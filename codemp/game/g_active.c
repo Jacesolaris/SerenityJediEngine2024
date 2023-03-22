@@ -5013,24 +5013,50 @@ void ClientThink_real(gentity_t* ent)
 		{
 			client->ps.dashtimeplayer = level.time;
 
-			if (client->ps.dashstartTime <= 0 && level.time - client->ps.dashlaststartTime >= 5000)
+			if (client->IsSprinting)
 			{
-				// They just pressed dash. Mark the time... 8000 wait between allowed dash.
-				client->ps.dashstartTime = level.time;
-				client->ps.dashlaststartTime = level.time;
-
-				if (!(client->ps.communicatingflags & 1 << DASHING))
+				if (client->ps.dashstartTime <= 0 && level.time - client->ps.dashlaststartTime >= 2000)
 				{
-					client->ps.communicatingflags |= 1 << DASHING;
+					// They just pressed dash. Mark the time... 8000 wait between allowed dash.
+					client->ps.dashstartTime = level.time;
+					client->ps.dashlaststartTime = level.time;
+
+					if (!(client->ps.communicatingflags & 1 << DASHING))
+					{
+						client->ps.communicatingflags |= 1 << DASHING;
+					}
+				}
+				else
+				{
+					if (level.time - client->ps.dashstartTime >= 1500)
+					{
+						// When dash was pressed, wait 3000 before letting go of dash.
+						client->ps.dashstartTime = 0;
+						client->ps.communicatingflags &= ~(1 << DASHING);
+					}
 				}
 			}
 			else
 			{
-				if (level.time - client->ps.dashstartTime >= 1500)
+				if (client->ps.dashstartTime <= 0 && level.time - client->ps.dashlaststartTime >= 5000)
 				{
-					// When dash was pressed, wait 3000 before letting go of dash.
-					client->ps.dashstartTime = 0;
-					client->ps.communicatingflags &= ~(1 << DASHING);
+					// They just pressed dash. Mark the time... 8000 wait between allowed dash.
+					client->ps.dashstartTime = level.time;
+					client->ps.dashlaststartTime = level.time;
+
+					if (!(client->ps.communicatingflags & 1 << DASHING))
+					{
+						client->ps.communicatingflags |= 1 << DASHING;
+					}
+				}
+				else
+				{
+					if (level.time - client->ps.dashstartTime >= 1500)
+					{
+						// When dash was pressed, wait 3000 before letting go of dash.
+						client->ps.dashstartTime = 0;
+						client->ps.communicatingflags &= ~(1 << DASHING);
+					}
 				}
 			}
 		}
@@ -5316,9 +5342,9 @@ void ClientThink_real(gentity_t* ent)
 						}
 					}
 				}
-			}
 		}
 	}
+}
 	else if (ent->client->ps.heldByClient)
 	{
 		ent->client->ps.heldByClient = 0;
