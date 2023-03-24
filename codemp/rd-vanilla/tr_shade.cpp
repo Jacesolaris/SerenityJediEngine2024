@@ -347,7 +347,7 @@ void RB_BeginSurface(shader_t* shader, const int fogNum) {
 	tess.num_vertexes = 0;
 	tess.shader = state;
 	tess.fogNum = fogNum;
-	tess.dlightBits = 0;		// will be OR'd in by surface functions
+	tess.dlight_bits = 0;		// will be OR'd in by surface functions
 	tess.xstages = state->stages;
 	tess.numPasses = state->numUnfoggedPasses;
 	tess.currentStageIteratorFunc = shader->sky ? RB_StageIteratorSky : RB_StageIteratorGeneric;
@@ -451,7 +451,7 @@ static void ProjectDlightTexture2()
 		vec3_t dist;
 		float vert_coords_array[SHADER_MAX_VERTEXES][4];
 		vec3_t origin;
-		if (!(tess.dlightBits & 1 << l)) {
+		if (!(tess.dlight_bits & 1 << l)) {
 			continue;	// this surface definately doesn't have any of this light
 		}
 
@@ -752,7 +752,7 @@ static void ProjectDlightTexture()
 		byte color_array[SHADER_MAX_VERTEXES][4];
 		float tex_coords_array[SHADER_MAX_VERTEXES][2];
 		vec3_t origin;
-		if (!(tess.dlightBits & 1 << l)) {
+		if (!(tess.dlight_bits & 1 << l)) {
 			continue;	// this surface definately doesn't have any of this light
 		}
 
@@ -1809,7 +1809,7 @@ void RB_StageIteratorGeneric()
 	//
 	// now do any dynamic lighting needed
 	//
-	if (tess.dlightBits && tess.shader->sort <= SS_OPAQUE
+	if (tess.dlight_bits && tess.shader->sort <= SS_OPAQUE
 		&& !(tess.shader->surfaceFlags & (SURF_NODLIGHT | SURF_SKY))) {
 		if (r_dlightStyle->integer > 0)
 		{

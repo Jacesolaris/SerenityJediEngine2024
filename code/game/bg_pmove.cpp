@@ -12644,7 +12644,14 @@ int PM_BlockingPoseForSaberAnimLevelSingle()
 				{
 					if (holding_block_and_attack)
 					{
-						anim = BOTH_SABEREADY_STANCE;
+						if (pm->cmd.buttons & BUTTON_WALKING)
+						{
+							anim = BOTH_P1_S1_T_;
+						}
+						else
+						{
+							anim = BOTH_SABEREADY_STANCE;
+						}
 					}
 					else
 					{

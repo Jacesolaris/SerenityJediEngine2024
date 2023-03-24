@@ -94,7 +94,7 @@ using trRefEntity_t = struct trRefEntity_s
 	vec3_t ambientLight; // color normalized to 0-255
 	int ambientLightInt; // 32 bit rgba packed
 	vec3_t directedLight;
-	int dlightBits;
+	int dlight_bits;
 };
 
 using orientationr_t = struct orientationr_s
@@ -675,7 +675,7 @@ using srfGridMesh_t = struct srfGridMesh_s
 	surfaceType_t surfaceType;
 
 	// dynamic lighting information
-	int dlightBits;
+	int dlight_bits;
 
 	// culling information
 	vec3_t meshBounds[2];
@@ -703,7 +703,7 @@ using srfSurfaceFace_t = struct srfSurfaceFace_s
 	cplane_t plane;
 
 	// dynamic lighting information
-	int dlightBits;
+	int dlight_bits;
 
 	// triangle definitions (no normals at points)
 	int num_points;
@@ -719,7 +719,7 @@ using srfTriangles_t = struct srfTriangles_s
 	surfaceType_t surfaceType;
 
 	// dynamic lighting information
-	int dlightBits;
+	int dlight_bits;
 
 	// culling information (FIXME: use this!)
 	vec3_t bounds[2];
@@ -1442,7 +1442,7 @@ struct shaderCommands_s
 	color4ub_t vertexColors[SHADER_MAX_VERTEXES] QALIGN(16);
 	byte vertexAlphas[SHADER_MAX_VERTEXES][4];
 	QALIGN(16) //rwwRMG - added support
-		int vertexDlightBits[SHADER_MAX_VERTEXES];
+		int vertexdlight_bits[SHADER_MAX_VERTEXES];
 	QALIGN(16)
 
 		stageVars_t svars QALIGN(16);
@@ -1451,7 +1451,7 @@ struct shaderCommands_s
 	float shaderTime;
 	int fogNum;
 
-	int dlightBits; // or together of all vertexDlightBits
+	int dlight_bits; // or together of all vertexdlight_bits
 
 	int num_indexes;
 	int num_vertexes;

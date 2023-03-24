@@ -186,7 +186,7 @@ void RB_ShadowTessEnd()
 		return;
 	}
 
-	//	if (!tess.dlightBits)
+	//	if (!tess.dlight_bits)
 	//	{
 	//		return;
 	//	}
@@ -197,7 +197,7 @@ void RB_ShadowTessEnd()
 	R_TransformDlights(backEnd.refdef.num_dlights, backEnd.refdef.dlights, &backEnd.ori);
 	/*	while (i < tr.refdef.num_dlights)
 		{
-			if (tess.dlightBits & (1 << i))
+			if (tess.dlight_bits & (1 << i))
 			{
 				dl = &tr.refdef.dlights[i];
 

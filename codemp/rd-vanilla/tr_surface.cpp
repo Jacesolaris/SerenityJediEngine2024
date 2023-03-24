@@ -302,8 +302,8 @@ RB_SurfaceTriangles
 void RB_SurfaceTriangles(const srfTriangles_t* srf) {
 	int			i;
 
-	const int dlight_bits = srf->dlightBits;
-	tess.dlightBits |= dlight_bits;
+	const int dlight_bits = srf->dlight_bits;
+	tess.dlight_bits |= dlight_bits;
 
 	RB_CHECKOVERFLOW(srf->num_verts, srf->num_indexes);
 
@@ -354,7 +354,7 @@ void RB_SurfaceTriangles(const srfTriangles_t* srf) {
 	}
 
 	for (i = 0; i < srf->num_verts; i++) {
-		tess.vertexDlightBits[tess.num_vertexes + i] = dlight_bits;
+		tess.vertexdlight_bits[tess.num_vertexes + i] = dlight_bits;
 	}
 
 	tess.num_vertexes += srf->num_verts;
@@ -1473,8 +1473,8 @@ void RB_SurfaceFace(srfSurfaceFace_t* surf) {
 
 	RB_CHECKOVERFLOW(surf->num_points, surf->numIndices);
 
-	const int dlightBits = surf->dlightBits;
-	tess.dlightBits |= dlightBits;
+	const int dlight_bits = surf->dlight_bits;
+	tess.dlight_bits |= dlight_bits;
 
 	const unsigned int* indices = (unsigned*)((char*)surf + surf->ofsIndices);
 
@@ -1521,7 +1521,7 @@ void RB_SurfaceFace(srfSurfaceFace_t* surf) {
 		ba.ui = ComputeFinalVertexColor((byte*)&v[VERTEX_COLOR]);
 		for (int j = 0; j < 4; j++)
 			tess.vertexColors[ndx][j] = ba.b[j];
-		tess.vertexDlightBits[ndx] = dlightBits;
+		tess.vertexdlight_bits[ndx] = dlight_bits;
 	}
 
 	tess.num_vertexes += surf->num_points;
@@ -1569,8 +1569,8 @@ void RB_SurfaceGrid(srfGridMesh_t* cv) {
 	int		width_table[MAX_GRID_SIZE];
 	int		height_table[MAX_GRID_SIZE];
 
-	const int dlight_bits = cv->dlightBits;
-	tess.dlightBits |= dlight_bits;
+	const int dlight_bits = cv->dlight_bits;
+	tess.dlight_bits |= dlight_bits;
 
 	// determine the allowable discrepance
 	const float lod_error = lod_error_for_volume(cv->lodOrigin, cv->lodRadius);
@@ -1633,7 +1633,7 @@ void RB_SurfaceGrid(srfGridMesh_t* cv) {
 		float* normal = tess.normal[num_vertexes];
 		float* tex_coords = tess.texCoords[num_vertexes][0];
 		auto color = reinterpret_cast<unsigned char*>(&tess.vertexColors[num_vertexes]);
-		int* v_dlight_bits = &tess.vertexDlightBits[num_vertexes];
+		int* v_dlight_bits = &tess.vertexdlight_bits[num_vertexes];
 
 		for (i = 0; i < rows; i++) {
 			for (j = 0; j < lod_width; j++) {

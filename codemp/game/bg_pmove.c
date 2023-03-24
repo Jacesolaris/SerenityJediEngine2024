@@ -1637,7 +1637,14 @@ int PM_BlockingPoseForSaberAnimLevelSingle(void)
 				{
 					if (active_blocking)
 					{
-						anim = BOTH_SABEREADY_STANCE;
+						if (pm->cmd.buttons & BUTTON_WALKING)
+						{
+							anim = BOTH_P1_S1_T_;
+						}
+						else
+						{
+							anim = BOTH_SABEREADY_STANCE;
+						}
 					}
 					else
 					{
