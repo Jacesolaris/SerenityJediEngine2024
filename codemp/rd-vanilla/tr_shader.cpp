@@ -2494,20 +2494,20 @@ static void FixRenderCommandList(const int new_shader) {
 				}
 				case RC_STRETCH_PIC:
 				{
-					const auto sp_cmd = static_cast<const stretchPicCommand_t*>(cur_cmd);
-					cur_cmd = static_cast<const void*>(sp_cmd + 1);
+					const auto sp_Cmd = static_cast<const stretchPicCommand_t*>(cur_cmd);
+					cur_cmd = static_cast<const void*>(sp_Cmd + 1);
 					break;
 				}
 				case RC_ROTATE_PIC:
 				{
-					const auto sp_cmd = static_cast<const rotatePicCommand_t*>(cur_cmd);
-					cur_cmd = static_cast<const void*>(sp_cmd + 1);
+					const auto sp_Cmd = static_cast<const rotatePicCommand_t*>(cur_cmd);
+					cur_cmd = static_cast<const void*>(sp_Cmd + 1);
 					break;
 				}
 				case RC_ROTATE_PIC2:
 				{
-					const auto sp_cmd = static_cast<const rotatePicCommand_t*>(cur_cmd);
-					cur_cmd = static_cast<const void*>(sp_cmd + 1);
+					const auto sp_Cmd = static_cast<const rotatePicCommand_t*>(cur_cmd);
+					cur_cmd = static_cast<const void*>(sp_Cmd + 1);
 					break;
 				}
 				case RC_DRAW_SURFS:

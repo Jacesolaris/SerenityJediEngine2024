@@ -1270,7 +1270,7 @@ void CL_ParseBinding(const int key, const qboolean down, const unsigned time)
 	const auto allCommands = static_cast<qboolean>(Key_GetCatcher() == 0);
 
 	// allow button up commands if in game even if key catcher is set
-	const qboolean allowUpCmds = static_cast<qboolean>(cls.state != CA_DISCONNECTED);
+	const qboolean allowUp_Cmds = static_cast<qboolean>(cls.state != CA_DISCONNECTED);
 
 	while (true)
 	{
@@ -1284,7 +1284,7 @@ void CL_ParseBinding(const int key, const qboolean down, const unsigned time)
 			// button commands add keynum and time as parameters
 			// so that multiple sources can be discriminated and
 			// subframe corrected
-			if (allCommands || allowUpCmds && !down)
+			if (allCommands || allowUp_Cmds && !down)
 			{
 				char cmd[1024];
 				Com_sprintf(cmd, sizeof cmd, "%c%s %d %d\n",

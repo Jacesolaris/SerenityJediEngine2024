@@ -671,6 +671,8 @@ gentity_t* create_missile(vec3_t org, vec3_t dir, const float vel, const int lif
 	missile->r.svFlags = SVF_USE_CURRENT_ORIGIN;
 	missile->parent = owner;
 	missile->r.ownerNum = owner->s.number;
+	//lmo tag owner info into state for duel Nox
+	missile->s.otherEntityNum = owner->s.number;
 
 	if (alt_fire)
 	{

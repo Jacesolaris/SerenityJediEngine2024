@@ -1658,7 +1658,7 @@ void CL_WritePacket(void)
 		Cvar_Set("cl_packetdup", "5");
 	}
 	const int oldPacketNum = clc.netchan.outgoingSequence - 1 - cl_packetdup->integer & PACKET_MASK;
-	int count = cl.cmdNumber - cl.outPackets[oldPacketNum].p_cmdNumber;
+	int count = cl.cmdNumber - cl.outPackets[oldPacketNum].p_CmdNumber;
 	if (count > MAX_PACKET_USERCMDS)
 	{
 		count = MAX_PACKET_USERCMDS;
@@ -1717,7 +1717,7 @@ void CL_WritePacket(void)
 	const int packetNum = clc.netchan.outgoingSequence & PACKET_MASK;
 	cl.outPackets[packetNum].p_realtime = cls.realtime;
 	cl.outPackets[packetNum].p_serverTime = oldcmd->serverTime;
-	cl.outPackets[packetNum].p_cmdNumber = cl.cmdNumber;
+	cl.outPackets[packetNum].p_CmdNumber = cl.cmdNumber;
 	clc.lastPacketSentTime = cls.realtime;
 
 	if (cl_showSend->integer)

@@ -546,6 +546,7 @@ qboolean PlaceShield(gentity_t* playerent)
 
 			shield->s.eFlags &= ~EF_NODRAW;
 			shield->r.svFlags &= ~SVF_NOCLIENT;
+			shield->s.otherEntityNum = playerent->s.number; //mark owner info for duel
 
 			trap->LinkEntity((sharedEntity_t*)shield);
 
@@ -1224,6 +1225,8 @@ void ItemUse_Sentry(gentity_t* ent)
 	trap->LinkEntity((sharedEntity_t*)sentry);
 
 	sentry->s.owner = ent->s.number;
+	sentry->s.otherEntityNum = ent->s.number; // mark owner info for duel 
+	sentry->s.weapon = WP_TURRET; //so I can identify the entity as sentry gun client side
 	sentry->s.shouldtarget = qtrue;
 	if (level.gametype >= GT_TEAM)
 	{

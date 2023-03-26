@@ -376,26 +376,26 @@ qboolean Boba_StopKnockdown(gentity_t* self, const gentity_t* pusher, const vec3
 	if (Q_irand(0, 2))
 	{
 		//flip or roll with it
-		usercmd_t temp_cmd;
+		usercmd_t temp_Cmd;
 		if (f_dot >= 0.4f)
 		{
-			temp_cmd.forwardmove = 127;
+			temp_Cmd.forwardmove = 127;
 			TIMER_Set(self, "moveforward", strafe_time);
 		}
 		else if (f_dot <= -0.4f)
 		{
-			temp_cmd.forwardmove = -127;
+			temp_Cmd.forwardmove = -127;
 			TIMER_Set(self, "moveback", strafe_time);
 		}
 		else if (r_dot > 0)
 		{
-			temp_cmd.rightmove = 127;
+			temp_Cmd.rightmove = 127;
 			TIMER_Set(self, "strafeRight", strafe_time);
 			TIMER_Set(self, "strafeLeft", -1);
 		}
 		else
 		{
-			temp_cmd.rightmove = -127;
+			temp_Cmd.rightmove = -127;
 			TIMER_Set(self, "strafeLeft", strafe_time);
 			TIMER_Set(self, "strafeRight", -1);
 		}
@@ -404,7 +404,7 @@ qboolean Boba_StopKnockdown(gentity_t* self, const gentity_t* pusher, const vec3
 		{
 			//flip
 			self->client->ps.forceJumpCharge = 280; //FIXME: calc this intelligently?
-			ForceJump(self, &temp_cmd);
+			ForceJump(self, &temp_Cmd);
 		}
 		else
 		{

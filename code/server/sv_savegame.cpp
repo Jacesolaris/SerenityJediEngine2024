@@ -44,9 +44,9 @@ SavedGameJustLoaded_e e_saved_game_just_loaded = eNO;
 char sLastSaveFileLoaded[MAX_QPATH] = { 0 };
 
 #ifdef JK2_MODE
-#define iSG_MAPCMD_SIZE (MAX_TOKEN_CHARS)
+#define iSG_MAp_Cmd_SIZE (MAX_TOKEN_CHARS)
 #else
-#define iSG_MAPCMD_SIZE (MAX_QPATH)
+#define iSG_MAp_Cmd_SIZE (MAX_QPATH)
 #endif // JK2_MODE
 
 static char* SG_GetSaveGameMapName(const char* ps_pathless_base_name);
@@ -813,11 +813,11 @@ int SG_GetSaveGameComment(
 		{
 			if (sMapName)
 			{
-				if (sgh.get_buffer_size() == iSG_MAPCMD_SIZE)
+				if (sgh.get_buffer_size() == iSG_MAp_Cmd_SIZE)
 				{
 					std::uninitialized_copy_n(
 						static_cast<const char*>(sgh.get_buffer_data()),
-						iSG_MAPCMD_SIZE,
+						iSG_MAp_Cmd_SIZE,
 						sMapName);
 				}
 				else
@@ -841,7 +841,7 @@ int SG_GetSaveGameComment(
 //
 static char* SG_GetSaveGameMapName(const char* ps_pathless_base_name)
 {
-	static char sMapName[iSG_MAPCMD_SIZE] = { 0 };
+	static char sMapName[iSG_MAp_Cmd_SIZE] = { 0 };
 	char* psReturn = nullptr;
 	if (SG_GetSaveGameComment(ps_pathless_base_name, nullptr, sMapName))
 	{
@@ -1135,17 +1135,17 @@ qboolean SG_WriteSavegame(const char* psPathlessBaseName, qboolean qbAutosave)
 	ojk::SavedGameHelper sgh(
 		&saved_game);
 
-	char sMapCmd[iSG_MAPCMD_SIZE] = { 0 };
-	Q_strncpyz(sMapCmd, psMapName, sizeof sMapCmd);
+	char sMap_Cmd[iSG_MAp_Cmd_SIZE] = { 0 };
+	Q_strncpyz(sMap_Cmd, psMapName, sizeof sMap_Cmd);
 
-	SG_WriteComment(qbAutosave, sMapCmd);
+	SG_WriteComment(qbAutosave, sMap_Cmd);
 #ifdef JK2_MODE
-	SG_WriteScreenshot(qbAutosave, sMapCmd);
+	SG_WriteScreenshot(qbAutosave, sMap_Cmd);
 #endif
 
 	sgh.write_chunk(
 		INT_ID('M', 'P', 'C', 'M'),
-		sMapCmd);
+		sMap_Cmd);
 
 	SG_WriteCvars();
 
@@ -1193,7 +1193,7 @@ qboolean SG_ReadSavegame
 	const char* psPathlessBaseName)
 {
 	char sComment[iSG_COMMENT_SIZE];
-	char sMapCmd[iSG_MAPCMD_SIZE];
+	char sMap_Cmd[iSG_MAp_Cmd_SIZE];
 
 #ifdef JK2_MODE
 	Cvar_Set("cg_missionstatusscreen", "1");
@@ -1261,7 +1261,7 @@ qboolean SG_ReadSavegame
 
 	sgh.read_chunk(
 		INT_ID('M', 'P', 'C', 'M'),
-		sMapCmd);
+		sMap_Cmd);
 
 	SG_ReadCvars();
 
@@ -1272,7 +1272,7 @@ qboolean SG_ReadSavegame
 
 	// note that this also trashes the whole G_Alloc pool as well (of course)
 	::SV_SpawnServer(
-		sMapCmd,
+		sMap_Cmd,
 		eForceReload_NOTHING,
 		e_saved_game_just_loaded != eFULL ? qtrue : qfalse);
 

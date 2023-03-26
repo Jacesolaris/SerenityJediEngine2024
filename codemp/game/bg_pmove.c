@@ -5547,7 +5547,7 @@ void PM_CheckGrab(void)
 	float lerpup = 0;
 	float lerpfwd = 0;
 	float lerpyaw = 0;
-	qboolean skipcmdtrace = qfalse;
+	qboolean skip_Cmdtrace = qfalse;
 
 	if (pm->ps->groundEntityNum != ENTITYNUM_NONE && pm->ps->inAirAnim)
 	{
@@ -5617,11 +5617,11 @@ void PM_CheckGrab(void)
 		//player is moving
 		if (LedgeTrace(&trace, checkDir, &lerpup, &lerpfwd, &lerpyaw))
 		{
-			skipcmdtrace = qtrue;
+			skip_Cmdtrace = qtrue;
 		}
 	}
 
-	if (!skipcmdtrace)
+	if (!skip_Cmdtrace)
 	{
 		//no luck finding a ledge to grab based on movement.  Try looking for a ledge based on where the player is
 		//TRYING to go.
@@ -10049,7 +10049,7 @@ static void PM_Footsteps(void)
 			g_entities[pm->ps->client_num].client->IsSprinting = qfalse;
 #endif
 		}
-		}
+	}
 	else if (pm->ps->pm_flags & PMF_ROLLING && !BG_InRoll(pm->ps, pm->ps->legsAnim) &&
 		!PM_InRollComplete(pm->ps, pm->ps->legsAnim))
 	{
@@ -11331,7 +11331,7 @@ static void PM_Footsteps(void)
 			// no sound when completely underwater
 		}
 	}
-	}
+}
 
 /*
 ==============
@@ -15735,7 +15735,7 @@ void PM_AdjustAttackStates(pmove_t * pmove)
 	}
 }
 
-void PM_CmdForRoll(playerState_t * ps, const int anim, usercmd_t * pCmd)
+void PM_CmdForRoll(playerState_t * ps, const int anim, usercmd_t * p_Cmd)
 {
 #ifdef _GAME
 	if (ps->userInt3 & 1 << FLAG_DODGEROLL)
@@ -15754,68 +15754,54 @@ void PM_CmdForRoll(playerState_t * ps, const int anim, usercmd_t * pCmd)
 	case BOTH_ROLL_F:
 	case BOTH_ROLL_F1:
 	case BOTH_ROLL_F2:
-#ifdef _GAME
-		if (dmflags.integer & DF_JK2ROLL)
-#else
-		if (cgs.dmflags & DF_JK2ROLL)
-#endif
-		{
-			if (pCmd->forwardmove < 64)
-			{
-				pCmd->forwardmove = 127;
-			}
-		}
-		else
-		{
-			pCmd->forwardmove = 127;
-		}
-		pCmd->rightmove = 0;
+		p_Cmd->forwardmove = 127;
+		p_Cmd->rightmove = 0;
 		break;
 	case BOTH_ROLL_B:
-		pCmd->forwardmove = -127;
-		pCmd->rightmove = 0;
+		p_Cmd->forwardmove = -127;
+		p_Cmd->rightmove = 0;
 		break;
 	case BOTH_ROLL_R:
-		pCmd->forwardmove = 0;
-		pCmd->rightmove = 127;
+		p_Cmd->forwardmove = 0;
+		p_Cmd->rightmove = 127;
 		break;
 	case BOTH_ROLL_L:
-		pCmd->forwardmove = 0;
-		pCmd->rightmove = -127;
+		p_Cmd->forwardmove = 0;
+		p_Cmd->rightmove = -127;
 		break;
 	case BOTH_GETUP_BROLL_R:
-		pCmd->forwardmove = 0;
-		pCmd->rightmove = 48;
+		p_Cmd->forwardmove = 0;
+		p_Cmd->rightmove = 48;
 		break;
 
 	case BOTH_GETUP_FROLL_R:
 		if (ps->legsTimer <= 250)
 		{
 			//end of anim
-			pCmd->forwardmove = pCmd->rightmove = 0;
+			p_Cmd->forwardmove = p_Cmd->rightmove = 0;
 		}
 		else
 		{
-			pCmd->forwardmove = 0;
-			pCmd->rightmove = 48;
+			p_Cmd->forwardmove = 0;
+			p_Cmd->rightmove = 48;
 		}
 		break;
 
 	case BOTH_GETUP_BROLL_L:
-		pCmd->forwardmove = 0;
-		pCmd->rightmove = -48;
+		p_Cmd->forwardmove = 0;
+		p_Cmd->rightmove = -48;
 		break;
 
 	case BOTH_GETUP_FROLL_L:
 		if (ps->legsTimer <= 250)
 		{
 			//end of anim
-			pCmd->forwardmove = pCmd->rightmove = 0;
+			p_Cmd->forwardmove = p_Cmd->rightmove = 0;
 		}
 		else
 		{
-			pCmd->forwardmove = 0;
-			pCmd->rightmove = -48;
+			p_Cmd->forwardmove = 0;
+			p_Cmd->rightmove = -48;
 		}
 		break;
 
@@ -15823,17 +15809,17 @@ void PM_CmdForRoll(playerState_t * ps, const int anim, usercmd_t * pCmd)
 		if (ps->torsoTimer <= 250)
 		{
 			//end of anim
-			pCmd->forwardmove = pCmd->rightmove = 0;
+			p_Cmd->forwardmove = p_Cmd->rightmove = 0;
 		}
 		else if (PM_AnimLength(ps->legsAnim) - ps->torsoTimer < 350)
 		{
 			//beginning of anim
-			pCmd->forwardmove = pCmd->rightmove = 0;
+			p_Cmd->forwardmove = p_Cmd->rightmove = 0;
 		}
 		else
 		{
-			pCmd->forwardmove = -64;
-			pCmd->rightmove = 0;
+			p_Cmd->forwardmove = -64;
+			p_Cmd->rightmove = 0;
 		}
 		break;
 
@@ -15841,17 +15827,17 @@ void PM_CmdForRoll(playerState_t * ps, const int anim, usercmd_t * pCmd)
 		if (ps->torsoTimer <= 100)
 		{
 			//end of anim
-			pCmd->forwardmove = pCmd->rightmove = 0;
+			p_Cmd->forwardmove = p_Cmd->rightmove = 0;
 		}
 		else if (PM_AnimLength(ps->legsAnim) - ps->torsoTimer < 200)
 		{
 			//beginning of anim
-			pCmd->forwardmove = pCmd->rightmove = 0;
+			p_Cmd->forwardmove = p_Cmd->rightmove = 0;
 		}
 		else
 		{
-			pCmd->forwardmove = -64;
-			pCmd->rightmove = 0;
+			p_Cmd->forwardmove = -64;
+			p_Cmd->rightmove = 0;
 		}
 		break;
 
@@ -15859,29 +15845,29 @@ void PM_CmdForRoll(playerState_t * ps, const int anim, usercmd_t * pCmd)
 		if (ps->torsoTimer <= 550)
 		{
 			//end of anim
-			pCmd->forwardmove = pCmd->rightmove = 0;
+			p_Cmd->forwardmove = p_Cmd->rightmove = 0;
 		}
 		else if (PM_AnimLength(ps->legsAnim) - ps->torsoTimer < 150)
 		{
 			//beginning of anim
-			pCmd->forwardmove = pCmd->rightmove = 0;
+			p_Cmd->forwardmove = p_Cmd->rightmove = 0;
 		}
 		else
 		{
-			pCmd->forwardmove = 64;
-			pCmd->rightmove = 0;
+			p_Cmd->forwardmove = 64;
+			p_Cmd->rightmove = 0;
 		}
 		break;
 	case BOTH_GETUP_FROLL_F:
 		if (ps->torsoTimer <= 100)
 		{
 			//end of anim
-			pCmd->forwardmove = pCmd->rightmove = 0;
+			p_Cmd->forwardmove = p_Cmd->rightmove = 0;
 		}
 		else
 		{
-			pCmd->forwardmove = 64;
-			pCmd->rightmove = 0;
+			p_Cmd->forwardmove = 64;
+			p_Cmd->rightmove = 0;
 		}
 		break;
 	case BOTH_LK_DL_ST_T_SB_1_L:
@@ -15890,17 +15876,17 @@ void PM_CmdForRoll(playerState_t * ps, const int anim, usercmd_t * pCmd)
 			&& ps->legsTimer > 550) //at least 6 frames from end
 		{
 			//move backwards
-			pCmd->forwardmove = -64;
-			pCmd->rightmove = 0;
+			p_Cmd->forwardmove = -64;
+			p_Cmd->rightmove = 0;
 		}
 		else
 		{
-			pCmd->forwardmove = pCmd->rightmove = 0;
+			p_Cmd->forwardmove = p_Cmd->rightmove = 0;
 		}
 		break;
 	default:;
 	}
-	pCmd->upmove = 0;
+	p_Cmd->upmove = 0;
 }
 
 qboolean PM_SaberInTransition(int move);

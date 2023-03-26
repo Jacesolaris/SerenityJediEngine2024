@@ -1265,7 +1265,7 @@ void Workshop_CmdHelp_f(gentity_t* ent);
 constexpr auto WSFLAG_NEEDSELECTED = 1;
 constexpr auto WSFLAG_ONLYINWS = 2;
 
-struct workshopCmd_t
+struct workshop_Cmd_t
 {
 	char* command;
 	char* help;
@@ -1273,10 +1273,10 @@ struct workshopCmd_t
 	void (*Command)(gentity_t*);
 };
 
-workshopCmd_t workshopCommands[] = {
+workshop_Cmd_t workshopCommands[] = {
 	{"aiworkshop", "Toggles the AI workshop", 0, WorkshopToggle},
 	{"workshop_commands", "Lists all AI workshop commands", 0, Workshop_Commands_f},
-	{"workshop_cmdhelp", "Provides detailed information about an AI workshop command", 0, Workshop_CmdHelp_f},
+	{"workshop_Cmdhelp", "Provides detailed information about an AI workshop command", 0, Workshop_CmdHelp_f},
 	{
 		"workshop_toggle_display", "Toggles the detailed display of the AI workshop", WSFLAG_ONLYINWS,
 		Workshop_ToggleDisplay_f
@@ -1446,24 +1446,24 @@ workshopCmd_t workshopCommands[] = {
 
 void Workshop_Commands_f(gentity_t* ent)
 {
-	workshopCmd_t* cmd = workshopCommands;
+	workshop_Cmd_t* cmd = workshopCommands;
 	while (cmd->Command)
 	{
 		Com_Printf("%s\n", cmd->command);
 		cmd++;
 	}
-	Com_Printf("You can receive help with any of these commands using the workshop_cmdhelp command.\n");
+	Com_Printf("You can receive help with any of these commands using the workshop_Cmdhelp command.\n");
 }
 
 void Workshop_CmdHelp_f(gentity_t* ent)
 {
 	if (gi.argc() != 2)
 	{
-		Com_Printf("usage: workshop_cmdhelp <command name>\n");
+		Com_Printf("usage: workshop_Cmdhelp <command name>\n");
 		return;
 	}
 
-	workshopCmd_t* cmd = workshopCommands;
+	workshop_Cmd_t* cmd = workshopCommands;
 	const char* text = gi.argv(1);
 	while (cmd->Command)
 	{
@@ -1485,7 +1485,7 @@ qboolean TryWorkshopCommand(gentity_t* ent)
 		return qfalse;
 	}
 	const char* text = gi.argv(0);
-	workshopCmd_t* cmd = workshopCommands;
+	workshop_Cmd_t* cmd = workshopCommands;
 	while (cmd->Command)
 	{
 		if (!Q_stricmp(cmd->command, text))

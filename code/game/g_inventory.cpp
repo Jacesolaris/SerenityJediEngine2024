@@ -85,7 +85,7 @@ qboolean INV_SecurityKeyGive(const gentity_t* target, const char* keyname)
 		return qfalse;
 	}
 
-	for (int i = 0; i <= 4; i++)
+	for (int i = 0; i < MAX_SECURITY_KEYS; i++)
 	{
 		if (target->client->ps.security_key_message[i][0] == '\0')
 		{
@@ -106,7 +106,7 @@ void INV_SecurityKeyTake(const gentity_t* target, const char* keyname)
 		return;
 	}
 
-	for (int i = 0; i <= 4; i++)
+	for (int i = 0; i < MAX_SECURITY_KEYS; i++)
 	{
 		if (target->client->ps.security_key_message[i])
 		{
@@ -117,13 +117,6 @@ void INV_SecurityKeyTake(const gentity_t* target, const char* keyname)
 				return;
 			}
 		}
-		/*
-		//don't do this because we could have removed one that's between 2 valid ones
-		else
-		{
-			break;
-		}
-		*/
 	}
 }
 
@@ -134,7 +127,7 @@ qboolean INV_SecurityKeyCheck(const gentity_t* target, const char* keyname)
 		return qfalse;
 	}
 
-	for (int i = 0; i <= 4; i++)
+	for (int i = 0; i < MAX_SECURITY_KEYS; i++)
 	{
 		if (target->client->ps.inventory[INV_SECURITY_KEY] && target->client->ps.security_key_message[i])
 		{
@@ -143,13 +136,6 @@ qboolean INV_SecurityKeyCheck(const gentity_t* target, const char* keyname)
 				return qtrue;
 			}
 		}
-		/*
-		//don't do this because we could have removed one that's between 2 valid ones
-		else
-		{
-			break;
-		}
-		*/
 	}
 
 	return qfalse;

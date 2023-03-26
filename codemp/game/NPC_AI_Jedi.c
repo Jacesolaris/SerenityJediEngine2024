@@ -753,26 +753,26 @@ qboolean Boba_StopKnockdown(gentity_t* self, const gentity_t* pusher, const vec3
 	if (Q_irand(0, 2))
 	{
 		//flip or roll with it
-		usercmd_t tempCmd;
+		usercmd_t temp_Cmd;
 		if (fDot >= 0.4f)
 		{
-			tempCmd.forwardmove = 127;
+			temp_Cmd.forwardmove = 127;
 			TIMER_Set(self, "moveforward", strafeTime);
 		}
 		else if (fDot <= -0.4f)
 		{
-			tempCmd.forwardmove = -127;
+			temp_Cmd.forwardmove = -127;
 			TIMER_Set(self, "moveback", strafeTime);
 		}
 		else if (rDot > 0)
 		{
-			tempCmd.rightmove = 127;
+			temp_Cmd.rightmove = 127;
 			TIMER_Set(self, "strafeRight", strafeTime);
 			TIMER_Set(self, "strafeLeft", -1);
 		}
 		else
 		{
-			tempCmd.rightmove = -127;
+			temp_Cmd.rightmove = -127;
 			TIMER_Set(self, "strafeLeft", strafeTime);
 			TIMER_Set(self, "strafeRight", -1);
 		}
@@ -781,7 +781,7 @@ qboolean Boba_StopKnockdown(gentity_t* self, const gentity_t* pusher, const vec3
 		{
 			//flip
 			self->client->ps.fd.forceJumpCharge = 280; //FIXME: calc this intelligently?
-			ForceJump(self, &tempCmd);
+			ForceJump(self, &temp_Cmd);
 		}
 		else
 		{
@@ -851,7 +851,7 @@ qboolean Jedi_StopKnockdown(gentity_t* self, const vec3_t push_dir)
 {
 	//certain NPCs can avoid knockdowns, check for that.
 	vec3_t pDir, fwd, right, ang;
-	usercmd_t tempCmd;
+	usercmd_t temp_Cmd;
 	const int strafeTime = Q_irand(1000, 2000);
 
 	if (self->s.number < MAX_CLIENTS || !self->NPC)
@@ -892,23 +892,23 @@ qboolean Jedi_StopKnockdown(gentity_t* self, const vec3_t push_dir)
 	//flip or roll with it
 	if (fDot >= 0.4f)
 	{
-		tempCmd.forwardmove = 127;
+		temp_Cmd.forwardmove = 127;
 		TIMER_Set(self, "moveforward", strafeTime);
 	}
 	else if (fDot <= -0.4f)
 	{
-		tempCmd.forwardmove = -127;
+		temp_Cmd.forwardmove = -127;
 		TIMER_Set(self, "moveback", strafeTime);
 	}
 	else if (rDot > 0)
 	{
-		tempCmd.rightmove = 127;
+		temp_Cmd.rightmove = 127;
 		TIMER_Set(self, "strafeRight", strafeTime);
 		TIMER_Set(self, "strafeLeft", -1);
 	}
 	else
 	{
-		tempCmd.rightmove = -127;
+		temp_Cmd.rightmove = -127;
 		TIMER_Set(self, "strafeLeft", strafeTime);
 		TIMER_Set(self, "strafeRight", -1);
 	}
@@ -917,7 +917,7 @@ qboolean Jedi_StopKnockdown(gentity_t* self, const vec3_t push_dir)
 	{
 		//flip
 		self->client->ps.fd.forceJumpCharge = 280; //FIXME: calc this intelligently?
-		ForceJump(self, &tempCmd);
+		ForceJump(self, &temp_Cmd);
 	}
 	else
 	{

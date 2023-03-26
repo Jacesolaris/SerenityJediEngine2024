@@ -155,6 +155,8 @@ gentity_t* create_missile(vec3_t org, vec3_t dir, const float vel, const int lif
 	missile->e_ThinkFunc = thinkF_G_FreeEntity;
 	missile->s.eType = ET_MISSILE;
 	missile->owner = owner;
+	//lmo tag owner info into state for duel Nox
+	missile->s.otherEntityNum = owner->s.number;
 
 	const Vehicle_t* p_veh = G_IsRidingVehicle(owner);
 

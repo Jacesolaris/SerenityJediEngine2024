@@ -2591,26 +2591,26 @@ static void FixRenderCommandList(int newShader) {
 				}
 				case RC_STRETCH_PIC:
 				{
-					const stretchPicCommand_t* sp_cmd = (const stretchPicCommand_t*)curCmd;
-					curCmd = (const void*)(sp_cmd + 1);
+					const stretchPicCommand_t* sp_Cmd = (const stretchPicCommand_t*)curCmd;
+					curCmd = (const void*)(sp_Cmd + 1);
 					break;
 				}
 				case RC_SCISSOR:
 				{
-					const scissorCommand_t* sp_cmd = (const scissorCommand_t*)curCmd;
-					curCmd = (const void*)(sp_cmd + 1);
+					const scissorCommand_t* sp_Cmd = (const scissorCommand_t*)curCmd;
+					curCmd = (const void*)(sp_Cmd + 1);
 					break;
 				}
 				case RC_ROTATE_PIC:
 				{
-					const rotatePicCommand_t* sp_cmd = (const rotatePicCommand_t*)curCmd;
-					curCmd = (const void*)(sp_cmd + 1);
+					const rotatePicCommand_t* sp_Cmd = (const rotatePicCommand_t*)curCmd;
+					curCmd = (const void*)(sp_Cmd + 1);
 					break;
 				}
 				case RC_ROTATE_PIC2:
 				{
-					const rotatePicCommand_t* sp_cmd = (const rotatePicCommand_t*)curCmd;
-					curCmd = (const void*)(sp_cmd + 1);
+					const rotatePicCommand_t* sp_Cmd = (const rotatePicCommand_t*)curCmd;
+					curCmd = (const void*)(sp_Cmd + 1);
 					break;
 				}
 				case RC_DRAW_SURFS:

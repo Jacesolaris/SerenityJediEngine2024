@@ -69,7 +69,7 @@ extern int PM_AnimLength(int index, animNumber_t anim);
 extern qboolean PM_InKnockDown(const playerState_t* ps);
 extern qboolean PM_InGetUp(const playerState_t* ps);
 extern qboolean PM_InRoll(const playerState_t* ps);
-extern void PM_CmdForRoll(playerState_t* ps, usercmd_t* p_cmd);
+extern void PM_CmdForRoll(playerState_t* ps, usercmd_t* p_Cmd);
 extern qboolean PM_InAttackRoll(int anim);
 extern qboolean PM_CrouchAnim(int anim);
 extern qboolean PM_FlippingAnim(int anim);

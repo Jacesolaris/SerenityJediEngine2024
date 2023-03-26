@@ -97,7 +97,7 @@ void CGCam_Enable()
 
 	client_camera.next_roff_time = 0;
 
-	if (g_entities[0].client)
+	if (g_entities[0].inuse && g_entities[0].client)
 	{
 		//Player zero not allowed to do anything
 		VectorClear(g_entities[0].client->ps.velocity);

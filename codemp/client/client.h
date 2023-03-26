@@ -78,7 +78,7 @@ new gamestate_t, potentially several times during an established connection
 
 using outPacket_t = struct outPacket_s
 {
-	int p_cmdNumber; // cl.cmdNumber when packet was sent
+	int p_CmdNumber; // cl.cmdNumber when packet was sent
 	int p_serverTime; // usercmd->serverTime when packet was sent
 	int p_realtime; // cls.realtime when packet was sent
 };

@@ -3480,7 +3480,7 @@ int AcceptBotCommand(const char* cmd, const gentity_t* pl)
 		return 0;
 	}
 
-	if (Q_stricmp(cmd, "bot_wp_cmdlist") == 0) //lists all the bot waypoint commands.
+	if (Q_stricmp(cmd, "bot_wp_Cmdlist") == 0) //lists all the bot waypoint commands.
 	{
 		trap->Print(
 			S_COLOR_YELLOW "bot_wp_add" S_COLOR_WHITE

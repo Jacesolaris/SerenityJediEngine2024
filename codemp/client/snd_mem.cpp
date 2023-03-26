@@ -243,11 +243,6 @@ void ResampleSfx(sfx_t* sfx, int iInRate, int iInWidth, byte* p_data)
 
 void S_LoadSound_Finalize(const wavinfo_t* info, sfx_t* sfx, byte* data)
 {
-	const float	stepscale = static_cast<float>(info->rate) / dma.speed;
-	int		len = static_cast<int>(info->samples / stepscale);
-
-	len *= info->width;
-
 	sfx->eSoundCompressionMethod = ct_16;
 	sfx->iSoundLengthInSamples = info->samples;
 	ResampleSfx(sfx, info->rate, info->width, data + info->dataofs);
@@ -360,21 +355,21 @@ void R_CheckMP3s(const char* psDir)
 				{
 					wavinfo_t info;
 
-					const int iRawPCMDataSize = MP3_GetUnpackedSize(sFilename, pbData, iSize, qtrue, qbForceStereo);
+					const int iRawp_CmdataSize = MP3_GetUnpackedSize(sFilename, pbData, iSize, qtrue, qbForceStereo);
 
-					if (iRawPCMDataSize)	// should always be true, unless file is fucked, in which case, stop this conversion process
+					if (iRawp_CmdataSize)	// should always be true, unless file is fucked, in which case, stop this conversion process
 					{
 						float fMaxVol = 128;	// any old default
-						int iActualUnpackedSize = iRawPCMDataSize;	// default, override later if not doing music
+						int iActualUnpackedSize = iRawp_CmdataSize;	// default, override later if not doing music
 
 						if (!qbForceStereo)	// no point for stereo files, which are for music and therefore no lip-sync
 						{
-							const auto pbUnpackBuffer = static_cast<byte*>(Z_Malloc(iRawPCMDataSize + 10, TAG_TEMP_WORKSPACE, qfalse));	// won't return if fails
+							const auto pbUnpackBuffer = static_cast<byte*>(Z_Malloc(iRawp_CmdataSize + 10, TAG_TEMP_WORKSPACE, qfalse));	// won't return if fails
 
 							iActualUnpackedSize = MP3_UnpackRawPCM(sFilename, pbData, iSize, pbUnpackBuffer);
-							if (iActualUnpackedSize != iRawPCMDataSize)
+							if (iActualUnpackedSize != iRawp_CmdataSize)
 							{
-								Com_Error(ERR_DROP, "******* Whoah! MP3 %s unpacked to %d bytes, but size calc said %d!\n", sFilename, iActualUnpackedSize, iRawPCMDataSize);
+								Com_Error(ERR_DROP, "******* Whoah! MP3 %s unpacked to %d bytes, but size calc said %d!\n", sFilename, iActualUnpackedSize, iRawp_CmdataSize);
 							}
 
 							// fake up a WAV structure so I can use the other post-load sound code such as volume calc for lip-synching
@@ -748,11 +743,11 @@ static qboolean S_LoadSound_Actual(sfx_t* sfx)
 		//
 		if (MP3_IsValid(sLoadName, data, size, qfalse))
 		{
-			const int iRawPCMDataSize = MP3_GetUnpackedSize(sLoadName, data, size, qfalse, qfalse);
+			const int iRawp_CmdataSize = MP3_GetUnpackedSize(sLoadName, data, size, qfalse, qfalse);
 
 			if (S_LoadSound_DirIsAllowedToKeepMP3s(sfx->sSoundName)	// NOT sLoadName, this uses original un-languaged name
 				&&
-				MP3Stream_InitFromFile(sfx, data, size, sLoadName, iRawPCMDataSize + 2304 /* + 1 MP3 frame size, jic */, qfalse)
+				MP3Stream_InitFromFile(sfx, data, size, sLoadName, iRawp_CmdataSize + 2304 /* + 1 MP3 frame size, jic */, qfalse)
 				)
 			{
 				//				Com_DPrintf("(Keeping file \"%s\" as MP3)\n",sLoadName);
@@ -772,18 +767,18 @@ static qboolean S_LoadSound_Actual(sfx_t* sfx)
 			{
 				// small file, not worth keeping as MP3 since it would increase in size (with MP3 header etc)...
 				//
-				Com_DPrintf("S_LoadSound: Unpacking MP3 file(%i) \"%s\" to wav(%i).\n", size, sLoadName, iRawPCMDataSize);
+				Com_DPrintf("S_LoadSound: Unpacking MP3 file(%i) \"%s\" to wav(%i).\n", size, sLoadName, iRawp_CmdataSize);
 				//
 				// unpack and convert into WAV...
 				//
 				{
 					{
-						const auto pbUnpackBuffer = static_cast<byte*>(Z_Malloc(iRawPCMDataSize + 10 + 2304 /* <g> */, TAG_TEMP_WORKSPACE, qfalse));
+						const auto pbUnpackBuffer = static_cast<byte*>(Z_Malloc(iRawp_CmdataSize + 10 + 2304 /* <g> */, TAG_TEMP_WORKSPACE, qfalse));
 						const int iResultBytes = MP3_UnpackRawPCM(sLoadName, data, size, pbUnpackBuffer, qfalse);
 
-						if (iResultBytes != iRawPCMDataSize) {
-							Com_Printf(S_COLOR_YELLOW"**** MP3 %s final unpack size %d different to previous value %d\n", sLoadName, iResultBytes, iRawPCMDataSize);
-							//assert (iResultBytes == iRawPCMDataSize);
+						if (iResultBytes != iRawp_CmdataSize) {
+							Com_Printf(S_COLOR_YELLOW"**** MP3 %s final unpack size %d different to previous value %d\n", sLoadName, iResultBytes, iRawp_CmdataSize);
+							//assert (iResultBytes == iRawp_CmdataSize);
 						}
 
 						// fake up a WAV structure so I can use the other post-load sound code such as volume calc for lip-synching
