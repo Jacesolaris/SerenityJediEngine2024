@@ -1350,7 +1350,10 @@ void WeaponThink()
 
 	// Can't Fire While Cloaked
 	if (NPC->client &&
-		(NPC->client->ps.powerups[PW_CLOAKED] || level.time < NPC->client->ps.powerups[PW_UNCLOAKING]))
+		(NPC->client->ps.powerups[PW_CLOAKED] 
+			|| level.time < NPC->client->ps.powerups[PW_UNCLOAKING]
+			|| NPC->client->ps.powerups[PW_STUNNED]
+			|| NPC->client->ps.powerups[PW_SHOCKED]))
 	{
 		return;
 	}

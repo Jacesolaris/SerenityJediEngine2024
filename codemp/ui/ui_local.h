@@ -362,7 +362,7 @@ typedef struct uiInfo_s {
 	int						currentCrosshair;
 
 	int						q3HeadCount;
-	char					q3HeadNames[MAX_Q3PLAYERMODELS][64];
+	char					q3HeadNames[MAX_Q3PLAYERMODELS][1024];
 	qhandle_t				q3HeadIcons[MAX_Q3PLAYERMODELS];
 	int						q3SelectedHead;
 
