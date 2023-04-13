@@ -379,6 +379,12 @@ void NPC_SetMiscDefaultData(gentity_t* ent)
 		ent->NPC->scriptFlags = SCF_CHASE_ENEMIES | SCF_LOOK_FOR_ENEMIES;
 		ent->NPC->scriptFlags |= SCF_DONT_FLEE;
 	}
+	if (Q_stricmp("md_dindjarin", ent->NPC_type) == 0
+		|| Q_stricmp("dindjarin", ent->NPC_type) == 0
+		/*|| Q_stricmp("boba_fettclass", ent->NPC_type) == 0*/)
+	{
+		ent->flags |= FL_SHIELDED | FL_NO_KNOCKBACK; //low-level shots bounce off, no knockback
+	}
 
 	if (ent->spawnflags & 4096)
 	{
