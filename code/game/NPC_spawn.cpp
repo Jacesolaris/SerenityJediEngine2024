@@ -295,10 +295,11 @@ void NPC_SetMiscDefaultData(gentity_t* ent)
 		ent->client->ps.forcePowerLevel[FP_LEVITATION] = FORCE_LEVEL_3;
 		ent->client->ps.forcePower = 100;
 		ent->NPC->scriptFlags |= SCF_NAV_CAN_FLY | SCF_FLY_WITH_JET | SCF_NAV_CAN_JUMP;
+		NPC->flags |= FL_UNDYING; // Can't Kill Boba, he's got plot armor!
 
-		if (!Q_stricmp("bobafett", ent->targetname) || !Q_stricmp("bobafett1", ent->targetname))
+		if (Q_stricmp("boba_fett", ent->NPC_type) == 0)
 		{
-			NPC->flags |= FL_UNDYING; // Can't Kill Boba, he's got plot armor!
+			ent->flags |= FL_BOBAFETT; //low-level shots bounce off, no knockback
 		}
 	}
 	else if (ent->client->NPC_class == CLASS_OBJECT)
@@ -314,6 +315,7 @@ void NPC_SetMiscDefaultData(gentity_t* ent)
 		ent->client->ps.forcePowerLevel[FP_LEVITATION] = FORCE_LEVEL_3;
 		ent->client->ps.forcePower = 100;
 		ent->NPC->scriptFlags |= SCF_NAV_CAN_FLY | SCF_FLY_WITH_JET | SCF_NAV_CAN_JUMP;
+		ent->flags |= FL_DINDJARIN; //low-level shots bounce off, no knockback
 
 		ent->behaviorSet[BSET_FLEE] = nullptr;
 	}
@@ -375,7 +377,7 @@ void NPC_SetMiscDefaultData(gentity_t* ent)
 	else if (ent->client->NPC_class == CLASS_SBD)
 	{
 		ent->client->ps.stats[STAT_ARMOR] = 250; // start with full armor
-		ent->flags |= FL_SHIELDED | FL_NO_KNOCKBACK; //low-level shots bounce off, no knockback
+		ent->flags |= FL_DINDJARIN; //low-level shots bounce off, no knockback
 		ent->NPC->scriptFlags = SCF_CHASE_ENEMIES | SCF_LOOK_FOR_ENEMIES;
 		ent->NPC->scriptFlags |= SCF_DONT_FLEE;
 	}
@@ -383,7 +385,7 @@ void NPC_SetMiscDefaultData(gentity_t* ent)
 		|| Q_stricmp("dindjarin", ent->NPC_type) == 0
 		/*|| Q_stricmp("boba_fettclass", ent->NPC_type) == 0*/)
 	{
-		ent->flags |= FL_SHIELDED | FL_NO_KNOCKBACK; //low-level shots bounce off, no knockback
+		ent->flags |= FL_DINDJARIN; //low-level shots bounce off, no knockback
 	}
 
 	if (ent->spawnflags & 4096)

@@ -79,6 +79,8 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #define FL_OVERCHARGED_HEALTH	0x00100000	// Reduce health back to max
 #define FL_NO_ANGLES			0x00200000	// No bone angle overrides, no pitch or roll in full angles
 #define FL_RED_CROSSHAIR		0x00400000	// Crosshair red on me
+#define	FL_DINDJARIN			0x00800000	// protected from all damage except lightsabers for 20% of the time
+#define	FL_BOBAFETT 			0x01000000	// protected from all damage
 
 //Pointer safety utilities
 #define VALID( a )		( a != NULL )

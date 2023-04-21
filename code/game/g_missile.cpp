@@ -141,6 +141,16 @@ void g_missile_reflect_effect(const gentity_t* ent, vec3_t dir)
 	}
 }
 
+void G_MissileBounceBeskarEffect(const gentity_t* ent, vec3_t dir)
+{
+	G_PlayEffect("blaster/beskar_impact", ent->currentOrigin, dir);
+
+	if (ent->owner && !ent->owner->NPC)
+	{
+		CGCam_BlockShakeSP(0.45f, 100);
+	}
+}
+
 //-------------------------------------------------------------------------
 static void g_missile_stick(gentity_t* missile, gentity_t* other, trace_t* tr)
 {
@@ -1516,378 +1526,449 @@ void g_missile_impact(gentity_t* ent, trace_t* trace, const int hit_loc = HL_NON
 		!=
 		WP_NOGHRI_STICK);
 
-	if (ent->dflags & DAMAGE_HEAVY_WEAP_CLASS)
-	{
-		// heavy class missiles generally never bounce.
-		bounce = qfalse;
-	}
+	auto beskar = static_cast<qboolean>((other->flags & FL_DINDJARIN)
+		&& !ent->splashDamage
+		&& !ent->splashRadius
+		&& ent->methodOfDeath != MOD_SABER
+		&& ent->methodOfDeath != MOD_REPEATER_ALT
+		&& ent->methodOfDeath != MOD_FLECHETTE_ALT
+		&& ent->methodOfDeath != MOD_ROCKET
+		&& ent->methodOfDeath != MOD_ROCKET_ALT
+		&& ent->methodOfDeath != WP_NOGHRI_STICK
+		&& ent->methodOfDeath != MOD_CONC_ALT
+		&& ent->methodOfDeath != MOD_THERMAL
+		&& ent->methodOfDeath != MOD_THERMAL_ALT
+		&& ent->methodOfDeath != MOD_DEMP2
+		&& ent->methodOfDeath != MOD_DEMP2_ALT
+		&& ent->methodOfDeath != MOD_EXPLOSIVE
+		&& ent->methodOfDeath != MOD_DETPACK
+		&& ent->methodOfDeath != MOD_LASERTRIP
+		&& ent->methodOfDeath != MOD_LASERTRIP_ALT
+		&& ent->methodOfDeath != MOD_SEEKER
+		&& ent->methodOfDeath != MOD_CONC
+		&& (!Q_irand(0, 1)));
 
-	if (other->flags & (FL_DMG_BY_HEAVY_WEAP_ONLY | FL_SHIELDED))
-	{
-		// Dumb assumption, but I guess we must be a shielded ion_cannon??  We should probably verify
-		// if it's an ion_cannon that's Heavy Weapon only, we don't want to make it shielded do we...?
-		if (strcmp("misc_ion_cannon", other->classname) == 0 && other->flags & FL_SHIELDED)
+	auto boba_fett = static_cast<qboolean>((other->flags & FL_BOBAFETT)
+		&& !ent->splashDamage
+		&& !ent->splashRadius
+		&& ent->methodOfDeath != MOD_SABER
+		&& ent->methodOfDeath != MOD_REPEATER_ALT
+		&& ent->methodOfDeath != MOD_FLECHETTE_ALT
+		&& ent->methodOfDeath != MOD_ROCKET
+		&& ent->methodOfDeath != MOD_ROCKET_ALT
+		&& ent->methodOfDeath != WP_NOGHRI_STICK
+		&& ent->methodOfDeath != MOD_CONC_ALT
+		&& ent->methodOfDeath != MOD_THERMAL
+		&& ent->methodOfDeath != MOD_THERMAL_ALT
+		&& ent->methodOfDeath != MOD_DEMP2
+		&& ent->methodOfDeath != MOD_DEMP2_ALT
+		&& ent->methodOfDeath != MOD_EXPLOSIVE
+		&& ent->methodOfDeath != MOD_DETPACK
+		&& ent->methodOfDeath != MOD_LASERTRIP
+		&& ent->methodOfDeath != MOD_LASERTRIP_ALT
+		&& ent->methodOfDeath != MOD_SEEKER
+		&& ent->methodOfDeath != MOD_CONC);
+
+		if (ent->dflags & DAMAGE_HEAVY_WEAP_CLASS)
 		{
-			// Anything will bounce off of us.
-			bounce = qtrue;
-
-			// Not exactly the debounce time, but rather the impact time for the shield effect...play effect for 1 second
-			other->painDebounceTime = level.time + 1000;
+			// heavy class missiles generally never bounce.
+			bounce = qfalse;
+			beskar = qfalse;
+			boba_fett = qfalse;
 		}
-	}
 
-	if (ent->s.weapon == WP_DEMP2)
-	{
-		// demp2 shots can never bounce
-		bounce = qfalse;
-
-		// in fact, alt-charge shots will not call the regular impact functions
-		if (ent->alt_fire)
+		if (other->flags & (FL_DMG_BY_HEAVY_WEAP_ONLY | FL_SHIELDED))
 		{
-			// detonate at the trace end
-			VectorCopy(trace->endpos, ent->currentOrigin);
-			VectorCopy(trace->plane.normal, ent->pos1);
-			DEMP2_AltDetonate(ent);
+			// Dumb assumption, but I guess we must be a shielded ion_cannon??  We should probably verify
+			// if it's an ion_cannon that's Heavy Weapon only, we don't want to make it shielded do we...?
+			if (strcmp("misc_ion_cannon", other->classname) == 0 && other->flags & FL_SHIELDED)
+			{
+				// Anything will bounce off of us.
+				bounce = qtrue;
+
+				// Not exactly the debounce time, but rather the impact time for the shield effect...play effect for 1 second
+				other->painDebounceTime = level.time + 1000;
+			}
+		}
+
+		if (ent->s.weapon == WP_DEMP2)
+		{
+			// demp2 shots can never bounce
+			bounce = qfalse;
+			beskar = qfalse;
+			boba_fett = qfalse;
+
+			// in fact, alt-charge shots will not call the regular impact functions
+			if (ent->alt_fire)
+			{
+				// detonate at the trace end
+				VectorCopy(trace->endpos, ent->currentOrigin);
+				VectorCopy(trace->plane.normal, ent->pos1);
+				DEMP2_AltDetonate(ent);
+				return;
+			}
+		}
+
+		if (beskar || boba_fett)
+		{
+			bounce = qfalse;
+			// Check to see if there is a bounce count
+			if (ent->bounceCount)
+			{
+				// decrement number of bounces and then see if it should be done bouncing
+				if (!--ent->bounceCount)
+				{
+					// He (or she) will bounce no more (after this current bounce, that is).
+					ent->s.eFlags &= ~(EF_BOUNCE | EF_BOUNCE_HALF);
+				}
+			}
+
+			g_bounce_missile(ent, trace);
+
+			if (ent->owner)
+			{
+				g_missile_add_alerts(ent);
+			}
+			G_MissileBounceBeskarEffect(ent, trace->plane.normal);
 			return;
 		}
-	}
 
-	if (bounce)
-	{
-		// Check to see if there is a bounce count
-		if (ent->bounceCount)
+		if (bounce)
 		{
-			// decrement number of bounces and then see if it should be done bouncing
-			if (!--ent->bounceCount)
+			// Check to see if there is a bounce count
+			if (ent->bounceCount)
 			{
-				// He (or she) will bounce no more (after this current bounce, that is).
-				ent->s.eFlags &= ~(EF_BOUNCE | EF_BOUNCE_HALF);
-			}
-		}
-
-		if (other->NPC)
-		{
-			G_Damage(other, ent, ent->owner, ent->currentOrigin, ent->s.pos.trDelta, 0, DAMAGE_NO_DAMAGE, MOD_UNKNOWN);
-		}
-
-		g_bounce_missile(ent, trace);
-
-		if (ent->owner)
-		{
-			g_missile_add_alerts(ent);
-		}
-		g_missile_bounce_effect(ent, trace->endpos, trace->plane.normal,
-			static_cast<qboolean>(trace->entity_num == ENTITYNUM_WORLD));
-
-		return;
-	}
-
-	if (other->s.number < MAX_CLIENTS || G_ControlledByPlayer(other))
-	{
-		// I would glom onto the EF_BOUNCE code section above, but don't feel like risking breaking something else
-		if (!other->takedamage && ent->s.eFlags & EF_BOUNCE_SHRAPNEL
-			|| trace->surfaceFlags & SURF_FORCEFIELD && !ent->splashDamage && !ent->splashRadius)
-		{
-			if (!(other->contents & CONTENTS_LIGHTSABER))
-			{
-				g_bounce_missile(ent, trace);
-
-				if (--ent->bounceCount < 0)
+				// decrement number of bounces and then see if it should be done bouncing
+				if (!--ent->bounceCount)
 				{
-					ent->s.eFlags &= ~EF_BOUNCE_SHRAPNEL;
+					// He (or she) will bounce no more (after this current bounce, that is).
+					ent->s.eFlags &= ~(EF_BOUNCE | EF_BOUNCE_HALF);
 				}
-				g_missile_bounce_effect(ent, trace->endpos, trace->plane.normal,
-					static_cast<qboolean>(trace->entity_num == ENTITYNUM_WORLD));
-				return;
 			}
-		}
-	}
-	else
-	{
-		// I would glom onto the EF_BOUNCE code section above, but don't feel like risking breaking something else
-		if (!other->takedamage && ent->s.eFlags & EF_BOUNCE_SHRAPNEL
-			|| trace->surfaceFlags & SURF_FORCEFIELD && !ent->splashDamage && !ent->splashRadius)
-		{
-			if (!(other->contents & CONTENTS_LIGHTSABER)
-				|| g_spskill->integer <= 0 //on easy, it reflects all shots
-				|| g_spskill->integer == 1 && ent->s.weapon != WP_FLECHETTE && ent->s.weapon != WP_DEMP2
-				|| g_spskill->integer >= 2 && ent->s.weapon != WP_FLECHETTE && ent->s.weapon != WP_DEMP2
-				&& ent->s.weapon != WP_BOWCASTER && ent->s.weapon != WP_REPEATER)
-			{
-				g_bounce_missile(ent, trace);
 
-				if (--ent->bounceCount < 0)
+			if (other->NPC)
+			{
+				G_Damage(other, ent, ent->owner, ent->currentOrigin, ent->s.pos.trDelta, 0, DAMAGE_NO_DAMAGE, MOD_UNKNOWN);
+			}
+
+			g_bounce_missile(ent, trace);
+
+			if (ent->owner)
+			{
+				g_missile_add_alerts(ent);
+			}
+			g_missile_bounce_effect(ent, trace->endpos, trace->plane.normal,
+				static_cast<qboolean>(trace->entity_num == ENTITYNUM_WORLD));
+
+			return;
+		}
+
+		if (other->s.number < MAX_CLIENTS || G_ControlledByPlayer(other))
+		{
+			// I would glom onto the EF_BOUNCE code section above, but don't feel like risking breaking something else
+			if (!other->takedamage && ent->s.eFlags & EF_BOUNCE_SHRAPNEL
+				|| trace->surfaceFlags & SURF_FORCEFIELD && !ent->splashDamage && !ent->splashRadius)
+			{
+				if (!(other->contents & CONTENTS_LIGHTSABER))
 				{
-					ent->s.eFlags &= ~EF_BOUNCE_SHRAPNEL;
+					g_bounce_missile(ent, trace);
+
+					if (--ent->bounceCount < 0)
+					{
+						ent->s.eFlags &= ~EF_BOUNCE_SHRAPNEL;
+					}
+					g_missile_bounce_effect(ent, trace->endpos, trace->plane.normal,
+						static_cast<qboolean>(trace->entity_num == ENTITYNUM_WORLD));
+					return;
 				}
-				g_missile_bounce_effect(ent, trace->endpos, trace->plane.normal,
-					static_cast<qboolean>(trace->entity_num == ENTITYNUM_WORLD));
-				return;
 			}
-		}
-	}
-
-	if ((!other->takedamage || other->client && other->health <= 0)
-		&& ent->s.weapon == WP_THERMAL
-		&& !ent->alt_fire)
-	{
-		//rolling thermal det - FIXME: make this an eFlag like bounce & stick!!!
-		if (ent->owner)
-		{
-			g_missile_add_alerts(ent);
-		}
-		return;
-	}
-
-	// check for sticking
-	if (ent->s.eFlags & EF_MISSILE_STICK)
-	{
-		if (ent->owner)
-		{
-			//Add the event
-			if (ent->s.weapon == WP_TRIP_MINE)
-			{
-				AddSoundEvent(ent->owner, ent->currentOrigin, ent->splashRadius / 2, AEL_DISCOVERED, qfalse, qtrue);
-				AddSightEvent(ent->owner, ent->currentOrigin, ent->splashRadius * 2, AEL_DISCOVERED, 60);
-			}
-			else
-			{
-				AddSoundEvent(ent->owner, ent->currentOrigin, 128, AEL_DISCOVERED, qfalse, qtrue);
-				AddSightEvent(ent->owner, ent->currentOrigin, 256, AEL_DISCOVERED, 10);
-			}
-		}
-
-		g_missile_stick(ent, other, trace);
-		return;
-	}
-
-	if (strcmp(ent->classname, "hook") == 0)
-	{
-		vec3_t v;
-		gentity_t* nent = G_Spawn();
-
-		if (other->client || other->s.eType == ET_MOVER)
-		{
-			G_PlayEffect("blaster/flesh_impact", ent->currentOrigin);
-
-			if (other->takedamage && other->client)
-			{
-				G_Damage(other, ent, ent, v, ent->currentOrigin, TASER_DAMAGE, DAMAGE_NO_KNOCKBACK, MOD_IMPACT);
-
-				GEntity_PainFunc(other, ent, ent, other->currentOrigin, 0, MOD_IMPACT);
-			}
-			nent->s.otherEntityNum2 = other->s.number;
-			ent->enemy = other;
-			v[0] = other->currentOrigin[0] + (other->mins[0] + other->maxs[0]) * 0.5f;
-			v[1] = other->currentOrigin[1] + (other->mins[1] + other->maxs[1]) * 0.5f;
-			v[2] = other->currentOrigin[2] + (other->mins[2] + other->maxs[2]) * 0.5f;
-			SnapVectorTowards(v, ent->s.pos.trBase); // save net bandwidth
 		}
 		else
 		{
-			VectorCopy(trace->endpos, v);
-			G_PlayEffect("impacts/droid_impact1", ent->currentOrigin);
-			ent->enemy = nullptr;
-		}
-
-		SnapVectorTowards(v, ent->s.pos.trBase);
-
-		nent->freeAfterEvent = qtrue;
-		nent->s.eType = ET_GENERAL;
-		ent->s.eType = ET_GRAPPLE;
-
-		G_SetOrigin(ent, v);
-		G_SetOrigin(nent, v);
-
-		ent->e_ThinkFunc = thinkF_Weapon_HookThink;
-		ent->nextthink = level.time + FRAMETIME;
-
-		if (!other->takedamage)
-		{
-			ent->parent->client->ps.pm_flags |= PMF_GRAPPLE_PULL;
-			VectorCopy(ent->currentOrigin, ent->parent->client->ps.lastHitLoc);
-		}
-
-		gi.linkentity(ent);
-		gi.linkentity(nent);
-
-		return;
-	}
-
-	if (strcmp(ent->classname, "stun") == 0)
-	{
-		vec3_t v;
-		gentity_t* nent = G_Spawn();
-
-		if (other->client || other->s.eType == ET_MOVER)
-		{
-			G_PlayEffect("stunBaton/flesh_impact", ent->currentOrigin);
-			nent->s.otherEntityNum2 = other->s.number;
-			ent->enemy = other;
-
-			if (other->takedamage && other->client)
+			// I would glom onto the EF_BOUNCE code section above, but don't feel like risking breaking something else
+			if (!other->takedamage && ent->s.eFlags & EF_BOUNCE_SHRAPNEL
+				|| trace->surfaceFlags & SURF_FORCEFIELD && !ent->splashDamage && !ent->splashRadius)
 			{
-				other->client->stunDamage = 40;
-				other->client->stunTime = level.time + 1000;
-				if (other->client->ps.powerups[PW_SHOCKED] < level.time + 100)
+				if (!(other->contents & CONTENTS_LIGHTSABER)
+					|| g_spskill->integer <= 0 //on easy, it reflects all shots
+					|| g_spskill->integer == 1 && ent->s.weapon != WP_FLECHETTE && ent->s.weapon != WP_DEMP2
+					|| g_spskill->integer >= 2 && ent->s.weapon != WP_FLECHETTE && ent->s.weapon != WP_DEMP2
+					&& ent->s.weapon != WP_BOWCASTER && ent->s.weapon != WP_REPEATER)
 				{
-					// ... do the effect for a split second for some more feedback
-					other->s.powerups |= 1 << PW_SHOCKED;
-					other->client->ps.powerups[PW_SHOCKED] = level.time + 4000;
-				}
+					g_bounce_missile(ent, trace);
 
-				G_Damage(other, ent, ent, v, ent->currentOrigin, TASER_DAMAGE, DAMAGE_NO_KNOCKBACK, MOD_ELECTROCUTE);
-
-				if (other->client->ps.stats[STAT_HEALTH] <= 0) // if we are dead
-				{
-					vec3_t spot;
-
-					VectorCopy(other->currentOrigin, spot);
-
-					other->flags |= FL_DISINTEGRATED;
-					other->svFlags |= SVF_BROADCAST;
-					gentity_t* tent = G_TempEntity(spot, EV_DISINTEGRATION);
-					tent->s.eventParm = PW_DISRUPTION;
-					tent->svFlags |= SVF_BROADCAST;
-					tent->owner = other;
-
-					if (other->playerModel >= 0)
+					if (--ent->bounceCount < 0)
 					{
-						// don't let 'em animate
-						gi.G2API_PauseBoneAnimIndex(&other->ghoul2[ent->playerModel], other->rootBone, level.time);
-						gi.G2API_PauseBoneAnimIndex(&other->ghoul2[ent->playerModel], other->motionBone, level.time);
-						gi.G2API_PauseBoneAnimIndex(&other->ghoul2[ent->playerModel], other->lowerLumbarBone,
-							level.time);
+						ent->s.eFlags &= ~EF_BOUNCE_SHRAPNEL;
 					}
+					g_missile_bounce_effect(ent, trace->endpos, trace->plane.normal,
+						static_cast<qboolean>(trace->entity_num == ENTITYNUM_WORLD));
+					return;
+				}
+			}
+		}
 
-					//not solid anymore
-					other->contents = 0;
-					other->maxs[2] = -8;
+		if ((!other->takedamage || other->client && other->health <= 0)
+			&& ent->s.weapon == WP_THERMAL
+			&& !ent->alt_fire)
+		{
+			//rolling thermal det - FIXME: make this an eFlag like bounce & stick!!!
+			if (ent->owner)
+			{
+				g_missile_add_alerts(ent);
+			}
+			return;
+		}
 
-					//need to pad deathtime some to stick around long enough for death effect to play
-					other->NPC->timeOfDeath = level.time + 2000;
+		// check for sticking
+		if (ent->s.eFlags & EF_MISSILE_STICK)
+		{
+			if (ent->owner)
+			{
+				//Add the event
+				if (ent->s.weapon == WP_TRIP_MINE)
+				{
+					AddSoundEvent(ent->owner, ent->currentOrigin, ent->splashRadius / 2, AEL_DISCOVERED, qfalse, qtrue);
+					AddSightEvent(ent->owner, ent->currentOrigin, ent->splashRadius * 2, AEL_DISCOVERED, 60);
 				}
 				else
 				{
-					G_KnockOver(other, nent, v, 25, qtrue);
+					AddSoundEvent(ent->owner, ent->currentOrigin, 128, AEL_DISCOVERED, qfalse, qtrue);
+					AddSightEvent(ent->owner, ent->currentOrigin, 256, AEL_DISCOVERED, 10);
 				}
 			}
-		}
-		else
-		{
-			VectorCopy(trace->endpos, v);
-			G_PlayEffect("impacts/droid_impact1", ent->currentOrigin);
-			ent->enemy = nullptr;
+
+			g_missile_stick(ent, other, trace);
+			return;
 		}
 
-		nent->freeAfterEvent = qtrue;
-		nent->s.eType = ET_GENERAL;
-		ent->s.eType = ET_GENERAL;
-
-		G_SetOrigin(ent, v);
-		G_SetOrigin(nent, v);
-
-		gi.linkentity(ent);
-		gi.linkentity(nent);
-
-		return;
-	}
-
-	// check for hitting a lightsaber
-	if (wp_saber_must_block(other, ent, qfalse, trace->endpos, -1, -1)
-		&& !WP_DoingForcedAnimationForForcePowers(other))
-	{
-		//play projectile block animation
-		if (other->client && !PM_SaberInAttack(other->client->ps.saber_move)
-			|| other->client && (pm->cmd.buttons & BUTTON_USE_FORCE
-				|| pm->cmd.buttons & BUTTON_FORCEGRIP
-				|| pm->cmd.buttons & BUTTON_DASH
-				|| pm->cmd.buttons & BUTTON_FORCE_LIGHTNING))
+		if (strcmp(ent->classname, "hook") == 0)
 		{
-			other->client->ps.weaponTime = 0;
-		}
+			vec3_t v;
+			gentity_t* nent = G_Spawn();
 
-		VectorSubtract(ent->currentOrigin, other->currentOrigin, diff);
-		VectorNormalize(diff);
-
-		wp_handle_bolt_block(other, ent, diff);
-
-		if (other->owner && !other->owner->s.number && other->owner->client)
-		{
-			other->owner->client->sess.missionStats.saberBlocksCnt++;
-		}
-
-		if (other->owner && other->owner->client)
-		{
-			other->owner->client->ps.saberEventFlags |= SEF_DEFLECTED;
-		}
-
-		//do the effect
-		VectorCopy(ent->s.pos.trDelta, diff);
-		VectorNormalize(diff);
-		g_missile_reflect_effect(ent, trace->plane.normal);
-
-		return;
-	}
-	if (other->contents & CONTENTS_LIGHTSABER)
-	{
-		//hit this person's saber, so..
-		if (other->owner && !other->owner->s.number && other->owner->client)
-		{
-			other->owner->client->sess.missionStats.saberBlocksCnt++;
-		}
-
-		if (other->owner->takedamage && other->owner->client &&
-			(!ent->splashDamage || !ent->splashRadius) &&
-			ent->s.weapon != WP_ROCKET_LAUNCHER &&
-			ent->s.weapon != WP_THERMAL &&
-			ent->s.weapon != WP_TRIP_MINE &&
-			ent->s.weapon != WP_DET_PACK &&
-			ent->s.weapon != WP_NOGHRI_STICK &&
-			ent->methodOfDeath != MOD_REPEATER_ALT &&
-			ent->methodOfDeath != MOD_FLECHETTE_ALT &&
-			ent->methodOfDeath != MOD_CONC &&
-			ent->methodOfDeath != MOD_CONC_ALT)
-		{
-			if (!other->owner || !other->owner->client || other->owner->client->ps.saberInFlight
-				|| in_front(ent->currentOrigin, other->owner->currentOrigin, other->owner->client->ps.viewangles,
-					SABER_REFLECT_MISSILE_CONE)
-				&& !WP_DoingForcedAnimationForForcePowers(other))
+			if (other->client || other->s.eType == ET_MOVER)
 			{
-				//Jedi cannot block shots from behind!
-				VectorSubtract(ent->currentOrigin, other->currentOrigin, diff);
-				VectorNormalize(diff);
+				G_PlayEffect("blaster/flesh_impact", ent->currentOrigin);
 
-				if (other->owner->client && !PM_SaberInAttack(other->owner->client->ps.saber_move)
-					|| other->owner->client && (pm->cmd.buttons & BUTTON_USE_FORCE
-						|| pm->cmd.buttons & BUTTON_FORCEGRIP
-						|| pm->cmd.buttons & BUTTON_DASH
-						|| pm->cmd.buttons & BUTTON_FORCE_LIGHTNING))
+				if (other->takedamage && other->client)
 				{
-					other->owner->client->ps.weaponTime = 0;
+					G_Damage(other, ent, ent, v, ent->currentOrigin, TASER_DAMAGE, DAMAGE_NO_KNOCKBACK, MOD_IMPACT);
+
+					GEntity_PainFunc(other, ent, ent, other->currentOrigin, 0, MOD_IMPACT);
 				}
+				nent->s.otherEntityNum2 = other->s.number;
+				ent->enemy = other;
+				v[0] = other->currentOrigin[0] + (other->mins[0] + other->maxs[0]) * 0.5f;
+				v[1] = other->currentOrigin[1] + (other->mins[1] + other->maxs[1]) * 0.5f;
+				v[2] = other->currentOrigin[2] + (other->mins[2] + other->maxs[2]) * 0.5f;
+				SnapVectorTowards(v, ent->s.pos.trBase); // save net bandwidth
+			}
+			else
+			{
+				VectorCopy(trace->endpos, v);
+				G_PlayEffect("impacts/droid_impact1", ent->currentOrigin);
+				ent->enemy = nullptr;
+			}
 
-				wp_handle_bolt_block(other, ent, diff);
+			SnapVectorTowards(v, ent->s.pos.trBase);
 
-				if (other->owner && other->owner->client)
+			nent->freeAfterEvent = qtrue;
+			nent->s.eType = ET_GENERAL;
+			ent->s.eType = ET_GRAPPLE;
+
+			G_SetOrigin(ent, v);
+			G_SetOrigin(nent, v);
+
+			ent->e_ThinkFunc = thinkF_Weapon_HookThink;
+			ent->nextthink = level.time + FRAMETIME;
+
+			if (!other->takedamage)
+			{
+				ent->parent->client->ps.pm_flags |= PMF_GRAPPLE_PULL;
+				VectorCopy(ent->currentOrigin, ent->parent->client->ps.lastHitLoc);
+			}
+
+			gi.linkentity(ent);
+			gi.linkentity(nent);
+
+			return;
+		}
+
+		if (strcmp(ent->classname, "stun") == 0)
+		{
+			vec3_t v;
+			gentity_t* nent = G_Spawn();
+
+			if (other->client || other->s.eType == ET_MOVER)
+			{
+				G_PlayEffect("stunBaton/flesh_impact", ent->currentOrigin);
+				nent->s.otherEntityNum2 = other->s.number;
+				ent->enemy = other;
+
+				if (other->takedamage && other->client)
 				{
-					other->owner->client->ps.saberEventFlags |= SEF_DEFLECTED;
+					other->client->stunDamage = 40;
+					other->client->stunTime = level.time + 1000;
+					if (other->client->ps.powerups[PW_SHOCKED] < level.time + 100)
+					{
+						// ... do the effect for a split second for some more feedback
+						other->s.powerups |= 1 << PW_SHOCKED;
+						other->client->ps.powerups[PW_SHOCKED] = level.time + 4000;
+					}
+
+					G_Damage(other, ent, ent, v, ent->currentOrigin, TASER_DAMAGE, DAMAGE_NO_KNOCKBACK, MOD_ELECTROCUTE);
+
+					if (other->client->ps.stats[STAT_HEALTH] <= 0) // if we are dead
+					{
+						vec3_t spot;
+
+						VectorCopy(other->currentOrigin, spot);
+
+						other->flags |= FL_DISINTEGRATED;
+						other->svFlags |= SVF_BROADCAST;
+						gentity_t* tent = G_TempEntity(spot, EV_DISINTEGRATION);
+						tent->s.eventParm = PW_DISRUPTION;
+						tent->svFlags |= SVF_BROADCAST;
+						tent->owner = other;
+
+						if (other->playerModel >= 0)
+						{
+							// don't let 'em animate
+							gi.G2API_PauseBoneAnimIndex(&other->ghoul2[ent->playerModel], other->rootBone, level.time);
+							gi.G2API_PauseBoneAnimIndex(&other->ghoul2[ent->playerModel], other->motionBone, level.time);
+							gi.G2API_PauseBoneAnimIndex(&other->ghoul2[ent->playerModel], other->lowerLumbarBone,
+								level.time);
+						}
+
+						//not solid anymore
+						other->contents = 0;
+						other->maxs[2] = -8;
+
+						//need to pad deathtime some to stick around long enough for death effect to play
+						other->NPC->timeOfDeath = level.time + 2000;
+					}
+					else
+					{
+						G_KnockOver(other, nent, v, 25, qtrue);
+					}
 				}
-				//do the effect
-				VectorCopy(ent->s.pos.trDelta, diff);
-				VectorNormalize(diff);
+			}
+			else
+			{
+				VectorCopy(trace->endpos, v);
+				G_PlayEffect("impacts/droid_impact1", ent->currentOrigin);
+				ent->enemy = nullptr;
+			}
+
+			nent->freeAfterEvent = qtrue;
+			nent->s.eType = ET_GENERAL;
+			ent->s.eType = ET_GENERAL;
+
+			G_SetOrigin(ent, v);
+			G_SetOrigin(nent, v);
+
+			gi.linkentity(ent);
+			gi.linkentity(nent);
+
+			return;
+		}
+
+		// check for hitting a lightsaber
+		if (wp_saber_must_block(other, ent, qfalse, trace->endpos, -1, -1)
+			&& !WP_DoingForcedAnimationForForcePowers(other))
+		{
+			//play projectile block animation
+			if (other->client && !PM_SaberInAttack(other->client->ps.saber_move)
+				|| other->client && (pm->cmd.buttons & BUTTON_USE_FORCE
+					|| pm->cmd.buttons & BUTTON_FORCEGRIP
+					|| pm->cmd.buttons & BUTTON_DASH
+					|| pm->cmd.buttons & BUTTON_FORCE_LIGHTNING))
+			{
+				other->client->ps.weaponTime = 0;
+			}
+
+			VectorSubtract(ent->currentOrigin, other->currentOrigin, diff);
+			VectorNormalize(diff);
+
+			wp_handle_bolt_block(other, ent, diff);
+
+			if (other->owner && !other->owner->s.number && other->owner->client)
+			{
+				other->owner->client->sess.missionStats.saberBlocksCnt++;
+			}
+
+			if (other->owner && other->owner->client)
+			{
+				other->owner->client->ps.saberEventFlags |= SEF_DEFLECTED;
+			}
+
+			//do the effect
+			VectorCopy(ent->s.pos.trDelta, diff);
+			VectorNormalize(diff);
+			g_missile_reflect_effect(ent, trace->plane.normal);
+
+			return;
+		}
+		if (other->contents & CONTENTS_LIGHTSABER)
+		{
+			//hit this person's saber, so..
+			if (other->owner && !other->owner->s.number && other->owner->client)
+			{
+				other->owner->client->sess.missionStats.saberBlocksCnt++;
+			}
+
+			if (other->owner->takedamage && other->owner->client &&
+				(!ent->splashDamage || !ent->splashRadius) &&
+				ent->s.weapon != WP_ROCKET_LAUNCHER &&
+				ent->s.weapon != WP_THERMAL &&
+				ent->s.weapon != WP_TRIP_MINE &&
+				ent->s.weapon != WP_DET_PACK &&
+				ent->s.weapon != WP_NOGHRI_STICK &&
+				ent->methodOfDeath != MOD_REPEATER_ALT &&
+				ent->methodOfDeath != MOD_FLECHETTE_ALT &&
+				ent->methodOfDeath != MOD_CONC &&
+				ent->methodOfDeath != MOD_CONC_ALT)
+			{
+				if (!other->owner || !other->owner->client || other->owner->client->ps.saberInFlight
+					|| in_front(ent->currentOrigin, other->owner->currentOrigin, other->owner->client->ps.viewangles,
+						SABER_REFLECT_MISSILE_CONE)
+					&& !WP_DoingForcedAnimationForForcePowers(other))
+				{
+					//Jedi cannot block shots from behind!
+					VectorSubtract(ent->currentOrigin, other->currentOrigin, diff);
+					VectorNormalize(diff);
+
+					if (other->owner->client && !PM_SaberInAttack(other->owner->client->ps.saber_move)
+						|| other->owner->client && (pm->cmd.buttons & BUTTON_USE_FORCE
+							|| pm->cmd.buttons & BUTTON_FORCEGRIP
+							|| pm->cmd.buttons & BUTTON_DASH
+							|| pm->cmd.buttons & BUTTON_FORCE_LIGHTNING))
+					{
+						other->owner->client->ps.weaponTime = 0;
+					}
+
+					wp_handle_bolt_block(other, ent, diff);
+
+					if (other->owner && other->owner->client)
+					{
+						other->owner->client->ps.saberEventFlags |= SEF_DEFLECTED;
+					}
+					//do the effect
+					VectorCopy(ent->s.pos.trDelta, diff);
+					VectorNormalize(diff);
+					g_missile_reflect_effect(ent, trace->plane.normal);
+
+					return;
+				}
+			}
+			else
+			{
+				//still do the bounce effect
 				g_missile_reflect_effect(ent, trace->plane.normal);
-
-				return;
 			}
 		}
-		else
-		{
-			//still do the bounce effect
-			g_missile_reflect_effect(ent, trace->plane.normal);
-		}
-	}
-	g_missile_impacted(ent, other, trace->endpos, trace->plane.normal, hit_loc);
+		g_missile_impacted(ent, other, trace->endpos, trace->plane.normal, hit_loc);
 }
 
 /*
@@ -2572,8 +2653,6 @@ gentity_t* fire_stun(gentity_t* self, vec3_t start, vec3_t dir)
 	return stun;
 }
 
-
-
 static qhandle_t stasisLoopSound = 0;
 gentity_t* tgt_list[MAX_GENTITIES];
 void G_StasisMissile(gentity_t* ent, gentity_t* missile)
@@ -2682,8 +2761,8 @@ void G_StasisMissile(gentity_t* ent, gentity_t* missile)
 				//stop homing
 				missile->e_ThinkFunc = thinkF_NULL;
 			}
+			}
 		}
-	}
 	else
 	{
 		VectorScale(bounce_dir, normalspeed, missile->s.pos.trDelta);
@@ -2735,4 +2814,4 @@ void G_StasisMissile(gentity_t* ent, gentity_t* missile)
 			}
 		}
 	}
-}
+	}

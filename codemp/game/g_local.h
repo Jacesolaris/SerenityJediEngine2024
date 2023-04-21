@@ -89,6 +89,8 @@ extern vec3_t gPainPoint;
 #define FL_UNDYING				0x00100000	// takes damage down to 1, but never dies
 #define FL_LOCK_PLAYER_WEAPONS	0x00200000	// No bone angle overrides, no pitch or roll in full angles
 #define FL_RED_CROSSHAIR		0x00400000	// Crosshair red on me
+#define	FL_DINDJARIN			0x00800000	// protected from all damage except lightsabers for 20% of the time
+#define	FL_BOBAFETT 			0x01000000	// protected from all damage
 //ex-eFlags -rww
 #define	FL_BOUNCE				0x00100000		// for missiles
 #define	FL_BOUNCE_HALF			0x00200000		// for missiles
