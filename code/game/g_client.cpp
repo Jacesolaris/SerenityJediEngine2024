@@ -2770,6 +2770,7 @@ void G_ChangePlayerModel(gentity_t* ent, const char* newModel)
 					if (ent->client->NPC_class == CLASS_BOBAFETT)
 					{
 						ent->flags |= FL_BOBAFETT; //low-level shots bounce off, no knockback
+						ent->flags |= FL_SABERDAMAGE_RESIST; //Partially resistant to sabers
 					}
 				}
 				else if (ent->client->NPC_class == CLASS_MANDO)
@@ -2777,6 +2778,7 @@ void G_ChangePlayerModel(gentity_t* ent, const char* newModel)
 					Mando_Precache(); // player as boba?
 					G_RemoveHolsterModels(ent);
 					ent->flags |= FL_DINDJARIN; //low-level shots bounce off, no knockback
+					ent->flags |= FL_SABERDAMAGE_RESIST; //Partially resistant to sabers
 				}
 
 				if (he_is_jedi(ent))
@@ -2908,6 +2910,7 @@ void G_ChangePlayerModel(gentity_t* ent, const char* newModel)
 					if (ent->client->NPC_class == CLASS_BOBAFETT)
 					{
 						ent->flags |= FL_BOBAFETT; //low-level shots bounce off, no knockback
+						ent->flags |= FL_SABERDAMAGE_RESIST; //Partially resistant to sabers
 					}
 				}
 				else if (ent->client->NPC_class == CLASS_MANDO)
@@ -2915,6 +2918,7 @@ void G_ChangePlayerModel(gentity_t* ent, const char* newModel)
 					Mando_Precache(); // player as boba?
 					G_RemoveHolsterModels(ent);
 					ent->flags |= FL_DINDJARIN; //low-level shots bounce off, no knockback
+					ent->flags |= FL_SABERDAMAGE_RESIST; //Partially resistant to sabers
 				}
 
 				if (he_is_jedi(ent))

@@ -259,6 +259,7 @@ extern void Boba_FlyStop(gentity_t* self);
 extern void Jetpack_Off(const gentity_t* ent);
 extern void sab_beh_saber_should_be_disarmed_blocker(gentity_t* blocker, int saber_num);
 extern void G_StasisMissile(gentity_t* ent, gentity_t* missile);
+void G_Beskar_Attack_Bounce(const gentity_t* self, gentity_t* other);
 
 qboolean g_saberNoEffects = qfalse;
 qboolean g_noClashFlare = qfalse;
@@ -2639,6 +2640,13 @@ qboolean wp_saber_apply_damage(gentity_t* ent, const float base_damage, const in
 							{
 								totalDmg[i] = max_dmg;
 							}
+						}
+
+						if (victim->flags & FL_SABERDAMAGE_RESIST && (!Q_irand(0, 1)))
+						{
+							d_flags |= DAMAGE_NO_DAMAGE;
+							G_Beskar_Attack_Bounce(ent, victim);
+							G_Sound(ent, G_SoundIndex("sound/weapons/impacts/beskar_impact1.mp3"));
 						}
 
 						if (!saber_in_special) // not doing a special move
@@ -29410,6 +29418,27 @@ qboolean WP_DoingForcedAnimationForForcePowers(const gentity_t* self)
 }
 
 extern qboolean G_StandardHumanoid(gentity_t* self);
+
+void G_Beskar_Attack_Bounce(const gentity_t* self, gentity_t* other)
+{
+	if (self->client->ps.saberBlocked == BLOCKED_NONE)
+	{
+		if (!pm_saber_in_special_attack(self->client->ps.torsoAnim))
+		{
+			if (SaberAttacking(self))
+			{
+				// Saber is in attack, use bounce for this attack.
+				self->client->ps.saberBounceMove = PM_SaberBounceForAttack(self->client->ps.saber_move);
+				self->client->ps.saberBlocked = BLOCKED_BOUNCE_MOVE;
+			}
+			else
+			{
+				// Saber is in defense, use defensive bounce.
+				self->client->ps.saberBlocked = BLOCKED_ATK_BOUNCE;
+			}
+		}
+	}
+}
 
 void G_SaberBounce(const gentity_t* attacker, gentity_t* victim)
 {

@@ -316,6 +316,7 @@ void NPC_SetMiscDefaultData(gentity_t* ent)
 		ent->client->ps.forcePower = 100;
 		ent->NPC->scriptFlags |= SCF_NAV_CAN_FLY | SCF_FLY_WITH_JET | SCF_NAV_CAN_JUMP;
 		ent->flags |= FL_DINDJARIN; //low-level shots bounce off, no knockback
+		ent->flags |= FL_SABERDAMAGE_RESIST; //Partially resistant to sabers
 
 		ent->behaviorSet[BSET_FLEE] = nullptr;
 	}
@@ -386,6 +387,7 @@ void NPC_SetMiscDefaultData(gentity_t* ent)
 		/*|| Q_stricmp("boba_fettclass", ent->NPC_type) == 0*/)
 	{
 		ent->flags |= FL_DINDJARIN; //low-level shots bounce off, no knockback
+		ent->flags |= FL_SABERDAMAGE_RESIST; //Partially resistant to sabers
 	}
 
 	if (ent->spawnflags & 4096)
