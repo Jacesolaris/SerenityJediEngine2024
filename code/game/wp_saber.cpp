@@ -7727,6 +7727,13 @@ void WP_SaberDamageTrace(gentity_t* ent, int saber_num, int blade_num)
 				{
 					collision_resolved = qtrue;
 				}
+				else if ((ent_attacking && (ent->s.number >= MAX_CLIENTS && !G_ControlledByPlayer(ent)))
+					&& (hit_owner_defending && (hit_owner->s.number >= MAX_CLIENTS && !G_ControlledByPlayer(hit_owner)))
+					&& !Q_irand(0, g_saberLockRandomNess->integer)
+					&& (g_debugSaberLock->integer || force_lock && WP_SabersCheckLock(ent, hit_owner)))
+				{
+					collision_resolved = qtrue;
+				}
 				else if (ent_attacking && hit_owner_defending)
 				{
 					if (saberHitFraction < 1.0f)
