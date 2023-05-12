@@ -4758,7 +4758,7 @@ void ClientThink_real(gentity_t* ent)
 				client->ps.userInt3 |= 1 << FLAG_BLOCKING;
 				client->ps.ManualBlockingTime = level.time; //Blocking time 1 on
 
-				if (client->ps.weapon == WP_SABER && client->ps.saberHolstered && client->NPC_class != CLASS_YODA) // not yoda he can block lightning with a saber off in his hand
+				if (client->ps.weapon == WP_SABER && client->ps.saberHolstered && client->NPC_class != CLASS_YODA && !manual_running_and_saberblocking(ent)) // not yoda he can block lightning with a saber off in his hand
 				{
 					switch (client->ps.fd.saber_anim_level)
 					{
@@ -5381,9 +5381,9 @@ void ClientThink_real(gentity_t* ent)
 						}
 					}
 				}
+			}
 		}
 	}
-}
 	else if (ent->client->ps.heldByClient)
 	{
 		ent->client->ps.heldByClient = 0;
