@@ -9924,6 +9924,8 @@ static void PM_Footsteps()
 
 	const qboolean holding_block = pm->ps->ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
 	//Holding Block Button
+	const qboolean active_blocking = pm->ps->ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK ? qtrue : qfalse;
+	//Holding Block Button
 
 	if (pm->gent == nullptr || pm->gent->client == nullptr)
 		return;
@@ -10380,7 +10382,8 @@ static void PM_Footsteps()
 			}
 			else if (pm->ps->weapon == WP_SABER
 				&& pm->ps->SaberLength() > 0
-				&& (pm->ps->SaberActive() || !g_noIgniteTwirl->integer)
+				&& (pm->ps->SaberActive() || !g_noIgniteTwirl->integer && !active_blocking
+					&& !holding_block)
 				&& !pm->ps->saberInFlight
 				&& !PM_SaberDrawPutawayAnim(pm->ps->legsAnim))
 			{
@@ -11842,6 +11845,10 @@ static void PM_FinishWeaponChange()
 {
 	qboolean true_switch = qtrue;
 
+	const qboolean holding_block = pm->ps->ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
+	//Holding Block Button
+	const qboolean active_blocking = pm->ps->ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK ? qtrue : qfalse;
+
 	if (pm->gent && pm->gent->client && pm->gent->client->pers.enterTime >= level.time - 500)
 	{
 		//just entered map
@@ -11974,7 +11981,8 @@ static void PM_FinishWeaponChange()
 				}
 				else
 				{
-					if (!g_noIgniteTwirl->integer && !IsSurrendering(pm->gent))
+					if (!g_noIgniteTwirl->integer && !IsSurrendering(pm->gent) && !active_blocking
+						&& !holding_block)
 					{
 						if (PM_RunningAnim(pm->ps->legsAnim) || pm->ps->groundEntityNum == ENTITYNUM_NONE ||
 							in_camera)

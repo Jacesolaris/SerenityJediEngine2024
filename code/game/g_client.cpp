@@ -2272,6 +2272,7 @@ void g_set_g2_player_model(gentity_t* ent, const char* model_name, const char* c
 		{
 			//three part skin
 			Com_sprintf(skinName, sizeof skinName, "models/players/%s/|%s", model_name, custom_skin);
+			
 			if (ent == player)
 			{
 
@@ -2298,6 +2299,7 @@ void g_set_g2_player_model(gentity_t* ent, const char* model_name, const char* c
 		else
 		{
 			Com_sprintf(skinName, sizeof skinName, "models/players/%s/model_%s.skin", model_name, custom_skin);
+			
 			if (ent == player)
 			{
 				gi.cvar_set("g_char_skin_head", va("model_%s", custom_skin));

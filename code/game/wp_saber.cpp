@@ -11176,13 +11176,6 @@ float manual_saberblocking(const gentity_t* defender)
 		return qfalse;
 	}
 
-	if (defender->client->ps.weapon == WP_SABER
-		&& !defender->client->ps.SaberActive())
-	{
-		//saber not currently in use or available.
-		return qfalse;
-	}
-
 	if (defender->health <= 1
 		|| BG_InKnockDown(defender->client->ps.legsAnim)
 		|| BG_InKnockDown(defender->client->ps.torsoAnim)

@@ -7768,7 +7768,6 @@ void ClientThink_real(gentity_t* ent, usercmd_t* ucmd)
 	if (!ent->NPC &&
 		(ent->s.number < MAX_CLIENTS || G_ControlledByPlayer(ent)) &&
 		client->ps.weapon == WP_SABER &&
-		client->ps.SaberActive() &&
 		!PM_SaberInMassiveBounce(client->ps.torsoAnim) &&
 		!PM_SaberInBashedAnim(client->ps.torsoAnim) &&
 		!PM_Saberinstab(client->ps.saber_move))
@@ -7789,6 +7788,12 @@ void ClientThink_real(gentity_t* ent, usercmd_t* ucmd)
 				client->ps.ManualBlockingFlags |= 1 << HOLDINGBLOCK;
 				client->ps.userInt3 |= 1 << FLAG_BLOCKING;
 				client->ps.ManualBlockingTime = level.time; //Blocking time 1 on
+
+				if (client->ps.weapon == WP_SABER && !client->ps.SaberActive() && client->NPC_class != CLASS_YODA) // not yoda he can block lightning with a saber off in his hand
+				{
+					//return qfalse;
+					client->ps.SaberActivate();
+				}
 			}
 
 			if (client->usercmd.buttons & BUTTON_WALKING)

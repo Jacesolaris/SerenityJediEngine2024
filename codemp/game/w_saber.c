@@ -12419,13 +12419,6 @@ float manual_saberblocking(const gentity_t* defender)
 		return qfalse;
 	}
 
-	if (defender->client->ps.weapon == WP_SABER
-		&& defender->client->ps.saberHolstered == 2)
-	{
-		//saber not currently in use or available.
-		return qfalse;
-	}
-
 	if (defender->health <= 1
 		|| PM_InKnockDown(&defender->client->ps)
 		|| BG_InFlipBack(defender->client->ps.torsoAnim)
@@ -12525,13 +12518,6 @@ float manual_running_and_saberblocking(const gentity_t* defender)
 
 	if (defender->client->ps.weapon == WP_SABER
 		&& defender->client->ps.saberInFlight)
-	{
-		//saber not currently in use or available.
-		return qfalse;
-	}
-
-	if (defender->client->ps.weapon == WP_SABER
-		&& defender->client->ps.saberHolstered == 2)
 	{
 		//saber not currently in use or available.
 		return qfalse;

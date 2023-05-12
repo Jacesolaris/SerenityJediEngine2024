@@ -4757,6 +4757,45 @@ void ClientThink_real(gentity_t* ent)
 				client->ps.ManualBlockingFlags |= 1 << HOLDINGBLOCK;
 				client->ps.userInt3 |= 1 << FLAG_BLOCKING;
 				client->ps.ManualBlockingTime = level.time; //Blocking time 1 on
+
+				if (client->ps.weapon == WP_SABER && client->ps.saberHolstered && client->NPC_class != CLASS_YODA) // not yoda he can block lightning with a saber off in his hand
+				{
+					switch (client->ps.fd.saber_anim_level)
+					{
+					case SS_FAST:
+					case SS_TAVION:
+					case SS_MEDIUM:
+					case SS_STRONG:
+					case SS_DESANN:
+						if (client->ps.saberHolstered)
+						{
+							//turn on first
+							G_Sound(ent, CHAN_WEAPON, ent->client->saber[0].soundOn);
+						}
+						break;
+					case SS_DUAL:
+						if (client->ps.saberHolstered == 1 && ent->client->saber[1].model[0])
+						{
+							//turn on second saber
+							G_Sound(ent, CHAN_WEAPON, ent->client->saber[1].soundOn);
+						}
+						else if (client->ps.saberHolstered == 2)
+						{
+							//turn on first
+							G_Sound(ent, CHAN_WEAPON, ent->client->saber[0].soundOn);
+						}
+						break;
+					case SS_STAFF:
+						if (ent->client->ps.saberHolstered > 0)
+						{
+							//turn on all blades
+							G_Sound(ent, CHAN_WEAPON, ent->client->saber[0].soundOn);
+						}
+						break;
+					default:;
+					}
+					ent->client->ps.saberHolstered = 0;
+				}
 			}
 
 			if (ucmd->buttons & BUTTON_ATTACK)

@@ -6476,7 +6476,8 @@ void PM_TorsoAnimLightsaber()
 			}
 			else
 			{
-				if (!g_noIgniteTwirl->integer && !IsSurrendering(pm->gent))
+				if (!g_noIgniteTwirl->integer && !IsSurrendering(pm->gent) && !active_blocking
+					&& !holding_block)
 				{
 					if (PM_RunningAnim(pm->ps->legsAnim) || pm->ps->groundEntityNum == ENTITYNUM_NONE || in_camera)
 					{
@@ -6570,7 +6571,8 @@ void PM_TorsoAnimLightsaber()
 			}
 			else
 			{
-				if (!g_noIgniteTwirl->integer && !IsSurrendering(pm->gent))
+				if (!g_noIgniteTwirl->integer && !IsSurrendering(pm->gent) && !active_blocking
+					&& !holding_block)
 				{
 					if (PM_RunningAnim(pm->ps->legsAnim) || pm->ps->groundEntityNum == ENTITYNUM_NONE || in_camera)
 					{

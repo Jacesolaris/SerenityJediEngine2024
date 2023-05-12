@@ -1188,7 +1188,7 @@ void CL_InitRef()
 	char dllName[MAX_OSPATH];
 
 	Com_Printf("----- Initializing Renderer ----\n");
-	cl_renderer = Cvar_Get("cl_renderer", DEFAULT_RENDER_LIBRARY, CVAR_ARCHIVE | CVAR_LATCH | CVAR_PROTECTED);
+	cl_renderer = Cvar_Get("cl_renderer", DEFAULT_RENDER_LIBRARY, CVAR_ARCHIVE | CVAR_LATCH);
 
 	Com_sprintf(dllName, sizeof dllName, "%s_" ARCH_STRING DLL_EXT, cl_renderer->string);
 
@@ -1319,7 +1319,7 @@ void CL_Init()
 
 	Com_Printf("-----------------------------------------------------------------\n");
 	Com_Printf("---------- Genuine SerenityJediEngine-(Solaris Edition)----------\n");
-	Com_Printf("---------------------Build date 04/05/2023-----------------------\n");
+	Com_Printf("---------------------Build date 12/05/2023-----------------------\n");
 	Com_Printf("-----------------------------------------------------------------\n");
 	Com_Printf("------------------------LightSaber-------------------------------\n");
 	Com_Printf("-----------An elegant weapon for a more civilized age------------\n");
