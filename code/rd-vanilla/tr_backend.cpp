@@ -1308,7 +1308,12 @@ const void* RB_DrawSurfs(const void* data) {
 
 		// Render the glowing objects.
 		g_bRenderGlowingObjects = true;
-		RB_RenderDrawSurfList(cmd->drawSurfs, cmd->numDrawSurfs);
+
+		if (r_Dynamic_AMD_Fix->integer == 0)
+		{
+			RB_RenderDrawSurfList(cmd->drawSurfs, cmd->numDrawSurfs);
+		}
+
 		g_bRenderGlowingObjects = false;
 		qglFinish();
 
@@ -1503,7 +1508,7 @@ const void* RB_SwapBuffers(const void* data) {
 		long sum = 0;
 
 		const auto stencilReadback = static_cast<unsigned char*>(R_Malloc(glConfig.vidWidth * glConfig.vidHeight,
-		                                                                  TAG_TEMP_WORKSPACE, qfalse));
+			TAG_TEMP_WORKSPACE, qfalse));
 		qglReadPixels(0, 0, glConfig.vidWidth, glConfig.vidHeight, GL_STENCIL_INDEX, GL_UNSIGNED_BYTE, stencilReadback);
 
 		for (int i = 0; i < glConfig.vidWidth * glConfig.vidHeight; i++) {

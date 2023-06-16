@@ -99,7 +99,7 @@ bool RE_SplitSkins(const char* INname, char* skinhead, char* skintorso, char* sk
 }
 
 // given a name, go get the skin we want and return
-qhandle_t RE_RegisterIndividualSkin(const char* name, const qhandle_t hSkin)
+qhandle_t RE_RegisterIndividualSkin(const char* name, const qhandle_t h_skin)
 {
 	char* text, * text_p;
 	char			surfName[MAX_QPATH];
@@ -113,9 +113,9 @@ qhandle_t RE_RegisterIndividualSkin(const char* name, const qhandle_t hSkin)
 		return 0;
 	}
 
-	assert(tr.skins[hSkin]);	//should already be setup, but might be an 3part append
+	assert(tr.skins[h_skin]);	//should already be setup, but might be an 3part append
 
-	skin_t* skin = tr.skins[hSkin];
+	skin_t* skin = tr.skins[h_skin];
 
 	text_p = text;
 	while (text_p && *text_p) {
@@ -171,11 +171,12 @@ qhandle_t RE_RegisterIndividualSkin(const char* name, const qhandle_t hSkin)
 		return 0;		// use default skin
 	}
 
-	return hSkin;
+	return h_skin;
 }
 
-qhandle_t RE_RegisterSkin(const char* name) {
-	qhandle_t	hSkin;
+qhandle_t RE_RegisterSkin(const char* name)
+{
+	qhandle_t h_skin;
 	skin_t* skin;
 
 	if (!name || !name[0]) {
@@ -189,24 +190,28 @@ qhandle_t RE_RegisterSkin(const char* name) {
 	}
 
 	// see if the skin is already loaded
-	for (hSkin = 1; hSkin < tr.numSkins; hSkin++) {
-		skin = tr.skins[hSkin];
-		if (!Q_stricmp(skin->name, name)) {
-			if (skin->numSurfaces == 0) {
+	for (h_skin = 1; h_skin < tr.numSkins; h_skin++)
+	{
+		skin = tr.skins[h_skin];
+		if (!Q_stricmp(skin->name, name)) 
+		{
+			if (skin->numSurfaces == 0)
+			{
 				return 0;		// default skin
 			}
-			return hSkin;
+			return h_skin;
 		}
 	}
 
 	// allocate a new skin
-	if (tr.numSkins == MAX_SKINS) {
+	if (tr.numSkins == MAX_SKINS)
+	{
 		ri->Printf(PRINT_ALL, "WARNING: RE_RegisterSkin( '%s' ) MAX_SKINS hit\n", name);
 		return 0;
 	}
 	tr.numSkins++;
 	skin = static_cast<skin_s*>(Hunk_Alloc(sizeof(skin_t), h_low));
-	tr.skins[hSkin] = skin;
+	tr.skins[h_skin] = skin;
 	Q_strncpyz(skin->name, name, sizeof skin->name);
 	skin->numSurfaces = 0;
 
@@ -214,12 +219,8 @@ qhandle_t RE_RegisterSkin(const char* name) {
 	R_IssuePendingRenderCommands();
 
 	// If not a .skin file, load as a single shader
-	if (strcmp(name + strlen(name) - 5, ".skin") != 0) {
-		/*		skin->numSurfaces = 1;
-				skin->surfaces[0] = (skinSurface_t *)Hunk_Alloc( sizeof(skin->surfaces[0]), h_low );
-				skin->surfaces[0]->shader = R_FindShader( name, lightmapsNone, stylesDefault, qtrue );
-				return hSkin;
-		*/
+	if (strcmp(name + strlen(name) - 5, ".skin") != 0)
+	{
 	}
 
 	char skinhead[MAX_QPATH] = { 0 };
@@ -227,22 +228,33 @@ qhandle_t RE_RegisterSkin(const char* name) {
 	char skinlower[MAX_QPATH] = { 0 };
 	if (RE_SplitSkins(name, (char*)&skinhead, (char*)&skintorso, (char*)&skinlower))
 	{//three part
-		hSkin = RE_RegisterIndividualSkin(skinhead, hSkin);
-		if (hSkin && strcmp(skinhead, skintorso) != 0)
+		h_skin = RE_RegisterIndividualSkin(skinhead, h_skin);
+		if (h_skin && strcmp(skinhead, skintorso) != 0)
 		{
-			hSkin = RE_RegisterIndividualSkin(skintorso, hSkin);
+			h_skin = RE_RegisterIndividualSkin(skintorso, h_skin);
 		}
 
-		if (hSkin && strcmp(skinhead, skinlower) != 0 && strcmp(skintorso, skinlower) != 0)
+		if (h_skin && strcmp(skinhead, skinlower) != 0 && strcmp(skintorso, skinlower) != 0)
 		{
-			hSkin = RE_RegisterIndividualSkin(skinlower, hSkin);
+			// Very ugly way of doing this, need to stop the game from registering the last listed "model_" skin in the menu as the lower skin can get cut off.
+			// If using a model_ skin, we'll register the head (which shouldn't be cut off). Otherwise, keep the original behavior for the custom skins.
+			char* skin;
+			skin = strrchr(skinhead, '/');
+			if (!strncmp(skin, "/model_", 7))
+			{
+				h_skin = RE_RegisterIndividualSkin(skinhead, h_skin);
+			}
+			else
+			{
+				h_skin = RE_RegisterIndividualSkin(skinlower, h_skin);
+			}
 		}
 	}
 	else
 	{//single skin
-		hSkin = RE_RegisterIndividualSkin(name, hSkin);
+		h_skin = RE_RegisterIndividualSkin(name, h_skin);
 	}
-	return hSkin;
+	return h_skin;
 }
 
 /*
@@ -388,11 +400,11 @@ void	R_InitSkins(void) {
 R_GetSkinByHandle
 ===============
 */
-skin_t* R_GetSkinByHandle(const qhandle_t hSkin) {
-	if (hSkin < 1 || hSkin >= tr.numSkins) {
+skin_t* R_GetSkinByHandle(const qhandle_t h_skin) {
+	if (h_skin < 1 || h_skin >= tr.numSkins) {
 		return tr.skins[0];
 	}
-	return tr.skins[hSkin];
+	return tr.skins[h_skin];
 }
 
 /*

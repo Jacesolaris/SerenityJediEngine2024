@@ -1379,7 +1379,7 @@ void R_InitImages();
 void R_DeleteTextures();
 float R_SumOfUsedImages(qboolean b_use_format);
 void R_InitSkins(void);
-skin_t* R_GetSkinByHandle(qhandle_t hSkin);
+skin_t* R_GetSkinByHandle(qhandle_t h_skin);
 const void* RB_TakeVideoFrameCmd(const void* data);
 void RE_HunkClearCrap(void);
 

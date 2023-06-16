@@ -1129,11 +1129,6 @@ void RB_RenderDrawSurfList(drawSurf_t* drawSurfs, const int numDrawSurfs) {
 		RB_ShadowFinish();
 		didShadowPass = true;
 	}
-
-	// add light flares on lights that aren't obscured
-
-	// rww - 9-13-01 [1-26-01-sof2]
-//	RB_RenderFlares();
 }
 
 /*

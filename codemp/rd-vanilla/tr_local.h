@@ -1322,7 +1322,7 @@ void	R_InitImages();
 void	R_DeleteTextures();
 float	R_SumOfUsedImages(qboolean b_use_format);
 void	R_InitSkins(void);
-skin_t* R_GetSkinByHandle(qhandle_t hSkin);
+skin_t* R_GetSkinByHandle(qhandle_t h_skin);
 const void* RB_TakeVideoFrameCmd(const void* data);
 void RE_HunkClearCrap(void);
 
@@ -1461,7 +1461,6 @@ void R_ClearFlares(void);
 
 void RB_AddFlare(void* surface, int fogNum, vec3_t point, vec3_t color, vec3_t normal);
 void RB_AddDlightFlares(void);
-void RB_RenderFlares(void);
 
 /*
 ============================================================

@@ -1099,6 +1099,7 @@ extern cvar_t* r_DynamicGlowIntensity;
 extern cvar_t* r_DynamicGlowSoft;
 extern cvar_t* r_DynamicGlowWidth;
 extern cvar_t* r_DynamicGlowHeight;
+extern cvar_t* r_Dynamic_AMD_Fix;
 
 extern	cvar_t* r_nobind;						// turns off binding to appropriate textures
 extern	cvar_t* r_singleShader;				// make most world faces use default shader
@@ -1278,7 +1279,7 @@ void	R_InitImages();
 void	R_DeleteTextures();
 float	R_SumOfUsedImages(qboolean b_use_format);
 void	R_InitSkins();
-skin_t* R_GetSkinByHandle(qhandle_t hSkin);
+skin_t* R_GetSkinByHandle(qhandle_t h_skin);
 
 //
 // tr_shader.c

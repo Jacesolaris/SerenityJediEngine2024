@@ -100,6 +100,7 @@ cvar_t* r_DynamicGlowIntensity;
 cvar_t* r_DynamicGlowSoft;
 cvar_t* r_DynamicGlowWidth;
 cvar_t* r_DynamicGlowHeight;
+cvar_t* r_Dynamic_AMD_Fix;
 
 cvar_t* r_ignoreGLErrors;
 cvar_t* r_logFile;
@@ -1542,6 +1543,7 @@ void R_Register()
 	r_DynamicGlowSoft = ri.Cvar_Get("r_DynamicGlowSoft", "1", CVAR_ARCHIVE_ND);
 	r_DynamicGlowWidth = ri.Cvar_Get("r_DynamicGlowWidth", "320", CVAR_ARCHIVE_ND | CVAR_LATCH);
 	r_DynamicGlowHeight = ri.Cvar_Get("r_DynamicGlowHeight", "240", CVAR_ARCHIVE_ND | CVAR_LATCH);
+	r_Dynamic_AMD_Fix = ri.Cvar_Get("r_Dynamic_AMD_Fix", "1", CVAR_ARCHIVE_ND);
 
 	r_picmip = ri.Cvar_Get("r_picmip", "0", CVAR_ARCHIVE | CVAR_LATCH);
 	ri.Cvar_CheckRange(r_picmip, 0, 16, qtrue);

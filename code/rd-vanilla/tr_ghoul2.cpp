@@ -505,7 +505,7 @@ void G2_RagGetBoneBasePoseMatrixLow(const CGhoul2Info& ghoul2, const int bone_nu
 }
 
 void G2_GetBoneMatrixLow(const CGhoul2Info& ghoul2, const int bone_num, const vec3_t scale, mdxaBone_t& ret_matrix,
-                         mdxaBone_t*& ret_basepose, mdxaBone_t*& ret_basepose_inv)
+	mdxaBone_t*& ret_basepose, mdxaBone_t*& ret_basepose_inv)
 {
 	if (!ghoul2.mBoneCache)
 	{
@@ -557,7 +557,7 @@ void G2_GetBoneMatrixLow(const CGhoul2Info& ghoul2, const int bone_num, const ve
 }
 
 int G2_GetParentBoneMatrixLow(const CGhoul2Info& ghoul2, const int bone_num, const vec3_t scale, mdxaBone_t& retMatrix,
-                              mdxaBone_t*& ret_basepose, mdxaBone_t*& ret_basepose_inv)
+	mdxaBone_t*& ret_basepose, mdxaBone_t*& ret_basepose_inv)
 {
 	int parent = -1;
 	if (ghoul2.mBoneCache)
@@ -1023,7 +1023,7 @@ void G2_TimingModel(boneInfo_t& bone, const int current_time, const int num_fram
 					}
 				}
 				// sanity check
-				assert(new_frame < end_frame&& new_frame >= bone.start_frame || anim_size < 10);
+				assert(new_frame < end_frame && new_frame >= bone.start_frame || anim_size < 10);
 			}
 			else
 			{
@@ -3008,7 +3008,7 @@ void RB_SurfaceGhoul(CRenderableSurface* surf)
 #endif
 
 #ifdef _G2_GORE
-	//CRenderableSurface *storeSurf = surf;
+	//CRenderableSurface* storeSurf = surf;
 
 	while (surf->goreChain)
 	{
@@ -3043,12 +3043,6 @@ void RB_SurfaceGhoul(CRenderableSurface* surf)
 	// NOTE: This is required because a ghoul model might need to be rendered twice a frame (don't cringe,
 	// it's not THAT bad), so we only delete it when doing the glow pass. Warning though, this assumes that
 	// the glow is rendered _second_!!! If that changes, change this!
-	//extern bool g_bRenderGlowingObjects;
-	//extern bool g_bDynamicGlowSupported;
-	//if ( !tess.shader->hasGlow || g_bRenderGlowingObjects || !g_bDynamicGlowSupported || !r_DynamicGlow->integer )
-	//{
-	//delete storeSurf;
-	//}
 #endif
 
 	tess.num_vertexes += surface->num_verts;
@@ -3587,7 +3581,7 @@ qboolean R_LoadMDXM(model_t* mod, void* buffer, const char* mod_name, qboolean& 
 
 		if (!sh)
 		{
-			surfInfo = reinterpret_cast<mdxmSurfHierarchy_t*>((byte*)surfInfo + (intptr_t)&static_cast<mdxmSurfHierarchy_t*>(nullptr)->
+			surfInfo = reinterpret_cast<mdxmSurfHierarchy_t*>((byte*)surfInfo + (intptr_t) & static_cast<mdxmSurfHierarchy_t*>(nullptr)->
 				childIndexes[surfInfo->numChildren]);
 			continue;
 		}
@@ -3609,7 +3603,7 @@ qboolean R_LoadMDXM(model_t* mod, void* buffer, const char* mod_name, qboolean& 
 #endif
 
 		// find the next surface
-		surfInfo = reinterpret_cast<mdxmSurfHierarchy_t*>((byte*)surfInfo + (intptr_t)&static_cast<mdxmSurfHierarchy_t*>(nullptr)->
+		surfInfo = reinterpret_cast<mdxmSurfHierarchy_t*>((byte*)surfInfo + (intptr_t) & static_cast<mdxmSurfHierarchy_t*>(nullptr)->
 			childIndexes[surfInfo->numChildren]);
 	}
 
