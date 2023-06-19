@@ -1257,7 +1257,7 @@ const void* R_DrawWireframeAutomap(const void* data)
 			}
 			else
 			{ //fill mode
-				vec3_t planeNormal;
+				vec3_t planeNormal{};
 				const float fAlpha = s->points[i].alpha;
 				planeNormal[0] = s->points[0].xyz[1] * (s->points[1].xyz[2] - s->points[2].xyz[2]) + s->points[1].xyz[1] * (s->points[2].xyz[2] - s->points[0].xyz[2]) + s->points[2].xyz[1] * (s->points[0].xyz[2] - s->points[1].xyz[2]);
 				planeNormal[1] = s->points[0].xyz[2] * (s->points[1].xyz[0] - s->points[2].xyz[0]) + s->points[1].xyz[2] * (s->points[2].xyz[0] - s->points[0].xyz[0]) + s->points[2].xyz[2] * (s->points[0].xyz[0] - s->points[1].xyz[0]);
@@ -1315,7 +1315,7 @@ R_RecursiveWorldNode
 static void R_RecursiveWorldNode(mnode_t* node, int planeBits, int dlight_bits) {
 	do
 	{
-		int			newDlights[2];
+		int			newDlights[2]{};
 
 #ifdef _ALT_AUTOMAP_METHOD
 		if (tr_drawingAutoMap)

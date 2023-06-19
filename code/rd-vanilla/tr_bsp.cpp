@@ -162,7 +162,7 @@ R_LoadLightmaps
 constexpr auto LIGHTMAP_SIZE = 128;
 static	void R_LoadLightmaps(const lump_t* l, const char* ps_map_name, world_t& world_data)
 {
-	byte		image[LIGHTMAP_SIZE * LIGHTMAP_SIZE * 4];
+	byte		image[LIGHTMAP_SIZE * LIGHTMAP_SIZE * 4]{};
 	int j;
 	float				max_intensity = 0;
 	double				sum_intensity = 0;
@@ -339,7 +339,7 @@ ParseFace
 static void ParseFace(const dsurface_t* ds, mapVert_t* verts, msurface_t* surf, int* indexes, byte*& p_face_data_buffer, const world_t& world_data, const int index)
 {
 	int			i, j, k;
-	int			lightmap_num[MAXLIGHTMAPS];
+	int			lightmap_num[MAXLIGHTMAPS]{};
 
 	for (i = 0; i < MAXLIGHTMAPS; i++)
 	{
@@ -420,9 +420,9 @@ ParseMesh
 */
 static void ParseMesh(const dsurface_t* ds, mapVert_t* verts, msurface_t* surf, const world_t& world_data, const int index) {
 	int				i, j, k;
-	drawVert_t points[MAX_PATCH_SIZE * MAX_PATCH_SIZE];
+	drawVert_t points[MAX_PATCH_SIZE * MAX_PATCH_SIZE]{};
 	int				lightmap_num[MAXLIGHTMAPS]{};
-	vec3_t			bounds[2];
+	vec3_t			bounds[2]{};
 	vec3_t			tmp_vec;
 	static surfaceType_t	skip_data = SF_SKIP;
 
@@ -1076,7 +1076,7 @@ R_LoadLightGrid
 */
 void R_LoadLightGrid(const lump_t* l, world_t& world_data) {
 	int		i;
-	vec3_t	maxs;
+	vec3_t	maxs{};
 
 	world_t* w = &world_data;
 

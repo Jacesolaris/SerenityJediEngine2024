@@ -166,7 +166,7 @@ void RE_AddPolyToScene(const qhandle_t h_shader, const int num_verts, const poly
 			fogIndex = 0;
 		}
 		else {
-			vec3_t bounds[2];
+			vec3_t bounds[2]{};
 			// find which fog volume the poly is in
 			VectorCopy(poly->verts[0].xyz, bounds[0]);
 			VectorCopy(poly->verts[0].xyz, bounds[1]);

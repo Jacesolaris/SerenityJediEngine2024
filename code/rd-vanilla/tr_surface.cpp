@@ -993,7 +993,7 @@ void RB_SurfacePolychain(const srfPoly_t* p) {
 
 static uint32_t ComputeFinalVertexColor(const byte* colors) {
 	int k;
-	byteAlias_t result;
+	byteAlias_t result{};
 	uint32_t g, b;
 
 	for (k = 0; k < 4; k++)
@@ -1108,9 +1108,9 @@ static void RB_SurfaceBeam()
 	constexpr auto num_beam_segs = 6;
 	int	i;
 	vec3_t perpvec;
-	vec3_t direction, normalized_direction;
-	vec3_t	start_points[num_beam_segs], end_points[num_beam_segs];
-	vec3_t oldorigin, origin;
+	vec3_t direction{}, normalized_direction{};
+	vec3_t	start_points[num_beam_segs]{}, end_points[num_beam_segs]{};
+	vec3_t oldorigin{}, origin{};
 
 	const refEntity_t* e = &backEnd.currentEntity->e;
 
@@ -1274,7 +1274,7 @@ static void LerpMeshVertexes(md3Surface_t* surf, const float backlerp)
 			old_xyz += 4, new_xyz += 4, old_normals += 4, new_normals += 4,
 			out_xyz += 4, out_normal += 4)
 		{
-			vec3_t uncompressed_old_normal, uncompressed_new_normal;
+			vec3_t uncompressed_old_normal{}, uncompressed_new_normal{};
 
 			// interpolate the xyz
 			out_xyz[0] = old_xyz[0] * old_xyz_scale + new_xyz[0] * new_xyz_scale;
@@ -1387,7 +1387,7 @@ void RB_SurfaceFace(srfSurfaceFace_t* surf) {
 	}
 
 	for (i = 0, v = surf->points[0], ndx = tess.num_vertexes; i < num_points; i++, v += VERTEXSIZE, ndx++) {
-		byteAlias_t ba;
+		byteAlias_t ba{};
 		VectorCopy(v, tess.xyz[ndx]);
 		tess.texCoords[ndx][0][0] = v[3];
 		tess.texCoords[ndx][0][1] = v[4];
@@ -1413,7 +1413,7 @@ void RB_SurfaceFace(srfSurfaceFace_t* surf) {
 }
 
 static float lod_error_for_volume(vec3_t local, const float radius) {
-	vec3_t		world;
+	vec3_t		world{};
 
 	// never let it go negative
 	if (r_lodCurveError->value < 0) {
@@ -1451,8 +1451,8 @@ Just copy the grid of points and triangulate
 void RB_SurfaceGrid(srfGridMesh_t* cv) {
 	int		i, j;
 	int irows, vrows;
-	int		width_table[MAX_GRID_SIZE];
-	int		height_table[MAX_GRID_SIZE];
+	int		width_table[MAX_GRID_SIZE]{};
+	int		height_table[MAX_GRID_SIZE]{};
 
 	const int dlight_bits = cv->dlight_bits;
 	tess.dlight_bits |= dlight_bits;
@@ -1593,7 +1593,7 @@ constexpr auto BEZIER_STEP = 0.05f;	// must be in the range of 0 to 1;
 static void RB_SurfaceLathe()
 {
 	vec2_t		pt, l_oldpt;
-	vec2_t		pt2, l_oldpt2;
+	vec2_t		pt2, l_oldpt2{};
 	float d = 1.0f, pain = 0.0f;
 	int			i;
 
@@ -2037,7 +2037,7 @@ static bool RB_TestZFlare(vec3_t point) {
 
 void RB_SurfaceFlare(srfFlare_t* surf) {
 	vec3_t		left, up;
-	byte		color[4];
+	byte		color[4]{};
 	vec3_t		dir;
 	vec3_t		origin;
 

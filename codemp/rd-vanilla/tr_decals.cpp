@@ -155,12 +155,12 @@ passed to the renderer.
 
 void RE_AddDecalToScene(const qhandle_t shader, const vec3_t origin, const vec3_t dir, const float orientation, const float r, const float g, const float b, const float a, qboolean alpha_fade, const float radius, const qboolean temporary)
 {
-	matrix3_t		axis;
-	vec3_t			original_points[4];
-	byte			colors[4];
+	matrix3_t		axis{};
+	vec3_t			original_points[4]{};
+	byte			colors[4]{};
 	int				i, j;
 	markFragment_t	mark_fragments[MAX_DECAL_FRAGMENTS], * mf;
-	vec3_t			mark_points[MAX_DECAL_POINTS];
+	vec3_t			mark_points[MAX_DECAL_POINTS]{};
 	vec3_t			projection;
 
 	assert(shader);
@@ -202,7 +202,7 @@ void RE_AddDecalToScene(const qhandle_t shader, const vec3_t origin, const vec3_
 	for (i = 0, mf = mark_fragments; i < num_fragments; i++, mf++)
 	{
 		polyVert_t* v;
-		polyVert_t	verts[MAX_VERTS_ON_DECAL_POLY];
+		polyVert_t	verts[MAX_VERTS_ON_DECAL_POLY]{};
 
 		// we have an upper limit on the complexity of polygons
 		// that we store persistantly

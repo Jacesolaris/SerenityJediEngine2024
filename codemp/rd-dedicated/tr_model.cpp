@@ -947,7 +947,7 @@ Same as RE_RegisterModel, except used by the server to handle ghoul2 instance mo
 qhandle_t RE_RegisterServerModel(const char* name)
 {
 	model_t* mod;
-	unsigned* buf;
+	unsigned* buf = nullptr;
 	int lod;
 	qboolean loaded;
 	/*
@@ -1114,7 +1114,7 @@ asked for again.
 static qhandle_t RE_RegisterModel_Actual(const char* name)
 {
 	model_t* mod;
-	unsigned* buf;
+	unsigned* buf = nullptr;
 	int lod;
 	qboolean loaded;
 	modelHash_t* mh;

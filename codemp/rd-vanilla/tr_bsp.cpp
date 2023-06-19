@@ -156,7 +156,7 @@ R_LoadLightmaps
 */
 #define	LIGHTMAP_SIZE	128
 static	void R_LoadLightmaps(const lump_t* l, const char* ps_map_name, const world_t& world_data) {
-	byte		image[LIGHTMAP_SIZE * LIGHTMAP_SIZE * 4];
+	byte		image[LIGHTMAP_SIZE * LIGHTMAP_SIZE * 4]{};
 	int j;
 	float max_intensity = 0;
 	double sum_intensity = 0;
@@ -327,7 +327,7 @@ ParseFace
 */
 static void ParseFace(const dsurface_t* ds, mapVert_t* verts, msurface_t* surf, int* indexes, const world_t& world_data, const int index) {
 	int					i, j, k;
-	int					lightmap_num[MAXLIGHTMAPS];
+	int					lightmap_num[MAXLIGHTMAPS]{};
 
 	for (i = 0; i < MAXLIGHTMAPS; i++)
 	{
@@ -1699,7 +1699,7 @@ R_LoadLightGrid
 */
 void R_LoadLightGrid(const lump_t* l, world_t& world_data) {
 	int		i;
-	vec3_t	maxs;
+	vec3_t	maxs{};
 
 	world_t* w = &world_data;
 

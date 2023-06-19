@@ -1260,7 +1260,7 @@ static qboolean ParseStage(shaderStage_t* stage, const char** text)
 		else if (!Q_stricmp(token, "animMap") || !Q_stricmp(token, "clampanimMap") || !Q_stricmp(token, "oneshotanimMap"))
 		{
 			constexpr auto max_image_animations = 32;
-			image_t* images[max_image_animations];
+			image_t* images[max_image_animations]{};
 			const bool b_clamp = !Q_stricmp(token, "clampanimMap");
 			const bool one_shot = !Q_stricmp(token, "oneshotanimMap");
 

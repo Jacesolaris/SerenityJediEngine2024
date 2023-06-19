@@ -526,8 +526,8 @@ void RB_BeginDrawingView(void) {
 
 	// clip to the plane of the portal
 	if (backEnd.viewParms.isPortal) {
-		float	plane[4];
-		double	plane2[4];
+		float	plane[4]{};
+		double	plane2[4]{};
 
 		plane[0] = backEnd.viewParms.portalPlane.normal[0];
 		plane[1] = backEnd.viewParms.portalPlane.normal[1];
@@ -553,7 +553,7 @@ void RB_BeginDrawingView(void) {
 //used by RF_DISTORTION
 static bool R_WorldCoordToScreenCoordFloat(vec3_t worldCoord, float* x, float* y)
 {
-	vec3_t	local, transformed;
+	vec3_t	local, transformed{};
 	vec3_t	vfwd;
 	vec3_t	vright;
 	vec3_t	vup;
@@ -1728,10 +1728,10 @@ void RB_ShowImages(void) {
 	R_Images_StartIteration();
 	while ((image = R_Images_GetNextIteration()) != nullptr)
 	{
-		float w = glConfig.vidWidth / 20;
-		float h = glConfig.vidHeight / 15;
+		float w = glConfig.vidWidth / static_cast<float>(20);
+		float h = glConfig.vidHeight / static_cast<float>(15);
 		const float x = i % 20 * w;
-		const float y = i / 20 * h;
+		const float y = i / static_cast<float>(20) * h;
 
 		// show in proportional size in mode 2
 		if (r_showImages->integer == 2) {

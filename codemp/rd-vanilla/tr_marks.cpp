@@ -44,7 +44,7 @@ static void R_ChopPolyBehindPlane(const int num_in_points, vec3_t in_points[MAX_
 	vec3_t normal, const float dist, const float epsilon) {
 	float		dists[MAX_VERTS_ON_POLY + 4] = { 0 };
 	int			sides[MAX_VERTS_ON_POLY + 4] = { 0 };
-	int			counts[3];
+	int			counts[3]{};
 	float		dot;
 	int			i;
 
@@ -245,8 +245,8 @@ int R_MarkFragments(int num_points, const vec3_t* points, const vec3_t projectio
 	vec3_t			mins, maxs;
 	int				returned_fragments;
 	int				returned_points;
-	vec3_t			normals[MAX_VERTS_ON_POLY + 2];
-	float			dists[MAX_VERTS_ON_POLY + 2];
+	vec3_t			normals[MAX_VERTS_ON_POLY + 2]{};
+	float			dists[MAX_VERTS_ON_POLY + 2]{};
 	float* v;
 	vec3_t			projection_dir;
 	vec3_t			v1, v2;
@@ -297,7 +297,7 @@ int R_MarkFragments(int num_points, const vec3_t* points, const vec3_t projectio
 
 	for (i = 0; i < numsurfaces; i++)
 	{
-		vec3_t clip_points[2][MAX_VERTS_ON_POLY];
+		vec3_t clip_points[2][MAX_VERTS_ON_POLY]{};
 		if (*surfaces[i] == SF_GRID) {
 			const srfGridMesh_t* cv = (srfGridMesh_t*)surfaces[i];
 			for (int m = 0; m < cv->height - 1; m++) {

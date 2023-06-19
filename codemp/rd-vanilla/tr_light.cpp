@@ -131,10 +131,10 @@ R_SetupEntityLightingGrid
 static void R_SetupEntityLightingGrid(trRefEntity_t* ent)
 {
 	vec3_t			light_origin;
-	int				pos[3];
+	int				pos[3]{};
 	int				i, j;
-	float			frac[3];
-	int				grid_step[3];
+	float			frac[3]{};
+	int				grid_step[3]{};
 	vec3_t			direction;
 	float			total_factor;
 	unsigned short* start_grid_pos;
@@ -202,7 +202,7 @@ static void R_SetupEntityLightingGrid(trRefEntity_t* ent)
 		mgrid_t* data;
 		unsigned short* gridPos;
 		int				lat, lng;
-		vec3_t			normal;
+		vec3_t			normal{};
 #if ACCURATE_LIGHTGRID_SAMPLING
 		vec3_t			gridOrg;
 		VectorCopy(start_grid_org, gridOrg);
@@ -275,7 +275,7 @@ static void R_SetupEntityLightingGrid(trRefEntity_t* ent)
 		if (r_debugLight->integer && ent->e.hModel == -1)
 		{
 			//draw
-			refEntity_t ref_ent;
+			refEntity_t ref_ent{};
 			ref_ent.hModel = 0;
 			ref_ent.ghoul2 = nullptr;
 			ref_ent.renderfx = 0;

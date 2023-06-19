@@ -132,7 +132,7 @@ static void MakeMeshNormals(const int width, const int height, drawVert_t ctrl[M
 {
 	int i, k;
 	vec3_t delta;
-	qboolean good[8];
+	qboolean good[8]{};
 	float len;
 	static int neighbors[8][2] = {
 		{0, 1}, {1, 1}, {1, 0}, {1, -1}, {0, -1}, {-1, -1}, {-1, 0}, {-1, 1}
@@ -172,7 +172,7 @@ static void MakeMeshNormals(const int width, const int height, drawVert_t ctrl[M
 	{
 		for (int j = 0; j < height; j++)
 		{
-			vec3_t around[8];
+			vec3_t around[8]{};
 			vec3_t base;
 			vec3_t sum;
 			int count = 0;
@@ -410,8 +410,8 @@ srfGridMesh_t* R_SubdividePatchToGrid(int width, int height,
 	int i, j, k;
 	drawVert_t prev, next, mid;
 	int t;
-	drawVert_t ctrl[MAX_GRID_SIZE][MAX_GRID_SIZE];
-	float errorTable[2][MAX_GRID_SIZE];
+	drawVert_t ctrl[MAX_GRID_SIZE][MAX_GRID_SIZE]{};
+	float errorTable[2][MAX_GRID_SIZE]{};
 
 	for (i = 0; i < width; i++)
 	{
@@ -439,7 +439,7 @@ srfGridMesh_t* R_SubdividePatchToGrid(int width, int height,
 			float maxLen = 0;
 			for (i = 0; i < height; i++)
 			{
-				vec3_t midxyz;
+				vec3_t midxyz{};
 				vec3_t vec_out;
 				vec3_t projected;
 
@@ -586,8 +586,8 @@ R_GridInsertColumn
 srfGridMesh_t* R_GridInsertColumn(srfGridMesh_t* grid, const int column, const int row, vec3_t point, const float loderror)
 {
 	int j;
-	drawVert_t ctrl[MAX_GRID_SIZE][MAX_GRID_SIZE];
-	float errorTable[2][MAX_GRID_SIZE];
+	drawVert_t ctrl[MAX_GRID_SIZE][MAX_GRID_SIZE]{};
+	float errorTable[2][MAX_GRID_SIZE]{};
 	vec3_t lodOrigin;
 
 	int oldwidth = 0;
@@ -644,8 +644,8 @@ R_GridInsertRow
 srfGridMesh_t* R_GridInsertRow(srfGridMesh_t* grid, const int row, const int column, vec3_t point, const float loderror)
 {
 	int j;
-	drawVert_t ctrl[MAX_GRID_SIZE][MAX_GRID_SIZE];
-	float errorTable[2][MAX_GRID_SIZE];
+	drawVert_t ctrl[MAX_GRID_SIZE][MAX_GRID_SIZE]{};
+	float errorTable[2][MAX_GRID_SIZE]{};
 	vec3_t lodOrigin;
 
 	int oldheight = 0;

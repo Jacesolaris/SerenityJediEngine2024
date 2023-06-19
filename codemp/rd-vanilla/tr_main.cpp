@@ -52,9 +52,9 @@ Returns CULL_IN, CULL_CLIP, or CULL_OUT
 int R_CullLocalBox(const vec3_t bounds[2])
 {
 	int i;
-	vec3_t transformed[8];
-	float dists[8];
-	vec3_t v;
+	vec3_t transformed[8]{};
+	float dists[8]{};
+	vec3_t v{};
 	int back;
 
 	if (r_nocull->integer == 1)
@@ -379,7 +379,7 @@ Sets up the modelview matrix for a given viewParm
 */
 void R_RotateForViewer(void)
 {
-	float viewerMatrix[16];
+	float viewerMatrix[16]{};
 	vec3_t origin;
 
 	memset(&tr.ori, 0, sizeof tr.ori);
@@ -446,7 +446,7 @@ static void SetFarClip(void)
 	//
 	for (int i = 0; i < 8; i++)
 	{
-		vec3_t v;
+		vec3_t v{};
 
 		if (i & 1)
 		{
@@ -669,7 +669,7 @@ qboolean R_GetPortalOrientations(const drawSurf_t* drawSurf, const int entity_nu
                                  orientation_t* surface, orientation_t* camera,
                                  vec3_t pvsOrigin, qboolean* mirror)
 {
-	cplane_t originalPlane, plane;
+	cplane_t originalPlane, plane{};
 
 	// create plane axis for the portal we are seeing
 	R_PlaneForSurface(drawSurf->surface, &originalPlane);
@@ -796,7 +796,7 @@ qboolean R_GetPortalOrientations(const drawSurf_t* drawSurf, const int entity_nu
 
 static qboolean IsMirror(const drawSurf_t* drawSurf, const int entity_num)
 {
-	cplane_t originalPlane, plane;
+	cplane_t originalPlane, plane{};
 
 	// create plane axis for the portal we are seeing
 	R_PlaneForSurface(drawSurf->surface, &originalPlane);
@@ -1067,7 +1067,7 @@ R_Radix
 static QINLINE void R_Radix(const int byte, const int size, drawSurf_t* source, drawSurf_t* dest)
 {
 	int count[256] = { 0 };
-	int index[256];
+	int index[256]{};
 	int i;
 
 	unsigned char* sortKey = (unsigned char*)&source[0].sort + byte;

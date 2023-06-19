@@ -226,13 +226,13 @@ void G2_Generate_Matrix(const model_t* mod, boneInfo_v& blist, const int index, 
 	const Eorientations up, const Eorientations left, const Eorientations forward)
 {
 	mdxaBone_t		temp1;
-	mdxaBone_t		permutation;
+	mdxaBone_t		permutation{};
 	mdxaBone_t* bone_override = &blist[index].matrix;
 
 	if (flags & (BONE_ANGLES_PREMULT | BONE_ANGLES_POSTMULT))
 	{
 		// build us a matrix out of the angles we are fed - but swap y and z because of wacky Quake setup
-		vec3_t	new_angles;
+		vec3_t	new_angles{};
 
 		// determine what axis newAngles Yaw should revolve around
 		switch (up)
@@ -3908,7 +3908,7 @@ static void G2_RagDollSolve(CGhoul2Info_v& ghoul2_v, const int g2_index, const f
 		}
 		else
 		{
-			mdxaBone_t gs[3];
+			mdxaBone_t gs[3]{};
 			vec3_t del_angles;
 			VectorClear(del_angles);
 
@@ -3943,9 +3943,9 @@ static void G2_RagDollSolve(CGhoul2Info_v& ghoul2_v, const int g2_index, const f
 					num_rag_dep++;
 					for (k = 0; k < 3; k++)
 					{
-						mdxaBone_t enew[3];
+						mdxaBone_t enew[3]{};
 						Multiply_3x4Matrix(&enew[k], &gs[k], &ragBones[dep_index]); //dest first arg
-						vec3_t t_position;
+						vec3_t t_position{};
 						t_position[0] = enew[k].matrix[0][3];
 						t_position[1] = enew[k].matrix[1][3];
 						t_position[2] = enew[k].matrix[2][3];
@@ -4123,7 +4123,7 @@ static void G2_IKSolve(CGhoul2Info_v& ghoul2_v, const int g2_index, const float 
 	// END this is the objective function thing
 	for (int i = 0; i < numRags; i++)
 	{
-		mdxaBone_t gs[3];
+		mdxaBone_t gs[3]{};
 		// these are used for affecting the end result
 		boneInfo_t& bone = *ragBoneData[i];
 
@@ -4182,9 +4182,9 @@ static void G2_IKSolve(CGhoul2Info_v& ghoul2_v, const int g2_index, const float 
 				num_rag_dep++;
 				for (k = 0; k < 3; k++)
 				{
-					mdxaBone_t enew[3];
+					mdxaBone_t enew[3]{};
 					Multiply_3x4Matrix(&enew[k], &gs[k], &ragBones[dep_index]); //dest first arg
-					vec3_t t_position;
+					vec3_t t_position{};
 					t_position[0] = enew[k].matrix[0][3];
 					t_position[1] = enew[k].matrix[1][3];
 					t_position[2] = enew[k].matrix[2][3];
@@ -4471,7 +4471,7 @@ qboolean G2_SetBoneIKState(CGhoul2Info_v& ghoul2, const int time, const char* bo
 
 	if (!bone_name)
 	{ //null bonename param means it's time to init the ik stuff on this instance
-		sharedRagDollUpdateParams_t s_rdup;
+		sharedRagDollUpdateParams_t s_rdup{};
 
 		if (ik_state == IKS_NONE)
 		{ //this means we want to reset the IK state completely.. run through the bone list, and reset all the appropriate flags

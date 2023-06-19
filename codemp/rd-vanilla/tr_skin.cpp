@@ -101,7 +101,7 @@ bool RE_SplitSkins(const char* INname, char* skinhead, char* skintorso, char* sk
 // given a name, go get the skin we want and return
 qhandle_t RE_RegisterIndividualSkin(const char* name, const qhandle_t h_skin)
 {
-	char* text, * text_p;
+	char* text = nullptr, * text_p;
 	char			surfName[MAX_QPATH];
 
 	// load and parse the skin file

@@ -478,7 +478,7 @@ Apply a color blend over a set of pixels
 */
 static void R_BlendOverTexture(byte* data, const int pixel_count, byte blend[4])
 {
-	int premult[3];
+	int premult[3]{};
 
 	const int inverse_alpha = 255 - blend[3];
 	premult[0] = blend[0] * blend[3];
@@ -1154,7 +1154,7 @@ static void R_CreateDlightImage()
 	else
 	{
 		// if we dont get a successful load
-		byte data[DLIGHT_SIZE][DLIGHT_SIZE][4];
+		byte data[DLIGHT_SIZE][DLIGHT_SIZE][4]{};
 
 		// make a centered inverse-square falloff blob for dynamic lighting
 		for (int x = 0; x < DLIGHT_SIZE; x++)
@@ -1247,7 +1247,7 @@ R_CreateFogImage
 
 static void R_CreateFogImage()
 {
-	float border_color[4];
+	float border_color[4]{};
 
 	const auto data = static_cast<unsigned char*>(Hunk_AllocateTempMemory(FOG_S * FOG_T * 4));
 
@@ -1522,7 +1522,7 @@ void R_SetGammaCorrectionLUT()
 		int inf;
 		const int shift = tr.overbrightBits;
 		const float g = r_gamma->value;
-		byte gamma_corrected[64];
+		byte gamma_corrected[64]{};
 
 		for (int i = 0; i < 64; i++)
 		{

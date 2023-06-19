@@ -28,11 +28,11 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 // Current version of the multi player game
 
 #define VERSION_MAJOR_RELEASE		23
-#define VERSION_MINOR_RELEASE		05
-#define VERSION_INTERNAL_BUILD		12
+#define VERSION_MINOR_RELEASE		06
+#define VERSION_INTERNAL_BUILD		19
 
-#define VERSION_STRING				"Year-23,Month-05,Day-12,BuildNum-08"
-#define VERSION_STRING_DOTTED		"Year-23,Month-05,Day-12,BuildNum-08"
+#define VERSION_STRING				"Year-23,Month-06,Day-19,BuildNum-02"
+#define VERSION_STRING_DOTTED		"Year-23,Month-06,Day-19,BuildNum-02"
 
 #if defined(_DEBUG)
 #define	JK_VERSION		"(debug)SerenityJediEngine2024-MP: " VERSION_STRING_DOTTED

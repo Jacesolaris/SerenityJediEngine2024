@@ -298,7 +298,7 @@ void RB_DoShadowTessEnd(vec3_t light_pos)
 		}
 		else
 		{
-			float plane_eq[4];
+			float plane_eq[4]{};
 			plane_eq[0] = v1[1] * (v2[2] - v3[2]) + v2[1] * (v3[2] - v1[2]) + v3[1] * (v1[2] - v2[2]);
 			plane_eq[1] = v1[2] * (v2[0] - v3[0]) + v2[2] * (v3[0] - v1[0]) + v3[2] * (v1[0] - v2[0]);
 			plane_eq[2] = v1[0] * (v2[1] - v3[1]) + v2[0] * (v3[1] - v1[1]) + v3[0] * (v1[1] - v2[1]);
@@ -479,8 +479,8 @@ RB_ProjectionShadowDeform
 =================
 */
 void RB_ProjectionShadowDeform() {
-	vec3_t	ground;
-	vec3_t	light;
+	vec3_t	ground{};
+	vec3_t	light{};
 	vec3_t	light_dir;
 
 	auto xyz = reinterpret_cast<float*>(tess.xyz);

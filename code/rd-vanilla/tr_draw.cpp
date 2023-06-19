@@ -632,12 +632,12 @@ qboolean RE_ProcessDissolve()
 				//
 				// blit circular graphic...
 				//
-				x0 = f_x_scale_factor * (Dissolve.iWidth / 2 - f_diag_zoom);
-				y0 = f_y_scale_factor * (Dissolve.iHeight / 2 - f_diag_zoom);
-				x1 = f_x_scale_factor * (Dissolve.iWidth / 2 + f_diag_zoom);
+				x0 = f_x_scale_factor * (Dissolve.iWidth / static_cast<float>(2) - f_diag_zoom);
+				y0 = f_y_scale_factor * (Dissolve.iHeight / static_cast<float>(2) - f_diag_zoom);
+				x1 = f_x_scale_factor * (Dissolve.iWidth / static_cast<float>(2) + f_diag_zoom);
 				y1 = y0;
 				x2 = x1;
-				y2 = f_y_scale_factor * (Dissolve.iHeight / 2 + f_diag_zoom);
+				y2 = f_y_scale_factor * (Dissolve.iHeight / static_cast<float>(2) + f_diag_zoom);
 				x3 = x0;
 				y3 = y2;
 
@@ -652,12 +652,12 @@ qboolean RE_ProcessDissolve()
 				//
 				// blit circular graphic...
 				//
-				x0 = f_x_scale_factor * (Dissolve.iWidth / 2 - f_diag_zoom);
-				y0 = f_y_scale_factor * (Dissolve.iHeight / 2 - f_diag_zoom);
-				x1 = f_x_scale_factor * (Dissolve.iWidth / 2 + f_diag_zoom);
+				x0 = f_x_scale_factor * (Dissolve.iWidth / static_cast<float>(2) - f_diag_zoom);
+				y0 = f_y_scale_factor * (Dissolve.iHeight / static_cast<float>(2) - f_diag_zoom);
+				x1 = f_x_scale_factor * (Dissolve.iWidth / static_cast<float>(2) + f_diag_zoom);
 				y1 = y0;
 				x2 = x1;
-				y2 = f_y_scale_factor * (Dissolve.iHeight / 2 + f_diag_zoom);
+				y2 = f_y_scale_factor * (Dissolve.iHeight / static_cast<float>(2) + f_diag_zoom);
 				x3 = x0;
 				y3 = y2;
 

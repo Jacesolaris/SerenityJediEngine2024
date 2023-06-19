@@ -1723,8 +1723,6 @@ void R_Init() {
 	int	err;
 	int i;
 
-	//ri.Printf( PRINT_ALL, "----- R_Init -----\n" );
-
 	ShaderEntryPtrs_Clear();
 
 	// clear all our internal state
@@ -1752,7 +1750,7 @@ void R_Init() {
 		{
 			if (i < FUNCTABLE_SIZE / 4)
 			{
-				tr.triangleTable[i] = static_cast<float>(i) / (FUNCTABLE_SIZE / 4);
+				tr.triangleTable[i] = static_cast<float>(i) / (static_cast<float>(FUNCTABLE_SIZE) / 4);
 			}
 			else
 			{

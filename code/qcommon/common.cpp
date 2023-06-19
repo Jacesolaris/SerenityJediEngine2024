@@ -64,6 +64,7 @@ cvar_t* com_outcast;
 cvar_t* com_homepath;
 cvar_t* g_newgameplusJKA;
 cvar_t* g_newgameplusJKO;
+cvar_t* g_spskill;
 #ifndef _WIN32
 cvar_t* com_ansiColor = nullptr;
 #endif
@@ -1165,6 +1166,7 @@ void Com_Init(char* commandLine)
 		com_outcast = Cvar_Get("com_outcast", "0", CVAR_ARCHIVE | CVAR_SAVEGAME | CVAR_NORESTART);
 		com_logfile = Cvar_Get("logfile", "0", CVAR_TEMP);
 		com_speedslog = Cvar_Get("speedslog", "0", CVAR_TEMP);
+		g_spskill = Cvar_Get("g_spskill", "2", CVAR_ARCHIVE | CVAR_SAVEGAME | CVAR_NORESTART);
 
 		g_newgameplusJKA = Cvar_Get("g_newgameplusJKA", "0", CVAR_ARCHIVE | CVAR_SAVEGAME | CVAR_NORESTART);
 

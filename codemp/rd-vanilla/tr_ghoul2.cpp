@@ -1356,7 +1356,7 @@ int G2_Find_Bone(const model_t* mod, const boneInfo_v& blist, const char* bone_n
 
 void G2_RagGetAnimMatrix(CGhoul2Info& ghoul2, const int bone_num, mdxaBone_t& matrix, const int frame)
 {
-	mdxaBone_t animMatrix;
+	mdxaBone_t animMatrix{};
 	mdxaSkel_t* skel;
 	mdxaSkelOffsets_t* offsets;
 	int parent;
@@ -1811,7 +1811,7 @@ void G2_TransformBone(const int index, CBoneCache& cb)
 
 					const float matrixScale = VectorLength(reinterpret_cast<float*>(&temp));
 
-					mdxaBone_t newMatrixTemp;
+					mdxaBone_t newMatrixTemp{};
 
 					if (HackadelicOnClient)
 					{
