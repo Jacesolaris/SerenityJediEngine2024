@@ -407,8 +407,8 @@ void SP_misc_model_gun_rack(gentity_t* ent)
 {
 	gitem_t* blaster = nullptr, * repeater = nullptr, * rocket = nullptr;
 	int ct = 0;
-	float ofz[3];
-	gitem_t* itemList[3];
+	float ofz[3]{};
+	gitem_t* itemList[3]{};
 	char* s;
 
 	G_SpawnString("icon", "", &s);
@@ -584,7 +584,7 @@ void spawn_rack_goods(gentity_t* ent)
 	gitem_t* am_blaster = nullptr, * am_metal_bolts = nullptr, * am_rockets = nullptr, * am_pwr_cell = nullptr;
 	gitem_t* health = nullptr;
 	int pos = 0, ct = 0;
-	gitem_t* itemList[4];
+	gitem_t* itemList[4]{};
 	// allocating 4, but we only use 3.  done so I don't have to validate that the array isn't full before I add another
 
 	gi.unlinkentity(ent);
@@ -764,7 +764,7 @@ void misc_model_cargo_die(gentity_t* self, const gentity_t* inflictor, gentity_t
 	const int mod, int d_flags,
 	int hit_loc)
 {
-	vec3_t org, temp;
+	vec3_t org, temp{};
 
 	// copy these for later
 	const int flags = self->spawnflags;

@@ -2693,7 +2693,7 @@ PM_CheckWaterJump
 static qboolean PM_CheckWaterJump()
 {
 	vec3_t spot;
-	vec3_t flatforward;
+	vec3_t flatforward{};
 
 	if (pm->ps->pm_time)
 	{
@@ -2780,7 +2780,7 @@ PM_WaterMove
 */
 static void PM_WaterMove()
 {
-	vec3_t wishvel;
+	vec3_t wishvel{};
 	float wishspeed;
 	vec3_t wishdir;
 	float scale;
@@ -2937,7 +2937,7 @@ extern void G_SetWeapon(gentity_t* self, int wp);
 
 static void PM_LadderMove()
 {
-	vec3_t wishvel;
+	vec3_t wishvel{};
 	float wishspeed;
 	vec3_t wishdir;
 	float scale;
@@ -3215,7 +3215,7 @@ Only with the flight powerup
 */
 static void PM_FlyMove()
 {
-	vec3_t wishvel;
+	vec3_t wishvel{};
 	vec3_t wishdir;
 	float accel;
 	qboolean low_grav_move = qfalse;
@@ -3503,7 +3503,7 @@ qboolean PM_CrouchAnim(int anim);
 static void PM_WalkMove()
 {
 	int i;
-	vec3_t wishvel;
+	vec3_t wishvel{};
 	vec3_t wishdir;
 	float wishspeed;
 	usercmd_t cmd;
@@ -3844,7 +3844,7 @@ PM_NoclipMove
 */
 static void PM_NoclipMove()
 {
-	vec3_t wishvel;
+	vec3_t wishvel{};
 	vec3_t wishdir;
 
 	if (pm->gent && pm->gent->client)
@@ -11604,7 +11604,7 @@ static void PM_WaterEvents()
 	{
 		//play the splash effect
 		trace_t tr;
-		vec3_t axis[3], angs, start, end;
+		vec3_t axis[3]{}, angs, start, end;
 
 		VectorSet(angs, 0, pm->gent->currentAngles[YAW], 0);
 		AngleVectors(angs, axis[2], axis[1], axis[0]);

@@ -2134,7 +2134,7 @@ void Weapon_HookThink(gentity_t* ent)
 {
 	if (ent->enemy)
 	{
-		vec3_t v, oldorigin;
+		vec3_t v{}, oldorigin;
 
 		VectorCopy(ent->currentOrigin, oldorigin);
 		v[0] = ent->enemy->currentOrigin[0] + (ent->enemy->mins[0] + ent->enemy->maxs[0]) * 0.5;
@@ -2153,7 +2153,7 @@ void Weapon_StunThink(gentity_t* ent)
 {
 	if (ent->enemy)
 	{
-		vec3_t v, oldorigin;
+		vec3_t v{}, oldorigin;
 
 		VectorCopy(ent->currentOrigin, oldorigin);
 

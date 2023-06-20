@@ -701,7 +701,7 @@ static void ReportPlayEffectError(const int id)
 void CFxScheduler::PlayEffect(const int id, vec3_t origin, vec3_t forward, const int vol, const int rad,
 	const bool isPortal)
 {
-	matrix3_t axis;
+	matrix3_t axis{};
 
 	// Take the forward vector and create two arbitrary but perpendicular vectors
 	VectorCopy(forward, axis[0]);

@@ -2323,7 +2323,7 @@ void barrier_shield_push_radius_ents(gentity_t* ent)
 {
 	gentity_t* radius_ents[128];
 	constexpr float radius = DROIDEKA_SHIELD_SIZE;
-	vec3_t mins, maxs;
+	vec3_t mins{}, maxs{};
 
 	for (int i = 0; i < 3; i++)
 	{

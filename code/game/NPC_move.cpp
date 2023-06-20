@@ -426,7 +426,7 @@ qboolean NPC_TryJump()
 		if (DistanceSquared(NPCInfo->jumpDest, NPCInfo->jumpTarget->currentOrigin) < minSafeRadiusSq)
 		{
 			vec3_t startPos;
-			vec3_t floorPos;
+			vec3_t floorPos{};
 			VectorCopy(NPCInfo->jumpDest, startPos);
 
 			floorPos[2] = NPCInfo->jumpDest[2] + (NPC->mins[2] - 32);

@@ -438,7 +438,7 @@ static void CG_AddFadeScaleModel(localEntity_t* le)
 //------------------------------------------
 static void CG_AddQuad(const localEntity_t* le)
 {
-	polyVert_t verts[4];
+	polyVert_t verts[4]{};
 
 	VectorCopy(le->refEntity.origin, verts[0].xyz);
 	verts[0].xyz[0] -= le->radius;
@@ -479,7 +479,7 @@ static void CG_AddQuad(const localEntity_t* le)
 //------------------------------------------
 static void CG_AddSprite(const localEntity_t* le)
 {
-	polyVert_t verts[4];
+	polyVert_t verts[4]{};
 
 	VectorCopy(le->refEntity.origin, verts[0].xyz);
 	VectorMA(verts[0].xyz, -le->radius, cg.refdef.viewaxis[2], verts[0].xyz);
@@ -542,7 +542,7 @@ CG_AddLocalEntities
 */
 void CG_AddLocalEntities()
 {
-	localEntity_t* next;
+	localEntity_t* next = nullptr;
 
 	// walk the list backwards, so any new local entities generated
 	// (trails, marks, etc) will be present this frame

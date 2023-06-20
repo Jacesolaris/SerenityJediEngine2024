@@ -161,7 +161,7 @@ static char* get_string_ptr(const int i_strlen, char* psOriginal)
 {
 	if (i_strlen != -1)
 	{
-		char s_string[768]; // arb, inc if nec.
+		char s_string[768]{}; // arb, inc if nec.
 
 		s_string[0] = 0;
 

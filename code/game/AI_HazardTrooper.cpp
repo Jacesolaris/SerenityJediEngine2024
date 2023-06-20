@@ -547,7 +547,7 @@ private:
 	////////////////////////////////////////////////////////////////////////////////////
 	bool TroopInFormation()
 	{
-		float max_actor_range_sq = (mActors.size() / 2 + 2) * mFormSpacingFwd;
+		float max_actor_range_sq = (mActors.size() / static_cast<float>(2) + 2) * mFormSpacingFwd;
 		max_actor_range_sq *= max_actor_range_sq;
 		for (int actor_index = 1; actor_index < mActors.size(); actor_index++)
 		{

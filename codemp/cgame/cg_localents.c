@@ -824,7 +824,7 @@ CG_AddLocalEntities
 */
 void CG_AddLocalEntities(void)
 {
-	localEntity_t* next;
+	localEntity_t* next = NULL;
 
 	// walk the list backwards, so any new local entities generated
 	// (trails, marks, etc) will be present this frame

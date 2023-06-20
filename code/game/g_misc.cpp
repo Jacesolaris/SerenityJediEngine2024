@@ -404,7 +404,7 @@ void SP_misc_model_static(gentity_t* ent)
 	char* value;
 	float temp;
 	float zOff;
-	vec3_t scale;
+	vec3_t scale{};
 
 	G_SpawnString("modelscale_vec", "1 1 1", &value);
 	sscanf(value, "%f %f %f", &scale[0], &scale[1], &scale[2]);
@@ -3048,7 +3048,7 @@ void misc_atst_use(gentity_t* self, gentity_t* other, gentity_t* activator)
 		return;
 	}
 
-	int tempLocDmg[HL_MAX];
+	int tempLocDmg[HL_MAX]{};
 	int hl, tempHealth;
 
 	if (activator->client->NPC_class != CLASS_ATST)

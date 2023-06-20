@@ -2542,8 +2542,8 @@ void ST_Commander()
 		{
 			TIMER_Set(NPC, "checkGrenadeTooCloseDebouncer", Q_irand(300, 600));
 
-			vec3_t mins;
-			vec3_t maxs;
+			vec3_t mins{};
+			vec3_t maxs{};
 			bool fled = false;
 			gentity_t* ent;
 

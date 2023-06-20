@@ -498,7 +498,7 @@ qboolean Jedi_StopKnockdown(gentity_t* self, const vec3_t push_dir)
 	const float r_dot = DotProduct(p_dir, right);
 
 	//flip or roll with it
-	usercmd_t temp_Cmd;
+	usercmd_t temp_Cmd{};
 	if (f_dot >= 0.4f)
 	{
 		temp_Cmd.forwardmove = 127;
@@ -657,7 +657,7 @@ void Tavion_ScepterSlam()
 		constexpr float radius = 300.0f;
 		constexpr float half_rad = radius / 2;
 		int i;
-		vec3_t mins, maxs, ent_dir;
+		vec3_t mins{}, maxs{}, ent_dir;
 
 		gi.G2API_GetBoltMatrix(NPC->ghoul2, NPC->weaponModel[1],
 			bolt_index,
@@ -1281,7 +1281,7 @@ static qboolean Jedi_ClearPathToSpot(vec3_t dest, const int impactEntNum)
 
 qboolean NPC_MoveDirClear(const int forwardmove, const int rightmove, const qboolean reset)
 {
-	vec3_t forward, right, testPos, angles, mins;
+	vec3_t forward, right, testPos, angles{}, mins;
 	trace_t trace;
 	float bottom_max = -STEPSIZE * 4 - 1;
 
@@ -7514,7 +7514,7 @@ static qboolean Jedi_Jump(vec3_t dest, const int goal_ent_num)
 		float shot_speed = 300, best_impact_dist = Q3_INFINITE; //fireSpeed,
 		vec3_t shot_vel, fail_case;
 		trace_t trace;
-		trajectory_t tr;
+		trajectory_t tr{};
 		int hit_count = 0;
 		constexpr int max_hits = 7;
 		vec3_t bottom;
@@ -8023,7 +8023,7 @@ static void Jedi_CheckJumps()
 	//Now predict where this is going
 	//in steps, keep evaluating the trajectory until the new z pos is <= than current z pos, trace down from there
 	trace_t trace;
-	trajectory_t tr;
+	trajectory_t tr{};
 	vec3_t last_pos, bottom;
 
 	VectorCopy(NPC->currentOrigin, tr.trBase);
@@ -8527,7 +8527,7 @@ void NPC_Jedi_Pain(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, c
 		// Figure out what quadrant the hit was in.
 		if (d_JediAI->integer || g_DebugSaberCombat->integer)
 		{
-			vec3_t diff, fwdangles, right;
+			vec3_t diff, fwdangles{}, right;
 
 			VectorSubtract(point, self->client->renderInfo.eyePoint, diff);
 			diff[2] = 0;
@@ -10609,8 +10609,8 @@ void NPC_CheckEvasion()
 			{
 				gentity_t* entity_list[MAX_GENTITIES];
 
-				vec3_t mins;
-				vec3_t maxs;
+				vec3_t mins{};
+				vec3_t maxs{};
 
 				for (int e = 0; e < 3; e++)
 				{

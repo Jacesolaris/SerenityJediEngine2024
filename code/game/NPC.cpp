@@ -512,7 +512,7 @@ void pitch_roll_for_slope(gentity_t* forwhom, vec3_t pass_slope, vec3_t store_an
 		//special code for vehicles
 		const Vehicle_t* p_veh = forwhom->m_pVehicle;
 
-		vec3_t temp_angles;
+		vec3_t temp_angles{};
 		temp_angles[PITCH] = temp_angles[ROLL] = 0;
 		temp_angles[YAW] = p_veh->m_vOrientation[YAW];
 		AngleVectors(temp_angles, ovf, ovr, nullptr);

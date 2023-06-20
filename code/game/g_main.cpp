@@ -1478,7 +1478,6 @@ class c_game_rag_doll_update_params final : public CRagDollUpdateParams
 {
 	void EffectorCollision(const SRagDollEffectorCollision& data) override
 	{
-		//Com_Printf("Effector Collision at (%f %f %f)\n",data.effectorPosition[0],data.effectorPosition[1],data.effectorPosition[2]);
 		vec3_t effectorPosDif;
 
 		if (data.useTracePlane)
@@ -1716,8 +1715,8 @@ qboolean G_RagDoll(gentity_t* ent, vec3_t forcedAngles)
 		if (!inSomething)
 		{
 			int i = 0;
-			int boltChecks[5];
-			vec3_t boltPoints[5];
+			int boltChecks[5]{};
+			vec3_t boltPoints[5]{};
 			vec3_t tAng;
 			//qboolean deathDone = qfalse;
 			trace_t tr;
@@ -1816,7 +1815,7 @@ qboolean G_RagDoll(gentity_t* ent, vec3_t forcedAngles)
 	if (ent->client->isRagging)
 	{
 		//We're in a ragdoll state, so make the call to keep our positions updated and whatnot.
-		CRagDollParams tParms;
+		CRagDollParams tParms{};
 		c_game_rag_doll_update_params tuParms;
 
 		const int ragAnim = G_RagAnimForPositioning(ent);

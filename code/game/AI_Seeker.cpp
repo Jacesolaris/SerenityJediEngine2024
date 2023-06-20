@@ -456,7 +456,7 @@ void Seeker_FollowPlayer()
 	if (dis < min_dist_sqr)
 	{
 		vec3_t dir;
-		vec3_t pt;
+		vec3_t pt{};
 		// generally circle the player closely till we take an enemy..this is our target point
 		if (NPC->client->NPC_class == CLASS_BOBAFETT || NPC->client->NPC_class == CLASS_MANDO)
 		{

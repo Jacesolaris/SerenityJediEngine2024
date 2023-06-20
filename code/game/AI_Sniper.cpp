@@ -707,7 +707,7 @@ void NPC_BSSniper_Attack()
 	//  now if this timer is done and the enemy is no longer in our line of sight, try to get a new enemy later
 	if (TIMER_Done(NPC, "sje_check_enemy"))
 	{
-		TIMER_Set(NPC, "sje_check_enemy", Q_irand(5000, 10000));
+		TIMER_Set(NPC, "sje_check_enemy", Q_irand(2500, 5000));
 
 		if (NPC->enemy && !NPC_ClearLOS(NPC->enemy) && NPC->health > 0)
 		{

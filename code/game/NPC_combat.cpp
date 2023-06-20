@@ -1726,7 +1726,7 @@ gentity_t* NPC_PickEnemy(const gentity_t* closestTo, const int enemyTeam, const 
 	const qboolean findClosest)
 {
 	int num_choices = 0;
-	int choice[128]; //FIXME: need a different way to determine how many choices?
+	int choice[128]{}; //FIXME: need a different way to determine how many choices?
 	gentity_t* newenemy;
 	gentity_t* closestEnemy = nullptr;
 	vec3_t diff;
@@ -2130,7 +2130,7 @@ int NPC_CheckMultipleEnemies(const gentity_t* closest_to, const int enemy_team, 
 
 						if (!NPC_EnemyTooFar(newenemy, 0, qfalse))
 						{
-							int choice[128];
+							int choice[128]{};
 							if (check_vis)
 							{
 								if (NPC_CheckVisibility(newenemy, CHECK_360 | CHECK_VISRANGE) >= VIS_360)

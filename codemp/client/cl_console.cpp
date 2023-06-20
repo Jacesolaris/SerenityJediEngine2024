@@ -734,7 +734,7 @@ void Con_DrawSolidConsole(const float frac)
 		// draw the background at full opacity only if fullscreen
 		if (frac < 1.0f)
 		{
-			vec4_t con_color;
+			vec4_t con_color{};
 			MAKERGBA(con_color, 1.0f, 1.0f, 1.0f, Com_Clamp(0.0f, 1.0f, con_opacity->value));
 			re->SetColor(con_color);
 		}

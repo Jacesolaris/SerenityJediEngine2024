@@ -398,7 +398,7 @@ void SandCreature_CheckMovingEnts()
 	gentity_t* radius_ents[128];
 	const float radius = NPCInfo->stats.earshot;
 	int i;
-	vec3_t mins, maxs;
+	vec3_t mins{}, maxs{};
 
 	for (i = 0; i < 3; i++)
 	{
@@ -744,7 +744,7 @@ void SandCreature_PushEnts()
 {
 	gentity_t* radius_ents[128];
 	constexpr float radius = 70;
-	vec3_t mins, maxs;
+	vec3_t mins{}, maxs{};
 
 	for (int i = 0; i < 3; i++)
 	{

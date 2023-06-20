@@ -282,7 +282,7 @@ void Boba_DustFallNear(const vec3_t origin, const int dustcount)
 	}
 
 	trace_t test_trace;
-	vec3_t test_direction;
+	vec3_t test_direction{};
 	vec3_t test_start_pos;
 
 	VectorCopy(origin, test_start_pos);
@@ -310,7 +310,7 @@ void Boba_DustFallNear(const vec3_t origin, const int dustcount)
 void Do_DustFallNear(const vec3_t origin, const int dustcount)
 {
 	trace_t test_trace;
-	vec3_t test_direction;
+	vec3_t test_direction{};
 	vec3_t test_start_pos;
 
 	VectorCopy(origin, test_start_pos);
@@ -376,7 +376,7 @@ qboolean Boba_StopKnockdown(gentity_t* self, const gentity_t* pusher, const vec3
 	if (Q_irand(0, 2))
 	{
 		//flip or roll with it
-		usercmd_t temp_Cmd;
+		usercmd_t temp_Cmd{};
 		if (f_dot >= 0.4f)
 		{
 			temp_Cmd.forwardmove = 127;
@@ -1533,7 +1533,7 @@ bool Boba_Flee()
 		{
 			if (TIMER_Done(NPC, "SpookPlayerTimer"))
 			{
-				vec3_t test_direction;
+				vec3_t test_direction{};
 				TIMER_Set(NPC, "SpookPlayerTimer", Q_irand(2000, 10000));
 				switch (Q_irand(0, 1))
 				{

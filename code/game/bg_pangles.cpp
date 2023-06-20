@@ -84,7 +84,7 @@ void BG_IK_MoveLimb(CGhoul2Info_v& ghoul2, const int bolt_index, const char* ani
 
 	if (!*ik_in_progress && !force_halt)
 	{
-		sharedSetBoneIKStateParams_t ik_p;
+		sharedSetBoneIKStateParams_t ik_p{};
 
 		//restrict the shoulder joint
 		//VectorSet(ikP.pcjMins,-50.0f,-80.0f,-15.0f);
@@ -155,7 +155,7 @@ void BG_IK_MoveLimb(CGhoul2Info_v& ghoul2, const int bolt_index, const char* ani
 	if (*ik_in_progress && !force_halt)
 	{
 		vec3_t torg;
-		vec3_t hold_point;
+		vec3_t hold_point{};
 		//actively update our ik state.
 		sharedIKMoveParams_t ik_m;
 		CRagDollUpdateParams tu_parms;

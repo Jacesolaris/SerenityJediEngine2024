@@ -777,7 +777,7 @@ void emplaced_gun_die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker
 	G_RadiusDamage(self->currentOrigin, self, self->splashDamage, self->splashRadius, self, MOD_UNKNOWN);
 
 	// when the gun is dead, add some ugliness to it.
-	vec3_t ugly;
+	vec3_t ugly{};
 
 	ugly[YAW] = 4;
 	ugly[PITCH] = self->lastAngles[PITCH] * 0.8f + Q_flrand(-1.0f, 1.0f) * 6;

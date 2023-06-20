@@ -100,7 +100,7 @@ void BubbleShield_PushRadiusEnts()
 {
 	gentity_t* radius_ents[128];
 	constexpr float radius = ASSASSIN_SHIELD_SIZE;
-	vec3_t mins, maxs;
+	vec3_t mins{}, maxs{};
 
 	for (int i = 0; i < 3; i++)
 	{
@@ -148,7 +148,7 @@ void deka_bubble_shield_push_radius_ents()
 {
 	gentity_t* radius_ents[128];
 	constexpr float radius = ASSASSIN_SHIELD_SIZE;
-	vec3_t mins, maxs;
+	vec3_t mins{}, maxs{};
 
 	for (int i = 0; i < 3; i++)
 	{

@@ -751,7 +751,7 @@ void wp_handle_bolt_block(gentity_t* ent, gentity_t* missile, vec3_t forward)
 	const qboolean accurate_missile_blocking =
 		blocker->client->ps.ManualBlockingFlags & 1 << MBF_ACCURATEMISSILEBLOCKING ? qtrue : qfalse;
 	//Active NPC Blocking
-	float slop_factor = (FATIGUE_AUTOBOLTBLOCK - 6) * (FORCE_LEVEL_3 - blocker->client->ps.forcePowerLevel[
+	float slop_factor = (FATIGUE_AUTOBOLTBLOCK - 6) * (static_cast<float>(FORCE_LEVEL_3) - blocker->client->ps.forcePowerLevel[
 		FP_SABER_DEFENSE]) / FORCE_LEVEL_3;
 
 	//save the original speed
@@ -1745,7 +1745,7 @@ void g_missile_impact(gentity_t* ent, trace_t* trace, const int hit_loc = HL_NON
 
 		if (strcmp(ent->classname, "hook") == 0)
 		{
-			vec3_t v;
+			vec3_t v{};
 			gentity_t* nent = G_Spawn();
 
 			if (other->client || other->s.eType == ET_MOVER)
@@ -1798,7 +1798,7 @@ void g_missile_impact(gentity_t* ent, trace_t* trace, const int hit_loc = HL_NON
 
 		if (strcmp(ent->classname, "stun") == 0)
 		{
-			vec3_t v;
+			vec3_t v{};
 			gentity_t* nent = G_Spawn();
 
 			if (other->client || other->s.eType == ET_MOVER)
@@ -1981,7 +1981,7 @@ Explode a missile without an impact
 */
 void g_explode_missile(gentity_t* ent)
 {
-	vec3_t dir;
+	vec3_t dir{};
 	vec3_t origin;
 
 	EvaluateTrajectory(&ent->s.pos, level.time, origin);
@@ -2039,7 +2039,7 @@ G_GroundTrace
 */
 int g_ground_trace(const gentity_t* ent, pml_t* p_pml)
 {
-	vec3_t point;
+	vec3_t point{};
 	trace_t trace;
 
 	point[0] = ent->currentOrigin[0];
@@ -2129,7 +2129,7 @@ constexpr auto BUMPCLIP = 1.5f;
 void g_roll_missile(gentity_t* ent)
 {
 	int numplanes;
-	vec3_t planes[MAX_CLIP_PLANES];
+	vec3_t planes[MAX_CLIP_PLANES]{};
 	vec3_t primal_velocity;
 	int i;
 	trace_t trace;

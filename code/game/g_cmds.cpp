@@ -779,7 +779,7 @@ Cmd_SetViewpos_f
 */
 void Cmd_SetViewpos_f(gentity_t* ent)
 {
-	vec3_t origin, angles;
+	vec3_t origin{}, angles;
 
 	if (!g_cheats->integer)
 	{
@@ -949,7 +949,7 @@ void Cmd_UseJetpack_f(const gentity_t* ent)
 //----------------------------------------------------------------------------------
 qboolean pick_seeker_spawn_point(vec3_t org, vec3_t fwd, vec3_t right, const int skip, vec3_t spot)
 {
-	vec3_t mins, maxs, forward, end;
+	vec3_t mins{}, maxs, forward, end;
 	trace_t tr;
 
 	VectorSet(maxs, -8, -8, -24); // ?? size
@@ -2751,7 +2751,7 @@ void ClientCommand(const int client_num)
 	}
 	else if (Q_stricmp(cmd, "weather") == 0)
 	{
-		char arg1[MAX_STRING_CHARS];
+		char arg1[MAX_STRING_CHARS]{};
 		int num;
 		CG_Argv(1);
 
