@@ -286,7 +286,7 @@ static void G_DynamicMusicUpdate( usercmd_t *ucmd )
 static void G_DynamicMusicUpdate()
 {
 	gentity_t* entity_list[MAX_GENTITIES];
-	vec3_t mins, maxs;
+	vec3_t mins{}, maxs{};
 	vec3_t center;
 	int danger = 0;
 	int battle = 0;
@@ -1123,7 +1123,7 @@ extern int PM_ValidateAnimRange(int start_frame, int end_frame, float animSpeed)
 
 extern "C" Q_EXPORT game_export_t * QDECL GetGameAPI(const game_import_t * import)
 {
-	gameinfo_import_t gameinfo_import;
+	gameinfo_import_t gameinfo_import{};
 
 	gi = *import;
 

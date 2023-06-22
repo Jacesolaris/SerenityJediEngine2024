@@ -20,6 +20,17 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 ===========================================================================
 */
 
+/// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// ///
+///																																///
+///																																///
+///													SERENITY JEDI ENGINE														///
+///										          LIGHTSABER COMBAT SYSTEM													    ///
+///																																///
+///						      System designed by Serenity and modded by JaceSolaris. (c) 2019 SJE   		                    ///
+///								    https://www.moddb.com/mods/serenityjediengine-20											///
+///																																///
+/// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// ///
+
 //b_spawn.cpp
 //added by MCG
 
@@ -1599,7 +1610,7 @@ constexpr auto MAX_SAFESPAWN_ENTS = 4;
 bool NPC_SafeSpawn(const gentity_t* ent, const float safeRadius)
 {
 	gentity_t* radius_ents[MAX_SAFESPAWN_ENTS];
-	vec3_t safeMins, safeMaxs;
+	vec3_t safeMins{}, safeMaxs{};
 	const float safeRadiusSquared = safeRadius * safeRadius;
 	int i;
 

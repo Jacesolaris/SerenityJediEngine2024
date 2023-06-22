@@ -20,6 +20,17 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 ===========================================================================
 */
 
+/// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// ///
+///																																///
+///																																///
+///													SERENITY JEDI ENGINE														///
+///										          LIGHTSABER COMBAT SYSTEM													    ///
+///																																///
+///						      System designed by Serenity and modded by JaceSolaris. (c) 2019 SJE   		                    ///
+///								    https://www.moddb.com/mods/serenityjediengine-20											///
+///																																///
+/// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// ///
+
 //wp_saberLoad.cpp
 
 #include "../qcommon/q_shared.h"
@@ -2443,7 +2454,7 @@ static void Saber_ParseBladeShader(saberInfo_t* saber, const char** p)
 
 static void Saber_ParseSaberDLightColor(saberInfo_t* saber, const char** p)
 {
-	vec3_t rgbValue;
+	vec3_t rgbValue{};
 	float f;
 
 	for (int i = 0; i < 3; i++)
@@ -2996,7 +3007,7 @@ qboolean WP_BreakSaber(gentity_t* ent, const char* surfName, const saberType_t s
 	int i;
 	const int originalNumBlades = ent->client->ps.saber[0].numBlades;
 	qboolean broken = qfalse;
-	saber_colors_t colors[MAX_BLADES];
+	saber_colors_t colors[MAX_BLADES]{};
 
 	//store the colors
 	for (i = 0; i < MAX_BLADES; i++)
@@ -3049,8 +3060,8 @@ qboolean WP_BreakSaber(gentity_t* ent, const char* surfName, const saberType_t s
 
 void WP_SaberLoadParms()
 {
-	int saberExtFNLen;
-	char* buffer;
+	int saberExtFNLen = 0;
+	char* buffer = nullptr;
 	char saberExtensionListBuf[2048]; //	The list of file names read in
 
 	//gi.Printf( "Parsing *.sab saber definitions\n" );
@@ -3102,8 +3113,8 @@ void WP_SaberLoadParms()
 
 void WP_SaberLoadParms2()
 {
-	int saberExtFNLen;
-	char* buffer;
+	int saberExtFNLen = 0;
+	char* buffer = nullptr;
 	char saberExtensionListBuf[2048]; //	The list of file names read in
 
 	//gi.Printf( "Parsing *.sab saber definitions\n" );

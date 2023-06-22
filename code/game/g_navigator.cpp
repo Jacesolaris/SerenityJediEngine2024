@@ -1554,8 +1554,8 @@ bool NAV::LoadFromEntitiesAndSaveToFile(const char* filename, int checksum)
 #endif // _DEBUG
 
 	CWayEdge atToTgt;
-	CVec3 atFloor;
-	CVec3 atRoof;
+	CVec3 atFloor{};
+	CVec3 atRoof{};
 	bool atOnFloor;
 
 	TNameToNodeMap::iterator nameFinder;
@@ -1680,7 +1680,7 @@ bool NAV::LoadFromEntitiesAndSaveToFile(const char* filename, int checksum)
 		if (!at->mFlags.get_bit(c_way_node::WN_NOAUTOCONNECT) &&
 			(at->mType == PT_COMBATNODE || at->mType == PT_GOALNODE))
 		{
-			ratl::ratl_compare closestNbrs[MIN_WAY_NEIGHBORS];
+			ratl::ratl_compare closestNbrs[MIN_WAY_NEIGHBORS]{};
 			// Get The List Of Nodes For This Cell Of The Map
 			//------------------------------------------------
 			TGraphCells::SCell& Cell = mCells.get_cell(at->mPoint[0], at->mPoint[1]);
@@ -2210,8 +2210,8 @@ void NAV::SpawnedPoint(gentity_t* ent, const EPointType type)
 		return;
 	}
 
-	CVec3 Mins;
-	CVec3 Maxs;
+	CVec3 Mins{};
+	CVec3 Maxs{};
 
 	Mins[0] = Mins[1] = SC_MEDIUM_RADIUS * -1.0f;
 	Maxs[0] = Maxs[1] = SC_MEDIUM_RADIUS;
@@ -2328,7 +2328,7 @@ NAV::TNodeHandle NAV::GetNearestNode(const vec3_t& position, const TNodeHandle p
 		}
 
 		CVec3 Pos(position);
-		SNodeSort NodeSort;
+		SNodeSort NodeSort{};
 
 		// PHASE I - TEST NAV POINTS
 		//===========================
@@ -2347,7 +2347,7 @@ NAV::TNodeHandle NAV::GetNearestNode(const vec3_t& position, const TNodeHandle p
 				if (!allowZOffset)
 				{
 					const float ZOff = fabsf(node.mPoint[2] - Pos[2]);
-					if (ZOff > VIEW_RANGE / 4)
+					if (ZOff > static_cast<float>(VIEW_RANGE) / 4)
 					{
 						continue;
 					}
@@ -2437,7 +2437,7 @@ NAV::TNodeHandle NAV::GetNearestNode(const vec3_t& position, const TNodeHandle p
 				if (!allowZOffset)
 				{
 					const float ZOff = fabsf(Point[2] - Pos[2]);
-					if (ZOff > VIEW_RANGE / 4)
+					if (ZOff > static_cast<float>(VIEW_RANGE) / 4)
 					{
 						continue;
 					}
@@ -2981,7 +2981,7 @@ bool NAV::SafePathExists(const CVec3& startVec, const CVec3& stopVec, const CVec
 	// Failed To Find An Acceptibly Safe Path
 	//----------------------------------------
 	CVec3 Prev(stopVec);
-	CVec3 Next;
+	CVec3 Next{};
 	for (mSearch.path_begin(); !mSearch.path_end(); mSearch.path_inc())
 	{
 		Next = mGraph.get_node(mSearch.path_at()).mPoint;
@@ -3501,7 +3501,7 @@ float NAV::PathDangerLevel(gentity_t* actor)
 	}
 
 	float DangerLevel = 0.0f;
-	CVec3 enemyPos;
+	CVec3 enemyPos{};
 	float enemySafeDist = 0.0f;
 	TEdgeHandle cur_edge;
 	int curPathAt = Path.size() - 1;
@@ -4628,7 +4628,7 @@ float STEER::Persue(gentity_t* actor, gentity_t* target, const float slowingDist
 
 	CVec3 ProjectForward(DirectionToTarget);
 	CVec3 ProjectRight{};
-	CVec3 ProjectUp;
+	CVec3 ProjectUp{};
 
 	if (relativeToTargetFacing)
 	{

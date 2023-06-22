@@ -20,6 +20,17 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 ===========================================================================
 */
 
+/// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// ///
+///																																///
+///																																///
+///													SERENITY JEDI ENGINE														///
+///										          LIGHTSABER COMBAT SYSTEM													    ///
+///																																///
+///						      System designed by Serenity and modded by JaceSolaris. (c) 2019 SJE   		                    ///
+///								    https://www.moddb.com/mods/serenityjediengine-20											///
+///																																///
+/// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// ///
+
 #include "g_local.h"
 #include "b_local.h"
 #include "g_functions.h"
@@ -105,7 +116,7 @@ qboolean WP_LobFire(const gentity_t* self, vec3_t start, vec3_t target, vec3_t m
 	float best_impact_dist = Q3_INFINITE; //fireSpeed,
 	vec3_t shot_vel, fail_case = { 0.0f };
 	trace_t trace;
-	trajectory_t tr;
+	trajectory_t tr{};
 	int hit_count = 0;
 	constexpr int max_hits = 7;
 

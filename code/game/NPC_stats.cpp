@@ -20,6 +20,17 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 ===========================================================================
 */
 
+/// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// ///
+///																																///
+///																																///
+///													SERENITY JEDI ENGINE														///
+///										          LIGHTSABER COMBAT SYSTEM													    ///
+///																																///
+///						      System designed by Serenity and modded by JaceSolaris. (c) 2019 SJE   		                    ///
+///								    https://www.moddb.com/mods/serenityjediengine-20											///
+///																																///
+/// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// ///
+
 //NPC_stats.cpp
 #include "b_local.h"
 #include "b_public.h"
@@ -358,7 +369,7 @@ saber_colors_t TranslateSaberColor(const char* name)
 	}
 	float colors[3];
 	Q_parseSaberColor(name, colors);
-	int colour_array[3];
+	int colour_array[3]{};
 	for (int i = 0; i < 3; i++)
 	{
 		colour_array[i] = static_cast<int>(colors[i] * 255);
@@ -864,7 +875,7 @@ static void G_ParseAnimationEvtFile(const int gla_index, const char* events_dire
 	const int i_real_gla_index = -1,
 	const bool model_specific = false)
 {
-	char text[80000];
+	char text[80000]{};
 	const char* text_p = text;
 	fileHandle_t f;
 	char events_path[MAX_QPATH];
@@ -953,7 +964,7 @@ extern qboolean PM_SaberInParry(int move);
 
 qboolean G_ParseAnimationFile(const int gla_index, const char* skeleton_name, const int file_index)
 {
-	char text[120000];
+	char text[120000]{};
 	const char* text_p = text;
 	animation_t* animations = level.knownAnimFileSets[file_index].animations;
 	char skeleton_path[MAX_QPATH];
@@ -4399,8 +4410,8 @@ qboolean NPC_ParseParms(const char* npc_name, gentity_t* npc)
 
 void NPC_LoadParms() //jka version
 {
-	int npc_ext_fn_len;
-	char* buffer;
+	int npc_ext_fn_len = 0;
+	char* buffer = nullptr;
 	char npc_extension_list_buf[16384]; //	The list of file names read in
 
 	//set where to store the first one
@@ -4451,8 +4462,8 @@ void NPC_LoadParms() //jka version
 
 void NPC_LoadParms1() //jko version
 {
-	int npc_ext_fn_len;
-	char* buffer;
+	int npc_ext_fn_len = 0;
+	char* buffer = nullptr;
 	char npc_extension_list_buf[16384]; //	The list of file names read in
 
 	//set where to store the first one
@@ -4503,8 +4514,8 @@ void NPC_LoadParms1() //jko version
 
 void NPC_LoadParms2() //mod version
 {
-	int npc_ext_fn_len;
-	char* buffer;
+	int npc_ext_fn_len = 0;
+	char* buffer = nullptr;
 	char npc_extension_list_buf[16384]; //	The list of file names read in
 
 	int totallen = 0;
@@ -4554,8 +4565,8 @@ void NPC_LoadParms2() //mod version
 
 void NPC_LoadParms3() //yav version
 {
-	int npc_ext_fn_len;
-	char* buffer;
+	int npc_ext_fn_len = 0;
+	char* buffer = nullptr;
 	char npc_extension_list_buf[16384]; //	The list of file names read in
 
 	int totallen = 0;
@@ -4604,8 +4615,8 @@ void NPC_LoadParms3() //yav version
 
 void NPC_LoadParms4() //eoc version
 {
-	int npc_ext_fn_len;
-	char* buffer;
+	int npc_ext_fn_len = 0;
+	char* buffer = nullptr;
 	char npc_extension_list_buf[16384]; //	The list of file names read in
 
 	int totallen = 0;

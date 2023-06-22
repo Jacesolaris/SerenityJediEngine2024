@@ -22,6 +22,17 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 ===========================================================================
 */
 
+/// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// ///
+///																																///
+///																																///
+///													SERENITY JEDI ENGINE														///
+///										          LIGHTSABER COMBAT SYSTEM													    ///
+///																																///
+///						      System designed by Serenity and modded by JaceSolaris. (c) 2019 SJE   		                    ///
+///								    https://www.moddb.com/mods/serenityjediengine-20											///
+///																																///
+/// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// ///
+
 #include "qcommon/qcommon.h"
 
 #ifdef _WIN32
@@ -258,7 +269,7 @@ qboolean NET_GetPacket(netadr_t* net_from, msg_t* net_message, fd_set* fdr)
 {
 	int ret;
 	socklen_t fromlen;
-	sockaddr_in from;
+	sockaddr_in from{};
 
 	if (ip_socket == INVALID_SOCKET || !FD_ISSET(ip_socket, fdr))
 	{
@@ -464,7 +475,7 @@ SOCKET NET_IPSocket(char* net_interface, const int port, int* err)
 	Com_Printf("----- Client Initialization -----\n");
 	Com_Printf("-----------------------------------------------------------------\n");
 	Com_Printf("---------- Genuine SerenityJediEngine-(Solaris Edition)----------\n");
-	Com_Printf("---------------------Build date 20/06/2023-----------------------\n");
+	Com_Printf("---------------------Build date 22/06/2023-----------------------\n");
 	Com_Printf("-----------------------------------------------------------------\n");
 	Com_Printf("------------------------LightSaber-------------------------------\n");
 	Com_Printf("-----------An elegant weapon for a more civilized age------------\n");
@@ -553,7 +564,7 @@ void NET_OpenSocks(const int port)
 	sockaddr_in address;
 	int len;
 	qboolean rfc1929;
-	unsigned char buf[64];
+	unsigned char buf[64]{};
 
 	usingSocks = qfalse;
 
@@ -1141,8 +1152,8 @@ sleeps msec or until net socket is ready
 */
 void NET_Sleep(int msec)
 {
-	timeval timeout;
-	fd_set fdset;
+	timeval timeout{};
+	fd_set fdset{};
 	int retval;
 	SOCKET highestfd = INVALID_SOCKET;
 

@@ -420,7 +420,7 @@ void G_ChooseLookEnemy(gentity_t* self, const usercmd_t* ucmd)
 	//closest, most in front... did damage to... took damage from?  How do we know who the player is focusing on?
 	gentity_t* bestEnt = nullptr;
 	gentity_t* entity_list[MAX_GENTITIES];
-	vec3_t center, mins, maxs, fwdangles, forward;
+	vec3_t center, mins{}, maxs{}, fwdangles{}, forward;
 	constexpr float radius = 256;
 	float bestRating = 0.0f;
 

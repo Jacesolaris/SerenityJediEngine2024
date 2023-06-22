@@ -38,11 +38,11 @@ extern void Q3_TaskIDComplete(gentity_t* ent, taskID_t taskType);
 static void G_RoffNotetrackCallback(gentity_t* ent, const char* notetrack)
 {
 	int i = 0, r = 0, r2 = 0, objectID;
-	char type[256];
-	char argument[512];
-	char addlArg[512];
+	char type[256]{};
+	char argument[512]{};
+	char addlArg[512]{};
 	char errMsg[256];
-	char teststr[256];
+	char teststr[256]{};
 	int addlArgs = 0;
 
 	if (!ent || !notetrack)
@@ -142,7 +142,7 @@ static void G_RoffNotetrackCallback(gentity_t* ent, const char* notetrack)
 	if (strcmp(type, "effect") == 0)
 	{
 		vec3_t parsedOffset;
-		char t[64];
+		char t[64]{};
 		int posoffset_gathered = 0;
 		if (!addlArgs)
 		{
@@ -230,7 +230,7 @@ static void G_RoffNotetrackCallback(gentity_t* ent, const char* notetrack)
 			vec3_t useAngles;
 			if (addlArgs)
 			{
-				vec3_t parsedAngles;
+				vec3_t parsedAngles{};
 				int angles_gathered = 0;
 				//if there is an additional argument for an effect it is expected to be XANGLE-YANGLE-ZANGLE
 				i++;
@@ -654,7 +654,7 @@ extern cvar_t* com_outcast;
 int G_LoadRoff(const char* fileName)
 {
 	char file[MAX_QPATH];
-	byte* data;
+	byte* data = nullptr;
 	int len, roff_id = 0;
 
 	// Before even bothering with all of this, make sure we have a place to store it.

@@ -1038,7 +1038,7 @@ void G_ParseField(const char* key, const char* value, gentity_t* ent)
 				break;
 			case F_VECTOR:
 			{
-				vec3_t vec;
+				vec3_t vec{};
 				const int i_fields_read = sscanf(value, "%f %f %f", &vec[0], &vec[1], &vec[2]);
 				assert(i_fields_read == 3);
 				if (i_fields_read != 3)
@@ -1054,7 +1054,7 @@ void G_ParseField(const char* key, const char* value, gentity_t* ent)
 			}
 			case F_VECTOR4:
 			{
-				vec4_t vec4;
+				vec4_t vec4{};
 				const int i_fields_read = sscanf(value, "%f %f %f %f", &vec4[0], &vec4[1], &vec4[2], &vec4[3]);
 				assert(i_fields_read == 4);
 				if (i_fields_read != 4)
@@ -1825,7 +1825,7 @@ void G_SpawnEntitiesFromString(const char* entity_string)
 
 void G_LoadExtraEntitiesFile()
 {
-	char* buffer;
+	char* buffer = nullptr;
 
 	const int len = gi.FS_ReadFile(va("mapentities/%s.eent", level.mapname), reinterpret_cast<void**>(&buffer));
 

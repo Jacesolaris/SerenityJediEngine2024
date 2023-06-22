@@ -59,7 +59,7 @@ static qboolean NPC_Jump(vec3_t dest, const int goal_ent_num)
 	qboolean belowBlocked = qfalse, aboveBlocked = qfalse;
 	vec3_t targetDir, shotVel;
 	trace_t trace;
-	trajectory_t tr;
+	trajectory_t tr{};
 	int hitCount = 0, aboveTries = 0, belowTries = 0;
 	constexpr int max_hits = 10;
 	vec3_t bottom;

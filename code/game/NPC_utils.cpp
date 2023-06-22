@@ -20,6 +20,17 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 ===========================================================================
 */
 
+/// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// ///
+///																																///
+///																																///
+///													SERENITY JEDI ENGINE														///
+///										          LIGHTSABER COMBAT SYSTEM													    ///
+///																																///
+///						      System designed by Serenity and modded by JaceSolaris. (c) 2019 SJE   		                    ///
+///								    https://www.moddb.com/mods/serenityjediengine-20											///
+///																																///
+/// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// ///
+
 //NPC_utils.cpp
 
 #include "b_local.h"
@@ -1014,7 +1025,7 @@ extern gentity_t* G_CheckControlledTurretEnemy(const gentity_t* self, gentity_t*
 int NPC_FindNearestEnemy(const gentity_t* ent)
 {
 	gentity_t* radius_ents[MAX_RADIUS_ENTS];
-	vec3_t mins, maxs;
+	vec3_t mins{}, maxs{};
 	int nearest_ent_id = -1;
 	float nearest_dist = static_cast<float>(WORLD_SIZE) * static_cast<float>(WORLD_SIZE);
 	int num_checks = 0;
@@ -1552,7 +1563,7 @@ float NPC_EnemyRangeFromBolt(const int bolt_index)
 int G_GetEntsNearBolt(gentity_t* self, gentity_t** radius_ents, const float radius, const int bolt_index,
 	vec3_t bolt_org)
 {
-	vec3_t mins, maxs;
+	vec3_t mins{}, maxs{};
 
 	//get my handRBolt's position
 	vec3_t org = { 0.0f };

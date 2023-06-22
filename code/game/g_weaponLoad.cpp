@@ -20,6 +20,17 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 ===========================================================================
 */
 
+/// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// ///
+///																																///
+///																																///
+///													SERENITY JEDI ENGINE														///
+///										          LIGHTSABER COMBAT SYSTEM													    ///
+///																																///
+///						      System designed by Serenity and modded by JaceSolaris. (c) 2019 SJE   		                    ///
+///								    https://www.moddb.com/mods/serenityjediengine-20											///
+///																																///
+/// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// ///
+
 // g_weaponLoad.cpp
 // fills in memory struct with ext_dat\weapons.dat
 
@@ -1543,7 +1554,7 @@ void WP_ParseParms(const char* buffer)
 //--------------------------------------------
 void WP_LoadWeaponParms()
 {
-	char* buffer;
+	char* buffer = nullptr;
 
 	const int len = gi.FS_ReadFile("ext_data/weapons.dat", reinterpret_cast<void**>(&buffer));
 

@@ -528,8 +528,8 @@ int G_RadiusList(vec3_t origin, float radius, const gentity_t* ignore, const qbo
 	gentity_t* ent_list[MAX_GENTITIES])
 {
 	gentity_t* entity_list[MAX_GENTITIES];
-	vec3_t mins, maxs;
-	vec3_t v;
+	vec3_t mins{}, maxs{};
+	vec3_t v{};
 	int i;
 	int ent_count = 0;
 
@@ -597,7 +597,7 @@ gentity_t* G_PickTarget(char* targetname)
 {
 	gentity_t* ent = nullptr;
 	int num_choices = 0;
-	gentity_t* choice[MAXCHOICES];
+	gentity_t* choice[MAXCHOICES]{};
 
 	if (!targetname)
 	{
@@ -1413,7 +1413,7 @@ qboolean G_CheckInSolid(gentity_t* self, const qboolean fix)
 
 qboolean infront(const gentity_t* from, const gentity_t* to)
 {
-	vec3_t angles, dir, forward;
+	vec3_t angles{}, dir, forward;
 
 	angles[PITCH] = angles[ROLL] = 0;
 	angles[YAW] = from->s.angles[YAW];

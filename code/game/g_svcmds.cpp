@@ -274,7 +274,7 @@ static void Svcmd_SaberColor_f()
 {
 	//FIXME: just list the colors, each additional listing sets that blade
 	int saber_num = atoi(gi.argv(1));
-	const char* color[MAX_BLADES];
+	const char* color[MAX_BLADES]{};
 	int blade_num;
 
 	for (blade_num = 0; blade_num < MAX_BLADES; blade_num++)
@@ -1325,7 +1325,7 @@ static void Svcmd_RunScript_f()
 
 void Svcmd_Weather_f()
 {
-	char arg1[MAX_STRING_CHARS];
+	char arg1[MAX_STRING_CHARS]{};
 	int num;
 	CG_Argv(1);
 

@@ -20,6 +20,17 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 ===========================================================================
 */
 
+/// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// ///
+///																																///
+///																																///
+///													SERENITY JEDI ENGINE														///
+///										          LIGHTSABER COMBAT SYSTEM													    ///
+///																																///
+///						      System designed by Serenity and modded by JaceSolaris. (c) 2019 SJE   		                    ///
+///								    https://www.moddb.com/mods/serenityjediengine-20											///
+///																																///
+/// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// ///
+
 #include "g_local.h"
 #include "b_local.h"
 #include "g_functions.h"
@@ -83,7 +94,7 @@ void DEMP2_AltRadiusDamage(gentity_t* ent)
 	float frac = (level.time - ent->fx_time) / 1300.0f; // synchronize with demp2 effect
 	gentity_t* entity_list[MAX_GENTITIES];
 	int i;
-	vec3_t mins, maxs;
+	vec3_t mins{}, maxs{};
 	vec3_t v, dir;
 
 	frac *= frac * frac;

@@ -20,6 +20,17 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 ===========================================================================
 */
 
+/// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// ///
+///																																///
+///																																///
+///													SERENITY JEDI ENGINE														///
+///										          LIGHTSABER COMBAT SYSTEM													    ///
+///																																///
+///						      System designed by Serenity and modded by JaceSolaris. (c) 2019 SJE   		                    ///
+///								    https://www.moddb.com/mods/serenityjediengine-20											///
+///																																///
+/// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// ///
+
 //NPC_senses.cpp
 
 #include "b_local.h"
@@ -193,7 +204,7 @@ qboolean InFOVFromPlayerView(const gentity_t* ent, const int hFOV, const int vFO
 	vec3_t spot;
 	vec3_t deltaVector;
 	vec3_t angles, fromAngles;
-	vec3_t deltaAngles;
+	vec3_t deltaAngles{};
 
 	if (!player || !player->client)
 	{
@@ -257,7 +268,7 @@ qboolean InFOV(const gentity_t* ent, const gentity_t* from, const int hFOV, cons
 	vec3_t spot;
 	vec3_t deltaVector;
 	vec3_t angles, fromAngles;
-	vec3_t deltaAngles;
+	vec3_t deltaAngles{};
 
 	if (from->client)
 	{

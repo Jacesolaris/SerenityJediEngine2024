@@ -20,6 +20,17 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 ===========================================================================
 */
 
+/// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// ///
+///																																///
+///																																///
+///													SERENITY JEDI ENGINE														///
+///										          LIGHTSABER COMBAT SYSTEM													    ///
+///																																///
+///						      System designed by Serenity and modded by JaceSolaris. (c) 2019 SJE   		                    ///
+///								    https://www.moddb.com/mods/serenityjediengine-20											///
+///																																///
+/// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// ///
+
 #ifndef GAME_VERSION_H
 #define GAME_VERSION_H
 #define _STR(x) #x
@@ -29,10 +40,10 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 #define VERSION_MAJOR_RELEASE		23
 #define VERSION_MINOR_RELEASE		06
-#define VERSION_INTERNAL_BUILD		19
+#define VERSION_INTERNAL_BUILD		22
 
-#define VERSION_STRING				"Year-23,Month-06,Day-19,BuildNum-02"
-#define VERSION_STRING_DOTTED		"Year-23,Month-06,Day-19,BuildNum-02"
+#define VERSION_STRING				"Year-23,Month-06,Day-22,BuildNum-03"
+#define VERSION_STRING_DOTTED		"Year-23,Month-06,Day-22,BuildNum-03"
 
 #if defined(_DEBUG)
 #define	JK_VERSION		"(debug)SerenityJediEngine2024-MP: " VERSION_STRING_DOTTED

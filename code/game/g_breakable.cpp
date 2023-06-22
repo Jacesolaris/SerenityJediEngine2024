@@ -1352,7 +1352,7 @@ void SP_misc_model_breakable(gentity_t* ent)
 			//ent->nextthink = level.time + FRAMETIME;
 			ent->e_UseFunc = useF_TieFighterUse;
 
-			vec3_t color;
+			vec3_t color{};
 
 			// if the "color" or "light" keys are set, setup constantLight
 			constexpr qboolean lightSet = qtrue; //G_SpawnFloat( "light", "100", &light );

@@ -13,6 +13,17 @@ This file is part of Jedi Academy.
     You should have received a copy of the GNU General Public License
     along with Jedi Academy.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+/// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// ///
+///																																///
+///																																///
+///													SERENITY JEDI ENGINE														///
+///										          LIGHTSABER COMBAT SYSTEM													    ///
+///																																///
+///						      System designed by Serenity and modded by JaceSolaris. (c) 2019 SJE   		                    ///
+///								    https://www.moddb.com/mods/serenityjediengine-20											///
+///																																///
+/// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// ///
 // Copyright 2001-2013 Raven Software
 
 #ifndef __AUTO_VERSION_HEADER
@@ -20,9 +31,9 @@ This file is part of Jedi Academy.
 
 #define VERSION_MAJOR_RELEASE		23
 #define VERSION_MINOR_RELEASE		06
-#define VERSION_INTERNAL_BUILD		19
+#define VERSION_INTERNAL_BUILD		22
 
-#define VERSION_STRING				"Year-23,Month-06,Day-19,BuildNum-02"
-#define VERSION_STRING_DOTTED		"Year-23,Month-06,Day-19,BuildNum-02"
+#define VERSION_STRING				"Year-23,Month-06,Day-22,BuildNum-03"
+#define VERSION_STRING_DOTTED		"Year-23,Month-06,Day-22,BuildNum-03"
 
 #endif // __AUTO_VERSION_HEADER
