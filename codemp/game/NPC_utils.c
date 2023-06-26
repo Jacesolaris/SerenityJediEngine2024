@@ -1659,7 +1659,7 @@ void JET_FlyStart(gentity_t* self)
 	}
 }
 
-void JET_FlyStop(gentity_t* self)
+void jet_fly_stop(gentity_t* self)
 {
 	if (!self || !self->client)
 	{

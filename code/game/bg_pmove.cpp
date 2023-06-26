@@ -116,7 +116,7 @@ extern qboolean G_CheckRollSafety(const gentity_t* self, int anim, float test_di
 extern saberMoveName_t PM_CheckPullAttack();
 extern qboolean JET_Flying(const gentity_t* self);
 extern void JET_FlyStart(gentity_t* self);
-extern void JET_FlyStop(gentity_t* self);
+extern void jet_fly_stop(gentity_t* self);
 extern qboolean PM_LockedAnim(int anim);
 extern qboolean G_TryingKataAttack(const usercmd_t* cmd);
 extern qboolean G_TryingCartwheel(const gentity_t* self, const usercmd_t* cmd);
@@ -4772,7 +4772,7 @@ static void PM_CrashLand()
 					|| pm->gent->client->NPC_class == CLASS_ROCKETTROOPER && pm->gent->NPC && pm->gent->NPC->rank <
 					RANK_LT)
 				{
-					JET_FlyStop(pm->gent);
+					jet_fly_stop(pm->gent);
 				}
 				else
 				{

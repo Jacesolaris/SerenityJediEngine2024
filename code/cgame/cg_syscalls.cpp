@@ -38,7 +38,7 @@ extern "C" Q_EXPORT void QDECL dllEntry(intptr_t(QDECL * syscallptr)(intptr_t ar
 
 inline int PASSFLOAT(const float x)
 {
-	byteAlias_t fi;
+	byteAlias_t fi{};
 	fi.f = x;
 	return fi.i;
 }

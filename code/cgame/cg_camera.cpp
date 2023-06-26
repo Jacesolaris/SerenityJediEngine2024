@@ -85,7 +85,7 @@ void CGCam_Enable()
 	client_camera.bar_alpha_dest = 1.0f;
 
 	client_camera.bar_height_source = 0.0f;
-	client_camera.bar_height_dest = 480 / 10;
+	client_camera.bar_height_dest = static_cast<float>(480) / 10;
 	client_camera.bar_height = 0.0f;
 
 	client_camera.info_state |= CAMERA_BAR_FADING;
@@ -164,7 +164,7 @@ void CGCam_Disable()
 	client_camera.bar_alpha_source = 1.0f;
 	client_camera.bar_alpha_dest = 0.0f;
 
-	client_camera.bar_height_source = 480 / 10;
+	client_camera.bar_height_source = static_cast<float>(480) / 10;
 	client_camera.bar_height_dest = 0.0f;
 
 	client_camera.info_state |= CAMERA_BAR_FADING;
@@ -644,17 +644,10 @@ void CGCam_FollowUpdate()
 	{
 		int num_subjects = 0;
 		gentity_t* from = nullptr;
-		vec3_t focus[MAX_CAMERA_GROUP_SUBJECTS];
+		vec3_t focus[MAX_CAMERA_GROUP_SUBJECTS]{};
 		//Stay centered in my cameraGroup, if I have one
 		while (nullptr != (from = G_Find(from, FOFS(cameraGroup), client_camera.cameraGroup)))
 		{
-			/*
-			if ( from->s.number == client_camera.aimEntNum )
-			{//This is the misc_camera_focus, we'll be removing this ent altogether eventually
-				continue;
-			}
-			*/
-
 			if (num_subjects >= MAX_CAMERA_GROUP_SUBJECTS)
 			{
 				gi.Printf(S_COLOR_RED"ERROR: Too many subjects in shot composition %s", client_camera.cameraGroup);
@@ -1303,7 +1296,7 @@ void CGCam_DrawWideScreen()
 		}
 		else
 		{
-			vec4_t modulate;
+			vec4_t modulate{};
 			modulate[0] = modulate[1] = modulate[2] = 0.0f;
 			modulate[3] = client_camera.bar_alpha;
 
@@ -1369,7 +1362,7 @@ This doesn't actually affect the camera's info, but passed information instead
 
 void CGCam_UpdateShake(vec3_t origin, vec3_t angles)
 {
-	vec3_t moveDir;
+	vec3_t moveDir{};
 
 	if (client_camera.shake_duration <= 0)
 		return;
@@ -1702,9 +1695,8 @@ void CGCam_NotetrackProcessFovAccel(const char* addlArg)
 static void CG_RoffNotetrackCallback(const char* notetrack)
 {
 	int i = 0;
-	char type[256];
-	//	char argument[512];
-	char addlArg[512];
+	char type[256]{};
+	char addlArg[512]{};
 	int addlArgs = 0;
 
 	if (!notetrack)

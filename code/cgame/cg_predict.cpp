@@ -108,7 +108,7 @@ void CG_ClipMoveToEntities(const vec3_t start, const vec3_t mins, const vec3_t m
 {
 	trace_t trace;
 	clip_handle_t cmodel;
-	vec3_t bmins, bmaxs;
+	vec3_t bmins{}, bmaxs{};
 
 	for (int i = 0; i < cg_numSolidEntities; i++)
 	{
@@ -450,7 +450,7 @@ void CG_InterpolatePlayerState(const qboolean grab_angles)
 		//		if (cg.frametime<150)
 		//		{
 		assert(pent);
-		vec3_t p1, p2, vel;
+		vec3_t p1, p2, vel{};
 		float lerpTime;
 
 		EvaluateTrajectory(&pent->currentState.pos, cg.snap->serverTime, p1);

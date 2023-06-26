@@ -291,7 +291,7 @@ void CG_Credits_Init(const char* psStripReference, vec4_t* pv4Color)
 	{
 		// read a line...
 		//
-		char sLine[MAX_LINE_BYTES];
+		char sLine[MAX_LINE_BYTES]{};
 		sLine[0] = '\0';
 		qboolean bWasCommand = qtrue;
 		while (true)
@@ -598,7 +598,7 @@ qboolean CG_Credits_Draw()
 			const float fMilliSecondsElapsed = cg.time - CreditData.iStartTime;
 			const float fSecondsElapsed = fMilliSecondsElapsed / 1000.0f;
 
-			bool b_erase_occured;
+			bool b_erase_occured = false;
 			for (auto it = CreditData.CreditLines.begin(); it != CreditData.CreditLines.end();
 				b_erase_occured ? it : ++it)
 			{

@@ -1629,18 +1629,37 @@ void JET_FlyStart(gentity_t* self)
 	}
 }
 
-void JET_FlyStop(gentity_t* self)
+extern qboolean G_ControlledByPlayer(const gentity_t* self);
+qboolean rocket_trooper_player(const gentity_t* self)
+{
+	if (self->s.number < MAX_CLIENTS || G_ControlledByPlayer(self))
+	{
+		if (self->client->NPC_class == CLASS_ROCKETTROOPER)
+		{
+			return qtrue;
+		}
+	}
+	return qfalse;
+}
+
+void jet_fly_stop(gentity_t* self)
 {
 	if (!self || !self->client)
 	{
 		return;
 	}
-	if (self->client->NPC_class == CLASS_BOBAFETT || self->client->NPC_class == CLASS_MANDO)
+	if (self->client->NPC_class == CLASS_BOBAFETT ||
+		self->client->NPC_class == CLASS_MANDO ||
+		self->client->NPC_class == CLASS_ROCKETTROOPER && rocket_trooper_player(self))
 	{
 		Boba_FlyStop(self);
 	}
-	else if (self->client->NPC_class == CLASS_ROCKETTROOPER)
+	else if (self->client->NPC_class == CLASS_ROCKETTROOPER && !rocket_trooper_player(self))
 	{
 		RT_FlyStop(self);
+	}
+	else
+	{
+		Boba_FlyStop(self);
 	}
 }

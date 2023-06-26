@@ -735,7 +735,7 @@ static void ReportPlayEffectError(const int id)
 //------------------------------------------------------
 void CFxScheduler::PlayEffect(const int id, vec3_t origin, const bool isPortal)
 {
-	vec3_t axis[3];
+	vec3_t axis[3]{};
 
 	VectorSet(axis[0], 0, 0, 1);
 	VectorSet(axis[1], 1, 0, 0);
@@ -758,7 +758,7 @@ void CFxScheduler::PlayEffect(const int id, vec3_t origin, const bool isPortal)
 //------------------------------------------------------
 void CFxScheduler::PlayEffect(const int id, vec3_t origin, vec3_t forward, const bool isPortal)
 {
-	vec3_t axis[3];
+	vec3_t axis[3]{};
 
 	// Take the forward vector and create two arbitrary but perpendicular vectors
 	VectorCopy(forward, axis[0]);

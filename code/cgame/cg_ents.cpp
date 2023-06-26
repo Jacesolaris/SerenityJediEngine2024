@@ -436,7 +436,7 @@ static void CG_General(centity_t* cent)
 
 		vec3_t start;
 		vec3_t end;
-		vec3_t r_hand_pos;
+		vec3_t r_hand_pos{};
 
 		centity_t* parent;
 		mdxaBone_t mat;
@@ -1366,7 +1366,7 @@ static void CG_Missile(centity_t* cent)
 
 		vec3_t start;
 		vec3_t end;
-		vec3_t r_hand_pos;
+		vec3_t r_hand_pos{};
 		vec3_t BLUER = { 0.0f, 0.0f, 1.0f };
 
 		mdxaBone_t mat;
@@ -1732,8 +1732,8 @@ static vec2_t st[] =
 
 void CG_Cube(vec3_t mins, vec3_t maxs, vec3_t color, const float alpha)
 {
-	vec3_t point[4], rot = { 0, 0, 0 };
-	int vec[3];
+	vec3_t point[4]{}, rot = { 0, 0, 0 };
+	int vec[3]{};
 	int axis;
 
 	for (axis = 0, vec[0] = 0, vec[1] = 1, vec[2] = 2; axis < 3; axis++, vec[0]++, vec[1]++, vec[2]++)
@@ -1776,8 +1776,8 @@ void CG_Cube(vec3_t mins, vec3_t maxs, vec3_t color, const float alpha)
 
 void CG_CubeOutline(vec3_t mins, vec3_t maxs, const int time, const unsigned int color)
 {
-	vec3_t point1, point2, point3, point4;
-	int vec[3];
+	vec3_t point1{}, point2{}, point3{}, point4{};
+	int vec[3]{};
 	int axis;
 
 	for (axis = 0, vec[0] = 0, vec[1] = 1, vec[2] = 2; axis < 3; axis++, vec[0]++, vec[1]++, vec[2]++)
@@ -2248,7 +2248,7 @@ void CG_DLightThink(const centity_t* cent)
 		const float t_delta = cg.time - cent->gent->painDebounceTime;
 		float percentage = t_delta / cent->gent->speed;
 		vec3_t org;
-		vec4_t current_rgba;
+		vec4_t current_rgba{};
 		const gentity_t* owner;
 		int i;
 
@@ -2995,9 +2995,9 @@ void CG_AddPacketEntities(const qboolean is_portal)
 void CG_ROFF_NotetrackCallback(const centity_t* cent, const char* notetrack)
 {
 	int i = 0, r = 0, object_id;
-	char type[256];
-	char argument[512];
-	char addl_arg[512];
+	char type[256]{};
+	char argument[512]{};
+	char addl_arg[512]{};
 	char err_msg[256];
 	int addl_args = 0;
 
@@ -3055,7 +3055,7 @@ void CG_ROFF_NotetrackCallback(const centity_t* cent, const char* notetrack)
 
 	if (strcmp(type, "effect") == 0)
 	{
-		char t[64];
+		char t[64]{};
 		vec3_t parsed_offset;
 		int posoffset_gathered = 0;
 		if (!addl_args)
@@ -3118,7 +3118,7 @@ void CG_ROFF_NotetrackCallback(const centity_t* cent, const char* notetrack)
 			vec3_t use_angles;
 			if (addl_args)
 			{
-				vec3_t parsed_angles;
+				vec3_t parsed_angles{};
 				int angles_gathered = 0;
 				//if there is an additional argument for an effect it is expected to be XANGLE-YANGLE-ZANGLE
 				i++;

@@ -1672,7 +1672,7 @@ void CG_AddViewWeapon(playerState_t* ps)
 	// set up gun position
 	CG_CalculateWeaponPosition(hand.origin, angles);
 
-	vec3_t extraOffset;
+	vec3_t extraOffset{};
 	extraOffset[0] = extraOffset[1] = extraOffset[2] = 0.0f;
 
 	if (ps->weapon == WP_TUSKEN_RIFLE || ps->weapon == WP_NOGHRI_STICK || ps->weapon == WP_TUSKEN_STAFF)
@@ -2207,7 +2207,7 @@ void CG_AddViewWeaponDuals(playerState_t* ps)
 	// set up gun position
 	CG_CalculateWeaponPosition(hand.origin, angles);
 
-	vec3_t extraOffset;
+	vec3_t extraOffset{};
 	extraOffset[0] = extraOffset[1] = extraOffset[2] = 0.0f;
 
 	if (ps->weapon == WP_TUSKEN_RIFLE || ps->weapon == WP_NOGHRI_STICK || ps->weapon == WP_TUSKEN_STAFF)
@@ -3083,12 +3083,12 @@ void CG_DrawWeaponSelect()
 		{
 			if (!CG_WeaponCheck(cg.weaponSelect))
 			{
-				CG_DrawPic(x - bigIconSize / 2, y - (bigIconSize - smallIconSize) / 2 + yOffset, bigIconSize,
+				CG_DrawPic(x - bigIconSize / static_cast<float>(2), y - (static_cast<float>(bigIconSize) - smallIconSize) / 2 + yOffset, bigIconSize,
 					bigIconSize, weaponInfo->weaponIconNoAmmo);
 			}
 			else
 			{
-				CG_DrawPic(x - bigIconSize / 2, y - (bigIconSize - smallIconSize) / 2 + yOffset, bigIconSize,
+				CG_DrawPic(x - bigIconSize / static_cast<float>(2), y - (static_cast<float>(bigIconSize) - smallIconSize) / 2 + yOffset, bigIconSize,
 					bigIconSize, weaponInfo->weaponIcon);
 			}
 		}
@@ -3096,12 +3096,12 @@ void CG_DrawWeaponSelect()
 		{
 			if (!CG_WeaponCheck(cg.weaponSelect))
 			{
-				CG_DrawPic(x - bigIconSize / 2, y - (bigIconSize - smallIconSize) / 2 + 10 + yOffset, bigIconSize,
+				CG_DrawPic(x - bigIconSize / static_cast<float>(2), y - (static_cast<float>(bigIconSize) - smallIconSize) / 2 + 10 + yOffset, bigIconSize,
 					bigIconSize, weaponInfo->weaponIconNoAmmo);
 			}
 			else
 			{
-				CG_DrawPic(x - bigIconSize / 2, y - (bigIconSize - smallIconSize) / 2 + 10 + yOffset, bigIconSize,
+				CG_DrawPic(x - bigIconSize / static_cast<float>(2), y - (static_cast<float>(bigIconSize) - smallIconSize) / 2 + 10 + yOffset, bigIconSize,
 					bigIconSize, weaponInfo->weaponIcon);
 			}
 		}

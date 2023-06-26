@@ -1051,7 +1051,7 @@ void NPC_ApplyScriptFlags()
 
 extern qboolean JET_Flying(const gentity_t* self);
 extern void JET_FlyStart(gentity_t* self);
-extern void JET_FlyStop(gentity_t* self);
+extern void jet_fly_stop(gentity_t* self);
 
 void NPC_HandleAIFlags()
 {
@@ -1106,7 +1106,7 @@ void NPC_HandleAIFlags()
 		//-----------------------------------
 		else if (!should_fly && is_flying)
 		{
-			JET_FlyStop(NPC); // EVENTUALLY, Remove All Other Calls
+			jet_fly_stop(NPC); // EVENTUALLY, Remove All Other Calls
 		}
 	}
 

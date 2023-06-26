@@ -92,7 +92,7 @@ can then be moved around
 */
 void CG_TestG2Model_f()
 {
-	vec3_t angles;
+	vec3_t angles{};
 
 	memset(&cg.testModelEntity, 0, sizeof cg.testModelEntity);
 	const auto ghoul2 = new CGhoul2Info_v;
@@ -163,7 +163,7 @@ void CG_TestModelSurfaceOnOff_f()
 
 void CG_TestModelSetAnglespre_f()
 {
-	vec3_t angles;
+	vec3_t angles{};
 
 	if (cgi_Argc() < 3)
 	{
@@ -180,7 +180,7 @@ void CG_TestModelSetAnglespre_f()
 
 void CG_TestModelSetAnglespost_f()
 {
-	vec3_t angles;
+	vec3_t angles{};
 
 	if (cgi_Argc() < 3)
 	{
@@ -219,7 +219,7 @@ can then be moved around
 */
 void CG_TestModel_f()
 {
-	vec3_t angles;
+	vec3_t angles{};
 
 	memset(&cg.testModelEntity, 0, sizeof cg.testModelEntity);
 	if (cgi_Argc() < 2)
@@ -2197,7 +2197,7 @@ void CG_DrawActiveFrame(const int serverTime, const stereoFrame_t stereoView)
 		// let's grab a panorama!
 		cg.levelShot = qtrue; //hide the 2d
 		VectorClear(cg.refdefViewAngles);
-		cg.refdefViewAngles[YAW] = -360 * cg_pano.integer / cg_panoNumShots.integer; //choose angle
+		cg.refdefViewAngles[YAW] = static_cast<float>(-360) * cg_pano.integer / cg_panoNumShots.integer; //choose angle
 		AnglesToAxis(cg.refdefViewAngles, cg.refdef.viewaxis);
 		CG_DrawActive(stereoView);
 		cg.levelShot = qfalse;

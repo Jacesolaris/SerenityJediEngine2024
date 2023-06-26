@@ -40,7 +40,11 @@ static	texModInfo_t	texMods[MAX_SHADER_STAGES][TR_MAX_TEXMODS];
 
 // Hash value (generated using the generateHashValueForText function) for the original
 // retail JKA shader for gfx/2d/wedge.
+#ifdef JK2_MODE
+constexpr auto RETAIL_ROCKET_WEDGE_SHADER_HASH = 1193966;
+#else
 constexpr auto RETAIL_ROCKET_WEDGE_SHADER_HASH = 1217042;
+#endif
 
 // Hash value (generated using the generateHashValueForText function) for the original
 // retail JKA shader for gfx/menus/radar/arrow_w.
@@ -2387,6 +2391,8 @@ static qboolean ParseShader(const char** text)
 		stages[0].stateBits |= GLS_SRCBLEND_SRC_ALPHA | GLS_DSTBLEND_ONE_MINUS_SRC_ALPHA;
 	}
 
+#ifndef JK2_MODE
+
 	// The basejka radar arrow contains an incorrect rgbGen of identity
 	// It only worked because the original code didn't check shaders at all,
 	// thus setcolor worked fine but with fixing RB_RotatePic it no longer
@@ -2401,6 +2407,7 @@ static qboolean ParseShader(const char** text)
 		stages[0].rgbGen = CGEN_VERTEX;
 		stages[0].alphaGen = AGEN_VERTEX;
 	}
+#endif
 
 	COM_EndParseSession();
 	return qtrue;

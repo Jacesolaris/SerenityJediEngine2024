@@ -2051,7 +2051,7 @@ int AITime = 0;
 int navTime = 0;
 #endif//	AI_TIMERS
 extern qboolean JET_Flying(const gentity_t* self);
-extern void JET_FlyStop(gentity_t* self);
+extern void jet_fly_stop(gentity_t* self);
 extern void Boba_StopFlameThrower(const gentity_t* self);
 
 constexpr auto CLOAK_DEFUEL_RATE = 150; //approx. 20 seconds of idle use from a fully charged fuel amt;
@@ -2275,7 +2275,7 @@ void G_RunFrame(const int levelTime)
 						Jetpack_Off(ent);
 						if (JET_Flying(ent))
 						{
-							JET_FlyStop(ent);
+							jet_fly_stop(ent);
 						}
 						Boba_StopFlameThrower(ent);
 					}

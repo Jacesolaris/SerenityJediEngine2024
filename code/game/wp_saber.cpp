@@ -260,6 +260,7 @@ extern void Jetpack_Off(const gentity_t* ent);
 extern void sab_beh_saber_should_be_disarmed_blocker(gentity_t* blocker, int saber_num);
 extern void G_StasisMissile(gentity_t* ent, gentity_t* missile);
 void G_Beskar_Attack_Bounce(const gentity_t* self, gentity_t* other);
+extern void jet_fly_stop(gentity_t* self);
 
 qboolean g_saberNoEffects = qfalse;
 qboolean g_noClashFlare = qfalse;
@@ -24723,10 +24724,11 @@ void ForceStasisWide(const gentity_t* self, gentity_t* trace_ent)
 					player_Freeze(trace_ent);
 
 					if (trace_ent->client->NPC_class == CLASS_BOBAFETT ||
-						trace_ent->client->NPC_class == CLASS_MANDO)
+						trace_ent->client->NPC_class == CLASS_MANDO ||
+						trace_ent->client->NPC_class == CLASS_ROCKETTROOPER)
 					{
 						// also disables npc jetpack
-						Boba_FlyStop(trace_ent);
+						jet_fly_stop(trace_ent);
 						if (trace_ent->client->jetPackOn)
 						{
 							//disable jetpack temporarily
@@ -24766,10 +24768,11 @@ void ForceStasisWide(const gentity_t* self, gentity_t* trace_ent)
 					player_Freeze(trace_ent);
 
 					if (trace_ent->client->NPC_class == CLASS_BOBAFETT ||
-						trace_ent->client->NPC_class == CLASS_MANDO)
+						trace_ent->client->NPC_class == CLASS_MANDO ||
+						trace_ent->client->NPC_class == CLASS_ROCKETTROOPER)
 					{
 						// also disables npc jetpack
-						Boba_FlyStop(trace_ent);
+						jet_fly_stop(trace_ent);
 						if (trace_ent->client->jetPackOn)
 						{
 							//disable jetpack temporarily
@@ -25138,10 +25141,11 @@ void force_stasis(gentity_t* self)
 				player_Freeze(trace_ent);
 
 				if (trace_ent->client->NPC_class == CLASS_BOBAFETT ||
-					trace_ent->client->NPC_class == CLASS_MANDO)
+					trace_ent->client->NPC_class == CLASS_MANDO ||
+					trace_ent->client->NPC_class == CLASS_ROCKETTROOPER)
 				{
 					// also disables npc jetpack
-					Boba_FlyStop(trace_ent);
+					jet_fly_stop(trace_ent);
 					if (trace_ent->client->jetPackOn)
 					{
 						//disable jetpack temporarily
@@ -25201,10 +25205,11 @@ void force_stasis(gentity_t* self)
 				player_Freeze(trace_ent);
 
 				if (trace_ent->client->NPC_class == CLASS_BOBAFETT ||
-					trace_ent->client->NPC_class == CLASS_MANDO)
+					trace_ent->client->NPC_class == CLASS_MANDO ||
+					trace_ent->client->NPC_class == CLASS_ROCKETTROOPER)
 				{
 					// also disables npc jetpack
-					Boba_FlyStop(trace_ent);
+					jet_fly_stop(trace_ent);
 					if (trace_ent->client->jetPackOn)
 					{
 						//disable jetpack temporarily

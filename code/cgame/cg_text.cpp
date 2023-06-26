@@ -71,7 +71,7 @@ const char* CG_DisplayBoxedText(const int iBoxX, const int iBoxY, const int iBox
 	const char* psBestLineBreakSrcPos = psCurrentTextReadPos;
 	while (*psCurrentTextReadPos && iYpos + iFontHeight < iBoxY + iBoxHeight)
 	{
-		char sLineForDisplay[2048]; // ott
+		char sLineForDisplay[2048]{}; // ott
 
 		// construct a line...
 		//
@@ -718,7 +718,7 @@ void CG_DrawCenterString()
 
 	while (true)
 	{
-		char linebuffer[1024];
+		char linebuffer[1024]{};
 
 		// this is kind of unpleasant when dealing with MBCS, but...
 		//

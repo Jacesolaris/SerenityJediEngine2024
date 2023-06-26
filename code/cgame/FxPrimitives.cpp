@@ -247,7 +247,7 @@ bool CParticle::Update()
 //----------------------------
 bool CParticle::UpdateOrigin()
 {
-	vec3_t new_origin;
+	vec3_t new_origin{};
 	//	float	ftime, time2;
 
 	UpdateVelocity();
@@ -1377,7 +1377,7 @@ void CEmitter::Draw()
 	//	either choke up the effects system on a fast machine, or look really nasty on a low end one.
 	if (mFlags & FX_EMIT_FX)
 	{
-		vec3_t org;
+		vec3_t org{};
 
 		constexpr auto TRAIL_RATE = 8; // we "think" at about a 60hz rate;
 
@@ -1951,7 +1951,7 @@ void CPoly::Rotate()
 	// Multiply our rotation matrix by each of the offset verts to get their new position
 	for (int i = 0; i < mCount; i++)
 	{
-		vec3_t temp[MAX_CPOLY_VERTS];
+		vec3_t temp[MAX_CPOLY_VERTS]{};
 		VectorRotate(mOrg[i], mRot, temp[i]);
 		VectorCopy(temp[i], mOrg[i]);
 	}
@@ -2175,7 +2175,7 @@ constexpr float BEZIER_RESOLUTION = 16.0f;
 //----------------------------
 void CBezier::Draw()
 {
-	vec3_t pos, old_pos;
+	vec3_t pos{}, old_pos;
 	constexpr float incr = 1.0f / BEZIER_RESOLUTION;
 
 	VectorCopy(mOrigin1, old_pos);

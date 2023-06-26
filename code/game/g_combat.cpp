@@ -121,7 +121,7 @@ extern void AI_DeleteSelfFromGroup(const gentity_t* self);
 extern void AI_GroupMemberKilled(const gentity_t* self);
 extern qboolean FlyingCreature(const gentity_t* ent);
 extern void G_DrivableATSTDie(gentity_t* self);
-extern void JET_FlyStop(gentity_t* self);
+extern void jet_fly_stop(gentity_t* self);
 extern void NPC_LeaveTroop(const gentity_t* actor);
 extern void Rancor_DropVictim(gentity_t* self);
 extern void Wampa_DropVictim(gentity_t* self);
@@ -4805,7 +4805,7 @@ void player_die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, cons
 		{
 			if (self->client->moveType == MT_FLYSWIM || self->client->ps.groundEntityNum == ENTITYNUM_NONE)
 			{
-				JET_FlyStop(self);
+				jet_fly_stop(self);
 			}
 			if (self->client->jetPackOn)
 			{

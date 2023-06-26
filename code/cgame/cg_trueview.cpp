@@ -31,7 +31,7 @@ int true_view_valid;
 int BG_SiegeGetPairedValue(const char* buf, char* key, char* outbuf)
 {
 	int i = 0;
-	char check_key[4096];
+	char check_key[4096]{};
 
 	while (buf[i])
 	{

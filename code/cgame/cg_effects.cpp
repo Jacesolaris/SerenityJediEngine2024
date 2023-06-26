@@ -98,7 +98,7 @@ Adds an explosion to a misc model breakables
 void CG_MiscModelExplosion(vec3_t mins, vec3_t maxs, const int size, const material_t chunk_type)
 {
 	int ct = 13;
-	vec3_t org, mid;
+	vec3_t org{}, mid;
 	const char* effect = nullptr, * effect2 = nullptr;
 
 	VectorAdd(mins, maxs, mid);
@@ -749,7 +749,7 @@ void CG_DoGlass(vec3_t verts[], vec3_t dmg_pt, vec3_t dmg_dir, const float dmg_r
 	{
 		for (x = 0.0f, t = 0; x < 1.0f; x += step_width, t++)
 		{
-			vec2_t bi_points[4];
+			vec2_t bi_points[4]{};
 			vec3_t sub_verts[4];
 			// This is nasty..we do this because we don't want to add a random offset on the edge of the glass brush
 			//	...but we do in the center, otherwise the breaking scheme looks way too orderly
@@ -938,7 +938,7 @@ void CG_PlayEffectIDBolted(const int fx_id, const int model_index, const int bol
 
 void CG_PlayEffectOnEnt(const char* fx_name, const int client_num, vec3_t origin, const vec3_t fwd)
 {
-	vec3_t temp, axis[3];
+	vec3_t temp, axis[3]{};
 
 	// Assume angles, we'll do a cross product to finish up
 	VectorCopy(fwd, axis[0]);
@@ -956,7 +956,7 @@ void CG_PlayEffectIDOnEnt(const int fx_id, const int client_num, vec3_t origin, 
 
 void CG_PlayEffect(const char* fx_name, vec3_t origin, const vec3_t fwd)
 {
-	vec3_t temp, axis[3];
+	vec3_t temp, axis[3]{};
 
 	// Assume angles, we'll do a cross product to finish up
 	VectorCopy(fwd, axis[0]);
@@ -994,7 +994,7 @@ constexpr auto GIB_JUMP = 250;
 
 void CG_GibPlayer(vec3_t player_origin)
 {
-	vec3_t origin, velocity;
+	vec3_t origin, velocity{};
 
 	VectorCopy(player_origin, origin);
 	velocity[0] = crandom() * GIB_VELOCITY;
@@ -1052,7 +1052,7 @@ constexpr auto HEAD_JUMP = 3000;
 
 void CG_GibPlayerHeadshot(vec3_t player_origin)
 {
-	vec3_t origin, velocity;
+	vec3_t origin, velocity{};
 
 	VectorCopy(player_origin, origin);
 	origin[2] += 25;

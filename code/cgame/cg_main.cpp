@@ -3071,7 +3071,7 @@ void CG_DrawAlert(vec3_t origin, const float rating)
 	VectorCopy(origin, drawPos);
 	drawPos[2] += 48;
 
-	vec3_t startRGB;
+	vec3_t startRGB{};
 
 	//Fades from green at 0, to red at 1
 	startRGB[0] = rating;
@@ -4490,12 +4490,12 @@ void CG_DrawForceSelect()
 	{
 		if (is_on_veh) //PM_WeaponOkOnVehicle
 		{
-			CG_DrawPic(x - bigIconSize / 2, y - (bigIconSize - smallIconSize) / 2 - 10 + yOffset, bigIconSize,
+			CG_DrawPic(x - bigIconSize / static_cast<float>(2), y - (static_cast<float>(bigIconSize) - smallIconSize) / 2 - 10 + yOffset, bigIconSize,
 				bigIconSize, force_icons[showPowers[cg.forcepowerSelect]]);
 		}
 		else
 		{
-			CG_DrawPic(x - bigIconSize / 2, y - (bigIconSize - smallIconSize) / 2 + yOffset, bigIconSize,
+			CG_DrawPic(x - bigIconSize / static_cast<float>(2), y - (static_cast<float>(bigIconSize) - smallIconSize) / 2 + yOffset, bigIconSize,
 				bigIconSize, force_icons[showPowers[cg.forcepowerSelect]]);
 		}
 	}

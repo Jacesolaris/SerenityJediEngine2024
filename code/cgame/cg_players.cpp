@@ -3834,7 +3834,7 @@ static qboolean CG_PlayerShadow(const centity_t* cent, float* shadow_plane)
 	}
 
 	vec3_t root_origin;
-	vec3_t temp_angles;
+	vec3_t temp_angles{};
 	temp_angles[PITCH] = 0;
 	temp_angles[YAW] = cent->pe.legs.yawAngle;
 	temp_angles[ROLL] = 0;
@@ -4216,7 +4216,7 @@ static void CG_PlayerFootsteps(const centity_t* cent, const footstepType_t foot_
 		&& cent->gent->client->NPC_class != CLASS_SWAMP)
 	{
 		mdxaBone_t bolt_matrix;
-		vec3_t temp_angles, side_origin, foot_down_dir;
+		vec3_t temp_angles{}, side_origin, foot_down_dir;
 
 		temp_angles[PITCH] = 0;
 		temp_angles[YAW] = cent->pe.legs.yawAngle;
@@ -4329,7 +4329,7 @@ static void CG_PlayerSplash(const centity_t* cent)
 			if (cl->NPC_class == CLASS_ATST)
 			{
 				mdxaBone_t bolt_matrix;
-				vec3_t temp_angles, side_origin;
+				vec3_t temp_angles{}, side_origin;
 
 				temp_angles[PITCH] = 0;
 				temp_angles[YAW] = cent->pe.legs.yawAngle;
@@ -7167,7 +7167,7 @@ static void CG_DoSaberLight(const saberInfo_t* saber)
 		}
 	}
 
-	vec3_t positions[MAX_BLADES * 2], mid = { 0 }, rgbs[MAX_BLADES * 2], rgb = { 0 };
+	vec3_t positions[MAX_BLADES * 2]{}, mid = { 0 }, rgbs[MAX_BLADES * 2]{}, rgb = { 0 };
 	float lengths[MAX_BLADES * 2] = { 0 }, totallength = 0, numpositions = 0, diameter = 0;
 	int i;
 
@@ -11152,7 +11152,7 @@ void CG_DoCustomSaber(vec3_t blade_muz, vec3_t blade_tip, vec3_t trail_tip, vec3
 static void CG_DoCloakedSaber(vec3_t origin, vec3_t dir, float length, float length_max, float radius,
 	saber_colors_t color, int rfx, qboolean do_light)
 {
-	vec3_t dif, mid, blade_dir, trail_tip, trail_muz, trail_dir, end_dir, base_dir;
+	vec3_t dif, mid, blade_dir, trail_tip{}, trail_muz{}, trail_dir, end_dir, base_dir;
 	qhandle_t blade = 0, glow = 0, ignite = 0;
 	refEntity_t saber;
 	float radiusmult;
@@ -11452,7 +11452,7 @@ static void CG_DoCloakedSaber(vec3_t origin, vec3_t dir, float length, float len
 static void CG_DoSaber(vec3_t origin, vec3_t dir, float length, float length_max, float radius, saber_colors_t color,
 	int rfx, qboolean do_light)
 {
-	vec3_t dif, mid, blade_dir, trail_tip, trail_muz, trail_dir, end_dir, base_dir;
+	vec3_t dif, mid, blade_dir, trail_tip{}, trail_muz{}, trail_dir, end_dir, base_dir;
 	qhandle_t blade = 0, glow = 0, ignite = 0;
 	refEntity_t saber;
 	float radiusmult;
@@ -11944,7 +11944,7 @@ extern markPoly_t* CG_AllocMark();
 static void CG_CreateSaberMarks(vec3_t start, vec3_t end, vec3_t normal)
 {
 	int i, j;
-	vec3_t axis[3], original_points[4];
+	vec3_t axis[3]{}, original_points[4]{};
 	vec3_t mark_points[MAX_MARK_POINTS], projection;
 	polyVert_t* v;
 	markFragment_t mark_fragments[MAX_MARK_FRAGMENTS], * mf;
@@ -11980,7 +11980,7 @@ static void CG_CreateSaberMarks(vec3_t start, vec3_t end, vec3_t normal)
 
 	for (i = 0, mf = mark_fragments; i < num_fragments; i++, mf++)
 	{
-		polyVert_t verts[MAX_VERTS_ON_POLY];
+		polyVert_t verts[MAX_VERTS_ON_POLY]{};
 		// we have an upper limit on the complexity of polygons that we store persistantly
 		if (mf->num_points > MAX_VERTS_ON_POLY)
 		{
@@ -14574,8 +14574,8 @@ void CG_Player(centity_t* cent)
 			{
 				//<True View varibles
 				mdxaBone_t eye_matrix;
-				vec3_t eye_angles;
-				vec3_t eye_axis[3];
+				vec3_t eye_angles{};
+				vec3_t eye_axis[3]{};
 				vec3_t oldeye_origin;
 				qhandle_t eyes_bolt;
 				qboolean bone_based = qfalse;
@@ -16268,7 +16268,7 @@ void CG_Player(centity_t* cent)
 
 						if (effect)
 						{
-							vec3_t up = { 0, 0, 1 }, ax[3];
+							vec3_t up = { 0, 0, 1 }, ax[3]{};
 
 							VectorCopy(flash.axis[0], ax[0]);
 

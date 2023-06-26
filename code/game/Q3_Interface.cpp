@@ -71,7 +71,7 @@ extern qboolean PM_HasAnimation(const gentity_t* ent, int animation);
 extern void G_ChangePlayerModel(gentity_t* ent, const char* newModel);
 extern void WP_SetSaberOrigin(gentity_t* self, vec3_t new_org);
 extern void JET_FlyStart(gentity_t* self);
-extern void JET_FlyStop(gentity_t* self);
+extern void jet_fly_stop(gentity_t* self);
 extern void Rail_LockCenterOfTrack(const char* trackName);
 extern void Rail_UnLockCenterOfTrack(const char* trackName);
 extern void G_GetBoltPosition(gentity_t* self, int bolt_index, vec3_t pos, int model_index = 0);
