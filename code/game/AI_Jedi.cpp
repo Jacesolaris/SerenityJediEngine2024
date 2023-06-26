@@ -6376,7 +6376,7 @@ INTERNAL AI ROUTINES
 */
 gentity_t* jedi_find_enemy_in_cone(const gentity_t* self, gentity_t* fallback, const float minDot)
 {
-	vec3_t forward, mins, maxs;
+	vec3_t forward, mins{}, maxs{};
 	gentity_t* enemy = fallback;
 	gentity_t* entity_list[MAX_GENTITIES];
 	int e;

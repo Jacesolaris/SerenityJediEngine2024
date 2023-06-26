@@ -3233,10 +3233,7 @@ void wp_saber_damage_add(const float tr_dmg, const int tr_victim_entity_num, vec
 	{
 		return;
 	}
-	if (tr_dmg * dmg < 10.0f)
-	{
-		//too piddly an amount of damage to really count?
-	}
+
 	if (tr_dmg)
 	{
 		int i;
@@ -6185,7 +6182,7 @@ void WP_SaberRadiusDamage(gentity_t* ent, vec3_t point, const float radius, cons
 	{
 		return;
 	}
-	vec3_t mins, maxs, entDir;
+	vec3_t mins{}, maxs{}, entDir;
 	gentity_t* radius_ents[128];
 	int i;
 
@@ -7356,7 +7353,7 @@ void WP_SaberDamageTrace(gentity_t* ent, int saber_num, int blade_num)
 		float tip_dmg_mod = 1.0f;
 		vec3_t base_diff;
 		float ave_length, step = 8, stepsize = 8;
-		vec3_t ma1, ma2, md2_ang, cur_base2;
+		vec3_t ma1, ma2, md2_ang{}, cur_base2;
 		int xx;
 		//do the trace at the base first
 		hit_wall = wp_saber_damage_for_trace(ent->s.number, base_old, base_new, base_damage, md2, qfalse,
@@ -8529,8 +8526,8 @@ extern float G_PointDistFromLineSegment(const vec3_t start, const vec3_t end, co
 void wp_saber_in_flight_reflect_check(gentity_t* self)
 {
 	gentity_t* entity_list[MAX_GENTITIES];
-	gentity_t* missile_list[MAX_GENTITIES];
-	vec3_t mins, maxs;
+	gentity_t* missile_list[MAX_GENTITIES]{};
+	vec3_t mins{}, maxs{};
 	int ent_count = 0;
 	vec3_t center;
 	vec3_t up = { 0, 0, 1 };
@@ -13447,7 +13444,7 @@ void wp_saber_start_missile_block_check(gentity_t* self, const usercmd_t* ucmd)
 	int closest_swing_quad = Q_T;
 	gentity_t* incoming = nullptr;
 	gentity_t* entity_list[MAX_GENTITIES];
-	vec3_t mins, maxs;
+	vec3_t mins{}, maxs{};
 	constexpr float radius = 256;
 	vec3_t forward, fwdangles = { 0 };
 	trace_t trace;
@@ -14340,7 +14337,7 @@ constexpr auto MAX_RADIUS_ENTS = 256; //NOTE: This can cause entities to be lost
 qboolean G_CheckEnemyPresence(const gentity_t* ent, const int dir, const float radius, const float tolerance)
 {
 	gentity_t* radius_ents[MAX_RADIUS_ENTS];
-	vec3_t mins, maxs;
+	vec3_t mins{}, maxs{};
 	vec3_t check_dir;
 	int i;
 
@@ -15405,10 +15402,10 @@ void ForceThrow(gentity_t* self, qboolean pull, qboolean fake)
 	float dist;
 	gentity_t* ent, * forward_ent = nullptr;
 	gentity_t* entity_list[MAX_GENTITIES];
-	gentity_t* push_target[MAX_GENTITIES];
+	gentity_t* push_target[MAX_GENTITIES]{};
 	int num_listed_entities = 0;
-	vec3_t mins, maxs;
-	vec3_t v;
+	vec3_t mins{}, maxs{};
+	vec3_t v{};
 	int i, e;
 	int ent_count = 0;
 	int radius;
@@ -17388,9 +17385,9 @@ void ForceRepulseThrow(gentity_t* self, int charge_time)
 
 	if (!num_listed_entities)
 	{
-		vec3_t mins;
-		vec3_t maxs;
-		vec3_t v;
+		vec3_t mins{};
+		vec3_t maxs{};
+		vec3_t v{};
 		int i;
 		int e;
 		gentity_t* entity_list[MAX_GENTITIES];
@@ -19296,7 +19293,7 @@ void ForceGripAdvanced(gentity_t* self)
 			if (g_gripitems->integer)
 			{
 				// One more try...try and physically check for entities in a box, similar to push
-				vec3_t mins, maxs;
+				vec3_t mins{}, maxs{};
 
 				for (int i = 0; i < 3; i++)
 				{
@@ -22740,9 +22737,9 @@ void force_shoot_lightning(gentity_t* self)
 	if (self->client->ps.forcePowerLevel[FP_LIGHTNING] > FORCE_LEVEL_2)
 	{
 		vec3_t center;
-		vec3_t mins;
-		vec3_t maxs;
-		vec3_t v;
+		vec3_t mins{};
+		vec3_t maxs{};
+		vec3_t v{};
 		constexpr float radius = FORCE_LIGHTNING_RADIUS_WIDE;
 		float dot;
 		gentity_t* entity_list[MAX_GENTITIES];
@@ -24635,7 +24632,7 @@ void ForceStasisWide(const gentity_t* self, gentity_t* trace_ent)
 
 	if (!trace_ent)
 	{
-		vec3_t end;
+		vec3_t end{};
 		//okay, trace straight ahead and see what's there
 		gi.trace(&tr, self->client->renderInfo.handLPoint, vec3_origin, vec3_origin, end, self->s.number,
 			MASK_OPAQUE | CONTENTS_SOLID | CONTENTS_BODY | CONTENTS_ITEM | CONTENTS_CORPSE | MASK_SHOT,
@@ -24645,7 +24642,7 @@ void ForceStasisWide(const gentity_t* self, gentity_t* trace_ent)
 			if (g_stasistems->integer)
 			{
 				// One more try...try and physically check for entities in a box, similar to push
-				vec3_t mins, maxs;
+				vec3_t mins{}, maxs{};
 
 				for (int i = 0; i < 3; i++)
 				{
@@ -25053,7 +25050,7 @@ void force_stasis(gentity_t* self)
 				if (g_stasistems->integer)
 				{
 					// One more try...try and physically check for entities in a box, similar to push
-					vec3_t mins, maxs;
+					vec3_t mins{}, maxs{};
 
 					for (int i = 0; i < 3; i++)
 					{

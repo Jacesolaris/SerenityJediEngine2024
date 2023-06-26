@@ -2354,32 +2354,57 @@ SHY - Spawner is shy
 */
 void SP_NPC_Kyle(gentity_t* self)
 {
+	const char* info = CG_ConfigString(CS_SERVERINFO);
+	const char* s = Info_ValueForKey(info, "mapname");
+
 	if (self->spawnflags & 1)
 	{
 		self->NPC_type = "Kyle_boss";
 	}
 	else
 	{
-		if (com_outcast->integer == 1) //playing outcast
+		if (is_outcast_map() || com_outcast->integer == 1) //playing outcast
 		{
 			self->NPC_type = "Kyle"; //jko normal kyle
+			wp_set_saber_model(nullptr, CLASS_KYLE);
 		}
 		else
 		{
-			if (Q_irand(0, 1))
+			if (strcmp(s, "academy1") == 0 ||
+				strcmp(s, "academy2") == 0 ||
+				strcmp(s, "academy3") == 0 ||
+				strcmp(s, "academy4") == 0 ||
+				strcmp(s, "academy5") == 0 ||
+				strcmp(s, "academy6") == 0 ||
+				strcmp(s, "t1_inter") == 0)
 			{
-				self->NPC_type = "Kyle";
+				self->NPC_type = "Kyle"; // no cloak
+			}
+			else if (strcmp(s, "yavin1") == 0 ||
+				strcmp(s, "yavin1b") == 0 ||
+				strcmp(s, "t1_sour") == 0 ||
+				strcmp(s, "t1_suprise") == 0 ||
+				strcmp(s, "t1_rail") == 0 ||
+				strcmp(s, "t3_byss") == 0 ||
+				strcmp(s, "vjun1") == 0 ||
+				strcmp(s, "vjun2") == 0 ||
+				strcmp(s, "vjun3") == 0 ||
+				strcmp(s, "kor2") == 0)
+			{
+				self->NPC_type = "Kyle2"; // with cloak
 			}
 			else
 			{
-				self->NPC_type = "Kyle2";
+				if (Q_irand(0, 1))
+				{
+					self->NPC_type = "Kyle";
+				}
+				else
+				{
+					self->NPC_type = "Kyle2";
+				}
 			}
 		}
-	}
-
-	if (is_outcast_map()) //playing outcast
-	{
-		wp_set_saber_model(nullptr, CLASS_KYLE);
 	}
 
 	SP_NPC_spawner(self);

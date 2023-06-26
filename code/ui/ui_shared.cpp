@@ -8324,7 +8324,7 @@ Window_Paint
 void Window_Paint(Window* w, const float fadeAmount, const float fadeClamp, const float fadeCycle)
 {
 	//float bordersize = 0;
-	vec4_t color;
+	vec4_t color{};
 	rectDef_t fillRect = w->rect;
 
 	if (uis.debugMode)

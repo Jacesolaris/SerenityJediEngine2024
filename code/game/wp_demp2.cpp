@@ -95,7 +95,7 @@ void DEMP2_AltRadiusDamage(gentity_t* ent)
 	gentity_t* entity_list[MAX_GENTITIES];
 	int i;
 	vec3_t mins{}, maxs{};
-	vec3_t v, dir;
+	vec3_t v{}, dir;
 
 	frac *= frac * frac;
 	// yes, this is completely ridiculous...but it causes the shell to grow slowly then "explode" at the end

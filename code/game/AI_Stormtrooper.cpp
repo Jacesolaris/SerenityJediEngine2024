@@ -877,7 +877,7 @@ qboolean NPC_CheckEnemiesInSpotlight()
 	gentity_t* entity_list[MAX_GENTITIES];
 	gentity_t* suspect = nullptr;
 	int i;
-	vec3_t mins, maxs;
+	vec3_t mins{}, maxs{};
 
 	for (i = 0; i < 3; i++)
 	{
