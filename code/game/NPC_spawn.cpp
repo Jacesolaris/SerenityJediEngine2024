@@ -764,14 +764,14 @@ void NPC_SetMiscDefaultData(gentity_t* ent)
 					g_create_g2_attached_weapon_model(ent, weaponData[ent->client->ps.weapon].weaponMdl,
 						ent->handLBolt, 1);
 				}
-				if (!Q_stricmp("Imperial", ent->NPC_type))
+				/*if (!Q_stricmp("Imperial", ent->NPC_type))
 				{
 					ent->NPC->scriptFlags |= SCF_altFire;
-				}
-				if (!Q_stricmp("StormPilot", ent->NPC_type))
+				}*/
+				/*if (!Q_stricmp("StormPilot", ent->NPC_type))
 				{
 					ent->NPC->scriptFlags |= SCF_altFire;
-				}
+				}*/
 				break;
 			case WP_DROIDEKA:
 				if (ent->client->NPC_class == CLASS_DROIDEKA
@@ -784,24 +784,24 @@ void NPC_SetMiscDefaultData(gentity_t* ent)
 				break;
 			case WP_DISRUPTOR:
 				NPCInfo->scriptFlags |= SCF_PILOT;
-				if (!Q_stricmp("saboteursniper", ent->NPC_type))
+				/*if (!Q_stricmp("saboteursniper", ent->NPC_type))
 				{
 					ent->NPC->scriptFlags |= SCF_altFire;
-				}
+				}*/
 				break;
 			case WP_BOWCASTER:
 				NPCInfo->scriptFlags |= SCF_PILOT;
-				if (!Q_stricmp("human_merc_bow", ent->NPC_type))
+				/*if (!Q_stricmp("human_merc_bow", ent->NPC_type))
 				{
 					ent->NPC->scriptFlags |= SCF_altFire;
-				}
+				}*/
 				break;
 			case WP_REPEATER:
 				NPCInfo->scriptFlags |= SCF_PILOT;
-				if (!Q_stricmp("human_merc_rep", ent->NPC_type))
+				/*if (!Q_stricmp("human_merc_rep", ent->NPC_type))
 				{
 					ent->NPC->scriptFlags |= SCF_altFire;
-				}
+				}*/
 				if (!Q_stricmp("StormTrooper_red", ent->NPC_type))
 				{
 					ent->NPC->scriptFlags |= SCF_altFire;
@@ -812,14 +812,14 @@ void NPC_SetMiscDefaultData(gentity_t* ent)
 				break;
 			case WP_FLECHETTE:
 				NPCInfo->scriptFlags |= SCF_PILOT;
-				if (!Q_stricmp("stofficeralt", ent->NPC_type))
+				/*if (!Q_stricmp("stofficeralt", ent->NPC_type))
 				{
 					ent->NPC->scriptFlags |= SCF_altFire;
 				}
 				if (!Q_stricmp("human_merc_flc", ent->NPC_type))
 				{
 					ent->NPC->scriptFlags |= SCF_altFire;
-				}
+				}*/
 				if (!Q_stricmp("StormTrooper_blue", ent->NPC_type))
 				{
 					ent->NPC->scriptFlags |= SCF_altFire;
@@ -829,10 +829,10 @@ void NPC_SetMiscDefaultData(gentity_t* ent)
 				break;
 			case WP_CONCUSSION:
 				NPCInfo->scriptFlags |= SCF_PILOT;
-				if (!Q_stricmp("human_merc_cnc", ent->NPC_type))
+				/*if (!Q_stricmp("human_merc_cnc", ent->NPC_type))
 				{
 					ent->NPC->scriptFlags |= SCF_altFire;
-				}
+				}*/
 				break;
 			case WP_THERMAL:
 				NPCInfo->scriptFlags |= SCF_PILOT;
@@ -846,27 +846,27 @@ void NPC_SetMiscDefaultData(gentity_t* ent)
 			case WP_BLASTER:
 				NPCInfo->scriptFlags |= SCF_PILOT;
 				ST_ClearTimers(ent);
-				if (ent->NPC->rank >= RANK_COMMANDER)
-				{
-					//commanders use alt-fire
-					ent->NPC->scriptFlags |= SCF_altFire;
-				}
-				if (ent->client->NPC_class == CLASS_IMPERIAL)
-				{
-					ent->NPC->scriptFlags |= SCF_altFire;
-				}
-				if (ent->client->NPC_class == CLASS_RODIAN)
-				{
-					ent->NPC->scriptFlags |= SCF_altFire;
-				}
-				if (!Q_stricmp("human_merc", ent->NPC_type))
-				{
-					ent->NPC->scriptFlags |= SCF_altFire;
-				}
-				if (!Q_stricmp("rodian2", ent->NPC_type))
-				{
-					ent->NPC->scriptFlags |= SCF_altFire;
-				}
+				//if (ent->NPC->rank >= RANK_COMMANDER)
+				//{
+				//	//commanders use alt-fire
+				//	ent->NPC->scriptFlags |= SCF_altFire;
+				//}
+				//if (ent->client->NPC_class == CLASS_IMPERIAL)
+				//{
+				//	ent->NPC->scriptFlags |= SCF_altFire;
+				//}
+				//if (ent->client->NPC_class == CLASS_RODIAN)
+				//{
+				//	ent->NPC->scriptFlags |= SCF_altFire;
+				//}
+				//if (!Q_stricmp("human_merc", ent->NPC_type))
+				//{
+				//	ent->NPC->scriptFlags |= SCF_altFire;
+				//}
+				//if (!Q_stricmp("rodian2", ent->NPC_type))
+				//{
+				//	ent->NPC->scriptFlags |= SCF_altFire;
+				//}
 				break;
 			}
 			if (ent->client->NPC_class == CLASS_DROIDEKA)

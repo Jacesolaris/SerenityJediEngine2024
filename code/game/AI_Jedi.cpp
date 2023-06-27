@@ -195,6 +195,24 @@ qboolean npc_is_jedi(const gentity_t* self)
 	return qfalse;
 }
 
+qboolean npc_should_not_throw_saber(const gentity_t* self)
+{
+	switch (self->client->NPC_class)
+	{
+	case CLASS_DESANN:
+	case CLASS_TAVION:
+	case CLASS_VADER:
+	case CLASS_SITHLORD:
+	case CLASS_KYLE:
+	case CLASS_LUKE:
+		return qtrue;
+	default:
+		break;
+	}
+
+	return qfalse;
+}
+
 qboolean npc_is_saber_master(const gentity_t* self)
 {
 	switch (self->client->NPC_class)
@@ -3409,7 +3427,9 @@ static void jedi_combat_distance(const int enemy_dist)
 						}
 						else
 						{
-							if (enemy_dist > 128 && WP_ForcePowerUsable(NPC, FP_SABERTHROW, 0)
+							if (!npc_should_not_throw_saber(NPC) &&
+								NPC->client->ps.forcePower > BLOCKPOINTS_KNOCKAWAY &&
+								enemy_dist > 128 && WP_ForcePowerUsable(NPC, FP_SABERTHROW, 0)
 								&& !(NPC->client->ps.forcePowersActive & 1 << FP_SPEED)
 								&& !(NPC->client->ps.forcePowersActive & 1 << FP_LIGHTNING)
 								&& !(NPC->client->ps.saberEventFlags & SEF_INWATER)) //saber not in water
@@ -3421,7 +3441,9 @@ static void jedi_combat_distance(const int enemy_dist)
 					}
 					else
 					{
-						if (enemy_dist > 128 && (NPCInfo->rank >= RANK_LT_JG || WP_ForcePowerUsable(
+						if (!npc_should_not_throw_saber(NPC) &&
+							NPC->client->ps.forcePower > BLOCKPOINTS_KNOCKAWAY &&
+							enemy_dist > 128 && (NPCInfo->rank >= RANK_LT_JG || WP_ForcePowerUsable(
 							NPC, FP_SABERTHROW, 0))
 							&& !(NPC->client->ps.forcePowersActive & 1 << FP_SPEED)
 							&& !(NPC->client->ps.forcePowersActive & 1 << FP_LIGHTNING)
@@ -5795,6 +5817,11 @@ extern qboolean NPC_CheckFallPositionOK(const gentity_t* NPC, vec3_t position);
 
 qboolean Jedi_EvasionRoll(gentity_t* ai_ent)
 {
+	if (ai_ent->client->NPC_class == CLASS_STORMTROOPER)
+	{
+		ai_ent->npc_roll_start = qfalse;
+		return qfalse;
+	}
 	if (!ai_ent->enemy->client)
 	{
 		ai_ent->npc_roll_start = qfalse;

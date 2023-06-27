@@ -2664,7 +2664,7 @@ void G_StasisMissile(gentity_t* ent, gentity_t* missile)
 
 	if (!registered)
 	{
-		stasisLoopSound = G_SoundIndex("sound/effects/blaster_stasis_loop.mp3");
+		stasisLoopSound = G_SoundIndex("sound/effects/blaster_stasis_loop.wav3");
 		registered = qtrue;
 	}
 
