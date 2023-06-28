@@ -1214,8 +1214,8 @@ static qboolean ParseStage(shaderStage_t* stage, const char** text)
 		//
 		if (!Q_stricmp(token, "animMap") || !Q_stricmp(token, "clampanimMap") || !Q_stricmp(token, "oneshotanimMap"))
 		{
-#define	MAX_IMAGE_ANIMATIONS	32
-			image_t* images[MAX_IMAGE_ANIMATIONS]{};
+			constexpr auto max_image_animations = 64;
+			image_t* images[max_image_animations];
 			const bool b_clamp = !Q_stricmp(token, "clampanimMap");
 			const bool one_shot = !Q_stricmp(token, "oneshotanimMap");
 
@@ -1229,7 +1229,7 @@ static qboolean ParseStage(shaderStage_t* stage, const char** text)
 			stage->bundle[0].imageAnimationSpeed = atof(token);
 			stage->bundle[0].oneShotAnimMap = one_shot;
 
-			// parse up to MAX_IMAGE_ANIMATIONS animations
+			// parse up to max_image_animations animations
 			while (true)
 			{
 				token = COM_ParseExt(text, qfalse);
@@ -1238,7 +1238,7 @@ static qboolean ParseStage(shaderStage_t* stage, const char** text)
 					break;
 				}
 				const int num = stage->bundle[0].numImageAnimations;
-				if (num < MAX_IMAGE_ANIMATIONS)
+				if (num < max_image_animations)
 				{
 					stage->bundle[0].image = nullptr;
 					return qfalse;
@@ -2019,9 +2019,21 @@ using infoParm_t = struct infoParm_s
 {
 	const char* name;
 	uint32_t clearSolid, surfaceFlags, contents;
+
+	infoParm_s() = default;
+
+	bool operator==(const infoParm_s& other) const
+	{
+		return false;
+	}
+
+	infoParm_s(const char* name, const uint32_t& clearSolid, const uint32_t& surfaceFlags, const uint32_t& contents)
+		: name(name), clearSolid(clearSolid), surfaceFlags(surfaceFlags), contents(contents)
+	{
+	}
 };
 
-infoParm_t infoParms[] = {
+infoParm_t info_Parms[] = {
 	// Game content Flags
 	{"nonsolid", ~CONTENTS_SOLID, SURF_NONE, CONTENTS_NONE}, // special hack to clear solid flag
 	{"nonopaque", ~CONTENTS_OPAQUE, SURF_NONE, CONTENTS_NONE}, // special hack to clear opaque flag
@@ -2065,21 +2077,22 @@ infoParm_t infoParms[] = {
 
 /*
 ===============
-ParseSurfaceParm
+parse_surface_parm
 
 surfaceparm <name>
 ===============
 */
-static void ParseSurfaceParm(const char** text)
+static void parse_surface_parm(const char** text)
 {
 	const char* token = COM_ParseExt(text, qfalse);
-	for (const auto& info_parm : infoParms)
+
+	for (const auto& num_info_parm : info_Parms)
 	{
-		if (!Q_stricmp(token, info_parm.name))
+		if (!Q_stricmp(token, num_info_parm.name))
 		{
-			shader.surfaceFlags |= info_parm.surfaceFlags;
-			shader.contentFlags |= info_parm.contents;
-			shader.contentFlags &= info_parm.clearSolid;
+			shader.surfaceFlags |= num_info_parm.surfaceFlags;
+			shader.contentFlags |= num_info_parm.contents;
+			shader.contentFlags &= num_info_parm.clearSolid;
 			break;
 		}
 	}
@@ -2224,7 +2237,7 @@ static qboolean ParseShader(const char** text)
 		// skip stuff that only q3map or the server needs
 		else if (!Q_stricmp(token, "surfaceParm"))
 		{
-			ParseSurfaceParm(text);
+			parse_surface_parm(text);
 		}
 		// no mip maps
 		else if (!Q_stricmp(token, "nomipmaps"))
