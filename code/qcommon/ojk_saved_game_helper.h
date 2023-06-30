@@ -300,7 +300,7 @@ namespace ojk
 		TDst& dst_value,
 		BooleanTag)
 	{
-		TSrc src_value;
+		TSrc src_value{};
 
 		if (!saved_game_->read(
 			&src_value,
@@ -324,7 +324,7 @@ namespace ojk
 	{
 		const int src_size = static_cast<int>(sizeof(TSrc));
 
-		TSrc src_value;
+		TSrc src_value{};
 
 		if (!saved_game_->read(
 			&src_value,
@@ -357,7 +357,7 @@ namespace ojk
 			std::uintptr_t
 		>;
 
-		DstNumeric dst_number;
+		DstNumeric dst_number{};
 
 		if (!try_read<TSrc>(
 			dst_number,

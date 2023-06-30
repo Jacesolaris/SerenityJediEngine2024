@@ -291,8 +291,6 @@ static void G_DynamicMusicUpdate()
 	int danger = 0;
 	int battle = 0;
 	int entTeam;
-	//qboolean	dangerNear = qfalse;
-	//qboolean	suspicious = qfalse;
 	qboolean clear_los;
 
 	//FIXME: intro and/or other cues? (one-shot music sounds)

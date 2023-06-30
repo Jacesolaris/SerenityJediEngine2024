@@ -1863,7 +1863,7 @@ void G2_TransformBone(const int index, CBoneCache& cb)
 				Multiply_3x4Matrix(&temp, &firstPass, &skel->BasePoseMat);
 				const float matrixScale = VectorLength(reinterpret_cast<float*>(&temp));
 
-				mdxaBone_t newMatrixTemp;
+				mdxaBone_t newMatrixTemp{};
 
 				if (HackadelicOnClient)
 				{
@@ -2191,7 +2191,7 @@ void G2_TransformGhoulBones(boneInfo_v& rootBoneList, const mdxaBone_t& rootMatr
 void G2_ProcessSurfaceBolt(const mdxaBone_v& bone_ptr, mdxmSurface_t* surface, const int boltNum, boltInfo_v& boltList,
                            const surfaceInfo_t* surfInfo, model_t* mod)
 {
-	float pTri[3][3];
+	float pTri[3][3]{};
 	int k;
 
 	// now there are two types of tag surface - model ones and procedural generated types - lets decide which one we have here.
@@ -2278,7 +2278,7 @@ void G2_ProcessSurfaceBolt(const mdxaBone_v& bone_ptr, mdxmSurface_t* surface, c
 		}
 
 		vec3_t normal;
-		vec3_t up;
+		vec3_t up{};
 		vec3_t right;
 		vec3_t vec0, vec1;
 		// work out baryCentricK
@@ -2894,7 +2894,7 @@ void* G2_FindSurface_BC(const model_s* mod, const int index, const int lod)
 void G2_ProcessSurfaceBolt2(CBoneCache& bone_cache, const mdxmSurface_t* surface, int boltNum, boltInfo_v& boltList,
 	const surfaceInfo_t* surfInfo, const model_t* mod, mdxaBone_t& retMatrix)
 {
-	float pTri[3][3];
+	float pTri[3][3]{};
 	int k;
 
 	// now there are two types of tag surface - model ones and procedural generated types - lets decide which one we have here.
@@ -2990,7 +2990,7 @@ void G2_ProcessSurfaceBolt2(CBoneCache& bone_cache, const mdxmSurface_t* surface
 		}
 
 		vec3_t normal;
-		vec3_t up;
+		vec3_t up{};
 		vec3_t right;
 		vec3_t vec0, vec1;
 		// work out baryCentricK
@@ -3216,7 +3216,7 @@ static void RootMatrix(CGhoul2Info_v& ghoul2, const int time, const vec3_t scale
 			if (ghoul2[i].mFlags & GHOUL2_NEWORIGIN)
 			{
 				mdxaBone_t bolt;
-				mdxaBone_t tempMatrix;
+				mdxaBone_t tempMatrix{};
 
 				G2_ConstructGhoulSkeleton(ghoul2, time, false, scale);
 				G2_GetBoltMatrixLow(ghoul2[i], ghoul2[i].mNewOrigin, scale, bolt);
@@ -3301,7 +3301,7 @@ void R_AddGhoulSurfaces(trRefEntity_t* ent)
 	// don't add third_person objects if not in a portal
 	auto personalModel = static_cast<qboolean>(ent->e.renderfx & RF_THIRD_PERSON && !tr.viewParms.isPortal);
 
-	int model_list[256];
+	int model_list[256]{};
 	assert(ghoul2.size() <= 255);
 	model_list[255] = 548;
 
@@ -3445,7 +3445,7 @@ void G2_ConstructGhoulSkeleton(CGhoul2Info_v& ghoul2, const int frameNum, const 
 	int modelCount;
 	mdxaBone_t rootMatrix;
 
-	int model_list[256];
+	int model_list[256]{};
 	assert(ghoul2.size() <= 255);
 	model_list[255] = 548;
 

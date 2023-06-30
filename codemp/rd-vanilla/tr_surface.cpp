@@ -829,7 +829,7 @@ static void RB_SurfaceCylinder()
 static void RB_SurfaceLathe()
 {
 	vec2_t		pt, l_oldpt;
-	vec2_t		pt2, l_oldpt2;
+	vec2_t		pt2, l_oldpt2{};
 	float d = 1.0f, pain = 0.0f;
 	int			i;
 

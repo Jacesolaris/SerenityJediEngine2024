@@ -2262,7 +2262,7 @@ char lcase(char c)
 	return c;
 }
 
-int playermodel(char* haystack, char* needle)
+int Class_Model(char* haystack, char* needle)
 {
 	while (*haystack)
 	{
@@ -2411,22 +2411,22 @@ qboolean client_userinfo_changed(const int client_num)
 	if (ent->s.eType != ET_NPC // no npcs,handled in npc.cfg
 		&& level.gametype != GT_SIEGE)
 	{
-		if (playermodel(model, "model_siege")
-			|| playermodel(model, "atst")
-			|| playermodel(model, "gonk")
-			|| playermodel(model, "hazardtrooper")
-			|| playermodel(model, "lambdashuttle")
-			|| playermodel(model, "marka_ragnos")
-			|| playermodel(model, "probe")
-			|| playermodel(model, "rocks")
-			|| playermodel(model, "sand_creature")
-			|| playermodel(model, "sentry")
-			|| playermodel(model, "swoop")
-			|| playermodel(model, "tauntaun")
-			|| playermodel(model, "tie_bomber")
-			|| playermodel(model, "tie_fighter")
-			|| playermodel(model, "x-wing")
-			|| playermodel(model, "z-95"))
+		if (Class_Model(model, "model_siege")
+			|| Class_Model(model, "atst")
+			|| Class_Model(model, "gonk")
+			|| Class_Model(model, "hazardtrooper")
+			|| Class_Model(model, "lambdashuttle")
+			|| Class_Model(model, "marka_ragnos")
+			|| Class_Model(model, "probe")
+			|| Class_Model(model, "rocks")
+			|| Class_Model(model, "sand_creature")
+			|| Class_Model(model, "sentry")
+			|| Class_Model(model, "swoop")
+			|| Class_Model(model, "tauntaun")
+			|| Class_Model(model, "tie_bomber")
+			|| Class_Model(model, "tie_fighter")
+			|| Class_Model(model, "x-wing")
+			|| Class_Model(model, "z-95"))
 		{
 			// don't allow them to pick these models
 			strcpy(model, DEFAULT_MODEL);
@@ -2435,34 +2435,34 @@ qboolean client_userinfo_changed(const int client_num)
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
 		}
 
-		if (playermodel(model, "aggl_dooku/main")
-			|| playermodel(model, "aggl_dooku/")
-			|| playermodel(model, "Jerec")
-			|| playermodel(model, "darth_talon")
-			|| playermodel(model, "darth_talon/")
-			|| playermodel(model, "darth_talon/head_aa|torso_aa|lower_aa")
-			|| playermodel(model, "chiss_jedi")
-			|| playermodel(model, "chiss_jedi/")
-			|| playermodel(model, "chiss_jedi/default")
-			|| playermodel(model, "ani3d/main")
-			|| playermodel(model, "ani3d/main2")
-			|| playermodel(model, "ani3d/main3")
-			|| playermodel(model, "ani3d/")
-			|| playermodel(model, "Jerec2")
-			|| playermodel(model, "Maula/main")
-			|| playermodel(model, "Maula")
-			|| playermodel(model, "maulb")
-			|| playermodel(model, "maulb/main")
-			|| playermodel(model, "maulsp")
-			|| playermodel(model, "maulsp/main")
-			|| playermodel(model, "Sith_Stalker2")
-			|| playermodel(model, "Sith_Stalker2/default")
-			|| playermodel(model, "Sith_Stalker")
-			|| playermodel(model, "Sith_Stalker/red")
-			|| playermodel(model, "Sith_Stalker/blue")
-			|| playermodel(model, "Sith_Stalker/robe")
-			|| playermodel(model, "Sith_Stalker/robehood")
-			|| playermodel(model, "Sith_Stalker/siege"))
+		if (Class_Model(model, "aggl_dooku/main")
+			|| Class_Model(model, "aggl_dooku/")
+			|| Class_Model(model, "Jerec")
+			|| Class_Model(model, "darth_talon")
+			|| Class_Model(model, "darth_talon/")
+			|| Class_Model(model, "darth_talon/head_aa|torso_aa|lower_aa")
+			|| Class_Model(model, "chiss_jedi")
+			|| Class_Model(model, "chiss_jedi/")
+			|| Class_Model(model, "chiss_jedi/default")
+			|| Class_Model(model, "ani3d/main")
+			|| Class_Model(model, "ani3d/main2")
+			|| Class_Model(model, "ani3d/main3")
+			|| Class_Model(model, "ani3d/")
+			|| Class_Model(model, "Jerec2")
+			|| Class_Model(model, "Maula/main")
+			|| Class_Model(model, "Maula")
+			|| Class_Model(model, "maulb")
+			|| Class_Model(model, "maulb/main")
+			|| Class_Model(model, "maulsp")
+			|| Class_Model(model, "maulsp/main")
+			|| Class_Model(model, "Sith_Stalker2")
+			|| Class_Model(model, "Sith_Stalker2/default")
+			|| Class_Model(model, "Sith_Stalker")
+			|| Class_Model(model, "Sith_Stalker/red")
+			|| Class_Model(model, "Sith_Stalker/blue")
+			|| Class_Model(model, "Sith_Stalker/robe")
+			|| Class_Model(model, "Sith_Stalker/robehood")
+			|| Class_Model(model, "Sith_Stalker/siege"))
 		{
 			client->pers.nextbotclass = BCLASS_SITHWORRIOR1;
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
@@ -2478,13 +2478,13 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (playermodel(model, "alora")
-			|| playermodel(model, "alora/red")
-			|| playermodel(model, "alorablue")
-			|| playermodel(model, "alora2")
-			|| playermodel(model, "mara")
-			|| playermodel(model, "malak")
-			|| playermodel(model, "malek"))
+		else if (Class_Model(model, "alora")
+			|| Class_Model(model, "alora/red")
+			|| Class_Model(model, "alorablue")
+			|| Class_Model(model, "alora2")
+			|| Class_Model(model, "mara")
+			|| Class_Model(model, "malak")
+			|| Class_Model(model, "malek"))
 		{
 			client->pers.nextbotclass = BCLASS_ALORA;
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
@@ -2500,7 +2500,7 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (playermodel(model, "assassin_droid"))
+		else if (Class_Model(model, "assassin_droid"))
 		{
 			client->pers.nextbotclass = BCLASS_ASSASSIN_DROID;
 			client->pers.botmodelscale = BOTZIZE_LARGE;
@@ -2516,14 +2516,14 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (playermodel(model, "biker_scout")
-			|| playermodel(model, "rebel_pilot/main")
-			|| playermodel(model, "bespin_cop/main")
-			|| playermodel(model, "bespin_cop")
-			|| playermodel(model, "bespin_cop/red")
-			|| playermodel(model, "bespin_cop/blue")
-			|| playermodel(model, "aurrasing/default")
-			|| playermodel(model, "aurrasing"))
+		else if (Class_Model(model, "biker_scout")
+			|| Class_Model(model, "rebel_pilot/main")
+			|| Class_Model(model, "bespin_cop/main")
+			|| Class_Model(model, "bespin_cop")
+			|| Class_Model(model, "bespin_cop/red")
+			|| Class_Model(model, "bespin_cop/blue")
+			|| Class_Model(model, "aurrasing/default")
+			|| Class_Model(model, "aurrasing"))
 		{
 			client->pers.nextbotclass = BCLASS_BESPIN_COP;
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
@@ -2539,33 +2539,33 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (playermodel(model, "lahansolo/main")
-			|| playermodel(model, "jynerso/default")
-			|| playermodel(model, "jynerso")
-			|| playermodel(model, "han_tfa")
-			|| playermodel(model, "han_anh")
-			|| playermodel(model, "han_anh/")
-			|| playermodel(model, "han_anh/default")
-			|| playermodel(model, "han_esb")
-			|| playermodel(model, "han_esb/")
-			|| playermodel(model, "han_esb/default")
-			|| playermodel(model, "oldhan/default")
-			|| playermodel(model, "oldhan")
-			|| playermodel(model, "hansolo/main")
-			|| playermodel(model, "hansolo/main2")
-			|| playermodel(model, "sthan/main")
-			|| playermodel(model, "ceclonepilot/main")
-			|| playermodel(model, "stormpilot")
-			|| playermodel(model, "stormpilot/blue")
-			|| playermodel(model, "stormpilot/red")
-			|| playermodel(model, "stormpilot/main")
-			|| playermodel(model, "at/main")
-			|| playermodel(model, "atp/main")
-			|| playermodel(model, "st_poe")
-			|| playermodel(model, "jedi_st_poe")
-			|| playermodel(model, "Krennic")
-			|| playermodel(model, "dash_rendar/default")
-			|| playermodel(model, "dash_rendar"))
+		else if (Class_Model(model, "lahansolo/main")
+			|| Class_Model(model, "jynerso/default")
+			|| Class_Model(model, "jynerso")
+			|| Class_Model(model, "han_tfa")
+			|| Class_Model(model, "han_anh")
+			|| Class_Model(model, "han_anh/")
+			|| Class_Model(model, "han_anh/default")
+			|| Class_Model(model, "han_esb")
+			|| Class_Model(model, "han_esb/")
+			|| Class_Model(model, "han_esb/default")
+			|| Class_Model(model, "oldhan/default")
+			|| Class_Model(model, "oldhan")
+			|| Class_Model(model, "hansolo/main")
+			|| Class_Model(model, "hansolo/main2")
+			|| Class_Model(model, "sthan/main")
+			|| Class_Model(model, "ceclonepilot/main")
+			|| Class_Model(model, "stormpilot")
+			|| Class_Model(model, "stormpilot/blue")
+			|| Class_Model(model, "stormpilot/red")
+			|| Class_Model(model, "stormpilot/main")
+			|| Class_Model(model, "at/main")
+			|| Class_Model(model, "atp/main")
+			|| Class_Model(model, "st_poe")
+			|| Class_Model(model, "jedi_st_poe")
+			|| Class_Model(model, "Krennic")
+			|| Class_Model(model, "dash_rendar/default")
+			|| Class_Model(model, "dash_rendar"))
 		{
 			client->pers.nextbotclass = BCLASS_STORMPILOT;
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
@@ -2581,16 +2581,16 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (playermodel(model, "trooper3/default")
-			|| playermodel(model, "MandoloriansPac/default_")
-			|| playermodel(model, "Bountyhunter3/default")
-			|| playermodel(model, "boba_fett")
-			|| playermodel(model, "boba_fett/main")
-			|| playermodel(model, "boba_fett/main2")
-			|| playermodel(model, "jangoJA_fett/")
-			|| playermodel(model, "jangoJA_fett/main")
-			|| playermodel(model, "jangoJA_fett/main2")
-			|| playermodel(model, "jangoJA_fett/default"))
+		else if (Class_Model(model, "trooper3/default")
+			|| Class_Model(model, "MandoloriansPac/default_")
+			|| Class_Model(model, "Bountyhunter3/default")
+			|| Class_Model(model, "boba_fett")
+			|| Class_Model(model, "boba_fett/main")
+			|| Class_Model(model, "boba_fett/main2")
+			|| Class_Model(model, "jangoJA_fett/")
+			|| Class_Model(model, "jangoJA_fett/main")
+			|| Class_Model(model, "jangoJA_fett/main2")
+			|| Class_Model(model, "jangoJA_fett/default"))
 		{
 			client->pers.nextbotclass = BCLASS_BOBAFETT;
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
@@ -2606,9 +2606,9 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (playermodel(model, "chiss")
-			|| playermodel(model, "chiss/red")
-			|| playermodel(model, "chiss/blue"))
+		else if (Class_Model(model, "chiss")
+			|| Class_Model(model, "chiss/red")
+			|| Class_Model(model, "chiss/blue"))
 		{
 			client->pers.nextbotclass = BCLASS_BARTENDER;
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
@@ -2624,15 +2624,15 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (playermodel(model, "chewbacca")
-			|| playermodel(model, "chewbacca2")
-			|| playermodel(model, "chewbacca_bespin")
-			|| playermodel(model, "koWookiee")
-			|| playermodel(model, "koWookiee/main")
-			|| playermodel(model, "chewbacca/default")
-			|| playermodel(model, "chewbacca/red")
-			|| playermodel(model, "chewbacca/blue")
-			|| playermodel(model, "cadbane"))
+		else if (Class_Model(model, "chewbacca")
+			|| Class_Model(model, "chewbacca2")
+			|| Class_Model(model, "chewbacca_bespin")
+			|| Class_Model(model, "koWookiee")
+			|| Class_Model(model, "koWookiee/main")
+			|| Class_Model(model, "chewbacca/default")
+			|| Class_Model(model, "chewbacca/red")
+			|| Class_Model(model, "chewbacca/blue")
+			|| Class_Model(model, "cadbane"))
 		{
 			client->pers.botmodelscale = BOTZIZE_MASSIVE;
 			client->pers.nextbotclass = BCLASS_CHEWIE;
@@ -2648,7 +2648,7 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (playermodel(model, "wookiee/default"))
+		else if (Class_Model(model, "wookiee/default"))
 		{
 			client->pers.botmodelscale = BOTZIZE_MASSIVE;
 			client->pers.nextbotclass = BCLASS_CHEWIE;
@@ -2664,8 +2664,8 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (playermodel(model, "wookiee/blue")
-			|| playermodel(model, "zaalbar"))
+		else if (Class_Model(model, "wookiee/blue")
+			|| Class_Model(model, "zaalbar"))
 		{
 			client->pers.botmodelscale = BOTZIZE_MASSIVE;
 			client->pers.nextbotclass = BCLASS_WOOKIEMELEE;
@@ -2681,7 +2681,7 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (playermodel(model, "wookiee/red"))
+		else if (Class_Model(model, "wookiee/red"))
 		{
 			client->pers.botmodelscale = BOTZIZE_MASSIVE;
 			client->pers.nextbotclass = BCLASS_WOOKIE;
@@ -2697,12 +2697,12 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (playermodel(model, "mandalore")
-			|| playermodel(model, "MandalorianBlack")
-			|| playermodel(model, "MandalorianBlue")
-			|| playermodel(model, "MandalorianGrey")
-			|| playermodel(model, "MandalorianRed")
-			|| playermodel(model, "Mandalorian"))
+		else if (Class_Model(model, "mandalore")
+			|| Class_Model(model, "MandalorianBlack")
+			|| Class_Model(model, "MandalorianBlue")
+			|| Class_Model(model, "MandalorianGrey")
+			|| Class_Model(model, "MandalorianRed")
+			|| Class_Model(model, "Mandalorian"))
 		{
 			client->pers.botmodelscale = BOTZIZE_MASSIVE;
 			client->pers.nextbotclass = BCLASS_WOOKIE;
@@ -2718,20 +2718,20 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (playermodel(model, "bao_dur")
-			|| playermodel(model, "bith")
-			|| playermodel(model, "derrik")
-			|| playermodel(model, "Duros2")
-			|| playermodel(model, "Duros3")
-			|| playermodel(model, "Duros4")
-			|| playermodel(model, "Duros5")
-			|| playermodel(model, "Duros6")
-			|| playermodel(model, "mission")
-			|| playermodel(model, "Rakata")
-			|| playermodel(model, "Selkath")
-			|| playermodel(model, "sithsoldier")
-			|| playermodel(model, "talia")
-			|| playermodel(model, "TwinSuns"))
+		else if (Class_Model(model, "bao_dur")
+			|| Class_Model(model, "bith")
+			|| Class_Model(model, "derrik")
+			|| Class_Model(model, "Duros2")
+			|| Class_Model(model, "Duros3")
+			|| Class_Model(model, "Duros4")
+			|| Class_Model(model, "Duros5")
+			|| Class_Model(model, "Duros6")
+			|| Class_Model(model, "mission")
+			|| Class_Model(model, "Rakata")
+			|| Class_Model(model, "Selkath")
+			|| Class_Model(model, "sithsoldier")
+			|| Class_Model(model, "talia")
+			|| Class_Model(model, "TwinSuns"))
 		{
 			client->pers.nextbotclass = BCLASS_WOOKIE;
 			if (!(ent->r.svFlags & SVF_BOT))
@@ -2746,10 +2746,10 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (playermodel(model, "cultist")
-			|| playermodel(model, "cultist/red")
-			|| playermodel(model, "cultist/blue")
-			|| playermodel(model, "cultist/"))
+		else if (Class_Model(model, "cultist")
+			|| Class_Model(model, "cultist/red")
+			|| Class_Model(model, "cultist/blue")
+			|| Class_Model(model, "cultist/"))
 		{
 			client->pers.nextbotclass = BCLASS_CULTIST;
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
@@ -2765,13 +2765,13 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (playermodel(model, "desann")
-			|| playermodel(model, "desann/main")
-			|| playermodel(model, "desann/red")
-			|| playermodel(model, "desann/blue")
-			|| playermodel(model, "desann/dark_robed")
-			|| playermodel(model, "desann/unrobed")
-			|| playermodel(model, "desann/default"))
+		else if (Class_Model(model, "desann")
+			|| Class_Model(model, "desann/main")
+			|| Class_Model(model, "desann/red")
+			|| Class_Model(model, "desann/blue")
+			|| Class_Model(model, "desann/dark_robed")
+			|| Class_Model(model, "desann/unrobed")
+			|| Class_Model(model, "desann/default"))
 		{
 			client->pers.botmodelscale = BOTZIZE_LARGE;
 			client->pers.nextbotclass = BCLASS_DESANN;
@@ -2787,15 +2787,15 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (playermodel(model, "kylo_ren")
-			|| playermodel(model, "kylo")
-			|| playermodel(model, "kylomp")
-			|| playermodel(model, "KyloRen")
-			|| playermodel(model, "KyloRenK")
-			|| playermodel(model, "kylo_ren/")
-			|| playermodel(model, "Matt_TRT")
-			|| playermodel(model, "batman_begins")
-			|| playermodel(model, "kylo_ren_nomask"))
+		else if (Class_Model(model, "kylo_ren")
+			|| Class_Model(model, "kylo")
+			|| Class_Model(model, "kylomp")
+			|| Class_Model(model, "KyloRen")
+			|| Class_Model(model, "KyloRenK")
+			|| Class_Model(model, "kylo_ren/")
+			|| Class_Model(model, "Matt_TRT")
+			|| Class_Model(model, "batman_begins")
+			|| Class_Model(model, "kylo_ren_nomask"))
 		{
 			client->pers.botmodelscale = BOTZIZE_TALL;
 			client->pers.nextbotclass = BCLASS_UNSTABLESABER;
@@ -2811,9 +2811,9 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (playermodel(model, "prisoner")
-			|| playermodel(model, "prisoner/red")
-			|| playermodel(model, "prisoner/blue"))
+		else if (Class_Model(model, "prisoner")
+			|| Class_Model(model, "prisoner/red")
+			|| Class_Model(model, "prisoner/blue"))
 		{
 			client->pers.nextbotclass = BCLASS_ELDER;
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
@@ -2829,13 +2829,13 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (playermodel(model, "galak")
-			|| playermodel(model, "galak/red")
-			|| playermodel(model, "galak/blue")
-			|| playermodel(model, "hothelite/default")
-			|| playermodel(model, "hothelite")
-			|| playermodel(model, "kejarjar/main")
-			|| playermodel(model, "kagungan/main"))
+		else if (Class_Model(model, "galak")
+			|| Class_Model(model, "galak/red")
+			|| Class_Model(model, "galak/blue")
+			|| Class_Model(model, "hothelite/default")
+			|| Class_Model(model, "hothelite")
+			|| Class_Model(model, "kejarjar/main")
+			|| Class_Model(model, "kagungan/main"))
 		{
 			client->pers.nextbotclass = BCLASS_GALAK;
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
@@ -2851,13 +2851,13 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (playermodel(model, "galakmech")
-			|| playermodel(model, "galakmech/default")
-			|| playermodel(model, "galakmech/red")
-			|| playermodel(model, "galakmech/blue")
-			|| playermodel(model, "galak_mech")
-			|| playermodel(model, "galak_mech/red")
-			|| playermodel(model, "galak_mech/blue"))
+		else if (Class_Model(model, "galakmech")
+			|| Class_Model(model, "galakmech/default")
+			|| Class_Model(model, "galakmech/red")
+			|| Class_Model(model, "galakmech/blue")
+			|| Class_Model(model, "galak_mech")
+			|| Class_Model(model, "galak_mech/red")
+			|| Class_Model(model, "galak_mech/blue"))
 		{
 			client->pers.nextbotclass = BCLASS_GALAKMECH;
 			client->pers.botmodelscale = BOTZIZE_LARGER;
@@ -2873,10 +2873,10 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (playermodel(model, "canderous")
-			|| playermodel(model, "OldRepSold")
-			|| playermodel(model, "OpoChano")
-			|| playermodel(model, "republic_officer"))
+		else if (Class_Model(model, "canderous")
+			|| Class_Model(model, "OldRepSold")
+			|| Class_Model(model, "OpoChano")
+			|| Class_Model(model, "republic_officer"))
 		{
 			client->pers.nextbotclass = BCLASS_BOUNTYHUNTER1;
 			client->pers.botmodelscale = BOTZIZE_TALL;
@@ -2892,12 +2892,12 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (playermodel(model, "gran")
-			|| playermodel(model, "gran/red")
-			|| playermodel(model, "gran/blue")
-			|| playermodel(model, "gran/main")
-			|| playermodel(model, "ta/main")
-			|| playermodel(model, "it/main"))
+		else if (Class_Model(model, "gran")
+			|| Class_Model(model, "gran/red")
+			|| Class_Model(model, "gran/blue")
+			|| Class_Model(model, "gran/main")
+			|| Class_Model(model, "ta/main")
+			|| Class_Model(model, "it/main"))
 		{
 			client->pers.nextbotclass = BCLASS_GRAN;
 			client->pers.botmodelscale = BOTZIZE_LARGE;
@@ -2913,9 +2913,9 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (playermodel(model, "hazardtrooper")
-			|| playermodel(model, "hazardtrooper/red")
-			|| playermodel(model, "hazardtrooper/blue"))
+		else if (Class_Model(model, "hazardtrooper")
+			|| Class_Model(model, "hazardtrooper/red")
+			|| Class_Model(model, "hazardtrooper/blue"))
 		{
 			client->pers.nextbotclass = BCLASS_HAZARDTROOPER;
 			client->pers.botmodelscale = BOTZIZE_LARGER;
@@ -2931,10 +2931,10 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (playermodel(model, "human_merc")
-			|| playermodel(model, "human_merc/red")
-			|| playermodel(model, "human_merc/blue")
-			|| playermodel(model, "Swoopgang"))
+		else if (Class_Model(model, "human_merc")
+			|| Class_Model(model, "human_merc/red")
+			|| Class_Model(model, "human_merc/blue")
+			|| Class_Model(model, "Swoopgang"))
 		{
 			client->pers.nextbotclass = BCLASS_HUMAN_MERC;
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
@@ -2950,10 +2950,10 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (playermodel(model, "imperial")
-			|| playermodel(model, "imperial/main")
-			|| playermodel(model, "imperial/main2")
-			|| playermodel(model, "imperial/main3"))
+		else if (Class_Model(model, "imperial")
+			|| Class_Model(model, "imperial/main")
+			|| Class_Model(model, "imperial/main2")
+			|| Class_Model(model, "imperial/main3"))
 		{
 			client->pers.nextbotclass = BCLASS_IMPERIAL;
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
@@ -2969,8 +2969,8 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (playermodel(model, "imperial/red")
-			|| playermodel(model, "imperial/blue"))
+		else if (Class_Model(model, "imperial/red")
+			|| Class_Model(model, "imperial/blue"))
 		{
 			client->pers.nextbotclass = BCLASS_IPPERIALAGENT3;
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
@@ -2986,9 +2986,9 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (playermodel(model, "imperial_worker")
-			|| playermodel(model, "imperial_worker/red")
-			|| playermodel(model, "imperial_worker/blue"))
+		else if (Class_Model(model, "imperial_worker")
+			|| Class_Model(model, "imperial_worker/red")
+			|| Class_Model(model, "imperial_worker/blue"))
 		{
 			client->pers.nextbotclass = BCLASS_IMPWORKER;
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
@@ -3004,31 +3004,31 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (playermodel(model, "jan")
-			|| playermodel(model, "jan/red")
-			|| playermodel(model, "jan/blue")
-			|| playermodel(model, "leia_TFA")
-			|| playermodel(model, "leia/default")
-			|| playermodel(model, "leia_anh/main")
-			|| playermodel(model, "leia_anh/default")
-			|| playermodel(model, "leia_esb")
-			|| playermodel(model, "leia_esb/")
-			|| playermodel(model, "leia_esb/default")
-			|| playermodel(model, "LeiaV/main")
-			|| playermodel(model, "princess/main")
-			|| playermodel(model, "princess/main2")
-			|| playermodel(model, "princess/main3")
-			|| playermodel(model, "padme3a/main")
-			|| playermodel(model, "padme3b/main")
-			|| playermodel(model, "padmebt/main")
-			|| playermodel(model, "st_finn")
-			|| playermodel(model, "jedi_st_finn")
-			|| playermodel(model, "padme/main")
-			|| playermodel(model, "leia_hoth")
-			|| playermodel(model, "leia_hoth/default")
-			|| playermodel(model, "atton")
-			|| playermodel(model, "carth")
-			|| playermodel(model, "mira"))
+		else if (Class_Model(model, "jan")
+			|| Class_Model(model, "jan/red")
+			|| Class_Model(model, "jan/blue")
+			|| Class_Model(model, "leia_TFA")
+			|| Class_Model(model, "leia/default")
+			|| Class_Model(model, "leia_anh/main")
+			|| Class_Model(model, "leia_anh/default")
+			|| Class_Model(model, "leia_esb")
+			|| Class_Model(model, "leia_esb/")
+			|| Class_Model(model, "leia_esb/default")
+			|| Class_Model(model, "LeiaV/main")
+			|| Class_Model(model, "princess/main")
+			|| Class_Model(model, "princess/main2")
+			|| Class_Model(model, "princess/main3")
+			|| Class_Model(model, "padme3a/main")
+			|| Class_Model(model, "padme3b/main")
+			|| Class_Model(model, "padmebt/main")
+			|| Class_Model(model, "st_finn")
+			|| Class_Model(model, "jedi_st_finn")
+			|| Class_Model(model, "padme/main")
+			|| Class_Model(model, "leia_hoth")
+			|| Class_Model(model, "leia_hoth/default")
+			|| Class_Model(model, "atton")
+			|| Class_Model(model, "carth")
+			|| Class_Model(model, "mira"))
 		{
 			client->pers.nextbotclass = BCLASS_JAN;
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
@@ -3044,10 +3044,10 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (playermodel(model, "jawa")
-			|| playermodel(model, "jawa/red")
-			|| playermodel(model, "jawa/blue")
-			|| playermodel(model, "jawa/main"))
+		else if (Class_Model(model, "jawa")
+			|| Class_Model(model, "jawa/red")
+			|| Class_Model(model, "jawa/blue")
+			|| Class_Model(model, "jawa/main"))
 		{
 			client->pers.botmodelscale = BOTZIZE_SMALLER;
 			client->pers.nextbotclass = BCLASS_JAWA;
@@ -3063,102 +3063,102 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (playermodel(model, "jedi")
-			|| playermodel(model, "quinlan_vos")
-			|| playermodel(model, "quinlan_vos2")
-			|| playermodel(model, "jedi_st_tiplee")
-			|| playermodel(model, "jedi_st_tiplee/")
-			|| playermodel(model, "Eeth_Koth/main")
-			|| playermodel(model, "Eeth_Koth_mp")
-			|| playermodel(model, "st_tiplee/default")
-			|| playermodel(model, "st_tiplee")
-			|| playermodel(model, "mja/")
-			|| playermodel(model, "mja/main")
-			|| playermodel(model, "mj/")
-			|| playermodel(model, "mj/main")
-			|| playermodel(model, "jedi/red")
-			|| playermodel(model, "jedi/blue")
-			|| playermodel(model, "obi3/main4")
-			|| playermodel(model, "muwindu/main")
-			|| playermodel(model, "mmKiadimundi/main")
-			|| playermodel(model, "bar/main")
-			|| playermodel(model, "shaak_ti/main")
-			|| playermodel(model, "lu/main")
-			|| playermodel(model, "cin_drallig_tm")
-			|| playermodel(model, "cin_drallig_tm/")
-			|| playermodel(model, "cin_drallig_tm/default")
-			|| playermodel(model, "cin_drallig_tm/default_robed")
-			|| playermodel(model, "eerin_bant_robe")
-			|| playermodel(model, "eerin_bant_robe/")
-			|| playermodel(model, "eerin_bant_robe/default")
-			|| playermodel(model, "anavader")
-			|| playermodel(model, "anavader/")
-			|| playermodel(model, "anavader/default")
-			|| playermodel(model, "agen_kolar")
-			|| playermodel(model, "agen_kolar/")
-			|| playermodel(model, "agen_kolar/default")
-			|| playermodel(model, "mlkfisto/main")
-			|| playermodel(model, "kit_fisto/default")
-			|| playermodel(model, "kit_fisto")
-			|| playermodel(model, "Coleman/main")
-			|| playermodel(model, "coleman_trebor_vm")
-			|| playermodel(model, "coleman_trebor_vm/")
-			|| playermodel(model, "coleman_trebor_vm/default")
-			|| playermodel(model, "saesee_tiin/main")
-			|| playermodel(model, "mhplokoon/main")
-			|| playermodel(model, "mkyarael/main")
-			|| playermodel(model, "Anakin_JA/main")
-			|| playermodel(model, "ani3/main")
-			|| playermodel(model, "ani3/main2")
-			|| playermodel(model, "ani3/main3")
-			|| playermodel(model, "jediknight1/default")
-			|| playermodel(model, "jediknight2/default")
-			|| playermodel(model, "jediknight3/default")
-			|| playermodel(model, "jediconsular1/default")
-			|| playermodel(model, "jediconsular2/default")
-			|| playermodel(model, "jediconsular3/default")
-			|| playermodel(model, "Obinew2/main")
-			|| playermodel(model, "jedi_spanki1a")
-			|| playermodel(model, "jedi_spanki1b")
-			|| playermodel(model, "jedi_spanki2")
-			|| playermodel(model, "jedi_spanki2a")
-			|| playermodel(model, "jedi_spanki2b")
-			|| playermodel(model, "jedi_spanki3")
-			|| playermodel(model, "jedi_spanki3a")
-			|| playermodel(model, "jedi_spanki3b")
-			|| playermodel(model, "jedi_spanki4")
-			|| playermodel(model, "jedi_spanki4a")
-			|| playermodel(model, "jedi_spanki4b")
-			|| playermodel(model, "jedi_spanki5")
-			|| playermodel(model, "jedi_spanki5a")
-			|| playermodel(model, "jedi_spanki5b")
-			|| playermodel(model, "jedi_spanki6")
-			|| playermodel(model, "jedi_spanki6a")
-			|| playermodel(model, "jedi_spanki6b")
-			|| playermodel(model, "jedi_spanki")
-			|| playermodel(model, "spiderman")
-			|| playermodel(model, "Wolverine")
-			|| playermodel(model, "SD_tmnt")
-			|| playermodel(model, "jedi_hm")
-			|| playermodel(model, "ExileMaleLightSide")
-			|| playermodel(model, "ExileMaleLightSideUR")
-			|| playermodel(model, "Kavar")
-			|| playermodel(model, "kreia")
-			|| playermodel(model, "Vandar")
-			|| playermodel(model, "Vandar_ghost")
-			|| playermodel(model, "Visas")
-			|| playermodel(model, "VrookLamar")
-			|| playermodel(model, "cal_kestis")
-			|| playermodel(model, "cal_kestis/cape")
-			|| playermodel(model, "cal_kestis/cape2")
-			|| playermodel(model, "cal_kestis/cape3")
-			|| playermodel(model, "cal_kestis/cape4")
-			|| playermodel(model, "cal_kestis/cape5")
-			|| playermodel(model, "cal_kestis/cape6")
-			|| playermodel(model, "cal_kestis/cape7")
-			|| playermodel(model, "cal_kestis/default2")
-			|| playermodel(model, "cal_kestis/default3")
-			|| playermodel(model, "cal_kestis/default4"))
+		else if (Class_Model(model, "jedi")
+			|| Class_Model(model, "quinlan_vos")
+			|| Class_Model(model, "quinlan_vos2")
+			|| Class_Model(model, "jedi_st_tiplee")
+			|| Class_Model(model, "jedi_st_tiplee/")
+			|| Class_Model(model, "Eeth_Koth/main")
+			|| Class_Model(model, "Eeth_Koth_mp")
+			|| Class_Model(model, "st_tiplee/default")
+			|| Class_Model(model, "st_tiplee")
+			|| Class_Model(model, "mja/")
+			|| Class_Model(model, "mja/main")
+			|| Class_Model(model, "mj/")
+			|| Class_Model(model, "mj/main")
+			|| Class_Model(model, "jedi/red")
+			|| Class_Model(model, "jedi/blue")
+			|| Class_Model(model, "obi3/main4")
+			|| Class_Model(model, "muwindu/main")
+			|| Class_Model(model, "mmKiadimundi/main")
+			|| Class_Model(model, "bar/main")
+			|| Class_Model(model, "shaak_ti/main")
+			|| Class_Model(model, "lu/main")
+			|| Class_Model(model, "cin_drallig_tm")
+			|| Class_Model(model, "cin_drallig_tm/")
+			|| Class_Model(model, "cin_drallig_tm/default")
+			|| Class_Model(model, "cin_drallig_tm/default_robed")
+			|| Class_Model(model, "eerin_bant_robe")
+			|| Class_Model(model, "eerin_bant_robe/")
+			|| Class_Model(model, "eerin_bant_robe/default")
+			|| Class_Model(model, "anavader")
+			|| Class_Model(model, "anavader/")
+			|| Class_Model(model, "anavader/default")
+			|| Class_Model(model, "agen_kolar")
+			|| Class_Model(model, "agen_kolar/")
+			|| Class_Model(model, "agen_kolar/default")
+			|| Class_Model(model, "mlkfisto/main")
+			|| Class_Model(model, "kit_fisto/default")
+			|| Class_Model(model, "kit_fisto")
+			|| Class_Model(model, "Coleman/main")
+			|| Class_Model(model, "coleman_trebor_vm")
+			|| Class_Model(model, "coleman_trebor_vm/")
+			|| Class_Model(model, "coleman_trebor_vm/default")
+			|| Class_Model(model, "saesee_tiin/main")
+			|| Class_Model(model, "mhplokoon/main")
+			|| Class_Model(model, "mkyarael/main")
+			|| Class_Model(model, "Anakin_JA/main")
+			|| Class_Model(model, "ani3/main")
+			|| Class_Model(model, "ani3/main2")
+			|| Class_Model(model, "ani3/main3")
+			|| Class_Model(model, "jediknight1/default")
+			|| Class_Model(model, "jediknight2/default")
+			|| Class_Model(model, "jediknight3/default")
+			|| Class_Model(model, "jediconsular1/default")
+			|| Class_Model(model, "jediconsular2/default")
+			|| Class_Model(model, "jediconsular3/default")
+			|| Class_Model(model, "Obinew2/main")
+			|| Class_Model(model, "jedi_spanki1a")
+			|| Class_Model(model, "jedi_spanki1b")
+			|| Class_Model(model, "jedi_spanki2")
+			|| Class_Model(model, "jedi_spanki2a")
+			|| Class_Model(model, "jedi_spanki2b")
+			|| Class_Model(model, "jedi_spanki3")
+			|| Class_Model(model, "jedi_spanki3a")
+			|| Class_Model(model, "jedi_spanki3b")
+			|| Class_Model(model, "jedi_spanki4")
+			|| Class_Model(model, "jedi_spanki4a")
+			|| Class_Model(model, "jedi_spanki4b")
+			|| Class_Model(model, "jedi_spanki5")
+			|| Class_Model(model, "jedi_spanki5a")
+			|| Class_Model(model, "jedi_spanki5b")
+			|| Class_Model(model, "jedi_spanki6")
+			|| Class_Model(model, "jedi_spanki6a")
+			|| Class_Model(model, "jedi_spanki6b")
+			|| Class_Model(model, "jedi_spanki")
+			|| Class_Model(model, "spiderman")
+			|| Class_Model(model, "Wolverine")
+			|| Class_Model(model, "SD_tmnt")
+			|| Class_Model(model, "jedi_hm")
+			|| Class_Model(model, "ExileMaleLightSide")
+			|| Class_Model(model, "ExileMaleLightSideUR")
+			|| Class_Model(model, "Kavar")
+			|| Class_Model(model, "kreia")
+			|| Class_Model(model, "Vandar")
+			|| Class_Model(model, "Vandar_ghost")
+			|| Class_Model(model, "Visas")
+			|| Class_Model(model, "VrookLamar")
+			|| Class_Model(model, "cal_kestis")
+			|| Class_Model(model, "cal_kestis/cape")
+			|| Class_Model(model, "cal_kestis/cape2")
+			|| Class_Model(model, "cal_kestis/cape3")
+			|| Class_Model(model, "cal_kestis/cape4")
+			|| Class_Model(model, "cal_kestis/cape5")
+			|| Class_Model(model, "cal_kestis/cape6")
+			|| Class_Model(model, "cal_kestis/cape7")
+			|| Class_Model(model, "cal_kestis/default2")
+			|| Class_Model(model, "cal_kestis/default3")
+			|| Class_Model(model, "cal_kestis/default4"))
 		{
 			client->pers.nextbotclass = BCLASS_JEDI;
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
@@ -3174,18 +3174,18 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (playermodel(model, "Jedi_GenericFemale1")
-			|| playermodel(model, "Jedi_GenericFemale1A")
-			|| playermodel(model, "Jedi_GenericFemale2")
-			|| playermodel(model, "Jedi_GenericFemale2A")
-			|| playermodel(model, "Jedi_GenericFemale3")
-			|| playermodel(model, "Jedi_GenericFemale3A")
-			|| playermodel(model, "Female_Jedi")
-			|| playermodel(model, "lxjade/main")
-			|| playermodel(model, "jedi_hf")
-			|| playermodel(model, "ExileFemaleLightSide")
-			|| playermodel(model, "ExileFemaleLightSideUR")
-			|| playermodel(model, "Female_Jedi"))
+		else if (Class_Model(model, "Jedi_GenericFemale1")
+			|| Class_Model(model, "Jedi_GenericFemale1A")
+			|| Class_Model(model, "Jedi_GenericFemale2")
+			|| Class_Model(model, "Jedi_GenericFemale2A")
+			|| Class_Model(model, "Jedi_GenericFemale3")
+			|| Class_Model(model, "Jedi_GenericFemale3A")
+			|| Class_Model(model, "Female_Jedi")
+			|| Class_Model(model, "lxjade/main")
+			|| Class_Model(model, "jedi_hf")
+			|| Class_Model(model, "ExileFemaleLightSide")
+			|| Class_Model(model, "ExileFemaleLightSideUR")
+			|| Class_Model(model, "Female_Jedi"))
 		{
 			client->pers.botmodelscale = BOTZIZE_SMALL;
 			client->pers.nextbotclass = BCLASS_JEDI;
@@ -3201,7 +3201,7 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (playermodel(model, "jedi/master"))
+		else if (Class_Model(model, "jedi/master"))
 		{
 			client->pers.nextbotclass = BCLASS_JEDIMASTER;
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
@@ -3217,9 +3217,9 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (playermodel(model, "jeditrainer")
-			|| playermodel(model, "jeditrainer/red")
-			|| playermodel(model, "jeditrainer/blue"))
+		else if (Class_Model(model, "jeditrainer")
+			|| Class_Model(model, "jeditrainer/red")
+			|| Class_Model(model, "jeditrainer/blue"))
 		{
 			client->pers.nextbotclass = BCLASS_JEDITRAINER;
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
@@ -3235,36 +3235,36 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (playermodel(model, "kyle")
-			|| playermodel(model, "kyle/main")
-			|| playermodel(model, "kyle/red")
-			|| playermodel(model, "kyle/blue")
-			|| playermodel(model, "Jedi_Genericfemale")
-			|| playermodel(model, "wzoldben/main3")
-			|| playermodel(model, "wzoldben/main2")
-			|| playermodel(model, "ntobiwan/main")
-			|| playermodel(model, "wzoldben/main")
-			|| playermodel(model, "Obinew2/main")
-			|| playermodel(model, "Obinew2/main2")
-			|| playermodel(model, "Obinew2/main3")
-			|| playermodel(model, "obi3/main")
-			|| playermodel(model, "obi3/main2")
-			|| playermodel(model, "obi3/main4")
-			|| playermodel(model, "obi3/main3")
-			|| playermodel(model, "ntobiwan/main2")
-			|| playermodel(model, "macewinduv3")
-			|| playermodel(model, "mace_windu")
-			|| playermodel(model, "mace_winduvm")
-			|| playermodel(model, "mace_winduvm/default_robed")
-			|| playermodel(model, "jedi_quigon")
-			|| playermodel(model, "Quigon")
-			|| playermodel(model, "jedi_kk")
-			|| playermodel(model, "hs_kenobi_rots")
-			|| playermodel(model, "jedi_kenobi")
-			|| playermodel(model, "noQuiGonVM3/main")
-			|| playermodel(model, "noQuiGonVM3/main2")
-			|| playermodel(model, "moMace_Windu/main")
-			|| playermodel(model, "muwindu/main"))
+		else if (Class_Model(model, "kyle")
+			|| Class_Model(model, "kyle/main")
+			|| Class_Model(model, "kyle/red")
+			|| Class_Model(model, "kyle/blue")
+			|| Class_Model(model, "Jedi_Genericfemale")
+			|| Class_Model(model, "wzoldben/main3")
+			|| Class_Model(model, "wzoldben/main2")
+			|| Class_Model(model, "ntobiwan/main")
+			|| Class_Model(model, "wzoldben/main")
+			|| Class_Model(model, "Obinew2/main")
+			|| Class_Model(model, "Obinew2/main2")
+			|| Class_Model(model, "Obinew2/main3")
+			|| Class_Model(model, "obi3/main")
+			|| Class_Model(model, "obi3/main2")
+			|| Class_Model(model, "obi3/main4")
+			|| Class_Model(model, "obi3/main3")
+			|| Class_Model(model, "ntobiwan/main2")
+			|| Class_Model(model, "macewinduv3")
+			|| Class_Model(model, "mace_windu")
+			|| Class_Model(model, "mace_winduvm")
+			|| Class_Model(model, "mace_winduvm/default_robed")
+			|| Class_Model(model, "jedi_quigon")
+			|| Class_Model(model, "Quigon")
+			|| Class_Model(model, "jedi_kk")
+			|| Class_Model(model, "hs_kenobi_rots")
+			|| Class_Model(model, "jedi_kenobi")
+			|| Class_Model(model, "noQuiGonVM3/main")
+			|| Class_Model(model, "noQuiGonVM3/main2")
+			|| Class_Model(model, "moMace_Windu/main")
+			|| Class_Model(model, "muwindu/main"))
 		{
 			client->pers.nextbotclass = BCLASS_KYLE;
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
@@ -3280,10 +3280,10 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (playermodel(model, "Shaaktivm")
-			|| playermodel(model, "jedi_shaakti")
-			|| playermodel(model, "bastila")
-			|| playermodel(model, "brianna"))
+		else if (Class_Model(model, "Shaaktivm")
+			|| Class_Model(model, "jedi_shaakti")
+			|| Class_Model(model, "bastila")
+			|| Class_Model(model, "brianna"))
 		{
 			client->pers.nextbotclass = BCLASS_KYLE;
 			client->pers.botmodelscale = BOTZIZE_SMALL;
@@ -3299,10 +3299,10 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (playermodel(model, "lando")
-			|| playermodel(model, "lando/red")
-			|| playermodel(model, "lando/blue")
-			|| playermodel(model, "lando/main"))
+		else if (Class_Model(model, "lando")
+			|| Class_Model(model, "lando/red")
+			|| Class_Model(model, "lando/blue")
+			|| Class_Model(model, "lando/main"))
 		{
 			client->pers.nextbotclass = BCLASS_LANDO;
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
@@ -3318,47 +3318,47 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (playermodel(model, "luke")
-			|| playermodel(model, "luke/")
-			|| playermodel(model, "lukejka")
-			|| playermodel(model, "lukejka/")
-			|| playermodel(model, "luke_tfa")
-			|| playermodel(model, "rey/head_a1|torso_a1|lower_a1")
-			|| playermodel(model, "rey")
-			|| playermodel(model, "st_rey")
-			|| playermodel(model, "jedi_st_rey")
-			|| playermodel(model, "lb/")
-			|| playermodel(model, "lb/main")
-			|| playermodel(model, "ld/")
-			|| playermodel(model, "ld/main")
-			|| playermodel(model, "lx/")
-			|| playermodel(model, "lx/main")
-			|| playermodel(model, "lr/")
-			|| playermodel(model, "lr/main")
-			|| playermodel(model, "lr/main2")
-			|| playermodel(model, "lr/main3")
-			|| playermodel(model, "stluke/")
-			|| playermodel(model, "stluke/main")
-			|| playermodel(model, "luanhluke/")
-			|| playermodel(model, "luanhluke/main")
-			|| playermodel(model, "luanhluke/main2")
-			|| playermodel(model, "luke/red")
-			|| playermodel(model, "luke/blue")
-			|| playermodel(model, "lukejka/red")
-			|| playermodel(model, "lukejka/blue")
-			|| playermodel(model, "t_luke_rotj")
-			|| playermodel(model, "jedi_luke")
-			|| playermodel(model, "t_anakin")
-			|| playermodel(model, "jedi_anakint")
-			|| playermodel(model, "jedi_anakin")
-			|| playermodel(model, "adi/main")
-			|| playermodel(model, "shaak_ti/main")
-			|| playermodel(model, "mgaaylasecura/")
-			|| playermodel(model, "mgaaylasecura/main")
-			|| playermodel(model, "jedi_anakin2")
-			|| playermodel(model, "jedi_anakin")
-			|| playermodel(model, "ajunta")
-			|| playermodel(model, "Atris"))
+		else if (Class_Model(model, "luke")
+			|| Class_Model(model, "luke/")
+			|| Class_Model(model, "lukejka")
+			|| Class_Model(model, "lukejka/")
+			|| Class_Model(model, "luke_tfa")
+			|| Class_Model(model, "rey/head_a1|torso_a1|lower_a1")
+			|| Class_Model(model, "rey")
+			|| Class_Model(model, "st_rey")
+			|| Class_Model(model, "jedi_st_rey")
+			|| Class_Model(model, "lb/")
+			|| Class_Model(model, "lb/main")
+			|| Class_Model(model, "ld/")
+			|| Class_Model(model, "ld/main")
+			|| Class_Model(model, "lx/")
+			|| Class_Model(model, "lx/main")
+			|| Class_Model(model, "lr/")
+			|| Class_Model(model, "lr/main")
+			|| Class_Model(model, "lr/main2")
+			|| Class_Model(model, "lr/main3")
+			|| Class_Model(model, "stluke/")
+			|| Class_Model(model, "stluke/main")
+			|| Class_Model(model, "luanhluke/")
+			|| Class_Model(model, "luanhluke/main")
+			|| Class_Model(model, "luanhluke/main2")
+			|| Class_Model(model, "luke/red")
+			|| Class_Model(model, "luke/blue")
+			|| Class_Model(model, "lukejka/red")
+			|| Class_Model(model, "lukejka/blue")
+			|| Class_Model(model, "t_luke_rotj")
+			|| Class_Model(model, "jedi_luke")
+			|| Class_Model(model, "t_anakin")
+			|| Class_Model(model, "jedi_anakint")
+			|| Class_Model(model, "jedi_anakin")
+			|| Class_Model(model, "adi/main")
+			|| Class_Model(model, "shaak_ti/main")
+			|| Class_Model(model, "mgaaylasecura/")
+			|| Class_Model(model, "mgaaylasecura/main")
+			|| Class_Model(model, "jedi_anakin2")
+			|| Class_Model(model, "jedi_anakin")
+			|| Class_Model(model, "ajunta")
+			|| Class_Model(model, "Atris"))
 		{
 			client->pers.nextbotclass = BCLASS_LUKE;
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
@@ -3374,7 +3374,7 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (playermodel(model, "ea_ep2anakin"))
+		else if (Class_Model(model, "ea_ep2anakin"))
 		{
 			client->pers.nextbotclass = BCLASS_DUELS;
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
@@ -3390,11 +3390,11 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (playermodel(model, "monmothma")
-			|| playermodel(model, "monmothma/red")
-			|| playermodel(model, "monmothma/blue")
-			|| playermodel(model, "ta/main")
-			|| playermodel(model, "it/main"))
+		else if (Class_Model(model, "monmothma")
+			|| Class_Model(model, "monmothma/red")
+			|| Class_Model(model, "monmothma/blue")
+			|| Class_Model(model, "ta/main")
+			|| Class_Model(model, "it/main"))
 		{
 			client->pers.nextbotclass = BCLASS_MONMOTHA;
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
@@ -3410,9 +3410,9 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (playermodel(model, "morgan")
-			|| playermodel(model, "morgan/red")
-			|| playermodel(model, "morgan/blue"))
+		else if (Class_Model(model, "morgan")
+			|| Class_Model(model, "morgan/red")
+			|| Class_Model(model, "morgan/blue"))
 		{
 			client->pers.nextbotclass = BCLASS_MORGANKATARN;
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
@@ -3428,9 +3428,9 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (playermodel(model, "noghri")
-			|| playermodel(model, "noghri/red")
-			|| playermodel(model, "noghri/blue"))
+		else if (Class_Model(model, "noghri")
+			|| Class_Model(model, "noghri/red")
+			|| Class_Model(model, "noghri/blue"))
 		{
 			client->pers.nextbotclass = BCLASS_NOGRHRI;
 			client->pers.botmodelscale = BOTZIZE_LARGE;
@@ -3446,11 +3446,11 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (playermodel(model, "protocol")
-			|| playermodel(model, "protocol/red")
-			|| playermodel(model, "protocol/blue")
-			|| playermodel(model, "tc14/main")
-			|| playermodel(model, "kgc3po/main"))
+		else if (Class_Model(model, "protocol")
+			|| Class_Model(model, "protocol/red")
+			|| Class_Model(model, "protocol/blue")
+			|| Class_Model(model, "tc14/main")
+			|| Class_Model(model, "kgc3po/main"))
 		{
 			client->pers.nextbotclass = BCLASS_PROTOCOL;
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
@@ -3466,8 +3466,8 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (playermodel(model, "r2d2")
-			|| playermodel(model, "r5d2"))
+		else if (Class_Model(model, "r2d2")
+			|| Class_Model(model, "r5d2"))
 		{
 			client->pers.botmodelscale = BOTZIZE_SMALLER;
 			client->pers.nextbotclass = BCLASS_R2D2;
@@ -3483,7 +3483,7 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (playermodel(model, "marka_ragnos"))
+		else if (Class_Model(model, "marka_ragnos"))
 		{
 			client->pers.nextbotclass = BCLASS_RAGNOS;
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
@@ -3499,7 +3499,7 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (playermodel(model, "rancor"))
+		else if (Class_Model(model, "rancor"))
 		{
 			client->pers.nextbotclass = BCLASS_RANCOR;
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
@@ -3515,8 +3515,8 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (playermodel(model, "rax_joris")
-			|| playermodel(model, "calo"))
+		else if (Class_Model(model, "rax_joris")
+			|| Class_Model(model, "calo"))
 		{
 			client->pers.nextbotclass = BCLASS_RAX;
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
@@ -3532,10 +3532,10 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (playermodel(model, "rebel")
-			|| playermodel(model, "rebel/main")
-			|| playermodel(model, "rebel/red")
-			|| playermodel(model, "rebel/blue"))
+		else if (Class_Model(model, "rebel")
+			|| Class_Model(model, "rebel/main")
+			|| Class_Model(model, "rebel/red")
+			|| Class_Model(model, "rebel/blue"))
 		{
 			client->pers.nextbotclass = BCLASS_REBEL;
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
@@ -3551,17 +3551,17 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (playermodel(model, "reborn")
-			|| playermodel(model, "reborn/red")
-			|| playermodel(model, "reborn/blue")
-			|| playermodel(model, "reborn/boss")
-			|| playermodel(model, "reborn/fencer")
-			|| playermodel(model, "reborn/forceuser")
-			|| playermodel(model, "reborn/acrobat")
-			|| playermodel(model, "reborn_new")
-			|| playermodel(model, "reborn_twin")
-			|| playermodel(model, "ExileFemaleDarkSide")
-			|| playermodel(model, "ExileFemaleDarkSideUR"))
+		else if (Class_Model(model, "reborn")
+			|| Class_Model(model, "reborn/red")
+			|| Class_Model(model, "reborn/blue")
+			|| Class_Model(model, "reborn/boss")
+			|| Class_Model(model, "reborn/fencer")
+			|| Class_Model(model, "reborn/forceuser")
+			|| Class_Model(model, "reborn/acrobat")
+			|| Class_Model(model, "reborn_new")
+			|| Class_Model(model, "reborn_twin")
+			|| Class_Model(model, "ExileFemaleDarkSide")
+			|| Class_Model(model, "ExileFemaleDarkSideUR"))
 		{
 			client->pers.nextbotclass = BCLASS_REBORN;
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
@@ -3577,9 +3577,9 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (playermodel(model, "reelo")
-			|| playermodel(model, "reelo/red")
-			|| playermodel(model, "reelo/blue"))
+		else if (Class_Model(model, "reelo")
+			|| Class_Model(model, "reelo/red")
+			|| Class_Model(model, "reelo/blue"))
 		{
 			client->pers.nextbotclass = BCLASS_REELO;
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
@@ -3595,9 +3595,9 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (playermodel(model, "rockettrooper")
-			|| playermodel(model, "rockettrooper/red")
-			|| playermodel(model, "rockettrooper/blue"))
+		else if (Class_Model(model, "rockettrooper")
+			|| Class_Model(model, "rockettrooper/red")
+			|| Class_Model(model, "rockettrooper/blue"))
 		{
 			client->pers.nextbotclass = BCLASS_ROCKETTROOPER;
 			client->pers.botmodelscale = BOTZIZE_LARGER;
@@ -3613,11 +3613,11 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (playermodel(model, "rodian")
-			|| playermodel(model, "rodian/red")
-			|| playermodel(model, "rodian/blue")
-			|| playermodel(model, "rodian/main")
-			|| playermodel(model, "pb/main"))
+		else if (Class_Model(model, "rodian")
+			|| Class_Model(model, "rodian/red")
+			|| Class_Model(model, "rodian/blue")
+			|| Class_Model(model, "rodian/main")
+			|| Class_Model(model, "pb/main"))
 		{
 			client->pers.nextbotclass = BCLASS_RODIAN;
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
@@ -3633,9 +3633,9 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (playermodel(model, "rosh_penin")
-			|| playermodel(model, "rosh_penin/red")
-			|| playermodel(model, "rosh_penin/blue"))
+		else if (Class_Model(model, "rosh_penin")
+			|| Class_Model(model, "rosh_penin/red")
+			|| Class_Model(model, "rosh_penin/blue"))
 		{
 			client->pers.nextbotclass = BCLASS_ROSH_PENIN;
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
@@ -3651,9 +3651,9 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (playermodel(model, "saboteur")
-			|| playermodel(model, "saboteur/red")
-			|| playermodel(model, "saboteur/blue"))
+		else if (Class_Model(model, "saboteur")
+			|| Class_Model(model, "saboteur/red")
+			|| Class_Model(model, "saboteur/blue"))
 		{
 			client->pers.nextbotclass = BCLASS_SABOTEUR;
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
@@ -3669,9 +3669,9 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (playermodel(model, "shadowtrooper")
-			|| playermodel(model, "shadowtrooper/red")
-			|| playermodel(model, "shadowtrooper/blue"))
+		else if (Class_Model(model, "shadowtrooper")
+			|| Class_Model(model, "shadowtrooper/red")
+			|| Class_Model(model, "shadowtrooper/blue"))
 		{
 			client->pers.nextbotclass = BCLASS_SHADOWTROOPER;
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
@@ -3687,48 +3687,48 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (playermodel(model, "cc/main")
-			|| playermodel(model, "sdt/")
-			|| playermodel(model, "bs/")
-			|| playermodel(model, "snowtrooper")
-			|| playermodel(model, "snowtrooper/blue")
-			|| playermodel(model, "snowtrooper/red")
-			|| playermodel(model, "arc")
-			|| playermodel(model, "cn")
-			|| playermodel(model, "cp")
-			|| playermodel(model, "ccm")
-			|| playermodel(model, "ccm/main")
-			|| playermodel(model, "cc/")
-			|| playermodel(model, "stormtrooper")
-			|| playermodel(model, "TR_8R")
-			|| playermodel(model, "TR_8R_normal")
-			|| playermodel(model, "FN-2187")
-			|| playermodel(model, "captainphasma")
-			|| playermodel(model, "stormtrooper_tfa")
-			|| playermodel(model, "stormtrooper/blue")
-			|| playermodel(model, "stormtrooper/red")
-			|| playermodel(model, "stormtrooper/main")
-			|| playermodel(model, "stormtrooper/main2")
-			|| playermodel(model, "bh")
-			|| playermodel(model, "ct")
-			|| playermodel(model, "ct/main2")
-			|| playermodel(model, "ct/main3")
-			|| playermodel(model, "ct/main4")
-			|| playermodel(model, "ct/main5")
-			|| playermodel(model, "ct/main6")
-			|| playermodel(model, "cb")
-			|| playermodel(model, "cbe")
-			|| playermodel(model, "cdy/")
-			|| playermodel(model, "cdy/main")
-			|| playermodel(model, "cdy/main2")
-			|| playermodel(model, "smuggler2/default")
-			|| playermodel(model, "trooper1/default")
-			|| playermodel(model, "trooper2/default")
-			|| playermodel(model, "swamptrooper")
-			|| playermodel(model, "swamptrooper/blue")
-			|| playermodel(model, "swamptrooper/red")
-			|| playermodel(model, "First_Order_Riot_Trooper")
-			|| playermodel(model, "sullustan"))
+		else if (Class_Model(model, "cc/main")
+			|| Class_Model(model, "sdt/")
+			|| Class_Model(model, "bs/")
+			|| Class_Model(model, "snowtrooper")
+			|| Class_Model(model, "snowtrooper/blue")
+			|| Class_Model(model, "snowtrooper/red")
+			|| Class_Model(model, "arc")
+			|| Class_Model(model, "cn")
+			|| Class_Model(model, "cp")
+			|| Class_Model(model, "ccm")
+			|| Class_Model(model, "ccm/main")
+			|| Class_Model(model, "cc/")
+			|| Class_Model(model, "stormtrooper")
+			|| Class_Model(model, "TR_8R")
+			|| Class_Model(model, "TR_8R_normal")
+			|| Class_Model(model, "FN-2187")
+			|| Class_Model(model, "captainphasma")
+			|| Class_Model(model, "stormtrooper_tfa")
+			|| Class_Model(model, "stormtrooper/blue")
+			|| Class_Model(model, "stormtrooper/red")
+			|| Class_Model(model, "stormtrooper/main")
+			|| Class_Model(model, "stormtrooper/main2")
+			|| Class_Model(model, "bh")
+			|| Class_Model(model, "ct")
+			|| Class_Model(model, "ct/main2")
+			|| Class_Model(model, "ct/main3")
+			|| Class_Model(model, "ct/main4")
+			|| Class_Model(model, "ct/main5")
+			|| Class_Model(model, "ct/main6")
+			|| Class_Model(model, "cb")
+			|| Class_Model(model, "cbe")
+			|| Class_Model(model, "cdy/")
+			|| Class_Model(model, "cdy/main")
+			|| Class_Model(model, "cdy/main2")
+			|| Class_Model(model, "smuggler2/default")
+			|| Class_Model(model, "trooper1/default")
+			|| Class_Model(model, "trooper2/default")
+			|| Class_Model(model, "swamptrooper")
+			|| Class_Model(model, "swamptrooper/blue")
+			|| Class_Model(model, "swamptrooper/red")
+			|| Class_Model(model, "First_Order_Riot_Trooper")
+			|| Class_Model(model, "sullustan"))
 		{
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
 			client->pers.nextbotclass = BCLASS_STORMTROOPER;
@@ -3744,8 +3744,8 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (playermodel(model, "captainphasma")
-			|| playermodel(model, "CaptainPhasmaK"))
+		else if (Class_Model(model, "captainphasma")
+			|| Class_Model(model, "CaptainPhasmaK"))
 		{
 			client->pers.botmodelscale = BOTZIZE_TALL;
 			client->pers.nextbotclass = BCLASS_STORMTROOPER;
@@ -3761,12 +3761,12 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (playermodel(model, "fbhutt/main")
-			|| playermodel(model, "Itho")
-			|| playermodel(model, "Itho2")
-			|| playermodel(model, "Itho3")
-			|| playermodel(model, "Itho4")
-			|| playermodel(model, "ithorian"))
+		else if (Class_Model(model, "fbhutt/main")
+			|| Class_Model(model, "Itho")
+			|| Class_Model(model, "Itho2")
+			|| Class_Model(model, "Itho3")
+			|| Class_Model(model, "Itho4")
+			|| Class_Model(model, "ithorian"))
 		{
 			client->pers.nextbotclass = BCLASS_STORMTROOPER;
 			client->pers.botmodelscale = BOTZIZE_MASSIVE;
@@ -3782,16 +3782,16 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (playermodel(model, "tavion")
-			|| playermodel(model, "tavion/blue")
-			|| playermodel(model, "tavion/red")
-			|| playermodel(model, "tavion_new")
-			|| playermodel(model, "tavion_new/blue")
-			|| playermodel(model, "tavion_new/red")
-			|| playermodel(model, "tavion_new/main")
-			|| playermodel(model, "asajj")
-			|| playermodel(model, "assajv")
-			|| playermodel(model, "AssajjCW"))
+		else if (Class_Model(model, "tavion")
+			|| Class_Model(model, "tavion/blue")
+			|| Class_Model(model, "tavion/red")
+			|| Class_Model(model, "tavion_new")
+			|| Class_Model(model, "tavion_new/blue")
+			|| Class_Model(model, "tavion_new/red")
+			|| Class_Model(model, "tavion_new/main")
+			|| Class_Model(model, "asajj")
+			|| Class_Model(model, "assajv")
+			|| Class_Model(model, "AssajjCW"))
 		{
 			client->pers.nextbotclass = BCLASS_TAVION;
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
@@ -3807,14 +3807,14 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (playermodel(model, "trandoshan")
-			|| playermodel(model, "trandoshan/blue")
-			|| playermodel(model, "trandoshan/red")
-			|| playermodel(model, "trandoshan/main")
-			|| playermodel(model, "sebulba/main")
-			|| playermodel(model, "sebulba/main2")
-			|| playermodel(model, "sebulba/main3")
-			|| playermodel(model, "lamasu/main"))
+		else if (Class_Model(model, "trandoshan")
+			|| Class_Model(model, "trandoshan/blue")
+			|| Class_Model(model, "trandoshan/red")
+			|| Class_Model(model, "trandoshan/main")
+			|| Class_Model(model, "sebulba/main")
+			|| Class_Model(model, "sebulba/main2")
+			|| Class_Model(model, "sebulba/main3")
+			|| Class_Model(model, "lamasu/main"))
 		{
 			client->pers.nextbotclass = BCLASS_TRANDOSHAN;
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
@@ -3830,18 +3830,18 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (playermodel(model, "Bountyhunter2/default")
-			|| playermodel(model, "bkzam/")
-			|| playermodel(model, "bkzam/main")
-			|| playermodel(model, "bkzam/main2")
-			|| playermodel(model, "bkzam/main3")
-			|| playermodel(model, "4lom/main")
-			|| playermodel(model, "4lom/")
-			|| playermodel(model, "tusken")
-			|| playermodel(model, "tusken/main")
-			|| playermodel(model, "tusken/blue")
-			|| playermodel(model, "tusken/red")
-			|| playermodel(model, "boushh/default"))
+		else if (Class_Model(model, "Bountyhunter2/default")
+			|| Class_Model(model, "bkzam/")
+			|| Class_Model(model, "bkzam/main")
+			|| Class_Model(model, "bkzam/main2")
+			|| Class_Model(model, "bkzam/main3")
+			|| Class_Model(model, "4lom/main")
+			|| Class_Model(model, "4lom/")
+			|| Class_Model(model, "tusken")
+			|| Class_Model(model, "tusken/main")
+			|| Class_Model(model, "tusken/blue")
+			|| Class_Model(model, "tusken/red")
+			|| Class_Model(model, "boushh/default"))
 		{
 			client->pers.nextbotclass = BCLASS_TUSKEN_SNIPER;
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
@@ -3857,8 +3857,8 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (playermodel(model, "edAurra/main")
-			|| playermodel(model, "ks/main"))
+		else if (Class_Model(model, "edAurra/main")
+			|| Class_Model(model, "ks/main"))
 		{
 			client->pers.nextbotclass = BCLASS_TUSKEN_RAIDER;
 			client->pers.botmodelscale = BOTZIZE_SMALL;
@@ -3874,7 +3874,7 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (playermodel(model, "fcgamorrean/main"))
+		else if (Class_Model(model, "fcgamorrean/main"))
 		{
 			client->pers.nextbotclass = BCLASS_TUSKEN_RAIDER;
 			client->pers.botmodelscale = BOTZIZE_LARGER;
@@ -3890,9 +3890,9 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (playermodel(model, "ugnaught")
-			|| playermodel(model, "ew/main")
-			|| playermodel(model, "ew"))
+		else if (Class_Model(model, "ugnaught")
+			|| Class_Model(model, "ew/main")
+			|| Class_Model(model, "ew"))
 		{
 			client->pers.botmodelscale = BOTZIZE_SMALLER;
 			client->pers.nextbotclass = BCLASS_UGNAUGHT;
@@ -3908,7 +3908,7 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (playermodel(model, "wampa"))
+		else if (Class_Model(model, "wampa"))
 		{
 			client->pers.nextbotclass = BCLASS_WAMPA;
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
@@ -3924,10 +3924,10 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (playermodel(model, "weequay")
-			|| playermodel(model, "weequay/blue")
-			|| playermodel(model, "weequay/red")
-			|| playermodel(model, "weequay/main"))
+		else if (Class_Model(model, "weequay")
+			|| Class_Model(model, "weequay/blue")
+			|| Class_Model(model, "weequay/red")
+			|| Class_Model(model, "weequay/main"))
 		{
 			client->pers.nextbotclass = BCLASS_WEEQUAY;
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
@@ -3943,7 +3943,7 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (playermodel(model, "lamasu/main"))
+		else if (Class_Model(model, "lamasu/main"))
 		{
 			client->pers.nextbotclass = BCLASS_WEEQUAY;
 			client->pers.botmodelscale = BOTZIZE_LARGER;
@@ -3959,13 +3959,13 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (playermodel(model, "SBD/default")
-			|| playermodel(model, "SBD")
-			|| playermodel(model, "SBD2")
-			|| playermodel(model, "Super_Battle_Droid")
-			|| playermodel(model, "Super Battle Droid")
-			|| playermodel(model, "superbattledroid")
-			|| playermodel(model, "SBD/"))
+		else if (Class_Model(model, "SBD/default")
+			|| Class_Model(model, "SBD")
+			|| Class_Model(model, "SBD2")
+			|| Class_Model(model, "Super_Battle_Droid")
+			|| Class_Model(model, "Super Battle Droid")
+			|| Class_Model(model, "superbattledroid")
+			|| Class_Model(model, "SBD/"))
 		{
 			client->pers.nextbotclass = BCLASS_SBD;
 			client->pers.botmodelscale = BOTZIZE_MASSIVE;
@@ -3981,17 +3981,17 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (playermodel(model, "battledroid")
-			|| playermodel(model, "battledroid/main")
-			|| playermodel(model, "battledroid/main2")
-			|| playermodel(model, "battledroid/main3")
-			|| playermodel(model, "battledroid/main4")
-			|| playermodel(model, "battle3po/main")
-			|| playermodel(model, "ra7/main")
-			|| playermodel(model, "hk47")
-			|| playermodel(model, "hk50")
-			|| playermodel(model, "hk51")
-			|| playermodel(model, "Wardroid"))
+		else if (Class_Model(model, "battledroid")
+			|| Class_Model(model, "battledroid/main")
+			|| Class_Model(model, "battledroid/main2")
+			|| Class_Model(model, "battledroid/main3")
+			|| Class_Model(model, "battledroid/main4")
+			|| Class_Model(model, "battle3po/main")
+			|| Class_Model(model, "ra7/main")
+			|| Class_Model(model, "hk47")
+			|| Class_Model(model, "hk50")
+			|| Class_Model(model, "hk51")
+			|| Class_Model(model, "Wardroid"))
 		{
 			client->pers.nextbotclass = BCLASS_BATTLEDROID;
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
@@ -4007,10 +4007,10 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (playermodel(model, "mando_hunter/default")
-			|| playermodel(model, "Bountyhunter1/default")
-			|| playermodel(model, "boba_fett/red")
-			|| playermodel(model, "Bountyhunter1/default_kamino"))
+		else if (Class_Model(model, "mando_hunter/default")
+			|| Class_Model(model, "Bountyhunter1/default")
+			|| Class_Model(model, "boba_fett/red")
+			|| Class_Model(model, "Bountyhunter1/default_kamino"))
 		{
 			client->pers.nextbotclass = BCLASS_MANDOLORIAN1;
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
@@ -4026,8 +4026,8 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (playermodel(model, "jango_fett/blue")
-			|| playermodel(model, "boba_fett/blue"))
+		else if (Class_Model(model, "jango_fett/blue")
+			|| Class_Model(model, "boba_fett/blue"))
 		{
 			client->pers.nextbotclass = BCLASS_MANDOLORIAN2;
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
@@ -4043,13 +4043,13 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (playermodel(model, "T_yoda_MP")
-			|| playermodel(model, "T_yoda_MP/default")
-			|| playermodel(model, "nayodaghost/main")
-			|| playermodel(model, "yoda/main")
-			|| playermodel(model, "jedi_yoda")
-			|| playermodel(model, "yoda")
-			|| playermodel(model, "yodavm"))
+		else if (Class_Model(model, "T_yoda_MP")
+			|| Class_Model(model, "T_yoda_MP/default")
+			|| Class_Model(model, "nayodaghost/main")
+			|| Class_Model(model, "yoda/main")
+			|| Class_Model(model, "jedi_yoda")
+			|| Class_Model(model, "yoda")
+			|| Class_Model(model, "yodavm"))
 		{
 			client->pers.botmodelscale = BOTZIZE_SMALLEST;
 			client->pers.nextbotclass = BCLASS_YODA;
@@ -4065,11 +4065,11 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (playermodel(model, "youngani")
-			|| playermodel(model, "youngshak")
-			|| playermodel(model, "youngfem")
-			|| playermodel(model, "youngling")
-			|| playermodel(model, "youngling/default"))
+		else if (Class_Model(model, "youngani")
+			|| Class_Model(model, "youngshak")
+			|| Class_Model(model, "youngfem")
+			|| Class_Model(model, "youngling")
+			|| Class_Model(model, "youngling/default"))
 		{
 			client->pers.botmodelscale = BOTZIZE_SMALLER;
 			client->pers.nextbotclass = BCLASS_JEDI;
@@ -4085,7 +4085,7 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (playermodel(model, "npj_p/default"))
+		else if (Class_Model(model, "npj_p/default"))
 		{
 			client->pers.botmodelscale = BOTZIZE_SMALL;
 			client->pers.nextbotclass = BCLASS_JEDI;
@@ -4101,7 +4101,7 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (playermodel(model, "Zaalba"))
+		else if (Class_Model(model, "Zaalba"))
 		{
 			client->pers.botmodelscale = BOTZIZE_LARGER;
 			client->pers.nextbotclass = BCLASS_SMUGGLER1;
@@ -4117,8 +4117,8 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (playermodel(model, "jarjar")
-			|| playermodel(model, "gungan"))
+		else if (Class_Model(model, "jarjar")
+			|| Class_Model(model, "gungan"))
 		{
 			client->pers.botmodelscale = BOTZIZE_LARGER;
 			client->pers.nextbotclass = BCLASS_SOILDER;
@@ -4134,9 +4134,9 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (playermodel(model, "khadmiral/main")
-			|| playermodel(model, "khadmiral/main2")
-			|| playermodel(model, "dustil"))
+		else if (Class_Model(model, "khadmiral/main")
+			|| Class_Model(model, "khadmiral/main2")
+			|| Class_Model(model, "dustil"))
 		{
 			client->pers.nextbotclass = BCLASS_SOILDER;
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
@@ -4152,14 +4152,14 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (playermodel(model, "jedi_maul")
-			|| playermodel(model, "DT_Maul")
-			|| playermodel(model, "DT_Maul/default")
-			|| playermodel(model, "DT_Maul/default_hooded")
-			|| playermodel(model, "DT_Maul/default_robed")
-			|| playermodel(model, "maulvm")
-			|| playermodel(model, "maulvms")
-			|| playermodel(model, "maulvmr"))
+		else if (Class_Model(model, "jedi_maul")
+			|| Class_Model(model, "DT_Maul")
+			|| Class_Model(model, "DT_Maul/default")
+			|| Class_Model(model, "DT_Maul/default_hooded")
+			|| Class_Model(model, "DT_Maul/default_robed")
+			|| Class_Model(model, "maulvm")
+			|| Class_Model(model, "maulvms")
+			|| Class_Model(model, "maulvmr"))
 		{
 			client->pers.nextbotclass = BCLASS_STAFFDARK;
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
@@ -4175,8 +4175,8 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (playermodel(model, "droideka")
-			|| playermodel(model, "droideka/main"))
+		else if (Class_Model(model, "droideka")
+			|| Class_Model(model, "droideka/main"))
 		{
 			client->pers.nextbotclass = BCLASS_SOILDER;
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
@@ -4192,19 +4192,19 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (playermodel(model, "vader")
-			|| playermodel(model, "vaderVM")
-			|| playermodel(model, "vader/")
-			|| playermodel(model, "vader/main")
-			|| playermodel(model, "vader/main2")
-			|| playermodel(model, "vader/main3")
-			|| playermodel(model, "vader/main4")
-			|| playermodel(model, "vader/default")
-			|| playermodel(model, "jedi_vader")
-			|| playermodel(model, "am_vader")
-			|| playermodel(model, "darthvader")
-			|| playermodel(model, "vadervmm")
-			|| playermodel(model, "t_vader"))
+		else if (Class_Model(model, "vader")
+			|| Class_Model(model, "vaderVM")
+			|| Class_Model(model, "vader/")
+			|| Class_Model(model, "vader/main")
+			|| Class_Model(model, "vader/main2")
+			|| Class_Model(model, "vader/main3")
+			|| Class_Model(model, "vader/main4")
+			|| Class_Model(model, "vader/default")
+			|| Class_Model(model, "jedi_vader")
+			|| Class_Model(model, "am_vader")
+			|| Class_Model(model, "darthvader")
+			|| Class_Model(model, "vadervmm")
+			|| Class_Model(model, "t_vader"))
 		{
 			client->pers.botmodelscale = BOTZIZE_MASSIVE;
 			client->pers.nextbotclass = BCLASS_LORDVADER;
@@ -4220,29 +4220,29 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (playermodel(model, "jedi_palpatine")
-			|| playermodel(model, "sithinquisitor1/default")
-			|| playermodel(model, "sithinquisitor3/default")
-			|| playermodel(model, "sithworrior2/default")
-			|| playermodel(model, "darth_sidious")
-			|| playermodel(model, "sidious")
-			|| playermodel(model, "sidious/main")
-			|| playermodel(model, "sidious/main2")
-			|| playermodel(model, "sidious/")
-			|| playermodel(model, "t_palpatine_sith")
-			|| playermodel(model, "hs_dooku")
-			|| playermodel(model, "jedi_dooku")
-			|| playermodel(model, "t_palpatine")
-			|| playermodel(model, "palpatine")
-			|| playermodel(model, "emperor/")
-			|| playermodel(model, "emperor/main")
-			|| playermodel(model, "sithinquisitor2/default")
-			|| playermodel(model, "sithworrior1/default")
-			|| playermodel(model, "palpatine/main/")
-			|| playermodel(model, "darkjedi")
-			|| playermodel(model, "darthrevan")
-			|| playermodel(model, "darthsion")
-			|| playermodel(model, "darthtraya"))
+		else if (Class_Model(model, "jedi_palpatine")
+			|| Class_Model(model, "sithinquisitor1/default")
+			|| Class_Model(model, "sithinquisitor3/default")
+			|| Class_Model(model, "sithworrior2/default")
+			|| Class_Model(model, "darth_sidious")
+			|| Class_Model(model, "sidious")
+			|| Class_Model(model, "sidious/main")
+			|| Class_Model(model, "sidious/main2")
+			|| Class_Model(model, "sidious/")
+			|| Class_Model(model, "t_palpatine_sith")
+			|| Class_Model(model, "hs_dooku")
+			|| Class_Model(model, "jedi_dooku")
+			|| Class_Model(model, "t_palpatine")
+			|| Class_Model(model, "palpatine")
+			|| Class_Model(model, "emperor/")
+			|| Class_Model(model, "emperor/main")
+			|| Class_Model(model, "sithinquisitor2/default")
+			|| Class_Model(model, "sithworrior1/default")
+			|| Class_Model(model, "palpatine/main/")
+			|| Class_Model(model, "darkjedi")
+			|| Class_Model(model, "darthrevan")
+			|| Class_Model(model, "darthsion")
+			|| Class_Model(model, "darthtraya"))
 		{
 			client->pers.nextbotclass = BCLASS_SITHLORD;
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
@@ -4258,7 +4258,7 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (playermodel(model, "snoke"))
+		else if (Class_Model(model, "snoke"))
 		{
 			client->pers.nextbotclass = BCLASS_SITHLORD;
 			client->pers.botmodelscale = BOTZIZE_TALL;
@@ -4274,15 +4274,15 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (playermodel(model, "gr")
-			|| playermodel(model, "gr/")
-			|| playermodel(model, "gr/main")
-			|| playermodel(model, "gr/main2")
-			|| playermodel(model, "grfour")
-			|| playermodel(model, "grievous_utapau")
-			|| playermodel(model, "grievous4")
-			|| playermodel(model, "grievous")
-			|| playermodel(model, "jedi_gri"))
+		else if (Class_Model(model, "gr")
+			|| Class_Model(model, "gr/")
+			|| Class_Model(model, "gr/main")
+			|| Class_Model(model, "gr/main2")
+			|| Class_Model(model, "grfour")
+			|| Class_Model(model, "grievous_utapau")
+			|| Class_Model(model, "grievous4")
+			|| Class_Model(model, "grievous")
+			|| Class_Model(model, "jedi_gri"))
 		{
 			client->pers.botmodelscale = BOTZIZE_MASSIVE;
 			client->pers.nextbotclass = BCLASS_GRIEVOUS;
@@ -4298,15 +4298,15 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (playermodel(model, "ma/main")
-			|| playermodel(model, "acdRoyalguard")
-			|| playermodel(model, "acdRoyalguard/")
-			|| playermodel(model, "acdRoyalguard/main")
-			|| playermodel(model, "ma/main2")
-			|| playermodel(model, "ma/main3")
-			|| playermodel(model, "ma/main4")
-			|| playermodel(model, "ma")
-			|| playermodel(model, "magnaguard"))
+		else if (Class_Model(model, "ma/main")
+			|| Class_Model(model, "acdRoyalguard")
+			|| Class_Model(model, "acdRoyalguard/")
+			|| Class_Model(model, "acdRoyalguard/main")
+			|| Class_Model(model, "ma/main2")
+			|| Class_Model(model, "ma/main3")
+			|| Class_Model(model, "ma/main4")
+			|| Class_Model(model, "ma")
+			|| Class_Model(model, "magnaguard"))
 		{
 			client->pers.botmodelscale = BOTZIZE_MASSIVE;
 			client->pers.nextbotclass = BCLASS_SITH;
@@ -4322,15 +4322,15 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (playermodel(model, "exile")
-			|| playermodel(model, "ExileMaleDarkSideUR")
-			|| playermodel(model, "nihilus")
-			|| playermodel(model, "revan")
-			|| playermodel(model, "sith_apprentice")
-			|| playermodel(model, "Sith_Assassin")
-			|| playermodel(model, "Sith_Assassin2")
-			|| playermodel(model, "Sith_Assassin2Master")
-			|| playermodel(model, "sith_warrior"))
+		else if (Class_Model(model, "exile")
+			|| Class_Model(model, "ExileMaleDarkSideUR")
+			|| Class_Model(model, "nihilus")
+			|| Class_Model(model, "revan")
+			|| Class_Model(model, "sith_apprentice")
+			|| Class_Model(model, "Sith_Assassin")
+			|| Class_Model(model, "Sith_Assassin2")
+			|| Class_Model(model, "Sith_Assassin2Master")
+			|| Class_Model(model, "sith_warrior"))
 		{
 			client->pers.nextbotclass = BCLASS_SITH;
 			if (!(ent->r.svFlags & SVF_BOT))

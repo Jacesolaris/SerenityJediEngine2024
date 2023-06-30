@@ -433,7 +433,7 @@ static void ProjectDlightTexture2()
 	byte	clip_bits[SHADER_MAX_VERTEXES]{};
 	float	tex_coords_array[SHADER_MAX_VERTEXES][2]{};
 	float	old_tex_coords_array[SHADER_MAX_VERTEXES][2]{};
-	unsigned int		color_array[SHADER_MAX_VERTEXES];
+	unsigned int		color_array[SHADER_MAX_VERTEXES]{};
 	glIndex_t	hit_indexes[SHADER_MAX_INDEXES]{};
 	int		fogging;
 	vec3_t	float_color{};

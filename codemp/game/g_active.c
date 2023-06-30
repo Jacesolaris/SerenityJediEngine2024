@@ -1458,25 +1458,25 @@ void ClientEvents(gentity_t* ent, int old_event_sequence)
 {
 	int damage;
 
-	const gclient_t* client = ent->client;
+	const gclient_t* Client = ent->client;
 
-	if (old_event_sequence < client->ps.eventSequence - MAX_PS_EVENTS)
+	if (old_event_sequence < Client->ps.eventSequence - MAX_PS_EVENTS)
 	{
-		old_event_sequence = client->ps.eventSequence - MAX_PS_EVENTS;
+		old_event_sequence = Client->ps.eventSequence - MAX_PS_EVENTS;
 	}
-	for (int i = old_event_sequence; i < client->ps.eventSequence; i++)
+	for (int i = old_event_sequence; i < Client->ps.eventSequence; i++)
 	{
 		vec3_t dir;
-		const int event = ent->client->ps.events[i & MAX_PS_EVENTS - 1];
+		const int event = Client->ps.events[i & MAX_PS_EVENTS - 1];
 
 		switch (event)
 		{
 		case EV_FALL:
 		{
-			const int delta = client->ps.eventParms[i & MAX_PS_EVENTS - 1];
+			const int delta = Client->ps.eventParms[i & MAX_PS_EVENTS - 1];
 			qboolean knockDownage = qfalse;
 
-			if (ent->client && ent->client->ps.fallingToDeath)
+			if (Client && Client->ps.fallingToDeath)
 			{
 				break;
 			}
@@ -1491,7 +1491,7 @@ void ClientEvents(gentity_t* ent, int old_event_sequence)
 				break;
 			}
 
-			if (PM_InKnockDownOnly(ent->client->ps.legsAnim))
+			if (PM_InKnockDownOnly(Client->ps.legsAnim))
 			{
 				if (delta <= 14)
 				{
@@ -1540,10 +1540,10 @@ void ClientEvents(gentity_t* ent, int old_event_sequence)
 		break;
 		case EV_ROLL:
 		{
-			const int delta = client->ps.eventParms[i & MAX_PS_EVENTS - 1];
+			const int delta = Client->ps.eventParms[i & MAX_PS_EVENTS - 1];
 			qboolean knock_downage = qfalse;
 
-			if (ent->client && ent->client->ps.fallingToDeath)
+			if (Client && Client->ps.fallingToDeath)
 			{
 				break;
 			}
@@ -1558,7 +1558,7 @@ void ClientEvents(gentity_t* ent, int old_event_sequence)
 				break;
 			}
 
-			if (PM_InKnockDownOnly(ent->client->ps.legsAnim))
+			if (PM_InKnockDownOnly(Client->ps.legsAnim))
 			{
 				if (delta <= 14)
 				{
@@ -1605,7 +1605,7 @@ void ClientEvents(gentity_t* ent, int old_event_sequence)
 		}
 		break;
 		case EV_FIRE_WEAPON:
-			if (PM_ReloadAnim(ent->client->ps.torsoAnim))
+			if (PM_ReloadAnim(Client->ps.torsoAnim))
 			{
 				return;
 			}
@@ -1616,7 +1616,7 @@ void ClientEvents(gentity_t* ent, int old_event_sequence)
 			break;
 
 		case EV_altFire:
-			if (PM_ReloadAnim(ent->client->ps.torsoAnim))
+			if (PM_ReloadAnim(Client->ps.torsoAnim))
 			{
 				return;
 			}

@@ -3544,7 +3544,7 @@ qboolean wp_saber_damage_effects(trace_t* tr, const float length, const float dm
 	const int enemy_team, const saberType_t saber_type, const saberInfo_t* saber,
 	const int blade_num)
 {
-	int hit_ent_num[MAX_G2_COLLISIONS];
+	int hit_ent_num[MAX_G2_COLLISIONS]{};
 	for (int& hen : hit_ent_num)
 	{
 		hen = ENTITYNUM_NONE;
@@ -3552,8 +3552,8 @@ qboolean wp_saber_damage_effects(trace_t* tr, const float length, const float dm
 	//NOTE: = {0} does NOT work on anything but bytes?
 	float hit_ent_dmg_add[MAX_G2_COLLISIONS] = { 0 };
 	float hit_ent_dmg_sub[MAX_G2_COLLISIONS] = { 0 };
-	vec3_t hit_ent_point[MAX_G2_COLLISIONS];
-	vec3_t hit_ent_normal[MAX_G2_COLLISIONS];
+	vec3_t hit_ent_point[MAX_G2_COLLISIONS]{};
+	vec3_t hit_ent_normal[MAX_G2_COLLISIONS]{};
 	vec3_t blade_dir;
 	float hit_ent_start_frac[MAX_G2_COLLISIONS] = { 0 };
 	int tr_hit_loc[MAX_G2_COLLISIONS] = { HL_NONE }; //same as 0
@@ -5248,7 +5248,7 @@ qboolean WP_SabersCheckLock2(gentity_t* attacker, gentity_t* defender, sabersLoc
 			}
 		}
 	}
-	vec3_t att_angles, def_angles, def_dir;
+	vec3_t att_angles, def_angles{}, def_dir;
 	VectorSubtract(defender->currentOrigin, attacker->currentOrigin, def_dir);
 	VectorCopy(attacker->client->ps.viewangles, att_angles);
 	att_angles[YAW] = vectoyaw(def_dir);
@@ -8807,7 +8807,7 @@ gentity_t* wp_saber_find_enemy(gentity_t* self, const gentity_t* saber)
 	//closest, most in front... did damage to... took damage from?  How do we know who the player is focusing on?
 	gentity_t* best_ent = nullptr;
 	gentity_t* entity_list[MAX_GENTITIES];
-	vec3_t center, mins, maxs, fwdangles, forward;
+	vec3_t center, mins{}, maxs{}, fwdangles{}, forward;
 	constexpr float radius = 400;
 	float best_rating = 0.0f;
 
@@ -14114,7 +14114,7 @@ void wp_saber_update(gentity_t* self, const usercmd_t* ucmd)
 	if (!self->client->ps.saberInFlight)
 	{
 		// It isn't, which means we can update its position as we will.
-		qboolean always_block[MAX_SABERS][MAX_BLADES];
+		qboolean always_block[MAX_SABERS][MAX_BLADES]{};
 		qboolean force_block = qfalse;
 		qboolean no_blocking = qfalse;
 
@@ -22009,7 +22009,7 @@ void force_lightning_damage(gentity_t* self, gentity_t* trace_ent, vec3_t dir, c
 				//saber can block lightning
 				//make them do a parry
 				const float chance_of_fizz = Q_flrand(0.0f, 1.0f);
-				vec3_t fwd;
+				vec3_t fwd{};
 				vec3_t right;
 				vec3_t up;
 				lightning_blocked = qtrue;
@@ -22189,7 +22189,7 @@ void force_lightning_damage(gentity_t* self, gentity_t* trace_ent, vec3_t dir, c
 						//saber can block lightning
 						//make them do a parry
 						const float chance_of_fizz = Q_flrand(0.0f, 1.0f);
-						vec3_t fwd;
+						vec3_t fwd{};
 						vec3_t right;
 						vec3_t up;
 						lightning_blocked = qtrue;
@@ -22287,7 +22287,7 @@ void force_lightning_damage(gentity_t* self, gentity_t* trace_ent, vec3_t dir, c
 						//Active Blocking
 						//make them do a parry
 						const float chance_of_fizz = Q_flrand(0.0f, 1.0f);
-						vec3_t fwd;
+						vec3_t fwd{};
 						vec3_t right;
 						vec3_t up;
 						lightning_blocked = qtrue;
@@ -22358,7 +22358,7 @@ void force_lightning_damage(gentity_t* self, gentity_t* trace_ent, vec3_t dir, c
 							35))
 					{
 						const float chance_of_fizz = Q_flrand(0.0f, 1.0f);
-						vec3_t fwd;
+						vec3_t fwd{};
 						vec3_t right;
 						vec3_t up;
 						lightning_blocked = qtrue;
@@ -22412,7 +22412,7 @@ void force_lightning_damage(gentity_t* self, gentity_t* trace_ent, vec3_t dir, c
 					{
 						//make them do a parry
 						const float chance_of_fizz = Q_flrand(0.0f, 1.0f);
-						vec3_t fwd;
+						vec3_t fwd{};
 						vec3_t right;
 						vec3_t up;
 						lightning_blocked = qtrue;
@@ -24279,7 +24279,7 @@ void ForceJump(gentity_t* self, const usercmd_t* ucmd)
 		FORCE_JUMP_CHARGE_TIME / FRAMETIME);
 
 	int anim;
-	vec3_t jump_vel;
+	vec3_t jump_vel{};
 
 	switch (WP_GetVelocityForForceJump(self, jump_vel, ucmd))
 	{
@@ -24880,7 +24880,7 @@ void force_stasis(gentity_t* self)
 		VectorNormalize(forward);
 		trace_ent = &g_entities[tr.entity_num];
 
-		vec3_t center, mins, maxs, v;
+		vec3_t center, mins{}, maxs{}, v{};
 		float reach = radius, dist;
 		gentity_t* entity_list[MAX_GENTITIES];
 		int e, num_listed_entities, i;
@@ -28679,7 +28679,7 @@ static void wp_force_power_run(gentity_t* self, forcePowers_t force_power, userc
 	case FP_DEADLYSIGHT:
 		if (self->client->ps.deadlySightLastChecked < level.time)
 		{
-			vec3_t forward, mins, maxs;
+			vec3_t forward, mins{}, maxs{};
 			int e, num_listed_entities;
 			gentity_t* entity_list[MAX_GENTITIES];
 			gentity_t* check = nullptr;
