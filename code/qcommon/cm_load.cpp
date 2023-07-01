@@ -545,7 +545,7 @@ void CMod_LoadPatches(const lump_t* surfs, const lump_t* verts, clipMap_t& cm)
 {
 	int count;
 	cPatch_t* patch;
-	vec3_t points[MAX_PATCH_VERTS];
+	vec3_t points[MAX_PATCH_VERTS]{};
 
 	auto in = reinterpret_cast<dsurface_t*>(cmod_base + surfs->fileofs);
 	if (surfs->filelen % sizeof * in)

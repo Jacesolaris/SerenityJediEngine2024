@@ -1166,7 +1166,7 @@ CL_Rcon_f
 */
 void CL_Rcon_f(void)
 {
-	char message[MAX_RCON_MESSAGE];
+	char message[MAX_RCON_MESSAGE]{};
 
 	if (!rcon_client_password->string[0])
 	{
@@ -1768,7 +1768,7 @@ CL_ServersResponsePacket
 void CL_ServersResponsePacket(const msg_t* msg)
 {
 	int i, j;
-	netadr_t addresses[MAX_SERVERSPERPACKET];
+	netadr_t addresses[MAX_SERVERSPERPACKET]{};
 
 	Com_Printf("CL_ServersResponsePacket\n");
 
@@ -1906,7 +1906,7 @@ static void CL_CheckSVStringEdRef(char* buf, const char* str)
 				if (str[i + 2] == '@' && i + 3 < strLen)
 				{
 					//@@@ should mean to insert a stringed reference here, so insert it into buf at the current place
-					char stripRef[MAX_STRINGED_SV_STRING];
+					char stripRef[MAX_STRINGED_SV_STRING]{};
 					int r = 0;
 
 					while (i < strLen && str[i] == '@')
@@ -3368,7 +3368,7 @@ void CL_ServerStatusResponse(const netadr_t from, msg_t* msg)
 
 	if (serverStatus->print)
 	{
-		char info[MAX_INFO_STRING];
+		char info[MAX_INFO_STRING]{};
 		Com_Printf("Server (%s)\n",
 			NET_AdrToString(serverStatus->address));
 		Com_Printf("Server settings:\n");

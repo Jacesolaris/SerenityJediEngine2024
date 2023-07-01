@@ -176,7 +176,7 @@ Coordinates are at 640 by 480 virtual resolution
 void SCR_DrawBigStringExt(const int x, const int y, const char* string, const float* set_color,
 	const qboolean force_color, const qboolean no_color_escape)
 {
-	vec4_t color;
+	vec4_t color{};
 
 	// draw the drop shadow
 	color[0] = color[1] = color[2] = 0;
@@ -225,7 +225,7 @@ void SCR_DrawBigStringExt(const int x, const int y, const char* string, const fl
 
 void SCR_DrawBigString(const int x, const int y, const char* s, const float alpha, const qboolean noColorEscape)
 {
-	float color[4];
+	float color[4]{};
 
 	color[0] = color[1] = color[2] = 1.0;
 	color[3] = alpha;

@@ -119,7 +119,7 @@ void CParticle::Draw(void)
 
 	if (mFlags & FX_PLAYER_VIEW)
 	{
-		vec4_t color;
+		vec4_t color{};
 
 		color[0] = mRefEnt.shaderRGBA[0] / 255.0;
 		color[1] = mRefEnt.shaderRGBA[1] / 255.0;
@@ -216,7 +216,7 @@ bool CParticle::Update(void)
 //----------------------------
 bool CParticle::UpdateOrigin(void)
 {
-	vec3_t new_origin;
+	vec3_t new_origin{};
 
 	VectorMA(mVel, theFxHelper.mRealTime, mAccel, mVel);
 
@@ -1321,7 +1321,7 @@ void CEmitter::Draw(void)
 	//	either choke up the effects system on a fast machine, or look really nasty on a low end one.
 	if (mFlags & FX_EMIT_FX)
 	{
-		vec3_t org;
+		vec3_t org{};
 
 		constexpr auto TRAIL_RATE = 12; // we "think" at about a 60hz rate;
 
@@ -1669,7 +1669,7 @@ constexpr auto OLD_MUZZLE = 3;
 //----------------------------
 void CTrail::Draw()
 {
-	polyVert_t verts[3];
+	polyVert_t verts[3]{};
 	//	vec3_t		color;
 
 	// build the first tri out of the new muzzle...new tip...old muzzle
@@ -1811,7 +1811,7 @@ bool CPoly::Cull(void)
 //----------------------------
 void CPoly::Draw(void)
 {
-	polyVert_t verts[MAX_CPOLY_VERTS];
+	polyVert_t verts[MAX_CPOLY_VERTS]{};
 
 	for (int i = 0; i < mCount; i++)
 	{
@@ -1881,7 +1881,7 @@ void CPoly::Rotate(void)
 	// Multiply our rotation matrix by each of the offset verts to get their new position
 	for (int i = 0; i < mCount; i++)
 	{
-		vec3_t temp[MAX_CPOLY_VERTS];
+		vec3_t temp[MAX_CPOLY_VERTS]{};
 		VectorRotate(mOrg[i], mRot, temp[i]);
 		VectorCopy(temp[i], mOrg[i]);
 	}
@@ -2031,7 +2031,7 @@ inline void CBezier::DrawSegment(vec3_t start, vec3_t end, const float texcoord1
 {
 	vec3_t lineDir, cross, viewDir;
 	static vec3_t lastEnd[2];
-	polyVert_t verts[4];
+	polyVert_t verts[4]{};
 
 	VectorSubtract(end, start, lineDir);
 	VectorSubtract(end, theFxHelper.refdef->vieworg, viewDir);
@@ -2109,7 +2109,7 @@ constexpr float BEZIER_RESOLUTION = 16.0f;
 //----------------------------
 void CBezier::Draw(void)
 {
-	vec3_t pos, old_pos;
+	vec3_t pos{}, old_pos;
 	constexpr float incr = 1.0f / BEZIER_RESOLUTION;
 
 	VectorCopy(mOrigin1, old_pos);
@@ -2172,7 +2172,7 @@ bool CFlash::Update(void)
 
 bool FX_WorldToScreen(vec3_t worldCoord, float* x, float* y)
 {
-	vec3_t local, transformed;
+	vec3_t local, transformed{};
 	vec3_t vfwd, vright, vup;
 
 	//NOTE: did it this way because most draw functions expect virtual 640x480 coords
@@ -2253,7 +2253,7 @@ void CFlash::Draw(void)
 
 	if (mFlags & FX_LOCALIZED_FLASH)
 	{
-		vec4_t color;
+		vec4_t color{};
 
 		color[0] = mRefEnt.shaderRGBA[0] / 255.0;
 		color[1] = mRefEnt.shaderRGBA[1] / 255.0;

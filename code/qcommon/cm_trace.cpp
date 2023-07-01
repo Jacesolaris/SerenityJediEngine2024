@@ -316,9 +316,9 @@ constexpr auto MAX_POSITION_LEAFS = 1024;
 
 void CM_PositionTest(traceWork_t * tw)
 {
-	int leafs[MAX_POSITION_LEAFS];
+	int leafs[MAX_POSITION_LEAFS]{};
 	int i;
-	leafList_t ll;
+	leafList_t ll{};
 
 	// identify the leafs we are touching
 	VectorAdd(tw->start, tw->size[0], ll.bounds[0]);
@@ -633,7 +633,7 @@ void CM_TraceThroughTree(traceWork_t * tw, clipMap_t * local, const int num, flo
 	float t1, t2, offset;
 	float frac, frac2;
 	float idist;
-	vec3_t mid;
+	vec3_t mid{};
 	int side;
 	float midf;
 
@@ -799,7 +799,7 @@ void CM_BoxTrace(trace_t * results, const vec3_t start, const vec3_t end,
 {
 	int i;
 	traceWork_t tw;
-	vec3_t offset;
+	vec3_t offset{};
 	clipMap_t* local = nullptr;
 
 	cmodel_t* cmod = CM_clip_handleToModel(model, &local);
@@ -970,12 +970,12 @@ void CM_TransformedBoxTrace(trace_t * results, const vec3_t start, const vec3_t 
 	const vec3_t origin, const vec3_t angles)
 {
 	trace_t trace;
-	vec3_t start_l, end_l;
+	vec3_t start_l{}, end_l{};
 	vec3_t forward, right, up;
 	vec3_t temp;
 	qboolean rotated;
-	vec3_t offset;
-	vec3_t symetricSize[2];
+	vec3_t offset{};
+	vec3_t symetricSize[2]{};
 
 	if (!mins)
 	{
@@ -1033,7 +1033,7 @@ void CM_TransformedBoxTrace(trace_t * results, const vec3_t start, const vec3_t 
 
 	if (rotated && trace.fraction != 1.0)
 	{
-		vec3_t a;
+		vec3_t a{};
 		// FIXME: figure out how to do this with existing angles
 		VectorNegate(angles, a);
 		AngleVectors(a, forward, right, up);
@@ -1095,7 +1095,7 @@ Returns true if culled out
 
 bool CM_CullWorldBox(const cplane_t * frustum, const vec3pair_t bounds)
 {
-	vec3_t transformed[8];
+	vec3_t transformed[8]{};
 
 	for (int i = 0; i < 8; i++)
 	{

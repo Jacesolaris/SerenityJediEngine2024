@@ -107,7 +107,7 @@ void FindChunk(const char* name)
 
 void DumpChunks(void)
 {
-	char	str[5];
+	char	str[5]{};
 
 	str[4] = 0;
 	data_p = iff_data;
@@ -353,7 +353,7 @@ void R_CheckMP3s(const char* psDir)
 
 				if (MP3_IsValid(sFilename, pbData, iSize, qbForceStereo))
 				{
-					wavinfo_t info;
+					wavinfo_t info{};
 
 					const int iRawp_CmdataSize = MP3_GetUnpackedSize(sFilename, pbData, iSize, qtrue, qbForceStereo);
 
@@ -420,7 +420,7 @@ void R_CheckMP3s(const char* psDir)
 							{
 								// make up a new tag if we didn't find one in the original file...
 								//
-								id3v1_1 TAG;
+								id3v1_1 TAG{};
 								if (!pTAG)
 								{
 									pTAG = &TAG;
@@ -698,7 +698,7 @@ qboolean gbInsideLoadSound = qfalse;
 static qboolean S_LoadSound_Actual(sfx_t* sfx)
 {
 	byte* data;
-	wavinfo_t	info;
+	wavinfo_t	info{};
 	int		size;
 	char	sLoadName[MAX_QPATH];
 

@@ -81,7 +81,7 @@ void LoadJPG(const char* filename, unsigned char** pic, int* width, int* height)
 	unsigned int pixelcount, memcount;
 	unsigned int sindex, dindex;
 	byte* out;
-	fileBuffer_t fbuffer;
+	fileBuffer_t fbuffer{};
 	byte* buf;
 	/* In this example we want to open the input file before doing anything else,
 	* so that the setjmp() error recovery below can assume the file is open.
@@ -328,9 +328,9 @@ Expects RGB input data
 size_t RE_SaveJPGToBuffer(byte* buffer, size_t bufSize, int quality,
 	int image_width, int image_height, byte* image_buffer, int padding)
 {
-	jpeg_compress_struct cinfo;
+	jpeg_compress_struct cinfo{};
 	jpeg_error_mgr jerr;
-	JSAMPROW row_pointer[1];	/* pointer to JSAMPLE row[s] */
+	JSAMPROW row_pointer[1]{};	/* pointer to JSAMPLE row[s] */
 	my_dest_ptr dest;
 	int row_stride;		/* physical row width in image buffer */
 	size_t outcount;

@@ -1247,7 +1247,7 @@ channel_t* S_OpenALPickChannel(const int entnum, const int entchannel)
 	{
 		int dist;
 		int longestDist;
-		float source_pos[3];
+		float source_pos[3]{};
 		// Find sound effect furthest from listener
 		ch = s_channels + 1;
 
@@ -2388,7 +2388,7 @@ void S_UpdateEntityPosition(const int entity_num, const vec3_t origin)
 				// Ignore position updates for CHAN_VOICE_GLOBAL
 				if (ch->entchannel != CHAN_VOICE_GLOBAL && ch->entchannel != CHAN_ANNOUNCER)
 				{
-					ALfloat pos[3];
+					ALfloat pos[3]{};
 					pos[0] = origin[0];
 					pos[1] = origin[2];
 					pos[2] = -origin[1];
@@ -2396,17 +2396,6 @@ void S_UpdateEntityPosition(const int entity_num, const vec3_t origin)
 
 					UpdateEAXBuffer(ch);
 				}
-
-				/*				pos[0] = origin[0];
-								pos[1] = origin[2];
-								pos[2] = -origin[1];
-								alSourcefv(s_channels[i].alSource, AL_POSITION, pos);
-
-								if ((s_bEALFileLoaded) && !( ch->entchannel == CHAN_VOICE || ch->entchannel == CHAN_VOICE_ATTEN || ch->entchannel == CHAN_VOICE_GLOBAL ) )
-								{
-									UpdateEAXBuffer(ch);
-								}
-				*/
 			}
 		}
 	}
@@ -2546,8 +2535,8 @@ Change the volumes of all the playing sounds for changes in their positions
 void S_Respatialize(const int entity_num, const vec3_t head, matrix3_t axis, const int inwater)
 {
 #ifdef USE_OPENAL
-	EAXOCCLUSIONPROPERTIES eaxOCProp;
-	EAXACTIVEFXSLOTS eaxActiveSlots;
+	EAXOCCLUSIONPROPERTIES eaxOCProp{};
+	EAXACTIVEFXSLOTS eaxActiveSlots{};
 #endif
 	int i;
 	channel_t* ch;
@@ -2907,7 +2896,7 @@ void S_Update_(void)
 #ifdef USE_OPENAL
 	if (s_UseOpenAL)
 	{
-		float pos[3];
+		float pos[3]{};
 		UpdateSingleShotSounds();
 
 		channel_t* ch = s_channels + 1;
@@ -3353,7 +3342,7 @@ void UpdateLoopingSounds()
 	int i, j;
 	ALuint source;
 	loopSound_t* loop;
-	float pos[3];
+	float pos[3]{};
 
 	// First check to see if any of the looping sounds are already playing at the correct positions
 	channel_t* ch = s_channels + 1;
@@ -3376,7 +3365,7 @@ void UpdateLoopingSounds()
 						if (!loop->bRelative)
 						{
 							// Set position to 0,0,0 and turn on Head Relative Mode
-							float values[3];
+							float values[3]{};
 							values[0] = 0.f;
 							values[1] = 0.f;
 							values[2] = 0.f;
@@ -4048,7 +4037,7 @@ int FGetLittleShort(const fileHandle_t f)
 // returns the length of the data in the chunk, or 0 if not found
 int S_FindWavChunk(const fileHandle_t f, const char* chunk)
 {
-	char name[5];
+	char name[5]{};
 
 	name[4] = 0;
 	const int r = FS_Read(name, 4, f);
@@ -4846,7 +4835,7 @@ static qboolean S_UpdateBackgroundTrack_Actual(MusicInfo_t* pMusicInfo, const qb
 
 	while (s_rawend < s_soundtime + MAX_RAW_SAMPLES)
 	{
-		byte raw[30000];
+		byte raw[30000]{};
 		const int bufferSamples = MAX_RAW_SAMPLES - (s_rawend - s_soundtime);
 
 		// decide how much data needs to be read from the file
@@ -5472,8 +5461,8 @@ qboolean SND_RegisterAudio_LevelLoadEnd(const qboolean bDeleteEverythingNotUsedT
 */
 void InitEAXManager()
 {
-	EAXFXSLOTPROPERTIES FXSlotProp;
-	GUID Effect;
+	EAXFXSLOTPROPERTIES FXSlotProp{};
+	GUID Effect{};
 
 	s_bEALFileLoaded = false;
 
@@ -5516,7 +5505,7 @@ void InitEAXManager()
 				if (lpEAXManagerCreateFn(&s_lpEAXManager) == EM_OK)
 				{
 					int i;
-					GUID FXSlotGuids[4];
+					GUID FXSlotGuids[4]{};
 					// Configure our EAX 4.0 Effect Slots
 
 					s_NumFXSlots = 0;
@@ -5954,13 +5943,13 @@ void UnloadEALFile()
 */
 void UpdateEAXListener()
 {
-	EMPOINT ListPos;
-	EMPOINT EMSourcePoint;
+	EMPOINT ListPos{};
+	EMPOINT EMSourcePoint{};
 	long lID, lSourceID;
 	EAXREVERBPROPERTIES Reverb;
 	long lVolume;
 	long lCurTime;
-	EAXVECTOR LP1, LP2, Pan;
+	EAXVECTOR LP1{}, LP2{}, Pan{};
 #ifdef DISPLAY_CLOSEST_ENVS
 	char szEnvName[256];
 #endif
@@ -5972,7 +5961,7 @@ void UpdateEAXListener()
 
 	if (s_lLastEnvUpdate + ENV_UPDATE_RATE < lCurTime)
 	{
-		REVERBDATA ReverbData[3];
+		REVERBDATA ReverbData[3]{};
 		channel_t* ch;
 		bool bFound;
 		float flNearest;
@@ -5981,8 +5970,8 @@ void UpdateEAXListener()
 		int j;
 		int i;
 		long lApertureNum;
-		EMPOINT EMAperture;
-		EMPOINT ListOri;
+		EMPOINT EMAperture{};
+		EMPOINT ListOri{};
 		// Update closest reverbs
 		s_lLastEnvUpdate = lCurTime;
 
@@ -6418,10 +6407,10 @@ void UpdateEAXListener()
 */
 void UpdateEAXBuffer(channel_t* ch)
 {
-	EMPOINT EMSourcePoint;
+	EMPOINT EMSourcePoint{};
 	EMPOINT EMVirtualSourcePoint;
-	EAXOBSTRUCTIONPROPERTIES eaxOBProp;
-	EAXOCCLUSIONPROPERTIES eaxOCProp;
+	EAXOBSTRUCTIONPROPERTIES eaxOBProp{};
+	EAXOCCLUSIONPROPERTIES eaxOCProp{};
 	long lSourceID;
 
 	// If EAX Manager is not initialized, or there is no EAX support, or the listener

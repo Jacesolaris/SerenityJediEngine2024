@@ -238,7 +238,7 @@ PC_SourceError
 */
 void PC_SourceError(int handle, char* format, ...)
 {
-	char filename[128];
+	char filename[128]{};
 	va_list argptr;
 	static char string[4096];
 
@@ -301,7 +301,7 @@ PC_Script_Parse
 */
 qboolean PC_Script_Parse(const char** out)
 {
-	char script[4096];
+	char script[4096]{};
 
 	script[0] = 0;
 	// scripts start with { and have ; separated command lists.. commands are command, arg..
@@ -4558,7 +4558,7 @@ ItemParse_addColorRange
 */
 qboolean ItemParse_addColorRange(itemDef_t* item)
 {
-	colorRangeDef_t color;
+	colorRangeDef_t color{};
 
 	if (PC_ParseFloat(&color.low) &&
 		PC_ParseFloat(&color.high) &&
@@ -4973,7 +4973,7 @@ static void Item_TextScroll_BuildLines(itemDef_t* item)
 
 	while (*psCurrentTextReadPos && scrollPtr->iLineCount < MAX_TEXTSCROLL_LINES)
 	{
-		char sLineForDisplay[2048]; // ott
+		char sLineForDisplay[2048]{}; // ott
 
 		// construct a line...
 		//
@@ -5931,7 +5931,7 @@ void Menu_Paint(menuDef_t* menu, qboolean forcePaint)
 	// draw the background if necessary
 	if (menu->fullScreen)
 	{
-		vec4_t color;
+		vec4_t color{};
 		color[0] = menu->window.backColor[0];
 		color[1] = menu->window.backColor[1];
 		color[2] = menu->window.backColor[2];
@@ -5984,7 +5984,7 @@ void Menu_Paint(menuDef_t* menu, qboolean forcePaint)
 
 	if (uis.debugMode)
 	{
-		vec4_t color;
+		vec4_t color{};
 		color[0] = color[2] = color[3] = 1;
 		color[1] = 0;
 		DC->drawRect(menu->window.rect.x, menu->window.rect.y, menu->window.rect.w, menu->window.rect.h, 1, color);
@@ -6131,7 +6131,7 @@ void Item_SetTextExtents(itemDef_t* item, int* width, int* height, const char* t
 		}
 		else if (item->textalignment == ITEM_ALIGN_CENTER)
 		{
-			item->textRect.x = item->textalignx - originalWidth / 2;
+			item->textRect.x = item->textalignx - originalWidth / static_cast<float>(2);
 		}
 
 		ToWindowCoords(&item->textRect.x, &item->textRect.y, &item->window);
@@ -6161,23 +6161,15 @@ void Item_TextColor(itemDef_t* item, vec4_t* newColor)
 	if (!(item->type == ITEM_TYPE_TEXT && item->window.flags & WINDOW_AUTOWRAPPED) && item->window.flags &
 		WINDOW_HASFOCUS)
 	{
-		vec4_t lowLight;
+		vec4_t lowLight{};
 		lowLight[0] = 0.8 * parent->focusColor[0];
 		lowLight[1] = 0.8 * parent->focusColor[1];
 		lowLight[2] = 0.8 * parent->focusColor[2];
 		lowLight[3] = 0.8 * parent->focusColor[3];
 		LerpColor(parent->focusColor, lowLight, *newColor,
-			0.5 + 0.5 * sin(static_cast<float>(DC->realTime / PULSE_DIVISOR)));
+			0.5 + 0.5 * sin(static_cast<float>(DC->realTime / static_cast<float>(PULSE_DIVISOR))));
 	}
-	/*	else if (item->textStyle == ITEM_TEXTSTYLE_BLINK && !((DC->realTime/BLINK_DIVISOR) & 1))
-		{
-			lowLight[0] = 0.8 * item->window.foreColor[0];
-			lowLight[1] = 0.8 * item->window.foreColor[1];
-			lowLight[2] = 0.8 * item->window.foreColor[2];
-			lowLight[3] = 0.8 * item->window.foreColor[3];
-			LerpColor(item->window.foreColor,lowLight,*newColor,0.5+0.5*sin(DC->realTime / PULSE_DIVISOR));
-		}
-	*/ else
+	else
 	{
 		memcpy(newColor, &item->window.foreColor, sizeof(vec4_t));
 	}
@@ -6368,7 +6360,7 @@ Item_TextField_Paint
 */
 void Item_TextField_Paint(itemDef_t* item)
 {
-	char buff[1024];
+	char buff[1024]{};
 	vec4_t newColor;
 	const auto parent = static_cast<menuDef_t*>(item->parent);
 	const editFieldDef_t* editPtr = static_cast<editFieldDef_t*>(item->typeData);
@@ -6384,7 +6376,7 @@ void Item_TextField_Paint(itemDef_t* item)
 
 	if (item->window.flags & WINDOW_HASFOCUS)
 	{
-		vec4_t lowLight;
+		vec4_t lowLight{};
 		lowLight[0] = 0.8 * parent->focusColor[0];
 		lowLight[1] = 0.8 * parent->focusColor[1];
 		lowLight[2] = 0.8 * parent->focusColor[2];
@@ -6565,7 +6557,7 @@ void Item_ListBox_Paint(itemDef_t* item)
 				{
 					if (item->window.flags & WINDOW_PLAYERCOLOR)
 					{
-						vec4_t color;
+						vec4_t color{};
 						color[0] = ui_char_color_red.integer / 255.0f;
 						color[1] = ui_char_color_green.integer / 255.0f;
 						color[2] = ui_char_color_blue.integer / 255.0f;
@@ -6781,7 +6773,7 @@ void BindingFromName(const char* cvar)
 			if (b2 != -1)
 			{
 				char sOR[32];
-				char keyname[2][32];
+				char keyname[2][32]{};
 
 				DC->keynumToStringBuf(b1, keyname[0], sizeof keyname[0]);
 				// do NOT do this or it corrupts asian text!!!					Q_strupr(keyname[0]);
@@ -6829,7 +6821,7 @@ void Item_Bind_Paint(itemDef_t* item)
 
 	if (item->window.flags & WINDOW_HASFOCUS)
 	{
-		vec4_t lowLight;
+		vec4_t lowLight{};
 		if (g_bindItem == item)
 		{
 			lowLight[0] = 0.8f * 1.0f;
@@ -6845,7 +6837,7 @@ void Item_Bind_Paint(itemDef_t* item)
 			lowLight[3] = 0.8f * parent->focusColor[3];
 		}
 		LerpColor(parent->focusColor, lowLight, newColor,
-			0.5 + 0.5 * sin(static_cast<float>(DC->realTime / PULSE_DIVISOR)));
+			0.5 + 0.5 * sin(static_cast<float>(DC->realTime / static_cast<float>(PULSE_DIVISOR))));
 	}
 	else
 	{
@@ -7015,7 +7007,7 @@ void Item_Model_Paint(itemDef_t* item)
 	float x, y, w, h;
 	refdef_t refdef;
 	refEntity_t ent;
-	vec3_t mins, maxs, origin;
+	vec3_t mins, maxs, origin{};
 	vec3_t angles;
 	const modelDef_t* modelPtr = static_cast<modelDef_t*>(item->typeData);
 
@@ -7276,7 +7268,7 @@ void Item_OwnerDraw_Paint(itemDef_t* item)
 
 	if (DC->ownerDrawItem)
 	{
-		vec4_t color, lowLight;
+		vec4_t color, lowLight{};
 		Fade(&item->window.flags, &item->window.foreColor[3], parent->fadeClamp, &item->window.nextTime,
 			parent->fadeCycle, qtrue, parent->fadeAmount);
 		memcpy(&color, &item->window.foreColor, sizeof color);
@@ -7461,7 +7453,7 @@ int Item_TextScroll_ThumbDrawPosition(itemDef_t* item)
 
 int Item_TextScroll_OverLB(itemDef_t* item, const float x, const float y)
 {
-	rectDef_t r;
+	rectDef_t r{};
 
 	const textScrollDef_t* scrollPtr = static_cast<textScrollDef_t*>(item->typeData);
 
@@ -7613,7 +7605,7 @@ void Item_Slider_Paint(itemDef_t* item)
 		lowLight[2] = 0.8 * parent->focusColor[2];
 		lowLight[3] = 0.8 * parent->focusColor[3];
 		LerpColor(parent->focusColor, lowLight, newColor,
-			0.5 + 0.5 * sin(static_cast<float>(DC->realTime / PULSE_DIVISOR)));
+			0.5 + 0.5 * sin(static_cast<float>(DC->realTime / static_cast<float>(PULSE_DIVISOR))));
 	}
 	else
 	{
@@ -7634,7 +7626,6 @@ void Item_Slider_Paint(itemDef_t* item)
 	DC->drawHandlePic(x, y + 2, SLIDER_WIDTH, SLIDER_HEIGHT, DC->Assets.sliderBar);
 
 	x = Item_Slider_ThumbPosition(item);
-	//	DC->drawHandlePic( x - (SLIDER_THUMB_WIDTH / 2), y - 2, SLIDER_THUMB_WIDTH, SLIDER_THUMB_HEIGHT, DC->Assets.sliderThumb );
 	DC->drawHandlePic(x - SLIDER_THUMB_WIDTH / 2, y + 2, SLIDER_THUMB_WIDTH, SLIDER_THUMB_HEIGHT,
 		DC->Assets.sliderThumb);
 }
@@ -7646,7 +7637,7 @@ Item_Paint
 */
 static qboolean Item_Paint(itemDef_t* item, const qboolean bDraw)
 {
-	vec4_t red;
+	vec4_t red{};
 	red[0] = red[3] = 1;
 	red[1] = red[2] = 0;
 
@@ -8179,7 +8170,7 @@ static qboolean Item_Paint(itemDef_t* item, const qboolean bDraw)
 	// Print a box showing the extents of the rectangle, when in debug mode
 	if (uis.debugMode)
 	{
-		vec4_t color;
+		vec4_t color{};
 		color[1] = color[3] = 1;
 		color[0] = color[2] = 0;
 		DC->drawRect(

@@ -414,8 +414,8 @@ float UI_SaberBladeRadiusForSaber(const char* saberName, int blade_num)
 
 void UI_SaberLoadParms()
 {
-	int saberExtFNLen;
-	char* buffer;
+	int saberExtFNLen = 0;
+	char* buffer = nullptr;
 	char saberExtensionListBuf[2048]; //	The list of file names read in
 
 	//ui.Printf( "UI Parsing *.sab saber definitions\n" );
@@ -2173,7 +2173,7 @@ saber_colors_t TranslateSaberColor(const char* name)
 	}
 	float colors[3];
 	Q_parseSaberColor(name, colors);
-	int colourArray[3];
+	int colourArray[3]{};
 	for (int i = 0; i < 3; i++)
 	{
 		colourArray[i] = static_cast<int>(colors[i] * 255);

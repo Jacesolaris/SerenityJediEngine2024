@@ -470,7 +470,7 @@ int MSG_ReadDelta(msg_t* msg, const int old_v, const int bits)
 
 void MSG_WriteDeltaFloat(msg_t* msg, const float old_v, const float new_v)
 {
-	byteAlias_t fi;
+	byteAlias_t fi{};
 	if (old_v == new_v)
 	{
 		MSG_WriteBits(msg, 0, 1);
@@ -485,7 +485,7 @@ float MSG_ReadDeltaFloat(msg_t* msg, const float old_v)
 {
 	if (MSG_ReadBits(msg, 1))
 	{
-		byteAlias_t fi;
+		byteAlias_t fi{};
 
 		fi.i = MSG_ReadBits(msg, 32);
 		return fi.f;
@@ -1253,7 +1253,7 @@ MSG_WriteDeltaPlayerstate
 void MSG_WriteDeltaPlayerstate(msg_t* msg, playerState_t* from, playerState_t* to)
 {
 	int i;
-	playerState_t dummy;
+	playerState_t dummy{};
 	const netField_t* field;
 
 	if (!from)
@@ -1406,7 +1406,7 @@ void MSG_ReadDeltaPlayerstate(msg_t* msg, playerState_t* from, playerState_t* to
 	const netField_t* field;
 	int start_bit;
 	int print;
-	playerState_t dummy;
+	playerState_t dummy{};
 
 	if (!from)
 	{

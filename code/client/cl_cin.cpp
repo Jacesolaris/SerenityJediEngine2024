@@ -659,7 +659,7 @@ static void decodeCodeBook(byte* input, unsigned short roq_flags)
 	{
 		unsigned int* i;
 		unsigned short* s;
-	} iaptr, ibptr, icptr, idptr;
+	} iaptr{}, ibptr{}, icptr{}, idptr{};
 
 	if (!roq_flags)
 	{
@@ -1733,7 +1733,7 @@ constexpr auto TC_STOPTIME = 81000;
 static void CIN_AddTextCrawl()
 {
 	refdef_t refdef;
-	polyVert_t verts[4];
+	polyVert_t verts[4]{};
 
 	// Set up refdef
 	memset(&refdef, 0, sizeof(refdef));

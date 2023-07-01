@@ -3097,8 +3097,7 @@ static void jedi_combat_distance(const int enemy_dist)
 	{
 		//we're out of striking range and we are allowed to attack
 		//first, check some tactical force power decisions
-		if (NPC->enemy && NPC->enemy->client->ps.eFlags & EF_FORCE_GRIPPED || NPC->enemy->client->ps.eFlags &
-			EF_FORCE_GRABBED)
+		if (NPC->enemy && (NPC->enemy->client->ps.eFlags & EF_FORCE_GRIPPED || NPC->enemy->client->ps.eFlags &EF_FORCE_GRABBED))
 		{
 			//They're being gripped, rush them!
 			if (NPC->enemy->client->ps.groundEntityNum != ENTITYNUM_NONE)

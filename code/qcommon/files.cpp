@@ -2199,7 +2199,7 @@ The directories are searched in base path, cd path and home path
 */
 int	FS_GetModList(char* listbuf, int bufsize) {
 	int nTotal, nPaks, nPotential;
-	char descPath[MAX_OSPATH];
+	char descPath[MAX_OSPATH]{};
 	fileHandle_t descHandle;
 
 	int dummy;
@@ -2597,7 +2597,7 @@ static void FS_AddGameDirectory(const char* path, const char* dir) {
 	pack_t* pak;
 	char			curpath[MAX_OSPATH + 1];
 	int				numfiles;
-	char* sorted[MAX_PAKFILES];
+	char* sorted[MAX_PAKFILES]{};
 
 	// this fixes the case where fs_basepath is the same as fs_cdpath
 	// which happens on full installs
@@ -2704,7 +2704,7 @@ Frees all resources and closes all files
 */
 void FS_Shutdown()
 {
-	searchpath_t* next;
+	searchpath_t* next = nullptr;
 
 	for (int i = 0; i < MAX_FILE_HANDLES; i++) {
 		if (fsh[i].fileSize) {

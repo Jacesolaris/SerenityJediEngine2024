@@ -822,7 +822,7 @@ const char* Info_ValueForKey(const char* s, const char* key)
 	while (true)
 	{
 		static char value[2][MAX_INFO_VALUE];
-		char pkey[MAX_INFO_KEY];
+		char pkey[MAX_INFO_KEY]{};
 		char* o = pkey;
 		while (*s != '\\')
 		{
@@ -913,8 +913,8 @@ void Info_RemoveKey(char* s, const char* key)
 
 	while (true)
 	{
-		char value[MAX_INFO_VALUE];
-		char pkey[MAX_INFO_KEY];
+		char value[MAX_INFO_VALUE]{};
+		char pkey[MAX_INFO_KEY]{};
 		char* start = s;
 		if (*s == '\\')
 			s++;
