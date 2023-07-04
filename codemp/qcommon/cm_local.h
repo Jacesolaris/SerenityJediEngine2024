@@ -230,17 +230,11 @@ cmodel_t* CM_clip_handleToModel(clip_handle_t handle, clipMap_t** clip_map = nul
 
 // cm_patch.c
 
-patchCollide_s* CM_GeneratePatchCollide(int width, int height, vec3_t* points);
-void CM_TraceThroughPatchCollide(traceWork_t* tw, trace_t& trace, const patchCollide_s* pc);
-qboolean CM_PositionTestInPatchCollide(traceWork_t* tw, const patchCollide_s* pc);
+struct patchCollide_s* CM_GeneratePatchCollide(int width, int height, vec3_t* points);
+void CM_TraceThroughPatchCollide(traceWork_t* tw, trace_t& trace, const struct patchCollide_s* pc);
+qboolean CM_PositionTestInPatchCollide(traceWork_t* tw, const struct patchCollide_s* pc);
 void CM_ClearLevelPatches(void);
-
-// cm_shader.cpp
-void CM_SetupShaderProperties(void);
-void CM_ShutdownShaderProperties(void);
-CCMShader* CM_GetShaderInfo(const char* name);
-CCMShader* CM_GetShaderInfo(int shaderNum);
-void CM_GetModelFormalName(const char* model, const char* skin, char* name, int size);
+void CM_ClearLevelPatches(void);
 
 // cm_load.cpp
 void CM_GetWorldBounds(vec3_t mins, vec3_t maxs);

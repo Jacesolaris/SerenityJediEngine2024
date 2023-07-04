@@ -61,7 +61,7 @@ int R_CullLocalBox(const vec3_t bounds[2])
 	int i;
 	vec3_t transformed[8]{};
 	float dists[8]{};
-	vec3_t v;
+	vec3_t v{};
 	int back;
 
 	if (r_nocull->integer == 1)

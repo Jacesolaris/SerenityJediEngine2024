@@ -2317,7 +2317,6 @@ bool G2_SetupModelPointers(CGhoul2Info* ghl_info) // returns true if the model i
 		return false;
 	}
 	ghl_info->mValid = false;
-	//	G2WARNING(ghl_info->mModelindex != -1,"Setup request on non-used info slot?");
 	if (ghl_info->mModelindex != -1)
 	{
 		G2ERROR(ghl_info->mFileName[0], "empty ghl_info->mFileName");
