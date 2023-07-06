@@ -72,7 +72,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 void MC_Compress(const float mat[3][4], unsigned char* _comp)
 {
-	char comp[MC_COMP_BYTES * 2];
+	char comp[MC_COMP_BYTES * 2]{};
 
 	for (int i = 0; i < MC_COMP_BYTES; i++)
 		comp[i] = 0;

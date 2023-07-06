@@ -102,7 +102,7 @@ unsigned char* SE_LoadFileData(const char* psFileName, int* piLoadedLength /* = 
 	{
 		// local filename, so prepend the base dir etc according to game and load it however (from PAK?)
 		//
-		unsigned char* pvLoadedData;
+		unsigned char* pvLoadedData = nullptr;
 		const int iLen = FS_ReadFile(psFileName, reinterpret_cast<void**>(&pvLoadedData));
 
 		if (iLen > 0)

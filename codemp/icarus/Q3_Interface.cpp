@@ -381,7 +381,7 @@ Q3_Evaluate
 static int Q3_Evaluate(int p1Type, const char* p1, int p2Type, const char* p2, const int operatorType)
 {
 	float f1 = 0, f2 = 0;
-	vec3_t v1, v2;
+	vec3_t v1{}, v2{};
 	const char* c1 = nullptr, * c2 = nullptr;
 	int i1 = 0, i2 = 0;
 

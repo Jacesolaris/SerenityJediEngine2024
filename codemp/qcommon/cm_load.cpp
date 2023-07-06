@@ -168,7 +168,7 @@ CMod_LoadSubmodels
 */
 static void CMod_LoadSubmodels(const lump_t* l, clipMap_t& cm)
 {
-	cmodel_t* out;
+	cmodel_t* out = nullptr;
 	int j;
 
 	auto in = reinterpret_cast<dmodel_t*>(cmod_base + l->fileofs);
@@ -536,7 +536,7 @@ static void CMod_LoadPatches(const lump_t* surfs, const lump_t* verts, clipMap_t
 {
 	int count;
 	cPatch_t* patch;
-	vec3_t points[MAX_PATCH_VERTS];
+	vec3_t points[MAX_PATCH_VERTS]{};
 
 	auto in = reinterpret_cast<dsurface_t*>(cmod_base + surfs->fileofs);
 	if (surfs->filelen % sizeof * in)

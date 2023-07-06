@@ -622,7 +622,7 @@ Open
 
 int CBlockStream::Open(char* buffer, const long size)
 {
-	char id_header[IBI_HEADER_ID_LENGTH];
+	char id_header[IBI_HEADER_ID_LENGTH]{};
 
 	Init();
 

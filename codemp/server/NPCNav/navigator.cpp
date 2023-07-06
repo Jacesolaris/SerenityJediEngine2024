@@ -168,7 +168,7 @@ void CNode::AddEdge(const int ID, const int cost, const int flags)
 		}
 	}
 
-	edge_t edge;
+	edge_t edge{};
 
 	edge.ID = ID;
 	edge.cost = cost;
@@ -608,7 +608,7 @@ bool CNavigator::Load(const char* filename, const int checksum)
 {
 	fileHandle_t file;
 
-	// Free previous map just in case. SerenityJediEngine2024-jampgame doesn't do this by default...
+	// Free previous map just in case. SerenityJediEngine2024-SJE-mpgame doesn't do this by default...
 	Free();
 
 	//Attempt to load the file
@@ -1256,7 +1256,7 @@ int CNavigator::CollectNearestNodes(vec3_t origin, const int radius, const int m
 		if (dist > static_cast<float>(radius * radius))
 			continue;
 
-		nodeList_t nChain;
+		nodeList_t nChain{};
 		nodeChain_l::iterator nci;
 
 		//Always add the first node

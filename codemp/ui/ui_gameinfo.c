@@ -144,7 +144,7 @@ UI_LoadArenas
 void UI_LoadArenas(void)
 {
 	char		dirlist[MAPSBUFSIZE];
-	int			dirlen;
+	int			dirlen = 0;
 
 	ui_numArenas = 0;
 	uiInfo.mapCount = 0;
@@ -243,7 +243,7 @@ void UI_LoadArenas(void)
 void UI_LoadSPArenas(void)
 {
 	char		dirlist[MAPSBUFSIZE];
-	int			dirlen;
+	int			dirlen = 0;
 
 	ui_numArenas = 0;
 	uiInfo.mapCount = 0;
@@ -397,7 +397,7 @@ void UI_LoadBots(void)
 {
 	vmCvar_t	botsFile;
 	char		dirlist[1024];
-	int			dirlen;
+	int			dirlen = 0;
 
 	ui_numBots = 0;
 

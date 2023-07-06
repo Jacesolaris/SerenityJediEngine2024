@@ -1310,7 +1310,7 @@ long FS_FOpenFileRead(const char* filename, fileHandle_t* file, qboolean uniqueF
 								!FS_IsExt(filename, ".arena", l) &&
 								!FS_IsExt(filename, ".menu", l) &&
 								!FS_IsExt(filename, ".fcf", l) &&
-								Q_stricmp(filename, "SerenityJediEngine2024-jampgamex86.dll") != 0 &&
+								Q_stricmp(filename, "SerenityJediEngine2024-SJE-mpgamex86.dll") != 0 &&
 								!strstr(filename, "levelshots"))
 							{
 								pak->referenced |= FS_GENERAL_REF;
@@ -3710,7 +3710,7 @@ void FS_Restart(int checksumFeed) {
 	}
 
 	if (Q_stricmp(fs_gamedirvar->string, lastValidGame)) {
-		// skip the jampconfig.cfg if "safe" is on the command line
+		// skip the SJE-mpconfig.cfg if "safe" is on the command line
 		if (!Com_SafeMode()) {
 			Cbuf_AddText("exec " Q3CONFIG_CFG "\n");
 		}

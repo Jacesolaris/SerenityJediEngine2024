@@ -191,7 +191,7 @@ static const char* GetErrorString(const DWORD error)
 
 	if (error)
 	{
-		LPVOID lpMsgBuf;
+		LPVOID lpMsgBuf = nullptr;
 		const DWORD bufLen = FormatMessage(
 			FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
 			nullptr, error, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), reinterpret_cast<LPTSTR>(&lpMsgBuf), 0, nullptr);

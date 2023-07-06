@@ -501,7 +501,7 @@ static cvarTable_t cvarTable[] =
 #ifdef JK2_MODE
 	{ &ui_hudFiles,				"cg_hudFiles",			"ui/jk2hud.txt", nullptr, CVAR_ARCHIVE },
 #else
-	{&ui_hudFiles, "cg_hudFiles", "ui/jahud.txt", nullptr, CVAR_ARCHIVE},
+	{&ui_hudFiles, "cg_hudFiles", "ui/sje-hud.txt", nullptr, CVAR_ARCHIVE},
 #endif
 
 	{&ui_char_anim, "ui_char_anim", "BOTH_MENUIDLE1", nullptr, 0},

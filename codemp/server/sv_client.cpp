@@ -140,7 +140,7 @@ void SV_DirectConnect(netadr_t from)
 	char userinfo[MAX_INFO_STRING];
 	int i;
 	client_t* cl, * newcl;
-	client_t temp;
+	client_t temp{};
 	sharedEntity_t* ent;
 	int client_num;
 	int version;
@@ -1040,8 +1040,8 @@ static void SV_VerifyPaks_f(client_t* cl)
 	//
 	if (sv_pure->integer != 0)
 	{
-		int nServerChkSum[1024];
-		int nClientChkSum[1024];
+		int nServerChkSum[1024]{};
+		int nClientChkSum[1024]{};
 		int j;
 		int i;
 		nChkSum1 = nChkSum2 = 0;
@@ -1497,7 +1497,7 @@ static void SV_UserMove(client_t* cl, msg_t* msg, const qboolean delta)
 {
 	int i;
 	usercmd_t nullcmd;
-	usercmd_t cmds[MAX_PACKET_USERCMDS];
+	usercmd_t cmds[MAX_PACKET_USERCMDS]{};
 
 	if (delta)
 	{

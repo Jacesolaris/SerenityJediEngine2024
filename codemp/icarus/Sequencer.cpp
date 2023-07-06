@@ -351,7 +351,7 @@ Parses a user triggered run command
 
 int CSequencer::ParseRun(CBlock* block)
 {
-	char* buffer;
+	char* buffer = nullptr;
 	char newname[MAX_STRING_SIZE];
 
 	//Get the name and format it
@@ -557,7 +557,7 @@ Adds a sequence that is saved until the affect is called by the parent
 int CSequencer::AddAffect(const bstream_t* bstream, const int retain, int* id)
 {
 	CSequence* sequence = AddSequence();
-	bstream_t new_stream;
+	bstream_t new_stream{};
 
 	sequence->SetFlag(SQ_AFFECT | SQ_PENDING);
 
@@ -1026,7 +1026,7 @@ int CSequencer::EvaluateConditional(CBlock* block) const
 {
 	CBlockMember* bm;
 	char tempString1[128], tempString2[128];
-	vector_t vec;
+	vector_t vec{};
 	int id, i, oper, memberNum = 0;
 	char* p1 = nullptr, * p2 = nullptr;
 	int t1, t2;

@@ -606,7 +606,7 @@ For viewing through other player's eyes, client can be something other than clie
 static void SV_BuildClientSnapshot(client_t* client)
 {
 	vec3_t org;
-	snapshotEntityNumbers_t entityNumbers;
+	snapshotEntityNumbers_t entityNumbers{};
 	int i;
 	sharedEntity_t* ent;
 	entityState_t* state;

@@ -342,7 +342,7 @@ if(BuildMPEngine OR BuildMPDed)
 	source_group("sys" FILES ${MPEngineAndDedSysFiles})
 endif(BuildMPEngine OR BuildMPDed)
 
-#        Engine/Executable (jamp.exe)
+#        Engine/Executable (SJE-mp.exe)
 
 if(BuildMPEngine)
 	set(MPEngineLibraries ${MPEngineAndDedLibraries})

@@ -2563,10 +2563,10 @@ void CG_LoadMenus(const char* menuFile)
 			trap->Print(S_COLOR_YELLOW "hud menu file not found: %s, using default\n", menuFile);
 		}
 
-		len = trap->FS_Open("ui/jahud.txt", &f, FS_READ);
+		len = trap->FS_Open("ui/sje-hud.txt", &f, FS_READ);
 		if (!f)
 		{
-			trap->Error(ERR_DROP, S_COLOR_RED "default hud menu file not found: ui/jahud.txt, unable to continue!");
+			trap->Error(ERR_DROP, S_COLOR_RED "default hud menu file not found: ui/sje-hud.txt, unable to continue!");
 		}
 	}
 
@@ -2675,7 +2675,7 @@ void CG_LoadHudMenu()
 	const char* hudSet = cg_hudFiles.string;
 	if (hudSet[0] == '\0')
 	{
-		hudSet = "ui/jahud.txt";
+		hudSet = "ui/sje-hud.txt";
 	}
 
 	CG_LoadMenus(hudSet);

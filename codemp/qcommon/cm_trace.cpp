@@ -299,7 +299,7 @@ void CM_TestCapsuleInCapsule(traceWork_t * tw, trace_t & trace, const clip_handl
 	vec3_t mins, maxs;
 	vec3_t top, bottom;
 	vec3_t p1, p2, tmp;
-	vec3_t offset, symetricSize[2];
+	vec3_t offset{}, symetricSize[2]{};
 
 	CM_ModelBounds(model, mins, maxs);
 
@@ -371,7 +371,7 @@ bounding box inside capsule check
 */
 void CM_TestBoundingBoxInCapsule(traceWork_t * tw, trace_t & trace, const clip_handle_t model)
 {
-	vec3_t mins, maxs, offset, size[2];
+	vec3_t mins, maxs, offset{}, size[2]{};
 
 	// mins maxs of the capsule
 	CM_ModelBounds(model, mins, maxs);
@@ -408,9 +408,9 @@ CM_PositionTest
 
 void CM_PositionTest(traceWork_t * tw, trace_t & trace)
 {
-	int leafs[MAX_POSITION_LEAFS];
+	int leafs[MAX_POSITION_LEAFS]{};
 	int i;
-	leafList_t ll;
+	leafList_t ll{};
 
 	// identify the leafs we are touching
 	VectorAdd(tw->start, tw->size[0], ll.bounds[0]);
@@ -965,7 +965,7 @@ void CM_TraceCapsuleThroughCapsule(traceWork_t * tw, trace_t & trace, const clip
 {
 	vec3_t mins, maxs;
 	vec3_t top, bottom, starttop, startbottom, endtop, endbottom;
-	vec3_t offset, symetricSize[2];
+	vec3_t offset{}, symetricSize[2]{};
 
 	CM_ModelBounds(model, mins, maxs);
 	// test trace bounds vs. capsule bounds
@@ -1028,7 +1028,7 @@ bounding box vs. capsule collision
 */
 void CM_TraceBoundingBoxThroughCapsule(traceWork_t * tw, trace_t & trace, const clip_handle_t model)
 {
-	vec3_t mins, maxs, offset, size[2];
+	vec3_t mins, maxs, offset{}, size[2]{};
 
 	// mins maxs of the capsule
 	CM_ModelBounds(model, mins, maxs);
@@ -1141,7 +1141,7 @@ void CM_TraceThroughTree(traceWork_t * tw, trace_t & trace, clipMap_t * local, c
 	float t1, t2, offset;
 	float frac, frac2;
 	float idist;
-	vec3_t mid;
+	vec3_t mid{};
 	int side;
 
 	if (trace.fraction <= p1f)
@@ -1297,7 +1297,7 @@ void CM_Trace(trace_t * trace, const vec3_t start, const vec3_t end,
 {
 	int i;
 	traceWork_t tw;
-	vec3_t offset;
+	vec3_t offset{};
 	clipMap_t* local = nullptr;
 
 	cmodel_t* cmod = CM_clip_handleToModel(model, &local);
@@ -1578,12 +1578,12 @@ void CM_TransformedBoxTrace(trace_t * trace, const vec3_t start, const vec3_t en
 	const clip_handle_t model, const int brushmask,
 	const vec3_t origin, const vec3_t angles, int capsule)
 {
-	vec3_t start_l, end_l;
+	vec3_t start_l{}, end_l{};
 	qboolean rotated;
-	vec3_t offset;
-	vec3_t symetricSize[2];
+	vec3_t offset{};
+	vec3_t symetricSize[2]{};
 	matrix3_t matrix;
-	sphere_t sphere;
+	sphere_t sphere{};
 
 	if (!mins)
 	{
@@ -1713,7 +1713,7 @@ Returns true if culled out
 
 bool CM_CullWorldBox(const cplane_t * frustum, const vec3pair_t bounds)
 {
-	vec3_t transformed[8];
+	vec3_t transformed[8]{};
 
 	for (int i = 0; i < 8; i++)
 	{

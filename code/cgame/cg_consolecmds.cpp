@@ -203,7 +203,7 @@ void CG_LoadHud_f()
 
 	if (hudSet[0] == '\0')
 	{
-		hudSet = "ui/jahud.txt";
+		hudSet = "ui/sje-hud.txt";
 	}
 	CG_LoadMenus(hudSet);
 }

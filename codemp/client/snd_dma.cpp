@@ -6267,7 +6267,7 @@ void UpdateEAXListener()
 
 		for (i = 0; i < Q_min(s_NumFXSlots, s_lNumEnvironments); i++)
 		{
-			EAXVECTOR LR;
+			EAXVECTOR LR{};
 			if (s_FXSlotInfo[i].lEnvID == s_EnvironmentID)
 			{
 				// Listener's environment

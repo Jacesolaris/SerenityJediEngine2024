@@ -56,7 +56,7 @@ static mdfour_ctx* m;
 static void mdfour64(const uint32_t* M)
 {
 	int j;
-	uint32_t X[16];
+	uint32_t X[16]{};
 
 	for (j = 0; j < 16; j++)
 		X[j] = M[j];
@@ -230,7 +230,7 @@ static void mdfour(byte* out, byte* in, const int n)
 
 uint32_t Com_BlockChecksum(const void* buffer, const int length)
 {
-	int digest[4];
+	int digest[4]{};
 
 	mdfour(reinterpret_cast<byte*>(digest), (byte*)buffer, length);
 

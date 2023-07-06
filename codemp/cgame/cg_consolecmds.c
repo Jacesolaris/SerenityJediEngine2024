@@ -296,7 +296,7 @@ static void CG_LoadHud_f(void)
 
 	if (hudSet[0] == '\0')
 	{
-		hudSet = "ui/jahud.txt";
+		hudSet = "ui/sje-hud.txt";
 	}
 
 	String_Init();

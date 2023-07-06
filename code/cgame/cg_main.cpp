@@ -551,7 +551,7 @@ static cvarTable_t cvarTable[] = {
 	{&cg_timescale, "timescale", "1", 0},
 	{&cg_skippingcin, "skippingCinematic", "0", CVAR_ROM},
 	{&cg_missionInfoFlashTime, "cg_missionInfoFlashTime", "10000", 0},
-	{&cg_hudFiles, "cg_hudFiles", "ui/jahud.txt", CVAR_ARCHIVE},
+	{&cg_hudFiles, "cg_hudFiles", "ui/sje-hud.txt", CVAR_ARCHIVE},
 
 	{&cg_VariantSoundCap, "cg_VariantSoundCap", "0", 0},
 	{&cg_turnAnims, "cg_turnAnims", "0", 0},
@@ -3451,10 +3451,10 @@ void CG_LoadMenus(const char* menuFile)
 			CG_Printf(S_COLOR_YELLOW "hud menu file not found: %s, using default\n", menuFile);
 		}
 
-		len = cgi_FS_FOpenFile("ui/jahud.txt", &f, FS_READ);
+		len = cgi_FS_FOpenFile("ui/sje-hud.txt", &f, FS_READ);
 		if (!f)
 		{
-			cgi_Error(S_COLOR_RED "default menu file not found: ui/jahud.txt, unable to continue!\n");
+			cgi_Error(S_COLOR_RED "default menu file not found: ui/sje-hud.txt, unable to continue!\n");
 		}
 	}
 
@@ -3509,7 +3509,7 @@ void CG_LoadHudMenu()
 	const char* hudSet = cg_hudFiles.string;
 	if (hudSet[0] == '\0')
 	{
-		hudSet = "ui/jahud.txt";
+		hudSet = "ui/sje-hud.txt";
 	}
 
 	CG_LoadMenus(hudSet);

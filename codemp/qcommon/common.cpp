@@ -377,7 +377,7 @@ void Com_ParseCommandLine(char* commandLine)
 	{
 		if (*commandLine == '"')
 		{
-			inq = !inq;
+			inq = ~inq;
 		}
 		// look for a + seperating character
 		// if commandLine came from a file, we might have real line seperators
@@ -400,7 +400,7 @@ void Com_ParseCommandLine(char* commandLine)
 Com_SafeMode
 
 Check for "safe" on the command line, which will
-skip loading of jampconfig.cfg
+skip loading of SJE-mpconfig.cfg
 ===================
 */
 qboolean Com_SafeMode(void)
@@ -484,13 +484,13 @@ qboolean Com_AddStartupCommands(void)
 
 void Info_Print(const char* s)
 {
-	char key[BIG_INFO_KEY];
+	char key[BIG_INFO_KEY]{};
 
 	if (*s == '\\')
 		s++;
 	while (*s)
 	{
-		char value[BIG_INFO_VALUE];
+		char value[BIG_INFO_VALUE]{};
 		char* o = key;
 		while (*s && *s != '\\')
 			*o++ = *s++;
@@ -567,7 +567,7 @@ Com_Filter
 */
 int Com_Filter(char* filter, char* name, const int casesensitive)
 {
-	char buf[MAX_TOKEN_CHARS];
+	char buf[MAX_TOKEN_CHARS]{};
 	int i;
 
 	while (*filter)
@@ -666,8 +666,8 @@ Com_FilterPath
 int Com_FilterPath(char* filter, char* name, const int casesensitive)
 {
 	int i;
-	char new_filter[MAX_QPATH];
-	char new_name[MAX_QPATH];
+	char new_filter[MAX_QPATH]{};
+	char new_name[MAX_QPATH]{};
 
 	for (i = 0; i < MAX_QPATH - 1 && filter[i]; i++)
 	{
@@ -1132,7 +1132,7 @@ Seed the random number generator, if possible with an OS supplied random seed.
 */
 static void Com_InitRand(void)
 {
-	unsigned int seed;
+	unsigned int seed = 0;
 
 	if (Sys_RandomBytes(reinterpret_cast<byte*>(&seed), sizeof seed))
 		srand(seed);
@@ -1220,7 +1220,7 @@ Com_Init
 */
 void Com_Init(char* commandLine)
 {
-	int qport;
+	int qport = 0;
 
 	Com_Printf("%s %s %s\n", JK_VERSION, PLATFORM_STRING, SOURCE_DATE);
 

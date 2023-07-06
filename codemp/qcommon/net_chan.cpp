@@ -619,7 +619,7 @@ Sends a text message in an out-of-band datagram
 void QDECL NET_OutOfBandPrint(const netsrc_t sock, const netadr_t adr, const char* format, ...)
 {
 	va_list argptr;
-	char string[MAX_MSGLEN];
+	char string[MAX_MSGLEN]{};
 
 	// set the header
 	string[0] = -1;
@@ -644,8 +644,8 @@ Sends a data message in an out-of-band datagram (only used for "connect")
 */
 void QDECL NET_OutOfBandData(const netsrc_t sock, const netadr_t adr, byte* format, const int len)
 {
-	byte string[MAX_MSGLEN * 2];
-	msg_t mbuf;
+	byte string[MAX_MSGLEN * 2]{};
+	msg_t mbuf{};
 
 	// set the header
 	string[0] = 0xff;

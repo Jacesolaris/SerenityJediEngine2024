@@ -95,7 +95,7 @@ SV_BotCalculatePaths
 */
 void SV_BotCalculatePaths(int /*rmg*/)
 {
-	vec3_t mins, maxs;
+	vec3_t mins{}, maxs{};
 
 	if (!gWPNum)
 	{
@@ -552,7 +552,7 @@ BotImport_DebugLineCreate
 */
 int BotImport_DebugLineCreate(void)
 {
-	vec3_t points[1];
+	vec3_t points[1]{};
 	return BotImport_DebugPolygonCreate(0, 0, points);
 }
 
@@ -573,7 +573,7 @@ BotImport_DebugLineShow
 */
 void BotImport_DebugLineShow(const int line, vec3_t start, vec3_t end, const int color)
 {
-	vec3_t points[4], dir, cross;
+	vec3_t points[4]{}, dir, cross;
 	constexpr vec3_t up = { 0, 0, 1 };
 
 	VectorCopy(start, points[0]);
@@ -721,7 +721,7 @@ SV_BotInitBotLib
 */
 void SV_BotInitBotLib(void)
 {
-	botlib_import_t botlib_import;
+	botlib_import_t botlib_import{};
 
 	if (debugpolygons) Z_Free(debugpolygons);
 	bot_maxdebugpolys = Cvar_VariableIntegerValue("bot_maxdebugpolys");

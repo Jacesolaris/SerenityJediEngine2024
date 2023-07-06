@@ -159,7 +159,7 @@ A NULL client will broadcast to all clients
 void QDECL SV_SendServerCommand(client_t* cl, const char* fmt, ...)
 {
 	va_list argptr;
-	byte message[MAX_MSGLEN];
+	byte message[MAX_MSGLEN]{};
 	client_t* client;
 	int j;
 
@@ -513,7 +513,7 @@ the simple info query.
 */
 void SVC_Status(const netadr_t from)
 {
-	char status[MAX_MSGLEN];
+	char status[MAX_MSGLEN]{};
 	char infostring[MAX_INFO_STRING];
 
 	// ignore if we are in single player
@@ -588,7 +588,7 @@ if a user is interested in a server to do a full status
 void SVC_Info(const netadr_t from)
 {
 	int humans, wDisable;
-	char infostring[MAX_INFO_STRING];
+	char infostring[MAX_INFO_STRING]{};
 
 	// ignore if we are in single player
 	/*
@@ -764,7 +764,7 @@ void SVC_RemoteCommand(const netadr_t from, msg_t* msg)
 	}
 	else
 	{
-		char remaining[1024];
+		char remaining[1024]{};
 		remaining[0] = 0;
 
 		// https://zerowing.idsoftware.com/bugzilla/show_bug.cgi?id=543
@@ -1093,7 +1093,7 @@ void SV_CheckCvars(void)
 
 	if (sv_hostname->modificationCount != lastModHostname)
 	{
-		char hostname[MAX_INFO_STRING];
+		char hostname[MAX_INFO_STRING]{};
 		char* c = hostname;
 		lastModHostname = sv_hostname->modificationCount;
 
@@ -1287,7 +1287,7 @@ void SV_Frame(const int msec)
 	{
 		Cvar_Set("sv_fps", "10");
 	}
-	int frameMsec = 1000 / sv_fps->integer * com_timescale->value;
+	int frameMsec = static_cast<float>(1000) / sv_fps->integer * com_timescale->value;
 	// don't let it scale below 1ms
 	if (frameMsec < 1)
 	{

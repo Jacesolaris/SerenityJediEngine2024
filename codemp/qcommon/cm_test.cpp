@@ -181,7 +181,7 @@ CM_BoxLeafnums
 int CM_BoxLeafnums(const vec3_t mins, const vec3_t maxs, int* boxList, const int listsize, int* lastLeaf)
 {
 	//rwwRMG - changed to boxList to not conflict with list type
-	leafList_t ll;
+	leafList_t ll{};
 
 	cmg.checkcount++;
 

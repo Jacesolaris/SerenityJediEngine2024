@@ -1988,7 +1988,7 @@ static void SV_G2API_AbsurdSmoothing(void* ghoul2, const qboolean status)
 
 static void SV_G2API_SetRagDoll(void* ghoul2, sharedRagDollParams_t* params)
 {
-	CRagDollParams rdParams;
+	CRagDollParams rdParams{};
 
 	if (!params)
 	{
@@ -3222,7 +3222,7 @@ intptr_t SV_GameSystemCalls(intptr_t* args)
 	{
 		//Convert the info in the shared structure over to the class-based version.
 		const auto rdParamst = static_cast<sharedRagDollParams_t*>(VMA(2));
-		CRagDollParams rdParams;
+		CRagDollParams rdParams{};
 
 		if (!rdParamst)
 		{
@@ -3383,7 +3383,7 @@ void SV_InitGame(const qboolean restart)
 void SV_BindGame(void)
 {
 	static gameImport_t gi;
-	char dllName[MAX_OSPATH] = "SerenityJediEngine2024-jampgame" ARCH_STRING DLL_EXT;
+	char dllName[MAX_OSPATH] = "SerenityJediEngine2024-SJE-mpgame" ARCH_STRING DLL_EXT;
 
 	memset(&gi, 0, sizeof gi);
 

@@ -402,7 +402,7 @@ void Huff_offsetTransmit(const huff_t* huff, const int ch, byte* fout, int* offs
 void Huff_Decompress(msg_t* mbuf, const int offset)
 {
 	int ch;
-	byte seq[65536];
+	byte seq[65536]{};
 	huff_t huff;
 
 	const int size = mbuf->cursize - offset;
@@ -462,7 +462,7 @@ extern int oldsize;
 
 void Huff_Compress(msg_t* mbuf, const int offset)
 {
-	byte seq[65536];
+	byte seq[65536]{};
 	huff_t huff;
 
 	const int size = mbuf->cursize - offset;

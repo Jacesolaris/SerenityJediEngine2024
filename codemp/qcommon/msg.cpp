@@ -374,7 +374,7 @@ void MSG_WriteLong(msg_t* sb, const int c)
 
 void MSG_WriteFloat(msg_t* sb, const float f)
 {
-	byteAlias_t dat;
+	byteAlias_t dat{};
 	dat.f = f;
 	MSG_WriteBits(sb, dat.i, 32);
 }
@@ -506,7 +506,7 @@ int MSG_ReadLong(msg_t* msg)
 
 float MSG_ReadFloat(msg_t* msg)
 {
-	byteAlias_t dat;
+	byteAlias_t dat{};
 
 	dat.i = MSG_ReadBits(msg, 32);
 	if (msg->readcount > msg->cursize)
@@ -658,7 +658,7 @@ int MSG_ReadDelta(msg_t* msg, const int oldV, const int bits)
 
 void MSG_WriteDeltaFloat(msg_t* msg, const float oldV, const float newV)
 {
-	byteAlias_t fi;
+	byteAlias_t fi{};
 	if (oldV == newV)
 	{
 		MSG_WriteBits(msg, 0, 1);
@@ -673,7 +673,7 @@ float MSG_ReadDeltaFloat(msg_t* msg, const float oldV)
 {
 	if (MSG_ReadBits(msg, 1))
 	{
-		byteAlias_t fi;
+		byteAlias_t fi{};
 
 		fi.i = MSG_ReadBits(msg, 32);
 		return fi.f;
@@ -728,7 +728,7 @@ int MSG_ReadDeltaKey(msg_t* msg, int key, const int oldV, int bits)
 
 void MSG_WriteDeltaKeyFloat(msg_t* msg, const int key, const float oldV, const float newV)
 {
-	byteAlias_t fi;
+	byteAlias_t fi{};
 	if (oldV == newV)
 	{
 		MSG_WriteBits(msg, 0, 1);
@@ -743,7 +743,7 @@ float MSG_ReadDeltaKeyFloat(msg_t* msg, const int key, const float oldV)
 {
 	if (MSG_ReadBits(msg, 1))
 	{
-		byteAlias_t fi;
+		byteAlias_t fi{};
 
 		fi.i = MSG_ReadBits(msg, 32) ^ key;
 		return fi.f;
@@ -2280,8 +2280,8 @@ static bitStorage_t* g_psfBitStorage = nullptr;
 void MSG_CheckNETFPSFOverrides(const qboolean psfOverrides)
 {
 	char overrideFile[4096];
-	char entryName[4096];
-	char bits[4096];
+	char entryName[4096]{};
+	char bits[4096]{};
 	char* fileName;
 	int ibits;
 	int i = 0;
@@ -2501,7 +2501,7 @@ void MSG_WriteDeltaPlayerstate(msg_t * msg, playerState_s * from, playerState_s 
 {
 #endif
 	int i;
-	playerState_t dummy;
+	playerState_t dummy{};
 	int statsbits;
 	int persistantbits;
 	int ammobits;
@@ -2781,7 +2781,7 @@ void MSG_ReadDeltaPlayerstate(msg_t * msg, playerState_t * from, playerState_t *
 #ifdef _ONEBIT_COMBO
 	int			numBitsInMask = 0;
 #endif
-	playerState_t dummy;
+	playerState_t dummy{};
 
 	if (!from)
 	{

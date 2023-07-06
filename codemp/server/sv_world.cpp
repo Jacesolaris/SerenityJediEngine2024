@@ -407,7 +407,7 @@ SV_AreaEntities_r
 */
 void SV_AreaEntities_r(const worldSector_t* node, areaParms_t* ap)
 {
-	svEntity_t* next;
+	svEntity_t* next = nullptr;
 
 	for (svEntity_t* check = node->entities; check; check = next)
 	{
@@ -458,7 +458,7 @@ SV_AreaEntities
 */
 int SV_AreaEntities(const vec3_t mins, const vec3_t maxs, int* entity_list, const int maxcount)
 {
-	areaParms_t ap;
+	areaParms_t ap{};
 
 	ap.mins = mins;
 	ap.maxs = maxs;

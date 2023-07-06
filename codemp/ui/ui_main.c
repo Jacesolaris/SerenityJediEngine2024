@@ -861,7 +861,7 @@ void UI_LoadNonIngame()
 	const char* menuSet = UI_Cvar_VariableString("ui_menuFilesMP");
 	if (menuSet == NULL || menuSet[0] == '\0')
 	{
-		menuSet = "ui/jampmenus.txt";
+		menuSet = "ui/SJE-mpmenus.txt";
 	}
 	UI_LoadMenus(menuSet, qfalse);
 	uiInfo.inGameLoad = qfalse;
@@ -1538,10 +1538,10 @@ void UI_LoadMenus(const char* menuFile, qboolean reset)
 	if (!handle)
 	{
 		Com_Printf(S_COLOR_YELLOW "menu file not found: %s, using default\n", menuFile);
-		handle = trap->PC_LoadSource("ui/jampmenus.txt");
+		handle = trap->PC_LoadSource("ui/SJE-mpmenus.txt");
 		if (!handle)
 		{
-			trap->Error(ERR_DROP, S_COLOR_RED "default menu file not found: ui/jampmenus.txt, unable to continue!\n");
+			trap->Error(ERR_DROP, S_COLOR_RED "default menu file not found: ui/SJE-mpmenus.txt, unable to continue!\n");
 		}
 	}
 
@@ -1599,7 +1599,7 @@ void UI_Load(void)
 
 	if (uiInfo.inGameLoad)
 	{
-		menuSet = "ui/jampingame.txt";
+		menuSet = "ui/SJE-mpingame.txt";
 	}
 	else
 	{
@@ -1607,7 +1607,7 @@ void UI_Load(void)
 	}
 	if (menuSet == NULL || menuSet[0] == '\0')
 	{
-		menuSet = "ui/jampmenus.txt";
+		menuSet = "ui/SJE-mpmenus.txt";
 	}
 
 	String_Init();
@@ -10867,13 +10867,13 @@ void UI_Init(qboolean inGameLoad)
 	const char* menuSet = UI_Cvar_VariableString("ui_menuFilesMP");
 	if (menuSet == NULL || menuSet[0] == '\0')
 	{
-		menuSet = "ui/jampmenus.txt";
+		menuSet = "ui/SJE-mpmenus.txt";
 	}
 
 #if 1
 	if (inGameLoad)
 	{
-		UI_LoadMenus("ui/jampingame.txt", qtrue);
+		UI_LoadMenus("ui/SJE-mpingame.txt", qtrue);
 		UI_LoadMenus("ui/menutest.txt", qfalse);
 	}
 	else if (!ui_bypassMainMenuLoad.integer)
@@ -10882,7 +10882,7 @@ void UI_Init(qboolean inGameLoad)
 	}
 #else //this was adding quite a giant amount of time to the load time
 	UI_LoadMenus(menuSet, qtrue);
-	UI_LoadMenus("ui/jampingame.txt", qtrue);
+	UI_LoadMenus("ui/SJE-mpingame.txt", qtrue);
 #endif
 
 	{

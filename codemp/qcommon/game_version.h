@@ -40,16 +40,16 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 #define VERSION_MAJOR_RELEASE		23
 #define VERSION_MINOR_RELEASE		07
-#define VERSION_INTERNAL_BUILD		04
+#define VERSION_INTERNAL_BUILD		07
 
-#define VERSION_STRING				"Year-23,Month-07,Day-04,BuildNum-01"
-#define VERSION_STRING_DOTTED		"Year-23,Month-07,Day-04,BuildNum-01"
+#define VERSION_STRING				"Year-23,Month-07,Day-07,BuildNum-02"
+#define VERSION_STRING_DOTTED		"Year-23,Month-07,Day-07,BuildNum-02"
 
 #if defined(_DEBUG)
 #define	JK_VERSION		"(debug)SerenityJediEngine2024-MP: " VERSION_STRING_DOTTED
-#define JK_VERSION_OLD	"(debug)JAmp: " VERSION_STRING_DOTTED
+#define JK_VERSION_OLD	"(debug)SJE-mp: " VERSION_STRING_DOTTED
 #else
 #define	JK_VERSION		"SerenityJediEngine2024-MP: " VERSION_STRING_DOTTED
-#define JK_VERSION_OLD	"JAmp: " VERSION_STRING_DOTTED
+#define JK_VERSION_OLD	"SJE-mp: " VERSION_STRING_DOTTED
 #endif
 #endif // GAME_VERSION_H

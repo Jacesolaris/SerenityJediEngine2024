@@ -338,7 +338,7 @@ void CROFFSystem::FixBadAngles(CROFF* obj)
 int CROFFSystem::Cache(const char* file, const qboolean isClient)
 {
 	int id = GetID(file);
-	unsigned char* data;
+	unsigned char* data = nullptr;
 	CROFF* cROFF;
 
 	if (id)
@@ -949,7 +949,7 @@ qboolean CROFFSystem::ApplyROFF(SROFFEntity* roff_ent, const CROFF* roff)
  ************************************************************************************************/
 void CROFFSystem::ProcessNote(const SROFFEntity* roff_ent, const char* note)
 {
-	char temp[1024];
+	char temp[1024]{};
 
 	int pos = 0;
 	while (note[pos])

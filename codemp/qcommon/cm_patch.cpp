@@ -142,8 +142,8 @@ collision detection purposes
 =================
 */
 static qboolean	CM_NeedsSubdivision(vec3_t a, vec3_t b, vec3_t c) {
-	vec3_t		cmid;
-	vec3_t		lmid;
+	vec3_t		cmid{};
+	vec3_t		lmid{};
 	vec3_t		delta;
 	int			i;
 
@@ -408,7 +408,7 @@ static		facet_t* facets = nullptr;
 #define	DIST_EPSILON	0.0235
 
 static int CM_PlaneEqual(patchPlane_t* p, float plane[4], int* flipped) {
-	float invplane[4];
+	float invplane[4]{};
 
 	if (
 		Q_fabs(p->plane[0] - plane[0]) < NORMAL_EPSILON
@@ -648,7 +648,7 @@ CM_SetBorderInward
 */
 static void CM_SetBorderInward(facet_t* facet, cGrid_t* grid, int gridPlanes[MAX_GRID_SIZE][MAX_GRID_SIZE][2],
 	int i, int j, int which) {
-	float* points[4];
+	float* points[4]{};
 	int		num_points;
 
 	switch (which) {
@@ -726,7 +726,7 @@ static qboolean CM_ValidateFacet(const facet_t* facet) {
 	float		plane[4];
 	int			j;
 	winding_t* w;
-	vec3_t		bounds[2];
+	vec3_t		bounds[2]{};
 
 	if (facet->surfacePlane == -1) {
 		return qfalse;
@@ -948,9 +948,9 @@ CM_PatchCollideFromGrid
 */
 static void CM_PatchCollideFromGrid(cGrid_t* grid, patchCollide_t* pf) {
 	int				i, j;
-	int				gridPlanes[MAX_GRID_SIZE][MAX_GRID_SIZE][2];
-	int				borders[4];
-	int				noAdjust[4];
+	int				gridPlanes[MAX_GRID_SIZE][MAX_GRID_SIZE][2]{};
+	int				borders[4]{};
+	int				noAdjust[4]{};
 
 	facets = static_cast<facet_t*>(Z_Malloc(MAX_FACETS * sizeof(facet_t), TAG_TEMP_WORKSPACE, qfalse, 4));
 
@@ -1127,7 +1127,7 @@ Points is packed as concatenated rows.
 ===================
 */
 patchCollide_s* CM_GeneratePatchCollide(int width, int height, vec3_t* points) {
-	cGrid_t			grid;
+	cGrid_t			grid{};
 	int				i, j;
 
 	if (width <= 2 || height <= 2 || !points) {
@@ -1210,8 +1210,8 @@ CM_TracePointThroughPatchCollide
 */
 static void CM_TracePointThroughPatchCollide(traceWork_t* tw, trace_t& trace, const patchCollide_s* pc)
 {
-	qboolean	frontFacing[MAX_PATCH_PLANES];
-	float		intersection[MAX_PATCH_PLANES];
+	qboolean	frontFacing[MAX_PATCH_PLANES]{};
+	float		intersection[MAX_PATCH_PLANES]{};
 	float		intersect;
 	const patchPlane_t* planes;
 	const facet_t* facet;
@@ -1624,8 +1624,7 @@ void CM_DrawDebugSurface(void (*drawPoly)(int color, int num_points, const float
 	int				curplanenum, planenum, curinward, inward;
 	float			plane[4];
 	constexpr vec3_t mins = { -15, -15, -28 }, maxs = { 15, 15, 28 };
-	//vec3_t mins = {0, 0, 0}, maxs = {0, 0, 0};
-	vec3_t v1;
+	vec3_t v1{};
 
 #ifndef BSPC
 	if (!cv2)
@@ -1653,7 +1652,7 @@ void CM_DrawDebugSurface(void (*drawPoly)(int color, int num_points, const float
 
 	for (i = 0, facet = pc->facets; i < pc->numFacets; i++, facet++) {
 		for (int k = 0; k < facet->numBorders + 1; k++) {
-			vec3_t v2;
+			vec3_t v2{};
 			//
 			if (k < facet->numBorders) {
 				planenum = facet->borderPlanes[k];
@@ -1734,7 +1733,7 @@ void CM_DrawDebugSurface(void (*drawPoly)(int color, int num_points, const float
 
 	// draw the debug block
 	{
-		matrix3_t v;
+		matrix3_t v{};
 
 		VectorCopy(debugBlockPoints[0], v[0]);
 		VectorCopy(debugBlockPoints[1], v[1]);

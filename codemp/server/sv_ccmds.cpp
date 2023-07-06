@@ -218,7 +218,7 @@ static void SV_Map_f(void)
 		kill_bots = qfalse;
 	}
 
-	// save the map name here cause on a map restart we reload the jampconfig.cfg
+	// save the map name here cause on a map restart we reload the SJE-mpconfig.cfg
 	// and thus nuke the arguments of the map command
 	Q_strncpyz(mapname, map, sizeof mapname);
 
@@ -1841,7 +1841,7 @@ static time_t SV_ExtractTimeFromDemoFolder(char* folder)
 	{
 		return 0;
 	}
-	tm timeinfo;
+	tm timeinfo{};
 	timeinfo.tm_isdst = 0;
 	const int numMatched = sscanf(folder + (strlen(folder) - timeLen), "%4d-%2d-%2d_%2d-%2d-%2d",
 		&timeinfo.tm_year, &timeinfo.tm_mon, &timeinfo.tm_mday, &timeinfo.tm_hour,
