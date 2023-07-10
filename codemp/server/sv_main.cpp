@@ -516,13 +516,6 @@ void SVC_Status(const netadr_t from)
 	char status[MAX_MSGLEN]{};
 	char infostring[MAX_INFO_STRING];
 
-	// ignore if we are in single player
-	/*
-	if ( Cvar_VariableValue( "g_gametype" ) == GT_SINGLE_PLAYER ) {
-		return;
-	}
-	*/
-
 	// Prevent using getstatus as an amplifier
 	if (SVC_RateLimitAddress(from, 10, 1000))
 	{

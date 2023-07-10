@@ -870,7 +870,7 @@ static void CL_G2API_SetRagDoll(void* ghoul2, sharedRagDollParams_t* params)
 {
 	if (!ghoul2) return;
 
-	CRagDollParams rdParams;
+	CRagDollParams rdParams{};
 	if (!params)
 	{
 		re->G2API_ResetRagDoll(*static_cast<CGhoul2Info_v*>(ghoul2));

@@ -349,7 +349,7 @@ void CL_CheckSVStringEdRef(char* buf, const char* str)
 				if (str[i + 2] == '@' && i + 3 < strLen)
 				{
 					//@@@ should mean to insert a StringEd reference here, so insert it into buf at the current place
-					char stringRef[MAX_STRINGED_SV_STRING];
+					char stringRef[MAX_STRINGED_SV_STRING]{};
 					int r = 0;
 
 					while (i < strLen && str[i] == '@')

@@ -445,7 +445,7 @@ void Field_VariableSizeDraw(field_t* edit, const int x, const int y, int width, 
 	// draw it
 	if (size == SMALLCHAR_WIDTH)
 	{
-		float color[4];
+		float color[4]{};
 
 		color[0] = color[1] = color[2] = color[3] = 1.0;
 		SCR_DrawSmallStringExt(x, y, str, color, qfalse, noColorEscape);
@@ -1323,7 +1323,7 @@ Execute the commands in the bind string
 */
 void CL_ParseBinding(const int key, const qboolean down, const unsigned time)
 {
-	char buf[MAX_STRING_CHARS], * p = buf;
+	char buf[MAX_STRING_CHARS]{}, * p = buf;
 
 	if (cls.state == CA_DISCONNECTED && Key_GetCatcher() == 0)
 		return;

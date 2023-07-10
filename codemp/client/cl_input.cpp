@@ -1178,8 +1178,8 @@ void CL_MouseMove(usercmd_t* cmd)
 		}
 		else
 		{
-			float rate[2];
-			float power[2];
+			float rate[2]{};
+			float power[2]{};
 
 			// sensitivity remains pretty much unchanged at low speeds
 			// cl_mouseAccel is a power value to how the acceleration is shaped

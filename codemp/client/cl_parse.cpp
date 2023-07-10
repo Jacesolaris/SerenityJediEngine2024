@@ -416,7 +416,7 @@ void FS_UpdateGamedir(void);
 
 void CL_ParseSetGame(msg_t* msg)
 {
-	char newGameDir[MAX_QPATH];
+	char newGameDir[MAX_QPATH]{};
 	int i = 0;
 
 	while (i < MAX_QPATH)

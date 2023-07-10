@@ -534,7 +534,7 @@ static void Cvar_QSortByName(cvar_t** a, const int n)
 
 static void Cvar_Sort(void)
 {
-	cvar_t* list[MAX_CVARS], * var;
+	cvar_t* list[MAX_CVARS]{}, * var;
 	int count;
 
 	for (count = 0, var = cvar_vars; var; var = var->next)

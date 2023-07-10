@@ -49,7 +49,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #define DEFAULT_REDTEAM_NAME	"Empire"
 #define DEFAULT_BLUETEAM_NAME	"Rebellion"
 
-#define CURRENT_SJE_CLIENTVERSION		"SerenityJediEngine2024"
+#define CURRENT_SJE_CLIENTVERSION		"Year-23,Month-07,Day-10,BuildNum-03"
 
 #define	STEPSIZE		18
 

@@ -654,7 +654,7 @@ static void decodeCodeBook(byte* input, unsigned short roq_flags)
 	{
 		unsigned int* i;
 		unsigned short* s;
-	} iaptr, ibptr, icptr, idptr;
+	} iaptr{}, ibptr{}, icptr{}, idptr{};
 
 	if (!roq_flags)
 	{

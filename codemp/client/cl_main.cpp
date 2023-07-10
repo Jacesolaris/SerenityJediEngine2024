@@ -932,7 +932,7 @@ CL_RequestMotd
 void CL_RequestMotd(void)
 {
 	netadr_t to;
-	char command[MAX_STRING_CHARS], info[MAX_INFO_STRING];
+	char command[MAX_STRING_CHARS], info[MAX_INFO_STRING]{};
 
 	if (!cl_motd->integer)
 	{

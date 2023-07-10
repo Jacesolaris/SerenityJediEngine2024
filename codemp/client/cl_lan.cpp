@@ -313,7 +313,7 @@ LAN_GetServerInfo
 */
 void LAN_GetServerInfo(const int source, const int n, char* buf, const int buflen)
 {
-	char info[MAX_STRING_CHARS];
+	char info[MAX_STRING_CHARS]{};
 	const serverInfo_t* server = nullptr;
 	info[0] = '\0';
 	switch (source)

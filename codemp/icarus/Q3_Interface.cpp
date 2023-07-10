@@ -453,7 +453,7 @@ static int Q3_Evaluate(int p1Type, const char* p1, int p2Type, const char* p2, c
 
 		case TK_STRING:
 		case TK_IDENTIFIER:
-			return !Q_stricmp(c1, c2);
+			return ~Q_stricmp(c1, c2);
 			//NOTENOTE: The script uses proper string comparison logic (ex. ( a == a ) == true )
 
 		default:

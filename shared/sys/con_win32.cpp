@@ -180,9 +180,9 @@ static void CON_Show(void)
 	CONSOLE_SCREEN_BUFFER_INFO binfo;
 	constexpr COORD writeSize = { MAX_EDIT_LINE, 1 };
 	constexpr COORD writePos = { 0, 0 };
-	SMALL_RECT write_area;
-	COORD cursorPos;
-	CHAR_INFO line[MAX_EDIT_LINE];
+	SMALL_RECT write_area{};
+	COORD cursorPos{};
+	CHAR_INFO line[MAX_EDIT_LINE]{};
 
 	GetConsoleScreenBufferInfo(qconsole_hout, &binfo);
 
@@ -390,7 +390,7 @@ char* CON_Input(void)
 
 		case VK_TAB:
 		{
-			field_t f;
+			field_t f{};
 
 			Q_strncpyz(f.buffer, qconsole_line, sizeof f.buffer);
 			Field_AutoComplete(&f);

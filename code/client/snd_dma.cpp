@@ -5426,7 +5426,7 @@ qboolean SND_RegisterAudio_LevelLoadEnd(const qboolean bDeleteEverythingNotUsedT
 void InitEAXManager()
 {
 #ifdef USE_OPENAL
-	EAXFXSLOTPROPERTIES FXSlotProp;
+	EAXFXSLOTPROPERTIES FXSlotProp{};
 	GUID Effect{};
 
 	s_bEALFileLoaded = false;
