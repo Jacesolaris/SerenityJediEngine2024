@@ -3383,7 +3383,7 @@ void SV_InitGame(const qboolean restart)
 void SV_BindGame(void)
 {
 	static gameImport_t gi;
-	char dllName[MAX_OSPATH] = "SerenityJediEngine2024-SJE-mpgame" ARCH_STRING DLL_EXT;
+	char dllName[MAX_OSPATH] = "SerenityJediEngine2024-mpgame" ARCH_STRING DLL_EXT;
 
 	memset(&gi, 0, sizeof gi);
 

@@ -1310,7 +1310,7 @@ long FS_FOpenFileRead(const char* filename, fileHandle_t* file, qboolean uniqueF
 								!FS_IsExt(filename, ".arena", l) &&
 								!FS_IsExt(filename, ".menu", l) &&
 								!FS_IsExt(filename, ".fcf", l) &&
-								Q_stricmp(filename, "SerenityJediEngine2024-SJE-mpgamex86.dll") != 0 &&
+								Q_stricmp(filename, "SerenityJediEngine2024-mpgamex86.dll") != 0 &&
 								!strstr(filename, "levelshots"))
 							{
 								pak->referenced |= FS_GENERAL_REF;

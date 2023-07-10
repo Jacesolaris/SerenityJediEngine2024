@@ -38,7 +38,7 @@ option(BuildPortableVersion "Build portable version (does not read or write file
 option(BuildMPEngine "Whether to create projects for the MP client (SerenityJediEngine2024-MP.exe)" ON)
 option(BuildMPRdVanilla "Whether to create projects for the MP default renderer (SerenityJediEngine2024-rdmp_x86.dll)" ON)
 option(BuildMPDed "Whether to create projects for the MP dedicated server (SerenityJediEngine2024-DED.exe)" ON)
-option(BuildMPGame "Whether to create projects for the MP server-side gamecode (SerenityJediEngine2024-SJE-mpgamex86.dll)" ON)
+option(BuildMPGame "Whether to create projects for the MP server-side gamecode (SerenityJediEngine2024-mpgamex86.dll)" ON)
 option(BuildMPCGame "Whether to create projects for the MP clientside gamecode (SerenityJediEngine2024-cgamex86.dll)" ON)
 option(BuildMPUI "Whether to create projects for the MP UI code (SerenityJediEngine2024-uix86.dll)" ON)
 
@@ -158,7 +158,7 @@ set(SPRDVanillaRenderer "SerenityJediEngine2024-rdsp_${Architecture}")
 set(MPEngine "SerenityJediEngine2024-MP.${Architecture}")
 set(MPVanillaRenderer "SerenityJediEngine2024-rdmp_${Architecture}")
 set(MPDed "SerenityJediEngine2024-DED.${Architecture}")
-set(MPGame "SerenityJediEngine2024-SJE-mpgame${Architecture}")
+set(MPGame "SerenityJediEngine2024-mpgame${Architecture}")
 set(MPCGame "SerenityJediEngine2024-cgame${Architecture}")
 set(MPUI "SerenityJediEngine2024-ui${Architecture}")
 

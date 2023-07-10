@@ -502,67 +502,67 @@ void LoadTips(void)
 		switch (index)
 		{
 		case 0:
-			CG_DrawProportionalString(320, 410, CG_GetStringEdString("LOADTIPS-MP", "TIP2"),
+			CG_DrawProportionalString(300, 390, CG_GetStringEdString("LOADTIPS-MP", "TIP2"),
 				UI_CENTER | UI_INFOFONT | UI_DROPSHADOW, colorWhite);
 			break;
 		case 1:
-			CG_DrawProportionalString(320, 410, CG_GetStringEdString("LOADTIPS-MP", "TIP3"),
+			CG_DrawProportionalString(300, 390, CG_GetStringEdString("LOADTIPS-MP", "TIP3"),
 				UI_CENTER | UI_INFOFONT | UI_DROPSHADOW, colorWhite);
 			break;
 		case 2:
-			CG_DrawProportionalString(320, 410, CG_GetStringEdString("LOADTIPS-MP", "TIP4"),
+			CG_DrawProportionalString(300, 390, CG_GetStringEdString("LOADTIPS-MP", "TIP4"),
 				UI_CENTER | UI_INFOFONT | UI_DROPSHADOW, colorWhite);
 			break;
 		case 3:
-			CG_DrawProportionalString(320, 410, CG_GetStringEdString("LOADTIPS-MP", "TIP5"),
+			CG_DrawProportionalString(300, 390, CG_GetStringEdString("LOADTIPS-MP", "TIP5"),
 				UI_CENTER | UI_INFOFONT | UI_DROPSHADOW, colorWhite);
 			break;
 		case 4:
-			CG_DrawProportionalString(320, 410, CG_GetStringEdString("LOADTIPS-MP", "TIP6"),
+			CG_DrawProportionalString(300, 390, CG_GetStringEdString("LOADTIPS-MP", "TIP6"),
 				UI_CENTER | UI_INFOFONT | UI_DROPSHADOW, colorWhite);
 			break;
 		case 5:
-			CG_DrawProportionalString(320, 410, CG_GetStringEdString("LOADTIPS-MP", "TIP7"),
+			CG_DrawProportionalString(300, 390, CG_GetStringEdString("LOADTIPS-MP", "TIP7"),
 				UI_CENTER | UI_INFOFONT | UI_DROPSHADOW, colorWhite);
 			break;
 		case 6:
-			CG_DrawProportionalString(320, 410, CG_GetStringEdString("LOADTIPS-MP", "TIP8"),
+			CG_DrawProportionalString(300, 390, CG_GetStringEdString("LOADTIPS-MP", "TIP8"),
 				UI_CENTER | UI_INFOFONT | UI_DROPSHADOW, colorWhite);
 			break;
 		case 7:
-			CG_DrawProportionalString(320, 410, CG_GetStringEdString("LOADTIPS-MP", "TIP9"),
+			CG_DrawProportionalString(300, 390, CG_GetStringEdString("LOADTIPS-MP", "TIP9"),
 				UI_CENTER | UI_INFOFONT | UI_DROPSHADOW, colorWhite);
 			break;
 		case 8:
-			CG_DrawProportionalString(320, 410, CG_GetStringEdString("LOADTIPS-MP", "TIP10"),
+			CG_DrawProportionalString(300, 390, CG_GetStringEdString("LOADTIPS-MP", "TIP10"),
 				UI_CENTER | UI_INFOFONT | UI_DROPSHADOW, colorWhite);
 			break;
 		case 9:
-			CG_DrawProportionalString(320, 410, CG_GetStringEdString("LOADTIPS-MP", "TIP11"),
+			CG_DrawProportionalString(300, 390, CG_GetStringEdString("LOADTIPS-MP", "TIP11"),
 				UI_CENTER | UI_INFOFONT | UI_DROPSHADOW, colorWhite);
 			break;
 		case 10:
-			CG_DrawProportionalString(320, 410, CG_GetStringEdString("LOADTIPS-MP", "TIP12"),
+			CG_DrawProportionalString(300, 390, CG_GetStringEdString("LOADTIPS-MP", "TIP12"),
 				UI_CENTER | UI_INFOFONT | UI_DROPSHADOW, colorWhite);
 			break;
 		case 11:
-			CG_DrawProportionalString(320, 410, CG_GetStringEdString("LOADTIPS-MP", "TIP13"),
+			CG_DrawProportionalString(300, 390, CG_GetStringEdString("LOADTIPS-MP", "TIP13"),
 				UI_CENTER | UI_INFOFONT | UI_DROPSHADOW, colorWhite);
 			break;
 		case 12:
-			CG_DrawProportionalString(320, 410, CG_GetStringEdString("LOADTIPS-MP", "TIP14"),
+			CG_DrawProportionalString(300, 390, CG_GetStringEdString("LOADTIPS-MP", "TIP14"),
 				UI_CENTER | UI_INFOFONT | UI_DROPSHADOW, colorWhite);
 			break;
 		case 13:
-			CG_DrawProportionalString(320, 410, CG_GetStringEdString("LOADTIPS-MP", "TIP15"),
+			CG_DrawProportionalString(300, 390, CG_GetStringEdString("LOADTIPS-MP", "TIP15"),
 				UI_CENTER | UI_INFOFONT | UI_DROPSHADOW, colorWhite);
 			break;
 		case 14:
-			CG_DrawProportionalString(320, 410, CG_GetStringEdString("LOADTIPS-MP", "TIP1"),
+			CG_DrawProportionalString(300, 390, CG_GetStringEdString("LOADTIPS-MP", "TIP1"),
 				UI_CENTER | UI_INFOFONT | UI_DROPSHADOW, colorWhite);
 			break;
 		default:
-			CG_DrawProportionalString(320, 410, CG_GetStringEdString("LOADTIPS-MP", "TIP1"),
+			CG_DrawProportionalString(300, 390, CG_GetStringEdString("LOADTIPS-MP", "TIP1"),
 				UI_CENTER | UI_INFOFONT | UI_DROPSHADOW, colorWhite);
 			break;
 		}

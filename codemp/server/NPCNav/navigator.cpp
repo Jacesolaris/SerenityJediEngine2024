@@ -608,7 +608,7 @@ bool CNavigator::Load(const char* filename, const int checksum)
 {
 	fileHandle_t file;
 
-	// Free previous map just in case. SerenityJediEngine2024-SJE-mpgame doesn't do this by default...
+	// Free previous map just in case. SerenityJediEngine2024-mpgame doesn't do this by default...
 	Free();
 
 	//Attempt to load the file

@@ -30,7 +30,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 vm_t* currentVM = nullptr;
 
 static const char* vmNames[MAX_VM] = {
-	"SerenityJediEngine2024-SJE-mpgame",
+	"SerenityJediEngine2024-mpgame",
 	"SerenityJediEngine2024-cgame",
 	"SerenityJediEngine2024-ui"
 };
