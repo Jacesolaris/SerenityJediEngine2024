@@ -2826,6 +2826,7 @@ saberMoveName_t PM_CheckPlayerAttackFromParry(const int curmove)
 
 int Next_Attack_Move_Check[MAX_CLIENTS]; // Next special move check.
 extern vmCvar_t g_attackskill;
+extern vmCvar_t bot_thinklevel;
 
 saberMoveName_t PM_SaberAttackForMovement(const saberMoveName_t curmove)
 {
@@ -3274,77 +3275,88 @@ saberMoveName_t PM_SaberAttackForMovement(const saberMoveName_t curmove)
 	}
 
 #ifdef _GAME
-	if (g_entities[pm->ps->client_num].r.svFlags & SVF_BOT)
-	{// Some special bot stuff.
-		if (Next_Attack_Move_Check[pm->ps->client_num] <= level.time && g_attackskill.integer >= 0)
-		{
-			int check_val = 0; // Times 500 for next check interval.
+	if (bot_thinklevel.integer >= 1)
+	{
+		if (g_entities[pm->ps->client_num].r.svFlags & SVF_BOT)
+		{// Some special bot stuff.
+			if (Next_Attack_Move_Check[pm->ps->client_num] <= level.time && g_attackskill.integer >= 0)
+			{
+				int check_val = 0; // Times 500 for next check interval.
 
-			if (PM_CanLunge())
-			{ //Bot Lunge (attack varies by level)
-				if ((pm->ps->pm_flags & PMF_DUCKED) || pm->cmd.upmove < 0)
-				{
-					newmove = PM_SaberLungeAttackMove(qtrue);
-				}
-				else
-				{
-					int choice = rand() % 3;
-
-					if (choice == 1)
-					{
-						newmove = PM_NPC_Force_Leap_Attack();
-					}
-					else if (choice == 2)
+				if (PM_CanLunge())
+				{ //Bot Lunge (attack varies by level)
+					if ((pm->ps->pm_flags & PMF_DUCKED) || pm->cmd.upmove < 0)
 					{
 						newmove = PM_SaberLungeAttackMove(qtrue);
-					}
-					else if (choice == 3)
-					{
-						switch (pm->ps->saber_anim_level)
-						{
-						case SS_FAST:
-							newmove = LS_A1_SPECIAL;
-							break;
-						case SS_MEDIUM:
-							newmove = LS_A2_SPECIAL;
-							break;
-						case SS_STRONG:
-							newmove = LS_A3_SPECIAL;
-							break;
-						case SS_DESANN:
-							newmove = LS_A5_SPECIAL;
-							break;
-						case SS_TAVION:
-							newmove = LS_A4_SPECIAL;
-							break;
-						case SS_DUAL:
-							newmove = LS_DUAL_SPIN_PROTECT;
-							break;
-						case SS_STAFF:
-							newmove = LS_STAFF_SOULCAL;
-							break;
-						default:;
-							newmove = LS_A2_SPECIAL;
-							break;
-						}
-						pm->ps->weaponstate = WEAPON_FIRING;
-						WP_ForcePowerDrain(pm->ps, FP_SABER_OFFENSE, SABER_ALT_ATTACK_POWER);
+
+						//Com_Printf(S_COLOR_MAGENTA"Next_Attack_Move_Check 0\n");
 					}
 					else
 					{
-						newmove = PM_SaberFlipOverAttackMove();
+						int choice = rand() % 3;
+
+						if (choice == 1)
+						{
+							newmove = PM_NPC_Force_Leap_Attack();
+
+							//Com_Printf(S_COLOR_MAGENTA"Next_Attack_Move_Check 1\n");
+						}
+						else if (choice == 2)
+						{
+							newmove = PM_SaberLungeAttackMove(qtrue);
+
+							//Com_Printf(S_COLOR_MAGENTA"Next_Attack_Move_Check 2\n");
+						}
+						else if (choice == 3)
+						{
+							switch (pm->ps->saber_anim_level)
+							{
+							case SS_FAST:
+								newmove = LS_A1_SPECIAL;
+								break;
+							case SS_MEDIUM:
+								newmove = LS_A2_SPECIAL;
+								break;
+							case SS_STRONG:
+								newmove = LS_A3_SPECIAL;
+								break;
+							case SS_DESANN:
+								newmove = LS_A5_SPECIAL;
+								break;
+							case SS_TAVION:
+								newmove = LS_A4_SPECIAL;
+								break;
+							case SS_DUAL:
+								newmove = LS_DUAL_SPIN_PROTECT;
+								break;
+							case SS_STAFF:
+								newmove = LS_STAFF_SOULCAL;
+								break;
+							default:;
+								newmove = LS_A2_SPECIAL;
+								break;
+							}
+							pm->ps->weaponstate = WEAPON_FIRING;
+							WP_ForcePowerDrain(pm->ps, FP_SABER_OFFENSE, SABER_ALT_ATTACK_POWER);
+
+							//Com_Printf(S_COLOR_MAGENTA"Next_Attack_Move_Check 3\n");
+						}
+						else
+						{
+							newmove = PM_SaberFlipOverAttackMove();
+						}
 					}
 				}
+
+				check_val = g_attackskill.integer;
+
+				if (check_val <= 0)
+				{
+					check_val = 1;
+				}
+
+				Next_Attack_Move_Check[pm->ps->client_num] = level.time + (40000 / check_val); // 20 secs / g_attackskill
 			}
-
-			check_val = g_attackskill.integer;
-
-			if (check_val <= 0)
-			{
-				check_val = 1;
-			}
-
-			Next_Attack_Move_Check[pm->ps->client_num] = level.time + (40000 / check_val); // 20 secs / g_attackskill
 		}
 	}
 #endif

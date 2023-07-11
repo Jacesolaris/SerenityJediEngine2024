@@ -127,7 +127,7 @@ void WP_FireTuskenRifle(gentity_t* ent)
 	missile->classname = "trifle_proj";
 	missile->s.weapon = WP_TUSKEN_RIFLE;
 
-	if (ent->s.number < MAX_CLIENTS || g_spskill->integer >= 2)
+	if (ent->s.number < MAX_CLIENTS || g_spskill->integer == 2)
 	{
 		missile->damage = TUSKEN_RIFLE_DAMAGE_HARD;
 	}
