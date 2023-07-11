@@ -525,8 +525,8 @@ void R_Init()
 	const auto ptr = static_cast<byte*>(Hunk_Alloc(
 		sizeof * backEndData + sizeof(srfPoly_t) * max_polys + sizeof(polyVert_t) * max_polyverts, h_low));
 	backEndData = reinterpret_cast<backEndData_t*>(ptr);
-	backEndData->polys = reinterpret_cast<srfPoly_t*>((char*)ptr + sizeof *backEndData);
-	backEndData->polyVerts = reinterpret_cast<polyVert_t*>(reinterpret_cast<char*>(ptr) + sizeof *backEndData + sizeof(srfPoly_t) * max_polys);
+	backEndData->polys = reinterpret_cast<srfPoly_t*>((char*)ptr + sizeof * backEndData);
+	backEndData->polyVerts = reinterpret_cast<polyVert_t*>(reinterpret_cast<char*>(ptr) + sizeof * backEndData + sizeof(srfPoly_t) * max_polys);
 
 	R_ModelInit();
 

@@ -3049,10 +3049,10 @@ void CG_PlayerAmbientEvents(centity_t* cent)
 				CG_PlayerAnimEventDo(cent, &anim_events[event_num]);
 			}
 
-				//Ok, now reset the timer.
-				cent->AmbTorsoTimer = cg.time + (anim_events[event_num].ambtime - anim_events[event_num].ambrandom) +
-					Q_irand(
-						0, anim_events[event_num].ambrandom + anim_events[event_num].ambrandom);
+			//Ok, now reset the timer.
+			cent->AmbTorsoTimer = cg.time + (anim_events[event_num].ambtime - anim_events[event_num].ambrandom) +
+				Q_irand(
+					0, anim_events[event_num].ambrandom + anim_events[event_num].ambrandom);
 		}
 	}
 	if (cg.time > cent->AmbLegsTimer)
@@ -3067,10 +3067,10 @@ void CG_PlayerAmbientEvents(centity_t* cent)
 			{
 				CG_PlayerAnimEventDo(cent, &anim_events[event_num]);
 			}
-				//Ok, now reset the timer.
-				cent->AmbLegsTimer = cg.time + (anim_events[event_num].ambtime - anim_events[event_num].ambrandom) +
-					Q_irand(
-						0, anim_events[event_num].ambrandom + anim_events[event_num].ambrandom);
+			//Ok, now reset the timer.
+			cent->AmbLegsTimer = cg.time + (anim_events[event_num].ambtime - anim_events[event_num].ambrandom) +
+				Q_irand(
+					0, anim_events[event_num].ambrandom + anim_events[event_num].ambrandom);
 		}
 	}
 }

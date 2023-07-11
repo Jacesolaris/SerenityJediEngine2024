@@ -51,7 +51,7 @@ ST_Move
 
 static qboolean SaberDroid_Move()
 {
-	NPCInfo->combatMove = qtrue; 
+	NPCInfo->combatMove = qtrue;
 	UpdateGoal();
 	if (!NPCInfo->goalEntity)
 	{

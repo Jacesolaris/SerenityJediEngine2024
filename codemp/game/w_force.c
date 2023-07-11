@@ -2146,74 +2146,74 @@ qboolean WP_CounterForce(const gentity_t* attacker, const gentity_t* defender, c
 			FP_ABSORB];
 	}
 
-		if (abilityDef >= 2)
+	if (abilityDef >= 2)
+	{
+		//defender is largely weaker than the attacker (2 levels)
+		if (!walk_check(defender) || defender->client->ps.groundEntityNum == ENTITYNUM_NONE)
 		{
-			//defender is largely weaker than the attacker (2 levels)
-			if (!walk_check(defender) || defender->client->ps.groundEntityNum == ENTITYNUM_NONE)
-			{
-				//can't block much stronger Force power while running or in mid-air
-				return qfalse;
-			}
+			//can't block much stronger Force power while running or in mid-air
+			return qfalse;
 		}
-		else if (abilityDef >= 1)
+	}
+	else if (abilityDef >= 1)
+	{
+		//defender is slightly weaker than their attacker
+		if (defender->client->ps.groundEntityNum == ENTITYNUM_NONE)
 		{
-			//defender is slightly weaker than their attacker
-			if (defender->client->ps.groundEntityNum == ENTITYNUM_NONE)
-			{
-				return qfalse;
-			}
+			return qfalse;
 		}
+	}
 
-		if (PM_SaberInBrokenParry(defender->client->ps.saber_move))
-		{
-			//can't block while stunned
-			return qfalse;
-		}
+	if (PM_SaberInBrokenParry(defender->client->ps.saber_move))
+	{
+		//can't block while stunned
+		return qfalse;
+	}
 
-		if (BG_InSlowBounce(&defender->client->ps) && defender->client->ps.userInt3 & 1 << FLAG_OLDSLOWBOUNCE)
-		{
-			//can't block lightning while in the heavier slow bounces.
-			return qfalse;
-		}
+	if (BG_InSlowBounce(&defender->client->ps) && defender->client->ps.userInt3 & 1 << FLAG_OLDSLOWBOUNCE)
+	{
+		//can't block lightning while in the heavier slow bounces.
+		return qfalse;
+	}
 
-		if (defender->client->ps.fd.blockPoints <= BLOCKPOINTS_HALF)
-		{
-			//can't block if we're too off balance.
-			return qfalse;
-		}
+	if (defender->client->ps.fd.blockPoints <= BLOCKPOINTS_HALF)
+	{
+		//can't block if we're too off balance.
+		return qfalse;
+	}
 
-		if (defender->client->ps.saberFatigueChainCount >= MISHAPLEVEL_HEAVY)
+	if (defender->client->ps.saberFatigueChainCount >= MISHAPLEVEL_HEAVY)
+	{
+		//can't block if we're too off balance.
+		return qfalse;
+	}
+	if (defender->client->ps.saberFatigueChainCount >= MISHAPLEVEL_LIGHT
+		&& attacker->client->ps.fd.saber_anim_level == SS_DESANN)
+	{
+		//can't block if we're too off balance and they are using Juyo's perk
+		return qfalse;
+	}
+	if (defender->client->ps.forceHandExtend != HANDEXTEND_NONE)
+	{
+		//can block force while using forceHandExtend.
+		return qtrue;
+	}
+
+	if (!(defender->client->buttons & BUTTON_BLOCK))
+	{
+		if (defender->r.svFlags & SVF_BOT || defender->s.eType == ET_NPC)
 		{
-			//can't block if we're too off balance.
-			return qfalse;
-		}
-		if (defender->client->ps.saberFatigueChainCount >= MISHAPLEVEL_LIGHT
-			&& attacker->client->ps.fd.saber_anim_level == SS_DESANN)
-		{
-			//can't block if we're too off balance and they are using Juyo's perk
-			return qfalse;
-		}
-		if (defender->client->ps.forceHandExtend != HANDEXTEND_NONE)
-		{
-			//can block force while using forceHandExtend.
 			return qtrue;
 		}
+		return qfalse;
+	}
 
-		if (!(defender->client->buttons & BUTTON_BLOCK))
-		{
-			if (defender->r.svFlags & SVF_BOT || defender->s.eType == ET_NPC)
-			{
-				return qtrue;
-			}
-			return qfalse;
-		}
-
-		if (IsHybrid(defender))
-		{
-			defender->client->ps.userInt3 |= 1 << FLAG_BLOCKING;
-			defender->client->ps.ManualBlockingTime = level.time + 1000;
-		}
-		return qtrue;
+	if (IsHybrid(defender))
+	{
+		defender->client->ps.userInt3 |= 1 << FLAG_BLOCKING;
+		defender->client->ps.ManualBlockingTime = level.time + 1000;
+	}
+	return qtrue;
 }
 
 void ForceGrip(const gentity_t* self)
@@ -4113,46 +4113,46 @@ void ForceJumpCharge(gentity_t* self, usercmd_t* ucmd)
 		return;
 	}
 
-		if (!self->client->ps.fd.forceJumpCharge)
-		{
-			self->client->ps.fd.forceJumpAddTime = 0;
-		}
+	if (!self->client->ps.fd.forceJumpCharge)
+	{
+		self->client->ps.fd.forceJumpAddTime = 0;
+	}
 
-		if (self->client->ps.fd.forceJumpAddTime >= level.time)
-		{
-			return;
-		}
+	if (self->client->ps.fd.forceJumpAddTime >= level.time)
+	{
+		return;
+	}
 
-		//need to play sound
-		if (!self->client->ps.fd.forceJumpCharge)
-		{
-			G_Sound(self, TRACK_CHANNEL_1, G_SoundIndex("sound/weapons/force/jumpbuild.wav"));
-		}
+	//need to play sound
+	if (!self->client->ps.fd.forceJumpCharge)
+	{
+		G_Sound(self, TRACK_CHANNEL_1, G_SoundIndex("sound/weapons/force/jumpbuild.wav"));
+	}
 
-		//Increment
-		if (self->client->ps.fd.forceJumpAddTime < level.time)
-		{
-			self->client->ps.fd.forceJumpCharge += forceJumpChargeInterval * 50;
-			self->client->ps.fd.forceJumpAddTime = level.time + 500;
-		}
+	//Increment
+	if (self->client->ps.fd.forceJumpAddTime < level.time)
+	{
+		self->client->ps.fd.forceJumpCharge += forceJumpChargeInterval * 50;
+		self->client->ps.fd.forceJumpAddTime = level.time + 500;
+	}
 
-		//clamp to max strength for current level
-		if (self->client->ps.fd.forceJumpCharge > forceJumpStrength[self->client->ps.fd.forcePowerLevel[FP_LEVITATION]])
-		{
-			self->client->ps.fd.forceJumpCharge = forceJumpStrength[self->client->ps.fd.forcePowerLevel[FP_LEVITATION]];
-			G_MuteSound(self->client->ps.fd.killSoundEntIndex[TRACK_CHANNEL_1 - 50], CHAN_VOICE);
-		}
+	//clamp to max strength for current level
+	if (self->client->ps.fd.forceJumpCharge > forceJumpStrength[self->client->ps.fd.forcePowerLevel[FP_LEVITATION]])
+	{
+		self->client->ps.fd.forceJumpCharge = forceJumpStrength[self->client->ps.fd.forcePowerLevel[FP_LEVITATION]];
+		G_MuteSound(self->client->ps.fd.killSoundEntIndex[TRACK_CHANNEL_1 - 50], CHAN_VOICE);
+	}
 
-		//clamp to max available force power
-		if (self->client->ps.fd.forceJumpCharge / forceJumpChargeInterval / (FORCE_JUMP_CHARGE_TIME / FRAMETIME) *
-			forcePowerNeeded[self->client->ps.fd.forcePowerLevel[FP_LEVITATION]][FP_LEVITATION] > self->client->ps.fd.
-			forcePower)
-		{
-			//can't use more than you have
-			G_MuteSound(self->client->ps.fd.killSoundEntIndex[TRACK_CHANNEL_1 - 50], CHAN_VOICE);
-			self->client->ps.fd.forceJumpCharge = self->client->ps.fd.forcePower * forceJumpChargeInterval / (
-				FORCE_JUMP_CHARGE_TIME / FRAMETIME);
-		}
+	//clamp to max available force power
+	if (self->client->ps.fd.forceJumpCharge / forceJumpChargeInterval / (FORCE_JUMP_CHARGE_TIME / FRAMETIME) *
+		forcePowerNeeded[self->client->ps.fd.forcePowerLevel[FP_LEVITATION]][FP_LEVITATION] > self->client->ps.fd.
+		forcePower)
+	{
+		//can't use more than you have
+		G_MuteSound(self->client->ps.fd.killSoundEntIndex[TRACK_CHANNEL_1 - 50], CHAN_VOICE);
+		self->client->ps.fd.forceJumpCharge = self->client->ps.fd.forcePower * forceJumpChargeInterval / (
+			FORCE_JUMP_CHARGE_TIME / FRAMETIME);
+	}
 }
 
 int WP_GetVelocityForForceJump(gentity_t* self, vec3_t jumpVel, const usercmd_t* ucmd)
@@ -8101,7 +8101,7 @@ void HolocronUpdate(gentity_t* self)
 				if (self->client->saber[0].model[0] && self->client->saber[1].model[0])
 				{
 					//dual
-					self->client->ps.fd.saberAnimLevelBase = self->client->ps.fd.saber_anim_level = self->client->ps.fd.
+					self->client->ps.fd.saber_anim_levelBase = self->client->ps.fd.saber_anim_level = self->client->ps.fd.
 						saberDrawAnimLevel = SS_DUAL;
 				}
 				else if (self->client->saber[0].saberFlags & SFL_TWO_HANDED)
@@ -8111,7 +8111,7 @@ void HolocronUpdate(gentity_t* self)
 				}
 				else
 				{
-					self->client->ps.fd.saberAnimLevelBase = self->client->ps.fd.saber_anim_level = self->client->ps.fd.
+					self->client->ps.fd.saber_anim_levelBase = self->client->ps.fd.saber_anim_level = self->client->ps.fd.
 						saberDrawAnimLevel = SS_MEDIUM;
 				}
 			}

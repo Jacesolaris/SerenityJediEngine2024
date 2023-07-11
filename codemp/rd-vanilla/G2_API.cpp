@@ -2037,7 +2037,7 @@ qboolean G2API_GetBoltMatrix_SPMethod(CGhoul2Info_v& ghoul2, const int model_ind
 bool G2_NeedsRecalc(CGhoul2Info* ghl_info, int frame_num);
 void G2_GetBoltMatrixLow(CGhoul2Info& ghoul2, int boltNum, const vec3_t scale, mdxaBone_t& retMatrix);
 void G2_GetBoneMatrixLow(const CGhoul2Info& ghoul2, int bone_num, const vec3_t scale, mdxaBone_t& retMatrix,
-                         mdxaBone_t*& ret_basepose, mdxaBone_t*& ret_basepose_inv);
+	mdxaBone_t*& ret_basepose, mdxaBone_t*& ret_basepose_inv);
 
 //qboolean G2API_GetBoltMatrix(CGhoul2Info_v &ghoul2, const int model_index, const int bolt_index, mdxaBone_t *matrix, const vec3_t angles,
 //							 const vec3_t position, const int AframeNum, qhandle_t *model_list, const vec3_t scale )

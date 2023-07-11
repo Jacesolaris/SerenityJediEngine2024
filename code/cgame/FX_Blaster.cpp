@@ -121,7 +121,6 @@ void FX_BlasterWeaponHitPlayer(gentity_t* hit, vec3_t origin, vec3_t normal, con
 	}
 }
 
-
 //////////////// Droideka ////////////////
 
 void FX_DroidekaProjectileThink(centity_t* cent, const weaponInfo_s* weapon)

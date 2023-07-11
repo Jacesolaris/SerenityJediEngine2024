@@ -438,7 +438,7 @@ static qboolean Music_ParseLeveldata(gsl::czstring psLevelName)
 				// check for new USE keyword...
 				//
 				int steps = 0;
-				gsl::cstring_view searchName{ &sLevelName[0], &sLevelName[strlen(&sLevelName[0])] };
+				gsl::cstring_view searchName{ &sLevelName[0], & sLevelName[strlen(&sLevelName[0])] };
 
 				constexpr int sanityLimit = 10;
 				while (!searchName.empty() && steps < sanityLimit)

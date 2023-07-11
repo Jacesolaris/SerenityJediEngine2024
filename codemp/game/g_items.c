@@ -1225,7 +1225,7 @@ void ItemUse_Sentry(gentity_t* ent)
 	trap->LinkEntity((sharedEntity_t*)sentry);
 
 	sentry->s.owner = ent->s.number;
-	sentry->s.otherEntityNum = ent->s.number; // mark owner info for duel 
+	sentry->s.otherEntityNum = ent->s.number; // mark owner info for duel
 	sentry->s.weapon = WP_TURRET; //so I can identify the entity as sentry gun client side
 	sentry->s.shouldtarget = qtrue;
 	if (level.gametype >= GT_TEAM)

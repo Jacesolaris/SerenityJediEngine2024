@@ -1888,7 +1888,7 @@ int wp_saber_init_blade_data(gentity_t* ent)
 				}
 			}
 
-			cg.saberAnimLevelPending = ent->client->ps.saber_anim_level;
+			cg.saber_anim_levelPending = ent->client->ps.saber_anim_level;
 			if (ent->client->sess.missionStats.weaponUsed[WP_SABER] <= 0)
 			{
 				//let missionStats know that we actually do have the saber, even if we never use it
@@ -17729,7 +17729,7 @@ void ForceRepulseThrow(gentity_t* self, int charge_time)
 						}
 					}
 				}
-				
+
 				if (mod_power_level != -1)
 				{
 					if (!mod_power_level)
@@ -28053,117 +28053,117 @@ static void wp_force_power_run(gentity_t* self, forcePowers_t force_power, userc
 				self->client->ps.forcePowerDebounce[FP_DRAIN] = level.time + 4000;
 				return;
 			}
-					if (self->client->ps.torsoAnim != BOTH_FORCE_DRAIN_GRAB_START
-						|| !self->client->ps.torsoAnimTimer)
-					{
-						NPC_SetAnim(self, SETANIM_BOTH, BOTH_FORCE_DRAIN_GRAB_HOLD, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
-					}
-					if (self->handLBolt != -1)
-					{
-						G_PlayEffect(G_EffectIndex("force/drain_hand"), self->playerModel, self->handLBolt, self->s.number,
-							self->currentOrigin, 200, qtrue);
-					}
-					if (self->handRBolt != -1)
-					{
-						G_PlayEffect(G_EffectIndex("force/drain_hand"), self->playerModel, self->handRBolt, self->s.number,
-							self->currentOrigin, 200, qtrue);
-					}
+			if (self->client->ps.torsoAnim != BOTH_FORCE_DRAIN_GRAB_START
+				|| !self->client->ps.torsoAnimTimer)
+			{
+				NPC_SetAnim(self, SETANIM_BOTH, BOTH_FORCE_DRAIN_GRAB_HOLD, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+			}
+			if (self->handLBolt != -1)
+			{
+				G_PlayEffect(G_EffectIndex("force/drain_hand"), self->playerModel, self->handLBolt, self->s.number,
+					self->currentOrigin, 200, qtrue);
+			}
+			if (self->handRBolt != -1)
+			{
+				G_PlayEffect(G_EffectIndex("force/drain_hand"), self->playerModel, self->handRBolt, self->s.number,
+					self->currentOrigin, 200, qtrue);
+			}
 
-					//how far are they
-					dist = Distance(self->client->renderInfo.eyePoint, drain_ent->currentOrigin);
-					if (DistanceSquared(drain_ent->currentOrigin, self->currentOrigin) > FORCE_DRAIN_DIST_SQUARED)
-					{
-						//must be close, got away somehow!
-						WP_ForcePowerStop(self, FP_DRAIN);
-						return;
-					}
+			//how far are they
+			dist = Distance(self->client->renderInfo.eyePoint, drain_ent->currentOrigin);
+			if (DistanceSquared(drain_ent->currentOrigin, self->currentOrigin) > FORCE_DRAIN_DIST_SQUARED)
+			{
+				//must be close, got away somehow!
+				WP_ForcePowerStop(self, FP_DRAIN);
+				return;
+			}
 
-					//keep my saber off!
-					WP_DeactivateSaber(self, qtrue);
-					if (drain_ent->client)
+			//keep my saber off!
+			WP_DeactivateSaber(self, qtrue);
+			if (drain_ent->client)
+			{
+				//now move them
+				VectorCopy(self->client->ps.viewangles, angles);
+				angles[0] = 0;
+				AngleVectors(angles, dir, nullptr, nullptr);
+				//stop them from thinking
+				drain_ent->client->ps.pm_time = 2000;
+				drain_ent->client->ps.pm_flags |= PMF_TIME_KNOCKBACK;
+				if (drain_ent->NPC)
+				{
+					if (!(drain_ent->NPC->aiFlags & NPCAI_DIE_ON_IMPACT))
 					{
-						//now move them
-						VectorCopy(self->client->ps.viewangles, angles);
-						angles[0] = 0;
-						AngleVectors(angles, dir, nullptr, nullptr);
-						//stop them from thinking
-						drain_ent->client->ps.pm_time = 2000;
-						drain_ent->client->ps.pm_flags |= PMF_TIME_KNOCKBACK;
-						if (drain_ent->NPC)
-						{
-							if (!(drain_ent->NPC->aiFlags & NPCAI_DIE_ON_IMPACT))
-							{
-								//not falling to their death
-								drain_ent->NPC->nextBStateThink = level.time + 2000;
-							}
-							vectoangles(dir, angles);
-							drain_ent->NPC->desiredYaw = AngleNormalize180(angles[YAW] + 180);
-							drain_ent->NPC->desiredPitch = -angles[PITCH];
-							SaveNPCGlobals();
-							SetNPCGlobals(drain_ent);
-							NPC_UpdateAngles(qtrue, qtrue);
-							drain_ent->NPC->last_ucmd.angles[0] = ucmd.angles[0];
-							drain_ent->NPC->last_ucmd.angles[1] = ucmd.angles[1];
-							drain_ent->NPC->last_ucmd.angles[2] = ucmd.angles[2];
-							RestoreNPCGlobals();
-							//FIXME: why does he turn back to his original angles once he dies or is let go?
-						}
-						else if (!drain_ent->s.number)
-						{
-							drain_ent->enemy = self;
-							NPC_SetLookTarget(drain_ent, self->s.number, level.time + 1000);
-						}
+						//not falling to their death
+						drain_ent->NPC->nextBStateThink = level.time + 2000;
+					}
+					vectoangles(dir, angles);
+					drain_ent->NPC->desiredYaw = AngleNormalize180(angles[YAW] + 180);
+					drain_ent->NPC->desiredPitch = -angles[PITCH];
+					SaveNPCGlobals();
+					SetNPCGlobals(drain_ent);
+					NPC_UpdateAngles(qtrue, qtrue);
+					drain_ent->NPC->last_ucmd.angles[0] = ucmd.angles[0];
+					drain_ent->NPC->last_ucmd.angles[1] = ucmd.angles[1];
+					drain_ent->NPC->last_ucmd.angles[2] = ucmd.angles[2];
+					RestoreNPCGlobals();
+					//FIXME: why does he turn back to his original angles once he dies or is let go?
+				}
+				else if (!drain_ent->s.number)
+				{
+					drain_ent->enemy = self;
+					NPC_SetLookTarget(drain_ent, self->s.number, level.time + 1000);
+				}
 
-						drain_ent->client->ps.eFlags |= EF_FORCE_DRAINED;
-						//dammit!  Make sure that saber stays off!
+				drain_ent->client->ps.eFlags |= EF_FORCE_DRAINED;
+				//dammit!  Make sure that saber stays off!
 
-						if (!(drain_ent->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK))
-						{
-							WP_DeactivateSaber(drain_ent, qtrue);
-						}
-						else
-						{
-							drain_ent->client->ps.ManualBlockingFlags &= ~(1 << HOLDINGBLOCK);
-							drain_ent->client->ps.ManualBlockingFlags &= ~(1 << HOLDINGBLOCKANDATTACK);
-							drain_ent->client->ps.ManualBlockingFlags &= ~(1 << PERFECTBLOCKING);
-							drain_ent->client->ps.ManualBlockingFlags &= ~(1 << MBF_NPCBLOCKING);
-							WP_DeactivateSaber(drain_ent, qtrue);
-						}
-					}
-					//Shouldn't this be discovered?
-					AddSightEvent(self, drain_ent->currentOrigin, 128, AEL_DISCOVERED, 20);
+				if (!(drain_ent->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK))
+				{
+					WP_DeactivateSaber(drain_ent, qtrue);
+				}
+				else
+				{
+					drain_ent->client->ps.ManualBlockingFlags &= ~(1 << HOLDINGBLOCK);
+					drain_ent->client->ps.ManualBlockingFlags &= ~(1 << HOLDINGBLOCKANDATTACK);
+					drain_ent->client->ps.ManualBlockingFlags &= ~(1 << PERFECTBLOCKING);
+					drain_ent->client->ps.ManualBlockingFlags &= ~(1 << MBF_NPCBLOCKING);
+					WP_DeactivateSaber(drain_ent, qtrue);
+				}
+			}
+			//Shouldn't this be discovered?
+			AddSightEvent(self, drain_ent->currentOrigin, 128, AEL_DISCOVERED, 20);
 
-					if (self->client->ps.forcePowerDebounce[FP_DRAIN] < level.time)
-					{
-						int drain_level = wp_absorb_conversion(drain_ent, drain_ent->client->ps.forcePowerLevel[FP_ABSORB],
-							FP_DRAIN,
-							self->client->ps.forcePowerLevel[FP_DRAIN],
-							force_power_needed[self->client->ps.forcePowerLevel[FP_DRAIN]]);
-						if (drain_level && drain_level == -1
-							|| Q_irand(drain_level, 3) < 3)
-						{
-							//the drain is being absorbed
-							ForceDrainEnt(self, drain_ent);
-						}
-						WP_ForcePowerDrain(self, FP_DRAIN, 3);
-					}
-					else
-					{
-						if (!Q_irand(0, 4))
-						{
-							WP_ForcePowerDrain(self, FP_DRAIN, 1);
-						}
-						if (!drain_ent->enemy)
-						{
-							G_SetEnemy(drain_ent, self);
-						}
-					}
-					if (drain_ent->health > 0)
-					{
-						//still alive
-						NPC_SetAnim(drain_ent, SETANIM_BOTH, BOTH_FORCE_DRAIN_GRABBED,
-							SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
-					}
+			if (self->client->ps.forcePowerDebounce[FP_DRAIN] < level.time)
+			{
+				int drain_level = wp_absorb_conversion(drain_ent, drain_ent->client->ps.forcePowerLevel[FP_ABSORB],
+					FP_DRAIN,
+					self->client->ps.forcePowerLevel[FP_DRAIN],
+					force_power_needed[self->client->ps.forcePowerLevel[FP_DRAIN]]);
+				if (drain_level && drain_level == -1
+					|| Q_irand(drain_level, 3) < 3)
+				{
+					//the drain is being absorbed
+					ForceDrainEnt(self, drain_ent);
+				}
+				WP_ForcePowerDrain(self, FP_DRAIN, 3);
+			}
+			else
+			{
+				if (!Q_irand(0, 4))
+				{
+					WP_ForcePowerDrain(self, FP_DRAIN, 1);
+				}
+				if (!drain_ent->enemy)
+				{
+					G_SetEnemy(drain_ent, self);
+				}
+			}
+			if (drain_ent->health > 0)
+			{
+				//still alive
+				NPC_SetAnim(drain_ent, SETANIM_BOTH, BOTH_FORCE_DRAIN_GRABBED,
+					SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+			}
 		}
 		else if (self->client->ps.forcePowerLevel[force_power] > FORCE_LEVEL_1)
 		{

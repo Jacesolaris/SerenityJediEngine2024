@@ -149,7 +149,7 @@ private:
 	static void FixBadAngles(CROFF* obj);
 	int NewID() { return ++mID; } // Increment before return so we can use zero as failed return val
 	static qboolean ApplyROFF(SROFFEntity* roff_ent,
-	                          const CROFF* roff); // True = success; False = roff complete
+		const CROFF* roff); // True = success; False = roff complete
 
 	static void ProcessNote(const SROFFEntity* roff_ent, const char* note);
 

@@ -1001,7 +1001,7 @@ namespace ragl
 					return;
 				}
 
-				assert(a >= 0 && b >= 0 && a < MAXNODES&& b < MAXNODES);
+				assert(a >= 0 && b >= 0 && a < MAXNODES && b < MAXNODES);
 				assert(mHandleToPos[mData[a].handle()] == a);
 				assert(mHandleToPos[mData[b].handle()] == b);
 

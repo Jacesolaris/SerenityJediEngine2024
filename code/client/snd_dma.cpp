@@ -6107,7 +6107,7 @@ static void UpdateEAXListener()
 					}
 				}
 
-				assert(s_FXSlotInfo[i].lEnvID < s_lNumEnvironments&& s_FXSlotInfo[i].lEnvID >= 0);
+				assert(s_FXSlotInfo[i].lEnvID < s_lNumEnvironments && s_FXSlotInfo[i].lEnvID >= 0);
 				if (s_FXSlotInfo[i].lEnvID < s_lNumEnvironments && s_FXSlotInfo[i].lEnvID >= 0)
 				{
 					s_lpEnvTable[s_FXSlotInfo[i].lEnvID].lFXSlotID = -1;
@@ -6201,7 +6201,7 @@ static void UpdateEAXListener()
 								}
 							}
 
-							assert(ReverbData[j].lEnvID < s_lNumEnvironments&& ReverbData[j].lEnvID >= 0);
+							assert(ReverbData[j].lEnvID < s_lNumEnvironments && ReverbData[j].lEnvID >= 0);
 							if (ReverbData[j].lEnvID < s_lNumEnvironments && ReverbData[j].lEnvID >= 0)
 							{
 								s_FXSlotInfo[i].lEnvID = ReverbData[j].lEnvID;

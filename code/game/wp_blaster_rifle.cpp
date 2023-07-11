@@ -357,8 +357,6 @@ void WP_FireWristPistol(gentity_t* ent, const qboolean alt_fire)
 	WP_FireJangoWristMissile(ent, muzzle, dir, alt_fire);
 }
 
-
-
 //////// DROIDEKA ////////
 
 //---------------------------------------------------------

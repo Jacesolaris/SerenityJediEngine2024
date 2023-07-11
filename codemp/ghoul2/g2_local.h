@@ -369,7 +369,7 @@ int G2API_GetSurfaceIndex(CGhoul2Info* ghl_info, const char* surface_name);
 char* G2API_GetSurfaceName(CGhoul2Info_v& ghoul2, int model_index, int surfNumber);
 char* G2API_GetGLAName(CGhoul2Info_v& ghoul2, int model_index);
 qboolean G2API_SetBoneAnglesMatrix(CGhoul2Info* ghl_info, const char* boneName, const mdxaBone_t& matrix, int flags,
-                                   const qhandle_t* model_list, int blend_time = 0, int current_time = 0);
+	const qhandle_t* model_list, int blend_time = 0, int current_time = 0);
 qboolean G2API_SetNewOrigin(CGhoul2Info_v& ghoul2, int bolt_index);
 int G2API_GetBoneIndex(CGhoul2Info* ghl_info, const char* boneName);
 qboolean G2API_StopBoneAnglesIndex(CGhoul2Info* ghl_info, int index);

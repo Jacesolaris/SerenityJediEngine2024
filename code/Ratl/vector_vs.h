@@ -266,7 +266,7 @@ namespace ratl
 		////////////////////////////////////////////////////////////////////////////////////
 		void swap(int i, int j)
 		{
-			assert(i < mSize&& j < mSize);
+			assert(i < mSize && j < mSize);
 			mArray.swap(i, j);
 		}
 

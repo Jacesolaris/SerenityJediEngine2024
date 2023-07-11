@@ -1669,7 +1669,7 @@ void NPC_BSRancor_Default()
 				gentity_t* sav_enemy = NPC->enemy; //FIXME: what about NPC->lastEnemy?
 				NPC->enemy = nullptr;
 				gentity_t* new_enemy = NPC_CheckEnemy(
-					static_cast<qboolean>(NPCInfo->confusionTime < level.time&& NPCInfo->insanityTime < level.time),
+					static_cast<qboolean>(NPCInfo->confusionTime < level.time && NPCInfo->insanityTime < level.time),
 					qfalse, qfalse);
 				NPC->enemy = sav_enemy;
 				if (new_enemy && new_enemy != sav_enemy)

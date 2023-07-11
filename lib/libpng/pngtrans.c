@@ -522,7 +522,7 @@ png_do_strip_channel(const png_row_infop row_info, const png_bytep row, const in
 				sp += 4, dp += 2;
 
 			while (sp < ep)
-				*dp++ = *sp++, * dp++ = *sp, sp += 3;
+				*dp++ = *sp++, *dp++ = *sp, sp += 3;
 
 			row_info->pixel_depth = 16;
 		}
@@ -549,7 +549,7 @@ png_do_strip_channel(const png_row_infop row_info, const png_bytep row, const in
 
 			/* Note that the loop adds 3 to dp and 4 to sp each time. */
 			while (sp < ep)
-				*dp++ = *sp++, * dp++ = *sp++, * dp++ = *sp, sp += 2;
+				*dp++ = *sp++, *dp++ = *sp++, *dp++ = *sp, sp += 2;
 
 			row_info->pixel_depth = 24;
 		}
@@ -564,9 +564,9 @@ png_do_strip_channel(const png_row_infop row_info, const png_bytep row, const in
 			while (sp < ep)
 			{
 				/* Copy 6 bytes, skip 2 */
-				*dp++ = *sp++, * dp++ = *sp++;
-				*dp++ = *sp++, * dp++ = *sp++;
-				*dp++ = *sp++, * dp++ = *sp, sp += 3;
+				*dp++ = *sp++, *dp++ = *sp++;
+				*dp++ = *sp++, *dp++ = *sp++;
+				*dp++ = *sp++, *dp++ = *sp, sp += 3;
 			}
 
 			row_info->pixel_depth = 48;

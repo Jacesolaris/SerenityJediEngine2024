@@ -2606,7 +2606,7 @@ void ClientCommand(const int client_num)
 		if (setStyle > SS_NONE && setStyle < SS_STAFF)
 		{
 			ent->client->ps.saberStylesKnown = 1 << setStyle;
-			cg.saberAnimLevelPending = ent->client->ps.saber_anim_level = setStyle;
+			cg.saber_anim_levelPending = ent->client->ps.saber_anim_level = setStyle;
 		}
 	}
 	else if (Q_stricmp(cmd, "saberdown") == 0)

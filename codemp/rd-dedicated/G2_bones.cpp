@@ -1159,9 +1159,9 @@ static bool G2_RagDollSetup(CGhoul2Info& ghoul2, int frame_num, bool reset_origi
 void G2_GetBoneBasepose(const CGhoul2Info& ghoul2, int bone_num, mdxaBone_t*& ret_basepose, mdxaBone_t*& ret_basepose_inv);
 int G2_GetBoneDependents(CGhoul2Info& ghoul2, int bone_num, int* temp_dependents, int max_dep);
 void G2_GetBoneMatrixLow(const CGhoul2Info& ghoul2, int bone_num, const vec3_t scale, mdxaBone_t& retMatrix,
-                         mdxaBone_t*& ret_basepose, mdxaBone_t*& ret_basepose_inv);
+	mdxaBone_t*& ret_basepose, mdxaBone_t*& ret_basepose_inv);
 int G2_GetParentBoneMatrixLow(const CGhoul2Info& ghoul2, int bone_num, const vec3_t scale, mdxaBone_t& retMatrix,
-                              mdxaBone_t*& ret_basepose, mdxaBone_t*& ret_basepose_inv);
+	mdxaBone_t*& ret_basepose, mdxaBone_t*& ret_basepose_inv);
 bool G2_WasBoneRendered(const CGhoul2Info& ghoul2, int bone_num);
 
 #define MAX_BONES_RAG (256)

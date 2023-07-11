@@ -647,7 +647,7 @@ void G2_RagGetBoneBasePoseMatrixLow(const CGhoul2Info& ghoul2, const int bone_nu
 }
 
 void G2_GetBoneMatrixLow(const CGhoul2Info& ghoul2, const int bone_num, const vec3_t scale, mdxaBone_t& retMatrix,
-                         mdxaBone_t*& ret_basepose, mdxaBone_t*& ret_basepose_inv)
+	mdxaBone_t*& ret_basepose, mdxaBone_t*& ret_basepose_inv)
 {
 	if (!ghoul2.mBoneCache)
 	{
@@ -699,7 +699,7 @@ void G2_GetBoneMatrixLow(const CGhoul2Info& ghoul2, const int bone_num, const ve
 }
 
 int G2_GetParentBoneMatrixLow(const CGhoul2Info& ghoul2, const int bone_num, const vec3_t scale, mdxaBone_t& retMatrix,
-                              mdxaBone_t*& ret_basepose, mdxaBone_t*& ret_basepose_inv)
+	mdxaBone_t*& ret_basepose, mdxaBone_t*& ret_basepose_inv)
 {
 	int parent = -1;
 	if (ghoul2.mBoneCache)
@@ -1070,7 +1070,7 @@ void G2_TimingModel(boneInfo_t& bone, const int current_time, const int num_fram
 					}
 				}
 				// sanity check
-				assert(new_frame < end_frame&& new_frame >= bone.start_frame || animSize < 10);
+				assert(new_frame < end_frame && new_frame >= bone.start_frame || animSize < 10);
 			}
 			else
 			{
@@ -2020,7 +2020,7 @@ void G2_TransformGhoulBones(boneInfo_v& rootBoneList, const mdxaBone_t& rootMatr
 
 // We've come across a surface that's designated as a bolt surface, process it and put it in the appropriate bolt place
 void G2_ProcessSurfaceBolt(const mdxaBone_v& bone_ptr, mdxmSurface_t* surface, const int boltNum, boltInfo_v& boltList,
-                           const surfaceInfo_t* surfInfo, model_t* mod)
+	const surfaceInfo_t* surfInfo, model_t* mod)
 {
 	float pTri[3][3]{};
 	int k;
@@ -2365,7 +2365,7 @@ void G2_ConstructUsedBoneList(CConstructBoneList& CBL)
 				// get the skel data struct for each child bone of the referenced bone
 				const mdxaSkel_t* childSkel = reinterpret_cast<mdxaSkel_t*>((byte*)mod_a->mdxa + sizeof(mdxaHeader_t) + offsets->offsets
 					[skel->
-						children[j]]);
+					children[j]]);
 
 				// does it have the always on flag on?
 				if (childSkel->flags & G2BONEFLAG_ALWAYSXFORM)
@@ -2787,7 +2787,7 @@ void G2_GetBoltMatrixLow(CGhoul2Info& ghoul2, int boltNum, const vec3_t scale, m
 	{
 		const mdxaSkelOffsets_t* offsets = reinterpret_cast<mdxaSkelOffsets_t*>((byte*)bone_cache.header + sizeof(mdxaHeader_t));
 		const auto skel = reinterpret_cast<mdxaSkel_t*>((byte*)bone_cache.header + sizeof(mdxaHeader_t) + offsets->offsets[boltList[
-				boltNum]
+			boltNum]
 			.boneNumber]);
 		Multiply_3x4Matrix(&retMatrix, const_cast<mdxaBone_t*>(&bone_cache.EvalUnsmooth(boltList[boltNum].boneNumber)),
 			&skel->BasePoseMat);
@@ -3427,7 +3427,7 @@ qboolean R_LoadMDXM(model_t* mod, void* buffer, const char* mod_name, qboolean& 
 		RE_RegisterModels_StoreShaderRequest(mod_name, &surfInfo->shader[0], &surfInfo->shaderIndex);
 
 		// find the next surface
-		surfInfo = reinterpret_cast<mdxmSurfHierarchy_t*>((byte*)surfInfo + (size_t)&static_cast<mdxmSurfHierarchy_t*>(nullptr)->
+		surfInfo = reinterpret_cast<mdxmSurfHierarchy_t*>((byte*)surfInfo + (size_t) & static_cast<mdxmSurfHierarchy_t*>(nullptr)->
 			childIndexes[surfInfo->numChildren]);
 	}
 

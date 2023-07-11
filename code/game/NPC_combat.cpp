@@ -1350,7 +1350,7 @@ void WeaponThink()
 
 	// Can't Fire While Cloaked
 	if (NPC->client &&
-		(NPC->client->ps.powerups[PW_CLOAKED] 
+		(NPC->client->ps.powerups[PW_CLOAKED]
 			|| level.time < NPC->client->ps.powerups[PW_UNCLOAKING]
 			|| NPC->client->ps.powerups[PW_STUNNED]
 			|| NPC->client->ps.powerups[PW_SHOCKED]))
@@ -2878,7 +2878,7 @@ void SP_point_combat(gentity_t* self)
 #endif
 		G_FreeEntity(self);
 		return;
-}
+	}
 
 	self->s.origin[2] += 0.125;
 	G_SetOrigin(self, self->s.origin);

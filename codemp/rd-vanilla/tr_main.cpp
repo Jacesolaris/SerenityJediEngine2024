@@ -666,8 +666,8 @@ Returns qtrue if it should be mirrored
 =================
 */
 qboolean R_GetPortalOrientations(const drawSurf_t* drawSurf, const int entity_num,
-                                 orientation_t* surface, orientation_t* camera,
-                                 vec3_t pvsOrigin, qboolean* mirror)
+	orientation_t* surface, orientation_t* camera,
+	vec3_t pvsOrigin, qboolean* mirror)
 {
 	cplane_t originalPlane, plane{};
 

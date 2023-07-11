@@ -2340,7 +2340,7 @@ NAV::TNodeHandle NAV::GetNearestNode(const vec3_t& position, const TNodeHandle p
 
 				NodeSort.mHandle = Cell.mNodes[i];
 				NodeSort.mDistance = node.mPoint.Dist2(Pos);
-				NodeSort.mInRadius = NodeSort.mDistance < node.mRadius* node.mRadius;
+				NodeSort.mInRadius = NodeSort.mDistance < node.mRadius * node.mRadius;
 
 				// Severly Bias Points That Are Not On The Same Z Height As The Pos
 				//------------------------------------------------------------------

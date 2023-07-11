@@ -12667,133 +12667,133 @@ static void CG_AddSaberBladeGo(const centity_t* cent, centity_t* scent, const in
 						}
 					}
 
-								const float diff = cg.time - saber_trail->lastTime;
+					const float diff = cg.time - saber_trail->lastTime;
 
-								// I'm not sure that clipping this is really the best idea
-								if (diff <= SABER_TRAIL_TIME * 2)
-								{
-									// build a quad
-									auto fx = new CTrail;
+					// I'm not sure that clipping this is really the best idea
+					if (diff <= SABER_TRAIL_TIME * 2)
+					{
+						// build a quad
+						auto fx = new CTrail;
 
-									float duration;
+						float duration;
 
-									if (cent->gent->client->ps.saber[saber_num].type == SABER_SITH_SWORD
-										|| !WP_SaberBladeUseSecondBladeStyle(&client->ps.saber[saber_num], blade_num) && client->ps.
-										saber[saber_num].trailStyle == 1
-										|| WP_SaberBladeUseSecondBladeStyle(&client->ps.saber[saber_num], blade_num) && client->ps.
-										saber[saber_num].trailStyle2 == 1)
-									{
-										fx->mShader = cgs.media.swordTrailShader;
-										duration = saber_trail->duration / 2.0f; // stay around twice as long
-										VectorSet(rgb1, 32.0f, 32.0f, 32.0f); // make the sith sword trail pretty faint
-									}
-									else if (client->ps.saber[saber_num].blade[blade_num].color == SABER_BLACK)
-									{
-										fx->mShader = cgs.media.blackSaberBlurShader;
-										duration = saber_trail->duration / 5.0f;
-									}
-									else if (cent->gent->client->ps.saber[saber_num].type == SABER_UNSTABLE
-										|| cent->gent->client->ps.saber[saber_num].type == SABER_STAFF_UNSTABLE
-										|| cent->gent->client->ps.saber[saber_num].type == SABER_ELECTROSTAFF)
-									{
-										fx->mShader = cgs.media.unstableBlurShader;
-										duration = saber_trail->duration / 5.0f;
-									}
-									else
-									{
-										switch (client->ps.saber[saber_num].blade[blade_num].color)
-										{
-										case SABER_RED:
-											fx->mShader = cgs.media.saberBlurShader;
-											duration = saber_trail->duration / 5.0f;
-											break;
-										case SABER_ORANGE:
-											fx->mShader = cgs.media.saberBlurShader;
-											duration = saber_trail->duration / 5.0f;
-											break;
-										case SABER_YELLOW:
-											fx->mShader = cgs.media.saberBlurShader;
-											duration = saber_trail->duration / 5.0f;
-											break;
-										case SABER_GREEN:
-											fx->mShader = cgs.media.saberBlurShader;
-											duration = saber_trail->duration / 5.0f;
-											break;
-										case SABER_BLUE:
-											fx->mShader = cgs.media.saberBlurShader;
-											duration = saber_trail->duration / 5.0f;
-											break;
-										case SABER_PURPLE:
-											fx->mShader = cgs.media.saberBlurShader;
-											duration = saber_trail->duration / 5.0f;
-											break;
-										case SABER_LIME:
-											fx->mShader = cgs.media.saberBlurShader;
-											duration = saber_trail->duration / 5.0f;
-											break;
-										case SABER_BLACK:
-											fx->mShader = cgs.media.blackSaberTrail;
-											duration = saber_trail->duration / 5.0f;
-											break;
-										case SABER_WHITE:
-											fx->mShader = cgs.media.saberBlurShader;
-											duration = saber_trail->duration / 5.0f;
-											break;
-										default: //SABER_RGB
-											fx->mShader = cgs.media.saberBlurShader;
-											duration = saber_trail->duration / 5.0f;
-											break;
-										}
-									}
+						if (cent->gent->client->ps.saber[saber_num].type == SABER_SITH_SWORD
+							|| !WP_SaberBladeUseSecondBladeStyle(&client->ps.saber[saber_num], blade_num) && client->ps.
+							saber[saber_num].trailStyle == 1
+							|| WP_SaberBladeUseSecondBladeStyle(&client->ps.saber[saber_num], blade_num) && client->ps.
+							saber[saber_num].trailStyle2 == 1)
+						{
+							fx->mShader = cgs.media.swordTrailShader;
+							duration = saber_trail->duration / 2.0f; // stay around twice as long
+							VectorSet(rgb1, 32.0f, 32.0f, 32.0f); // make the sith sword trail pretty faint
+						}
+						else if (client->ps.saber[saber_num].blade[blade_num].color == SABER_BLACK)
+						{
+							fx->mShader = cgs.media.blackSaberBlurShader;
+							duration = saber_trail->duration / 5.0f;
+						}
+						else if (cent->gent->client->ps.saber[saber_num].type == SABER_UNSTABLE
+							|| cent->gent->client->ps.saber[saber_num].type == SABER_STAFF_UNSTABLE
+							|| cent->gent->client->ps.saber[saber_num].type == SABER_ELECTROSTAFF)
+						{
+							fx->mShader = cgs.media.unstableBlurShader;
+							duration = saber_trail->duration / 5.0f;
+						}
+						else
+						{
+							switch (client->ps.saber[saber_num].blade[blade_num].color)
+							{
+							case SABER_RED:
+								fx->mShader = cgs.media.saberBlurShader;
+								duration = saber_trail->duration / 5.0f;
+								break;
+							case SABER_ORANGE:
+								fx->mShader = cgs.media.saberBlurShader;
+								duration = saber_trail->duration / 5.0f;
+								break;
+							case SABER_YELLOW:
+								fx->mShader = cgs.media.saberBlurShader;
+								duration = saber_trail->duration / 5.0f;
+								break;
+							case SABER_GREEN:
+								fx->mShader = cgs.media.saberBlurShader;
+								duration = saber_trail->duration / 5.0f;
+								break;
+							case SABER_BLUE:
+								fx->mShader = cgs.media.saberBlurShader;
+								duration = saber_trail->duration / 5.0f;
+								break;
+							case SABER_PURPLE:
+								fx->mShader = cgs.media.saberBlurShader;
+								duration = saber_trail->duration / 5.0f;
+								break;
+							case SABER_LIME:
+								fx->mShader = cgs.media.saberBlurShader;
+								duration = saber_trail->duration / 5.0f;
+								break;
+							case SABER_BLACK:
+								fx->mShader = cgs.media.blackSaberTrail;
+								duration = saber_trail->duration / 5.0f;
+								break;
+							case SABER_WHITE:
+								fx->mShader = cgs.media.saberBlurShader;
+								duration = saber_trail->duration / 5.0f;
+								break;
+							default: //SABER_RGB
+								fx->mShader = cgs.media.saberBlurShader;
+								duration = saber_trail->duration / 5.0f;
+								break;
+							}
+						}
 
-									const float old_alpha = 1.0f - diff / duration;
+						const float old_alpha = 1.0f - diff / duration;
 
-									// Go from new muzzle to new end...then to old end...back down to old muzzle...finally
-									//	connect back to the new muzzle...this is our trail quad
-									VectorCopy(org, fx->mVerts[0].origin);
-									VectorMA(end, 3.0f, axis[0], fx->mVerts[1].origin);
+						// Go from new muzzle to new end...then to old end...back down to old muzzle...finally
+						//	connect back to the new muzzle...this is our trail quad
+						VectorCopy(org, fx->mVerts[0].origin);
+						VectorMA(end, 3.0f, axis[0], fx->mVerts[1].origin);
 
-									VectorCopy(saber_trail->tip, fx->mVerts[2].origin);
-									VectorCopy(saber_trail->base, fx->mVerts[3].origin);
+						VectorCopy(saber_trail->tip, fx->mVerts[2].origin);
+						VectorCopy(saber_trail->base, fx->mVerts[3].origin);
 
-									// New muzzle
-									VectorCopy(rgb1, fx->mVerts[0].rgb);
-									fx->mVerts[0].alpha = 255.0f;
+						// New muzzle
+						VectorCopy(rgb1, fx->mVerts[0].rgb);
+						fx->mVerts[0].alpha = 255.0f;
 
-									fx->mVerts[0].ST[0] = 0.0f;
-									fx->mVerts[0].ST[1] = 0.99f;
-									fx->mVerts[0].destST[0] = 0.99f;
-									fx->mVerts[0].destST[1] = 0.99f;
+						fx->mVerts[0].ST[0] = 0.0f;
+						fx->mVerts[0].ST[1] = 0.99f;
+						fx->mVerts[0].destST[0] = 0.99f;
+						fx->mVerts[0].destST[1] = 0.99f;
 
-									// new tip
-									VectorCopy(rgb1, fx->mVerts[1].rgb);
-									fx->mVerts[1].alpha = 255.0f;
+						// new tip
+						VectorCopy(rgb1, fx->mVerts[1].rgb);
+						fx->mVerts[1].alpha = 255.0f;
 
-									fx->mVerts[1].ST[0] = 0.0f;
-									fx->mVerts[1].ST[1] = 0.0f;
-									fx->mVerts[1].destST[0] = 0.99f;
-									fx->mVerts[1].destST[1] = 0.0f;
+						fx->mVerts[1].ST[0] = 0.0f;
+						fx->mVerts[1].ST[1] = 0.0f;
+						fx->mVerts[1].destST[0] = 0.99f;
+						fx->mVerts[1].destST[1] = 0.0f;
 
-									// old tip
-									VectorCopy(rgb1, fx->mVerts[2].rgb);
-									fx->mVerts[2].alpha = 255.0f;
+						// old tip
+						VectorCopy(rgb1, fx->mVerts[2].rgb);
+						fx->mVerts[2].alpha = 255.0f;
 
-									fx->mVerts[2].ST[0] = 0.99f - old_alpha; // NOTE: this just happens to contain the value I want
-									fx->mVerts[2].ST[1] = 0.0f;
-									fx->mVerts[2].destST[0] = 0.99f + fx->mVerts[2].ST[0];
-									fx->mVerts[2].destST[1] = 0.0f;
+						fx->mVerts[2].ST[0] = 0.99f - old_alpha; // NOTE: this just happens to contain the value I want
+						fx->mVerts[2].ST[1] = 0.0f;
+						fx->mVerts[2].destST[0] = 0.99f + fx->mVerts[2].ST[0];
+						fx->mVerts[2].destST[1] = 0.0f;
 
-									// old muzzle
-									VectorCopy(rgb1, fx->mVerts[3].rgb);
-									fx->mVerts[3].alpha = 255.0f;
+						// old muzzle
+						VectorCopy(rgb1, fx->mVerts[3].rgb);
+						fx->mVerts[3].alpha = 255.0f;
 
-									fx->mVerts[3].ST[0] = 0.99f - old_alpha; // NOTE: this just happens to contain the value I want
-									fx->mVerts[3].ST[1] = 0.99f;
-									fx->mVerts[3].destST[0] = 0.99f + fx->mVerts[2].ST[0];
-									fx->mVerts[3].destST[1] = 0.99f;
+						fx->mVerts[3].ST[0] = 0.99f - old_alpha; // NOTE: this just happens to contain the value I want
+						fx->mVerts[3].ST[1] = 0.99f;
+						fx->mVerts[3].destST[0] = 0.99f + fx->mVerts[2].ST[0];
+						fx->mVerts[3].destST[1] = 0.99f;
 
-									FX_AddPrimitive(reinterpret_cast<CEffect**>(&fx), duration);
-								}
+						FX_AddPrimitive(reinterpret_cast<CEffect**>(&fx), duration);
+					}
 				}
 
 				// we must always do this, even if we aren't active..otherwise we won't know where to pick up from

@@ -230,8 +230,8 @@ int AAS_FloodClusterAreas_r(const int areanum, const int clusternum)
 		{
 			continue;
 		} //end if
-			if (!AAS_FloodClusterAreas_r(aasworld.reachability[
-				aasworld.areasettings[areanum].firstreachablearea + i].areanum, clusternum)) return qfalse;
+		if (!AAS_FloodClusterAreas_r(aasworld.reachability[
+			aasworld.areasettings[areanum].firstreachablearea + i].areanum, clusternum)) return qfalse;
 	} //end for
 	return qtrue;
 } //end of the function AAS_FloodClusterAreas_r

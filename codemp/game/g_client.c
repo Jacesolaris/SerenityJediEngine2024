@@ -7663,19 +7663,19 @@ void ClientSpawn(gentity_t* ent)
 
 	ent->reloadTime = 0;
 
-	//set saberAnimLevelBase
+	//set saber_anim_levelBase
 	if (ent->client->saber[0].model[0] && ent->client->saber[1].model[0])
 	{
-		ent->client->ps.fd.saberAnimLevelBase = SS_DUAL;
+		ent->client->ps.fd.saber_anim_levelBase = SS_DUAL;
 	}
 	else if (ent->client->saber[0].numBlades > 1
 		&& WP_SaberCanTurnOffSomeBlades(&ent->client->saber[0]))
 	{
-		ent->client->ps.fd.saberAnimLevelBase = SS_STAFF;
+		ent->client->ps.fd.saber_anim_levelBase = SS_STAFF;
 	}
 	else
 	{
-		ent->client->ps.fd.saberAnimLevelBase = SS_MEDIUM;
+		ent->client->ps.fd.saber_anim_levelBase = SS_MEDIUM;
 	}
 
 	//set initial saber holstered mode

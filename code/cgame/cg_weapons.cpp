@@ -3413,7 +3413,6 @@ void CG_NextWeapon_f()
 
 	if (g_entities[0].client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_TWENTYSIX)
 	{
-
 		NPC_SetAnim(cg_entities[0].gent, SETANIM_TORSO, BOTH_RELOADFAIL, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 		G_SoundOnEnt(cg_entities[0].gent, CHAN_WEAPON, "sound/weapons/reloadfail.mp3");
 		G_SoundOnEnt(cg_entities[0].gent, CHAN_VOICE_ATTEN, "*pain25.wav");
@@ -3649,7 +3648,6 @@ void CG_PrevWeapon_f()
 
 	if (g_entities[0].client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_TWENTYSIX)
 	{
-
 		NPC_SetAnim(cg_entities[0].gent, SETANIM_TORSO, BOTH_RELOADFAIL, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 		G_SoundOnEnt(cg_entities[0].gent, CHAN_WEAPON, "sound/weapons/reloadfail.mp3");
 		G_SoundOnEnt(cg_entities[0].gent, CHAN_VOICE_ATTEN, "*pain25.wav");
@@ -3780,7 +3778,6 @@ void CG_ChangeWeapon(const int num)
 
 	if (g_entities[0].client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_TWENTYSIX)
 	{
-
 		NPC_SetAnim(cg_entities[0].gent, SETANIM_TORSO, BOTH_RELOADFAIL, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 		G_SoundOnEnt(cg_entities[0].gent, CHAN_WEAPON, "sound/weapons/reloadfail.mp3");
 		G_SoundOnEnt(cg_entities[0].gent, CHAN_VOICE_ATTEN, "*pain25.wav");
@@ -3894,7 +3891,6 @@ void CG_Weapon_f()
 
 	if (g_entities[0].client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_TWENTYSIX)
 	{
-
 		NPC_SetAnim(cg_entities[0].gent, SETANIM_TORSO, BOTH_RELOADFAIL, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 		G_SoundOnEnt(cg_entities[0].gent, CHAN_WEAPON, "sound/weapons/reloadfail.mp3");
 		G_SoundOnEnt(cg_entities[0].gent, CHAN_VOICE_ATTEN, "*pain25.wav");

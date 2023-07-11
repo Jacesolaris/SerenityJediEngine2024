@@ -49,7 +49,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #define DEFAULT_REDTEAM_NAME	"Empire"
 #define DEFAULT_BLUETEAM_NAME	"Rebellion"
 
-#define CURRENT_SJE_CLIENTVERSION		"Year-23,Month-07,Day-11,BuildNum-04"
+#define CURRENT_SJE_CLIENTVERSION		"Year-23,Month-07,Day-11,BuildNum-05"
 
 #define	STEPSIZE		18
 
@@ -551,7 +551,7 @@ typedef struct bgEntity_s
 #if defined(__GNUC__) || defined(__GCC__) || defined(MINGW32) || defined(MACOS_X)
 } _bgEntity_t;
 #else
-	} bgEntity_t;
+} bgEntity_t;
 #endif
 
 typedef struct pmove_s {

@@ -1608,7 +1608,7 @@ R_AddWorldSurfaces
 */
 void R_AddWorldSurfaces()
 {
-	if (!r_drawworld->integer) 
+	if (!r_drawworld->integer)
 	{
 		return;
 	}

@@ -4007,7 +4007,7 @@ void ClientThink_real(gentity_t* ent)
 							&& client->ps.saberHolstered == 1)
 						{
 							//one saber should be off, adjust saber_anim_level accordinly
-							client->ps.fd.saberAnimLevelBase = i;
+							client->ps.fd.saber_anim_levelBase = i;
 							client->ps.fd.saber_anim_level = SS_FAST;
 							client->ps.fd.saberDrawAnimLevel = client->ps.fd.saber_anim_level;
 						}
@@ -4016,13 +4016,13 @@ void ClientThink_real(gentity_t* ent)
 							&& client->saber[0].singleBladeStyle != SS_NONE)
 						{
 							//one saber or blade should be off, adjust saber_anim_level accordinly
-							client->ps.fd.saberAnimLevelBase = i;
+							client->ps.fd.saber_anim_levelBase = i;
 							client->ps.fd.saber_anim_level = client->saber[0].singleBladeStyle;
 							client->ps.fd.saberDrawAnimLevel = client->ps.fd.saber_anim_level;
 						}
 						else
 						{
-							client->ps.fd.saberAnimLevelBase = client->ps.fd.saber_anim_level = i;
+							client->ps.fd.saber_anim_levelBase = client->ps.fd.saber_anim_level = i;
 							client->ps.fd.saberDrawAnimLevel = i;
 						}
 						break;

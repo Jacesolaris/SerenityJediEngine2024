@@ -6274,7 +6274,7 @@ static QINLINE qboolean check_saber_damage(gentity_t* self, const int r_saber_nu
 	const qboolean self_m_blocking = self->client->ps.ManualBlockingFlags & 1 << PERFECTBLOCKING ? qtrue : qfalse;
 	//Perfect Blocking
 
-	if (BG_SabersOff(&self->client->ps) || !self->client->ps.saberEntityNum && self->client->ps.fd.saberAnimLevelBase
+	if (BG_SabersOff(&self->client->ps) || !self->client->ps.saberEntityNum && self->client->ps.fd.saber_anim_levelBase
 		!= SS_DUAL)
 	{
 		// register as a hit so we don't do a lot of interpolation.

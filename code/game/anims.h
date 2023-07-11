@@ -4584,7 +4584,7 @@ using animNumber_t = enum //# animNumber_e
 
 	BOTH_ATTACK_FP,
 	BOTH_ATTACK_DUAL,
-		BOTH_READY_DUAL,
+	BOTH_READY_DUAL,
 
 	BOTH_INV_USE,
 

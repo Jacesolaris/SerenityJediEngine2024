@@ -1998,32 +1998,32 @@ void CalculateJumpRoutes(void)
 					nheightdif = gWPArray[i]->origin[2] - gWPArray[i - 1]->origin[2];
 				}
 
-					if (gWPArray[i + 1] && gWPArray[i + 1]->inuse && gWPArray[i + 1]->origin[2] + 16 < gWPArray[i]->origin[
-						2])
+				if (gWPArray[i + 1] && gWPArray[i + 1]->inuse && gWPArray[i + 1]->origin[2] + 16 < gWPArray[i]->origin[
+					2])
+				{
+					pheightdif = gWPArray[i]->origin[2] - gWPArray[i + 1]->origin[2];
+				}
+
+				if (nheightdif > pheightdif)
+				{
+					pheightdif = nheightdif;
+				}
+
+				if (pheightdif)
+				{
+					if (pheightdif > 500)
 					{
-						pheightdif = gWPArray[i]->origin[2] - gWPArray[i + 1]->origin[2];
+						gWPArray[i]->forceJumpTo = 999; //FORCE_LEVEL_3; //FJSR
 					}
-
-						if (nheightdif > pheightdif)
-						{
-							pheightdif = nheightdif;
-						}
-
-						if (pheightdif)
-						{
-							if (pheightdif > 500)
-							{
-								gWPArray[i]->forceJumpTo = 999; //FORCE_LEVEL_3; //FJSR
-							}
-							else if (pheightdif > 256)
-							{
-								gWPArray[i]->forceJumpTo = 999; //FORCE_LEVEL_2; //FJSR
-							}
-							else if (pheightdif > 128)
-							{
-								gWPArray[i]->forceJumpTo = 999; //FORCE_LEVEL_1; //FJSR
-							}
-						}
+					else if (pheightdif > 256)
+					{
+						gWPArray[i]->forceJumpTo = 999; //FORCE_LEVEL_2; //FJSR
+					}
+					else if (pheightdif > 128)
+					{
+						gWPArray[i]->forceJumpTo = 999; //FORCE_LEVEL_1; //FJSR
+					}
+				}
 			}
 		}
 

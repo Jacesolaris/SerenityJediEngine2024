@@ -62,7 +62,7 @@ using zoneTail_t = struct
 
 static zoneTail_t* ZoneTailFromHeader(zoneHeader_t* pHeader)
 {
-	return reinterpret_cast<zoneTail_t*>((char*)pHeader + sizeof *pHeader + pHeader->iSize);
+	return reinterpret_cast<zoneTail_t*>((char*)pHeader + sizeof * pHeader + pHeader->iSize);
 }
 
 #ifdef DETAILED_ZONE_DEBUG_CODE

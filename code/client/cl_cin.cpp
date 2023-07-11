@@ -2090,7 +2090,6 @@ static void PlayCinematic(const char* arg, const char* s, const qboolean qbInGam
 			}
 		}
 
-
 		float ratio = static_cast<float>(SCREEN_WIDTH * cls.glconfig.vidHeight) / static_cast<float>(SCREEN_HEIGHT *
 			cls.glconfig.vidWidth);
 		ratio = Com_Clamp(0.75f, 1.0f, ratio);

@@ -3748,6 +3748,179 @@ saberMoveName_t PM_SaberJumpForwardAttackMove()
 	return LS_A_JUMP_T__B_;
 }
 
+saberMoveName_t PM_NPC_Force_Leap_Attack()
+{
+	vec3_t fwd_angles, jump_fwd;
+
+	//see if we have an overridden (or cancelled) kata move
+	if (pm->ps->saber[0].jumpAtkFwdMove != LS_INVALID)
+	{
+		if (pm->ps->saber[0].jumpAtkFwdMove != LS_NONE)
+		{
+			return static_cast<saberMoveName_t>(pm->ps->saber[0].jumpAtkFwdMove);
+		}
+	}
+	if (pm->ps->dualSabers)
+	{
+		if (pm->ps->saber[1].jumpAtkFwdMove != LS_INVALID)
+		{
+			if (pm->ps->saber[1].jumpAtkFwdMove != LS_NONE)
+			{
+				return static_cast<saberMoveName_t>(pm->ps->saber[1].jumpAtkFwdMove);
+			}
+		}
+	}
+	//no overrides, cancelled?
+	if (pm->ps->saber[0].jumpAtkFwdMove == LS_NONE)
+	{
+		return LS_NONE;
+	}
+	if (pm->ps->dualSabers)
+	{
+		if (pm->ps->saber[1].jumpAtkFwdMove == LS_NONE)
+		{
+			return LS_NONE;
+		}
+	}
+
+	if (pm->ps->saber_anim_level == SS_DUAL || pm->ps->saber_anim_level == SS_STAFF)
+	{
+		pm->cmd.upmove = 0; //no jump just yet
+
+		if (pm->ps->saber_anim_level == SS_STAFF)
+		{
+			if (Q_irand(0, 1))
+			{
+				return LS_JUMPATTACK_STAFF_LEFT;
+			}
+			return LS_JUMPATTACK_STAFF_RIGHT;
+		}
+		return LS_JUMPATTACK_DUAL;
+	}
+	else if (pm->ps->saber_anim_level == SS_FAST || pm->ps->saber_anim_level == SS_TAVION)
+	{
+		VectorCopy(pm->ps->viewangles, fwd_angles);
+		fwd_angles[PITCH] = fwd_angles[ROLL] = 0;
+		AngleVectors(fwd_angles, jump_fwd, nullptr, nullptr);
+		VectorScale(jump_fwd, 150, pm->ps->velocity);
+		pm->ps->velocity[2] = 250;
+		//250 is normalized for a standing enemy at your z level, about 64 tall... adjust for actual maxs[2]-mins[2] of enemy and for zdiff in origins
+		if (pm->gent && pm->gent->enemy)
+		{
+			//go higher for taller enemies
+			pm->ps->velocity[2] *= (pm->gent->enemy->maxs[2] - pm->gent->enemy->mins[2]) / 64.0f;
+			//go higher for enemies higher than you, lower for those lower than you
+			const float z_diff = pm->gent->enemy->currentOrigin[2] - pm->ps->origin[2];
+			pm->ps->velocity[2] += z_diff * 1.5f;
+			//clamp to decent-looking values
+			//FIXME: still jump too low sometimes
+			if (z_diff <= 0 && pm->ps->velocity[2] < 200)
+			{
+				//if we're on same level, don't let me jump so low, I clip into the ground
+				pm->ps->velocity[2] = 200;
+			}
+			else if (pm->ps->velocity[2] < 50)
+			{
+				pm->ps->velocity[2] = 50;
+			}
+			else if (pm->ps->velocity[2] > 400)
+			{
+				pm->ps->velocity[2] = 400;
+			}
+		}
+		pm->ps->forceJumpZStart = pm->ps->origin[2]; //so we don't take damage if we land at same height
+		pm->ps->pm_flags |= PMF_JUMPING | PMF_SLOW_MO_FALL;
+
+		PM_AddEvent(EV_JUMP);
+
+		if (pm->gent && pm->gent->client->ps.forcePowerLevel[FP_LEVITATION] < FORCE_LEVEL_3)
+		{
+			//short burst
+			G_SoundOnEnt(pm->gent, CHAN_BODY, "sound/weapons/force/jumpsmall.mp3");
+		}
+		else
+		{
+			//holding it
+			G_SoundOnEnt(pm->gent, CHAN_BODY, "sound/weapons/force/jump.mp3");
+		}
+		pm->cmd.upmove = 0;
+		pm->gent->angle = pm->ps->viewangles[YAW]; //so we know what yaw we started this at
+		return LS_A_FLIP_STAB;
+	}
+	else if (pm->ps->saber_anim_level == SS_MEDIUM)
+	{
+		VectorCopy(pm->ps->viewangles, fwd_angles);
+		fwd_angles[PITCH] = fwd_angles[ROLL] = 0;
+		AngleVectors(fwd_angles, jump_fwd, nullptr, nullptr);
+		VectorScale(jump_fwd, 150, pm->ps->velocity);
+		pm->ps->velocity[2] = 250;
+		//250 is normalized for a standing enemy at your z level, about 64 tall... adjust for actual maxs[2]-mins[2] of enemy and for zdiff in origins
+		if (pm->gent && pm->gent->enemy)
+		{
+			//go higher for taller enemies
+			pm->ps->velocity[2] *= (pm->gent->enemy->maxs[2] - pm->gent->enemy->mins[2]) / 64.0f;
+			//go higher for enemies higher than you, lower for those lower than you
+			const float z_diff = pm->gent->enemy->currentOrigin[2] - pm->ps->origin[2];
+			pm->ps->velocity[2] += z_diff * 1.5f;
+			//clamp to decent-looking values
+			if (z_diff <= 0 && pm->ps->velocity[2] < 200)
+			{
+				//if we're on same level, don't let me jump so low, I clip into the ground
+				pm->ps->velocity[2] = 200;
+			}
+			else if (pm->ps->velocity[2] < 50)
+			{
+				pm->ps->velocity[2] = 50;
+			}
+			else if (pm->ps->velocity[2] > 400)
+			{
+				pm->ps->velocity[2] = 400;
+			}
+		}
+		pm->ps->forceJumpZStart = pm->ps->origin[2]; //so we don't take damage if we land at same height
+		pm->ps->pm_flags |= PMF_JUMPING | PMF_SLOW_MO_FALL;
+
+		PM_AddEvent(EV_JUMP);
+
+		if (pm->gent && pm->gent->client->ps.forcePowerLevel[FP_LEVITATION] < FORCE_LEVEL_3)
+		{
+			//short burst
+			G_SoundOnEnt(pm->gent, CHAN_BODY, "sound/weapons/force/jumpsmall.mp3");
+		}
+		else
+		{
+			//holding it
+			G_SoundOnEnt(pm->gent, CHAN_BODY, "sound/weapons/force/jump.mp3");
+		}
+		pm->cmd.upmove = 0;
+		pm->gent->angle = pm->ps->viewangles[YAW]; //so we know what yaw we started this at
+		return LS_A_FLIP_SLASH;
+	}
+	else
+	{
+		VectorCopy(pm->ps->viewangles, fwd_angles);
+		fwd_angles[PITCH] = fwd_angles[ROLL] = 0;
+		AngleVectors(fwd_angles, jump_fwd, nullptr, nullptr);
+		VectorScale(jump_fwd, 200, pm->ps->velocity);
+		pm->ps->velocity[2] = 180;
+		pm->ps->forceJumpZStart = pm->ps->origin[2]; //so we don't take damage if we land at same height
+		pm->ps->pm_flags |= PMF_JUMPING | PMF_SLOW_MO_FALL;
+		PM_AddEvent(EV_JUMP);
+		if (pm->gent->client->ps.forcePowerLevel[FP_LEVITATION] < FORCE_LEVEL_3)
+		{
+			//short burst
+			G_SoundOnEnt(pm->gent, CHAN_BODY, "sound/weapons/force/jumpsmall.mp3");
+		}
+		else
+		{
+			//holding it
+			G_SoundOnEnt(pm->gent, CHAN_BODY, "sound/weapons/force/jump.mp3");
+		}
+		pm->cmd.upmove = 0;
+		return LS_A_JUMP_T__B_;
+	}
+}
+
 qboolean PM_CheckJumpForwardAttackMove()
 {
 	if (pm->ps->client_num < MAX_CLIENTS
@@ -4501,7 +4674,35 @@ saberMoveName_t PM_CheckPlayerAttackFromParry(const int curmove)
 	return LS_NONE;
 }
 
-int nextcheck[MAX_CLIENTS]; // Next special move check.
+#define LUNGE_DISTANCE 128
+qboolean PM_CanLunge(void)
+{
+	trace_t tr;
+	vec3_t flatAng;
+	vec3_t fwd, back{};
+	const vec3_t trmins = { -15, -15, -8 };
+	const vec3_t trmaxs = { 15, 15, 8 };
+
+	VectorCopy(pm->ps->viewangles, flatAng);
+	flatAng[PITCH] = 0;
+
+	AngleVectors(flatAng, fwd, 0, 0);
+
+	back[0] = pm->ps->origin[0] + fwd[0] * LUNGE_DISTANCE;
+	back[1] = pm->ps->origin[1] + fwd[1] * LUNGE_DISTANCE;
+	back[2] = pm->ps->origin[2] + fwd[2] * LUNGE_DISTANCE;
+
+	pm->trace(&tr, pm->ps->origin, trmins, trmaxs, back, pm->ps->client_num, MASK_PLAYERSOLID, static_cast<EG2_Collision>(0), 0);
+
+	if (tr.fraction != 1.0 && tr.entity_num >= 0 && tr.entity_num < MAX_CLIENTS)
+	{
+		//We don't have real entity access here so we can't do an in depth check. But if it's a client and it's behind us, I guess that's reason enough to stab backward
+		return qtrue;
+	}
+
+	return qfalse;
+}
+int Next_Attack_Move[MAX_CLIENTS]; // Next special move check.
 
 saberMoveName_t PM_SaberAttackForMovement(const int forwardmove, const int rightmove, const int curmove)
 {
@@ -5058,6 +5259,7 @@ saberMoveName_t PM_SaberAttackForMovement(const int forwardmove, const int right
 			return static_cast<saberMoveName_t>(Q_irand(LS_A_TL2BR, LS_A_T2B));
 		}
 	}
+
 	return newmove;
 }
 
@@ -7715,7 +7917,6 @@ void PM_TorsoAnimation()
 						}
 					}
 					break;
-
 
 				case WP_DROIDEKA:
 					if (pm->gent && pm->gent->weaponModel[1] > 0)

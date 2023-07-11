@@ -2562,7 +2562,7 @@ static void Jedi_Advance(void)
 extern qboolean WP_SaberCanTurnOffSomeBlades(const saberInfo_t* saber);
 extern qboolean G_ValidSaberStyle(const gentity_t* ent, int saber_style);
 
-static void Jedi_AdjustSaberAnimLevel(const gentity_t* self, int new_level)
+static void Jedi_Adjustsaber_anim_level(const gentity_t* self, int new_level)
 {
 	if (!self || !self->client)
 	{
@@ -2935,7 +2935,7 @@ static void Jedi_AdjustSaberAnimLevel(const gentity_t* self, int new_level)
 	}
 }
 
-static void Jedi_CheckDecreaseSaberAnimLevel(void)
+static void Jedi_CheckDecreasesaber_anim_level(void)
 {
 	if (NPCS.NPC->client->ps.fd.saber_anim_level == SS_DUAL
 		|| NPCS.NPC->client->ps.fd.saber_anim_level == SS_STAFF)
@@ -2947,7 +2947,7 @@ static void Jedi_CheckDecreaseSaberAnimLevel(void)
 		//not attacking
 		if (TIMER_Done(NPCS.NPC, "saberLevelDebounce") && !Q_irand(0, 10))
 		{
-			Jedi_AdjustSaberAnimLevel(NPCS.NPC, Q_irand(SS_FAST, SS_TAVION)); //random
+			Jedi_Adjustsaber_anim_level(NPCS.NPC, Q_irand(SS_FAST, SS_TAVION)); //random
 			TIMER_Set(NPCS.NPC, "saberLevelDebounce", Q_irand(3000, 10000));
 		}
 	}
@@ -7318,7 +7318,7 @@ static void Jedi_CombatTimersUpdate(const int enemy_dist)
 			{
 				//advance!
 				Jedi_Aggression(NPCS.NPC, 1); //get closer
-				Jedi_AdjustSaberAnimLevel(NPCS.NPC, NPCS.NPC->client->ps.fd.saber_anim_level - 1); //use a faster attack
+				Jedi_Adjustsaber_anim_level(NPCS.NPC, NPCS.NPC->client->ps.fd.saber_anim_level - 1); //use a faster attack
 			}
 			else
 			{
@@ -7329,7 +7329,7 @@ static void Jedi_CombatTimersUpdate(const int enemy_dist)
 				}
 				if (!Q_irand(0, 1))
 				{
-					Jedi_AdjustSaberAnimLevel(NPCS.NPC, NPCS.NPC->client->ps.fd.saber_anim_level - 1);
+					Jedi_Adjustsaber_anim_level(NPCS.NPC, NPCS.NPC->client->ps.fd.saber_anim_level - 1);
 				}
 			}
 			if (d_JediAI.integer || g_DebugSaberCombat.integer)
@@ -7370,7 +7370,7 @@ static void Jedi_CombatTimersUpdate(const int enemy_dist)
 			}
 			if (!Q_irand(0, 2))
 			{
-				Jedi_AdjustSaberAnimLevel(NPCS.NPC, NPCS.NPC->client->ps.fd.saber_anim_level + 1);
+				Jedi_Adjustsaber_anim_level(NPCS.NPC, NPCS.NPC->client->ps.fd.saber_anim_level + 1);
 			}
 			newFlags &= ~SEF_HITENEMY;
 		}
@@ -7390,7 +7390,7 @@ static void Jedi_CombatTimersUpdate(const int enemy_dist)
 				{
 					Jedi_Aggression(NPCS.NPC, -2); //really should back off!
 				}
-				Jedi_AdjustSaberAnimLevel(NPCS.NPC, NPCS.NPC->client->ps.fd.saber_anim_level + 1);
+				Jedi_Adjustsaber_anim_level(NPCS.NPC, NPCS.NPC->client->ps.fd.saber_anim_level + 1);
 				//use a stronger attack
 				if (d_JediAI.integer || g_DebugSaberCombat.integer)
 				{
@@ -7410,7 +7410,7 @@ static void Jedi_CombatTimersUpdate(const int enemy_dist)
 				}
 				if (!Q_irand(0, 1))
 				{
-					Jedi_AdjustSaberAnimLevel(NPCS.NPC, NPCS.NPC->client->ps.fd.saber_anim_level + 1);
+					Jedi_Adjustsaber_anim_level(NPCS.NPC, NPCS.NPC->client->ps.fd.saber_anim_level + 1);
 				}
 			}
 			newFlags &= ~SEF_BLOCKED;
@@ -7425,7 +7425,7 @@ static void Jedi_CombatTimersUpdate(const int enemy_dist)
 			newFlags &= ~SEF_DEFLECTED;
 			if (!Q_irand(0, 3))
 			{
-				Jedi_AdjustSaberAnimLevel(NPCS.NPC, NPCS.NPC->client->ps.fd.saber_anim_level - 1);
+				Jedi_Adjustsaber_anim_level(NPCS.NPC, NPCS.NPC->client->ps.fd.saber_anim_level - 1);
 			}
 		}
 		if (NPCS.NPC->client->ps.saberEventFlags & SEF_HITWALL)
@@ -7438,7 +7438,7 @@ static void Jedi_CombatTimersUpdate(const int enemy_dist)
 			//hit some other damagable object
 			if (!Q_irand(0, 3))
 			{
-				Jedi_AdjustSaberAnimLevel(NPCS.NPC, NPCS.NPC->client->ps.fd.saber_anim_level - 1);
+				Jedi_Adjustsaber_anim_level(NPCS.NPC, NPCS.NPC->client->ps.fd.saber_anim_level - 1);
 			}
 			newFlags &= ~SEF_HITOBJECT;
 		}
@@ -7618,7 +7618,7 @@ static qboolean Jedi_AttackDecide(const int enemy_dist)
 			//try to attack straight from a parry
 			NPCS.NPC->client->ps.weaponTime = NPCS.NPCInfo->shotTime = NPCS.NPC->attackDebounceTime = 0;
 			NPCS.NPC->client->ps.saberBlocked = BLOCKED_NONE;
-			Jedi_AdjustSaberAnimLevel(NPCS.NPC, SS_FAST); //try to follow-up with a quick attack
+			Jedi_Adjustsaber_anim_level(NPCS.NPC, SS_FAST); //try to follow-up with a quick attack
 			WeaponThink();
 			return qtrue;
 		}
@@ -8569,13 +8569,13 @@ static void Jedi_Combat(void)
 				}
 			}
 		}
-			//else, we can see him or we can't track him at all
+		//else, we can see him or we can't track him at all
 
-			//every few seconds, decide if we should we advance or retreat?
-			Jedi_CombatTimersUpdate(enemy_dist);
-			//We call this even if lost enemy to keep him moving and to update the taunting behavior
-			//maintain a distance from enemy appropriate for our aggression level
-			Jedi_CombatDistance(enemy_dist);
+		//every few seconds, decide if we should we advance or retreat?
+		Jedi_CombatTimersUpdate(enemy_dist);
+		//We call this even if lost enemy to keep him moving and to update the taunting behavior
+		//maintain a distance from enemy appropriate for our aggression level
+		Jedi_CombatDistance(enemy_dist);
 	}
 
 	if (NPCS.NPC->client->NPC_class != CLASS_BOBAFETT && NPCS.NPC->client->NPC_class != CLASS_MANDO)
@@ -8731,7 +8731,7 @@ void NPC_Jedi_Pain(gentity_t* self, gentity_t* attacker, const int damage)
 		if (!Q_irand(0, 3))
 		{
 			//ouch... maybe switch up which saber power level we're using
-			Jedi_AdjustSaberAnimLevel(self, Q_irand(SS_FAST, SS_TAVION));
+			Jedi_Adjustsaber_anim_level(self, Q_irand(SS_FAST, SS_TAVION));
 		}
 		if (!Q_irand(0, 1))
 		{
@@ -9729,187 +9729,187 @@ static void Jedi_Attack(void)
 		VectorClear(NPCS.NPC->client->ps.moveDir);
 	}
 
-			//NOTE: for now, we clear ucmd.forwardmove & ucmd.rightmove while in air to avoid jumps going awry...
-			if (NPCS.NPC->client->ps.groundEntityNum == ENTITYNUM_NONE)
-			{
-				//don't push while in air, throws off jumps!
-				//FIXME: if we are in the air over a drop near a ledge, should we try to push back towards the ledge?
-				NPCS.ucmd.forwardmove = 0;
-				NPCS.ucmd.rightmove = 0;
-				VectorClear(NPCS.NPC->client->ps.moveDir);
-			}
+	//NOTE: for now, we clear ucmd.forwardmove & ucmd.rightmove while in air to avoid jumps going awry...
+	if (NPCS.NPC->client->ps.groundEntityNum == ENTITYNUM_NONE)
+	{
+		//don't push while in air, throws off jumps!
+		//FIXME: if we are in the air over a drop near a ledge, should we try to push back towards the ledge?
+		NPCS.ucmd.forwardmove = 0;
+		NPCS.ucmd.rightmove = 0;
+		VectorClear(NPCS.NPC->client->ps.moveDir);
+	}
 
-			if (!TIMER_Done(NPCS.NPC, "duck"))
-			{
-				NPCS.ucmd.upmove = -127;
-			}
+	if (!TIMER_Done(NPCS.NPC, "duck"))
+	{
+		NPCS.ucmd.upmove = -127;
+	}
 
-			if (NPCS.NPC->client->NPC_class != CLASS_BOBAFETT
-				&& (NPCS.NPC->client->NPC_class != CLASS_REBORN || NPCS.NPC->s.weapon == WP_SABER)
-				&& NPCS.NPC->client->NPC_class != CLASS_ROCKETTROOPER
-				|| NPCS.NPC->client->pers.nextbotclass != BCLASS_BOBAFETT
-				|| NPCS.NPC->client->pers.nextbotclass != BCLASS_MANDOLORIAN1
-				|| NPCS.NPC->client->pers.nextbotclass != BCLASS_MANDOLORIAN2)
+	if (NPCS.NPC->client->NPC_class != CLASS_BOBAFETT
+		&& (NPCS.NPC->client->NPC_class != CLASS_REBORN || NPCS.NPC->s.weapon == WP_SABER)
+		&& NPCS.NPC->client->NPC_class != CLASS_ROCKETTROOPER
+		|| NPCS.NPC->client->pers.nextbotclass != BCLASS_BOBAFETT
+		|| NPCS.NPC->client->pers.nextbotclass != BCLASS_MANDOLORIAN1
+		|| NPCS.NPC->client->pers.nextbotclass != BCLASS_MANDOLORIAN2)
+	{
+		if (PM_SaberInBrokenParry(NPCS.NPC->client->ps.saber_move) || NPCS.NPC->client->ps.saberBlocked ==
+			BLOCKED_PARRY_BROKEN)
+		{
+			//just make sure they don't pull their saber to them if they're being blocked
+			NPCS.ucmd.buttons &= ~BUTTON_ATTACK;
+		}
+	}
+
+	if (NPCS.NPCInfo->scriptFlags & SCF_DONT_FIRE //not allowed to attack
+		|| NPCS.NPC->client->ps.fd.forcePowersActive & 1 << FP_HEAL && NPCS.NPC->client->ps.fd.forcePowerLevel[
+			FP_HEAL] < FORCE_LEVEL_3
+		|| NPCS.NPC->client->ps.saberEventFlags & SEF_INWATER && !NPCS.NPC->client->ps.saberInFlight)
+		//saber in water
+	{
+		NPCS.ucmd.buttons &= ~(BUTTON_ATTACK | BUTTON_ALT_ATTACK);
+	}
+
+	if (NPCS.NPCInfo->scriptFlags & SCF_NO_ACROBATICS)
+	{
+		NPCS.ucmd.upmove = 0;
+		NPCS.NPC->client->ps.fd.forceJumpCharge = 0;
+	}
+
+	if (NPCS.NPC->client->NPC_class != CLASS_BOBAFETT
+		&& (NPCS.NPC->client->NPC_class != CLASS_REBORN || NPCS.NPC->s.weapon == WP_SABER)
+		&& NPCS.NPC->client->NPC_class != CLASS_ROCKETTROOPER
+		|| NPCS.NPC->client->pers.nextbotclass != BCLASS_BOBAFETT
+		|| NPCS.NPC->client->pers.nextbotclass != BCLASS_MANDOLORIAN1
+		|| NPCS.NPC->client->pers.nextbotclass != BCLASS_MANDOLORIAN2)
+	{
+		Jedi_CheckDecreasesaber_anim_level();
+	}
+
+	if (NPCS.ucmd.buttons & BUTTON_ATTACK && NPCS.NPC->client->playerTeam == NPCTEAM_ENEMY)
+	{
+		if (Q_irand(0, NPCS.NPC->client->ps.fd.saber_anim_level) > 0
+			&& Q_irand(0, NPCS.NPC->client->pers.maxHealth + 10) > NPCS.NPC->health
+			&& !Q_irand(0, 3))
+		{
+			//the more we're hurt and the stronger the attack we're using, the more likely we are to make a anger noise when we swing
+			G_AddVoiceEvent(NPCS.NPC, Q_irand(EV_COMBAT1, EV_COMBAT3), 1000);
+		}
+	}
+
+	if (Jedi_CheckKataAttack())
+	{
+		//doing a kata attack
+	}
+	else
+	{
+		//check other special combat behavior
+		if (NPCS.NPC->client->NPC_class != CLASS_BOBAFETT
+			&& (NPCS.NPC->client->NPC_class != CLASS_REBORN || NPCS.NPC->s.weapon == WP_SABER)
+			&& NPCS.NPC->client->NPC_class != CLASS_ROCKETTROOPER
+			|| NPCS.NPC->client->pers.nextbotclass != BCLASS_BOBAFETT
+			|| NPCS.NPC->client->pers.nextbotclass != BCLASS_MANDOLORIAN1
+			|| NPCS.NPC->client->pers.nextbotclass != BCLASS_MANDOLORIAN2)
+		{
+			//saber wielders only.
+			if (NPCS.NPC->client->NPC_class == CLASS_TAVION
+				|| NPCS.NPC->client->NPC_class == CLASS_SHADOWTROOPER
+				|| NPCS.NPC->client->NPC_class == CLASS_ALORA
+				|| g_npcspskill.integer && (NPCS.NPC->client->NPC_class == CLASS_DESANN || NPCS.NPCInfo->rank >=
+					Q_irand(RANK_CREWMAN, RANK_CAPTAIN)))
 			{
-				if (PM_SaberInBrokenParry(NPCS.NPC->client->ps.saber_move) || NPCS.NPC->client->ps.saberBlocked ==
-					BLOCKED_PARRY_BROKEN)
+				//certain NPCS will kick in force speed if the player does...
+				if (NPCS.NPC->enemy
+					&& !NPCS.NPC->enemy->s.number
+					&& NPCS.NPC->enemy->client
+					&& NPCS.NPC->enemy->client->ps.fd.forcePowersActive & 1 << FP_SPEED
+					&& !(NPCS.NPC->client->ps.fd.forcePowersActive & 1 << FP_SPEED))
 				{
-					//just make sure they don't pull their saber to them if they're being blocked
-					NPCS.ucmd.buttons &= ~BUTTON_ATTACK;
+					int chance = 0;
+					switch (g_npcspskill.integer)
+					{
+					case 0:
+						chance = 9;
+					case 1:
+						chance = 3;
+					case 2:
+						chance = 1;
+						break;
+					default:;
+					}
+					if (!Q_irand(0, chance))
+					{
+						ForceSpeed(NPCS.NPC, 0);
+					}
 				}
 			}
-
-			if (NPCS.NPCInfo->scriptFlags & SCF_DONT_FIRE //not allowed to attack
-				|| NPCS.NPC->client->ps.fd.forcePowersActive & 1 << FP_HEAL && NPCS.NPC->client->ps.fd.forcePowerLevel[
-					FP_HEAL] < FORCE_LEVEL_3
-				|| NPCS.NPC->client->ps.saberEventFlags & SEF_INWATER && !NPCS.NPC->client->ps.saberInFlight)
-				//saber in water
+		}
+		//Sometimes Alora flips towards you instead of runs
+		if (NPCS.NPC->client->NPC_class == CLASS_ALORA)
+		{
+			if (NPCS.ucmd.buttons & BUTTON_ALT_ATTACK)
 			{
-				NPCS.ucmd.buttons &= ~(BUTTON_ATTACK | BUTTON_ALT_ATTACK);
+				//chance of doing a special dual saber throw
+				if (NPCS.NPC->client->ps.fd.saber_anim_level == SS_DUAL
+					&& !NPCS.NPC->client->ps.saberInFlight)
+				{
+					//has dual sabers and haven't already tossed the saber.
+					if (Distance(NPCS.NPC->enemy->r.currentOrigin, NPCS.NPC->r.currentOrigin) >= 120)
+					{
+						NPC_SetAnim(NPCS.NPC, SETANIM_BOTH, BOTH_ALORA_SPIN_THROW,
+							SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+						NPCS.NPC->client->ps.weaponTime = NPCS.NPC->client->ps.torsoTimer;
+					}
+				}
 			}
-
-					if (NPCS.NPCInfo->scriptFlags & SCF_NO_ACROBATICS)
+			else if (NPCS.NPC->enemy
+				&& NPCS.ucmd.forwardmove > 0
+				&& fabs(NPCS.ucmd.rightmove) < 32
+				&& !(NPCS.ucmd.buttons & BUTTON_WALKING)
+				&& !(NPCS.ucmd.buttons & BUTTON_ATTACK)
+				&& NPCS.NPC->client->ps.saber_move == LS_READY
+				&& NPCS.NPC->client->ps.legsAnim == BOTH_RUN_DUAL)
+			{
+				//running at us, not attacking
+				if (Distance(NPCS.NPC->enemy->r.currentOrigin, NPCS.NPC->r.currentOrigin) > 80)
+				{
+					if (NPCS.NPC->client->ps.legsAnim == BOTH_FLIP_F
+						|| NPCS.NPC->client->ps.legsAnim == BOTH_ALORA_FLIP_1_MD2
+						|| NPCS.NPC->client->ps.legsAnim == BOTH_ALORA_FLIP_2_MD2
+						|| NPCS.NPC->client->ps.legsAnim == BOTH_ALORA_FLIP_3_MD2
+						|| NPCS.NPC->client->ps.legsAnim == BOTH_ALORA_FLIP_1
+						|| NPCS.NPC->client->ps.legsAnim == BOTH_ALORA_FLIP_2
+						|| NPCS.NPC->client->ps.legsAnim == BOTH_ALORA_FLIP_3)
 					{
-						NPCS.ucmd.upmove = 0;
-						NPCS.NPC->client->ps.fd.forceJumpCharge = 0;
-					}
-
-					if (NPCS.NPC->client->NPC_class != CLASS_BOBAFETT
-						&& (NPCS.NPC->client->NPC_class != CLASS_REBORN || NPCS.NPC->s.weapon == WP_SABER)
-						&& NPCS.NPC->client->NPC_class != CLASS_ROCKETTROOPER
-						|| NPCS.NPC->client->pers.nextbotclass != BCLASS_BOBAFETT
-						|| NPCS.NPC->client->pers.nextbotclass != BCLASS_MANDOLORIAN1
-						|| NPCS.NPC->client->pers.nextbotclass != BCLASS_MANDOLORIAN2)
-					{
-						Jedi_CheckDecreaseSaberAnimLevel();
-					}
-
-					if (NPCS.ucmd.buttons & BUTTON_ATTACK && NPCS.NPC->client->playerTeam == NPCTEAM_ENEMY)
-					{
-						if (Q_irand(0, NPCS.NPC->client->ps.fd.saber_anim_level) > 0
-							&& Q_irand(0, NPCS.NPC->client->pers.maxHealth + 10) > NPCS.NPC->health
-							&& !Q_irand(0, 3))
+						if (NPCS.NPC->client->ps.legsTimer <= 200 && Q_irand(0, 2))
 						{
-							//the more we're hurt and the stronger the attack we're using, the more likely we are to make a anger noise when we swing
-							G_AddVoiceEvent(NPCS.NPC, Q_irand(EV_COMBAT1, EV_COMBAT3), 1000);
+							//go ahead and start anotther
+							NPC_SetAnim(NPCS.NPC, SETANIM_BOTH, Q_irand(BOTH_ALORA_FLIP_1, BOTH_ALORA_FLIP_3),
+								SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 						}
 					}
+					else if (!Q_irand(0, 6))
+					{
+						NPC_SetAnim(NPCS.NPC, SETANIM_BOTH, Q_irand(BOTH_ALORA_FLIP_1, BOTH_ALORA_FLIP_3),
+							SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+					}
+				}
+			}
+		}
+	}
 
-					if (Jedi_CheckKataAttack())
-					{
-						//doing a kata attack
-					}
-					else
-					{
-						//check other special combat behavior
-						if (NPCS.NPC->client->NPC_class != CLASS_BOBAFETT
-							&& (NPCS.NPC->client->NPC_class != CLASS_REBORN || NPCS.NPC->s.weapon == WP_SABER)
-							&& NPCS.NPC->client->NPC_class != CLASS_ROCKETTROOPER
-							|| NPCS.NPC->client->pers.nextbotclass != BCLASS_BOBAFETT
-							|| NPCS.NPC->client->pers.nextbotclass != BCLASS_MANDOLORIAN1
-							|| NPCS.NPC->client->pers.nextbotclass != BCLASS_MANDOLORIAN2)
-						{
-							//saber wielders only.
-							if (NPCS.NPC->client->NPC_class == CLASS_TAVION
-								|| NPCS.NPC->client->NPC_class == CLASS_SHADOWTROOPER
-								|| NPCS.NPC->client->NPC_class == CLASS_ALORA
-								|| g_npcspskill.integer && (NPCS.NPC->client->NPC_class == CLASS_DESANN || NPCS.NPCInfo->rank >=
-									Q_irand(RANK_CREWMAN, RANK_CAPTAIN)))
-							{
-								//certain NPCS will kick in force speed if the player does...
-								if (NPCS.NPC->enemy
-									&& !NPCS.NPC->enemy->s.number
-									&& NPCS.NPC->enemy->client
-									&& NPCS.NPC->enemy->client->ps.fd.forcePowersActive & 1 << FP_SPEED
-									&& !(NPCS.NPC->client->ps.fd.forcePowersActive & 1 << FP_SPEED))
-								{
-									int chance = 0;
-									switch (g_npcspskill.integer)
-									{
-									case 0:
-										chance = 9;
-									case 1:
-										chance = 3;
-									case 2:
-										chance = 1;
-										break;
-									default:;
-									}
-									if (!Q_irand(0, chance))
-									{
-										ForceSpeed(NPCS.NPC, 0);
-									}
-								}
-							}
-						}
-						//Sometimes Alora flips towards you instead of runs
-						if (NPCS.NPC->client->NPC_class == CLASS_ALORA)
-						{
-							if (NPCS.ucmd.buttons & BUTTON_ALT_ATTACK)
-							{
-								//chance of doing a special dual saber throw
-								if (NPCS.NPC->client->ps.fd.saber_anim_level == SS_DUAL
-									&& !NPCS.NPC->client->ps.saberInFlight)
-								{
-									//has dual sabers and haven't already tossed the saber.
-									if (Distance(NPCS.NPC->enemy->r.currentOrigin, NPCS.NPC->r.currentOrigin) >= 120)
-									{
-										NPC_SetAnim(NPCS.NPC, SETANIM_BOTH, BOTH_ALORA_SPIN_THROW,
-											SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
-										NPCS.NPC->client->ps.weaponTime = NPCS.NPC->client->ps.torsoTimer;
-									}
-								}
-							}
-							else if (NPCS.NPC->enemy
-								&& NPCS.ucmd.forwardmove > 0
-								&& fabs(NPCS.ucmd.rightmove) < 32
-								&& !(NPCS.ucmd.buttons & BUTTON_WALKING)
-								&& !(NPCS.ucmd.buttons & BUTTON_ATTACK)
-								&& NPCS.NPC->client->ps.saber_move == LS_READY
-								&& NPCS.NPC->client->ps.legsAnim == BOTH_RUN_DUAL)
-							{
-								//running at us, not attacking
-								if (Distance(NPCS.NPC->enemy->r.currentOrigin, NPCS.NPC->r.currentOrigin) > 80)
-								{
-									if (NPCS.NPC->client->ps.legsAnim == BOTH_FLIP_F
-										|| NPCS.NPC->client->ps.legsAnim == BOTH_ALORA_FLIP_1_MD2
-										|| NPCS.NPC->client->ps.legsAnim == BOTH_ALORA_FLIP_2_MD2
-										|| NPCS.NPC->client->ps.legsAnim == BOTH_ALORA_FLIP_3_MD2
-										|| NPCS.NPC->client->ps.legsAnim == BOTH_ALORA_FLIP_1
-										|| NPCS.NPC->client->ps.legsAnim == BOTH_ALORA_FLIP_2
-										|| NPCS.NPC->client->ps.legsAnim == BOTH_ALORA_FLIP_3)
-									{
-										if (NPCS.NPC->client->ps.legsTimer <= 200 && Q_irand(0, 2))
-										{
-											//go ahead and start anotther
-											NPC_SetAnim(NPCS.NPC, SETANIM_BOTH, Q_irand(BOTH_ALORA_FLIP_1, BOTH_ALORA_FLIP_3),
-												SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
-										}
-									}
-									else if (!Q_irand(0, 6))
-									{
-										NPC_SetAnim(NPCS.NPC, SETANIM_BOTH, Q_irand(BOTH_ALORA_FLIP_1, BOTH_ALORA_FLIP_3),
-											SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
-									}
-								}
-							}
-						}
-					}
-
-					if (VectorCompare(NPCS.NPC->client->ps.moveDir, vec3_origin)
-						&& (NPCS.ucmd.forwardmove || NPCS.ucmd.rightmove))
-					{
-						//using ucmds to move this turn, not NAV
-						if (NPCS.ucmd.buttons & BUTTON_WALKING)
-						{
-							//FIXME: NAV system screws with speed directly, so now I have to re-set it myself!
-							NPCS.NPC->client->ps.speed = NPCS.NPCInfo->stats.walkSpeed;
-						}
-						else
-						{
-							NPCS.NPC->client->ps.speed = NPCS.NPCInfo->stats.runSpeed;
-						}
-					}
+	if (VectorCompare(NPCS.NPC->client->ps.moveDir, vec3_origin)
+		&& (NPCS.ucmd.forwardmove || NPCS.ucmd.rightmove))
+	{
+		//using ucmds to move this turn, not NAV
+		if (NPCS.ucmd.buttons & BUTTON_WALKING)
+		{
+			//FIXME: NAV system screws with speed directly, so now I have to re-set it myself!
+			NPCS.NPC->client->ps.speed = NPCS.NPCInfo->stats.walkSpeed;
+		}
+		else
+		{
+			NPCS.NPC->client->ps.speed = NPCS.NPCInfo->stats.runSpeed;
+		}
+	}
 }
 
 //added all SP code used for the Rosh boss fight

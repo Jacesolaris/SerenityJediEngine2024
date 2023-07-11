@@ -27,7 +27,7 @@ namespace Q
 			return std::find_if_not<gsl::cstring_view::const_iterator, int(*)(int)>(
 				begin, end,
 				std::isspace
-				);
+			);
 		}
 
 		//    Verbatim string
@@ -83,7 +83,7 @@ namespace Q
 			auto end = std::find_if<gsl::cstring_view::const_iterator, int(*)(int)>(
 				begin, input.end(),
 				std::isspace
-				);
+			);
 			if (begin == end)
 			{
 				// empty string is not accepted

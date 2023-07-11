@@ -961,7 +961,6 @@ static qboolean R_LoadMD3(model_t* mod, int lod, void* buffer, const char* name,
 
 //=============================================================================
 
-
 /*
 ** RE_BeginRegistration
 */

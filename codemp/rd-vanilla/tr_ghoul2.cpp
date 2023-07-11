@@ -648,7 +648,7 @@ void G2_RagGetBoneBasePoseMatrixLow(const CGhoul2Info& ghoul2, const int bone_nu
 }
 
 void G2_GetBoneMatrixLow(const CGhoul2Info& ghoul2, const int bone_num, const vec3_t scale, mdxaBone_t& retMatrix,
-                         mdxaBone_t*& ret_basepose, mdxaBone_t*& ret_basepose_inv)
+	mdxaBone_t*& ret_basepose, mdxaBone_t*& ret_basepose_inv)
 {
 	if (!ghoul2.mBoneCache)
 	{
@@ -700,7 +700,7 @@ void G2_GetBoneMatrixLow(const CGhoul2Info& ghoul2, const int bone_num, const ve
 }
 
 int G2_GetParentBoneMatrixLow(const CGhoul2Info& ghoul2, const int bone_num, const vec3_t scale, mdxaBone_t& retMatrix,
-                              mdxaBone_t*& ret_basepose, mdxaBone_t*& ret_basepose_inv)
+	mdxaBone_t*& ret_basepose, mdxaBone_t*& ret_basepose_inv)
 {
 	int parent = -1;
 	if (ghoul2.mBoneCache)
@@ -1224,7 +1224,7 @@ void G2_TimingModel(boneInfo_t& bone, const int current_time, const int num_fram
 					}
 				}
 				// sanity check
-				assert(new_frame < end_frame&& new_frame >= bone.start_frame || animSize < 10);
+				assert(new_frame < end_frame && new_frame >= bone.start_frame || animSize < 10);
 			}
 			else
 			{
@@ -2189,7 +2189,7 @@ void G2_TransformGhoulBones(boneInfo_v& rootBoneList, const mdxaBone_t& rootMatr
 
 // We've come across a surface that's designated as a bolt surface, process it and put it in the appropriate bolt place
 void G2_ProcessSurfaceBolt(const mdxaBone_v& bone_ptr, mdxmSurface_t* surface, const int boltNum, boltInfo_v& boltList,
-                           const surfaceInfo_t* surfInfo, model_t* mod)
+	const surfaceInfo_t* surfInfo, model_t* mod)
 {
 	float pTri[3][3]{};
 	int k;

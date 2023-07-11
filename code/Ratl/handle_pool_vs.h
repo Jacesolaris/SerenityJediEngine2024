@@ -229,7 +229,7 @@ namespace ratl
 		////////////////////////////////////////////////////////////////////////////////////
 		int index_to_handle(int index) const
 		{
-			assert(index >= 0 && index < CAPACITY&& pool_root<T>::is_used_index(index));
+			assert(index >= 0 && index < CAPACITY && pool_root<T>::is_used_index(index));
 			//disallowing this on stale handles
 			return mHandles[index];
 		}

@@ -11236,7 +11236,7 @@ void standard_bot_ai(bot_state_t* bs)
 						forceHostile = 1;
 					}
 
-						bs->doForcePushPullSpamTime = level.time + 500;
+					bs->doForcePushPullSpamTime = level.time + 500;
 				}
 				else
 				{
@@ -11248,7 +11248,7 @@ void standard_bot_ai(bot_state_t* bs)
 						forceHostile = 1;
 					}
 
-						bs->doForcePushPullSpamTime = level.time + 500;
+					bs->doForcePushPullSpamTime = level.time + 500;
 				}
 			}
 		}

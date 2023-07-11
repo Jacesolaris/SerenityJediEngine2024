@@ -261,6 +261,7 @@ cvar_t* g_WeaponRemovalTime;
 cvar_t* g_IconBackgroundSlow;
 
 cvar_t* g_AllowLedgeGrab;
+cvar_t* g_attackskill;
 
 cvar_t* g_remove_unused_weapons;
 
@@ -888,7 +889,9 @@ void G_InitCvars()
 
 	g_IconBackgroundSlow = gi.cvar("g_iconbackgroundslow", "0", CVAR_ARCHIVE | CVAR_SAVEGAME | CVAR_NORESTART);
 
-	g_AllowLedgeGrab = gi.cvar("g_allowledgegrab", "0", CVAR_ARCHIVE | CVAR_SAVEGAME | CVAR_NORESTART);
+	g_AllowLedgeGrab = gi.cvar("g_allowledgegrab", "1", CVAR_ARCHIVE | CVAR_SAVEGAME | CVAR_NORESTART);
+
+	g_attackskill = gi.cvar("g_attackskill", "3", CVAR_ARCHIVE);
 }
 
 /*

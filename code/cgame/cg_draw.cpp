@@ -388,34 +388,34 @@ static void CG_DrawCusSaberStyle(const centity_t* cent, const float hud_ratio)
 
 	cgi_R_SetColor(colorTable[CT_WHITE]);
 
-	if (!cg.saberAnimLevelPending && cent->gent->client)
+	if (!cg.saber_anim_levelPending && cent->gent->client)
 	{
 		//uninitialized after a loadgame, cheat across and get it
-		cg.saberAnimLevelPending = cent->gent->client->ps.saber_anim_level;
+		cg.saber_anim_levelPending = cent->gent->client->ps.saber_anim_level;
 	}
 
 	// don't need to draw ammo, but we will draw the current saber style in this window
-	if (cg.saberAnimLevelPending == SS_FAST)
+	if (cg.saber_anim_levelPending == SS_FAST)
 	{
 		index = OHB_SABERSTYLE_FAST;
 	}
-	else if (cg.saberAnimLevelPending == SS_MEDIUM)
+	else if (cg.saber_anim_levelPending == SS_MEDIUM)
 	{
 		index = OHB_SABERSTYLE_MEDIUM;
 	}
-	else if (cg.saberAnimLevelPending == SS_TAVION)
+	else if (cg.saber_anim_levelPending == SS_TAVION)
 	{
 		index = OHB_SABERSTYLE_TAVION;
 	}
-	else if (cg.saberAnimLevelPending == SS_DESANN)
+	else if (cg.saber_anim_levelPending == SS_DESANN)
 	{
 		index = OHB_SABERSTYLE_DESANN;
 	}
-	else if (cg.saberAnimLevelPending == SS_STAFF)
+	else if (cg.saber_anim_levelPending == SS_STAFF)
 	{
 		index = OHB_SABERSTYLE_STAFF;
 	}
-	else if (cg.saberAnimLevelPending == SS_DUAL)
+	else if (cg.saber_anim_levelPending == SS_DUAL)
 	{
 		index = OHB_SABERSTYLE_DUAL;
 	}
@@ -533,7 +533,6 @@ static void CG_DrawCusweapontype(const centity_t* cent, const float hud_ratio)
 		else
 		{
 			wp_index = OHB_BLASTER;
-			
 		}
 	}
 	else if (cent->currentState.weapon == WP_BOWCASTER)
@@ -1591,13 +1590,13 @@ void CG_DrawJK2Ammo(const centity_t* cent, const int x, const int y)
 	{
 		cgi_R_SetColor(colorTable[CT_WHITE]);
 
-		if (!cg.saberAnimLevelPending && cent->gent->client)
+		if (!cg.saber_anim_levelPending && cent->gent->client)
 		{
 			//uninitialized after a loadgame, cheat across and get it
-			cg.saberAnimLevelPending = cent->gent->client->ps.saber_anim_level;
+			cg.saber_anim_levelPending = cent->gent->client->ps.saber_anim_level;
 		}
 		// don't need to draw ammo, but we will draw the current saber style in this window
-		switch (cg.saberAnimLevelPending)
+		switch (cg.saber_anim_levelPending)
 		{
 		case 1: //FORCE_LEVEL_1:
 			CG_DrawPic(x, y, 80, 40, cgs.media.JK2HUDSaberStyleFast);
@@ -3014,13 +3013,13 @@ static void CG_DrawSimpleSaberStyle(const centity_t* cent)
 		return;
 	}
 
-	if (!cg.saberAnimLevelPending && cent->gent && cent->gent->client)
+	if (!cg.saber_anim_levelPending && cent->gent && cent->gent->client)
 	{
 		//uninitialized after a loadgame, cheat across and get it
-		cg.saberAnimLevelPending = cent->gent->client->ps.saber_anim_level;
+		cg.saber_anim_levelPending = cent->gent->client->ps.saber_anim_level;
 	}
 
-	switch (cg.saberAnimLevelPending)
+	switch (cg.saber_anim_levelPending)
 	{
 	default:
 	case SS_FAST:
@@ -3806,13 +3805,13 @@ static void CG_DrawDataPadAmmo(const centity_t* cent, const int x, const int y)
 	{
 		cgi_R_SetColor(colorTable[CT_WHITE]);
 
-		if (!cg.saberAnimLevelPending && cent->gent->client)
+		if (!cg.saber_anim_levelPending && cent->gent->client)
 		{
 			//uninitialized after a loadgame, cheat across and get it
-			cg.saberAnimLevelPending = cent->gent->client->ps.saber_anim_level;
+			cg.saber_anim_levelPending = cent->gent->client->ps.saber_anim_level;
 		}
 		// don't need to draw ammo, but we will draw the current saber style in this window
-		switch (cg.saberAnimLevelPending)
+		switch (cg.saber_anim_levelPending)
 		{
 		case SS_FAST:
 			CG_DrawPic(x, y, 80, 40, cgs.media.HUDSaberStyleFast);

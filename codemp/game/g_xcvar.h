@@ -231,6 +231,7 @@ XCVAR_DEF(g_DebugSaberCombat, "0", NULL, CVAR_ARCHIVE, qtrue)
 XCVAR_DEF(g_WeaponRemovalTime, "10", NULL, CVAR_ARCHIVE, qtrue)
 XCVAR_DEF(g_remove_unused_weapons, "1", NULL, CVAR_ARCHIVE, qtrue)
 XCVAR_DEF(com_outcast, "0", NULL, CVAR_ARCHIVE, qtrue)
-XCVAR_DEF(g_AllowLedgeGrab, "0", NULL, CVAR_ARCHIVE, qtrue)
+XCVAR_DEF(g_AllowLedgeGrab, "1", NULL, CVAR_ARCHIVE, qtrue)
+XCVAR_DEF(g_attackskill, "3", NULL, CVAR_ARCHIVE, qfalse)
 
 #undef XCVAR_DEF

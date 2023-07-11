@@ -1537,20 +1537,20 @@ void NPC_Begin(gentity_t* ent)
 
 	ChangeWeapon(ent, ent->client->ps.weapon); //yes, again... sigh
 
-	//set saberAnimLevelBase
+	//set saber_anim_levelBase
 	if (ent->client->saber[0].model[0] && ent->client->saber[1].model[0])
 	{
-		ent->client->ps.fd.saberAnimLevelBase = ent->client->ps.fd.saber_anim_level = SS_DUAL;
+		ent->client->ps.fd.saber_anim_levelBase = ent->client->ps.fd.saber_anim_level = SS_DUAL;
 	}
 	else if (ent->client->saber[0].numBlades > 1
 		&& WP_SaberCanTurnOffSomeBlades(&ent->client->saber[0]))
 	{
-		ent->client->ps.fd.saberAnimLevelBase = ent->client->ps.fd.saber_anim_level = SS_STAFF;
+		ent->client->ps.fd.saber_anim_levelBase = ent->client->ps.fd.saber_anim_level = SS_STAFF;
 	}
 	else
 	{
 		int newLevel = Q_irand(SS_FAST, SS_STAFF);
-		ent->client->ps.fd.saberAnimLevelBase = SS_MEDIUM;
+		ent->client->ps.fd.saber_anim_levelBase = SS_MEDIUM;
 
 		//new validation technique.
 		if (!G_ValidSaberStyle(ent, newLevel))

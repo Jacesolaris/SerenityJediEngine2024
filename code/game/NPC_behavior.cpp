@@ -413,7 +413,7 @@ void NPC_BSFollowLeader_UpdateEnemy()
 	if (!NPC->enemy)
 	{
 		//no enemy, find one
-		NPC_CheckEnemy(static_cast<qboolean>(NPCInfo->confusionTime < level.time&& NPCInfo->insanityTime < level.time),
+		NPC_CheckEnemy(static_cast<qboolean>(NPCInfo->confusionTime < level.time && NPCInfo->insanityTime < level.time),
 			qfalse); //don't find new enemy if this is tempbehav
 		if (NPC->enemy)
 		{
@@ -477,7 +477,7 @@ void NPC_BSFollowLeader_UpdateEnemy()
 		else if (NPC->client->ps.weapon && NPCInfo->enemyCheckDebounceTime < level.time)
 		{
 			NPC_CheckEnemy(
-				static_cast<qboolean>(NPCInfo->confusionTime < level.time&& NPCInfo->insanityTime < level.time ||
+				static_cast<qboolean>(NPCInfo->confusionTime < level.time && NPCInfo->insanityTime < level.time ||
 					NPCInfo->
 					tempBehavior != BS_FOLLOW_LEADER), qfalse); //don't find new enemy if this is tempbehav
 		}

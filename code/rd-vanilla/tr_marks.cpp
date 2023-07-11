@@ -428,7 +428,7 @@ int R_MarkFragments(int num_points, const vec3_t* points, const vec3_t projectio
 					// add the fragments of this triangle
 					R_AddMarkFragments(3, clip_points,
 						num_planes, normals, dists,
-						max_points, point_buffer,fragment_buffer,
+						max_points, point_buffer, fragment_buffer,
 						&returned_points, &returned_fragments);
 					if (returned_fragments == max_fragments)
 					{

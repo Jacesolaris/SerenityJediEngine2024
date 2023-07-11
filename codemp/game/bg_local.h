@@ -85,13 +85,13 @@ qboolean PM_InRollComplete(const playerState_t* ps, int anim);
 
 int PM_AnimLength(animNumber_t anim);
 
-int PM_ReadyPoseForSaberAnimLevel(void);
-int PM_IdlePoseForSaberAnimLevel(void);
-int PM_ReadyPoseForSaberAnimLevelBOT(void);
-int PM_ReadyPoseForSaberAnimLevelDucked(void);
-int PM_BlockingPoseForSaberAnimLevelSingle(void);
-int PM_BlockingPoseForSaberAnimLevelDual(void);
-int PM_BlockingPoseForSaberAnimLevelStaff(void);
+int PM_ReadyPoseForsaber_anim_level(void);
+int PM_IdlePoseForsaber_anim_level(void);
+int PM_ReadyPoseForsaber_anim_levelBOT(void);
+int PM_ReadyPoseForsaber_anim_levelDucked(void);
+int PM_BlockingPoseForsaber_anim_levelSingle(void);
+int PM_BlockingPoseForsaber_anim_levelDual(void);
+int PM_BlockingPoseForsaber_anim_levelStaff(void);
 
 float PM_GroundDistance(void);
 

@@ -380,7 +380,7 @@ using cg_t = struct
 
 	// input state sent to server
 	int weaponSelect;
-	int saberAnimLevelPending;
+	int saber_anim_levelPending;
 
 	// auto rotating items
 	vec3_t autoAngles;

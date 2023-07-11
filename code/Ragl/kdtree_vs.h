@@ -360,8 +360,8 @@ namespace ragl
 					{
 						bounds.mMins[curDimension] = curNode;
 					}
-						tree_search(query, mPool[curNode].mLeft, nextDimension, bounds);
-						bounds.mMaxs[curDimension] = OldMaxs; // Restore Old Maxs For The Right Child Search
+					tree_search(query, mPool[curNode].mLeft, nextDimension, bounds);
+					bounds.mMaxs[curDimension] = OldMaxs; // Restore Old Maxs For The Right Child Search
 				}
 
 				// Test The Right Child
@@ -373,7 +373,7 @@ namespace ragl
 					{
 						bounds.mMaxs[curDimension] = curNode;
 					}
-						tree_search(query, mPool[curNode].mRight, nextDimension, bounds);
+					tree_search(query, mPool[curNode].mRight, nextDimension, bounds);
 				}
 			}
 		}

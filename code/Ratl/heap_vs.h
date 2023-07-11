@@ -118,7 +118,7 @@ namespace ratl
 			{
 				return;
 			}
-			assert(a >= 0 && b >= 0 && a < CAPACITY&& b < CAPACITY);
+			assert(a >= 0 && b >= 0 && a < CAPACITY && b < CAPACITY);
 			mData.swap(a, b);
 		}
 

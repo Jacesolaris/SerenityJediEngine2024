@@ -319,10 +319,10 @@ bool CPrimitiveTemplate::ParseGroupFlags(const gsl::cstring_view& val, int& flag
 	{
 		static StringViewIMap<int> flagNames{
 			{CSTRING_VIEW("linear"), FX_LINEAR},
-			{CSTRING_VIEW("nonlinear"), FX_NONLINEAR},
-			{CSTRING_VIEW("wave"), FX_WAVE},
-			{CSTRING_VIEW("random"), FX_RAND},
-			{CSTRING_VIEW("clamp"), FX_CLAMP},
+			{ CSTRING_VIEW("nonlinear"), FX_NONLINEAR },
+			{ CSTRING_VIEW("wave"), FX_WAVE },
+			{ CSTRING_VIEW("random"), FX_RAND },
+			{ CSTRING_VIEW("clamp"), FX_CLAMP },
 		};
 
 		auto pos = flagNames.find(cur);
@@ -750,20 +750,20 @@ bool CPrimitiveTemplate::ParseFlags(const gsl::cstring_view& val)
 	{
 		static StringViewIMap<int> flagNames{
 			{CSTRING_VIEW("useModel"), FX_ATTACHED_MODEL},
-			{CSTRING_VIEW("useBBox"), FX_USE_BBOX},
-			{CSTRING_VIEW("usePhysics"), FX_APPLY_PHYSICS},
-			{CSTRING_VIEW("expensivePhysics"), FX_EXPENSIVE_PHYSICS},
-			//rww - begin g2 stuff
-			{CSTRING_VIEW("ghoul2Collision"), (FX_GHOUL2_TRACE | FX_APPLY_PHYSICS | FX_EXPENSIVE_PHYSICS)},
-			{CSTRING_VIEW("ghoul2Decals"), FX_GHOUL2_DECALS},
-			//rww - end
-			{CSTRING_VIEW("impactKills"), FX_KILL_ON_IMPACT},
-			{CSTRING_VIEW("impactFx"), FX_IMPACT_RUNS_FX},
-			{CSTRING_VIEW("deathFx"), FX_DEATH_RUNS_FX},
-			{CSTRING_VIEW("useAlpha"), FX_USE_ALPHA},
-			{CSTRING_VIEW("emitFx"), FX_EMIT_FX},
-			{CSTRING_VIEW("depthHack"), FX_DEPTH_HACK},
-			{CSTRING_VIEW("setShaderTime"), FX_SET_SHADER_TIME},
+			{ CSTRING_VIEW("useBBox"), FX_USE_BBOX },
+			{ CSTRING_VIEW("usePhysics"), FX_APPLY_PHYSICS },
+			{ CSTRING_VIEW("expensivePhysics"), FX_EXPENSIVE_PHYSICS },
+				//rww - begin g2 stuff
+			{ CSTRING_VIEW("ghoul2Collision"), (FX_GHOUL2_TRACE | FX_APPLY_PHYSICS | FX_EXPENSIVE_PHYSICS) },
+			{ CSTRING_VIEW("ghoul2Decals"), FX_GHOUL2_DECALS },
+				//rww - end
+			{ CSTRING_VIEW("impactKills"), FX_KILL_ON_IMPACT },
+			{ CSTRING_VIEW("impactFx"), FX_IMPACT_RUNS_FX },
+			{ CSTRING_VIEW("deathFx"), FX_DEATH_RUNS_FX },
+			{ CSTRING_VIEW("useAlpha"), FX_USE_ALPHA },
+			{ CSTRING_VIEW("emitFx"), FX_EMIT_FX },
+			{ CSTRING_VIEW("depthHack"), FX_DEPTH_HACK },
+			{ CSTRING_VIEW("setShaderTime"), FX_SET_SHADER_TIME },
 		};
 
 		auto pos = flagNames.find(cur);
@@ -804,19 +804,19 @@ bool CPrimitiveTemplate::ParseSpawnFlags(const gsl::cstring_view& val)
 	{
 		static StringViewIMap<int> flagNames{
 			{CSTRING_VIEW("org2fromTrace"), FX_ORG2_FROM_TRACE},
-			{CSTRING_VIEW("traceImpactFx"), FX_TRACE_IMPACT_FX},
-			{CSTRING_VIEW("org2isOffset"), FX_ORG2_IS_OFFSET},
-			{CSTRING_VIEW("cheapOrgCalc"), FX_CHEAP_ORG_CALC},
-			{CSTRING_VIEW("cheapOrg2Calc"), FX_CHEAP_ORG2_CALC},
-			{CSTRING_VIEW("absoluteVel"), FX_VEL_IS_ABSOLUTE},
-			{CSTRING_VIEW("absoluteAccel"), FX_ACCEL_IS_ABSOLUTE},
-			{CSTRING_VIEW("orgOnSphere"), FX_ORG_ON_SPHERE},
-			{CSTRING_VIEW("orgOnCylinder"), FX_ORG_ON_CYLINDER},
-			{CSTRING_VIEW("axisFromSphere"), FX_AXIS_FROM_SPHERE},
-			{CSTRING_VIEW("randrotaroundfwd"), FX_RAND_ROT_AROUND_FWD},
-			{CSTRING_VIEW("evenDistribution"), FX_EVEN_DISTRIBUTION},
-			{CSTRING_VIEW("rgbComponentInterpolation"), FX_RGB_COMPONENT_INTERP},
-			{CSTRING_VIEW("lessAttenuation"), FX_SND_LESS_ATTENUATION},
+			{ CSTRING_VIEW("traceImpactFx"), FX_TRACE_IMPACT_FX },
+			{ CSTRING_VIEW("org2isOffset"), FX_ORG2_IS_OFFSET },
+			{ CSTRING_VIEW("cheapOrgCalc"), FX_CHEAP_ORG_CALC },
+			{ CSTRING_VIEW("cheapOrg2Calc"), FX_CHEAP_ORG2_CALC },
+			{ CSTRING_VIEW("absoluteVel"), FX_VEL_IS_ABSOLUTE },
+			{ CSTRING_VIEW("absoluteAccel"), FX_ACCEL_IS_ABSOLUTE },
+			{ CSTRING_VIEW("orgOnSphere"), FX_ORG_ON_SPHERE },
+			{ CSTRING_VIEW("orgOnCylinder"), FX_ORG_ON_CYLINDER },
+			{ CSTRING_VIEW("axisFromSphere"), FX_AXIS_FROM_SPHERE },
+			{ CSTRING_VIEW("randrotaroundfwd"), FX_RAND_ROT_AROUND_FWD },
+			{ CSTRING_VIEW("evenDistribution"), FX_EVEN_DISTRIBUTION },
+			{ CSTRING_VIEW("rgbComponentInterpolation"), FX_RGB_COMPONENT_INTERP },
+			{ CSTRING_VIEW("lessAttenuation"), FX_SND_LESS_ATTENUATION },
 		};
 		auto pos = flagNames.find(cur);
 		if (pos == flagNames.end())
@@ -1640,15 +1640,15 @@ bool CPrimitiveTemplate::ParseGroup(const CGPGroup& grp, const StringViewIMap<Pa
 bool CPrimitiveTemplate::ParseRGB(const CGPGroup& grp)
 {
 	static StringViewIMap<ParseMethod> parseMethods{
-		{CSTRING_VIEW("start"), &CPrimitiveTemplate::ParseRGBStart},
+		{CSTRING_VIEW("start"), & CPrimitiveTemplate::ParseRGBStart},
 
-		{CSTRING_VIEW("end"), &CPrimitiveTemplate::ParseRGBEnd},
+		{ CSTRING_VIEW("end"), &CPrimitiveTemplate::ParseRGBEnd },
 
-		{CSTRING_VIEW("parm"), &CPrimitiveTemplate::ParseRGBParm},
-		{CSTRING_VIEW("parms"), &CPrimitiveTemplate::ParseRGBParm},
+		{ CSTRING_VIEW("parm"), &CPrimitiveTemplate::ParseRGBParm },
+		{ CSTRING_VIEW("parms"), &CPrimitiveTemplate::ParseRGBParm },
 
-		{CSTRING_VIEW("flag"), &CPrimitiveTemplate::ParseRGBFlags},
-		{CSTRING_VIEW("flags"), &CPrimitiveTemplate::ParseRGBFlags},
+		{ CSTRING_VIEW("flag"), &CPrimitiveTemplate::ParseRGBFlags },
+		{ CSTRING_VIEW("flags"), &CPrimitiveTemplate::ParseRGBFlags },
 	};
 	return ParseGroup(grp, parseMethods, "RGB");
 }
@@ -1667,15 +1667,15 @@ bool CPrimitiveTemplate::ParseRGB(const CGPGroup& grp)
 bool CPrimitiveTemplate::ParseAlpha(const CGPGroup& grp)
 {
 	static StringViewIMap<ParseMethod> parseMethods{
-		{CSTRING_VIEW("start"), &CPrimitiveTemplate::ParseAlphaStart},
+		{CSTRING_VIEW("start"), & CPrimitiveTemplate::ParseAlphaStart},
 
-		{CSTRING_VIEW("end"), &CPrimitiveTemplate::ParseAlphaEnd},
+		{ CSTRING_VIEW("end"), &CPrimitiveTemplate::ParseAlphaEnd },
 
-		{CSTRING_VIEW("parm"), &CPrimitiveTemplate::ParseAlphaParm},
-		{CSTRING_VIEW("parms"), &CPrimitiveTemplate::ParseAlphaParm},
+		{ CSTRING_VIEW("parm"), &CPrimitiveTemplate::ParseAlphaParm },
+		{ CSTRING_VIEW("parms"), &CPrimitiveTemplate::ParseAlphaParm },
 
-		{CSTRING_VIEW("flag"), &CPrimitiveTemplate::ParseAlphaFlags},
-		{CSTRING_VIEW("flags"), &CPrimitiveTemplate::ParseAlphaFlags},
+		{ CSTRING_VIEW("flag"), &CPrimitiveTemplate::ParseAlphaFlags },
+		{ CSTRING_VIEW("flags"), &CPrimitiveTemplate::ParseAlphaFlags },
 	};
 	return ParseGroup(grp, parseMethods, "Alpha");
 }
@@ -1694,15 +1694,15 @@ bool CPrimitiveTemplate::ParseAlpha(const CGPGroup& grp)
 bool CPrimitiveTemplate::ParseSize(const CGPGroup& grp)
 {
 	static StringViewIMap<ParseMethod> parseMethods{
-		{CSTRING_VIEW("start"), &CPrimitiveTemplate::ParseSizeStart},
+		{CSTRING_VIEW("start"), & CPrimitiveTemplate::ParseSizeStart},
 
-		{CSTRING_VIEW("end"), &CPrimitiveTemplate::ParseSizeEnd},
+		{ CSTRING_VIEW("end"), &CPrimitiveTemplate::ParseSizeEnd },
 
-		{CSTRING_VIEW("parm"), &CPrimitiveTemplate::ParseSizeParm},
-		{CSTRING_VIEW("parms"), &CPrimitiveTemplate::ParseSizeParm},
+		{ CSTRING_VIEW("parm"), &CPrimitiveTemplate::ParseSizeParm },
+		{ CSTRING_VIEW("parms"), &CPrimitiveTemplate::ParseSizeParm },
 
-		{CSTRING_VIEW("flag"), &CPrimitiveTemplate::ParseSizeFlags},
-		{CSTRING_VIEW("flags"), &CPrimitiveTemplate::ParseSizeFlags},
+		{ CSTRING_VIEW("flag"), &CPrimitiveTemplate::ParseSizeFlags },
+		{ CSTRING_VIEW("flags"), &CPrimitiveTemplate::ParseSizeFlags },
 	};
 	return ParseGroup(grp, parseMethods, "Size");
 }
@@ -1721,15 +1721,15 @@ bool CPrimitiveTemplate::ParseSize(const CGPGroup& grp)
 bool CPrimitiveTemplate::ParseSize2(const CGPGroup& grp)
 {
 	static StringViewIMap<ParseMethod> parseMethods{
-		{CSTRING_VIEW("start"), &CPrimitiveTemplate::ParseSize2Start},
+		{CSTRING_VIEW("start"), & CPrimitiveTemplate::ParseSize2Start},
 
-		{CSTRING_VIEW("end"), &CPrimitiveTemplate::ParseSize2End},
+		{ CSTRING_VIEW("end"), &CPrimitiveTemplate::ParseSize2End },
 
-		{CSTRING_VIEW("parm"), &CPrimitiveTemplate::ParseSize2Parm},
-		{CSTRING_VIEW("parms"), &CPrimitiveTemplate::ParseSize2Parm},
+		{ CSTRING_VIEW("parm"), &CPrimitiveTemplate::ParseSize2Parm },
+		{ CSTRING_VIEW("parms"), &CPrimitiveTemplate::ParseSize2Parm },
 
-		{CSTRING_VIEW("flag"), &CPrimitiveTemplate::ParseSize2Flags},
-		{CSTRING_VIEW("flags"), &CPrimitiveTemplate::ParseSize2Flags},
+		{ CSTRING_VIEW("flag"), &CPrimitiveTemplate::ParseSize2Flags },
+		{ CSTRING_VIEW("flags"), &CPrimitiveTemplate::ParseSize2Flags },
 	};
 	return ParseGroup(grp, parseMethods, "Size2");
 }
@@ -1748,15 +1748,15 @@ bool CPrimitiveTemplate::ParseSize2(const CGPGroup& grp)
 bool CPrimitiveTemplate::ParseLength(const CGPGroup& grp)
 {
 	static StringViewIMap<ParseMethod> parseMethods{
-		{CSTRING_VIEW("start"), &CPrimitiveTemplate::ParseLengthStart},
+		{CSTRING_VIEW("start"), & CPrimitiveTemplate::ParseLengthStart},
 
-		{CSTRING_VIEW("end"), &CPrimitiveTemplate::ParseLengthEnd},
+		{ CSTRING_VIEW("end"), &CPrimitiveTemplate::ParseLengthEnd },
 
-		{CSTRING_VIEW("parm"), &CPrimitiveTemplate::ParseLengthParm},
-		{CSTRING_VIEW("parms"), &CPrimitiveTemplate::ParseLengthParm},
+		{ CSTRING_VIEW("parm"), &CPrimitiveTemplate::ParseLengthParm },
+		{ CSTRING_VIEW("parms"), &CPrimitiveTemplate::ParseLengthParm },
 
-		{CSTRING_VIEW("flag"), &CPrimitiveTemplate::ParseLengthFlags},
-		{CSTRING_VIEW("flags"), &CPrimitiveTemplate::ParseLengthFlags},
+		{ CSTRING_VIEW("flag"), &CPrimitiveTemplate::ParseLengthFlags },
+		{ CSTRING_VIEW("flags"), &CPrimitiveTemplate::ParseLengthFlags },
 	};
 	return ParseGroup(grp, parseMethods, "Length");
 }
@@ -1772,34 +1772,34 @@ bool CPrimitiveTemplate::ParsePrimitive(const CGPGroup& grp)
 		// Single Value Parsing
 		{
 			static StringViewIMap<ParseMethod> parseMethods{
-				{CSTRING_VIEW("count"), &CPrimitiveTemplate::ParseCount},
-				{CSTRING_VIEW("life"), &CPrimitiveTemplate::ParseLife},
-				{CSTRING_VIEW("delay"), &CPrimitiveTemplate::ParseDelay},
-				{CSTRING_VIEW("bounce"), &CPrimitiveTemplate::ParseElasticity},
-				{CSTRING_VIEW("intensity"), &CPrimitiveTemplate::ParseElasticity},
-				{CSTRING_VIEW("min"), &CPrimitiveTemplate::ParseMin},
-				{CSTRING_VIEW("max"), &CPrimitiveTemplate::ParseMax},
-				{CSTRING_VIEW("angle"), &CPrimitiveTemplate::ParseAngle},
-				{CSTRING_VIEW("angles"), &CPrimitiveTemplate::ParseAngle},
-				{CSTRING_VIEW("angleDelta"), &CPrimitiveTemplate::ParseAngleDelta},
-				{CSTRING_VIEW("velocity"), &CPrimitiveTemplate::ParseVelocity},
-				{CSTRING_VIEW("vel"), &CPrimitiveTemplate::ParseVelocity},
-				{CSTRING_VIEW("acceleration"), &CPrimitiveTemplate::ParseAcceleration},
-				{CSTRING_VIEW("accel"), &CPrimitiveTemplate::ParseAcceleration},
-				{CSTRING_VIEW("gravity"), &CPrimitiveTemplate::ParseGravity},
-				{CSTRING_VIEW("density"), &CPrimitiveTemplate::ParseDensity},
-				{CSTRING_VIEW("variance"), &CPrimitiveTemplate::ParseVariance},
-				{CSTRING_VIEW("origin"), &CPrimitiveTemplate::ParseOrigin1},
-				{CSTRING_VIEW("origin2"), &CPrimitiveTemplate::ParseOrigin2},
-				{CSTRING_VIEW("radius"), &CPrimitiveTemplate::ParseRadius},
-				{CSTRING_VIEW("height"), &CPrimitiveTemplate::ParseHeight},
-				{CSTRING_VIEW("wind"), &CPrimitiveTemplate::ParseWindModifier},
-				{CSTRING_VIEW("rotation"), &CPrimitiveTemplate::ParseRotation},
-				{CSTRING_VIEW("rotationDelta"), &CPrimitiveTemplate::ParseRotationDelta},
-				{CSTRING_VIEW("flags"), &CPrimitiveTemplate::ParseFlags},
-				{CSTRING_VIEW("flag"), &CPrimitiveTemplate::ParseFlags},
-				{CSTRING_VIEW("spawnFlags"), &CPrimitiveTemplate::ParseSpawnFlags},
-				{CSTRING_VIEW("spawnFlag"), &CPrimitiveTemplate::ParseSpawnFlags},
+				{CSTRING_VIEW("count"), & CPrimitiveTemplate::ParseCount},
+				{ CSTRING_VIEW("life"), &CPrimitiveTemplate::ParseLife },
+				{ CSTRING_VIEW("delay"), &CPrimitiveTemplate::ParseDelay },
+				{ CSTRING_VIEW("bounce"), &CPrimitiveTemplate::ParseElasticity },
+				{ CSTRING_VIEW("intensity"), &CPrimitiveTemplate::ParseElasticity },
+				{ CSTRING_VIEW("min"), &CPrimitiveTemplate::ParseMin },
+				{ CSTRING_VIEW("max"), &CPrimitiveTemplate::ParseMax },
+				{ CSTRING_VIEW("angle"), &CPrimitiveTemplate::ParseAngle },
+				{ CSTRING_VIEW("angles"), &CPrimitiveTemplate::ParseAngle },
+				{ CSTRING_VIEW("angleDelta"), &CPrimitiveTemplate::ParseAngleDelta },
+				{ CSTRING_VIEW("velocity"), &CPrimitiveTemplate::ParseVelocity },
+				{ CSTRING_VIEW("vel"), &CPrimitiveTemplate::ParseVelocity },
+				{ CSTRING_VIEW("acceleration"), &CPrimitiveTemplate::ParseAcceleration },
+				{ CSTRING_VIEW("accel"), &CPrimitiveTemplate::ParseAcceleration },
+				{ CSTRING_VIEW("gravity"), &CPrimitiveTemplate::ParseGravity },
+				{ CSTRING_VIEW("density"), &CPrimitiveTemplate::ParseDensity },
+				{ CSTRING_VIEW("variance"), &CPrimitiveTemplate::ParseVariance },
+				{ CSTRING_VIEW("origin"), &CPrimitiveTemplate::ParseOrigin1 },
+				{ CSTRING_VIEW("origin2"), &CPrimitiveTemplate::ParseOrigin2 },
+				{ CSTRING_VIEW("radius"), &CPrimitiveTemplate::ParseRadius },
+				{ CSTRING_VIEW("height"), &CPrimitiveTemplate::ParseHeight },
+				{ CSTRING_VIEW("wind"), &CPrimitiveTemplate::ParseWindModifier },
+				{ CSTRING_VIEW("rotation"), &CPrimitiveTemplate::ParseRotation },
+				{ CSTRING_VIEW("rotationDelta"), &CPrimitiveTemplate::ParseRotationDelta },
+				{ CSTRING_VIEW("flags"), &CPrimitiveTemplate::ParseFlags },
+				{ CSTRING_VIEW("flag"), &CPrimitiveTemplate::ParseFlags },
+				{ CSTRING_VIEW("spawnFlags"), &CPrimitiveTemplate::ParseSpawnFlags },
+				{ CSTRING_VIEW("spawnFlag"), &CPrimitiveTemplate::ParseSpawnFlags },
 			};
 			auto pos = parseMethods.find(prop.GetName());
 			if (pos != parseMethods.end())
@@ -1813,16 +1813,16 @@ bool CPrimitiveTemplate::ParsePrimitive(const CGPGroup& grp)
 		{
 			using PropertyParseMethod = bool(CPrimitiveTemplate::*)(const CGPProperty&);
 			static StringViewIMap<PropertyParseMethod> parseMethods{
-				{CSTRING_VIEW("shaders"), &CPrimitiveTemplate::ParseShaders},
-				{CSTRING_VIEW("shader"), &CPrimitiveTemplate::ParseShaders},
-				{CSTRING_VIEW("models"), &CPrimitiveTemplate::ParseModels},
-				{CSTRING_VIEW("model"), &CPrimitiveTemplate::ParseModels},
-				{CSTRING_VIEW("sounds"), &CPrimitiveTemplate::ParseSounds},
-				{CSTRING_VIEW("sound"), &CPrimitiveTemplate::ParseSounds},
-				{CSTRING_VIEW("impactfx"), &CPrimitiveTemplate::ParseImpactFxStrings},
-				{CSTRING_VIEW("deathfx"), &CPrimitiveTemplate::ParseDeathFxStrings},
-				{CSTRING_VIEW("emitfx"), &CPrimitiveTemplate::ParseEmitterFxStrings},
-				{CSTRING_VIEW("playfx"), &CPrimitiveTemplate::ParsePlayFxStrings},
+				{CSTRING_VIEW("shaders"), & CPrimitiveTemplate::ParseShaders},
+				{ CSTRING_VIEW("shader"), &CPrimitiveTemplate::ParseShaders },
+				{ CSTRING_VIEW("models"), &CPrimitiveTemplate::ParseModels },
+				{ CSTRING_VIEW("model"), &CPrimitiveTemplate::ParseModels },
+				{ CSTRING_VIEW("sounds"), &CPrimitiveTemplate::ParseSounds },
+				{ CSTRING_VIEW("sound"), &CPrimitiveTemplate::ParseSounds },
+				{ CSTRING_VIEW("impactfx"), &CPrimitiveTemplate::ParseImpactFxStrings },
+				{ CSTRING_VIEW("deathfx"), &CPrimitiveTemplate::ParseDeathFxStrings },
+				{ CSTRING_VIEW("emitfx"), &CPrimitiveTemplate::ParseEmitterFxStrings },
+				{ CSTRING_VIEW("playfx"), &CPrimitiveTemplate::ParsePlayFxStrings },
 			};
 			auto pos = parseMethods.find(prop.GetName());
 			if (pos != parseMethods.end())
@@ -1860,18 +1860,18 @@ bool CPrimitiveTemplate::ParsePrimitive(const CGPGroup& grp)
 	{
 		using GroupParseMethod = bool (CPrimitiveTemplate::*)(const CGPGroup&);
 		static StringViewIMap<GroupParseMethod> parseMethods{
-			{CSTRING_VIEW("rgb"), &CPrimitiveTemplate::ParseRGB},
+			{CSTRING_VIEW("rgb"), & CPrimitiveTemplate::ParseRGB},
 
-			{CSTRING_VIEW("alpha"), &CPrimitiveTemplate::ParseAlpha},
+			{ CSTRING_VIEW("alpha"), &CPrimitiveTemplate::ParseAlpha },
 
-			{CSTRING_VIEW("size"), &CPrimitiveTemplate::ParseSize},
-			{CSTRING_VIEW("width"), &CPrimitiveTemplate::ParseSize},
+			{ CSTRING_VIEW("size"), &CPrimitiveTemplate::ParseSize },
+			{ CSTRING_VIEW("width"), &CPrimitiveTemplate::ParseSize },
 
-			{CSTRING_VIEW("size2"), &CPrimitiveTemplate::ParseSize2},
-			{CSTRING_VIEW("width2"), &CPrimitiveTemplate::ParseSize2},
+			{ CSTRING_VIEW("size2"), &CPrimitiveTemplate::ParseSize2 },
+			{ CSTRING_VIEW("width2"), &CPrimitiveTemplate::ParseSize2 },
 
-			{CSTRING_VIEW("length"), &CPrimitiveTemplate::ParseLength},
-			{CSTRING_VIEW("height"), &CPrimitiveTemplate::ParseLength},
+			{ CSTRING_VIEW("length"), &CPrimitiveTemplate::ParseLength },
+			{ CSTRING_VIEW("height"), &CPrimitiveTemplate::ParseLength },
 		};
 		auto pos = parseMethods.find(subGrp.GetName());
 		if (pos == parseMethods.end())

@@ -345,6 +345,7 @@ extern qboolean NPC_FaceEnemy(qboolean do_pitch = qtrue);
 
 //Skill level cvar
 extern cvar_t* g_spskill;
+extern cvar_t* g_attackskill;
 extern cvar_t* g_newgameplusJKA;
 extern cvar_t* g_newgameplusJKO;
 

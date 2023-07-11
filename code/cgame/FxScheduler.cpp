@@ -519,18 +519,18 @@ int CFxScheduler::ParseEffect(const char* file, const CGPGroup& base)
 	{
 		static std::map<gsl::cstring_view, EPrimType, Q::CStringViewILess> primitiveTypes{
 			{CSTRING_VIEW("particle"), Particle},
-			{CSTRING_VIEW("line"), Line},
-			{CSTRING_VIEW("tail"), Tail},
-			{CSTRING_VIEW("sound"), Sound},
-			{CSTRING_VIEW("cylinder"), Cylinder},
-			{CSTRING_VIEW("electricity"), Electricity},
-			{CSTRING_VIEW("emitter"), Emitter},
-			{CSTRING_VIEW("decal"), Decal},
-			{CSTRING_VIEW("orientedparticle"), OrientedParticle},
-			{CSTRING_VIEW("fxrunner"), FxRunner},
-			{CSTRING_VIEW("light"), Light},
-			{CSTRING_VIEW("cameraShake"), CameraShake},
-			{CSTRING_VIEW("flash"), ScreenFlash}
+			{ CSTRING_VIEW("line"), Line },
+			{ CSTRING_VIEW("tail"), Tail },
+			{ CSTRING_VIEW("sound"), Sound },
+			{ CSTRING_VIEW("cylinder"), Cylinder },
+			{ CSTRING_VIEW("electricity"), Electricity },
+			{ CSTRING_VIEW("emitter"), Emitter },
+			{ CSTRING_VIEW("decal"), Decal },
+			{ CSTRING_VIEW("orientedparticle"), OrientedParticle },
+			{ CSTRING_VIEW("fxrunner"), FxRunner },
+			{ CSTRING_VIEW("light"), Light },
+			{ CSTRING_VIEW("cameraShake"), CameraShake },
+			{ CSTRING_VIEW("flash"), ScreenFlash }
 		};
 		auto pos = primitiveTypes.find(primitiveGroup.GetName());
 		if (pos != primitiveTypes.end())

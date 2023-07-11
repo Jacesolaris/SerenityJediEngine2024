@@ -1038,7 +1038,7 @@ typedef struct forcedata_s {
 
 	qboolean	sentryDeployed;
 
-	int			saberAnimLevelBase;//sigh...
+	int			saber_anim_levelBase;//sigh...
 	int			saber_anim_level;
 	int			saberDrawAnimLevel;
 

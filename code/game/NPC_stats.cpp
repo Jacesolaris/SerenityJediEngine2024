@@ -4311,7 +4311,7 @@ qboolean NPC_ParseParms(const char* npc_name, gentity_t* npc)
 				npc->client->ps.saber_anim_level = n;
 				if (parsingPlayer)
 				{
-					cg.saberAnimLevelPending = n;
+					cg.saber_anim_levelPending = n;
 				}
 				continue;
 			}

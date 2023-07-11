@@ -633,7 +633,7 @@ void Svcmd_SaberAttackCycle_f()
 	int saber_anim_level;
 	if (!self->s.number)
 	{
-		saber_anim_level = cg.saberAnimLevelPending;
+		saber_anim_level = cg.saber_anim_levelPending;
 	}
 	else
 	{
@@ -693,7 +693,7 @@ void Svcmd_SaberAttackCycle_f()
 	WP_UseFirstValidSaberStyle(self, &saber_anim_level);
 	if (!self->s.number)
 	{
-		cg.saberAnimLevelPending = saber_anim_level;
+		cg.saber_anim_levelPending = saber_anim_level;
 	}
 	else
 	{

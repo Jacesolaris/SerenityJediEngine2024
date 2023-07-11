@@ -193,7 +193,7 @@ qhandle_t RE_RegisterSkin(const char* name)
 	for (h_skin = 1; h_skin < tr.numSkins; h_skin++)
 	{
 		skin = tr.skins[h_skin];
-		if (!Q_stricmp(skin->name, name)) 
+		if (!Q_stricmp(skin->name, name))
 		{
 			if (skin->numSurfaces == 0)
 			{

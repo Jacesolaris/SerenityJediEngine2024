@@ -1455,7 +1455,6 @@ static void WP_BowcasterMainFire(gentity_t* ent)
 		}
 		else if (!(ent->client->ps.fd.forcePowersActive & 1 << FP_SEE) || ent->client->ps.fd.forcePowerLevel[FP_SEE] < FORCE_LEVEL_2)
 		{//force sight 2+ gives perfect aim
-
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
 				if (PM_CrouchAnim(ent->client->ps.legsAnim))
@@ -3819,8 +3818,7 @@ static void WP_FireConcussionAlt(gentity_t* ent)
 		}
 
 		if (trace_ent)
-		{	
-
+		{
 			if (wp_player_must_dodge(trace_ent, ent) && !
 				WP_DoingForcedAnimationForForcePowers(trace_ent))
 			{
@@ -3929,18 +3927,18 @@ static void WP_FireConcussionAlt(gentity_t* ent)
 						//stop the traces on any mover
 						break;
 					}
-		}
+				}
 				else
 				{
 					break;
 					// hit solid, but doesn't take damage, so stop the shot...we _could_ allow it to shoot through walls, might be cool?
 				}
-	}
+			}
 			else // not rendering impact, must be a skybox or other similar thing?
 			{
 				break; // don't try anymore traces
 			}
-}
+		}
 		// Get ready for an attempt to trace through another person
 		//VectorCopy( tr.endpos, muzzle2 );
 		VectorCopy(tr.endpos, start);

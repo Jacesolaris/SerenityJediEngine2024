@@ -297,19 +297,19 @@ int GetPairedValue(char* buf, const char* key, char* outbuf)
 			}
 		}
 
-			const char* placesecond = strstr(place + 1, key);
+		const char* placesecond = strstr(place + 1, key);
 
-			if (placesecond)
-			{
-				startpoint += placesecond - place;
-				startletter += placesecond - place;
-				place = placesecond;
-			}
-			else
-			{
-				place = NULL;
-				break;
-			}
+		if (placesecond)
+		{
+			startpoint += placesecond - place;
+			startletter += placesecond - place;
+			place = placesecond;
+		}
+		else
+		{
+			place = NULL;
+			break;
+		}
 	}
 
 	if (!found || !place || !buf[startpoint] || buf[startpoint] == '\0')

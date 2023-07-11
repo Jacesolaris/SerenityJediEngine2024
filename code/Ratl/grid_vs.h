@@ -295,7 +295,7 @@ namespace ratl
 		////////////////////////////////////////////////////////////////////////////////////
 		T& rawGet(int Loc)
 		{
-			assert(Loc >= 0 && Loc < XSIZE_MAX* YSIZE_MAX);
+			assert(Loc >= 0 && Loc < XSIZE_MAX * YSIZE_MAX);
 			return mData[Loc];
 		}
 
@@ -508,7 +508,7 @@ namespace ratl
 		////////////////////////////////////////////////////////////////////////////////////
 		riterator rangeBegin(int range, int x, int y)
 		{
-			assert(x >= 0 && y >= 0 && x < XSIZE_MAX&& y < YSIZE_MAX);
+			assert(x >= 0 && y >= 0 && x < XSIZE_MAX && y < YSIZE_MAX);
 			return riterator(this, range, x, y);
 		}
 
@@ -523,7 +523,7 @@ namespace ratl
 			int x = (position[0] - mMins[0]) / mScale[0];
 			int y = (position[1] - mMins[1]) / mScale[1];
 
-			assert(x >= 0 && y >= 0 && x < XSIZE_MAX&& y < YSIZE_MAX);
+			assert(x >= 0 && y >= 0 && x < XSIZE_MAX && y < YSIZE_MAX);
 			return riterator(this, range, x, y);
 		}
 	};

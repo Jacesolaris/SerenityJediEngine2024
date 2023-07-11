@@ -1895,7 +1895,7 @@ ParseSkyParms
 skyParms <outerbox> <cloudheight> <innerbox>
 ===============
 */
-static void ParseSkyParms(const char** text) 
+static void ParseSkyParms(const char** text)
 {
 	const char* suf[6] = { "rt", "lf", "bk", "ft", "up", "dn" };
 
