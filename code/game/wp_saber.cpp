@@ -4810,8 +4810,7 @@ qboolean WP_SabersCheckLock2(gentity_t* attacker, gentity_t* defender, sabersloc
 	int att_anim, def_anim, advance = 0;
 	float att_start = 0.5f, def_start = 0.5f;
 	float ideal_dist = 48.0f;
-	//FIXME: this distances need to be modified by the lengths of the sabers involved...
-	//MATCH ANIMS
+
 	if (lock_mode == LOCK_KYLE_GRAB1
 		|| lock_mode == LOCK_KYLE_GRAB2
 		|| lock_mode == LOCK_KYLE_GRAB3)
@@ -5389,6 +5388,7 @@ qboolean WP_SabersCheckLock(gentity_t* ent1, gentity_t* ent2)
 		//still finishing the last lock break!
 		return qfalse;
 	}
+
 	//BR to TL lock
 	if (ent1->client->ps.torsoAnim == BOTH_A1_BR_TL ||
 		ent1->client->ps.torsoAnim == BOTH_A2_BR_TL ||

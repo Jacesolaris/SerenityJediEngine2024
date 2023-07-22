@@ -2330,73 +2330,73 @@ static QINLINE qboolean WP_SabersCheckLock2(gentity_t* attacker, gentity_t* defe
 	}
 
 	G_SetAnim(attacker, NULL, SETANIM_BOTH, att_anim, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
-	attacker->client->ps.saberLockFrame = bgAllAnims[attacker->localAnimIndex].anims[att_anim].firstFrame + bgAllAnims[
-		attacker->localAnimIndex].anims[att_anim].numFrames * att_start;
 
-		G_SetAnim(defender, NULL, SETANIM_BOTH, def_anim, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
-		defender->client->ps.saberLockFrame = bgAllAnims[defender->localAnimIndex].anims[def_anim].firstFrame + bgAllAnims[
-			defender->localAnimIndex].anims[def_anim].numFrames * def_start;
+	attacker->client->ps.saberLockFrame = bgAllAnims[attacker->localAnimIndex].anims[att_anim].firstFrame + bgAllAnims[attacker->localAnimIndex].anims[att_anim].numFrames * att_start;
 
-			attacker->client->ps.saberLockHits = 0;
-			defender->client->ps.saberLockHits = 0;
+	G_SetAnim(defender, NULL, SETANIM_BOTH, def_anim, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
 
-			attacker->client->ps.saberLockAdvance = qfalse;
-			defender->client->ps.saberLockAdvance = qfalse;
+	defender->client->ps.saberLockFrame = bgAllAnims[defender->localAnimIndex].anims[def_anim].firstFrame + bgAllAnims[defender->localAnimIndex].anims[def_anim].numFrames * def_start;
 
-			VectorClear(attacker->client->ps.velocity);
-			VectorClear(defender->client->ps.velocity);
-			attacker->client->ps.saberLockTime = defender->client->ps.saberLockTime = level.time + 10000;
-			attacker->client->ps.saberLockEnemy = defender->s.number;
-			defender->client->ps.saberLockEnemy = attacker->s.number;
-			attacker->client->ps.weaponTime = defender->client->ps.weaponTime = Q_irand(1000, 3000);
-			//delay 1 to 3 seconds before pushing
-			attacker->client->ps.userInt3 &= ~(1 << FLAG_ATTACKFAKE);
-			defender->client->ps.userInt3 &= ~(1 << FLAG_ATTACKFAKE);
+	attacker->client->ps.saberLockHits = 0;
+	defender->client->ps.saberLockHits = 0;
 
-			VectorSubtract(defender->r.currentOrigin, attacker->r.currentOrigin, def_dir);
-			VectorCopy(attacker->client->ps.viewangles, att_angles);
-			att_angles[YAW] = vectoyaw(def_dir);
-			SetClientViewAngle(attacker, att_angles);
-			def_angles[PITCH] = att_angles[PITCH] * -1;
-			def_angles[YAW] = AngleNormalize180(att_angles[YAW] + 180);
-			def_angles[ROLL] = 0;
-			SetClientViewAngle(defender, def_angles);
+	attacker->client->ps.saberLockAdvance = qfalse;
+	defender->client->ps.saberLockAdvance = qfalse;
 
-			//MATCH POSITIONS
-			diff = VectorNormalize(def_dir) - ideal_dist; //diff will be the total error in dist
-			//try to move attacker half the diff towards the defender
-			VectorMA(attacker->r.currentOrigin, diff * 0.5f, def_dir, new_org);
+	VectorClear(attacker->client->ps.velocity);
+	VectorClear(defender->client->ps.velocity);
+	attacker->client->ps.saberLockTime = defender->client->ps.saberLockTime = level.time + 10000;
+	attacker->client->ps.saberLockEnemy = defender->s.number;
+	defender->client->ps.saberLockEnemy = attacker->s.number;
+	attacker->client->ps.weaponTime = defender->client->ps.weaponTime = Q_irand(1000, 3000);
+	//delay 1 to 3 seconds before pushing
+	attacker->client->ps.userInt3 &= ~(1 << FLAG_ATTACKFAKE);
+	defender->client->ps.userInt3 &= ~(1 << FLAG_ATTACKFAKE);
 
-			trap->Trace(&trace, attacker->r.currentOrigin, attacker->r.mins, attacker->r.maxs, new_org, attacker->s.number,
-				attacker->clipmask, qfalse, 0, 0);
-			if (!trace.startsolid && !trace.allsolid)
-			{
-				G_SetOrigin(attacker, trace.endpos);
-				if (attacker->client)
-				{
-					VectorCopy(trace.endpos, attacker->client->ps.origin);
-				}
-				trap->LinkEntity((sharedEntity_t*)attacker);
-			}
-			//now get the defender's dist and do it for him too
-			VectorSubtract(attacker->r.currentOrigin, defender->r.currentOrigin, att_dir);
-			diff = VectorNormalize(att_dir) - ideal_dist; //diff will be the total error in dist
-			//try to move defender all of the remaining diff towards the attacker
-			VectorMA(defender->r.currentOrigin, diff, att_dir, new_org);
-			trap->Trace(&trace, defender->r.currentOrigin, defender->r.mins, defender->r.maxs, new_org, defender->s.number,
-				defender->clipmask, qfalse, 0, 0);
-			if (!trace.startsolid && !trace.allsolid)
-			{
-				if (defender->client)
-				{
-					VectorCopy(trace.endpos, defender->client->ps.origin);
-				}
-				G_SetOrigin(defender, trace.endpos);
-				trap->LinkEntity((sharedEntity_t*)defender);
-			}
+	VectorSubtract(defender->r.currentOrigin, attacker->r.currentOrigin, def_dir);
+	VectorCopy(attacker->client->ps.viewangles, att_angles);
+	att_angles[YAW] = vectoyaw(def_dir);
+	SetClientViewAngle(attacker, att_angles);
+	def_angles[PITCH] = att_angles[PITCH] * -1;
+	def_angles[YAW] = AngleNormalize180(att_angles[YAW] + 180);
+	def_angles[ROLL] = 0;
+	SetClientViewAngle(defender, def_angles);
 
-			//DONE!
-			return qtrue;
+	//MATCH POSITIONS
+	diff = VectorNormalize(def_dir) - ideal_dist; //diff will be the total error in dist
+	//try to move attacker half the diff towards the defender
+	VectorMA(attacker->r.currentOrigin, diff * 0.5f, def_dir, new_org);
+
+	trap->Trace(&trace, attacker->r.currentOrigin, attacker->r.mins, attacker->r.maxs, new_org, attacker->s.number,
+		attacker->clipmask, qfalse, 0, 0);
+	if (!trace.startsolid && !trace.allsolid)
+	{
+		G_SetOrigin(attacker, trace.endpos);
+		if (attacker->client)
+		{
+			VectorCopy(trace.endpos, attacker->client->ps.origin);
+		}
+		trap->LinkEntity((sharedEntity_t*)attacker);
+	}
+	//now get the defender's dist and do it for him too
+	VectorSubtract(attacker->r.currentOrigin, defender->r.currentOrigin, att_dir);
+	diff = VectorNormalize(att_dir) - ideal_dist; //diff will be the total error in dist
+	//try to move defender all of the remaining diff towards the attacker
+	VectorMA(defender->r.currentOrigin, diff, att_dir, new_org);
+	trap->Trace(&trace, defender->r.currentOrigin, defender->r.mins, defender->r.maxs, new_org, defender->s.number,
+		defender->clipmask, qfalse, 0, 0);
+	if (!trace.startsolid && !trace.allsolid)
+	{
+		if (defender->client)
+		{
+			VectorCopy(trace.endpos, defender->client->ps.origin);
+		}
+		G_SetOrigin(defender, trace.endpos);
+		trap->LinkEntity((sharedEntity_t*)defender);
+	}
+
+	//DONE!
+	return qtrue;
 }
 
 extern saberMoveData_t saberMoveData[LS_MOVE_MAX];
@@ -2450,7 +2450,9 @@ qboolean WP_SabersCheckLock(gentity_t* ent1, gentity_t* ent2)
 	{
 		return qfalse;
 	}
+
 	const float dist = DistanceSquared(ent1->r.currentOrigin, ent2->r.currentOrigin);
+	
 	if (dist < 64 || dist > 6400)
 	{
 		//between 8 and 80 from each other
@@ -6337,54 +6339,29 @@ static QINLINE qboolean check_saber_damage(gentity_t* self, const int r_saber_nu
 		return qfalse;
 	}
 
-	if (g_saberdebug.integer)
+	if (self->client->ps.saberInFlight && r_saber_num == 0 && self->client->ps.saberAttackWound < level.time)
 	{
-		dmg = DODGE_LOWFPBOOST;
+		dmg = SABER_NORHITDAMAGE;
 	}
-	else
+	else if (BG_SaberInFullDamageMove(&self->client->ps, self->localAnimIndex))
 	{
-		if (self->client->ps.saberInFlight && r_saber_num == 0 && self->client->ps.saberAttackWound < level.time)
+		//full damage moves
+		if (g_saberRealisticCombat.integer)
 		{
-			dmg = SABER_NORHITDAMAGE;
-		}
-		else if (BG_SaberInFullDamageMove(&self->client->ps, self->localAnimIndex))
-		{
-			//full damage moves
-			if (g_saberRealisticCombat.integer)
+			if (g_saberRealisticCombat.integer > 1)
 			{
-				if (g_saberRealisticCombat.integer > 1)
+				if (g_saberRealisticCombat.integer > 2)
 				{
-					if (g_saberRealisticCombat.integer > 2)
+					if (PM_KickMove(self->client->ps.saber_move)
+						|| PM_KickingAnim(self->client->ps.legsAnim)
+						|| PM_KickingAnim(self->client->ps.torsoAnim))
 					{
-						if (PM_KickMove(self->client->ps.saber_move)
-							|| PM_KickingAnim(self->client->ps.legsAnim)
-							|| PM_KickingAnim(self->client->ps.torsoAnim))
-						{
-							//use no saber damage for kick moves.
-							dmg = SABER_NO_DAMAGE;
-						}
-						else
-						{
-							dmg = SABER_MAXHITDAMAGE;
-						}
+						//use no saber damage for kick moves.
+						dmg = SABER_NO_DAMAGE;
 					}
 					else
 					{
-						if (PM_KickMove(self->client->ps.saber_move)
-							|| PM_KickingAnim(self->client->ps.legsAnim)
-							|| PM_KickingAnim(self->client->ps.torsoAnim))
-						{
-							//use no saber damage for kick moves.
-							dmg = SABER_NO_DAMAGE;
-						}
-						else if (saber_in_kill_move)
-						{
-							dmg = SABER_MAXHITDAMAGE;
-						}
-						else
-						{
-							dmg = SABER_SJEHITDAMAGE;
-						}
+						dmg = SABER_MAXHITDAMAGE;
 					}
 				}
 				else
@@ -6402,7 +6379,7 @@ static QINLINE qboolean check_saber_damage(gentity_t* self, const int r_saber_nu
 					}
 					else
 					{
-						dmg = SABER_NORHITDAMAGE;
+						dmg = SABER_SJEHITDAMAGE;
 					}
 				}
 			}
@@ -6421,28 +6398,53 @@ static QINLINE qboolean check_saber_damage(gentity_t* self, const int r_saber_nu
 				}
 				else
 				{
+					dmg = SABER_NORHITDAMAGE;
+				}
+			}
+		}
+		else
+		{
+			if (PM_KickMove(self->client->ps.saber_move)
+				|| PM_KickingAnim(self->client->ps.legsAnim)
+				|| PM_KickingAnim(self->client->ps.torsoAnim))
+			{
+				//use no saber damage for kick moves.
+				dmg = SABER_NO_DAMAGE;
+			}
+			else if (saber_in_kill_move)
+			{
+				dmg = SABER_MAXHITDAMAGE;
+			}
+			else
+			{
+				if (g_saberdebug.integer)
+				{
+					dmg = SABER_DEBUGTDAMAGE;
+				}
+				else
+				{
 					dmg = SABER_MINHITDAMAGE;
 				}
 			}
 		}
-		else if (BG_SaberInTransitionDamageMove(&self->client->ps))
-		{
-			//use idle damage for transition moves.
-			dmg = SABER_NONATTACK_DAMAGE;
-			idle_damage = qtrue;
-		}
-		else if ((self_holding_block || self_active_blocking || self_m_blocking || self->client->ps.saberManualBlockingTime > level.time) && !(self->r.svFlags & SVF_BOT))
-		{
-			//Dont do damage if holding block.
-			dmg = SABER_NO_DAMAGE;
-			idle_damage = qtrue;
-		}
-		else
-		{
-			//idle saber damage
-			dmg = SABER_NONATTACK_DAMAGE;
-			idle_damage = qtrue;
-		}
+	}
+	else if (BG_SaberInTransitionDamageMove(&self->client->ps))
+	{
+		//use idle damage for transition moves.
+		dmg = SABER_NONATTACK_DAMAGE;
+		idle_damage = qtrue;
+	}
+	else if ((self_holding_block || self_active_blocking || self_m_blocking || self->client->ps.saberManualBlockingTime > level.time) && !(self->r.svFlags & SVF_BOT))
+	{
+		//Dont do damage if holding block.
+		dmg = SABER_NO_DAMAGE;
+		idle_damage = qtrue;
+	}
+	else
+	{
+		//idle saber damage
+		dmg = SABER_NONATTACK_DAMAGE;
+		idle_damage = qtrue;
 	}
 
 	if (!dmg)
@@ -6790,8 +6792,8 @@ static QINLINE qboolean check_saber_damage(gentity_t* self, const int r_saber_nu
 		if (blocker && blocker->inuse && blocker->client)
 		{
 			//saberlock test
-			if (dmg > SABER_NONATTACK_DAMAGE || BG_SaberInNonIdleDamageMove(
-				&blocker->client->ps, blocker->localAnimIndex))
+			if (dmg > SABER_NONATTACK_DAMAGE ||
+				BG_SaberInNonIdleDamageMove(&blocker->client->ps, blocker->localAnimIndex))
 			{
 				const int lock_factor = g_saberLockFactor.integer;
 
@@ -12255,7 +12257,7 @@ finalUpdate:
 	}
 
 	G_UpdateClientAnims(self, anim_speed_scale);
-	}
+}
 
 int WP_MissileBlockForBlock(const int saber_block)
 {

@@ -8261,14 +8261,14 @@ void ClientThink_real(gentity_t* ent, usercmd_t* ucmd)
 				client->ps.communicatingflags |= 1 << CF_SABERLOCKING;
 			}
 
-			if (ucmd->rightmove > 0)
+			if (ucmd->rightmove > 0 || ucmd->forwardmove > 0)
 			{
 				if (!(client->ps.communicatingflags & 1 << CF_SABERLOCK_ADVANCE))
 				{
 					client->ps.communicatingflags |= 1 << CF_SABERLOCK_ADVANCE;
 				}
 			}
-			else if (ucmd->rightmove < 0)
+			else
 			{
 				client->ps.communicatingflags &= ~(1 << CF_SABERLOCK_ADVANCE);
 			}

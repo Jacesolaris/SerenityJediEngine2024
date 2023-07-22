@@ -14644,7 +14644,7 @@ int G_SaberLockStrength(const gentity_t* gent)
 	{//have moved to next frame since last lock push
 		if (gent->s.number >= MAX_CLIENTS && !PM_ControlledByPlayer())
 		{
-			gent->client->ps.saberLockHitCheckTime = level.time + 250; //check for AI pushes much slower.
+			gent->client->ps.saberLockHitCheckTime = level.time + 25; //check for AI pushes much slower.
 
 			if (gent->client->ps.saberLockHitIncrementTime < level.time)
 			{//have moved to next frame since last saberlock attack button press
@@ -14652,11 +14652,11 @@ int G_SaberLockStrength(const gentity_t* gent)
 
 				if (gent->client->NPC_class == CLASS_DESANN || gent->client->NPC_class == CLASS_VADER || gent->client->NPC_class == CLASS_LUKE)
 				{
-					strength += 5 + gent->client->ps.forcePowerLevel[FP_SABER_OFFENSE] + Q_irand(0, g_spskill->integer);
+					strength += 2 + gent->client->ps.forcePowerLevel[FP_SABER_OFFENSE] + Q_irand(0, g_spskill->integer);
 				}
 				else
 				{
-					strength += gent->client->ps.forcePowerLevel[FP_SABER_OFFENSE];
+					strength += gent->client->ps.forcePowerLevel[FP_SABER_OFFENSE] + Q_irand(0, g_spskill->integer);
 				}
 			}
 		}
@@ -14668,14 +14668,14 @@ int G_SaberLockStrength(const gentity_t* gent)
 			if (gent->client->ps.saberLockHitIncrementTime < level.time)
 			{//have moved to next frame since last saberlock attack button press
 				gent->client->ps.saberLockHitIncrementTime = level.time + 50;//so we don't register an attack key press more than once per server frame
-				
+
 				if (pm->ps->communicatingflags & 1 << CF_SABERLOCK_ADVANCE)
 				{
 					strength += gent->client->ps.forcePowerLevel[FP_SABER_OFFENSE] + Q_irand(0, g_spskill->integer) + Q_irand(0, pm->cmd.buttons & BUTTON_ATTACK);
 				}
 				else
 				{
-					strength += pm->cmd.buttons & BUTTON_ATTACK;
+					strength += pm->cmd.buttons & BUTTON_ATTACK + Q_irand(0, g_spskill->integer);
 				}
 			}
 		}
@@ -14752,19 +14752,31 @@ qboolean PM_SaberLocked()
 	{
 		return qfalse;
 	}
+
 	gentity_t* genemy = &g_entities[pm->ps->saberLockEnemy];
+
 	if (!genemy)
 	{
 		return qfalse;
 	}
+
 	if (PM_InSaberLock(pm->ps->torsoAnim) && PM_InSaberLock(genemy->client->ps.torsoAnim))
 	{
+		/*if (pm->ps->client_num < MAX_CLIENTS || PM_ControlledByPlayer())
+		{
+			if (d_slowmoaction->integer)
+			{
+				G_StartStasisEffect(pm->gent, MEF_NO_SPIN, 200, 0.3f, 0);
+			}
+		}*/
+
 		if (pm->ps->saberLockTime <= level.time + 500
 			&& pm->ps->saberLockEnemy != ENTITYNUM_NONE)
 		{
 			//lock just ended
 			const int strength = G_SaberLockStrength(gent);
 			const int e_strength = G_SaberLockStrength(genemy);
+
 			if (strength > 1 && e_strength > 1 && !Q_irand(0, abs(strength - e_strength) + 1))
 			{
 				//both knock each other down!
@@ -14777,6 +14789,7 @@ qboolean PM_SaberLocked()
 			}
 			return qtrue;
 		}
+
 		if (pm->ps->saberLockTime < level.time)
 		{
 			//done... tie breaker above should have handled this, but...?
@@ -14790,6 +14803,7 @@ qboolean PM_SaberLocked()
 			}
 			return qfalse;
 		}
+
 		if (pm->cmd.buttons & BUTTON_ATTACK)
 		{
 			//holding attack

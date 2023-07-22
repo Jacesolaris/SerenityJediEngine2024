@@ -113,6 +113,7 @@ extern float forcePushPullRadius[NUM_FORCE_POWER_LEVELS];
 #define SABER_SJEHITDAMAGE           70
 #define SABER_NORHITDAMAGE			 50
 #define SABER_MINHITDAMAGE           35
+#define SABER_DEBUGTDAMAGE           5
 
 #define DODGE_SABERBLOCK		     15
 #define DODGE_LOWDPBOOST		     10

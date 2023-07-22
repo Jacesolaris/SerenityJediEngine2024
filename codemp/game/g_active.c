@@ -5162,18 +5162,18 @@ void ClientThink_real(gentity_t* ent)
 				client->ps.communicatingflags |= 1 << CF_SABERLOCKING;
 			}
 
-			if (ucmd->rightmove > 0)
+			if (ucmd->rightmove > 0 || ucmd->forwardmove > 0)
 			{
 				if (!(client->ps.communicatingflags & 1 << CF_SABERLOCK_ADVANCE))
 				{
 					client->ps.communicatingflags |= 1 << CF_SABERLOCK_ADVANCE;
 				}
 			}
-			else if (ucmd->rightmove < 0)
+			else
 			{
 				client->ps.communicatingflags &= ~(1 << CF_SABERLOCK_ADVANCE);
 			}
-		}
+			}
 		else
 		{
 			client->ps.respectingtime = 0;
@@ -5590,7 +5590,7 @@ void ClientThink_real(gentity_t* ent)
 
 			if (ent->r.svFlags & SVF_BOT)
 			{
-				ent->client->ps.saberLockHitCheckTime = level.time + 250; //check for AI pushes much slower.
+				ent->client->ps.saberLockHitCheckTime = level.time + 25; //check for AI pushes much slower.
 
 				if (ent->client->ps.saberLockHitIncrementTime < level.time)
 				{//have moved to next frame since last saberlock attack button press
@@ -5598,11 +5598,11 @@ void ClientThink_real(gentity_t* ent)
 
 					if (ent->client->botclass == BCLASS_DESANN || ent->client->botclass == BCLASS_LUKE)
 					{
-						strength = 2 + ent->client->ps.fd.forcePowerLevel[FP_SABER_OFFENSE];
+						strength = 2;
 					}
 					else
 					{
-						strength = 2;
+						strength = 1;
 					}
 				}
 
@@ -5618,7 +5618,7 @@ void ClientThink_real(gentity_t* ent)
 
 					if (ent->client->ps.communicatingflags & 1 << CF_SABERLOCK_ADVANCE)
 					{
-						strength = 1 + ent->client->buttons & BUTTON_ATTACK;
+						strength = 3 + ent->client->buttons & BUTTON_ATTACK;
 					}
 					else
 					{

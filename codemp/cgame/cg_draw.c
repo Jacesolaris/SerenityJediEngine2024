@@ -10851,11 +10851,11 @@ static void CG_Draw2D(void)
 		CG_DrawPic(0, 0, 640, 480, trap->R_RegisterShader("gfx/2d/jsense"));
 	}
 
-	//if (cg.predicted_player_state.communicatingflags & (1 << CF_SABERLOCK_ADVANCE))
-	//{//test for all sorts of shit... does it work? show me.
-	//	CG_DrawPic(0, 0, 640, 480, trap->R_RegisterShader("gfx/2d/jsense"));
-	//	CG_DrawPic(0, 0, 640, 480, trap->R_RegisterShader("gfx/2d/droid_view"));
-	//}
+	if (cg.predicted_player_state.communicatingflags & (1 << CF_SABERLOCK_ADVANCE))
+	{//test for all sorts of shit... does it work? show me.
+		CG_DrawPic(0, 0, 640, 480, trap->R_RegisterShader("gfx/2d/jsense"));
+		CG_DrawPic(0, 0, 640, 480, trap->R_RegisterShader("gfx/2d/droid_view"));
+	}
 
 	CG_Draw2DScreenTints();
 
