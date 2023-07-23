@@ -718,6 +718,7 @@ extern vmCvar_t cg_rollSounds;
 extern vmCvar_t cg_missionstatusscreen;
 
 extern vmCvar_t cg_hudRatio;
+extern vmCvar_t cg_saberLockCinematicCamera;
 
 void CG_NewClientinfo(int client_num);
 //

@@ -2173,6 +2173,7 @@ static QINLINE qboolean WP_SabersCheckLock2(gentity_t* attacker, gentity_t* defe
 				return qfalse;
 				break;
 			}
+			G_Sound(attacker, CHAN_BODY, G_SoundIndex("sound/weapons/saber/saberlockstart.mp3"));
 		}
 		else
 		{
@@ -2326,6 +2327,7 @@ static QINLINE qboolean WP_SabersCheckLock2(gentity_t* attacker, gentity_t* defe
 					return qfalse;
 				}
 			}
+			G_Sound(attacker, CHAN_BODY, G_SoundIndex("sound/weapons/saber/saberlockstart.mp3"));
 		}
 	}
 

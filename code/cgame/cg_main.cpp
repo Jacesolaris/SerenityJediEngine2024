@@ -444,6 +444,8 @@ vmCvar_t cg_newgameplusJKA;
 
 vmCvar_t cg_newgameplusJKO;
 
+vmCvar_t cg_saberLockCinematicCamera;
+
 using cvarTable_t = struct
 {
 	vmCvar_t* vmCvar;
@@ -646,6 +648,8 @@ static cvarTable_t cvarTable[] = {
 	{&cg_newgameplusJKA, "g_newgameplusJKA", "0", CVAR_ARCHIVE | CVAR_SAVEGAME | CVAR_NORESTART},
 
 	{&cg_newgameplusJKO, "g_newgameplusJKO", "0", CVAR_ARCHIVE | CVAR_SAVEGAME | CVAR_NORESTART},
+
+	{&cg_saberLockCinematicCamera, "g_saberLockCinematicCamera", "0", CVAR_ARCHIVE },
 };
 
 static constexpr size_t cvarTableSize = std::size(cvarTable);

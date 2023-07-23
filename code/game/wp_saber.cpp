@@ -1645,28 +1645,15 @@ void wp_saber_hit_sound(const gentity_t* ent, const int saber_num, const int bla
 	}
 }
 
-void wp_saber_lock_sound(const gentity_t* ent, const int saber_num, const int blade_num)
+void wp_saber_lock_sound(const gentity_t* ent)
 {
 	if (!ent || !ent->client)
 	{
 		return;
 	}
 	const int index = Q_irand(1, 9);
-
-	if (!WP_SaberBladeUseSecondBladeStyle(&ent->client->ps.saber[saber_num], blade_num)
-		&& ent->client->ps.saber[saber_num].blockSound[0])
-	{
-		G_Sound(ent, ent->client->ps.saber[saber_num].blockSound[Q_irand(0, 2)]);
-	}
-	else if (WP_SaberBladeUseSecondBladeStyle(&ent->client->ps.saber[saber_num], blade_num)
-		&& ent->client->ps.saber[saber_num].block2Sound[0])
-	{
-		G_Sound(ent, ent->client->ps.saber[saber_num].block2Sound[Q_irand(0, 2)]);
-	}
-	else
-	{
-		G_Sound(ent, G_SoundIndex(va("sound/weapons/saber/saberlock%d.mp3", index)));
-	}
+	
+	G_Sound(ent, G_SoundIndex(va("sound/weapons/saber/saberlock%d.mp3", index)));
 }
 
 void wp_saber_block_sound(const gentity_t* ent, const int saber_num, const int blade_num)
@@ -4950,6 +4937,7 @@ qboolean WP_SabersCheckLock2(gentity_t* attacker, gentity_t* defender, sabersloc
 			default:
 				return qfalse;
 			}
+			G_SoundOnEnt(attacker, CHAN_BODY, "sound/weapons/saber/saberlockstart.mp3");
 		}
 		else
 		{
@@ -5089,6 +5077,7 @@ qboolean WP_SabersCheckLock2(gentity_t* attacker, gentity_t* defender, sabersloc
 					return qfalse;
 				}
 			}
+			G_SoundOnEnt(attacker, CHAN_BODY, "sound/weapons/saber/saberlockstart.mp3");
 		}
 	}
 	//set the proper anims
@@ -8075,7 +8064,8 @@ void WP_SaberDamageTrace(gentity_t* ent, int saber_num, int blade_num)
 						G_PlayEffect("saber/saber_friction.efx", g_saberFlashPos, hit_norm);
 					}
 				}
-				G_Sound(ent, G_SoundIndex(va("sound/weapons/saber/saberlock%d.mp3", index)));
+
+				wp_saber_lock_sound(ent);
 			}
 		}
 	}

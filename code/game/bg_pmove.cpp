@@ -14737,7 +14737,6 @@ extern qboolean g_check_increment_lock_anim(int anim, int win_or_lose);
 
 qboolean PM_SaberLocked()
 {
-	//FIXME: maybe kick out of saberlock?
 	if (pm->ps->saberLockEnemy == ENTITYNUM_NONE)
 	{
 		if (PM_InSaberLock(pm->ps->torsoAnim))
@@ -14762,14 +14761,6 @@ qboolean PM_SaberLocked()
 
 	if (PM_InSaberLock(pm->ps->torsoAnim) && PM_InSaberLock(genemy->client->ps.torsoAnim))
 	{
-		/*if (pm->ps->client_num < MAX_CLIENTS || PM_ControlledByPlayer())
-		{
-			if (d_slowmoaction->integer)
-			{
-				G_StartStasisEffect(pm->gent, MEF_NO_SPIN, 200, 0.3f, 0);
-			}
-		}*/
-
 		if (pm->ps->saberLockTime <= level.time + 500
 			&& pm->ps->saberLockEnemy != ENTITYNUM_NONE)
 		{
@@ -14781,11 +14772,13 @@ qboolean PM_SaberLocked()
 			{
 				//both knock each other down!
 				PM_SaberLockBreak(gent, genemy, LOCK_DRAW, 0);
+				G_SoundOnEnt(pm->gent, CHAN_BODY, "sound/weapons/saber/saberlockend.mp3");
 			}
 			else
 			{
 				//both "win"
 				PM_SaberLockBreak(gent, genemy, LOCK_STALEMATE, 0);
+				G_SoundOnEnt(pm->gent, CHAN_BODY, "sound/weapons/saber/saberlockend.mp3");
 			}
 			return qtrue;
 		}
@@ -14796,10 +14789,12 @@ qboolean PM_SaberLocked()
 			if (PM_InSaberLock(pm->ps->torsoAnim) && pm->ps->torsoAnimTimer > 0)
 			{
 				pm->ps->torsoAnimTimer = 0;
+				G_SoundOnEnt(pm->gent, CHAN_BODY, "sound/weapons/saber/saberlockend.mp3");
 			}
 			if (PM_InSaberLock(pm->ps->legsAnim) && pm->ps->legsAnimTimer > 0)
 			{
 				pm->ps->legsAnimTimer = 0;
+				G_SoundOnEnt(pm->gent, CHAN_BODY, "sound/weapons/saber/saberlockend.mp3");
 			}
 			return qfalse;
 		}
@@ -14843,6 +14838,7 @@ qboolean PM_SaberLocked()
 							{
 								//I won!  Break out
 								PM_SaberLockBreak(gent, genemy, LOCK_VICTORY, strength);
+								G_SoundOnEnt(pm->gent, CHAN_BODY, "sound/weapons/saber/saberlockend.mp3");
 								return qtrue;
 							}
 							PM_SetAnimFrame(gent, cur_frame, qtrue, qtrue);
@@ -14861,6 +14857,7 @@ qboolean PM_SaberLocked()
 							{
 								//I won!  Break out
 								PM_SaberLockBreak(gent, genemy, LOCK_VICTORY, strength);
+								G_SoundOnEnt(pm->gent, CHAN_BODY, "sound/weapons/saber/saberlockend.mp3");
 								return qtrue;
 							}
 							PM_SetAnimFrame(gent, cur_frame, qtrue, qtrue);
@@ -14883,6 +14880,7 @@ qboolean PM_SaberLocked()
 							{
 								//I won!  Break out
 								PM_SaberLockBreak(gent, genemy, LOCK_VICTORY, strength);
+								G_SoundOnEnt(pm->gent, CHAN_BODY, "sound/weapons/saber/saberlockend.mp3");
 								return qtrue;
 							}
 							PM_SetAnimFrame(gent, cur_frame, qtrue, qtrue);
@@ -14901,6 +14899,7 @@ qboolean PM_SaberLocked()
 							{
 								//I won!  Break out
 								PM_SaberLockBreak(gent, genemy, LOCK_VICTORY, strength);
+								G_SoundOnEnt(pm->gent, CHAN_BODY, "sound/weapons/saber/saberlockend.mp3");
 								return qtrue;
 							}
 							PM_SetAnimFrame(gent, cur_frame, qtrue, qtrue);
@@ -15023,18 +15022,22 @@ qboolean PM_SaberLocked()
 		if (gent->painDebounceTime > level.time && genemy->painDebounceTime > level.time)
 		{
 			PM_SaberLockBreak(gent, genemy, LOCK_DRAW, 0);
+			G_SoundOnEnt(pm->gent, CHAN_BODY, "sound/weapons/saber/saberlockend.mp3");
 		}
 		else if (gent->painDebounceTime > level.time)
 		{
 			PM_SaberLockBreak(genemy, gent, LOCK_VICTORY, 0);
+			G_SoundOnEnt(pm->gent, CHAN_BODY, "sound/weapons/saber/saberlockend.mp3");
 		}
 		else if (genemy->painDebounceTime > level.time)
 		{
 			PM_SaberLockBreak(gent, genemy, LOCK_VICTORY, 0);
+			G_SoundOnEnt(pm->gent, CHAN_BODY, "sound/weapons/saber/saberlockend.mp3");
 		}
 		else
 		{
 			PM_SaberLockBreak(gent, genemy, LOCK_STALEMATE, 0);
+			G_SoundOnEnt(pm->gent, CHAN_BODY, "sound/weapons/saber/saberlockend.mp3");
 		}
 	}
 	return qtrue;

@@ -939,7 +939,7 @@ static void CG_OffsetThirdPersonView()
 	vectoangles(diff, cg.refdefViewAngles);
 
 	// Temp: just move the camera to the side a bit
-	if (cg.overrides.active & CG_OVERRIDE_3RD_PERSON_HOF)
+	if (cg.overrides.active & CG_OVERRIDE_3RD_PERSON_HOF && g_saberLockCinematicCamera->integer)
 	{
 		AnglesToAxis(cg.refdefViewAngles, cg.refdef.viewaxis);
 		VectorMA(cameraCurLoc, cg.overrides.thirdPersonHorzOffset, cg.refdef.viewaxis[1], cameraCurLoc);

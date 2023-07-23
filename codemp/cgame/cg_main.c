@@ -754,6 +754,9 @@ static void CG_RegisterSounds(void)
 
 	trap->R_RegisterShader("models/map_objects/imp_mine/turret_chair_dmg.tga");
 
+	trap->S_RegisterSound("sound/weapons/saber/saberlockstart.mp3");
+	trap->S_RegisterSound("sound/weapons/saber/saberlockend.mp3");
+
 	for (i = 1; i < 11; i++)
 	{
 		trap->S_RegisterSound(va("sound/weapons/saber/saberhup%i", i));

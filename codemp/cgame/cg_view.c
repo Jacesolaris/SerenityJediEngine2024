@@ -822,7 +822,13 @@ static void CG_OffsetThirdPersonView(void)
 	vectoangles(diff, cg.refdef.viewangles);
 
 	// Temp: just move the camera to the side a bit
-	if (thirdPersonHorzOffset != 0.0f)
+
+	if (cg.predicted_player_state.communicatingflags & (1 << CF_SABERLOCKING) && g_saberLockCinematicCamera.integer)
+	{
+		AnglesToAxis(cg.refdef.viewangles, cg.refdef.viewaxis);
+		VectorMA(cameraCurLoc, thirdPersonHorzOffset, cg.refdef.viewaxis[1], cameraCurLoc);
+	}
+	else if (thirdPersonHorzOffset != 0.0f)
 	{
 		AnglesToAxis(cg.refdef.viewangles, cg.refdef.viewaxis);
 		VectorMA(cameraCurLoc, thirdPersonHorzOffset, cg.refdef.viewaxis[1], cameraCurLoc);

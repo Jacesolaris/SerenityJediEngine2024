@@ -1864,7 +1864,6 @@ void PM_SaberLocked(void)
 	}
 
 	playerState_t* genemy = e_genemy->playerState;
-
 	if (!genemy)
 	{
 		return;
@@ -1883,12 +1882,18 @@ void PM_SaberLocked(void)
 		genemy->weaponTime = 0;
 
 		const float dist = DistanceSquared(pm->ps->origin, genemy->origin);
+		
 		if (dist < 64 || dist > 6400)
 		{
 			//between 8 and 80 from each other
 			PM_SaberLockBreak(genemy, qfalse, 0);
+#ifdef _GAME
+			gentity_t* self = &g_entities[pm->ps->client_num];
+			G_Sound(self, CHAN_BODY, G_SoundIndex("sound/weapons/saber/saberlockend.mp3"));
+#endif
 			return;
 		}
+		
 		if (pm->ps->saberLockAdvance)
 		{
 			int remaining;
@@ -1914,6 +1919,10 @@ void PM_SaberLocked(void)
 					{
 						//I won!  Break out
 						PM_SaberLockBreak(genemy, qtrue, strength);
+#ifdef _GAME
+						gentity_t* self = &g_entities[pm->ps->client_num];
+						G_Sound(self, CHAN_BODY, G_SoundIndex("sound/weapons/saber/saberlockend.mp3"));
+#endif
 						return;
 					}
 					PM_SetAnimFrame(pm->ps, cur_frame);
@@ -1927,6 +1936,10 @@ void PM_SaberLocked(void)
 					{
 						//I won!  Break out
 						PM_SaberLockBreak(genemy, qtrue, strength);
+#ifdef _GAME
+						gentity_t* self = &g_entities[pm->ps->client_num];
+						G_Sound(self, CHAN_BODY, G_SoundIndex("sound/weapons/saber/saberlockend.mp3"));
+#endif
 						return;
 					}
 					PM_SetAnimFrame(pm->ps, cur_frame);
@@ -1944,6 +1957,10 @@ void PM_SaberLocked(void)
 					{
 						//I won!  Break out
 						PM_SaberLockBreak(genemy, qtrue, strength);
+#ifdef _GAME
+						gentity_t* self = &g_entities[pm->ps->client_num];
+						G_Sound(self, CHAN_BODY, G_SoundIndex("sound/weapons/saber/saberlockend.mp3"));
+#endif
 						return;
 					}
 					PM_SetAnimFrame(pm->ps, cur_frame);
@@ -1957,6 +1974,10 @@ void PM_SaberLocked(void)
 					{
 						//I won!  Break out
 						PM_SaberLockBreak(genemy, qtrue, strength);
+#ifdef _GAME
+						gentity_t* self = &g_entities[pm->ps->client_num];
+						G_Sound(self, CHAN_BODY, G_SoundIndex("sound/weapons/saber/saberlockend.mp3"));
+#endif
 						return;
 					}
 					PM_SetAnimFrame(pm->ps, cur_frame);
@@ -2008,6 +2029,10 @@ void PM_SaberLocked(void)
 	{
 		//something broke us out of it
 		PM_SaberLockBreak(genemy, qfalse, 0);
+#ifdef _GAME
+		gentity_t* self = &g_entities[pm->ps->client_num];
+		G_Sound(self, CHAN_BODY, G_SoundIndex("sound/weapons/saber/saberlockend.mp3"));
+#endif
 	}
 }
 
@@ -4991,6 +5016,10 @@ void PM_WeaponLightsaber(void)
 				if (en)
 				{
 					PM_SaberLockBreak(en, qfalse, 0);
+#ifdef _GAME
+					gentity_t* self = &g_entities[pm->ps->client_num];
+					G_Sound(self, CHAN_BODY, G_SoundIndex("sound/weapons/saber/saberlockend.mp3"));
+#endif
 					return;
 				}
 			}
