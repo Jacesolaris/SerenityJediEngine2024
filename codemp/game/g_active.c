@@ -5173,7 +5173,7 @@ void ClientThink_real(gentity_t* ent)
 			{
 				client->ps.communicatingflags &= ~(1 << CF_SABERLOCK_ADVANCE);
 			}
-			}
+		}
 		else
 		{
 			client->ps.respectingtime = 0;
@@ -5604,38 +5604,54 @@ void ClientThink_real(gentity_t* ent)
 					{
 						strength = 1;
 					}
+
+					ent->client->ps.saberLockHits += strength;
 				}
 
-				ent->client->ps.saberLockHits += strength;
+				if (ent->client->ps.saberLockHits > 0)
+				{
+					if (!ent->client->ps.saberLockAdvance)
+					{
+						ent->client->ps.saberLockHits--;
+					}
+					ent->client->ps.saberLockAdvance = qtrue;
+				}
 			}
 			else
 			{
 				ent->client->ps.saberLockHitCheckTime = level.time + 25;//so we don't push more than once per server frame
-
-				if (ent->client->ps.saberLockHitIncrementTime < level.time)
-				{//have moved to next frame since last saberlock attack button press
-					ent->client->ps.saberLockHitIncrementTime = level.time + 50;//so we don't register an attack key press more than once per server frame
-
-					if (ent->client->ps.communicatingflags & 1 << CF_SABERLOCK_ADVANCE)
-					{
-						strength = 3 + ent->client->buttons & BUTTON_ATTACK;
-					}
-					else
-					{
-						strength = ent->client->buttons & BUTTON_ATTACK;
-					}
-				}
-
-				ent->client->ps.saberLockHits += strength;
-			}
-
-			if (ent->client->ps.saberLockHits > 0)
-			{
-				if (!ent->client->ps.saberLockAdvance)
+				
+				if (ent->client->ps.communicatingflags & 1 << CF_SABERLOCK_ADVANCE)
 				{
-					ent->client->ps.saberLockHits--;
+					if (ent->client->ps.saberLockHitIncrementTime < level.time)
+					{//have moved to next frame since last saberlock attack button press
+						ent->client->ps.saberLockHitIncrementTime = level.time + 50;//so we don't register an attack key press more than once per server frame
+
+						strength += ent->client->ps.fd.forcePowerLevel[FP_SABER_OFFENSE] + Q_irand(1, g_attackskill.integer) + Q_irand(0, ent->client->buttons & BUTTON_ATTACK);
+
+						ent->client->ps.saberLockHits += strength;
+					}
 				}
-				ent->client->ps.saberLockAdvance = qtrue;
+				else
+				{
+					if (ent->client->ps.saberLockHitIncrementTime < level.time)
+					{//have moved to next frame since last saberlock attack button press
+						ent->client->ps.saberLockHitIncrementTime = level.time + 50;//so we don't register an attack key press more than once per server frame
+
+						strength = Q_irand(0, ent->client->buttons & BUTTON_ATTACK);
+
+						ent->client->ps.saberLockHits += strength;
+					}
+				}
+
+				if (ent->client->ps.saberLockHits > 0 && ent->client->ps.communicatingflags & 1 << CF_SABERLOCK_ADVANCE)
+				{
+					if (!ent->client->ps.saberLockAdvance)
+					{
+						ent->client->ps.saberLockHits--;
+					}
+					ent->client->ps.saberLockAdvance = qtrue;
+				}
 			}
 		}
 	}

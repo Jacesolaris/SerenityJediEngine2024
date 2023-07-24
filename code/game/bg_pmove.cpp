@@ -14811,12 +14811,8 @@ qboolean PM_SaberLocked()
 				{
 					float current_frame, junk2;
 					int cur_frame, junk;
-					int strength;
-					const animation_t* anim = &level.knownAnimFileSets[gent->client->clientInfo.animFileIndex].
-						animations[pm->
-						ps->
-						torsoAnim];
-
+					int strength = G_SaberLockStrength(gent);
+					const animation_t* anim = &level.knownAnimFileSets[gent->client->clientInfo.animFileIndex].animations[pm->ps->torsoAnim];
 #ifdef _DEBUG
 					const qboolean ret =
 #endif
@@ -14825,8 +14821,8 @@ qboolean PM_SaberLocked()
 							&junk, &junk2, nullptr);
 #ifdef _DEBUG
 					assert(ret); // this would be pretty bad, the below code seems to assume the call succeeds. -gil
-#endif
-					strength = G_SaberLockStrength(gent);
+#endif					
+					
 					if (PM_InSaberLockOld(pm->ps->torsoAnim))
 					{
 						//old locks

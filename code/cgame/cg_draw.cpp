@@ -4742,6 +4742,12 @@ static void CG_DrawCrosshair(vec3_t world_point)
 		return;
 	}
 
+	if (in_camera)
+	{
+		//no crosshair while in cutscenes
+		return;
+	}
+
 	if (cg.zoomMode > 0 && cg.zoomMode < 3)
 	{
 		//not while scoped
@@ -7347,8 +7353,8 @@ static void CG_Draw2D()
 	
 	//if (cg.predicted_player_state.communicatingflags & (1 << CF_SABERLOCK_ADVANCE))
 	//{//test for all sorts of shit... does it work? show me.
-		//CG_DrawPic(0, 0, 640, 480, cgi_R_RegisterShader("gfx/2d/jsense"));
-		//CG_DrawPic(0, 0, 640, 480, cgi_R_RegisterShader("gfx/2d/droid_view"));
+	//	CG_DrawPic(0, 0, 640, 480, cgi_R_RegisterShader("gfx/2d/jsense"));
+	//	CG_DrawPic(0, 0, 640, 480, cgi_R_RegisterShader("gfx/2d/droid_view"));
 	//}
 
 	if (cg_debugHealthBars.integer)

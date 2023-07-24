@@ -1731,31 +1731,31 @@ int PM_SaberLockResultAnim(playerState_t* duelist, const qboolean super_break, c
 
 void PM_SaberLockBreak(playerState_t* genemy, const qboolean victory, const int strength)
 {
-	const qboolean super_break = strength + pm->cmd.buttons & BUTTON_ATTACK;
+	const qboolean super_break = strength + pm->ps->saberLockHits > Q_irand(1, pm->cmd.buttons & BUTTON_ATTACK);
 
 	pm->ps->userInt3 &= ~(1 << FLAG_SABERLOCK_ATTACKER);
 	genemy->userInt3 &= ~(1 << FLAG_SABERLOCK_ATTACKER);
 
-	const int win_anim = PM_SaberLockWinAnim(victory, super_break);
+	int win_anim = PM_SaberLockWinAnim(victory, super_break);
+	int loseAnim = PM_SaberLockLoseAnim(genemy, victory, super_break);
 
 	if (win_anim != -1)
-	{
-		//a single vs. single break
-		PM_SaberLockLoseAnim(genemy, victory, super_break);
+	{//a single vs. single break
+		loseAnim = PM_SaberLockLoseAnim(genemy, victory, super_break);
 	}
 	else
-	{
-		PM_SaberLockResultAnim(pm->ps, super_break, qtrue);
+	{//must be a saberlock that's not between single and single...
+		win_anim = PM_SaberLockResultAnim(pm->ps, super_break, qtrue);
 		pm->ps->weaponstate = WEAPON_FIRING;
-		PM_SaberLockResultAnim(genemy, super_break, qfalse);
+
+		loseAnim = PM_SaberLockResultAnim(genemy, super_break, qfalse);
 		genemy->weaponstate = WEAPON_READY;
 	}
 
 	if (victory)
 	{//someone lost the lock, so punish them by knocking them down
 		if (!super_break)
-		{
-			//if we're not in a superbreak, force the loser to mishap.
+		{//if we're not in a superbreak, force the loser to mishap.
 			pm->checkDuelLoss = genemy->client_num + 1;
 		}
 	}
@@ -1763,7 +1763,7 @@ void PM_SaberLockBreak(playerState_t* genemy, const qboolean victory, const int 
 	{//If no one lost, then shove each player away from the other
 		vec3_t opp_dir;
 
-		const int newstrength = 8;
+		const int newstrength = 10;
 
 		VectorSubtract(genemy->origin, pm->ps->origin, opp_dir);
 		VectorNormalize(opp_dir);
@@ -1778,11 +1778,14 @@ void PM_SaberLockBreak(playerState_t* genemy, const qboolean victory, const int 
 		pm->ps->velocity[2] = 0;
 	}
 
+	genemy->weaponTime = 0;
+
 	pm->ps->saberLockTime = genemy->saberLockTime = 0;
 	pm->ps->saberLockFrame = genemy->saberLockFrame = 0;
 	pm->ps->saberLockEnemy = genemy->saberLockEnemy = 0;
 
-	PM_AddEvent(EV_JUMP);
+	//PM_AddEvent(EV_JUMP);
+
 	if (!victory)
 	{
 		//no-one won
@@ -1882,7 +1885,7 @@ void PM_SaberLocked(void)
 		genemy->weaponTime = 0;
 
 		const float dist = DistanceSquared(pm->ps->origin, genemy->origin);
-		
+
 		if (dist < 64 || dist > 6400)
 		{
 			//between 8 and 80 from each other
@@ -1893,134 +1896,268 @@ void PM_SaberLocked(void)
 #endif
 			return;
 		}
-		
-		if (pm->ps->saberLockAdvance)
+
+#ifdef _GAME
+		if (g_entities[pm->ps->client_num].r.svFlags & SVF_BOT)
 		{
-			int remaining;
-			int cur_frame;
-			const int strength = pm->ps->fd.forcePowerLevel[FP_SABER_OFFENSE] + 1;
-
-			pm->ps->saberLockAdvance = qfalse;
-
-			const animation_t* anim = &pm->animations[pm->ps->torsoAnim];
-
-			const float current_frame = pm->ps->saberLockFrame;
-
-			//advance/decrement my frame number
-			if (BG_InSaberLockOld(pm->ps->torsoAnim))
+			if (pm->ps->saberLockAdvance)
 			{
-				//old locks
-				if (pm->ps->torsoAnim == BOTH_CCWCIRCLELOCK ||
-					pm->ps->torsoAnim == BOTH_BF2LOCK)
+				int remaining;
+				int cur_frame;
+				const int strength = 1;
+
+				pm->ps->saberLockAdvance = qfalse;
+
+				const animation_t* anim = &pm->animations[pm->ps->torsoAnim];
+
+				const float current_frame = pm->ps->saberLockFrame;
+
+				//advance/decrement my frame number
+				if (BG_InSaberLockOld(pm->ps->torsoAnim))
 				{
-					cur_frame = floor(current_frame) - strength;
-					//drop my frame one
-					if (cur_frame <= anim->firstFrame)
+					//old locks
+					if (pm->ps->torsoAnim == BOTH_CCWCIRCLELOCK ||
+						pm->ps->torsoAnim == BOTH_BF2LOCK)
 					{
-						//I won!  Break out
-						PM_SaberLockBreak(genemy, qtrue, strength);
-#ifdef _GAME
-						gentity_t* self = &g_entities[pm->ps->client_num];
-						G_Sound(self, CHAN_BODY, G_SoundIndex("sound/weapons/saber/saberlockend.mp3"));
-#endif
-						return;
+						cur_frame = floor(current_frame) - strength;
+						//drop my frame one
+						if (cur_frame <= anim->firstFrame)
+						{
+							//I won!  Break out
+							PM_SaberLockBreak(genemy, qtrue, strength);
+							gentity_t* self = &g_entities[pm->ps->client_num];
+							G_Sound(self, CHAN_BODY, G_SoundIndex("sound/weapons/saber/saberlockend.mp3"));
+							return;
+						}
+						PM_SetAnimFrame(pm->ps, cur_frame);
+						remaining = cur_frame - anim->firstFrame;
 					}
-					PM_SetAnimFrame(pm->ps, cur_frame);
-					remaining = cur_frame - anim->firstFrame;
+					else
+					{
+						cur_frame = ceil(current_frame) + strength;
+						//advance my frame one
+						if (cur_frame >= anim->firstFrame + anim->numFrames)
+						{
+							//I won!  Break out
+							PM_SaberLockBreak(genemy, qtrue, strength);
+							gentity_t* self = &g_entities[pm->ps->client_num];
+							G_Sound(self, CHAN_BODY, G_SoundIndex("sound/weapons/saber/saberlockend.mp3"));
+							return;
+						}
+						PM_SetAnimFrame(pm->ps, cur_frame);
+						remaining = anim->firstFrame + anim->numFrames - cur_frame;
+					}
 				}
 				else
 				{
-					cur_frame = ceil(current_frame) + strength;
-					//advance my frame one
-					if (cur_frame >= anim->firstFrame + anim->numFrames)
+					//new locks
+					if (g_check_increment_lock_anim(pm->ps->torsoAnim, SABER_LOCK_WIN))
 					{
-						//I won!  Break out
-						PM_SaberLockBreak(genemy, qtrue, strength);
-#ifdef _GAME
-						gentity_t* self = &g_entities[pm->ps->client_num];
-						G_Sound(self, CHAN_BODY, G_SoundIndex("sound/weapons/saber/saberlockend.mp3"));
-#endif
-						return;
+						cur_frame = ceil(current_frame) + strength;
+						//advance my frame one
+						if (cur_frame >= anim->firstFrame + anim->numFrames)
+						{
+							//I won!  Break out
+							PM_SaberLockBreak(genemy, qtrue, strength);
+							gentity_t* self = &g_entities[pm->ps->client_num];
+							G_Sound(self, CHAN_BODY, G_SoundIndex("sound/weapons/saber/saberlockend.mp3"));
+							return;
+						}
+						PM_SetAnimFrame(pm->ps, cur_frame);
+						remaining = anim->firstFrame + anim->numFrames - cur_frame;
 					}
-					PM_SetAnimFrame(pm->ps, cur_frame);
-					remaining = anim->firstFrame + anim->numFrames - cur_frame;
+					else
+					{
+						cur_frame = floor(current_frame) - strength;
+						//drop my frame one
+						if (cur_frame <= anim->firstFrame)
+						{
+							//I won!  Break out
+							PM_SaberLockBreak(genemy, qtrue, strength);
+							gentity_t* self = &g_entities[pm->ps->client_num];
+							G_Sound(self, CHAN_BODY, G_SoundIndex("sound/weapons/saber/saberlockend.mp3"));
+							return;
+						}
+						PM_SetAnimFrame(pm->ps, cur_frame);
+						remaining = cur_frame - anim->firstFrame;
+					}
 				}
-			}
-			else
-			{
-				//new locks
-				if (g_check_increment_lock_anim(pm->ps->torsoAnim, SABER_LOCK_WIN))
+				if (!PM_irand_timesync(0, 2))
 				{
-					cur_frame = ceil(current_frame) + strength;
-					//advance my frame one
-					if (cur_frame >= anim->firstFrame + anim->numFrames)
+					//PM_AddEvent(EV_JUMP);
+				}
+				//advance/decrement enemy frame number
+				anim = &pm->animations[genemy->torsoAnim];
+
+				if (BG_InSaberLockOld(genemy->torsoAnim))
+				{
+					if (genemy->torsoAnim == BOTH_CWCIRCLELOCK ||
+						genemy->torsoAnim == BOTH_BF1LOCK)
 					{
-						//I won!  Break out
-						PM_SaberLockBreak(genemy, qtrue, strength);
-#ifdef _GAME
-						gentity_t* self = &g_entities[pm->ps->client_num];
-						G_Sound(self, CHAN_BODY, G_SoundIndex("sound/weapons/saber/saberlockend.mp3"));
-#endif
-						return;
+						if (!PM_irand_timesync(0, 2))
+						{
+							BG_AddPredictableEventToPlayerstate(EV_PAIN, floor((float)80 / 100 * 100.0f), genemy);
+						}
+						PM_SetAnimFrame(genemy, anim->firstFrame + remaining);
 					}
-					PM_SetAnimFrame(pm->ps, cur_frame);
-					remaining = anim->firstFrame + anim->numFrames - cur_frame;
+					else
+					{
+						PM_SetAnimFrame(genemy, anim->firstFrame + anim->numFrames - remaining);
+					}
 				}
 				else
 				{
-					cur_frame = floor(current_frame) - strength;
-					//drop my frame one
-					if (cur_frame <= anim->firstFrame)
+					//new locks
+					if (g_check_increment_lock_anim(genemy->torsoAnim, SABER_LOCK_LOSE))
 					{
-						//I won!  Break out
-						PM_SaberLockBreak(genemy, qtrue, strength);
-#ifdef _GAME
-						gentity_t* self = &g_entities[pm->ps->client_num];
-						G_Sound(self, CHAN_BODY, G_SoundIndex("sound/weapons/saber/saberlockend.mp3"));
-#endif
-						return;
+						if (!PM_irand_timesync(0, 2))
+						{
+							BG_AddPredictableEventToPlayerstate(EV_PAIN, floor((float)80 / 100 * 100.0f), genemy);
+						}
+						PM_SetAnimFrame(genemy, anim->firstFrame + anim->numFrames - remaining);
 					}
-					PM_SetAnimFrame(pm->ps, cur_frame);
-					remaining = cur_frame - anim->firstFrame;
+					else
+					{
+						PM_SetAnimFrame(genemy, anim->firstFrame + remaining);
+					}
 				}
 			}
-			if (!PM_irand_timesync(0, 2))
+		}
+		else
+#endif
+		{
+			if (pm->ps->saberLockAdvance && pm->cmd.buttons & BUTTON_ATTACK && pm->ps->communicatingflags & 1 << CF_SABERLOCK_ADVANCE)
 			{
-				//PM_AddEvent(EV_JUMP);
-			}
-			//advance/decrement enemy frame number
-			anim = &pm->animations[genemy->torsoAnim];
-
-			if (BG_InSaberLockOld(genemy->torsoAnim))
-			{
-				if (genemy->torsoAnim == BOTH_CWCIRCLELOCK ||
-					genemy->torsoAnim == BOTH_BF1LOCK)
+				//holding attack
+				if (!(pm->ps->pm_flags & PMF_ATTACK_HELD))
 				{
+					int remaining;
+					int cur_frame;
+					const int strength = Q_irand(1, pm->ps->fd.forcePowerLevel[FP_SABER_OFFENSE]);
+
+					pm->ps->saberLockAdvance = qfalse;
+
+					const animation_t* anim = &pm->animations[pm->ps->torsoAnim];
+
+					const float current_frame = pm->ps->saberLockFrame;
+
+					//advance/decrement my frame number
+					if (BG_InSaberLockOld(pm->ps->torsoAnim))
+					{
+						//old locks
+						if (pm->ps->torsoAnim == BOTH_CCWCIRCLELOCK ||
+							pm->ps->torsoAnim == BOTH_BF2LOCK)
+						{
+							cur_frame = floor(current_frame) - strength;
+							//drop my frame one
+							if (cur_frame <= anim->firstFrame)
+							{
+								//I won!  Break out
+								PM_SaberLockBreak(genemy, qtrue, strength);
+#ifdef _GAME
+								gentity_t* self = &g_entities[pm->ps->client_num];
+								G_Sound(self, CHAN_BODY, G_SoundIndex("sound/weapons/saber/saberlockend.mp3"));
+#endif
+								return;
+							}
+							PM_SetAnimFrame(pm->ps, cur_frame);
+							remaining = cur_frame - anim->firstFrame;
+						}
+						else
+						{
+							cur_frame = ceil(current_frame) + strength;
+							//advance my frame one
+							if (cur_frame >= anim->firstFrame + anim->numFrames)
+							{
+								//I won!  Break out
+								PM_SaberLockBreak(genemy, qtrue, strength);
+#ifdef _GAME
+								gentity_t* self = &g_entities[pm->ps->client_num];
+								G_Sound(self, CHAN_BODY, G_SoundIndex("sound/weapons/saber/saberlockend.mp3"));
+#endif
+								return;
+							}
+							PM_SetAnimFrame(pm->ps, cur_frame);
+							remaining = anim->firstFrame + anim->numFrames - cur_frame;
+						}
+					}
+					else
+					{
+						//new locks
+						if (g_check_increment_lock_anim(pm->ps->torsoAnim, SABER_LOCK_WIN))
+						{
+							cur_frame = ceil(current_frame) + strength;
+							//advance my frame one
+							if (cur_frame >= anim->firstFrame + anim->numFrames)
+							{
+								//I won!  Break out
+								PM_SaberLockBreak(genemy, qtrue, strength);
+#ifdef _GAME
+								gentity_t* self = &g_entities[pm->ps->client_num];
+								G_Sound(self, CHAN_BODY, G_SoundIndex("sound/weapons/saber/saberlockend.mp3"));
+#endif
+								return;
+							}
+							PM_SetAnimFrame(pm->ps, cur_frame);
+							remaining = anim->firstFrame + anim->numFrames - cur_frame;
+						}
+						else
+						{
+							cur_frame = floor(current_frame) - strength;
+							//drop my frame one
+							if (cur_frame <= anim->firstFrame)
+							{
+								//I won!  Break out
+								PM_SaberLockBreak(genemy, qtrue, strength);
+#ifdef _GAME
+								gentity_t* self = &g_entities[pm->ps->client_num];
+								G_Sound(self, CHAN_BODY, G_SoundIndex("sound/weapons/saber/saberlockend.mp3"));
+#endif
+								return;
+							}
+							PM_SetAnimFrame(pm->ps, cur_frame);
+							remaining = cur_frame - anim->firstFrame;
+						}
+					}
 					if (!PM_irand_timesync(0, 2))
 					{
-						BG_AddPredictableEventToPlayerstate(EV_PAIN, floor((float)80 / 100 * 100.0f), genemy);
+						//PM_AddEvent(EV_JUMP);
 					}
-					PM_SetAnimFrame(genemy, anim->firstFrame + remaining);
-				}
-				else
-				{
-					PM_SetAnimFrame(genemy, anim->firstFrame + anim->numFrames - remaining);
-				}
-			}
-			else
-			{
-				//new locks
-				if (g_check_increment_lock_anim(genemy->torsoAnim, SABER_LOCK_LOSE))
-				{
-					if (!PM_irand_timesync(0, 2))
+					//advance/decrement enemy frame number
+					anim = &pm->animations[genemy->torsoAnim];
+
+					if (BG_InSaberLockOld(genemy->torsoAnim))
 					{
-						BG_AddPredictableEventToPlayerstate(EV_PAIN, floor((float)80 / 100 * 100.0f), genemy);
+						if (genemy->torsoAnim == BOTH_CWCIRCLELOCK ||
+							genemy->torsoAnim == BOTH_BF1LOCK)
+						{
+							if (!PM_irand_timesync(0, 2))
+							{
+								BG_AddPredictableEventToPlayerstate(EV_PAIN, floor((float)80 / 100 * 100.0f), genemy);
+							}
+							PM_SetAnimFrame(genemy, anim->firstFrame + remaining);
+						}
+						else
+						{
+							PM_SetAnimFrame(genemy, anim->firstFrame + anim->numFrames - remaining);
+						}
 					}
-					PM_SetAnimFrame(genemy, anim->firstFrame + anim->numFrames - remaining);
-				}
-				else
-				{
-					PM_SetAnimFrame(genemy, anim->firstFrame + remaining);
+					else
+					{
+						//new locks
+						if (g_check_increment_lock_anim(genemy->torsoAnim, SABER_LOCK_LOSE))
+						{
+							if (!PM_irand_timesync(0, 2))
+							{
+								BG_AddPredictableEventToPlayerstate(EV_PAIN, floor((float)80 / 100 * 100.0f), genemy);
+							}
+							PM_SetAnimFrame(genemy, anim->firstFrame + anim->numFrames - remaining);
+						}
+						else
+						{
+							PM_SetAnimFrame(genemy, anim->firstFrame + remaining);
+						}
+					}
 				}
 			}
 		}
