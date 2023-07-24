@@ -2458,11 +2458,13 @@ void CG_Limb(const centity_t* cent)
 
 extern Vehicle_t* G_IsRidingVehicle(const gentity_t* p_ent);
 qboolean MatrixMode = qfalse;
+qboolean SaberlockCamMode = qfalse;
 extern cvar_t* g_skippingcin;
 
 void CG_MatrixEffect(const centity_t* cent)
 {
 	float MATRIX_EFFECT_TIME = 1000.0f;
+
 	if (cent->currentState.bolt_info & MEF_MULTI_SPIN)
 	{
 		//multiple spins
@@ -2514,10 +2516,11 @@ void CG_MatrixEffect(const centity_t* cent)
 	{
 		//time is up or this is a falling spin and they hit the ground or mission end screen is up
 		cg.overrides.active &= ~(CG_OVERRIDE_3RD_PERSON_RNG | CG_OVERRIDE_3RD_PERSON_ANG | CG_OVERRIDE_3RD_PERSON_POF);
-		//cg.overrides.thirdPersonEntity = 0;
+		cg.overrides.thirdPersonHorzOffset = 0;
 		cg.overrides.thirdPersonAngle = 0;
 		cg.overrides.thirdPersonPitchOffset = 0;
 		cg.overrides.thirdPersonRange = 0;
+
 		if (g_skippingcin->integer)
 		{
 			//skipping?  don't mess with timescale
@@ -2573,6 +2576,7 @@ void CG_MatrixEffect(const centity_t* cent)
 		//rotate
 		cg.overrides.active |= CG_OVERRIDE_3RD_PERSON_ANG;
 		cg.overrides.thirdPersonAngle = 360.0f * elapsed_time / MATRIX_EFFECT_TIME;
+
 		if (cent->currentState.bolt_info & MEF_REVERSE_SPIN)
 		{
 			cg.overrides.thirdPersonAngle *= -1;
@@ -2698,9 +2702,11 @@ void CG_StasisEffect(const centity_t* cent)
 	{
 		//time is up or this is a falling spin and they hit the ground or mission end screen is up
 		cg.overrides.active &= ~(CG_OVERRIDE_3RD_PERSON_RNG | CG_OVERRIDE_3RD_PERSON_ANG | CG_OVERRIDE_3RD_PERSON_POF);
+		cg.overrides.thirdPersonHorzOffset = 0;
 		cg.overrides.thirdPersonAngle = 0;
 		cg.overrides.thirdPersonPitchOffset = 0;
 		cg.overrides.thirdPersonRange = 0;
+
 		if (g_skippingcin->integer)
 		{
 			//skipping?  don't mess with timescale

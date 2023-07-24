@@ -2116,6 +2116,8 @@ static QINLINE qboolean WP_SabersCheckLock2(gentity_t* attacker, gentity_t* defe
 	}
 	else
 	{
+		const int index_start = Q_irand(1, 5);
+
 		if (lock_mode == LOCK_RANDOM)
 		{
 			lock_mode = (saberslock_mode_t)Q_irand(LOCK_FIRST, LOCK_RANDOM - 1);
@@ -2173,7 +2175,7 @@ static QINLINE qboolean WP_SabersCheckLock2(gentity_t* attacker, gentity_t* defe
 				return qfalse;
 				break;
 			}
-			G_Sound(attacker, CHAN_BODY, G_SoundIndex("sound/weapons/saber/saberlockstart.mp3"));
+			G_Sound(attacker, CHAN_AUTO, G_SoundIndex(va("sound/weapons/saber/saber_locking_start%d.mp3", index_start)));
 		}
 		else
 		{
@@ -2327,7 +2329,7 @@ static QINLINE qboolean WP_SabersCheckLock2(gentity_t* attacker, gentity_t* defe
 					return qfalse;
 				}
 			}
-			G_Sound(attacker, CHAN_BODY, G_SoundIndex("sound/weapons/saber/saberlockstart.mp3"));
+			G_Sound(attacker, CHAN_AUTO, G_SoundIndex(va("sound/weapons/saber/saber_locking_start%d.mp3", index_start)));
 		}
 	}
 

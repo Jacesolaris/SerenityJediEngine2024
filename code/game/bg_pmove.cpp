@@ -14747,6 +14747,7 @@ qboolean PM_SaberLocked()
 		return qfalse;
 	}
 	gentity_t* gent = pm->gent;
+	const int index_end = Q_irand(1, 5);
 	if (!gent)
 	{
 		return qfalse;
@@ -14772,13 +14773,13 @@ qboolean PM_SaberLocked()
 			{
 				//both knock each other down!
 				PM_SaberLockBreak(gent, genemy, LOCK_DRAW, 0);
-				G_SoundOnEnt(pm->gent, CHAN_BODY, "sound/weapons/saber/saberlockend.mp3");
+				G_Sound(pm->gent, G_SoundIndex(va("sound/weapons/saber/saber_locking_end%d.mp3", index_end)));
 			}
 			else
 			{
 				//both "win"
 				PM_SaberLockBreak(gent, genemy, LOCK_STALEMATE, 0);
-				G_SoundOnEnt(pm->gent, CHAN_BODY, "sound/weapons/saber/saberlockend.mp3");
+				G_Sound(pm->gent, G_SoundIndex(va("sound/weapons/saber/saber_locking_end%d.mp3", index_end)));
 			}
 			return qtrue;
 		}
@@ -14789,12 +14790,12 @@ qboolean PM_SaberLocked()
 			if (PM_InSaberLock(pm->ps->torsoAnim) && pm->ps->torsoAnimTimer > 0)
 			{
 				pm->ps->torsoAnimTimer = 0;
-				G_SoundOnEnt(pm->gent, CHAN_BODY, "sound/weapons/saber/saberlockend.mp3");
+				G_Sound(pm->gent, G_SoundIndex(va("sound/weapons/saber/saber_locking_end%d.mp3", index_end)));
 			}
 			if (PM_InSaberLock(pm->ps->legsAnim) && pm->ps->legsAnimTimer > 0)
 			{
 				pm->ps->legsAnimTimer = 0;
-				G_SoundOnEnt(pm->gent, CHAN_BODY, "sound/weapons/saber/saberlockend.mp3");
+				G_Sound(pm->gent, G_SoundIndex(va("sound/weapons/saber/saber_locking_end%d.mp3", index_end)));
 			}
 			return qfalse;
 		}
@@ -14838,7 +14839,7 @@ qboolean PM_SaberLocked()
 							{
 								//I won!  Break out
 								PM_SaberLockBreak(gent, genemy, LOCK_VICTORY, strength);
-								G_SoundOnEnt(pm->gent, CHAN_BODY, "sound/weapons/saber/saberlockend.mp3");
+								G_Sound(pm->gent, G_SoundIndex(va("sound/weapons/saber/saber_locking_end%d.mp3", index_end)));
 								return qtrue;
 							}
 							PM_SetAnimFrame(gent, cur_frame, qtrue, qtrue);
@@ -14857,7 +14858,7 @@ qboolean PM_SaberLocked()
 							{
 								//I won!  Break out
 								PM_SaberLockBreak(gent, genemy, LOCK_VICTORY, strength);
-								G_SoundOnEnt(pm->gent, CHAN_BODY, "sound/weapons/saber/saberlockend.mp3");
+								G_Sound(pm->gent, G_SoundIndex(va("sound/weapons/saber/saber_locking_end%d.mp3", index_end)));
 								return qtrue;
 							}
 							PM_SetAnimFrame(gent, cur_frame, qtrue, qtrue);
@@ -14880,7 +14881,7 @@ qboolean PM_SaberLocked()
 							{
 								//I won!  Break out
 								PM_SaberLockBreak(gent, genemy, LOCK_VICTORY, strength);
-								G_SoundOnEnt(pm->gent, CHAN_BODY, "sound/weapons/saber/saberlockend.mp3");
+								G_Sound(pm->gent, G_SoundIndex(va("sound/weapons/saber/saber_locking_end%d.mp3", index_end)));
 								return qtrue;
 							}
 							PM_SetAnimFrame(gent, cur_frame, qtrue, qtrue);
@@ -14899,7 +14900,7 @@ qboolean PM_SaberLocked()
 							{
 								//I won!  Break out
 								PM_SaberLockBreak(gent, genemy, LOCK_VICTORY, strength);
-								G_SoundOnEnt(pm->gent, CHAN_BODY, "sound/weapons/saber/saberlockend.mp3");
+								G_Sound(pm->gent, G_SoundIndex(va("sound/weapons/saber/saber_locking_end%d.mp3", index_end)));
 								return qtrue;
 							}
 							PM_SetAnimFrame(gent, cur_frame, qtrue, qtrue);
@@ -15022,22 +15023,22 @@ qboolean PM_SaberLocked()
 		if (gent->painDebounceTime > level.time && genemy->painDebounceTime > level.time)
 		{
 			PM_SaberLockBreak(gent, genemy, LOCK_DRAW, 0);
-			G_SoundOnEnt(pm->gent, CHAN_BODY, "sound/weapons/saber/saberlockend.mp3");
+			G_Sound(pm->gent, G_SoundIndex(va("sound/weapons/saber/saber_locking_end%d.mp3", index_end)));
 		}
 		else if (gent->painDebounceTime > level.time)
 		{
 			PM_SaberLockBreak(genemy, gent, LOCK_VICTORY, 0);
-			G_SoundOnEnt(pm->gent, CHAN_BODY, "sound/weapons/saber/saberlockend.mp3");
+			G_Sound(pm->gent, G_SoundIndex(va("sound/weapons/saber/saber_locking_end%d.mp3", index_end)));
 		}
 		else if (genemy->painDebounceTime > level.time)
 		{
 			PM_SaberLockBreak(gent, genemy, LOCK_VICTORY, 0);
-			G_SoundOnEnt(pm->gent, CHAN_BODY, "sound/weapons/saber/saberlockend.mp3");
+			G_Sound(pm->gent, G_SoundIndex(va("sound/weapons/saber/saber_locking_end%d.mp3", index_end)));
 		}
 		else
 		{
 			PM_SaberLockBreak(gent, genemy, LOCK_STALEMATE, 0);
-			G_SoundOnEnt(pm->gent, CHAN_BODY, "sound/weapons/saber/saberlockend.mp3");
+			G_Sound(pm->gent, G_SoundIndex(va("sound/weapons/saber/saber_locking_end%d.mp3", index_end)));
 		}
 	}
 	return qtrue;

@@ -1986,7 +1986,7 @@ void PM_SaberLocked(void)
 			}
 			if (!PM_irand_timesync(0, 2))
 			{
-				PM_AddEvent(EV_JUMP);
+				//PM_AddEvent(EV_JUMP);
 			}
 			//advance/decrement enemy frame number
 			anim = &pm->animations[genemy->torsoAnim];
