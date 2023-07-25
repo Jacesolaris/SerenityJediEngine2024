@@ -5594,10 +5594,9 @@ qboolean G_CheckClampUcmd(gentity_t* ent, usercmd_t* ucmd)
 			// Not in a vehicle.
 			if (ent->s.m_iVehicleNum == 0)
 			{
-				if (!MatrixMode)
+				if (!MatrixMode && !(cg.renderingThirdPerson && cg.predicted_player_state.communicatingflags & (1 << CF_SABERLOCKING) && g_saberLockCinematicCamera->integer))
 				{
-					cg.overrides.active &= ~(CG_OVERRIDE_3RD_PERSON_RNG | CG_OVERRIDE_3RD_PERSON_POF |
-						CG_OVERRIDE_3RD_PERSON_ANG);
+					cg.overrides.active &= ~(CG_OVERRIDE_3RD_PERSON_RNG | CG_OVERRIDE_3RD_PERSON_POF | CG_OVERRIDE_3RD_PERSON_ANG);
 					cg.overrides.thirdPersonRange = 0;
 				}
 			}
