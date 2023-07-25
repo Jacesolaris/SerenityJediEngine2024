@@ -3168,16 +3168,17 @@ qboolean G_CheckClampUcmd(gentity_t* ent, usercmd_t* ucmd)
 	{
 		if (ent->client->ps.communicatingflags & (1 << CF_SABERLOCKING))
 		{
-			cg.overrides.active |= CG_OVERRIDE_3RD_PERSON_RNG | CG_OVERRIDE_FOV | CG_OVERRIDE_3RD_PERSON_CDP;
+			cg.overrides.active |= CG_OVERRIDE_3RD_PERSON_RNG | CG_OVERRIDE_FOV | CG_OVERRIDE_3RD_PERSON_CDP | CG_OVERRIDE_3RD_PERSON_HOF;
 
-			cg.overrides.thirdPersonRange = cg_thirdPersonRange.value - 20;
+			cg.overrides.thirdPersonRange = 82.5f;
 			cg.overrides.thirdPersonCameraDamp = 1;
-			cg.overrides.fov = 45;
+			cg.overrides.thirdPersonHorzOffset = -12.5f;
+			cg.overrides.fov = 40.5f;
 		}
 		else
 		{
-			cg.overrides.active &= ~(CG_OVERRIDE_3RD_PERSON_RNG | CG_OVERRIDE_FOV | CG_OVERRIDE_3RD_PERSON_CDP);
-			cg.overrides.thirdPersonRange = cg.overrides.thirdPersonCameraDamp = 0;
+			cg.overrides.active &= ~(CG_OVERRIDE_3RD_PERSON_RNG | CG_OVERRIDE_FOV | CG_OVERRIDE_3RD_PERSON_CDP | CG_OVERRIDE_3RD_PERSON_HOF);
+			cg.overrides.thirdPersonRange = cg.overrides.thirdPersonCameraDamp = cg.overrides.thirdPersonHorzOffset = 0;
 		}
 	}
 

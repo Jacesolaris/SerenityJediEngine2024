@@ -422,7 +422,7 @@ static void CG_CalcIdealThirdPersonViewTarget()
 	else if (cg.renderingThirdPerson && cg.predicted_player_state.communicatingflags & (1 << CF_SABERLOCKING) && cg_saberLockCinematicCamera.integer)
 	{
 		VectorCopy(cameraFocusLoc, cameraIdealTarget);
-		cameraIdealTarget[2] -= 9.0f;
+		cameraIdealTarget[2] -= 15.5f;
 	}
 	else
 	{
@@ -798,8 +798,6 @@ static void CG_OffsetThirdPersonView()
 	camWaterAdjust = 0;
 	cameraStiffFactor = 0.0;
 
-	float thirdPersonHorzOffset = cg_thirdPersonHorzOffset.value;
-
 	// Set camera viewing direction.
 	VectorCopy(cg.refdefViewAngles, cameraFocusAngles);
 
@@ -850,8 +848,7 @@ static void CG_OffsetThirdPersonView()
 	}
 	else if (cg.renderingThirdPerson && cg.predicted_player_state.communicatingflags & (1 << CF_SABERLOCKING) && cg_saberLockCinematicCamera.integer)
 	{
-		thirdPersonHorzOffset = -12.5f;
-		cameraFocusAngles[YAW] += cg.overrides.thirdPersonAngle = 27.5f;
+		cameraFocusAngles[YAW] += cg.overrides.thirdPersonAngle = 32.5f;
 		cameraFocusAngles[PITCH] += cg.overrides.thirdPersonPitchOffset = -11.25f;
 	}
 	else
@@ -951,7 +948,12 @@ static void CG_OffsetThirdPersonView()
 	vectoangles(diff, cg.refdefViewAngles);
 
 	// Temp: just move the camera to the side a bit
-	if (cg_thirdPersonHorzOffset.value != 0.0f)
+	if (cg.overrides.active & CG_OVERRIDE_3RD_PERSON_HOF)
+	{
+		AnglesToAxis(cg.refdefViewAngles, cg.refdef.viewaxis);
+		VectorMA(cameraCurLoc, cg.overrides.thirdPersonHorzOffset, cg.refdef.viewaxis[1], cameraCurLoc);
+	}
+	else if (cg_thirdPersonHorzOffset.value != 0.0f)
 	{
 		AnglesToAxis(cg.refdefViewAngles, cg.refdef.viewaxis);
 		VectorMA(cameraCurLoc, cg_thirdPersonHorzOffset.value, cg.refdef.viewaxis[1], cameraCurLoc);
