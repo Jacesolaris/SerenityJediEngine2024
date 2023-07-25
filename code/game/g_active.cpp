@@ -3168,15 +3168,15 @@ qboolean G_CheckClampUcmd(gentity_t* ent, usercmd_t* ucmd)
 	{
 		if (ent->client->ps.communicatingflags & (1 << CF_SABERLOCKING))
 		{
-			cg.overrides.active |= CG_OVERRIDE_3RD_PERSON_RNG | CG_OVERRIDE_FOV;
+			cg.overrides.active |= CG_OVERRIDE_3RD_PERSON_RNG | CG_OVERRIDE_FOV | CG_OVERRIDE_3RD_PERSON_CDP;
 
-			cg.overrides.thirdPersonRange = 60.0f;
+			cg.overrides.thirdPersonRange = cg_thirdPersonRange.value - 20;
 			cg.overrides.thirdPersonCameraDamp = 1;
-			cg.overrides.fov = 31;
+			cg.overrides.fov = 45;
 		}
 		else
 		{
-			cg.overrides.active &= ~(CG_OVERRIDE_3RD_PERSON_RNG | CG_OVERRIDE_FOV);
+			cg.overrides.active &= ~(CG_OVERRIDE_3RD_PERSON_RNG | CG_OVERRIDE_FOV | CG_OVERRIDE_3RD_PERSON_CDP);
 			cg.overrides.thirdPersonRange = cg.overrides.thirdPersonCameraDamp = 0;
 		}
 	}

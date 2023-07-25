@@ -562,7 +562,7 @@ static void CG_UpdateThirdPersonCameraDamp(void)
 
 	if (cg.renderingThirdPerson && cg.predicted_player_state.communicatingflags & (1 << CF_SABERLOCKING) && g_saberLockCinematicCamera.integer)
 	{
-		//thirdPersonCameraDamp = 1;
+		thirdPersonCameraDamp = 1;
 	}
 
 	if (dampfactor >= 1.0 || cg.thisFrameTeleport)

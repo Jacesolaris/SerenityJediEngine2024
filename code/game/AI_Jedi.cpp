@@ -9484,7 +9484,7 @@ static void Jedi_Attack()
 			&& NPC->client->ps.saberLockTime < level.time + 5000
 			&& !Q_irand(0, 10))
 		{
-			if (!Jedi_Trainer(NPC) && g_saberLockCinematicCamera->integer < 1) // dont do it in training
+			if (!Jedi_Trainer(NPC) || g_saberLockCinematicCamera->integer < 1) // dont do it in training / cam mode
 			{
 				ForceThrow(NPC, qfalse);
 			}
