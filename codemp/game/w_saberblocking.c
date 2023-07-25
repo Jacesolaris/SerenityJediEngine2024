@@ -66,7 +66,6 @@ extern qboolean ButterFingers(gentity_t* saberent, gentity_t* saber_owner, const
 extern qboolean PM_SaberInnonblockableAttack(int anim);
 extern qboolean pm_saber_in_special_attack(int anim);
 extern qboolean PM_VelocityForBlockedMove(const playerState_t* ps, vec3_t throw_dir);
-extern qboolean saberKnockOutOfHand(gentity_t* saberent, gentity_t* saber_owner, vec3_t velocity);
 extern void PM_VelocityForSaberMove(const playerState_t* ps, vec3_t throw_dir);
 extern int G_GetParryForBlock(int block);
 extern qboolean WP_SaberMBlock(gentity_t* blocker, gentity_t* attacker, int saber_num, int blade_num);

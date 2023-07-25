@@ -73,6 +73,7 @@ extern qboolean PM_RunningAnim(int anim);
 extern qboolean BG_IsAlreadyinTauntAnim(int anim);
 qboolean WP_SaberStyleValidForSaber(const saberInfo_t* saber1, const saberInfo_t* saber2, int saber_holstered, int saber_anim_level);
 extern qboolean PM_SaberInBashedAnim(int anim);
+extern qboolean saberKnockOutOfHand(gentity_t* saberent, gentity_t* saber_owner, vec3_t velocity);
 
 void P_SetTwitchInfo(gclient_t* client)
 {
@@ -5085,7 +5086,7 @@ void ClientThink_real(gentity_t* ent)
 			}
 			else
 			{
-				if (client->ps.dashstartTime <= 0 && level.time - client->ps.dashlaststartTime >= 5000)
+				if (client->ps.dashstartTime <= 0 && level.time - client->ps.dashlaststartTime >= 3000)
 				{
 					// They just pressed dash. Mark the time... 8000 wait between allowed dash.
 					client->ps.dashstartTime = level.time;
@@ -5620,7 +5621,7 @@ void ClientThink_real(gentity_t* ent)
 			else
 			{
 				ent->client->ps.saberLockHitCheckTime = level.time + 25;//so we don't push more than once per server frame
-				
+
 				if (ent->client->ps.communicatingflags & 1 << CF_SABERLOCK_ADVANCE)
 				{
 					if (ent->client->ps.saberLockHitIncrementTime < level.time)
@@ -5763,6 +5764,16 @@ void ClientThink_real(gentity_t* ent)
 
 	if (pmove.checkDuelLoss)
 	{
+		if (pmove.checkDuelLoss > 0 && (pmove.checkDuelLoss <= MAX_CLIENTS || (pmove.checkDuelLoss < (MAX_GENTITIES - 1) && g_entities[pmove.checkDuelLoss - 1].s.eType == ET_NPC)))
+		{
+			gentity_t* clientLost = &g_entities[pmove.checkDuelLoss - 1];
+
+			if (clientLost && clientLost->inuse && clientLost->client)
+			{
+				saberKnockOutOfHand(&g_entities[clientLost->client->ps.saberEntityNum], clientLost, vec3_origin);
+			}
+		}
+
 		pmove.checkDuelLoss = 0;
 	}
 

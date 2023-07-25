@@ -2456,7 +2456,7 @@ qboolean WP_SabersCheckLock(gentity_t* ent1, gentity_t* ent2)
 	}
 
 	const float dist = DistanceSquared(ent1->r.currentOrigin, ent2->r.currentOrigin);
-	
+
 	if (dist < 64 || dist > 6400)
 	{
 		//between 8 and 80 from each other
@@ -7532,115 +7532,181 @@ static QINLINE qboolean CheckThrownSaberDamaged(gentity_t* saberent, gentity_t* 
 			//within range
 			trace_t tr;
 
-			trap->Trace(&tr, saberent->r.currentOrigin, NULL, NULL, ent->client->ps.origin, saberent->s.number,
-				MASK_SHOT, qfalse, 0, 0);
-
-			const qboolean other_holding_block = ent->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK
-				? qtrue
-				: qfalse; //Normal Blocking
-			const qboolean other_active_blocking = ent->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK
-				? qtrue
-				: qfalse; //Active Blocking
-			const qboolean other_m_blocking = ent->client->ps.ManualBlockingFlags & 1 << PERFECTBLOCKING
-				? qtrue
-				: qfalse;
-			//Perfect Blocking
+			trap->Trace(&tr, saberent->r.currentOrigin, NULL, NULL, ent->client->ps.origin, saberent->s.number, MASK_SHOT, qfalse, 0, 0);
 
 			if (tr.fraction == 1 || tr.entity_num == ent->s.number)
 			{
-				//Slice them
-				if (WP_SaberCanBlockThrownSaber(ent, tr.endpos))
+				if (ent->r.svFlags & SVF_BOT)
 				{
-					//they blocked it
-					if (ent->r.svFlags & SVF_BOT)
+					//Slice them
+					if (WP_SaberCanBlockThrownSaber(ent, tr.endpos))
 					{
+						//they blocked it
 						WP_SaberBlockNonRandom(ent, tr.endpos, qfalse);
-					}
-					else
-					{
-						if (other_holding_block || other_active_blocking || other_m_blocking ||
-							manual_saberblocking(ent) || ent->client->ps.saberManualBlockingTime > level.time)
+
+						te = G_TempEntity(tr.endpos, EV_SABER_BLOCK);
+						VectorCopy(tr.endpos, te->s.origin);
+						VectorCopy(tr.plane.normal, te->s.angles);
+						if (!te->s.angles[0] && !te->s.angles[1] && !te->s.angles[2])
 						{
-							WP_SaberBlockNonRandom(ent, tr.endpos, qfalse);
+							te->s.angles[1] = 1;
 						}
-					}
+						te->s.eventParm = 1;
+						te->s.weapon = 0; //saber_num
+						te->s.legsAnim = 0; //blade_num
 
-					te = G_TempEntity(tr.endpos, EV_SABER_BLOCK);
-					VectorCopy(tr.endpos, te->s.origin);
-					VectorCopy(tr.plane.normal, te->s.angles);
-					if (!te->s.angles[0] && !te->s.angles[1] && !te->s.angles[2])
-					{
-						te->s.angles[1] = 1;
-					}
-					te->s.eventParm = 1;
-					te->s.weapon = 0; //saber_num
-					te->s.legsAnim = 0; //blade_num
+						if (saberCheckKnockdown_Thrown(saberent, saber_owner, &g_entities[tr.entity_num]))
+						{
+							//it was knocked out of the air
+							return qfalse;
+						}
 
-					if (saberCheckKnockdown_Thrown(saberent, saber_owner, &g_entities[tr.entity_num]))
-					{
-						//it was knocked out of the air
+						if (!returning)
+						{
+							//return to owner if blocked
+							thrownSaberTouch(saberent, saberent, NULL);
+						}
+
+						saber_owner->client->ps.saberAttackWound = level.time + 500;
 						return qfalse;
 					}
+					else
+					{ //a good hit
+						vec3_t dir;
+						int dflags = 0;
 
-					if (!returning)
-					{
-						//return to owner if blocked
-						thrownSaberTouch(saberent, saberent, NULL);
+						VectorSubtract(tr.endpos, saberent->r.currentOrigin, dir);
+						VectorNormalize(dir);
+
+						if (!dir[0] && !dir[1] && !dir[2])
+						{
+							dir[1] = 1;
+						}
+
+						if (saber_owner->client->saber[0].saberFlags2 & SFL2_NO_DISMEMBERMENT)
+						{
+							dflags |= DAMAGE_NO_DISMEMBER;
+						}
+
+						if (saber_owner->client->saber[0].knockbackScale > 0.0f)
+						{
+							dflags |= DAMAGE_SABER_KNOCKBACK1;
+						}
+
+						if (saber_owner->client->ps.isJediMaster)
+						{
+							//2x damage for the Jedi Master
+							G_Damage(ent, saber_owner, saber_owner, dir, tr.endpos, saberent->damage * 2, dflags, MOD_SABER);
+						}
+						else
+						{
+							G_Damage(ent, saber_owner, saber_owner, dir, tr.endpos, saberent->damage, dflags, MOD_SABER);
+						}
+
+						te = G_TempEntity(tr.endpos, EV_SABER_BODY_HIT);
+						te->s.otherEntityNum = ent->s.number;
+						te->s.otherEntityNum2 = saber_owner->s.number;
+						te->s.weapon = 0; //saber_num
+						te->s.legsAnim = 0; //blade_num
+						VectorCopy(tr.endpos, te->s.origin);
+						VectorCopy(tr.plane.normal, te->s.angles);
+						if (!te->s.angles[0] && !te->s.angles[1] && !te->s.angles[2])
+						{
+							te->s.angles[1] = 1;
+						}
+
+						te->s.eventParm = 1;
+
+						if (!returning)
+						{
+							//return to owner if blocked
+							thrownSaberTouch(saberent, saberent, NULL);
+						}
 					}
-
-					saber_owner->client->ps.saberAttackWound = level.time + 500;
-					return qfalse;
-				}
-				//a good hit
-				vec3_t dir;
-				int dflags = 0;
-
-				VectorSubtract(tr.endpos, saberent->r.currentOrigin, dir);
-				VectorNormalize(dir);
-
-				if (!dir[0] && !dir[1] && !dir[2])
-				{
-					dir[1] = 1;
-				}
-
-				if (saber_owner->client->saber[0].saberFlags2 & SFL2_NO_DISMEMBERMENT)
-				{
-					dflags |= DAMAGE_NO_DISMEMBER;
-				}
-
-				if (saber_owner->client->saber[0].knockbackScale > 0.0f)
-				{
-					dflags |= DAMAGE_SABER_KNOCKBACK1;
-				}
-
-				if (saber_owner->client->ps.isJediMaster)
-				{
-					//2x damage for the Jedi Master
-					G_Damage(ent, saber_owner, saber_owner, dir, tr.endpos, saberent->damage * 2, dflags, MOD_SABER);
 				}
 				else
 				{
-					G_Damage(ent, saber_owner, saber_owner, dir, tr.endpos, saberent->damage, dflags, MOD_SABER);
-				}
+					const qboolean other_holding_block = ent->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse; //Normal Blocking
+					const qboolean other_active_blocking = ent->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK ? qtrue : qfalse; //Active Blocking
+					const qboolean other_m_blocking = ent->client->ps.ManualBlockingFlags & 1 << PERFECTBLOCKING ? qtrue : qfalse;//Perfect Blocking
 
-				te = G_TempEntity(tr.endpos, EV_SABER_BODY_HIT);
-				te->s.otherEntityNum = ent->s.number;
-				te->s.otherEntityNum2 = saber_owner->s.number;
-				te->s.weapon = 0; //saber_num
-				te->s.legsAnim = 0; //blade_num
-				VectorCopy(tr.endpos, te->s.origin);
-				VectorCopy(tr.plane.normal, te->s.angles);
-				if (!te->s.angles[0] && !te->s.angles[1] && !te->s.angles[2])
-				{
-					te->s.angles[1] = 1;
-				}
+					if (other_holding_block || other_active_blocking || other_m_blocking ||
+						manual_saberblocking(ent) || ent->client->ps.saberManualBlockingTime > level.time)
+					{
+						WP_SaberBlockNonRandom(ent, tr.endpos, qfalse);
 
-				te->s.eventParm = 1;
+						te = G_TempEntity(tr.endpos, EV_SABER_BLOCK);
+						VectorCopy(tr.endpos, te->s.origin);
+						VectorCopy(tr.plane.normal, te->s.angles);
+						if (!te->s.angles[0] && !te->s.angles[1] && !te->s.angles[2])
+						{
+							te->s.angles[1] = 1;
+						}
+						te->s.eventParm = 1;
+						te->s.weapon = 0; //saber_num
+						te->s.legsAnim = 0; //blade_num
 
-				if (!returning)
-				{
-					//return to owner if blocked
-					thrownSaberTouch(saberent, saberent, NULL);
+						if (saberCheckKnockdown_Thrown(saberent, saber_owner, &g_entities[tr.entity_num]))
+						{
+							//it was knocked out of the air
+							return qfalse;
+						}
+
+						if (!returning)
+						{
+							//return to owner if blocked
+							thrownSaberTouch(saberent, saberent, NULL);
+						}
+
+						saber_owner->client->ps.saberAttackWound = level.time + 500;
+						return qfalse;
+					}
+					else
+					{
+						//a good hit
+						vec3_t dir;
+						int dflags = 0;
+
+						VectorSubtract(tr.endpos, saberent->r.currentOrigin, dir);
+						VectorNormalize(dir);
+
+						if (!dir[0] && !dir[1] && !dir[2])
+						{
+							dir[1] = 1;
+						}
+
+						if (saber_owner->client->saber[0].saberFlags2 & SFL2_NO_DISMEMBERMENT)
+						{
+							dflags |= DAMAGE_NO_DISMEMBER;
+						}
+
+						if (saber_owner->client->saber[0].knockbackScale > 0.0f)
+						{
+							dflags |= DAMAGE_SABER_KNOCKBACK1;
+						}
+
+						G_Damage(ent, saber_owner, saber_owner, dir, tr.endpos, saberent->damage, dflags, MOD_SABER);
+
+						te = G_TempEntity(tr.endpos, EV_SABER_BODY_HIT);
+						te->s.otherEntityNum = ent->s.number;
+						te->s.otherEntityNum2 = saber_owner->s.number;
+						te->s.weapon = 0; //saber_num
+						te->s.legsAnim = 0; //blade_num
+						VectorCopy(tr.endpos, te->s.origin);
+						VectorCopy(tr.plane.normal, te->s.angles);
+						if (!te->s.angles[0] && !te->s.angles[1] && !te->s.angles[2])
+						{
+							te->s.angles[1] = 1;
+						}
+
+						te->s.eventParm = 1;
+
+						if (!returning)
+						{
+							//return to owner if blocked
+							thrownSaberTouch(saberent, saberent, NULL);
+						}
+					}
 				}
 
 				saber_owner->client->ps.saberAttackWound = level.time + 500;
@@ -8431,7 +8497,8 @@ qboolean saberCheckKnockdown_DuelLoss(gentity_t* saberent, gentity_t* saberOwner
 	}
 
 	saberOwner->client->ps.saber_move = LS_V1_BL;
-	//rwwFIXMEFIXME: Ideally check which lock it was exactly and use the proper anim (same goes for the attacker)
+
+	//Ideally check which lock it was exactly and use the proper anim (same goes for the attacker)
 	saberOwner->client->ps.saberBlocked = BLOCKED_BOUNCE_MOVE;
 
 	if (other && other->client)
@@ -14423,11 +14490,6 @@ qboolean WP_SaberCanBlockThrownSaber(gentity_t* self, vec3_t point)
 	}
 
 	if (self->client->ps.weapon != WP_SABER)
-	{
-		return qfalse;
-	}
-
-	if (self->client->ps.weaponstate == WEAPON_RAISING)
 	{
 		return qfalse;
 	}

@@ -1731,7 +1731,7 @@ int PM_SaberLockResultAnim(playerState_t* duelist, const qboolean super_break, c
 
 void PM_SaberLockBreak(playerState_t* genemy, const qboolean victory, const int strength)
 {
-	const qboolean super_break = strength + pm->ps->saberLockHits > Q_irand(1, pm->cmd.buttons & BUTTON_ATTACK);
+	const qboolean super_break = strength + pm->cmd.buttons & BUTTON_ATTACK;
 
 	pm->ps->userInt3 &= ~(1 << FLAG_SABERLOCK_ATTACKER);
 	genemy->userInt3 &= ~(1 << FLAG_SABERLOCK_ATTACKER);
@@ -1777,8 +1777,6 @@ void PM_SaberLockBreak(playerState_t* genemy, const qboolean victory, const int 
 		pm->ps->velocity[1] = opp_dir[1] * (newstrength * 40);
 		pm->ps->velocity[2] = 0;
 	}
-
-	genemy->weaponTime = 0;
 
 	pm->ps->saberLockTime = genemy->saberLockTime = 0;
 	pm->ps->saberLockFrame = genemy->saberLockFrame = 0;

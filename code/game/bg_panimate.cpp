@@ -4116,7 +4116,6 @@ saberMoveName_t PM_SaberFlipOverAttackMove()
 
 	pm->gent->angle = pm->ps->viewangles[YAW]; //so we know what yaw we started this at
 
-	//G_DrainPowerForSpecialMove(pm->gent, FP_LEVITATION, FATIGUE_JUMPATTACK);
 	WP_ForcePowerDrain(pm->gent, FP_SABER_OFFENSE, SABER_ALT_ATTACK_POWER_FB);
 
 	if (pm->ps->saber_anim_level == SS_FAST || pm->ps->saber_anim_level == SS_TAVION)
