@@ -847,7 +847,7 @@ static QINLINE void CG_EntityStateToPlayerState(entityState_t* s, playerState_t*
 	ps->legsFlip = s->legsFlip;
 	ps->torsoFlip = s->torsoFlip;
 	ps->client_num = s->client_num;
-	ps->saberMove = s->saberMove;
+	ps->saber_move = s->saber_move;
 
 	/*
 	VectorCopy( s->apos.trBase, ps->viewangles );

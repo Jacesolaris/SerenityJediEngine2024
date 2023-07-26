@@ -116,8 +116,7 @@ extern qboolean PM_SaberInDamageMove(int move);
 extern qboolean PM_SaberDoDamageAnim(int anim);
 extern qboolean BG_SaberInTransitionDamageMove(const playerState_t* ps);
 extern qboolean BG_InSlowBounce(const playerState_t* ps);
-void DebounceSaberImpact(const gentity_t* self, const gentity_t* other_saberer, int rsaber_num, int rblade_num,
-	int sabimpactentitynum);
+void DebounceSaberImpact(const gentity_t* self, const gentity_t* other_saberer, int rsaber_num, int rblade_num, int sabimpactentitynum);
 extern qboolean BG_InFlipBack(int anim);
 extern qboolean PM_SaberInBashedAnim(int anim);
 extern qboolean PM_SaberInReturn(int move);
@@ -149,12 +148,12 @@ extern int PM_InGrappleMove(int anim);
 extern qboolean PM_SaberInKillMove(int move);
 extern qboolean PM_WalkingOrRunningAnim(int anim);
 extern qboolean PM_RestAnim(int anim);
-extern qboolean sab_beh_block_vs_attack(gentity_t* blocker, gentity_t* attacker, int saber_num, int blade_num,
-	vec3_t hit_loc);
+extern qboolean sab_beh_block_vs_attack(gentity_t* blocker, gentity_t* attacker, int saber_num, int blade_num, vec3_t hit_loc);
 extern qboolean BG_HopAnim(int anim);
 extern void wp_force_power_regenerate(const gentity_t* self, int override_amt);
 extern qboolean PM_SaberInOverHeadSlash(saberMoveName_t saber_move);
 extern qboolean PM_SaberInBackAttack(saberMoveName_t saber_move);
+qboolean WP_DoingForcedAnimationForForcePowers(const gentity_t* self);
 
 float VectorBlockDistance(vec3_t v1, vec3_t v2)
 {
@@ -7484,6 +7483,7 @@ void wp_saber_start_missile_block_check(gentity_t* self, usercmd_t* ucmd)
 
 void thrownSaberTouch(gentity_t* saberent, gentity_t* other, const trace_t* trace);
 float manual_saberblocking(const gentity_t* defender);
+int WP_SaberCanBlock(gentity_t* self, vec3_t point, int dflags, int mod, qboolean projectile, int attackStr);
 
 static QINLINE qboolean CheckThrownSaberDamaged(gentity_t* saberent, gentity_t* saber_owner, gentity_t* ent,
 	const int dist,
@@ -7536,176 +7536,89 @@ static QINLINE qboolean CheckThrownSaberDamaged(gentity_t* saberent, gentity_t* 
 
 			if (tr.fraction == 1 || tr.entity_num == ent->s.number)
 			{
-				if (ent->r.svFlags & SVF_BOT)
+				//Slice them
+				if (!saber_owner->client->ps.isJediMaster && WP_SaberCanBlock(ent, tr.endpos, 0, MOD_SABER, qfalse, 999))
 				{
-					//Slice them
-					if (WP_SaberCanBlockThrownSaber(ent, tr.endpos))
+					//they blocked it
+					WP_SaberBlockNonRandom(ent, tr.endpos, qfalse);
+
+					te = G_TempEntity(tr.endpos, EV_SABER_BLOCK);
+					VectorCopy(tr.endpos, te->s.origin);
+					VectorCopy(tr.plane.normal, te->s.angles);
+					if (!te->s.angles[0] && !te->s.angles[1] && !te->s.angles[2])
 					{
-						//they blocked it
-						WP_SaberBlockNonRandom(ent, tr.endpos, qfalse);
+						te->s.angles[1] = 1;
+					}
+					te->s.eventParm = 1;
+					te->s.weapon = 0; //saber_num
+					te->s.legsAnim = 0; //blade_num
 
-						te = G_TempEntity(tr.endpos, EV_SABER_BLOCK);
-						VectorCopy(tr.endpos, te->s.origin);
-						VectorCopy(tr.plane.normal, te->s.angles);
-						if (!te->s.angles[0] && !te->s.angles[1] && !te->s.angles[2])
-						{
-							te->s.angles[1] = 1;
-						}
-						te->s.eventParm = 1;
-						te->s.weapon = 0; //saber_num
-						te->s.legsAnim = 0; //blade_num
-
-						if (saberCheckKnockdown_Thrown(saberent, saber_owner, &g_entities[tr.entity_num]))
-						{
-							//it was knocked out of the air
-							return qfalse;
-						}
-
-						if (!returning)
-						{
-							//return to owner if blocked
-							thrownSaberTouch(saberent, saberent, NULL);
-						}
-
-						saber_owner->client->ps.saberAttackWound = level.time + 500;
+					if (saberCheckKnockdown_Thrown(saberent, saber_owner, &g_entities[tr.entity_num]))
+					{
+						//it was knocked out of the air
 						return qfalse;
 					}
-					else
-					{ //a good hit
-						vec3_t dir;
-						int dflags = 0;
 
-						VectorSubtract(tr.endpos, saberent->r.currentOrigin, dir);
-						VectorNormalize(dir);
-
-						if (!dir[0] && !dir[1] && !dir[2])
-						{
-							dir[1] = 1;
-						}
-
-						if (saber_owner->client->saber[0].saberFlags2 & SFL2_NO_DISMEMBERMENT)
-						{
-							dflags |= DAMAGE_NO_DISMEMBER;
-						}
-
-						if (saber_owner->client->saber[0].knockbackScale > 0.0f)
-						{
-							dflags |= DAMAGE_SABER_KNOCKBACK1;
-						}
-
-						if (saber_owner->client->ps.isJediMaster)
-						{
-							//2x damage for the Jedi Master
-							G_Damage(ent, saber_owner, saber_owner, dir, tr.endpos, saberent->damage * 2, dflags, MOD_SABER);
-						}
-						else
-						{
-							G_Damage(ent, saber_owner, saber_owner, dir, tr.endpos, saberent->damage, dflags, MOD_SABER);
-						}
-
-						te = G_TempEntity(tr.endpos, EV_SABER_BODY_HIT);
-						te->s.otherEntityNum = ent->s.number;
-						te->s.otherEntityNum2 = saber_owner->s.number;
-						te->s.weapon = 0; //saber_num
-						te->s.legsAnim = 0; //blade_num
-						VectorCopy(tr.endpos, te->s.origin);
-						VectorCopy(tr.plane.normal, te->s.angles);
-						if (!te->s.angles[0] && !te->s.angles[1] && !te->s.angles[2])
-						{
-							te->s.angles[1] = 1;
-						}
-
-						te->s.eventParm = 1;
-
-						if (!returning)
-						{
-							//return to owner if blocked
-							thrownSaberTouch(saberent, saberent, NULL);
-						}
+					if (!returning)
+					{
+						//return to owner if blocked
+						thrownSaberTouch(saberent, saberent, NULL);
 					}
+
+					saber_owner->client->ps.saberAttackWound = level.time + 500;
+					return qfalse;
 				}
 				else
-				{
-					const qboolean other_holding_block = ent->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse; //Normal Blocking
-					const qboolean other_active_blocking = ent->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK ? qtrue : qfalse; //Active Blocking
-					const qboolean other_m_blocking = ent->client->ps.ManualBlockingFlags & 1 << PERFECTBLOCKING ? qtrue : qfalse;//Perfect Blocking
+				{ //a good hit
+					vec3_t dir;
+					int dflags = 0;
 
-					if (other_holding_block || other_active_blocking || other_m_blocking ||
-						manual_saberblocking(ent) || ent->client->ps.saberManualBlockingTime > level.time)
+					VectorSubtract(tr.endpos, saberent->r.currentOrigin, dir);
+					VectorNormalize(dir);
+
+					if (!dir[0] && !dir[1] && !dir[2])
 					{
-						WP_SaberBlockNonRandom(ent, tr.endpos, qfalse);
+						dir[1] = 1;
+					}
 
-						te = G_TempEntity(tr.endpos, EV_SABER_BLOCK);
-						VectorCopy(tr.endpos, te->s.origin);
-						VectorCopy(tr.plane.normal, te->s.angles);
-						if (!te->s.angles[0] && !te->s.angles[1] && !te->s.angles[2])
-						{
-							te->s.angles[1] = 1;
-						}
-						te->s.eventParm = 1;
-						te->s.weapon = 0; //saber_num
-						te->s.legsAnim = 0; //blade_num
+					if (saber_owner->client->saber[0].saberFlags2 & SFL2_NO_DISMEMBERMENT)
+					{
+						dflags |= DAMAGE_NO_DISMEMBER;
+					}
 
-						if (saberCheckKnockdown_Thrown(saberent, saber_owner, &g_entities[tr.entity_num]))
-						{
-							//it was knocked out of the air
-							return qfalse;
-						}
+					if (saber_owner->client->saber[0].knockbackScale > 0.0f)
+					{
+						dflags |= DAMAGE_SABER_KNOCKBACK1;
+					}
 
-						if (!returning)
-						{
-							//return to owner if blocked
-							thrownSaberTouch(saberent, saberent, NULL);
-						}
-
-						saber_owner->client->ps.saberAttackWound = level.time + 500;
-						return qfalse;
+					if (saber_owner->client->ps.isJediMaster)
+					{
+						//2x damage for the Jedi Master
+						G_Damage(ent, saber_owner, saber_owner, dir, tr.endpos, saberent->damage * 2, dflags, MOD_SABER);
 					}
 					else
 					{
-						//a good hit
-						vec3_t dir;
-						int dflags = 0;
-
-						VectorSubtract(tr.endpos, saberent->r.currentOrigin, dir);
-						VectorNormalize(dir);
-
-						if (!dir[0] && !dir[1] && !dir[2])
-						{
-							dir[1] = 1;
-						}
-
-						if (saber_owner->client->saber[0].saberFlags2 & SFL2_NO_DISMEMBERMENT)
-						{
-							dflags |= DAMAGE_NO_DISMEMBER;
-						}
-
-						if (saber_owner->client->saber[0].knockbackScale > 0.0f)
-						{
-							dflags |= DAMAGE_SABER_KNOCKBACK1;
-						}
-
 						G_Damage(ent, saber_owner, saber_owner, dir, tr.endpos, saberent->damage, dflags, MOD_SABER);
+					}
 
-						te = G_TempEntity(tr.endpos, EV_SABER_BODY_HIT);
-						te->s.otherEntityNum = ent->s.number;
-						te->s.otherEntityNum2 = saber_owner->s.number;
-						te->s.weapon = 0; //saber_num
-						te->s.legsAnim = 0; //blade_num
-						VectorCopy(tr.endpos, te->s.origin);
-						VectorCopy(tr.plane.normal, te->s.angles);
-						if (!te->s.angles[0] && !te->s.angles[1] && !te->s.angles[2])
-						{
-							te->s.angles[1] = 1;
-						}
+					te = G_TempEntity(tr.endpos, EV_SABER_BODY_HIT);
+					te->s.otherEntityNum = ent->s.number;
+					te->s.otherEntityNum2 = saber_owner->s.number;
+					te->s.weapon = 0; //saber_num
+					te->s.legsAnim = 0; //blade_num
+					VectorCopy(tr.endpos, te->s.origin);
+					VectorCopy(tr.plane.normal, te->s.angles);
+					if (!te->s.angles[0] && !te->s.angles[1] && !te->s.angles[2])
+					{
+						te->s.angles[1] = 1;
+					}
 
-						te->s.eventParm = 1;
+					te->s.eventParm = 1;
 
-						if (!returning)
-						{
-							//return to owner if blocked
-							thrownSaberTouch(saberent, saberent, NULL);
-						}
+					if (!returning)
+					{
+						//return to owner if blocked
+						thrownSaberTouch(saberent, saberent, NULL);
 					}
 				}
 
@@ -14466,40 +14379,150 @@ qboolean WP_SaberBlockBolt(gentity_t* self, vec3_t hitloc, const qboolean missil
 
 extern float Q_clamp(float min, float value, float max);
 
-qboolean WP_SaberCanBlockThrownSaber(gentity_t* self, vec3_t point)
+int WP_SaberCanBlock(gentity_t* self, vec3_t point, int dflags, int mod, qboolean projectile, int attackStr)
 {
+	qboolean thrownSaber = qfalse;
+	float blockFactor = 0;
+
 	if (!self || !self->client || !point)
 	{
-		return qfalse;
+		return 0;
+	}
+
+	if (attackStr == 999)
+	{
+		attackStr = 0;
+		thrownSaber = qtrue;
+	}
+
+	if (!(self->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK))
+	{
+		if (self->r.svFlags & SVF_BOT)
+		{
+			//bots just randomly parry to make up for them not intelligently parrying.
+			if (self->client->ps.weapon == WP_SABER && !BG_SabersOff(&self->client->ps) && !self->client->ps.saberInFlight)
+			{
+				return 1;
+			}
+			return 0;
+		}
+		return 0;
+	}
+
+	if (PM_SaberInAttack(self->client->ps.saber_move))
+	{
+		return 0;
+	}
+
+	if (PM_InSaberAnim(self->client->ps.torsoAnim) && !self->client->ps.saberBlocked &&
+		self->client->ps.saber_move != LS_READY && self->client->ps.saber_move != LS_NONE)
+	{
+		if (self->client->ps.saber_move < LS_PARRY_UP || self->client->ps.saber_move > LS_REFLECT_LL)
+		{
+			return 0;
+		}
 	}
 
 	if (PM_SaberInBrokenParry(self->client->ps.saber_move))
 	{
-		return qfalse;
+		return 0;
 	}
 
 	if (!self->client->ps.saberEntityNum)
-	{
-		//saber is knocked away
-		return qfalse;
+	{ //saber is knocked away
+		return 0;
 	}
 
 	if (BG_SabersOff(&self->client->ps))
 	{
-		return qfalse;
+		return 0;
 	}
 
 	if (self->client->ps.weapon != WP_SABER)
 	{
-		return qfalse;
+		return 0;
+	}
+
+	if (self->client->ps.weaponstate == WEAPON_RAISING)
+	{
+		return 0;
 	}
 
 	if (self->client->ps.saberInFlight)
 	{
-		return qfalse;
+		return 0;
 	}
 
-	return qtrue;
+	if ((self->client->pers.cmd.buttons & BUTTON_ATTACK))
+	{ //don't block when the player is trying to slash, if it's a projectile or he's doing a very strong attack
+		return 0;
+	}
+
+	if (SaberAttacking(self))
+	{ //attacking, can't block now
+		return 0;
+	}
+
+	if (self->client->ps.saber_move != LS_READY &&
+		!self->client->ps.saberBlocking)
+	{
+		return 0;
+	}
+
+	if (self->client->ps.saberBlockingTime >= level.time)
+	{
+		return 0;
+	}
+
+	if (self->client->ps.forceHandExtend != HANDEXTEND_NONE)
+	{
+		return 0;
+	}
+
+	if (self->client->ps.fd.forcePowerLevel[FP_SABER_DEFENSE] == FORCE_LEVEL_3)
+	{
+		if (d_saberGhoul2Collision.integer)
+		{
+			blockFactor = 0.3f;
+		}
+		else
+		{
+			blockFactor = 0.05f;
+		}
+	}
+	else if (self->client->ps.fd.forcePowerLevel[FP_SABER_DEFENSE] == FORCE_LEVEL_2)
+	{
+		blockFactor = 0.6f;
+	}
+	else if (self->client->ps.fd.forcePowerLevel[FP_SABER_DEFENSE] == FORCE_LEVEL_1)
+	{
+		blockFactor = 0.9f;
+	}
+	else
+	{ //for now we just don't get to autoblock with no def
+		return 0;
+	}
+
+	if (thrownSaber)
+	{
+		blockFactor -= 0.25f;
+	}
+
+	if (attackStr)
+	{ //blocking a saber, not a projectile.
+		blockFactor -= 0.25f;
+	}
+
+	if (!in_front(point, self->client->ps.origin, self->client->ps.viewangles, blockFactor)) //orig 0.2f
+	{
+		return 0;
+	}
+
+	if (projectile)
+	{
+		WP_SaberBlockNonRandom(self, point, projectile);
+	}
+	return 1;
 }
 
 qboolean HasSetSaberOnly(void)

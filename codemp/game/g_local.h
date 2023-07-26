@@ -1804,7 +1804,6 @@ gentity_t* G_PreDefSound(vec3_t org, int pdSound);
 qboolean HasSetSaberOnly(void);
 void WP_ForcePowerStop(gentity_t* self, forcePowers_t forcePower);
 void wp_saber_position_update(gentity_t* self, usercmd_t* ucmd);
-qboolean WP_SaberCanBlockThrownSaber(gentity_t* self, vec3_t point);
 void wp_saber_init_blade_data(const gentity_t* ent);
 void WP_InitForcePowers(const gentity_t* ent);
 void WP_SpawnInitForcePowers(gentity_t* ent);
