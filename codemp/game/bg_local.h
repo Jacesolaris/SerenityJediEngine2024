@@ -32,10 +32,6 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 #define	OVERCLIP		1.001f
 
-#define __SABER_ANIMATION_SMOOTH__
-
-#define __NO_SABER_SPINAROUND__
-
 // all of the locals will be zeroed before each
 // pmove, just to make damn sure we don't have
 // any differences when running on client or server

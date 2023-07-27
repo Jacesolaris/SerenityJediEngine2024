@@ -89,6 +89,14 @@ extern qboolean PM_SaberDoDamageAnim(int anim);
 extern qboolean in_camera;
 extern qboolean PM_Can_Do_Kill_Move(void);
 extern qboolean PM_SaberInMassiveBounce(int anim);
+int Next_Kill_Attack_Move_Check[MAX_CLIENTS]; // Next special move check.
+extern vmCvar_t g_attackskill;
+extern vmCvar_t bot_thinklevel;
+saberMoveName_t PM_DoAI_Fake(const int curmove);
+qboolean PM_Can_Do_Kill_Lunge(void);
+qboolean PM_Can_Do_Kill_Lunge_back(void);
+int PM_SaberBackflipAttackMove(void);
+saberMoveName_t PM_NPC_Force_Leap_Attack(void);
 
 int PM_irand_timesync(const int val1, const int val2)
 {
@@ -726,8 +734,23 @@ qboolean PM_VelocityForBlockedMove(const playerState_t* ps, vec3_t throw_dir)
 
 saberMoveName_t PM_NPCSaberAttackFromQuad(const int quad)
 {
+	//saberMoveName_t auto_move = LS_NONE;
+
+	//if (pm->gent &&
+	//	(pm->gent->NPC && pm->gent->NPC->rank != RANK_ENSIGN && pm->gent->NPC->rank != RANK_CIVILIAN
+	//		|| pm->gent->client && (pm->gent->client->NPC_class == CLASS_TAVION || pm->gent->client->NPC_class == CLASS_ALORA)))
+	//{
+	//	auto_move = PM_AttackForEnemyPos(qtrue, qtrue);
+	//}
+
+	//if (auto_move != LS_NONE && PM_SaberInSpecial(auto_move))
+	//{
+	//	//if have opportunity to do a special attack, do one
+	//	return auto_move;
+	//}
 	//pick another one
 	saberMoveName_t newmove = LS_NONE;
+
 	switch (quad)
 	{
 	case Q_T: //blocked top
@@ -830,6 +853,185 @@ saberMoveName_t PM_NPCSaberAttackFromQuad(const int quad)
 	default:
 		break;
 	}
+
+
+#ifdef _GAME
+	if (bot_thinklevel.integer >= 1 &&
+		BG_EnoughForcePowerForMove(SABER_KATA_ATTACK_POWER) &&
+		!pm->ps->fd.forcePowersActive && !in_camera)
+	{
+		if (g_entities[pm->ps->client_num].r.svFlags & SVF_BOT)
+		{// Some special bot stuff.
+			if (Next_Kill_Attack_Move_Check[pm->ps->client_num] <= level.time && g_attackskill.integer >= 0)
+			{
+				int check_val = 0; // Times 500 for next check interval.
+
+				if (PM_Can_Do_Kill_Lunge_back())
+				{ //BACKSTAB
+					if ((pm->ps->pm_flags & PMF_DUCKED) || pm->cmd.upmove < 0)
+					{
+						newmove = LS_A_BACK_CR;
+					}
+					else
+					{
+						int choice = rand() % 3;
+
+						if (choice == 1)
+						{
+							newmove = LS_A_BACK;
+						}
+						else if (choice == 2)
+						{
+							newmove = PM_SaberBackflipAttackMove();
+						}
+						else if (choice == 3)
+						{
+							newmove = LS_A_BACKFLIP_ATK;
+						}
+						else
+						{
+							newmove = LS_A_BACKSTAB;
+						}
+					}
+				}
+				else if (PM_Can_Do_Kill_Lunge())
+				{ //Bot Lunge (attack varies by level)
+					if (pm->ps->pm_flags & PMF_DUCKED)
+					{
+						newmove = PM_SaberLungeAttackMove(qtrue);
+
+						if (d_attackinfo.integer)
+						{
+							Com_Printf(S_COLOR_MAGENTA"Next_Kill_Attack_Move_Check 0\n");
+						}
+					}
+					else
+					{
+						const int choice = rand() % 9;
+
+						switch (choice)
+						{
+						case 0:
+							newmove = PM_NPC_Force_Leap_Attack();
+
+							if (d_attackinfo.integer)
+							{
+								Com_Printf(S_COLOR_MAGENTA"Next_Kill_Attack_Move_Check 1\n");
+							}
+							break;
+						case 1:
+							newmove = PM_DoAI_Fake(qtrue);
+
+							if (d_attackinfo.integer)
+							{
+								Com_Printf(S_COLOR_MAGENTA"Next_Kill_Attack_Move_Check 2\n");
+							}
+							break;
+						case 2:
+							newmove = LS_A1_SPECIAL;
+
+							if (d_attackinfo.integer)
+							{
+								Com_Printf(S_COLOR_MAGENTA"Next_Kill_Attack_Move_Check 3\n");
+							}
+							break;
+						case 3:
+							newmove = LS_A2_SPECIAL;
+
+							if (d_attackinfo.integer)
+							{
+								Com_Printf(S_COLOR_MAGENTA"Next_Kill_Attack_Move_Check 4\n");
+							}
+							break;
+						case 4:
+							newmove = LS_A3_SPECIAL;
+
+							if (d_attackinfo.integer)
+							{
+								Com_Printf(S_COLOR_MAGENTA"Next_Kill_Attack_Move_Check 5\n");
+							}
+							break;
+						case 5:
+							newmove = LS_A4_SPECIAL;
+
+							if (d_attackinfo.integer)
+							{
+								Com_Printf(S_COLOR_MAGENTA"Next_Kill_Attack_Move_Check 6\n");
+							}
+							break;
+						case 6:
+							newmove = LS_A5_SPECIAL;
+
+							if (d_attackinfo.integer)
+							{
+								Com_Printf(S_COLOR_MAGENTA"Next_Kill_Attack_Move_Check 7\n");
+							}
+							break;
+						case 7:
+							if (pm->ps->fd.saber_anim_level == SS_DUAL)
+							{
+								newmove = LS_DUAL_SPIN_PROTECT;
+							}
+							else if (pm->ps->fd.saber_anim_level == SS_STAFF)
+							{
+								newmove = LS_STAFF_SOULCAL;
+							}
+							else
+							{
+								newmove = LS_A_JUMP_T__B_;
+							}
+
+							if (d_attackinfo.integer)
+							{
+								Com_Printf(S_COLOR_MAGENTA"Next_Kill_Attack_Move_Check 8\n");
+							}
+							break;
+						case 8:
+							if (pm->ps->fd.saber_anim_level == SS_DUAL)
+							{
+								newmove = LS_JUMPATTACK_DUAL;
+							}
+							else if (pm->ps->fd.saber_anim_level == SS_STAFF)
+							{
+								newmove = LS_JUMPATTACK_STAFF_RIGHT;
+							}
+							else
+							{
+								newmove = LS_SPINATTACK;
+							}
+
+							if (d_attackinfo.integer)
+							{
+								Com_Printf(S_COLOR_MAGENTA"Next_Kill_Attack_Move_Check 9\n");
+							}
+							break;
+						default:
+							newmove = PM_SaberFlipOverAttackMove();
+
+							if (d_attackinfo.integer)
+							{
+								Com_Printf(S_COLOR_MAGENTA"Next_Kill_Attack_Move_Check 10\n");
+							}
+							break;
+						}
+					}
+					pm->ps->weaponstate = WEAPON_FIRING;
+					WP_ForcePowerDrain(pm->ps, FP_SABER_OFFENSE, SABER_ALT_ATTACK_POWER_FB);
+				}
+
+				check_val = g_attackskill.integer;
+
+				if (check_val <= 0)
+				{
+					check_val = 1;
+				}
+
+				Next_Kill_Attack_Move_Check[pm->ps->client_num] = level.time + (40000 / check_val); // 20 secs / g_attackskill
+			}
+		}
+	}
+#endif
+
 	return newmove;
 }
 
@@ -2529,8 +2731,8 @@ saberMoveName_t PM_SaberLungeAttackMove(const qboolean noSpecials)
 	return LS_A_T2B;
 }
 
-#define LUNGE_DISTANCE 128
-qboolean PM_CanLunge(void)
+#define SPECIAL_ATTACK_DISTANCE 128
+qboolean PM_Can_Do_Kill_Lunge(void)
 {
 	trace_t tr;
 	vec3_t flatAng;
@@ -2543,15 +2745,42 @@ qboolean PM_CanLunge(void)
 
 	AngleVectors(flatAng, fwd, 0, 0);
 
-	back[0] = pm->ps->origin[0] + fwd[0] * LUNGE_DISTANCE;
-	back[1] = pm->ps->origin[1] + fwd[1] * LUNGE_DISTANCE;
-	back[2] = pm->ps->origin[2] + fwd[2] * LUNGE_DISTANCE;
+	back[0] = pm->ps->origin[0] + fwd[0] * SPECIAL_ATTACK_DISTANCE;
+	back[1] = pm->ps->origin[1] + fwd[1] * SPECIAL_ATTACK_DISTANCE;
+	back[2] = pm->ps->origin[2] + fwd[2] * SPECIAL_ATTACK_DISTANCE;
 
 	pm->trace(&tr, pm->ps->origin, trmins, trmaxs, back, pm->ps->client_num, MASK_PLAYERSOLID);
 
 	if (tr.fraction != 1.0 && tr.entity_num >= 0 && tr.entity_num < MAX_CLIENTS)
 	{
-		//We don't have real entity access here so we can't do an in depth check. But if it's a client and it's behind us, I guess that's reason enough to stab backward
+		//We don't have real entity access here so we can't do an in depth check. But if it's a client, I guess that's reason enough to attack
+		return qtrue;
+	}
+
+	return qfalse;
+}
+
+qboolean PM_Can_Do_Kill_Lunge_back(void)
+{
+	trace_t tr;
+	vec3_t flatAng;
+	vec3_t fwd, back;
+	vec3_t trmins = { -15, -15, -8 };
+	vec3_t trmaxs = { 15, 15, 8 };
+
+	VectorCopy(pm->ps->viewangles, flatAng);
+	flatAng[PITCH] = 0;
+
+	AngleVectors(flatAng, fwd, 0, 0);
+
+	back[0] = pm->ps->origin[0] - fwd[0] * SPECIAL_ATTACK_DISTANCE;
+	back[1] = pm->ps->origin[1] - fwd[1] * SPECIAL_ATTACK_DISTANCE;
+	back[2] = pm->ps->origin[2] - fwd[2] * SPECIAL_ATTACK_DISTANCE;
+
+	pm->trace(&tr, pm->ps->origin, trmins, trmaxs, back, pm->ps->client_num, MASK_PLAYERSOLID);
+
+	if (tr.fraction != 1.0 && tr.entity_num >= 0 && (tr.entity_num < MAX_CLIENTS))
+	{ //We don't have real entity access here so we can't do an indepth check. But if it's a client and it's behind us, I guess that's reason enough to stab backward
 		return qtrue;
 	}
 
@@ -2968,11 +3197,6 @@ saberMoveName_t PM_CheckPlayerAttackFromParry(const int curmove)
 	}
 	return LS_NONE;
 }
-
-int Next_Kill_Attack_Move_Check[MAX_CLIENTS]; // Next special move check.
-extern vmCvar_t g_attackskill;
-extern vmCvar_t bot_thinklevel;
-saberMoveName_t PM_DoAI_Fake(const int curmove);
 
 saberMoveName_t PM_SaberAttackForMovement(const saberMoveName_t curmove)
 {
@@ -3419,110 +3643,6 @@ saberMoveName_t PM_SaberAttackForMovement(const saberMoveName_t curmove)
 			pm->cmd.forwardmove = 0;
 		}
 	}
-
-#ifdef _GAME
-	if (bot_thinklevel.integer >= 1 &&
-		BG_EnoughForcePowerForMove(SABER_KATA_ATTACK_POWER) &&
-		!pm->ps->fd.forcePowersActive)
-	{
-		if (g_entities[pm->ps->client_num].r.svFlags & SVF_BOT)
-		{// Some special bot stuff.
-			if (Next_Kill_Attack_Move_Check[pm->ps->client_num] <= level.time && g_attackskill.integer >= 0)
-			{
-				int check_val = 0; // Times 500 for next check interval.
-
-				if (PM_CanLunge())
-				{ //Bot Lunge (attack varies by level)
-					if ((pm->ps->pm_flags & PMF_DUCKED) || pm->cmd.upmove < 0)
-					{
-						newmove = PM_SaberLungeAttackMove(qtrue);
-
-						if (d_attackinfo.integer)
-						{
-							Com_Printf(S_COLOR_MAGENTA"Next_Kill_Attack_Move_Check 0\n");
-						}
-					}
-					else
-					{
-						int choice = rand() % 3;
-
-						if (choice == 1)
-						{
-							newmove = PM_NPC_Force_Leap_Attack();
-
-							if (d_attackinfo.integer)
-							{
-								Com_Printf(S_COLOR_MAGENTA"Next_Kill_Attack_Move_Check 1\n");
-							}
-						}
-						else if (choice == 2)
-						{
-							newmove = PM_DoAI_Fake(qtrue);
-
-							if (d_attackinfo.integer)
-							{
-								Com_Printf(S_COLOR_MAGENTA"Next_Kill_Attack_Move_Check 2\n");
-							}
-						}
-						else if (choice == 3)
-						{
-							switch (pm->ps->saber_anim_level)
-							{
-							case SS_FAST:
-								newmove = LS_A1_SPECIAL;
-								break;
-							case SS_MEDIUM:
-								newmove = LS_A2_SPECIAL;
-								break;
-							case SS_STRONG:
-								newmove = LS_A3_SPECIAL;
-								break;
-							case SS_DESANN:
-								newmove = LS_A5_SPECIAL;
-								break;
-							case SS_TAVION:
-								newmove = LS_A4_SPECIAL;
-								break;
-							case SS_DUAL:
-								newmove = LS_DUAL_SPIN_PROTECT;
-								break;
-							case SS_STAFF:
-								newmove = LS_STAFF_SOULCAL;
-								break;
-							default:;
-								newmove = LS_A2_SPECIAL;
-								break;
-							}
-							if (d_attackinfo.integer)
-							{
-								Com_Printf(S_COLOR_MAGENTA"Next_Kill_Attack_Move_Check 3\n");
-							}
-						}
-						else
-						{
-							newmove = PM_SaberFlipOverAttackMove();
-							if (d_attackinfo.integer)
-							{
-								Com_Printf(S_COLOR_MAGENTA"Next_Kill_Attack_Move_Check 4\n");
-							}
-						}
-					}
-					pm->ps->weaponstate = WEAPON_FIRING;
-					WP_ForcePowerDrain(pm->ps, FP_SABER_OFFENSE, SABER_ALT_ATTACK_POWER_FB);
-				}
-
-				check_val = g_attackskill.integer;
-
-				if (check_val <= 0)
-				{
-					check_val = 1;
-				}
-
-				Next_Kill_Attack_Move_Check[pm->ps->client_num] = level.time + (40000 / check_val); // 20 secs / g_attackskill
-			}
-		}
-	}
-#endif
 
 	return newmove;
 }

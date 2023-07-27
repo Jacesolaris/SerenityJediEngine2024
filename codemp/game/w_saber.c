@@ -7483,7 +7483,7 @@ void wp_saber_start_missile_block_check(gentity_t* self, usercmd_t* ucmd)
 
 void thrownSaberTouch(gentity_t* saberent, gentity_t* other, const trace_t* trace);
 float manual_saberblocking(const gentity_t* defender);
-int WP_SaberCanBlock(gentity_t* self, vec3_t point, int dflags, int mod, qboolean projectile, int attackStr);
+int WP_SaberCanBlock(gentity_t* self, vec3_t point, int dflags, int mod, qboolean projectile);
 
 static QINLINE qboolean CheckThrownSaberDamaged(gentity_t* saberent, gentity_t* saber_owner, gentity_t* ent,
 	const int dist,
@@ -7537,7 +7537,7 @@ static QINLINE qboolean CheckThrownSaberDamaged(gentity_t* saberent, gentity_t* 
 			if (tr.fraction == 1 || tr.entity_num == ent->s.number)
 			{
 				//Slice them
-				if (!saber_owner->client->ps.isJediMaster && WP_SaberCanBlock(ent, tr.endpos, 0, MOD_SABER, qfalse, 999))
+				if (!saber_owner->client->ps.isJediMaster && WP_SaberCanBlock(ent, tr.endpos, 0, MOD_SABER, qtrue))
 				{
 					//they blocked it
 					WP_SaberBlockNonRandom(ent, tr.endpos, qfalse);
@@ -14379,20 +14379,13 @@ qboolean WP_SaberBlockBolt(gentity_t* self, vec3_t hitloc, const qboolean missil
 
 extern float Q_clamp(float min, float value, float max);
 
-int WP_SaberCanBlock(gentity_t* self, vec3_t point, int dflags, int mod, qboolean projectile, int attackStr)
+int WP_SaberCanBlock(gentity_t* self, vec3_t point, int dflags, int mod, qboolean projectile)
 {
-	qboolean thrownSaber = qfalse;
 	float blockFactor = 0;
 
 	if (!self || !self->client || !point)
 	{
 		return 0;
-	}
-
-	if (attackStr == 999)
-	{
-		attackStr = 0;
-		thrownSaber = qtrue;
 	}
 
 	if (!(self->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK))
@@ -14483,16 +14476,16 @@ int WP_SaberCanBlock(gentity_t* self, vec3_t point, int dflags, int mod, qboolea
 	{
 		if (d_saberGhoul2Collision.integer)
 		{
-			blockFactor = 0.3f;
+			blockFactor = 0.8f;
 		}
 		else
 		{
-			blockFactor = 0.05f;
+			blockFactor = 0.6f;
 		}
 	}
 	else if (self->client->ps.fd.forcePowerLevel[FP_SABER_DEFENSE] == FORCE_LEVEL_2)
 	{
-		blockFactor = 0.6f;
+		blockFactor = 0.8f;
 	}
 	else if (self->client->ps.fd.forcePowerLevel[FP_SABER_DEFENSE] == FORCE_LEVEL_1)
 	{
@@ -14500,21 +14493,6 @@ int WP_SaberCanBlock(gentity_t* self, vec3_t point, int dflags, int mod, qboolea
 	}
 	else
 	{ //for now we just don't get to autoblock with no def
-		return 0;
-	}
-
-	if (thrownSaber)
-	{
-		blockFactor -= 0.25f;
-	}
-
-	if (attackStr)
-	{ //blocking a saber, not a projectile.
-		blockFactor -= 0.25f;
-	}
-
-	if (!in_front(point, self->client->ps.origin, self->client->ps.viewangles, blockFactor)) //orig 0.2f
-	{
 		return 0;
 	}
 

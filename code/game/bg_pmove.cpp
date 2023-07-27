@@ -13804,7 +13804,8 @@ void PM_Use()
 extern saberMoveName_t PM_AttackForEnemyPos(qboolean allow_fb, qboolean allow_stab_down);
 extern saberMoveName_t PM_NPC_Force_Leap_Attack(void);
 extern saberMoveName_t PM_SaberFlipOverAttackMove(void);
-extern qboolean PM_CanLunge(void);
+extern qboolean PM_Can_Do_Kill_Lunge(void);
+extern qboolean PM_Can_Do_Kill_Lunge_back(void);
 int Next_Kill_Attack_Move_Check[MAX_CLIENTS]; // Next special move check.
 saberMoveName_t PM_DoAI_Fake(const int curmove);
 
@@ -13931,7 +13932,8 @@ saberMoveName_t PM_NPCSaberAttackFromQuad(const int quad)
 	}
 
 	if (g_spskill->integer > 1
-		&& G_EnoughPowerForSpecialMove(pm->ps->forcePower, SABER_ALT_ATTACK_POWER, qtrue))
+		&& G_EnoughPowerForSpecialMove(pm->ps->forcePower, SABER_ALT_ATTACK_POWER, qtrue) &&
+		!pm->ps->forcePowersActive && !in_camera)
 	{
 		if (pm->ps->client_num >= MAX_CLIENTS && !PM_ControlledByPlayer())
 		{// Some special bot stuff.
@@ -13939,9 +13941,37 @@ saberMoveName_t PM_NPCSaberAttackFromQuad(const int quad)
 			{
 				int check_val = 0; // Times 500 for next check interval.
 
-				if (PM_CanLunge())
-				{
+				if (PM_Can_Do_Kill_Lunge_back())
+				{ //BACKSTAB
 					if ((pm->ps->pm_flags & PMF_DUCKED) || pm->cmd.upmove < 0)
+					{
+						newmove = LS_A_BACK_CR;
+					}
+					else
+					{
+						int choice = rand() % 3;
+
+						if (choice == 1)
+						{
+							newmove = LS_A_BACK;
+						}
+						else if (choice == 2)
+						{
+							newmove = PM_SaberBackflipAttackMove();
+						}
+						else if (choice == 3)
+						{
+							newmove = LS_A_BACKFLIP_ATK;
+						}
+						else
+						{
+							newmove = LS_A_BACKSTAB;
+						}
+					}
+				}
+				else if (PM_Can_Do_Kill_Lunge())
+				{
+					if (pm->ps->pm_flags & PMF_DUCKED)
 					{
 						newmove = PM_SaberLungeAttackMove(qtrue);
 
@@ -13952,69 +13982,112 @@ saberMoveName_t PM_NPCSaberAttackFromQuad(const int quad)
 					}
 					else
 					{
-						int choice = rand() % 3;
+						const int choice = rand() % 9;
 
-						if (choice == 1)
+						switch (choice)
 						{
+						case 0:
 							newmove = PM_NPC_Force_Leap_Attack();
 
 							if (d_attackinfo->integer)
 							{
 								gi.Printf(S_COLOR_MAGENTA"Next_Kill_Attack_Move_Check 1\n");
 							}
-						}
-						else if (choice == 2)
-						{
+							break;
+						case 1:
 							newmove = PM_DoAI_Fake(qtrue);
 
 							if (d_attackinfo->integer)
 							{
 								gi.Printf(S_COLOR_MAGENTA"Next_Kill_Attack_Move_Check 2\n");
 							}
-						}
-						else if (choice == 3)
-						{
-							switch (pm->ps->saber_anim_level)
-							{
-							case SS_FAST:
-								newmove = LS_A1_SPECIAL;
-								break;
-							case SS_MEDIUM:
-								newmove = LS_A2_SPECIAL;
-								break;
-							case SS_STRONG:
-								newmove = LS_A3_SPECIAL;
-								break;
-							case SS_DESANN:
-								newmove = LS_A5_SPECIAL;
-								break;
-							case SS_TAVION:
-								newmove = LS_A4_SPECIAL;
-								break;
-							case SS_DUAL:
-								newmove = LS_DUAL_SPIN_PROTECT;
-								break;
-							case SS_STAFF:
-								newmove = LS_STAFF_SOULCAL;
-								break;
-							default:;
-								newmove = LS_A2_SPECIAL;
-								break;
-							}
+							break;
+						case 2:
+							newmove = LS_A1_SPECIAL;
 
 							if (d_attackinfo->integer)
 							{
 								gi.Printf(S_COLOR_MAGENTA"Next_Kill_Attack_Move_Check 3\n");
 							}
-						}
-						else
-						{
-							newmove = PM_SaberFlipOverAttackMove();
+							break;
+						case 3:
+							newmove = LS_A2_SPECIAL;
 
 							if (d_attackinfo->integer)
 							{
 								gi.Printf(S_COLOR_MAGENTA"Next_Kill_Attack_Move_Check 4\n");
 							}
+							break;
+						case 4:
+							newmove = LS_A3_SPECIAL;
+
+							if (d_attackinfo->integer)
+							{
+								gi.Printf(S_COLOR_MAGENTA"Next_Kill_Attack_Move_Check 5\n");
+							}
+							break;
+						case 5:
+							newmove = LS_A4_SPECIAL;
+
+							if (d_attackinfo->integer)
+							{
+								gi.Printf(S_COLOR_MAGENTA"Next_Kill_Attack_Move_Check 6\n");
+							}
+							break;
+						case 6:
+							newmove = LS_A5_SPECIAL;
+
+							if (d_attackinfo->integer)
+							{
+								gi.Printf(S_COLOR_MAGENTA"Next_Kill_Attack_Move_Check 7\n");
+							}
+							break;
+						case 7:
+							if (pm->ps->saber_anim_level == SS_DUAL)
+							{
+								newmove = LS_DUAL_SPIN_PROTECT;
+							}
+							else if (pm->ps->saber_anim_level == SS_STAFF)
+							{
+								newmove = LS_STAFF_SOULCAL;
+							}
+							else
+							{
+								newmove = LS_A_JUMP_T__B_;
+							}
+
+							if (d_attackinfo->integer)
+							{
+								gi.Printf(S_COLOR_MAGENTA"Next_Kill_Attack_Move_Check 8\n");
+							}
+							break;
+						case 8:
+							if (pm->ps->saber_anim_level == SS_DUAL)
+							{
+								newmove = LS_JUMPATTACK_DUAL;
+							}
+							else if (pm->ps->saber_anim_level == SS_STAFF)
+							{
+								newmove = LS_JUMPATTACK_STAFF_RIGHT;
+							}
+							else
+							{
+								newmove = LS_SPINATTACK;
+							}
+
+							if (d_attackinfo->integer)
+							{
+								gi.Printf(S_COLOR_MAGENTA"Next_Kill_Attack_Move_Check 9\n");
+							}
+							break;
+						default:
+							newmove = PM_SaberFlipOverAttackMove();
+
+							if (d_attackinfo->integer)
+							{
+								gi.Printf(S_COLOR_MAGENTA"Next_Kill_Attack_Move_Check 10\n");
+							}
+							break;
 						}
 					}
 					pm->ps->weaponstate = WEAPON_FIRING;
@@ -14821,8 +14894,8 @@ qboolean PM_SaberLocked()
 							&junk, &junk2, nullptr);
 #ifdef _DEBUG
 					assert(ret); // this would be pretty bad, the below code seems to assume the call succeeds. -gil
-#endif					
-					
+#endif
+
 					if (PM_InSaberLockOld(pm->ps->torsoAnim))
 					{
 						//old locks

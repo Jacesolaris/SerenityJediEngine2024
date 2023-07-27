@@ -5726,63 +5726,49 @@ int bg_parse_animation_file(const char* filename, animation_t* anim_set, const q
 			//backwards
 			anim_set[anim_num].frameLerp = floor(1000.0f / fps);
 
-#ifdef __SABER_ANIMATION_SMOOTH__
+			//Slow down saber moves...
+			for (int x = 4; x < LS_MOVE_MAX; x++)
 			{
-				//Slow down saber moves...
-
-				for (int x = 4; x < LS_MOVE_MAX; x++)
+				if (saberMoveData[x].animToUse + 77 * 4 == anim_num) // SS_TAVION
 				{
-#ifdef __NO_SABER_SPINAROUND__
-					if (saberMoveData[x].animToUse + 77 * 4 == anim_num) // SS_TAVION
-					{
-						anim_set[anim_num].frameLerp *= 1.2;
-						break;
-					}
-#endif
-					if (saberMoveData[x].animToUse + 77 * 5 == anim_num) // SS_DUAL
-					{
-						anim_set[anim_num].frameLerp *= 1.1;
-						break;
-					}
-					if (saberMoveData[x].animToUse + 77 * 6 == anim_num) // SS_STAFF
-					{
-						anim_set[anim_num].frameLerp *= 1.1;
-						break;
-					}
+					anim_set[anim_num].frameLerp *= 1.2;
+					break;
+				}
+				if (saberMoveData[x].animToUse + 77 * 5 == anim_num) // SS_DUAL
+				{
+					anim_set[anim_num].frameLerp *= 1.1;
+					break;
+				}
+				if (saberMoveData[x].animToUse + 77 * 6 == anim_num) // SS_STAFF
+				{
+					anim_set[anim_num].frameLerp *= 1.1;
+					break;
 				}
 			}
-#endif
 		}
 		else
 		{
 			anim_set[anim_num].frameLerp = ceil(1000.0f / fps);
 
-#ifdef __SABER_ANIMATION_SMOOTH__
+			//Slow down saber moves...
+			for (int x = 4; x < LS_MOVE_MAX; x++)
 			{
-				//Slow down saber moves...
-
-				for (int x = 4; x < LS_MOVE_MAX; x++)
+				if (saberMoveData[x].animToUse + 77 * 4 == anim_num) // SS_TAVION
 				{
-#ifdef __NO_SABER_SPINAROUND__
-					if (saberMoveData[x].animToUse + 77 * 4 == anim_num) // SS_TAVION
-					{
-						anim_set[anim_num].frameLerp *= 1.2;
-						break;
-					}
-#endif
-					if (saberMoveData[x].animToUse + 77 * 5 == anim_num) // SS_DUAL
-					{
-						anim_set[anim_num].frameLerp *= 1.1;
-						break;
-					}
-					if (saberMoveData[x].animToUse + 77 * 6 == anim_num) // SS_STAFF
-					{
-						anim_set[anim_num].frameLerp *= 1.1;
-						break;
-					}
+					anim_set[anim_num].frameLerp *= 1.2;
+					break;
+				}
+				if (saberMoveData[x].animToUse + 77 * 5 == anim_num) // SS_DUAL
+				{
+					anim_set[anim_num].frameLerp *= 1.1;
+					break;
+				}
+				if (saberMoveData[x].animToUse + 77 * 6 == anim_num) // SS_STAFF
+				{
+					anim_set[anim_num].frameLerp *= 1.1;
+					break;
 				}
 			}
-#endif
 		}
 	}
 
