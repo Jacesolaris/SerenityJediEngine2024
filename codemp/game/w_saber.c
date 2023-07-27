@@ -7540,7 +7540,7 @@ static QINLINE qboolean CheckThrownSaberDamaged(gentity_t* saberent, gentity_t* 
 				if (!saber_owner->client->ps.isJediMaster && WP_SaberCanBlock(ent, tr.endpos, 0, MOD_SABER, qtrue))
 				{
 					//they blocked it
-					WP_SaberBlockNonRandom(ent, tr.endpos, qfalse);
+					//WP_SaberBlockNonRandom(ent, tr.endpos, qfalse);
 
 					te = G_TempEntity(tr.endpos, EV_SABER_BLOCK);
 					VectorCopy(tr.endpos, te->s.origin);

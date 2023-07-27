@@ -2252,10 +2252,11 @@ int LoadPathData(const char* filename)
 
 	trap->FS_Close(f);
 
-	if (level.gametype == GT_SIEGE)
+	/*if (level.gametype == GT_SIEGE)
 	{
 		CalculateSiegeGoals();
-	}
+	}*/
+	CalculateSiegeGoals();
 
 	CalculateWeightGoals();
 	//calculate weights for idle activity goals when

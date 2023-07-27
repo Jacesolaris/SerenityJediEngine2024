@@ -3058,6 +3058,13 @@ void maglock_link(gentity_t* self)
 	//self->fxID = G_EffectIndex( "maglock/explosion" );
 
 	trap->LinkEntity((sharedEntity_t*)self);
+
+	if (level.gametype != GT_SIEGE)
+	{// Screw maglocks in non-siege games. Trigger it on map load...
+		maglock_die(self, self, self, 10000, MOD_SABER);
+		trap->Print("Destroyed a siege/sp maglock.\n");
+		return;
+	}
 }
 
 void faller_touch(gentity_t* self, gentity_t* other, trace_t* trace)

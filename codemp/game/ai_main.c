@@ -3079,8 +3079,8 @@ int favorite_weapon(bot_state_t* bs, const gentity_t* target, const qboolean hav
 		}
 	}
 
-	if (level.gametype == GT_SIEGE
-		&& bestweapon == WP_NONE
+	if (/*level.gametype == GT_SIEGE
+		&&*/ bestweapon == WP_NONE
 		&& target && target->flags & FL_DMG_BY_HEAVY_WEAP_ONLY)
 	{
 		//we don't have the weapons to damage this thingy. call for help!

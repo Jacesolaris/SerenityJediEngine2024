@@ -405,6 +405,7 @@ void G_InitGame(int levelTime, int randomSeed, int restart)
 	clear_registered_items();
 
 	//make sure saber data is loaded before this! (so we can precache the appropriate hilts)
+
 	InitSiegeMode();
 
 	trap->Cvar_Register(&mapname, "mapname", "", CVAR_SERVERINFO | CVAR_ROM);
@@ -4620,6 +4621,50 @@ void G_RunFrame(const int levelTime)
 				ent->s.loopIsSoundset = qfalse;
 			}
 			continue;
+		}
+
+		if (ent->client && (ent->s.eType == ET_PLAYER || ent->s.eType == ET_NPC))
+		{//  NPCs can hack/use too!!!
+			if (ent->client->isHacking > MAX_CLIENTS)
+			{ //hacking checks
+				gentity_t* hacked = &g_entities[ent->client->isHacking];
+				vec3_t angDif;
+
+				VectorSubtract(ent->client->ps.viewangles, ent->client->hackingAngles, angDif);
+
+				//keep him in the "use" anim
+				if (ent->client->ps.torsoAnim != BOTH_CONSOLE1)
+				{
+					G_SetAnim(ent, NULL, SETANIM_TORSO, BOTH_CONSOLE1, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
+				}
+				else
+				{
+					ent->client->ps.torsoTimer = 500;
+				}
+
+				ent->client->ps.weaponTime = ent->client->ps.torsoTimer;
+
+				if (!(ent->client->pers.cmd.buttons & BUTTON_USE) && (ent->s.eType == ET_PLAYER || ent->s.eType == ET_NPC))
+				{ //have to keep holding use
+					ent->client->isHacking = 0;
+					ent->client->ps.hackingTime = 0;
+				}
+				else if (!hacked->inuse)
+				{ //shouldn't happen, but safety first
+					ent->client->isHacking = 0;
+					ent->client->ps.hackingTime = 0;
+				}
+				else if (!G_PointInBounds(ent->client->ps.origin, hacked->r.absmin, hacked->r.absmax))
+				{ //they stepped outside the thing they're hacking, so reset hacking time
+					ent->client->isHacking = 0;
+					ent->client->ps.hackingTime = 0;
+				}
+				else if (VectorLength(angDif) > 10.0f && (ent->s.eType == ET_PLAYER || ent->s.eType == ET_NPC))
+				{ //must remain facing generally the same angle as when we start (But only for players)
+					ent->client->isHacking = 0;
+					ent->client->ps.hackingTime = 0;
+				}
+			}
 		}
 
 		if (i < MAX_CLIENTS)

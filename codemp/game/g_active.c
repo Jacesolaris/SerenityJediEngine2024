@@ -619,17 +619,17 @@ void DoImpact(gentity_t* self, gentity_t* other, const qboolean damageSelf)
 					magnitude = (self->client->ps.fd.forceJumpZStart - self->r.currentOrigin[2]) / 3;
 				}
 			}
-			if (magnitude >= 100 + self->health && self->s.number >= MAX_CLIENTS && self->s.weapon != WP_SABER
-				|| self->client->NPC_class == CLASS_VEHICLE || magnitude >= 700)
-				//health here is used to simulate structural integrity
-			{
-				if ((self->s.weapon == WP_SABER || self->s.number < MAX_CLIENTS || self->client && (self->client->
-					NPC_class == CLASS_BOBAFETT || self->client->NPC_class == CLASS_MANDO || self->client->NPC_class
-					==
-					CLASS_ROCKETTROOPER)) && self->client && self->client->ps.groundEntityNum < ENTITYNUM_NONE &&
-					magnitude < 1000)
-				{
-					//players and jedi take less impact damage
+
+			if ((magnitude >= 100 + self->health
+				&& self->s.number >= MAX_CLIENTS
+				&& self->s.weapon != WP_SABER)
+				|| (magnitude >= 700))
+			{//health here is used to simulate structural integrity
+				if ((self->s.weapon == WP_SABER)
+					&& self->client
+					&& self->client->ps.groundEntityNum < ENTITYNUM_NONE
+					&& magnitude < 1000)
+				{//players and jedi take less impact damage
 					//allow for some lenience on high falls
 					magnitude /= 2;
 				}
@@ -648,8 +648,7 @@ void DoImpact(gentity_t* self, gentity_t* other, const qboolean damageSelf)
 				}
 				if (magnitude >= 1)
 				{
-					G_Damage(self, NULL, NULL, NULL, self->r.currentOrigin, magnitude / 2, DAMAGE_NO_ARMOR,
-						MOD_FALLING);
+					G_Damage(self, NULL, NULL, NULL, self->r.currentOrigin, magnitude / 2, DAMAGE_NO_ARMOR,	MOD_FALLING);
 				}
 			}
 		}
