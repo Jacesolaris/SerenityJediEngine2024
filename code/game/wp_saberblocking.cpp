@@ -253,8 +253,7 @@ void sab_beh_add_mishap_attacker(gentity_t* attacker, const int saber_num)
 				{
 					//20% chance
 					sab_beh_animate_heavy_slow_bounce_attacker(attacker);
-					if (d_attackinfo->integer || g_DebugSaberCombat->integer && (attacker->NPC && !G_ControlledByPlayer(
-						attacker)))
+					if (d_attackinfo->integer || g_DebugSaberCombat->integer && (attacker->NPC && !G_ControlledByPlayer(attacker)))
 					{
 						gi.Printf(S_COLOR_YELLOW"NPC Attacker staggering\n");
 					}
@@ -262,8 +261,7 @@ void sab_beh_add_mishap_attacker(gentity_t* attacker, const int saber_num)
 				else
 				{
 					sab_beh_saber_should_be_disarmed_attacker(attacker, saber_num);
-					if (d_attackinfo->integer || g_DebugSaberCombat->integer && (attacker->NPC && !G_ControlledByPlayer(
-						attacker)))
+					if (d_attackinfo->integer || g_DebugSaberCombat->integer && (attacker->NPC && !G_ControlledByPlayer(attacker)))
 					{
 						gi.Printf(S_COLOR_RED"NPC Attacker lost his saber\n");
 					}
@@ -272,8 +270,7 @@ void sab_beh_add_mishap_attacker(gentity_t* attacker, const int saber_num)
 			else
 			{
 				sab_beh_saber_should_be_disarmed_attacker(attacker, saber_num);
-				if (d_attackinfo->integer || g_DebugSaberCombat->integer && (attacker->s.number < MAX_CLIENTS ||
-					G_ControlledByPlayer(attacker)))
+				if (d_attackinfo->integer || g_DebugSaberCombat->integer && (attacker->s.number < MAX_CLIENTS || G_ControlledByPlayer(attacker)))
 				{
 					gi.Printf(S_COLOR_RED"Player Attacker lost his saber\n");
 				}
@@ -281,8 +278,7 @@ void sab_beh_add_mishap_attacker(gentity_t* attacker, const int saber_num)
 			break;
 		case 1:
 			sab_beh_animate_heavy_slow_bounce_attacker(attacker);
-			if (d_attackinfo->integer || g_DebugSaberCombat->integer && (attacker->s.number < MAX_CLIENTS ||
-				G_ControlledByPlayer(attacker)))
+			if (d_attackinfo->integer || g_DebugSaberCombat->integer && (attacker->s.number < MAX_CLIENTS || G_ControlledByPlayer(attacker)))
 			{
 				gi.Printf(S_COLOR_RED"Player Attacker staggering\n");
 			}
@@ -393,8 +389,7 @@ void sab_beh_animate_slow_bounce_blocker(gentity_t* blocker)
 
 ////////Bounces//////////
 
-qboolean sab_beh_attack_blocked(gentity_t* attacker, gentity_t* blocker, const int saber_num,
-	const qboolean force_mishap)
+qboolean sab_beh_attack_blocked(gentity_t* attacker, gentity_t* blocker, const int saber_num, const qboolean force_mishap)
 {
 	//if the attack is blocked -(Im the attacker)
 	const qboolean m_blocking = blocker->client->ps.ManualBlockingFlags & 1 << PERFECTBLOCKING ? qtrue : qfalse;
@@ -715,8 +710,7 @@ qboolean sab_beh_attack_vs_block(gentity_t* attacker, gentity_t* blocker, const 
 
 			sab_beh_add_balance(blocker, MPCOST_PARRYING_ATTACKFAKE);
 
-			if ((d_attackinfo->integer || g_DebugSaberCombat->integer) && !PM_InSaberLock(
-				attacker->client->ps.torsoAnim))
+			if ((d_attackinfo->integer || g_DebugSaberCombat->integer) && !PM_InSaberLock(attacker->client->ps.torsoAnim))
 			{
 				gi.Printf(S_COLOR_YELLOW"Attackers Attack Fake was Blocked\n");
 			}
@@ -1064,7 +1058,10 @@ qboolean sab_beh_block_vs_attack(gentity_t* blocker, gentity_t* attacker, const 
 						{
 							WP_SaberMBlock(blocker, attacker, saber_num, blade_num);
 
-							g_do_m_block_response(blocker);
+							if (blocker->NPC && !G_ControlledByPlayer(blocker)) //NPC only
+							{
+								g_do_m_block_response(attacker);
+							}
 
 							if ((d_blockinfo->integer || g_DebugSaberCombat->integer) && (blocker->NPC && !
 								G_ControlledByPlayer(blocker)))

@@ -84,6 +84,7 @@ void sab_beh_animate_heavy_slow_bounce_attacker(gentity_t* attacker);
 extern void G_StaggerAttacker(gentity_t* atk);
 extern void G_BounceAttacker(gentity_t* atk);
 extern void wp_saber_clear_damage_for_ent_num(gentity_t* attacker, int entity_num, int saber_num, int blade_num);
+extern void g_do_m_block_response(const gentity_t* speaker_npc_self);
 //////////Defines////////////////
 
 void sab_beh_saber_should_be_disarmed_attacker(gentity_t* attacker, const gentity_t* blocker)
@@ -725,8 +726,7 @@ qboolean sab_beh_attack_vs_attack(gentity_t* attacker, gentity_t* blocker)
 	return qtrue;
 }
 
-qboolean sab_beh_attack_vs_block(gentity_t* attacker, gentity_t* blocker, const int saber_num, const int blade_num,
-	vec3_t hit_loc)
+qboolean sab_beh_attack_vs_block(gentity_t* attacker, gentity_t* blocker, const int saber_num, const int blade_num, vec3_t hit_loc)
 {
 	//if the attack is blocked -(Im the attacker)
 	const qboolean perfectparry = g_perfect_blocking(blocker, attacker, hit_loc); //perfect Attack Blocking
@@ -994,6 +994,11 @@ qboolean sab_beh_block_vs_attack(gentity_t* blocker, gentity_t* attacker, const 
 						attacker->client->ps.userInt3 |= 1 << FLAG_MBLOCKBOUNCE;
 					}
 
+					if (attacker->r.svFlags & SVF_BOT) //NPC only
+					{
+						g_do_m_block_response(attacker);
+					}
+
 					if (!(blocker->r.svFlags & SVF_BOT))
 					{
 						CGCam_BlockShakeMP(blocker->s.origin, NULL, 0.45f, 100, qfalse);
@@ -1147,6 +1152,11 @@ qboolean sab_beh_block_vs_attack(gentity_t* blocker, gentity_t* attacker, const 
 						}
 						else
 						{
+
+							if (blocker->r.svFlags & SVF_BOT) //NPC only
+							{
+								g_do_m_block_response(blocker);
+							}
 							//WP_SaberMBlock(blocker, attacker, saber_num, blade_num);
 							WP_SaberMBlockDirection(blocker, hit_loc, qfalse);
 
@@ -1247,5 +1257,5 @@ qboolean sab_beh_block_vs_attack(gentity_t* blocker, gentity_t* attacker, const 
 }
 
 /////////Functions//////////////
-// 
+//
 /////////////////////// 20233 new build ////////////////////////////////

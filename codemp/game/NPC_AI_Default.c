@@ -50,6 +50,31 @@ void NPC_LostEnemyDecideChase(void)
 	G_ClearEnemy(NPCS.NPC);
 }
 
+extern void G_AddVoiceEvent(const gentity_t* self, int event, int speak_debounce_time);
+void g_do_m_block_response(const gentity_t* speaker_npc_self)
+{
+	const int voice_event = Q_irand(0, 4);
+
+	switch (voice_event)
+	{
+	case 0:
+		G_AddVoiceEvent(speaker_npc_self, Q_irand(EV_GLOAT1, EV_GLOAT3), 1000);
+		break;
+	case 1:
+		G_AddVoiceEvent(speaker_npc_self, Q_irand(EV_JCHASE1, EV_JCHASE3), 1000);
+		break;
+	case 2:
+		G_AddVoiceEvent(speaker_npc_self, Q_irand(EV_COMBAT1, EV_COMBAT3), 1000);
+		break;
+	case 3:
+		G_AddVoiceEvent(speaker_npc_self, Q_irand(EV_ANGER1, EV_ANGER3), 1000);
+		break;
+	default:
+		G_AddVoiceEvent(speaker_npc_self, Q_irand(EV_TAUNT1, EV_TAUNT3), 1000);
+		break;
+	}
+}
+
 /*
 -------------------------
 NPC_StandIdle
