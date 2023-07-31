@@ -909,6 +909,7 @@ public:
 	qboolean stunhasbeenfired;
 	int cloneFired; //[CloneRifle]
 	int DekaFired;
+	int Dash_Count;
 
 	void sg_export(
 		ojk::SavedGameHelper& saved_game) const
@@ -1008,6 +1009,7 @@ public:
 
 		saved_game.write<int32_t>(cloneFired);
 		saved_game.write<int32_t>(DekaFired);
+		saved_game.write<int32_t>(Dash_Count);
 	}
 
 	void sg_import(
@@ -1108,6 +1110,7 @@ public:
 
 		saved_game.read<int32_t>(cloneFired);
 		saved_game.read<int32_t>(DekaFired);
+		saved_game.read<int32_t>(Dash_Count);
 	}
 }; // GClientBase
 

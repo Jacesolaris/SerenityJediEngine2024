@@ -8154,47 +8154,105 @@ void ClientThink_real(gentity_t* ent, usercmd_t* ucmd)
 
 			if (client->IsSprinting)
 			{
-				if (client->ps.dashstartTime <= 0 && level.time - client->ps.dashlaststartTime >= 2000)
+				if (client->Dash_Count <= 2)
 				{
-					// They just pressed dash. Mark the time... 8000 wait between allowed dash.
-					client->ps.dashstartTime = level.time;
-					client->ps.dashlaststartTime = level.time;
-
-					if (!(client->ps.communicatingflags & 1 << DASHING))
+					if (client->ps.dashstartTime <= 0 && level.time - client->ps.dashlaststartTime >= 100)
 					{
-						client->ps.communicatingflags |= 1 << DASHING;
+						// They just pressed dash. Mark the time... 3000 wait between allowed dash.
+						client->ps.dashstartTime = level.time;
+						client->ps.dashlaststartTime = level.time;
+						client->Dash_Count++;
+
+						if (!(client->ps.communicatingflags & 1 << DASHING))
+						{
+							client->ps.communicatingflags |= 1 << DASHING;
+						}
+					}
+					else
+					{
+						if (level.time - client->ps.dashstartTime >= 10)
+						{
+							// When dash was pressed, wait 3000 before letting go of dash.
+							client->ps.dashstartTime = 0;
+							client->ps.communicatingflags &= ~(1 << DASHING);
+						}
 					}
 				}
 				else
 				{
-					if (level.time - client->ps.dashstartTime >= 1500)
+					if (client->ps.dashstartTime <= 0 && level.time - client->ps.dashlaststartTime >= 2000)
 					{
-						// When dash was pressed, wait 3000 before letting go of dash.
-						client->ps.dashstartTime = 0;
-						client->ps.communicatingflags &= ~(1 << DASHING);
+						// They just pressed dash. Mark the time... 8000 wait between allowed dash.
+						client->ps.dashstartTime = level.time;
+						client->ps.dashlaststartTime = level.time;
+						client->Dash_Count++;
+
+						if (!(client->ps.communicatingflags & 1 << DASHING))
+						{
+							client->ps.communicatingflags |= 1 << DASHING;
+						}
+					}
+					else
+					{
+						if (level.time - client->ps.dashstartTime >= 1500)
+						{
+							// When dash was pressed, wait 3000 before letting go of dash.
+							client->ps.dashstartTime = 0;
+							client->Dash_Count = 0;
+							client->ps.communicatingflags &= ~(1 << DASHING);
+						}
 					}
 				}
 			}
 			else
 			{
-				if (client->ps.dashstartTime <= 0 && level.time - client->ps.dashlaststartTime >= 3000)
+				if (client->Dash_Count <= 2)
 				{
-					// They just pressed dash. Mark the time... 8000 wait between allowed dash.
-					client->ps.dashstartTime = level.time;
-					client->ps.dashlaststartTime = level.time;
-
-					if (!(client->ps.communicatingflags & 1 << DASHING))
+					if (client->ps.dashstartTime <= 0 && level.time - client->ps.dashlaststartTime >= 100)
 					{
-						client->ps.communicatingflags |= 1 << DASHING;
+						// They just pressed dash. Mark the time... 3000 wait between allowed dash.
+						client->ps.dashstartTime = level.time;
+						client->ps.dashlaststartTime = level.time;
+						client->Dash_Count++;
+
+						if (!(client->ps.communicatingflags & 1 << DASHING))
+						{
+							client->ps.communicatingflags |= 1 << DASHING;
+						}
+					}
+					else
+					{
+						if (level.time - client->ps.dashstartTime >= 10)
+						{
+							// When dash was pressed, wait 3000 before letting go of dash.
+							client->ps.dashstartTime = 0;
+							client->ps.communicatingflags &= ~(1 << DASHING);
+						}
 					}
 				}
 				else
 				{
-					if (level.time - client->ps.dashstartTime >= 1500)
+					if (client->ps.dashstartTime <= 0 && level.time - client->ps.dashlaststartTime >= 3000)
 					{
-						// When dash was pressed, wait 3000 before letting go of dash.
-						client->ps.dashstartTime = 0;
-						client->ps.communicatingflags &= ~(1 << DASHING);
+						// They just pressed dash. Mark the time... 8000 wait between allowed dash.
+						client->ps.dashstartTime = level.time;
+						client->ps.dashlaststartTime = level.time;
+						client->Dash_Count++;
+
+						if (!(client->ps.communicatingflags & 1 << DASHING))
+						{
+							client->ps.communicatingflags |= 1 << DASHING;
+						}
+					}
+					else
+					{
+						if (level.time - client->ps.dashstartTime >= 1500)
+						{
+							// When dash was pressed, wait 3000 before letting go of dash.
+							client->ps.dashstartTime = 0;
+							client->Dash_Count = 0;
+							client->ps.communicatingflags &= ~(1 << DASHING);
+						}
 					}
 				}
 			}
@@ -8440,8 +8498,8 @@ void ClientThink_real(gentity_t* ent, usercmd_t* ucmd)
 		{
 			cg.overrides.thirdPersonPitchOffset = 0;
 			cg.overrides.thirdPersonVertOffset = 200;
-		}
 	}
+}
 
 	//play/stop any looping sounds tied to controlled movement
 	G_CheckMovingLoopingSounds(ent, ucmd);

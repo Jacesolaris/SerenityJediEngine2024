@@ -1107,6 +1107,7 @@ struct gclient_s
 	gentity_t* ManualBlockStaggerDefender;
 	int StaggerAnimTime;
 	int cloneFired;
+	int Dash_Count;
 };
 
 //animations

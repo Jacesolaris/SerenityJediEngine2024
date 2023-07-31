@@ -521,9 +521,6 @@ void G_SetEnemy(gentity_t* self, gentity_t* enemy)
 		NPC_Jedi_RateNewEnemy(self, enemy);
 	}
 
-	//NOTE: this is not necessarily true!
-	//self->NPC->enemyLastSeenTime = level.time;
-
 	if (self->enemy == nullptr)
 	{
 		//TEMP HACK: turn on our saber
