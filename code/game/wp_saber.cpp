@@ -1652,7 +1652,7 @@ void wp_saber_lock_sound(const gentity_t* ent)
 		return;
 	}
 	const int index = Q_irand(1, 9);
-	
+
 	G_Sound(ent, G_SoundIndex(va("sound/weapons/saber/saberlock%d.mp3", index)));
 }
 
@@ -2552,7 +2552,7 @@ qboolean wp_saber_apply_damage(gentity_t* ent, const float base_damage, const in
 			if (dmgFraction[i] < saberHitFraction || broken_parry)
 			{
 				gentity_t* victim = &g_entities[victimEntityNum[i]];
-				
+
 				if (!victim)
 				{
 					continue;
@@ -2583,9 +2583,12 @@ qboolean wp_saber_apply_damage(gentity_t* ent, const float base_damage, const in
 
 				if (totalDmg[i] > 0)
 				{
-					if (ent->s.number < MAX_CLIENTS || G_ControlledByPlayer(ent))
+					if (victim->health >= 1)
 					{
-						CGCam_BlockShakeSP(0.25f, 100);
+						if (ent->s.number < MAX_CLIENTS || G_ControlledByPlayer(ent))
+						{
+							CGCam_BlockShakeSP(0.25f, 100);
+						}
 					}
 					//actually want to do *some* damage here
 					if (victim->client
@@ -4834,7 +4837,7 @@ qboolean WP_SabersCheckLock2(gentity_t* attacker, gentity_t* defender, sabersloc
 		}
 		attacker->client->ps.SaberDeactivate();
 		defender->client->ps.SaberDeactivate();
-		
+
 		if (d_slowmoaction->integer > 3
 			&& (defender->s.number < MAX_CLIENTS
 				|| attacker->s.number < MAX_CLIENTS))
@@ -25747,7 +25750,7 @@ void ForceGrasp(gentity_t* self)
 			G_SoundOnEnt(self, CHAN_BODY, "sound/weapons/force/grab.mp3");
 		}
 	}
-}
+	}
 
 extern void WP_FireBlast(gentity_t* ent, int force_level);
 
@@ -26785,8 +26788,8 @@ void WP_ForcePowerStop(gentity_t* self, const forcePowers_t force_power)
 								G_AngerAlert(grip_ent);
 							}
 						}
-					}
 				}
+			}
 				else
 				{
 					grip_ent->s.eFlags &= ~EF_FORCE_GRIPPED;
@@ -26814,10 +26817,10 @@ void WP_ForcePowerStop(gentity_t* self, const forcePowers_t force_power)
 						grip_ent->s.pos.trTime = level.time;
 					}
 				}
-			}
+		}
 			self->s.loopSound = 0;
 			self->client->ps.forceGripEntityNum = ENTITYNUM_NONE;
-		}
+	}
 		if (self->client->ps.torsoAnim == BOTH_FORCEGRIP_HOLD
 			|| self->client->ps.torsoAnim == BOTH_FORCEGRIP_OLD)
 		{
@@ -27090,8 +27093,8 @@ void WP_ForcePowerStop(gentity_t* self, const forcePowers_t force_power)
 								G_AngerAlert(grip_ent);
 							}
 						}
-					}
 				}
+			}
 				else
 				{
 					grip_ent->s.eFlags &= ~EF_FORCE_GRABBED;
@@ -27119,10 +27122,10 @@ void WP_ForcePowerStop(gentity_t* self, const forcePowers_t force_power)
 						grip_ent->s.pos.trTime = level.time;
 					}
 				}
-			}
+		}
 			self->s.loopSound = 0;
 			self->client->ps.forceGripEntityNum = ENTITYNUM_NONE;
-		}
+}
 		if (self->client->ps.torsoAnim == BOTH_FORCEGRIP_HOLD)
 		{
 			NPC_SetAnim(self, SETANIM_BOTH, BOTH_FORCEGRIP_RELEASE, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
@@ -27149,7 +27152,7 @@ void WP_ForcePowerStop(gentity_t* self, const forcePowers_t force_power)
 		break;
 	default:
 		break;
-	}
+}
 }
 
 void WP_ForceForceThrow(gentity_t* thrower)
@@ -28614,8 +28617,8 @@ static void wp_force_power_run(gentity_t* self, forcePowers_t force_power, userc
 				}
 				grip_ent->painDebounceTime = level.time + 2000;
 			}
+			}
 		}
-	}
 	break;
 	case FP_REPULSE:
 	{
@@ -28796,7 +28799,7 @@ static void wp_force_power_run(gentity_t* self, forcePowers_t force_power, userc
 	default:
 		break;
 	}
-}
+	}
 
 void WP_CheckForcedPowers(gentity_t* self, usercmd_t* ucmd)
 {
