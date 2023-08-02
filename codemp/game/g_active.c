@@ -5088,7 +5088,7 @@ void ClientThink_real(gentity_t* ent)
 				}
 				else
 				{
-					if (client->ps.dashstartTime <= 0 && level.time - client->ps.dashlaststartTime >= 2000)
+					if (client->ps.dashstartTime <= 0 && level.time - client->ps.dashlaststartTime >= 2500)
 					{
 						// They just pressed dash. Mark the time... 8000 wait between allowed dash.
 						client->ps.dashstartTime = level.time;
@@ -5102,7 +5102,7 @@ void ClientThink_real(gentity_t* ent)
 					}
 					else
 					{
-						if (level.time - client->ps.dashstartTime >= 1500)
+						if (level.time - client->ps.dashstartTime >= 2500)
 						{
 							// When dash was pressed, wait 3000 before letting go of dash.
 							client->ps.dashstartTime = 0;
@@ -5154,7 +5154,7 @@ void ClientThink_real(gentity_t* ent)
 					}
 					else
 					{
-						if (level.time - client->ps.dashstartTime >= 1500)
+						if (level.time - client->ps.dashstartTime >= 2500)
 						{
 							// When dash was pressed, wait 3000 before letting go of dash.
 							client->ps.dashstartTime = 0;

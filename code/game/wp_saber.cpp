@@ -2552,6 +2552,7 @@ qboolean wp_saber_apply_damage(gentity_t* ent, const float base_damage, const in
 			if (dmgFraction[i] < saberHitFraction || broken_parry)
 			{
 				gentity_t* victim = &g_entities[victimEntityNum[i]];
+				
 				if (!victim)
 				{
 					continue;
@@ -2582,6 +2583,10 @@ qboolean wp_saber_apply_damage(gentity_t* ent, const float base_damage, const in
 
 				if (totalDmg[i] > 0)
 				{
+					if (ent->s.number < MAX_CLIENTS || G_ControlledByPlayer(ent))
+					{
+						CGCam_BlockShakeSP(0.25f, 100);
+					}
 					//actually want to do *some* damage here
 					if (victim->client
 						&& victim->client->NPC_class == CLASS_WAMPA
@@ -8170,6 +8175,7 @@ void WP_SaberDamageTrace(gentity_t* ent, int saber_num, int blade_num)
 	{
 		//actually did damage to something
 		wp_saber_hit_sound(ent, saber_num, blade_num);
+
 		if (!saber_in_special && (d_combatinfo->integer || g_DebugSaberCombat->integer))
 		{
 			if (g_saberRealisticCombat->integer == 3)

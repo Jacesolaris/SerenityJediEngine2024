@@ -4965,6 +4965,13 @@ void wp_saber_specific_do_hit(const gentity_t* self, const int saber_num, const 
 	}
 
 	gentity_t* te = G_TempEntity(impactpoint, EV_SABER_HIT);
+
+
+	if (!(self->r.svFlags & SVF_BOT))
+	{
+		CGCam_BlockShakeMP(self->s.origin, NULL, 0.25f, 100, qfalse);
+	}
+
 	if (te)
 	{
 		te->s.otherEntityNum = victim->s.number;
