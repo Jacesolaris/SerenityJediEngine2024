@@ -374,12 +374,12 @@ static void CG_CalcIdealThirdPersonViewTarget()
 
 		if (gent->client &&
 			(gent->client->NPC_class == CLASS_GONK
-			|| gent->client->NPC_class == CLASS_INTERROGATOR
-			|| gent->client->NPC_class == CLASS_SENTRY
-			|| gent->client->NPC_class == CLASS_PROBE
-			|| gent->client->NPC_class == CLASS_MOUSE
-			|| gent->client->NPC_class == CLASS_R2D2
-			|| gent->client->NPC_class == CLASS_R5D2))
+				|| gent->client->NPC_class == CLASS_INTERROGATOR
+				|| gent->client->NPC_class == CLASS_SENTRY
+				|| gent->client->NPC_class == CLASS_PROBE
+				|| gent->client->NPC_class == CLASS_MOUSE
+				|| gent->client->NPC_class == CLASS_R2D2
+				|| gent->client->NPC_class == CLASS_R5D2))
 		{
 			// Droids use a generic offset
 			cameraFocusLoc[2] += 4;
@@ -1428,7 +1428,7 @@ static qboolean CG_CalcFov()
 		{
 			fov_x = cg.overrides.fov;
 		}
-		else if ((!cg.renderingThirdPerson && !cg.zoomMode) && (cg_trueguns.integer || cg.snap->ps.weapon == WP_SABER ||cg.snap->ps.weapon == WP_MELEE) && cg_truefov.value)
+		else if ((!cg.renderingThirdPerson && !cg.zoomMode) && (cg_trueguns.integer || cg.snap->ps.weapon == WP_SABER || cg.snap->ps.weapon == WP_MELEE) && cg_truefov.value)
 		{
 			fov_x = cg_truefov.value;
 		}
@@ -1613,6 +1613,58 @@ void CG_SaberClashFlare()
 		cgi_R_RegisterShader("gfx/effects/saberFlare"));
 }
 
+void CG_SaberBlockFlare()
+{
+	constexpr int max_time = 150;
+
+	const int t = cg.time - g_saberFlashTime;
+
+	if (t <= 0 || t >= max_time)
+	{
+		return;
+	}
+
+	vec3_t dif;
+
+	// Don't do clashes for things that are behind us
+	VectorSubtract(g_saberFlashPos, cg.refdef.vieworg, dif);
+
+	if (DotProduct(dif, cg.refdef.viewaxis[0]) < 0.2)
+	{
+		return;
+	}
+
+	trace_t tr;
+
+	CG_Trace(&tr, cg.refdef.vieworg, nullptr, nullptr, g_saberFlashPos, -1, CONTENTS_SOLID);
+
+	if (tr.fraction < 1.0f)
+	{
+		return;
+	}
+
+	vec3_t color;
+	int x, y;
+	float len = VectorNormalize(dif);
+
+	// clamp to a known range
+	if (len > 800)
+	{
+		len = 800;
+	}
+
+	const float v = (1.0f - static_cast<float>(t) / max_time) * ((1.0f - len / 800.0f) * 2.0f + 0.35f);
+
+	CG_WorldCoordToScreenCoord(g_saberFlashPos, &x, &y);
+
+	VectorSet(color, 0.8f, 0.8f, 0.8f);
+	cgi_R_SetColor(color);
+
+	CG_DrawPic(x - v * 300 * cgs.widthRatioCoef, y - v * 300,
+		v * 600 * cgs.widthRatioCoef, v * 600,
+		cgi_R_RegisterShader("gfx/effects/BlockFlare"));
+}
+
 /*
 ===============
 CG_CalcViewValues
@@ -1651,7 +1703,7 @@ static qboolean CG_CalcViewValues()
 		VectorCopy(ps->viewangles, cg.refdefViewAngles);
 		AnglesToAxis(cg.refdefViewAngles, cg.refdef.viewaxis);
 		return CG_CalcFov();
-}
+	}
 
 	cg.bobcycle = (ps->bobCycle & 128) >> 7;
 	cg.bobfracsin = fabs(sin((ps->bobCycle & 127) / 127.0 * M_PI));
@@ -1815,7 +1867,7 @@ static qboolean CG_CalcViewValues()
 
 	// field of view
 	return CG_CalcFov();
-	}
+}
 
 /*
 =====================

@@ -673,6 +673,22 @@ qboolean sab_beh_attack_vs_attack(gentity_t* attacker, gentity_t* blocker)
 		//set otherOwner
 		sab_beh_add_balance(blocker, 1);
 	}
+	else if (atkfake && otherfake)
+	{
+		//both faking
+		//set self
+		if (WP_SabersCheckLock(attacker, blocker))
+		{
+			attacker->client->ps.userInt3 |= 1 << FLAG_SABERLOCK_ATTACKER;
+			attacker->client->ps.saberBlocked = BLOCKED_NONE;
+
+			blocker->client->ps.userInt3 |= 1 << FLAG_SABERLOCK_ATTACKER;
+			blocker->client->ps.saberBlocked = BLOCKED_NONE;
+		}
+		sab_beh_add_balance(attacker, 1);
+		//set otherOwner
+		sab_beh_add_balance(blocker, 1);
+	}
 	else if (PM_SaberInKata(attacker->client->ps.saber_move))
 	{
 		sab_beh_add_balance(attacker, 1);
@@ -994,6 +1010,8 @@ qboolean sab_beh_block_vs_attack(gentity_t* blocker, gentity_t* attacker, const 
 						attacker->client->ps.userInt3 |= 1 << FLAG_MBLOCKBOUNCE;
 					}
 
+					blocker->client->ps.userInt3 |= 1 << FLAG_PERFECTBLOCK;
+
 					if (attacker->r.svFlags & SVF_BOT) //NPC only
 					{
 						g_do_m_block_response(attacker);
@@ -1216,6 +1234,8 @@ qboolean sab_beh_block_vs_attack(gentity_t* blocker, gentity_t* attacker, const 
 			{
 				CGCam_BlockShakeMP(blocker->s.origin, NULL, 0.45f, 100, qfalse);
 			}
+
+			blocker->client->ps.userInt3 |= 1 << FLAG_PERFECTBLOCK;
 
 			G_Sound(blocker, CHAN_AUTO,
 				G_SoundIndex(va("sound/weapons/saber/saber_perfectblock%d.mp3", Q_irand(1, 3))));

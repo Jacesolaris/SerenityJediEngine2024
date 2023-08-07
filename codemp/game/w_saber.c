@@ -71,7 +71,6 @@ void AnimateKnockdown(gentity_t* self, gentity_t* inflictor);
 extern qboolean PM_SuperBreakWinAnim(int anim);
 extern stringID_table_t SaberMoveTable[];
 extern stringID_table_t animTable[MAX_ANIMATIONS + 1];
-extern qboolean BG_InSlowBounce(const playerState_t* ps);
 qboolean WP_SaberBlockNonRandom(gentity_t* self, vec3_t hitloc, qboolean missileBlock);
 qboolean wp_saber_block_non_random_missile(gentity_t* self, vec3_t hitloc, qboolean missileBlock);
 extern qboolean g_accurate_blocking(const gentity_t* self, const gentity_t* attacker, vec3_t hit_loc);
@@ -115,7 +114,7 @@ extern qboolean BG_IsAlreadyinTauntAnim(int anim);
 extern qboolean PM_SaberInDamageMove(int move);
 extern qboolean PM_SaberDoDamageAnim(int anim);
 extern qboolean BG_SaberInTransitionDamageMove(const playerState_t* ps);
-extern qboolean BG_InSlowBounce(const playerState_t* ps);
+extern qboolean PM_InSlowBounce(const playerState_t* ps);
 void DebounceSaberImpact(const gentity_t* self, const gentity_t* other_saberer, int rsaber_num, int rblade_num, int sabimpactentitynum);
 extern qboolean BG_InFlipBack(int anim);
 extern qboolean PM_SaberInBashedAnim(int anim);
@@ -2149,25 +2148,25 @@ static QINLINE qboolean WP_SabersCheckLock2(gentity_t* attacker, gentity_t* defe
 			case LOCK_DIAG_BR:
 				att_anim = BOTH_CWCIRCLELOCK;
 				def_anim = BOTH_CCWCIRCLELOCK;
-				att_start = def_start = 0.85f;
+				att_start = def_start = 0.15f;
 				ideal_dist = LOCK_IDEAL_DIST_CIRCLE;
 				break;
 			case LOCK_DIAG_BL:
 				att_anim = BOTH_CCWCIRCLELOCK;
 				def_anim = BOTH_CWCIRCLELOCK;
-				att_start = def_start = 0.85f;
+				att_start = def_start = 0.15f;
 				ideal_dist = LOCK_IDEAL_DIST_CIRCLE;
 				break;
 			case LOCK_R:
 				att_anim = BOTH_CCWCIRCLELOCK;
 				def_anim = BOTH_CWCIRCLELOCK;
-				att_start = def_start = 0.75f;
+				att_start = def_start = 0.25f;
 				ideal_dist = LOCK_IDEAL_DIST_CIRCLE;
 				break;
 			case LOCK_L:
 				att_anim = BOTH_CWCIRCLELOCK;
 				def_anim = BOTH_CCWCIRCLELOCK;
-				att_start = def_start = 0.75f;
+				att_start = def_start = 0.25f;
 				ideal_dist = LOCK_IDEAL_DIST_CIRCLE;
 				break;
 			default:
@@ -2514,7 +2513,7 @@ qboolean WP_SabersCheckLock(gentity_t* ent1, gentity_t* ent2)
 
 	//don't allow saberlocks while a player is in a slow bounce.  This was allowing players to spam attack fakes/saberlocks
 	//and never let their opponent get out of a slow bounce.
-	if (BG_InSlowBounce(&ent1->client->ps) || BG_InSlowBounce(&ent2->client->ps))
+	if (PM_InSlowBounce(&ent1->client->ps) || PM_InSlowBounce(&ent2->client->ps))
 	{
 		return qfalse;
 	}
@@ -4966,14 +4965,13 @@ void wp_saber_specific_do_hit(const gentity_t* self, const int saber_num, const 
 
 	gentity_t* te = G_TempEntity(impactpoint, EV_SABER_HIT);
 
-
-	if (!(self->r.svFlags & SVF_BOT))
+	/*if (!(self->r.svFlags & SVF_BOT))
 	{
 		if (victim->health >= 1)
 		{
 			CGCam_BlockShakeMP(self->s.origin, NULL, 0.25f, 100, qfalse);
 		}
-	}
+	}*/
 
 	if (te)
 	{
@@ -6768,10 +6766,20 @@ static QINLINE qboolean check_saber_damage(gentity_t* self, const int r_saber_nu
 			dmg = (int)damage;
 		}
 
+		if (dmg >= SABER_TRANSITION_DAMAGE)
+		{
+			if (!(self->r.svFlags & SVF_BOT))
+			{
+				if (victim->health >= 1)
+				{
+					CGCam_BlockShakeMP(self->s.origin, self, 0.25f, 100, qfalse);
+				}
+			}
+		}
+
 		//We need the final damage total to know if we need to bounce the saber back or not.
 		G_Damage(victim, self, self, dir, tr.endpos, dmg, dflags, MOD_SABER);
 		G_SaberBounce(self, victim);
-
 		wp_saber_specific_do_hit(self, r_saber_num, r_blade_num, victim, tr.endpos, dmg);
 
 		if (victim->health <= 0)
@@ -9379,125 +9387,122 @@ qboolean WP_AbsorbKick(gentity_t* self, const gentity_t* pusher, const vec3_t pu
 		}
 		G_Sound(self, CHAN_BODY, G_SoundIndex(va("sound/weapons/melee/punch%d", Q_irand(1, 4))));
 	}
-	else
+	else if (pusher->client->ps.torsoAnim == BOTH_MELEEUP ||
+		pusher->client->ps.torsoAnim == MELEE_STANCE_HOLD_T ||
+		pusher->client->ps.torsoAnim == MELEE_STANCE_HOLD_LT ||
+		pusher->client->ps.torsoAnim == MELEE_STANCE_HOLD_RT ||
+		pusher->client->ps.torsoAnim == MELEE_STANCE_HOLD_BR ||
+		pusher->client->ps.torsoAnim == MELEE_STANCE_HOLD_BL ||
+		pusher->client->ps.torsoAnim == MELEE_STANCE_HOLD_B ||
+		pusher->client->ps.torsoAnim == MELEE_STANCE_T ||
+		pusher->client->ps.torsoAnim == MELEE_STANCE_LT ||
+		pusher->client->ps.torsoAnim == MELEE_STANCE_RT ||
+		pusher->client->ps.torsoAnim == MELEE_STANCE_BR ||
+		pusher->client->ps.torsoAnim == MELEE_STANCE_BL ||
+		pusher->client->ps.torsoAnim == MELEE_STANCE_B) //for the Uppercut
 	{
-		if (pusher->client->ps.torsoAnim == BOTH_MELEEUP ||
-			pusher->client->ps.torsoAnim == MELEE_STANCE_HOLD_T ||
-			pusher->client->ps.torsoAnim == MELEE_STANCE_HOLD_LT ||
-			pusher->client->ps.torsoAnim == MELEE_STANCE_HOLD_RT ||
-			pusher->client->ps.torsoAnim == MELEE_STANCE_HOLD_BR ||
-			pusher->client->ps.torsoAnim == MELEE_STANCE_HOLD_BL ||
-			pusher->client->ps.torsoAnim == MELEE_STANCE_HOLD_B ||
-			pusher->client->ps.torsoAnim == MELEE_STANCE_T_MP ||
-			pusher->client->ps.torsoAnim == MELEE_STANCE_LT_MP ||
-			pusher->client->ps.torsoAnim == MELEE_STANCE_RT_MP ||
-			pusher->client->ps.torsoAnim == MELEE_STANCE_BR_MP ||
-			pusher->client->ps.torsoAnim == MELEE_STANCE_BL_MP ||
-			pusher->client->ps.torsoAnim == MELEE_STANCE_B_MP) //for the Uppercut
+		G_SetAnim(self, &self->client->pers.cmd, SETANIM_BOTH, Q_irand(BOTH_KNOCKDOWN1, BOTH_KNOCKDOWN2),
+			SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
+		WP_BlockPointsDrain(self, FATIGUE_BLOCKPOINTDRAIN);
+		AddFatigueMeleeBonus(pusher, self);
+		G_Sound(self, CHAN_BODY, G_SoundIndex(va("sound/weapons/melee/punch%d", Q_irand(1, 4))));
+	}
+	else if (pusher->client->ps.torsoAnim == BOTH_WOOKIE_SLAP || pusher->client->ps.torsoAnim == BOTH_TUSKENLUNGE1)
+		//for the wookie slap
+	{
+		G_SetAnim(self, &self->client->pers.cmd, SETANIM_BOTH, Q_irand(BOTH_SLAPDOWNRIGHT, BOTH_SLAPDOWNLEFT),
+			SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
+		WP_BlockPointsDrain(self, FATIGUE_BLOCKPOINTDRAIN);
+		AddFatigueMeleeBonus(pusher, self);
+		G_Sound(self, CHAN_BODY, G_SoundIndex(va("sound/weapons/melee/punch%d", Q_irand(1, 4))));
+	}
+	else if (pusher->client->ps.legsAnim == BOTH_A7_KICK_F
+		|| pusher->client->ps.legsAnim == BOTH_A7_KICK_F2
+		|| pusher->client->ps.torsoAnim == BOTH_TUSKENATTACK1
+		|| pusher->client->ps.torsoAnim == BOTH_TUSKENATTACK2
+		|| pusher->client->ps.torsoAnim == BOTH_TUSKENATTACK3) //for the front kick
+	{
+		G_SetAnim(self, &self->client->pers.cmd, SETANIM_BOTH, Q_irand(BOTH_KNOCKDOWN1, BOTH_KNOCKDOWN2),
+			SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
+		WP_BlockPointsDrain(self, FATIGUE_BLOCKPOINTDRAIN);
+		AddFatigueMeleeBonus(pusher, self);
+		G_Sound(self, CHAN_BODY, G_SoundIndex(va("sound/weapons/melee/punch%d", Q_irand(1, 4))));
+		if (pusher->client->ps.legsAnim == BOTH_A7_KICK_F2)
 		{
-			G_SetAnim(self, &self->client->pers.cmd, SETANIM_BOTH, Q_irand(BOTH_KNOCKDOWN1, BOTH_KNOCKDOWN2),
-				SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
-			WP_BlockPointsDrain(self, FATIGUE_BLOCKPOINTDRAIN);
-			AddFatigueMeleeBonus(pusher, self);
-			G_Sound(self, CHAN_BODY, G_SoundIndex(va("sound/weapons/melee/punch%d", Q_irand(1, 4))));
+			G_Sound(self, CHAN_BODY, G_SoundIndex(va("sound/weapons/melee/swing%d", Q_irand(1, 4))));
 		}
-		else if (pusher->client->ps.torsoAnim == BOTH_WOOKIE_SLAP || pusher->client->ps.torsoAnim == BOTH_TUSKENLUNGE1)
-			//for the wookie slap
-		{
-			G_SetAnim(self, &self->client->pers.cmd, SETANIM_BOTH, Q_irand(BOTH_SLAPDOWNRIGHT, BOTH_SLAPDOWNLEFT),
-				SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
-			WP_BlockPointsDrain(self, FATIGUE_BLOCKPOINTDRAIN);
-			AddFatigueMeleeBonus(pusher, self);
-			G_Sound(self, CHAN_BODY, G_SoundIndex(va("sound/weapons/melee/punch%d", Q_irand(1, 4))));
-		}
-		else if (pusher->client->ps.legsAnim == BOTH_A7_KICK_F
-			|| pusher->client->ps.legsAnim == BOTH_A7_KICK_F2
-			|| pusher->client->ps.torsoAnim == BOTH_TUSKENATTACK1
+		else if (pusher->client->ps.torsoAnim == BOTH_TUSKENATTACK1
 			|| pusher->client->ps.torsoAnim == BOTH_TUSKENATTACK2
-			|| pusher->client->ps.torsoAnim == BOTH_TUSKENATTACK3) //for the front kick
+			|| pusher->client->ps.torsoAnim == BOTH_TUSKENATTACK3)
 		{
-			G_SetAnim(self, &self->client->pers.cmd, SETANIM_BOTH, Q_irand(BOTH_KNOCKDOWN1, BOTH_KNOCKDOWN2),
-				SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
-			WP_BlockPointsDrain(self, FATIGUE_BLOCKPOINTDRAIN);
-			AddFatigueMeleeBonus(pusher, self);
-			G_Sound(self, CHAN_BODY, G_SoundIndex(va("sound/weapons/melee/punch%d", Q_irand(1, 4))));
-			if (pusher->client->ps.legsAnim == BOTH_A7_KICK_F2)
-			{
-				G_Sound(self, CHAN_BODY, G_SoundIndex(va("sound/weapons/melee/swing%d", Q_irand(1, 4))));
-			}
-			else if (pusher->client->ps.torsoAnim == BOTH_TUSKENATTACK1
-				|| pusher->client->ps.torsoAnim == BOTH_TUSKENATTACK2
-				|| pusher->client->ps.torsoAnim == BOTH_TUSKENATTACK3)
-			{
-				G_Sound(self, CHAN_BODY, G_SoundIndex("sound/movers/objects/saber_slam"));
-			}
-		}
-		else if (pusher->client->ps.legsAnim == BOTH_A7_KICK_B) //for the roundhouse
-		{
-			G_SetAnim(self, &self->client->pers.cmd, SETANIM_BOTH, Q_irand(BOTH_KNOCKDOWN1, BOTH_KNOCKDOWN5),
-				SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
-			WP_BlockPointsDrain(self, FATIGUE_BLOCKPOINTDRAIN);
-			AddFatigueMeleeBonus(pusher, self);
-			G_Sound(self, CHAN_BODY, G_SoundIndex(va("sound/weapons/melee/punch%d", Q_irand(1, 4))));
-		}
-		else if (pusher->client->ps.legsAnim == BOTH_A7_KICK_B2) //for the backkick
-		{
-			G_SetAnim(self, &self->client->pers.cmd, SETANIM_BOTH, BOTH_KNOCKDOWN5,
-				SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
-			WP_BlockPointsDrain(self, FATIGUE_BLOCKPOINTDRAIN);
-			AddFatigueMeleeBonus(pusher, self);
-			G_Sound(self, CHAN_BODY, G_SoundIndex(va("sound/weapons/melee/punch%d", Q_irand(1, 4))));
-		}
-		else if (pusher->client->ps.legsAnim == BOTH_A7_KICK_B3) //for the backkick
-		{
-			G_SetAnim(self, &self->client->pers.cmd, SETANIM_BOTH, BOTH_KNOCKDOWN4,
-				SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
-			WP_BlockPointsDrain(self, FATIGUE_BLOCKPOINTDRAIN);
-			AddFatigueMeleeBonus(pusher, self);
-			G_Sound(self, CHAN_BODY, G_SoundIndex(va("sound/weapons/melee/punch%d", Q_irand(1, 4))));
-		}
-		else if (pusher->client->ps.legsAnim == BOTH_A7_KICK_R || pusher->client->ps.legsAnim == BOTH_A7_KICK_L)
-		{
-			G_SetAnim(self, &self->client->pers.cmd, SETANIM_BOTH, BOTH_KNOCKDOWN2,
-				SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
-			WP_BlockPointsDrain(self, FATIGUE_BLOCKPOINTDRAIN);
-			AddFatigueMeleeBonus(pusher, self);
-			G_Sound(self, CHAN_BODY, G_SoundIndex(va("sound/weapons/melee/punch%d", Q_irand(1, 4))));
-		}
-		else if (pusher->client->ps.torsoAnim == BOTH_A7_SLAP_R || pusher->client->ps.torsoAnim == BOTH_SMACK_R)
-			//for the r slap
-		{
-			G_SetAnim(self, &self->client->pers.cmd, SETANIM_BOTH, BOTH_SLAPDOWNRIGHT,
-				SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
-			WP_BlockPointsDrain(self, FATIGUE_BLOCKPOINTDRAIN);
-			AddFatigueMeleeBonus(pusher, self);
-			G_Sound(self, CHAN_BODY, G_SoundIndex(va("sound/weapons/melee/punch%d", Q_irand(1, 4))));
-		}
-		else if (pusher->client->ps.torsoAnim == BOTH_A7_SLAP_L || pusher->client->ps.torsoAnim == BOTH_SMACK_L)
-			//for the l slap
-		{
-			G_SetAnim(self, &self->client->pers.cmd, SETANIM_BOTH, BOTH_SLAPDOWNLEFT,
-				SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
-			WP_BlockPointsDrain(self, FATIGUE_BLOCKPOINTDRAIN);
-			AddFatigueMeleeBonus(pusher, self);
-			G_Sound(self, CHAN_BODY, G_SoundIndex(va("sound/weapons/melee/punch%d", Q_irand(1, 4))));
-		}
-		else if (pusher->client->ps.torsoAnim == BOTH_A7_HILT) //for the hiltbash
-		{
-			G_SetAnim(self, &self->client->pers.cmd, SETANIM_BOTH, BOTH_BASHED1,
-				SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
-			WP_BlockPointsDrain(self, FATIGUE_BLOCKPOINTDRAIN);
-			AddFatigueMeleeBonus(pusher, self);
 			G_Sound(self, CHAN_BODY, G_SoundIndex("sound/movers/objects/saber_slam"));
 		}
-		else
-		{
-			//if anything else other than kick/slap/roundhouse or karate
-			G_SetAnim(self, &self->client->pers.cmd, SETANIM_BOTH, Q_irand(BOTH_KNOCKDOWN1, BOTH_KNOCKDOWN2),
-				SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
-			WP_BlockPointsDrain(self, FATIGUE_BP_ABSORB);
-			G_Sound(self, CHAN_BODY, G_SoundIndex(va("sound/weapons/melee/punch%d", Q_irand(1, 4))));
-		}
+	}
+	else if (pusher->client->ps.legsAnim == BOTH_A7_KICK_B) //for the roundhouse
+	{
+		G_SetAnim(self, &self->client->pers.cmd, SETANIM_BOTH, Q_irand(BOTH_KNOCKDOWN1, BOTH_KNOCKDOWN5),
+			SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
+		WP_BlockPointsDrain(self, FATIGUE_BLOCKPOINTDRAIN);
+		AddFatigueMeleeBonus(pusher, self);
+		G_Sound(self, CHAN_BODY, G_SoundIndex(va("sound/weapons/melee/punch%d", Q_irand(1, 4))));
+	}
+	else if (pusher->client->ps.legsAnim == BOTH_A7_KICK_B2) //for the backkick
+	{
+		G_SetAnim(self, &self->client->pers.cmd, SETANIM_BOTH, BOTH_KNOCKDOWN5,
+			SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
+		WP_BlockPointsDrain(self, FATIGUE_BLOCKPOINTDRAIN);
+		AddFatigueMeleeBonus(pusher, self);
+		G_Sound(self, CHAN_BODY, G_SoundIndex(va("sound/weapons/melee/punch%d", Q_irand(1, 4))));
+	}
+	else if (pusher->client->ps.legsAnim == BOTH_A7_KICK_B3) //for the backkick
+	{
+		G_SetAnim(self, &self->client->pers.cmd, SETANIM_BOTH, BOTH_KNOCKDOWN4,
+			SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
+		WP_BlockPointsDrain(self, FATIGUE_BLOCKPOINTDRAIN);
+		AddFatigueMeleeBonus(pusher, self);
+		G_Sound(self, CHAN_BODY, G_SoundIndex(va("sound/weapons/melee/punch%d", Q_irand(1, 4))));
+	}
+	else if (pusher->client->ps.legsAnim == BOTH_A7_KICK_R || pusher->client->ps.legsAnim == BOTH_A7_KICK_L)
+	{
+		G_SetAnim(self, &self->client->pers.cmd, SETANIM_BOTH, BOTH_KNOCKDOWN2,
+			SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
+		WP_BlockPointsDrain(self, FATIGUE_BLOCKPOINTDRAIN);
+		AddFatigueMeleeBonus(pusher, self);
+		G_Sound(self, CHAN_BODY, G_SoundIndex(va("sound/weapons/melee/punch%d", Q_irand(1, 4))));
+	}
+	else if (pusher->client->ps.torsoAnim == BOTH_A7_SLAP_R || pusher->client->ps.torsoAnim == BOTH_SMACK_R)
+		//for the r slap
+	{
+		G_SetAnim(self, &self->client->pers.cmd, SETANIM_BOTH, BOTH_SLAPDOWNRIGHT,
+			SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
+		WP_BlockPointsDrain(self, FATIGUE_BLOCKPOINTDRAIN);
+		AddFatigueMeleeBonus(pusher, self);
+		G_Sound(self, CHAN_BODY, G_SoundIndex(va("sound/weapons/melee/punch%d", Q_irand(1, 4))));
+	}
+	else if (pusher->client->ps.torsoAnim == BOTH_A7_SLAP_L || pusher->client->ps.torsoAnim == BOTH_SMACK_L)
+		//for the l slap
+	{
+		G_SetAnim(self, &self->client->pers.cmd, SETANIM_BOTH, BOTH_SLAPDOWNLEFT,
+			SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
+		WP_BlockPointsDrain(self, FATIGUE_BLOCKPOINTDRAIN);
+		AddFatigueMeleeBonus(pusher, self);
+		G_Sound(self, CHAN_BODY, G_SoundIndex(va("sound/weapons/melee/punch%d", Q_irand(1, 4))));
+	}
+	else if (pusher->client->ps.torsoAnim == BOTH_A7_HILT) //for the hiltbash
+	{
+		G_SetAnim(self, &self->client->pers.cmd, SETANIM_BOTH, BOTH_BASHED1,
+			SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
+		WP_BlockPointsDrain(self, FATIGUE_BLOCKPOINTDRAIN);
+		AddFatigueMeleeBonus(pusher, self);
+		G_Sound(self, CHAN_BODY, G_SoundIndex("sound/movers/objects/saber_slam"));
+	}
+	else
+	{
+		//if anything else other than kick/slap/roundhouse or karate
+		G_SetAnim(self, &self->client->pers.cmd, SETANIM_BOTH, Q_irand(BOTH_KNOCKDOWN1, BOTH_KNOCKDOWN2),
+			SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
+		WP_BlockPointsDrain(self, FATIGUE_BP_ABSORB);
+		G_Sound(self, CHAN_BODY, G_SoundIndex(va("sound/weapons/melee/punch%d", Q_irand(1, 4))));
 	}
 	return qtrue;
 }
@@ -10487,16 +10492,20 @@ static void G_KickSomeMofos(gentity_t* ent)
 			}
 			break;
 		case BOTH_KYLE_GRAB: //right slap
+		case BOTH_KYLE_MISS: //right slap
+		case BOTH_KYLE_PA_1: //right slap
+		case BOTH_KYLE_PA_2: //right slap
+		case BOTH_KYLE_PA_3: //right slap
 		case MELEE_STANCE_HOLD_T: //right slap
 		case MELEE_STANCE_HOLD_RT: //right slap
 		case MELEE_STANCE_HOLD_BR:
-		case MELEE_STANCE_T_MP: //right slap
-		case MELEE_STANCE_RT_MP: //right slap
-		case MELEE_STANCE_BR_MP:
-		case BOTH_MELEE_R: //right slap
-		case BOTH_MELEE2: //right slap
-		case BOTH_MELEE4: //right slap
-		case BOTH_MELEEUP: //right slap
+		case MELEE_STANCE_T: //right slap
+		case MELEE_STANCE_RT: //right slap
+		case MELEE_STANCE_BR:
+		case BOTH_MELEE_R://right slap
+		case BOTH_MELEE2://right slap
+		case BOTH_MELEE4://right slap
+		case BOTH_MELEEUP://right slap
 		case BOTH_TUSKENLUNGE1:
 		case BOTH_TUSKENATTACK2:
 		case BOTH_WOOKIE_SLAP:
@@ -10517,6 +10526,15 @@ static void G_KickSomeMofos(gentity_t* ent)
 					VectorNormalize(kick_dir);
 					VectorMA(kick_end, 20.0f, kick_dir, kick_end);
 				}
+				else if (ri->elbowRBolt != -1)
+				{
+					//actually trace to a bolt
+					G_GetBoltPosition(ent, ri->elbowRBolt, kick_end, 0);
+					VectorSubtract(kick_end, ent->r.currentOrigin, kick_dir);
+					kick_dir[2] = 0; //ah, flatten it, I guess...
+					VectorNormalize(kick_dir);
+					VectorMA(kick_end, 20.0f, kick_dir, kick_end);
+				}
 				else if (ri->handLBolt != -1)
 				{
 					//actually trace to a bolt
@@ -10530,15 +10548,6 @@ static void G_KickSomeMofos(gentity_t* ent)
 				{
 					//actually trace to a bolt
 					G_GetBoltPosition(ent, ri->elbowLBolt, kick_end, 0);
-					VectorSubtract(kick_end, ent->r.currentOrigin, kick_dir);
-					kick_dir[2] = 0; //ah, flatten it, I guess...
-					VectorNormalize(kick_dir);
-					VectorMA(kick_end, 20.0f, kick_dir, kick_end);
-				}
-				else if (ri->elbowRBolt != -1)
-				{
-					//actually trace to a bolt
-					G_GetBoltPosition(ent, ri->elbowRBolt, kick_end, 0);
 					VectorSubtract(kick_end, ent->r.currentOrigin, kick_dir);
 					kick_dir[2] = 0; //ah, flatten it, I guess...
 					VectorNormalize(kick_dir);
@@ -10653,12 +10662,12 @@ static void G_KickSomeMofos(gentity_t* ent)
 		case MELEE_STANCE_HOLD_LT: //left slap
 		case MELEE_STANCE_HOLD_BL: //left slap
 		case MELEE_STANCE_HOLD_B: //left slap
-		case MELEE_STANCE_LT_MP: //left slap
-		case MELEE_STANCE_BL_MP: //left slap
-		case MELEE_STANCE_B_MP: //left slap
-		case BOTH_MELEE_L: //left slap
-		case BOTH_MELEE1: //left slap
-		case BOTH_MELEE3: //left slap
+		case MELEE_STANCE_LT: //left slap
+		case MELEE_STANCE_BL: //left slap
+		case MELEE_STANCE_B: //left slap
+		case BOTH_MELEE_L://left slap
+		case BOTH_MELEE1://left slap
+		case BOTH_MELEE3://left slap
 		case BOTH_TUSKENATTACK1:
 		case BOTH_TUSKENATTACK3:
 		case BOTH_FJSS_TR_BL:
@@ -10682,24 +10691,6 @@ static void G_KickSomeMofos(gentity_t* ent)
 				{
 					//actually trace to a bolt
 					G_GetBoltPosition(ent, ri->handRBolt, kick_end, 0);
-					VectorSubtract(kick_end, ent->r.currentOrigin, kick_dir);
-					kick_dir[2] = 0; //ah, flatten it, I guess...
-					VectorNormalize(kick_dir);
-					VectorMA(kick_end, 20.0f, kick_dir, kick_end);
-				}
-				else if (ri->elbowLBolt != -1)
-				{
-					//actually trace to a bolt
-					G_GetBoltPosition(ent, ri->elbowLBolt, kick_end, 0);
-					VectorSubtract(kick_end, ent->r.currentOrigin, kick_dir);
-					kick_dir[2] = 0; //ah, flatten it, I guess...
-					VectorNormalize(kick_dir);
-					VectorMA(kick_end, 20.0f, kick_dir, kick_end);
-				}
-				else if (ri->elbowRBolt != -1)
-				{
-					//actually trace to a bolt
-					G_GetBoltPosition(ent, ri->elbowRBolt, kick_end, 0);
 					VectorSubtract(kick_end, ent->r.currentOrigin, kick_dir);
 					kick_dir[2] = 0; //ah, flatten it, I guess...
 					VectorNormalize(kick_dir);

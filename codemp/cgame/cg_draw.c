@@ -2410,7 +2410,7 @@ void CG_Draw_JKA_ForcePower(const centity_t* cent, const menuDef_t* menu_hud)
 	}
 
 	// Make the hud flash by setting forceHUDTotalFlashTime above cg.time
-	if (cg.forceHUDTotalFlashTime > cg.time || cg_entities[cg.snap->ps.client_num].currentState.userInt3 & 1 <<	FLAG_FATIGUED)
+	if (cg.forceHUDTotalFlashTime > cg.time || cg_entities[cg.snap->ps.client_num].currentState.userInt3 & 1 << FLAG_FATIGUED)
 	{
 		flash = qtrue;
 		if (cg.forceHUDNextFlashTime < cg.time)
@@ -7774,6 +7774,61 @@ void CG_SaberClashFlare(void)
 		trap->R_RegisterShader("gfx/effects/saberFlare"));
 }
 
+void CG_SaberBlockFlare(void)
+{
+	const int max_time = 150;
+	vec3_t dif;
+	vec4_t color;
+	int x, y;
+	trace_t tr;
+
+	const int t = cg.time - cg_saberFlashTime;
+
+	if (t <= 0 || t >= max_time)
+	{
+		return;
+	}
+
+	// Don't do clashes for things that are behind us
+	VectorSubtract(cg_saberFlashPos, cg.refdef.vieworg, dif);
+
+	if (DotProduct(dif, cg.refdef.viewaxis[0]) < 0.2)
+	{
+		return;
+	}
+
+	CG_Trace(&tr, cg.refdef.vieworg, NULL, NULL, cg_saberFlashPos, -1, CONTENTS_SOLID);
+
+	if (tr.fraction < 1.0f)
+	{
+		return;
+	}
+
+	const float len = VectorNormalize(dif);
+	if (len > 1200)
+	{
+		return;
+	}
+
+	float v = (1.0f - (float)t / max_time) * ((1.0f - len / 800.0f) * 2.0f + 0.35f);
+	if (v < 0.001f)
+	{
+		v = 0.001f;
+	}
+
+	if (!CG_WorldCoordToScreenCoord(cg_saberFlashPos, &x, &y))
+	{
+		return;
+	}
+
+	VectorSet4(color, 0.8f, 0.8f, 0.8f, 1.0f);
+	trap->R_SetColor(color);
+
+	CG_DrawPic(x - v * 300, y - v * 300,
+		v * 600, v * 600,
+		trap->R_RegisterShader("gfx/effects/BlockFlare"));
+}
+
 void CG_DottedLine(const float x1, const float y1, const float x2, const float y2, const float dot_size,
 	const int num_dots, vec4_t color, const float alpha)
 {
@@ -10851,10 +10906,11 @@ static void CG_Draw2D(void)
 		CG_DrawPic(0, 0, 640, 480, trap->R_RegisterShader("gfx/2d/jsense"));
 	}
 
+	//if (cg.snap->ps.userInt3 & (1 << FLAG_PERFECTBLOCK))
 	//if (cg.predicted_player_state.communicatingflags & (1 << CF_SABERLOCK_ADVANCE))
 	//{//test for all sorts of shit... does it work? show me.
-	//	CG_DrawPic(0, 0, 640, 480, trap->R_RegisterShader("gfx/2d/jsense"));
-	//	CG_DrawPic(0, 0, 640, 480, trap->R_RegisterShader("gfx/2d/droid_view"));
+		//CG_DrawPic(0, 0, 640, 480, trap->R_RegisterShader("gfx/2d/jsense"));
+		//CG_DrawPic(0, 0, 640, 480, trap->R_RegisterShader("gfx/2d/droid_view"));
 	//}
 
 	CG_Draw2DScreenTints();
@@ -10909,6 +10965,7 @@ static void CG_Draw2D(void)
 		CG_DrawCrosshair(NULL, 0);
 		CG_DrawCrosshairNames();
 		CG_SaberClashFlare();
+		CG_SaberBlockFlare();
 	}
 	else
 	{

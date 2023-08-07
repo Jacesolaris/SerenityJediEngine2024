@@ -3933,12 +3933,12 @@ qboolean PM_MeleeblockAnim(const int anim)
 {
 	switch (anim)
 	{
-	case MELEE_STANCE_LT_MP:
-	case MELEE_STANCE_RT_MP:
-	case MELEE_STANCE_BL_MP:
-	case MELEE_STANCE_BR_MP:
-	case MELEE_STANCE_B_MP:
-	case MELEE_STANCE_T_MP:
+	case MELEE_STANCE_LT:
+	case MELEE_STANCE_RT:
+	case MELEE_STANCE_BL:
+	case MELEE_STANCE_BR:
+	case MELEE_STANCE_B:
+	case MELEE_STANCE_T:
 		return qtrue;
 	default:
 		return PM_MeleeblockHoldAnim(anim);

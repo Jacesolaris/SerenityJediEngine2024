@@ -139,8 +139,7 @@ static void CG_Draw_JKA_ForcePower(const centity_t* cent, const float hud_ratio)
 	}
 
 	// Make the hud flash by setting forceHUDTotalFlashTime above cg.time
-	if (cg.forceHUDTotalFlashTime > cg.time || cg_entities[cg.snap->ps.client_num].currentState.userInt3 & 1 <<
-		FLAG_FATIGUED)
+	if (cg.forceHUDTotalFlashTime > cg.time || cg_entities[cg.snap->ps.client_num].currentState.userInt3 & 1 <<FLAG_FATIGUED)
 	{
 		flash = qtrue;
 		if (cg.forceHUDNextFlashTime < cg.time)
@@ -7253,6 +7252,7 @@ CG_Draw2D
 =================
 */
 extern void CG_SaberClashFlare();
+extern void CG_SaberBlockFlare();
 
 static void CG_Draw2D()
 {
@@ -7309,7 +7309,7 @@ static void CG_Draw2D()
 	if (in_camera)
 	{
 		//still draw the saber clash flare, but nothing else
-		CG_SaberClashFlare();
+		CG_SaberBlockFlare();
 		return;
 	}
 
@@ -7350,11 +7350,22 @@ static void CG_Draw2D()
 		CG_DrawHealthBars();
 		CG_DrawBlockPointBars();
 	}
-	
 	//if (cg.predicted_player_state.communicatingflags & (1 << CF_SABERLOCK_ADVANCE))
+	//if (cg.predicted_player_state.communicatingflags & (1 << CF_SABERLOCKING))
+	//if (cg.predicted_player_state.communicatingflags & (1 << PROJECTING))
+	//if (cg.predicted_player_state.pm_flags & PMF_BLOCK_HELD)
+	//if (cg.predicted_player_state.ManualBlockingFlags & (1 << MBF_PROJBLOCKING))
+	//if (cg_entities[cg.snap->ps.client_num].currentState.userInt3 & (1 << FLAG_ATTACKFAKE))
+	//if (cent->currentState.eFlags & EF2_DUAL_WEAPONS)
+	//if (cent->currentState.eFlags & EF2_DUAL_PISTOLS)
+	//if (cg.predicted_player_state.ManualBlockingFlags & 1 << MBF_ACCURATEMISSILEBLOCKING)
+	//if (cg.predicted_player_state.ManualBlockingFlags & 1 << MBF_NPCBLOCKSTANCE)
+	//if (cg.predicted_player_state.ManualBlockingFlags & 1 << MBF_MISSILESTASIS)
+	//if (cg_entities[cg.snap->ps.client_num].currentState.userInt3 & 1 << FLAG_PERFECTBLOCK)
+	//if (cg.snap->ps.userInt3 & (1 << FLAG_PERFECTBLOCK))
 	//{//test for all sorts of shit... does it work? show me.
-	//	CG_DrawPic(0, 0, 640, 480, cgi_R_RegisterShader("gfx/2d/jsense"));
-	//	CG_DrawPic(0, 0, 640, 480, cgi_R_RegisterShader("gfx/2d/droid_view"));
+		//CG_DrawPic(0, 0, 640, 480, cgi_R_RegisterShader("gfx/2d/jsense"));
+		//CG_DrawPic(0, 0, 640, 480, cgi_R_RegisterShader("gfx/2d/droid_view"));
 	//}
 
 	if (cg_debugHealthBars.integer)

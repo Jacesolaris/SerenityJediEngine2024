@@ -3087,7 +3087,14 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 							if (client->saber[saber_num].blockEffect)
 							{
 								//custom saber block effect
-								perfectblock_fxid = client->saber[saber_num].blockEffect;
+								if (cent->currentState.userInt3 & 1 << FLAG_PERFECTBLOCK)
+								{
+									perfectblock_fxid = client->saber[saber_num].blockEffect;
+								}
+								else
+								{
+									block_fxid = client->saber[saber_num].blockEffect;
+								}
 							}
 							if (client->saber[saber_num].blockSound[0])
 							{

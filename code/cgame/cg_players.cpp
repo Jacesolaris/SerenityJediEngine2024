@@ -5661,7 +5661,6 @@ Adds a piece with modifications or duplications for powerups
 ===============
 */
 extern vmCvar_t cg_thirdPersonAlpha;
-extern int IsPressingDashButton(const gentity_t* self);
 
 void CG_AddRefEntityWithPowerups(refEntity_t* ent, int powerups, centity_t* cent)
 {

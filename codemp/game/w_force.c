@@ -2316,8 +2316,12 @@ int IsPressingDashButton(const gentity_t* self)
 {
 	if (PM_RunningAnim(self->client->ps.legsAnim)
 		&& !PM_SaberInAttack(self->client->ps.saber_move)
+		&& self->client->pers.cmd.upmove == 0
+		&& !self->client->hookhasbeenfired
 		&& (!(self->client->buttons & BUTTON_KICK))
-		&& self->client->buttons & BUTTON_DASH)
+		&& (!(self->client->buttons & BUTTON_USE))
+		&& self->client->buttons & BUTTON_DASH
+		&& self->client->ps.pm_flags & PMF_DASH_HELD)
 	{
 		return qtrue;
 	}

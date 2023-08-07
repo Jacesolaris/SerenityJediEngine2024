@@ -70,7 +70,6 @@ extern qboolean PM_BlockDualAnim(int anim);
 extern qboolean PM_BlockHoldDualAnim(int anim);
 extern qboolean PM_BlockStaffAnim(int anim);
 extern qboolean PM_BlockHoldStaffAnim(int anim);
-extern qboolean BG_InSlowBounce(const playerState_t* ps);
 qboolean PM_SaberWalkAnim(int anim);
 extern void PM_SetMeleeBlock(void);
 extern qboolean PM_MeleeblockAnim(int anim);
@@ -13361,7 +13360,7 @@ void PM_Weapon(void)
 	}
 	else
 	{
-		if (pm->cmd.buttons & BUTTON_WALKING && pm->cmd.buttons & BUTTON_BLOCK)
+		if (pm->ps->ManualBlockingFlags & 1 << MBF_MELEEBLOCK)
 		{
 			//set up the block position
 			PM_SetMeleeBlock();
@@ -13906,6 +13905,10 @@ void PM_Weapon(void)
 	}
 	else if (pm->ps->weapon == WP_MELEE)
 	{
+		if (pm->ps->ManualBlockingFlags & 1 << MBF_MELEEBLOCK)
+		{
+			PM_SetMeleeBlock();
+		}
 		//special anims for standard melee attacks
 		if (!pm->ps->m_iVehicleNum)
 		{
@@ -15285,261 +15288,6 @@ void PM_UpdateViewAngles(int saber_anim_level, playerState_t * ps, const usercmd
 		}
 	}
 
-	if (pm->ps->ManualBlockingFlags & 1 << MBF_MELEEBLOCK)
-	{
-		//only in the real meleeblock pmove
-		if (cmd->rightmove || cmd->forwardmove) //pushing a direction
-		{
-			int anim = -1;
-
-			if (cmd->rightmove > 0)
-			{
-				//lean right
-				if (cmd->forwardmove > 0)
-				{
-					//lean forward right
-					if (ps->torsoAnim == MELEE_STANCE_HOLD_RT)
-					{
-						anim = ps->torsoAnim;
-					}
-					else
-					{
-						anim = MELEE_STANCE_RT_MP;
-					}
-				}
-				else if (cmd->forwardmove < 0)
-				{
-					//lean backward right
-					if (ps->torsoAnim == MELEE_STANCE_HOLD_BR)
-					{
-						anim = ps->torsoAnim;
-					}
-					else
-					{
-						anim = MELEE_STANCE_BR_MP;
-					}
-				}
-				else
-				{
-					//lean right
-					if (ps->torsoAnim == MELEE_STANCE_HOLD_RT)
-					{
-						anim = ps->torsoAnim;
-					}
-					else
-					{
-						anim = MELEE_STANCE_RT_MP;
-					}
-				}
-			}
-			else if (cmd->rightmove < 0)
-			{
-				//lean left
-				if (cmd->forwardmove > 0)
-				{
-					//lean forward left
-					if (ps->torsoAnim == MELEE_STANCE_HOLD_LT)
-					{
-						anim = ps->torsoAnim;
-					}
-					else
-					{
-						anim = MELEE_STANCE_LT_MP;
-					}
-				}
-				else if (cmd->forwardmove < 0)
-				{
-					//lean backward left
-					if (ps->torsoAnim == MELEE_STANCE_HOLD_BL)
-					{
-						anim = ps->torsoAnim;
-					}
-					else
-					{
-						anim = MELEE_STANCE_BL_MP;
-					}
-				}
-				else
-				{
-					//lean left
-					if (ps->torsoAnim == MELEE_STANCE_HOLD_LT)
-					{
-						anim = ps->torsoAnim;
-					}
-					else
-					{
-						anim = MELEE_STANCE_LT_MP;
-					}
-				}
-			}
-			else
-			{
-				//not pressing either side
-				if (cmd->forwardmove > 0)
-				{
-					//lean forward
-					if (PM_MeleeblockAnim(ps->torsoAnim))
-					{
-						anim = ps->torsoAnim;
-					}
-					else if (Q_irand(0, 1))
-					{
-						anim = MELEE_STANCE_T_MP;
-					}
-					else
-					{
-						anim = MELEE_STANCE_T_MP;
-					}
-				}
-				else if (cmd->forwardmove < 0)
-				{
-					//lean backward
-					if (PM_MeleeblockAnim(ps->torsoAnim))
-					{
-						anim = ps->torsoAnim;
-					}
-					else if (Q_irand(0, 1))
-					{
-						anim = MELEE_STANCE_B_MP;
-					}
-					else
-					{
-						anim = MELEE_STANCE_B_MP;
-					}
-				}
-			}
-			if (anim != -1)
-			{
-				int extraHoldTime = 0;
-				if (PM_MeleeblockAnim(ps->torsoAnim) && !PM_MeleeblockHoldAnim(ps->torsoAnim))
-				{
-					//already in a dodge
-					//use the hold pose, don't start it all over again
-					anim = MELEE_STANCE_HOLD_LT + (anim - MELEE_STANCE_LT_MP);
-					extraHoldTime = 1200;
-				}
-				if (anim == pm->ps->torsoAnim)
-				{
-					if (pm->ps->torsoTimer < 1200)
-					{
-						pm->ps->torsoTimer = 1200;
-					}
-				}
-				else
-				{
-					PM_SetAnim(SETANIM_TORSO, anim, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
-				}
-				if (extraHoldTime && pm->ps->torsoTimer < extraHoldTime)
-				{
-					ps->torsoTimer += extraHoldTime;
-				}
-				if (pm->ps->groundEntityNum != ENTITYNUM_NONE && !pm->cmd.upmove)
-				{
-					PM_SetAnim(SETANIM_LEGS, anim, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
-					pm->ps->legsTimer = pm->ps->torsoTimer;
-				}
-				else
-				{
-					PM_SetAnim(SETANIM_LEGS, anim, SETANIM_FLAG_NORMAL);
-				}
-				ps->weaponTime = ps->torsoTimer;
-				ps->leanStopDebounceTime = ceil((float)ps->torsoTimer / 50.0f); //20;
-			}
-		}
-		else if (!pm->ps->zoomMode && cmd->rightmove != 0 && !cmd->forwardmove && cmd->upmove <= 0)
-		{
-			//Only lean if holding use button, strafing and not moving forward or back and not jumping
-			int leanofs = 0;
-			vec3_t viewangles;
-
-			if (cmd->rightmove > 0)
-			{
-				if (ps->leanofs <= 28)
-				{
-					leanofs = ps->leanofs + 4;
-				}
-				else
-				{
-					leanofs = 32;
-				}
-			}
-			else
-			{
-				if (ps->leanofs >= -28)
-				{
-					leanofs = ps->leanofs - 4;
-				}
-				else
-				{
-					leanofs = -32;
-				}
-			}
-
-			VectorCopy(ps->origin, start);
-			start[2] += ps->viewheight;
-			VectorCopy(ps->viewangles, viewangles);
-			viewangles[ROLL] = 0;
-			AngleVectors(ps->viewangles, NULL, right, NULL);
-			VectorNormalize(right);
-			right[2] = leanofs < 0 ? 0.25 : -0.25;
-			VectorMA(start, leanofs, right, end);
-			VectorSet(tmins, -8, -8, -4);
-			VectorSet(tmaxs, 8, 8, 4);
-			pm->trace(&trace, start, tmins, tmaxs, end, ps->client_num, MASK_PLAYERSOLID);
-
-			ps->leanofs = floor((float)leanofs * trace.fraction);
-
-			ps->leanStopDebounceTime = 20;
-		}
-		else
-		{
-			if (cmd->forwardmove || cmd->upmove > 0)
-			{
-				if (pm->ps->legsAnim == LEGS_LEAN_RIGHT1 ||
-					pm->ps->legsAnim == LEGS_LEAN_LEFT1)
-				{
-					pm->ps->legsTimer = 0; //Force it to stop the anim
-				}
-
-				if (ps->leanofs > 0)
-				{
-					ps->leanofs -= 4;
-					if (ps->leanofs < 0)
-					{
-						ps->leanofs = 0;
-					}
-				}
-				else if (ps->leanofs < 0)
-				{
-					ps->leanofs += 4;
-					if (ps->leanofs > 0)
-					{
-						ps->leanofs = 0;
-					}
-				}
-			}
-			else //BUTTON_USE
-			{
-				if (ps->leanofs > 0)
-				{
-					ps->leanofs -= 4;
-					if (ps->leanofs < 0)
-					{
-						ps->leanofs = 0;
-					}
-				}
-				else if (ps->leanofs < 0)
-				{
-					ps->leanofs += 4;
-					if (ps->leanofs > 0)
-					{
-						ps->leanofs = 0;
-					}
-				}
-			}
-		}
-	}
-
 	if (ps->leanStopDebounceTime)
 	{
 		ps->leanStopDebounceTime -= 1;
@@ -16014,11 +15762,11 @@ void BG_AdjustClientSpeed(playerState_t * ps, const usercmd_t * cmd, const int s
 		//move slower when low on health
 		ps->speed *= 0.90f;
 	}
-	else if (PM_MeleeblockAnim(ps->torsoAnim) || PM_MeleeblockHoldAnim(ps->torsoAnim))
-	{
-		//move slower when low on health
-		ps->speed *= 0.60f;
-	}
+	//else if (PM_MeleeblockAnim(ps->torsoAnim) || PM_MeleeblockHoldAnim(ps->torsoAnim))
+	//{
+	//	//move slower when low on health
+	//	ps->speed *= 0.60f;
+	//}
 	else if (BG_SprintAnim(pm->ps->legsAnim))
 	{
 		if (pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING)
@@ -18496,11 +18244,11 @@ void PmoveSingle(pmove_t * pmove)
 		stiffenedUp = qtrue;
 		//PM_SetPMViewAngle(pm->ps, pm->ps->viewangles, &pm->cmd);
 	}
-	else if (PM_MeleeblockHoldAnim(pm->ps->torsoAnim) || PM_MeleeblockAnim(pm->ps->torsoAnim))
-	{
-		stiffenedUp = qtrue;
-		//PM_SetPMViewAngle(pm->ps, pm->ps->viewangles, &pm->cmd);
-	}
+	//else if (PM_MeleeblockHoldAnim(pm->ps->torsoAnim) || PM_MeleeblockAnim(pm->ps->torsoAnim))
+	//{
+	//	stiffenedUp = qtrue;
+	//	//PM_SetPMViewAngle(pm->ps, pm->ps->viewangles, &pm->cmd);
+	//}
 	else if (pm->ps->saber_move == LS_STABDOWN_DUAL ||
 		pm->ps->saber_move == LS_STABDOWN_STAFF ||
 		pm->ps->saber_move == LS_STABDOWN_BACKHAND ||
@@ -18861,18 +18609,16 @@ void PmoveSingle(pmove_t * pmove)
 		pm->ps->legsAnim == MELEE_STANCE_HOLD_RT ||
 		pm->ps->legsAnim == MELEE_STANCE_HOLD_T ||
 		pm->ps->legsAnim == MELEE_STANCE_HOLD_B)
-	{
-		//can't move while in a dodge
+	{ //can't move while in a dodge
 		stiffenedUp = qtrue;
 	}
-	else if (pm->ps->legsAnim == MELEE_STANCE_BL_MP ||
-		pm->ps->legsAnim == MELEE_STANCE_BR_MP ||
-		pm->ps->legsAnim == MELEE_STANCE_LT_MP ||
-		pm->ps->legsAnim == MELEE_STANCE_RT_MP ||
-		pm->ps->legsAnim == MELEE_STANCE_T_MP ||
-		pm->ps->legsAnim == MELEE_STANCE_B_MP)
-	{
-		//can't move while in a dodge
+	else if (pm->ps->legsAnim == MELEE_STANCE_BL ||
+		pm->ps->legsAnim == MELEE_STANCE_BR ||
+		pm->ps->legsAnim == MELEE_STANCE_LT ||
+		pm->ps->legsAnim == MELEE_STANCE_RT ||
+		pm->ps->legsAnim == MELEE_STANCE_T ||
+		pm->ps->legsAnim == MELEE_STANCE_B)
+	{ //can't move while in a dodge
 		stiffenedUp = qtrue;
 	}
 	else if (pm->cmd.buttons & BUTTON_GRAPPLE)

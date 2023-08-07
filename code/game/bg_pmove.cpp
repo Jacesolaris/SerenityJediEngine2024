@@ -12796,62 +12796,6 @@ int Fatigue_SaberAttack()
 //Add Fatigue for all the sabermoves.
 extern qboolean PM_KnockAwayStaffAndDuels(int move);
 
-void PM_BlockPointFatigue(playerState_t* ps, const int new_move, const int anim)
-{
-	if (ps->saber_move != new_move)
-	{
-		//wasn't playing that attack before
-		if (PM_KickMove(new_move))
-		{
-			//melee move
-			PM_AddBlockFatigue(ps, FATIGUE_MELEE);
-		}
-		else if (PM_KnockAwayStaffAndDuels(new_move))
-		{
-			//simple saber attack
-			PM_AddBlockFatigue(ps, FATIGUE_AUTOSABERDEFENSE);
-		}
-		else if (PM_SaberInAttackPure(new_move))
-		{
-			//simple saber attack
-			PM_AddBlockFatigue(ps, FATIGUE_AUTOSABERDEFENSE);
-		}
-		else if (PM_SaberInAttack(new_move) || pm_saber_in_special_attack(anim))
-		{
-			//simple saber attack
-			PM_AddBlockFatigue(ps, FATIGUE_AUTOSABERDEFENSE);
-		}
-		else if (PM_KnockawayForParry(new_move))
-		{
-			//simple saber attack
-			PM_AddBlockFatigue(ps, FATIGUE_AUTOSABERDEFENSE);
-		}
-		else if (PM_SaberInbackblock(new_move))
-		{
-			//simple block
-			PM_AddBlockFatigue(ps, FATIGUE_AUTOSABERDEFENSE);
-		}
-		else if (PM_IsInBlockingAnim(new_move))
-		{
-			//simple block
-			PM_AddBlockFatigue(ps, FATIGUE_AUTOSABERDEFENSE);
-		}
-		else if (PM_SaberInTransition(new_move) && pm->ps->userInt3 & 1 << FLAG_ATTACKFAKE)
-		{
-			//attack fakes cost FP as well
-			if (ps->saber_anim_level == SS_DUAL)
-			{
-				//dual sabers don't have transition/FP costs.
-			}
-			else
-			{
-				//single sabers
-				PM_AddBlockFatigue(ps, FATIGUE_AUTOSABERDEFENSE);
-			}
-		}
-	}
-}
-
 void PM_NPCFatigue(playerState_t* ps, const int new_move)
 {
 	if (ps->saber_move != new_move)
@@ -12889,6 +12833,7 @@ void PM_NPCFatigue(playerState_t* ps, const int new_move)
 }
 
 void PM_SaberFakeFlagUpdate(int new_move);
+void PM_SaberPerfectBlockUpdate(int new_move);
 
 void WP_SaberFatigueRegenerate(const int override_amt)
 {
@@ -13583,15 +13528,16 @@ void PM_SetSaberMove(saberMoveName_t new_move)
 		{
 			if (pm->gent && (pm->gent->s.number < MAX_CLIENTS || G_ControlledByPlayer(pm->gent)))
 			{
-				//PM_BlockPointFatigue(pm->ps, new_move, anim); //drainblockpoints low cost
 			}
 			else
 			{
 				PM_NPCFatigue(pm->ps, new_move); //drainblockpoints low cost
 			}
 
-			//update the attack fake flag
+			//update the flag
 			PM_SaberFakeFlagUpdate(new_move);
+			
+			PM_SaberPerfectBlockUpdate(new_move);
 
 			if (!PM_SaberInBounce(new_move) && !PM_SaberInReturn(new_move)) //or new move isn't slowbounce move
 			{
@@ -21604,6 +21550,17 @@ void PM_SaberFakeFlagUpdate(const int new_move)
 	}
 }
 
+void PM_SaberPerfectBlockUpdate(const int new_move)
+{
+	const qboolean holding_block = pm->ps->ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
+
+	//checks to see if the flag needs to be removed.
+	if ((!(holding_block)) || PM_SaberInBounce(new_move) || PM_SaberInMassiveBounce(pm->ps->torsoAnim) || PM_SaberInAttack(new_move))
+	{
+		pm->ps->userInt3 &= ~(1 << FLAG_PERFECTBLOCK);
+	}
+}
+
 //saber status utility tools
 qboolean BG_SaberInFullDamageMove(const playerState_t* ps)
 {
@@ -21654,6 +21611,22 @@ qboolean BG_InSlowBounce(const playerState_t* ps)
 	//checks for a bounce/return animation in combination with the slow bounce flag
 	if (ps->userInt3 & 1 << FLAG_SLOWBOUNCE
 		&& (PM_BounceAnim(ps->torsoAnim) || PM_SaberReturnAnim(ps->torsoAnim)))
+	{
+		//in slow bounce
+		return qtrue;
+	}
+	if (PM_SaberInBounce(ps->saber_move))
+	{
+		//in slow bounce
+		return qtrue;
+	}
+	return qfalse;
+}
+
+qboolean PM_InSlowBounce(const playerState_t* ps)
+{
+	//checks for a bounce/return animation in combination with the slow bounce flag
+	if (ps->userInt3 & 1 << FLAG_SLOWBOUNCE	&& (PM_BounceAnim(ps->torsoAnim)))
 	{
 		//in slow bounce
 		return qtrue;

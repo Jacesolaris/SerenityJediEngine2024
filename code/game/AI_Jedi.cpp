@@ -124,7 +124,6 @@ extern void ForceGrip(const gentity_t* self);
 extern void ForceDashAnimDash(gentity_t* self);
 extern qboolean WP_AbsorbKick(gentity_t* self, const gentity_t* pusher, const vec3_t push_dir);
 extern qboolean BG_SaberInNonIdleDamageMove(const playerState_t* ps);
-extern qboolean BG_InSlowBounce(const playerState_t* ps);
 extern cvar_t* g_DebugSaberCombat;
 extern qboolean wp_saber_block_check_random(gentity_t* self, vec3_t hitloc);
 extern void npc_check_speak(gentity_t* speaker_npc);

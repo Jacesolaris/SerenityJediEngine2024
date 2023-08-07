@@ -854,7 +854,6 @@ saberMoveName_t PM_NPCSaberAttackFromQuad(const int quad)
 		break;
 	}
 
-
 #ifdef _GAME
 	if (bot_thinklevel.integer >= 1 &&
 		BG_EnoughForcePowerForMove(SABER_KATA_ATTACK_POWER) &&
@@ -4120,192 +4119,186 @@ qboolean InSaberDelayAnimation(const int move)
 
 void PM_SetMeleeBlock(void)
 {
-	if (pm->ps->ManualBlockingFlags & 1 << MBF_MELEEBLOCK)
-	{
-		//only in the real meleeblock pmove
-		if (pm->cmd.rightmove || pm->cmd.forwardmove) //pushing a direction
-		{
-			int anim = -1;
+	int anim = -1;
 
-			if (pm->cmd.rightmove > 0)
-			{
-				//lean right
-				if (pm->cmd.forwardmove > 0)
+	if (pm->ps->weapon != WP_MELEE)
+	{
+		return;
+	}
+
+	if (pm->cmd.rightmove || pm->cmd.forwardmove)  //pushing a direction
+	{
+		if (pm->cmd.rightmove > 0)
+		{//lean right
+			if (pm->cmd.forwardmove > 0)
+			{//lean forward right
+				if (pm->ps->torsoAnim == MELEE_STANCE_HOLD_RT)
 				{
-					//lean forward right
-					if (pm->ps->torsoAnim == MELEE_STANCE_HOLD_RT)
-					{
-						anim = pm->ps->torsoAnim;
-					}
-					else
-					{
-						anim = MELEE_STANCE_RT_MP;
-					}
-					pm->cmd.rightmove = 0;
-					pm->cmd.forwardmove = 0;
-				}
-				else if (pm->cmd.forwardmove < 0)
-				{
-					//lean backward right
-					if (pm->ps->torsoAnim == MELEE_STANCE_HOLD_BR)
-					{
-						anim = pm->ps->torsoAnim;
-					}
-					else
-					{
-						anim = MELEE_STANCE_BR_MP;
-					}
-					pm->cmd.rightmove = 0;
-					pm->cmd.forwardmove = 0;
+					anim = pm->ps->torsoAnim;
 				}
 				else
 				{
-					//lean right
-					if (pm->ps->torsoAnim == MELEE_STANCE_HOLD_RT)
-					{
-						anim = pm->ps->torsoAnim;
-					}
-					else
-					{
-						anim = MELEE_STANCE_RT_MP;
-					}
-					pm->cmd.rightmove = 0;
-					pm->cmd.forwardmove = 0;
+					anim = MELEE_STANCE_RT;
+				}
+				pm->cmd.rightmove = 0;
+				pm->cmd.forwardmove = 0;
+			}
+			else if (pm->cmd.forwardmove < 0)
+			{//lean backward right
+				if (pm->ps->torsoAnim == MELEE_STANCE_HOLD_BR)
+				{
+					anim = pm->ps->torsoAnim;
+				}
+				else
+				{
+					anim = MELEE_STANCE_BR;
+				}
+				pm->cmd.rightmove = 0;
+				pm->cmd.forwardmove = 0;
+			}
+			else
+			{//lean right
+				if (pm->ps->torsoAnim == MELEE_STANCE_HOLD_RT)
+				{
+					anim = pm->ps->torsoAnim;
+				}
+				else
+				{
+					anim = MELEE_STANCE_RT;
 				}
 			}
-			else if (pm->cmd.rightmove < 0)
-			{
-				//lean left
-				if (pm->cmd.forwardmove > 0)
+			pm->cmd.rightmove = 0;
+			pm->cmd.forwardmove = 0;
+		}
+		else if (pm->cmd.rightmove < 0)
+		{//lean left
+			if (pm->cmd.forwardmove > 0)
+			{//lean forward left
+				if (pm->ps->torsoAnim == MELEE_STANCE_HOLD_LT)
 				{
-					//lean forward left
-					if (pm->ps->torsoAnim == MELEE_STANCE_HOLD_LT)
-					{
-						anim = pm->ps->torsoAnim;
-					}
-					else
-					{
-						anim = MELEE_STANCE_LT_MP;
-					}
-					pm->cmd.rightmove = 0;
-					pm->cmd.forwardmove = 0;
-				}
-				else if (pm->cmd.forwardmove < 0)
-				{
-					//lean backward left
-					if (pm->ps->torsoAnim == MELEE_STANCE_HOLD_BL)
-					{
-						anim = pm->ps->torsoAnim;
-					}
-					else
-					{
-						anim = MELEE_STANCE_BL_MP;
-					}
-					pm->cmd.rightmove = 0;
-					pm->cmd.forwardmove = 0;
+					anim = pm->ps->torsoAnim;
 				}
 				else
 				{
-					//lean left
-					if (pm->ps->torsoAnim == MELEE_STANCE_HOLD_LT)
-					{
-						anim = pm->ps->torsoAnim;
-					}
-					else
-					{
-						anim = MELEE_STANCE_LT_MP;
-					}
-					pm->cmd.rightmove = 0;
-					pm->cmd.forwardmove = 0;
+					anim = MELEE_STANCE_LT;
+				}
+				pm->cmd.rightmove = 0;
+				pm->cmd.forwardmove = 0;
+			}
+			else if (pm->cmd.forwardmove < 0)
+			{//lean backward left
+				if (pm->ps->torsoAnim == MELEE_STANCE_HOLD_BL)
+				{
+					anim = pm->ps->torsoAnim;
+				}
+				else
+				{
+					anim = MELEE_STANCE_BL;
+				}
+				pm->cmd.rightmove = 0;
+				pm->cmd.forwardmove = 0;
+			}
+			else
+			{//lean left
+				if (pm->ps->torsoAnim == MELEE_STANCE_HOLD_LT)
+				{
+					anim = pm->ps->torsoAnim;
+				}
+				else
+				{
+					anim = MELEE_STANCE_LT;
+				}
+			}
+			pm->cmd.rightmove = 0;
+			pm->cmd.forwardmove = 0;
+		}
+		else
+		{//not pressing either side
+			if (pm->cmd.forwardmove > 0)
+			{//lean forward
+				if (PM_MeleeblockAnim(pm->ps->torsoAnim))
+				{
+					anim = pm->ps->torsoAnim;
+				}
+				else if (Q_irand(0, 1))
+				{
+					anim = MELEE_STANCE_T;
+				}
+				else
+				{
+					anim = MELEE_STANCE_T;
+				}
+				pm->cmd.rightmove = 0;
+				pm->cmd.forwardmove = 0;
+			}
+			else if (pm->cmd.forwardmove < 0)
+			{//lean backward
+				if (PM_MeleeblockAnim(pm->ps->torsoAnim))
+				{
+					anim = pm->ps->torsoAnim;
+				}
+				else if (Q_irand(0, 1))
+				{
+					anim = MELEE_STANCE_B;
+				}
+				else
+				{
+					anim = MELEE_STANCE_B;
+				}
+				pm->cmd.rightmove = 0;
+				pm->cmd.forwardmove = 0;
+			}
+			pm->cmd.rightmove = 0;
+			pm->cmd.forwardmove = 0;
+		}
+		if (anim != -1)
+		{
+			int extraHoldTime = 0;
+			if (PM_MeleeblockAnim(pm->ps->torsoAnim) && !PM_MeleeblockHoldAnim(pm->ps->torsoAnim))
+			{//use the hold pose, don't start it all over again
+				anim = MELEE_STANCE_HOLD_LT + (anim - MELEE_STANCE_LT);
+				extraHoldTime = 600;
+			}
+			if (anim == pm->ps->torsoAnim)
+			{
+				if (pm->ps->torsoTimer < 600)
+				{
+					pm->ps->torsoTimer = 600;
 				}
 			}
 			else
 			{
-				//not pressing either side
-				if (pm->cmd.forwardmove > 0)
-				{
-					//lean forward
-					if (PM_MeleeblockAnim(pm->ps->torsoAnim))
-					{
-						anim = pm->ps->torsoAnim;
-					}
-					else if (Q_irand(0, 1))
-					{
-						anim = MELEE_STANCE_T_MP;
-					}
-					else
-					{
-						anim = MELEE_STANCE_T_MP;
-					}
-					pm->cmd.rightmove = 0;
-					pm->cmd.forwardmove = 0;
-				}
-				else if (pm->cmd.forwardmove < 0)
-				{
-					//lean backward
-					if (PM_MeleeblockAnim(pm->ps->torsoAnim))
-					{
-						anim = pm->ps->torsoAnim;
-					}
-					else if (Q_irand(0, 1))
-					{
-						anim = MELEE_STANCE_B_MP;
-					}
-					else
-					{
-						anim = MELEE_STANCE_B_MP;
-					}
-					pm->cmd.rightmove = 0;
-					pm->cmd.forwardmove = 0;
-				}
+				PM_SetAnim(SETANIM_TORSO, anim, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+				pm->cmd.forwardmove = 0;
+				pm->cmd.rightmove = 0;
+				pm->cmd.upmove = 0;
 			}
-			if (anim != -1)
+			if (extraHoldTime && pm->ps->torsoTimer < extraHoldTime)
 			{
-				int extraHoldTime = 0;
-				if (PM_MeleeblockAnim(pm->ps->torsoAnim) && !PM_MeleeblockHoldAnim(pm->ps->torsoAnim))
-				{
-					//use the hold pose, don't start it all over again
-					anim = MELEE_STANCE_HOLD_LT + (anim - MELEE_STANCE_LT_MP);
-					extraHoldTime = 1200;
-				}
-				if (anim == pm->ps->torsoAnim)
-				{
-					if (pm->ps->torsoTimer < 1200)
-					{
-						pm->ps->torsoTimer = 1200;
-					}
-				}
-				else
-				{
-					PM_SetAnim(SETANIM_TORSO, anim, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
-					pm->cmd.forwardmove = 0;
-					pm->cmd.rightmove = 0;
-					pm->cmd.upmove = 0;
-				}
-				if (extraHoldTime && pm->ps->torsoTimer < extraHoldTime)
-				{
-					pm->ps->torsoTimer += extraHoldTime;
-					pm->cmd.forwardmove = 0;
-					pm->cmd.rightmove = 0;
-					pm->cmd.upmove = 0;
-				}
-				if (pm->ps->groundEntityNum != ENTITYNUM_NONE && !pm->cmd.upmove)
-				{
-					PM_SetAnim(SETANIM_LEGS, anim, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
-					pm->ps->legsTimer = pm->ps->torsoTimer;
-					pm->cmd.forwardmove = 0;
-					pm->cmd.rightmove = 0;
-					pm->cmd.upmove = 0;
-				}
-				else
-				{
-					PM_SetAnim(SETANIM_LEGS, anim, SETANIM_FLAG_NORMAL);
-					pm->cmd.forwardmove = 0;
-					pm->cmd.rightmove = 0;
-					pm->cmd.upmove = 0;
-				}
-				pm->ps->weaponTime = pm->ps->torsoTimer;
+				pm->ps->torsoTimer += extraHoldTime;
+				pm->cmd.forwardmove = 0;
+				pm->cmd.rightmove = 0;
+				pm->cmd.upmove = 0;
 			}
+			if (pm->ps->groundEntityNum != ENTITYNUM_NONE && !pm->cmd.upmove)
+			{
+				PM_SetAnim(SETANIM_LEGS, anim, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+				pm->ps->legsTimer = pm->ps->torsoTimer;
+				pm->cmd.forwardmove = 0;
+				pm->cmd.rightmove = 0;
+				pm->cmd.upmove = 0;
+			}
+			else
+			{
+				PM_SetAnim(SETANIM_LEGS, anim, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+				pm->cmd.forwardmove = 0;
+				pm->cmd.rightmove = 0;
+				pm->cmd.upmove = 0;
+			}
+			pm->ps->weaponTime = pm->ps->torsoTimer;
+			pm->cmd.forwardmove = 0;
+			pm->cmd.rightmove = 0;
+			pm->cmd.upmove = 0;
 		}
 	}
 }
@@ -6580,113 +6573,6 @@ int Fatigue_SaberAttack()
 //Add Fatigue for all the saber moves.
 extern qboolean PM_KnockAwayStaffAndDuels(int move);
 
-void PM_BlockFatigue(playerState_t* ps, const int new_move, const int anim)
-{
-	if (ps->saber_move != new_move)
-	{
-		//wasn't playing that attack before
-		if (PM_KickMove(new_move))
-		{
-			//melee move
-			PM_AddBlockFatigue(ps, FATIGUE_MELEE);
-		}
-		else if (PM_KnockAwayStaffAndDuels(new_move))
-		{
-			//simple saber attack
-			PM_AddBlockFatigue(ps, FATIGUE_AUTOSABERDEFENSE);
-		}
-		else if (PM_SaberInAttackPure(new_move))
-		{
-			//simple saber attack
-			PM_AddBlockFatigue(ps, FATIGUE_AUTOSABERDEFENSE);
-		}
-		else if (PM_SaberInAttack(new_move) || pm_saber_in_special_attack(anim))
-		{
-			//simple saber attack
-			PM_AddBlockFatigue(ps, FATIGUE_AUTOSABERDEFENSE);
-		}
-		else if (PM_KnockawayForParry(new_move))
-		{
-			//simple saber attack
-			PM_AddBlockFatigue(ps, FATIGUE_AUTOSABERDEFENSE);
-		}
-		else if (PM_SaberInbackblock(new_move))
-		{
-			//simple block
-			PM_AddBlockFatigue(ps, FATIGUE_AUTOSABERDEFENSE);
-		}
-		else if (PM_SaberInTransition(new_move) && pm->ps->userInt3 & 1 << FLAG_ATTACKFAKE)
-		{
-			//attack fakes cost FP as well
-			if (ps->fd.saber_anim_level == SS_DUAL)
-			{
-				//dual sabers don't have transition/FP costs.
-			}
-			else
-			{
-				//single sabers
-				PM_AddBlockFatigue(ps, FATIGUE_AUTOSABERDEFENSE);
-			}
-		}
-	}
-}
-
-void PM_SaberFatigue(playerState_t* ps, const int new_move, const int anim)
-{
-	if (ps->saber_move != new_move)
-	{
-		//wasn't playing that attack before
-		if (PM_KickMove(new_move))
-		{
-			//melee move
-			PM_AddBlockFatigue(ps, Fatigue_SaberAttack());
-		}
-		else if (PM_KnockAwayStaffAndDuels(new_move))
-		{
-			//simple saber attack
-			PM_AddBlockFatigue(ps, FATIGUE_AUTOSABERBOLTBLOCK);
-		}
-		else if (PM_SaberInAttackPure(new_move))
-		{
-			//simple saber attack
-			PM_AddBlockFatigue(ps, FATIGUE_AUTOSABERBOLTBLOCK);
-		}
-		else if (PM_SaberInAttack(new_move) || pm_saber_in_special_attack(anim))
-		{
-			//simple saber attack
-			PM_AddBlockFatigue(ps, FATIGUE_AUTOSABERBOLTBLOCK);
-		}
-		else if (PM_KnockawayForParry(new_move))
-		{
-			//simple saber attack
-			PM_AddBlockFatigue(ps, FATIGUE_AUTOSABERBOLTBLOCK);
-		}
-		else if (PM_SaberInbackblock(new_move))
-		{
-			//simple block
-			PM_AddBlockFatigue(ps, FATIGUE_AUTOSABERBOLTBLOCK);
-		}
-		else if (PM_IsInBlockingAnim(new_move))
-		{
-			//simple block
-			PM_AddBlockFatigue(ps, FATIGUE_AUTOSABERBOLTBLOCK);
-		}
-		else if (PM_SaberInTransition(new_move) && pm->ps->userInt3 & 1 << FLAG_ATTACKFAKE)
-		{
-			//attack fakes cost FP as well
-			if (ps->fd.saber_anim_level == SS_DUAL)
-			{
-				//dual sabers don't have transition/FP costs.
-			}
-			else
-			{
-				//single sabers
-				PM_AddBlockFatigue(ps, FATIGUE_AUTOSABERBOLTBLOCK);
-			}
-		}
-	}
-}
-
 void PM_NPCFatigue(playerState_t* ps, const int new_move)
 {
 	if (ps->saber_move != new_move)
@@ -6729,6 +6615,7 @@ void PM_NPCFatigue(playerState_t* ps, const int new_move)
 }
 
 void PM_SaberFakeFlagUpdate(int new_move);
+void PM_SaberPerfectBlockUpdate(int new_move);
 
 void PM_SetJumped(const float height, const qboolean force)
 {
@@ -7283,17 +7170,6 @@ void PM_SetSaberMove(saberMoveName_t new_move)
 
 			if (!(g_entities[pm->ps->client_num].r.svFlags & SVF_BOT))
 			{
-				if (holding_block)
-				{
-					if (active_blocking)
-					{
-						//PM_BlockFatigue(pm->ps, new_move, anim); //drainblockpoints low cost
-					}
-					else
-					{
-						//PM_SaberFatigue(pm->ps, new_move, anim); //drainblockpoints high cost
-					}
-				}
 			}
 			else
 #endif
@@ -7301,8 +7177,10 @@ void PM_SetSaberMove(saberMoveName_t new_move)
 				PM_NPCFatigue(pm->ps, new_move); //drainblockpoints low cost
 			}
 
-			//update the attack fake flag
+			//update the flag
 			PM_SaberFakeFlagUpdate(new_move);
+
+			PM_SaberPerfectBlockUpdate(new_move);
 
 			if (!PM_SaberInBounce(new_move) && !PM_SaberInReturn(new_move)) //or new move isn't slow bounce move
 			{
@@ -7638,6 +7516,17 @@ void PM_SaberFakeFlagUpdate(const int new_move)
 	}
 }
 
+void PM_SaberPerfectBlockUpdate(const int new_move)
+{
+	const qboolean holding_block = pm->ps->ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
+
+	//checks to see if the flag needs to be removed.
+	if ((!(holding_block)) || PM_SaberInBounce(new_move) || PM_SaberInMassiveBounce(pm->ps->torsoAnim) || PM_SaberInAttack(new_move))
+	{
+		pm->ps->userInt3 &= ~(1 << FLAG_PERFECTBLOCK);
+	}
+}
+
 extern float bg_get_torso_anim_point(const playerState_t* ps, int anim_index);
 
 qboolean BG_SaberInFullDamageMove(const playerState_t* ps, const int anim_index)
@@ -7744,6 +7633,23 @@ qboolean BG_InSlowBounce(const playerState_t* ps)
 	//checks for a bounce/return animation in combination with the slow bounce flag
 	if (ps->userInt3 & 1 << FLAG_SLOWBOUNCE
 		&& (PM_BounceAnim(ps->torsoAnim) || PM_SaberReturnAnim(ps->torsoAnim)))
+	{
+		//in slow bounce
+		return qtrue;
+	}
+	if (PM_SaberInBounce(ps->saber_move))
+	{
+		//in slow bounce
+		return qtrue;
+	}
+	return qfalse;
+}
+
+qboolean PM_InSlowBounce(const playerState_t* ps)
+{
+	//checks for a bounce/return animation in combination with the slow bounce flag
+	if (ps->userInt3 & 1 << FLAG_SLOWBOUNCE
+		&& (PM_BounceAnim(ps->torsoAnim)))
 	{
 		//in slow bounce
 		return qtrue;
