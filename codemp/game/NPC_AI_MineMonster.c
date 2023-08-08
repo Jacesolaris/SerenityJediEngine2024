@@ -84,9 +84,6 @@ void MineMonster_Patrol(void)
 			TIMER_Set(NPCS.NPC, "patrolTime", Q_flrand(-1.0f, 1.0f) * 5000 + 5000);
 		}
 	}
-
-	//rwwFIXMEFIXME: Care about all clients, not just client 0
-	//OJKFIXME: clietnum 0
 	VectorSubtract(g_entities[0].r.currentOrigin, NPCS.NPC->r.currentOrigin, dif);
 
 	if (VectorLengthSquared(dif) < 256 * 256)

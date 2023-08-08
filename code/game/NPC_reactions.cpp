@@ -694,8 +694,6 @@ void NPC_Touch(gentity_t* self, gentity_t* other, trace_t* trace)
 
 	if (other->client)
 	{
-		//FIXME:  if pushing against another bot, both ucmd.rightmove = 127???
-		//Except if not facing one another...
 		if (other->health > 0)
 		{
 			NPCInfo->touchedByPlayer = other;
@@ -750,13 +748,8 @@ void NPC_Touch(gentity_t* self, gentity_t* other, trace_t* trace)
 	{
 		//rancor
 		if (NPCInfo->blockedEntity != other && TIMER_Done(NPC, "blockedEntityIgnore"))
-		{
-			//blocked
-			//if ( G_EntIsBreakable( other->s.number, NPC ) )
-			{
-				//bumped into another breakable, so take that one instead?
-				NPCInfo->blockedEntity = other; //???
-			}
+		{//bumped into another breakable, so take that one instead?
+			NPCInfo->blockedEntity = other; //???
 		}
 	}
 

@@ -3028,6 +3028,11 @@ qboolean G_EntIsBreakable(const int entity_num)
 	}
 
 	const gentity_t* ent = &g_entities[entity_num];
+
+	if (!ent->takedamage)
+	{
+		return qfalse;
+	}
 	if (ent->r.svFlags & SVF_GLASS_BRUSH)
 	{
 		return qtrue;

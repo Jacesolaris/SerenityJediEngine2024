@@ -34,6 +34,8 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #define LSTATE_WAITING		1
 
 float enemyDist = 0;
+void Wampa_Move(const qboolean visible);
+void Wampa_Attack(const float distance, const qboolean do_charge);
 
 void Wampa_SetBolts(gentity_t* self)
 {
@@ -41,17 +43,10 @@ void Wampa_SetBolts(gentity_t* self)
 	{
 		renderInfo_t* ri = &self->client->renderInfo;
 		ri->headBolt = trap->G2API_AddBolt(self->ghoul2, 0, "*head_eyes");
-		//ri->cervicalBolt = trap->G2API_AddBolt(self->ghoul2, 0, "neck_bone" );
-		//ri->chestBolt = trap->G2API_AddBolt(self->ghoul2, 0, "upper_spine");
-		//ri->gutBolt = trap->G2API_AddBolt(self->ghoul2, 0, "mid_spine");
 		ri->torsoBolt = trap->G2API_AddBolt(self->ghoul2, 0, "lower_spine");
 		ri->crotchBolt = trap->G2API_AddBolt(self->ghoul2, 0, "rear_bone");
-		//ri->elbowLBolt = trap->G2API_AddBolt(self->ghoul2, 0, "*l_arm_elbow");
-		//ri->elbowRBolt = trap->G2API_AddBolt(self->ghoul2, 0, "*r_arm_elbow");
 		ri->handLBolt = trap->G2API_AddBolt(self->ghoul2, 0, "*l_hand");
 		ri->handRBolt = trap->G2API_AddBolt(self->ghoul2, 0, "*r_hand");
-		//ri->kneeLBolt = trap->G2API_AddBolt(self->ghoul2, 0, "*hips_l_knee");
-		//ri->kneeRBolt = trap->G2API_AddBolt(self->ghoul2, 0, "*hips_r_knee");
 		ri->footLBolt = trap->G2API_AddBolt(self->ghoul2, 0, "*l_leg_foot");
 		ri->footRBolt = trap->G2API_AddBolt(self->ghoul2, 0, "*r_leg_foot");
 	}
@@ -64,19 +59,12 @@ NPC_Wampa_Precache
 */
 void NPC_Wampa_Precache(void)
 {
-	/*
-	int i;
-	for ( i = 1; i < 4; i ++ )
+	
+	for (int i = 1; i < 3; i++)
 	{
-		G_SoundIndex( va("sound/chars/wampa/growl%d.wav", i) );
+		G_SoundIndex(va("sound/chars/wampa/snort%d.wav", i));
 	}
-	for ( i = 1; i < 3; i ++ )
-	{
-		G_SoundIndex( va("sound/chars/wampa/snort%d.wav", i) );
-	}
-	*/
 	G_SoundIndex("sound/chars/rancor/swipehit.wav");
-	//G_SoundIndex( "sound/chars/wampa/chomp.wav" );
 }
 
 /*
@@ -101,8 +89,7 @@ qboolean Wampa_CheckRoar(gentity_t* self)
 	if (self->wait < level.time)
 	{
 		self->wait = level.time + Q_irand(5000, 20000);
-		NPC_SetAnim(self, SETANIM_BOTH, Q_irand(BOTH_GESTURE1, BOTH_GESTURE2),
-			SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+		NPC_SetAnim(self, SETANIM_BOTH, Q_irand(BOTH_GESTURE1, BOTH_GESTURE2),SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 		TIMER_Set(self, "rageTime", self->client->ps.legsTimer);
 		G_Sound(self, CHAN_VOICE, G_SoundIndex(va("sound/chars/howler/howl.mp3")));
 		return qtrue;
@@ -117,19 +104,36 @@ Wampa_Patrol
 */
 void Wampa_Patrol(void)
 {
+	gentity_t* closest_player = FindClosestPlayer(NPCS.NPC->r.currentOrigin, NPCS.NPC->client->enemyTeam);
+	vec3_t dif;
+
 	NPCS.NPCInfo->localState = LSTATE_CLEAR;
 
 	//If we have somewhere to go, then do that
 	if (UpdateGoal())
 	{
-		NPCS.ucmd.buttons |= BUTTON_WALKING;
-		NPC_MoveToGoal(qtrue);
+		Wampa_Move(qtrue);
 	}
 	else
 	{
 		if (TIMER_Done(NPCS.NPC, "patrolTime"))
 		{
-			TIMER_Set(NPCS.NPC, "patrolTime", Q_flrand(-1.0f, 1.0f) * 5000 + 5000);
+			TIMER_Set(NPCS.NPC, "patrolTime", flrand(-1.0f, 1.0f) * 5000 + 5000);
+		}
+	}
+	VectorSubtract(g_entities[0].r.currentOrigin, NPCS.NPC->r.currentOrigin, dif);
+
+	if (VectorLengthSquared(dif) < 256 * 256)
+	{
+		G_SetEnemy(NPCS.NPC, &g_entities[0]);
+	}
+
+	if (closest_player)
+	{
+		//attack enemy players that are close.
+		if (Distance(closest_player->r.currentOrigin, NPCS.NPC->r.currentOrigin) < 256 * 256)
+		{
+			G_SetEnemy(NPCS.NPC, closest_player);
 		}
 	}
 
@@ -138,7 +142,9 @@ void Wampa_Patrol(void)
 		Wampa_Idle();
 		return;
 	}
-	Wampa_CheckRoar(NPCS.NPC);
+
+	Wampa_Attack(0, qtrue);
+
 	TIMER_Set(NPCS.NPC, "lookForNewEnemy", Q_irand(5000, 15000));
 }
 

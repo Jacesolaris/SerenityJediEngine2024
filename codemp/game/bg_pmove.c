@@ -5443,7 +5443,7 @@ static qboolean pm_check_jump(void)
 	}
 
 	return qtrue;
-		}
+}
 
 qboolean LedgeTrace(trace_t* trace, vec3_t dir, float* lerpup, float* lerpfwd, float* lerpyaw)
 {
@@ -5689,8 +5689,8 @@ void PM_CheckGrab(void)
 			gentity_t* self = &g_entities[pm->ps->client_num];
 			G_Sound(self, CHAN_BODY, G_SoundIndex("sound/weapons/change.wav"));
 #endif
+		}
 	}
-}
 	VectorCopy(trace.endpos, pm->ps->origin);
 	VectorCopy(vec3_origin, pm->ps->velocity);
 	PM_GrabWallForJump(BOTH_LEDGE_GRAB);
@@ -5895,9 +5895,9 @@ static void PM_WaterMove(void)
 			gentity_t* self = &g_entities[pm->ps->client_num];
 			G_Sound(self, CHAN_BODY, G_SoundIndex("sound/weapons/change.wav"));
 #endif
-	}
-			}
 		}
+	}
+}
 
 static void PM_LadderMove(void)
 {
@@ -6004,9 +6004,9 @@ static void PM_LadderMove(void)
 			gentity_t* self = &g_entities[pm->ps->client_num];
 			G_Sound(self, CHAN_BODY, G_SoundIndex("sound/weapons/change.wav"));
 #endif
-	}
-			}
 		}
+	}
+}
 
 /*
 ===================
@@ -6460,7 +6460,7 @@ static void PM_AirMove(void)
 	{
 		PM_StepSlideMove(qtrue);
 	}
-		}
+}
 
 extern qboolean PM_Bobaspecialanim(int anim);
 
@@ -7270,7 +7270,7 @@ static int pm_try_roll(void)
 		}
 	}
 	return 0;
-	}
+}
 
 #ifdef _GAME
 static void PM_CrashLandEffect(void)
@@ -8571,7 +8571,7 @@ static void PM_CheckDuck(void)
 				pm->mins[1] = -8;
 				pm->mins[0] = -8;
 			}
-				}
+		}
 
 		if (PM_CheckDualForwardJumpDuck())
 		{
@@ -8645,7 +8645,7 @@ static void PM_CheckDuck(void)
 				}
 			}
 		}
-			}
+	}
 
 	if (pm->ps->pm_flags & PMF_DUCKED)
 	{
@@ -8662,7 +8662,7 @@ static void PM_CheckDuck(void)
 		pm->maxs[2] = pm->ps->standheight; //DEFAULT_MAXS_2;
 		pm->ps->viewheight = DEFAULT_VIEWHEIGHT;
 	}
-		}
+}
 
 //===================================================================
 
@@ -9640,8 +9640,8 @@ void PM_SwimFloatAnim(void)
 			gentity_t* self = &g_entities[pm->ps->client_num];
 			G_Sound(self, CHAN_BODY, G_SoundIndex("sound/weapons/change.wav"));
 #endif
+		}
 	}
-}
 
 	if (pm->watertype & CONTENTS_LADDER)
 	{
@@ -9675,7 +9675,7 @@ void PM_SwimFloatAnim(void)
 			}
 		}
 	}
-	}
+}
 
 /*
 ===============
@@ -9781,22 +9781,22 @@ static void PM_Footsteps(void)
 					gentity_t* self = &g_entities[pm->ps->client_num];
 					G_Sound(self, CHAN_BODY, G_SoundIndex("sound/weapons/change.wav"));
 #endif
+				}
 			}
-		}
 			pm->cmd.buttons &= ~(BUTTON_ATTACK | BUTTON_ALT_ATTACK | BUTTON_FORCEPOWER | BUTTON_DASH);
 
 			if (pm->ps->pm_flags & PMF_LADDER || pm->watertype & CONTENTS_LADDER)
 			{
 				// on ladder
 				PM_LadderAnim();
-	}
+			}
 			else
 			{
 				PM_SwimFloatAnim();
 			}
-}
+		}
 		return;
-}
+	}
 	// if not trying to move
 	else if (!pm->cmd.forwardmove && !pm->cmd.rightmove || pm->ps->speed == 0)
 	{
@@ -9893,7 +9893,7 @@ static void PM_Footsteps(void)
 										{
 											PM_ContinueLegsAnim(
 												PM_LegsSlopeBackTransition(PM_BlockingPoseForsaber_anim_levelDual()));
-							}
+										}
 										else if (pm->ps->fd.saber_anim_level == SS_STAFF)
 										{
 											PM_ContinueLegsAnim(
@@ -9904,22 +9904,22 @@ static void PM_Footsteps(void)
 											PM_ContinueLegsAnim(
 												PM_LegsSlopeBackTransition(PM_BlockingPoseForsaber_anim_levelSingle()));
 										}
-						}
+									}
 									else
 									{
 										PM_ContinueLegsAnim(PM_LegsSlopeBackTransition(PM_IdlePoseForsaber_anim_level()));
 									}
-					}
-				}
+								}
+							}
 							else
 							{
 								PM_ContinueLegsAnim(PM_LegsSlopeBackTransition(WeaponReadyLegsAnim[pm->ps->weapon]));
 							}
+						}
+					}
+				}
 			}
 		}
-	}
-}
-}
 		if (pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING || pm->ps->PlayerEffectFlags & 1 << PEF_WEAPONSPRINTING)
 		{
 			pm->ps->PlayerEffectFlags &= ~(1 << PEF_SPRINTING);
@@ -9929,7 +9929,7 @@ static void PM_Footsteps(void)
 #endif
 		}
 		return;
-}
+	}
 
 #ifdef _GAME
 #define OVERRIDE_ROLL_CHECK g_entities[pm->ps->client_num].npc_roll_start
@@ -10030,7 +10030,7 @@ static void PM_Footsteps(void)
 #ifdef _GAME
 			AddSoundEvent(&g_entities[pm->ps->client_num], pm->ps->origin, 128, AEL_MINOR, qtrue, qtrue);
 #endif
-	}
+		}
 
 		if (pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING || pm->ps->PlayerEffectFlags & 1 << PEF_WEAPONSPRINTING)
 		{
@@ -10273,7 +10273,7 @@ static void PM_Footsteps(void)
 							{
 								desiredAnim = BOTH_RUN2;
 							}
-					}
+						}
 						else
 						{
 							if (!pm->ps->weaponTime)
@@ -10338,13 +10338,13 @@ static void PM_Footsteps(void)
 								PEF_WEAPONSPRINTING)
 							{
 								pm->ps->PlayerEffectFlags &= ~(1 << PEF_SPRINTING);
-									pm->ps->PlayerEffectFlags &= ~(1 << PEF_WEAPONSPRINTING);
+								pm->ps->PlayerEffectFlags &= ~(1 << PEF_WEAPONSPRINTING);
 #ifdef _GAME
-									g_entities[pm->ps->client_num].client->IsSprinting = qfalse;
+								g_entities[pm->ps->client_num].client->IsSprinting = qfalse;
 #endif
+							}
 						}
-			}
-		}
+					}
 					else if (pm->ps->weapon == WP_BOWCASTER ||
 						pm->ps->weapon == WP_FLECHETTE ||
 						pm->ps->weapon == WP_DISRUPTOR ||
@@ -10413,13 +10413,13 @@ static void PM_Footsteps(void)
 								PEF_WEAPONSPRINTING)
 							{
 								pm->ps->PlayerEffectFlags &= ~(1 << PEF_SPRINTING);
-									pm->ps->PlayerEffectFlags &= ~(1 << PEF_WEAPONSPRINTING);
+								pm->ps->PlayerEffectFlags &= ~(1 << PEF_WEAPONSPRINTING);
 #ifdef _GAME
-									g_entities[pm->ps->client_num].client->IsSprinting = qfalse;
+								g_entities[pm->ps->client_num].client->IsSprinting = qfalse;
 #endif
+							}
 						}
 					}
-	}
 					else if (pm->ps->weapon == WP_THERMAL ||
 						pm->ps->weapon == WP_DET_PACK ||
 						pm->ps->weapon == WP_TRIP_MINE)
@@ -10465,13 +10465,13 @@ static void PM_Footsteps(void)
 								PEF_WEAPONSPRINTING)
 							{
 								pm->ps->PlayerEffectFlags &= ~(1 << PEF_SPRINTING);
-									pm->ps->PlayerEffectFlags &= ~(1 << PEF_WEAPONSPRINTING);
+								pm->ps->PlayerEffectFlags &= ~(1 << PEF_WEAPONSPRINTING);
 #ifdef _GAME
-									g_entities[pm->ps->client_num].client->IsSprinting = qfalse;
+								g_entities[pm->ps->client_num].client->IsSprinting = qfalse;
 #endif
+							}
 						}
-}
-	}
+					}
 					else if (pm->ps->weapon == WP_CONCUSSION || pm->ps->weapon == WP_ROCKET_LAUNCHER)
 					{
 						if (!pm->ps->weaponTime)
@@ -10508,7 +10508,7 @@ static void PM_Footsteps(void)
 							{
 								PM_SetAnim(SETANIM_BOTH, BOTH_RUN7, SETANIM_FLAG_NORMAL);
 							}
-					}
+						}
 						else
 						{
 							desiredAnim = BOTH_RUN7;
@@ -10535,13 +10535,13 @@ static void PM_Footsteps(void)
 								PEF_WEAPONSPRINTING)
 							{
 								pm->ps->PlayerEffectFlags &= ~(1 << PEF_SPRINTING);
-									pm->ps->PlayerEffectFlags &= ~(1 << PEF_WEAPONSPRINTING);
+								pm->ps->PlayerEffectFlags &= ~(1 << PEF_WEAPONSPRINTING);
 #ifdef _GAME
-									g_entities[pm->ps->client_num].client->IsSprinting = qfalse;
+								g_entities[pm->ps->client_num].client->IsSprinting = qfalse;
 #endif
+							}
 						}
-	}
-}
+					}
 					else if (pm->ps && pm_entSelf
 						&& pm_entSelf->s.botclass == BCLASS_WOOKIEMELEE || pm_entSelf->s.botclass == BCLASS_CHEWIE)
 					{
@@ -10586,13 +10586,13 @@ static void PM_Footsteps(void)
 								PEF_WEAPONSPRINTING)
 							{
 								pm->ps->PlayerEffectFlags &= ~(1 << PEF_SPRINTING);
-									pm->ps->PlayerEffectFlags &= ~(1 << PEF_WEAPONSPRINTING);
+								pm->ps->PlayerEffectFlags &= ~(1 << PEF_WEAPONSPRINTING);
 #ifdef _GAME
-									g_entities[pm->ps->client_num].client->IsSprinting = qfalse;
+								g_entities[pm->ps->client_num].client->IsSprinting = qfalse;
 #endif
+							}
 						}
-	}
-	}
+					}
 					else if (pm->ps->fd.forcePowersActive & 1 << FP_RAGE)
 					{
 						//in force rage
@@ -10630,12 +10630,12 @@ static void PM_Footsteps(void)
 						if (!pm->ps->weaponTime)
 						{
 							PM_SetAnim(SETANIM_BOTH, BOTH_SPRINT, SETANIM_FLAG_NORMAL);
-					}
+						}
 						else
 						{
 							desiredAnim = BOTH_SPRINT;
 						}
-}
+					}
 					else if (pm->ps->weapon == WP_MELEE)
 					{
 						if (pm->ps->stats[STAT_HEALTH] <= 70 && pm->ps->stats[STAT_HEALTH] >= 40)
@@ -10690,8 +10690,8 @@ static void PM_Footsteps(void)
 						{
 							desiredAnim = BOTH_RUN1;
 						}
-	}
-		} ////////////////////////////////////////////// saber running anims ///////////////////////////////////////////
+					}
+				} ////////////////////////////////////////////// saber running anims ///////////////////////////////////////////
 				else
 				{
 					if (pm->ps->weapon == WP_SABER)
@@ -10835,7 +10835,7 @@ static void PM_Footsteps(void)
 							if (pm->ps->stats[STAT_HEALTH] <= 70 && pm->ps->stats[STAT_HEALTH] >= 40)
 							{
 								PM_SetAnim(SETANIM_BOTH, BOTH_RUN7, SETANIM_FLAG_NORMAL);
-						}
+							}
 							else if (pm->ps->stats[STAT_HEALTH] <= 40)
 							{
 								PM_SetAnim(SETANIM_BOTH, BOTH_RUN8, SETANIM_FLAG_NORMAL);
@@ -10873,11 +10873,11 @@ static void PM_Footsteps(void)
 									}
 								}
 							}
-					}
-				} //////////////////////////////// end saber running anims /////////////////////////////////
+						}
+					} //////////////////////////////// end saber running anims /////////////////////////////////
 				}
 			}
-	}
+		}
 		else
 		{
 			bobmove = 0.2f; // walking bobs slow
@@ -10979,7 +10979,7 @@ static void PM_Footsteps(void)
 					{
 						desiredAnim = BOTH_WALK1;
 					}
-			}
+				}
 				else if (pm->ps->weapon == WP_BRYAR_OLD || pm_entSelf->s.botclass == BCLASS_SBD)
 				{
 					if (!pm->ps->weaponTime)
@@ -11108,7 +11108,7 @@ static void PM_Footsteps(void)
 							if (pm->cmd.buttons & BUTTON_BLOCK)
 							{
 								desiredAnim = BOTH_WALK2;
-								}
+							}
 							else
 							{
 #ifdef _GAME
@@ -11191,7 +11191,7 @@ static void PM_Footsteps(void)
 							if (pm->cmd.buttons & BUTTON_BLOCK)
 							{
 								desiredAnim = BOTH_WALK2;
-								}
+							}
 							else
 							{
 #ifdef _GAME
@@ -11212,7 +11212,7 @@ static void PM_Footsteps(void)
 						if (pm->ps->saberHolstered)
 						{
 							desiredAnim = BOTH_WALK1;
-								}
+						}
 						else
 						{
 							if (pm->cmd.buttons & BUTTON_BLOCK)
@@ -11246,7 +11246,7 @@ static void PM_Footsteps(void)
 					g_entities[pm->ps->client_num].client->IsSprinting = qfalse;
 #endif
 				}
-								}
+			}
 #ifdef _GAME
 			if (!Q_irand(0, 9))
 			{
@@ -11254,7 +11254,7 @@ static void PM_Footsteps(void)
 				AddSoundEvent(&g_entities[pm->ps->client_num], pm->ps->origin, 16, AEL_MINOR, qtrue, qtrue);
 			}
 #endif
-							}
+		}
 
 		if (desiredAnim != -1)
 		{
@@ -11268,8 +11268,8 @@ static void PM_Footsteps(void)
 			{
 				PM_ContinueLegsAnim(ires);
 			}
-						}
-							}
+		}
+	}
 
 	// check for footstep / splash sounds
 	old = pm->ps->bobCycle;
@@ -11322,7 +11322,7 @@ static void PM_Footsteps(void)
 			// no sound when completely underwater
 		}
 	}
-	}
+}
 
 /*
 ==============
@@ -11386,7 +11386,7 @@ static void PM_WaterEvents(void)
 		AddSoundEvent(&g_entities[pm->ps->client_num], pm->ps->origin, 384, AEL_SUSPICIOUS, qfalse, qfalse);
 		AddSightEvent(&g_entities[pm->ps->client_num], pm->ps->origin, 512, AEL_SUSPICIOUS, 0);
 #endif
-}
+	}
 
 	if (impact_splash)
 	{
@@ -11421,8 +11421,8 @@ static void PM_WaterEvents(void)
 				G_PlayEffect(EFFECT_WATER_SPLASH, tr.endpos, tr.plane.normal);
 #endif
 			}
-			}
-			}
+		}
+	}
 
 	//
 	// check for head just going under water
@@ -11475,8 +11475,8 @@ static void PM_WaterEvents(void)
 		AddSoundEvent(&g_entities[pm->ps->client_num], pm->ps->origin, 256, AEL_MINOR, qfalse, qfalse);
 		AddSightEvent(&g_entities[pm->ps->client_num], pm->ps->origin, 384, AEL_SUSPICIOUS, 0);
 #endif
-		}
 	}
+}
 
 void BG_ClearRocketLock(playerState_t * ps)
 {
@@ -11486,8 +11486,8 @@ void BG_ClearRocketLock(playerState_t * ps)
 		ps->rocketLastValidTime = 0;
 		ps->rocketLockTime = -1;
 		ps->rocketTargetTime = 0;
-		}
 	}
+}
 
 /*
 ===============
@@ -11594,7 +11594,7 @@ void PM_FinishWeaponChange(void)
 				//not holding any sabers, make sure all our blades are all off.
 				pm->ps->saberHolstered = 2;
 			}
-}
+		}
 		else if (!pm->ps->saberInFlight && !BG_FullBodyEmoteAnim(pm->ps->torsoAnim))
 		{
 			//have saber(s)
@@ -11614,7 +11614,7 @@ void PM_FinishWeaponChange(void)
 				else if (PM_WalkingAnim(pm->ps->legsAnim))
 				{
 					PM_SetAnim(SETANIM_TORSO, BOTH_SABER_IGNITION_JFA, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
-		}
+				}
 				else
 				{
 					if (saber1 && (saber1->type == SABER_BACKHAND
@@ -11655,9 +11655,9 @@ void PM_FinishWeaponChange(void)
 						PM_SetSaberMove(LS_DRAW2);
 					}
 				}
-							}
-						}
-								}
+			}
+		}
+	}
 	else
 	{
 		PM_SetAnim(SETANIM_TORSO, TORSO_RAISEWEAP1, SETANIM_FLAG_OVERRIDE);
@@ -11672,7 +11672,7 @@ void PM_FinishWeaponChange(void)
 	{
 		pm->ps->weaponTime += 250;
 	}
-							}
+}
 
 #ifdef _GAME
 extern void WP_GetVehicleCamPos(gentity_t * ent, gentity_t * pilot, vec3_t camPos);
@@ -11716,7 +11716,7 @@ int BG_VehTraceFromCamPos(trace_t * cam_trace, const bgEntity_t * bg_ent, const 
 		return cam_trace->entity_num + 1;
 	}
 	return 0;
-						}
+}
 
 void PM_RocketLock(const float lockDist, const qboolean vehicleLock)
 {
@@ -12002,7 +12002,7 @@ static qboolean PM_DoChargedWeapons(const qboolean vehicleRocketLock, const bgEn
 					pm->ps->weaponstate = WEAPON_CHARGING_ALT;
 					goto rest;
 				}
-		}
+			}
 			else if (pm->ps->ammo[weaponData[pm->ps->weapon].ammoIndex] < weaponData[pm->ps->weapon].altChargeSub +
 				weaponData[pm->ps->weapon].altEnergyPerShot)
 			{
@@ -12018,7 +12018,7 @@ static qboolean PM_DoChargedWeapons(const qboolean vehicleRocketLock, const bgEn
 					pm->ps->weaponChargeSubtractTime = pm->cmd.serverTime + weaponData[pm->ps->weapon].altChargeSubTime;
 				}
 			}
-	}
+		}
 		else
 		{
 			if (pm->ps->weaponstate != WEAPON_CHARGING)
@@ -12062,7 +12062,7 @@ static qboolean PM_DoChargedWeapons(const qboolean vehicleRocketLock, const bgEn
 		}
 
 		return qtrue; // short-circuit rest of weapon code
-}
+	}
 rest:
 	// Only charging weapons should be able to set these states...so....
 	//	let's see which fire mode we need to set up now that the buttons are up
@@ -12093,7 +12093,7 @@ rest:
 	}
 
 	return qfalse; // continue with the rest of the weapon code
-								}
+}
 
 int PM_ItemUsable(const playerState_t * ps, int forced_use)
 {
@@ -12823,8 +12823,8 @@ void PM_Weapon(void)
 				pm->cmd.buttons &= ~(BUTTON_ATTACK | BUTTON_ALT_ATTACK);
 			}
 #endif
-			}
 		}
+	}
 
 	if (pm->ps->weapon != WP_DISRUPTOR //not using disruptor
 		&& pm->ps->weapon != WP_ROCKET_LAUNCHER //not using rocket launcher
@@ -13649,13 +13649,13 @@ void PM_Weapon(void)
 						{
 							PM_StartTorsoAnim(PM_BlockingPoseForsaber_anim_levelSingle());
 						}
-			}
+					}
 					else
 					{
 						PM_StartTorsoAnim(PM_IdlePoseForsaber_anim_level());
 					}
-		}
-	}
+				}
+			}
 			else if (pm->ps->weapon == WP_MELEE || PM_IsRocketTrooper())
 			{
 				PM_StartTorsoAnim(pm->ps->legsAnim);
@@ -13689,9 +13689,9 @@ void PM_Weapon(void)
 					}
 				}
 			}
-	}
+		}
 		return;
-}
+	}
 
 	if (PM_CanSetWeaponAnims() &&
 		!PM_IsRocketTrooper() &&
@@ -13856,7 +13856,7 @@ void PM_Weapon(void)
 		!pm->ps->zoomLocked)
 	{
 		return;
-		}
+	}
 
 	if (pm->ps->weapon == WP_DISRUPTOR &&
 		pm->cmd.buttons & BUTTON_ALT_ATTACK &&
@@ -14275,7 +14275,7 @@ void PM_Weapon(void)
 	}
 	pm->ps->weaponTime += addTime;
 	pm->ps->lastShotTime = 3000; //so we know when the last time we fired our gun is
-			}
+}
 
 /*
 ================
@@ -14721,8 +14721,8 @@ void PM_UpdateViewAngles(int saber_anim_level, playerState_t * ps, const usercmd
 				//get roll from vehicle
 				ps->viewangles[ROLL] = pm_entVeh->playerState->viewangles[ROLL];
 				continue;
+			}
 		}
-	}
 #endif // VEH_CONTROL_SCHEME_4
 		else
 		{
@@ -14742,7 +14742,7 @@ void PM_UpdateViewAngles(int saber_anim_level, playerState_t * ps, const usercmd
 			}
 		}
 		ps->viewangles[i] = SHORT2ANGLE(temp);
-}
+	}
 
 	//manual dodge
 	if (pm->ps->ManualBlockingFlags & 1 << MBF_MELEEDODGE)
@@ -15295,7 +15295,7 @@ void PM_UpdateViewAngles(int saber_anim_level, playerState_t * ps, const usercmd
 		pm->cmd.buttons &= ~BUTTON_USE;
 		pm->cmd.buttons &= ~BUTTON_BLOCK;
 	}
-		}
+}
 
 //-------------------------------------------
 void PM_AdjustAttackStates(pmove_t * pmove)
@@ -15625,9 +15625,9 @@ void PM_CmdForRoll(playerState_t * ps, const int anim, usercmd_t * p_Cmd)
 		}
 		break;
 	default:;
-		}
-	p_Cmd->upmove = 0;
 	}
+	p_Cmd->upmove = 0;
+}
 
 qboolean PM_SaberInTransition(int move);
 
@@ -15785,7 +15785,7 @@ void BG_AdjustClientSpeed(playerState_t * ps, const usercmd_t * cmd, const int s
 		if (!g_entities[pm->ps->client_num].r.svFlags & SVF_BOT)
 		{
 			ps->speed *= 1.30f;
-	}
+		}
 #endif
 	}
 	else if (BG_SprintSaberAnim(pm->ps->legsAnim))
@@ -15794,9 +15794,9 @@ void BG_AdjustClientSpeed(playerState_t * ps, const usercmd_t * cmd, const int s
 		if (!g_entities[pm->ps->client_num].r.svFlags & SVF_BOT)
 		{
 			ps->speed *= 1.50f;
-}
+		}
 #endif
-}
+	}
 	else if (pm->ps->weapon == WP_BRYAR_PISTOL ||
 		pm->ps->weapon == WP_THERMAL ||
 		pm->ps->weapon == WP_TRIP_MINE ||
@@ -15980,7 +15980,7 @@ void BG_AdjustClientSpeed(playerState_t * ps, const usercmd_t * cmd, const int s
 	{
 		ps->speed *= saber->moveSpeedScale;
 	}
-	}
+}
 
 qboolean BG_InRollAnim(const entityState_t * cent)
 {
@@ -16244,9 +16244,15 @@ void BG_BoneOrientationsForClass(const int NPC_class, const char* boneName, int*
 	switch (NPC_class)
 	{
 	case CLASS_RANCOR:
-		*oUp = NEGATIVE_X;
-		*oRt = POSITIVE_Y;
-		*oFwd = POSITIVE_Z;
+		if (Q_stricmp("pelvis", boneName) == 0
+			|| Q_stricmp("lower_lumbar", boneName) == 0
+			|| Q_stricmp("upper_lumbar", boneName) == 0)
+		{
+			//only these 3 bones on them are wrong
+			*oUp = NEGATIVE_X;
+			*oRt = POSITIVE_Y;
+			*oFwd = POSITIVE_Z;
+		}
 		break;
 	case CLASS_ROCKETTROOPER:
 	case CLASS_HAZARD_TROOPER:
@@ -16630,10 +16636,10 @@ static void BG_G2ClientSpineAngles(void* ghoul2, const int motionBolt, vec3_t ce
 			&& !PM_FlippingAnim(ciLegs)
 			&& !PM_SpinningSaberAnim(ciLegs)
 			&& !PM_SpinningSaberAnim(ciTorso))
-		{
-			doCorr = qtrue;
-		}
+	{
+		doCorr = qtrue;
 	}
+}
 #endif
 
 	if (doCorr)
@@ -16663,7 +16669,7 @@ static void BG_G2ClientSpineAngles(void* ghoul2, const int motionBolt, vec3_t ce
 		{
 			viewAngles[ang] = AngleNormalize180(viewAngles[ang] - AngleNormalize180(motionAngles[ang]));
 		}
-}
+	}
 
 	//distribute the angles differently up the spine
 	//added in different bone handling support for some of NPCs
@@ -17217,7 +17223,7 @@ void BG_G2PlayerAngles(void* ghoul2, const int motionBolt, entityState_t * cent,
 		{
 			llAngles[YAW] -= bLAngles[ROLL];
 		}
-	}
+}
 #endif
 
 	if (BG_ClassHasBadBones(cent->NPC_class))
@@ -17227,14 +17233,14 @@ void BG_G2PlayerAngles(void* ghoul2, const int motionBolt, entityState_t * cent,
 		{
 			llAngles[YAW] = llAngles[ROLL] = 0.0f;
 			ulAngles[YAW] = ulAngles[ROLL] = 0.0f;
-	}
+		}
 		BG_BoneOrientationsForClass(cent->NPC_class, "upper_lumbar", &oUp, &oRt, &oFwd);
 		trap->G2API_SetBoneAngles(ghoul2, 0, "lower_lumbar", ulAngles, BONE_ANGLES_POSTMULT, oUp, oRt, oFwd, 0, 0,
 			time);
 		BG_BoneOrientationsForClass(cent->NPC_class, "lower_lumbar", &oUp, &oRt, &oFwd);
 		trap->G2API_SetBoneAngles(ghoul2, 0, "upper_lumbar", llAngles, BONE_ANGLES_POSTMULT, oUp, oRt, oFwd, 0, 0,
 			time);
-}
+	}
 	else
 	{
 		trap->G2API_SetBoneAngles(ghoul2, 0, "lower_lumbar", llAngles, BONE_ANGLES_POSTMULT, POSITIVE_X, NEGATIVE_Y,
@@ -17806,7 +17812,7 @@ void PM_VehFaceHyperspacePoint(bgEntity_t * veh)
 			else if (!(veh->playerState->eFlags2 & EF2_HYPERSPACE))
 			{//flag us as ready to hyperspace!
 				veh->playerState->eFlags2 |= EF2_HYPERSPACE;
-			}
+}
 		}
 	}
 }
@@ -18488,7 +18494,7 @@ void PmoveSingle(pmove_t * pmove)
 				pm->cmd.buttons = 0;
 			}
 		}
-}
+	}
 	else if (pm->ps->torsoAnim == BOTH_COWER1_STOP && pm->ps->torsoTimer > 0)
 	{
 		stiffenedUp = qtrue;
@@ -19068,7 +19074,7 @@ void PmoveSingle(pmove_t * pmove)
 
 		VectorMA(pm->ps->origin, 1.0f, pm->ps->velocity, blah);
 		CG_TestLine(pm->ps->origin, blah, 1, 0xff0000, 1);
-	}
+		}
 #endif
 #endif
 
@@ -19162,7 +19168,7 @@ void PmoveSingle(pmove_t * pmove)
 				veh->m_pVehicle->m_ulFlags & VEH_CRASHING)
 			{
 				veh->m_pVehicle->m_ulFlags &= ~VEH_CRASHING;
-		}
+			}
 
 			if (self->playerState->m_iVehicleNum)
 			{
@@ -19199,7 +19205,7 @@ void PmoveSingle(pmove_t * pmove)
 					//client must explicitly call this for prediction
 					BG_FighterUpdate(veh->m_pVehicle, &veh->m_pVehicle->m_ucmd, pm->mins, pm->maxs,
 						self->playerState->gravity, pm->trace);
-			}
+				}
 
 				if (veh->m_pVehicle->m_iBoarding == 0)
 				{
@@ -19233,7 +19239,7 @@ void PmoveSingle(pmove_t * pmove)
 						AngleVectors(vVehAngles, veh->playerState->moveDir, NULL, NULL);
 					}
 				}
-		}
+			}
 			else if (veh->playerState)
 			{
 				veh->playerState->speed = 0.0f;
@@ -19242,11 +19248,11 @@ void PmoveSingle(pmove_t * pmove)
 					PM_SetPMViewAngle(self->playerState, veh->m_pVehicle->m_vOrientation, &pm->cmd);
 					PM_SetPMViewAngle(veh->playerState, veh->m_pVehicle->m_vOrientation, &pm->cmd);
 				}
-			}
+					}
 #endif
-	}
+				}
 		noAnimate = qtrue;
-}
+			}
 
 	if (pm_entSelf->s.NPC_class != CLASS_VEHICLE
 		&& pm->ps->m_iVehicleNum)
@@ -19417,7 +19423,7 @@ void PmoveSingle(pmove_t * pmove)
 		//riding a vehicle, see if we should do some anim overrides
 		PM_VehicleWeaponAnimate();
 	}
-						}
+		}
 
 /*
 ================
@@ -19588,7 +19594,7 @@ int pm_min_get_up_time(const playerState_t * ps)
 		if (ps->fd.forcePowerLevel[FP_LEVITATION] >= FORCE_LEVEL_3)
 		{
 			return get_up_time + 400;
-	}
+		}
 		if (ps->fd.forcePowerLevel[FP_LEVITATION] == FORCE_LEVEL_2)
 		{
 			return get_up_time + 200;
@@ -19598,9 +19604,9 @@ int pm_min_get_up_time(const playerState_t * ps)
 			return get_up_time + 100;
 		}
 		return get_up_time;
-}
+	}
 	return 200;
-					}
+}
 
 qboolean PM_InAttackRoll(const int anim)
 {
@@ -19927,7 +19933,7 @@ qboolean PM_CheckRollGetup(void)
 					anim = BOTH_GETUP_BROLL_F;
 				}
 				forceGetUp = qtrue;
-	}
+			}
 			else if (pm->cmd.forwardmove < 0)
 			{
 				if (pm->ps->legsAnim == BOTH_KNOCKDOWN3
@@ -20097,7 +20103,7 @@ qboolean PM_CheckRollGetup(void)
 		}
 	}
 	return qfalse;
-				}
+}
 
 qboolean PM_GettingUpFromKnockDown(const float standheight, const float crouchheight)
 {
@@ -20277,7 +20283,7 @@ qboolean PM_GettingUpFromKnockDown(const float standheight, const float crouchhe
 				{
 					//need to be able to override this anim
 					pm->ps->torsoTimer = 0;
-					}
+				}
 				if (PM_LockedAnim(pm->ps->legsAnim))
 				{
 					//need to be able to override this anim
@@ -20288,9 +20294,9 @@ qboolean PM_GettingUpFromKnockDown(const float standheight, const float crouchhe
 				//don't finish whatever saber anim you may have been in
 				pm->ps->saberBlocked = BLOCKED_NONE;
 				return qtrue;
-				}
-			return PM_CrouchGetup(crouchheight);
 			}
+			return PM_CrouchGetup(crouchheight);
+		}
 		if (pm->ps->legsAnim == BOTH_LK_DL_ST_T_SB_1_L)
 		{
 			//racc - apprenently this move has a special cmd for it.
@@ -20300,6 +20306,6 @@ qboolean PM_GettingUpFromKnockDown(const float standheight, const float crouchhe
 		{
 			pm->cmd.rightmove = pm->cmd.forwardmove = 0;
 		}
-		}
-	return qfalse;
 	}
+	return qfalse;
+}

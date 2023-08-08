@@ -44,6 +44,10 @@ extern cvar_t* g_dismemberment;
 extern cvar_t* g_bobaDebug;
 
 void Rancor_Attack(float distance, qboolean do_charge, qboolean aim_at_blocked_entity);
+extern void G_Knockdown(gentity_t* self, gentity_t* attacker, const vec3_t push_dir, float strength, qboolean break_saber_lock);
+extern qboolean G_DoDismemberment(gentity_t* self, vec3_t point, int mod, int hit_loc, qboolean force = qfalse);
+extern float NPC_EntRangeFromBolt(const gentity_t* targ_ent, int bolt_index);
+extern int NPC_GetEntsNearBolt(gentity_t** radius_ents, float radius, int bolt_index, vec3_t bolt_org);
 /*
 -------------------------
 NPC_Rancor_Precache
@@ -65,8 +69,6 @@ void NPC_MutantRancor_Precache()
 	G_SoundIndex("sound/chars/rancor/breath_loop.wav");
 	G_EffectIndex("mrancor/breath");
 }
-
-//FIXME: initialize all my timers
 
 qboolean Rancor_CheckAhead(vec3_t end)
 {
@@ -260,12 +262,6 @@ void Rancor_Move()
 }
 
 //---------------------------------------------------------
-extern void G_Knockdown(gentity_t* self, gentity_t* attacker, const vec3_t push_dir, float strength,
-	qboolean break_saber_lock);
-extern qboolean G_DoDismemberment(gentity_t* self, vec3_t point, int mod, int hit_loc,
-	qboolean force = qfalse);
-extern float NPC_EntRangeFromBolt(const gentity_t* targ_ent, int bolt_index);
-extern int NPC_GetEntsNearBolt(gentity_t** radius_ents, float radius, int bolt_index, vec3_t bolt_org);
 
 void Rancor_DropVictim(gentity_t* self)
 {
@@ -287,7 +283,6 @@ void Rancor_DropVictim(gentity_t* self)
 					if (self->activator->client)
 					{
 						self->activator->client->ps.legsAnimTimer = self->activator->client->ps.torsoAnimTimer = 0;
-						//FIXME: ragdoll?
 					}
 				}
 				else
@@ -322,7 +317,7 @@ void Rancor_DropVictim(gentity_t* self)
 		if (self->activator->s.number == 0)
 		{
 			//don't attack the player again for a bit
-			TIMER_Set(self, "attackDebounce", Q_irand(2000, 4000 + (2 - g_spskill->integer) * 2000));
+			TIMER_Set(self, "attackDebounce", Q_irand(1000, 2000 + (2 - g_spskill->integer) * 2000));
 		}
 		self->activator = nullptr;
 	}
@@ -342,42 +337,36 @@ void Rancor_Swing(const int bolt_index, const qboolean try_grab)
 
 	const int num_ents = NPC_GetEntsNearBolt(radius_ents, radius, bolt_index, bolt_org);
 
-	//if ( NPCInfo->blockedEntity && G_EntIsBreakable( NPCInfo->blockedEntity->s.number, NPC ) )
+	//attacking a breakable brush
+	trace_t trace;
+
+	gi.trace(&trace, NPC->pos3, vec3_origin, vec3_origin, bolt_org, NPC->s.number, CONTENTS_SOLID | CONTENTS_BODY, static_cast<EG2_Collision>(0), 0);
+#ifndef FINAL_BUILD
+	if (g_bobaDebug->integer > 0)
 	{
-		//attacking a breakable brush
-		//HMM... maybe always do this?
-		//if bolt_org inside a breakable brush, damage it
-		trace_t trace;
-		gi.trace(&trace, NPC->pos3, vec3_origin, vec3_origin, bolt_org, NPC->s.number, CONTENTS_SOLID | CONTENTS_BODY,
-			static_cast<EG2_Collision>(0), 0);
+		G_DebugLine(NPC->pos3, bolt_org, 1000, 0x000000ff);
+	}
+#endif
+	//remember pos3 for the trace from last hand pos to current hand pos next time
+	VectorCopy(bolt_org, NPC->pos3);
+	//FIXME: also do a trace TO the bolt from where we are...?
+	if (G_EntIsBreakable(trace.entity_num, NPC))
+	{
+		G_Damage(&g_entities[trace.entity_num], NPC, NPC, vec3_origin, bolt_org, 100, 0, MOD_MELEE);
+	}
+	else
+	{
+		//fuck, do an actual line trace, I guess...
+		gi.trace(&trace, origin_up, vec3_origin, vec3_origin, bolt_org, NPC->s.number, CONTENTS_SOLID | CONTENTS_BODY, static_cast<EG2_Collision>(0), 0);
 #ifndef FINAL_BUILD
 		if (g_bobaDebug->integer > 0)
 		{
-			G_DebugLine(NPC->pos3, bolt_org, 1000, 0x000000ff);
+			G_DebugLine(originUp, bolt_org, 1000, 0x000000ff);
 		}
 #endif
-		//remember pos3 for the trace from last hand pos to current hand pos next time
-		VectorCopy(bolt_org, NPC->pos3);
-		//FIXME: also do a trace TO the bolt from where we are...?
 		if (G_EntIsBreakable(trace.entity_num, NPC))
 		{
-			G_Damage(&g_entities[trace.entity_num], NPC, NPC, vec3_origin, bolt_org, 100, 0, MOD_MELEE);
-		}
-		else
-		{
-			//fuck, do an actual line trace, I guess...
-			gi.trace(&trace, origin_up, vec3_origin, vec3_origin, bolt_org, NPC->s.number, CONTENTS_SOLID | CONTENTS_BODY,
-				static_cast<EG2_Collision>(0), 0);
-#ifndef FINAL_BUILD
-			if (g_bobaDebug->integer > 0)
-			{
-				G_DebugLine(originUp, bolt_org, 1000, 0x000000ff);
-			}
-#endif
-			if (G_EntIsBreakable(trace.entity_num, NPC))
-			{
-				G_Damage(&g_entities[trace.entity_num], NPC, NPC, vec3_origin, bolt_org, 200, 0, MOD_MELEE);
-			}
+			G_Damage(&g_entities[trace.entity_num], NPC, NPC, vec3_origin, bolt_org, 200, 0, MOD_MELEE);
 		}
 	}
 
@@ -450,7 +439,6 @@ void Rancor_Swing(const int bolt_index, const qboolean try_grab)
 				}
 				NPC->enemy = radius_ents[i]; //make him my new best friend
 				radius_ents[i]->client->ps.eFlags |= EF_HELD_BY_RANCOR;
-				//FIXME: this makes it so that the victim can't hit us with shots!  Just use activator or something
 				radius_ents[i]->activator = NPC;
 				// kind of dumb, but when we are locked to the Rancor, we are owned by it.
 				NPC->activator = radius_ents[i]; //remember him
@@ -464,8 +452,7 @@ void Rancor_Swing(const int bolt_index, const qboolean try_grab)
 				}
 				else if (radius_ents[i]->client)
 				{
-					NPC_SetAnim(radius_ents[i], SETANIM_BOTH, BOTH_SWIM_IDLE1,
-						SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+					NPC_SetAnim(radius_ents[i], SETANIM_BOTH, BOTH_SWIM_IDLE1, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 				}
 			}
 			else
@@ -477,8 +464,7 @@ void Rancor_Swing(const int bolt_index, const qboolean try_grab)
 				if (NPC->spawnflags & SPF_RANCOR_FASTKILL
 					&& radius_ents[i]->s.number >= MAX_CLIENTS)
 				{
-					G_Damage(radius_ents[i], NPC, NPC, vec3_origin, bolt_org, radius_ents[i]->health + 1000,
-						DAMAGE_NO_KNOCKBACK | DAMAGE_NO_PROTECTION, MOD_MELEE);
+					G_Damage(radius_ents[i], NPC, NPC, vec3_origin, bolt_org, radius_ents[i]->health + 1000, DAMAGE_NO_KNOCKBACK | DAMAGE_NO_PROTECTION, MOD_MELEE);
 				}
 				vec3_t angs;
 				VectorCopy(NPC->client->ps.viewangles, angs);
@@ -509,46 +495,42 @@ void Rancor_Smash()
 	const float radius_squared = radius * radius;
 	vec3_t bolt_org;
 
-	AddSoundEvent(NPC, NPC->currentOrigin, 512, AEL_DANGER, qfalse, qtrue);
+	AddSoundEvent(NPC, NPC->currentOrigin, 1024, AEL_DANGER, qfalse, qtrue);
 
 	const int num_ents = NPC_GetEntsNearBolt(radius_ents, radius, NPC->handLBolt, bolt_org);
 
-	//if ( NPCInfo->blockedEntity && G_EntIsBreakable( NPCInfo->blockedEntity->s.number, NPC ) )
+	//attacking a breakable brush
+	trace_t trace;
+
+	gi.trace(&trace, bolt_org, vec3_origin, vec3_origin, NPC->pos3, NPC->s.number, CONTENTS_SOLID | CONTENTS_BODY,
+		static_cast<EG2_Collision>(0), 0);
+#ifndef FINAL_BUILD
+	if (g_bobaDebug->integer > 0)
 	{
-		//attacking a breakable brush
-		//HMM... maybe always do this?
-		//if bolt_org inside a breakable brush, damage it
-		trace_t trace;
-		gi.trace(&trace, bolt_org, vec3_origin, vec3_origin, NPC->pos3, NPC->s.number, CONTENTS_SOLID | CONTENTS_BODY,
-			static_cast<EG2_Collision>(0), 0);
+		G_DebugLine(NPC->pos3, bolt_org, 1000, 0x000000ff);
+	}
+#endif
+	//remember pos3 for the trace from last hand pos to current hand pos next time
+	VectorCopy(bolt_org, NPC->pos3);
+	//FIXME: also do a trace TO the bolt from where we are...?
+	if (G_EntIsBreakable(trace.entity_num, NPC))
+	{
+		G_Damage(&g_entities[trace.entity_num], NPC, NPC, vec3_origin, bolt_org, 200, 0, MOD_MELEE);
+	}
+	else
+	{
+		//fuck, do an actual line trace, I guess...
+		gi.trace(&trace, NPC->currentOrigin, vec3_origin, vec3_origin, bolt_org, NPC->s.number,
+			CONTENTS_SOLID | CONTENTS_BODY, static_cast<EG2_Collision>(0), 0);
 #ifndef FINAL_BUILD
 		if (g_bobaDebug->integer > 0)
 		{
-			G_DebugLine(NPC->pos3, bolt_org, 1000, 0x000000ff);
+			G_DebugLine(NPC->currentOrigin, bolt_org, 1000, 0x000000ff);
 		}
 #endif
-		//remember pos3 for the trace from last hand pos to current hand pos next time
-		VectorCopy(bolt_org, NPC->pos3);
-		//FIXME: also do a trace TO the bolt from where we are...?
 		if (G_EntIsBreakable(trace.entity_num, NPC))
 		{
 			G_Damage(&g_entities[trace.entity_num], NPC, NPC, vec3_origin, bolt_org, 200, 0, MOD_MELEE);
-		}
-		else
-		{
-			//fuck, do an actual line trace, I guess...
-			gi.trace(&trace, NPC->currentOrigin, vec3_origin, vec3_origin, bolt_org, NPC->s.number,
-				CONTENTS_SOLID | CONTENTS_BODY, static_cast<EG2_Collision>(0), 0);
-#ifndef FINAL_BUILD
-			if (g_bobaDebug->integer > 0)
-			{
-				G_DebugLine(NPC->currentOrigin, bolt_org, 1000, 0x000000ff);
-			}
-#endif
-			if (G_EntIsBreakable(trace.entity_num, NPC))
-			{
-				G_Damage(&g_entities[trace.entity_num], NPC, NPC, vec3_origin, bolt_org, 200, 0, MOD_MELEE);
-			}
 		}
 	}
 
@@ -601,19 +583,16 @@ void Rancor_Smash()
 				if (NPC->spawnflags & SPF_RANCOR_FASTKILL
 					&& radius_ents[i]->s.number >= MAX_CLIENTS)
 				{
-					G_Damage(radius_ents[i], NPC, NPC, vec3_origin, bolt_org, radius_ents[i]->health + 1000,
-						DAMAGE_NO_KNOCKBACK | DAMAGE_NO_PROTECTION, MOD_MELEE);
+					G_Damage(radius_ents[i], NPC, NPC, vec3_origin, bolt_org, radius_ents[i]->health + 1000, DAMAGE_NO_KNOCKBACK | DAMAGE_NO_PROTECTION, MOD_MELEE);
 				}
 				else if (NPC->spawnflags & SPF_RANCOR_MUTANT) //FIXME: a flag or something would be better
 				{
 					//more damage
-					G_Damage(radius_ents[i], NPC, NPC, vec3_origin, radius_ents[i]->currentOrigin, Q_irand(40, 55),
-						DAMAGE_NO_KNOCKBACK, MOD_MELEE);
+					G_Damage(radius_ents[i], NPC, NPC, vec3_origin, radius_ents[i]->currentOrigin, Q_irand(40, 55), DAMAGE_NO_KNOCKBACK, MOD_MELEE);
 				}
 				else
 				{
-					G_Damage(radius_ents[i], NPC, NPC, vec3_origin, radius_ents[i]->currentOrigin, Q_irand(10, 25),
-						DAMAGE_NO_KNOCKBACK, MOD_MELEE);
+					G_Damage(radius_ents[i], NPC, NPC, vec3_origin, radius_ents[i]->currentOrigin, Q_irand(10, 25), DAMAGE_NO_KNOCKBACK, MOD_MELEE);
 				}
 			}
 			if (radius_ents[i]->health > 0
@@ -684,19 +663,16 @@ void Rancor_Bite()
 			if (NPC->spawnflags & SPF_RANCOR_FASTKILL
 				&& radius_ents[i]->s.number >= MAX_CLIENTS)
 			{
-				G_Damage(radius_ents[i], NPC, NPC, vec3_origin, radius_ents[i]->currentOrigin,
-					radius_ents[i]->health + 1000, DAMAGE_NO_KNOCKBACK | DAMAGE_NO_PROTECTION, MOD_MELEE);
+				G_Damage(radius_ents[i], NPC, NPC, vec3_origin, radius_ents[i]->currentOrigin, radius_ents[i]->health + 1000, DAMAGE_NO_KNOCKBACK | DAMAGE_NO_PROTECTION, MOD_MELEE);
 			}
 			else if (NPC->spawnflags & SPF_RANCOR_MUTANT)
 			{
 				//more damage
-				G_Damage(radius_ents[i], NPC, NPC, vec3_origin, radius_ents[i]->currentOrigin, Q_irand(35, 50),
-					DAMAGE_NO_KNOCKBACK, MOD_MELEE);
+				G_Damage(radius_ents[i], NPC, NPC, vec3_origin, radius_ents[i]->currentOrigin, Q_irand(35, 50), DAMAGE_NO_KNOCKBACK, MOD_MELEE);
 			}
 			else
 			{
-				G_Damage(radius_ents[i], NPC, NPC, vec3_origin, radius_ents[i]->currentOrigin, Q_irand(15, 30),
-					DAMAGE_NO_KNOCKBACK, MOD_MELEE);
+				G_Damage(radius_ents[i], NPC, NPC, vec3_origin, radius_ents[i]->currentOrigin, Q_irand(15, 30), DAMAGE_NO_KNOCKBACK, MOD_MELEE);
 			}
 			if (radius_ents[i]->health <= 0 && radius_ents[i]->client)
 			{
@@ -715,13 +691,11 @@ void Rancor_Bite()
 					}
 					if (hit_loc == HL_HEAD)
 					{
-						NPC_SetAnim(radius_ents[i], SETANIM_BOTH, BOTH_DEATH17,
-							SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+						NPC_SetAnim(radius_ents[i], SETANIM_BOTH, BOTH_DEATH17, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 					}
 					else if (hit_loc == HL_WAIST)
 					{
-						NPC_SetAnim(radius_ents[i], SETANIM_BOTH, BOTH_DEATHBACKWARD2,
-							SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+						NPC_SetAnim(radius_ents[i], SETANIM_BOTH, BOTH_DEATHBACKWARD2, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 					}
 					radius_ents[i]->client->dismembered = false;
 					G_DoDismemberment(radius_ents[i], radius_ents[i]->currentOrigin, MOD_SABER, hit_loc, qtrue);
@@ -763,8 +737,7 @@ void Rancor_Attack(const float distance, const qboolean do_charge, const qboolea
 				if (NPC->activator->health > 0 && NPC->activator->client)
 				{
 					G_AddEvent(NPC->activator, Q_irand(EV_DEATH1, EV_DEATH3), 0);
-					NPC_SetAnim(NPC->activator, SETANIM_TORSO, BOTH_FALLDEATH1,
-						SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+					NPC_SetAnim(NPC->activator, SETANIM_TORSO, BOTH_FALLDEATH1, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 					if (NPC->activator->NPC)
 					{
 						//no more thinking for you
@@ -781,11 +754,10 @@ void Rancor_Attack(const float distance, const qboolean do_charge, const qboolea
 			{
 				NPC_SetAnim(NPC, SETANIM_BOTH, BOTH_ATTACK5, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 				TIMER_Set(NPC, "attack_dmg", 1250);
+
 				if (NPC->enemy && NPC->enemy->s.number == 0)
-				{
-					//don't attack the player again for a bit
-					TIMER_Set(NPC, "attackDebounce",
-						NPC->client->ps.legsAnimTimer + Q_irand(2000, 4000 + (2 - g_spskill->integer) * 2000));
+				{	//don't attack the player again for a bit
+					TIMER_Set(NPC, "attackDebounce", NPC->client->ps.legsAnimTimer + Q_irand(1000, 2000 + (2 - g_spskill->integer) * 2000));
 				}
 			}
 			else if (NPC->spawnflags & SPF_RANCOR_MUTANT)
@@ -829,16 +801,14 @@ void Rancor_Attack(const float distance, const qboolean do_charge, const qboolea
 				}
 				NPC_SetAnim(NPC, SETANIM_BOTH, breath_anim, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 				//start effect here
-				G_PlayEffect(G_EffectIndex("mrancor/breath"), NPC->playerModel, NPC->gutBolt, NPC->s.number,
-					NPC->currentOrigin, NPC->client->ps.legsAnimTimer - 500, qfalse);
+				G_PlayEffect(G_EffectIndex("mrancor/breath"), NPC->playerModel, NPC->gutBolt, NPC->s.number, NPC->currentOrigin, NPC->client->ps.legsAnimTimer - 500, qfalse);
 				TIMER_Set(NPC, "breathAttack", NPC->client->ps.legsAnimTimer - 500);
 				G_SoundOnEnt(NPC, CHAN_WEAPON, "sound/chars/rancor/breath_start.wav");
 				NPC->s.loopSound = G_SoundIndex("sound/chars/rancor/breath_loop.wav");
 				if (NPC->enemy && NPC->enemy->s.number == 0)
 				{
 					//don't attack the player again for a bit
-					TIMER_Set(NPC, "attackDebounce",
-						NPC->client->ps.legsAnimTimer + Q_irand(2000, 4000 + (2 - g_spskill->integer) * 2000));
+					TIMER_Set(NPC, "attackDebounce", NPC->client->ps.legsAnimTimer + Q_irand(1000, 2000 + (2 - g_spskill->integer) * 2000));
 				}
 			}
 			else
@@ -922,7 +892,6 @@ void Rancor_Attack(const float distance, const qboolean do_charge, const qboolea
 		{
 			//FIXME: back up?
 			ucmd.forwardmove = -64;
-			//FIXME: check for walls/ledges?
 			return;
 		}
 
@@ -1266,36 +1235,26 @@ void NPC_Rancor_Pain(gentity_t* self, gentity_t* inflictor, gentity_t* other, co
 				&& self->client->ps.legsAnim != BOTH_ATTACK2
 				&& self->client->ps.legsAnim != BOTH_ATTACK10
 				&& self->client->ps.legsAnim != BOTH_ATTACK11)
-			{
-				//cant interrupt one of the big attack anims
-				/*
-				if ( self->count != 1
-					|| other == self->activator
-					|| (self->client->ps.legsAnim != BOTH_ATTACK1&&self->client->ps.legsAnim != BOTH_ATTACK3) )
-				*/
+			{//cant interrupt one of the big attack anims
+				if (self->health > 100 || hit_by_rancor)
 				{
-					//if going to bite our victim, only victim can interrupt that anim
-					if (self->health > 100 || hit_by_rancor)
+					TIMER_Remove(self, "attacking");
+
+					VectorCopy(self->NPC->lastPathAngles, self->s.angles);
+
+					if (self->count == 1)
 					{
-						TIMER_Remove(self, "attacking");
+						NPC_SetAnim(self, SETANIM_BOTH, BOTH_PAIN2, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+					}
+					else
+					{
+						NPC_SetAnim(self, SETANIM_BOTH, BOTH_PAIN1, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+					}
+					TIMER_Set(self, "takingPain", self->client->ps.legsAnimTimer + Q_irand(0, 500 * (2 - g_spskill->integer)));
 
-						VectorCopy(self->NPC->lastPathAngles, self->s.angles);
-
-						if (self->count == 1)
-						{
-							NPC_SetAnim(self, SETANIM_BOTH, BOTH_PAIN2, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
-						}
-						else
-						{
-							NPC_SetAnim(self, SETANIM_BOTH, BOTH_PAIN1, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
-						}
-						TIMER_Set(self, "takingPain",
-							self->client->ps.legsAnimTimer + Q_irand(0, 500 * (2 - g_spskill->integer)));
-
-						if (self->NPC)
-						{
-							self->NPC->localState = LSTATE_WAITING;
-						}
+					if (self->NPC)
+					{
+						self->NPC->localState = LSTATE_WAITING;
 					}
 				}
 			}
@@ -1543,7 +1502,7 @@ void NPC_BSRancor_Default()
 	if (!TIMER_Done(NPC, "rageTime"))
 	{
 		//do nothing but roar first time we see an enemy
-		AddSoundEvent(NPC, NPC->currentOrigin, 1024, AEL_DANGER_GREAT, qfalse, qfalse);
+		AddSoundEvent(NPC, NPC->currentOrigin, 4096, AEL_DANGER_GREAT, qfalse, qfalse);
 		NPC_FaceEnemy(qtrue);
 		return;
 	}
@@ -1581,7 +1540,7 @@ void NPC_BSRancor_Default()
 		}
 		else
 		{
-			AddSoundEvent(NPC, NPC->currentOrigin, 512, AEL_DANGER_GREAT, qfalse, qfalse);
+			AddSoundEvent(NPC, NPC->currentOrigin, 1024, AEL_DANGER_GREAT, qfalse, qfalse);
 		}
 		if (NPC->count == 2 && NPC->client->ps.legsAnim == BOTH_ATTACK3)
 		{
@@ -1733,7 +1692,7 @@ void NPC_BSRancor_Default()
 			G_SoundOnEnt(NPC, CHAN_AUTO, va("sound/chars/rancor/snort_%d.wav", Q_irand(1, 4)));
 
 			TIMER_Set(NPC, "idlenoise", Q_irand(2000, 4000));
-			AddSoundEvent(NPC, NPC->currentOrigin, 384, AEL_DANGER, qfalse, qfalse);
+			AddSoundEvent(NPC, NPC->currentOrigin, 512, AEL_DANGER, qfalse, qfalse);
 		}
 		if (NPCInfo->scriptFlags & SCF_LOOK_FOR_ENEMIES)
 		{

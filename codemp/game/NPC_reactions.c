@@ -664,14 +664,11 @@ void NPC_Touch(gentity_t* self, gentity_t* other, trace_t* trace)
 				G_Sound(other, CHAN_AUTO, G_SoundIndex("sound/weapons/key_pkup.wav"));
 				NPC_SetAnim(other, SETANIM_TORSO, BOTH_BUTTON2, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 			}
-			//trap->SendServerCommand(sendnum, text);
 		}
 	}
 
 	if (other->client)
 	{
-		//FIXME:  if pushing against another bot, both ucmd.rightmove = 127???
-		//Except if not facing one another...
 		if (other->health > 0)
 		{
 			NPCS.NPCInfo->touchedByPlayer = other;
@@ -726,13 +723,8 @@ void NPC_Touch(gentity_t* self, gentity_t* other, trace_t* trace)
 	{
 		//rancor
 		if (NPCS.NPCInfo->blockedEntity != other && TIMER_Done(NPCS.NPC, "blockedEntityIgnore"))
-		{
-			//blocked
-			//if ( G_EntIsBreakable( other->s.number, NPC ) )
-			{
-				//bumped into another breakable, so take that one instead?
-				NPCS.NPCInfo->blockedEntity = other; //???
-			}
+		{//bumped into another breakable, so take that one instead?
+			NPCS.NPCInfo->blockedEntity = other; //???
 		}
 	}
 

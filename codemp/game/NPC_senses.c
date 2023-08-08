@@ -585,11 +585,8 @@ AddSoundEvent
 */
 qboolean RemoveOldestAlert(void);
 
-void AddSoundEvent(gentity_t* owner, vec3_t position, const float radius, const alertEventLevel_e alertLevel,
-	const qboolean needLOS,
-	qboolean onGround)
+void AddSoundEvent(gentity_t* owner, vec3_t position, const float radius, const alertEventLevel_e alertLevel, const qboolean needLOS, qboolean onGround)
 {
-	//FIXME: Handle this in another manner?
 	if (level.numAlertEvents >= MAX_ALERT_EVENTS)
 	{
 		if (!RemoveOldestAlert())
@@ -625,6 +622,7 @@ void AddSoundEvent(gentity_t* owner, vec3_t position, const float radius, const 
 	{
 		level.alertEvents[level.numAlertEvents].addLight = 0; //will force an LOS trace on this sound
 	}
+	level.alertEvents[level.numAlertEvents].onGround = onGround;
 	level.alertEvents[level.numAlertEvents].ID = level.curAlertID++;
 	level.alertEvents[level.numAlertEvents].timestamp = level.time;
 

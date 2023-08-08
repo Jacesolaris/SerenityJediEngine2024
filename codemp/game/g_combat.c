@@ -3144,8 +3144,9 @@ void player_die(gentity_t* self, const gentity_t* inflictor, gentity_t* attacker
 			Boba_FlyStop(self);
 		}
 
-		if (self->s.NPC_class == CLASS_RANCOR || self->s.NPC_class == CLASS_WAMPA || self->s.NPC_class ==
-			CLASS_SAND_CREATURE)
+		if (self->s.NPC_class == CLASS_RANCOR ||
+			self->s.NPC_class == CLASS_WAMPA ||
+			self->s.NPC_class == CLASS_SAND_CREATURE)
 		{
 			Rancor_DropVictim(self);
 		}

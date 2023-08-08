@@ -5032,7 +5032,6 @@ void wp_saber_specific_do_hit(const gentity_t* self, const int saber_num, const 
 	}
 }
 
-extern qboolean G_EntIsBreakable(int entity_num);
 extern void G_Knockdown(gentity_t* self, gentity_t* attacker, const vec3_t push_dir, float strength,
 	qboolean break_saber_lock);
 static qboolean saberDoClashEffect = qfalse;

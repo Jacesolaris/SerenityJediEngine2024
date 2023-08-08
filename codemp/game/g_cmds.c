@@ -3852,6 +3852,7 @@ ClientCommand
 #define CMD_NOINTERMISSION		(1<<0)
 #define CMD_CHEAT				(1<<1)
 #define CMD_ALIVE				(1<<2)
+#define CMD_CHEATOVERRIDE		(1<<3)
 
 typedef struct command_s
 {
@@ -3904,6 +3905,7 @@ command_t commands[] = {
 	{"voice_cmd", Cmd_VoiceCommand_f, CMD_NOINTERMISSION},
 	{"vote", Cmd_Vote_f, CMD_NOINTERMISSION},
 	{"where", Cmd_Where_f, CMD_NOINTERMISSION},
+	{"sje", Cmd_NPC_f, CMD_CHEATOVERRIDE | CMD_ALIVE},
 };
 static const size_t num_commands = ARRAY_LEN(commands);
 
@@ -4106,6 +4108,11 @@ void ClientCommand(const int client_num)
 	}
 	if (command->flags & CMD_CHEAT
 		&& !sv_cheats.integer)
+	{
+		trap->SendServerCommand(client_num, va("print \"%s\n\"", G_GetStringEdString("MP_SVGAME", "NOCHEATS")));
+		return;
+	}
+	if (command->flags & CMD_CHEATOVERRIDE && !g_cheatoverride.integer)
 	{
 		trap->SendServerCommand(client_num, va("print \"%s\n\"", G_GetStringEdString("MP_SVGAME", "NOCHEATS")));
 		return;

@@ -32,6 +32,7 @@ extern void G_AddVoiceEvent(const gentity_t* self, int event, int speak_debounce
 extern void ForceJump(gentity_t* self, const usercmd_t* ucmd);
 extern qboolean PM_InRoll(const playerState_t* ps);
 extern void WP_ResistForcePush(gentity_t* self, const gentity_t* pusher, qboolean no_penalty);
+extern qboolean G_EntIsBreakable(int entity_num);
 
 #define	MAX_VIEW_DIST		2048
 #define MAX_VIEW_SPEED		100
@@ -487,8 +488,6 @@ void Tavion_ScepterDamage(void)
 		}
 	}
 }
-
-extern qboolean G_EntIsBreakable(int entity_num);
 
 void Tavion_ScepterSlam(void)
 {
