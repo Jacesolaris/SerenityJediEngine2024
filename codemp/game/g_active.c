@@ -4546,6 +4546,16 @@ void ClientThink_real(gentity_t* ent)
 				}
 			}
 		}
+		else if (BG_SprintSaberAnim(ent->client->ps.legsAnim))
+		{
+			if (ent->client->ps.PlayerEffectFlags & 1 << PEF_SPRINTING)
+			{
+				if (!(ent->r.svFlags & SVF_BOT))
+				{
+					client->ps.speed *= 1.60f;
+				}
+			}
+		}
 		else if (ent->client->ps.PlayerEffectFlags & 1 << PEF_WEAPONSPRINTING)
 		{
 			if (!(ent->r.svFlags & SVF_BOT))

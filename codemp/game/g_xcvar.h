@@ -219,8 +219,6 @@ XCVAR_DEF(g_pushitems, "1", NULL, CVAR_ARCHIVE, qtrue)
 XCVAR_DEF(g_forcekickflip, "1", NULL, CVAR_ARCHIVE, qtrue)
 
 XCVAR_DEF(g_AllowBotBuyItem, "1", NULL, CVAR_NONE, qtrue)
-XCVAR_DEF(g_SaberPerfectBlockingTimer, "400", NULL, CVAR_ARCHIVE, qtrue)
-XCVAR_DEF(g_SaberPerfectBlockingwaitTimer, "2500", NULL, CVAR_ARCHIVE, qtrue)
 XCVAR_DEF(g_allowturret, "0", NULL, CVAR_ARCHIVE, qtrue)
 XCVAR_DEF(d_combatinfo, "0", NULL, CVAR_ARCHIVE, qtrue)
 XCVAR_DEF(d_blockinfo, "0", NULL, CVAR_ARCHIVE, qtrue)

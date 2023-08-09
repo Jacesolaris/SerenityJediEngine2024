@@ -474,7 +474,6 @@ void PlayerStateToEntityState(playerState_t* ps, entityState_t* s)
 	s->ManualBlockingFlags = ps->ManualBlockingFlags; //Blockingflag on OK
 	s->ManualBlockingTime = ps->ManualBlockingTime; //Blocking time 1 on
 	s->ManualblockStartTime = ps->ManualblockStartTime; //Blocking 2
-	s->ManualblockLastStartTime = ps->ManualblockLastStartTime; //Blocking 3
 	s->Manual_m_blockingTime = ps->Manual_m_blockingTime;
 
 	s->BoltblockStartTime = ps->BoltblockStartTime; //Blocking 2

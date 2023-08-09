@@ -801,7 +801,7 @@ void wp_handle_bolt_block(gentity_t* ent, gentity_t* missile, vec3_t forward)
 		{
 			gi.Printf(S_COLOR_YELLOW"GOES TO CROSSHAIR\n");
 		}
-		if (level.time - blocker->client->ps.ManualblockLastStartTime < 3000)
+		if (level.time - blocker->client->ps.ManualblockStartTime < 3000)
 		{
 			// good
 			vectoangles(forward, angs);

@@ -73,7 +73,7 @@ extern stringID_table_t SaberMoveTable[];
 extern stringID_table_t animTable[MAX_ANIMATIONS + 1];
 qboolean WP_SaberBlockNonRandom(gentity_t* self, vec3_t hitloc, qboolean missileBlock);
 qboolean wp_saber_block_non_random_missile(gentity_t* self, vec3_t hitloc, qboolean missileBlock);
-extern qboolean g_accurate_blocking(const gentity_t* self, const gentity_t* attacker, vec3_t hit_loc);
+extern qboolean g_accurate_blocking(const gentity_t* blocker, const gentity_t* attacker, vec3_t hit_loc);
 extern void PM_AddFatigue(playerState_t* ps, int fatigue);
 extern qboolean PM_WalkingAnim(int anim);
 extern qboolean PM_StandingAnim(int anim);
@@ -105,8 +105,7 @@ extern int Jedi_ReCalcParryTime(const gentity_t* self, evasionType_t evasion_typ
 extern qboolean PM_SaberInnonblockableAttack(int anim);
 extern qboolean NPC_IsAlive(const gentity_t* self, const gentity_t* npc);
 //////////////////////////////////////////////////
-extern qboolean sab_beh_attack_vs_block(gentity_t* attacker, gentity_t* blocker, int saber_num, int blade_num,
-	vec3_t hit_loc);
+extern qboolean sab_beh_attack_vs_block(gentity_t* attacker, gentity_t* blocker, int saber_num, int blade_num, vec3_t hit_loc);
 //////////////////////////////////////////////////
 extern saberMoveName_t PM_AnimateOldKnockBack(int move);
 extern int G_AnimateOldKnockBack(int move);
@@ -125,7 +124,6 @@ int BotCanAbsorbKick(const gentity_t* defender, const vec3_t push_dir);
 extern qboolean PM_Dyinganim(const playerState_t* ps);
 extern int SabBeh_AnimateMassiveDualSlowBounce(int anim);
 extern int SabBeh_AnimateMassiveStaffSlowBounce(int anim);
-extern qboolean sab_beh_attack_vs_attack(gentity_t* attacker, gentity_t* blocker);
 extern qboolean BG_SaberInFullDamageMove(const playerState_t* ps, int anim_index);
 extern void G_ClearEnemy(gentity_t* self);
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -7557,8 +7555,6 @@ static QINLINE qboolean CheckThrownSaberDamaged(gentity_t* saberent, gentity_t* 
 				if (!saber_owner->client->ps.isJediMaster && WP_SaberCanBlock(ent, tr.endpos, 0, MOD_SABER, qtrue))
 				{
 					//they blocked it
-					//WP_SaberBlockNonRandom(ent, tr.endpos, qfalse);
-
 					te = G_TempEntity(tr.endpos, EV_SABER_BLOCK);
 					VectorCopy(tr.endpos, te->s.origin);
 					VectorCopy(tr.plane.normal, te->s.angles);

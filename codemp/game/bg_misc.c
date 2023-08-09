@@ -3361,7 +3361,6 @@ void BG_PlayerStateToEntityState(playerState_t* ps, entityState_t* s, const qboo
 	s->ManualBlockingFlags = ps->ManualBlockingFlags; //Blockingflag on OK
 	s->ManualBlockingTime = ps->ManualBlockingTime; //Blocking time 1 on
 	s->ManualblockStartTime = ps->ManualblockStartTime; //Blocking 2
-	s->ManualblockLastStartTime = ps->ManualblockLastStartTime; //Blocking 3
 	s->BoltblockStartTime = ps->BoltblockStartTime; //Blocking 4
 	s->ManualMBlockingTime = ps->ManualMBlockingTime;
 
@@ -3571,7 +3570,6 @@ void BG_PlayerStateToEntityStateExtraPolate(playerState_t* ps, entityState_t* s,
 	s->ManualBlockingFlags = ps->ManualBlockingFlags; //Blockingflag on OK
 	s->ManualBlockingTime = ps->ManualBlockingTime; //Blocking time 1 on
 	s->ManualblockStartTime = ps->ManualblockStartTime; //Blocking 2
-	s->ManualblockLastStartTime = ps->ManualblockLastStartTime; //Blocking 3
 	s->BoltblockStartTime = ps->BoltblockStartTime; //Blocking 4
 	s->ManualMBlockingTime = ps->ManualMBlockingTime;
 
@@ -3694,7 +3692,7 @@ int BG_ModelCache(const char* model_name, const char* skin_name)
 	return trap->R_RegisterModel(model_name);
 #endif // _CGAME
 #endif // _GAME
-}
+	}
 
 #if defined(_GAME)
 #define MAX_POOL_SIZE	3000000 //1024000

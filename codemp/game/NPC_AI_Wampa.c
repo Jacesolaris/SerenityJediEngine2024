@@ -59,7 +59,6 @@ NPC_Wampa_Precache
 */
 void NPC_Wampa_Precache(void)
 {
-	
 	for (int i = 1; i < 3; i++)
 	{
 		G_SoundIndex(va("sound/chars/wampa/snort%d.wav", i));
@@ -89,7 +88,7 @@ qboolean Wampa_CheckRoar(gentity_t* self)
 	if (self->wait < level.time)
 	{
 		self->wait = level.time + Q_irand(5000, 20000);
-		NPC_SetAnim(self, SETANIM_BOTH, Q_irand(BOTH_GESTURE1, BOTH_GESTURE2),SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+		NPC_SetAnim(self, SETANIM_BOTH, Q_irand(BOTH_GESTURE1, BOTH_GESTURE2), SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 		TIMER_Set(self, "rageTime", self->client->ps.legsTimer);
 		G_Sound(self, CHAN_VOICE, G_SoundIndex(va("sound/chars/howler/howl.mp3")));
 		return qtrue;

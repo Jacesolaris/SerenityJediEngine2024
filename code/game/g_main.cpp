@@ -240,8 +240,6 @@ cvar_t* g_gripitems;
 cvar_t* g_stasistems;
 cvar_t* g_sentryexplode;
 cvar_t* g_vehAutoAimLead;
-cvar_t* g_SaberPerfectBlockingTimer;
-cvar_t* g_SaberPerfectBlockingwaitTimer;
 cvar_t* in_joystick;
 cvar_t* g_Weather;
 
@@ -854,12 +852,6 @@ void G_InitCvars()
 	//if 1, saber faces up when holstered not down
 
 	g_noIgniteTwirl = gi.cvar("g_noIgniteTwirl", "0", CVAR_ARCHIVE); //if 1, don't do ignite twirl
-
-	g_SaberPerfectBlockingwaitTimer = gi.cvar("g_SaberPerfectBlockingwaitTimer", "2500", CVAR_ARCHIVE);
-	//Alternate saber combat system
-
-	g_SaberPerfectBlockingTimer = gi.cvar("g_SaberPerfectBlockingTimer", "400", CVAR_ARCHIVE);
-	//Alternate saber combat system
 
 	in_joystick = gi.cvar("in_joystick", "0", CVAR_ARCHIVE_ND | CVAR_LATCH);
 

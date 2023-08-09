@@ -155,8 +155,6 @@ extern qboolean pm_saber_in_special_attack(int anim);
 extern qboolean PM_SaberInBounce(int move);
 extern qboolean PM_SaberInKnockaway(int move);
 extern qboolean PM_KickMove(int move);
-extern cvar_t* g_SaberPerfectBlockingTimer;
-extern cvar_t* g_SaberPerfectBlockingwaitTimer;
 extern bool in_camera;
 extern qboolean player_locked;
 extern qboolean stop_icarus;
@@ -8498,8 +8496,8 @@ void ClientThink_real(gentity_t* ent, usercmd_t* ucmd)
 		{
 			cg.overrides.thirdPersonPitchOffset = 0;
 			cg.overrides.thirdPersonVertOffset = 200;
+		}
 	}
-}
 
 	//play/stop any looping sounds tied to controlled movement
 	G_CheckMovingLoopingSounds(ent, ucmd);

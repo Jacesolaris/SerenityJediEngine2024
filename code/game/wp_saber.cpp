@@ -203,7 +203,7 @@ extern qboolean PM_Saberinstab(int move);
 extern qboolean PM_RestAnim(int anim);
 extern qboolean PM_KickingAnim(int anim);
 extern void PM_AddFatigue(playerState_t* ps, int fatigue);
-extern qboolean g_accurate_blocking(const gentity_t* self, const gentity_t* attacker, vec3_t hit_loc);
+extern qboolean g_accurate_blocking(const gentity_t* blocker, const gentity_t* attacker, vec3_t hit_loc);
 extern int G_KnockawayForParry(int move);
 extern int G_AnimateOldKnockBack(int move);
 extern cvar_t* g_saberRealisticCombat;
@@ -219,8 +219,8 @@ extern qboolean npc_is_light_jedi(const gentity_t* self);
 extern qboolean PM_SaberInMassiveBounce(int anim);
 extern void npc_check_speak(gentity_t* speaker_npc);
 //////////////////////////////////////////////////
-extern qboolean sab_beh_block_vs_attack(gentity_t* blocker, gentity_t* attacker, int saber_num, int blade_num);
-extern qboolean sab_beh_attack_vs_block(gentity_t* attacker, gentity_t* blocker, int saber_num, int blade_num);
+extern qboolean sab_beh_block_vs_attack(gentity_t* blocker, gentity_t* attacker, int saber_num, int blade_num, vec3_t hit_loc);
+extern qboolean sab_beh_attack_vs_block(gentity_t* attacker, gentity_t* blocker, int saber_num, int blade_num, vec3_t hit_loc);
 //////////////////////////////////////////////////
 void player_Freeze(const gentity_t* self);
 void Player_CheckFreeze(const gentity_t* self);
@@ -7603,10 +7603,10 @@ void WP_SaberDamageTrace(gentity_t* ent, int saber_num, int blade_num)
 						}
 
 						//make me parry	-(Im the blocker)
-						sab_beh_block_vs_attack(hit_owner, ent, saber_num, blade_num);
+						sab_beh_block_vs_attack(hit_owner, ent, saber_num, blade_num, saberHitLocation);
 
 						//make me bounce -(Im the attacker)
-						sab_beh_attack_vs_block(ent, hit_owner, saber_num, blade_num);
+						sab_beh_attack_vs_block(ent, hit_owner, saber_num, blade_num, saberHitLocation);
 
 						collision_resolved = qtrue;
 					}
@@ -10302,8 +10302,7 @@ int WP_SaberBlockCost(gentity_t* defender, const gentity_t* attacker, vec3_t hit
 		if (attacker->client->ps.userInt3 & 1 << FLAG_ATTACKFAKE)
 		{
 			//attacker is in an attack fake
-			if (attacker->client->ps.saber_anim_level == SS_STRONG
-				&& !g_accurate_blocking(defender, attacker, hit_loc))
+			if (attacker->client->ps.saber_anim_level == SS_STRONG && !g_accurate_blocking(defender, attacker, hit_loc))
 			{
 				//Red does additional DP damage with attack fakes if they aren't parried.
 				saber_block_cost = BasicSaberBlockCost(attacker->client->ps.saber_anim_level) * 1.35;

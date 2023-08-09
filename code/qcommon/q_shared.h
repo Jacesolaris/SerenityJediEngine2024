@@ -2083,7 +2083,6 @@ public:
 	int Manual_m_blockingTime; //m_blocking on
 	int ManualBlockingTime; //Blocking 1
 	int ManualblockStartTime; //Blocking 2
-	int ManualblockLastStartTime; //Blocking 3
 	int BoltblockStartTime; //Blocking 4
 
 	int MeleeblockStartTime; //Melee Blocking 1
@@ -2458,7 +2457,6 @@ public:
 		saved_game.write<int32_t>(Manual_m_blockingTime); //m_blocking on
 		saved_game.write<int32_t>(ManualBlockingTime); //Blocking 1
 		saved_game.write<int32_t>(ManualblockStartTime); //Blocking 2
-		saved_game.write<int32_t>(ManualblockLastStartTime); //Blocking 3
 		saved_game.write<int32_t>(BoltblockStartTime); //Blocking 4
 
 		saved_game.write<int32_t>(MeleeblockStartTime); //Melee Blocking 1
@@ -2715,7 +2713,6 @@ public:
 		saved_game.read<int32_t>(Manual_m_blockingTime); //m_blocking on
 		saved_game.read<int32_t>(ManualBlockingTime); //Blocking 1
 		saved_game.read<int32_t>(ManualblockStartTime); //Blocking 2
-		saved_game.read<int32_t>(ManualblockLastStartTime); //Blocking 3
 		saved_game.read<int32_t>(BoltblockStartTime); //Blocking 4
 
 		saved_game.read<int32_t>(MeleeblockStartTime); //Melee Blocking 1
@@ -3059,7 +3056,6 @@ using entityState_t = struct entityState_s
 	int Manual_m_blockingTime; //m_blocking on
 	int ManualBlockingTime; //Blocking 1
 	int ManualblockStartTime; //Blocking 2
-	int ManualblockLastStartTime; //Blocking 3
 	int BoltblockStartTime; //Blocking 4
 
 	int MeleeblockStartTime; //Melee Blocking 1
@@ -3172,7 +3168,6 @@ using entityState_t = struct entityState_s
 		saved_game.write<int32_t>(Manual_m_blockingTime); //m_blocking on
 		saved_game.write<int32_t>(ManualBlockingTime); //Blocking 1
 		saved_game.write<int32_t>(ManualblockStartTime); //Blocking 2
-		saved_game.write<int32_t>(ManualblockLastStartTime); //Blocking 3
 		saved_game.write<int32_t>(BoltblockStartTime); //Blocking 4
 
 		saved_game.write<int32_t>(MeleeblockStartTime); //Melee Blocking 1
@@ -3290,7 +3285,6 @@ using entityState_t = struct entityState_s
 		saved_game.read<int32_t>(Manual_m_blockingTime); //m_blocking on
 		saved_game.read<int32_t>(ManualBlockingTime); //Blocking 1
 		saved_game.read<int32_t>(ManualblockStartTime); //Blocking 2
-		saved_game.read<int32_t>(ManualblockLastStartTime); //Blocking 3
 		saved_game.read<int32_t>(BoltblockStartTime); //Blocking 4
 
 		saved_game.read<int32_t>(MeleeblockStartTime); //Melee Blocking 1

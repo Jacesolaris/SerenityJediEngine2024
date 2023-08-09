@@ -1983,8 +1983,6 @@ void PM_SaberLockBreak(playerState_t* genemy, const qboolean victory, const int 
 	pm->ps->saberLockFrame = genemy->saberLockFrame = 0;
 	pm->ps->saberLockEnemy = genemy->saberLockEnemy = 0;
 
-	//PM_AddEvent(EV_JUMP);
-
 	if (!victory)
 	{
 		//no-one won

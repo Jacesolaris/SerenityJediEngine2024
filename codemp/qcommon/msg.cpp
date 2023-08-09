@@ -1094,7 +1094,6 @@ netField_t entityStateFields[] =
 	{NETF(ManualBlockingTime), 32},
 	{NETF(ManualMBlockingTime), 32},
 	{NETF(ManualblockStartTime), 32},
-	{NETF(ManualblockLastStartTime), 32},
 	{NETF(BoltblockStartTime), 32},
 
 	{NETF(MeleeblockStartTime), 32}, //Blocking 2
@@ -1645,7 +1644,6 @@ netField_t playerStateFields[] =
 	{PSF(ManualBlockingTime), 32},
 	{PSF(ManualMBlockingTime), 32},
 	{PSF(ManualblockStartTime), 32},
-	{PSF(ManualblockLastStartTime), 32},
 	{PSF(BoltblockStartTime), 32},
 
 	{PSF(MeleeblockStartTime), 32}, //Blocking 2
@@ -1872,7 +1870,6 @@ netField_t pilotPlayerStateFields[] =
 	{PSF(ManualBlockingTime), 32},
 	{PSF(ManualMBlockingTime), 32},
 	{PSF(ManualblockStartTime), 32},
-	{PSF(ManualblockLastStartTime), 32},
 	{PSF(BoltblockStartTime), 32},
 
 	{PSF(MeleeblockStartTime), 32}, //Blocking 2
@@ -2007,7 +2004,6 @@ netField_t vehPlayerStateFields[] =
 	{PSF(ManualBlockingTime), 32},
 	{PSF(ManualMBlockingTime), 32},
 	{PSF(ManualblockStartTime), 32},
-	{PSF(ManualblockLastStartTime), 32},
 	{PSF(BoltblockStartTime), 32},
 
 	{PSF(MeleeblockStartTime), 32}, //Blocking 2
@@ -2222,7 +2218,6 @@ netField_t	playerStateFields[] =
 { PSF(ManualBlockingTime), 32 },
 { PSF(ManualMBlockingTime), 32 },
 { PSF(ManualblockStartTime), 32 },
-{ PSF(ManualblockLastStartTime), 32 },
 { PSF(BoltblockStartTime), 32 },
 
 { PSF(MeleeblockStartTime), 32 }, //Blocking 2

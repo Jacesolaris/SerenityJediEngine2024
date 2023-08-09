@@ -1401,7 +1401,6 @@ typedef struct playerState_s {
 	int	        ManualMBlockingTime; //MBlocking on
 	int	        ManualBlockingTime; //Blocking time 1 on
 	int			ManualblockStartTime; //Blocking 2
-	int			ManualblockLastStartTime; //Blocking 3
 	int			BoltblockStartTime; //Blocking 4
 
 	int			MeleeblockStartTime; //Blocking 2
@@ -1990,7 +1989,6 @@ typedef struct entityState_s {
 	int	   ManualMBlockingTime;//MBlocking on
 	int	   ManualblockStartTime; //Blocking 2
 	int	   ManualBlockingTime; //Blocking time 1 on
-	int	   ManualblockLastStartTime; //Blocking 3
 	int	   BoltblockStartTime; //Blocking 4
 
 	int	   MeleeblockStartTime; //Blocking 2

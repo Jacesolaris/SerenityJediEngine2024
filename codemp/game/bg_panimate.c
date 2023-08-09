@@ -2407,7 +2407,7 @@ qboolean BG_InKnockDownOnGround(const playerState_t* ps)
 	case BOTH_FORCE_GETUP_B4:
 	case BOTH_FORCE_GETUP_B5:
 	case BOTH_FORCE_GETUP_B6:
-		if (BG_AnimLength(0, ps->legsAnim) - ps->legsTimer < 500)
+		if (BG_AnimLength(0, (animNumber_t)ps->legsAnim) - ps->legsTimer < 500)
 		{
 			//at beginning of getup anim
 			return qtrue;
@@ -2421,7 +2421,7 @@ qboolean BG_InKnockDownOnGround(const playerState_t* ps)
 	case BOTH_GETUP_FROLL_F:
 	case BOTH_GETUP_FROLL_L:
 	case BOTH_GETUP_FROLL_R:
-		if (BG_AnimLength(0, ps->legsAnim) - ps->legsTimer < 500)
+		if (BG_AnimLength(0, (animNumber_t)ps->legsAnim) - ps->legsTimer < 500)
 		{
 			//at beginning of getup anim
 			return qtrue;

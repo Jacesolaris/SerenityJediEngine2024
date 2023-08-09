@@ -13536,7 +13536,7 @@ void PM_SetSaberMove(saberMoveName_t new_move)
 
 			//update the flag
 			PM_SaberFakeFlagUpdate(new_move);
-			
+
 			PM_SaberPerfectBlockUpdate(new_move);
 
 			if (!PM_SaberInBounce(new_move) && !PM_SaberInReturn(new_move)) //or new move isn't slowbounce move
@@ -21626,7 +21626,7 @@ qboolean BG_InSlowBounce(const playerState_t* ps)
 qboolean PM_InSlowBounce(const playerState_t* ps)
 {
 	//checks for a bounce/return animation in combination with the slow bounce flag
-	if (ps->userInt3 & 1 << FLAG_SLOWBOUNCE	&& (PM_BounceAnim(ps->torsoAnim)))
+	if (ps->userInt3 & 1 << FLAG_SLOWBOUNCE && (PM_BounceAnim(ps->torsoAnim)))
 	{
 		//in slow bounce
 		return qtrue;
