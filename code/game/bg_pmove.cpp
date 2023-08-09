@@ -159,7 +159,7 @@ extern cvar_t* g_allowslipping;
 extern cvar_t* g_allowClimbing;
 extern cvar_t* g_AllowLedgeGrab;
 extern cvar_t* g_saberAutoBlocking;
-
+extern void ForceDashAnimDash(gentity_t* self);
 extern int parry_debounce[];
 extern qboolean cg_usingInFrontOf;
 extern qboolean player_locked;
@@ -1277,6 +1277,24 @@ qboolean PM_GentCantJump(const gentity_t* gent)
 	return qfalse;
 }
 
+qboolean PM_Is_A_Dash_Anim(const int anim)
+{
+	switch (anim)
+	{
+	case BOTH_DASH_R:
+	case BOTH_DASH_L:
+	case BOTH_DASH_B:
+	case BOTH_DASH_F:
+	case BOTH_HOP_R:
+	case BOTH_HOP_L:
+	case BOTH_HOP_B:
+	case BOTH_HOP_F:
+		return qtrue;
+	default:;
+	}
+	return qfalse;
+}
+
 static qboolean pm_check_jump()
 {
 	//Don't allow jump until all buttons are up
@@ -1303,6 +1321,11 @@ static qboolean pm_check_jump()
 	}
 
 	if (PM_InForceFall())
+	{
+		return qfalse;
+	}
+
+	if (pm->ps->communicatingflags & 1 << DASHING || PM_Is_A_Dash_Anim(pm->ps->torsoAnim))
 	{
 		return qfalse;
 	}
@@ -2796,7 +2819,7 @@ static void PM_WaterMove()
 		{
 			// jumped away
 			return;
-		}
+}
 	}
 #if 0
 	// jump = head for surface
@@ -2953,7 +2976,7 @@ static void PM_LadderMove()
 		{
 			// jumped away
 			return;
-		}
+}
 	}
 #if 0
 	// jump = head for surface
@@ -5890,20 +5913,20 @@ static void PM_GroundTraceMissed()
 								}
 							}
 						}
+							}
+						}
 					}
 				}
-			}
-		}
 
 		if (pm->ps->groundEntityNum != ENTITYNUM_NONE)
 		{
 			pm->ps->jumpZStart = pm->ps->origin[2];
 		}
-	}
+			}
 	pm->ps->groundEntityNum = ENTITYNUM_NONE;
 	pml.groundPlane = qfalse;
 	pml.walking = qfalse;
-}
+		}
 
 #ifdef _GAME
 extern void G_Knockdown(gentity_t* self, gentity_t* attacker, const vec3_t push_dir, float strength, qboolean breakSaberLock);
@@ -6161,7 +6184,7 @@ static void PM_GroundTrace()
 				pm->ps->velocity[2] = 0;
 			}
 		}
-	}
+}
 
 	pm->ps->groundEntityNum = trace.entity_num;
 	pm->ps->lastOnGround = level.time;
@@ -6172,7 +6195,7 @@ static void PM_GroundTrace()
 	}
 
 	PM_AddTouchEnt(trace.entity_num);
-}
+	}
 
 int LastMatrixJumpTime = 0;
 constexpr auto DEBUGMATRIXJUMP = 0;
@@ -8973,8 +8996,8 @@ void PM_FootSlopeTrace(float* p_diff, float* p_interval)
 				*p_interval = interval;
 			}
 			return;
-		}
-	}
+}
+}
 #else
 
 	//FIXME: these really should have been gotten on the cgame, but I guess sometimes they're not and we end up with qnan numbers!
@@ -10568,6 +10591,7 @@ static void PM_Footsteps()
 	if (pm->ps->pm_flags & PMF_DUCKED || OVERRIDE_ROLL_CHECK)
 	{
 		bobmove = 0.5f; // ducked characters bob much faster
+
 		if (!PM_InOnGroundAnim(pm->ps) //not on the ground
 			&& (!PM_InRollIgnoreTimer(pm->ps) || !pm->ps->legsAnimTimer && pm->cmd.upmove < 0))
 		{

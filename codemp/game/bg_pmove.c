@@ -4184,6 +4184,24 @@ qboolean PM_InForceFall()
 	return qfalse;
 }
 
+qboolean PM_Is_A_Dash_Anim(const int anim)
+{
+	switch (anim)
+	{
+	case BOTH_DASH_R:
+	case BOTH_DASH_L:
+	case BOTH_DASH_B:
+	case BOTH_DASH_F:
+	case BOTH_HOP_R:
+	case BOTH_HOP_L:
+	case BOTH_HOP_B:
+	case BOTH_HOP_F:
+		return qtrue;
+	default:;
+	}
+	return qfalse;
+}
+
 /*
 =============
 PM_CheckJump
@@ -4194,6 +4212,7 @@ extern void PM_AddFatigue(playerState_t* ps, int fatigue);
 
 static qboolean pm_check_jump(void)
 {
+	qboolean doing_dash_action = pm->ps->communicatingflags & 1 << DASHING ? qtrue : qfalse;
 	qboolean allowFlips = qtrue;
 
 	saberInfo_t* saber1 = BG_MySaber(pm->ps->client_num, 0);
@@ -4242,6 +4261,11 @@ static qboolean pm_check_jump(void)
 	}
 
 	if (PM_InForceFall())
+	{
+		return qfalse;
+	}
+
+	if (pm->ps->communicatingflags & 1 << DASHING || PM_Is_A_Dash_Anim(pm->ps->torsoAnim))
 	{
 		return qfalse;
 	}
@@ -9908,7 +9932,8 @@ static void PM_Footsteps(void)
 		int rolled = 0;
 
 		bobmove = 0.5; // ducked characters bob much faster
-		if (!PM_InOnGroundAnim(pm->ps) //not on the ground
+
+		if (!PM_InOnGroundAnim(pm->ps->legsAnim) //not on the ground
 			&& (!PM_InRollIgnoreTimer(pm->ps) || (!pm->ps->legsTimer && pm->cmd.upmove < 0)))//not in a roll (or you just finished one and you're still holding crouch)
 		{
 			if ((PM_RunningAnim(pm->ps->legsAnim)

@@ -416,7 +416,7 @@ void NPC_ST_StoreMovementSpeech(const int speech, const float chance)
 	NPCS.NPCInfo->movementSpeechChance = chance;
 }
 
-extern qboolean PM_InOnGroundAnim(int anim);
+extern qboolean PM_InOnGroundAnim(const int anim);
 
 qboolean Melee_CanDoGrab(void)
 {

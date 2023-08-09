@@ -74,6 +74,7 @@ extern qboolean BG_IsAlreadyinTauntAnim(int anim);
 qboolean WP_SaberStyleValidForSaber(const saberInfo_t* saber1, const saberInfo_t* saber2, int saber_holstered, int saber_anim_level);
 extern qboolean PM_SaberInBashedAnim(int anim);
 extern qboolean saberKnockOutOfHand(gentity_t* saberent, gentity_t* saber_owner, vec3_t velocity);
+extern qboolean BG_SprintSaberAnim(int anim);
 
 void P_SetTwitchInfo(gclient_t* client)
 {

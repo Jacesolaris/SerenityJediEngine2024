@@ -76,7 +76,7 @@ qboolean PM_PainAnim(int anim);
 qboolean PM_JumpingAnim(int anim);
 qboolean PM_LandingAnim(int anim);
 qboolean PM_SpinningAnim(int anim);
-qboolean PM_InOnGroundAnim(int anim);
+qboolean PM_InOnGroundAnim(const int anim);
 qboolean PM_InRollComplete(const playerState_t* ps, int anim);
 
 int PM_AnimLength(animNumber_t anim);

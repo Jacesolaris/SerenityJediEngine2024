@@ -3037,7 +3037,7 @@ void Kyle_TryGrab(void)
 	NPCS.NPC->client->ps.saberHolstered = 2;
 }
 
-extern qboolean PM_InOnGroundAnim(int anim);
+extern qboolean PM_InOnGroundAnim(const int anim);
 
 qboolean Kyle_CanDoGrab(void)
 {
