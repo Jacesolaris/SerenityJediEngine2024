@@ -8035,12 +8035,12 @@ void ClientThink_real(gentity_t* ent, usercmd_t* ucmd)
 		client->ps.ManualBlockingFlags &= ~(1 << MBF_MELEEDODGE);
 	}
 
-	if (ent->NPC || ent->s.client_num >= MAX_CLIENTS && !G_ControlledByPlayer(ent) &&
+	if ((ent->NPC || ent->s.client_num >= MAX_CLIENTS && !G_ControlledByPlayer(ent)) &&
 		client->ps.weapon == WP_SABER &&
-		client->ps.SaberActive()
-		&& !PM_SaberInMassiveBounce(client->ps.torsoAnim)
-		&& !PM_SaberInBashedAnim(client->ps.torsoAnim)
-		&& !PM_Saberinstab(client->ps.saber_move))
+		client->ps.SaberActive() &&
+		!PM_SaberInMassiveBounce(client->ps.torsoAnim) &&
+		!PM_SaberInBashedAnim(client->ps.torsoAnim) &&
+		!PM_Saberinstab(client->ps.saber_move))
 	{
 		if (manual_npc_saberblocking(ent))
 		{

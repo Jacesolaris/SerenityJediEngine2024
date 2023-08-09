@@ -7933,7 +7933,7 @@ void WP_SaberDamageTrace(gentity_t* ent, int saber_num, int blade_num)
 					}
 					if (!g_saberNoEffects)
 					{
-						G_PlayEffect("saber/saber_friction.efx", g_saberFlashPos, hit_norm);
+						G_PlayEffect("saber/saber_lock.efx", g_saberFlashPos, hit_norm);
 					}
 				}
 
@@ -11343,8 +11343,7 @@ float manual_npc_saberblocking(const gentity_t* defender)
 		return qfalse;
 	}
 
-	if (defender->s.eFlags & EF_FORCE_DRAINED || defender->s.eFlags & EF_FORCE_GRIPPED || defender->s.eFlags &
-		EF_FORCE_GRABBED)
+	if (defender->s.eFlags & EF_FORCE_DRAINED || defender->s.eFlags & EF_FORCE_GRIPPED || defender->s.eFlags & EF_FORCE_GRABBED)
 	{
 		return qfalse;
 	}
@@ -11363,7 +11362,8 @@ float manual_npc_saberblocking(const gentity_t* defender)
 		|| PM_SaberInBashedAnim(defender->client->ps.torsoAnim)
 		|| PM_SaberInBrokenParry(defender->client->ps.saber_move)
 		|| defender->client->ps.groundEntityNum == ENTITYNUM_NONE
-		|| defender->client->ps.blockPoints < BLOCKPOINTS_FIVE)
+		|| defender->client->ps.blockPoints < BLOCKPOINTS_FIVE
+		|| defender->client->ps.forcePower < BLOCKPOINTS_FIVE)
 	{
 		return qfalse;
 	}
@@ -11388,7 +11388,7 @@ float manual_npc_saberblocking(const gentity_t* defender)
 		return qfalse;
 	}
 
-	if (defender->s.number >= MAX_CLIENTS && !G_ControlledByPlayer(defender))
+	if (SaberAttacking(defender) && (defender->s.number >= MAX_CLIENTS && !G_ControlledByPlayer(defender)))
 	{
 		//bots just randomly parry to make up for them not intelligently parrying.
 		return qtrue;

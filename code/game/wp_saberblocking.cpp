@@ -232,7 +232,7 @@ qboolean g_accurate_blocking(const gentity_t* blocker, const gentity_t* attacker
 	return qfalse;
 }
 
-void sab_beh_add_mishap_attacker(gentity_t* attacker, const int saber_num)
+void sab_beh_add_mishap_attacker(gentity_t* attacker, const gentity_t* blocker, const int saber_num)
 {
 	if (attacker->client->ps.blockPoints <= MISHAPLEVEL_NONE)
 	{
@@ -250,7 +250,7 @@ void sab_beh_add_mishap_attacker(gentity_t* attacker, const int saber_num)
 		switch (rand_num)
 		{
 		case 0:
-			if (attacker->NPC && !G_ControlledByPlayer(attacker)) //NPC only
+			if (blocker->NPC && !G_ControlledByPlayer(blocker)) //NPC only
 			{
 				if (!Q_irand(0, 4))
 				{
@@ -267,6 +267,66 @@ void sab_beh_add_mishap_attacker(gentity_t* attacker, const int saber_num)
 					if (d_attackinfo->integer || g_DebugSaberCombat->integer && (attacker->NPC && !G_ControlledByPlayer(attacker)))
 					{
 						gi.Printf(S_COLOR_RED"NPC Attacker lost his saber\n");
+					}
+				}
+			}
+			else
+			{
+				sab_beh_saber_should_be_disarmed_attacker(attacker, saber_num);
+				if (d_attackinfo->integer || g_DebugSaberCombat->integer && (attacker->s.number < MAX_CLIENTS || G_ControlledByPlayer(attacker)))
+				{
+					gi.Printf(S_COLOR_RED"Player Attacker lost his saber\n");
+				}
+			}
+			break;
+		case 1:
+			sab_beh_animate_heavy_slow_bounce_attacker(attacker);
+			if (d_attackinfo->integer || g_DebugSaberCombat->integer && (attacker->s.number < MAX_CLIENTS || G_ControlledByPlayer(attacker)))
+			{
+				gi.Printf(S_COLOR_RED"Player Attacker staggering\n");
+			}
+			break;
+		default:;
+		}
+	}
+}
+
+
+void sab_beh_add_mishap_Fake_attacker(gentity_t* attacker, const gentity_t* blocker, const int saber_num)
+{
+	if (attacker->client->ps.blockPoints <= MISHAPLEVEL_NONE)
+	{
+		attacker->client->ps.blockPoints = MISHAPLEVEL_NONE;
+	}
+	else if (attacker->client->ps.saberFatigueChainCount <= MISHAPLEVEL_NONE)
+	{
+		attacker->client->ps.saberFatigueChainCount = MISHAPLEVEL_NONE;
+	}
+	else
+	{
+		//overflowing causes a full mishap.
+		const int rand_num = Q_irand(0, 2);
+
+		switch (rand_num)
+		{
+		case 0:
+			if (blocker->NPC && !G_ControlledByPlayer(blocker)) //NPC only
+			{
+				if (!Q_irand(0, 4))
+				{
+					//20% chance
+					sab_beh_saber_should_be_disarmed_attacker(attacker, saber_num);
+					if (d_attackinfo->integer || g_DebugSaberCombat->integer && (attacker->NPC && !G_ControlledByPlayer(attacker)))
+					{
+						gi.Printf(S_COLOR_RED"NPC Attacker lost his saber\n");
+					}
+				}
+				else
+				{
+					sab_beh_animate_heavy_slow_bounce_attacker(attacker);
+					if (d_attackinfo->integer || g_DebugSaberCombat->integer && (attacker->NPC && !G_ControlledByPlayer(attacker)))
+					{
+						gi.Printf(S_COLOR_YELLOW"NPC Attacker staggering\n");
 					}
 				}
 			}
@@ -407,7 +467,7 @@ qboolean sab_beh_attack_blocked(gentity_t* attacker, gentity_t* blocker, const i
 			if (!Q_irand(0, 4))
 			{
 				//20% chance
-				sab_beh_add_mishap_attacker(attacker, saber_num);
+				sab_beh_add_mishap_attacker(attacker, blocker, saber_num);
 			}
 			else
 			{
@@ -426,7 +486,7 @@ qboolean sab_beh_attack_blocked(gentity_t* attacker, gentity_t* blocker, const i
 			{
 				gi.Printf(S_COLOR_GREEN"Attacker player is fatigued\n");
 			}
-			sab_beh_add_mishap_attacker(attacker, saber_num);
+			sab_beh_add_mishap_attacker(attacker, blocker, saber_num);
 		}
 		return qtrue;
 	}
@@ -724,7 +784,7 @@ qboolean sab_beh_attack_vs_block(gentity_t* attacker, gentity_t* blocker, const 
 			}
 
 			sab_beh_add_balance(blocker, MPCOST_PARRYING_ATTACKFAKE);
-			sab_beh_add_mishap_attacker(attacker, saber_num);
+			sab_beh_add_mishap_Fake_attacker(attacker, blocker, saber_num);
 
 			if ((d_attackinfo->integer || g_DebugSaberCombat->integer) && !PM_InSaberLock(attacker->client->ps.torsoAnim))
 			{

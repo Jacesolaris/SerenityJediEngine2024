@@ -1412,7 +1412,8 @@ static void CG_RegisterEffects()
 	cgs.effects.landingSnow = theFxScheduler.RegisterEffect("materials/snow_large");
 	cgs.effects.landingGravel = theFxScheduler.RegisterEffect("materials/gravel_large");
 	cgs.effects.landingLava = theFxScheduler.RegisterEffect("materials/dirt_large");
-	cgs.effects.mSaberFriction = theFxScheduler.RegisterEffect("saber/saber_lock");
+	cgs.effects.mSaberFriction = theFxScheduler.RegisterEffect("saber/saber_friction");
+	cgs.effects.mSaberLock = theFxScheduler.RegisterEffect("saber/saber_lock");
 	//splashes
 	if (gi.totalMapContents() & CONTENTS_WATER)
 	{

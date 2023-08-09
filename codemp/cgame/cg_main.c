@@ -1423,6 +1423,7 @@ static void CG_RegisterGraphics(void)
 	cgs.effects.mBlasterSmoke = trap->FX_RegisterEffect("blaster/smoke_bolton");
 	cgs.effects.mForceConfustionOld = trap->FX_RegisterEffect("force/confusion_old.efx");
 	cgs.effects.mSaberFriction = trap->FX_RegisterEffect("saber/saber_friction.efx");
+	cgs.effects.mSaberLock = trap->FX_RegisterEffect("saber/saber_lock.efx");
 
 	cgs.effects.forceLightning = trap->FX_RegisterEffect("effects/force/lightning.efx");
 	cgs.effects.forceLightningWide = trap->FX_RegisterEffect("effects/force/lightningwide.efx");

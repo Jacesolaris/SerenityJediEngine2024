@@ -14633,7 +14633,6 @@ void PM_SaberLockBreak(gentity_t* gent, gentity_t* genemy, const saberLockResult
 					}
 				}
 				//else see if we can knock the saber out of their hand
-				//FIXME: for now, always disarm the right-hand saber
 				if (!(genemy->client->ps.saber[0].saberFlags & SFL_NOT_DISARMABLE))
 				{
 					//add disarmBonus into this check

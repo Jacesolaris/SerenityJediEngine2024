@@ -1945,7 +1945,7 @@ void PM_SaberLockBreak(playerState_t* genemy, const qboolean victory, const int 
 		loseAnim = PM_SaberLockLoseAnim(genemy, victory, super_break);
 	}
 	else
-	{//must be a saberlock that's not between single and single...
+	{//must be a saberlock that's not between single and single..
 		win_anim = PM_SaberLockResultAnim(pm->ps, super_break, qtrue);
 		pm->ps->weaponstate = WEAPON_FIRING;
 

@@ -1917,7 +1917,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 						trap->S_StartSound(flash_point, es->number, CHAN_AUTO, lock_sound);
 						client->saberLockSoundDebounce = cg.time + 200;
 					}
-					trap->FX_PlayEffectID(cgs.effects.mSaberFriction, flash_point, fx_dir, -1, -1, qfalse);
+					trap->FX_PlayEffectID(cgs.effects.mSaberLock, flash_point, fx_dir, -1, -1, qfalse);
 				}
 			}
 		}

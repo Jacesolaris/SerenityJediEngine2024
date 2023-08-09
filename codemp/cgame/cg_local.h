@@ -1736,6 +1736,7 @@ typedef struct cgEffects_s {
 	fxHandle_t	mShipDestBurning;
 	fxHandle_t	mBobaJet;
 	fxHandle_t  mSaberFriction;
+	fxHandle_t  mSaberLock;
 	fxHandle_t	mBlueJet;
 
 	fxHandle_t	mboil;

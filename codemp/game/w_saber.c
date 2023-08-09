@@ -7901,9 +7901,9 @@ void MakeDeadSaber(const gentity_t* ent)
 	trap->LinkEntity((sharedEntity_t*)saberent);
 }
 
-#define MAX_LEAVE_TIME 2500
-#define MAX_BOT_LEAVE_TIME 2000
-#define MAX_PLAYER_LEAVE_TIME 2000
+#define MAX_LEAVE_TIME 2000
+#define MAX_BOT_LEAVE_TIME 1750
+#define MAX_PLAYER_LEAVE_TIME 1500
 #define MIN_LEAVE_TIME 1250
 
 void saberReactivate(gentity_t* saberent, gentity_t* saber_owner);
@@ -12600,12 +12600,11 @@ float manual_npc_saberblocking(const gentity_t* defender)
 		return qfalse;
 	}
 
-	if (defender->client->ps.saberFatigueChainCount > MISHAPLEVEL_TEN
-		&& (defender->client->ps.fd.forcePower <= BLOCKPOINTS_HALF || defender->client->ps.fd.blockPoints <=
-			BLOCKPOINTS_HALF))
+	/*if (defender->client->ps.saberFatigueChainCount > MISHAPLEVEL_TEN
+		&& (defender->client->ps.fd.blockPoints <= BLOCKPOINTS_HALF))
 	{
 		return qfalse;
-	}
+	}*/
 
 	if (defender->health <= 1
 		|| PM_InKnockDown(&defender->client->ps)
@@ -12640,8 +12639,7 @@ float manual_npc_saberblocking(const gentity_t* defender)
 		return qfalse;
 	}
 
-	if (defender->client->ps.weapon == WP_SABER
-		&& defender->client->ps.saberHolstered)
+	if (defender->client->ps.weapon == WP_SABER	&& defender->client->ps.saberHolstered)
 	{
 		//saber not currently in use or available.
 		return qfalse;
