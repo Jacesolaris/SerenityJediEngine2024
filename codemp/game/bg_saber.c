@@ -2495,7 +2495,16 @@ saberMoveName_t PM_SaberFlipOverAttackMove(void)
 	VectorCopy(pm->ps->viewangles, fwdAngles);
 	fwdAngles[PITCH] = fwdAngles[ROLL] = 0;
 	AngleVectors(fwdAngles, jumpFwd, NULL, NULL);
-	VectorScale(jumpFwd, 150, pm->ps->velocity); //was 50
+
+	if (pm->ps->fd.saber_anim_level == SS_FAST || pm->ps->fd.saber_anim_level == SS_TAVION)
+	{
+		VectorScale(jumpFwd, 200, pm->ps->velocity); //was 50
+	}
+	else
+	{
+		VectorScale(jumpFwd, 150, pm->ps->velocity); //was 50
+	}
+
 	pm->ps->velocity[2] = 400;
 
 	PM_SetForceJumpZStart(pm->ps->origin[2]); //so we don't take damage if we land at same height
@@ -3677,7 +3686,7 @@ qboolean PM_CheckUpsideDownAttack(void)
 	case BOTH_ALORA_FLIP_B:
 	case BOTH_FORCEWALLRUNFLIP_END:
 	{
-		const float anim_length = PM_AnimLength(pm->ps->legsAnim);
+		const float anim_length = PM_AnimLength((animNumber_t)pm->ps->legsAnim);
 		const float elapsed_time = anim_length - pm->ps->legsTimer;
 		const float mid_point = anim_length / 2.0f;
 		if (elapsed_time < mid_point - 100.0f

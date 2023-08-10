@@ -1537,8 +1537,7 @@ gentity_t* G_ScreenShake(vec3_t org, const gentity_t* target, const float intens
 	return te;
 }
 
-gentity_t* CGCam_BlockShakeMP(vec3_t org, const gentity_t* target, const float intensity, const int duration,
-	const qboolean global)
+gentity_t* CGCam_BlockShakeMP(vec3_t org, const gentity_t* target, const float intensity, const int duration,const qboolean global)
 {
 	gentity_t* te = G_TempEntity(org, EV_BLOCKSHAKE);
 	VectorCopy(org, te->s.origin);

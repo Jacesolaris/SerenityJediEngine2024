@@ -810,15 +810,15 @@ qboolean sab_beh_attack_vs_block(gentity_t* attacker, gentity_t* blocker, const 
 					//20% chance
 					sab_beh_animate_heavy_slow_bounce_attacker(attacker);
 					attacker->client->ps.userInt3 |= 1 << FLAG_MBLOCKBOUNCE;
-
-					if (!(attacker->r.svFlags & SVF_BOT))
-					{
-						CGCam_BlockShakeMP(attacker->s.origin, NULL, 0.45f, 100, qfalse);
-					}
 				}
 				else
 				{
 					attacker->client->ps.userInt3 |= 1 << FLAG_BLOCKED;
+				}
+
+				if (!(attacker->r.svFlags & SVF_BOT))
+				{
+					CGCam_BlockShakeMP(attacker->s.origin, attacker, 0.45f, 100, qfalse);
 				}
 			}
 			else
@@ -954,7 +954,7 @@ qboolean sab_beh_block_vs_attack(gentity_t* blocker, gentity_t* attacker, const 
 
 					if (!(blocker->r.svFlags & SVF_BOT))
 					{
-						CGCam_BlockShakeMP(blocker->s.origin, NULL, 0.45f, 100, qfalse);
+						CGCam_BlockShakeMP(blocker->s.origin, blocker, 0.45f, 100, qfalse);
 					}
 					G_Sound(blocker, CHAN_AUTO,
 						G_SoundIndex(va("sound/weapons/saber/saber_perfectblock%d.mp3", Q_irand(1, 3))));
@@ -1007,7 +1007,7 @@ qboolean sab_beh_block_vs_attack(gentity_t* blocker, gentity_t* attacker, const 
 
 					if (!(blocker->r.svFlags & SVF_BOT))
 					{
-						CGCam_BlockShakeMP(blocker->s.origin, NULL, 0.45f, 100, qfalse);
+						CGCam_BlockShakeMP(blocker->s.origin, blocker, 0.45f, 100, qfalse);
 					}
 
 					if ((d_blockinfo.integer || g_DebugSaberCombat.integer) && !(blocker->r.svFlags & SVF_BOT))
@@ -1047,7 +1047,7 @@ qboolean sab_beh_block_vs_attack(gentity_t* blocker, gentity_t* attacker, const 
 
 				if (!(blocker->r.svFlags & SVF_BOT))
 				{
-					CGCam_BlockShakeMP(blocker->s.origin, NULL, 0.45f, 100, qfalse);
+					CGCam_BlockShakeMP(blocker->s.origin, blocker, 0.45f, 100, qfalse);
 				}
 
 				if (blocker->r.svFlags & SVF_BOT) //NPC only
@@ -1165,7 +1165,7 @@ qboolean sab_beh_block_vs_attack(gentity_t* blocker, gentity_t* attacker, const 
 		{
 			if (!(blocker->r.svFlags & SVF_BOT))
 			{
-				CGCam_BlockShakeMP(blocker->s.origin, NULL, 0.45f, 100, qfalse);
+				CGCam_BlockShakeMP(blocker->s.origin, blocker, 0.45f, 100, qfalse);
 			}
 
 			blocker->client->ps.userInt3 |= 1 << FLAG_PERFECTBLOCK;

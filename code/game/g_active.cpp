@@ -3148,7 +3148,6 @@ qboolean G_CheckClampUcmd(gentity_t* ent, usercmd_t* ucmd)
 		if (ent->client->ps.saberLockTime - level.time > SABER_LOCK_DELAYED_TIME)
 		{
 			//2 second delay before either can push
-			//FIXME: base on difficulty
 			ucmd->buttons = 0;
 		}
 		else

@@ -4218,7 +4218,7 @@ qboolean PM_InOnGroundAnims(const playerState_t* ps)
 	case BOTH_FORCE_GETUP_B5:
 	case BOTH_FORCE_GETUP_B6:
 	case BOTH_STANDFROMPRONE:
-		if (ps->legsTimer > PM_AnimLength(ps->legsAnim) - 400)
+		if (ps->legsTimer > PM_AnimLength((animNumber_t)ps->legsAnim) - 400)
 		{
 			//still pretty much horizontal at this point
 			return qtrue;

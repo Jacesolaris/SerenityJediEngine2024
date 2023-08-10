@@ -1376,6 +1376,10 @@ static void MedPackGive(gentity_t* ent, const int amount)
 	{
 		return;
 	}
+	if (ent->client->ps.duelInProgress)
+	{
+		return;
+	}
 
 	if (ent->health <= 0 ||
 		ent->client->ps.stats[STAT_HEALTH] <= 0 ||

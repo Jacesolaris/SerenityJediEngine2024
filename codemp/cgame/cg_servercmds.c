@@ -1378,11 +1378,6 @@ static void CG_BodyQueueCopy(centity_t* cent, const int client_num, const int kn
 
 		const int eFrame = anim->firstFrame + anim->numFrames;
 
-		//if (!cgs.clientinfo[source->currentState.number].frame || (cent->currentState.torsoAnim) != (source->currentState.torsoAnim) )
-		//{
-		//	aNum = (anim->firstFrame+anim->numFrames)-1;
-		//}
-
 		trap->G2API_SetBoneAnim(cent->ghoul2, 0, "upper_lumbar", aNum, eFrame, flags, animSpeed, cg.time, -1, 150);
 		trap->G2API_SetBoneAnim(cent->ghoul2, 0, "model_root", aNum, eFrame, flags, animSpeed, cg.time, -1, 150);
 		trap->G2API_SetBoneAnim(cent->ghoul2, 0, "Motion", aNum, eFrame, flags, animSpeed, cg.time, -1, 150);

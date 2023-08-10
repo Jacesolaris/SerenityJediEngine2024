@@ -743,7 +743,7 @@ typedef struct weaponInfo_s {
 	float			missileDlight;
 	vec3_t			missileDlightColor;
 	int				missileRenderfx;
-	sfxHandle_t		missileHitSound;
+	sfxHandle_t		missilehit_sound;
 
 	sfxHandle_t		altFlashSound[4];
 	sfxHandle_t		altFiringSound;
@@ -755,7 +755,7 @@ typedef struct weaponInfo_s {
 	float			altMissileDlight;
 	vec3_t			altMissileDlightColor;
 	int				altMissileRenderfx;
-	sfxHandle_t		altMissileHitSound;
+	sfxHandle_t		altMissilehit_sound;
 
 	sfxHandle_t		selectSound;
 
@@ -1435,7 +1435,7 @@ typedef struct cgMedia_s {
 
 	//#ifdef JK2AWARDS
 
-	sfxHandle_t hitSound;
+	sfxHandle_t hit_sound;
 	sfxHandle_t hitTeamSound;
 	sfxHandle_t impressiveSound;
 	sfxHandle_t excellentSound;

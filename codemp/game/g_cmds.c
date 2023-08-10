@@ -1091,6 +1091,7 @@ void StopFollowing(gentity_t* ent)
 	ent->client->ps.legsTimer = 0;
 	ent->client->ps.torsoAnim = 0;
 	ent->client->ps.torsoTimer = 0;
+	ent->client->ps.duelInProgress = qfalse;
 	ent->client->ps.isJediMaster = qfalse;
 	// major exploit if you are spectating somebody and they are JM and you reconnect
 	ent->client->ps.cloakFuel = 100; // so that fuel goes away after stop following them
@@ -3385,24 +3386,6 @@ void Cmd_SaberAttackCycle_f(gentity_t* ent)
 	}
 }
 
-qboolean G_OtherPlayersDueling(void)
-{
-	int i = 0;
-
-	while (i < MAX_CLIENTS)
-	{
-		const gentity_t* ent = &g_entities[i];
-
-		if (ent && ent->inuse && ent->client && ent->client->ps.duelInProgress)
-		{
-			return qtrue;
-		}
-		i++;
-	}
-
-	return qfalse;
-}
-
 void Cmd_EngageDuel_f(gentity_t* ent)
 {
 	trace_t tr;
@@ -3416,14 +3399,6 @@ void Cmd_EngageDuel_f(gentity_t* ent)
 	if (level.gametype == GT_DUEL || level.gametype == GT_POWERDUEL)
 	{
 		//rather pointless in this mode..
-		trap->SendServerCommand(ent - g_entities,
-			va("print \"%s\n\"", G_GetStringEdString("MP_SVGAME", "NODUEL_GAMETYPE")));
-		return;
-	}
-
-	if (level.gametype >= GT_TEAM)
-	{
-		//no private dueling in team modes
 		trap->SendServerCommand(ent - g_entities,
 			va("print \"%s\n\"", G_GetStringEdString("MP_SVGAME", "NODUEL_GAMETYPE")));
 		return;
@@ -3469,7 +3444,7 @@ void Cmd_EngageDuel_f(gentity_t* ent)
 			return;
 		}
 
-		if (level.gametype >= GT_TEAM && OnSameTeam(ent, challenged))
+		if (!g_friendlyFire.integer && (level.gametype >= GT_TEAM && OnSameTeam(ent, challenged)))
 		{
 			return;
 		}

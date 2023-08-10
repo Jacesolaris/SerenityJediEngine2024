@@ -321,7 +321,7 @@ void CG_CheckLocalSounds(const playerState_t* ps, const playerState_t* ops)
 	// hit changes
 	if (ps->persistant[PERS_HITS] > ops->persistant[PERS_HITS])
 	{
-		//trap->S_StartLocalSound( cgs.media.hitSound, CHAN_LOCAL_SOUND );
+		//trap->S_StartLocalSound( cgs.media.hit_sound, CHAN_LOCAL_SOUND );
 	}
 	else if (ps->persistant[PERS_HITS] < ops->persistant[PERS_HITS])
 	{

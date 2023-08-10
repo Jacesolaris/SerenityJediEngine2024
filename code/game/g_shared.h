@@ -1995,8 +1995,8 @@ using weaponInfo_t = struct weaponInfo_s
 
 	sfxHandle_t stopSound;
 
-	sfxHandle_t missileHitSound;
-	sfxHandle_t altmissileHitSound;
+	sfxHandle_t missilehit_sound;
+	sfxHandle_t altmissilehit_sound;
 
 	sfxHandle_t chargeSound;
 	sfxHandle_t altChargeSound;

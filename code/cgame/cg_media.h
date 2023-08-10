@@ -467,7 +467,7 @@ using cgMedia_t = struct
 
 	sfxHandle_t footsteps[FOOTSTEP_TOTAL][4];
 
-	sfxHandle_t hitSound;
+	sfxHandle_t hit_sound;
 	sfxHandle_t hitTeamSound;
 	sfxHandle_t impressiveSound;
 	sfxHandle_t excellentSound;

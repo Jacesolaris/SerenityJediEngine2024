@@ -915,11 +915,11 @@ void wp_saber_set_defaults(saberInfo_t* saber)
 	// none - if set, the game will use this shader for marks on enemies instead of the default "gfx/damage/saberglowmark"
 	saber->g2WeaponMarkShader = 0;
 	// none - if set, the game will use this shader for marks on enemies instead of the default "gfx/damage/saberglowmark"
-	saber->hitSound[0] = 0;
+	saber->hit_sound[0] = 0;
 	// none - if set, plays one of these 3 sounds when saber hits a person - NOTE: must provide all 3!!!
-	saber->hitSound[1] = 0;
+	saber->hit_sound[1] = 0;
 	// none - if set, plays one of these 3 sounds when saber hits a person - NOTE: must provide all 3!!!
-	saber->hitSound[2] = 0;
+	saber->hit_sound[2] = 0;
 	// none - if set, plays one of these 3 sounds when saber hits a person - NOTE: must provide all 3!!!
 	saber->blockSound[0] = 0;
 	// none - if set, plays one of these 3 sounds when saber/sword hits another saber/sword - NOTE: must provide all 3!!!
@@ -2161,28 +2161,28 @@ static void Saber_ParseSplashKnockback(saberInfo_t* saber, const char** p)
 	saber->splashKnockback = f;
 }
 
-static void Saber_ParseHitSound1(saberInfo_t* saber, const char** p)
+static void Saber_Parsehit_sound1(saberInfo_t* saber, const char** p)
 {
 	const char* value;
 	if (COM_ParseString(p, &value))
 		return;
-	saber->hitSound[0] = BG_SoundIndex(value);
+	saber->hit_sound[0] = BG_SoundIndex(value);
 }
 
-static void Saber_ParseHitSound2(saberInfo_t* saber, const char** p)
+static void Saber_Parsehit_sound2(saberInfo_t* saber, const char** p)
 {
 	const char* value;
 	if (COM_ParseString(p, &value))
 		return;
-	saber->hitSound[1] = BG_SoundIndex(value);
+	saber->hit_sound[1] = BG_SoundIndex(value);
 }
 
-static void Saber_ParseHitSound3(saberInfo_t* saber, const char** p)
+static void Saber_Parsehit_sound3(saberInfo_t* saber, const char** p)
 {
 	const char* value;
 	if (COM_ParseString(p, &value))
 		return;
-	saber->hitSound[2] = BG_SoundIndex(value);
+	saber->hit_sound[2] = BG_SoundIndex(value);
 }
 
 static void Saber_ParseBlockSound1(saberInfo_t* saber, const char** p)
@@ -2790,11 +2790,11 @@ static keywordHash_t saberParseKeywords[] = {
 	{"splashDamage2", Saber_ParseSplashDamage2, NULL},
 	{"splashKnockback", Saber_ParseSplashKnockback, NULL},
 	{"splashKnockback2", Saber_ParseSplashKnockback2, NULL},
-	{"hitSound1", Saber_ParseHitSound1, NULL},
+	{"hit_sound1", Saber_Parsehit_sound1, NULL},
 	{"hit2Sound1", Saber_ParseHit2Sound1, NULL},
-	{"hitSound2", Saber_ParseHitSound2, NULL},
+	{"hit_sound2", Saber_Parsehit_sound2, NULL},
 	{"hit2Sound2", Saber_ParseHit2Sound2, NULL},
-	{"hitSound3", Saber_ParseHitSound3, NULL},
+	{"hit_sound3", Saber_Parsehit_sound3, NULL},
 	{"hit2Sound3", Saber_ParseHit2Sound3, NULL},
 	{"blockSound1", Saber_ParseBlockSound1, NULL},
 	{"block2Sound1", Saber_ParseBlock2Sound1, NULL},

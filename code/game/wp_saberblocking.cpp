@@ -291,7 +291,6 @@ void sab_beh_add_mishap_attacker(gentity_t* attacker, const gentity_t* blocker, 
 	}
 }
 
-
 void sab_beh_add_mishap_Fake_attacker(gentity_t* attacker, const gentity_t* blocker, const int saber_num)
 {
 	if (attacker->client->ps.blockPoints <= MISHAPLEVEL_NONE)

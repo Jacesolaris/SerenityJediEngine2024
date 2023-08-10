@@ -1248,7 +1248,7 @@ using saberInfo_t = struct
 	char bladeshader[MAX_QPATH]; //none - if set, overrides the shader used for the saber blade
 	vec3_t saberDLightColor; //none - if set, overrides the default white color used for the saber dlight
 	//int		trailShader;				//none - if set, overrides the shader used for the saber trail?
-	qhandle_t hitSound[3];
+	qhandle_t hit_sound[3];
 	//none - if set, plays one of these 3 sounds when saber hits a person - NOTE: must provide all 3!!!
 	qhandle_t blockSound[3];
 	//none - if set, plays one of these 3 sounds when saber/sword hits another saber/sword - NOTE: must provide all 3!!!
@@ -1479,7 +1479,7 @@ using saberInfo_t = struct
 		saved_game.write<int32_t>(trailStyle);
 		saved_game.write<int8_t>(g2MarksShader);
 		saved_game.write<int8_t>(g2WeaponMarkShader);
-		saved_game.write<int32_t>(hitSound);
+		saved_game.write<int32_t>(hit_sound);
 		saved_game.write<int32_t>(blockSound);
 		saved_game.write<int32_t>(bounceSound);
 		saved_game.write<int32_t>(blockEffect);
@@ -1568,7 +1568,7 @@ using saberInfo_t = struct
 		saved_game.read<int32_t>(trailStyle);
 		saved_game.read<int8_t>(g2MarksShader);
 		saved_game.read<int8_t>(g2WeaponMarkShader);
-		saved_game.read<int32_t>(hitSound);
+		saved_game.read<int32_t>(hit_sound);
 		saved_game.read<int32_t>(blockSound);
 		saved_game.read<int32_t>(bounceSound);
 		saved_game.read<int32_t>(blockEffect);

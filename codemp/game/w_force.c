@@ -3268,8 +3268,8 @@ void force_lightning_damage(gentity_t* self, gentity_t* trace_ent, vec3_t dir, c
 						{
 							//saber can block lightning
 							const int rsaber_num = 0;
-							const int rBladeNum = 0;
-							trace_ent->client->saber[rsaber_num].blade[rBladeNum].storageTime = level.time;
+							const int rblade_num = 0;
+							trace_ent->client->saber[rsaber_num].blade[rblade_num].storageTime = level.time;
 							if (saber_lightning_blocked && !hand_lightning_blocked)
 							{
 								const float chance_of_fizz = flrand(0.0f, 1.0f);
@@ -3280,10 +3280,10 @@ void force_lightning_damage(gentity_t* self, gentity_t* trace_ent, vec3_t dir, c
 								if (chance_of_fizz > 0)
 								{
 									vec3_t end2;
-									VectorMA(trace_ent->client->saber[rsaber_num].blade[rBladeNum].muzzle_point,
-										trace_ent->client->saber[rsaber_num].blade[rBladeNum].lengthMax *
+									VectorMA(trace_ent->client->saber[rsaber_num].blade[rblade_num].muzzle_point,
+										trace_ent->client->saber[rsaber_num].blade[rblade_num].lengthMax *
 										flrand(0, 1),
-										trace_ent->client->saber[rsaber_num].blade[rBladeNum].muzzleDir, end2);
+										trace_ent->client->saber[rsaber_num].blade[rblade_num].muzzleDir, end2);
 									if (trace_ent->client->ps.fd.blockPoints > 50)
 									{
 										G_PlayEffectID(G_EffectIndex("saber/saber_Lightninghit.efx"), end2, ang);
@@ -3329,8 +3329,8 @@ void force_lightning_damage(gentity_t* self, gentity_t* trace_ent, vec3_t dir, c
 					{
 						//Serenitysabersystems saber can block lightning
 						const int rsaber_num = 0;
-						const int rBladeNum = 0;
-						trace_ent->client->saber[rsaber_num].blade[rBladeNum].storageTime = level.time;
+						const int rblade_num = 0;
+						trace_ent->client->saber[rsaber_num].blade[rblade_num].storageTime = level.time;
 						if (saber_lightning_blocked && !hand_lightning_blocked)
 						{
 							const float chance_of_fizz = flrand(0.0f, 1.0f);
@@ -3341,9 +3341,9 @@ void force_lightning_damage(gentity_t* self, gentity_t* trace_ent, vec3_t dir, c
 							if (chance_of_fizz > 0)
 							{
 								vec3_t end2;
-								VectorMA(trace_ent->client->saber[rsaber_num].blade[rBladeNum].muzzle_point,
-									trace_ent->client->saber[rsaber_num].blade[rBladeNum].lengthMax * flrand(0, 1),
-									trace_ent->client->saber[rsaber_num].blade[rBladeNum].muzzleDir, end2);
+								VectorMA(trace_ent->client->saber[rsaber_num].blade[rblade_num].muzzle_point,
+									trace_ent->client->saber[rsaber_num].blade[rblade_num].lengthMax * flrand(0, 1),
+									trace_ent->client->saber[rsaber_num].blade[rblade_num].muzzleDir, end2);
 								if (trace_ent->client->ps.fd.blockPoints > 50)
 								{
 									G_PlayEffectID(G_EffectIndex("saber/saber_Lightninghit.efx"), end2, ang);

@@ -262,6 +262,7 @@ extern void G_StasisMissile(gentity_t* ent, gentity_t* missile);
 void G_Beskar_Attack_Bounce(const gentity_t* self, gentity_t* other);
 extern void jet_fly_stop(gentity_t* self);
 extern qboolean PM_InSlowBounce(const playerState_t* ps);
+extern qboolean WP_SaberCanBlockSwing(int ourStr, int attackStr);
 
 qboolean g_saberNoEffects = qfalse;
 qboolean g_noClashFlare = qfalse;
@@ -1611,9 +1612,9 @@ void wp_saber_hit_sound(const gentity_t* ent, const int saber_num, const int bla
 	const int indexspecial = Q_irand(1, 3);
 
 	if (!WP_SaberBladeUseSecondBladeStyle(&ent->client->ps.saber[saber_num], blade_num)
-		&& ent->client->ps.saber[saber_num].hitSound[0])
+		&& ent->client->ps.saber[saber_num].hit_sound[0])
 	{
-		G_Sound(ent, ent->client->ps.saber[saber_num].hitSound[Q_irand(0, 2)]);
+		G_Sound(ent, ent->client->ps.saber[saber_num].hit_sound[Q_irand(0, 2)]);
 	}
 	else if (WP_SaberBladeUseSecondBladeStyle(&ent->client->ps.saber[saber_num], blade_num)
 		&& ent->client->ps.saber[saber_num].hit2Sound[0])
@@ -11388,7 +11389,12 @@ float manual_npc_saberblocking(const gentity_t* defender)
 		return qfalse;
 	}
 
-	if (SaberAttacking(defender) && (defender->s.number >= MAX_CLIENTS && !G_ControlledByPlayer(defender)))
+	if (PM_SaberInMassiveBounce(defender->client->ps.torsoAnim) || PM_SaberInBashedAnim(defender->client->ps.torsoAnim))
+	{
+		return qfalse;
+	}
+
+	if (SaberAttacking(defender) && defender->client->ps.saberFatigueChainCount < MISHAPLEVEL_HUDFLASH)
 	{
 		//bots just randomly parry to make up for them not intelligently parrying.
 		return qtrue;

@@ -60,7 +60,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #define DEFAULT_REDTEAM_NAME	"Empire"
 #define DEFAULT_BLUETEAM_NAME	"Rebellion"
 
-#define CURRENT_SJE_CLIENTVERSION		"Year-23,Month-08,Day-09,BuildNum-06" // build date
+#define CURRENT_SJE_CLIENTVERSION		"Year-23,Month-08,Day-10,BuildNum-07" // build date
 
 #define	STEPSIZE		18
 
@@ -1925,7 +1925,7 @@ typedef struct saberInfo_s {
 	int				trailStyle, trailStyle2;				// 0 - default (0) is normal, 1 is a motion blur and 2 is no trail at all (good for real-sword type mods)
 	int				g2MarksShader, g2MarksShader2;			// none - if set, the game will use this shader for marks on enemies instead of the default "gfx/damage/saberglowmark"
 	int				g2WeaponMarkShader, g2WeaponMarkShader2;// none - if set, the game will ry to project this shader onto the weapon when it damages a person (good for a blood splatter on the weapon)
-	qhandle_t		hitSound[3], hit2Sound[3];				// none - if set, plays one of these 3 sounds when saber hits a person - NOTE: must provide all 3!!!
+	qhandle_t		hit_sound[3], hit2Sound[3];				// none - if set, plays one of these 3 sounds when saber hits a person - NOTE: must provide all 3!!!
 	qhandle_t		blockSound[3], block2Sound[3];			// none - if set, plays one of these 3 sounds when saber/sword hits another saber/sword - NOTE: must provide all 3!!!
 	qhandle_t		bounceSound[3], bounce2Sound[3];		// none - if set, plays one of these 3 sounds when saber/sword hits a wall and bounces off (must set bounceOnWall to 1 to use these sounds) - NOTE: must provide all 3!!!
 	int				blockEffect, blockEffect2;				// none - if set, plays this effect when the saber/sword hits another saber/sword (instead of "saber/saber_block.efx")

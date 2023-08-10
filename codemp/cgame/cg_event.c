@@ -1890,8 +1890,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 					VectorSubtract(cg.refdef.vieworg, flash_point, vec_sub);
 					if (VectorLength(vec_sub) < 5000)
 					{
-						CG_Trace(&tr, cg.refdef.vieworg, NULL, NULL, flash_point, ENTITYNUM_NONE,
-							CONTENTS_TERRAIN | CONTENTS_SOLID);
+						CG_Trace(&tr, cg.refdef.vieworg, NULL, NULL, flash_point, ENTITYNUM_NONE, CONTENTS_TERRAIN | CONTENTS_SOLID);
 						if (tr.fraction == 1.0 || tr.entity_num < MAX_CLIENTS)
 						{
 							cull_pass = qtrue;
@@ -2719,6 +2718,11 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 
 	case EV_SABER_ATTACK:
 		DEBUGNAME("EV_SABER_ATTACK");
+
+		if (cg.predicted_player_state.duelInProgress && (cg.predicted_player_state.client_num != es->client_num && cg.predicted_player_state.duelIndex != es->client_num))
+		{
+			break;
+		}
 		{
 			qhandle_t swing_sound = trap->S_RegisterSound(va("sound/weapons/saber/saberhup%i.wav", Q_irand(1, 11)));
 			clientInfo_t* client = NULL;
@@ -2843,10 +2847,10 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 								hit_other_fx_id = client->saber[0].hitOtherEffect;
 							}
 						}
-						if (client->saber[saber_num].hitSound[0])
+						if (client->saber[saber_num].hit_sound[0])
 						{
 							//custom hit sound
-							hit_sound = client->saber[saber_num].hitSound[Q_irand(0, 2)];
+							hit_sound = client->saber[saber_num].hit_sound[Q_irand(0, 2)];
 						}
 					}
 				}
@@ -3040,10 +3044,8 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 				qboolean cull_pass = qfalse;
 				int block_fxid = cgs.effects.mSaberBlock;
 				int perfectblock_fxid = cgs.effects.mSaberprfectBlock;
-				qhandle_t block_sound = trap->
-					S_RegisterSound(va("sound/weapons/saber/saberblock%d", Q_irand(1, 90)));
-				qhandle_t knock_sound = trap->
-					S_RegisterSound(va("sound/weapons/saber/saberknock%d", Q_irand(1, 4)));
+				qhandle_t block_sound = trap->S_RegisterSound(va("sound/weapons/saber/saberblock%d", Q_irand(1, 90)));
+				qhandle_t knock_sound = trap->S_RegisterSound(va("sound/weapons/saber/saberknock%d", Q_irand(1, 4)));
 
 				if (es->otherEntityNum2 >= 0 && es->otherEntityNum2 < ENTITYNUM_NONE)
 				{
@@ -3061,6 +3063,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 					{
 						int saber_num = es->weapon;
 						int blade_num = es->legsAnim;
+
 						if (WP_SaberBladeUseSecondBladeStyle(&client->saber[saber_num], blade_num))
 						{
 							//use second blade style values
@@ -3120,8 +3123,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 
 					if (VectorLength(vec_sub) < 5000)
 					{
-						CG_Trace(&tr, cg.refdef.vieworg, NULL, NULL, es->origin, ENTITYNUM_NONE,
-							CONTENTS_TERRAIN | CONTENTS_SOLID);
+						CG_Trace(&tr, cg.refdef.vieworg, NULL, NULL, es->origin, ENTITYNUM_NONE, CONTENTS_TERRAIN | CONTENTS_SOLID);
 
 						if (tr.fraction == 1.0 || tr.entity_num < MAX_CLIENTS)
 						{
@@ -3158,8 +3160,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 				}
 				if (Q_irand(0, 1))
 				{
-					trap->FX_PlayEffectID(cgs.effects.mBlasterDeflectpassthrough, es->origin, fx_dir, -1, -1,
-						qfalse);
+					trap->FX_PlayEffectID(cgs.effects.mBlasterDeflectpassthrough, es->origin, fx_dir, -1, -1, qfalse);
 				}
 				else
 				{
@@ -3249,8 +3250,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 
 				if (VectorLength(vec_sub) < 5000)
 				{
-					CG_Trace(&tr, cg.refdef.vieworg, NULL, NULL, es->origin, ENTITYNUM_NONE,
-						CONTENTS_TERRAIN | CONTENTS_SOLID);
+					CG_Trace(&tr, cg.refdef.vieworg, NULL, NULL, es->origin, ENTITYNUM_NONE, CONTENTS_TERRAIN | CONTENTS_SOLID);
 
 					if (tr.fraction == 1.0 || tr.entity_num < MAX_CLIENTS)
 					{
@@ -3268,8 +3268,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 				cg_saberFlashTime = cg.time - 50;
 				VectorCopy(es->origin, cg_saberFlashPos);
 			}
-			trap->S_StartSound(es->origin, -1, CHAN_WEAPON,
-				trap->S_RegisterSound(va("sound/weapons/saber/saberhitwall%i", Q_irand(1, 3))));
+			trap->S_StartSound(es->origin, -1, CHAN_WEAPON, trap->S_RegisterSound(va("sound/weapons/saber/saberhitwall%i", Q_irand(1, 3))));
 		}
 		break;
 
@@ -3515,6 +3514,12 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 
 	case EV_BLOCKSHAKE:
 		DEBUGNAME("EV_BLOCKSHAKE");
+
+		/*if (es->owner == cg.predicted_player_state.client_num)
+		{
+			CGCam_BlockShake(es->angles[0], es->time);
+		}*/
+
 		if (!es->modelindex || cg.predicted_player_state.client_num == es->modelindex - 1)
 		{
 			CGCam_BlockShake(es->angles[0], es->time);

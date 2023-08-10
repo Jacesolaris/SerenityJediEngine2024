@@ -180,8 +180,8 @@ using weaponData_t = struct weaponData_s
 	float alt_missileDlight; // what is says
 	vec3_t alt_missileDlightColor; // ditto
 
-	char missileHitSound[64]; // Missile impact sound
-	char altmissileHitSound[64]; // alt Missile impact sound
+	char missilehit_sound[64]; // Missile impact sound
+	char altmissilehit_sound[64]; // alt Missile impact sound
 	void* func;
 	void* altfunc;
 

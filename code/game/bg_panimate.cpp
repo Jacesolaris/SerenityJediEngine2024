@@ -4071,7 +4071,16 @@ saberMoveName_t PM_SaberFlipOverAttackMove()
 	VectorCopy(pm->ps->viewangles, fwd_angles);
 	fwd_angles[PITCH] = fwd_angles[ROLL] = 0;
 	AngleVectors(fwd_angles, jumpFwd, nullptr, nullptr);
-	VectorScale(jumpFwd, 150, pm->ps->velocity);
+	
+	if (pm->ps->saber_anim_level == SS_FAST || pm->ps->saber_anim_level == SS_TAVION)
+	{
+		VectorScale(jumpFwd, 200, pm->ps->velocity);
+	}
+	else
+	{
+		VectorScale(jumpFwd, 150, pm->ps->velocity);
+	}
+
 	pm->ps->velocity[2] = 250;
 	//250 is normalized for a standing enemy at your z level, about 64 tall... adjust for actual maxs[2]-mins[2] of enemy and for zdiff in origins
 	if (pm->gent && pm->gent->enemy)

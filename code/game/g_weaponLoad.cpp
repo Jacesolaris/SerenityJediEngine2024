@@ -227,8 +227,8 @@ void WPN_MissileLightColor(const char** hold_buf);
 void WPN_AltMissileLightColor(const char** hold_buf);
 void WPN_FuncName(const char** hold_buf);
 void WPN_AltFuncName(const char** hold_buf);
-void WPN_MissileHitSound(const char** hold_buf);
-void WPN_AltMissileHitSound(const char** hold_buf);
+void WPN_Missilehit_sound(const char** hold_buf);
+void WPN_AltMissilehit_sound(const char** hold_buf);
 void WPN_MuzzleEffect(const char** hold_buf);
 void WPN_AltMuzzleEffect(const char** hold_buf);
 void WPN_overloadmuzzleEffect(const char** hold_buf);
@@ -526,8 +526,8 @@ wpnParms_t WpnParms[] =
 	{"altmissileLightColor", WPN_AltMissileLightColor},
 	{"missileFuncName", WPN_FuncName},
 	{"altmissileFuncName", WPN_AltFuncName},
-	{"missileHitSound", WPN_MissileHitSound},
-	{"altmissileHitSound", WPN_AltMissileHitSound},
+	{"missilehit_sound", WPN_Missilehit_sound},
+	{"altmissilehit_sound", WPN_AltMissilehit_sound},
 	{"muzzleEffect", WPN_MuzzleEffect},
 	{"altmuzzleEffect", WPN_AltMuzzleEffect},
 	{"overloadmuzzleEffect", WPN_overloadmuzzleEffect},
@@ -1153,7 +1153,7 @@ void WPN_AltMissileName(const char** hold_buf)
 }
 
 //--------------------------------------------
-void WPN_MissileHitSound(const char** hold_buf)
+void WPN_Missilehit_sound(const char** hold_buf)
 {
 	const char* token_str;
 
@@ -1167,14 +1167,14 @@ void WPN_MissileHitSound(const char** hold_buf)
 	if (len > 64)
 	{
 		len = 64;
-		gi.Printf(S_COLOR_YELLOW"WARNING: MissileHitSound too long in external WEAPONS.DAT '%s'\n", token_str);
+		gi.Printf(S_COLOR_YELLOW"WARNING: Missilehit_sound too long in external WEAPONS.DAT '%s'\n", token_str);
 	}
 
-	Q_strncpyz(weaponData[wpnParms.weaponNum].missileHitSound, token_str, len);
+	Q_strncpyz(weaponData[wpnParms.weaponNum].missilehit_sound, token_str, len);
 }
 
 //--------------------------------------------
-void WPN_AltMissileHitSound(const char** hold_buf)
+void WPN_AltMissilehit_sound(const char** hold_buf)
 {
 	const char* token_str;
 
@@ -1188,10 +1188,10 @@ void WPN_AltMissileHitSound(const char** hold_buf)
 	if (len > 64)
 	{
 		len = 64;
-		gi.Printf(S_COLOR_YELLOW"WARNING: AltMissileHitSound too long in external WEAPONS.DAT '%s'\n", token_str);
+		gi.Printf(S_COLOR_YELLOW"WARNING: AltMissilehit_sound too long in external WEAPONS.DAT '%s'\n", token_str);
 	}
 
-	Q_strncpyz(weaponData[wpnParms.weaponNum].altmissileHitSound, token_str, len);
+	Q_strncpyz(weaponData[wpnParms.weaponNum].altmissilehit_sound, token_str, len);
 }
 
 //--------------------------------------------

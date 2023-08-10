@@ -301,13 +301,13 @@ void CG_RegisterWeapon(const int weapon_num)
 	{
 		weaponInfo->alt_missileSound = cgi_S_RegisterSound(weaponData[weapon_num].alt_missileSound);
 	}
-	if (weaponData[weapon_num].missileHitSound[0])
+	if (weaponData[weapon_num].missilehit_sound[0])
 	{
-		weaponInfo->missileHitSound = cgi_S_RegisterSound(weaponData[weapon_num].missileHitSound);
+		weaponInfo->missilehit_sound = cgi_S_RegisterSound(weaponData[weapon_num].missilehit_sound);
 	}
-	if (weaponData[weapon_num].altmissileHitSound[0])
+	if (weaponData[weapon_num].altmissilehit_sound[0])
 	{
-		weaponInfo->altmissileHitSound = cgi_S_RegisterSound(weaponData[weapon_num].altmissileHitSound);
+		weaponInfo->altmissilehit_sound = cgi_S_RegisterSound(weaponData[weapon_num].altmissilehit_sound);
 	}
 	if (weaponData[weapon_num].mMuzzleEffect[0])
 	{

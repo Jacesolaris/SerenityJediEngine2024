@@ -11620,7 +11620,7 @@ void CG_G2SaberEffects(vec3_t start, vec3_t end, const centity_t* owner)
 			{
 				//it succeeded with the ghoul2 trace
 				trap->FX_PlayEffectID(cgs.effects.mSaberBloodSparks, trace.endpos, trace.plane.normal, -1, -1, qfalse);
-				trap->S_StartSound(trace.endpos, trace.entity_num, CHAN_AUTO,trap->S_RegisterSound(va("sound/weapons/saber/saberhit%i.mp3", Q_irand(1, 15))));
+				trap->S_StartSound(trace.endpos, trace.entity_num, CHAN_AUTO, trap->S_RegisterSound(va("sound/weapons/saber/saberhit%i.mp3", Q_irand(1, 15))));
 			}
 		}
 
@@ -11817,7 +11817,6 @@ void CG_SaberCompWork(vec3_t start, vec3_t end, centity_t* owner, const int sabe
 											owner->lerpOrigin, owner->lerpAngles[YAW],
 											owner->ghoul2, owner->modelScale, Q_irand(5000, 10000));
 									}
-
 
 									if (client && client->infoValid)
 									{// Also do blood sparks here...

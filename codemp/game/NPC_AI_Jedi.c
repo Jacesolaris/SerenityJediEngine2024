@@ -4327,7 +4327,7 @@ evasionType_t Jedi_CheckFlipEvasions(gentity_t* self, const float rightdot, floa
 
 		AngleVectors(fwdAngles, NULL, right, NULL);
 
-		const float anim_length = PM_AnimLength(self->client->ps.legsAnim);
+		const float anim_length = PM_AnimLength((animNumber_t)self->client->ps.legsAnim);
 		if (self->client->ps.legsAnim == BOTH_WALL_RUN_LEFT && rightdot < 0)
 		{
 			//I'm running on a wall to my left and the attack is on the left

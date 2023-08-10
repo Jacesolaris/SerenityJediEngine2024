@@ -749,7 +749,7 @@ void g_missile_reflect_effect(gentity_t* ent, vec3_t dir)
 
 	if (!(ent->r.svFlags & SVF_BOT))
 	{
-		CGCam_BlockShakeMP(ent->s.origin, NULL, 0.45f, 100, qfalse);
+		CGCam_BlockShakeMP(ent->s.origin, ent, 0.45f, 100, qfalse);
 	}
 }
 

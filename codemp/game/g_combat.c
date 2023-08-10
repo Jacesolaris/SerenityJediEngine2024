@@ -3868,7 +3868,7 @@ qboolean G_CheckForStrongAttackMomentum(const gentity_t* self)
 			//our saber_move was not already interupted by some other anim (like pain)
 			if (PM_SaberInStart(self->client->ps.saber_move))
 			{
-				const float anim_length = PM_AnimLength(self->client->ps.torsoAnim);
+				const float anim_length = PM_AnimLength((animNumber_t)self->client->ps.torsoAnim);
 				if (anim_length - self->client->ps.torsoTimer > 750)
 				{
 					//start anim is already 3/4 of a second into it, can't interrupt it now

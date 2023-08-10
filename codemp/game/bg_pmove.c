@@ -5091,7 +5091,7 @@ static qboolean pm_check_jump(void)
 					if (pm->ps->legsTimer > 400)
 					{
 						//not at the end of the anim
-						float anim_len = PM_AnimLength(BOTH_WALL_RUN_LEFT);
+						float anim_len = PM_AnimLength((animNumber_t)BOTH_WALL_RUN_LEFT);
 						if (pm->ps->legsTimer < anim_len - 400)
 						{
 							//not at start of anim
@@ -5105,7 +5105,7 @@ static qboolean pm_check_jump(void)
 					if (pm->ps->legsTimer > 400)
 					{
 						//not at the end of the anim
-						float anim_len = PM_AnimLength(BOTH_WALL_RUN_RIGHT);
+						float anim_len = PM_AnimLength((animNumber_t)BOTH_WALL_RUN_RIGHT);
 						if (pm->ps->legsTimer < anim_len - 400)
 						{
 							//not at start of anim
@@ -8356,9 +8356,9 @@ qboolean PM_CheckDualForwardJumpDuck(void)
 	{
 		//dynamically reduce bounding box to let character sail over heads of enemies
 		if (pm->ps->legsTimer >= 1450
-			&& PM_AnimLength(BOTH_JUMPATTACK6) - pm->ps->legsTimer >= 400
+			&& PM_AnimLength((animNumber_t)BOTH_JUMPATTACK6) - pm->ps->legsTimer >= 400
 			|| pm->ps->legsTimer >= 400
-			&& PM_AnimLength(BOTH_JUMPATTACK6) - pm->ps->legsTimer >= 1100)
+			&& PM_AnimLength((animNumber_t)BOTH_JUMPATTACK6) - pm->ps->legsTimer >= 1100)
 		{
 			//in a part of the anim that we're pretty much sideways in, raise up the minimum_mins
 			pm->mins[2] = 0;
@@ -8375,9 +8375,9 @@ void PM_CheckFixMins(void)
 	{
 		//dynamically reduce bounding box to let character sail over heads of enemies
 		if (pm->ps->legsTimer >= 1450
-			&& PM_AnimLength(BOTH_JUMPATTACK6) - pm->ps->legsTimer >= 400
+			&& PM_AnimLength((animNumber_t)BOTH_JUMPATTACK6) - pm->ps->legsTimer >= 400
 			|| pm->ps->legsTimer >= 400
-			&& PM_AnimLength(BOTH_JUMPATTACK6) - pm->ps->legsTimer >= 1100)
+			&& PM_AnimLength((animNumber_t)BOTH_JUMPATTACK6) - pm->ps->legsTimer >= 1100)
 		{
 			//in a part of the anim that we're pretty much sideways in, raise up the minimum_mins
 			pm->mins[2] = 0;
@@ -15515,7 +15515,7 @@ void PM_CmdForRoll(playerState_t* ps, const int anim, usercmd_t* p_Cmd)
 			//end of anim
 			p_Cmd->forwardmove = p_Cmd->rightmove = 0;
 		}
-		else if (PM_AnimLength(ps->legsAnim) - ps->torsoTimer < 350)
+		else if (PM_AnimLength((animNumber_t)ps->legsAnim) - ps->torsoTimer < 350)
 		{
 			//beginning of anim
 			p_Cmd->forwardmove = p_Cmd->rightmove = 0;
@@ -15533,7 +15533,7 @@ void PM_CmdForRoll(playerState_t* ps, const int anim, usercmd_t* p_Cmd)
 			//end of anim
 			p_Cmd->forwardmove = p_Cmd->rightmove = 0;
 		}
-		else if (PM_AnimLength(ps->legsAnim) - ps->torsoTimer < 200)
+		else if (PM_AnimLength((animNumber_t)ps->legsAnim) - ps->torsoTimer < 200)
 		{
 			//beginning of anim
 			p_Cmd->forwardmove = p_Cmd->rightmove = 0;
@@ -15551,7 +15551,7 @@ void PM_CmdForRoll(playerState_t* ps, const int anim, usercmd_t* p_Cmd)
 			//end of anim
 			p_Cmd->forwardmove = p_Cmd->rightmove = 0;
 		}
-		else if (PM_AnimLength(ps->legsAnim) - ps->torsoTimer < 150)
+		else if (PM_AnimLength((animNumber_t)ps->legsAnim) - ps->torsoTimer < 150)
 		{
 			//beginning of anim
 			p_Cmd->forwardmove = p_Cmd->rightmove = 0;
@@ -17236,7 +17236,7 @@ static QINLINE void PM_CmdForSaberMoves(usercmd_t* ucmd)
 		pm->ps->legsAnim == BOTH_BUTTERFLY_RIGHT && pm->ps->saber_move == LS_BUTTERFLY_RIGHT ||
 		pm->ps->legsAnim == BOTH_BUTTERFLY_LEFT && pm->ps->saber_move == LS_BUTTERFLY_LEFT)
 	{
-		int aLen = PM_AnimLength(BOTH_JUMPATTACK6);
+		int aLen = PM_AnimLength((animNumber_t)BOTH_JUMPATTACK6);
 
 		ucmd->forwardmove = ucmd->rightmove = ucmd->upmove = 0;
 
@@ -17283,7 +17283,7 @@ static QINLINE void PM_CmdForSaberMoves(usercmd_t* ucmd)
 			float lenMin = 1700.0f;
 			float lenMax = 1800.0f;
 
-			aLen = PM_AnimLength(pm->ps->legsAnim);
+			aLen = PM_AnimLength((animNumber_t)pm->ps->legsAnim);
 
 			if (pm->ps->legsAnim == BOTH_BUTTERFLY_LEFT)
 			{
@@ -17359,7 +17359,7 @@ static QINLINE void PM_CmdForSaberMoves(usercmd_t* ucmd)
 	else if (pm->ps->saber_move == LS_A_BACKFLIP_ATK &&
 		pm->ps->legsAnim == BOTH_JUMPATTACK7)
 	{
-		const int aLen = PM_AnimLength(BOTH_JUMPATTACK7);
+		const int aLen = PM_AnimLength((animNumber_t)BOTH_JUMPATTACK7);
 
 		if (pm->ps->legsTimer > 800 //not at end
 			&& aLen - pm->ps->legsTimer >= 400) //not in beginning
@@ -18171,12 +18171,25 @@ void PmoveSingle(pmove_t* pmove)
 		pm->ps->saber_move == LS_A_FLIP_STAB || pm->ps->saber_move == LS_A_FLIP_SLASH ||
 		pm->ps->saber_move == LS_DUAL_LR || pm->ps->saber_move == LS_DUAL_FB)
 	{
-		if (pm->ps->legsAnim == BOTH_JUMPFLIPSTABDOWN && pm->ps->legsTimer < 1600 && pm->ps->legsTimer > 1150
-			|| pm->ps->legsAnim == BOTH_JUMPFLIPSLASHDOWN1 && pm->ps->legsTimer < 1600 && pm->ps->legsTimer > 900)
+		if (pm->ps->fd.saber_anim_level == SS_FAST || pm->ps->fd.saber_anim_level == SS_TAVION)
 		{
-			//flipover medium stance attack
-			pm->ps->viewangles[YAW] += pml.frametime * 240.0f;
-			PM_SetPMViewAngle(pm->ps, pm->ps->viewangles, &pm->cmd);
+			if(pm->ps->legsAnim == BOTH_JUMPFLIPSTABDOWN)
+			{ //flipover fast stance attack
+				if (pm->ps->legsTimer < 1600 && pm->ps->legsTimer > 900)
+				{
+					pm->ps->viewangles[YAW] += pml.frametime * 180.0f;
+					PM_SetPMViewAngle(pm->ps, pm->ps->viewangles, &pm->cmd);
+				}
+			}
+		}
+		else
+		{
+			if ((pm->ps->legsAnim == BOTH_JUMPFLIPSTABDOWN && pm->ps->legsTimer < 1600 && pm->ps->legsTimer > 1150)
+				|| (pm->ps->legsAnim == BOTH_JUMPFLIPSLASHDOWN1 && pm->ps->legsTimer < 1600 && pm->ps->legsTimer > 900))
+			{ //flipover medium stance attack
+				pm->ps->viewangles[YAW] += pml.frametime * 180.0f;
+				PM_SetPMViewAngle(pm->ps, pm->ps->viewangles, &pm->cmd);
+			}
 		}
 		stiffenedUp = qtrue;
 	}
@@ -19160,7 +19173,7 @@ void PmoveSingle(pmove_t* pmove)
 					}
 				}
 				i++;
-			}
+		}
 #else
 			if (!veh->playerState->vehBoarding) //|| veh->m_pVehicle->m_pVehicleInfo->type == VH_FIGHTER)
 			{
@@ -19387,7 +19400,7 @@ void PmoveSingle(pmove_t* pmove)
 		//riding a vehicle, see if we should do some anim overrides
 		PM_VehicleWeaponAnimate();
 	}
-}
+	}
 
 /*
 ================
@@ -19537,7 +19550,7 @@ int pm_min_get_up_time(const playerState_t* ps)
 	if (p_ent->s.NPC_class == CLASS_STORMCOMMANDO)
 	{
 		return npcget_up_time + 100;
-	}
+}
 
 #ifdef _GAME
 	if (g_entities[pm->ps->client_num].r.svFlags & SVF_BOT)
@@ -19570,7 +19583,7 @@ int pm_min_get_up_time(const playerState_t* ps)
 		return get_up_time;
 	}
 	return 200;
-}
+	}
 
 qboolean PM_InAttackRoll(const int anim)
 {
@@ -19838,7 +19851,7 @@ qboolean PM_CrouchGetup(const float crouchheight)
 	pm->ps->saber_move = pm->ps->saberBounceMove = LS_READY; //don't finish whatever saber anim you may have been in
 	pm->ps->saberBlocked = BLOCKED_NONE;
 	return qtrue;
-}
+	}
 
 extern qboolean PM_LockedAnim(int anim);
 
@@ -20048,7 +20061,7 @@ qboolean PM_CheckRollGetup(void)
 					//racc - evil NPCs sometimes taunt when they use the force to jump up from a knockdown.
 					PM_AddEvent(Q_irand(EV_COMBAT1, EV_COMBAT3));
 					self->NPC->blockedSpeechDebounceTime = level.time + 1000;
-				}
+			}
 				if (self->client->ps.fd.forcePowerLevel[FP_LEVITATION] < FORCE_LEVEL_3)
 				{
 					//short burst
@@ -20062,10 +20075,10 @@ qboolean PM_CheckRollGetup(void)
 #endif
 				//launch off ground?
 				pm->ps->weaponTime = 300; //just to make sure it's cleared
-			}
-			return qtrue;
 		}
-	}
+			return qtrue;
+}
+}
 	return qfalse;
 }
 
@@ -20228,7 +20241,7 @@ qboolean PM_GettingUpFromKnockDown(const float standheight, const float crouchhe
 						//racc - enemy bots talk a little smack if they
 						PM_AddEvent(Q_irand(EV_COMBAT1, EV_COMBAT3));
 						self->NPC->blockedSpeechDebounceTime = level.time + 1000;
-					}
+				}
 					if (self->client->ps.fd.forcePowerLevel[FP_LEVITATION] < FORCE_LEVEL_3)
 					{
 						//short burst
@@ -20242,7 +20255,7 @@ qboolean PM_GettingUpFromKnockDown(const float standheight, const float crouchhe
 #endif
 					//launch off ground?
 					pm->ps->weaponTime = 300; //just to make sure it's cleared
-				}
+			}
 				if (PM_LockedAnim(pm->ps->torsoAnim))
 				{
 					//need to be able to override this anim
@@ -20258,9 +20271,9 @@ qboolean PM_GettingUpFromKnockDown(const float standheight, const float crouchhe
 				//don't finish whatever saber anim you may have been in
 				pm->ps->saberBlocked = BLOCKED_NONE;
 				return qtrue;
-			}
-			return PM_CrouchGetup(crouchheight);
 		}
+			return PM_CrouchGetup(crouchheight);
+	}
 		if (pm->ps->legsAnim == BOTH_LK_DL_ST_T_SB_1_L)
 		{
 			//racc - apprenently this move has a special cmd for it.
@@ -20270,6 +20283,6 @@ qboolean PM_GettingUpFromKnockDown(const float standheight, const float crouchhe
 		{
 			pm->cmd.rightmove = pm->cmd.forwardmove = 0;
 		}
-	}
+}
 	return qfalse;
 }
