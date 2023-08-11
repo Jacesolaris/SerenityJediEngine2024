@@ -1713,28 +1713,27 @@ void ForceHeal(gentity_t* self)
 
 	if (self->client->ps.fd.forcePowerLevel[FP_HEAL] < FORCE_LEVEL_2)
 	{
-		G_SetAnim(self, &self->client->pers.cmd, SETANIM_BOTH, BOTH_FORCEHEAL_START,
-			SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
+		G_SetAnim(self, &self->client->pers.cmd, SETANIM_BOTH, BOTH_FORCEHEAL_START, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
 		self->client->ps.saber_move = self->client->ps.saberBounceMove = LS_READY;
 		self->client->ps.saberBlocked = BLOCKED_NONE;
 	}
 	else
 	{
 		//just a quick gesture
-		G_SetAnim(self, &self->client->pers.cmd, SETANIM_TORSO, BOTH_FORCEHEAL_QUICK,
-			SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
+		G_SetAnim(self, &self->client->pers.cmd, SETANIM_TORSO, BOTH_FORCE_ABSORB, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
 		self->client->ps.saber_move = self->client->ps.saberBounceMove = LS_READY;
 		self->client->ps.saberBlocked = BLOCKED_NONE;
 	}
 
-	if (self->client->ps.fd.forcePowerLevel[FP_HEAL] < FORCE_LEVEL_2)
+	/*if (self->client->ps.fd.forcePowerLevel[FP_HEAL] < FORCE_LEVEL_2)
 	{
 		G_Sound(self, CHAN_ITEM, G_SoundIndex("sound/weapons/force/heal.wav"));
 	}
 	else
 	{
 		G_Sound(self, CHAN_ITEM, G_SoundIndex("sound/player/injecthealth.mp3"));
-	}
+	}*/
+	G_Sound(self, CHAN_ITEM, G_SoundIndex("sound/weapons/force/heal.wav"));
 
 	G_PlayBoltedEffect(G_EffectIndex("force/heal2.efx"), self, "thoracic");
 }

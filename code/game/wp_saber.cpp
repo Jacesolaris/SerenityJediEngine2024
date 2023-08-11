@@ -18281,27 +18281,27 @@ void ForceHeal(gentity_t* self)
 		self->client->ps.saber_move = self->client->ps.saberBounceMove = LS_READY;
 		//don't finish whatever saber anim you may have been in
 		self->client->ps.saberBlocked = BLOCKED_NONE;
-		self->client->ps.torsoAnimTimer = self->client->ps.legsAnimTimer = FP_ForceHealInterval(self) *
-			FP_MaxForceHeal(self) + 2000; //???
+		self->client->ps.torsoAnimTimer = self->client->ps.legsAnimTimer = FP_ForceHealInterval(self) * FP_MaxForceHeal(self) + 2000;
 		WP_DeactivateSaber(self); //turn off saber when meditating
 	}
 	else
 	{
 		//just a quick gesture
-		NPC_SetAnim(self, SETANIM_TORSO, BOTH_FORCEHEAL_QUICK, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+		NPC_SetAnim(self, SETANIM_TORSO, BOTH_FORCE_ABSORB, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 		self->client->ps.saber_move = self->client->ps.saberBounceMove = LS_READY;
 		//don't finish whatever saber anim you may have been in
 		self->client->ps.saberBlocked = BLOCKED_NONE;
 	}
 
-	if (self->client->ps.forcePowerLevel[FP_HEAL] < FORCE_LEVEL_2)
+	/*if (self->client->ps.forcePowerLevel[FP_HEAL] < FORCE_LEVEL_2)
 	{
-		G_SoundOnEnt(self, CHAN_ITEM, "sound/weapons/force/heal.mp3");
+		G_SoundOnEnt(self, CHAN_ITEM, "sound/weapons/force/heal.wav");
 	}
 	else
 	{
 		G_SoundOnEnt(self, CHAN_ITEM, "sound/player/injecthealth.mp3");
-	}
+	}*/
+	G_SoundOnEnt(self, CHAN_ITEM, "sound/weapons/force/heal.wav");
 }
 
 extern void NPC_PlayConfusionSound(gentity_t* self);

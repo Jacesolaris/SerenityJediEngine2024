@@ -2210,7 +2210,7 @@ static void jedi_combat_distance(const int enemy_dist)
 				|| NPC->client->NPC_class == CLASS_KYLE
 				|| NPC->client->NPC_class == CLASS_LUKE)
 			{
-				NPC_SetAnim(NPC, SETANIM_TORSO, BOTH_FORCEHEAL_QUICK, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+				NPC_SetAnim(NPC, SETANIM_TORSO, BOTH_FORCE_ABSORB, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 			}
 			else
 			{
