@@ -1812,7 +1812,6 @@ void WP_ForcePowersUpdate(gentity_t* self, usercmd_t* ucmd);
 int ForcePowerUsableOn(const gentity_t* attacker, const gentity_t* other, forcePowers_t forcePower);
 void ForceHeal(gentity_t* self);
 void ForceSpeed(gentity_t* self, int forceDuration);
-void ForceSpeedDash(gentity_t* self);
 void ForceRage(gentity_t* self);
 void ForceGrip(const gentity_t* self);
 void ForceProtect(gentity_t* self);

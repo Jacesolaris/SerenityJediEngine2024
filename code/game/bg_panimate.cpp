@@ -3512,8 +3512,23 @@ saberMoveName_t PM_SaberLungeAttackMove(const qboolean fallbackToNormalLunge)
 	}
 	case SS_STAFF:
 		return LS_SPINATTACK;
-	case SS_FAST:
+		break;
+	case SS_TAVION:
 		return LS_PULL_ATTACK_STAB;
+		break;
+		break;
+	case SS_FAST:
+		vec3_t fwd_angles, jumpFwd;
+
+		VectorCopy(pm->ps->viewangles, fwd_angles);
+		fwd_angles[PITCH] = fwd_angles[ROLL] = 0;
+		//do the lunge
+		AngleVectors(fwd_angles, jumpFwd, nullptr, nullptr);
+		VectorScale(jumpFwd, 150, pm->ps->velocity);
+		pm->ps->velocity[2] = 50;
+		PM_AddEvent(EV_JUMP);
+		return LS_A_LUNGE;
+		break;
 	case SS_STRONG:
 	case SS_DESANN:
 		if (fallbackToNormalLunge)

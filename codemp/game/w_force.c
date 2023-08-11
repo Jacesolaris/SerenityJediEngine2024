@@ -68,7 +68,6 @@ extern void g_reflect_missile_auto(const gentity_t* ent, gentity_t* missile, vec
 extern void g_reflect_missile_bot(const gentity_t* ent, gentity_t* missile, vec3_t forward);
 extern void G_SoundOnEnt(gentity_t* ent, soundChannel_t channel, const char* soundPath);
 extern saberInfo_t* BG_MySaber(int client_num, int saber_num);
-int IsPressingDashButton(const gentity_t* self);
 extern qboolean G_ControlledByPlayer(const gentity_t* self);
 extern qboolean PM_SaberCanInterruptMove(int move, int anim);
 extern void Boba_FireWristMissile(gentity_t* self, int whichMissile);
@@ -2521,8 +2520,7 @@ void ForceSpeedDash(gentity_t* self)
 		return;
 	}
 
-	if (self->client->ps.forceAllowDeactivateTime < level.time && self->client->ps.fd.forcePowersActive & 1 <<
-		FP_SPEED)
+	if (self->client->ps.forceAllowDeactivateTime < level.time && self->client->ps.fd.forcePowersActive & 1 <<FP_SPEED)
 	{
 		WP_ForcePowerStop(self, FP_SPEED);
 		return;
@@ -2548,30 +2546,12 @@ void ForceSpeedDash(gentity_t* self)
 	if (self->client->ps.groundEntityNum != ENTITYNUM_NONE)
 	{
 		vec3_t dir;
-		if (self->client->ps.fd.forcePowerLevel[FP_SPEED] > FORCE_LEVEL_2)
-		{
-			AngleVectors(self->client->ps.viewangles, dir, NULL, NULL);
-			self->client->ps.velocity[0] = self->client->ps.velocity[0] * 7;
-			self->client->ps.velocity[1] = self->client->ps.velocity[1] * 7;
 
-			ForceDashAnimDash(self);
-		}
-		else if (self->client->ps.fd.forcePowerLevel[FP_SPEED] > FORCE_LEVEL_1)
-		{
-			AngleVectors(self->client->ps.viewangles, dir, NULL, NULL);
-			self->client->ps.velocity[0] = self->client->ps.velocity[0] * 5;
-			self->client->ps.velocity[1] = self->client->ps.velocity[1] * 5;
+		AngleVectors(self->client->ps.viewangles, dir, NULL, NULL);
+		self->client->ps.velocity[0] = self->client->ps.velocity[0] * 5;
+		self->client->ps.velocity[1] = self->client->ps.velocity[1] * 5;
 
-			ForceDashAnimDash(self);
-		}
-		else
-		{
-			AngleVectors(self->client->ps.viewangles, dir, NULL, NULL);
-			self->client->ps.velocity[0] = self->client->ps.velocity[0] * 3;
-			self->client->ps.velocity[1] = self->client->ps.velocity[1] * 3;
-
-			ForceDashAnimDash(self);
-		}
+		ForceDashAnimDash(self);
 	}
 	else if (self->client->ps.groundEntityNum == ENTITYNUM_NONE)
 	{
@@ -7686,14 +7666,7 @@ int WP_DoSpecificPower(gentity_t* self, const usercmd_t* ucmd, const forcePowers
 			//need to release before we can use nonhold powers again
 			break;
 		}
-		if (self->client->ps.communicatingflags & 1 << DASHING)
-		{
-			ForceSpeedDash(self);
-		}
-		else
-		{
-			ForceSpeed(self, 0);
-		}
+		ForceSpeed(self, 0);
 		self->client->ps.fd.forceButtonNeedRelease = 1;
 		break;
 	case FP_GRIP:

@@ -2459,15 +2459,7 @@ void ClientCommand(const int client_num)
 	else if (Q_stricmp(cmd, "force_speed") == 0)
 	{
 		ent = G_GetSelfForPlayerCmd();
-
-		if (ent->client->ps.communicatingflags & 1 << DASHING)
-		{
-			ForceSpeedDash(ent);
-		}
-		else
-		{
-			ForceSpeed(ent);
-		}
+		ForceSpeed(ent);
 	}
 	else if (Q_stricmp(cmd, "force_heal") == 0)
 	{

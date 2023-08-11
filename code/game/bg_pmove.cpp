@@ -20445,14 +20445,7 @@ void PM_CheckForceUseButton(gentity_t* ent, usercmd_t* ucmd)
 				ForceHeal(ent);
 				break;
 			case FP_SPEED:
-				if (ent->client->ps.communicatingflags & 1 << DASHING)
-				{
-					ForceSpeedDash(ent);
-				}
-				else
-				{
-					ForceSpeed(ent);
-				}
+				ForceSpeed(ent);
 				break;
 			case FP_PUSH:
 				ForceThrow(ent, qfalse);

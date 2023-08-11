@@ -6824,14 +6824,7 @@ static void ProcessGenericCmd(gentity_t* ent, const byte cmd)
 		ForceHeal(ent);
 		break;
 	case GENCMD_FORCE_SPEED:
-		if (ent->client->ps.communicatingflags & 1 << DASHING)
-		{
-			ForceSpeedDash(ent);
-		}
-		else
-		{
-			ForceSpeed(ent);
-		}
+		ForceSpeed(ent);
 		break;
 	case GENCMD_FORCE_THROW:
 		ForceThrow(ent, qfalse);

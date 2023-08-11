@@ -233,7 +233,6 @@ extern float forceJumpHeightMax[];
 extern float forcePushPullRadius[];
 
 extern void ForceSpeed(gentity_t* self, int duration = 0);
-extern void ForceSpeedDash(gentity_t* self);
 extern float forceSpeedValue[];
 extern float forceSpeedRangeMod[];
 extern float forceSpeedFOVMod[];

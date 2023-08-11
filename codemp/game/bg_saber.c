@@ -2624,7 +2624,7 @@ saberMoveName_t PM_SaberLungeAttackMove(const qboolean noSpecials)
 		AngleVectors(fwdAngles, jumpFwd, NULL, NULL);
 		VectorScale(jumpFwd, 150, pm->ps->velocity);
 		PM_AddEvent(EV_JUMP);
-		return LS_PULL_ATTACK_STAB;
+		return LS_A_LUNGE;
 	}
 	if (pm->ps->fd.saber_anim_level == SS_MEDIUM)
 	{
@@ -2672,7 +2672,7 @@ saberMoveName_t PM_SaberLungeAttackMove(const qboolean noSpecials)
 		AngleVectors(fwdAngles, jumpFwd, NULL, NULL);
 		VectorScale(jumpFwd, 150, pm->ps->velocity);
 		PM_AddEvent(EV_JUMP);
-		return LS_A_LUNGE;
+		return LS_PULL_ATTACK_STAB;
 	}
 	if (pm->ps->fd.saber_anim_level == SS_DUAL)
 	{

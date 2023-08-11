@@ -18098,30 +18098,12 @@ void ForceSpeedDash(gentity_t* self)
 	if (self->client->ps.groundEntityNum != ENTITYNUM_NONE)
 	{
 		vec3_t dir;
-		if (self->client->ps.forcePowerLevel[FP_SPEED] > FORCE_LEVEL_2)
-		{
-			AngleVectors(self->client->ps.viewangles, dir, nullptr, nullptr);
-			self->client->ps.velocity[0] = self->client->ps.velocity[0] * 7;
-			self->client->ps.velocity[1] = self->client->ps.velocity[1] * 7;
 
-			ForceDashAnimDash(self);
-		}
-		else if (self->client->ps.forcePowerLevel[FP_SPEED] > FORCE_LEVEL_1)
-		{
-			AngleVectors(self->client->ps.viewangles, dir, nullptr, nullptr);
-			self->client->ps.velocity[0] = self->client->ps.velocity[0] * 5;
-			self->client->ps.velocity[1] = self->client->ps.velocity[1] * 5;
+		AngleVectors(self->client->ps.viewangles, dir, nullptr, nullptr);
+		self->client->ps.velocity[0] = self->client->ps.velocity[0] * 5;
+		self->client->ps.velocity[1] = self->client->ps.velocity[1] * 5;
 
-			ForceDashAnimDash(self);
-		}
-		else
-		{
-			AngleVectors(self->client->ps.viewangles, dir, nullptr, nullptr);
-			self->client->ps.velocity[0] = self->client->ps.velocity[0] * 3;
-			self->client->ps.velocity[1] = self->client->ps.velocity[1] * 3;
-
-			ForceDashAnimDash(self);
-		}
+		ForceDashAnimDash(self);
 	}
 	else if (self->client->ps.groundEntityNum == ENTITYNUM_NONE)
 	{
@@ -28685,14 +28667,7 @@ void WP_CheckForcedPowers(gentity_t* self, usercmd_t* ucmd)
 				//nothing
 				break;
 			case FP_SPEED:
-				if (self->client->ps.communicatingflags & 1 << DASHING)
-				{
-					ForceSpeedDash(self);
-				}
-				else
-				{
-					ForceSpeed(self);
-				}
+				ForceSpeed(self);
 				//do only once
 				self->client->ps.forcePowersForced &= ~(1 << force_power);
 				break;
