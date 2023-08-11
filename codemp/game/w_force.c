@@ -3134,12 +3134,10 @@ void force_lightning_damage(gentity_t* self, gentity_t* trace_ent, vec3_t dir, c
 							MOD_FORCE_LIGHTNING);
 					}
 
-					if ((trace_ent->NPC || trace_ent->s.eType == ET_PLAYER || self->r.svFlags & SVF_BOT)
-						&& trace_ent->s.weapon != WP_EMPLACED_GUN)
+					if (trace_ent->s.weapon != WP_EMPLACED_GUN)
 					{
 						if (trace_ent
-							&& trace_ent->health <= 35 && (trace_ent->s.number < MAX_CLIENTS || G_ControlledByPlayer(
-								trace_ent)))
+							&& trace_ent->health <= 35 && !class_is_gunner(trace_ent))
 						{
 							trace_ent->client->stunDamage = 9;
 							trace_ent->client->stunTime = level.time + 1000;
@@ -3160,17 +3158,14 @@ void force_lightning_damage(gentity_t* self, gentity_t* trace_ent, vec3_t dir, c
 							trace_ent->nextthink = level.time;
 						}
 
-						if (PM_RunningAnim(trace_ent->client->ps.legsAnim) && trace_ent->client->ps.stats[STAT_HEALTH] >
-							1)
+						if (PM_RunningAnim(trace_ent->client->ps.legsAnim) && trace_ent->client->ps.stats[STAT_HEALTH] > 1)
 						{
 							G_KnockOver(trace_ent, self, dir, 25, qtrue);
 						}
-						else if (trace_ent->client->ps.groundEntityNum == ENTITYNUM_NONE && trace_ent->client->ps.stats[
-							STAT_HEALTH] > 1)
+						else if (trace_ent->client->ps.groundEntityNum == ENTITYNUM_NONE && trace_ent->client->ps.stats[STAT_HEALTH] > 1)
 						{
 							g_throw(trace_ent, dir, 2);
-							G_SetAnim(trace_ent, &trace_ent->client->pers.cmd, SETANIM_BOTH,
-								Q_irand(BOTH_SLAPDOWNRIGHT, BOTH_SLAPDOWNLEFT), SETANIM_AFLAG_PACE, 0);
+							G_SetAnim(trace_ent, &trace_ent->client->pers.cmd, SETANIM_BOTH, Q_irand(BOTH_SLAPDOWNRIGHT, BOTH_SLAPDOWNLEFT), SETANIM_AFLAG_PACE, 0);
 						}
 						else
 						{
@@ -3180,29 +3175,24 @@ void force_lightning_damage(gentity_t* self, gentity_t* trace_ent, vec3_t dir, c
 							{
 								if (trace_ent->client->ps.stats[STAT_HEALTH] < 75)
 								{
-									G_SetAnim(trace_ent, &trace_ent->client->pers.cmd, SETANIM_TORSO, BOTH_COWER1,
-										SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
+									G_SetAnim(trace_ent, &trace_ent->client->pers.cmd, SETANIM_TORSO, BOTH_COWER1, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
 								}
 								else if (trace_ent->client->ps.stats[STAT_HEALTH] < 50)
 								{
-									G_SetAnim(trace_ent, &trace_ent->client->pers.cmd, SETANIM_TORSO,
-										BOTH_SONICPAIN_HOLD, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
+									G_SetAnim(trace_ent, &trace_ent->client->pers.cmd, SETANIM_TORSO, BOTH_SONICPAIN_HOLD, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
 								}
 								else
 								{
-									G_SetAnim(trace_ent, &trace_ent->client->pers.cmd, SETANIM_TORSO, BOTH_FACEPROTECT,
-										SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
+									G_SetAnim(trace_ent, &trace_ent->client->pers.cmd, SETANIM_TORSO, BOTH_FACEPROTECT, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
 								}
 							}
 							else
 							{
-								if ((trace_ent->NPC || trace_ent->s.eType == ET_PLAYER || self->r.svFlags & SVF_BOT)
-									&& trace_ent->client->ps.stats[STAT_HEALTH] < 2 && class_is_gunner(trace_ent))
+								if (trace_ent->client->ps.stats[STAT_HEALTH] < 2 && class_is_gunner(trace_ent))
 								{
 									vec3_t defaultDir;
 									VectorSet(defaultDir, 0, 0, 1);
-									G_PlayEffectID(G_EffectIndex("force/Lightningkill.efx"), trace_ent->r.currentOrigin,
-										defaultDir);
+									G_PlayEffectID(G_EffectIndex("force/Lightningkill.efx"), trace_ent->r.currentOrigin, defaultDir);
 								}
 							}
 						}

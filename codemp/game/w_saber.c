@@ -151,7 +151,9 @@ extern void wp_force_power_regenerate(const gentity_t* self, int override_amt);
 extern qboolean PM_SaberInOverHeadSlash(saberMoveName_t saber_move);
 extern qboolean PM_SaberInBackAttack(saberMoveName_t saber_move);
 qboolean WP_DoingForcedAnimationForForcePowers(const gentity_t* self);
-extern qboolean WP_SaberCanBlockSwing(int ourStr, int attackStr);
+void thrownSaberTouch(gentity_t* saberent, gentity_t* other, const trace_t* trace);
+float manual_saberblocking(const gentity_t* defender);
+int WP_SaberCanBlockThrownSaber(gentity_t* self, vec3_t point, qboolean projectile);
 
 float VectorBlockDistance(vec3_t v1, vec3_t v2)
 {
@@ -7459,7 +7461,7 @@ void wp_saber_start_missile_block_check(gentity_t* self, usercmd_t* ucmd)
 				blocker->client->ps.saberBlocked = blockedfor_quad(closest_swing_quad);
 				blocker->client->ps.userInt3 |= 1 << FLAG_PREBLOCK;
 			}
-			else if (blocker->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK)
+			else if (blocker->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK || blocker->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK)
 			{
 				wp_saber_block_non_random_missile(blocker, incoming->r.currentOrigin, qtrue);
 			}
@@ -7493,10 +7495,6 @@ void wp_saber_start_missile_block_check(gentity_t* self, usercmd_t* ucmd)
 
 #define SABER_THROWN_HIT_DAMAGE 30
 #define SABER_THROWN_RETURN_HIT_DAMAGE 5
-
-void thrownSaberTouch(gentity_t* saberent, gentity_t* other, const trace_t* trace);
-float manual_saberblocking(const gentity_t* defender);
-int WP_SaberCanBlock(gentity_t* self, vec3_t point, int dflags, int mod, qboolean projectile);
 
 static QINLINE qboolean CheckThrownSaberDamaged(gentity_t* saberent, gentity_t* saber_owner, gentity_t* ent,
 	const int dist,
@@ -7550,7 +7548,7 @@ static QINLINE qboolean CheckThrownSaberDamaged(gentity_t* saberent, gentity_t* 
 			if (tr.fraction == 1 || tr.entity_num == ent->s.number)
 			{
 				//Slice them
-				if (!saber_owner->client->ps.isJediMaster && WP_SaberCanBlock(ent, tr.endpos, 0, MOD_SABER, qtrue))
+				if (WP_SaberCanBlockThrownSaber(ent, tr.endpos, qtrue))
 				{
 					//they blocked it
 					te = G_TempEntity(tr.endpos, EV_SABER_BLOCK);
@@ -7698,7 +7696,6 @@ static QINLINE qboolean CheckThrownSaberDamaged(gentity_t* saberent, gentity_t* 
 
 				te = G_TempEntity(tr.endpos, EV_SABER_HIT);
 				te->s.otherEntityNum = ENTITYNUM_NONE; //don't do this for throw damage
-				//te->s.otherEntityNum = ent->s.number;
 				te->s.otherEntityNum2 = saber_owner->s.number;
 				//actually, do send this, though - for the overridden per-saber hit effects/sounds
 				te->s.weapon = 0; //saber_num
@@ -8002,7 +7999,7 @@ void DownedSaberThink(gentity_t* saberent)
 		&& !PM_SaberInMassiveBounce(saber_own->client->ps.torsoAnim)
 		&& !saber_own->client->ps.torsoAnim == BOTH_LOSE_SABER
 		&& level.time - saber_own->client->saberKnockedTime > MAX_PLAYER_LEAVE_TIME
-		|| saberent->s.pos.trType == TR_STATIONARY && saber_own->client->pers.cmd.buttons & BUTTON_ALT_ATTACK)
+		|| saberent->s.pos.trType == TR_STATIONARY && (saber_own->client->pers.cmd.buttons & BUTTON_ALT_ATTACK || saber_own->client->pers.cmd.buttons & BUTTON_ATTACK))
 		&& !(saber_own->r.svFlags & SVF_BOT))
 	{
 		//we want to pull the saber back.
@@ -14366,16 +14363,14 @@ qboolean WP_SaberBlockBolt(gentity_t* self, vec3_t hitloc, const qboolean missil
 
 extern float Q_clamp(float min, float value, float max);
 
-int WP_SaberCanBlock(gentity_t* self, vec3_t point, int dflags, int mod, qboolean projectile)
+int WP_SaberCanBlockThrownSaber(gentity_t* self, vec3_t point, qboolean projectile)
 {
-	float blockFactor = 0;
-
 	if (!self || !self->client || !point)
 	{
 		return 0;
 	}
 
-	if (!(self->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK))
+	if (!(self->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK || self->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK))
 	{
 		if (self->r.svFlags & SVF_BOT)
 		{
@@ -14387,15 +14382,6 @@ int WP_SaberCanBlock(gentity_t* self, vec3_t point, int dflags, int mod, qboolea
 			return 0;
 		}
 		return 0;
-	}
-
-	if (PM_InSaberAnim(self->client->ps.torsoAnim) && !self->client->ps.saberBlocked &&
-		self->client->ps.saber_move != LS_READY && self->client->ps.saber_move != LS_NONE)
-	{
-		if (self->client->ps.saber_move < LS_PARRY_UP || self->client->ps.saber_move > LS_REFLECT_LL)
-		{
-			return 0;
-		}
 	}
 
 	if (PM_SaberInBrokenParry(self->client->ps.saber_move))
@@ -14423,33 +14409,9 @@ int WP_SaberCanBlock(gentity_t* self, vec3_t point, int dflags, int mod, qboolea
 		return 0;
 	}
 
-	if (self->client->ps.fd.forcePowerLevel[FP_SABER_DEFENSE] == FORCE_LEVEL_3)
-	{
-		if (d_saberGhoul2Collision.integer)
-		{
-			blockFactor = 0.8f;
-		}
-		else
-		{
-			blockFactor = 0.6f;
-		}
-	}
-	else if (self->client->ps.fd.forcePowerLevel[FP_SABER_DEFENSE] == FORCE_LEVEL_2)
-	{
-		blockFactor = 0.8f;
-	}
-	else if (self->client->ps.fd.forcePowerLevel[FP_SABER_DEFENSE] == FORCE_LEVEL_1)
-	{
-		blockFactor = 0.9f;
-	}
-	else
-	{ //for now we just don't get to autoblock with no def
-		return 0;
-	}
-
 	if (projectile)
 	{
-		WP_SaberBlockNonRandom(self, point, projectile);
+		wp_saber_block_non_random_missile(self, point, projectile);
 	}
 	return 1;
 }

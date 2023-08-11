@@ -262,7 +262,6 @@ extern void G_StasisMissile(gentity_t* ent, gentity_t* missile);
 void G_Beskar_Attack_Bounce(const gentity_t* self, gentity_t* other);
 extern void jet_fly_stop(gentity_t* self);
 extern qboolean PM_InSlowBounce(const playerState_t* ps);
-extern qboolean WP_SaberCanBlockSwing(int ourStr, int attackStr);
 
 qboolean g_saberNoEffects = qfalse;
 qboolean g_noClashFlare = qfalse;
@@ -13893,7 +13892,7 @@ void wp_saber_start_missile_block_check(gentity_t* self, const usercmd_t* ucmd)
 				blocker->client->ps.saberBlocked = blockedfor_quad(closest_swing_quad);
 				blocker->client->ps.userInt3 |= 1 << FLAG_PREBLOCK;
 			}
-			else if (blocker->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK)
+			else if (blocker->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK || blocker->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK)
 			{
 				wp_saber_block_non_random_missile(blocker, incoming->currentOrigin, qtrue);
 			}

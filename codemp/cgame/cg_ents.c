@@ -1027,13 +1027,6 @@ static void CG_General(centity_t* cent)
 			//if it's set to smooth keep the smoothed lerp origin updated, as we don't want to smooth while bolted.
 			VectorCopy(cent->lerpOrigin, cent->turAngles);
 		}
-
-		/* disabled for now
-				if (pl->currentState.number != cg.predicted_player_state.client_num)
-				{ //don't render thing above head to self
-					CG_SiegeEntRenderAboveHead(cent);
-				}
-		*/
 	}
 	else if (cent->currentState.eFlags & EF_CLIENTSMOOTH)
 	{
@@ -1680,16 +1673,14 @@ static void CG_General(centity_t* cent)
 				if (!cent->dustTrailTime)
 				{
 					cent->dustTrailTime = cg.time;
-					if (light_side)
+					/*if (light_side)
 					{
-						trap->S_StartSound(NULL, cent->currentState.number, CHAN_AUTO,
-							trap->S_RegisterSound("sound/weapons/force/see.wav"));
+						trap->S_StartSound(NULL, cent->currentState.number, CHAN_AUTO,trap->S_RegisterSound("sound/weapons/force/see.wav"));
 					}
 					else
 					{
-						trap->S_StartSound(NULL, cent->currentState.number, CHAN_AUTO,
-							trap->S_RegisterSound("sound/weapons/force/lightning.mp3"));
-					}
+						trap->S_StartSound(NULL, cent->currentState.number, CHAN_AUTO,trap->S_RegisterSound("sound/weapons/force/lightning.mp3"));
+					}*/
 				}
 				ent.endTime = cent->dustTrailTime;
 				ent.renderfx |= RF_DISINTEGRATE2;
@@ -1729,15 +1720,16 @@ static void CG_General(centity_t* cent)
 			ent.renderfx &= ~RF_DISINTEGRATE2;
 			ent.customShader = 0;
 
-			if (cur_time_dif < 3400)
+			if (cur_time_dif < 2400)
 			{
 				if (light_side)
 				{
-					if (cur_time_dif < 2200)
+					if (cur_time_dif < 1200)
 					{
-						//probably temporary
-						trap->S_StartSound(NULL, cent->currentState.number, CHAN_AUTO,
-							trap->S_RegisterSound("sound/weapons/saber/saberhum1"));
+						if (Q_flrand(0.0f, 1.0f) > 0.9f)
+						{
+							trap->S_StartSound(NULL, cent->currentState.number, CHAN_AUTO, cgs.media.crackleSound);
+						}
 					}
 				}
 				else
