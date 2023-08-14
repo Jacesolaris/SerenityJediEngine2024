@@ -5939,7 +5939,6 @@ void CG_AddRefEntityWithPowerups(refEntity_t* ent, int powerups, centity_t* cent
 			|| cent->gent->client->ps.legsAnim == BOTH_FORCELONGLEAP_ATTACK) //or force long jump attack
 		&& (gent->s.number || cg.renderingThirdPerson)) // looks dumb doing this with first peron mode on
 	{
-		//FIXME: debounce this
 		localEntity_t* ex;
 
 		ex = CG_AllocLocalEntity();
@@ -5947,7 +5946,6 @@ void CG_AddRefEntityWithPowerups(refEntity_t* ent, int powerups, centity_t* cent
 		memcpy(&ex->refEntity, ent, sizeof(refEntity_t));
 
 		ex->refEntity.renderfx |= RF_ALPHA_FADE | RF_NOSHADOW | RF_G2MINLOD;
-		//ex->refEntity.renderfx |= RF_ALPHA_FADE;
 		ex->startTime = cg.time;
 		ex->endTime = ex->startTime + 75;
 		VectorCopy(ex->refEntity.origin, ex->pos.trBase);

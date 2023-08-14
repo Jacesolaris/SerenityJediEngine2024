@@ -197,7 +197,6 @@ public:
 		saved_game.read<int32_t>(customCalloutSoundDir);
 	}
 
-	int saberLockFxDebounce; //debounces the saberlock clash efx.
 	int saberLockSoundDebounce; //debounces the saberlock saber noises.
 
 	char modelName[MAX_QPATH];

@@ -4969,7 +4969,7 @@ void wp_saber_specific_do_hit(const gentity_t* self, const int saber_num, const 
 	{
 		if (victim->health >= 1)
 		{
-			CGCam_BlockShakeMP(self->s.origin, self, 0.25f, 100, qfalse);
+			CGCam_BlockShakeMP(self->s.origin, self, 0.25f, 100);
 		}
 	}*/
 
@@ -6769,7 +6769,7 @@ static QINLINE qboolean check_saber_damage(gentity_t* self, const int r_saber_nu
 			{
 				if (victim->health >= 1)
 				{
-					CGCam_BlockShakeMP(self->s.origin, self, 0.25f, 100, qfalse);
+					CGCam_BlockShakeMP(self->s.origin, self, 0.25f, 100);
 				}
 			}
 		}

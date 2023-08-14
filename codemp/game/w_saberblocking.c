@@ -816,10 +816,10 @@ qboolean sab_beh_attack_vs_block(gentity_t* attacker, gentity_t* blocker, const 
 					attacker->client->ps.userInt3 |= 1 << FLAG_BLOCKED;
 				}
 
-				if (!(attacker->r.svFlags & SVF_BOT))
+				/*if (!(attacker->r.svFlags & SVF_BOT))
 				{
-					CGCam_BlockShakeMP(attacker->s.origin, attacker, 0.45f, 100, qfalse);
-				}
+					CGCam_BlockShakeMP(attacker->s.origin, attacker, 0.45f, 100);
+				}*/
 			}
 			else
 			{
@@ -954,7 +954,7 @@ qboolean sab_beh_block_vs_attack(gentity_t* blocker, gentity_t* attacker, const 
 
 					if (!(blocker->r.svFlags & SVF_BOT))
 					{
-						CGCam_BlockShakeMP(blocker->s.origin, blocker, 0.45f, 100, qfalse);
+						CGCam_BlockShakeMP(blocker->s.origin, blocker, 0.45f, 100);
 					}
 					G_Sound(blocker, CHAN_AUTO,
 						G_SoundIndex(va("sound/weapons/saber/saber_perfectblock%d.mp3", Q_irand(1, 3))));
@@ -1007,7 +1007,7 @@ qboolean sab_beh_block_vs_attack(gentity_t* blocker, gentity_t* attacker, const 
 
 					if (!(blocker->r.svFlags & SVF_BOT))
 					{
-						CGCam_BlockShakeMP(blocker->s.origin, blocker, 0.45f, 100, qfalse);
+						CGCam_BlockShakeMP(blocker->s.origin, blocker, 0.45f, 100);
 					}
 
 					if ((d_blockinfo.integer || g_DebugSaberCombat.integer) && !(blocker->r.svFlags & SVF_BOT))
@@ -1047,7 +1047,7 @@ qboolean sab_beh_block_vs_attack(gentity_t* blocker, gentity_t* attacker, const 
 
 				if (!(blocker->r.svFlags & SVF_BOT))
 				{
-					CGCam_BlockShakeMP(blocker->s.origin, blocker, 0.45f, 100, qfalse);
+					CGCam_BlockShakeMP(blocker->s.origin, blocker, 0.45f, 100);
 				}
 
 				if (blocker->r.svFlags & SVF_BOT) //NPC only
@@ -1165,7 +1165,7 @@ qboolean sab_beh_block_vs_attack(gentity_t* blocker, gentity_t* attacker, const 
 		{
 			if (!(blocker->r.svFlags & SVF_BOT))
 			{
-				CGCam_BlockShakeMP(blocker->s.origin, blocker, 0.45f, 100, qfalse);
+				CGCam_BlockShakeMP(blocker->s.origin, blocker, 0.45f, 100);
 			}
 
 			blocker->client->ps.userInt3 |= 1 << FLAG_PERFECTBLOCK;

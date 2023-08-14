@@ -2318,8 +2318,7 @@ int IsPressingDashButton(const gentity_t* self)
 		&& !self->client->hookhasbeenfired
 		&& (!(self->client->buttons & BUTTON_KICK))
 		&& (!(self->client->buttons & BUTTON_USE))
-		&& self->client->buttons & BUTTON_DASH
-		&& self->client->ps.pm_flags & PMF_DASH_HELD)
+		&& self->client->buttons & BUTTON_DASH)
 	{
 		return qtrue;
 	}
@@ -2476,6 +2475,12 @@ void ForceSpeedDash(gentity_t* self)
 		return;
 	}
 
+	if (self->client->ps.groundEntityNum == ENTITYNUM_NONE)
+	{
+		//can't dash in mid-air
+		return;
+	}
+
 	if (self->watertype == CONTENTS_WATER)
 	{
 		return;
@@ -2520,7 +2525,7 @@ void ForceSpeedDash(gentity_t* self)
 		return;
 	}
 
-	if (self->client->ps.forceAllowDeactivateTime < level.time && self->client->ps.fd.forcePowersActive & 1 <<FP_SPEED)
+	if (self->client->ps.forceAllowDeactivateTime < level.time && self->client->ps.fd.forcePowersActive & 1 << FP_SPEED)
 	{
 		WP_ForcePowerStop(self, FP_SPEED);
 		return;
@@ -8719,8 +8724,7 @@ void WP_ForcePowersUpdate(gentity_t* self, usercmd_t* ucmd)
 	}
 
 	if (self->client->ps.communicatingflags & 1 << DASHING)
-	{
-		//dash is one of the powers with its own button.. if it's held, call the specific dash power function.
+	{//dash is one of the powers with its own button.. if it's held, call the specific dash power function.
 		ForceSpeedDash(self);
 	}
 

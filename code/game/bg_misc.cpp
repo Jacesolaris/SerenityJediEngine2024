@@ -490,7 +490,6 @@ void PlayerStateToEntityState(playerState_t* ps, entityState_t* s)
 	s->surrenderstartTime = ps->surrenderstartTime;
 	s->surrenderlaststartTime = ps->surrenderlaststartTime;
 
-	s->dashtimeplayer = ps->dashtimeplayer;
 	s->dashstartTime = ps->dashstartTime;
 	s->dashlaststartTime = ps->dashlaststartTime;
 

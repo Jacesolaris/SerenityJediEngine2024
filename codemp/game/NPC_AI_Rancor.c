@@ -660,13 +660,13 @@ void Rancor_Attack(const float distance, const qboolean do_charge, const qboolea
 			Rancor_Smash();
 			G_GetBoltPosition(NPCS.NPC, NPCS.NPC->client->renderInfo.handLBolt, shake_pos, 0);
 			//G_ScreenShake(shake_pos, NULL, 2.0f, 1000, qfalse);
-			CGCam_BlockShakeMP(shake_pos, NULL, 0.25f, 100, qfalse);
+			CGCam_BlockShakeMP(shake_pos, NULL, 0.25f, 100);
 			break;
 		case BOTH_MELEE2:
 			Rancor_Bite();
 			TIMER_Set(NPCS.NPC, "attack_dmg2", 450);
 			//G_ScreenShake(shake_pos, NULL, 0.5f, 1000, qfalse);
-			CGCam_BlockShakeMP(shake_pos, NULL, 0.25f, 100, qfalse);
+			CGCam_BlockShakeMP(shake_pos, NULL, 0.25f, 100);
 			break;
 		case BOTH_ATTACK1:
 			if (NPCS.NPC->count == 1 && NPCS.NPC->activator)

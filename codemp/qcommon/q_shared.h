@@ -1421,7 +1421,6 @@ typedef struct playerState_s {
 	int	    surrenderstartTime;
 	int	    surrenderlaststartTime;
 
-	int	    dashtimeplayer;
 	int	    dashstartTime;
 	int	    dashlaststartTime;
 
@@ -2009,7 +2008,6 @@ typedef struct entityState_s {
 	int	    surrenderstartTime;
 	int	    surrenderlaststartTime;
 
-	int	    dashtimeplayer;
 	int	    dashstartTime;
 	int	    dashlaststartTime;
 

@@ -4212,7 +4212,6 @@ extern void PM_AddFatigue(playerState_t* ps, int fatigue);
 
 static qboolean pm_check_jump(void)
 {
-	qboolean doing_dash_action = pm->ps->communicatingflags & 1 << DASHING ? qtrue : qfalse;
 	qboolean allowFlips = qtrue;
 
 	saberInfo_t* saber1 = BG_MySaber(pm->ps->client_num, 0);
@@ -18173,7 +18172,7 @@ void PmoveSingle(pmove_t* pmove)
 	{
 		if (pm->ps->fd.saber_anim_level == SS_FAST || pm->ps->fd.saber_anim_level == SS_TAVION)
 		{
-			if(pm->ps->legsAnim == BOTH_JUMPFLIPSTABDOWN)
+			if (pm->ps->legsAnim == BOTH_JUMPFLIPSTABDOWN)
 			{ //flipover fast stance attack
 				if (pm->ps->legsTimer < 1600 && pm->ps->legsTimer > 900)
 				{
@@ -19173,7 +19172,7 @@ void PmoveSingle(pmove_t* pmove)
 					}
 				}
 				i++;
-		}
+			}
 #else
 			if (!veh->playerState->vehBoarding) //|| veh->m_pVehicle->m_pVehicleInfo->type == VH_FIGHTER)
 			{
@@ -19400,7 +19399,7 @@ void PmoveSingle(pmove_t* pmove)
 		//riding a vehicle, see if we should do some anim overrides
 		PM_VehicleWeaponAnimate();
 	}
-	}
+}
 
 /*
 ================
@@ -19550,7 +19549,7 @@ int pm_min_get_up_time(const playerState_t* ps)
 	if (p_ent->s.NPC_class == CLASS_STORMCOMMANDO)
 	{
 		return npcget_up_time + 100;
-}
+	}
 
 #ifdef _GAME
 	if (g_entities[pm->ps->client_num].r.svFlags & SVF_BOT)
@@ -19583,7 +19582,7 @@ int pm_min_get_up_time(const playerState_t* ps)
 		return get_up_time;
 	}
 	return 200;
-	}
+}
 
 qboolean PM_InAttackRoll(const int anim)
 {
@@ -19851,7 +19850,7 @@ qboolean PM_CrouchGetup(const float crouchheight)
 	pm->ps->saber_move = pm->ps->saberBounceMove = LS_READY; //don't finish whatever saber anim you may have been in
 	pm->ps->saberBlocked = BLOCKED_NONE;
 	return qtrue;
-	}
+}
 
 extern qboolean PM_LockedAnim(int anim);
 
@@ -20061,7 +20060,7 @@ qboolean PM_CheckRollGetup(void)
 					//racc - evil NPCs sometimes taunt when they use the force to jump up from a knockdown.
 					PM_AddEvent(Q_irand(EV_COMBAT1, EV_COMBAT3));
 					self->NPC->blockedSpeechDebounceTime = level.time + 1000;
-			}
+				}
 				if (self->client->ps.fd.forcePowerLevel[FP_LEVITATION] < FORCE_LEVEL_3)
 				{
 					//short burst
@@ -20075,10 +20074,10 @@ qboolean PM_CheckRollGetup(void)
 #endif
 				//launch off ground?
 				pm->ps->weaponTime = 300; //just to make sure it's cleared
-		}
+			}
 			return qtrue;
-}
-}
+		}
+	}
 	return qfalse;
 }
 
@@ -20241,7 +20240,7 @@ qboolean PM_GettingUpFromKnockDown(const float standheight, const float crouchhe
 						//racc - enemy bots talk a little smack if they
 						PM_AddEvent(Q_irand(EV_COMBAT1, EV_COMBAT3));
 						self->NPC->blockedSpeechDebounceTime = level.time + 1000;
-				}
+					}
 					if (self->client->ps.fd.forcePowerLevel[FP_LEVITATION] < FORCE_LEVEL_3)
 					{
 						//short burst
@@ -20255,7 +20254,7 @@ qboolean PM_GettingUpFromKnockDown(const float standheight, const float crouchhe
 #endif
 					//launch off ground?
 					pm->ps->weaponTime = 300; //just to make sure it's cleared
-			}
+				}
 				if (PM_LockedAnim(pm->ps->torsoAnim))
 				{
 					//need to be able to override this anim
@@ -20271,9 +20270,9 @@ qboolean PM_GettingUpFromKnockDown(const float standheight, const float crouchhe
 				//don't finish whatever saber anim you may have been in
 				pm->ps->saberBlocked = BLOCKED_NONE;
 				return qtrue;
-		}
+			}
 			return PM_CrouchGetup(crouchheight);
-	}
+		}
 		if (pm->ps->legsAnim == BOTH_LK_DL_ST_T_SB_1_L)
 		{
 			//racc - apprenently this move has a special cmd for it.
@@ -20283,6 +20282,6 @@ qboolean PM_GettingUpFromKnockDown(const float standheight, const float crouchhe
 		{
 			pm->cmd.rightmove = pm->cmd.forwardmove = 0;
 		}
-}
+	}
 	return qfalse;
 }

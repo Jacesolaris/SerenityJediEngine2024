@@ -829,7 +829,7 @@ qboolean sab_beh_attack_vs_block(gentity_t* attacker, gentity_t* blocker, const 
 						{
 							G_StartStasisEffect(attacker, MEF_NO_SPIN, 200, 0.3f, 0);
 						}
-						CGCam_BlockShakeSP(0.45f, 100);
+						//CGCam_BlockShakeSP(0.45f, 100);
 					}
 				}
 				else

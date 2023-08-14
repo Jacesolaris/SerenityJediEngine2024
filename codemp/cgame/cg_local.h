@@ -310,9 +310,7 @@ typedef struct clientInfo_s {
 	float		facial_aux;			// time before next aux. If a minus value, we are in aux mode
 
 	int			superSmoothTime; //do crazy amount of smoothing
-
-	int				saberLockFxDebounce;  //debounces the saberlock clash efx.
-	int				saberLockSoundDebounce;  //debounces the saberlock saber noises.
+	int			saberLockSoundDebounce;  //debounces the saberlock saber noises.
 
 	vec3_t	rgb1;
 	vec3_t	rgb2;

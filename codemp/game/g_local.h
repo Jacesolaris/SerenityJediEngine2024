@@ -1481,7 +1481,7 @@ gentity_t* G_PlayEffect(int fxID, vec3_t org, vec3_t ang);
 gentity_t* G_PlayEffectID(int fxID, vec3_t org, vec3_t ang);
 gentity_t* G_PlayBoltedEffect(int fxID, gentity_t* owner, const char* bolt);
 gentity_t* G_ScreenShake(vec3_t org, const gentity_t* target, float intensity, int duration, qboolean global);
-gentity_t* CGCam_BlockShakeMP(vec3_t org, const gentity_t* target, float intensity, int duration, qboolean global);
+gentity_t* CGCam_BlockShakeMP(vec3_t org, const gentity_t* target, float intensity, int duration);
 void G_MuteSound(int entnum, int channel);
 void G_Sound(gentity_t* ent, int channel, int soundIndex);
 void G_SoundAtLoc(vec3_t loc, int channel, int soundIndex);
