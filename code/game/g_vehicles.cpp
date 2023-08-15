@@ -2197,7 +2197,7 @@ static bool UpdateRider(Vehicle_t* p_veh, bgEntity_t* pRider, usercmd_t* pUmcd)
 	}
 
 	return true;
-	}
+}
 
 #ifdef _JK2MP //we want access to this one clientside, but it's the only
 //generic vehicle function we care about over there
@@ -2772,10 +2772,10 @@ qboolean G_FlyVehicleDestroySurface(gentity_t * veh, int surface)
 
 	if (!veh->m_pVehicle->m_iRemovedSurfaces)
 	{//first time something got blown off
-		if (veh->m_pVehicle->m_pPilot)
-		{//make the pilot scream to his death
-			G_EntitySound((gentity_t*)veh->m_pVehicle->m_pPilot, CHAN_VOICE, G_SoundIndex("*falling1.wav"));
-		}
+		//if (veh->m_pVehicle->m_pPilot)
+		//{//make the pilot scream to his death
+		//	G_EntitySound((gentity_t*)veh->m_pVehicle->m_pPilot, CHAN_VOICE, G_SoundIndex("*falling1.wav"));
+		//}
 	}
 	//so we can check what's broken
 	veh->m_pVehicle->m_iRemovedSurfaces |= smashedBits;

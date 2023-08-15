@@ -918,8 +918,8 @@ int CG_G2EvIndexForModel(void* g2, const int anim_index)
 	return evt_index;
 }
 
-#define DEFAULT_FEMALE_SOUNDPATH "chars/mp_generic_female/misc"//"chars/tavion/misc"
-#define DEFAULT_MALE_SOUNDPATH "chars/mp_generic_male/misc"//"chars/kyle/misc"
+#define DEFAULT_FEMALE_sound_path "chars/mp_generic_female/misc"//"chars/tavion/misc"
+#define DEFAULT_MALE_sound_path "chars/mp_generic_male/misc"//"chars/kyle/misc"
 
 void CG_LoadCISounds(clientInfo_t* ci, const qboolean modelloaded)
 {
@@ -927,7 +927,7 @@ void CG_LoadCISounds(clientInfo_t* ci, const qboolean modelloaded)
 	qboolean is_female = qfalse;
 	int i;
 	int f_len;
-	char soundpath[MAX_QPATH];
+	char sound_path[MAX_QPATH];
 	char sound_name[1024];
 	const char* s;
 
@@ -954,32 +954,32 @@ void CG_LoadCISounds(clientInfo_t* ci, const qboolean modelloaded)
 		}
 	}
 
-	soundpath[0] = 0;
+	sound_path[0] = 0;
 
 	if (f)
 	{
-		trap->FS_Read(soundpath, f_len, f);
-		soundpath[f_len] = 0;
+		trap->FS_Read(sound_path, f_len, f);
+		sound_path[f_len] = 0;
 
 		i = f_len;
 
-		while (i >= 0 && soundpath[i] != '\n')
+		while (i >= 0 && sound_path[i] != '\n')
 		{
-			if (soundpath[i] == 'f')
+			if (sound_path[i] == 'f')
 			{
 				is_female = qtrue;
-				soundpath[i] = 0;
+				sound_path[i] = 0;
 			}
 			i--;
 		}
 
 		i = 0;
 
-		while (soundpath[i] && soundpath[i] != '\r' && soundpath[i] != '\n')
+		while (sound_path[i] && sound_path[i] != '\r' && sound_path[i] != '\n')
 		{
 			i++;
 		}
-		soundpath[i] = 0;
+		sound_path[i] = 0;
 
 		trap->FS_Close(f);
 
@@ -1016,9 +1016,9 @@ void CG_LoadCISounds(clientInfo_t* ci, const qboolean modelloaded)
 
 		ci->sounds[i] = 0;
 		// if the model didn't load use the sounds of the default model
-		if (soundpath[0])
+		if (sound_path[0])
 		{
-			ci->sounds[i] = trap->S_RegisterSound(va("sound/chars/%s/misc/%s", soundpath, sound_name));
+			ci->sounds[i] = trap->S_RegisterSound(va("sound/chars/%s/misc/%s", sound_path, sound_name));
 		}
 		else
 		{
@@ -1033,11 +1033,11 @@ void CG_LoadCISounds(clientInfo_t* ci, const qboolean modelloaded)
 			//failed the load, try one out of the generic path
 			if (is_female)
 			{
-				ci->sounds[i] = trap->S_RegisterSound(va("sound/%s/%s", DEFAULT_FEMALE_SOUNDPATH, sound_name));
+				ci->sounds[i] = trap->S_RegisterSound(va("sound/%s/%s", DEFAULT_FEMALE_sound_path, sound_name));
 			}
 			else
 			{
-				ci->sounds[i] = trap->S_RegisterSound(va("sound/%s/%s", DEFAULT_MALE_SOUNDPATH, sound_name));
+				ci->sounds[i] = trap->S_RegisterSound(va("sound/%s/%s", DEFAULT_MALE_sound_path, sound_name));
 			}
 		}
 	}
@@ -1059,11 +1059,11 @@ void CG_LoadCISounds(clientInfo_t* ci, const qboolean modelloaded)
 
 			ci->siegeSounds[i] = 0;
 			// if the model didn't load use the sounds of the default model
-			if (soundpath[0])
+			if (sound_path[0])
 			{
-				ci->siegeSounds[i] = trap->S_RegisterSound(va("sound/chars/%s/misc/%s", soundpath, sound_name));
+				ci->siegeSounds[i] = trap->S_RegisterSound(va("sound/chars/%s/misc/%s", sound_path, sound_name));
 				if (!ci->siegeSounds[i])
-					ci->siegeSounds[i] = trap->S_RegisterSound(va("sound/%s/%s", soundpath, sound_name));
+					ci->siegeSounds[i] = trap->S_RegisterSound(va("sound/%s/%s", sound_path, sound_name));
 			}
 			else
 			{
@@ -1078,11 +1078,11 @@ void CG_LoadCISounds(clientInfo_t* ci, const qboolean modelloaded)
 				//failed the load, try one out of the generic path
 				if (is_female)
 				{
-					ci->siegeSounds[i] = trap->S_RegisterSound(va("sound/%s/%s", DEFAULT_FEMALE_SOUNDPATH, sound_name));
+					ci->siegeSounds[i] = trap->S_RegisterSound(va("sound/%s/%s", DEFAULT_FEMALE_sound_path, sound_name));
 				}
 				else
 				{
-					ci->siegeSounds[i] = trap->S_RegisterSound(va("sound/%s/%s", DEFAULT_MALE_SOUNDPATH, sound_name));
+					ci->siegeSounds[i] = trap->S_RegisterSound(va("sound/%s/%s", DEFAULT_MALE_sound_path, sound_name));
 				}
 			}
 		}
@@ -1107,9 +1107,9 @@ void CG_LoadCISounds(clientInfo_t* ci, const qboolean modelloaded)
 
 			ci->duelSounds[i] = 0;
 			// if the model didn't load use the sounds of the default model
-			if (soundpath[0])
+			if (sound_path[0])
 			{
-				ci->duelSounds[i] = trap->S_RegisterSound(va("sound/chars/%s/misc/%s", soundpath, sound_name));
+				ci->duelSounds[i] = trap->S_RegisterSound(va("sound/chars/%s/misc/%s", sound_path, sound_name));
 			}
 			else
 			{
@@ -1124,11 +1124,11 @@ void CG_LoadCISounds(clientInfo_t* ci, const qboolean modelloaded)
 				//failed the load, try one out of the generic path
 				if (is_female)
 				{
-					ci->duelSounds[i] = trap->S_RegisterSound(va("sound/%s/%s", DEFAULT_FEMALE_SOUNDPATH, sound_name));
+					ci->duelSounds[i] = trap->S_RegisterSound(va("sound/%s/%s", DEFAULT_FEMALE_sound_path, sound_name));
 				}
 				else
 				{
-					ci->duelSounds[i] = trap->S_RegisterSound(va("sound/%s/%s", DEFAULT_MALE_SOUNDPATH, sound_name));
+					ci->duelSounds[i] = trap->S_RegisterSound(va("sound/%s/%s", DEFAULT_MALE_sound_path, sound_name));
 				}
 			}
 		}
@@ -14585,18 +14585,18 @@ int FindGender(const char* model_path, const centity_t* cent)
 
 	if (f)
 	{
-		char soundpath[MAX_QPATH];
-		trap->FS_Read(soundpath, f_len, f);
-		soundpath[f_len] = 0;
+		char sound_path[MAX_QPATH];
+		trap->FS_Read(sound_path, f_len, f);
+		sound_path[f_len] = 0;
 
 		int i = f_len;
 
-		while (i >= 0 && soundpath[i] != '\n')
+		while (i >= 0 && sound_path[i] != '\n')
 		{
-			if (soundpath[i] == 'f')
+			if (sound_path[i] == 'f')
 			{
 				is_female = qtrue;
-				soundpath[i] = 0;
+				sound_path[i] = 0;
 			}
 
 			i--;

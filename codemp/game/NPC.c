@@ -30,7 +30,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 extern vec3_t player_mins;
 extern vec3_t player_maxs;
-extern void G_SoundOnEnt(gentity_t* ent, soundChannel_t channel, const char* soundPath);
+extern void G_SoundOnEnt(gentity_t* ent, soundChannel_t channel, const char* sound_path);
 extern void PM_SetTorsoAnimTimer(gentity_t* ent, int* torsoAnimTimer, int time);
 extern void PM_SetLegsAnimTimer(gentity_t* ent, int* legsAnimTimer, int time);
 extern void NPC_BSNoClip(void);

@@ -48,7 +48,7 @@ extern void BG_ReduceSaberMishapLevel(playerState_t* ps);
 extern qboolean G_ValidSaberStyle(const gentity_t* ent, int saber_style);
 extern qboolean BG_SprintAnim(int anim);
 extern void Weapon_GrapplingHook_Fire(gentity_t* ent);
-extern void G_SoundOnEnt(gentity_t* ent, soundChannel_t channel, const char* soundPath);
+extern void G_SoundOnEnt(gentity_t* ent, soundChannel_t channel, const char* sound_path);
 extern qboolean BG_InSlowBounce(const playerState_t* ps);
 extern qboolean PM_SaberInBrokenParry(int move);
 extern qboolean PM_InKnockDown(const playerState_t* ps);

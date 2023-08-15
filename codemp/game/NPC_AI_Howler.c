@@ -387,7 +387,7 @@ static void Howler_Howl(void)
 
 //------------------------------
 //replaced with SP version
-void G_SoundOnEnt(gentity_t* ent, int channel, const char* soundPath);
+extern void G_SoundOnEnt(gentity_t* ent, soundChannel_t channel, const char* sound_path);
 
 static void Howler_Attack(const float enemy_dist, const qboolean howl)
 {

@@ -24,7 +24,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 //static void R5D2_LookAround( void );
 float NPC_GetPainChance(const gentity_t* self, int damage);
-extern void G_SoundOnEnt(gentity_t* ent, soundChannel_t channel, const char* soundPath);
+extern void G_SoundOnEnt(gentity_t* ent, soundChannel_t channel, const char* sound_path);
 
 #define TURN_OFF   0x00000100
 

@@ -4174,15 +4174,6 @@ int wp_player_must_dodge(const gentity_t* self, const gentity_t* shooter)
 		return qfalse;
 	}
 
-	if (!g_allowBodyDodge.integer)
-	{
-		//body dodges have been disabled.
-		if (self->client && !(self->client->pers.cmd.generic_cmd & GENCMD_FORCE_HEALOTHER))
-		{
-			return qfalse;
-		}
-	}
-
 	if (PM_InLedgeMove(self->client->ps.legsAnim))
 	{
 		return qfalse;
@@ -4299,16 +4290,14 @@ int wp_player_must_dodge(const gentity_t* self, const gentity_t* shooter)
 	}
 
 	if (!walk_check(self)
-		&& (!in_front(shooter->client->ps.origin, self->client->ps.origin, self->client->ps.viewangles, -0.7f)
-			|| PM_SaberInAttack(self->client->ps.saber_move)
-			|| PM_SaberInStart(self->client->ps.saber_move)))
+		|| PM_SaberInAttack(self->client->ps.saber_move)
+		|| PM_SaberInStart(self->client->ps.saber_move))
 	{
 		if (self->NPC)
 		{
-			//can't Dodge saber swings while running and hit from behind or in swing.
+			//can't Dodge saber swings while running or in swing.
 			return qtrue;
 		}
-		//can't Dodge saber swings while running and hit from behind or in swing.
 		return qfalse;
 	}
 
@@ -5411,7 +5400,7 @@ qboolean pm_walking_or_standing(const gentity_t* self)
 	return qfalse;
 }
 
-void DoNormalDodge(gentity_t* self, const int dodge_anim, const qboolean partial)
+void DoNormalDodge(gentity_t* self, const int dodge_anim)
 {
 	//have self go into the given dodgeAnim
 	//Our own happy way of forcing an anim:
@@ -5420,12 +5409,6 @@ void DoNormalDodge(gentity_t* self, const int dodge_anim, const qboolean partial
 	self->client->ps.forceHandExtendTime = level.time + 300;
 	self->client->ps.weaponTime = 300;
 	self->client->ps.saber_move = LS_NONE;
-
-	if (!partial)
-	{
-		//only do the after image during full dodges.
-		G_Sound(self, CHAN_BODY, G_SoundIndex("sound/weapons/melee/swing4.wav"));
-	}
 
 	G_Sound(self, CHAN_BODY, G_SoundIndex("sound/weapons/melee/swing4.wav"));
 }
@@ -5529,21 +5512,11 @@ qboolean G_DoDodge(gentity_t* self, gentity_t* shooter, vec3_t dmg_origin, int h
 	int dodge_anim = -1;
 	int dpcost = BasicWeaponBlockCosts[mod];
 	const int saved_dmg = *dmg;
-	qboolean partial = qfalse;
 	qboolean no_action = qfalse;
 
 	if (in_camera)
 	{
 		return qfalse;
-	}
-
-	if (!g_allowBodyDodge.integer)
-	{
-		//body dodges have been disabled.
-		if (self->client && !(self->client->pers.cmd.generic_cmd & GENCMD_FORCE_HEALOTHER))
-		{
-			return qfalse;
-		}
 	}
 
 	if (self->NPC &&
@@ -5725,16 +5698,14 @@ qboolean G_DoDodge(gentity_t* self, gentity_t* shooter, vec3_t dmg_origin, int h
 		}
 
 		if (!walk_check(self)
-			&& (!in_front(shooter->client->ps.origin, self->client->ps.origin, self->client->ps.viewangles, -0.7f)
-				|| PM_SaberInAttack(self->client->ps.saber_move)
-				|| PM_SaberInStart(self->client->ps.saber_move)))
+			|| PM_SaberInAttack(self->client->ps.saber_move)
+			|| PM_SaberInStart(self->client->ps.saber_move))
 		{
 			if (self->NPC)
 			{
-				//can't Dodge saber swings while running and hit from behind or in swing.
+				//can't Dodge saber swings while running or in swing.
 				return qtrue;
 			}
-			//can't Dodge saber swings while running and hit from behind or in swing.
 			return qfalse;
 		}
 	}
@@ -5791,7 +5762,6 @@ qboolean G_DoDodge(gentity_t* self, gentity_t* shooter, vec3_t dmg_origin, int h
 		//Scale damage as is appropriate
 		*dmg = (int)(*dmg * (self->client->ps.stats[STAT_DODGE] / (float)dpcost));
 		G_DodgeDrain(self, shooter, self->client->ps.stats[STAT_DODGE]);
-		partial = qtrue;
 	}
 	else
 	{
@@ -5810,10 +5780,6 @@ qboolean G_DoDodge(gentity_t* self, gentity_t* shooter, vec3_t dmg_origin, int h
 
 	if (no_action)
 	{
-		if (partial)
-		{
-			return qfalse;
-		}
 		return qtrue;
 	}
 
@@ -5841,11 +5807,6 @@ qboolean G_DoDodge(gentity_t* self, gentity_t* shooter, vec3_t dmg_origin, int h
 		blow_back_power *= 2;
 		g_throw(self, blow_back_dir, blow_back_power);
 		G_Knockdown(self, shooter, blow_back_dir, 600, qtrue);
-
-		if (partial)
-		{
-			return qfalse;
-		}
 		return qtrue;
 	}
 
@@ -5994,7 +5955,7 @@ qboolean G_DoDodge(gentity_t* self, gentity_t* shooter, vec3_t dmg_origin, int h
 		if (self->client->ps.forceHandExtend != HANDEXTEND_DODGE && !PM_InKnockDown(&self->client->ps))
 		{
 			//do a simple dodge
-			DoNormalDodge(self, dodge_anim, partial);
+			DoNormalDodge(self, dodge_anim);
 		}
 		else
 		{
@@ -6137,7 +6098,7 @@ qboolean G_DoDodge(gentity_t* self, gentity_t* shooter, vec3_t dmg_origin, int h
 			if (x == fall_check_max)
 			{
 				//we don't have a valid position to dodge roll to. just do a normal dodge
-				DoNormalDodge(self, dodge_anim, partial);
+				DoNormalDodge(self, dodge_anim);
 			}
 			else
 			{
@@ -6177,9 +6138,562 @@ qboolean G_DoDodge(gentity_t* self, gentity_t* shooter, vec3_t dmg_origin, int h
 				G_Sound(self, CHAN_BODY, G_SoundIndex("sound/weapons/melee/swing4.wav"));
 			}
 		}
-		if (partial && *dmg > 0)
+		return qtrue;
+	}
+	return qfalse;
+}
+
+qboolean G_DoSaberDodge(gentity_t* dodger, gentity_t* attacker, vec3_t dmg_origin, int hit_loc, int* dmg, const int mod)
+{
+	int dodge_anim = -1;
+	int dpcost = BasicWeaponBlockCosts[mod];
+	const int saved_dmg = *dmg;
+	qboolean no_action = qfalse;
+
+	if (in_camera)
+	{
+		return qfalse;
+	}
+
+	if (dodger->NPC &&
+		(dodger->client->NPC_class == CLASS_STORMTROOPER
+			|| dodger->client->NPC_class == CLASS_STORMCOMMANDO
+			|| dodger->client->NPC_class == CLASS_SWAMPTROOPER
+			|| dodger->client->NPC_class == CLASS_CLONETROOPER
+			|| dodger->client->NPC_class == CLASS_IMPWORKER
+			|| dodger->client->NPC_class == CLASS_IMPERIAL
+			|| dodger->client->NPC_class == CLASS_SABER_DROID
+			|| dodger->client->NPC_class == CLASS_ASSASSIN_DROID
+			|| dodger->client->NPC_class == CLASS_GONK
+			|| dodger->client->NPC_class == CLASS_MOUSE
+			|| dodger->client->NPC_class == CLASS_PROBE
+			|| dodger->client->NPC_class == CLASS_PROTOCOL
+			|| dodger->client->NPC_class == CLASS_R2D2
+			|| dodger->client->NPC_class == CLASS_R5D2
+			|| dodger->client->NPC_class == CLASS_SEEKER
+			|| dodger->client->NPC_class == CLASS_INTERROGATOR))
+	{
+		// don't get Dodge.
+		return qfalse;
+	}
+
+	if (dpcost == -1)
+	{
+		//can't dodge this.
+		return qfalse;
+	}
+
+	if (!dodger || !dodger->client || !dodger->inuse || dodger->health <= 0)
+	{
+		return qfalse;
+	}
+
+	//check for private duel conditions
+	if (attacker && attacker->client)
+	{
+		if (attacker->client->ps.duelInProgress && attacker->client->ps.duelIndex != dodger->s.number)
 		{
+			//enemy client is in duel with someone else.
 			return qfalse;
+		}
+
+		if (dodger->client->ps.duelInProgress && dodger->client->ps.duelIndex != attacker->s.number)
+		{
+			//we're in a duel with someone else.
+			return qfalse;
+		}
+	}
+
+	if (BG_HopAnim(dodger->client->ps.legsAnim) //in dodge hop
+		|| BG_InRoll(&dodger->client->ps, dodger->client->ps.legsAnim)
+		&& dodger->client->ps.userInt3 & 1 << FLAG_DODGEROLL //in dodge roll
+		|| mod != MOD_SABER && dodger->client->ps.forceHandExtend == HANDEXTEND_DODGE)
+	{
+		//already doing a dodge
+		return qtrue;
+	}
+
+	if (dodger->client->ps.groundEntityNum == ENTITYNUM_NONE)
+	{
+		//can't dodge direct fire in mid-air
+		return qfalse;
+	}
+
+	if (PM_InKnockDown(&dodger->client->ps)
+		|| BG_InRoll(&dodger->client->ps, dodger->client->ps.legsAnim)
+		|| BG_InKnockDown(dodger->client->ps.legsAnim))
+	{
+		//can't Dodge while knocked down or getting up from knockdown.
+		return qfalse;
+	}
+
+	if (dodger->client->ps.forceHandExtend == HANDEXTEND_CHOKE
+		|| PM_InGrappleMove(dodger->client->ps.torsoAnim) > 1)
+	{
+		//in some effect that stops me from moving on my own
+		return qfalse;
+	}
+
+	if (BG_IsAlreadyinTauntAnim(dodger->client->ps.legsAnim))
+	{
+		return qfalse;
+	}
+
+	if (dodger->client->ps.legsAnim == BOTH_MEDITATE || dodger->client->ps.legsAnim == BOTH_MEDITATE_SABER)
+	{//can't dodge while meditating.
+		return qfalse;
+	}
+
+	if (dodger->client->ps.weapon == WP_SABER && dodger->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK)
+	{
+		return qfalse; //dont do if we are already blocking
+	}
+
+	if (dodger->client->ps.weapon == WP_SABER && PM_CrouchingAnim(dodger->client->ps.legsAnim))
+	{
+		return qfalse; //dont do if we are already blocking
+	}
+
+	if (!(dodger->client->pers.cmd.buttons & BUTTON_USE) && !(dodger->r.svFlags & SVF_BOT))
+	{
+		return qfalse;
+	}
+
+	if ((dodger->r.svFlags & SVF_BOT
+		&& dodger->client->ps.weapon == WP_SABER
+		&& dodger->client->ps.fd.forcePower < FATIGUE_DODGEINGBOT)
+		|| (dodger->r.svFlags & SVF_BOT
+			&& (dodger->client->ps.weapon != WP_SABER &&
+				dodger->client->botclass != BCLASS_MANDOLORIAN &&
+				dodger->client->botclass != BCLASS_MANDOLORIAN1 &&
+				dodger->client->botclass != BCLASS_MANDOLORIAN2 &&
+				dodger->client->botclass != BCLASS_BOBAFETT)
+			|| dodger->client->ps.fd.forcePower < FATIGUE_DODGEINGBOT))
+		// if your not a mando or jedi or low FP then you cant dodge
+	{
+		return qfalse;
+	}
+
+	if (dodger->client->ps.fd.forcePower < dpcost && !(dodger->r.svFlags & SVF_BOT)) //player
+	{
+		//Not enough dodge
+		return qfalse;
+	}
+
+	if (mod == MOD_SABER && attacker && attacker->client)
+	{
+		//special saber moves have special effects.
+		if (attacker->client->ps.saber_move == LS_A_LUNGE
+			|| attacker->client->ps.saber_move == LS_SPINATTACK
+			|| attacker->client->ps.saber_move == LS_SPINATTACK_DUAL
+			|| attacker->client->ps.saber_move == LS_SPINATTACK_GRIEV)
+		{
+			//attacker is doing lunge special
+			if (dodger->client->ps.userInt3 & 1 << FLAG_FATIGUED)
+			{
+				//can't dodge a lunge special while fatigued
+				return qfalse;
+			}
+		}
+
+		if (PM_SuperBreakWinAnim(attacker->client->ps.torsoAnim) && dodger->client->ps.fd.forcePower < 50)
+		{
+			//can't block super breaks if we're low on DP.
+			return qfalse;
+		}
+
+		if (!walk_check(dodger)
+			|| PM_SaberInAttack(dodger->client->ps.saber_move)
+			|| PM_SaberInStart(dodger->client->ps.saber_move))
+		{
+			if (dodger->NPC)
+			{
+				//can't Dodge saber swings while running or in swing.
+				return qtrue;
+			}
+			return qfalse;
+		}
+	}
+
+	if (*dmg <= DODGE_MINDAM && mod != MOD_REPEATER)
+	{
+		dpcost = (int)(dpcost * ((float)*dmg / DODGE_MINDAM));
+		no_action = qtrue;
+	}
+	else if (dodger->client->ps.forceHandExtend == HANDEXTEND_DODGE)
+	{
+		//you're already dodging but you got hit again.
+		dpcost = 0;
+	}
+
+	if (dodger->r.svFlags & SVF_BOT) //bots only get 1
+	{
+		PM_AddFatigue(&dodger->client->ps, FATIGUE_DODGEINGBOT);
+	}
+	else
+	{
+		PM_AddFatigue(&dodger->client->ps, dpcost);
+	}
+
+	if (no_action)
+	{
+		return qtrue;
+	}
+
+	if (mod == MOD_REPEATER_ALT_SPLASH
+		|| mod == MOD_FLECHETTE_ALT_SPLASH
+		|| mod == MOD_ROCKET_SPLASH
+		|| mod == MOD_ROCKET_HOMING_SPLASH
+		|| mod == MOD_THERMAL_SPLASH
+		|| mod == MOD_TRIP_MINE_SPLASH
+		|| mod == MOD_TIMED_MINE_SPLASH
+		|| mod == MOD_DET_PACK_SPLASH
+		|| mod == MOD_ROCKET)
+	{
+		//splash damage dodge, dodged by throwing oneself away from the blast into a knockdown
+		vec3_t blow_back_dir;
+		int blow_back_power = saved_dmg;
+		VectorSubtract(dodger->client->ps.origin, dmg_origin, blow_back_dir);
+		VectorNormalize(blow_back_dir);
+
+		if (blow_back_power > 1000)
+		{
+			//clamp blow back power level
+			blow_back_power = 1000;
+		}
+		blow_back_power *= 2;
+		g_throw(dodger, blow_back_dir, blow_back_power);
+		G_Knockdown(dodger, attacker, blow_back_dir, 600, qtrue);
+		return qtrue;
+	}
+
+	/*===========================================================================
+	doing a positional dodge for direct hit damage (like sabers or blaster bolts)
+	===========================================================================*/
+	if (hit_loc == -1)
+	{
+		//Use the last surface impact data as the hit location
+		if (d_saberGhoul2Collision.integer && dodger->client
+			&& dodger->client->g2LastSurfaceModel == G2MODEL_PLAYER
+			&& dodger->client->g2LastSurfaceTime == level.time)
+		{
+			char hit_surface[MAX_QPATH];
+
+			trap->G2API_GetSurfaceName(dodger->ghoul2, dodger->client->g2LastSurfaceHit, 0, hit_surface);
+
+			if (hit_surface[0])
+			{
+				G_GetHitLocFromSurfName(dodger, hit_surface, &hit_loc, dmg_origin, vec3_origin, vec3_origin, MOD_SABER);
+			}
+		}
+		else
+		{
+			//ok, that didn't work.  Try the old math way.
+			hit_loc = G_GetHitLocation(dodger, dmg_origin);
+		}
+	}
+
+	switch (hit_loc)
+	{
+	case HL_NONE:
+		return qfalse;
+
+	case HL_FOOT_RT:
+	case HL_FOOT_LT:
+		dodge_anim = Q_irand(BOTH_HOP_L, BOTH_HOP_R);
+		break;
+	case HL_LEG_RT:
+	case HL_LEG_LT:
+		if (dodger->client->pers.botclass == BCLASS_MANDOLORIAN
+			|| dodger->client->pers.botclass == BCLASS_BOBAFETT
+			|| dodger->client->pers.botclass == BCLASS_MANDOLORIAN1
+			|| dodger->client->pers.botclass == BCLASS_MANDOLORIAN2)
+		{
+			dodger->client->jetPackOn = qtrue;
+			dodger->client->ps.eFlags |= EF_JETPACK_ACTIVE;
+			dodger->client->ps.eFlags |= EF_JETPACK_FLAMING;
+			dodger->client->ps.eFlags |= EF_JETPACK_HOVER;
+			Boba_FlyStart(dodger);
+			dodger->client->ps.fd.forceJumpCharge = 280;
+			dodger->client->jetPackTime = level.time + 30000;
+		}
+		else
+		{
+			dodge_anim = Q_irand(BOTH_HOP_L, BOTH_HOP_R);
+		}
+		break;
+
+	case HL_BACK_RT:
+		dodge_anim = BOTH_DODGE_FL;
+		break;
+	case HL_CHEST_RT:
+		dodge_anim = BOTH_DODGE_FR;
+		break;
+	case HL_BACK_LT:
+		dodge_anim = BOTH_DODGE_FR;
+		break;
+	case HL_CHEST_LT:
+		dodge_anim = BOTH_DODGE_FR;
+		break;
+	case HL_BACK:
+		if (dodger->client->pers.botclass == BCLASS_MANDOLORIAN
+			|| dodger->client->pers.botclass == BCLASS_BOBAFETT
+			|| dodger->client->pers.botclass == BCLASS_MANDOLORIAN1
+			|| dodger->client->pers.botclass == BCLASS_MANDOLORIAN2)
+		{
+			dodger->client->jetPackOn = qtrue;
+			dodger->client->ps.eFlags |= EF_JETPACK_ACTIVE;
+			dodger->client->ps.eFlags |= EF_JETPACK_FLAMING;
+			dodger->client->ps.eFlags |= EF_JETPACK_HOVER;
+			Boba_FlyStart(dodger);
+			dodger->client->ps.fd.forceJumpCharge = 280;
+			dodger->client->jetPackTime = (dodger->client->jetPackTime + level.time) / 2 + 10000;
+		}
+		else
+		{
+			dodge_anim = Q_irand(BOTH_DODGE_FL, BOTH_DODGE_FR);
+		}
+		break;
+	case HL_CHEST:
+		if (dodger->client->pers.botclass == BCLASS_MANDOLORIAN
+			|| dodger->client->pers.botclass == BCLASS_BOBAFETT
+			|| dodger->client->pers.botclass == BCLASS_MANDOLORIAN1
+			|| dodger->client->pers.botclass == BCLASS_MANDOLORIAN2)
+		{
+			dodger->client->jetPackOn = qtrue;
+			dodger->client->ps.eFlags |= EF_JETPACK_ACTIVE;
+			dodger->client->ps.eFlags |= EF_JETPACK_FLAMING;
+			dodger->client->ps.eFlags |= EF_JETPACK_HOVER;
+			Boba_FlyStart(dodger);
+			dodger->client->ps.fd.forceJumpCharge = 280;
+			dodger->client->jetPackTime = (dodger->client->jetPackTime + level.time) / 2 + 10000;
+		}
+		else
+		{
+			dodge_anim = BOTH_DODGE_B;
+		}
+		break;
+	case HL_WAIST:
+		if (dodger->client->pers.botclass == BCLASS_MANDOLORIAN
+			|| dodger->client->pers.botclass == BCLASS_BOBAFETT
+			|| dodger->client->pers.botclass == BCLASS_MANDOLORIAN1
+			|| dodger->client->pers.botclass == BCLASS_MANDOLORIAN2)
+		{
+			dodger->client->jetPackOn = qtrue;
+			dodger->client->ps.eFlags |= EF_JETPACK_ACTIVE;
+			dodger->client->ps.eFlags |= EF_JETPACK_FLAMING;
+			dodger->client->ps.eFlags |= EF_JETPACK_HOVER;
+			Boba_FlyStart(dodger);
+			dodger->client->ps.fd.forceJumpCharge = 280;
+			dodger->client->jetPackTime = (dodger->client->jetPackTime + level.time) / 2 + 10000;
+		}
+		else
+		{
+			dodge_anim = Q_irand(BOTH_DODGE_L, BOTH_DODGE_R);
+		}
+		break;
+	case HL_ARM_RT:
+	case HL_HAND_RT:
+		dodge_anim = BOTH_DODGE_L;
+		break;
+	case HL_ARM_LT:
+	case HL_HAND_LT:
+		dodge_anim = BOTH_DODGE_R;
+		break;
+	case HL_HEAD:
+		dodge_anim = BOTH_CROUCHDODGE;
+		break;
+	default:
+		return qfalse;
+	}
+
+	if (dodge_anim != -1)
+	{
+		if (dodger->client->ps.forceHandExtend != HANDEXTEND_DODGE && !PM_InKnockDown(&dodger->client->ps))
+		{
+			//do a simple dodge
+			DoNormalDodge(dodger, dodge_anim);
+		}
+		else
+		{
+			//can't just do a simple dodge
+			int rolled;
+			vec3_t tangles;
+			vec3_t forward;
+			vec3_t right;
+			vec3_t impactpoint;
+			int x;
+			int fall_check_max;
+
+			VectorSubtract(dmg_origin, dodger->client->ps.origin, impactpoint);
+			VectorNormalize(impactpoint);
+
+			VectorSet(tangles, 0, dodger->client->ps.viewangles[YAW], 0);
+
+			AngleVectors(tangles, forward, right, NULL);
+
+			const float fdot = DotProduct(impactpoint, forward);
+			const float rdot = DotProduct(impactpoint, right);
+
+			if (PM_InKnockDown(&dodger->client->ps))
+			{
+				//ground dodge roll
+				fall_check_max = 2;
+				if (rdot < 0)
+				{
+					//Right
+					if (dodger->client->ps.legsAnim == BOTH_KNOCKDOWN3
+						|| dodger->client->ps.legsAnim == BOTH_KNOCKDOWN5
+						|| dodger->client->ps.legsAnim == BOTH_LK_DL_ST_T_SB_1_L)
+					{
+						rolled = BOTH_GETUP_FROLL_R;
+					}
+					else
+					{
+						rolled = BOTH_GETUP_BROLL_R;
+					}
+				}
+				else
+				{
+					//left
+					if (dodger->client->ps.legsAnim == BOTH_KNOCKDOWN3
+						|| dodger->client->ps.legsAnim == BOTH_KNOCKDOWN5
+						|| dodger->client->ps.legsAnim == BOTH_LK_DL_ST_T_SB_1_L)
+					{
+						rolled = BOTH_GETUP_FROLL_L;
+					}
+					else
+					{
+						rolled = BOTH_GETUP_BROLL_L;
+					}
+				}
+			}
+			else
+			{
+				//normal Dodge rolls.
+				fall_check_max = 4;
+				if (fabs(fdot) > fabs(rdot))
+				{
+					//Forward/Back
+					if (fdot < 0)
+					{
+						//Forward
+						rolled = BOTH_HOP_F;
+					}
+					else
+					{
+						//Back
+						rolled = BOTH_HOP_B;
+					}
+				}
+				else
+				{
+					//Right/Left
+					if (rdot < 0)
+					{
+						//Right
+						rolled = BOTH_HOP_R;
+					}
+					else
+					{
+						//Left
+						rolled = BOTH_HOP_L;
+					}
+				}
+			}
+
+			for (x = 0; x < fall_check_max; x++)
+			{
+				//check for a valid rolling direction..namely someplace where we
+				//won't roll off cliffs
+				if (DodgeRollCheck(dodger, rolled, forward, right))
+				{
+					//passed check
+					break;
+				}
+
+				//otherwise, rotate to try the next possible direction
+				//reset to start of possible moves if we're at the end of the list
+				//for the perspective roll type.
+				if (rolled == BOTH_GETUP_BROLL_R)
+				{
+					//there's only two possible evasions in this mode.
+					rolled = BOTH_GETUP_BROLL_L;
+				}
+				else if (rolled == BOTH_GETUP_BROLL_L)
+				{
+					//there's only two possible evasions in this mode.
+					rolled = BOTH_GETUP_BROLL_R;
+				}
+				else if (rolled == BOTH_GETUP_FROLL_R)
+				{
+					//there's only two possible evasions in this mode.
+					rolled = BOTH_GETUP_FROLL_L;
+				}
+				else if (rolled == BOTH_GETUP_FROLL_L)
+				{
+					//there's only two possible evasions in this mode.
+					rolled = BOTH_GETUP_FROLL_R;
+				}
+				else if (rolled == BOTH_ROLL_R)
+				{
+					//reset to start of the possible normal roll directions
+					rolled = BOTH_ROLL_F;
+				}
+				else if (rolled == BOTH_HOP_R)
+				{
+					//reset to the start of possible hop directions
+					rolled = BOTH_HOP_F;
+				}
+				else
+				{
+					//just advance the roll move
+					rolled++;
+				}
+			}
+
+			if (x == fall_check_max)
+			{
+				//we don't have a valid position to dodge roll to. just do a normal dodge
+				DoNormalDodge(dodger, dodge_anim);
+			}
+			else
+			{
+				//ok, we can do the dodge hops/rolls
+				if (PM_InKnockDown(&dodger->client->ps)
+					|| BG_HopAnim(rolled))
+				{
+					//ground dodge roll
+					G_SetAnim(dodger, &dodger->client->pers.cmd, SETANIM_BOTH, rolled,
+						SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
+				}
+				else
+				{
+					//normal dodge roll
+					dodger->client->ps.legsTimer = 0;
+					dodger->client->ps.legsAnim = 0;
+					G_SetAnim(dodger, &dodger->client->pers.cmd, SETANIM_BOTH, rolled,
+						SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 150);
+					G_AddEvent(dodger, EV_ROLL, 0);
+					dodger->r.maxs[2] = dodger->client->ps.crouchheight;
+					dodger->client->ps.viewheight = DEFAULT_VIEWHEIGHT;
+					dodger->client->ps.pm_flags &= ~PMF_DUCKED;
+					dodger->client->ps.pm_flags |= PMF_ROLLING;
+				}
+
+				//set the dodge roll flag
+				dodger->client->ps.userInt3 |= 1 << FLAG_DODGEROLL;
+
+				//set weapontime
+				dodger->client->ps.weaponTime = dodger->client->ps.torsoTimer;
+
+				//clear out the old dodge move.
+				dodger->client->ps.forceHandExtend = HANDEXTEND_NONE;
+				dodger->client->ps.forceDodgeAnim = 0;
+				dodger->client->ps.forceHandExtendTime = 0;
+				dodger->client->ps.saber_move = LS_NONE;
+				G_Sound(dodger, CHAN_BODY, G_SoundIndex("sound/weapons/melee/swing4.wav"));
+			}
 		}
 		return qtrue;
 	}
@@ -6710,7 +7224,7 @@ static QINLINE qboolean check_saber_damage(gentity_t* self, const int r_saber_nu
 			DebounceSaberImpact(self, blocker, r_saber_num, r_blade_num, sabimpactentitynum);
 			return qtrue;
 		}
-		if (G_DoDodge(victim, self, tr.endpos, -1, &dmg, MOD_SABER))
+		if (G_DoSaberDodge(victim, self, tr.endpos, -1, &dmg, MOD_SABER))
 		{
 			//add saber impact debounce
 			DebounceSaberImpact(self, blocker, r_saber_num, r_blade_num, sabimpactentitynum);
@@ -9333,45 +9847,45 @@ extern void G_GetBoltPosition(gentity_t* self, int bolt_index, vec3_t pos, int m
 
 extern qboolean BG_InKnockDown(int anim);
 
-qboolean WP_AbsorbKick(gentity_t* self, const gentity_t* pusher, const vec3_t push_dir)
+qboolean WP_AbsorbKick(gentity_t* hit_ent, const gentity_t* pusher, const vec3_t push_dir)
 {
-	const qboolean active_blocking = self->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK ? qtrue : qfalse;
+	const qboolean active_blocking = hit_ent->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK ? qtrue : qfalse;
 	//manual Blocking
-	const qboolean holding_block = self->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
+	const qboolean holding_block = hit_ent->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
 	//Normal Blocking
-	const qboolean npc_blocking = self->client->ps.ManualBlockingFlags & 1 << MBF_NPCKICKBLOCK ? qtrue : qfalse;
+	const qboolean npc_blocking = hit_ent->client->ps.ManualBlockingFlags & 1 << MBF_NPCKICKBLOCK ? qtrue : qfalse;
 	//NPC Blocking
 
-	if (PlayerCanAbsorbKick(self, push_dir) && (holding_block || active_blocking) && !(self->r.svFlags & SVF_BOT))
+	if (PlayerCanAbsorbKick(hit_ent, push_dir) && (holding_block || active_blocking) && !(hit_ent->r.svFlags & SVF_BOT))
 		//player only
 	{
-		if (self->client->ps.fd.blockPoints > 50)
+		if (hit_ent->client->ps.fd.blockPoints > 50)
 		{
-			G_Stagger(self);
-			WP_BlockPointsDrain(self, FATIGUE_BP_ABSORB);
+			G_Stagger(hit_ent);
+			WP_BlockPointsDrain(hit_ent, FATIGUE_BP_ABSORB);
 		}
 		else
 		{
-			G_Stumble(self);
-			WP_BlockPointsDrain(self, FATIGUE_BP_ABSORB);
+			G_Stumble(hit_ent);
+			WP_BlockPointsDrain(hit_ent, FATIGUE_BP_ABSORB);
 		}
-		G_Sound(self, CHAN_BODY, G_SoundIndex(va("sound/weapons/melee/punch%d", Q_irand(1, 4))));
+		G_Sound(hit_ent, CHAN_BODY, G_SoundIndex(va("sound/weapons/melee/punch%d", Q_irand(1, 4))));
 	}
-	else if (BotCanAbsorbKick(self, push_dir) && npc_blocking && self->r.svFlags & SVF_BOT) //NPC only
+	else if (BotCanAbsorbKick(hit_ent, push_dir) && npc_blocking && hit_ent->r.svFlags & SVF_BOT) //NPC only
 	{
-		if (self->client->ps.fd.blockPoints > 50 && self->client->ps.fd.forcePower > 50) //NPC only
+		if (hit_ent->client->ps.fd.blockPoints > 50 && hit_ent->client->ps.fd.forcePower > 50) //NPC only
 		{
-			G_Stagger(self);
-			WP_BlockPointsDrain(self, FATIGUE_BP_ABSORB);
-			WP_DeactivateSaber(self);
+			G_Stagger(hit_ent);
+			WP_BlockPointsDrain(hit_ent, FATIGUE_BP_ABSORB);
+			WP_DeactivateSaber(hit_ent);
 		}
 		else
 		{
-			G_SetAnim(self, &self->client->pers.cmd, SETANIM_BOTH, Q_irand(BOTH_FLIP_BACK1, BOTH_FLIP_BACK2),
+			G_SetAnim(hit_ent, &hit_ent->client->pers.cmd, SETANIM_BOTH, Q_irand(BOTH_FLIP_BACK1, BOTH_FLIP_BACK2),
 				SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
-			WP_BlockPointsDrain(self, FATIGUE_BP_ABSORB);
+			WP_BlockPointsDrain(hit_ent, FATIGUE_BP_ABSORB);
 		}
-		G_Sound(self, CHAN_BODY, G_SoundIndex(va("sound/weapons/melee/punch%d", Q_irand(1, 4))));
+		G_Sound(hit_ent, CHAN_BODY, G_SoundIndex(va("sound/weapons/melee/punch%d", Q_irand(1, 4))));
 	}
 	else if (pusher->client->ps.torsoAnim == BOTH_MELEEUP ||
 		pusher->client->ps.torsoAnim == MELEE_STANCE_HOLD_T ||
@@ -9387,20 +9901,46 @@ qboolean WP_AbsorbKick(gentity_t* self, const gentity_t* pusher, const vec3_t pu
 		pusher->client->ps.torsoAnim == MELEE_STANCE_BL ||
 		pusher->client->ps.torsoAnim == MELEE_STANCE_B) //for the Uppercut
 	{
-		G_SetAnim(self, &self->client->pers.cmd, SETANIM_BOTH, Q_irand(BOTH_KNOCKDOWN1, BOTH_KNOCKDOWN2),
+		G_SetAnim(hit_ent, &hit_ent->client->pers.cmd, SETANIM_BOTH, Q_irand(BOTH_KNOCKDOWN1, BOTH_KNOCKDOWN2),
 			SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
-		WP_BlockPointsDrain(self, FATIGUE_BLOCKPOINTDRAIN);
-		AddFatigueMeleeBonus(pusher, self);
-		G_Sound(self, CHAN_BODY, G_SoundIndex(va("sound/weapons/melee/punch%d", Q_irand(1, 4))));
+		WP_BlockPointsDrain(hit_ent, FATIGUE_BLOCKPOINTDRAIN);
+		AddFatigueMeleeBonus(pusher, hit_ent);
+		G_Sound(hit_ent, CHAN_BODY, G_SoundIndex(va("sound/weapons/melee/punch%d", Q_irand(1, 4))));
+
+		if (!hit_ent->client->ps.saberHolstered)
+		{
+			if (hit_ent->client->saber[0].soundOff)
+			{
+				G_Sound(hit_ent, CHAN_WEAPON, hit_ent->client->saber[0].soundOff);
+			}
+			if (hit_ent->client->saber[1].soundOff)
+			{
+				G_Sound(hit_ent, CHAN_WEAPON, hit_ent->client->saber[1].soundOff);
+			}
+			hit_ent->client->ps.saberHolstered = 2;
+		}
 	}
 	else if (pusher->client->ps.torsoAnim == BOTH_WOOKIE_SLAP || pusher->client->ps.torsoAnim == BOTH_TUSKENLUNGE1)
 		//for the wookie slap
 	{
-		G_SetAnim(self, &self->client->pers.cmd, SETANIM_BOTH, Q_irand(BOTH_SLAPDOWNRIGHT, BOTH_SLAPDOWNLEFT),
+		G_SetAnim(hit_ent, &hit_ent->client->pers.cmd, SETANIM_BOTH, Q_irand(BOTH_SLAPDOWNRIGHT, BOTH_SLAPDOWNLEFT),
 			SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
-		WP_BlockPointsDrain(self, FATIGUE_BLOCKPOINTDRAIN);
-		AddFatigueMeleeBonus(pusher, self);
-		G_Sound(self, CHAN_BODY, G_SoundIndex(va("sound/weapons/melee/punch%d", Q_irand(1, 4))));
+		WP_BlockPointsDrain(hit_ent, FATIGUE_BLOCKPOINTDRAIN);
+		AddFatigueMeleeBonus(pusher, hit_ent);
+		G_Sound(hit_ent, CHAN_BODY, G_SoundIndex(va("sound/weapons/melee/punch%d", Q_irand(1, 4))));
+
+		if (!hit_ent->client->ps.saberHolstered)
+		{
+			if (hit_ent->client->saber[0].soundOff)
+			{
+				G_Sound(hit_ent, CHAN_WEAPON, hit_ent->client->saber[0].soundOff);
+			}
+			if (hit_ent->client->saber[1].soundOff)
+			{
+				G_Sound(hit_ent, CHAN_WEAPON, hit_ent->client->saber[1].soundOff);
+			}
+			hit_ent->client->ps.saberHolstered = 2;
+		}
 	}
 	else if (pusher->client->ps.legsAnim == BOTH_A7_KICK_F
 		|| pusher->client->ps.legsAnim == BOTH_A7_KICK_F2
@@ -9408,87 +9948,191 @@ qboolean WP_AbsorbKick(gentity_t* self, const gentity_t* pusher, const vec3_t pu
 		|| pusher->client->ps.torsoAnim == BOTH_TUSKENATTACK2
 		|| pusher->client->ps.torsoAnim == BOTH_TUSKENATTACK3) //for the front kick
 	{
-		G_SetAnim(self, &self->client->pers.cmd, SETANIM_BOTH, Q_irand(BOTH_KNOCKDOWN1, BOTH_KNOCKDOWN2),
+		G_SetAnim(hit_ent, &hit_ent->client->pers.cmd, SETANIM_BOTH, Q_irand(BOTH_KNOCKDOWN1, BOTH_KNOCKDOWN2),
 			SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
-		WP_BlockPointsDrain(self, FATIGUE_BLOCKPOINTDRAIN);
-		AddFatigueMeleeBonus(pusher, self);
-		G_Sound(self, CHAN_BODY, G_SoundIndex(va("sound/weapons/melee/punch%d", Q_irand(1, 4))));
+		WP_BlockPointsDrain(hit_ent, FATIGUE_BLOCKPOINTDRAIN);
+		AddFatigueMeleeBonus(pusher, hit_ent);
+		G_Sound(hit_ent, CHAN_BODY, G_SoundIndex(va("sound/weapons/melee/punch%d", Q_irand(1, 4))));
 		if (pusher->client->ps.legsAnim == BOTH_A7_KICK_F2)
 		{
-			G_Sound(self, CHAN_BODY, G_SoundIndex(va("sound/weapons/melee/swing%d", Q_irand(1, 4))));
+			G_Sound(hit_ent, CHAN_BODY, G_SoundIndex(va("sound/weapons/melee/swing%d", Q_irand(1, 4))));
 		}
 		else if (pusher->client->ps.torsoAnim == BOTH_TUSKENATTACK1
 			|| pusher->client->ps.torsoAnim == BOTH_TUSKENATTACK2
 			|| pusher->client->ps.torsoAnim == BOTH_TUSKENATTACK3)
 		{
-			G_Sound(self, CHAN_BODY, G_SoundIndex("sound/movers/objects/saber_slam"));
+			G_Sound(hit_ent, CHAN_BODY, G_SoundIndex("sound/movers/objects/saber_slam"));
+		}
+
+		if (!hit_ent->client->ps.saberHolstered)
+		{
+			if (hit_ent->client->saber[0].soundOff)
+			{
+				G_Sound(hit_ent, CHAN_WEAPON, hit_ent->client->saber[0].soundOff);
+			}
+			if (hit_ent->client->saber[1].soundOff)
+			{
+				G_Sound(hit_ent, CHAN_WEAPON, hit_ent->client->saber[1].soundOff);
+			}
+			hit_ent->client->ps.saberHolstered = 2;
 		}
 	}
 	else if (pusher->client->ps.legsAnim == BOTH_A7_KICK_B) //for the roundhouse
 	{
-		G_SetAnim(self, &self->client->pers.cmd, SETANIM_BOTH, Q_irand(BOTH_KNOCKDOWN1, BOTH_KNOCKDOWN5),
+		G_SetAnim(hit_ent, &hit_ent->client->pers.cmd, SETANIM_BOTH, Q_irand(BOTH_KNOCKDOWN1, BOTH_KNOCKDOWN5),
 			SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
-		WP_BlockPointsDrain(self, FATIGUE_BLOCKPOINTDRAIN);
-		AddFatigueMeleeBonus(pusher, self);
-		G_Sound(self, CHAN_BODY, G_SoundIndex(va("sound/weapons/melee/punch%d", Q_irand(1, 4))));
+		WP_BlockPointsDrain(hit_ent, FATIGUE_BLOCKPOINTDRAIN);
+		AddFatigueMeleeBonus(pusher, hit_ent);
+		G_Sound(hit_ent, CHAN_BODY, G_SoundIndex(va("sound/weapons/melee/punch%d", Q_irand(1, 4))));
+
+		if (!hit_ent->client->ps.saberHolstered)
+		{
+			if (hit_ent->client->saber[0].soundOff)
+			{
+				G_Sound(hit_ent, CHAN_WEAPON, hit_ent->client->saber[0].soundOff);
+			}
+			if (hit_ent->client->saber[1].soundOff)
+			{
+				G_Sound(hit_ent, CHAN_WEAPON, hit_ent->client->saber[1].soundOff);
+			}
+			hit_ent->client->ps.saberHolstered = 2;
+		}
 	}
 	else if (pusher->client->ps.legsAnim == BOTH_A7_KICK_B2) //for the backkick
 	{
-		G_SetAnim(self, &self->client->pers.cmd, SETANIM_BOTH, BOTH_KNOCKDOWN5,
+		G_SetAnim(hit_ent, &hit_ent->client->pers.cmd, SETANIM_BOTH, BOTH_KNOCKDOWN5,
 			SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
-		WP_BlockPointsDrain(self, FATIGUE_BLOCKPOINTDRAIN);
-		AddFatigueMeleeBonus(pusher, self);
-		G_Sound(self, CHAN_BODY, G_SoundIndex(va("sound/weapons/melee/punch%d", Q_irand(1, 4))));
+		WP_BlockPointsDrain(hit_ent, FATIGUE_BLOCKPOINTDRAIN);
+		AddFatigueMeleeBonus(pusher, hit_ent);
+		G_Sound(hit_ent, CHAN_BODY, G_SoundIndex(va("sound/weapons/melee/punch%d", Q_irand(1, 4))));
+
+		if (!hit_ent->client->ps.saberHolstered)
+		{
+			if (hit_ent->client->saber[0].soundOff)
+			{
+				G_Sound(hit_ent, CHAN_WEAPON, hit_ent->client->saber[0].soundOff);
+			}
+			if (hit_ent->client->saber[1].soundOff)
+			{
+				G_Sound(hit_ent, CHAN_WEAPON, hit_ent->client->saber[1].soundOff);
+			}
+			hit_ent->client->ps.saberHolstered = 2;
+		}
 	}
 	else if (pusher->client->ps.legsAnim == BOTH_A7_KICK_B3) //for the backkick
 	{
-		G_SetAnim(self, &self->client->pers.cmd, SETANIM_BOTH, BOTH_KNOCKDOWN4,
+		G_SetAnim(hit_ent, &hit_ent->client->pers.cmd, SETANIM_BOTH, BOTH_KNOCKDOWN4,
 			SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
-		WP_BlockPointsDrain(self, FATIGUE_BLOCKPOINTDRAIN);
-		AddFatigueMeleeBonus(pusher, self);
-		G_Sound(self, CHAN_BODY, G_SoundIndex(va("sound/weapons/melee/punch%d", Q_irand(1, 4))));
+		WP_BlockPointsDrain(hit_ent, FATIGUE_BLOCKPOINTDRAIN);
+		AddFatigueMeleeBonus(pusher, hit_ent);
+		G_Sound(hit_ent, CHAN_BODY, G_SoundIndex(va("sound/weapons/melee/punch%d", Q_irand(1, 4))));
+
+		if (!hit_ent->client->ps.saberHolstered)
+		{
+			if (hit_ent->client->saber[0].soundOff)
+			{
+				G_Sound(hit_ent, CHAN_WEAPON, hit_ent->client->saber[0].soundOff);
+			}
+			if (hit_ent->client->saber[1].soundOff)
+			{
+				G_Sound(hit_ent, CHAN_WEAPON, hit_ent->client->saber[1].soundOff);
+			}
+			hit_ent->client->ps.saberHolstered = 2;
+		}
 	}
 	else if (pusher->client->ps.legsAnim == BOTH_A7_KICK_R || pusher->client->ps.legsAnim == BOTH_A7_KICK_L)
 	{
-		G_SetAnim(self, &self->client->pers.cmd, SETANIM_BOTH, BOTH_KNOCKDOWN2,
+		G_SetAnim(hit_ent, &hit_ent->client->pers.cmd, SETANIM_BOTH, BOTH_KNOCKDOWN2,
 			SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
-		WP_BlockPointsDrain(self, FATIGUE_BLOCKPOINTDRAIN);
-		AddFatigueMeleeBonus(pusher, self);
-		G_Sound(self, CHAN_BODY, G_SoundIndex(va("sound/weapons/melee/punch%d", Q_irand(1, 4))));
+		WP_BlockPointsDrain(hit_ent, FATIGUE_BLOCKPOINTDRAIN);
+		AddFatigueMeleeBonus(pusher, hit_ent);
+		G_Sound(hit_ent, CHAN_BODY, G_SoundIndex(va("sound/weapons/melee/punch%d", Q_irand(1, 4))));
+
+		if (!hit_ent->client->ps.saberHolstered)
+		{
+			if (hit_ent->client->saber[0].soundOff)
+			{
+				G_Sound(hit_ent, CHAN_WEAPON, hit_ent->client->saber[0].soundOff);
+			}
+			if (hit_ent->client->saber[1].soundOff)
+			{
+				G_Sound(hit_ent, CHAN_WEAPON, hit_ent->client->saber[1].soundOff);
+			}
+			hit_ent->client->ps.saberHolstered = 2;
+		}
 	}
 	else if (pusher->client->ps.torsoAnim == BOTH_A7_SLAP_R || pusher->client->ps.torsoAnim == BOTH_SMACK_R)
 		//for the r slap
 	{
-		G_SetAnim(self, &self->client->pers.cmd, SETANIM_BOTH, BOTH_SLAPDOWNRIGHT,
+		G_SetAnim(hit_ent, &hit_ent->client->pers.cmd, SETANIM_BOTH, BOTH_SLAPDOWNRIGHT,
 			SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
-		WP_BlockPointsDrain(self, FATIGUE_BLOCKPOINTDRAIN);
-		AddFatigueMeleeBonus(pusher, self);
-		G_Sound(self, CHAN_BODY, G_SoundIndex(va("sound/weapons/melee/punch%d", Q_irand(1, 4))));
+		WP_BlockPointsDrain(hit_ent, FATIGUE_BLOCKPOINTDRAIN);
+		AddFatigueMeleeBonus(pusher, hit_ent);
+		G_Sound(hit_ent, CHAN_BODY, G_SoundIndex(va("sound/weapons/melee/punch%d", Q_irand(1, 4))));
+
+		if (!hit_ent->client->ps.saberHolstered)
+		{
+			if (hit_ent->client->saber[0].soundOff)
+			{
+				G_Sound(hit_ent, CHAN_WEAPON, hit_ent->client->saber[0].soundOff);
+			}
+			if (hit_ent->client->saber[1].soundOff)
+			{
+				G_Sound(hit_ent, CHAN_WEAPON, hit_ent->client->saber[1].soundOff);
+			}
+			hit_ent->client->ps.saberHolstered = 2;
+		}
 	}
 	else if (pusher->client->ps.torsoAnim == BOTH_A7_SLAP_L || pusher->client->ps.torsoAnim == BOTH_SMACK_L)
 		//for the l slap
 	{
-		G_SetAnim(self, &self->client->pers.cmd, SETANIM_BOTH, BOTH_SLAPDOWNLEFT,
+		G_SetAnim(hit_ent, &hit_ent->client->pers.cmd, SETANIM_BOTH, BOTH_SLAPDOWNLEFT,
 			SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
-		WP_BlockPointsDrain(self, FATIGUE_BLOCKPOINTDRAIN);
-		AddFatigueMeleeBonus(pusher, self);
-		G_Sound(self, CHAN_BODY, G_SoundIndex(va("sound/weapons/melee/punch%d", Q_irand(1, 4))));
+		WP_BlockPointsDrain(hit_ent, FATIGUE_BLOCKPOINTDRAIN);
+		AddFatigueMeleeBonus(pusher, hit_ent);
+		G_Sound(hit_ent, CHAN_BODY, G_SoundIndex(va("sound/weapons/melee/punch%d", Q_irand(1, 4))));
+
+		if (!hit_ent->client->ps.saberHolstered)
+		{
+			if (hit_ent->client->saber[0].soundOff)
+			{
+				G_Sound(hit_ent, CHAN_WEAPON, hit_ent->client->saber[0].soundOff);
+			}
+			if (hit_ent->client->saber[1].soundOff)
+			{
+				G_Sound(hit_ent, CHAN_WEAPON, hit_ent->client->saber[1].soundOff);
+			}
+			hit_ent->client->ps.saberHolstered = 2;
+		}
 	}
 	else if (pusher->client->ps.torsoAnim == BOTH_A7_HILT) //for the hiltbash
 	{
-		G_SetAnim(self, &self->client->pers.cmd, SETANIM_BOTH, BOTH_BASHED1,
+		G_SetAnim(hit_ent, &hit_ent->client->pers.cmd, SETANIM_BOTH, BOTH_BASHED1,
 			SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
-		WP_BlockPointsDrain(self, FATIGUE_BLOCKPOINTDRAIN);
-		AddFatigueMeleeBonus(pusher, self);
-		G_Sound(self, CHAN_BODY, G_SoundIndex("sound/movers/objects/saber_slam"));
+		WP_BlockPointsDrain(hit_ent, FATIGUE_BLOCKPOINTDRAIN);
+		AddFatigueMeleeBonus(pusher, hit_ent);
+		G_Sound(hit_ent, CHAN_BODY, G_SoundIndex("sound/movers/objects/saber_slam"));
 	}
 	else
 	{
 		//if anything else other than kick/slap/roundhouse or karate
-		G_SetAnim(self, &self->client->pers.cmd, SETANIM_BOTH, Q_irand(BOTH_KNOCKDOWN1, BOTH_KNOCKDOWN2),
+		G_SetAnim(hit_ent, &hit_ent->client->pers.cmd, SETANIM_BOTH, Q_irand(BOTH_KNOCKDOWN1, BOTH_KNOCKDOWN2),
 			SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
-		WP_BlockPointsDrain(self, FATIGUE_BP_ABSORB);
-		G_Sound(self, CHAN_BODY, G_SoundIndex(va("sound/weapons/melee/punch%d", Q_irand(1, 4))));
+		WP_BlockPointsDrain(hit_ent, FATIGUE_BP_ABSORB);
+		G_Sound(hit_ent, CHAN_BODY, G_SoundIndex(va("sound/weapons/melee/punch%d", Q_irand(1, 4))));
+
+		if (!hit_ent->client->ps.saberHolstered)
+		{
+			if (hit_ent->client->saber[0].soundOff)
+			{
+				G_Sound(hit_ent, CHAN_WEAPON, hit_ent->client->saber[0].soundOff);
+			}
+			if (hit_ent->client->saber[1].soundOff)
+			{
+				G_Sound(hit_ent, CHAN_WEAPON, hit_ent->client->saber[1].soundOff);
+			}
+			hit_ent->client->ps.saberHolstered = 2;
+		}
 	}
 	return qtrue;
 }

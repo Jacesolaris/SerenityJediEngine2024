@@ -30,7 +30,7 @@ extern void NPC_AimAdjust(int change);
 extern qboolean WP_LobFire(const gentity_t* self, vec3_t start, vec3_t target, vec3_t mins, vec3_t maxs, int clipmask,
 	vec3_t velocity, qboolean trace_path, int ignore_ent_num, int enemy_num,
 	float min_speed, float max_speed, float ideal_speed, qboolean must_hit);
-extern void G_SoundOnEnt(gentity_t* ent, soundChannel_t channel, const char* soundPath);
+extern void G_SoundOnEnt(gentity_t* ent, soundChannel_t channel, const char* sound_path);
 
 extern qboolean PM_CrouchAnim(int anim);
 

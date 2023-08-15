@@ -608,7 +608,7 @@ void NPC_JumpAnimation()
 }
 
 //make sound for jump
-extern void G_SoundOnEnt(gentity_t* ent, soundChannel_t channel, const char* soundPath);
+extern void G_SoundOnEnt(gentity_t* ent, soundChannel_t channel, const char* sound_path);
 extern void JET_FlyStart(gentity_t* self);
 
 void NPC_JumpSound()

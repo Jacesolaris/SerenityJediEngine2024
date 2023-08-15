@@ -810,7 +810,7 @@ using animEventType_t = enum
 	//NOTENOTE:  Be sure to update animEventTypeTable and ParseAnimationEvtBlock(...) if you change this enum list!
 	AEV_NONE,
 	AEV_SOUND,
-	//# animID AEV_SOUND framenum soundpath randomlow randomhi chancetoplay
+	//# animID AEV_SOUND framenum sound_path randomlow randomhi chancetoplay
 	AEV_FOOTSTEP,
 	//# animID AEV_FOOTSTEP framenum footstepType chancetoplay
 	AEV_EFFECT,
@@ -820,7 +820,7 @@ using animEventType_t = enum
 	AEV_MOVE,
 	//# animID AEV_MOVE framenum forwardpush rightpush uppush
 	AEV_SOUNDCHAN,
-	//# animID AEV_SOUNDCHAN framenum CHANNEL soundpath randomlow randomhi chancetoplay
+	//# animID AEV_SOUNDCHAN framenum CHANNEL sound_path randomlow randomhi chancetoplay
 	AEV_SABER_SWING,
 	//# animID AEV_SABER_SWING framenum CHANNEL randomlow randomhi chancetoplay
 	AEV_SABER_SPIN,

@@ -5016,7 +5016,7 @@ void UI_GetVideoSetup()
 static void UI_SetSexandSoundForModel(const char* char_model)
 {
 	int f;
-	char soundpath[MAX_QPATH]{};
+	char sound_path[MAX_QPATH]{};
 	qboolean isFemale = qfalse;
 
 	int i = ui.FS_FOpenFile(va("models/players/%s/sounds.cfg", char_model), &f, FS_READ);
@@ -5028,16 +5028,16 @@ static void UI_SetSexandSoundForModel(const char* char_model)
 		return;
 	}
 
-	soundpath[0] = 0;
+	sound_path[0] = 0;
 
-	ui.FS_Read(&soundpath, i, f);
+	ui.FS_Read(&sound_path, i, f);
 
-	while (i >= 0 && soundpath[i] != '\n')
+	while (i >= 0 && sound_path[i] != '\n')
 	{
-		if (soundpath[i] == 'f')
+		if (sound_path[i] == 'f')
 		{
 			isFemale = qtrue;
-			soundpath[i] = 0;
+			sound_path[i] = 0;
 		}
 
 		i--;
@@ -5045,15 +5045,15 @@ static void UI_SetSexandSoundForModel(const char* char_model)
 
 	i = 0;
 
-	while (soundpath[i] && soundpath[i] != '\r' && soundpath[i] != '\n')
+	while (sound_path[i] && sound_path[i] != '\r' && sound_path[i] != '\n')
 	{
 		i++;
 	}
-	soundpath[i] = 0;
+	sound_path[i] = 0;
 
 	ui.FS_FCloseFile(f);
 
-	Cvar_Set("snd", soundpath);
+	Cvar_Set("snd", sound_path);
 	if (isFemale)
 	{
 		Cvar_Set("sex", "f");

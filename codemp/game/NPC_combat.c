@@ -459,7 +459,7 @@ G_SetEnemy
 void G_AimSet(const gentity_t* self, int aim);
 extern void Saboteur_Cloak(gentity_t* self);
 extern gentity_t* G_CheckControlledTurretEnemy(const gentity_t* self, gentity_t* enemy, qboolean validate);
-extern void G_SoundOnEnt(gentity_t* ent, int channel, const char* soundPath);
+extern void G_SoundOnEnt(gentity_t* ent, soundChannel_t channel, const char* sound_path);
 
 void G_SetEnemy(gentity_t* self, gentity_t* enemy)
 {

@@ -62,12 +62,12 @@ hstring modelsAlreadyDone[MAX_MODELS_PER_LEVEL];
 
 stringID_table_t animEventTypeTable[] =
 {
-	ENUM2STRING(AEV_SOUND), //# animID AEV_SOUND framenum soundpath randomlow randomhi chancetoplay
+	ENUM2STRING(AEV_SOUND), //# animID AEV_SOUND framenum sound_path randomlow randomhi chancetoplay
 	ENUM2STRING(AEV_FOOTSTEP), //# animID AEV_FOOTSTEP framenum footstepType
 	ENUM2STRING(AEV_EFFECT), //# animID AEV_EFFECT framenum effectpath boltName
 	ENUM2STRING(AEV_FIRE), //# animID AEV_FIRE framenum altfire chancetofire
 	ENUM2STRING(AEV_MOVE), //# animID AEV_MOVE framenum forwardpush rightpush uppush
-	ENUM2STRING(AEV_SOUNDCHAN), //# animID AEV_SOUNDCHAN framenum CHANNEL soundpath randomlow randomhi chancetoplay
+	ENUM2STRING(AEV_SOUNDCHAN), //# animID AEV_SOUNDCHAN framenum CHANNEL sound_path randomlow randomhi chancetoplay
 	ENUM2STRING(AEV_SABER_SWING), //# animID AEV_SABER_SWING framenum CHANNEL randomlow randomhi chancetoplay
 	ENUM2STRING(AEV_SABER_SPIN), //# animID AEV_SABER_SPIN framenum CHANNEL chancetoplay
 	//must be terminated
@@ -576,7 +576,7 @@ static void ParseAnimationEvtBlock(const int gla_index, const unsigned short mod
 		//now read out the proper data based on the type
 		switch (anim_events[cur_anim_event].eventType)
 		{
-		case AEV_SOUNDCHAN: //# animID AEV_SOUNDCHAN framenum CHANNEL soundpath randomlow randomhi chancetoplay
+		case AEV_SOUNDCHAN: //# animID AEV_SOUNDCHAN framenum CHANNEL sound_path randomlow randomhi chancetoplay
 			token = COM_Parse(text_p);
 			if (!token)
 			{
@@ -611,7 +611,7 @@ static void ParseAnimationEvtBlock(const int gla_index, const unsigned short mod
 				anim_events[cur_anim_event].eventData[AED_SOUNDCHANNEL] = CHAN_AUTO;
 			}
 			//fall through to normal sound
-		case AEV_SOUND: //# animID AEV_SOUND framenum soundpath randomlow randomhi chancetoplay
+		case AEV_SOUND: //# animID AEV_SOUND framenum sound_path randomlow randomhi chancetoplay
 			//get soundstring
 			token = COM_Parse(text_p);
 			if (!token)

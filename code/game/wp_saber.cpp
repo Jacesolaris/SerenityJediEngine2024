@@ -262,6 +262,7 @@ extern void G_StasisMissile(gentity_t* ent, gentity_t* missile);
 void G_Beskar_Attack_Bounce(const gentity_t* self, gentity_t* other);
 extern void jet_fly_stop(gentity_t* self);
 extern qboolean PM_InSlowBounce(const playerState_t* ps);
+extern qboolean PM_InSlopeAnim(int anim);
 
 qboolean g_saberNoEffects = qfalse;
 qboolean g_noClashFlare = qfalse;
@@ -13906,8 +13907,7 @@ void wp_saber_start_missile_block_check(gentity_t* self, const usercmd_t* ucmd)
 				VectorMA(incoming->currentOrigin, scale, ent_dir, start);
 				VectorCopy(self->currentOrigin, end);
 				end[2] += self->maxs[2] * 0.75f;
-				gi.trace(&trace, start, incoming->mins, incoming->maxs, end, incoming->s.number, MASK_SHOT, G2_COLLIDE,
-					10);
+				gi.trace(&trace, start, incoming->mins, incoming->maxs, end, incoming->s.number, MASK_SHOT, G2_COLLIDE,	10);
 
 				jedi_dodge_evasion(self, incoming->owner, &trace, HL_NONE);
 			}
@@ -17902,7 +17902,8 @@ int IsPressingDashButton(const gentity_t* self)
 		&& !self->client->hookhasbeenfired
 		&& (!(self->client->buttons & BUTTON_KICK))
 		&& (!(self->client->buttons & BUTTON_USE))
-		&& self->client->buttons & BUTTON_DASH)
+		&& self->client->buttons & BUTTON_DASH
+		&& self->client->ps.pm_flags & PMF_DASH_HELD)
 	{
 		return qtrue;
 	}
@@ -18053,6 +18054,11 @@ void ForceSpeedDash(gentity_t* self)
 		return;
 	}
 
+	if (PM_InSlopeAnim(self->client->ps.legsAnim))
+	{
+		return;
+	}
+
 	if (self->client->ps.forcePowerDebounce[FP_SPEED] > level.time)
 	{
 		//stops it while using it and also after using it, up to 3 second delay
@@ -18086,7 +18092,7 @@ void ForceSpeedDash(gentity_t* self)
 
 	if (self->client->ps.forcePowersActive & 1 << FP_SPEED) //If using speed at same time just in case
 	{
-		if (PM_RunningAnim(self->client->ps.legsAnim))
+		if (PM_RunningAnim(self->client->ps.legsAnim) && IsPressingDashButton(self))
 		{
 			ForceDashAnim(self);
 		}
@@ -18097,6 +18103,22 @@ void ForceSpeedDash(gentity_t* self)
 	}
 
 	if (self->client->ps.saberLockTime > level.time)
+	{
+		return;
+	}
+
+	if (!IsPressingDashButton(self))
+	{
+		//it's already turned on.  turn it off.
+		return;
+	}
+
+	if (!(self->client->ps.communicatingflags & 1 << DASHING))
+	{
+		return;
+	}
+
+	if (!(self->client->ps.pm_flags & PMF_DASH_HELD))
 	{
 		return;
 	}
@@ -25605,7 +25627,7 @@ void ForceGrasp(gentity_t* self)
 			G_SoundOnEnt(self, CHAN_BODY, "sound/weapons/force/grab.mp3");
 		}
 	}
-	}
+}
 
 extern void WP_FireBlast(gentity_t* ent, int force_level);
 
@@ -26095,25 +26117,11 @@ void WP_ForcePowerStart(gentity_t* self, const forcePowers_t force_power, int ov
 		}
 		self->client->ps.forcePowersActive |= 1 << force_power;
 
-		if (IsPressingDashButton(self))
-		{
-			//
-		}
-		else
-		{
-			self->s.loopSound = G_SoundIndex("sound/weapons/force/speedloop.wav");
-		}
+		self->s.loopSound = G_SoundIndex("sound/weapons/force/speedloop.wav");
 
 		if (self->client->ps.forcePowerLevel[force_power] > FORCE_LEVEL_2)
 		{
-			if (IsPressingDashButton(self))
-			{
-				//
-			}
-			else
-			{
-				self->client->ps.forcePowerDebounce[force_power] = level.time;
-			}
+			self->client->ps.forcePowerDebounce[force_power] = level.time;
 		}
 		break;
 	case FP_PUSH:
@@ -26643,8 +26651,8 @@ void WP_ForcePowerStop(gentity_t* self, const forcePowers_t force_power)
 								G_AngerAlert(grip_ent);
 							}
 						}
+					}
 				}
-			}
 				else
 				{
 					grip_ent->s.eFlags &= ~EF_FORCE_GRIPPED;
@@ -26672,10 +26680,10 @@ void WP_ForcePowerStop(gentity_t* self, const forcePowers_t force_power)
 						grip_ent->s.pos.trTime = level.time;
 					}
 				}
-		}
+			}
 			self->s.loopSound = 0;
 			self->client->ps.forceGripEntityNum = ENTITYNUM_NONE;
-	}
+		}
 		if (self->client->ps.torsoAnim == BOTH_FORCEGRIP_HOLD
 			|| self->client->ps.torsoAnim == BOTH_FORCEGRIP_OLD)
 		{
@@ -26948,8 +26956,8 @@ void WP_ForcePowerStop(gentity_t* self, const forcePowers_t force_power)
 								G_AngerAlert(grip_ent);
 							}
 						}
+					}
 				}
-			}
 				else
 				{
 					grip_ent->s.eFlags &= ~EF_FORCE_GRABBED;
@@ -26977,10 +26985,10 @@ void WP_ForcePowerStop(gentity_t* self, const forcePowers_t force_power)
 						grip_ent->s.pos.trTime = level.time;
 					}
 				}
-		}
+			}
 			self->s.loopSound = 0;
 			self->client->ps.forceGripEntityNum = ENTITYNUM_NONE;
-}
+		}
 		if (self->client->ps.torsoAnim == BOTH_FORCEGRIP_HOLD)
 		{
 			NPC_SetAnim(self, SETANIM_BOTH, BOTH_FORCEGRIP_RELEASE, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
@@ -27007,7 +27015,7 @@ void WP_ForcePowerStop(gentity_t* self, const forcePowers_t force_power)
 		break;
 	default:
 		break;
-}
+	}
 }
 
 void WP_ForceForceThrow(gentity_t* thrower)
@@ -28472,8 +28480,8 @@ static void wp_force_power_run(gentity_t* self, forcePowers_t force_power, userc
 				}
 				grip_ent->painDebounceTime = level.time + 2000;
 			}
-			}
 		}
+	}
 	break;
 	case FP_REPULSE:
 	{
@@ -28654,7 +28662,7 @@ static void wp_force_power_run(gentity_t* self, forcePowers_t force_power, userc
 	default:
 		break;
 	}
-	}
+}
 
 void WP_CheckForcedPowers(gentity_t* self, usercmd_t* ucmd)
 {

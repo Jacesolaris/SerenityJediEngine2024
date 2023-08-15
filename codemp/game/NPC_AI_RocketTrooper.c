@@ -7,7 +7,7 @@ extern void NPC_BSST_Patrol(void);
 extern void NPC_BehaviorSet_Stormtrooper(int b_state);
 
 extern void RT_FlyStart(gentity_t* self);
-extern void G_SoundOnEnt(gentity_t* ent, soundChannel_t channel, const char* soundPath);
+extern void G_SoundOnEnt(gentity_t* ent, soundChannel_t channel, const char* sound_path);
 
 #define VELOCITY_DECAY		0.7f
 

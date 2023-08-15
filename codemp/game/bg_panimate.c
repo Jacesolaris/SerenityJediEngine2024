@@ -4780,12 +4780,12 @@ void BG_AnimsetFree()
 
 stringID_table_t animEventTypeTable[MAX_ANIM_EVENTS + 1] =
 {
-	ENUM2STRING(AEV_SOUND), //# animID AEV_SOUND framenum soundpath randomlow randomhi chance to play
+	ENUM2STRING(AEV_SOUND), //# animID AEV_SOUND framenum sound_path randomlow randomhi chance to play
 	ENUM2STRING(AEV_FOOTSTEP), //# animID AEV_FOOTSTEP framenum footstepType
 	ENUM2STRING(AEV_EFFECT), //# animID AEV_EFFECT framenum effect path boltName
 	ENUM2STRING(AEV_FIRE), //# animID AEV_FIRE framenum alt fire chance to fire
 	ENUM2STRING(AEV_MOVE), //# animID AEV_MOVE framenum forward push right push up push
-	ENUM2STRING(AEV_SOUNDCHAN), //# animID AEV_SOUNDCHAN framenum CHANNEL soundpath randomlow randomhi chance to play
+	ENUM2STRING(AEV_SOUNDCHAN), //# animID AEV_SOUNDCHAN framenum CHANNEL sound_path randomlow randomhi chance to play
 	ENUM2STRING(AEV_SABER_SWING), //# animID AEV_SABER_SWING framenum CHANNEL randomlow randomhi chance to play
 	ENUM2STRING(AEV_SABER_SPIN), //# animID AEV_SABER_SPIN framenum CHANNEL chance to play
 	ENUM2STRING(AEV_AMBIENT),
@@ -4877,7 +4877,7 @@ void ParseAnimationEvtBlock(const char* aeb_filename, animevent_t* anim_events, 
 		if (!Q_stricmp(token, "AEV_AMBIENT"))
 		{
 			//It's an ambient sound, do your thing.
-			//AEV_AMBIENT intervals random factor soundpath randomlow randomhi chance to play
+			//AEV_AMBIENT intervals random factor sound_path randomlow randomhi chance to play
 			//see if this frame already has an event of this type on it, if so, overwrite it
 			cur_anim_event = CheckAnimFrameForEventType(anim_events, 0, AEV_AMBIENT);
 			if (cur_anim_event == -1)
@@ -5086,7 +5086,7 @@ void ParseAnimationEvtBlock(const char* aeb_filename, animevent_t* anim_events, 
 		//now read out the proper data based on the type
 		switch (anim_events[cur_anim_event].eventType)
 		{
-		case AEV_SOUNDCHAN: //# animID AEV_SOUNDCHAN framenum CHANNEL soundpath randomlow randomhi chance to play
+		case AEV_SOUNDCHAN: //# animID AEV_SOUNDCHAN framenum CHANNEL sound_path randomlow randomhi chance to play
 			token = COM_Parse(text_p);
 			if (!token)
 				break;
@@ -5107,7 +5107,7 @@ void ParseAnimationEvtBlock(const char* aeb_filename, animevent_t* anim_events, 
 				anim_events[cur_anim_event].eventData[AED_SOUNDCHANNEL] = CHAN_AUTO;
 
 			//fall through to normal sound
-		case AEV_SOUND: //# animID AEV_SOUND framenum soundpath randomlow randomhi chance to play
+		case AEV_SOUND: //# animID AEV_SOUND framenum sound_path randomlow randomhi chance to play
 			//get sound string
 			token = COM_Parse(text_p);
 			if (!token)

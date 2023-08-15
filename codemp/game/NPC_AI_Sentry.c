@@ -24,7 +24,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #include "g_nav.h"
 
 extern gitem_t* BG_FindItemForAmmo(ammo_t ammo);
-extern void G_SoundOnEnt(gentity_t* ent, soundChannel_t channel, const char* soundPath);
+extern void G_SoundOnEnt(gentity_t* ent, soundChannel_t channel, const char* sound_path);
 
 #define MIN_DISTANCE		256
 #define MIN_DISTANCE_SQR	( MIN_DISTANCE * MIN_DISTANCE )

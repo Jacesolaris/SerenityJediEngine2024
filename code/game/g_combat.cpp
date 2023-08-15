@@ -6170,6 +6170,21 @@ void G_Knockdown(gentity_t* self, gentity_t* attacker, const vec3_t push_dir, fl
 
 		G_CheckLedgeDive(self, 72, push_dir, qfalse, qfalse);
 
+		if (self->client->ps.SaberActive())
+		{
+			if (self->client->ps.saber[1].Active())
+			{
+				//turn off second saber
+				G_Sound(self, self->client->ps.saber[1].soundOff);
+			}
+			else if (self->client->ps.saber[0].Active())
+			{
+				//turn off first
+				G_Sound(self, self->client->ps.saber[0].soundOff);
+			}
+			self->client->ps.SaberDeactivate();
+		}
+
 		if (!PM_RollingAnim(self->client->ps.legsAnim)
 			&& !PM_InKnockDown(&self->client->ps))
 		{
@@ -6298,6 +6313,21 @@ void G_KnockOver(gentity_t* self, const gentity_t* attacker, const vec3_t push_d
 	{
 		NPC_SetPainEvent(self);
 		G_CheckLedgeDive(self, 72, push_dir, qfalse, qfalse);
+
+		if (self->client->ps.SaberActive())
+		{
+			if (self->client->ps.saber[1].Active())
+			{
+				//turn off second saber
+				G_Sound(self, self->client->ps.saber[1].soundOff);
+			}
+			else if (self->client->ps.saber[0].Active())
+			{
+				//turn off first
+				G_Sound(self, self->client->ps.saber[0].soundOff);
+			}
+			self->client->ps.SaberDeactivate();
+		}
 
 		if (!PM_RollingAnim(self->client->ps.legsAnim)
 			&& !PM_InKnockDown(&self->client->ps))

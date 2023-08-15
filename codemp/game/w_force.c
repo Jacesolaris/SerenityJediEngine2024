@@ -66,7 +66,7 @@ extern qboolean in_camera;
 extern qboolean PM_RunningAnim(int anim);
 extern void g_reflect_missile_auto(const gentity_t* ent, gentity_t* missile, vec3_t forward);
 extern void g_reflect_missile_bot(const gentity_t* ent, gentity_t* missile, vec3_t forward);
-extern void G_SoundOnEnt(gentity_t* ent, soundChannel_t channel, const char* soundPath);
+extern void G_SoundOnEnt(gentity_t* ent, soundChannel_t channel, const char* sound_path);
 extern saberInfo_t* BG_MySaber(int client_num, int saber_num);
 extern qboolean G_ControlledByPlayer(const gentity_t* self);
 extern qboolean PM_SaberCanInterruptMove(int move, int anim);
@@ -2318,7 +2318,8 @@ int IsPressingDashButton(const gentity_t* self)
 		&& !self->client->hookhasbeenfired
 		&& (!(self->client->buttons & BUTTON_KICK))
 		&& (!(self->client->buttons & BUTTON_USE))
-		&& self->client->buttons & BUTTON_DASH)
+		&& self->client->buttons & BUTTON_DASH
+		&& self->client->ps.pm_flags & PMF_DASH_HELD)
 	{
 		return qtrue;
 	}
@@ -2500,6 +2501,12 @@ void ForceSpeedDash(gentity_t* self)
 	{
 		return;
 	}
+
+	if (PM_InSlopeAnim(self->client->ps.legsAnim))
+	{
+		return;
+	}
+
 	if (self->client->ps.fd.forcePowerDebounce[FP_SPEED] > level.time)
 	{
 		//stops it while using it and also after using it, up to 3 second delay
@@ -2544,6 +2551,22 @@ void ForceSpeedDash(gentity_t* self)
 	}
 
 	if (self->client->ps.saberLockTime > level.time)
+	{
+		return;
+	}
+
+	if (!IsPressingDashButton(self))
+	{
+		//it's already turned on.  turn it off.
+		return;
+	}
+
+	if (!(self->client->ps.communicatingflags & 1 << DASHING))
+	{
+		return;
+	}
+
+	if (!(self->client->ps.pm_flags & PMF_DASH_HELD))
 	{
 		return;
 	}
@@ -8624,7 +8647,7 @@ void WP_ForcePowersUpdate(gentity_t* self, usercmd_t* ucmd)
 	if (self->client->ps.groundEntityNum != ENTITYNUM_NONE)
 	{
 		self->client->fjDidJump = qfalse;
-	}
+			}
 
 	if (self->client->ps.fd.forceJumpCharge && self->client->ps.groundEntityNum == ENTITYNUM_NONE && self->client->
 		fjDidJump)
@@ -9007,7 +9030,7 @@ powersetcheck:
 
 		self->client->ps.fd.forcePower = prepower - dif;
 	}
-}
+		}
 
 void WP_BlockPointsUpdate(const gentity_t* self)
 {

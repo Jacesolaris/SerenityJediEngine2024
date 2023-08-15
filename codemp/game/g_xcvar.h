@@ -194,9 +194,6 @@ XCVAR_DEF(g_dodgemulti, "10.0", NULL, CVAR_LATCH, qfalse)
 
 XCVAR_DEF(g_ffaRespawnTimer, "1", NULL, CVAR_ARCHIVE, qtrue)
 
-XCVAR_DEF(g_debugdodge, "0", NULL, CVAR_CHEAT, qtrue)
-
-XCVAR_DEF(g_allowBodyDodge, "1", NULL, CVAR_SERVERINFO | CVAR_ARCHIVE, qtrue)
 XCVAR_DEF(bot_cpu_usage, "0", NULL, CVAR_NONE, qfalse)
 XCVAR_DEF(g_deathfx, "1", NULL, CVAR_ARCHIVE, qtrue)
 

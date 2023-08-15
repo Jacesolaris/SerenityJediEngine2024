@@ -5250,6 +5250,11 @@ static const char* g_bindCommands[] = {
 	"+button13",
 	"+button14",
 	"+button15",
+	"+button16",
+	"+button17",
+	"+button18",
+	"+button19",
+	"+button20",
 	"weather",
 	"saberdown",
 	//emotes
@@ -5741,7 +5746,7 @@ void Item_Model_Paint(itemDef_t* item)
 
 			//update saber models
 			UI_SaberAttachToChar(item);
-		}
+}
 	}
 #endif
 
@@ -5845,7 +5850,7 @@ void Item_Model_Paint(itemDef_t* item)
 			ent.shaderRGBA[2] = ui_char_color_blue.integer;
 			ent.shaderRGBA[3] = 255;
 			//			UI_TalkingHead(item);
-		}
+	}
 		if (item->flags & ITF_ISANYSABER)
 		{//UGH, draw the saber blade!
 			UI_SaberDrawBlades(item, origin, angles);
@@ -6032,10 +6037,10 @@ void Item_ListBox_Paint(itemDef_t* item)
 						color[2] = ui_char_color_blue.integer / COLOR_MAX;
 						color[3] = 1.0f;
 						DC->setColor(color);
-					}
+			}
 #endif
 					DC->drawHandlePic(x + 1, y + 1, listPtr->elementWidth - 2, listPtr->elementHeight - 2, image);
-				}
+		}
 
 				if (i == item->cursorPos)
 				{
@@ -6052,8 +6057,8 @@ void Item_ListBox_Paint(itemDef_t* item)
 				x += listPtr->elementWidth;
 				listPtr->endPos++;
 				// fit++;
-			}
-		}
+	}
+	}
 		else
 		{
 			//
@@ -6068,7 +6073,7 @@ void Item_ListBox_Paint(itemDef_t* item)
 				item->window.foreColor, text, 0, 0, item->textStyle, item->i_menu_font);
 		}
 #endif
-	}
+}
 	// A vertical list box
 	else
 	{
@@ -6136,11 +6141,11 @@ void Item_ListBox_Paint(itemDef_t* item)
 								color[2] = ui_char_color_blue.integer / COLOR_MAX;
 								color[3] = 1.0f;
 								DC->setColor(color);
-							}
+					}
 #endif
 							DC->drawHandlePic(x + 1, y + 1, listPtr->elementWidth - 2, listPtr->elementHeight - 2,
 								image);
-						}
+				}
 
 						if (i == item->cursorPos)
 						{
@@ -6156,7 +6161,7 @@ void Item_ListBox_Paint(itemDef_t* item)
 						}
 						x += listPtr->elementWidth;
 						listPtr->endPos++;
-					}
+			}
 
 					sizeHeight -= listPtr->elementHeight;
 					if (sizeHeight < listPtr->elementHeight)
@@ -6169,8 +6174,8 @@ void Item_ListBox_Paint(itemDef_t* item)
 					listPtr->endPos++;
 					startPos = listPtr->endPos;
 					y += listPtr->elementHeight;
-				}
-			}
+		}
+	}
 			// single column
 			else
 			{
@@ -7676,7 +7681,7 @@ qboolean ItemParse_asset_model(itemDef_t* item, const int handle)
 		trap->Cvar_VariableStringBuffer("ui_char_model", ui_char_model, sizeof ui_char_model);
 		Com_sprintf(modelPath, sizeof modelPath, "models/players/%s/model.glm", ui_char_model);
 		return ItemParse_asset_model_go(item, modelPath, &animRunLength);
-	}
+}
 #endif
 	return ItemParse_asset_model_go(item, token.string, &animRunLength);
 }
@@ -8657,7 +8662,7 @@ qboolean ItemParse_cvarFloat(itemDef_t* item, const int handle)
 		return qtrue;
 	}
 	return qfalse;
-}
+	}
 
 #ifdef UI_BUILD
 char currLanguage[32][128];
@@ -8705,10 +8710,10 @@ qboolean ItemParse_cvarStrList(itemDef_t* item, const int handle)
 			// The cvar value that goes into se_language
 			trap->SE_GetLanguageName((const int)multiPtr->count, (char*)currLanguage[multiPtr->count]);
 			multiPtr->cvarStr[multiPtr->count] = currLanguage[multiPtr->count];
-		}
+	}
 #endif
 		return qtrue;
-	}
+}
 
 	if (*token.string != '{')
 	{
@@ -8928,7 +8933,7 @@ qboolean ItemParse_isSaber(itemDef_t* item, int handle)
 		else
 		{
 			item->flags &= ~ITF_ISSABER;
-		}
+}
 
 		return qtrue;
 	}
@@ -9411,9 +9416,9 @@ static void Item_TextScroll_BuildLines(itemDef_t* item)
 			w += cw;
 			lineEnd++;
 		}
-	}
+		}
 #endif
-}
+	}
 
 // Item_InitControls
 // init's special control types

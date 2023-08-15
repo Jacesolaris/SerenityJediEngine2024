@@ -78,7 +78,7 @@ qboolean switch_siege_ideal_class(const bot_state_t* bs, const char* idealclass)
 extern int rebel_attackers;
 extern int imperial_attackers;
 void bot_behave_attack_basic(bot_state_t* bs, const gentity_t* target);
-extern void G_SoundOnEnt(gentity_t* ent, soundChannel_t channel, const char* soundPath);
+extern void G_SoundOnEnt(gentity_t* ent, soundChannel_t channel, const char* sound_path);
 extern qboolean PM_SaberInBounce(int move);
 extern qboolean PM_SaberInReturn(int move);
 extern qboolean PM_SaberInStart(int move);

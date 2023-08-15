@@ -5427,6 +5427,11 @@ static const char* g_bindCommands[] =
 	"+button13",
 	"+button14",
 	"+button15",
+	"+button16",
+	"+button17",
+	"+button18",
+	"+button19",
+	"+button20",
 	"use_Cloak",
 	"weather",
 	"saberdown",
@@ -6070,7 +6075,7 @@ bool HasStringLanguageChanged(const itemDef_t* item)
 	if (!item->text || item->text[0] == '\0')
 	{
 		return false;
-	}
+}
 
 	int modificationCount;
 #ifdef JK2_MODE
@@ -6324,7 +6329,7 @@ void Item_Text_Paint(itemDef_t* item)
 		DC->drawText(item->textRect.x + item->text2alignx, item->textRect.y + item->text2aligny, item->textscale, color,
 			textPtr, 0, item->textStyle, item->font);
 	}
-}
+	}
 
 /*
 =================

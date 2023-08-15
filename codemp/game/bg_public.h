@@ -60,7 +60,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #define DEFAULT_REDTEAM_NAME	"Empire"
 #define DEFAULT_BLUETEAM_NAME	"Rebellion"
 
-#define CURRENT_SJE_CLIENTVERSION		"Year-23,Month-08,Day-14,BuildNum-11" // build date
+#define CURRENT_SJE_CLIENTVERSION		"Year-23,Month-08,Day-15,BuildNum-12" // build date
 
 #define	STEPSIZE		18
 
@@ -428,12 +428,12 @@ extern stringID_table_t footstepTypeTable[NUM_FOOTSTEP_TYPES + 1];
 typedef enum
 {//NOTENOTE:  Be sure to update animEventTypeTable and ParseAnimationEvtBlock(...) if you change this enum list!
 	AEV_NONE,
-	AEV_SOUND,		//# animID AEV_SOUND framenum soundpath randomlow randomhi chancetoplay
+	AEV_SOUND,		//# animID AEV_SOUND framenum sound_path randomlow randomhi chancetoplay
 	AEV_FOOTSTEP,	//# animID AEV_FOOTSTEP framenum footstepType chancetoplay
 	AEV_EFFECT,		//# animID AEV_EFFECT framenum effectpath boltName chancetoplay
 	AEV_FIRE,		//# animID AEV_FIRE framenum altfire chancetofire
 	AEV_MOVE,		//# animID AEV_MOVE framenum forwardpush rightpush uppush
-	AEV_SOUNDCHAN,  //# animID AEV_SOUNDCHAN framenum CHANNEL soundpath randomlow randomhi chancetoplay
+	AEV_SOUNDCHAN,  //# animID AEV_SOUNDCHAN framenum CHANNEL sound_path randomlow randomhi chancetoplay
 	AEV_SABER_SWING,  //# animID AEV_SABER_SWING framenum CHANNEL randomlow randomhi chancetoplay
 	AEV_SABER_SPIN,  //# animID AEV_SABER_SPIN framenum CHANNEL chancetoplay
 	AEV_AMBIENT,

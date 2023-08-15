@@ -122,7 +122,7 @@ extern qboolean IsCowering(const gentity_t* self);
 extern qboolean IsAnimRequiresResponce(const gentity_t* self);
 extern void ForceGrip(const gentity_t* self);
 extern void ForceDashAnimDash(gentity_t* self);
-extern qboolean WP_AbsorbKick(gentity_t* self, const gentity_t* pusher, const vec3_t push_dir);
+extern qboolean WP_AbsorbKick(gentity_t* hit_ent, const gentity_t* pusher, const vec3_t push_dir);
 extern qboolean BG_SaberInNonIdleDamageMove(const playerState_t* ps);
 extern cvar_t* g_DebugSaberCombat;
 extern qboolean wp_saber_block_check_random(gentity_t* self, vec3_t hitloc);

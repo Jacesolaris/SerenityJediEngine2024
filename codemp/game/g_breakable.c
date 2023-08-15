@@ -7,7 +7,7 @@
 #define MDL_AMMO			2
 
 extern void G_MiscModelExplosion(vec3_t mins, vec3_t maxs, int size, material_t chunkType);
-extern void G_SoundOnEnt(gentity_t* ent, soundChannel_t channel, const char* soundPath);
+extern void G_SoundOnEnt(gentity_t* ent, soundChannel_t channel, const char* sound_path);
 extern void G_Chunks(int owner, vec3_t origin, const vec3_t normal, const vec3_t mins, const vec3_t maxs,
 	float speed, int numChunks, material_t chunkType, int customChunk, float baseScale);
 

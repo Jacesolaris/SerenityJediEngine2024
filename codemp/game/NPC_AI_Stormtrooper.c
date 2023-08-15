@@ -84,7 +84,7 @@ void NPC_Saboteur_Precache(void)
 	G_SoundIndex("sound/chars/shadowtrooper/decloak.wav");
 }
 
-extern void G_SoundOnEnt(gentity_t* ent, int channel, const char* soundPath);
+extern void G_SoundOnEnt(gentity_t* ent, soundChannel_t channel, const char* sound_path);
 
 void Saboteur_Decloak(gentity_t* self, const int uncloak_time)
 {

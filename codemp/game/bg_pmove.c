@@ -2185,7 +2185,7 @@ void PM_SetSpecialMoveValues(void)
 //	return qfalse;
 //}
 
-extern void G_SoundOnEnt(gentity_t* ent, int channel, const char* soundPath);
+extern void G_SoundOnEnt(gentity_t* ent, soundChannel_t channel, const char* sound_path);
 
 static void PM_FallToDeath(gentity_t* self)
 {

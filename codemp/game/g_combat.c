@@ -5893,6 +5893,19 @@ void G_Knockdown(gentity_t* self, gentity_t* attacker, const vec3_t push_dir, fl
 		//racc - check to see if an NPC should get conventently kicked off a nearby cliff.
 		G_CheckLedgeDive(self, 72, push_dir, qfalse, qfalse);
 
+		if (!self->client->ps.saberHolstered)
+		{
+			if (self->client->saber[0].soundOff)
+			{
+				G_Sound(self, CHAN_WEAPON, self->client->saber[0].soundOff);
+			}
+			if (self->client->saber[1].soundOff)
+			{
+				G_Sound(self, CHAN_WEAPON, self->client->saber[1].soundOff);
+			}
+			self->client->ps.saberHolstered = 2;
+		}
+
 		if (!PM_RollingAnim(self->client->ps.legsAnim)
 			&& !PM_InKnockDown(&self->client->ps))
 		{
@@ -6028,6 +6041,19 @@ void G_KnockOver(gentity_t* self, gentity_t* attacker, const vec3_t push_dir, fl
 		}
 		G_CheckLedgeDive(self, 72, push_dir, qfalse, qfalse);
 
+		if (!self->client->ps.saberHolstered)
+		{
+			if (self->client->saber[0].soundOff)
+			{
+				G_Sound(self, CHAN_WEAPON, self->client->saber[0].soundOff);
+			}
+			if (self->client->saber[1].soundOff)
+			{
+				G_Sound(self, CHAN_WEAPON, self->client->saber[1].soundOff);
+			}
+			self->client->ps.saberHolstered = 2;
+		}
+
 		if (!PM_RollingAnim(self->client->ps.legsAnim)
 			&& !PM_InKnockDown(&self->client->ps))
 		{
@@ -6074,21 +6100,6 @@ void G_KnockOver(gentity_t* self, gentity_t* attacker, const vec3_t push_dir, fl
 				//player holds extra long so you have more time to decide to do the quick getup
 				if (BG_KnockDownAnim(self->client->ps.legsAnim))
 				{
-					/*if (!(self->r.svFlags & SVF_BOT))
-					{
-						self->client->ps.legsTimer += PLAYER_KNOCKOVER_HOLD_EXTRA_TIME;
-						self->client->ps.torsoTimer += PLAYER_KNOCKOVER_HOLD_EXTRA_TIME;
-					}
-					else if (self->NPC)
-					{
-						self->client->ps.legsTimer += NPC_KNOCKOVER_HOLD_EXTRA_TIME;
-						self->client->ps.torsoTimer += NPC_KNOCKOVER_HOLD_EXTRA_TIME;
-					}
-					else
-					{
-						self->client->ps.legsTimer += BOT_KNOCKOVER_HOLD_EXTRA_TIME;
-						self->client->ps.torsoTimer += BOT_KNOCKOVER_HOLD_EXTRA_TIME;
-					}*/
 					self->client->ps.legsTimer += BOT_KNOCKOVER_HOLD_EXTRA_TIME;
 					self->client->ps.torsoTimer += BOT_KNOCKOVER_HOLD_EXTRA_TIME;
 				}

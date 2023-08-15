@@ -33,7 +33,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #define LEFT_ARM_HEALTH 40
 #define RIGHT_ARM_HEALTH 40
 
-extern void G_SoundOnEnt(gentity_t* ent, soundChannel_t channel, const char* soundPath);
+extern void G_SoundOnEnt(gentity_t* ent, soundChannel_t channel, const char* sound_path);
 /*
 -------------------------
 NPC_ATST_Precache
