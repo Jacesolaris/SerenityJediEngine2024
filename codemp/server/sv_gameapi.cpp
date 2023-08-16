@@ -86,7 +86,7 @@ void GVM_ClientBegin(const int client_num)
 	ge->ClientBegin(client_num, qtrue);
 }
 
-qboolean GVM_ClientUserinfoChanged(const int client_num)
+qboolean GVM_client_userinfo_changed(const int client_num)
 {
 	if (gvm->isLegacy)
 		return static_cast<qboolean>(VM_Call(gvm, GAME_CLIENT_USERINFO_CHANGED, client_num));

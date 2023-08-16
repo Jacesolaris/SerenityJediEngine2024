@@ -576,7 +576,7 @@ static void client_clean_name(const char* in, char* out, const int outSize)
 
 /*
 ===========
-ClientUserInfoChanged
+client_userinfo_changed
 
 Called from ClientConnect when the player first connects and
 directly by the server system when the player updates a userinfo variable.

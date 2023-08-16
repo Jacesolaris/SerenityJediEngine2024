@@ -701,6 +701,9 @@ typedef struct clientPersistant_s
 	qboolean SJE_clientplugin;
 
 	int save_score;
+
+	int	padawantimer;
+	qboolean	ampadawan;
 } clientPersistant_t;
 
 typedef struct renderInfo_s
@@ -1485,7 +1488,7 @@ gentity_t* CGCam_BlockShakeMP(vec3_t org, const gentity_t* target, float intensi
 void G_MuteSound(int entnum, int channel);
 void G_Sound(gentity_t* ent, int channel, int soundIndex);
 void G_SoundAtLoc(vec3_t loc, int channel, int soundIndex);
-void G_EntitySound(gentity_t* ent, int channel, int soundIndex);
+void G_EntitySound(gentity_t* ent, soundChannel_t channel, int soundIndex);
 void TryUse(gentity_t* ent);
 void G_SendG2KillQueue(void);
 void G_KillG2Queue(int ent_num);

@@ -1334,7 +1334,7 @@ static void SV_UpdateUserinfo_f(client_t* cl)
 
 	SV_UserinfoChanged(cl);
 	// call prog code to allow overrides
-	GVM_ClientUserinfoChanged(cl - svs.clients);
+	GVM_client_userinfo_changed(cl - svs.clients);
 }
 
 using ucmd_t = struct ucmd_s

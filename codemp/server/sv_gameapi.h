@@ -24,7 +24,7 @@ void GVM_InitGame(int levelTime, int randomSeed, int restart);
 void GVM_ShutdownGame(int restart);
 char* GVM_ClientConnect(int client_num, qboolean firstTime, qboolean isBot);
 void GVM_ClientBegin(int client_num);
-qboolean GVM_ClientUserinfoChanged(int client_num);
+qboolean GVM_client_userinfo_changed(int client_num);
 void GVM_ClientDisconnect(int client_num);
 void GVM_ClientCommand(int client_num);
 void GVM_ClientThink(int client_num, usercmd_t* ucmd);

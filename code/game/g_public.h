@@ -421,7 +421,7 @@ using game_export_t = struct
 	char* (*ClientConnect)(int client_num, qboolean firstTime, SavedGameJustLoaded_e e_saved_game_just_loaded);
 
 	void (*client_begin)(int client_num, const usercmd_t* cmd, SavedGameJustLoaded_e e_saved_game_just_loaded);
-	void (*ClientUserinfoChanged)(int client_num);
+	void (*client_userinfo_changed)(int client_num);
 	void (*ClientDisconnect)(int client_num);
 	void (*ClientCommand)(int client_num);
 	void (*ClientThink)(int client_num, usercmd_t* cmd);

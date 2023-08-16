@@ -1631,7 +1631,7 @@ void G_SoundAtLoc(vec3_t loc, const int channel, const int soundIndex)
 G_EntitySound
 =============
 */
-void G_EntitySound(gentity_t* ent, const int channel, const int soundIndex)
+void G_EntitySound(gentity_t* ent, soundChannel_t channel, const int soundIndex)
 {
 	gentity_t* te = G_TempEntity(ent->r.currentOrigin, EV_ENTITY_SOUND);
 	te->s.eventParm = soundIndex;
@@ -1640,7 +1640,7 @@ void G_EntitySound(gentity_t* ent, const int channel, const int soundIndex)
 }
 
 //To make porting from SP easier.
-void G_SoundOnEnt(const gentity_t* ent, soundChannel_t channel, const char* sound_path)
+void G_SoundOnEnt(gentity_t* ent, soundChannel_t channel, const char* sound_path)
 {
 	gentity_t* te = G_TempEntity(ent->r.currentOrigin, EV_ENTITY_SOUND);
 	te->s.eventParm = G_SoundIndex((char*)sound_path);

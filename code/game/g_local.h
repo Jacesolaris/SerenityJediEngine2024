@@ -459,9 +459,6 @@ void G_Sound(const gentity_t* ent, int sound_index);
 void G_FreeEntity(gentity_t* ed);
 
 void G_TouchTriggers(gentity_t* ent);
-void G_TouchTeamClients(gentity_t* ent);
-void G_TouchSolids(gentity_t* ent);
-
 char* vtos(const vec3_t v);
 
 float vectoyaw(const vec3_t vec);

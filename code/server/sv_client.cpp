@@ -310,7 +310,7 @@ static void SV_UpdateUserinfo_f(client_t* cl)
 
 	SV_UserinfoChanged(cl);
 	// call prog code to allow overrides
-	ge->ClientUserinfoChanged(cl - svs.clients);
+	ge->client_userinfo_changed(cl - svs.clients);
 }
 
 using ucmd_t = struct

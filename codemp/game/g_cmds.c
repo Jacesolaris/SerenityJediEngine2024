@@ -614,7 +614,7 @@ void Cmd_TeamTask_f(gentity_t* ent) {
 	trap->GetUserinfo(client, userinfo, sizeof(userinfo));
 	Info_SetValueForKey(userinfo, "teamtask", va("%d", task));
 	trap->SetUserinfo(client, userinfo);
-	ClientUserinfoChanged(client);
+	client_userinfo_changed(client);
 }
 #endif
 

@@ -95,6 +95,7 @@ extern int PM_InGrappleMove(int anim);
 extern void WP_BlockPointsDrain(const gentity_t* self, int fatigue);
 extern void PM_AddBlockFatigue(playerState_t* ps, int fatigue);
 extern void G_StasisMissile(gentity_t* ent, gentity_t* missile, vec3_t forward);
+extern qboolean PM_InSlopeAnim(int anim);
 
 void G_LetGoOfLedge(const gentity_t* ent)
 {
@@ -8647,7 +8648,7 @@ void WP_ForcePowersUpdate(gentity_t* self, usercmd_t* ucmd)
 	if (self->client->ps.groundEntityNum != ENTITYNUM_NONE)
 	{
 		self->client->fjDidJump = qfalse;
-			}
+	}
 
 	if (self->client->ps.fd.forceJumpCharge && self->client->ps.groundEntityNum == ENTITYNUM_NONE && self->client->
 		fjDidJump)
@@ -9030,7 +9031,7 @@ powersetcheck:
 
 		self->client->ps.fd.forcePower = prepower - dif;
 	}
-		}
+}
 
 void WP_BlockPointsUpdate(const gentity_t* self)
 {

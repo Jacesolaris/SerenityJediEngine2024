@@ -1461,25 +1461,210 @@ team_t PickTeam(const int ignoreclient_num)
 	return TEAM_BLUE;
 }
 
-/*
-===========
-ForceClientSkin
+static const char* firstNames[] = {
+	"Evil",
+	"Dark",
+	"Redneck",
+	"Braindead",
+	"Killer",
+	"Last",
+	"First",
+	"John",
+	"Light",
+	"Fast",
+	"Slow",
+	"Nooby",
+	"Professor",
+	"Master",
+	"Looser",
+	"Owned",
+	"Red",
+	"Shadow",
+	"Sneaky",
+	"Broken",
+	"Lost",
+	"Hidden",
+	"Silent",
+	"The",
+	"Da",
+	"Your",
+	"Laggy",
+	"JKA",
+	"Angry",
+	"Confused",
+	"Lucky",
+	"Bad",
+	"Charlie",
+	"Hungry",
+	"Living",
+	"Dead",
+	"Johnny",
+	"Defiant",
+	"Green",
+	"Lazy",
+	"Mr",
+	"Miss",
+	"Mrs",
+	"Young",
+	"Old",
+	"New",
+	"Ancient",
+	"Falling",
+	"Fallen",
+	"Darkened",
+	"Idiot",
+	"Moron",
+	"Stupid",
+	"Running",
+	"Hiding",
+	"Rising",
+	"Jumping",
+	"Retreating",
+	"Commander",
+	"Funny",
+	"Faster",
+	"Slower",
+	"Grand",
+	"Shallow",
+	"Hollow",
+	"Under",
+	"Lesser",
+	"Micro",
+	"Macro",
+	"Jack",
+	"Dickie",
+	"Dancing",
+	"Lasting",
+	"Fastest",
+	"Slowest",
+	"Needy",
+	"Sniping",
+	"Medic",
+	"Hero",
+	"Our",
+	"My",
+	"Holy",
+	"The",
+	"The",
+	"The",
+	"The",
+	"Da",
+	"Da",
+	"Da",
+	"Da",
+	"Big",
+	"Small",
+	"Mad",
+	"Crazy",
+	"Jedi",
+	"Jedi",
+	"Jedi",
+	"Jedi",
+	"Sith",
+	"Sith",
+	"Sith",
+	"Sith",
+	"Sith",
+	"Smiling",
+	"Black"
+}; // 105
 
-Forces a client's skin (for teamplay)
-===========
-*/
-/*
-static void ForceClientSkin( gclient_t *client, char *model, const char *skin ) {
-	char *p;
+static const char* lastNames[] = {
+	"One",
+	"Avenger",
+	"Destroyer",
+	"Apprentice",
+	"Sniper",
+	"Killer",
+	"Protector",
+	"Assassin",
+	"Defender",
+	"Attacker",
+	"Master",
+	"Knight",
+	"1",
+	"Lagalot",
+	"Spacefiller",
+	"Player",
+	"69",
+	"101",
+	"Hunter",
+	"Jack",
+	"Lamer",
+	"Death",
+	"Hidden",
+	"Runner",
+	"Skywalker",
+	"Soul",
+	"Hacker",
+	"Hack",
+	"Noob",
+	"Missfire",
+	"Gunfire",
+	"Gunslinger",
+	"Stabber",
+	"Backstab",
+	"Swiftkick",
+	"Swift",
+	"Slasher",
+	"007",
+	"Leadridden",
+	"Leadrush",
+	"Killer",
+	"Jr",
+	"Virus",
+	"Trojan",
+	"Guardmaster",
+	"Attacker",
+	"Battlemaster",
+	"Kitty",
+	"Wolf",
+	"Fox",
+	"Idiot",
+	"Jack",
+	"John",
+	"Joe",
+	"Mac",
+	"Frontrunner",
+	"Man",
+	"Woman",
+	"Dog",
+	"Hog",
+	"Fist",
+	"Core",
+	"Jackson",
+	"Voss",
+	"Vlad",
+	"Voodoo",
+	"Lost",
+	"Doom",
+	"Death",
+	"Demise",
+	"Maul",
+	"Vader",
+	"Skywalker",
+	"Solo",
+	"Lando",
+	"Falcon",
+	"Raven",
+	"Hawk",
+	"Skull",
+	"Sith",
+	"Jedi",
+	"Carnage",
+	"Rumble",
+	"Botman"
+}; // 84
 
-	if ((p = Q_strrchr(model, '/')) != 0) {
-		*p = 0;
-	}
+char* PickName(void)
+{// Choose a random name by combining!
+	int choice1 = rand() % 105;
+	int choice2 = rand() % 84;
+	int color1 = rand() % 7;
+	int color2 = rand() % 7;
 
-	Q_strcat(model, MAX_QPATH, "/");
-	Q_strcat(model, MAX_QPATH, skin);
+	return va("^%i%s^%i%s", color1, firstNames[choice1], color2, lastNames[choice2]);
 }
-*/
 
 /*
 ===========
@@ -1491,12 +1676,7 @@ static void client_clean_name(const char* in, char* out, const int outSize)
 	int outpos = 0, colorlessLen = 0, spaces = 0, ats = 0;
 
 	// discard leading spaces
-	// ReSharper disable once CppPossiblyErroneousEmptyStatements
 	for (; *in == ' '; in++);
-
-	// discard leading asterisk's (fail raven for using * as a skipnotify)
-	// apparently .* causes the issue too so... derp
-	//for(; *in == '*'; in++);
 
 	for (; *in && outpos < outSize - 1; in++)
 	{
@@ -1532,14 +1712,6 @@ static void client_clean_name(const char* in, char* out, const int outSize)
 			if (Q_IsColorStringExt(&out[outpos - 1]))
 			{
 				colorlessLen--;
-
-#if 0
-				if (ColorIndex(*in) == 0)
-				{// Disallow color black in names to prevent players from getting advantage playing in front of black backgrounds
-					outpos--;
-					continue;
-				}
-#endif
 			}
 			else
 			{
@@ -1560,7 +1732,16 @@ static void client_clean_name(const char* in, char* out, const int outSize)
 
 	// don't allow empty names
 	if (*out == '\0' || colorlessLen == 0)
-		Q_strncpyz(out, "Padawan", outSize);
+	{
+		if (g_noPadawanNames.integer != 0)
+		{
+			Q_strncpyz(out, PickName(), outSize);
+		}
+		else
+		{
+			Q_strncpyz(out, "Padawan", outSize);
+		}
+	}
 }
 
 #ifdef _DEBUG
@@ -2067,7 +2248,7 @@ void SetupGameGhoul2Model(gentity_t* ent, char* modelname, char* skinName)
 
 /*
 ===========
-ClientUserInfoChanged
+client_userinfo_changed
 
 Called from ClientConnect when the player first connects and
 directly by the server system when the player updates a userinfo variable.
@@ -2382,25 +2563,39 @@ qboolean client_userinfo_changed(const int client_num)
 		Q_strncpyz(client->pers.netname_nocolor, "scoreboard", sizeof client->pers.netname_nocolor);
 	}
 
-	if (client->pers.connected == CON_CONNECTED && strcmp(oldname, client->pers.netname) != 0)
+	if (client->pers.connected == CON_CONNECTED)
 	{
-		if (client->pers.netnameTime > level.time)
+		if (strcmp(oldname, client->pers.netname) != 0)
 		{
-			trap->SendServerCommand(client_num, va("print \"%s\n\"", G_GetStringEdString("MP_SVGAME", "NONAMECHANGE")));
+			if (client->pers.netnameTime > level.time)
+			{
+				trap->SendServerCommand(client_num, va("print \"%s\n\"", G_GetStringEdString("MP_SVGAME", "NONAMECHANGE")));
 
-			Info_SetValueForKey(userinfo, "name", oldname);
-			trap->SetUserinfo(client_num, userinfo);
-			Q_strncpyz(client->pers.netname, oldname, sizeof client->pers.netname);
-			Q_strncpyz(client->pers.netname_nocolor, oldname, sizeof client->pers.netname_nocolor);
-			Q_StripColor(client->pers.netname_nocolor);
+				Info_SetValueForKey(userinfo, "name", oldname);
+				trap->SetUserinfo(client_num, userinfo);
+				Q_strncpyz(client->pers.netname, oldname, sizeof client->pers.netname);
+				Q_strncpyz(client->pers.netname_nocolor, oldname, sizeof client->pers.netname_nocolor);
+				Q_StripColor(client->pers.netname_nocolor);
+			}
+			else
+			{
+				trap->SendServerCommand(-1, va("print \"%s" S_COLOR_WHITE " %s %s\n\"", oldname, G_GetStringEdString("MP_SVGAME", "PLRENAME"), client->pers.netname));
+				G_LogPrintf("ClientRename: %i [%s] (%s) \"%s^7\" -> \"%s^7\"\n", client_num, ent->client->sess.IP, ent->client->pers.guid, oldname, ent->client->pers.netname);
+				client->pers.netnameTime = level.time + 5000;
+			}
+		}
+
+		if (Q_stristr(client->pers.netname, "Padawan"))
+		{
+			if (g_noPadawanNames.integer != 0)
+			{
+				client->pers.padawantimer = 30;
+				client->pers.ampadawan = 1;
+			}
 		}
 		else
 		{
-			trap->SendServerCommand(-1, va("print \"%s" S_COLOR_WHITE " %s %s\n\"", oldname,
-				G_GetStringEdString("MP_SVGAME", "PLRENAME"), client->pers.netname));
-			G_LogPrintf("ClientRename: %i [%s] (%s) \"%s^7\" -> \"%s^7\"\n", client_num, ent->client->sess.IP,
-				ent->client->pers.guid, oldname, ent->client->pers.netname);
-			client->pers.netnameTime = level.time + 5000;
+			client->pers.ampadawan = 0;
 		}
 	}
 
@@ -4642,9 +4837,9 @@ qboolean client_userinfo_changed(const int client_num)
 	if (g_logClientInfo.integer)
 	{
 		if (strcmp(oldClientinfo, buf) != 0)
-			G_LogPrintf("ClientUserinfoChanged: %i %s\n", client_num, buf);
+			G_LogPrintf("client_userinfo_changed: %i %s\n", client_num, buf);
 		else
-			G_LogPrintf("ClientUserinfoChanged: %i <no change>\n", client_num);
+			G_LogPrintf("client_userinfo_changed: %i <no change>\n", client_num);
 	}
 
 	return qtrue;

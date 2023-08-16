@@ -1223,11 +1223,14 @@ Actions that happen once a second
 */
 extern void WP_SaberFatigueRegenerate(int override_amt);
 extern void WP_BlasterFatigueRegenerate(int override_amt);
+extern void uwRename(gentity_t* player, const char* newname);
+extern char* PickName(void);
 
 void ClientTimerActions(gentity_t* ent, const int msec)
 {
 	gclient_t* client = ent->client;
 	client->timeResidual += msec;
+	int client_num = ent - g_entities;
 
 	while (client->timeResidual >= 1000)
 	{
@@ -1342,6 +1345,19 @@ void ClientTimerActions(gentity_t* ent, const int msec)
 
 		Player_CheckBurn(ent);
 		Player_CheckFreeze(ent);
+
+		if (client->pers.padawantimer >= 1 && client->pers.ampadawan == 1 && g_noPadawanNames.integer != 0)
+		{
+			trap->SendServerCommand(ent - g_entities, va("cp \"^1Padawan names are not allowed here!\n^1Please change it in ^3%d seconds^1,\n^1or your name will be changed.\n\"", client->pers.padawantimer));
+			client->pers.padawantimer--;
+		}
+
+		if (client->pers.padawantimer == 0 && client->pers.ampadawan == 1 && g_noPadawanNames.integer != 0)
+		{
+			client->pers.ampadawan = 0;
+			uwRename(&g_entities[client_num], PickName());
+			trap->SendServerCommand(ent - g_entities, va("print \"^1Padawan names are not allowed, you have been forcefully renamed.\n\""));
+		}
 	}
 }
 
@@ -5420,8 +5436,8 @@ void ClientThink_real(gentity_t* ent)
 					}
 				}
 			}
-		}
 	}
+}
 	else if (ent->client->ps.heldByClient)
 	{
 		ent->client->ps.heldByClient = 0;
@@ -6614,7 +6630,7 @@ void ClientEndFrame(gentity_t* ent)
 	if (!g_synchronousClients->integer && (ent->client->ps.pm_type == PM_NORMAL || ent->client->ps.pm_type == PM_JETPACK || ent->client->ps.pm_type == PM_FLOAT)) {
 		// FIXME: this must change eventually for non-sync demo recording
 		VectorClear(ent->client->ps.viewangles);
-	}
+}
 #endif
 
 	//

@@ -269,6 +269,17 @@ void G_RemoveWeather(void)
 	trap->SetConfigstring(CS_EFFECTS + num, "");
 }
 
+void uwRename(gentity_t* player, const char* newname)
+{
+	char userinfo[MAX_INFO_STRING];
+	int clientNum = player - g_entities;
+	trap->GetUserinfo(clientNum, userinfo, sizeof(userinfo));
+	Info_SetValueForKey(userinfo, "name", newname);
+	trap->SetUserinfo(clientNum, userinfo);
+	client_userinfo_changed(clientNum);
+	player->client->pers.netnameTime = level.time + 5000; // hmmm...
+}
+
 void Svcmd_Weather_f(void)
 {
 	char arg1[MAX_STRING_CHARS];
