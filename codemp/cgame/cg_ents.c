@@ -530,7 +530,12 @@ void CG_Special(const centity_t* cent)
 	if (s1->modelindex == HI_SHIELD)
 	{
 		// The portable shield should go through a different rendering function.
-		FX_DrawPortableShield(cent);
+		if (!cg.snap->ps.duelInProgress ||
+			s1->otherEntityNum == cg.snap->ps.client_num ||
+			s1->otherEntityNum == cg.snap->ps.duelIndex)
+		{
+			FX_DrawPortableShield(cent);
+		}
 	}
 }
 
@@ -990,6 +995,16 @@ static void CG_General(centity_t* cent)
 
 		CG_GrappleStartpoint(end);
 		//GOING OUT
+	}
+
+	if (cg.snap->ps.duelInProgress &&
+		((cent->currentState.weapon == WP_SABER &&
+			cent->currentState.otherEntityNum != cg.snap->ps.client_num &&
+			cent->currentState.otherEntityNum != cg.snap->ps.duelIndex) ||
+			cent->currentState.eType & ET_BODY ||
+			cent->currentState.weapon == G2_MODEL_PART))
+	{ // don't render flying sabers owned by others, bodies or body parts
+		return;
 	}
 
 	if (cent->currentState.boltToPlayer)
@@ -1779,7 +1794,23 @@ static void CG_General(centity_t* cent)
 	}
 
 	// add to refresh list
-	trap->R_AddRefEntityToScene(&ent);
+	
+	// test for duel noX conditions
+	if (cent->currentState.weapon == WP_TRIP_MINE ||
+		cent->currentState.weapon == WP_DET_PACK ||
+		cent->currentState.bolt1)  // lmo using same bolt1 hack to recognise sentry! (see above and SP_PAS in g_items.c)
+	{ // if entity is a trip mine, detpack, sentry gun consider duel NoX
+		if (!cg.snap->ps.duelInProgress ||
+			cent->currentState.otherEntityNum == cg.snap->ps.client_num ||
+			cent->currentState.otherEntityNum == cg.snap->ps.duelIndex)
+		{
+			trap->R_AddRefEntityToScene(&ent);
+		}
+	}
+	else
+	{ // not special case
+		trap->R_AddRefEntityToScene(&ent);
+	}
 
 	if (cent->bolt3 == 999)
 	{
@@ -1934,37 +1965,41 @@ static void CG_General(centity_t* cent)
 		}
 	}
 
-	if (cent->currentState.time == -1 && cent->currentState.weapon == WP_TRIP_MINE && cent->currentState.eFlags &
-		EF_FIRING)
+	if (cent->currentState.time == -1 && cent->currentState.weapon == WP_TRIP_MINE && cent->currentState.eFlags & EF_FIRING)
 	{
 		vec3_t beam_org;
 		int beam_id;
 		//if force sight is active, render the laser multiple times up to the force sight level to increase visibility
-		if (cent->currentState.bolt2 == 1)
-		{
-			VectorMA(ent.origin, 6.6f, ent.axis[0], beam_org); // forward
-			beam_id = cgs.effects.tripmineGlowFX;
-			trap->FX_PlayEffectID(beam_id, beam_org, cent->currentState.pos.trDelta, -1, -1, qfalse);
-		}
-		else
-		{
-			VectorMA(ent.origin, 6.6f, ent.axis[0], beam_org); // forward
-			beam_id = cgs.effects.tripmineLaserFX;
-
-			if (cg.snap->ps.fd.forcePowersActive & 1 << FP_SEE)
+		if (!cg.snap->ps.duelInProgress ||
+			cent->currentState.otherEntityNum == cg.snap->ps.client_num ||
+			cent->currentState.otherEntityNum == cg.snap->ps.duelIndex)
+		{ // dont render if neither you nor opponent are owner
+			if (cent->currentState.bolt2 == 1)
 			{
-				int i = 0;
-				i = cg.snap->ps.fd.forcePowerLevel[FP_SEE];
-
-				while (i > 0)
-				{
-					trap->FX_PlayEffectID(beam_id, beam_org, cent->currentState.pos.trDelta, -1, -1, qfalse);
-					trap->FX_PlayEffectID(beam_id, beam_org, cent->currentState.pos.trDelta, -1, -1, qfalse);
-					i--;
-				}
+				VectorMA(ent.origin, 6.6f, ent.axis[0], beam_org); // forward
+				beam_id = cgs.effects.tripmineGlowFX;
+				trap->FX_PlayEffectID(beam_id, beam_org, cent->currentState.pos.trDelta, -1, -1, qfalse);
 			}
+			else
+			{
+				VectorMA(ent.origin, 6.6f, ent.axis[0], beam_org); // forward
+				beam_id = cgs.effects.tripmineLaserFX;
 
-			trap->FX_PlayEffectID(beam_id, beam_org, cent->currentState.pos.trDelta, -1, -1, qfalse);
+				if (cg.snap->ps.fd.forcePowersActive & 1 << FP_SEE)
+				{
+					int i = 0;
+					i = cg.snap->ps.fd.forcePowerLevel[FP_SEE];
+
+					while (i > 0)
+					{
+						trap->FX_PlayEffectID(beam_id, beam_org, cent->currentState.pos.trDelta, -1, -1, qfalse);
+						trap->FX_PlayEffectID(beam_id, beam_org, cent->currentState.pos.trDelta, -1, -1, qfalse);
+						i--;
+					}
+				}
+
+				trap->FX_PlayEffectID(beam_id, beam_org, cent->currentState.pos.trDelta, -1, -1, qfalse);
+			}
 		}
 	}
 
@@ -2796,7 +2831,16 @@ static void CG_Missile(centity_t* cent)
 	entityState_t* s1;
 	const weaponInfo_t* weapon;
 
+	if (cg.snap->ps.duelInProgress &&
+		cent->currentState.eType == ET_MISSILE &&
+		cent->currentState.otherEntityNum != cg.snap->ps.client_num &&
+		cent->currentState.otherEntityNum != cg.snap->ps.duelIndex)
+	{ //dont render missiles (includes dead sabers) if duel nox
+		return;
+	}
+
 	s1 = &cent->currentState;
+
 	if (s1->weapon > WP_NUM_WEAPONS && s1->weapon != G2_MODEL_PART)
 	{
 		s1->weapon = 0;

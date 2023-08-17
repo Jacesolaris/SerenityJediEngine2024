@@ -1315,7 +1315,7 @@ void G_TauntSound(const gentity_t* ent, const int taunt)
 }
 
 extern qboolean PM_CrouchAnim(int anim);
-extern float manual_saberblocking(const gentity_t* defender);
+extern qboolean manual_saberblocking(const gentity_t* defender);
 extern qboolean is_holding_block_button(const gentity_t* defender);
 extern qboolean NPC_IsMando(const gentity_t* self);
 

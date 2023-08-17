@@ -55,7 +55,7 @@ extern qboolean PM_InKnockDown(const playerState_t* ps);
 extern void Player_CheckBurn(const gentity_t* self);
 extern void Player_CheckFreeze(const gentity_t* self);
 extern void bg_reduce_blaster_mishap_level_advanced(playerState_t* ps);
-extern float manual_saberblocking(const gentity_t* defender);
+extern qboolean manual_saberblocking(const gentity_t* defender);
 extern float manual_running_and_saberblocking(const gentity_t* defender);
 extern qboolean manual_meleeblocking(const gentity_t* defender);
 extern qboolean manual_melee_dodging(const gentity_t* defender);
@@ -1223,7 +1223,7 @@ Actions that happen once a second
 */
 extern void WP_SaberFatigueRegenerate(int override_amt);
 extern void WP_BlasterFatigueRegenerate(int override_amt);
-extern void uwRename(gentity_t* player, const char* newname);
+extern void G_Rename_Player(gentity_t* player, const char* newname);
 extern char* PickName(void);
 
 void ClientTimerActions(gentity_t* ent, const int msec)
@@ -1346,17 +1346,17 @@ void ClientTimerActions(gentity_t* ent, const int msec)
 		Player_CheckBurn(ent);
 		Player_CheckFreeze(ent);
 
-		if (client->pers.padawantimer >= 1 && client->pers.ampadawan == 1 && g_noPadawanNames.integer != 0)
+		if (client->pers.padawantimer >= 3 && client->pers.ampadawan == 1 && g_noPadawanNames.integer != 0)
 		{
-			trap->SendServerCommand(ent - g_entities, va("cp \"^1Padawan names are not allowed here!\n^1Please change it in ^3%d seconds^1,\n^1or your name will be changed.\n\"", client->pers.padawantimer));
+			trap->SendServerCommand(ent - g_entities, va("cp \"The Name ^1padawan ^7is not allowed here!\nPlease change it in ^3%d seconds,\nor your name will be changed.\n\"", client->pers.padawantimer));
 			client->pers.padawantimer--;
 		}
 
-		if (client->pers.padawantimer == 0 && client->pers.ampadawan == 1 && g_noPadawanNames.integer != 0)
+		if ((client->pers.padawantimer == 2 || client->pers.padawantimer == 1) && client->pers.ampadawan == 1 && g_noPadawanNames.integer != 0)
 		{
 			client->pers.ampadawan = 0;
-			uwRename(&g_entities[client_num], PickName());
-			trap->SendServerCommand(ent - g_entities, va("print \"^1Padawan names are not allowed, you have been forcefully renamed.\n\""));
+			G_Rename_Player(&g_entities[client_num], PickName());
+			trap->SendServerCommand(ent - g_entities, va("cp \"^1Padawan names are not allowed, you have been ^1forcefully renamed.\n\""));
 		}
 	}
 }
@@ -1457,7 +1457,7 @@ void G_CheapWeaponFire(const int ent_num, const int ev)
 		ent->client->ps.eFlags &= ~EF_INVULNERABLE;
 		ent->client->invulnerableTimer = 0;
 		break;
-	case EV_altFire:
+	case EV_ALTFIRE:
 		if (PM_ReloadAnim(ent->client->ps.torsoAnim))
 		{
 			return;
@@ -1641,7 +1641,7 @@ void ClientEvents(gentity_t* ent, int old_event_sequence)
 			ent->client->invulnerableTimer = 0;
 			break;
 
-		case EV_altFire:
+		case EV_ALTFIRE:
 			if (PM_ReloadAnim(Client->ps.torsoAnim))
 			{
 				return;

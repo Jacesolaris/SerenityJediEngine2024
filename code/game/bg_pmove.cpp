@@ -1331,7 +1331,7 @@ static qboolean pm_check_jump()
 	}
 
 #if METROID_JUMP
-	if (pm->cmd.buttons & BUTTON_GRAPPLE)
+	if (pm->ps->hookhasbeenfired || pm->cmd.buttons & BUTTON_GRAPPLE)
 	{
 		//  turn off force levitation if grapple is used
 		// also remove protection from a fall
@@ -8586,6 +8586,8 @@ qboolean PM_RunningAnim(const int anim)
 	case BOTH_RUN10:
 	case BOTH_SPRINT:
 	case BOTH_SPRINT_SABER:
+	case BOTH_SPRINT_MP:
+	case BOTH_SPRINT_SABER_MP:
 	case SBD_RUNBACK_NORMAL:
 	case SBD_RUNING_WEAPON:
 	case SBD_RUNBACK_WEAPON:
@@ -10604,7 +10606,7 @@ static void PM_Footsteps()
 				rolled = pm_try_roll();
 			}
 			else if (PM_CrouchAnim(pm->gent->client->ps.legsAnim) &&
-				(pm->cmd.buttons & BUTTON_USE || pm->cmd.buttons & BUTTON_DASH || OVERRIDE_ROLL_CHECK))
+				(pm->cmd.buttons & BUTTON_DASH || OVERRIDE_ROLL_CHECK))
 			{
 				//roll!
 				rolled = PM_TryRoll_SJE();
@@ -15477,8 +15479,9 @@ qboolean PM_PickAutoMultiKick(const qboolean allow_singles)
 qboolean PM_CheckKickAttack()
 {
 	if (pm->cmd.buttons & BUTTON_KICK
-		&& pm->gent->client->NPC_class != CLASS_DROIDEKA
 		&& !(pm->cmd.buttons & BUTTON_DASH)
+		&& pm->gent->client->NPC_class != CLASS_DROIDEKA
+		&& !(pm->ps->forcePowersActive & 1 << FP_LIGHTNING)
 		&& (!PM_FlippingAnim(pm->ps->legsAnim) || pm->ps->legsAnimTimer <= 250))
 	{
 		return qtrue;
@@ -15489,8 +15492,8 @@ qboolean PM_CheckKickAttack()
 qboolean PM_CheckAltKickAttack()
 {
 	if (pm->cmd.buttons & BUTTON_ALT_ATTACK || pm->cmd.buttons & BUTTON_KICK
-		&& pm->gent->client->NPC_class != CLASS_DROIDEKA
 		&& !(pm->cmd.buttons & BUTTON_DASH)
+		&& pm->gent->client->NPC_class != CLASS_DROIDEKA
 		&& (!PM_FlippingAnim(pm->ps->legsAnim) || pm->ps->legsAnimTimer <= 250))
 	{
 		return qtrue;
@@ -18679,7 +18682,7 @@ void PM_WeaponLightsaber()
 
 	if (pm->cmd.buttons & BUTTON_ALT_ATTACK)
 	{
-		PM_AddEvent(EV_altFire);
+		PM_AddEvent(EV_ALTFIRE);
 
 		if (!add_time)
 		{
@@ -20112,7 +20115,7 @@ static void PM_Weapon()
 			&& pm->gent->owner->e_UseFunc == useF_eweb_use)
 		{
 			//eweb always shoots alt-fire, for proper effects and sounds
-			PM_AddEvent(EV_altFire);
+			PM_AddEvent(EV_ALTFIRE);
 			add_time = weaponData[pm->ps->weapon].altFireTime;
 		}
 		else
@@ -20131,7 +20134,7 @@ static void PM_Weapon()
 	}
 	else if (pm->cmd.buttons & BUTTON_ALT_ATTACK)
 	{
-		PM_AddEvent(EV_altFire);
+		PM_AddEvent(EV_ALTFIRE);
 		add_time = weaponData[pm->ps->weapon].altFireTime;
 		if (pm->ps->weapon == WP_THERMAL)
 		{
@@ -20373,7 +20376,7 @@ static void PM_VehicleWeapon()
 
 	if (pm->cmd.buttons & BUTTON_ALT_ATTACK)
 	{
-		PM_AddEvent(EV_altFire);
+		PM_AddEvent(EV_ALTFIRE);
 	}
 	else
 	{

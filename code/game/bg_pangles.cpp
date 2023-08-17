@@ -63,6 +63,7 @@ extern qboolean PM_KickMove(int move);
 extern qboolean PM_InLedgeMove(int anim);
 extern qboolean PM_KickingAnim(int anim);
 extern qboolean PM_InRoll(const playerState_t* ps);
+extern qboolean PM_CrouchAnim(int anim);
 
 extern qboolean cg_usingInFrontOf;
 extern qboolean player_locked;
@@ -1530,6 +1531,7 @@ qboolean G_OkayToLean(const playerState_t* ps, const usercmd_t* cmd, const qbool
 	if ((ps->client_num < MAX_CLIENTS || G_ControlledByPlayer(&g_entities[ps->client_num])) //player
 		&& ps->groundEntityNum != ENTITYNUM_NONE //on ground
 		&& (interrupt_okay //okay to interrupt a lean
+			&& !PM_CrouchAnim(ps->legsAnim)
 			&& PM_DodgeAnim(ps->torsoAnim)
 			|| PM_BlockAnim(ps->torsoAnim) || PM_BlockDualAnim(ps->torsoAnim) || PM_BlockStaffAnim(ps->torsoAnim)
 			|| PM_MeleeblockAnim(ps->torsoAnim) //already leaning

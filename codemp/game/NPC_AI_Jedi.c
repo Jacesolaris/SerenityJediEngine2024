@@ -5245,8 +5245,8 @@ evasionType_t jedi_saber_block_go(gentity_t* self, usercmd_t* cmd, vec3_t p_hitl
 							else
 							{
 								AngleVectors(self->client->ps.viewangles, hitdir, NULL, NULL);
-								self->client->ps.velocity[0] = self->client->ps.velocity[0] * 5;
-								self->client->ps.velocity[1] = self->client->ps.velocity[1] * 5;
+								self->client->ps.velocity[0] = self->client->ps.velocity[0] * 3;
+								self->client->ps.velocity[1] = self->client->ps.velocity[1] * 3;
 								self->client->pers.cmd.rightmove = -64;
 								ForceDashAnimDash(self);
 							}
@@ -5296,8 +5296,8 @@ evasionType_t jedi_saber_block_go(gentity_t* self, usercmd_t* cmd, vec3_t p_hitl
 							else
 							{
 								AngleVectors(self->client->ps.viewangles, hitdir, NULL, NULL);
-								self->client->ps.velocity[0] = self->client->ps.velocity[0] * 5;
-								self->client->ps.velocity[1] = self->client->ps.velocity[1] * 5;
+								self->client->ps.velocity[0] = self->client->ps.velocity[0] * 3;
+								self->client->ps.velocity[1] = self->client->ps.velocity[1] * 3;
 								self->client->pers.cmd.rightmove = 64;
 								ForceDashAnimDash(self);
 							}

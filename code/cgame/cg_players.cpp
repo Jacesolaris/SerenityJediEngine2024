@@ -1202,7 +1202,7 @@ static void CG_PlayerAnimEventDo(centity_t* cent, animevent_t* anim_event)
 		//add fire event
 		if (anim_event->eventData[AED_FIRE_ALT])
 		{
-			G_AddEvent(cent->gent, EV_altFire, 0);
+			G_AddEvent(cent->gent, EV_ALTFIRE, 0);
 		}
 		else
 		{

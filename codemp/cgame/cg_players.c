@@ -11391,8 +11391,7 @@ void CG_CreateSaberMarks(vec3_t start, vec3_t end, vec3_t normal)
 
 	// get the fragments
 	const int num_fragments = trap->R_MarkFragments(4, (const float(*)[3])original_points,
-		projection, MAX_MARK_POINTS, mark_points[0], MAX_MARK_FRAGMENTS,
-		mark_fragments);
+		projection, MAX_MARK_POINTS, mark_points[0], MAX_MARK_FRAGMENTS,mark_fragments);
 
 	for (i = 0, mf = mark_fragments; i < num_fragments; i++, mf++)
 	{

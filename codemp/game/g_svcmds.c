@@ -269,7 +269,7 @@ void G_RemoveWeather(void)
 	trap->SetConfigstring(CS_EFFECTS + num, "");
 }
 
-void uwRename(gentity_t* player, const char* newname)
+void G_Rename_Player(gentity_t* player, const char* newname)
 {
 	char userinfo[MAX_INFO_STRING];
 	int clientNum = player - g_entities;

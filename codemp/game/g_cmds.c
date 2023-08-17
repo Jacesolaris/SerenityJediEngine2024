@@ -814,7 +814,7 @@ void SetTeam(gentity_t* ent, const char* s)
 		spec_state = SPECTATOR_FOLLOW;
 		spec_client = -2;
 	}
-	else if (!Q_stricmp(s, "spectator") || !Q_stricmp(s, "s"))
+	else if (!Q_stricmp(s, "spectator") || !Q_stricmp(s, "s") || !Q_stricmp(s, "spectate"))
 	{
 		team = TEAM_SPECTATOR;
 		spec_state = SPECTATOR_FREE;

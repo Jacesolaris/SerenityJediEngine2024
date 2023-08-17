@@ -112,7 +112,7 @@ extern void WP_SaberFatigueRegenerate(int override_amt);
 extern void bg_reduce_blaster_mishap_level_advanced(playerState_t* ps);
 extern qboolean BG_InSlowBounce(const playerState_t* ps);
 extern void WP_ForcePowerDrain(const gentity_t* self, forcePowers_t force_power, int override_amt);
-extern float manual_saberblocking(const gentity_t* defender);
+extern qboolean manual_saberblocking(const gentity_t* defender);
 extern float manual_running_and_saberblocking(const gentity_t* defender);
 extern qboolean manual_meleeblocking(const gentity_t* defender);
 extern qboolean manual_melee_dodging(const gentity_t* defender);
@@ -2090,21 +2090,21 @@ void ClientEvents(gentity_t* ent, const int old_event_sequence)
 			}
 #ifndef FINAL_BUILD
 			if (fired) {
-				gi.Printf("DOUBLE EV_FIRE_WEAPON AND-OR EV_altFire!!\n");
+				gi.Printf("DOUBLE EV_FIRE_WEAPON AND-OR EV_ALTFIRE!!\n");
 			}
 			fired = qtrue;
 #endif
 			FireWeapon(ent, qfalse);
 			break;
 
-		case EV_altFire:
+		case EV_ALTFIRE:
 			if (PM_ReloadAnim(ent->client->ps.torsoAnim))
 			{
 				return;
 			}
 #ifndef FINAL_BUILD
 			if (fired) {
-				gi.Printf("DOUBLE EV_FIRE_WEAPON AND-OR EV_altFire!!\n");
+				gi.Printf("DOUBLE EV_FIRE_WEAPON AND-OR EV_ALTFIRE!!\n");
 			}
 			fired = qtrue;
 #endif

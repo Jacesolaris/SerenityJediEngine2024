@@ -1982,7 +1982,7 @@ void CG_AddViewWeaponDuals(playerState_t* ps)
 	weaponData_t* wData;
 	centity_t* cent;
 	float fovOffset, leanOffset;
-	qboolean DoingDashAction = cg.predicted_player_state.communicatingflags & 1 << DASHING ? qtrue : qfalse;
+	const qboolean doing_dash_action = cg.predicted_player_state.communicatingflags & 1 << DASHING ? qtrue : qfalse;
 
 	// no gun if in third person view
 	if (cg.renderingThirdPerson)
@@ -2162,7 +2162,7 @@ void CG_AddViewWeaponDuals(playerState_t* ps)
 	// drop gun lower at higher fov
 	float actualFOV;
 
-	if (!DoingDashAction && cg.snap->ps.forcePowersActive & 1 << FP_SPEED && player->client->ps.forcePowerDuration[
+	if (!doing_dash_action && cg.snap->ps.forcePowersActive & 1 << FP_SPEED && player->client->ps.forcePowerDuration[
 		FP_SPEED]) //cg.renderingThirdPerson &&
 	{
 		actualFOV = CG_ForceSpeedFOV();

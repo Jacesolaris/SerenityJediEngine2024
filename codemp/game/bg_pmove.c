@@ -8775,6 +8775,7 @@ qboolean PM_RunningAnim(const int anim)
 	case BOTH_RUN9:
 	case BOTH_RUN10:
 	case BOTH_SPRINT:
+	case BOTH_SPRINT_SABER:
 	case BOTH_SPRINT_MP:
 	case BOTH_SPRINT_SABER_MP:
 	case SBD_RUNBACK_NORMAL:
@@ -9937,7 +9938,7 @@ static void PM_Footsteps(void)
 			if ((PM_RunningAnim(pm->ps->legsAnim)
 				|| pm->ps->legsAnim == BOTH_FORCEHEAL_START
 				|| PM_CanRollFromSoulCal(pm->ps)
-				|| pm->cmd.buttons & BUTTON_USE || pm->cmd.buttons & BUTTON_DASH) &&
+				|| pm->cmd.buttons & BUTTON_DASH) &&
 				!BG_InRoll(pm->ps, pm->ps->legsAnim))
 			{
 				//roll!
@@ -13787,7 +13788,7 @@ void PM_Weapon(void)
 		pm->ps->weaponTime += addTime;
 		if (pm->cmd.buttons & BUTTON_ALT_ATTACK)
 		{
-			PM_AddEvent(EV_altFire);
+			PM_AddEvent(EV_ALTFIRE);
 		}
 		else
 		{
@@ -13803,7 +13804,7 @@ void PM_Weapon(void)
 #ifdef _GAME //hack, only do it game-side. vehicle weapons don't really need predicting I suppose.
 		if (pm->cmd.buttons & BUTTON_ALT_ATTACK)
 		{
-			G_CheapWeaponFire(pm->ps->client_num, EV_altFire);
+			G_CheapWeaponFire(pm->ps->client_num, EV_ALTFIRE);
 		}
 		else
 		{
@@ -14201,7 +14202,7 @@ void PM_Weapon(void)
 			if (pm->ps->weapon != WP_MELEE || !pm->ps->m_iVehicleNum)
 			{
 				//do not fire melee events at all when on vehicle
-				PM_AddEvent(EV_altFire);
+				PM_AddEvent(EV_ALTFIRE);
 			}
 			addTime = weaponData[pm->ps->weapon].altFireTime;
 		}
@@ -14504,6 +14505,7 @@ qboolean G_OkayToLean(const playerState_t* ps, const usercmd_t* uscmd, const qbo
 	if (ps->client_num < MAX_CLIENTS //player
 		&& ps->groundEntityNum != ENTITYNUM_NONE //on ground
 		&& (interruptOkay //okay to interrupt a lean
+			&& !PM_CrouchAnim(ps->legsAnim)
 			&& PM_DodgeAnim(ps->torsoAnim)
 			|| PM_BlockAnim(ps->torsoAnim) || PM_BlockDualAnim(ps->torsoAnim) || PM_BlockStaffAnim(ps->torsoAnim)
 			|| PM_MeleeblockAnim(ps->torsoAnim) //already leaning

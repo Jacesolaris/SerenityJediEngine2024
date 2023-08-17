@@ -102,7 +102,7 @@ extern qboolean PM_KnockDownAnim(int anim);
 extern void G_SpeechEvent(const gentity_t* self, int event);
 extern qboolean Rosh_BeingHealed(const gentity_t* self);
 extern void wp_force_power_regenerate(const gentity_t* self, int override_amt);
-extern float manual_saberblocking(const gentity_t* defender);
+extern qboolean manual_saberblocking(const gentity_t* defender);
 static int G_CheckForLedge(const gentity_t* self, vec3_t fall_check_dir, float check_dist);
 static int G_CheckSpecialDeathAnim(gentity_t* self);
 static void G_TrackWeaponUsage(const gentity_t* self, const gentity_t* inflictor, int add, int mod);

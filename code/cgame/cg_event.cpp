@@ -722,8 +722,8 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 		CG_FireWeapon(cent, qfalse);
 		break;
 
-	case EV_altFire:
-		DEBUGNAME("EV_altFire");
+	case EV_ALTFIRE:
+		DEBUGNAME("EV_ALTFIRE");
 		CG_FireWeapon(cent, qtrue);
 		break;
 

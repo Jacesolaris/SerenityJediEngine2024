@@ -3055,7 +3055,7 @@ qboolean client_userinfo_changed(const int client_num)
 			|| Class_Model(model, "galak_mech/blue"))
 		{
 			client->pers.nextbotclass = BCLASS_GALAKMECH;
-			client->pers.botmodelscale = BOTZIZE_LARGER;
+			client->pers.botmodelscale = BOTZIZE_MASSIVE;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
 				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=

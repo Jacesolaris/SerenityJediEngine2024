@@ -952,9 +952,9 @@ qboolean sab_beh_block_vs_attack(gentity_t* blocker, gentity_t* attacker, const 
 				{
 					WP_SaberMBlock(blocker, attacker, saber_num, blade_num);
 
-					if (blocker->client->ps.blockPoints <= BLOCKPOINTS_FATIGUE)
+					if (attacker->client->ps.saberFatigueChainCount >= MISHAPLEVEL_THIRTEEN)
 					{
-						sab_beh_saber_should_be_disarmed_attacker(attacker, saber_num);
+						sab_beh_add_mishap_attacker(attacker, blocker, saber_num);
 					}
 					else
 					{

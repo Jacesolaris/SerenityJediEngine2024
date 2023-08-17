@@ -2695,6 +2695,25 @@ void G_ChangePlayerModel(gentity_t* ent, const char* newModel)
 		return;
 	}
 
+	if (!in_camera
+		&& (ent->client->usercmd.buttons & BUTTON_ATTACK
+			|| ent->client->usercmd.buttons & BUTTON_ALT_ATTACK
+			|| ent->client->usercmd.buttons & BUTTON_USE_FORCE
+			|| ent->client->usercmd.buttons & BUTTON_FORCEGRIP
+			|| ent->client->usercmd.buttons & BUTTON_FORCE_LIGHTNING
+			|| ent->client->usercmd.buttons & BUTTON_FORCE_DRAIN
+			|| ent->client->usercmd.buttons & BUTTON_BLOCK
+			|| ent->client->usercmd.buttons & BUTTON_KICK
+			|| ent->client->usercmd.buttons & BUTTON_USE
+			|| ent->client->usercmd.buttons & BUTTON_DASH))
+	{
+		gi.Printf(
+			S_COLOR_RED
+			"ERROR: Erm this may seem stupid but You can not change characters when holding function buttons\n");
+		gi.Printf(S_COLOR_WHITE"NOTICE: You must now re-select a character\n");
+		return;
+	}
+
 	if (ent->client->NPC_class != CLASS_MANDO && ent->client->ps.eFlags & EF2_DUAL_WEAPONS)
 	{
 		ent->client->ps.eFlags &= ~EF2_DUAL_WEAPONS;

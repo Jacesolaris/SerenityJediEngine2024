@@ -2259,6 +2259,8 @@ public:
 	int repulseChargeStart;
 	int deadlySightLastChecked;
 
+	qboolean hookhasbeenfired;
+
 #endif // !JK2_MODE
 
 	void sg_export(
@@ -2513,6 +2515,7 @@ public:
 		saved_game.write<int32_t>(sprintDebReduce);
 		saved_game.write<int32_t>(repulseChargeStart);
 		saved_game.write<int32_t>(deadlySightLastChecked);
+		saved_game.write<int32_t>(hookhasbeenfired);
 #endif // !JK2_MODE
 	}
 
@@ -2768,6 +2771,7 @@ public:
 		saved_game.read<int32_t>(sprintDebReduce);
 		saved_game.read<int32_t>(repulseChargeStart);
 		saved_game.read<int32_t>(deadlySightLastChecked);
+		saved_game.read<int32_t>(hookhasbeenfired);
 #endif // !JK2_MODE
 	}
 }; // PlayerStateBase

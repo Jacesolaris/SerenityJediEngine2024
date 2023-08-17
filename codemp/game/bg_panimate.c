@@ -1093,6 +1093,23 @@ qboolean PM_InKataAnim(const int anim)
 	return qfalse;
 }
 
+qboolean PM_KnockDownAnim(const int anim)
+{
+	switch (anim)
+	{
+	case BOTH_KNOCKDOWN1:
+	case BOTH_KNOCKDOWN2:
+	case BOTH_KNOCKDOWN3:
+	case BOTH_KNOCKDOWN4:
+	case BOTH_KNOCKDOWN5:
+	case BOTH_SLAPDOWNRIGHT:
+	case BOTH_SLAPDOWNLEFT:
+		return qtrue;
+	default:;
+	}
+	return qfalse;
+}
+
 qboolean PM_StaggerAnim(const int anim)
 {
 	switch (anim)

@@ -225,7 +225,7 @@ extern qboolean sab_beh_attack_vs_block(gentity_t* attacker, gentity_t* blocker,
 void player_Freeze(const gentity_t* self);
 void Player_CheckFreeze(const gentity_t* self);
 extern qboolean PM_SaberInSpecial(int move);
-float manual_saberblocking(const gentity_t* defender);
+qboolean manual_saberblocking(const gentity_t* defender);
 void wp_block_points_regenerate(const gentity_t* self, int override_amt);
 void wp_force_power_regenerate(const gentity_t* self, int override_amt);
 void G_Stagger(gentity_t* hit_ent);
@@ -10998,7 +10998,7 @@ qboolean is_holding_block_button(const gentity_t* defender)
 	return qfalse;
 }
 
-float manual_saberblocking(const gentity_t* defender)
+qboolean manual_saberblocking(const gentity_t* defender)
 {
 	if (defender->s.number >= MAX_CLIENTS && !G_ControlledByPlayer(defender)
 		&& defender->client->ps.weapon != WP_SABER)
@@ -15310,11 +15310,27 @@ void ForceThrow(gentity_t* self, qboolean pull, qboolean fake)
 		return;
 	}
 
+	if (PM_SaberInnonblockableAttack(self->client->ps.torsoAnim))
+	{
+		return;
+	}
+
+	if (PM_InGetUp(&self->client->ps)
+		|| PM_InForceGetUp(&self->client->ps)
+		|| PM_InKnockDown(&self->client->ps)
+		|| PM_KnockDownAnim(self->client->ps.legsAnim)
+		|| PM_KnockDownAnim(self->client->ps.torsoAnim)
+		|| PM_StaggerAnim(self->client->ps.torsoAnim))
+	{
+		return;
+	}
+
 	if (!self->s.number && (cg.zoomMode || in_camera))
 	{
 		//can't force throw/pull when zoomed in or in cinematic
 		return;
 	}
+
 	if (self->client->ps.saberLockTime > level.time)
 	{
 		if (pull || self->client->ps.forcePowerLevel[FP_PUSH] < FORCE_LEVEL_3)
@@ -17913,6 +17929,7 @@ int IsPressingDashButton(const gentity_t* self)
 int IsPressingKickButton(const gentity_t* self)
 {
 	if (!(self->client->buttons & BUTTON_DASH)
+		&& self->client->NPC_class != CLASS_DROIDEKA
 		&& (self->client->buttons & BUTTON_KICK && self->client->ps.pm_flags & PMF_KICK_HELD))
 	{
 		return qtrue;
@@ -18092,7 +18109,7 @@ void ForceSpeedDash(gentity_t* self)
 
 	if (self->client->ps.forcePowersActive & 1 << FP_SPEED) //If using speed at same time just in case
 	{
-		if (PM_RunningAnim(self->client->ps.legsAnim) && IsPressingDashButton(self))
+		if (PM_RunningAnim(self->client->ps.legsAnim))
 		{
 			ForceDashAnim(self);
 		}
@@ -18128,8 +18145,8 @@ void ForceSpeedDash(gentity_t* self)
 		vec3_t dir;
 
 		AngleVectors(self->client->ps.viewangles, dir, nullptr, nullptr);
-		self->client->ps.velocity[0] = self->client->ps.velocity[0] * 5;
-		self->client->ps.velocity[1] = self->client->ps.velocity[1] * 5;
+		self->client->ps.velocity[0] = self->client->ps.velocity[0] * 3;
+		self->client->ps.velocity[1] = self->client->ps.velocity[1] * 3;
 
 		ForceDashAnimDash(self);
 	}

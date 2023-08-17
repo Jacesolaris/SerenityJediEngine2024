@@ -70,7 +70,7 @@ void ThrowSaberToAttacker(gentity_t* self, const gentity_t* attacker);
 extern qboolean G_ControlledByPlayer(const gentity_t* self);
 extern qboolean BG_SaberInNonIdleDamageMove(const playerState_t* ps, int anim_index);
 extern void wp_force_power_regenerate(const gentity_t* self, int override_amt);
-extern float manual_saberblocking(const gentity_t* defender);
+extern qboolean manual_saberblocking(const gentity_t* defender);
 extern void wp_block_points_regenerate(const gentity_t* self, int override_amt);
 extern void G_LetGoOfLedge(const gentity_t* ent);
 

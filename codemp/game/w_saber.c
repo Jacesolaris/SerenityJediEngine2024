@@ -152,7 +152,6 @@ extern qboolean PM_SaberInOverHeadSlash(saberMoveName_t saber_move);
 extern qboolean PM_SaberInBackAttack(saberMoveName_t saber_move);
 qboolean WP_DoingForcedAnimationForForcePowers(const gentity_t* self);
 void thrownSaberTouch(gentity_t* saberent, gentity_t* other, const trace_t* trace);
-float manual_saberblocking(const gentity_t* defender);
 int WP_SaberCanBlockThrownSaber(gentity_t* self, vec3_t point, qboolean projectile);
 
 float VectorBlockDistance(vec3_t v1, vec3_t v2)
@@ -6889,6 +6888,10 @@ static QINLINE qboolean check_saber_damage(gentity_t* self, const int r_saber_nu
 						//use no saber damage for kick moves.
 						dmg = SABER_NO_DAMAGE;
 					}
+					else if (self->client->ps.saber_move == LS_PULL_ATTACK_STAB)
+					{
+						dmg = SABER_NORHITDAMAGE;
+					}
 					else
 					{
 						dmg = SABER_MAXHITDAMAGE;
@@ -6902,6 +6905,10 @@ static QINLINE qboolean check_saber_damage(gentity_t* self, const int r_saber_nu
 					{
 						//use no saber damage for kick moves.
 						dmg = SABER_NO_DAMAGE;
+					}
+					else if (self->client->ps.saber_move == LS_PULL_ATTACK_STAB)
+					{
+						dmg = SABER_NORHITDAMAGE;
 					}
 					else if (saber_in_kill_move)
 					{
@@ -6922,6 +6929,10 @@ static QINLINE qboolean check_saber_damage(gentity_t* self, const int r_saber_nu
 					//use no saber damage for kick moves.
 					dmg = SABER_NO_DAMAGE;
 				}
+				else if (self->client->ps.saber_move == LS_PULL_ATTACK_STAB)
+				{
+					dmg = SABER_NORHITDAMAGE;
+				}
 				else if (saber_in_kill_move)
 				{
 					dmg = SABER_MAXHITDAMAGE;
@@ -6940,6 +6951,10 @@ static QINLINE qboolean check_saber_damage(gentity_t* self, const int r_saber_nu
 			{
 				//use no saber damage for kick moves.
 				dmg = SABER_NO_DAMAGE;
+			}
+			else if (self->client->ps.saber_move == LS_PULL_ATTACK_STAB)
+			{
+				dmg = SABER_NORHITDAMAGE;
 			}
 			else if (saber_in_kill_move)
 			{
@@ -13011,7 +13026,7 @@ qboolean is_holding_block_button(const gentity_t* defender)
 	return qfalse;
 }
 
-float manual_saberblocking(const gentity_t* defender)
+qboolean manual_saberblocking(const gentity_t* defender)
 {
 	if (defender->r.svFlags & SVF_BOT && defender->client->ps.weapon != WP_SABER)
 	{
