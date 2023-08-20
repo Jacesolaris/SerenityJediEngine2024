@@ -145,7 +145,6 @@ extern void ForceDestruction(gentity_t* self);
 extern qboolean WP_SaberStyleValidForSaber(const gentity_t* ent, int saber_anim_level);
 extern void ItemUse_Jetpack(const gentity_t* ent);
 extern void Jetpack_Off(const gentity_t* ent);
-extern saberMoveName_t PM_MBlocktheAttack(int move);
 extern qboolean IsSurrendering(const gentity_t* self);
 extern qboolean PM_IsInBlockingAnim(int move);
 extern qboolean PM_StandingidleAnim(int move);
@@ -159,7 +158,6 @@ extern cvar_t* g_allowslipping;
 extern cvar_t* g_allowClimbing;
 extern cvar_t* g_AllowLedgeGrab;
 extern cvar_t* g_saberAutoBlocking;
-extern void ForceDashAnimDash(gentity_t* self);
 extern int parry_debounce[];
 extern qboolean cg_usingInFrontOf;
 extern qboolean player_locked;
@@ -16702,19 +16700,6 @@ qboolean PM_SaberBlocking()
 		{
 			//we parried another lightsaber while attacking, so treat it as a bounce
 			pm->ps->saberBlocked = BLOCKED_ATK_BOUNCE;
-		}
-		else if ((pm->ps->saber_anim_level == SS_FAST ||
-			pm->ps->saber_anim_level == SS_MEDIUM ||
-			pm->ps->saber_anim_level == SS_STRONG ||
-			pm->ps->saber_anim_level == SS_DESANN ||
-			pm->ps->saber_anim_level == SS_TAVION) &&
-			(pm->cmd.buttons & BUTTON_WALKING && pm->cmd.buttons & BUTTON_USE)
-			&& pm->ps->saberBlocked >= BLOCKED_UPPER_RIGHT
-			&& pm->ps->saberBlocked <= BLOCKED_FRONT
-			&& !PM_SaberInKnockaway(pm->ps->saberBounceMove))
-		{
-			//if hitting use during a parry (not already a knockaway)
-			pm->ps->saberBounceMove = PM_MBlocktheAttack(pm->ps->saberBlocked);
 		}
 		else
 		{

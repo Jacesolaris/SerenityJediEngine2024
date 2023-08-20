@@ -2548,6 +2548,7 @@ void ForceSpeedDash(gentity_t* self)
 		if (PM_RunningAnim(self->client->ps.legsAnim))
 		{
 			ForceDashAnim(self);
+			WP_ForcePowerStop(self, FP_SPEED);
 		}
 		else
 		{
@@ -2581,8 +2582,8 @@ void ForceSpeedDash(gentity_t* self)
 		vec3_t dir;
 
 		AngleVectors(self->client->ps.viewangles, dir, NULL, NULL);
-		self->client->ps.velocity[0] = self->client->ps.velocity[0] * 3;
-		self->client->ps.velocity[1] = self->client->ps.velocity[1] * 3;
+		self->client->ps.velocity[0] = self->client->ps.velocity[0] * 4;
+		self->client->ps.velocity[1] = self->client->ps.velocity[1] * 4;
 
 		ForceDashAnimDash(self);
 	}

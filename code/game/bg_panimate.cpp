@@ -2599,28 +2599,6 @@ saberMoveName_t PM_BrokenParryForParry(const int move)
 	return LS_NONE;
 }
 
-saberMoveName_t PM_MBlocktheAttack(const int move)
-{
-	switch (move)
-	{
-	case BLOCKED_FRONT:
-	case BLOCKED_BLOCKATTACK_FRONT:
-	case BLOCKED_TOP: //LS_PARRY_UP:
-		return LS_K1_T_; //push up
-	case BLOCKED_BLOCKATTACK_RIGHT:
-	case BLOCKED_UPPER_RIGHT: //LS_PARRY_UR:
-	default:
-		return LS_BLOCK_FULL_RIGHT; //push up, slightly to right
-	case BLOCKED_BLOCKATTACK_LEFT:
-	case BLOCKED_UPPER_LEFT: //LS_PARRY_UL:
-		return LS_BLOCK_FULL_LEFT; //push up and to left
-	case BLOCKED_LOWER_RIGHT: //LS_PARRY_LR:
-		return LS_K1_BR; //push down and to left
-	case BLOCKED_LOWER_LEFT: //LS_PARRY_LL:
-		return LS_K1_BL; //push down and to right
-	}
-}
-
 /////////////////////////////////////
 
 saberMoveName_t PM_AnimateOldKnockBack(const int move)

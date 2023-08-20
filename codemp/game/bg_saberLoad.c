@@ -2161,7 +2161,7 @@ static void Saber_ParseSplashKnockback(saberInfo_t* saber, const char** p)
 	saber->splashKnockback = f;
 }
 
-static void Saber_Parsehit_sound1(saberInfo_t* saber, const char** p)
+static void Saber_ParseHitSound1(saberInfo_t* saber, const char** p)
 {
 	const char* value;
 	if (COM_ParseString(p, &value))
@@ -2169,7 +2169,7 @@ static void Saber_Parsehit_sound1(saberInfo_t* saber, const char** p)
 	saber->hit_sound[0] = BG_SoundIndex(value);
 }
 
-static void Saber_Parsehit_sound2(saberInfo_t* saber, const char** p)
+static void Saber_ParseHitSound2(saberInfo_t* saber, const char** p)
 {
 	const char* value;
 	if (COM_ParseString(p, &value))
@@ -2177,7 +2177,7 @@ static void Saber_Parsehit_sound2(saberInfo_t* saber, const char** p)
 	saber->hit_sound[1] = BG_SoundIndex(value);
 }
 
-static void Saber_Parsehit_sound3(saberInfo_t* saber, const char** p)
+static void Saber_ParseHitSound3(saberInfo_t* saber, const char** p)
 {
 	const char* value;
 	if (COM_ParseString(p, &value))
@@ -2790,12 +2790,15 @@ static keywordHash_t saberParseKeywords[] = {
 	{"splashDamage2", Saber_ParseSplashDamage2, NULL},
 	{"splashKnockback", Saber_ParseSplashKnockback, NULL},
 	{"splashKnockback2", Saber_ParseSplashKnockback2, NULL},
-	{"hit_sound1", Saber_Parsehit_sound1, NULL},
-	{"hit2Sound1", Saber_ParseHit2Sound1, NULL},
-	{"hit_sound2", Saber_Parsehit_sound2, NULL},
-	{"hit2Sound2", Saber_ParseHit2Sound2, NULL},
-	{"hit_sound3", Saber_Parsehit_sound3, NULL},
-	{"hit2Sound3", Saber_ParseHit2Sound3, NULL},
+	{"hit_sound1", Saber_ParseHitSound1, NULL },
+	{"hitSound1", Saber_ParseHitSound1, NULL },
+	{"hit2Sound1", Saber_ParseHit2Sound1, NULL },
+	{"hitSound2", Saber_ParseHitSound2, NULL },
+	{"hit_sound2", Saber_ParseHitSound2, NULL },
+	{"hit2Sound2", Saber_ParseHit2Sound2, NULL },
+	{"hit_sound3", Saber_ParseHitSound3, NULL },
+	{"hitSound3", Saber_ParseHitSound3, NULL },
+	{"hit2Sound3", Saber_ParseHit2Sound3, NULL },
 	{"blockSound1", Saber_ParseBlockSound1, NULL},
 	{"block2Sound1", Saber_ParseBlock2Sound1, NULL},
 	{"blockSound2", Saber_ParseBlockSound2, NULL},
