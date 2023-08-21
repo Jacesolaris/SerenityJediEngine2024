@@ -59,7 +59,7 @@ extern qboolean PM_WalkingOrRunningAnim(int anim);
 extern qboolean PM_MeleeblockHoldAnim(int anim);
 extern qboolean PM_MeleeblockAnim(int anim);
 extern qboolean PlayerAffectedByStasis();
-extern qboolean PM_KickMove(int move);
+extern qboolean PM_kick_move(int move);
 extern qboolean PM_InLedgeMove(int anim);
 extern qboolean PM_KickingAnim(int anim);
 extern qboolean PM_InRoll(const playerState_t* ps);
@@ -2076,7 +2076,7 @@ void PM_UpdateViewAngles(int saber_anim_level, playerState_t* ps, usercmd_t* cmd
 		&& gent->s.weapon == WP_SABER
 		&& pm->ps->SaberActive()
 		&& !gent->client->ps.saberInFlight
-		&& !PM_KickMove(pm->ps->saber_move)
+		&& !PM_kick_move(pm->ps->saber_move)
 		&& cmd->forwardmove >= 0
 		&& !PM_WalkingOrRunningAnim(pm->ps->legsAnim)
 		&& !PM_WalkingOrRunningAnim(pm->ps->torsoAnim)

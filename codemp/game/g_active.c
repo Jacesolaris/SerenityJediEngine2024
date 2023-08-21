@@ -5081,7 +5081,7 @@ void ClientThink_real(gentity_t* ent)
 	if (!(ent->r.svFlags & SVF_BOT))
 	{
 		if (IsPressingDashButton(ent)
-			&& !PM_KickMove(ent->client->ps.saber_move)
+			&& !PM_kick_move(ent->client->ps.saber_move)
 			&& !PM_SaberInAttack(ent->client->ps.saber_move))
 		{
 			if (client->Dash_Count <= 2)

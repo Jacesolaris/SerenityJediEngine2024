@@ -2502,7 +2502,7 @@ void ForceSpeedDash(gentity_t* self)
 		return;
 	}
 
-	if (PM_KickMove(self->client->ps.saber_move))
+	if (PM_kick_move(self->client->ps.saber_move))
 	{
 		return;
 	}

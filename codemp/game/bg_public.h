@@ -60,7 +60,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #define DEFAULT_REDTEAM_NAME	"Empire"
 #define DEFAULT_BLUETEAM_NAME	"Rebellion"
 
-#define CURRENT_SJE_CLIENTVERSION		"Year-23,Month-08,Day-20,BuildNum-16" // build date
+#define CURRENT_SJE_CLIENTVERSION		"Year-23,Month-08,Day-21,BuildNum-17" // build date
 
 #define	STEPSIZE		18
 
@@ -1980,7 +1980,7 @@ qboolean PM_InBackFlip(int anim);
 qboolean BG_DirectFlippingAnim(int anim);
 qboolean PM_SaberInAttack(int move);
 qboolean PM_SaberInSpecial(int move);
-qboolean PM_KickMove(int move);
+qboolean PM_kick_move(int move);
 qboolean PM_SaberInIdle(int move);
 qboolean PM_FlippingAnim(int anim);
 qboolean PM_SpinningSaberAnim(int anim);

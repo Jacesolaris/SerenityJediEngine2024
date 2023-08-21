@@ -154,7 +154,7 @@ extern qboolean BG_InKnockDown(int anim);
 extern qboolean pm_saber_in_special_attack(int anim);
 extern qboolean PM_SaberInBounce(int move);
 extern qboolean PM_SaberInKnockaway(int move);
-extern qboolean PM_KickMove(int move);
+extern qboolean PM_kick_move(int move);
 extern bool in_camera;
 extern qboolean player_locked;
 extern qboolean stop_icarus;
@@ -8288,7 +8288,7 @@ void ClientThink_real(gentity_t* ent, usercmd_t* ucmd)
 		}
 		else if (IsPressingDashButton(ent)
 			&& !PM_SaberInAttack(ent->client->ps.saber_move)
-			&& !PM_KickMove(ent->client->ps.saber_move))
+			&& !PM_kick_move(ent->client->ps.saber_move))
 		{
 			if (client->Dash_Count <= 2)
 			{

@@ -13334,7 +13334,7 @@ void PM_Weapon(void)
 			if (!PM_SaberInBounce(pm->ps->saber_move)
 				&& !PM_SaberInKnockaway(pm->ps->saber_move)
 				&& !PM_SaberInBrokenParry(pm->ps->saber_move)
-				&& !PM_KickMove(pm->ps->saber_move)
+				&& !PM_kick_move(pm->ps->saber_move)
 				&& !PM_KickingAnim(pm->ps->torsoAnim)
 				&& !PM_KickingAnim(pm->ps->legsAnim)
 				&& !BG_InRoll(pm->ps, pm->ps->legsAnim)
@@ -14008,7 +14008,7 @@ void PM_Weapon(void)
 				if (!PM_SaberInBounce(pm->ps->saber_move)
 					&& !PM_SaberInKnockaway(pm->ps->saber_move)
 					&& !PM_SaberInBrokenParry(pm->ps->saber_move)
-					&& !PM_KickMove(pm->ps->saber_move)
+					&& !PM_kick_move(pm->ps->saber_move)
 					&& !PM_KickingAnim(pm->ps->torsoAnim)
 					&& !PM_KickingAnim(pm->ps->legsAnim)
 					&& !BG_InRoll(pm->ps, pm->ps->legsAnim)
@@ -14559,7 +14559,7 @@ void PM_UpdateViewAngles(int saber_anim_level, playerState_t* ps, const usercmd_
 	vec3_t start, end, tmins, tmaxs, right;
 	trace_t trace;
 
-	saberInfo_t* saber1 = BG_MySaber(pm->ps->client_num, 0);
+	saberInfo_t* saber1 = BG_MySaber(ps->client_num, 0);
 
 	if (ps->pm_type == PM_INTERMISSION || ps->pm_type == PM_SPINTERMISSION)
 	{
@@ -14709,7 +14709,7 @@ void PM_UpdateViewAngles(int saber_anim_level, playerState_t* ps, const usercmd_
 	}
 
 	//manual dodge
-	if (pm->ps->ManualBlockingFlags & 1 << MBF_MELEEDODGE)
+	if (ps->ManualBlockingFlags & 1 << MBF_MELEEDODGE)
 	{
 		//check leaning
 		if (G_OkayToLean(ps, &pm->cmd, qtrue) && (cmd->rightmove || cmd->forwardmove)) //pushing a direction
@@ -14841,25 +14841,25 @@ void PM_UpdateViewAngles(int saber_anim_level, playerState_t* ps, const usercmd_
 					anim = BOTH_DODGE_HOLD_FL + (anim - BOTH_DODGE_FL);
 					extraHoldTime = 300;
 				}
-				if (anim == pm->ps->torsoAnim)
+				if (anim == ps->torsoAnim)
 				{
-					if (pm->ps->torsoTimer < 200)
+					if (ps->torsoTimer < 200)
 					{
-						pm->ps->torsoTimer = 200;
+						ps->torsoTimer = 200;
 					}
 				}
 				else
 				{
 					PM_SetAnim(SETANIM_TORSO, anim, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 				}
-				if (extraHoldTime && pm->ps->torsoTimer < extraHoldTime)
+				if (extraHoldTime && ps->torsoTimer < extraHoldTime)
 				{
 					ps->torsoTimer += extraHoldTime;
 				}
-				if (pm->ps->groundEntityNum != ENTITYNUM_NONE && !pm->cmd.upmove)
+				if (ps->groundEntityNum != ENTITYNUM_NONE && !pm->cmd.upmove)
 				{
 					PM_SetAnim(SETANIM_LEGS, anim, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
-					pm->ps->legsTimer = pm->ps->torsoTimer;
+					ps->legsTimer = ps->torsoTimer;
 				}
 				else
 				{
@@ -14869,7 +14869,7 @@ void PM_UpdateViewAngles(int saber_anim_level, playerState_t* ps, const usercmd_
 				ps->leanStopDebounceTime = ceil((float)ps->torsoTimer / 50.0f); //20;
 			}
 		}
-		else if (!pm->ps->zoomMode && cmd->rightmove != 0 && !cmd->forwardmove && cmd->upmove <= 0)
+		else if (!ps->zoomMode && cmd->rightmove != 0 && !cmd->forwardmove && cmd->upmove <= 0)
 		{
 			//Only lean if holding use button, strafing and not moving forward or back and not jumping
 			int leanofs = 0;
@@ -14918,10 +14918,10 @@ void PM_UpdateViewAngles(int saber_anim_level, playerState_t* ps, const usercmd_
 		{
 			if (cmd->forwardmove || cmd->upmove > 0)
 			{
-				if (pm->ps->legsAnim == LEGS_LEAN_RIGHT1 ||
-					pm->ps->legsAnim == LEGS_LEAN_LEFT1)
+				if (ps->legsAnim == LEGS_LEAN_RIGHT1 ||
+					ps->legsAnim == LEGS_LEAN_LEFT1)
 				{
-					pm->ps->legsTimer = 0; //Force it to stop the anim
+					ps->legsTimer = 0; //Force it to stop the anim
 				}
 
 				if (ps->leanofs > 0)
@@ -14964,17 +14964,17 @@ void PM_UpdateViewAngles(int saber_anim_level, playerState_t* ps, const usercmd_
 	}
 
 	//standing block
-	if (pm->ps->weapon == WP_SABER
-		&& !BG_SabersOff(pm->ps)
-		&& !pm->ps->saberInFlight
-		&& !PM_KickMove(pm->ps->saber_move)
+	if (ps->weapon == WP_SABER
+		&& !BG_SabersOff(ps)
+		&& !ps->saberInFlight
+		&& !PM_kick_move(ps->saber_move)
 		&& cmd->forwardmove >= 0
-		&& !PM_WalkingOrRunningAnim(pm->ps->legsAnim)
-		&& !PM_WalkingOrRunningAnim(pm->ps->torsoAnim)
-		&& !(pm->ps->pm_flags & PMF_DUCKED)
-		&& pm->ps->fd.blockPoints > BLOCKPOINTS_FAIL
-		&& pm->ps->fd.forcePower > BLOCKPOINTS_FAIL
-		&& pm->ps->fd.forcePowersKnown & 1 << FP_SABER_DEFENSE)
+		&& !PM_WalkingOrRunningAnim(ps->legsAnim)
+		&& !PM_WalkingOrRunningAnim(ps->torsoAnim)
+		&& !(ps->pm_flags & PMF_DUCKED)
+		&& ps->fd.blockPoints > BLOCKPOINTS_FAIL
+		&& ps->fd.forcePower > BLOCKPOINTS_FAIL
+		&& ps->fd.forcePowersKnown & 1 << FP_SABER_DEFENSE)
 	{
 		if (cmd->buttons & BUTTON_BLOCK && !(cmd->buttons & BUTTON_USE) && !(cmd->buttons & BUTTON_WALKING))
 		{
@@ -15028,9 +15028,9 @@ void PM_UpdateViewAngles(int saber_anim_level, playerState_t* ps, const usercmd_
 						}
 						else
 						{
-							if (pm->ps->torsoAnim == BOTH_BLOCK_HOLD_R)
+							if (ps->torsoAnim == BOTH_BLOCK_HOLD_R)
 							{
-								anim = pm->ps->torsoAnim;
+								anim = ps->torsoAnim;
 							}
 							else
 							{
@@ -15080,7 +15080,7 @@ void PM_UpdateViewAngles(int saber_anim_level, playerState_t* ps, const usercmd_
 						}
 						else
 						{
-							if (pm->ps->torsoAnim == BOTH_BLOCK_HOLD_L)
+							if (ps->torsoAnim == BOTH_BLOCK_HOLD_L)
 							{
 								anim = pm->ps->torsoAnim;
 							}
@@ -15093,7 +15093,7 @@ void PM_UpdateViewAngles(int saber_anim_level, playerState_t* ps, const usercmd_
 				}
 				else if (!cmd->forwardmove && !cmd->rightmove && cmd->buttons & BUTTON_ATTACK)
 				{
-					pm->ps->saberBlocked = BLOCKED_TOP;
+					ps->saberBlocked = BLOCKED_TOP;
 				}
 				if (anim != -1)
 				{
@@ -15129,25 +15129,25 @@ void PM_UpdateViewAngles(int saber_anim_level, playerState_t* ps, const usercmd_
 							extraHoldTime = 100;
 						}
 					}
-					if (anim == pm->ps->torsoAnim)
+					if (anim == ps->torsoAnim)
 					{
-						if (pm->ps->torsoTimer < 100)
+						if (ps->torsoTimer < 100)
 						{
-							pm->ps->torsoTimer = 100;
+							ps->torsoTimer = 100;
 						}
 					}
 					else
 					{
 						PM_SetAnim(SETANIM_TORSO, anim, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 					}
-					if (extraHoldTime && pm->ps->torsoTimer < extraHoldTime)
+					if (extraHoldTime && ps->torsoTimer < extraHoldTime)
 					{
 						ps->torsoTimer += extraHoldTime;
 					}
-					if (pm->ps->groundEntityNum != ENTITYNUM_NONE && !pm->cmd.upmove)
+					if (ps->groundEntityNum != ENTITYNUM_NONE && !pm->cmd.upmove)
 					{
 						PM_SetAnim(SETANIM_LEGS, anim, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
-						pm->ps->legsTimer = pm->ps->torsoTimer;
+						ps->legsTimer = ps->torsoTimer;
 					}
 					else
 					{
@@ -15157,7 +15157,7 @@ void PM_UpdateViewAngles(int saber_anim_level, playerState_t* ps, const usercmd_
 					ps->leanStopDebounceTime = ceil((float)ps->torsoTimer / 50.0f); //20;
 				}
 			}
-			else if (!pm->ps->zoomMode && cmd->rightmove != 0 && !cmd->forwardmove && cmd->upmove <= 0)
+			else if (!ps->zoomMode && cmd->rightmove != 0 && !cmd->forwardmove && cmd->upmove <= 0)
 			{
 				//Only lean if holding use button, strafing and not moving forward or back and not jumping
 				int leanofs = 0;
@@ -15206,10 +15206,10 @@ void PM_UpdateViewAngles(int saber_anim_level, playerState_t* ps, const usercmd_
 			{
 				if (cmd->forwardmove || cmd->upmove > 0)
 				{
-					if (pm->ps->legsAnim == LEGS_LEAN_RIGHT1 ||
-						pm->ps->legsAnim == LEGS_LEAN_LEFT1)
+					if (ps->legsAnim == LEGS_LEAN_RIGHT1 ||
+						ps->legsAnim == LEGS_LEAN_LEFT1)
 					{
-						pm->ps->legsTimer = 0; //Force it to stop the anim
+						ps->legsTimer = 0; //Force it to stop the anim
 					}
 
 					if (ps->leanofs > 0)
@@ -18213,7 +18213,7 @@ void PmoveSingle(pmove_t* pmove)
 	{
 		stiffenedUp = qtrue;
 	}
-	else if (PM_KickMove(pm->ps->saber_move) || PM_KickingAnim(pm->ps->legsAnim))
+	else if (PM_kick_move(pm->ps->saber_move) || PM_KickingAnim(pm->ps->legsAnim))
 	{
 		stiffenedUp = qtrue;
 		if (pm->ps->legsTimer <= 0)

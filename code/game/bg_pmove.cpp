@@ -90,7 +90,7 @@ extern qboolean PM_SaberKataDone(int curmove, int newmove);
 extern qboolean PM_SaberInSpecial(int move);
 extern qboolean PM_InDeathAnim();
 extern qboolean PM_StandingAnim(int anim);
-extern qboolean PM_KickMove(int move);
+extern qboolean PM_kick_move(int move);
 extern qboolean PM_KickingAnim(int anim);
 extern qboolean PM_InAirKickingAnim(int anim);
 extern qboolean PM_SuperBreakLoseAnim(int anim);
@@ -13466,7 +13466,7 @@ void PM_SetSaberMove(saberMoveName_t new_move)
 				|| new_move == LS_PULL_ATTACK_STAB
 				|| new_move == LS_PULL_ATTACK_SWING
 				|| PM_SaberInBrokenParry(new_move)
-				|| PM_KickMove(new_move))
+				|| PM_kick_move(new_move))
 			{
 				parts = SETANIM_BOTH;
 			}
@@ -16020,7 +16020,7 @@ void PM_CheckKick()
 	if (!PM_SaberInBounce(pm->ps->saber_move)
 		&& !PM_SaberInKnockaway(pm->ps->saber_move)
 		&& !PM_SaberInBrokenParry(pm->ps->saber_move)
-		&& !PM_KickMove(pm->ps->saber_move)
+		&& !PM_kick_move(pm->ps->saber_move)
 		&& !PM_KickingAnim(pm->ps->torsoAnim)
 		&& !PM_KickingAnim(pm->ps->legsAnim)
 		&& !PM_InRoll(pm->ps)
@@ -16236,7 +16236,7 @@ void PM_MeleeKickForConditions()
 	if (!PM_SaberInBounce(pm->ps->saber_move)
 		&& !PM_SaberInKnockaway(pm->ps->saber_move)
 		&& !PM_SaberInBrokenParry(pm->ps->saber_move)
-		&& !PM_KickMove(pm->ps->saber_move)
+		&& !PM_kick_move(pm->ps->saber_move)
 		&& !PM_KickingAnim(pm->ps->torsoAnim)
 		&& !PM_KickingAnim(pm->ps->legsAnim)
 		&& !PM_InRoll(pm->ps)
@@ -16452,7 +16452,7 @@ void PM_MeleeMoveForConditions()
 	if (!PM_SaberInBounce(pm->ps->saber_move)
 		&& !PM_SaberInKnockaway(pm->ps->saber_move)
 		&& !PM_SaberInBrokenParry(pm->ps->saber_move)
-		&& !PM_KickMove(pm->ps->saber_move)
+		&& !PM_kick_move(pm->ps->saber_move)
 		&& !PM_KickingAnim(pm->ps->torsoAnim)
 		&& !PM_KickingAnim(pm->ps->legsAnim)
 		&& !PM_InRoll(pm->ps)
@@ -19565,7 +19565,7 @@ static void PM_Weapon()
 
 			if (pm->ps->weapon == WP_MELEE
 				&& (pm->ps->client_num < MAX_CLIENTS || PM_ControlledByPlayer())
-				&& PM_KickMove(pm->ps->saber_move))
+				&& PM_kick_move(pm->ps->saber_move))
 			{
 				//melee, not attacking, clear move
 				pm->ps->saber_move = LS_NONE;
@@ -21573,7 +21573,7 @@ qboolean BG_SaberInFullDamageMove(const playerState_t* ps)
 		|| PM_SaberInDamageMove(ps->saber_move)
 		|| pm_saber_in_special_attack(ps->torsoAnim) //jacesolaris 2019 test for idlekill
 		|| PM_SaberDoDamageAnim(ps->torsoAnim)
-		&& !PM_KickMove(ps->saber_move)
+		&& !PM_kick_move(ps->saber_move)
 		&& !PM_InSaberLock(ps->torsoAnim)
 		|| PM_SuperBreakWinAnim(ps->torsoAnim))
 	{
