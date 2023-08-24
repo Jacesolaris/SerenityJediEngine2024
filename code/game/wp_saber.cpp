@@ -103,7 +103,7 @@ extern void Jedi_RageStop(const gentity_t* self);
 extern int PM_PickAnim(const gentity_t* self, int minAnim, int maxAnim);
 extern void NPC_SetPainEvent(gentity_t* self);
 extern qboolean PM_SwimmingAnim(int anim);
-extern qboolean PM_InAnimForSaberMove(int anim, int saber_move);
+extern qboolean PM_InAnimForsaber_move(int anim, int saber_move);
 extern qboolean PM_SpinningSaberAnim(int anim);
 extern qboolean pm_saber_in_special_attack(int anim);
 extern qboolean PM_SaberInKillAttack(int anim);
@@ -2141,9 +2141,9 @@ qboolean wp_get_saber_deflection_angle(const gentity_t* attacker, const gentity_
 		time)
 	{
 		//Hmm, let's try just basing it off the anim
-		const int att_quad_start = saberMoveData[attacker->client->ps.saber_move].startQuad;
-		const int att_quad_end = saberMoveData[attacker->client->ps.saber_move].endQuad;
-		int def_quad = saberMoveData[defender->client->ps.saber_move].endQuad;
+		const int att_quad_start = saber_moveData[attacker->client->ps.saber_move].startQuad;
+		const int att_quad_end = saber_moveData[attacker->client->ps.saber_move].endQuad;
+		int def_quad = saber_moveData[defender->client->ps.saber_move].endQuad;
 		int quad_diff = fabs(static_cast<float>(def_quad - att_quad_start));
 
 		if (defender->client->ps.saber_move == LS_READY)
@@ -5389,12 +5389,12 @@ qboolean WP_SabersCheckLock(gentity_t* ent1, gentity_t* ent2)
 	if (PM_SaberInParry(ent1->client->ps.saber_move))
 	{
 		//use the endquad of the move
-		lock_quad = saberMoveData[ent1->client->ps.saber_move].endQuad;
+		lock_quad = saber_moveData[ent1->client->ps.saber_move].endQuad;
 	}
 	else
 	{
 		//use the startquad of the move
-		lock_quad = saberMoveData[ent1->client->ps.saber_move].startQuad;
+		lock_quad = saber_moveData[ent1->client->ps.saber_move].startQuad;
 	}
 
 	switch (lock_quad)
@@ -6950,7 +6950,7 @@ void WP_SaberDamageTrace(gentity_t* ent, int saber_num, int blade_num)
 		{
 			//okay, in a saber_move that does damage//make sure we're in the right anim
 			if (!pm_saber_in_special_attack(ent->client->ps.torsoAnim)
-				&& !PM_InAnimForSaberMove(ent->client->ps.torsoAnim, ent->client->ps.saber_move))
+				&& !PM_InAnimForsaber_move(ent->client->ps.torsoAnim, ent->client->ps.saber_move))
 			{
 				//forced into some other animation somehow, like a pain or death?
 				if (!WP_SaberBladeUseSecondBladeStyle(&ent->client->ps.saber[saber_num], blade_num)
@@ -7917,28 +7917,10 @@ void WP_SaberDamageTrace(gentity_t* ent, int saber_num, int blade_num)
 
 			if (wp_sabers_intersection(ent, &g_entities[ent->client->ps.saberLockEnemy], g_saberFlashPos))
 			{
-				int index = 1;
-				index = Q_irand(1, 9);
-
-				if (Q_irand(0, 10))
+				if (!g_saberNoEffects)
 				{
-					if (!g_saberNoEffects)
-					{
-						wp_saber_block_effect(ent, saber_num, blade_num, g_saberFlashPos, hit_norm, qfalse);
-					}
+					G_PlayEffect("saber/saber_lock.efx", g_saberFlashPos, hit_norm);
 				}
-				else
-				{
-					if (!g_noClashFlare)
-					{
-						g_saberFlashTime = level.time - 50;
-					}
-					if (!g_saberNoEffects)
-					{
-						G_PlayEffect("saber/saber_lock.efx", g_saberFlashPos, hit_norm);
-					}
-				}
-
 				wp_saber_lock_sound(ent);
 			}
 		}
@@ -7953,7 +7935,7 @@ void WP_SaberDamageTrace(gentity_t* ent, int saber_num, int blade_num)
 		{
 			//bounce off walls
 			ent->client->ps.saberBlocked = BLOCKED_ATK_BOUNCE;
-			ent->client->ps.saberBounceMove = LS_D1_BR + (saberMoveData[ent->client->ps.saber_move].startQuad - Q_BR);
+			ent->client->ps.saberBounceMove = LS_D1_BR + (saber_moveData[ent->client->ps.saber_move].startQuad - Q_BR);
 			//do bounce sound & force feedback
 			wp_saber_bounce_on_wall_sound(ent, saber_num, blade_num);
 			//do hit effect
@@ -8000,7 +7982,7 @@ void WP_SaberDamageTrace(gentity_t* ent, int saber_num, int blade_num)
 			//reflect from wall
 			//do bounce sound & force feedback
 			ent->client->ps.saberBlocked = BLOCKED_ATK_BOUNCE;
-			ent->client->ps.saberBounceMove = LS_D1_BR + (saberMoveData[ent->client->ps.saber_move].startQuad - Q_BR);
+			ent->client->ps.saberBounceMove = LS_D1_BR + (saber_moveData[ent->client->ps.saber_move].startQuad - Q_BR);
 
 			//do hit effect
 			if (!g_saberNoEffects)
@@ -13615,13 +13597,13 @@ void wp_saber_start_missile_block_check(gentity_t* self, const usercmd_t* ucmd)
 				if (BG_SaberInNonIdleDamageMove(&self->client->ps))
 				{
 					//attacking
-					swing_block_quad = invert_quad(saberMoveData[self->client->ps.saber_move].startQuad);
+					swing_block_quad = invert_quad(saber_moveData[self->client->ps.saber_move].startQuad);
 				}
 				else if (PM_SaberInStart(self->client->ps.saber_move) ||
 					PM_SaberInTransition(self->client->ps.saber_move))
 				{
 					//preparing to attack
-					swing_block_quad = invert_quad(saberMoveData[self->client->ps.saber_move].endQuad);
+					swing_block_quad = invert_quad(saber_moveData[self->client->ps.saber_move].endQuad);
 				}
 				else
 				{
@@ -13907,7 +13889,7 @@ void wp_saber_start_missile_block_check(gentity_t* self, const usercmd_t* ucmd)
 				VectorMA(incoming->currentOrigin, scale, ent_dir, start);
 				VectorCopy(self->currentOrigin, end);
 				end[2] += self->maxs[2] * 0.75f;
-				gi.trace(&trace, start, incoming->mins, incoming->maxs, end, incoming->s.number, MASK_SHOT, G2_COLLIDE,	10);
+				gi.trace(&trace, start, incoming->mins, incoming->maxs, end, incoming->s.number, MASK_SHOT, G2_COLLIDE, 10);
 
 				jedi_dodge_evasion(self, incoming->owner, &trace, HL_NONE);
 			}

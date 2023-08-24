@@ -60,7 +60,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #define DEFAULT_REDTEAM_NAME	"Empire"
 #define DEFAULT_BLUETEAM_NAME	"Rebellion"
 
-#define CURRENT_SJE_CLIENTVERSION		"Year-23,Month-08,Day-21,BuildNum-17" // build date
+#define CURRENT_SJE_CLIENTVERSION		"Year-23,Month-08,Day-24,BuildNum-18" // build date
 
 #define	STEPSIZE		18
 
@@ -1406,7 +1406,7 @@ typedef enum {
 // Ideally this will be replaced with an external file or more sophisticated move-picker
 // once the game gets out of prototype stage.
 
-// rww - Moved all this to bg_public so that we can access the saberMoveData stuff on the cgame
+// rww - Moved all this to bg_public so that we can access the saber_moveData stuff on the cgame
 // which is currently used for determining if a saber trail should be rendered in a given frame
 #ifdef LS_NONE
 #undef LS_NONE
@@ -1656,7 +1656,7 @@ typedef enum {
 	Q_NUM_QUADS
 } saberQuadrant_t;
 
-typedef struct saberMoveData_s {
+typedef struct saber_moveData_s {
 	char* name;
 	int animToUse;
 	int	startQuad;
@@ -1667,9 +1667,9 @@ typedef struct saberMoveData_s {
 	saberMoveName_t chain_idle;			// What move to call if the attack button is not pressed at the end of this anim
 	saberMoveName_t chain_attack;		// What move to call if the attack button (and nothing else) is pressed
 	qboolean trailLength;
-} saberMoveData_t;
+} saber_moveData_t;
 
-extern saberMoveData_t	saberMoveData[LS_MOVE_MAX];
+extern saber_moveData_t	saber_moveData[LS_MOVE_MAX];
 
 typedef enum
 {

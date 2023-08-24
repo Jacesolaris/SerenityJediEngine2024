@@ -1922,8 +1922,9 @@ void NPC_RunBehavior(const int team, const int b_state)
 	{
 		NPC_BSCinematic();
 	}
-	else if (NPCInfo->scriptFlags & SCF_PILOT && Pilot_MasterUpdate())
+	else if ((NPCInfo->scriptFlags & SCF_PILOT) && Pilot_MasterUpdate())
 	{
+		return;
 	}
 	else if (NPC_JumpBackingUp())
 	{

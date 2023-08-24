@@ -497,73 +497,73 @@ void LoadTips(void)
 	const int time = trap->Milliseconds();
 	const int index = rand() % 15;
 
-	if ((SCREENTIP_NEXT_UPDATE_TIME < time || SCREENTIP_NEXT_UPDATE_TIME == 0) && cg.loadLCARSStage <= 4)
+	if ((SCREENTIP_NEXT_UPDATE_TIME < time || SCREENTIP_NEXT_UPDATE_TIME == 0) && cg.loadLCARSStage <= 6)
 	{
 		switch (index)
 		{
 		case 0:
 			CG_DrawProportionalString(300, 390, CG_GetStringEdString("LOADTIPS-MP", "TIP2"),
-				UI_CENTER | UI_INFOFONT | UI_DROPSHADOW, colorWhite);
+				UI_CENTER | UI_SMALLFONT | UI_DROPSHADOW, colorWhite);
 			break;
 		case 1:
 			CG_DrawProportionalString(300, 390, CG_GetStringEdString("LOADTIPS-MP", "TIP3"),
-				UI_CENTER | UI_INFOFONT | UI_DROPSHADOW, colorWhite);
+				UI_CENTER | UI_SMALLFONT | UI_DROPSHADOW, colorWhite);
 			break;
 		case 2:
 			CG_DrawProportionalString(300, 390, CG_GetStringEdString("LOADTIPS-MP", "TIP4"),
-				UI_CENTER | UI_INFOFONT | UI_DROPSHADOW, colorWhite);
+				UI_CENTER | UI_SMALLFONT | UI_DROPSHADOW, colorWhite);
 			break;
 		case 3:
 			CG_DrawProportionalString(300, 390, CG_GetStringEdString("LOADTIPS-MP", "TIP5"),
-				UI_CENTER | UI_INFOFONT | UI_DROPSHADOW, colorWhite);
+				UI_CENTER | UI_SMALLFONT | UI_DROPSHADOW, colorWhite);
 			break;
 		case 4:
 			CG_DrawProportionalString(300, 390, CG_GetStringEdString("LOADTIPS-MP", "TIP6"),
-				UI_CENTER | UI_INFOFONT | UI_DROPSHADOW, colorWhite);
+				UI_CENTER | UI_SMALLFONT | UI_DROPSHADOW, colorWhite);
 			break;
 		case 5:
 			CG_DrawProportionalString(300, 390, CG_GetStringEdString("LOADTIPS-MP", "TIP7"),
-				UI_CENTER | UI_INFOFONT | UI_DROPSHADOW, colorWhite);
+				UI_CENTER | UI_SMALLFONT | UI_DROPSHADOW, colorWhite);
 			break;
 		case 6:
 			CG_DrawProportionalString(300, 390, CG_GetStringEdString("LOADTIPS-MP", "TIP8"),
-				UI_CENTER | UI_INFOFONT | UI_DROPSHADOW, colorWhite);
+				UI_CENTER | UI_SMALLFONT | UI_DROPSHADOW, colorWhite);
 			break;
 		case 7:
 			CG_DrawProportionalString(300, 390, CG_GetStringEdString("LOADTIPS-MP", "TIP9"),
-				UI_CENTER | UI_INFOFONT | UI_DROPSHADOW, colorWhite);
+				UI_CENTER | UI_SMALLFONT | UI_DROPSHADOW, colorWhite);
 			break;
 		case 8:
 			CG_DrawProportionalString(300, 390, CG_GetStringEdString("LOADTIPS-MP", "TIP10"),
-				UI_CENTER | UI_INFOFONT | UI_DROPSHADOW, colorWhite);
+				UI_CENTER | UI_SMALLFONT | UI_DROPSHADOW, colorWhite);
 			break;
 		case 9:
 			CG_DrawProportionalString(300, 390, CG_GetStringEdString("LOADTIPS-MP", "TIP11"),
-				UI_CENTER | UI_INFOFONT | UI_DROPSHADOW, colorWhite);
+				UI_CENTER | UI_SMALLFONT | UI_DROPSHADOW, colorWhite);
 			break;
 		case 10:
 			CG_DrawProportionalString(300, 390, CG_GetStringEdString("LOADTIPS-MP", "TIP12"),
-				UI_CENTER | UI_INFOFONT | UI_DROPSHADOW, colorWhite);
+				UI_CENTER | UI_SMALLFONT | UI_DROPSHADOW, colorWhite);
 			break;
 		case 11:
 			CG_DrawProportionalString(300, 390, CG_GetStringEdString("LOADTIPS-MP", "TIP13"),
-				UI_CENTER | UI_INFOFONT | UI_DROPSHADOW, colorWhite);
+				UI_CENTER | UI_SMALLFONT | UI_DROPSHADOW, colorWhite);
 			break;
 		case 12:
 			CG_DrawProportionalString(300, 390, CG_GetStringEdString("LOADTIPS-MP", "TIP14"),
-				UI_CENTER | UI_INFOFONT | UI_DROPSHADOW, colorWhite);
+				UI_CENTER | UI_SMALLFONT | UI_DROPSHADOW, colorWhite);
 			break;
 		case 13:
 			CG_DrawProportionalString(300, 390, CG_GetStringEdString("LOADTIPS-MP", "TIP15"),
-				UI_CENTER | UI_INFOFONT | UI_DROPSHADOW, colorWhite);
+				UI_CENTER | UI_SMALLFONT | UI_DROPSHADOW, colorWhite);
 			break;
 		case 14:
 			CG_DrawProportionalString(300, 390, CG_GetStringEdString("LOADTIPS-MP", "TIP1"),
-				UI_CENTER | UI_INFOFONT | UI_DROPSHADOW, colorWhite);
+				UI_CENTER | UI_SMALLFONT | UI_DROPSHADOW, colorWhite);
 			break;
 		default:
 			CG_DrawProportionalString(300, 390, CG_GetStringEdString("LOADTIPS-MP", "TIP1"),
-				UI_CENTER | UI_INFOFONT | UI_DROPSHADOW, colorWhite);
+				UI_CENTER | UI_SMALLFONT | UI_DROPSHADOW, colorWhite);
 			break;
 		}
 		SCREENTIP_NEXT_UPDATE_TIME = time + 2500;

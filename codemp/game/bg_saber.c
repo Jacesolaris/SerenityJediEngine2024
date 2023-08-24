@@ -40,7 +40,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #ifdef _GAME
 #include "g_local.h"
 extern stringID_table_t animTable[MAX_ANIMATIONS + 1];
-extern stringID_table_t SaberMoveTable[];
+extern stringID_table_t saber_moveTable[];
 #endif
 
 extern qboolean BG_SabersOff(const playerState_t* ps);
@@ -194,7 +194,7 @@ qboolean BG_EnoughForcePowerForMove(const int cost)
 #define AFLAG_FINISH (SETANIM_FLAG_HOLD | SETANIM_FLAG_HOLDLESS)
 
 //FIXME: add the alternate anims for each style?
-saberMoveData_t saberMoveData[LS_MOVE_MAX] = {
+saber_moveData_t saber_moveData[LS_MOVE_MAX] = {
 	//							NB:randomized
 	// name			anim(do all styles?)startQ	endQ	setanimflag		blend,	blocking	chain_idle		chain_attack	trailLen
 	{"None", BOTH_STAND1, Q_R, Q_R, AFLAG_IDLE, 350, BLK_NO, LS_NONE, LS_NONE, 0}, // LS_NONE		= 0,
@@ -624,7 +624,7 @@ void PM_VelocityForSaberMove(const playerState_t* ps, vec3_t throw_dir)
 
 	AngleVectors(ps->viewangles, v_forward, v_right, v_up);
 
-	switch (saberMoveData[ps->saber_move].startQuad)
+	switch (saber_moveData[ps->saber_move].startQuad)
 	{
 	case Q_BR:
 		VectorScale(v_right, 1, start_q);
@@ -656,7 +656,7 @@ void PM_VelocityForSaberMove(const playerState_t* ps, vec3_t throw_dir)
 		break;
 	default:;
 	}
-	switch (saberMoveData[ps->saber_move].endQuad)
+	switch (saber_moveData[ps->saber_move].endQuad)
 	{
 	case Q_BR:
 		VectorScale(v_right, 1, end_q);
@@ -1153,7 +1153,7 @@ saberMoveName_t PM_SaberAnimTransitionMove(const saberMoveName_t curmove, const 
 			case LS_H1_TL:
 			case LS_H1_BR:
 			case LS_H1_BL:
-				retmove = PM_ReturnforQuad(saberMoveData[curmove].endQuad);
+				retmove = PM_ReturnforQuad(saber_moveData[curmove].endQuad);
 				break;
 			default:;
 			}
@@ -1176,10 +1176,10 @@ saberMoveName_t PM_SaberAnimTransitionMove(const saberMoveName_t curmove, const 
 				else
 				{
 					//okay to chain to another attack
-					retmove = transitionMove[saberMoveData[curmove].endQuad][saberMoveData[newmove].startQuad];
+					retmove = transitionMove[saber_moveData[curmove].endQuad][saber_moveData[newmove].startQuad];
 				}
 			}
-			else if (saberMoveData[curmove].endQuad == saberMoveData[newmove].startQuad)
+			else if (saber_moveData[curmove].endQuad == saber_moveData[newmove].startQuad)
 			{
 				//new move starts from same quadrant
 				retmove = newmove;
@@ -1204,7 +1204,7 @@ saberMoveName_t PM_SaberAnimTransitionMove(const saberMoveName_t curmove, const 
 				case LS_D1__L:
 				case LS_D1_BL:
 				case LS_D1_B_:
-					retmove = transitionMove[saberMoveData[curmove].endQuad][saberMoveData[newmove].startQuad];
+					retmove = transitionMove[saber_moveData[curmove].endQuad][saber_moveData[newmove].startQuad];
 					break;
 					//transitioning from a return
 				case LS_R_TL2BR:
@@ -1269,7 +1269,7 @@ saberMoveName_t PM_SaberAnimTransitionMove(const saberMoveName_t curmove, const 
 				case LS_H1_TL:
 				case LS_H1_BR:
 				case LS_H1_BL:
-					retmove = transitionMove[saberMoveData[curmove].endQuad][saberMoveData[newmove].startQuad];
+					retmove = transitionMove[saber_moveData[curmove].endQuad][saber_moveData[newmove].startQuad];
 					break;
 					//NB: transitioning from transitions is fine
 				default:
@@ -1517,7 +1517,7 @@ int PM_SaberAttackChainAngle(const int move1, const int move2)
 	{
 		return -1;
 	}
-	return saberMoveTransitionAngle[saberMoveData[move1].endQuad][saberMoveData[move2].startQuad];
+	return saberMoveTransitionAngle[saber_moveData[move1].endQuad][saber_moveData[move2].startQuad];
 }
 
 qboolean PM_SaberKataDone(const int curmove, const int newmove)
@@ -3186,7 +3186,7 @@ saberMoveName_t PM_CheckPlayerAttackFromParry(const int curmove)
 	if (curmove >= LS_PARRY_UP && curmove <= LS_REFLECT_LL)
 	{
 		//in a parry
-		switch (saberMoveData[curmove].endQuad)
+		switch (saber_moveData[curmove].endQuad)
 		{
 		case Q_T:
 			return LS_A_T2B;
@@ -3558,11 +3558,11 @@ saberMoveName_t PM_SaberAttackForMovement(const saberMoveName_t curmove)
 #endif
 				{
 					//player uses chain-attack
-					newmove = saberMoveData[curmove].chain_attack;
+					newmove = saber_moveData[curmove].chain_attack;
 				}
 				if (PM_SaberKataDone(curmove, newmove))
 				{
-					return saberMoveData[curmove].chain_idle;
+					return saber_moveData[curmove].chain_idle;
 				}
 				return newmove;
 			}
@@ -3574,7 +3574,7 @@ saberMoveName_t PM_SaberAttackForMovement(const saberMoveName_t curmove)
 					Q_irand(0, 3))
 				{
 					//use bot random
-					newmove = PM_NPCSaberAttackFromQuad(saberMoveData[curmove].endQuad);
+					newmove = PM_NPCSaberAttackFromQuad(saber_moveData[curmove].endQuad);
 				}
 				else
 #endif
@@ -3582,17 +3582,17 @@ saberMoveName_t PM_SaberAttackForMovement(const saberMoveName_t curmove)
 					if (pm->ps->fd.saber_anim_level == SS_FAST || pm->ps->fd.saber_anim_level == SS_TAVION)
 					{
 						//player is in fast attacks, so come right back down from the same spot
-						newmove = PM_AttackMoveForQuad(saberMoveData[curmove].endQuad);
+						newmove = PM_AttackMoveForQuad(saber_moveData[curmove].endQuad);
 					}
 					else
 					{
 						//use a transition to wrap to another attack from a different dir
-						newmove = saberMoveData[curmove].chain_attack;
+						newmove = saber_moveData[curmove].chain_attack;
 					}
 				}
 				if (PM_SaberKataDone(curmove, newmove))
 				{
-					return saberMoveData[curmove].chain_idle;
+					return saber_moveData[curmove].chain_idle;
 				}
 				return newmove;
 			}
@@ -4438,10 +4438,10 @@ saberMoveName_t PM_DoFake(const int curmove)
 	{
 		//assume that we're trying to fake in our current direction so we'll automatically fake
 		//in the completely opposite direction.  This allows the player to do a fake while standing still.
-		newQuad = saberMoveData[curmove].endQuad;
+		newQuad = saber_moveData[curmove].endQuad;
 	}
 
-	if (newQuad == saberMoveData[curmove].endQuad)
+	if (newQuad == saber_moveData[curmove].endQuad)
 	{
 		//player is attempting to do a fake move to the same quadrant
 		//as such, fake to the completely opposite quad
@@ -4468,7 +4468,7 @@ saberMoveName_t PM_DoFake(const int curmove)
 
 	//add faking flag
 	pm->ps->userInt3 |= 1 << FLAG_ATTACKFAKE;
-	return transitionMove[saberMoveData[curmove].endQuad][newQuad];
+	return transitionMove[saber_moveData[curmove].endQuad][newQuad];
 }
 
 saberMoveName_t PM_DoAI_Fake(const int curmove)
@@ -4541,10 +4541,10 @@ saberMoveName_t PM_DoAI_Fake(const int curmove)
 	{
 		//assume that we're trying to fake in our current direction so we'll automatically fake
 		//in the completely opposite direction.  This allows the player to do a fake while standing still.
-		newQuad = saberMoveData[curmove].endQuad;
+		newQuad = saber_moveData[curmove].endQuad;
 	}
 
-	if (newQuad == saberMoveData[curmove].endQuad)
+	if (newQuad == saber_moveData[curmove].endQuad)
 	{
 		//player is attempting to do a fake move to the same quadrant
 		//as such, fake to the completely opposite quad
@@ -4571,7 +4571,7 @@ saberMoveName_t PM_DoAI_Fake(const int curmove)
 
 	//add faking flag
 	pm->ps->userInt3 |= 1 << FLAG_ATTACKFAKE;
-	return transitionMove[saberMoveData[curmove].endQuad][newQuad];
+	return transitionMove[saber_moveData[curmove].endQuad][newQuad];
 }
 
 void PM_SaberDroidWeapon(void)
@@ -4824,7 +4824,7 @@ qboolean PM_SaberBlocking(void)
 					if (g_entities[pm->ps->client_num].r.svFlags & SVF_BOT || pm_entSelf->s.eType == ET_NPC)
 					{
 						// Some special bot stuff.
-						nextMove = saberMoveData[pm->ps->saber_move].chain_attack;
+						nextMove = saber_moveData[pm->ps->saber_move].chain_attack;
 					}
 					else
 #endif
@@ -4832,12 +4832,12 @@ qboolean PM_SaberBlocking(void)
 						//player
 						int newQuad = PM_SaberMoveQuadrantForMovement(&pm->cmd);
 
-						while (newQuad == saberMoveData[pm->ps->saber_move].startQuad)
+						while (newQuad == saber_moveData[pm->ps->saber_move].startQuad)
 						{
 							//player is still in same attack quad, don't repeat that attack because it looks bad,
 							newQuad = Q_irand(Q_BR, Q_BL);
 						}
-						nextMove = transitionMove[saberMoveData[pm->ps->saber_move].startQuad][newQuad];
+						nextMove = transitionMove[saber_moveData[pm->ps->saber_move].startQuad][newQuad];
 					}
 				}
 				else
@@ -4847,24 +4847,24 @@ qboolean PM_SaberBlocking(void)
 					if (g_entities[pm->ps->client_num].r.svFlags & SVF_BOT || pm_entSelf->s.eType == ET_NPC)
 					{
 						// Some special bot stuff.
-						nextMove = saberMoveData[pm->ps->saber_move].chain_idle;
+						nextMove = saber_moveData[pm->ps->saber_move].chain_idle;
 					}
 					else
 #endif
 					{
 						//player
-						if (saberMoveData[pm->ps->saber_move].startQuad == Q_T)
+						if (saber_moveData[pm->ps->saber_move].startQuad == Q_T)
 						{
 							nextMove = LS_R_BL2TR;
 						}
-						else if (saberMoveData[pm->ps->saber_move].startQuad < Q_T)
+						else if (saber_moveData[pm->ps->saber_move].startQuad < Q_T)
 						{
-							nextMove = LS_R_TL2BR + (saberMoveName_t)(saberMoveData[pm->ps->saber_move].startQuad -
+							nextMove = LS_R_TL2BR + (saberMoveName_t)(saber_moveData[pm->ps->saber_move].startQuad -
 								Q_BR);
 						}
 						else
 						{
-							nextMove = LS_R_BR2TL + (saberMoveName_t)(saberMoveData[pm->ps->saber_move].startQuad -
+							nextMove = LS_R_BR2TL + (saberMoveName_t)(saber_moveData[pm->ps->saber_move].startQuad -
 								Q_TL);
 						}
 					}
@@ -5956,7 +5956,7 @@ weapChecks:
 			}
 			if (kick_move != -1)
 			{
-				const int kick_anim = saberMoveData[kick_move].animToUse;
+				const int kick_anim = saber_moveData[kick_move].animToUse;
 
 				if (kick_anim != -1)
 				{
@@ -6033,7 +6033,7 @@ weapChecks:
 #endif
 				{
 					//perform attack fake
-					newmove = PM_ReturnforQuad(saberMoveData[curmove].endQuad);
+					newmove = PM_ReturnforQuad(saber_moveData[curmove].endQuad);
 					PM_AddBlockFatigue(pm->ps, FATIGUE_ATTACKFAKE);
 				}
 			}
@@ -6049,13 +6049,13 @@ weapChecks:
 				if (g_entities[pm->ps->client_num].r.svFlags & SVF_BOT) //npc
 				{
 					//NPCs never stop attacking mid-attack, just follow thru with attack.
-					newmove = saberMoveData[curmove].chain_attack;
+					newmove = saber_moveData[curmove].chain_attack;
 				}
 				else
 #endif
 				{
 					//exit out of transition without attacking
-					newmove = PM_ReturnforQuad(saberMoveData[curmove].endQuad);
+					newmove = PM_ReturnforQuad(saber_moveData[curmove].endQuad);
 				}
 			}
 			else if (PM_SaberInBounce(curmove))
@@ -6068,12 +6068,12 @@ weapChecks:
 					if (PM_SaberKataDone(LS_NONE, LS_NONE))
 					{
 						//done with this kata, must return to ready before attack again
-						newmove = saberMoveData[curmove].chain_idle;
+						newmove = saber_moveData[curmove].chain_idle;
 					}
 					else
 					{
 						//okay to chain to another attack
-						newmove = saberMoveData[curmove].chain_attack;
+						newmove = saber_moveData[curmove].chain_attack;
 						//we assume they're attacking, even if they're not
 						pm->ps->saberAttackChainCount++;
 						pm->ps->saberFatigueChainCount++;
@@ -6083,7 +6083,7 @@ weapChecks:
 #endif
 				{
 					//player gets his by directional control
-					newmove = saberMoveData[curmove].chain_idle; //oops, not attacking, so don't chain
+					newmove = saber_moveData[curmove].chain_idle; //oops, not attacking, so don't chain
 				}
 			}
 			else
@@ -6121,7 +6121,7 @@ weapChecks:
 				if (newmove == LS_NONE)
 				{
 					//no movement, just let the normal attack code handle it
-					newmove = saberMoveData[curmove].chain_attack;
+					newmove = saber_moveData[curmove].chain_attack;
 				}
 			}
 			else if (PM_SaberInBounce(curmove))
@@ -6191,7 +6191,7 @@ weapChecks:
 
 		if (curmove >= LS_PARRY_UP && curmove <= LS_REFLECT_LL)
 		{//from a parry or reflection, can go directly into an attack
-			switch (saberMoveData[curmove].endQuad)
+			switch (saber_moveData[curmove].endQuad)
 			{
 			case Q_T:
 				newmove = LS_A_T2B;
@@ -6216,7 +6216,7 @@ weapChecks:
 		if (newmove != LS_NONE)
 		{
 			//have a valid, final LS_ move picked, so skip finding the transition move and just get the anim
-			anim = saberMoveData[newmove].animToUse;
+			anim = saber_moveData[newmove].animToUse;
 		}
 
 		if (anim == -1)
@@ -6224,7 +6224,7 @@ weapChecks:
 			if (PM_SaberInTransition(curmove))
 			{
 				//in a transition, must play sequential attack
-				newmove = saberMoveData[curmove].chain_attack;
+				newmove = saber_moveData[curmove].chain_attack;
 			}
 			else if (curmove >= LS_S_TL2BR && curmove <= LS_S_T2B)
 			{
@@ -6251,7 +6251,7 @@ weapChecks:
 						&& Q_irand(0, 1))) //minor change to make fast-attack users use the special attacks more
 				{
 					//NPCs use more randomized attacks the more skilled they are
-					newmove = PM_NPCSaberAttackFromQuad(saberMoveData[curmove].endQuad);
+					newmove = PM_NPCSaberAttackFromQuad(saber_moveData[curmove].endQuad);
 				}
 				else
 #endif
@@ -6261,10 +6261,10 @@ weapChecks:
 					if (pm->ps->saberFatigueChainCount < MISHAPLEVEL_TEN)
 					{
 						if ((PM_SaberInBounce(curmove) || PM_SaberInBrokenParry(curmove))
-							&& saberMoveData[newmove].startQuad == saberMoveData[curmove].endQuad)
+							&& saber_moveData[newmove].startQuad == saber_moveData[curmove].endQuad)
 						{
 							//this attack would be a repeat of the last (which was blocked), so don't actually use it, use the default chain attack for this bounce
-							newmove = saberMoveData[curmove].chain_attack;
+							newmove = saber_moveData[curmove].chain_attack;
 						}
 					}
 					else
@@ -6273,7 +6273,7 @@ weapChecks:
 							&& newmove >= LS_A_TL2BR && newmove <= LS_A_T2B)
 						{
 							//prevent similar attack directions to prevent lightning-like bounce attacks.
-							if (saberMoveData[newmove].startQuad == saberMoveData[curmove].endQuad)
+							if (saber_moveData[newmove].startQuad == saber_moveData[curmove].endQuad)
 							{
 								//can't attack in the same direction
 								newmove = LS_READY;
@@ -6288,7 +6288,7 @@ weapChecks:
 				if (PM_SaberKataDone(curmove, newmove))
 				{
 					//cannot chain this time
-					newmove = saberMoveData[curmove].chain_idle;
+					newmove = saber_moveData[curmove].chain_idle;
 				}
 			}
 
@@ -6298,7 +6298,7 @@ weapChecks:
 				{
 					//don't do transitions when cartwheeling - could make you spin!
 					newmove = PM_SaberAnimTransitionMove(curmove, newmove);
-					anim = saberMoveData[newmove].animToUse;
+					anim = saber_moveData[newmove].animToUse;
 				}
 			}
 		}
@@ -6334,11 +6334,11 @@ weapChecks:
 			}
 			else
 			{
-				newmove = saberMoveData[curmove].chain_attack;
+				newmove = saber_moveData[curmove].chain_attack;
 			}
 			if (newmove != LS_NONE)
 			{
-				anim = saberMoveData[newmove].animToUse;
+				anim = saber_moveData[newmove].animToUse;
 			}
 
 			if (!pm->cmd.forwardmove && !pm->cmd.rightmove && pm->cmd.upmove >= 0 && pm->ps->groundEntityNum !=
@@ -6686,8 +6686,8 @@ void WP_BlasterFatigueRegenerate(const int override_amt)
 
 void PM_SetSaberMove(saberMoveName_t new_move)
 {
-	unsigned int setflags = saberMoveData[new_move].animSetFlags;
-	int anim = saberMoveData[new_move].animToUse;
+	unsigned int setflags = saber_moveData[new_move].animSetFlags;
+	int anim = saber_moveData[new_move].animToUse;
 	int parts = SETANIM_TORSO;
 
 	const saberInfo_t* saber1 = BG_MySaber(pm->ps->client_num, 0);
@@ -6857,7 +6857,7 @@ void PM_SetSaberMove(saberMoveName_t new_move)
 		{
 			//enemy both on left and right
 			new_move = LS_DUAL_LR;
-			anim = saberMoveData[new_move].animToUse;
+			anim = saber_moveData[new_move].animToUse;
 			//probably already moved, but...
 			pm->cmd.rightmove = 0;
 		}
@@ -6869,7 +6869,7 @@ void PM_SetSaberMove(saberMoveName_t new_move)
 		{
 			//enemy both in front and back
 			new_move = LS_DUAL_FB;
-			anim = saberMoveData[new_move].animToUse;
+			anim = saber_moveData[new_move].animToUse;
 			//probably already moved, but...
 			pm->cmd.forwardmove = 0;
 		}
@@ -7286,7 +7286,7 @@ void PM_SetSaberMove(saberMoveName_t new_move)
 		}
 
 		pm->ps->saber_move = new_move;
-		pm->ps->saberBlocking = saberMoveData[new_move].blocking;
+		pm->ps->saberBlocking = saber_moveData[new_move].blocking;
 
 		pm->ps->torsoAnim = anim;
 

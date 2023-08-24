@@ -69,7 +69,7 @@ qboolean walk_check(const gentity_t* self);
 qboolean saberKnockOutOfHand(gentity_t* saberent, gentity_t* saber_owner, vec3_t velocity);
 void AnimateKnockdown(gentity_t* self, gentity_t* inflictor);
 extern qboolean PM_SuperBreakWinAnim(int anim);
-extern stringID_table_t SaberMoveTable[];
+extern stringID_table_t saber_moveTable[];
 extern stringID_table_t animTable[MAX_ANIMATIONS + 1];
 qboolean WP_SaberBlockNonRandom(gentity_t* self, vec3_t hitloc, qboolean missileBlock);
 qboolean wp_saber_block_non_random_missile(gentity_t* self, vec3_t hitloc, qboolean missileBlock);
@@ -2401,7 +2401,7 @@ static QINLINE qboolean WP_SabersCheckLock2(gentity_t* attacker, gentity_t* defe
 	return qtrue;
 }
 
-extern saberMoveData_t saberMoveData[LS_MOVE_MAX];
+extern saber_moveData_t saber_moveData[LS_MOVE_MAX];
 
 qboolean WP_SabersCheckLock(gentity_t* ent1, gentity_t* ent2)
 {
@@ -2530,12 +2530,12 @@ qboolean WP_SabersCheckLock(gentity_t* ent1, gentity_t* ent2)
 	if (PM_SaberInParry(ent1->client->ps.saber_move))
 	{
 		//use the endquad of the move
-		lock_quad = saberMoveData[ent1->client->ps.saber_move].endQuad;
+		lock_quad = saber_moveData[ent1->client->ps.saber_move].endQuad;
 	}
 	else
 	{
 		//use the startquad of the move
-		lock_quad = saberMoveData[ent1->client->ps.saber_move].startQuad;
+		lock_quad = saber_moveData[ent1->client->ps.saber_move].startQuad;
 	}
 
 	switch (lock_quad)
@@ -6888,6 +6888,10 @@ static QINLINE qboolean check_saber_damage(gentity_t* self, const int r_saber_nu
 						//use no saber damage for kick moves.
 						dmg = SABER_NO_DAMAGE;
 					}
+					else if (saber_in_kill_move)
+					{
+						dmg = SABER_MAXHITDAMAGE;
+					}
 					else if (self->client->ps.saber_move == LS_PULL_ATTACK_STAB)
 					{
 						dmg = SABER_NORHITDAMAGE;
@@ -6906,13 +6910,13 @@ static QINLINE qboolean check_saber_damage(gentity_t* self, const int r_saber_nu
 						//use no saber damage for kick moves.
 						dmg = SABER_NO_DAMAGE;
 					}
-					else if (self->client->ps.saber_move == LS_PULL_ATTACK_STAB)
-					{
-						dmg = SABER_NORHITDAMAGE;
-					}
 					else if (saber_in_kill_move)
 					{
 						dmg = SABER_MAXHITDAMAGE;
+					}
+					else if (self->client->ps.saber_move == LS_PULL_ATTACK_STAB)
+					{
+						dmg = SABER_NORHITDAMAGE;
 					}
 					else
 					{
@@ -6929,13 +6933,13 @@ static QINLINE qboolean check_saber_damage(gentity_t* self, const int r_saber_nu
 					//use no saber damage for kick moves.
 					dmg = SABER_NO_DAMAGE;
 				}
-				else if (self->client->ps.saber_move == LS_PULL_ATTACK_STAB)
-				{
-					dmg = SABER_NORHITDAMAGE;
-				}
 				else if (saber_in_kill_move)
 				{
 					dmg = SABER_MAXHITDAMAGE;
+				}
+				else if (self->client->ps.saber_move == LS_PULL_ATTACK_STAB)
+				{
+					dmg = SABER_NORHITDAMAGE;
 				}
 				else
 				{
@@ -6952,13 +6956,13 @@ static QINLINE qboolean check_saber_damage(gentity_t* self, const int r_saber_nu
 				//use no saber damage for kick moves.
 				dmg = SABER_NO_DAMAGE;
 			}
-			else if (self->client->ps.saber_move == LS_PULL_ATTACK_STAB)
-			{
-				dmg = SABER_NORHITDAMAGE;
-			}
 			else if (saber_in_kill_move)
 			{
 				dmg = SABER_MAXHITDAMAGE;
+			}
+			else if (self->client->ps.saber_move == LS_PULL_ATTACK_STAB)
+			{
+				dmg = SABER_NORHITDAMAGE;
 			}
 			else
 			{
@@ -7374,7 +7378,7 @@ static QINLINE qboolean check_saber_damage(gentity_t* self, const int r_saber_nu
 					//do bounce sound & force feedback
 					WP_SaberBounceSound(self, r_saber_num, r_blade_num);
 					self->client->ps.saberBlocked = BLOCKED_ATK_BOUNCE;
-					self->client->ps.saberBounceMove = LS_D1_BR + (saberMoveData[self->client->ps.saber_move].startQuad -
+					self->client->ps.saberBounceMove = LS_D1_BR + (saber_moveData[self->client->ps.saber_move].startQuad -
 						Q_BR);
 				}
 				else if (self->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK &&
@@ -7388,7 +7392,7 @@ static QINLINE qboolean check_saber_damage(gentity_t* self, const int r_saber_nu
 					//reflect from wall
 					//do bounce sound & force feedback
 					self->client->ps.saberBlocked = BLOCKED_ATK_BOUNCE;
-					self->client->ps.saberBounceMove = LS_D1_BR + (saberMoveData[self->client->ps.saber_move].startQuad -
+					self->client->ps.saberBounceMove = LS_D1_BR + (saber_moveData[self->client->ps.saber_move].startQuad -
 						Q_BR);
 				}
 			}
@@ -7685,13 +7689,13 @@ void wp_saber_start_missile_block_check(gentity_t* self, usercmd_t* ucmd)
 				if (BG_SaberInNonIdleDamageMove(&p_owner->client->ps, p_owner->localAnimIndex))
 				{
 					//attacking
-					swing_block_quad = invert_quad(saberMoveData[p_owner->client->ps.saber_move].startQuad);
+					swing_block_quad = invert_quad(saber_moveData[p_owner->client->ps.saber_move].startQuad);
 				}
 				else if (PM_SaberInStart(p_owner->client->ps.saber_move)
 					|| PM_SaberInTransition(p_owner->client->ps.saber_move))
 				{
 					//preparing to attack
-					swing_block_quad = invert_quad(saberMoveData[p_owner->client->ps.saber_move].endQuad);
+					swing_block_quad = invert_quad(saber_moveData[p_owner->client->ps.saber_move].endQuad);
 				}
 				else
 				{
@@ -8493,7 +8497,7 @@ void DownedSaberThink(gentity_t* saberent)
 			saberent->think = G_FreeEntity;
 			saberent->nextthink = level.time;
 			return;
-		}
+}
 #endif
 
 		saberReactivate(saberent, saber_own);
@@ -8642,7 +8646,7 @@ void DrownedSaberTouch(gentity_t* self, gentity_t* other, trace_t* trace)
 			//make activation noise if we have one.
 			G_Sound(other, CHAN_WEAPON, other->client->saber[0].soundOn);
 		}
-	}
+}
 }
 
 void saberReactivate(gentity_t* saberent, gentity_t* saber_owner)
@@ -9856,7 +9860,7 @@ void UpdateClientRenderinfo(gentity_t* self, vec3_t render_origin, vec3_t render
 
 		VectorCopy(self->client->ps.origin, ri->eyePoint);
 		ri->eyePoint[2] += self->client->ps.viewheight;
-	}
+}
 }
 
 #define STAFF_KICK_RANGE 16
@@ -11734,7 +11738,7 @@ void wp_saber_position_update(gentity_t* self, usercmd_t* ucmd)
 		!g2SaberInstance)
 	{
 		return;
-	}
+}
 
 #ifndef FINAL_BUILD
 	viewlock = self->client->ps.userInt1;
@@ -15270,7 +15274,7 @@ saberMoveName_t G_PickAutoKick(gentity_t* self, const gentity_t* enemy)
 	if (kick_move != LS_NONE)
 	{
 		//we have a kickmove, do it!
-		const int kick_anim = saberMoveData[kick_move].animToUse;
+		const int kick_anim = saber_moveData[kick_move].animToUse;
 		if (kick_anim != -1)
 		{
 			G_SetAnim(self, NULL, SETANIM_BOTH, kick_anim, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);

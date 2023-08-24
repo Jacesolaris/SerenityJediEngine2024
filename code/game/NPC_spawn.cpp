@@ -558,7 +558,6 @@ void NPC_SetMiscDefaultData(gentity_t* ent)
 	switch (ent->client->playerTeam)
 	{
 	case TEAM_PLAYER:
-	{
 		if (ent->client->NPC_class == CLASS_SEEKER)
 		{
 			ent->NPC->defaultBehavior = BS_DEFAULT;
@@ -645,26 +644,25 @@ void NPC_SetMiscDefaultData(gentity_t* ent)
 				NPC_GalakMech_Init(ent);
 			}
 		}
-	}
-	if (ent->client->NPC_class == CLASS_PLAYER || ent->client->NPC_class == CLASS_VEHICLE || ent->spawnflags &
-		SFB_CINEMATIC)
-	{
-		ent->NPC->defaultBehavior = BS_CINEMATIC;
-	}
-	else
-	{
-		if (g_noAutoFollow->integer)
+		if (ent->client->NPC_class == CLASS_PLAYER || ent->client->NPC_class == CLASS_VEHICLE || ent->spawnflags &
+			SFB_CINEMATIC)
 		{
-			ent->NPC->defaultBehavior = BS_STAND_GUARD;
-			ent->client->leader = nullptr;
+			ent->NPC->defaultBehavior = BS_CINEMATIC;
 		}
 		else
 		{
-			ent->NPC->defaultBehavior = BS_FOLLOW_LEADER;
-			ent->client->leader = &g_entities[0]; //player
+			if (g_noAutoFollow->integer)
+			{
+				ent->NPC->defaultBehavior = BS_STAND_GUARD;
+				ent->client->leader = nullptr;
+			}
+			else
+			{
+				ent->NPC->defaultBehavior = BS_FOLLOW_LEADER;
+				ent->client->leader = &g_entities[0]; //player
+			}
 		}
-	}
-	break;
+		break;
 
 	case TEAM_NEUTRAL:
 
@@ -711,6 +709,7 @@ void NPC_SetMiscDefaultData(gentity_t* ent)
 			ent->client->NPC_class == CLASS_SHADOWTROOPER)
 		{
 			ent->client->enemyTeam = TEAM_PLAYER;
+			NPCInfo->scriptFlags |= SCF_PILOT;
 
 			if (ent->spawnflags & JSF_AMBUSH)
 			{
@@ -749,6 +748,7 @@ void NPC_SetMiscDefaultData(gentity_t* ent)
 			switch (ent->client->ps.weapon)
 			{
 			case WP_BRYAR_PISTOL:
+				NPCInfo->scriptFlags |= SCF_PILOT;
 				break;
 			case WP_SBD_PISTOL:
 			case WP_JAWA:
@@ -764,14 +764,6 @@ void NPC_SetMiscDefaultData(gentity_t* ent)
 					g_create_g2_attached_weapon_model(ent, weaponData[ent->client->ps.weapon].weaponMdl,
 						ent->handLBolt, 1);
 				}
-				/*if (!Q_stricmp("Imperial", ent->NPC_type))
-				{
-					ent->NPC->scriptFlags |= SCF_altFire;
-				}*/
-				/*if (!Q_stricmp("StormPilot", ent->NPC_type))
-				{
-					ent->NPC->scriptFlags |= SCF_altFire;
-				}*/
 				break;
 			case WP_DROIDEKA:
 				if (ent->client->NPC_class == CLASS_DROIDEKA

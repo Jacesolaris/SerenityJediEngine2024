@@ -1310,7 +1310,7 @@ int CG_InClientBitflags(const entityState_t* ent, const int client)
 void CG_PlayDoorLoopSound(const centity_t* cent);
 void CG_PlayDoorSound(const centity_t* cent, int type);
 
-void CG_TryPlayCustomSound(vec3_t origin, const int entity_num, const int channel, const char* sound_name)
+void CG_TryPlayCustomSound(vec3_t origin, const int entity_num, const soundChannel_t channel, const char* sound_name)
 {
 	const sfxHandle_t c_sound = CG_CustomSound(entity_num, sound_name);
 

@@ -843,7 +843,7 @@ void LoadTips()
 	const int index = rand() % 15;
 	const int time = cgi_Milliseconds();
 
-	if ((SCREENTIP_NEXT_UPDATE_TIME < time || SCREENTIP_NEXT_UPDATE_TIME == 0) && cg.loadLCARSStage <= 4)
+	if ((SCREENTIP_NEXT_UPDATE_TIME < time || SCREENTIP_NEXT_UPDATE_TIME == 0) && cg.loadLCARSStage <= 6)
 	{
 		cgi_Cvar_Set("ui_tipsbriefing", va("@LOADTIPS_TIP%d", index));
 		SCREENTIP_NEXT_UPDATE_TIME = time + 2500;

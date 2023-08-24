@@ -2057,57 +2057,57 @@ static void CG_General(centity_t* cent)
 		else if (cgs.gametype == GT_FFA)
 		{
 			// A team game
-			if (cg.predicted_player_state.botclass == BCLASS_DESANN
-				|| cg.predicted_player_state.botclass == BCLASS_UNSTABLESABER
-				|| cg.predicted_player_state.botclass == BCLASS_SHADOWTROOPER
-				|| cg.predicted_player_state.botclass == BCLASS_TAVION
-				|| cg.predicted_player_state.botclass == BCLASS_ALORA
-				|| cg.predicted_player_state.botclass == BCLASS_REBORN)
+			if (cent->currentState.botclass == BCLASS_DESANN
+				|| cent->currentState.botclass == BCLASS_UNSTABLESABER
+				|| cent->currentState.botclass == BCLASS_SHADOWTROOPER
+				|| cent->currentState.botclass == BCLASS_TAVION
+				|| cent->currentState.botclass == BCLASS_ALORA
+				|| cent->currentState.botclass == BCLASS_REBORN)
 			{
 				ent.shaderRGBA[0] = 255;
 				ent.shaderRGBA[1] = 120;
 				ent.shaderRGBA[2] = 255;
 				ent.renderfx |= RF_MINLIGHT | RF_NODEPTH;
 			}
-			else if (cg.predicted_player_state.botclass == BCLASS_SBD
-				|| cg.predicted_player_state.botclass == BCLASS_ASSASSIN_DROID
-				|| cg.predicted_player_state.botclass == BCLASS_BATTLEDROID
-				|| cg.predicted_player_state.botclass == BCLASS_DROIDEKA
-				|| cg.predicted_player_state.botclass == BCLASS_SABER_DROID)
+			else if (cent->currentState.botclass == BCLASS_SBD
+				|| cent->currentState.botclass == BCLASS_ASSASSIN_DROID
+				|| cent->currentState.botclass == BCLASS_BATTLEDROID
+				|| cent->currentState.botclass == BCLASS_DROIDEKA
+				|| cent->currentState.botclass == BCLASS_SABER_DROID)
 			{
 				ent.shaderRGBA[0] = 100;
 				ent.shaderRGBA[1] = 90;
 				ent.shaderRGBA[2] = 160;
 			}
-			else if (cg.predicted_player_state.botclass == BCLASS_JEDI
-				|| cg.predicted_player_state.botclass == BCLASS_JEDITRAINER
-				|| cg.predicted_player_state.botclass == BCLASS_JEDIMASTER
-				|| cg.predicted_player_state.botclass == BCLASS_LUKE
-				|| cg.predicted_player_state.botclass == BCLASS_KYLE)
+			else if (cent->currentState.botclass == BCLASS_JEDI
+				|| cent->currentState.botclass == BCLASS_JEDITRAINER
+				|| cent->currentState.botclass == BCLASS_JEDIMASTER
+				|| cent->currentState.botclass == BCLASS_LUKE
+				|| cent->currentState.botclass == BCLASS_KYLE)
 			{
 				ent.shaderRGBA[0] = 0;
 				ent.shaderRGBA[1] = 120;
 				ent.shaderRGBA[2] = 0;
 			}
-			else if (cg.predicted_player_state.botclass == BCLASS_R2D2
-				|| cg.predicted_player_state.botclass == BCLASS_R5D2
-				|| cg.predicted_player_state.botclass == BCLASS_PROTOCOL)
+			else if (cent->currentState.botclass == BCLASS_R2D2
+				|| cent->currentState.botclass == BCLASS_R5D2
+				|| cent->currentState.botclass == BCLASS_PROTOCOL)
 			{
 				ent.shaderRGBA[0] = 255;
 				ent.shaderRGBA[1] = 255;
 				ent.shaderRGBA[2] = 230;
 			}
-			else if (cg.predicted_player_state.botclass == BCLASS_JAN)
+			else if (cent->currentState.botclass == BCLASS_JAN)
 			{
 				ent.shaderRGBA[0] = 125;
 				ent.shaderRGBA[1] = 255;
 				ent.shaderRGBA[2] = 230;
 			}
-			else if (cg.predicted_player_state.botclass == BCLASS_BOBAFETT
-				|| cg.predicted_player_state.botclass == BCLASS_ROCKETTROOPER
-				|| cg.predicted_player_state.botclass == BCLASS_MANDOLORIAN
-				|| cg.predicted_player_state.botclass == BCLASS_MANDOLORIAN1
-				|| cg.predicted_player_state.botclass == BCLASS_MANDOLORIAN2)
+			else if (cent->currentState.botclass == BCLASS_BOBAFETT
+				|| cent->currentState.botclass == BCLASS_ROCKETTROOPER
+				|| cent->currentState.botclass == BCLASS_MANDOLORIAN
+				|| cent->currentState.botclass == BCLASS_MANDOLORIAN1
+				|| cent->currentState.botclass == BCLASS_MANDOLORIAN2)
 			{
 				ent.shaderRGBA[0] = 85;
 				ent.shaderRGBA[1] = 155;
@@ -2134,57 +2134,57 @@ static void CG_General(centity_t* cent)
 			}
 			else
 			{
-				if (cg.predicted_player_state.botclass == BCLASS_DESANN
-					|| cg.predicted_player_state.botclass == BCLASS_UNSTABLESABER
-					|| cg.predicted_player_state.botclass == BCLASS_SHADOWTROOPER
-					|| cg.predicted_player_state.botclass == BCLASS_TAVION
-					|| cg.predicted_player_state.botclass == BCLASS_ALORA
-					|| cg.predicted_player_state.botclass == BCLASS_REBORN)
+				if (cent->currentState.botclass == BCLASS_DESANN
+					|| cent->currentState.botclass == BCLASS_UNSTABLESABER
+					|| cent->currentState.botclass == BCLASS_SHADOWTROOPER
+					|| cent->currentState.botclass == BCLASS_TAVION
+					|| cent->currentState.botclass == BCLASS_ALORA
+					|| cent->currentState.botclass == BCLASS_REBORN)
 				{
 					ent.shaderRGBA[0] = 255;
 					ent.shaderRGBA[1] = 120;
 					ent.shaderRGBA[2] = 255;
 					ent.renderfx |= RF_MINLIGHT | RF_NODEPTH;
 				}
-				else if (cg.predicted_player_state.botclass == BCLASS_SBD
-					|| cg.predicted_player_state.botclass == BCLASS_ASSASSIN_DROID
-					|| cg.predicted_player_state.botclass == BCLASS_BATTLEDROID
-					|| cg.predicted_player_state.botclass == BCLASS_DROIDEKA
-					|| cg.predicted_player_state.botclass == BCLASS_SABER_DROID)
+				else if (cent->currentState.botclass == BCLASS_SBD
+					|| cent->currentState.botclass == BCLASS_ASSASSIN_DROID
+					|| cent->currentState.botclass == BCLASS_BATTLEDROID
+					|| cent->currentState.botclass == BCLASS_DROIDEKA
+					|| cent->currentState.botclass == BCLASS_SABER_DROID)
 				{
 					ent.shaderRGBA[0] = 100;
 					ent.shaderRGBA[1] = 90;
 					ent.shaderRGBA[2] = 160;
 				}
-				else if (cg.predicted_player_state.botclass == BCLASS_JEDI
-					|| cg.predicted_player_state.botclass == BCLASS_JEDITRAINER
-					|| cg.predicted_player_state.botclass == BCLASS_JEDIMASTER
-					|| cg.predicted_player_state.botclass == BCLASS_LUKE
-					|| cg.predicted_player_state.botclass == BCLASS_KYLE)
+				else if (cent->currentState.botclass == BCLASS_JEDI
+					|| cent->currentState.botclass == BCLASS_JEDITRAINER
+					|| cent->currentState.botclass == BCLASS_JEDIMASTER
+					|| cent->currentState.botclass == BCLASS_LUKE
+					|| cent->currentState.botclass == BCLASS_KYLE)
 				{
 					ent.shaderRGBA[0] = 0;
 					ent.shaderRGBA[1] = 120;
 					ent.shaderRGBA[2] = 0;
 				}
-				else if (cg.predicted_player_state.botclass == BCLASS_R2D2
-					|| cg.predicted_player_state.botclass == BCLASS_R5D2
-					|| cg.predicted_player_state.botclass == BCLASS_PROTOCOL)
+				else if (cent->currentState.botclass == BCLASS_R2D2
+					|| cent->currentState.botclass == BCLASS_R5D2
+					|| cent->currentState.botclass == BCLASS_PROTOCOL)
 				{
 					ent.shaderRGBA[0] = 255;
 					ent.shaderRGBA[1] = 255;
 					ent.shaderRGBA[2] = 230;
 				}
-				else if (cg.predicted_player_state.botclass == BCLASS_JAN)
+				else if (cent->currentState.botclass == BCLASS_JAN)
 				{
 					ent.shaderRGBA[0] = 125;
 					ent.shaderRGBA[1] = 255;
 					ent.shaderRGBA[2] = 230;
 				}
-				else if (cg.predicted_player_state.botclass == BCLASS_BOBAFETT
-					|| cg.predicted_player_state.botclass == BCLASS_ROCKETTROOPER
-					|| cg.predicted_player_state.botclass == BCLASS_MANDOLORIAN
-					|| cg.predicted_player_state.botclass == BCLASS_MANDOLORIAN1
-					|| cg.predicted_player_state.botclass == BCLASS_MANDOLORIAN2)
+				else if (cent->currentState.botclass == BCLASS_BOBAFETT
+					|| cent->currentState.botclass == BCLASS_ROCKETTROOPER
+					|| cent->currentState.botclass == BCLASS_MANDOLORIAN
+					|| cent->currentState.botclass == BCLASS_MANDOLORIAN1
+					|| cent->currentState.botclass == BCLASS_MANDOLORIAN2)
 				{
 					ent.shaderRGBA[0] = 85;
 					ent.shaderRGBA[1] = 155;

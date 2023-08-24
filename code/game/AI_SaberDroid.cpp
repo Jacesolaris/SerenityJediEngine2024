@@ -292,10 +292,10 @@ void NPC_SaberDroid_PickAttack()
 		NPC->client->ps.saber_anim_level = SS_STRONG;
 		break;
 	}
-	NPC->client->ps.saberBlocking = saberMoveData[NPC->client->ps.saber_move].blocking;
-	if (saberMoveData[NPC->client->ps.saber_move].trailLength > 0)
+	NPC->client->ps.saberBlocking = saber_moveData[NPC->client->ps.saber_move].blocking;
+	if (saber_moveData[NPC->client->ps.saber_move].trailLength > 0)
 	{
-		NPC->client->ps.SaberActivateTrail(saberMoveData[NPC->client->ps.saber_move].trailLength);
+		NPC->client->ps.SaberActivateTrail(saber_moveData[NPC->client->ps.saber_move].trailLength);
 	}
 	else
 	{
@@ -466,7 +466,7 @@ void NPC_BSSD_Default()
 	if (!NPC->client->ps.weaponTime)
 	{
 		NPC->client->ps.saber_move = LS_READY;
-		NPC->client->ps.saberBlocking = saberMoveData[LS_READY].blocking;
+		NPC->client->ps.saberBlocking = saber_moveData[LS_READY].blocking;
 		NPC->client->ps.SaberDeactivateTrail(0);
 		NPC->client->ps.saber_anim_level = SS_MEDIUM;
 		NPC->client->ps.weaponstate = WEAPON_READY;

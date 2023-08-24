@@ -12204,7 +12204,7 @@ CheckTrail:
 	{
 		int trail_dur;
 		// Use Raven's superior sabers.
-		saber_trail->duration = saberMoveData[cent->currentState.saber_move].trailLength;
+		saber_trail->duration = saber_moveData[cent->currentState.saber_move].trailLength;
 
 		if (cent->currentState.userInt3 & 1 << FLAG_ATTACKFAKE)
 		{
@@ -12241,7 +12241,7 @@ CheckTrail:
 			{
 				if (client->saber[saber_num].type == SABER_SITH_SWORD
 					|| (PM_SuperBreakWinAnim(cent->currentState.torsoAnim)
-						|| saberMoveData[cent->currentState.saber_move].trailLength > 0
+						|| saber_moveData[cent->currentState.saber_move].trailLength > 0
 						|| cent->currentState.powerups & 1 << PW_SPEED && cg_speedTrail.integer
 						|| cent->currentState.saberInFlight && saber_num == 0)
 					&& cg.time < saber_trail->lastTime + 2000)
@@ -12572,7 +12572,7 @@ CheckTrail:
 			dirlen1 = VectorLength(dir1);
 			dirlen2 = VectorLength(dir2);
 
-			if (saberMoveData[cent->currentState.saber_move].trailLength == 0)
+			if (saber_moveData[cent->currentState.saber_move].trailLength == 0)
 			{
 				dirlen0 *= 0.5;
 				dirlen1 *= 0.3;

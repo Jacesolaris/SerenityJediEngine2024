@@ -57,7 +57,7 @@ extern qboolean PM_RollingAnim(int anim);
 extern qboolean PM_CrouchAnim(int anim);
 extern qboolean BG_KnockDownAnim(int anim);
 extern void ScalePlayer(gentity_t* self, int scale);
-extern qboolean PM_InAnimForSaberMove(int anim, int saber_move);
+extern qboolean PM_InAnimForsaber_move(int anim, int saber_move);
 extern qboolean PM_SaberInStart(int move);
 extern int PM_AnimLength(animNumber_t anim);
 extern qboolean PM_SaberInReturn(int move);
@@ -3863,7 +3863,7 @@ qboolean G_CheckForStrongAttackMomentum(const gentity_t* self)
 	if (pm_power_level_for_saber_anims(&self->client->ps) > FORCE_LEVEL_2)
 	{
 		//strong attacks can't be interrupted
-		if (PM_InAnimForSaberMove(self->client->ps.torsoAnim, self->client->ps.saber_move))
+		if (PM_InAnimForsaber_move(self->client->ps.torsoAnim, self->client->ps.saber_move))
 		{
 			//our saber_move was not already interupted by some other anim (like pain)
 			if (PM_SaberInStart(self->client->ps.saber_move))
@@ -8283,7 +8283,7 @@ void G_DodgeDrain(const gentity_t* victim, const gentity_t* attacker, int amount
 
 	client->ps.stats[STAT_DODGE] -= amount;
 
-	if (attacker->client && attacker->client->ps.torsoAnim == saberMoveData[16].animToUse)
+	if (attacker->client && attacker->client->ps.torsoAnim == saber_moveData[16].animToUse)
 	{
 		//In DFA?
 		client->ps.saberFatigueChainCount += MISHAPLEVEL_OVERLOAD;

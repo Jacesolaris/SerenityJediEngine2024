@@ -84,7 +84,7 @@ XCVAR_DEF(g_debugServerSkel, "0", NULL, CVAR_CHEAT, qfalse)
 #ifdef _DEBUG
 XCVAR_DEF(g_disableServerG2, "0", NULL, CVAR_NONE, qtrue)
 #endif
-XCVAR_DEF(g_dismember, "50", NULL, CVAR_ARCHIVE, qtrue)
+XCVAR_DEF(g_dismember, "80", NULL, CVAR_ARCHIVE, qtrue)
 XCVAR_DEF(g_doWarmup, "0", NULL, CVAR_NONE, qtrue)
 XCVAR_DEF(g_corpseRemovalTime, "10", NULL, CVAR_NONE, qtrue)
 XCVAR_DEF(g_ff_objectives, "0", NULL, CVAR_CHEAT | CVAR_NORESTART, qtrue)

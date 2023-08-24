@@ -7976,7 +7976,7 @@ qboolean BG_InDFA()
 		return qtrue;
 	}
 
-	if (pm->ps->torsoAnim == saberMoveData[16].animToUse)
+	if (pm->ps->torsoAnim == saber_moveData[16].animToUse)
 	{
 		return qtrue;
 	}
@@ -8004,7 +8004,7 @@ qboolean G_InDFA(const gentity_t* ent)
 		return qtrue;
 	}
 
-	if (ent->client->ps.torsoAnim == saberMoveData[16].animToUse)
+	if (ent->client->ps.torsoAnim == saber_moveData[16].animToUse)
 	{
 		return qtrue;
 	}
@@ -13403,7 +13403,7 @@ void PM_Weapon(void)
 				}
 				if (kickMove != -1)
 				{
-					int kickAnim = saberMoveData[kickMove].animToUse;
+					int kickAnim = saber_moveData[kickMove].animToUse;
 
 					if (kickAnim != -1)
 					{
@@ -13980,7 +13980,7 @@ void PM_Weapon(void)
 
 					if (kickMove != -1)
 					{
-						int kickAnim = saberMoveData[kickMove].animToUse;
+						int kickAnim = saber_moveData[kickMove].animToUse;
 
 						if (kickAnim != -1)
 						{
@@ -14085,7 +14085,7 @@ void PM_Weapon(void)
 
 					if (kickMove != -1)
 					{
-						int kickAnim = saberMoveData[kickMove].animToUse;
+						int kickAnim = saber_moveData[kickMove].animToUse;
 
 						if (kickAnim != -1)
 						{
@@ -17625,7 +17625,7 @@ void PM_CheckInVehicleSaberAttackAnim(void)
 			pm->ps->weaponTime = pm->ps->torsoTimer;
 		}
 	}
-	pm->ps->saberBlocking = saberMoveData[pm->ps->saber_move].blocking;
+	pm->ps->saberBlocking = saber_moveData[pm->ps->saber_move].blocking;
 }
 
 //do we have a weapon that's ok for using on the vehicle?
@@ -19672,7 +19672,7 @@ qboolean PM_GoingToAttackDown(const playerState_t* ps)
 		|| ps->saber_move == LS_A_JUMP_PALP_ //death from above
 		|| ps->saber_move == LS_A_T2B //attacking top to bottom
 		|| ps->saber_move == LS_S_T2B //starting at attack downward
-		|| PM_SaberInTransition(ps->saber_move) && saberMoveData[ps->saber_move].endQuad == Q_T)
+		|| PM_SaberInTransition(ps->saber_move) && saber_moveData[ps->saber_move].endQuad == Q_T)
 		//transitioning to a top to bottom attack
 	{
 		return qtrue;

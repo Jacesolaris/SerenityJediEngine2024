@@ -8555,7 +8555,7 @@ void bot_behave_attack_basic(bot_state_t* bs, const gentity_t* target)
 		{
 			//we can and want to do a saber attack fake.
 			int fake_quad = Q_irand(Q_BR, Q_B);
-			while (fake_quad == saberMoveData[bs->cur_ps.saber_move].endQuad)
+			while (fake_quad == saber_moveData[bs->cur_ps.saber_move].endQuad)
 			{
 				//can't fake in the direction we're already trying to attack in
 				fake_quad = Q_irand(Q_BR, Q_B);
@@ -10638,6 +10638,7 @@ void select_best_siege_class(const int client_num, const qboolean force_join)
 	}
 }
 
+extern saberInfo_t* BG_MySaber(int client_num, int saber_num);
 //the main AI loop.
 //please don't be too frightened.
 void standard_bot_ai(bot_state_t* bs)
@@ -10655,6 +10656,8 @@ void standard_bot_ai(bot_state_t* bs)
 	gentity_t* friend_in_lof = 0;
 	vec3_t pre_frame_g_angles;
 	vec3_t move_dir;
+	const saberInfo_t* saber1 = BG_MySaber(bs->client, 0);
+	const saberInfo_t* saber2 = BG_MySaber(bs->client, 1);
 
 	//Reset the action states
 	bs->doAttack = qfalse;
@@ -10905,11 +10908,43 @@ void standard_bot_ai(bot_state_t* bs)
 			(!bs->doChat || bs->chatTime < level.time))
 		{
 			trap->EA_Attack(bs->client);
-			Cmd_SaberAttackCycle_f(&g_entities[bs->client]);
-			bs->changeStyleDebounce = level.time + 10000;
+			if (g_entities[bs->client].client->ps.fd.saber_anim_level != SS_STAFF
+				&& g_entities[bs->client].client->ps.fd.saber_anim_level != SS_DUAL)
+			{
+				Cmd_SaberAttackCycle_f(&g_entities[bs->client]); // we died lets change the saber style
+			}
 		}
 
 		return;
+	}
+
+	qboolean dualSabers = qfalse;
+	qboolean staffSaber = qfalse;
+
+	if (saber2 && saber2->model[0])
+	{
+		dualSabers = qtrue;
+	}
+
+	if (saber1->numBlades > 1)
+	{
+		staffSaber = qtrue;
+	}
+
+	if (dualSabers && bs->cur_ps.fd.saber_anim_level != SS_DUAL)
+	{//dual sabers
+		Cmd_SaberAttackCycle_f(&g_entities[bs->client]);
+	}
+
+	if (staffSaber && bs->cur_ps.fd.saber_anim_level != SS_STAFF)
+	{//dual sabers
+		Cmd_SaberAttackCycle_f(&g_entities[bs->client]);
+	}
+
+	if (!dualSabers && !staffSaber
+		&& (bs->cur_ps.fd.saber_anim_level != SS_FAST && bs->cur_ps.fd.saber_anim_level != SS_MEDIUM && bs->cur_ps.fd.saber_anim_level != SS_STRONG))
+	{//using a single saber
+		Cmd_SaberAttackCycle_f(&g_entities[bs->client]);
 	}
 
 	if (PM_InLedgeMove(bs->cur_ps.legsAnim))
@@ -10917,31 +10952,6 @@ void standard_bot_ai(bot_state_t* bs)
 		//we're in a ledge move, just pull up for now
 		trap->EA_MoveForward(bs->client);
 		return;
-	}
-
-	if (g_entities[bs->client].client->ps.fd.saber_anim_level == SS_STAFF
-		&& !(g_entities[bs->client].client->saber[saber_num].type == SABER_STAFF
-			|| g_entities[bs->client].client->saber[saber_num].type == SABER_STAFF_THIN
-			|| g_entities[bs->client].client->saber[saber_num].type == SABER_STAFF_UNSTABLE
-			|| g_entities[bs->client].client->saber[saber_num].type == SABER_ELECTROSTAFF))
-	{
-		if (bs->changeStyleDebounce < level.time)
-		{
-			// Switch stance every so often...
-			bs->changeStyleDebounce = level.time + 10000;
-			Cmd_SaberAttackCycle_f(&g_entities[bs->client]);
-		}
-	}
-
-	if (g_entities[bs->client].client->ps.fd.saber_anim_level == SS_DUAL
-		|| g_entities[bs->client].client->ps.fd.saber_anim_level != SS_MEDIUM)
-	{
-		if (bs->changeStyleDebounce < level.time)
-		{
-			// Switch stance every so often...
-			bs->changeStyleDebounce = level.time + 10000;
-			Cmd_SaberAttackCycle_f(&g_entities[bs->client]);
-		}
 	}
 
 	if (bs->cur_ps.saberLockTime > level.time)
@@ -12125,21 +12135,32 @@ void standard_bot_ai(bot_state_t* bs)
 				bs->saberPowerTime = level.time + Q_irand(3000, 15000);
 			}
 
-			if (bs->currentEnemy->health > 40
-				&& g_entities[bs->client].client->ps.fd.forcePowerLevel[FP_SABER_OFFENSE] > 1)
+			if (g_entities[bs->client].client->ps.fd.saber_anim_level != SS_STAFF
+				&& g_entities[bs->client].client->ps.fd.saber_anim_level != SS_DUAL)
 			{
-				if (g_entities[bs->client].client->ps.fd.saber_anim_level != SS_MEDIUM)
+				if (bs->currentEnemy->health > 75
+					&& g_entities[bs->client].client->ps.fd.forcePowerLevel[FP_SABER_OFFENSE] > 2)
 				{
-					//they're down on health a little, use level 2 if we can
-					Cmd_SaberAttackCycle_f(&g_entities[bs->client]);
+					if (g_entities[bs->client].client->ps.fd.saber_anim_level != SS_STRONG
+						&& bs->saberPower)
+					{ //if we are up against someone with a lot of health and we have a strong attack available, then h4q them
+						Cmd_SaberAttackCycle_f(&g_entities[bs->client]);
+					}
 				}
-			}
-			else
-			{
-				if (g_entities[bs->client].client->ps.fd.saber_anim_level != SS_FAST)
+				else if (bs->currentEnemy->health > 40
+					&& g_entities[bs->client].client->ps.fd.forcePowerLevel[FP_SABER_OFFENSE] > 1)
 				{
-					//they've gone below 40 health, go at them with quick attacks
-					Cmd_SaberAttackCycle_f(&g_entities[bs->client]);
+					if (g_entities[bs->client].client->ps.fd.saber_anim_level != SS_MEDIUM)
+					{ //they're down on health a little, use level 2 if we can
+						Cmd_SaberAttackCycle_f(&g_entities[bs->client]);
+					}
+				}
+				else
+				{
+					if (g_entities[bs->client].client->ps.fd.saber_anim_level != SS_FAST)
+					{ //they've gone below 40 health, go at them with quick attacks
+						Cmd_SaberAttackCycle_f(&g_entities[bs->client]);
+					}
 				}
 			}
 

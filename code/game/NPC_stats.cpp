@@ -1082,17 +1082,17 @@ qboolean G_ParseAnimationFile(const int gla_index, const char* skeleton_name, co
 			//Slow down saber moves...
 			for (int x = 4; x < LS_MOVE_MAX; x++)
 			{
-				if (saberMoveData[x].animToUse + 77 * 4 == anim_num) // SS_TAVION
+				if (saber_moveData[x].animToUse + 77 * 4 == anim_num) // SS_TAVION
 				{
 					animations[anim_num].frameLerp *= 1.2;
 					break;
 				}
-				if (saberMoveData[x].animToUse + 77 * 5 == anim_num) // SS_DUAL
+				if (saber_moveData[x].animToUse + 77 * 5 == anim_num) // SS_DUAL
 				{
 					animations[anim_num].frameLerp *= 1.1;
 					break;
 				}
-				if (saberMoveData[x].animToUse + 77 * 6 == anim_num) // SS_STAFF
+				if (saber_moveData[x].animToUse + 77 * 6 == anim_num) // SS_STAFF
 				{
 					animations[anim_num].frameLerp *= 1.1;
 					break;
@@ -1109,17 +1109,17 @@ qboolean G_ParseAnimationFile(const int gla_index, const char* skeleton_name, co
 			//Slow down saber moves...
 			for (int x = 4; x < LS_MOVE_MAX; x++)
 			{
-				if (saberMoveData[x].animToUse + 77 * 4 == anim_num) // SS_TAVION
+				if (saber_moveData[x].animToUse + 77 * 4 == anim_num) // SS_TAVION
 				{
 					animations[anim_num].frameLerp *= 1.2;
 					break;
 				}
-				if (saberMoveData[x].animToUse + 77 * 5 == anim_num) // SS_DUAL
+				if (saber_moveData[x].animToUse + 77 * 5 == anim_num) // SS_DUAL
 				{
 					animations[anim_num].frameLerp *= 1.1;
 					break;
 				}
-				if (saberMoveData[x].animToUse + 77 * 6 == anim_num) // SS_STAFF
+				if (saber_moveData[x].animToUse + 77 * 6 == anim_num) // SS_STAFF
 				{
 					animations[anim_num].frameLerp *= 1.1;
 					break;

@@ -591,7 +591,7 @@ using saberQuadrant_t = enum
 	Q_NUM_QUADS
 };
 
-using saberMoveData_t = struct
+using saber_moveData_t = struct
 {
 	const char* name;
 	int animToUse;
@@ -605,6 +605,6 @@ using saberMoveData_t = struct
 	int trailLength;
 };
 
-extern saberMoveData_t saberMoveData[LS_MOVE_MAX];
+extern saber_moveData_t saber_moveData[LS_MOVE_MAX];
 
 #endif	// __WP_SABER_H
