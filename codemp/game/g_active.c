@@ -3910,6 +3910,32 @@ void CancelReload(gentity_t* ent)
 }
 ////////////////////// reload
 
+float IsOversizedModel(gentity_t* ent)
+{
+	gclient_t* client = ent->client;
+
+	if (client->pers.botmodelscale == BOTZIZE_TALL ||
+		client->pers.botmodelscale == BOTZIZE_LARGE ||
+		client->pers.botmodelscale == BOTZIZE_LARGER ||
+		client->pers.botmodelscale == BOTZIZE_MASSIVE)
+	{
+		return qtrue;
+	}
+	return qfalse;
+}
+
+float IsUndersizedModel(gentity_t* ent)
+{
+	gclient_t* client = ent->client;
+
+	if (client->pers.botmodelscale == BOTZIZE_SMALLER ||
+		client->pers.botmodelscale == BOTZIZE_SMALLEST)
+	{
+		return qtrue;
+	}
+	return qfalse;
+}
+
 /*
 ==============
 ClientThink
@@ -4627,7 +4653,7 @@ void ClientThink_real(gentity_t* ent)
 		}
 	}
 
-	if (ent->client->ps.duelInProgress)
+	if (client->ps.duelInProgress)
 	{
 		gentity_t* duelAgainst = &g_entities[ent->client->ps.duelIndex];
 
@@ -5200,6 +5226,20 @@ void ClientThink_real(gentity_t* ent)
 				client->ps.communicatingflags &= ~(1 << CF_SABERLOCK_ADVANCE);
 			}
 		}
+		else if (IsOversizedModel(ent))
+		{
+			if (!(client->ps.communicatingflags & 1 << OVERSIZEDMODEL))
+			{
+				client->ps.communicatingflags |= 1 << OVERSIZEDMODEL;
+			}
+		}
+		else if (IsUndersizedModel(ent))
+		{
+			if (!(client->ps.communicatingflags & 1 << UNDERSIZEDMODEL))
+			{
+				client->ps.communicatingflags |= 1 << UNDERSIZEDMODEL;
+			}
+		}
 		else
 		{
 			client->ps.respectingtime = 0;
@@ -5212,6 +5252,8 @@ void ClientThink_real(gentity_t* ent)
 			client->ps.communicatingflags &= ~(1 << GESTURING);
 			client->ps.communicatingflags &= ~(1 << DASHING);
 			client->ps.communicatingflags &= ~(1 << KICKING);
+			client->ps.communicatingflags &= ~(1 << OVERSIZEDMODEL);
+			client->ps.communicatingflags &= ~(1 << UNDERSIZEDMODEL);
 			if (client->ps.weapon != WP_STUN_BATON ||
 				(client->ps.communicatingflags |= client->ps.grapplestartTime >= 3000))
 			{
@@ -5220,7 +5262,7 @@ void ClientThink_real(gentity_t* ent)
 		}
 	}
 
-	if (ent->client->doingThrow > level.time)
+	if (client->doingThrow > level.time)
 	{
 		gentity_t* throwee = &g_entities[ent->client->throwingIndex];
 
@@ -5229,8 +5271,8 @@ void ClientThink_real(gentity_t* ent)
 			throwee->client->ps.pm_flags & PMF_FOLLOW ||
 			throwee->client->throwingIndex != ent->s.number)
 		{
-			ent->client->doingThrow = 0;
-			ent->client->ps.forceHandExtend = HANDEXTEND_NONE;
+			client->doingThrow = 0;
+			client->ps.forceHandExtend = HANDEXTEND_NONE;
 
 			if (throwee->inuse && throwee->client)
 			{
@@ -5248,10 +5290,10 @@ void ClientThink_real(gentity_t* ent)
 	if (ucmd->buttons & BUTTON_BLOCK)
 	{
 		//blocking with saber
-		ent->client->ps.saberManualBlockingTime = level.time + FRAMETIME;
+		client->ps.saberManualBlockingTime = level.time + FRAMETIME;
 	}
 
-	if (ent->client->beingThrown > level.time)
+	if (client->beingThrown > level.time)
 	{
 		gentity_t* thrower = &g_entities[ent->client->throwingIndex];
 
@@ -5260,12 +5302,12 @@ void ClientThink_real(gentity_t* ent)
 			thrower->client->ps.pm_flags & PMF_FOLLOW ||
 			thrower->client->throwingIndex != ent->s.number)
 		{
-			ent->client->ps.heldByClient = 0;
-			ent->client->beingThrown = 0;
+			client->ps.heldByClient = 0;
+			client->beingThrown = 0;
 
-			if (ent->client->ps.forceHandExtend != HANDEXTEND_POSTTHROWN)
+			if (client->ps.forceHandExtend != HANDEXTEND_POSTTHROWN)
 			{
-				ent->client->ps.forceHandExtend = HANDEXTEND_NONE;
+				client->ps.forceHandExtend = HANDEXTEND_NONE;
 			}
 
 			if (thrower->inuse && thrower->client)
@@ -5622,13 +5664,35 @@ void ClientThink_real(gentity_t* ent)
 				{//have moved to next frame since last saberlock attack button press
 					ent->client->ps.saberLockHitIncrementTime = level.time + 150;//so we don't register an attack key press more than once per server frame
 
-					if (ent->client->botclass == BCLASS_DESANN || ent->client->botclass == BCLASS_LUKE)
+					if (blockOpp && blockOpp->r.svFlags & SVF_BOT)
 					{
-						strength = 2;
+						switch (ent->client->ps.fd.saber_anim_level)
+						{
+						case SS_FAST:
+							strength = 1;
+							break;
+						case SS_MEDIUM:
+						case SS_TAVION:
+						case SS_DUAL:
+						case SS_STAFF:
+							strength = 2;
+							break;
+						case SS_STRONG:
+						case SS_DESANN:
+							strength = 3;
+							break;
+						}
 					}
 					else
 					{
-						strength = 1;
+						if (ent->client->botclass == BCLASS_DESANN || ent->client->botclass == BCLASS_LUKE)
+						{
+							strength = 2;
+						}
+						else
+						{
+							strength = 1;
+						}
 					}
 
 					ent->client->ps.saberLockHits += strength;

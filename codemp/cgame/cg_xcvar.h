@@ -257,5 +257,7 @@ XCVAR_DEF(com_outcast, "0", NULL, CVAR_ARCHIVE)
 XCVAR_DEF(cg_SaberInnonblockableAttackWarning, "1", NULL, CVAR_ARCHIVE)
 XCVAR_DEF(g_AllowLedgeGrab, "1", NULL, CVAR_ARCHIVE)
 XCVAR_DEF(g_saberLockCinematicCamera, "0", NULL, CVAR_ARCHIVE)
+XCVAR_DEF(cg_oversizedview, "110", NULL, CVAR_ARCHIVE)
+XCVAR_DEF(cg_undersizedview, "60", NULL, CVAR_ARCHIVE)
 
 #undef XCVAR_DEF

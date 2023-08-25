@@ -2745,11 +2745,6 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 
 	case EV_SABER_ATTACK:
 		DEBUGNAME("EV_SABER_ATTACK");
-
-		if (cg.predicted_player_state.duelInProgress && (cg.predicted_player_state.client_num != es->client_num && cg.predicted_player_state.duelIndex != es->client_num))
-		{
-			break;
-		}
 		{
 			qhandle_t swing_sound = trap->S_RegisterSound(va("sound/weapons/saber/saberhup%i.wav", Q_irand(1, 11)));
 			clientInfo_t* client = NULL;

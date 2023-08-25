@@ -364,6 +364,14 @@ static void CG_CalcIdealThirdPersonViewTarget(void)
 		{
 			vertOffset = -15.5f;
 		}
+		else if (cg.renderingThirdPerson && cg.predicted_player_state.communicatingflags & (1 << OVERSIZEDMODEL))
+		{
+			vertOffset = 50.0f;
+		}
+		else if (cg.renderingThirdPerson && cg.predicted_player_state.communicatingflags & (1 << UNDERSIZEDMODEL))
+		{
+			vertOffset = -20.0f;
+		}
 		cameraIdealTarget[2] += vertOffset;
 	}
 }
@@ -565,6 +573,16 @@ static void CG_UpdateThirdPersonCameraDamp(void)
 		thirdPersonCameraDamp = 1;
 	}
 
+	if (cg.renderingThirdPerson && cg.predicted_player_state.communicatingflags & (1 << OVERSIZEDMODEL))
+	{
+		thirdPersonCameraDamp = 1;
+	}
+
+	if (cg.renderingThirdPerson && cg.predicted_player_state.communicatingflags & (1 << UNDERSIZEDMODEL))
+	{
+		thirdPersonCameraDamp = 1;
+	}
+
 	if (dampfactor >= 1.0 || cg.thisFrameTeleport)
 	{
 		// No damping.
@@ -708,6 +726,16 @@ static void CG_OffsetThirdPersonView(void)
 		thirdPersonHorzOffset = -25.5f;
 		thirdPersonAngle = 40.5f;
 	}
+	else if (cg.renderingThirdPerson && cg.predicted_player_state.communicatingflags & (1 << OVERSIZEDMODEL))
+	{
+		thirdPersonHorzOffset = 0.0f;
+		thirdPersonAngle = 0.0f;
+	}
+	else if (cg.renderingThirdPerson && cg.predicted_player_state.communicatingflags & (1 << UNDERSIZEDMODEL))
+	{
+		thirdPersonHorzOffset = 0.0f;
+		thirdPersonAngle = 0.0f;
+	}
 	else
 	{
 		// Add in the third Person Angle.
@@ -824,6 +852,16 @@ static void CG_OffsetThirdPersonView(void)
 	// Temp: just move the camera to the side a bit
 
 	if (cg.predicted_player_state.communicatingflags & (1 << CF_SABERLOCKING) && g_saberLockCinematicCamera.integer)
+	{
+		AnglesToAxis(cg.refdef.viewangles, cg.refdef.viewaxis);
+		VectorMA(cameraCurLoc, thirdPersonHorzOffset, cg.refdef.viewaxis[1], cameraCurLoc);
+	}
+	else if (cg.predicted_player_state.communicatingflags & (1 << OVERSIZEDMODEL))
+	{
+		AnglesToAxis(cg.refdef.viewangles, cg.refdef.viewaxis);
+		VectorMA(cameraCurLoc, thirdPersonHorzOffset, cg.refdef.viewaxis[1], cameraCurLoc);
+	}
+	else if (cg.predicted_player_state.communicatingflags & (1 << UNDERSIZEDMODEL))
 	{
 		AnglesToAxis(cg.refdef.viewangles, cg.refdef.viewaxis);
 		VectorMA(cameraCurLoc, thirdPersonHorzOffset, cg.refdef.viewaxis[1], cameraCurLoc);
@@ -1239,6 +1277,18 @@ static int CG_CalcFov(void)
 		thirdPersonPitchOffset = -11.25f;
 		thirdPersonRange = 82.5f;
 		cgFov = cg_saberlockfov.value;
+	}
+	else if (cg.renderingThirdPerson && cg.predicted_player_state.communicatingflags & (1 << OVERSIZEDMODEL))
+	{
+		thirdPersonPitchOffset = +50.0f;
+		thirdPersonRange = 120.0f;
+		cgFov = cg_oversizedview.value;
+	}
+	else if (cg.renderingThirdPerson && cg.predicted_player_state.communicatingflags & (1 << UNDERSIZEDMODEL))
+	{
+		thirdPersonPitchOffset = -10.0f;
+		thirdPersonRange = 60.0f;
+		cgFov = cg_undersizedview.value;
 	}
 	else
 	{

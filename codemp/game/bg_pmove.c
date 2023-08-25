@@ -3897,6 +3897,7 @@ qboolean PM_AdjustAnglesForLongJump(playerState_t* ps, usercmd_t* ucmd)
 {
 	if (ps->legsAnim == BOTH_FORCELONGLEAP_START
 		|| ps->legsAnim == BOTH_FORCELONGLEAP_ATTACK
+		|| ps->legsAnim == BOTH_FORCELONGLEAP_ATTACK2
 		|| ps->legsAnim == BOTH_FORCELONGLEAP_LAND)
 	{
 		//can't turn
@@ -3996,7 +3997,8 @@ qboolean PM_CheckGrabWall(const trace_t* trace)
 		//player
 		//only if we were in a longjump
 		if (pm->ps->legsAnim != BOTH_FORCELONGLEAP_START
-			&& pm->ps->legsAnim != BOTH_FORCELONGLEAP_ATTACK)
+			&& pm->ps->legsAnim != BOTH_FORCELONGLEAP_ATTACK
+			&& pm->ps->legsAnim != BOTH_FORCELONGLEAP_ATTACK2)
 		{
 			return qfalse;
 		}
@@ -4025,7 +4027,8 @@ qboolean PM_CheckGrabWall(const trace_t* trace)
 	}
 
 	if (pm->ps->legsAnim != BOTH_FORCELONGLEAP_START
-		&& pm->ps->legsAnim != BOTH_FORCELONGLEAP_ATTACK)
+		&& pm->ps->legsAnim != BOTH_FORCELONGLEAP_ATTACK
+		&& pm->ps->legsAnim != BOTH_FORCELONGLEAP_ATTACK2)
 	{
 		//not in a long-jump
 		vec3_t enemyDir;
@@ -7976,6 +7979,11 @@ qboolean BG_InDFA()
 		return qtrue;
 	}
 
+	if (pm->ps->saber_move == LS_LEAP_ATTACK2)
+	{
+		return qtrue;
+	}
+
 	if (pm->ps->torsoAnim == saber_moveData[16].animToUse)
 	{
 		return qtrue;
@@ -7998,6 +8006,7 @@ qboolean G_InDFA(const gentity_t* ent)
 		|| ent->client->ps.saber_move == LS_A_JUMP_PALP_
 		|| ent->client->ps.saber_move == LS_A_FLIP_STAB
 		|| ent->client->ps.saber_move == LS_LEAP_ATTACK
+		|| ent->client->ps.saber_move == LS_LEAP_ATTACK2
 		|| ent->client->ps.saber_move == LS_A_FLIP_SLASH
 		|| ent->client->ps.saber_move == LS_R_BL2TR)
 	{
@@ -19694,6 +19703,7 @@ qboolean PM_ForceUsingSaberAnim(const int anim)
 	case BOTH_JUMPATTACK7:
 	case BOTH_FORCELONGLEAP_START:
 	case BOTH_FORCELONGLEAP_ATTACK:
+	case BOTH_FORCELONGLEAP_ATTACK2:
 	case BOTH_FORCEWALLRUNFLIP_START:
 	case BOTH_FORCEWALLRUNFLIP_END:
 	case BOTH_FORCEWALLRUNFLIP_ALT:

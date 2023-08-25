@@ -3553,6 +3553,8 @@ using communicatingflags_e = enum
 	KICKING,
 	CF_SABERLOCKING,
 	CF_SABERLOCK_ADVANCE,
+	OVERSIZEDMODEL,
+	UNDERSIZEDMODEL,
 };
 
 using PlayerEffectFlags_e = enum

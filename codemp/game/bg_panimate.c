@@ -430,6 +430,7 @@ qboolean PM_SaberInAttack(const int move)
 	case LS_SPINATTACK_GRIEV:
 	case LS_SPINATTACK:
 	case LS_LEAP_ATTACK:
+	case LS_LEAP_ATTACK2:
 	case LS_SWOOP_ATTACK_RIGHT:
 	case LS_SWOOP_ATTACK_LEFT:
 	case LS_TAUNTAUN_ATTACK_RIGHT:
@@ -659,6 +660,7 @@ qboolean PM_InAnimForsaber_move(int anim, const int saber_move)
 	case BOTH_VT_ATR_S:
 	case BOTH_VT_ATL_S:
 	case BOTH_FORCELONGLEAP_ATTACK:
+	case BOTH_FORCELONGLEAP_ATTACK2:
 	case BOTH_A7_KICK_F:
 	case BOTH_A7_KICK_F2:
 	case BOTH_A7_KICK_B:
@@ -816,6 +818,7 @@ qboolean PM_SaberInDamageMove(const int move)
 	case LS_SPINATTACK_GRIEV:
 	case LS_SPINATTACK:
 	case LS_LEAP_ATTACK:
+	case LS_LEAP_ATTACK2:
 	case LS_SWOOP_ATTACK_RIGHT:
 	case LS_SWOOP_ATTACK_LEFT:
 	case LS_TAUNTAUN_ATTACK_RIGHT:
@@ -876,6 +879,7 @@ qboolean PM_SaberDoDamageAnim(const int anim)
 	case BOTH_SPINATTACK7:
 	case BOTH_SPINATTACKGRIEVOUS:
 	case BOTH_FORCELONGLEAP_ATTACK:
+	case BOTH_FORCELONGLEAP_ATTACK2:
 	case BOTH_VS_ATR_S:
 	case BOTH_VS_ATL_S:
 	case BOTH_VT_ATR_S:
@@ -1141,6 +1145,7 @@ qboolean PM_SaberInKillMove(const int move)
 	case LS_A_FLIP_STAB:
 	case LS_A_FLIP_SLASH:
 	case LS_LEAP_ATTACK:
+	case LS_LEAP_ATTACK2:
 	case LS_STABDOWN:
 	case LS_STABDOWN_BACKHAND:
 	case LS_STABDOWN_STAFF:
@@ -1190,6 +1195,7 @@ qboolean PM_SaberInSpecial(const int move)
 	case LS_SPINATTACK_GRIEV:
 	case LS_SPINATTACK:
 	case LS_LEAP_ATTACK:
+	case LS_LEAP_ATTACK2:
 	case LS_SWOOP_ATTACK_RIGHT:
 	case LS_SWOOP_ATTACK_LEFT:
 	case LS_TAUNTAUN_ATTACK_RIGHT:
@@ -1574,6 +1580,7 @@ qboolean PM_SaberInnonblockableAttack(const int anim)
 	case BOTH_SPINATTACK7:
 	case BOTH_SPINATTACKGRIEVOUS:
 	case BOTH_FORCELONGLEAP_ATTACK:
+	case BOTH_FORCELONGLEAP_ATTACK2:
 	case BOTH_STABDOWN:
 	case BOTH_STABDOWN_BACKHAND:
 	case BOTH_STABDOWN_STAFF:
@@ -1727,6 +1734,7 @@ qboolean PM_SaberCanInterruptMove(const int move, const int anim)
 		case LS_SPINATTACK_GRIEV:
 		case LS_SPINATTACK:
 		case LS_LEAP_ATTACK:
+		case LS_LEAP_ATTACK2:
 		case LS_SWOOP_ATTACK_RIGHT:
 		case LS_SWOOP_ATTACK_LEFT:
 		case LS_TAUNTAUN_ATTACK_RIGHT:
@@ -1823,6 +1831,7 @@ qboolean PM_SaberCanInterruptMove(const int move, const int anim)
 	case BOTH_SPINATTACK7:
 	case BOTH_SPINATTACKGRIEVOUS:
 	case BOTH_FORCELONGLEAP_ATTACK:
+	case BOTH_FORCELONGLEAP_ATTACK2:
 	case BOTH_VS_ATR_S:
 	case BOTH_VS_ATL_S:
 	case BOTH_VT_ATR_S:
@@ -3407,6 +3416,7 @@ int pm_power_level_for_saber_anims(const playerState_t* ps)
 	}
 	return FORCE_LEVEL_3;
 	case BOTH_FORCELONGLEAP_ATTACK:
+	case BOTH_FORCELONGLEAP_ATTACK2:
 		if (anim_time_elapsed <= 200)
 		{
 			//1st four frames of anim

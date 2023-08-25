@@ -270,10 +270,9 @@ saber_moveData_t saber_moveData[LS_MOVE_MAX] = {
 	{"DualSpinAtkgrie", BOTH_SPINATTACKGRIEVOUS, Q_R, Q_R,AFLAG_ACTIVE, 100, BLK_TIGHT, LS_READY, LS_READY, 200},
 	// LS_SPINATTACK_GRIEV
 	{"StfSpinAtk", BOTH_SPINATTACK7, Q_L, Q_R, AFLAG_ACTIVE, 100, BLK_TIGHT, LS_READY, LS_READY, 200}, // LS_SPINATTACK
-	{"LngLeapAtk", BOTH_FORCELONGLEAP_ATTACK, Q_R, Q_L, AFLAG_ACTIVE, 100, BLK_TIGHT, LS_READY, LS_READY, 200},
-	// LS_LEAP_ATTACK
-	{"SwoopAtkR", BOTH_VS_ATR_S, Q_R, Q_T, AFLAG_ACTIVE, 100, BLK_TIGHT, LS_READY, LS_READY, 200},
-	// LS_SWOOP_ATTACK_RIGHT
+	{"LngLeapAtk", BOTH_FORCELONGLEAP_ATTACK, Q_R, Q_L, AFLAG_ACTIVE, 100, BLK_TIGHT, LS_READY, LS_READY, 200},	// LS_LEAP_ATTACK
+	{"LngLeapAtk2", BOTH_FORCELONGLEAP_ATTACK2, Q_R, Q_L, AFLAG_ACTIVE, 100, BLK_TIGHT, LS_READY, LS_READY, 200},	// LS_LEAP_ATTACK2
+	{"SwoopAtkR", BOTH_VS_ATR_S, Q_R, Q_T, AFLAG_ACTIVE, 100, BLK_TIGHT, LS_READY, LS_READY, 200},	// LS_SWOOP_ATTACK_RIGHT
 	{"SwoopAtkL", BOTH_VS_ATL_S, Q_L, Q_T, AFLAG_ACTIVE, 100, BLK_TIGHT, LS_READY, LS_READY, 200},
 	// LS_SWOOP_ATTACK_LEFT
 	{"TauntaunAtkR", BOTH_VT_ATR_S, Q_R, Q_T, AFLAG_ACTIVE, 100, BLK_TIGHT, LS_READY, LS_READY, 200},
@@ -2179,10 +2178,6 @@ void PM_SaberLocked(void)
 						remaining = cur_frame - anim->firstFrame;
 					}
 				}
-				if (!PM_irand_timesync(0, 2))
-				{
-					//PM_AddEvent(EV_JUMP);
-				}
 				//advance/decrement enemy frame number
 				anim = &pm->animations[genemy->torsoAnim];
 
@@ -2191,9 +2186,9 @@ void PM_SaberLocked(void)
 					if (genemy->torsoAnim == BOTH_CWCIRCLELOCK ||
 						genemy->torsoAnim == BOTH_BF1LOCK)
 					{
-						if (!PM_irand_timesync(0, 2))
+						if (!PM_irand_timesync(0, 4))
 						{
-							BG_AddPredictableEventToPlayerstate(EV_PAIN, floor((float)80 / 100 * 100.0f), genemy);
+							BG_AddPredictableEventToPlayerstate(Q_irand(EV_PUSHED1, EV_PUSHED3), floor((float)80 / 100 * 100.0f), genemy);
 						}
 						PM_SetAnimFrame(genemy, anim->firstFrame + remaining);
 					}
@@ -2207,7 +2202,7 @@ void PM_SaberLocked(void)
 					//new locks
 					if (g_check_increment_lock_anim(genemy->torsoAnim, SABER_LOCK_LOSE))
 					{
-						if (!PM_irand_timesync(0, 2))
+						if (!PM_irand_timesync(0, 4))
 						{
 							BG_AddPredictableEventToPlayerstate(EV_PAIN, floor((float)80 / 100 * 100.0f), genemy);
 						}
@@ -2316,10 +2311,6 @@ void PM_SaberLocked(void)
 							remaining = cur_frame - anim->firstFrame;
 						}
 					}
-					if (!PM_irand_timesync(0, 2))
-					{
-						//PM_AddEvent(EV_JUMP);
-					}
 					//advance/decrement enemy frame number
 					anim = &pm->animations[genemy->torsoAnim];
 
@@ -2328,9 +2319,9 @@ void PM_SaberLocked(void)
 						if (genemy->torsoAnim == BOTH_CWCIRCLELOCK ||
 							genemy->torsoAnim == BOTH_BF1LOCK)
 						{
-							if (!PM_irand_timesync(0, 2))
+							if (!PM_irand_timesync(0, 4))
 							{
-								BG_AddPredictableEventToPlayerstate(EV_PAIN, floor((float)80 / 100 * 100.0f), genemy);
+								BG_AddPredictableEventToPlayerstate(Q_irand(EV_PUSHED1, EV_PUSHED3), floor((float)80 / 100 * 100.0f), genemy);
 							}
 							PM_SetAnimFrame(genemy, anim->firstFrame + remaining);
 						}
@@ -2344,7 +2335,7 @@ void PM_SaberLocked(void)
 						//new locks
 						if (g_check_increment_lock_anim(genemy->torsoAnim, SABER_LOCK_LOSE))
 						{
-							if (!PM_irand_timesync(0, 2))
+							if (!PM_irand_timesync(0, 4))
 							{
 								BG_AddPredictableEventToPlayerstate(EV_PAIN, floor((float)80 / 100 * 100.0f), genemy);
 							}
@@ -6175,7 +6166,7 @@ weapChecks:
 				pm->ps->saberHolstered = 0;
 				PM_AddEvent(EV_SABER_UNHOLSTER);
 			}
-			PM_SetSaberMove(LS_LEAP_ATTACK);
+			PM_SetSaberMove(LS_LEAP_ATTACK2);
 			return;
 		}
 		if (pm->ps->torsoAnim == BOTH_FORCELONGLEAP_START)
