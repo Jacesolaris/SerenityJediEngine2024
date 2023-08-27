@@ -3910,26 +3910,115 @@ void CancelReload(gentity_t* ent)
 }
 ////////////////////// reload
 
-float IsOversizedModel(gentity_t* ent)
+qboolean IsGunner(const gentity_t* ent)
+{
+	switch (ent->s.weapon)
+	{
+	case WP_BRYAR_OLD:
+	case WP_BLASTER:
+	case WP_DISRUPTOR:
+	case WP_BOWCASTER:
+	case WP_REPEATER:
+	case WP_DEMP2:
+	case WP_FLECHETTE:
+	case WP_ROCKET_LAUNCHER:
+	case WP_THERMAL:
+	case WP_TRIP_MINE:
+	case WP_DET_PACK:
+	case WP_CONCUSSION:
+	case WP_STUN_BATON:
+	case WP_BRYAR_PISTOL:
+		return qtrue;
+	default:;
+	}
+	return qfalse;
+}
+
+qboolean Bot_Is_Saber_Class(gentity_t* ent)
+{
+	// Evasion/Weapon Switching/etc...
+	switch (ent->client->pers.botclass)
+	{
+	case BCLASS_ALORA:
+	case BCLASS_CULTIST:
+	case BCLASS_DESANN:
+	case BCLASS_JEDI:
+	case BCLASS_JEDIMASTER:
+	case BCLASS_JEDITRAINER:
+	case BCLASS_KYLE:
+	case BCLASS_LUKE:
+	case BCLASS_MORGANKATARN:
+	case BCLASS_REBORN:
+	case BCLASS_REBORN_TWIN:
+	case BCLASS_REBORN_MASTER:
+	case BCLASS_SABER_DROID:
+	case BCLASS_SHADOWTROOPER:
+	case BCLASS_SERENITY:
+	case BCLASS_CADENCE:
+	case BCLASS_YODA:
+	case BCLASS_PADAWAN:
+	case BCLASS_SITHLORD:
+	case BCLASS_LORDVADER:
+	case BCLASS_SITH:
+	case BCLASS_APPRENTICE:
+	case BCLASS_JEDIKNIGHT1:
+	case BCLASS_JEDIKNIGHT2:
+	case BCLASS_JEDIKNIGHT3:
+	case BCLASS_JEDICONSULAR1:
+	case BCLASS_JEDICONSULAR2:
+	case BCLASS_JEDICONSULAR3:
+	case BCLASS_SITHWORRIOR1:
+	case BCLASS_SITHWORRIOR2:
+	case BCLASS_SITHWORRIOR3:
+	case BCLASS_SITHINQUISITOR1:
+	case BCLASS_SITHINQUISITOR2:
+	case BCLASS_SITHINQUISITOR3:
+	case BCLASS_DUELS:
+	case BCLASS_GRIEVOUS:
+	case BCLASS_STAFF:
+	case BCLASS_STAFFDARK:
+	case BCLASS_UNSTABLESABER:
+	case BCLASS_OBIWAN:
+		break;
+	default:
+		return qfalse;
+	}
+	return qtrue;
+}
+
+qboolean Is_Oversized_Gunner(gentity_t* ent)
 {
 	gclient_t* client = ent->client;
 
-	if (client->pers.botmodelscale == BOTZIZE_TALL ||
+	if ((client->pers.botmodelscale == BOTZIZE_TALL ||
 		client->pers.botmodelscale == BOTZIZE_LARGE ||
 		client->pers.botmodelscale == BOTZIZE_LARGER ||
-		client->pers.botmodelscale == BOTZIZE_MASSIVE)
+		client->pers.botmodelscale == BOTZIZE_MASSIVE) && !Bot_Is_Saber_Class(ent))
 	{
 		return qtrue;
 	}
 	return qfalse;
 }
 
-float IsUndersizedModel(gentity_t* ent)
+qboolean Is_Undersized_Gunner(gentity_t* ent)
 {
 	gclient_t* client = ent->client;
 
-	if (client->pers.botmodelscale == BOTZIZE_SMALLER ||
-		client->pers.botmodelscale == BOTZIZE_SMALLEST)
+	if ((client->pers.botmodelscale == BOTZIZE_SMALL ||
+		client->pers.botmodelscale == BOTZIZE_SMALLER ||
+		client->pers.botmodelscale == BOTZIZE_SMALLEST) && !Bot_Is_Saber_Class(ent))
+	{
+		return qtrue;
+	}
+	return qfalse;
+}
+
+qboolean Is_Undersized_Jedi(gentity_t* ent)
+{
+	gclient_t* client = ent->client;
+
+	if ((client->pers.botmodelscale == BOTZIZE_SMALLER ||
+		client->pers.botmodelscale == BOTZIZE_SMALLEST) && Bot_Is_Saber_Class(ent))
 	{
 		return qtrue;
 	}
@@ -5207,7 +5296,64 @@ void ClientThink_real(gentity_t* ent)
 				}
 			}
 		}
-		else if (client->ps.saberLockTime > level.time)
+		else if (Is_Oversized_Gunner(ent))
+		{
+			if (!(client->ps.communicatingflags & 1 << OVERSIZEDGUNNER))
+			{
+				client->ps.communicatingflags |= 1 << OVERSIZEDGUNNER;
+			}
+
+			if ((client->ps.saberLockTime > level.time) && (ucmd->rightmove > 0 || ucmd->forwardmove > 0))
+			{//just in case i missed a saber user
+				if (!(client->ps.communicatingflags & 1 << CF_SABERLOCK_ADVANCE))
+				{
+					client->ps.communicatingflags |= 1 << CF_SABERLOCK_ADVANCE;
+				}
+			}
+			else
+			{
+				client->ps.communicatingflags &= ~(1 << CF_SABERLOCK_ADVANCE);
+			}
+		}
+		else if (Is_Undersized_Jedi(ent))
+		{
+			if (!(client->ps.communicatingflags & 1 << UNDERSIZEDJEDI))
+			{
+				client->ps.communicatingflags |= 1 << UNDERSIZEDJEDI;
+			}
+
+			if ((client->ps.saberLockTime > level.time) && (ucmd->rightmove > 0 || ucmd->forwardmove > 0))
+			{ //just in case i missed a saber user
+				if (!(client->ps.communicatingflags & 1 << CF_SABERLOCK_ADVANCE))
+				{
+					client->ps.communicatingflags |= 1 << CF_SABERLOCK_ADVANCE;
+				}
+			}
+			else
+			{
+				client->ps.communicatingflags &= ~(1 << CF_SABERLOCK_ADVANCE);
+			}
+		}
+		else if (Is_Undersized_Gunner(ent))
+		{
+			if (!(client->ps.communicatingflags & 1 << UNDERSIZEDGUNNER))
+			{
+				client->ps.communicatingflags |= 1 << UNDERSIZEDGUNNER;
+			}
+
+			if ((client->ps.saberLockTime > level.time) && (ucmd->rightmove > 0 || ucmd->forwardmove > 0))
+			{ //just in case i missed a saber user
+				if (!(client->ps.communicatingflags & 1 << CF_SABERLOCK_ADVANCE))
+				{
+					client->ps.communicatingflags |= 1 << CF_SABERLOCK_ADVANCE;
+				}
+			}
+			else
+			{
+				client->ps.communicatingflags &= ~(1 << CF_SABERLOCK_ADVANCE);
+			}
+		}
+		else if (client->ps.saberLockTime > level.time && !Is_Undersized_Gunner(ent) && !Is_Oversized_Gunner(ent))
 		{
 			if (!(client->ps.communicatingflags & 1 << CF_SABERLOCKING))
 			{
@@ -5226,20 +5372,6 @@ void ClientThink_real(gentity_t* ent)
 				client->ps.communicatingflags &= ~(1 << CF_SABERLOCK_ADVANCE);
 			}
 		}
-		else if (IsOversizedModel(ent))
-		{
-			if (!(client->ps.communicatingflags & 1 << OVERSIZEDMODEL))
-			{
-				client->ps.communicatingflags |= 1 << OVERSIZEDMODEL;
-			}
-		}
-		else if (IsUndersizedModel(ent))
-		{
-			if (!(client->ps.communicatingflags & 1 << UNDERSIZEDMODEL))
-			{
-				client->ps.communicatingflags |= 1 << UNDERSIZEDMODEL;
-			}
-		}
 		else
 		{
 			client->ps.respectingtime = 0;
@@ -5252,8 +5384,9 @@ void ClientThink_real(gentity_t* ent)
 			client->ps.communicatingflags &= ~(1 << GESTURING);
 			client->ps.communicatingflags &= ~(1 << DASHING);
 			client->ps.communicatingflags &= ~(1 << KICKING);
-			client->ps.communicatingflags &= ~(1 << OVERSIZEDMODEL);
-			client->ps.communicatingflags &= ~(1 << UNDERSIZEDMODEL);
+			client->ps.communicatingflags &= ~(1 << UNDERSIZEDJEDI);
+			client->ps.communicatingflags &= ~(1 << OVERSIZEDGUNNER);
+			client->ps.communicatingflags &= ~(1 << UNDERSIZEDGUNNER);
 			if (client->ps.weapon != WP_STUN_BATON ||
 				(client->ps.communicatingflags |= client->ps.grapplestartTime >= 3000))
 			{
@@ -5477,7 +5610,7 @@ void ClientThink_real(gentity_t* ent)
 						}
 					}
 				}
-			}
+		}
 	}
 }
 	else if (ent->client->ps.heldByClient)
@@ -5592,7 +5725,7 @@ void ClientThink_real(gentity_t* ent)
 			{
 				//if it isn't humanoid then we will be having none of this.
 				pmove.ghoul2 = NULL;
-			}
+	}
 			else
 			{
 				pmove.ghoul2 = ent->ghoul2;
@@ -6694,7 +6827,7 @@ void ClientEndFrame(gentity_t* ent)
 	if (!g_synchronousClients->integer && (ent->client->ps.pm_type == PM_NORMAL || ent->client->ps.pm_type == PM_JETPACK || ent->client->ps.pm_type == PM_FLOAT)) {
 		// FIXME: this must change eventually for non-sync demo recording
 		VectorClear(ent->client->ps.viewangles);
-}
+	}
 #endif
 
 	//
