@@ -153,6 +153,7 @@ extern qboolean PM_SaberInBackAttack(saberMoveName_t saber_move);
 qboolean WP_DoingForcedAnimationForForcePowers(const gentity_t* self);
 void thrownSaberTouch(gentity_t* saberent, gentity_t* other, const trace_t* trace);
 int WP_SaberCanBlockThrownSaber(gentity_t* self, vec3_t point, qboolean projectile);
+void G_Beskar_Attack_Bounce(const gentity_t* self, gentity_t* other);
 
 float VectorBlockDistance(vec3_t v1, vec3_t v2)
 {
@@ -7242,6 +7243,7 @@ static QINLINE qboolean check_saber_damage(gentity_t* self, const int r_saber_nu
 		int dflags = 0;
 
 		gentity_t* victim = &g_entities[tr.entity_num];
+		const int index = Q_irand(1, 3);
 
 		if (dmg <= SABER_NONATTACK_DAMAGE || (G_DoSaberDodge(victim, self, tr.endpos, -1, &dmg, MOD_SABER)))
 		{
@@ -7250,6 +7252,13 @@ static QINLINE qboolean check_saber_damage(gentity_t* self, const int r_saber_nu
 			//add saber impact debounce
 			DebounceSaberImpact(self, blocker, r_saber_num, r_blade_num, sabimpactentitynum);
 			return qtrue;
+		}
+
+		if (victim->flags & FL_SABERDAMAGE_RESIST && (!Q_irand(0, 1)))
+		{
+			dflags |= DAMAGE_NO_DAMAGE;
+			G_Beskar_Attack_Bounce(self, victim);
+			G_Sound(victim, CHAN_BODY, G_SoundIndex(va("sound/weapons/impacts/beskar_impact%d.mp3", index)));
 		}
 		//hit!
 		//determine if this saber blade does dismemberment or not.
@@ -16228,4 +16237,25 @@ qboolean WP_SaberNPCFatiguedParry(gentity_t* blocker, gentity_t* attacker, const
 		return qtrue;
 	}
 	return qfalse;
+}
+
+void G_Beskar_Attack_Bounce(const gentity_t* self, gentity_t* other)
+{
+	if (self->client->ps.saberBlocked == BLOCKED_NONE)
+	{
+		if (!pm_saber_in_special_attack(self->client->ps.torsoAnim))
+		{
+			if (SaberAttacking(self))
+			{
+				// Saber is in attack, use bounce for this attack.
+				self->client->ps.saberBounceMove = PM_SaberBounceForAttack(self->client->ps.saber_move);
+				self->client->ps.saberBlocked = BLOCKED_BOUNCE_MOVE;
+			}
+			else
+			{
+				// Saber is in defense, use defensive bounce.
+				self->client->ps.saberBlocked = BLOCKED_ATK_BOUNCE;
+			}
+		}
+	}
 }

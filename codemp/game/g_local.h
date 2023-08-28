@@ -91,17 +91,15 @@ extern vec3_t gPainPoint;
 #define FL_RED_CROSSHAIR		0x00400000	// Crosshair red on me
 #define	FL_DINDJARIN			0x00800000	// protected from all damage except lightsabers for 20% of the time
 #define	FL_BOBAFETT 			0x01000000	// protected from all damage
-//ex-eFlags -rww
 #define	FL_BOUNCE				0x00100000		// for missiles
 #define	FL_BOUNCE_HALF			0x00200000		// for missiles
 #define	FL_BOUNCE_SHRAPNEL		0x00400000		// special shrapnel flag
-//vehicle game-local stuff -rww
 #define	FL_VEH_BOARDING			0x00800000		// special shrapnel flag
-//breakable flags -rww
 #define FL_DMG_BY_SABER_ONLY		0x01000000 //only take dmg from saber
 #define FL_DMG_BY_HEAVY_WEAP_ONLY	0x02000000 //only take dmg from explosives
 #define FL_BBRUSH					0x04000000 //I am a breakable brush
 #define FL_NO_IMPACT_DMG			0x08000000	// Will not take impact damage
+#define	FL_SABERDAMAGE_RESIST		0x10000000	// protected from all damage except lightsabers for 20% of the time
 
 #define SABERTWEAK_INTERPOLATE			(0x0001u) // use SP style interpolation, also fix various small issues
 #define SABERTWEAK_PROLONGDAMAGE		(0x0002u) // allow damaging in wind-up and return animations

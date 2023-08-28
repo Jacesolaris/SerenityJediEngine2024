@@ -7435,6 +7435,8 @@ void ClientSpawn(gentity_t* ent)
 			client->ps.stats[STAT_HOLDABLE_ITEMS] |= 1 << HI_MEDPAC;
 			client->ps.stats[STAT_HOLDABLE_ITEMS] |= 1 << HI_SEEKER;
 			client->ps.stats[STAT_HOLDABLE_ITEMS] |= 1 << HI_GRAPPLE;
+			ent->flags |= FL_SABERDAMAGE_RESIST;
+			ent->flags |= FL_DINDJARIN;
 			break;
 		case BCLASS_CHEWIE:
 			client->ps.stats[STAT_HOLDABLE_ITEMS] |= 1 << HI_SENTRY_GUN;
@@ -7767,6 +7769,8 @@ void ClientSpawn(gentity_t* ent)
 			client->ps.stats[STAT_HOLDABLE_ITEMS] |= 1 << HI_EWEB;
 			client->ps.stats[STAT_HOLDABLE_ITEMS] |= 1 << HI_MEDPAC;
 			client->ps.stats[STAT_HOLDABLE_ITEMS] |= 1 << HI_GRAPPLE;
+			ent->flags |= FL_SABERDAMAGE_RESIST;
+			ent->flags |= FL_DINDJARIN;
 			break;
 		case BCLASS_MANDOLORIAN1:
 			client->ps.stats[STAT_ARMOR] = 300;
@@ -7777,6 +7781,8 @@ void ClientSpawn(gentity_t* ent)
 			client->ps.stats[STAT_HOLDABLE_ITEMS] |= 1 << HI_EWEB;
 			client->ps.stats[STAT_HOLDABLE_ITEMS] |= 1 << HI_MEDPAC;
 			client->ps.stats[STAT_HOLDABLE_ITEMS] |= 1 << HI_GRAPPLE;
+			ent->flags |= FL_SABERDAMAGE_RESIST;
+			ent->flags |= FL_DINDJARIN;
 			break;
 		case BCLASS_MANDOLORIAN2:
 			client->ps.stats[STAT_ARMOR] = 300;
@@ -7787,6 +7793,8 @@ void ClientSpawn(gentity_t* ent)
 			client->ps.stats[STAT_HOLDABLE_ITEMS] |= 1 << HI_EWEB;
 			client->ps.stats[STAT_HOLDABLE_ITEMS] |= 1 << HI_MEDPAC;
 			client->ps.stats[STAT_HOLDABLE_ITEMS] |= 1 << HI_GRAPPLE;
+			ent->flags |= FL_SABERDAMAGE_RESIST;
+			ent->flags |= FL_DINDJARIN;
 			break;
 		case BCLASS_SOILDER:
 			client->ps.stats[STAT_HOLDABLE_ITEMS] |= 1 << HI_EWEB;

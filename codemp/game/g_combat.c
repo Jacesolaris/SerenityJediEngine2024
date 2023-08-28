@@ -6473,6 +6473,51 @@ void G_Damage(gentity_t* targ, gentity_t* inflictor, gentity_t* attacker, vec3_t
 		return;
 	}
 
+	if (targ->flags & FL_DINDJARIN
+		&& mod != MOD_SABER
+		&& mod != MOD_REPEATER_ALT
+		&& mod != MOD_FLECHETTE_ALT_SPLASH
+		&& mod != MOD_ROCKET
+		&& mod != MOD_ROCKET_SPLASH
+		&& mod != MOD_CONC_ALT
+		&& mod != MOD_THERMAL
+		&& mod != MOD_THERMAL_SPLASH
+		&& mod != MOD_DEMP2
+		&& mod != MOD_DEMP2_ALT
+		&& mod != MOD_DET_PACK_SPLASH
+		&& mod != MOD_TRIP_MINE_SPLASH
+		&& mod != MOD_FORCE_LIGHTNING
+		&& mod != MOD_FORCE_DARK
+		&& mod != MOD_SEEKER
+		&& mod != MOD_CONC)
+	{
+		if (damage < 10)
+		{//ignore piddly little damage
+			damage = 5;
+		}
+		else if (damage >= 10)
+		{
+			const int choice = Q_irand(0, 3);
+
+			switch (choice)
+			{
+			case 0:
+				damage = ceil(damage * 0.25f);
+				break;
+			case 1:
+			default:
+				damage = ceil(damage * 0.50f);
+				break;
+			case 2:
+				damage = ceil(damage * 0.75f);
+				break;
+			case 3:
+				damage = ceil(damage * 0.95f);
+				break;
+			}
+		}
+	}
+
 	if (targ->client)
 	{
 		//don't take damage when in a walker, or fighter

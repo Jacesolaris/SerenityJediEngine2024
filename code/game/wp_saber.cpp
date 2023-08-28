@@ -2617,6 +2617,7 @@ qboolean wp_saber_apply_damage(gentity_t* ent, const float base_damage, const in
 							static_cast<saberMoveName_t>(ent->client->ps.saber_move));
 						const qboolean saber_in_lunge_stab = PM_SaberInLungeStab(
 							static_cast<saberMoveName_t>(ent->client->ps.saber_move));
+						const int index = Q_irand(1, 3);
 
 						if (victim->client
 							&& (victim->s.weapon == WP_SABER || victim->client->NPC_class == CLASS_REBORN || victim->
@@ -2644,7 +2645,7 @@ qboolean wp_saber_apply_damage(gentity_t* ent, const float base_damage, const in
 						{
 							d_flags |= DAMAGE_NO_DAMAGE;
 							G_Beskar_Attack_Bounce(ent, victim);
-							G_Sound(ent, G_SoundIndex("sound/weapons/impacts/beskar_impact1.mp3"));
+							G_Sound(victim, G_SoundIndex(va("sound/weapons/impacts/beskar_impact%d.mp3", index)));
 						}
 
 						if (!saber_in_special) // not doing a special move

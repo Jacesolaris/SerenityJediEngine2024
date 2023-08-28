@@ -753,6 +753,37 @@ void g_missile_reflect_effect(gentity_t* ent, vec3_t dir)
 	}
 }
 
+void G_MissileBounceBeskarEffect(gentity_t* ent, vec3_t org, vec3_t dir, const qboolean hit_world)
+{
+	G_PlayEffectID(G_EffectIndex("blaster/beskar_impact"), ent->r.currentOrigin, dir);
+}
+
+static void G_MissileAddAlerts(gentity_t* ent)
+{
+	//Add the event
+	if (ent->s.weapon == WP_THERMAL && (ent->delay - level.time < 2000 || ent->s.pos.trType == TR_INTERPOLATE))
+	{
+		//a thermal about to explode or rolling
+		if (ent->delay - level.time < 500)
+		{
+			//half a second before it explodes!
+			AddSoundEvent(ent->owner, ent->r.currentOrigin, ent->splashRadius * 2, AEL_DANGER_GREAT, qfalse, qtrue);
+			AddSightEvent(ent->owner, ent->r.currentOrigin, ent->splashRadius * 2, AEL_DANGER_GREAT, 20);
+		}
+		else
+		{
+			//2 seconds until it explodes or it's rolling
+			AddSoundEvent(ent->owner, ent->r.currentOrigin, ent->splashRadius * 2, AEL_DANGER, qfalse, qtrue);
+			AddSightEvent(ent->owner, ent->r.currentOrigin, ent->splashRadius * 2, AEL_DANGER, 20);
+		}
+	}
+	else
+	{
+		AddSoundEvent(ent->owner, ent->r.currentOrigin, 128, AEL_DISCOVERED, qfalse, qtrue);
+		AddSightEvent(ent->owner, ent->r.currentOrigin, 256, AEL_DISCOVERED, 40);
+	}
+}
+
 /*
 ================
 G_MissileImpact
@@ -768,6 +799,9 @@ qboolean G_MissileImpact(gentity_t* ent, trace_t* trace)
 	gentity_t* other = &g_entities[trace->entity_num];
 
 	// check for bounce
+	auto bounce = (!other->takedamage && ent->flags & (FL_BOUNCE | FL_BOUNCE_HALF)
+		|| (trace->surfaceFlags & SURF_FORCEFIELD || other->flags & FL_SHIELDED));
+
 	if ((!other->takedamage || ent->s.weapon == WP_THERMAL) &&
 		(ent->bounceCount > 0 || ent->bounceCount == -5) &&
 		ent->flags & (FL_BOUNCE | FL_BOUNCE_HALF))
@@ -834,6 +868,47 @@ qboolean G_MissileImpact(gentity_t* ent, trace_t* trace)
 		}
 	}
 
+	auto beskar = ((other->flags & FL_DINDJARIN)
+		&& !ent->splashDamage
+		&& !ent->splashRadius
+		&& ent->methodOfDeath != MOD_SABER
+		&& ent->methodOfDeath != MOD_REPEATER_ALT
+		&& ent->methodOfDeath != MOD_FLECHETTE_ALT_SPLASH
+		&& ent->methodOfDeath != MOD_ROCKET
+		&& ent->methodOfDeath != MOD_ROCKET_SPLASH
+		&& ent->methodOfDeath != MOD_CONC_ALT
+		&& ent->methodOfDeath != MOD_THERMAL
+		&& ent->methodOfDeath != MOD_THERMAL_SPLASH
+		&& ent->methodOfDeath != MOD_DEMP2
+		&& ent->methodOfDeath != MOD_DEMP2_ALT
+		&& ent->methodOfDeath != MOD_SEEKER
+		&& ent->methodOfDeath != MOD_CONC
+		&& (!Q_irand(0, 1)));
+
+	auto boba_fett = ((other->flags & FL_BOBAFETT)
+		&& !ent->splashDamage
+		&& !ent->splashRadius
+		&& ent->methodOfDeath != MOD_SABER
+		&& ent->methodOfDeath != MOD_REPEATER_ALT
+		&& ent->methodOfDeath != MOD_FLECHETTE_ALT_SPLASH
+		&& ent->methodOfDeath != MOD_ROCKET
+		&& ent->methodOfDeath != MOD_ROCKET_SPLASH
+		&& ent->methodOfDeath != MOD_CONC_ALT
+		&& ent->methodOfDeath != MOD_THERMAL
+		&& ent->methodOfDeath != MOD_THERMAL_SPLASH
+		&& ent->methodOfDeath != MOD_DEMP2
+		&& ent->methodOfDeath != MOD_DEMP2_ALT
+		&& ent->methodOfDeath != MOD_SEEKER
+		&& ent->methodOfDeath != MOD_CONC);
+
+	if (ent->dflags & DAMAGE_HEAVY_WEAP_CLASS)
+	{
+		// heavy class missiles generally never bounce.
+		bounce = qfalse;
+		beskar = qfalse;
+		boba_fett = qfalse;
+	}
+
 	if (other->flags & FL_DMG_BY_HEAVY_WEAP_ONLY)
 	{
 		if (ent->methodOfDeath != MOD_REPEATER_ALT &&
@@ -896,6 +971,31 @@ qboolean G_MissileImpact(gentity_t* ent, trace_t* trace)
 
 		g_missile_bounce_effect(ent, ent->r.currentOrigin, fwd, trace->entity_num == ENTITYNUM_WORLD);
 		return qtrue;
+	}
+
+	if (beskar || boba_fett)
+	{
+		bounce = qfalse;
+		// Check to see if there is a bounce count
+		if (ent->bounceCount)
+		{
+			// decrement number of bounces and then see if it should be done bouncing
+			if (!--ent->bounceCount)
+			{
+				// He (or she) will bounce no more (after this current bounce, that is).
+				ent->flags &= ~(FL_BOUNCE | FL_BOUNCE_HALF);
+			}
+		}
+
+		G_BounceMissile(ent, trace);
+		G_SetAnim(other, NULL, SETANIM_TORSO, Q_irand(BOTH_PAIN1, BOTH_PAIN3), SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
+
+		if (ent->owner)
+		{
+			G_MissileAddAlerts(ent);
+		}
+		G_MissileBounceBeskarEffect(ent, ent->r.currentOrigin, fwd, trace->entity_num == ENTITYNUM_WORLD);
+		return qfalse;
 	}
 
 	// check for hitting a lightsaber
