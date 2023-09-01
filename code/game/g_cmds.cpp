@@ -2263,6 +2263,10 @@ void G_SetTauntAnim(gentity_t* ent, const int taunt)
 
 void G_SetsaberdownorAnim(gentity_t* ent)
 {
+	if (ent->client->ps.saberLockTime >= level.time)
+	{
+		return;
+	}
 	if (ent->client->ps.weapon == WP_SABER)
 	{
 		// put away saber

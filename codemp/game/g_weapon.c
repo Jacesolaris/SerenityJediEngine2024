@@ -1348,8 +1348,6 @@ static void WP_FireDisruptor(gentity_t* ent, qboolean alt_fire)
 	{
 		WP_DisruptorMainFire(ent);
 	}
-
-	G_PlayEffect(G_EffectIndex("disruptor/line_cap"), muzzle, forward);
 }
 
 /*

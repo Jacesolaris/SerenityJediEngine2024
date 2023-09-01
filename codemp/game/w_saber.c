@@ -246,11 +246,11 @@ void G_Stagger(gentity_t* hit_ent)
 		hit_ent->client->MassiveBounceAnimTime = hit_ent->client->ps.torsoTimer + level.time;
 	}
 
-	if (hit_ent->client->ps.saber_anim_level == SS_DUAL)
+	if (hit_ent->client->ps.fd.saber_anim_level == SS_DUAL)
 	{
 		SabBeh_AnimateMassiveDualSlowBounce(use_anim);
 	}
-	else if (hit_ent->client->ps.saber_anim_level == SS_STAFF)
+	else if (hit_ent->client->ps.fd.saber_anim_level == SS_STAFF)
 	{
 		SabBeh_AnimateMassiveStaffSlowBounce(use_anim);
 	}
@@ -265,7 +265,7 @@ void G_FatigueBPKnockaway(gentity_t* blocker)
 
 	const int anim_choice = irand(0, 5);
 
-	if (blocker->client->ps.saber_anim_level == SS_DUAL)
+	if (blocker->client->ps.fd.saber_anim_level == SS_DUAL)
 	{
 		switch (anim_choice)
 		{
@@ -290,7 +290,7 @@ void G_FatigueBPKnockaway(gentity_t* blocker)
 			break;
 		}
 	}
-	else if (blocker->client->ps.saber_anim_level == SS_STAFF)
+	else if (blocker->client->ps.fd.saber_anim_level == SS_STAFF)
 	{
 		switch (anim_choice)
 		{
@@ -367,7 +367,7 @@ void G_StaggerAttacker(gentity_t* atk)
 
 	const int anim_choice = irand(0, 7);
 
-	if (atk->client->ps.saber_anim_level == SS_DUAL)
+	if (atk->client->ps.fd.saber_anim_level == SS_DUAL)
 	{
 		switch (anim_choice)
 		{
@@ -398,7 +398,7 @@ void G_StaggerAttacker(gentity_t* atk)
 			break;
 		}
 	}
-	else if (atk->client->ps.saber_anim_level == SS_STAFF)
+	else if (atk->client->ps.fd.saber_anim_level == SS_STAFF)
 	{
 		switch (anim_choice)
 		{
@@ -487,7 +487,7 @@ void G_BounceAttacker(gentity_t* atk)
 
 	const int anim_choice = irand(0, 6);
 
-	if (atk->client->ps.saber_anim_level == SS_DUAL)
+	if (atk->client->ps.fd.saber_anim_level == SS_DUAL)
 	{
 		switch (anim_choice)
 		{
@@ -515,7 +515,7 @@ void G_BounceAttacker(gentity_t* atk)
 			break;
 		}
 	}
-	else if (atk->client->ps.saber_anim_level == SS_STAFF)
+	else if (atk->client->ps.fd.saber_anim_level == SS_STAFF)
 	{
 		switch (anim_choice)
 		{
@@ -543,7 +543,7 @@ void G_BounceAttacker(gentity_t* atk)
 			break;
 		}
 	}
-	else if (atk->client->ps.saber_anim_level == SS_FAST)
+	else if (atk->client->ps.fd.saber_anim_level == SS_FAST)
 	{
 		switch (anim_choice)
 		{
@@ -571,7 +571,7 @@ void G_BounceAttacker(gentity_t* atk)
 			break;
 		}
 	}
-	else if (atk->client->ps.saber_anim_level == SS_MEDIUM)
+	else if (atk->client->ps.fd.saber_anim_level == SS_MEDIUM)
 	{
 		switch (anim_choice)
 		{
@@ -599,7 +599,7 @@ void G_BounceAttacker(gentity_t* atk)
 			break;
 		}
 	}
-	else if (atk->client->ps.saber_anim_level == SS_STRONG)
+	else if (atk->client->ps.fd.saber_anim_level == SS_STRONG)
 	{
 		switch (anim_choice)
 		{
@@ -627,7 +627,7 @@ void G_BounceAttacker(gentity_t* atk)
 			break;
 		}
 	}
-	else if (atk->client->ps.saber_anim_level == SS_DESANN)
+	else if (atk->client->ps.fd.saber_anim_level == SS_DESANN)
 	{
 		switch (anim_choice)
 		{
@@ -655,7 +655,7 @@ void G_BounceAttacker(gentity_t* atk)
 			break;
 		}
 	}
-	else if (atk->client->ps.saber_anim_level == SS_TAVION)
+	else if (atk->client->ps.fd.saber_anim_level == SS_TAVION)
 	{
 		switch (anim_choice)
 		{
@@ -8506,7 +8506,7 @@ void DownedSaberThink(gentity_t* saberent)
 			saberent->think = G_FreeEntity;
 			saberent->nextthink = level.time;
 			return;
-}
+		}
 #endif
 
 		saberReactivate(saberent, saber_own);
@@ -8655,7 +8655,7 @@ void DrownedSaberTouch(gentity_t* self, gentity_t* other, trace_t* trace)
 			//make activation noise if we have one.
 			G_Sound(other, CHAN_WEAPON, other->client->saber[0].soundOn);
 		}
-}
+	}
 }
 
 void saberReactivate(gentity_t* saberent, gentity_t* saber_owner)
@@ -9869,7 +9869,7 @@ void UpdateClientRenderinfo(gentity_t* self, vec3_t render_origin, vec3_t render
 
 		VectorCopy(self->client->ps.origin, ri->eyePoint);
 		ri->eyePoint[2] += self->client->ps.viewheight;
-}
+	}
 }
 
 #define STAFF_KICK_RANGE 16
@@ -11747,7 +11747,7 @@ void wp_saber_position_update(gentity_t* self, usercmd_t* ucmd)
 		!g2SaberInstance)
 	{
 		return;
-}
+	}
 
 #ifndef FINAL_BUILD
 	viewlock = self->client->ps.userInt1;
@@ -14400,7 +14400,7 @@ qboolean WP_SaberFatiguedParryDirection(gentity_t* self, vec3_t hitloc, const qb
 	{
 		if (rightdot > 0.3)
 		{
-			switch (self->client->ps.saber_anim_level)
+			switch (self->client->ps.fd.saber_anim_level)
 			{
 			case SS_STAFF:
 				G_SetAnim(self, &self->client->pers.cmd, SETANIM_TORSO, BOTH_V7_TR_S7, SETANIM_AFLAG_PACE, 0);
@@ -14416,7 +14416,7 @@ qboolean WP_SaberFatiguedParryDirection(gentity_t* self, vec3_t hitloc, const qb
 		}
 		else if (rightdot < -0.3)
 		{
-			switch (self->client->ps.saber_anim_level)
+			switch (self->client->ps.fd.saber_anim_level)
 			{
 			case SS_STAFF:
 				G_SetAnim(self, &self->client->pers.cmd, SETANIM_TORSO, BOTH_V7_TL_S7, SETANIM_AFLAG_PACE, 0);
@@ -14432,7 +14432,7 @@ qboolean WP_SaberFatiguedParryDirection(gentity_t* self, vec3_t hitloc, const qb
 		}
 		else
 		{
-			switch (self->client->ps.saber_anim_level)
+			switch (self->client->ps.fd.saber_anim_level)
 			{
 			case SS_STAFF:
 				G_SetAnim(self, &self->client->pers.cmd, SETANIM_TORSO, BOTH_V7_T__S7, SETANIM_AFLAG_PACE, 0);
@@ -14455,7 +14455,7 @@ qboolean WP_SaberFatiguedParryDirection(gentity_t* self, vec3_t hitloc, const qb
 		}
 		if (rightdot > 0.1)
 		{
-			switch (self->client->ps.saber_anim_level)
+			switch (self->client->ps.fd.saber_anim_level)
 			{
 			case SS_STAFF:
 				G_SetAnim(self, &self->client->pers.cmd, SETANIM_TORSO, BOTH_V7__R_S7, SETANIM_AFLAG_PACE, 0);
@@ -14471,7 +14471,7 @@ qboolean WP_SaberFatiguedParryDirection(gentity_t* self, vec3_t hitloc, const qb
 		}
 		else if (rightdot < -0.1)
 		{
-			switch (self->client->ps.saber_anim_level)
+			switch (self->client->ps.fd.saber_anim_level)
 			{
 			case SS_STAFF:
 				G_SetAnim(self, &self->client->pers.cmd, SETANIM_TORSO, BOTH_V7__L_S7, SETANIM_AFLAG_PACE, 0);
@@ -14487,7 +14487,7 @@ qboolean WP_SaberFatiguedParryDirection(gentity_t* self, vec3_t hitloc, const qb
 		}
 		else
 		{
-			switch (self->client->ps.saber_anim_level)
+			switch (self->client->ps.fd.saber_anim_level)
 			{
 			case SS_STAFF:
 				G_SetAnim(self, &self->client->pers.cmd, SETANIM_TORSO, BOTH_V7_T__S7, SETANIM_AFLAG_PACE, 0);
@@ -14506,7 +14506,7 @@ qboolean WP_SaberFatiguedParryDirection(gentity_t* self, vec3_t hitloc, const qb
 	{
 		if (rightdot >= 0)
 		{
-			switch (self->client->ps.saber_anim_level)
+			switch (self->client->ps.fd.saber_anim_level)
 			{
 			case SS_STAFF:
 				G_SetAnim(self, &self->client->pers.cmd, SETANIM_TORSO, BOTH_V7_BR_S7, SETANIM_AFLAG_PACE, 0);
@@ -14522,7 +14522,7 @@ qboolean WP_SaberFatiguedParryDirection(gentity_t* self, vec3_t hitloc, const qb
 		}
 		else
 		{
-			switch (self->client->ps.saber_anim_level)
+			switch (self->client->ps.fd.saber_anim_level)
 			{
 			case SS_STAFF:
 				G_SetAnim(self, &self->client->pers.cmd, SETANIM_TORSO, BOTH_V7_BL_S7, SETANIM_AFLAG_PACE, 0);

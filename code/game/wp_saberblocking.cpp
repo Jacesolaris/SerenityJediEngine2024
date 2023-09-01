@@ -1090,26 +1090,15 @@ qboolean sab_beh_block_vs_attack(gentity_t* blocker, gentity_t* attacker, const 
 			}
 			else if ((accurate_parry || npc_blocking)) //Other types and npc,s
 			{
-				if (blocker->NPC && !G_ControlledByPlayer(blocker)) //NPC only
+				if (attacker->client->ps.saber_anim_level == SS_DESANN || attacker->client->ps.saber_anim_level == SS_STRONG)
 				{
-					if (attacker->client->ps.saber_anim_level == SS_DESANN || attacker->client->ps.saber_anim_level ==
-						SS_STRONG)
+					WP_SaberFatiguedParry(blocker, attacker, saber_num, blade_num);
+				}
+				else
+				{
+					if (blocker->client->ps.blockPoints <= BLOCKPOINTS_MISSILE)
 					{
-						WP_SaberFatiguedParry(blocker, attacker, saber_num, blade_num);
-					}
-					else
-					{
-						if (blocker->client->ps.blockPoints <= BLOCKPOINTS_MISSILE)
-						{
-							WP_SaberParry(blocker, attacker, saber_num, blade_num);
-
-							if ((d_blockinfo->integer || g_DebugSaberCombat->integer) && (blocker->NPC && !
-								G_ControlledByPlayer(blocker)))
-							{
-								gi.Printf(S_COLOR_CYAN"NPC normal Parry\n");
-							}
-						}
-						else if (blocker->client->ps.blockPoints <= BLOCKPOINTS_HALF)
+						if (blocker->client->ps.blockPoints <= BLOCKPOINTS_FOURTY)
 						{
 							WP_SaberFatiguedParry(blocker, attacker, saber_num, blade_num);
 
@@ -1118,32 +1107,42 @@ qboolean sab_beh_block_vs_attack(gentity_t* blocker, gentity_t* attacker, const 
 							{
 								gi.Printf(S_COLOR_CYAN"NPC Fatigued Parry\n");
 							}
+							PM_AddBlockFatigue(&blocker->client->ps, BLOCKPOINTS_FAIL);
 						}
 						else
 						{
-							WP_SaberMBlock(blocker, attacker, saber_num, blade_num);
-
-							if (blocker->NPC && !G_ControlledByPlayer(blocker)) //NPC only
-							{
-								g_do_m_block_response(attacker);
-							}
+							WP_SaberParry(blocker, attacker, saber_num, blade_num);
 
 							if ((d_blockinfo->integer || g_DebugSaberCombat->integer) && (blocker->NPC && !
 								G_ControlledByPlayer(blocker)))
 							{
-								gi.Printf(S_COLOR_CYAN"NPC good Parry\n");
+								gi.Printf(S_COLOR_CYAN"NPC normal Parry\n");
 							}
+
+							PM_AddBlockFatigue(&blocker->client->ps, BLOCKPOINTS_THREE);
 						}
 					}
-				}
-				else
-				{
-					WP_SaberMBlock(blocker, attacker, saber_num, blade_num);
+					else
+					{
+						WP_SaberMBlock(blocker, attacker, saber_num, blade_num);
+
+						if (blocker->NPC && !G_ControlledByPlayer(blocker)) //NPC only
+						{
+							g_do_m_block_response(attacker);
+						}
+
+						if ((d_blockinfo->integer || g_DebugSaberCombat->integer) && (blocker->NPC && !
+							G_ControlledByPlayer(blocker)))
+						{
+							gi.Printf(S_COLOR_CYAN"NPC good Parry\n");
+						}
+
+						PM_AddBlockFatigue(&blocker->client->ps, BLOCKPOINTS_THREE);
+					}
 				}
 
 				G_Sound(blocker, G_SoundIndex(va("sound/weapons/saber/saber_goodparry%d.mp3", Q_irand(1, 3))));
 
-				PM_AddBlockFatigue(&blocker->client->ps, BLOCKPOINTS_THREE);
 				if ((d_blockinfo->integer || g_DebugSaberCombat->integer) && blocker->s.number < MAX_CLIENTS ||
 					G_ControlledByPlayer(blocker))
 				{
