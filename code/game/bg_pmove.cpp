@@ -10930,7 +10930,6 @@ static void PM_Footsteps()
 							if (!(pm->ps->PlayerEffectFlags & 1 << PEF_WEAPONSPRINTING))
 							{
 								pm->ps->PlayerEffectFlags |= 1 << PEF_WEAPONSPRINTING;
-								pm->ps->sprintFuel -= 15;
 								g_entities[pm->ps->client_num].client->IsSprinting = qtrue;
 							}
 							if (pm->gent && pm->gent->client && (pm->gent->client->NPC_class == CLASS_REBORN || pm
@@ -11032,7 +11031,6 @@ static void PM_Footsteps()
 							if (!(pm->ps->PlayerEffectFlags & 1 << PEF_WEAPONSPRINTING))
 							{
 								pm->ps->PlayerEffectFlags |= 1 << PEF_WEAPONSPRINTING;
-								pm->ps->sprintFuel -= 15;
 								g_entities[pm->ps->client_num].client->IsSprinting = qtrue;
 							}
 						}
@@ -11074,7 +11072,6 @@ static void PM_Footsteps()
 						if (!(pm->ps->PlayerEffectFlags & 1 << PEF_WEAPONSPRINTING))
 						{
 							pm->ps->PlayerEffectFlags |= 1 << PEF_WEAPONSPRINTING;
-							pm->ps->sprintFuel -= 15;
 							g_entities[pm->ps->client_num].client->IsSprinting = qtrue;
 						}
 					}
@@ -11119,7 +11116,6 @@ static void PM_Footsteps()
 							if (!(pm->ps->PlayerEffectFlags & 1 << PEF_WEAPONSPRINTING))
 							{
 								pm->ps->PlayerEffectFlags |= 1 << PEF_WEAPONSPRINTING;
-								pm->ps->sprintFuel -= 15;
 								g_entities[pm->ps->client_num].client->IsSprinting = qtrue;
 							}
 						}
@@ -11269,7 +11265,6 @@ static void PM_Footsteps()
 							if (!(pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING))
 							{
 								pm->ps->PlayerEffectFlags |= 1 << PEF_SPRINTING;
-								pm->ps->sprintFuel -= 15;
 								g_entities[pm->ps->client_num].client->IsSprinting = qtrue;
 							}
 						}

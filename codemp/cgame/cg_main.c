@@ -853,7 +853,7 @@ static void CG_RegisterSounds(void)
 	trap->S_RegisterSound("sound/weapons/saber/saberhit14");
 	trap->S_RegisterSound("sound/weapons/saber/saberhit15");
 
-	trap->S_RegisterSound("sound/weapons/saber/saber_catch.wav");
+	trap->S_RegisterSound("sound/weapons/saber/saber_catch.mp3");
 	trap->S_RegisterSound("sound/weapons/saber/sabercatch.mp3");
 
 	trap->S_RegisterSound("sound/weapons/saber/lightning1");

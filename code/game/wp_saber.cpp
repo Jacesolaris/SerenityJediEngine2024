@@ -9381,7 +9381,7 @@ void WP_SaberCatch(gentity_t* self, gentity_t* saber, const qboolean switch_to_s
 		saber->clipmask = MASK_SHOT | CONTENTS_LIGHTSABER;
 
 		//play catch sound
-		G_Sound(saber, G_SoundIndex("sound/weapons/saber/saber_catch.wav"));
+		G_Sound(saber, G_SoundIndex("sound/weapons/saber/saber_catch.mp3"));
 
 		if (self->client->ps.weapon == WP_SABER)
 		{

@@ -15367,7 +15367,7 @@ void SaberBallisticsThink(gentity_t* saber_ent)
 		if (owner_len <= 32)
 		{
 			//racc - picked up the saber.
-			G_Sound(saber_ent, CHAN_AUTO, G_SoundIndex("sound/weapons/saber/sabercatch.mp3"));
+			G_Sound(saber_ent, CHAN_AUTO, G_SoundIndex("sound/weapons/saber/saber_catch.mp3"));
 			G_SetAnim(saber_owner, NULL, SETANIM_TORSO, BOTH_STAND1TO2, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
 
 			saber_ent->s.eFlags &= ~EF_MISSILE_STICK;
