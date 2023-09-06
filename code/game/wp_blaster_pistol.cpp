@@ -50,7 +50,7 @@ void WP_FireBryarPistol(gentity_t* ent, const qboolean alt_fire)
 	{
 		//no inherent aim screw up
 	}
-	else if (!(ent->client->ps.forcePowersActive & 1 << FP_SEE) || ent->client->ps.forcePowerLevel[FP_SEE] < FORCE_LEVEL_2)
+	else if ((!(ent->client->ps.forcePowersActive & 1 << FP_SEE)) || (ent->client->ps.forcePowersActive & 1 << FP_SEE && ent->client->ps.forcePowerLevel[FP_SEE] < FORCE_LEVEL_2))
 	{//force sight 2+ gives perfect aim
 		vec3_t angs;
 
@@ -209,7 +209,7 @@ void WP_FireBryarPistolDuals(gentity_t* ent, const qboolean alt_fire, const qboo
 	{
 		//no inherent aim screw up
 	}
-	else if (!(ent->client->ps.forcePowersActive & 1 << FP_SEE) || ent->client->ps.forcePowerLevel[FP_SEE] < FORCE_LEVEL_2)
+	else if ((!(ent->client->ps.forcePowersActive & 1 << FP_SEE)) || (ent->client->ps.forcePowersActive & 1 << FP_SEE && ent->client->ps.forcePowerLevel[FP_SEE] < FORCE_LEVEL_2))
 	{//force sight 2+ gives perfect aim
 		vec3_t angs;
 
@@ -414,7 +414,7 @@ void WP_FireBryarsbdPistol(gentity_t* ent, const qboolean alt_fire)
 	{
 		//no inherent aim screw up
 	}
-	else if (!(ent->client->ps.forcePowersActive & 1 << FP_SEE) || ent->client->ps.forcePowerLevel[FP_SEE] < FORCE_LEVEL_2)
+	else if ((!(ent->client->ps.forcePowersActive & 1 << FP_SEE)) || (ent->client->ps.forcePowersActive & 1 << FP_SEE && ent->client->ps.forcePowerLevel[FP_SEE] < FORCE_LEVEL_2))
 	{//force sight 2+ gives perfect aim
 		if (alt_fire)
 		{
@@ -506,7 +506,7 @@ void WP_FireJawaPistol(gentity_t* ent, const qboolean alt_fire)
 	{
 		//no inherent aim screw up
 	}
-	else if (!(ent->client->ps.forcePowersActive & 1 << FP_SEE) || ent->client->ps.forcePowerLevel[FP_SEE] < FORCE_LEVEL_2)
+	else if ((!(ent->client->ps.forcePowersActive & 1 << FP_SEE)) || (ent->client->ps.forcePowersActive & 1 << FP_SEE && ent->client->ps.forcePowerLevel[FP_SEE] < FORCE_LEVEL_2))
 	{//force sight 2+ gives perfect aim
 		vec3_t angs;
 
@@ -657,7 +657,7 @@ void WP_FireBryarPistolold(gentity_t* ent, const qboolean alt_fire)
 	{
 		//no inherent aim screw up
 	}
-	else if (!(ent->client->ps.forcePowersActive & 1 << FP_SEE) || ent->client->ps.forcePowerLevel[FP_SEE] < FORCE_LEVEL_2)
+	else if ((!(ent->client->ps.forcePowersActive & 1 << FP_SEE)) || (ent->client->ps.forcePowersActive & 1 << FP_SEE && ent->client->ps.forcePowerLevel[FP_SEE] < FORCE_LEVEL_2))
 	{//force sight 2+ gives perfect aim
 		vec3_t angs;
 

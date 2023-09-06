@@ -3207,7 +3207,8 @@ qboolean client_userinfo_changed(const int client_num)
 		else if (Class_Model(model, "imperial")
 			|| Class_Model(model, "imperial/main")
 			|| Class_Model(model, "imperial/main2")
-			|| Class_Model(model, "imperial/main3"))
+			|| Class_Model(model, "imperial/main3")
+			|| Class_Model(model, "imperialcommando"))
 		{
 			client->pers.nextbotclass = BCLASS_IMPERIAL;
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
