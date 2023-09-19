@@ -694,6 +694,23 @@ void Svcmd_SaberAttackCycle_f()
 	if (!self->s.number)
 	{
 		cg.saber_anim_levelPending = saber_anim_level;
+
+		if (!(self->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK)) // lets do a movement when changing styles // need better anims for this
+		{
+			if (saber_anim_level == SS_DUAL)
+			{
+				NPC_SetAnim(self, SETANIM_TORSO, BOTH_SABERDUAL_BHSABERS_STANCE, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+			}
+			else if (saber_anim_level == SS_STAFF)
+			{
+				NPC_SetAnim(self, SETANIM_TORSO, BOTH_SABERDUAL_BHSABERS_STANCE, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+			}
+			else
+			{
+				NPC_SetAnim(self, SETANIM_TORSO, BOTH_SABERDUAL_BHSABERS_STANCE, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+			}
+			G_Sound(self, G_SoundIndex(va("sound/weapons/saber/lowswing%d", Q_irand(1, 7))));
+		}
 	}
 	else
 	{

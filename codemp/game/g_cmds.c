@@ -3378,6 +3378,23 @@ void Cmd_SaberAttackCycle_f(gentity_t* ent)
 	{
 		//not busy, set it now
 		ent->client->ps.fd.saber_anim_level = select_level;
+
+		if (!(ent->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK)) // lets do a movement when changing styles // need better anims for this
+		{
+			if (select_level == SS_DUAL)
+			{
+				G_SetAnim(ent, &ent->client->pers.cmd, SETANIM_TORSO, BOTH_SABERDUAL_BHSABERS_STANCE, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
+			}
+			else if (select_level == SS_STAFF)
+			{
+				G_SetAnim(ent, &ent->client->pers.cmd, SETANIM_TORSO, BOTH_SABERDUAL_BHSABERS_STANCE, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
+			}
+			else
+			{
+				G_SetAnim(ent, &ent->client->pers.cmd, SETANIM_TORSO, BOTH_SABERDUAL_BHSABERS_STANCE, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
+			}
+			G_Sound(ent, CHAN_AUTO, G_SoundIndex(va("sound/weapons/saber/lowswing%i.wav", Q_irand(1, 7))));
+		}
 	}
 	else
 	{
