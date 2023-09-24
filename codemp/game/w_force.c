@@ -5465,7 +5465,6 @@ void ForceThrow(gentity_t* self, qboolean pull)
 		{
 			self->client->ps.forceHandExtend = HANDEXTEND_FORCEPUSH;
 			self->client->ps.forceHandExtendTime = level.time + 650;
-			self->client->ps.powerups[PW_FORCE_PUSH] = level.time + self->client->ps.torsoTimer + 1000;
 		}
 		else if (self->client->ps.forceHandExtend == HANDEXTEND_KNOCKDOWN && G_InGetUpAnim(&self->client->ps))
 		{

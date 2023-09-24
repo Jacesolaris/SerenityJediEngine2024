@@ -5462,6 +5462,12 @@ static void CG_PlayerSplash(const centity_t* cent)
 
 static void CG_ForcePushBlur(vec3_t org, centity_t* cent)
 {
+	if (com_outcast.integer == 2) // NO EFFECT
+	{
+		//no effect
+		return;
+	}
+
 	if (!cent || !cg_renderToTextureFX.integer)
 	{
 		localEntity_t* ex = CG_AllocLocalEntity();
@@ -5491,6 +5497,73 @@ static void CG_ForcePushBlur(vec3_t org, centity_t* cent)
 		ex->pos.trTime = cg.time;
 		ex->pos.trType = TR_LINEAR;
 		VectorScale(cg.refdef.viewaxis[1], -55, ex->pos.trDelta);
+
+		ex->color[0] = 24;
+		ex->color[1] = 32;
+		ex->color[2] = 40;
+		ex->refEntity.customShader = trap->R_RegisterShader("gfx/effects/forcePush");
+	}
+	else if (com_outcast.integer == 1)
+	{
+		localEntity_t* ex = CG_AllocLocalEntity();
+		ex->leType = LE_PUFF;
+		ex->refEntity.reType = RT_SPRITE;
+
+		if (cent->currentState.powerups & 1 << PW_FORCE_PUSH_RHAND)
+		{
+			ex->radius = 8.0f;
+		}
+		else
+		{
+			ex->radius = 2.0f;
+		}
+		ex->startTime = cg.time;
+		ex->endTime = ex->startTime + 120;
+		VectorCopy(org, ex->pos.trBase);
+		ex->pos.trTime = cg.time;
+		ex->pos.trType = TR_LINEAR;
+
+		if (cent->currentState.powerups & 1 << PW_FORCE_PUSH_RHAND)
+		{
+			VectorScale(cg.refdef.viewaxis[1], 255, ex->pos.trDelta);
+		}
+		else
+		{
+			VectorScale(cg.refdef.viewaxis[1], 55, ex->pos.trDelta);
+		}
+
+		ex->color[0] = 24;
+		ex->color[1] = 32;
+		ex->color[2] = 40;
+		ex->refEntity.customShader = trap->R_RegisterShader("gfx/effects/forcePush");
+
+		ex = CG_AllocLocalEntity();
+		ex->leType = LE_PUFF;
+		ex->refEntity.reType = RT_SPRITE;
+		ex->refEntity.rotation = 180.0f;
+
+		if (cent->currentState.powerups & 1 << PW_FORCE_PUSH_RHAND)
+		{
+			ex->radius = 8.0f;
+		}
+		else
+		{
+			ex->radius = 2.0f;
+		}
+		ex->startTime = cg.time;
+		ex->endTime = ex->startTime + 120;
+		VectorCopy(org, ex->pos.trBase);
+		ex->pos.trTime = cg.time;
+		ex->pos.trType = TR_LINEAR;
+
+		if (cent->currentState.powerups & 1 << PW_FORCE_PUSH_RHAND)
+		{
+			VectorScale(cg.refdef.viewaxis[1], -255, ex->pos.trDelta);
+		}
+		else
+		{
+			VectorScale(cg.refdef.viewaxis[1], -55, ex->pos.trDelta);
+		}
 
 		ex->color[0] = 24;
 		ex->color[1] = 32;
@@ -5851,8 +5924,25 @@ static void CG_ForcePushBodyBlur(centity_t* cent)
 		}
 		else
 		{
-			//standard effect, don't be refractive (for now)
-			CG_ForcePushBlur(fx_org, NULL);
+			if (com_outcast.integer == 0) //JKA
+			{
+				//standard effect, don't be refractive (for now)
+				CG_ForcePushBlur(fx_org, NULL);
+			}
+			else if (com_outcast.integer == 1) //JKO
+			{
+				//standard effect, don't be refractive (for now)
+				CG_ForcePushBlur(fx_org, NULL);
+			}
+			else if (com_outcast.integer == 2) // NO EFFECT
+			{
+				//no effect
+			}
+			else // BACKUP
+			{
+				//standard effect, don't be refractive (for now)
+				CG_ForcePushBlur(fx_org, NULL);
+			}
 		}
 	}
 }
@@ -18355,7 +18445,22 @@ SkipTrueView:
 	//fullbody push effect
 	if (cent->currentState.eFlags & EF_BODYPUSH)
 	{
-		CG_ForcePushBodyBlur(cent);
+		if (com_outcast.integer == 0) //JKA
+		{
+			CG_ForcePushBodyBlur(cent);
+		}
+		else if (com_outcast.integer == 1) //JKO
+		{
+			CG_ForcePushBodyBlur(cent);
+		}
+		else if (com_outcast.integer == 2) // NO EFFECT
+		{
+			//no effect
+		}
+		else // BACKUP
+		{
+			CG_ForcePushBodyBlur(cent);
+		}
 	}
 
 	if (cent->currentState.powerups & 1 << PW_DISINT_4)

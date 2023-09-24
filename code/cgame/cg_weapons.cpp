@@ -3424,7 +3424,7 @@ void CG_NextWeapon_f()
 		return;
 	}
 
-	if (g_entities[0].client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_TWENTYSIX)
+	if (g_entities[0].client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_TWELVE)
 	{
 		NPC_SetAnim(cg_entities[0].gent, SETANIM_TORSO, BOTH_RELOADFAIL, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 		G_SoundOnEnt(cg_entities[0].gent, CHAN_WEAPON, "sound/weapons/reloadfail.mp3");
@@ -3659,7 +3659,7 @@ void CG_PrevWeapon_f()
 		return;
 	}
 
-	if (g_entities[0].client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_TWENTYSIX)
+	if (g_entities[0].client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_TWELVE)
 	{
 		NPC_SetAnim(cg_entities[0].gent, SETANIM_TORSO, BOTH_RELOADFAIL, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 		G_SoundOnEnt(cg_entities[0].gent, CHAN_WEAPON, "sound/weapons/reloadfail.mp3");
@@ -3789,7 +3789,7 @@ void CG_ChangeWeapon(const int num)
 		return;
 	}
 
-	if (g_entities[0].client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_TWENTYSIX)
+	if (g_entities[0].client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_TWELVE)
 	{
 		NPC_SetAnim(cg_entities[0].gent, SETANIM_TORSO, BOTH_RELOADFAIL, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 		G_SoundOnEnt(cg_entities[0].gent, CHAN_WEAPON, "sound/weapons/reloadfail.mp3");
@@ -3902,7 +3902,7 @@ void CG_Weapon_f()
 		return;
 	}
 
-	if (g_entities[0].client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_TWENTYSIX)
+	if (g_entities[0].client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_TWELVE)
 	{
 		NPC_SetAnim(cg_entities[0].gent, SETANIM_TORSO, BOTH_RELOADFAIL, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 		G_SoundOnEnt(cg_entities[0].gent, CHAN_WEAPON, "sound/weapons/reloadfail.mp3");
@@ -4202,29 +4202,6 @@ void CG_FireWeapon(centity_t* cent, const qboolean alt_fire)
 	{
 		return;
 	}
-
-	/*if (g_entities[0].client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_TWENTYNINE)
-	{
-		if (cg_entities[0].gent->s.weapon == WP_BRYAR_PISTOL ||
-			cg_entities[0].gent->s.weapon == WP_BLASTER_PISTOL ||
-			cg_entities[0].gent->s.weapon == WP_DUAL_PISTOL ||
-			cg_entities[0].gent->s.weapon == WP_REY ||
-			cg_entities[0].gent->s.weapon == WP_JANGO ||
-			cg_entities[0].gent->s.weapon == WP_CLONEPISTOL ||
-			cg_entities[0].gent->s.weapon == WP_REBELBLASTER)
-		{
-			NPC_SetAnim(cg_entities[0].gent, SETANIM_TORSO, BOTH_PISTOLFAIL, SETANIM_AFLAG_BLOCKPACE);
-		}
-		else
-		{
-			NPC_SetAnim(cg_entities[0].gent, SETANIM_TORSO, BOTH_RIFLEFAIL, SETANIM_AFLAG_BLOCKPACE);
-		}
-		G_SoundOnEnt(cg_entities[0].gent, CHAN_WEAPON, "sound/weapons/reloadfail.mp3");
-		G_SoundOnEnt(cg_entities[0].gent, CHAN_VOICE_ATTEN, "*pain25.wav");
-		G_Damage(cg_entities[0].gent, nullptr, nullptr, nullptr, cg_entities[0].gent->currentOrigin, 2, DAMAGE_NO_ARMOR, MOD_LAVA);
-		cg_entities[0].gent->reloadTime = level.time + fire_deley_time();
-		return;
-	}*/
 
 	if (ent->weapon >= WP_NUM_WEAPONS)
 	{

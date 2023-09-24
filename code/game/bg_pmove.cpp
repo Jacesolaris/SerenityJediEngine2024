@@ -2817,7 +2817,7 @@ static void PM_WaterMove()
 		{
 			// jumped away
 			return;
-}
+		}
 	}
 #if 0
 	// jump = head for surface
@@ -2974,7 +2974,7 @@ static void PM_LadderMove()
 		{
 			// jumped away
 			return;
-}
+		}
 	}
 #if 0
 	// jump = head for surface
@@ -5911,20 +5911,20 @@ static void PM_GroundTraceMissed()
 								}
 							}
 						}
-							}
-						}
 					}
 				}
+			}
+		}
 
 		if (pm->ps->groundEntityNum != ENTITYNUM_NONE)
 		{
 			pm->ps->jumpZStart = pm->ps->origin[2];
 		}
-			}
+	}
 	pm->ps->groundEntityNum = ENTITYNUM_NONE;
 	pml.groundPlane = qfalse;
 	pml.walking = qfalse;
-		}
+}
 
 #ifdef _GAME
 extern void G_Knockdown(gentity_t* self, gentity_t* attacker, const vec3_t push_dir, float strength, qboolean breakSaberLock);
@@ -6182,7 +6182,7 @@ static void PM_GroundTrace()
 				pm->ps->velocity[2] = 0;
 			}
 		}
-}
+	}
 
 	pm->ps->groundEntityNum = trace.entity_num;
 	pm->ps->lastOnGround = level.time;
@@ -6193,7 +6193,7 @@ static void PM_GroundTrace()
 	}
 
 	PM_AddTouchEnt(trace.entity_num);
-	}
+}
 
 int LastMatrixJumpTime = 0;
 constexpr auto DEBUGMATRIXJUMP = 0;
@@ -8996,8 +8996,8 @@ void PM_FootSlopeTrace(float* p_diff, float* p_interval)
 				*p_interval = interval;
 			}
 			return;
-}
-}
+		}
+	}
 #else
 
 	//FIXME: these really should have been gotten on the cgame, but I guess sometimes they're not and we end up with qnan numbers!
@@ -12929,9 +12929,12 @@ void PM_SetSaberMove(saberMoveName_t new_move)
 	else if (PM_SaberInAttack(new_move))
 	{
 		//continuing with a kata, increment attack counter
-		//FIXME: maybe some contextual/style-specific logic in here
 		pm->ps->saberAttackChainCount++;
-		pm->ps->saberFatigueChainCount++;
+
+		if (pm->ps->saberFatigueChainCount < MISHAPLEVEL_MAX)
+		{
+			pm->ps->saberFatigueChainCount++;
+		}
 	}
 
 	if (pm->ps->saberFatigueChainCount >= MISHAPLEVEL_OVERLOAD)
@@ -18178,7 +18181,11 @@ void PM_WeaponLightsaber()
 						newmove = saber_moveData[curmove].chain_attack;
 						//we assume they're attacking, even if they're not
 						pm->ps->saberAttackChainCount++;
-						pm->ps->saberFatigueChainCount++;
+
+						if (pm->ps->saberFatigueChainCount < MISHAPLEVEL_MAX)
+						{
+							pm->ps->saberFatigueChainCount++;
+						}
 					}
 				}
 				else

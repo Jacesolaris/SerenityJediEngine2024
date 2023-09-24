@@ -2038,7 +2038,7 @@ void CG_NextWeapon_f(void)
 		return;
 	}
 
-	if (cg.snap->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_TWENTYSIX)
+	if (cg.snap->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_TWELVE)
 	{
 		return;
 	}
@@ -2122,7 +2122,7 @@ void CG_PrevWeapon_f(void)
 		return;
 	}
 
-	if (cg.snap->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_TWENTYSIX)
+	if (cg.snap->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_TWELVE)
 	{
 		return;
 	}
@@ -2219,7 +2219,7 @@ void CG_Weapon_f(void)
 		return;
 	}
 
-	if (cg.snap->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_TWENTYSIX)
+	if (cg.snap->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_TWELVE)
 	{
 		return;
 	}
@@ -2591,25 +2591,6 @@ void CG_FireWeapon(centity_t* cent, const qboolean alt_fire)
 	{
 		return;
 	}
-
-	/*if (cent->currentState.PlayerEffectFlags & 1 << PEF_FREEZING)
-	{
-		return;
-	}
-
-	if (CG_IsMindTricked(cent->currentState.trickedentindex,
-		cent->currentState.trickedentindex2,
-		cent->currentState.trickedentindex3,
-		cent->currentState.trickedentindex4,
-		cg.snap->ps.client_num))
-	{
-		return;
-	}
-
-	if (cent->currentState.frozenTime > 0)
-	{
-		return;
-	}*/
 
 	const weaponInfo_t* weap = &cg_weapons[ent->weapon];
 

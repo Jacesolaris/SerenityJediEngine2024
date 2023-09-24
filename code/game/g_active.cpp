@@ -1962,7 +1962,7 @@ void ClientTimerActions(gentity_t* ent, const int msec)
 		{
 			if (ent->client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_MIN && ent->client->ps.weaponTime < 1)
 			{
-				if (ent->client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_FULL)
+				if (ent->client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_ELEVEN)
 				{
 					WP_BlasterFatigueRegenerate(4);
 				}
@@ -7278,7 +7278,7 @@ void ReloadGun(gentity_t* ent)
 
 	if (IsHoldingGun(ent))
 	{
-		if (ent->client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_TWENTYSIX)
+		if (ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_TWELVE)
 		{
 			NPC_SetAnim(ent, SETANIM_TORSO, BOTH_RELOADFAIL, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 			G_SoundOnEnt(ent, CHAN_WEAPON, "sound/weapons/reloadfail.mp3");
@@ -7364,6 +7364,18 @@ void ReloadGun(gentity_t* ent)
 		}
 
 		ent->client->ps.weaponstate = WEAPON_RELOADING;
+	}
+}
+
+void FireOverheatFail(gentity_t* ent)
+{
+	if (IsHoldingGun(ent))
+	{
+		NPC_SetAnim(ent, SETANIM_TORSO, BOTH_RELOADFAIL, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+		G_SoundOnEnt(ent, CHAN_WEAPON, "sound/weapons/reloadfail.mp3");
+		G_SoundOnEnt(ent, CHAN_VOICE_ATTEN, "*pain25.wav");
+		G_Damage(ent, nullptr, nullptr, nullptr, ent->currentOrigin, 2, DAMAGE_NO_ARMOR, MOD_LAVA);
+		ent->reloadTime = level.time + PainTime(ent);
 	}
 }
 

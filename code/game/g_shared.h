@@ -908,6 +908,7 @@ public:
 	qboolean stunhasbeenfired;
 	int cloneFired; //[CloneRifle]
 	int DekaFired;
+	int BoltsFired;
 	int Dash_Count;
 
 	void sg_export(
@@ -1008,6 +1009,7 @@ public:
 
 		saved_game.write<int32_t>(cloneFired);
 		saved_game.write<int32_t>(DekaFired);
+		saved_game.write<int32_t>(BoltsFired);
 		saved_game.write<int32_t>(Dash_Count);
 	}
 
@@ -1109,6 +1111,7 @@ public:
 
 		saved_game.read<int32_t>(cloneFired);
 		saved_game.read<int32_t>(DekaFired);
+		saved_game.read<int32_t>(BoltsFired);
 		saved_game.read<int32_t>(Dash_Count);
 	}
 }; // GClientBase

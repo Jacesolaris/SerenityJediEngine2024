@@ -1289,7 +1289,7 @@ void ClientTimerActions(gentity_t* ent, const int msec)
 		{
 			if (ent->client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_MIN && ent->client->ps.weaponTime < 1)
 			{
-				if (ent->client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_FULL)
+				if (ent->client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_ELEVEN)
 				{
 					WP_BlasterFatigueRegenerate(4);
 				}
@@ -3827,7 +3827,7 @@ void ReloadGun(gentity_t* ent)
 
 	if (IsHoldingGun(ent))
 	{
-		if (ent->client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_TWENTYSIX)
+		if (ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_TWELVE)
 		{
 			NPC_SetAnim(ent, SETANIM_TORSO, BOTH_RELOADFAIL, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 			G_SoundOnEnt(ent, CHAN_WEAPON, "sound/weapons/reloadfail.mp3");
@@ -3904,6 +3904,18 @@ void ReloadGun(gentity_t* ent)
 			ent->client->ps.weaponTime = ent->client->ps.torsoTimer;
 			bg_reduce_blaster_mishap_level_advanced(&ent->client->ps);
 		}
+	}
+}
+
+void FireOverheatFail(gentity_t* ent)
+{
+	if (IsHoldingGun(ent))
+	{
+		NPC_SetAnim(ent, SETANIM_TORSO, BOTH_RELOADFAIL, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+		G_SoundOnEnt(ent, CHAN_WEAPON, "sound/weapons/reloadfail.mp3");
+		G_SoundOnEnt(ent, CHAN_VOICE_ATTEN, "*pain25.wav");
+		G_Damage(ent, NULL, NULL, NULL, ent->r.currentOrigin, 2, DAMAGE_NO_ARMOR, MOD_LAVA);
+		ent->reloadTime = level.time + PainTime(ent);
 	}
 }
 
@@ -4371,7 +4383,22 @@ void ClientThink_real(gentity_t* ent)
 	//Check if we should have a fullbody push effect around the player
 	if (client->pushEffectTime > level.time)
 	{
-		client->ps.eFlags |= EF_BODYPUSH;
+		if (com_outcast.integer == 0) //JKA
+		{
+			client->ps.eFlags |= EF_BODYPUSH;
+		}
+		else if (com_outcast.integer == 1) //JKO
+		{
+			client->ps.eFlags |= EF_BODYPUSH;
+		}
+		else if (com_outcast.integer == 2) // NO EFFECT
+		{
+			//no effect
+		}
+		else // BACKUP
+		{
+			client->ps.eFlags |= EF_BODYPUSH;
+		}
 	}
 	else if (client->pushEffectTime)
 	{

@@ -60,7 +60,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #define DEFAULT_REDTEAM_NAME	"Empire"
 #define DEFAULT_BLUETEAM_NAME	"Rebellion"
 
-#define CURRENT_SJE_CLIENTVERSION		"Year-23,Month-09,Day-19,BuildNum-05" // build date
+#define CURRENT_SJE_CLIENTVERSION		"Year-23,Month-09,Day-24,BuildNum-06" // build date
 
 #define	STEPSIZE		18
 
@@ -795,6 +795,7 @@ typedef enum {
 	PW_INVINCIBLE,
 	PW_GALAK_SHIELD,
 	PW_FORCE_PUSH,
+	PW_FORCE_PUSH_RHAND,
 	PW_FORCE_PROJECTILE,
 
 	PW_NUM_POWERUPS
@@ -837,7 +838,7 @@ typedef enum {
 	CTFMESSAGE_PLAYER_GOT_FLAG
 } ctfMsg_t;
 
-#define PW_REMOVE_AT_DEATH ((1<<PW_MEDITATE)|(1<<PW_BATTLESUIT)|(1<<PW_CLOAKED)|(1<<PW_GALAK_SHIELD)|(1<<PW_INVINCIBLE)|(1<<PW_FORCE_PUSH))
+#define PW_REMOVE_AT_DEATH ((1<<PW_MEDITATE)|(1<<PW_BATTLESUIT)|(1<<PW_CLOAKED)|(1<<PW_GALAK_SHIELD)|(1<<PW_INVINCIBLE)|(1<<PW_FORCE_PUSH)|(1<<PW_FORCE_PUSH_RHAND))
 // reward sounds (stored in ps->persistant[PERS_PLAYEREVENTS])
 #define	PLAYEREVENT_DENIEDREWARD		0x0001
 #define	PLAYEREVENT_GAUNTLETREWARD		0x0002

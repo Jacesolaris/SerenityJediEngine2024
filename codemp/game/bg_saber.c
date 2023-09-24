@@ -6067,16 +6067,20 @@ weapChecks:
 						newmove = saber_moveData[curmove].chain_attack;
 						//we assume they're attacking, even if they're not
 						pm->ps->saberAttackChainCount++;
-						pm->ps->saberFatigueChainCount++;
-					}
-				}
+
+						if (pm->ps->saberFatigueChainCount < MISHAPLEVEL_MAX)
+						{
+							pm->ps->saberFatigueChainCount++;
+			}
+		}
+	}
 				else
 #endif
 				{
 					//player gets his by directional control
 					newmove = saber_moveData[curmove].chain_idle; //oops, not attacking, so don't chain
 				}
-			}
+}
 			else
 			{
 				PM_SetSaberMove(LS_READY);
@@ -6243,7 +6247,7 @@ weapChecks:
 				{
 					//NPCs use more randomized attacks the more skilled they are
 					newmove = PM_NPCSaberAttackFromQuad(saber_moveData[curmove].endQuad);
-				}
+			}
 				else
 #endif
 				{
@@ -6281,7 +6285,7 @@ weapChecks:
 					//cannot chain this time
 					newmove = saber_moveData[curmove].chain_idle;
 				}
-			}
+		}
 
 			if (newmove != LS_NONE)
 			{
@@ -6695,7 +6699,11 @@ void PM_SetSaberMove(saberMoveName_t new_move)
 	{
 		//continuing with a kata, increment attack counter
 		pm->ps->saberAttackChainCount++;
-		pm->ps->saberFatigueChainCount++;
+
+		if (pm->ps->saberFatigueChainCount < MISHAPLEVEL_MAX)
+		{
+			pm->ps->saberFatigueChainCount++;
+		}
 	}
 
 	if (pm->ps->saberFatigueChainCount > MISHAPLEVEL_OVERLOAD)
@@ -7032,7 +7040,7 @@ void PM_SetSaberMove(saberMoveName_t new_move)
 		}
 
 		parts = SETANIM_TORSO;
-	}
+			}
 
 	if (!pm->ps->m_iVehicleNum)
 	{
@@ -7343,7 +7351,7 @@ saberInfo_t* BG_MySaber(int client_num, int saber_num)
 #endif
 
 	return NULL;
-}
+		}
 
 qboolean PM_DoKick(void)
 {

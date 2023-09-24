@@ -714,7 +714,7 @@ void WP_FireWrist(gentity_t* ent)
 			}
 			else
 			{
-				if (PM_RunningAnim(ent->client->ps.legsAnim) || ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_FULL)
+				if (PM_RunningAnim(ent->client->ps.legsAnim) || ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_ELEVEN)
 				{ // running or very fatigued
 					angs[PITCH] += Q_flrand(-2.0f, 2.0f) * RUNNING_SPREAD;
 					angs[YAW] += Q_flrand(-2.0f, 2.0f) * RUNNING_SPREAD;
@@ -768,7 +768,7 @@ void WP_FireBlaster(gentity_t* ent, const qboolean alt_fire)
 				}
 				else
 				{
-					if (PM_RunningAnim(ent->client->ps.legsAnim) || ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_FULL)
+					if (PM_RunningAnim(ent->client->ps.legsAnim) || ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_ELEVEN)
 					{ // running or very fatigued
 						angs[PITCH] += Q_flrand(-2.0f, 2.0f) * RUNNING_SPREAD;
 						angs[YAW] += Q_flrand(-2.0f, 2.0f) * RUNNING_SPREAD;
@@ -802,7 +802,7 @@ void WP_FireBlaster(gentity_t* ent, const qboolean alt_fire)
 				}
 				else
 				{
-					if (PM_RunningAnim(ent->client->ps.legsAnim) || ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_FULL)
+					if (PM_RunningAnim(ent->client->ps.legsAnim) || ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_ELEVEN)
 					{ // running or very fatigued
 						angs[PITCH] += Q_flrand(-2.0f, 2.0f) * RUNNING_SPREAD;
 						angs[YAW] += Q_flrand(-2.0f, 2.0f) * RUNNING_SPREAD;
@@ -1462,7 +1462,7 @@ static void WP_BowcasterMainFire(gentity_t* ent)
 				}
 				else
 				{
-					if (PM_RunningAnim(ent->client->ps.legsAnim) || ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_FULL)
+					if (PM_RunningAnim(ent->client->ps.legsAnim) || ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_ELEVEN)
 					{ // running or very fatigued
 						angs[PITCH] += Q_flrand(-2.0f, 2.0f) * RUNNING_SPREAD;
 						angs[YAW] += Q_flrand(-2.0f, 2.0f) * RUNNING_SPREAD;
@@ -1619,7 +1619,7 @@ static void WP_FireRepeater(gentity_t* ent, const qboolean alt_fire)
 				}
 				else
 				{
-					if (PM_RunningAnim(ent->client->ps.legsAnim) || ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_FULL)
+					if (PM_RunningAnim(ent->client->ps.legsAnim) || ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_ELEVEN)
 					{ // running or very fatigued
 						angs[PITCH] += Q_flrand(-2.0f, 2.0f) * RUNNING_SPREAD;
 						angs[YAW] += Q_flrand(-2.0f, 2.0f) * RUNNING_SPREAD;
@@ -1986,7 +1986,7 @@ static void WP_FlechetteMainFire(gentity_t* ent)
 					}
 					else
 					{
-						if (PM_RunningAnim(ent->client->ps.legsAnim) || ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_FULL)
+						if (PM_RunningAnim(ent->client->ps.legsAnim) || ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_ELEVEN)
 						{ // running or very fatigued
 							angs[PITCH] += Q_flrand(-2.0f, 2.0f) * RUNNING_SPREAD;
 							angs[YAW] += Q_flrand(-2.0f, 2.0f) * RUNNING_SPREAD;
@@ -5352,7 +5352,7 @@ tryFire:
 	}
 }
 
-void G_AddMercBalance(const gentity_t* ent, int amount)
+void G_AddBlasterAttackChainCount(const gentity_t* ent, int amount)
 {
 	if (ent->r.svFlags & SVF_BOT)
 	{
@@ -5390,7 +5390,7 @@ FireWeapon
 */
 int BG_EmplacedView(vec3_t base_angles, vec3_t angles, float* new_yaw, float constraint);
 
-qboolean DoesnotDrainMishap(const gentity_t* ent)
+qboolean doesnot_drain_mishap(const gentity_t* ent)
 {
 	switch (ent->s.weapon)
 	{
@@ -5407,6 +5407,9 @@ qboolean DoesnotDrainMishap(const gentity_t* ent)
 	}
 	return qfalse;
 }
+
+extern void FireOverheatFail(gentity_t* ent);
+extern qboolean PM_ReloadAnim(int anim);
 
 void FireWeapon(gentity_t* ent, const qboolean alt_fire)
 {
@@ -5436,17 +5439,22 @@ void FireWeapon(gentity_t* ent, const qboolean alt_fire)
 		return;
 	}
 
-	/*if (ent->client->ps.PlayerEffectFlags & 1 << PEF_FREEZING)
+	if (ent && ent->client && ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_FOURTEEN)
+	{
+		if (!(ent->r.svFlags & SVF_BOT))
+		{
+			FireOverheatFail(ent);
+			return;
+		}
+	}
+
+	if (ent && ent->client && PM_ReloadAnim(ent->client->ps.torsoAnim))
 	{
 		return;
 	}
 
-	if (ent->client->frozenTime > 0)
-	{
-		return;
-	}*/
 	// set aiming directions
-	if (ent->client && ent->s.weapon == WP_EMPLACED_GUN && ent->client->ps.emplacedIndex)
+	if (ent && ent->client && ent->s.weapon == WP_EMPLACED_GUN && ent->client->ps.emplacedIndex)
 	{
 		//if using emplaced then base muzzle point off of gun position/angles
 		gentity_t* emp = &g_entities[ent->client->ps.emplacedIndex];
@@ -5517,7 +5525,7 @@ void FireWeapon(gentity_t* ent, const qboolean alt_fire)
 		calcmuzzle_point2(ent, forward, vright, muzzle2);
 	}
 
-	if (!DoesnotDrainMishap(ent))
+	if (!doesnot_drain_mishap(ent) && ent->client->ps.BlasterAttackChainCount <= BLASTERMISHAPLEVEL_FULL)
 	{
 		if (ent->s.weapon == WP_REPEATER)
 		{
@@ -5527,11 +5535,11 @@ void FireWeapon(gentity_t* ent, const qboolean alt_fire)
 			{
 				if (ent->client->pers.cmd.forwardmove == 0 && ent->client->pers.cmd.rightmove == 0)
 				{
-					G_AddMercBalance(ent, BLASTERMISHAPLEVEL_MININACCURACY);
+					G_AddBlasterAttackChainCount(ent, BLASTERMISHAPLEVEL_MIN);
 				}
 				else
 				{
-					G_AddMercBalance(ent, BLASTERMISHAPLEVEL_TWO);
+					G_AddBlasterAttackChainCount(ent, BLASTERMISHAPLEVEL_TWO);
 				}
 
 				ent->client->cloneFired = 0;
@@ -5539,19 +5547,25 @@ void FireWeapon(gentity_t* ent, const qboolean alt_fire)
 		}
 		else if (ent->s.weapon == WP_DISRUPTOR)
 		{
-			G_AddMercBalance(ent, BLASTERMISHAPLEVEL_RUNINACCURACY);
+			G_AddBlasterAttackChainCount(ent, BLASTERMISHAPLEVEL_THREE);
 		}
 		else
 		{
-			if (ent->client->pers.cmd.forwardmove == 0 && ent->client->pers.cmd.rightmove == 0)
+			ent->client->BoltsFired++;
+
+			if (ent->client->BoltsFired == 2)
 			{
-				G_AddMercBalance(ent, BLASTERMISHAPLEVEL_MININACCURACY);
-			}
-			else
-			{
-				G_AddMercBalance(ent, Q_irand(BLASTERMISHAPLEVEL_MININACCURACY,
-					BLASTERMISHAPLEVEL_TWO));
-				// 1 was not enough
+				if (ent->client->pers.cmd.forwardmove == 0 && ent->client->pers.cmd.rightmove == 0)
+				{
+					G_AddBlasterAttackChainCount(ent, BLASTERMISHAPLEVEL_MIN);
+				}
+				else
+				{
+					G_AddBlasterAttackChainCount(ent, Q_irand(BLASTERMISHAPLEVEL_MIN, BLASTERMISHAPLEVEL_TWO));
+					// 1 was not enough
+				}
+
+				ent->client->BoltsFired = 0;
 			}
 		}
 	}

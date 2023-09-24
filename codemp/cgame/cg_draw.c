@@ -1432,9 +1432,10 @@ static void CG_DrawCusweapontype(const centity_t* cent, const menuDef_t* menu_hu
 			);
 		}
 	}
-	else if (cent->currentState.weapon == WP_BRYAR_PISTOL)
+	else if (cent->currentState.weapon == WP_BRYAR_OLD)
 	{
-		focus_item = Menu_FindItemByName(menu_hud, "weapontype_briar_pistol");
+		focus_item = Menu_FindItemByName(menu_hud, "weapontype_sbd_blaster");
+		//focus_item = Menu_FindItemByName(menu_hud, "weapontype_briar_pistol");
 
 		if (focus_item)
 		{
@@ -1702,7 +1703,7 @@ void CG_DrawCusgunfatigue(const menuDef_t* menu_hud)
 	}
 
 	// Make the hud flash by setting forceHUDTotalFlashTime above cg.time
-	if (cg.mishapHUDTotalFlashTime > cg.time || cg.snap->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_FULL)
+	if (cg.mishapHUDTotalFlashTime > cg.time || cg.snap->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_ELEVEN)
 	{
 		flash = qtrue;
 		if (cg.mishapHUDNextFlashTime < cg.time)
@@ -2709,7 +2710,7 @@ void CG_DrawJK2GunFatigue(const centity_t* cent, const int x, const int y)
 		}
 		else
 		{
-			if (cg.mishapHUDTotalFlashTime > cg.time || cg.snap->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_FULL)
+			if (cg.mishapHUDTotalFlashTime > cg.time || cg.snap->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_ELEVEN)
 			{
 				if (!(cg.time / 600 & 1))
 				{
@@ -2742,7 +2743,7 @@ void CG_DrawJK2GunFatigue(const centity_t* cent, const int x, const int y)
 	}
 	else
 	{
-		if (cg.mishapHUDTotalFlashTime > cg.time || cg.snap->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_FULL)
+		if (cg.mishapHUDTotalFlashTime > cg.time || cg.snap->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_ELEVEN)
 		{
 			if (!(cg.time / 600 & 1))
 			{
@@ -2840,7 +2841,7 @@ void CG_DrawJK2SaberFatigue(const centity_t* cent, const int x, const int y)
 				cg.messageLitActive = qfalse;
 			}
 		}
-		else if (cg.mishapHUDTotalFlashTime > cg.time || cg.snap->ps.saberFatigueChainCount > MISHAPLEVEL_RUNINACCURACY)
+		else if (cg.mishapHUDTotalFlashTime > cg.time || cg.snap->ps.saberFatigueChainCount > MISHAPLEVEL_TWO)
 		{
 			if (!(cg.time / 600 & 1))
 			{
@@ -2912,7 +2913,7 @@ void CG_DrawJK2SaberFatigue(const centity_t* cent, const int x, const int y)
 				cg.messageLitActive = qfalse;
 			}
 		}
-		else if (cg.mishapHUDTotalFlashTime > cg.time || cg.snap->ps.saberFatigueChainCount > MISHAPLEVEL_RUNINACCURACY)
+		else if (cg.mishapHUDTotalFlashTime > cg.time || cg.snap->ps.saberFatigueChainCount > MISHAPLEVEL_TWO)
 		{
 			if (!(cg.time / 600 & 1))
 			{

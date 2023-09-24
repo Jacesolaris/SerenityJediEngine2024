@@ -1237,17 +1237,17 @@ void bg_reduce_saber_mishap_level(playerState_t* ps)
 	}
 	else if (ps->saberFatigueChainCount >= MISHAPLEVEL_FOUR)
 	{
-		ps->saberFatigueChainCount = MISHAPLEVEL_SNIPER;
+		ps->saberFatigueChainCount = MISHAPLEVEL_THREE;
 	}
-	else if (ps->saberFatigueChainCount >= MISHAPLEVEL_SNIPER)
+	else if (ps->saberFatigueChainCount >= MISHAPLEVEL_THREE)
 	{
-		ps->saberFatigueChainCount = MISHAPLEVEL_RUNINACCURACY;
+		ps->saberFatigueChainCount = MISHAPLEVEL_TWO;
 	}
-	else if (ps->saberFatigueChainCount >= MISHAPLEVEL_RUNINACCURACY)
+	else if (ps->saberFatigueChainCount >= MISHAPLEVEL_TWO)
 	{
-		ps->saberFatigueChainCount = MISHAPLEVEL_MININACCURACY;
+		ps->saberFatigueChainCount = MISHAPLEVEL_MIN;
 	}
-	else if (ps->saberFatigueChainCount >= MISHAPLEVEL_MININACCURACY)
+	else if (ps->saberFatigueChainCount >= MISHAPLEVEL_MIN)
 	{
 		ps->saberFatigueChainCount = MISHAPLEVEL_NONE;
 	}

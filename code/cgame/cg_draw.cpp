@@ -619,61 +619,29 @@ static void CG_DrawCusgunfatigue(const centity_t* cent, const float hud_ratio)
 		return;
 	}
 
-	if (cg_com_outcast.integer == 1) //jko
+	// Make the hud flash by setting forceHUDTotalFlashTime above cg.time
+	if (cg.mishapHUDTotalFlashTime > cg.time || cent->gent->client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_ELEVEN)
 	{
-		// Make the hud flash by setting forceHUDTotalFlashTime above cg.time
-		if (cg.mishapHUDTotalFlashTime > cg.time || cent->gent->client->ps.BlasterAttackChainCount >
-			BLASTERMISHAPLEVEL_FULL)
+		flash = qtrue;
+		if (cg.mishapHUDNextFlashTime < cg.time)
 		{
-			flash = qtrue;
-			if (cg.mishapHUDNextFlashTime < cg.time)
-			{
-				cg.mishapHUDNextFlashTime = cg.time + 400;
-				//cgi_S_StartSound(NULL, 0, CHAN_AUTO, cgs.media.overheatgun);
+			cg.mishapHUDNextFlashTime = cg.time + 400;
+			//cgi_S_StartSound(NULL, 0, CHAN_AUTO, cgs.media.overheatgun);
 
-				if (cg.mishapHUDActive)
-				{
-					cg.mishapHUDActive = qfalse;
-				}
-				else
-				{
-					cg.mishapHUDActive = qtrue;
-				}
+			if (cg.mishapHUDActive)
+			{
+				cg.mishapHUDActive = qfalse;
 			}
-		}
-		else // turn HUD back on if it had just finished flashing time.
-		{
-			cg.mishapHUDNextFlashTime = 0;
-			cg.mishapHUDActive = qtrue;
+			else
+			{
+				cg.mishapHUDActive = qtrue;
+			}
 		}
 	}
-	else
+	else // turn HUD back on if it had just finished flashing time.
 	{
-		// Make the hud flash by setting forceHUDTotalFlashTime above cg.time
-		if (cg.mishapHUDTotalFlashTime > cg.time || cent->gent->client->ps.BlasterAttackChainCount >
-			BLASTERMISHAPLEVEL_FULL)
-		{
-			flash = qtrue;
-			if (cg.mishapHUDNextFlashTime < cg.time)
-			{
-				cg.mishapHUDNextFlashTime = cg.time + 400;
-				//cgi_S_StartSound(NULL, 0, CHAN_AUTO, cgs.media.overheatgun);
-
-				if (cg.mishapHUDActive)
-				{
-					cg.mishapHUDActive = qfalse;
-				}
-				else
-				{
-					cg.mishapHUDActive = qtrue;
-				}
-			}
-		}
-		else // turn HUD back on if it had just finished flashing time.
-		{
-			cg.mishapHUDNextFlashTime = 0;
-			cg.mishapHUDActive = qtrue;
-		}
+		cg.mishapHUDNextFlashTime = 0;
+		cg.mishapHUDActive = qtrue;
 	}
 
 	constexpr float inc = static_cast<float>(max_blaster_attack_chain_count) / MAX_HUD_TICS;
@@ -793,7 +761,7 @@ static void CG_DrawJK2SaberFatigue(const centity_t* cent, const int x, const int
 			}
 		}
 		else if (cg.mishapHUDTotalFlashTime > cg.time || cent->gent->client->ps.saberFatigueChainCount >
-			MISHAPLEVEL_RUNINACCURACY)
+			MISHAPLEVEL_TWO)
 		{
 			if (!(cg.time / 600 & 1))
 			{
@@ -869,7 +837,7 @@ static void CG_DrawJK2SaberFatigue(const centity_t* cent, const int x, const int
 			}
 		}
 		else if (cg.mishapHUDTotalFlashTime > cg.time || cent->gent->client->ps.saberFatigueChainCount >
-			MISHAPLEVEL_RUNINACCURACY)
+			MISHAPLEVEL_TWO)
 		{
 			if (!(cg.time / 600 & 1))
 			{
@@ -906,7 +874,7 @@ static void CG_DrawJK2GunFatigue(const centity_t* cent, const int x, const int y
 	if (cg_com_outcast.integer == 1) //jko
 	{
 		if (cg.mishapHUDTotalFlashTime > cg.time || cent->gent->client->ps.BlasterAttackChainCount >
-			BLASTERMISHAPLEVEL_FULL)
+			BLASTERMISHAPLEVEL_ELEVEN)
 		{
 			if (!(cg.time / 600 & 1))
 			{
@@ -939,7 +907,7 @@ static void CG_DrawJK2GunFatigue(const centity_t* cent, const int x, const int y
 	else
 	{
 		if (cg.mishapHUDTotalFlashTime > cg.time || cent->gent->client->ps.BlasterAttackChainCount >
-			BLASTERMISHAPLEVEL_FULL)
+			BLASTERMISHAPLEVEL_ELEVEN)
 		{
 			if (!(cg.time / 600 & 1))
 			{
