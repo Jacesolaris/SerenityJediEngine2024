@@ -238,10 +238,11 @@ using ammoData_t = struct ammoData_s
 #define BLASTER_VELOCITY			2300
 #define BLASTER_NPC_VEL_CUT			0.5f
 #define BLASTER_NPC_HARD_VEL_CUT	0.7f
-#define BLASTER_DAMAGE				20
-#define	BLASTER_NPC_DAMAGE_EASY		6
-#define	BLASTER_NPC_DAMAGE_NORMAL	14
-#define	BLASTER_NPC_DAMAGE_HARD		18
+#define BLASTER_DAMAGE				25
+#define	BLASTER_NPC_DAMAGE_EASY		8
+#define	BLASTER_NPC_DAMAGE_NORMAL	20
+#define	BLASTER_NPC_DAMAGE_HARD		35
+#define	SJE_BLASTER_NPC_DAMAGE_HARD		50
 
 // Tenloss Disruptor
 //----------
@@ -263,7 +264,7 @@ using ammoData_t = struct ammoData_s
 #define	BOWCASTER_VELOCITY			1600
 #define	BOWCASTER_NPC_DAMAGE_EASY	12
 #define	BOWCASTER_NPC_DAMAGE_NORMAL	24
-#define	BOWCASTER_NPC_DAMAGE_HARD	36
+#define	BOWCASTER_NPC_DAMAGE_HARD	40
 #define BOWCASTER_SPLASH_DAMAGE		0
 #define BOWCASTER_SPLASH_RADIUS		0
 #define BOWCASTER_SIZE				2
@@ -276,11 +277,11 @@ using ammoData_t = struct ammoData_s
 //----------
 #define REPEATER_SPREAD				0.3f
 #define REPEATER_NPC_SPREAD			0.7f
-#define	REPEATER_DAMAGE				8
+#define	REPEATER_DAMAGE				10
 #define	REPEATER_VELOCITY			2000
 #define	REPEATER_NPC_DAMAGE_EASY	2
 #define	REPEATER_NPC_DAMAGE_NORMAL	4
-#define	REPEATER_NPC_DAMAGE_HARD	6
+#define	REPEATER_NPC_DAMAGE_HARD	10
 
 #define REPEATER_ALT_SIZE				3	// half of bbox size
 #define	REPEATER_ALT_DAMAGE				60
@@ -297,7 +298,7 @@ using ammoData_t = struct ammoData_s
 #define	DEMP2_VELOCITY				2000
 #define	DEMP2_NPC_DAMAGE_EASY		6
 #define	DEMP2_NPC_DAMAGE_NORMAL		12
-#define	DEMP2_NPC_DAMAGE_HARD		18
+#define	DEMP2_NPC_DAMAGE_HARD		20
 #define	DEMP2_SIZE					2		// half of bbox size
 
 #define DEMP2_ALT_DAMAGE			15

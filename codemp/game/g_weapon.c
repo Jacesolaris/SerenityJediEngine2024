@@ -65,7 +65,7 @@ extern void WP_ForcePowerDrain(playerState_t* ps, forcePowers_t force_power, int
 // SDB Pistol
 //--------
 //spread for the sbd pistol.
-#define SBD_PISTOL_DAMAGE			5
+#define SBD_PISTOL_DAMAGE			10
 
 // Bryar Pistol
 //--------
@@ -83,10 +83,11 @@ extern void WP_ForcePowerDrain(playerState_t* ps, forcePowers_t force_power, int
 #define BLASTER_VELOCITY			2300
 #define BLASTER_NPC_VEL_CUT			0.5f
 #define BLASTER_NPC_HARD_VEL_CUT	0.7f
-#define BLASTER_DAMAGE				20
-#define	BLASTER_NPC_DAMAGE_EASY		6
-#define	BLASTER_NPC_DAMAGE_NORMAL	14
-#define	BLASTER_NPC_DAMAGE_HARD		18
+#define BLASTER_DAMAGE				25
+#define	BLASTER_NPC_DAMAGE_EASY		8
+#define	BLASTER_NPC_DAMAGE_NORMAL	20
+#define	BLASTER_NPC_DAMAGE_HARD		35
+#define	SJE_BLASTER_NPC_DAMAGE_HARD		50
 
 // Tenloss Disruptor
 //----------
@@ -572,13 +573,14 @@ void WP_FireBlasterMissile(gentity_t* ent, vec3_t start, vec3_t dir, const qbool
 //---------------------------------------------------------
 {
 	const int velocity = BLASTER_VELOCITY;
+	const int damage = BLASTER_DAMAGE;
 
 	gentity_t* missile = create_missile(start, dir, velocity, 10000, ent, alt_fire);
 
 	missile->classname = "blaster_proj";
 	missile->s.weapon = WP_BLASTER;
 
-	if (ent->s.eType == ET_NPC)
+	if (ent->s.eType == ET_NPC || ent->r.svFlags & SVF_BOT)
 	{
 		if (g_npcspskill.integer == 0)
 		{
@@ -595,7 +597,6 @@ void WP_FireBlasterMissile(gentity_t* ent, vec3_t start, vec3_t dir, const qbool
 	}
 	else
 	{
-		const int damage = BLASTER_DAMAGE;
 		missile->damage = damage;
 	}
 

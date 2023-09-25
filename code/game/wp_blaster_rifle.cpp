@@ -75,7 +75,9 @@ void WP_FireBlasterMissile(gentity_t* ent, vec3_t start, vec3_t dir, const qbool
 	missile->s.weapon = WP_BLASTER;
 
 	// Do the damages
-	if (ent->s.number != 0 && ent->client->NPC_class != CLASS_BOBAFETT && ent->client->NPC_class != CLASS_MANDO)
+	if (ent->s.number != 0 &&
+		ent->client->NPC_class != CLASS_BOBAFETT &&
+		ent->client->NPC_class != CLASS_MANDO)
 	{
 		if (g_spskill->integer == 0)
 		{
@@ -90,8 +92,11 @@ void WP_FireBlasterMissile(gentity_t* ent, vec3_t start, vec3_t dir, const qbool
 			damage = BLASTER_NPC_DAMAGE_HARD;
 		}
 	}
+	else
+	{
+		missile->damage = damage;
+	}
 
-	missile->damage = damage;
 	missile->dflags = DAMAGE_DEATH_KNOCKBACK | DAMAGE_EXTRA_KNOCKBACK;
 	if (alt_fire)
 	{
@@ -236,7 +241,9 @@ void WP_FireJangoWristMissile(gentity_t* ent, vec3_t start, vec3_t dir, const qb
 	missile->s.weapon = WP_WRIST_BLASTER;
 
 	// Do the damages
-	if (ent->s.number != 0 && ent->client->NPC_class != CLASS_BOBAFETT && ent->client->NPC_class != CLASS_MANDO)
+	if (ent->s.number != 0 &&
+		ent->client->NPC_class != CLASS_BOBAFETT &&
+		ent->client->NPC_class != CLASS_MANDO)
 	{
 		if (g_spskill->integer == 0)
 		{
@@ -251,8 +258,11 @@ void WP_FireJangoWristMissile(gentity_t* ent, vec3_t start, vec3_t dir, const qb
 			damage = BLASTER_NPC_DAMAGE_HARD;
 		}
 	}
+	else
+	{
+		missile->damage = damage;
+	}
 
-	missile->damage = damage;
 	missile->dflags = DAMAGE_DEATH_KNOCKBACK | DAMAGE_EXTRA_KNOCKBACK;
 	if (alt_fire)
 	{
@@ -400,7 +410,9 @@ void WP_FireDroidekaDualPistolMissileDuals(gentity_t* ent, vec3_t start, vec3_t 
 	missile->s.weapon = WP_DROIDEKA;
 
 	// Do the damages
-	if (ent->s.number != 0 && ent->client->NPC_class != CLASS_BOBAFETT && ent->client->NPC_class != CLASS_MANDO)
+	if (ent->s.number != 0 &&
+		ent->client->NPC_class != CLASS_BOBAFETT &&
+		ent->client->NPC_class != CLASS_MANDO)
 	{
 		if (g_spskill->integer == 0)
 		{
@@ -415,8 +427,10 @@ void WP_FireDroidekaDualPistolMissileDuals(gentity_t* ent, vec3_t start, vec3_t 
 			damage = BLASTER_NPC_DAMAGE_HARD;
 		}
 	}
-
-	missile->damage = damage;
+	else
+	{
+		missile->damage = damage;
+	}
 
 	missile->dflags = DAMAGE_DEATH_KNOCKBACK | DAMAGE_EXTRA_KNOCKBACK;
 	if (alt_fire)
@@ -482,7 +496,9 @@ void WP_FireDroidekaDualPistolMissile(gentity_t* ent, vec3_t start, vec3_t dir, 
 	missile->s.weapon = WP_DROIDEKA;
 
 	// Do the damages
-	if (ent->s.number != 0 && ent->client->NPC_class != CLASS_BOBAFETT && ent->client->NPC_class != CLASS_MANDO)
+	if (ent->s.number != 0 &&
+		ent->client->NPC_class != CLASS_BOBAFETT &&
+		ent->client->NPC_class != CLASS_MANDO)
 	{
 		if (g_spskill->integer == 0)
 		{
@@ -497,8 +513,11 @@ void WP_FireDroidekaDualPistolMissile(gentity_t* ent, vec3_t start, vec3_t dir, 
 			damage = BLASTER_NPC_DAMAGE_HARD;
 		}
 	}
+	else
+	{
+		missile->damage = damage;
+	}
 
-	missile->damage = damage;
 	missile->dflags = DAMAGE_DEATH_KNOCKBACK | DAMAGE_EXTRA_KNOCKBACK;
 	if (alt_fire)
 	{
