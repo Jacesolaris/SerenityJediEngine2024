@@ -337,9 +337,7 @@ sfxHandle_t CG_CustomSound(int client_num, const char* sound_name)
 		}
 	}
 
-	/*if (cgs.gametype == GT_DUEL
-		|| cgs.gametype == GT_POWERDUEL
-		|| com_buildScript.integer)*/
+	if (cgs.gametype >= GT_FFA || com_buildScript.integer)
 	{
 		//Duel only
 		for (i = 0; i < MAX_CUSTOM_SOUNDS; i++)
@@ -347,6 +345,24 @@ sfxHandle_t CG_CustomSound(int client_num, const char* sound_name)
 			if (!cg_customDuelSoundNames[i])
 			{
 				num_c_duel_sounds = i;
+				break;
+			}
+		}
+
+		for (i = 0; i < MAX_CUSTOM_SOUNDS; i++)
+		{
+			if (!cg_customCombatSoundNames[i])
+			{
+				num_c_com_sounds = i;
+				break;
+			}
+		}
+
+		for (i = 0; i < MAX_CUSTOM_SOUNDS; i++)
+		{
+			if (!cg_customJediSoundNames[i])
+			{
+				num_c_jedi_sounds = i;
 				break;
 			}
 		}
@@ -1088,9 +1104,7 @@ void CG_LoadCISounds(clientInfo_t* ci, const qboolean modelloaded)
 		}
 	}
 
-	if (cgs.gametype == GT_DUEL
-		|| cgs.gametype == GT_POWERDUEL
-		|| com_buildScript.integer)
+	if (cgs.gametype >= GT_FFA || com_buildScript.integer)
 	{
 		//load the Duel sounds then
 		for (i = 0; i < MAX_CUSTOM_DUEL_SOUNDS; i++)

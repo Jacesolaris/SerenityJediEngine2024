@@ -14253,12 +14253,32 @@ PM_Animate
 ================
 */
 
-static void PM_Animate(void)
+extern qboolean BG_IsAlreadyinTauntAnim(int anim);
+static void PM_BotGesture(void)
 {
-	if (pm->cmd.buttons & BUTTON_GESTURE)
+	if (BG_IsAlreadyinTauntAnim(pm->ps->torsoAnim))
 	{
-		if (!pm->ps->m_iVehicleNum)
+		return;
+	}
+
+#ifdef _GAME
+	if (!(g_entities[pm->ps->client_num].r.svFlags & SVF_BOT))
+	{
+		return;
+	}
+#endif
+
+	if (pm->ps->stats[STAT_HEALTH] <= 1)
+	{
+		return;
+	}
+
+	if (!pm->ps->m_iVehicleNum)
+	{
+		if (pm->cmd.buttons & BUTTON_GESTURE)
 		{
+			PM_AddEvent(EV_TAUNT);
+
 			if (pm->ps->weapon != WP_SABER) //MP
 			{
 				if (pm_entSelf->s.botclass == BCLASS_LORDVADER || pm_entSelf->s.botclass == BCLASS_DESANN)
@@ -14275,6 +14295,17 @@ static void PM_Animate(void)
 					{
 						PM_SetAnim(SETANIM_TORSO, TORSO_HANDSIGNAL4, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 					}
+				}
+			}
+			else if (pm->ps->weapon == WP_MELEE) //MP
+			{
+				if (pm_entSelf->s.botclass == BCLASS_LORDVADER || pm_entSelf->s.botclass == BCLASS_DESANN)
+				{
+					PM_SetAnim(SETANIM_TORSO, BOTH_VADERTAUNT, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+				}
+				else
+				{
+					PM_SetAnim(SETANIM_TORSO, TORSO_HANDSIGNAL4, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 				}
 			}
 			else
@@ -14300,13 +14331,12 @@ static void PM_Animate(void)
 				}
 			}
 
-			PM_AddEvent(EV_TAUNT);
+			pm->ps->forceHandExtendTime = pm->cmd.serverTime + 1000;
 		}
-	}
-	else if (pm->cmd.buttons & BUTTON_RESPECT)
-	{
-		if (!pm->ps->m_iVehicleNum)
+		else if (pm->cmd.buttons & BUTTON_RESPECT)
 		{
+			PM_AddEvent(EV_TAUNT);
+
 			if (pm->ps->weapon != WP_SABER) //MP
 			{
 				if (pm_entSelf->s.botclass == BCLASS_LORDVADER || pm_entSelf->s.botclass == BCLASS_DESANN)
@@ -14325,6 +14355,17 @@ static void PM_Animate(void)
 					}
 				}
 			}
+			else if (pm->ps->weapon == WP_MELEE) //MP
+			{
+				if (pm_entSelf->s.botclass == BCLASS_LORDVADER || pm_entSelf->s.botclass == BCLASS_DESANN)
+				{
+					PM_SetAnim(SETANIM_TORSO, BOTH_VADERTAUNT, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+				}
+				else
+				{
+					PM_SetAnim(SETANIM_TORSO, TORSO_HANDSIGNAL4, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+				}
+			}
 			else
 			{
 				pm->ps->saberHolstered = 2;
@@ -14338,13 +14379,12 @@ static void PM_Animate(void)
 				}
 			}
 
-			PM_AddEvent(EV_TAUNT);
+			pm->ps->forceHandExtendTime = pm->cmd.serverTime + 1000;
 		}
-	}
-	else if (pm->cmd.buttons & BUTTON_FLOURISH)
-	{
-		if (!pm->ps->m_iVehicleNum)
+		else if (pm->cmd.buttons & BUTTON_FLOURISH)
 		{
+			PM_AddEvent(EV_TAUNT);
+
 			if (pm->ps->weapon != WP_SABER) //MP
 			{
 				if (pm_entSelf->s.botclass == BCLASS_LORDVADER || pm_entSelf->s.botclass == BCLASS_DESANN)
@@ -14361,6 +14401,17 @@ static void PM_Animate(void)
 					{
 						PM_SetAnim(SETANIM_TORSO, TORSO_HANDSIGNAL3, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 					}
+				}
+			}
+			else if (pm->ps->weapon == WP_MELEE) //MP
+			{
+				if (pm_entSelf->s.botclass == BCLASS_LORDVADER || pm_entSelf->s.botclass == BCLASS_DESANN)
+				{
+					PM_SetAnim(SETANIM_TORSO, BOTH_VADERTAUNT, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+				}
+				else
+				{
+					PM_SetAnim(SETANIM_TORSO, TORSO_HANDSIGNAL4, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 				}
 			}
 			else
@@ -14391,13 +14442,12 @@ static void PM_Animate(void)
 				}
 			}
 
-			PM_AddEvent(EV_TAUNT);
+			pm->ps->forceHandExtendTime = pm->cmd.serverTime + 1000;
 		}
-	}
-	else if (pm->cmd.buttons & BUTTON_GLOAT)
-	{
-		if (!pm->ps->m_iVehicleNum)
+		else if (pm->cmd.buttons & BUTTON_GLOAT)
 		{
+			PM_AddEvent(EV_TAUNT);
+
 			if (pm->ps->weapon != WP_SABER) //MP
 			{
 				if (pm_entSelf->s.botclass == BCLASS_LORDVADER || pm_entSelf->s.botclass == BCLASS_DESANN)
@@ -14414,6 +14464,17 @@ static void PM_Animate(void)
 					{
 						PM_SetAnim(SETANIM_TORSO, TORSO_HANDSIGNAL2, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 					}
+				}
+			}
+			else if (pm->ps->weapon == WP_MELEE) //MP
+			{
+				if (pm_entSelf->s.botclass == BCLASS_LORDVADER || pm_entSelf->s.botclass == BCLASS_DESANN)
+				{
+					PM_SetAnim(SETANIM_TORSO, BOTH_VADERTAUNT, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+				}
+				else
+				{
+					PM_SetAnim(SETANIM_TORSO, TORSO_HANDSIGNAL4, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 				}
 			}
 			else
@@ -14441,7 +14502,7 @@ static void PM_Animate(void)
 				}
 			}
 
-			PM_AddEvent(EV_TAUNT);
+			pm->ps->forceHandExtendTime = pm->cmd.serverTime + 1000;
 		}
 	}
 }
@@ -19294,7 +19355,7 @@ void PmoveSingle(pmove_t* pmove)
 
 	if (!noAnimate)
 	{
-		PM_Animate();
+		PM_BotGesture();
 	}
 
 	// set groundentity, watertype, and waterlevel

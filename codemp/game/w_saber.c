@@ -4198,7 +4198,7 @@ int wp_player_must_dodge(const gentity_t* self, const gentity_t* shooter)
 		return qfalse;
 	}
 
-	if (BG_IsAlreadyinTauntAnim(self->client->ps.legsAnim))
+	if (BG_IsAlreadyinTauntAnim(self->client->ps.torsoAnim))
 	{
 		if (BG_HopAnim(self->client->ps.legsAnim) //in dodge hop
 			|| BG_InRoll(&self->client->ps, self->client->ps.legsAnim)
@@ -5624,7 +5624,7 @@ qboolean G_DoDodge(gentity_t* self, gentity_t* shooter, vec3_t dmg_origin, int h
 		return qfalse;
 	}
 
-	if (BG_IsAlreadyinTauntAnim(self->client->ps.legsAnim))
+	if (BG_IsAlreadyinTauntAnim(self->client->ps.torsoAnim))
 	{
 		return qfalse;
 	}
@@ -6234,7 +6234,7 @@ qboolean G_DoSaberDodge(gentity_t* dodger, gentity_t* attacker, vec3_t dmg_origi
 		return qfalse;
 	}
 
-	if (BG_IsAlreadyinTauntAnim(dodger->client->ps.legsAnim))
+	if (BG_IsAlreadyinTauntAnim(dodger->client->ps.torsoAnim))
 	{
 		return qfalse;
 	}
@@ -6855,8 +6855,7 @@ static QINLINE qboolean check_saber_damage(gentity_t* self, const int r_saber_nu
 	/////////////////////////////SABERBLADE BOX SIZE///////////////////////////////////////
 
 	const int real_trace_result = g_real_trace(self, &tr, saber_start, saber_tr_mins, saber_tr_maxs, saber_end,
-		self->s.number,
-		tr_mask, r_saber_num, r_blade_num);
+		self->s.number, tr_mask, r_saber_num, r_blade_num);
 
 	if (real_trace_result == REALTRACE_MISS || real_trace_result == REALTRACE_HIT_WORLD)
 	{
@@ -6899,7 +6898,14 @@ static QINLINE qboolean check_saber_damage(gentity_t* self, const int r_saber_nu
 					}
 					else
 					{
-						dmg = SABER_MAXHITDAMAGE;
+						if (g_saberdebug.integer)
+						{
+							dmg = SABER_DEBUGTDAMAGE;
+						}
+						else
+						{
+							dmg = SABER_MAXHITDAMAGE;
+						}
 					}
 				}
 				else
@@ -6921,7 +6927,14 @@ static QINLINE qboolean check_saber_damage(gentity_t* self, const int r_saber_nu
 					}
 					else
 					{
-						dmg = SABER_SJEHITDAMAGE;
+						if (g_saberdebug.integer)
+						{
+							dmg = SABER_DEBUGTDAMAGE;
+						}
+						else
+						{
+							dmg = SABER_SJEHITDAMAGE;
+						}
 					}
 				}
 			}
@@ -6944,7 +6957,14 @@ static QINLINE qboolean check_saber_damage(gentity_t* self, const int r_saber_nu
 				}
 				else
 				{
-					dmg = SABER_NORHITDAMAGE;
+					if (g_saberdebug.integer)
+					{
+						dmg = SABER_DEBUGTDAMAGE;
+					}
+					else
+					{
+						dmg = SABER_NORHITDAMAGE;
+					}
 				}
 			}
 		}
@@ -8553,7 +8573,7 @@ void DownedSaberThink(gentity_t* saberent)
 	{
 		//we want to pull the saber back.
 		pull_back = qtrue;
-	}
+}
 	else if (level.time - saber_own->client->saberKnockedTime > MAX_LEAVE_TIME)
 	{
 		//Been sitting around for too long, go back no matter what he wants.

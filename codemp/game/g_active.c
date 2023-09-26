@@ -2662,12 +2662,12 @@ extern qboolean PM_CrouchAnim(int anim);
 extern qboolean is_holding_block_button(const gentity_t* defender);
 void ReloadGun(gentity_t* ent);
 void CancelReload(gentity_t* ent);
+extern qboolean PM_RestAnim(int anim);
 
 void G_SetTauntAnim(gentity_t* ent, int taunt)
 {
 	const saberInfo_t* saber1 = BG_MySaber(ent->client_num, 0);
-	const qboolean holding_block = ent->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
-	//Normal Blocking
+	const qboolean holding_block = ent->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;//Normal Blocking
 
 	// dead clients dont get to spam taunt
 	if (ent->client->ps.stats[STAT_HEALTH] <= 0)
@@ -2686,7 +2686,7 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 		return;
 	}
 
-	if (BG_IsAlreadyinTauntAnim(ent->client->ps.legsAnim))
+	if (BG_IsAlreadyinTauntAnim(ent->client->ps.torsoAnim))
 	{
 		return;
 	}
@@ -2694,7 +2694,9 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 	if (taunt != TAUNT_RELOAD)
 	{
 		if (PM_CrouchAnim(ent->client->ps.legsAnim) ||
-			PM_CrouchAnim(ent->client->ps.torsoAnim))
+			PM_CrouchAnim(ent->client->ps.torsoAnim) ||
+			PM_RestAnim(ent->client->ps.legsAnim) ||
+			PM_RestAnim(ent->client->ps.torsoAnim))
 		{
 			return;
 		}
@@ -2746,6 +2748,7 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 		switch (taunt)
 		{
 		case TAUNT_TAUNT:
+			G_AddEvent(ent, EV_TAUNT, taunt);
 			if (ent->client->ps.weapon != WP_SABER) //MP
 			{
 				if (ent->client->botclass == BCLASS_LORDVADER || ent->client->botclass == BCLASS_DESANN)
@@ -2933,9 +2936,9 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 					}
 				}
 			}
-			G_AddEvent(ent, EV_TAUNT, taunt);
 			break;
 		case TAUNT_BOW:
+			G_AddEvent(ent, EV_TAUNT, taunt);
 			if (ent->client->ps.weapon != WP_SABER) //MP
 			{
 				if (PM_WalkingAnim(ent->client->ps.legsAnim) || PM_RunningAnim(ent->client->ps.legsAnim))
@@ -3011,9 +3014,9 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 					NPC_SetAnim(ent, SETANIM_TORSO, BOTH_BOW, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 				}
 			}
-			G_AddEvent(ent, EV_TAUNT, taunt);
 			break;
 		case TAUNT_MEDITATE:
+			G_AddEvent(ent, EV_TAUNT, taunt);
 			if (ent->client->ps.weapon != WP_SABER) //MP
 			{
 				if (PM_WalkingAnim(ent->client->ps.legsAnim) || PM_RunningAnim(ent->client->ps.legsAnim))
@@ -3082,9 +3085,9 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 					anim = BOTH_MEDITATE;
 				}
 			}
-			G_AddEvent(ent, EV_TAUNT, taunt);
 			break;
 		case TAUNT_FLOURISH:
+			G_AddEvent(ent, EV_TAUNT, taunt);
 			if (ent->client->ps.weapon != WP_SABER) //MP
 			{
 				if (PM_WalkingAnim(ent->client->ps.legsAnim) || PM_RunningAnim(ent->client->ps.legsAnim))
@@ -3225,9 +3228,9 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 				}
 				ent->client->ps.saberHolstered = 0;
 			}
-			G_AddEvent(ent, EV_TAUNT, taunt);
 			break;
 		case TAUNT_GLOAT:
+			G_AddEvent(ent, EV_TAUNT, taunt);
 			if (ent->client->ps.weapon != WP_SABER) //MP
 			{
 				if (PM_WalkingAnim(ent->client->ps.legsAnim) || PM_RunningAnim(ent->client->ps.legsAnim))
@@ -3381,9 +3384,9 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 					}
 				}
 			}
-			G_AddEvent(ent, EV_TAUNT, taunt);
 			break;
 		case TAUNT_SURRENDER:
+			G_AddEvent(ent, EV_TAUNT, taunt);
 			if (ent->client->ps.weapon != WP_SABER) //MP
 			{
 				if (PM_WalkingAnim(ent->client->ps.legsAnim) || PM_RunningAnim(ent->client->ps.legsAnim))
@@ -3473,7 +3476,6 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 					}
 				}
 			}
-			G_AddEvent(ent, EV_TAUNT, taunt);
 			break;
 		case TAUNT_RELOAD:
 		{
@@ -3646,7 +3648,6 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 				default:;
 				}
 			}
-			G_AddEvent(ent, EV_TAUNT, taunt);
 		}
 		break;
 		default:;

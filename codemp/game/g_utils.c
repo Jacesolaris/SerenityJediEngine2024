@@ -1421,7 +1421,6 @@ G_AddEvent
 Adds an event+parm and twiddles the event counter
 ===============
 */
-extern qboolean BG_IsAlreadyinTauntAnim(int anim);
 
 void G_AddEvent(gentity_t* ent, const int event, const int event_parm)
 {

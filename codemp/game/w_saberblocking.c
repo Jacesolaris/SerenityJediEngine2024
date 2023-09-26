@@ -816,10 +816,10 @@ qboolean sab_beh_attack_vs_block(gentity_t* attacker, gentity_t* blocker, const 
 					attacker->client->ps.userInt3 |= 1 << FLAG_BLOCKED;
 				}
 
-				/*if (!(attacker->r.svFlags & SVF_BOT))
+				if (!(attacker->r.svFlags & SVF_BOT))
 				{
 					CGCam_BlockShakeMP(attacker->s.origin, attacker, 0.45f, 100);
-				}*/
+				}
 			}
 			else
 			{
@@ -932,7 +932,6 @@ qboolean sab_beh_block_vs_attack(gentity_t* blocker, gentity_t* attacker, const 
 				//perfect Blocking
 				if (m_blocking) // A perfectly timed block
 				{
-					//WP_SaberMBlock(blocker, attacker, saber_num, blade_num);
 					WP_SaberMBlockDirection(blocker, hit_loc, qfalse);
 
 					if (attacker->client->ps.saberFatigueChainCount >= MISHAPLEVEL_THIRTEEN)

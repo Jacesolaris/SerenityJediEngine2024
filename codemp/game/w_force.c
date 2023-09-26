@@ -9294,7 +9294,7 @@ qboolean jedi_dodge_evasion(gentity_t* self, const gentity_t* shooter, trace_t* 
 		return qfalse;
 	}
 
-	if (BG_IsAlreadyinTauntAnim(self->client->ps.legsAnim))
+	if (BG_IsAlreadyinTauntAnim(self->client->ps.torsoAnim))
 	{
 		return qfalse;
 	}
