@@ -2938,7 +2938,6 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 			}
 			break;
 		case TAUNT_BOW:
-			G_AddEvent(ent, EV_TAUNT, taunt);
 			if (ent->client->ps.weapon != WP_SABER) //MP
 			{
 				if (PM_WalkingAnim(ent->client->ps.legsAnim) || PM_RunningAnim(ent->client->ps.legsAnim))
@@ -3293,9 +3292,21 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 					{
 					case SS_FAST:
 					case SS_TAVION:
+						if (ent->client->ps.saberHolstered)
+						{
+							//turn on first
+							G_Sound(ent, CHAN_WEAPON, ent->client->saber[0].soundOn);
+						}
+						ent->client->ps.saberHolstered = 0;
 						NPC_SetAnim(ent, SETANIM_TORSO, BOTH_VICTORY_FAST, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 						break;
 					case SS_MEDIUM:
+						if (ent->client->ps.saberHolstered)
+						{
+							//turn on first
+							G_Sound(ent, CHAN_WEAPON, ent->client->saber[0].soundOn);
+						}
+						ent->client->ps.saberHolstered = 0;
 						NPC_SetAnim(ent, SETANIM_TORSO, BOTH_VICTORY_MEDIUM, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 						break;
 					case SS_STRONG:
@@ -3341,9 +3352,21 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 					{
 					case SS_FAST:
 					case SS_TAVION:
+						if (ent->client->ps.saberHolstered)
+						{
+							//turn on first
+							G_Sound(ent, CHAN_WEAPON, ent->client->saber[0].soundOn);
+						}
+						ent->client->ps.saberHolstered = 0;
 						NPC_SetAnim(ent, SETANIM_TORSO, BOTH_VICTORY_FAST, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 						break;
 					case SS_MEDIUM:
+						if (ent->client->ps.saberHolstered)
+						{
+							//turn on first
+							G_Sound(ent, CHAN_WEAPON, ent->client->saber[0].soundOn);
+						}
+						ent->client->ps.saberHolstered = 0;
 						NPC_SetAnim(ent, SETANIM_TORSO, BOTH_VICTORY_MEDIUM, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 						break;
 					case SS_STRONG:
@@ -3478,7 +3501,6 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 			}
 			break;
 		case TAUNT_RELOAD:
-		{
 			if (IsHoldingGun(ent)) //MP
 			{
 				if (ent->reloadTime > 0)
@@ -3648,8 +3670,7 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 				default:;
 				}
 			}
-		}
-		break;
+			break;
 		default:;
 		}
 
@@ -5642,9 +5663,9 @@ void ClientThink_real(gentity_t* ent)
 						}
 					}
 				}
+			}
 		}
 	}
-}
 	else if (ent->client->ps.heldByClient)
 	{
 		ent->client->ps.heldByClient = 0;
@@ -5757,7 +5778,7 @@ void ClientThink_real(gentity_t* ent)
 			{
 				//if it isn't humanoid then we will be having none of this.
 				pmove.ghoul2 = NULL;
-	}
+			}
 			else
 			{
 				pmove.ghoul2 = ent->ghoul2;

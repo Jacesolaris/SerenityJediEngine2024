@@ -271,6 +271,7 @@ const char* cg_customJediSoundNames[MAX_CUSTOM_JEDI_SOUNDS] =
 	"*jdetected1.wav",
 	"*jdetected2.wav",
 	"*jdetected3.wav",
+	"*taunt.wav",
 	"*taunt1.wav",
 	"*taunt2.wav",
 	"*taunt3.wav",
@@ -423,7 +424,7 @@ CG_CustomSound
 
 ================
 */
-static sfxHandle_t CG_CustomSound(const int entity_num, const char* sound_name, const int custom_sound_set)
+sfxHandle_t CG_CustomSound(const int entity_num, const char* sound_name, const int custom_sound_set)
 {
 	int i;
 

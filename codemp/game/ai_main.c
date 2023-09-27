@@ -1207,6 +1207,7 @@ void bot_input_to_user_command(bot_input_t* bi, usercmd_t* ucmd, int delta_angle
 	if (bi->actionflags & ACTION_KICK) ucmd->buttons |= BUTTON_KICK;
 	if (bi->actionflags & ACTION_USE) ucmd->buttons |= BUTTON_BOTUSE;
 	if (bi->actionflags & ACTION_BLOCK) ucmd->buttons |= BUTTON_BLOCK;
+	if (bi->actionflags & ACTION_GLOAT) ucmd->buttons |= BUTTON_GLOAT;
 
 	if (use_time < level.time && Q_irand(1, 10) < 5)
 	{
@@ -1397,7 +1398,7 @@ void bot_update_input(bot_state_t* bs, const int time, const int elapsed_time)
 				if (check_val <= 0)
 					check_val = 1;
 
-				gesturetime[bs->cur_ps.client_num] = level.time + 20000 / check_val;
+				gesturetime[bs->cur_ps.client_num] = level.time + 40000 / check_val;
 			}
 			else
 			{
@@ -1409,6 +1410,44 @@ void bot_update_input(bot_state_t* bs, const int time, const int elapsed_time)
 		{
 			// Reset.
 			gesturetime[bs->cur_ps.client_num] = 0;
+		}
+	}
+
+	if (nexttaunt[bs->cur_ps.client_num] <= level.time && bot_thinklevel.integer >= 0)
+	{
+		if (bs->currentEnemy
+			&& bs->currentEnemy->client
+			&& bs->currentEnemy->health > 0
+			&& bs->jumpTime <= level.time // Don't gesture during jumping...
+			&& !bs->doAttack
+			&& !bs->doAltAttack
+			&& bs->currentEnemy->client->ps.groundEntityNum != ENTITYNUM_NONE
+			&& VectorDistance(g_entities[bs->cur_ps.client_num].r.currentOrigin,
+				bs->currentEnemy->r.currentOrigin) < 300
+			|| nexttaunt[bs->cur_ps.client_num] > level.time)
+		{
+			if (visible(&g_entities[bs->cur_ps.client_num], bs->currentEnemy) || nexttaunt[bs->cur_ps.client_num] >
+				level.time)
+			{
+				bi.actionflags |= ACTION_GLOAT;
+
+				int check_val = bot_thinklevel.integer;
+
+				if (check_val <= 0)
+					check_val = 1;
+
+				nexttaunt[bs->cur_ps.client_num] = level.time + 20000 / check_val;
+			}
+			else
+			{
+				// Reset.
+				nexttaunt[bs->cur_ps.client_num] = 0;
+			}
+		}
+		else
+		{
+			// Reset.
+			nexttaunt[bs->cur_ps.client_num] = 0;
 		}
 	}
 

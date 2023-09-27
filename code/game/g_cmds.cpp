@@ -1253,7 +1253,7 @@ enum
 	TAUNT_RELOAD
 };
 
-void G_TauntSound(const gentity_t* ent, const int taunt)
+void G_TauntSound(gentity_t* ent, int taunt)
 {
 	if (BG_IsAlreadyinTauntAnim(ent->client->ps.torsoAnim))
 	{
@@ -1274,10 +1274,9 @@ void G_TauntSound(const gentity_t* ent, const int taunt)
 		}
 		break;
 	case TAUNT_BOW:
-		G_SpeechEvent(ent, Q_irand(EV_GLOAT1, EV_GLOAT3));
 		break;
 	case TAUNT_MEDITATE:
-		G_SpeechEvent(ent, Q_irand(EV_GLOAT1, EV_GLOAT3));
+		G_AddVoiceEvent(ent, EV_PUSHFAIL, 0);
 		break;
 	case TAUNT_FLOURISH:
 		if (Q_irand(0, 1))
@@ -1587,7 +1586,6 @@ void G_SetTauntAnim(gentity_t* ent, const int taunt)
 			}
 			break;
 		case TAUNT_BOW:
-			G_TauntSound(ent, TAUNT_BOW);
 			if (ent->client->ps.weapon != WP_SABER) //SP
 			{
 				if (PM_WalkingAnim(ent->client->ps.legsAnim) || PM_RunningAnim(ent->client->ps.legsAnim))
@@ -1784,9 +1782,19 @@ void G_SetTauntAnim(gentity_t* ent, const int taunt)
 					{
 					case SS_FAST:
 					case SS_TAVION:
+						if (!ent->client->ps.SaberActive())
+						{
+							//turn on the saber if it's not on
+							ent->client->ps.SaberActivate();
+						}
 						NPC_SetAnim(ent, SETANIM_TORSO, BOTH_SHOWOFF_FAST, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 						break;
 					case SS_MEDIUM:
+						if (!ent->client->ps.SaberActive())
+						{
+							//turn on the saber if it's not on
+							ent->client->ps.SaberActivate();
+						}
 						if (ent->client->ps.saber[0].type == SABER_OBIWAN) //saber kylo
 						{
 							NPC_SetAnim(ent, SETANIM_TORSO, BOTH_SHOWOFF_OBI,
@@ -1800,6 +1808,11 @@ void G_SetTauntAnim(gentity_t* ent, const int taunt)
 						break;
 					case SS_STRONG:
 					case SS_DESANN:
+						if (!ent->client->ps.SaberActive())
+						{
+							//turn on the saber if it's not on
+							ent->client->ps.SaberActivate();
+						}
 						NPC_SetAnim(ent, SETANIM_TORSO, BOTH_SHOWOFF_STRONG, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 						break;
 					case SS_DUAL:
@@ -1817,9 +1830,19 @@ void G_SetTauntAnim(gentity_t* ent, const int taunt)
 					{
 					case SS_FAST:
 					case SS_TAVION:
+						if (!ent->client->ps.SaberActive())
+						{
+							//turn on the saber if it's not on
+							ent->client->ps.SaberActivate();
+						}
 						NPC_SetAnim(ent, SETANIM_TORSO, BOTH_SHOWOFF_FAST, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 						break;
 					case SS_MEDIUM:
+						if (!ent->client->ps.SaberActive())
+						{
+							//turn on the saber if it's not on
+							ent->client->ps.SaberActivate();
+						}
 						if (ent->client->ps.saber[0].type == SABER_OBIWAN) //saber kylo
 						{
 							NPC_SetAnim(ent, SETANIM_TORSO, BOTH_SHOWOFF_OBI,
@@ -1917,32 +1940,54 @@ void G_SetTauntAnim(gentity_t* ent, const int taunt)
 					case SS_FAST:
 					case SS_TAVION:
 						NPC_SetAnim(ent, SETANIM_TORSO, BOTH_VICTORY_FAST, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+						if (!ent->client->ps.SaberActive())
+						{
+							//turn on the saber if it's not on
+							ent->client->ps.SaberActivate();
+						}
 						break;
 					case SS_MEDIUM:
 						NPC_SetAnim(ent, SETANIM_TORSO, BOTH_VICTORY_MEDIUM, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+						if (!ent->client->ps.SaberActive())
+						{
+							//turn on the saber if it's not on
+							ent->client->ps.SaberActivate();
+						}
 						break;
 					case SS_STRONG:
 					case SS_DESANN:
-						ent->client->ps.SaberActivate();
 						NPC_SetAnim(ent, SETANIM_TORSO, BOTH_VICTORY_STRONG, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+						if (!ent->client->ps.SaberActive())
+						{
+							//turn on the saber if it's not on
+							ent->client->ps.SaberActivate();
+						}
 						break;
 					case SS_DUAL:
-						ent->client->ps.SaberActivate();
 						if (ent->client->ps.dualSabers && ent->weaponModel[1] == -1)
 						{
 							G_RemoveHolsterModels(ent);
 							wp_saber_add_g2_saber_models(ent, qtrue);
 						}
 						NPC_SetAnim(ent, SETANIM_TORSO, BOTH_VICTORY_DUAL, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+						if (!ent->client->ps.SaberActive())
+						{
+							//turn on the saber if it's not on
+							ent->client->ps.SaberActivate();
+						}
 						break;
 					case SS_STAFF:
-						ent->client->ps.SaberActivate();
 						if (ent->client->ps.dualSabers && ent->weaponModel[1] == -1)
 						{
 							G_RemoveHolsterModels(ent);
 							wp_saber_add_g2_saber_models(ent, qtrue);
 						}
 						NPC_SetAnim(ent, SETANIM_TORSO, BOTH_SHOWOFF_STAFF, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+						if (!ent->client->ps.SaberActive())
+						{
+							//turn on the saber if it's not on
+							ent->client->ps.SaberActivate();
+						}
 						break;
 					default:;
 					}
@@ -1953,14 +1998,28 @@ void G_SetTauntAnim(gentity_t* ent, const int taunt)
 					{
 					case SS_FAST:
 					case SS_TAVION:
+						if (!ent->client->ps.SaberActive())
+						{
+							//turn on the saber if it's not on
+							ent->client->ps.SaberActivate();
+						}
 						NPC_SetAnim(ent, SETANIM_TORSO, BOTH_VICTORY_FAST, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 						break;
 					case SS_MEDIUM:
+						if (!ent->client->ps.SaberActive())
+						{
+							//turn on the saber if it's not on
+							ent->client->ps.SaberActivate();
+						}
 						NPC_SetAnim(ent, SETANIM_TORSO, BOTH_VICTORY_MEDIUM, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 						break;
 					case SS_STRONG:
 					case SS_DESANN:
-						ent->client->ps.SaberActivate();
+						if (!ent->client->ps.SaberActive())
+						{
+							//turn on the saber if it's not on
+							ent->client->ps.SaberActivate();
+						}
 						if (ent->client->ps.dualSabers && ent->weaponModel[1] == -1)
 						{
 							G_RemoveHolsterModels(ent);
@@ -2083,7 +2142,6 @@ void G_SetTauntAnim(gentity_t* ent, const int taunt)
 			}
 			break;
 		case TAUNT_RELOAD:
-		{
 			if (IsHoldingGun(ent)) //SP
 			{
 				if (ent->reloadTime > 0)
@@ -2241,8 +2299,7 @@ void G_SetTauntAnim(gentity_t* ent, const int taunt)
 				default:;
 				}
 			}
-		}
-		break;
+			break;
 		default:;
 		}
 

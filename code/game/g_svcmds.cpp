@@ -709,7 +709,14 @@ void Svcmd_SaberAttackCycle_f()
 			{
 				NPC_SetAnim(self, SETANIM_TORSO, BOTH_STAND2TO1, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 			}
-			G_Sound(self, G_SoundIndex(va("sound/weapons/saber/lowswing%d", Q_irand(1, 7))));
+			if (self->client->ps.SaberActive())
+			{
+				G_Sound(self, G_SoundIndex(va("sound/weapons/saber/lowswing%d", Q_irand(1, 7))));
+			}
+			else
+			{
+				G_Sound(self, G_SoundIndex("sound/weapons/saber/saber_catch.mp3"));
+			}
 		}
 	}
 	else

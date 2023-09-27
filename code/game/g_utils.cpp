@@ -363,8 +363,7 @@ void G_SpeechEvent(const gentity_t* self, const int event)
 	case EV_CHASE1:
 	case EV_CHASE2:
 	case EV_CHASE3:
-		if (!CG_TryPlayCustomSound(nullptr, self->s.number, CHAN_VOICE, va("*chase%i.wav", event - EV_CHASE1 + 1),
-			CS_EXTRA))
+		if (!CG_TryPlayCustomSound(nullptr, self->s.number, CHAN_VOICE, va("*chase%i.wav", event - EV_CHASE1 + 1), CS_EXTRA))
 		{
 			CG_TryPlayCustomSound(nullptr, self->s.number, CHAN_VOICE, va("*anger%i.wav", Q_irand(1, 3)), CS_COMBAT);
 		}

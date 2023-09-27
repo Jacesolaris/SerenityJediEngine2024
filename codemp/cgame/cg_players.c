@@ -164,6 +164,7 @@ const char* cg_customJediSoundNames[MAX_CUSTOM_JEDI_SOUNDS] =
 	"*jdetected1",
 	"*jdetected2",
 	"*jdetected3",
+	"*taunt",
 	"*taunt1",
 	"*taunt2",
 	"*taunt3",
@@ -192,6 +193,7 @@ const char* cg_customDuelSoundNames[MAX_CUSTOM_DUEL_SOUNDS] =
 	"*victory1", //Say when killed an enemy
 	"*victory2",
 	"*victory3",
+	"*taunt",
 	"*taunt1",
 	"*taunt2",
 	"*taunt3",
@@ -384,8 +386,7 @@ sfxHandle_t CG_CustomSound(int client_num, const char* sound_name)
 			//siege only
 			return ci->duelSounds[i];
 		}
-		if (client_num >= MAX_CLIENTS && i < num_c_com_sounds && strcmp(l_sound_name, cg_customCombatSoundNames[i]) ==
-			0)
+		if (i < num_c_com_sounds && strcmp(l_sound_name, cg_customCombatSoundNames[i]) == 0)
 		{
 			//npc only
 			return ci->combatSounds[i];
@@ -395,7 +396,7 @@ sfxHandle_t CG_CustomSound(int client_num, const char* sound_name)
 			//npc only
 			return ci->extraSounds[i];
 		}
-		if (client_num >= MAX_CLIENTS && i < num_c_jedi_sounds && strcmp(l_sound_name, cg_customJediSoundNames[i]) == 0)
+		if (i < num_c_jedi_sounds && strcmp(l_sound_name, cg_customJediSoundNames[i]) == 0)
 		{
 			//npc only
 			return ci->jediSounds[i];
@@ -11495,7 +11496,7 @@ void CG_CreateSaberMarks(vec3_t start, vec3_t end, vec3_t normal)
 
 	// get the fragments
 	const int num_fragments = trap->R_MarkFragments(4, (const float(*)[3])original_points,
-		projection, MAX_MARK_POINTS, mark_points[0], MAX_MARK_FRAGMENTS,mark_fragments);
+		projection, MAX_MARK_POINTS, mark_points[0], MAX_MARK_FRAGMENTS, mark_fragments);
 
 	for (i = 0, mf = mark_fragments; i < num_fragments; i++, mf++)
 	{

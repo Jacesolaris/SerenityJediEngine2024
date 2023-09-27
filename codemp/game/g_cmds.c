@@ -3393,7 +3393,14 @@ void Cmd_SaberAttackCycle_f(gentity_t* ent)
 			{
 				G_SetAnim(ent, &ent->client->pers.cmd, SETANIM_TORSO, BOTH_STAND2TO1, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
 			}
-			G_Sound(ent, CHAN_AUTO, G_SoundIndex(va("sound/weapons/saber/lowswing%i.wav", Q_irand(1, 7))));
+			if (ent->client->ps.saberHolstered)
+			{
+				G_Sound(ent, CHAN_AUTO, G_SoundIndex("sound/weapons/saber/saber_catch.wav"));
+			}
+			else
+			{
+				G_Sound(ent, CHAN_AUTO, G_SoundIndex(va("sound/weapons/saber/lowswing%i.wav", Q_irand(1, 7))));
+			}
 		}
 	}
 	else
