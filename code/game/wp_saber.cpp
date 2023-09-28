@@ -118,9 +118,9 @@ extern qboolean PM_SaberInParry(int move);
 extern qboolean PM_SaberInKnockaway(int move);
 extern qboolean PM_SaberInBrokenParry(int move);
 extern qboolean PM_SpinningSaberAnim(int anim);
-extern saberMoveName_t PM_SaberBounceForAttack(int move);
-extern saberMoveName_t PM_KnockawayForParry(int move);
-extern saberMoveName_t PM_AnimateOldKnockBack(int move);
+extern saber_moveName_t PM_SaberBounceForAttack(int move);
+extern saber_moveName_t PM_KnockawayForParry(int move);
+extern saber_moveName_t PM_AnimateOldKnockBack(int move);
 extern qboolean PM_FlippingAnim(int anim);
 extern qboolean PM_RollingAnim(int anim);
 extern qboolean PM_CrouchAnim(int anim);
@@ -134,15 +134,14 @@ extern qboolean PM_SuperBreakWinAnim(int anim);
 extern qboolean PM_SaberLockBreakAnim(int anim);
 extern qboolean PM_InOnGroundAnim(playerState_t* ps);
 extern qboolean PM_KnockDownAnim(int anim);
-extern qboolean PM_SaberInKata(saberMoveName_t saber_move);
-extern qboolean PM_SaberInBackAttack(saberMoveName_t saber_move);
-extern qboolean PM_SaberInOverHeadSlash(saberMoveName_t saber_move);
-extern qboolean PM_SaberInRollStab(saberMoveName_t saber_move);
-extern qboolean PM_SaberInLungeStab(saberMoveName_t saber_move);
+extern qboolean PM_SaberInKata(saber_moveName_t saber_move);
+extern qboolean PM_SaberInBackAttack(saber_moveName_t saber_move);
+extern qboolean PM_SaberInOverHeadSlash(saber_moveName_t saber_move);
+extern qboolean PM_SaberInRollStab(saber_moveName_t saber_move);
+extern qboolean PM_SaberInLungeStab(saber_moveName_t saber_move);
 extern qboolean PM_StabDownAnim(int anim);
 extern qboolean PM_LungRollAnim(int anim);
 extern int PM_PowerLevelForSaberAnim(const playerState_t* ps, int saber_num = 0);
-extern void PM_VelocityForSaberMove(const playerState_t* ps, vec3_t throw_dir);
 extern qboolean PM_VelocityForBlockedMove(const playerState_t* ps, vec3_t throwDir);
 extern qboolean PM_SaberCanInterruptMove(int move, int anim);
 extern int Jedi_ReCalcParryTime(const gentity_t* self, evasionType_t evasionType);
@@ -195,7 +194,7 @@ extern qboolean PM_FaceProtectAnim(int anim);
 extern void G_KnockOver(gentity_t* self, const gentity_t* attacker, const vec3_t push_dir, float strength,
 	qboolean break_saber_lock);
 extern qboolean BG_InKnockDown(int anim);
-extern saberMoveName_t PM_BrokenParryForParry(int move);
+extern saber_moveName_t PM_BrokenParryForParry(int move);
 extern qboolean PM_SaberInDamageMove(int move);
 extern qboolean PM_SaberDoDamageAnim(int anim);
 extern qboolean PM_SaberInnonblockableAttack(int anim);
@@ -1595,10 +1594,10 @@ void wp_saber_hit_sound(const gentity_t* ent, const int saber_num, const int bla
 	const qboolean saber_in_stab_down = PM_StabDownAnim(ent->client->ps.torsoAnim);
 	const qboolean saber_in_special = PM_SaberInKillAttack(ent->client->ps.torsoAnim);
 	const qboolean saber_in_over_head_attack = PM_SaberInOverHeadSlash(
-		static_cast<saberMoveName_t>(ent->client->ps.saber_move));
-	const qboolean saberInKata = PM_SaberInKata(static_cast<saberMoveName_t>(ent->client->ps.saber_move));
+		static_cast<saber_moveName_t>(ent->client->ps.saber_move));
+	const qboolean saberInKata = PM_SaberInKata(static_cast<saber_moveName_t>(ent->client->ps.saber_move));
 	const qboolean saberInLockWin = PM_SuperBreakWinAnim(ent->client->ps.torsoAnim);
-	const qboolean saberInBackAttack = PM_SaberInBackAttack(static_cast<saberMoveName_t>(ent->client->ps.saber_move));
+	const qboolean saberInBackAttack = PM_SaberInBackAttack(static_cast<saber_moveName_t>(ent->client->ps.saber_move));
 	const qboolean saberInLungeRoll = PM_LungRollAnim(ent->client->ps.torsoAnim);
 
 	if (!ent || !ent->client)
@@ -2608,15 +2607,15 @@ qboolean wp_saber_apply_damage(gentity_t* ent, const float base_damage, const in
 						const qboolean saber_in_special = pm_saber_in_special_attack(ent->client->ps.torsoAnim);
 						const qboolean saber_in_stab_down = PM_StabDownAnim(ent->client->ps.torsoAnim);
 						const qboolean saber_in_kata = PM_SaberInKata(
-							static_cast<saberMoveName_t>(ent->client->ps.saber_move));
+							static_cast<saber_moveName_t>(ent->client->ps.saber_move));
 						const qboolean saber_in_back_attack = PM_SaberInBackAttack(
-							static_cast<saberMoveName_t>(ent->client->ps.saber_move));
+							static_cast<saber_moveName_t>(ent->client->ps.saber_move));
 						const qboolean saber_in_over_head_attack = PM_SaberInOverHeadSlash(
-							static_cast<saberMoveName_t>(ent->client->ps.saber_move));
+							static_cast<saber_moveName_t>(ent->client->ps.saber_move));
 						const qboolean saber_in_roll_stab = PM_SaberInRollStab(
-							static_cast<saberMoveName_t>(ent->client->ps.saber_move));
+							static_cast<saber_moveName_t>(ent->client->ps.saber_move));
 						const qboolean saber_in_lunge_stab = PM_SaberInLungeStab(
-							static_cast<saberMoveName_t>(ent->client->ps.saber_move));
+							static_cast<saber_moveName_t>(ent->client->ps.saber_move));
 						const int index = Q_irand(1, 3);
 
 						if (victim->client
@@ -6195,7 +6194,7 @@ void G_Stagger(gentity_t* hit_ent)
 	}
 }
 
-void G_FatigueBPKnockaway(gentity_t* blocker)
+void g_fatigue_bp_knockaway(gentity_t* blocker)
 {
 	if (PM_InGetUp(&blocker->client->ps) || PM_InForceGetUp(&blocker->client->ps))
 	{
@@ -7626,9 +7625,7 @@ void WP_SaberDamageTrace(gentity_t* ent, int saber_num, int blade_num)
 
 		if (saberHitFraction < 1.0f)
 		{
-			auto active_defenseentagain = static_cast<qboolean>
-				(ent->client->ps.ManualBlockingFlags & 1 << MBF_NPCBLOCKING || ent->client->ps.ManualBlockingFlags & 1
-					<< HOLDINGBLOCK);
+			auto active_defenseentagain = static_cast<qboolean>(ent->client->ps.ManualBlockingFlags & 1 << MBF_NPCBLOCKING || ent->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK);
 
 			if (!collision_resolved && base_damage)
 			{
@@ -7733,7 +7730,7 @@ void WP_SaberDamageTrace(gentity_t* ent, int saber_num, int blade_num)
 								}
 								else
 								{
-									G_FatigueBPKnockaway(hit_owner);
+									g_fatigue_bp_knockaway(hit_owner);
 									PM_AddBlockFatigue(&hit_owner->client->ps, BLOCKPOINTS_TEN);
 								}
 
@@ -9623,7 +9620,7 @@ void WP_SaberThrow(gentity_t* self, const usercmd_t* ucmd)
 
 	if (!g_saberNewControlScheme->integer)
 	{
-		if (PM_SaberInKata(static_cast<saberMoveName_t>(self->client->ps.saber_move)))
+		if (PM_SaberInKata(static_cast<saber_moveName_t>(self->client->ps.saber_move)))
 		{
 			//don't throw saber when in special attack (alt+attack)
 			return;
@@ -10785,8 +10782,7 @@ int wp_saber_must_block(gentity_t* self, const gentity_t* atk, const qboolean ch
 		if (self->s.number >= MAX_CLIENTS && !G_ControlledByPlayer(self))
 		{
 			//bots just randomly parry to make up for them not intelligently parrying.
-			if (self->client->ps.weapon == WP_SABER && self->client->ps.SaberActive() && !self->client->ps.
-				saberInFlight)
+			if (self->client->ps.weapon == WP_SABER && self->client->ps.SaberActive() && !self->client->ps.saberInFlight)
 			{
 				return 1;
 			}
@@ -11064,8 +11060,7 @@ qboolean manual_saberblocking(const gentity_t* defender)
 
 	if (!(defender->client->buttons & BUTTON_BLOCK))
 	{
-		if (defender->s.number >= MAX_CLIENTS && !G_ControlledByPlayer(defender) && defender->client->ps.weapon ==
-			WP_SABER)
+		if (defender->s.number >= MAX_CLIENTS && !G_ControlledByPlayer(defender) && defender->client->ps.weapon == WP_SABER)
 		{
 			//bots just randomly parry to make up for them not intelligently parrying.
 			return qtrue;
@@ -11323,7 +11318,7 @@ float manual_npc_saberblocking(const gentity_t* defender)
 		return qfalse;
 	}
 
-	if (PM_SaberInKata(static_cast<saberMoveName_t>(defender->client->ps.saber_move)))
+	if (PM_SaberInKata(static_cast<saber_moveName_t>(defender->client->ps.saber_move)))
 	{
 		return qfalse;
 	}
@@ -13305,26 +13300,33 @@ void wp_saber_start_missile_block_check(gentity_t* self, const usercmd_t* ucmd)
 
 	if (self->client->ps.weapon != WP_SABER) //saber not here
 	{
-		//saber not currently in use or available, attempt to use our hands instead.
-		do_full_routine = qfalse;
-	}
-
-	if (self->client->ps.weapon == WP_SABER && !self->client->ps.SaberActive())
-	{
-		//saber not currently in use or available, attempt to use our hands instead.
-		do_full_routine = qfalse;
-	}
-
-	if (self->client->ps.weapon == WP_SABER && self->client->ps.saberInFlight)
-	{
-		//saber not currently in use or available, attempt to use our hands instead.
-		do_full_routine = qfalse;
-	}
-
-	if ((self->s.number < MAX_CLIENTS || G_ControlledByPlayer(self)) && !(self->client->ps.ManualBlockingFlags & 1 <<
-		HOLDINGBLOCK))
-	{
 		return;
+	}
+	else if (self->client->ps.weapon == WP_SABER && !self->client->ps.SaberActive())
+	{
+		//saber not currently in use or available, attempt to use our hands instead.
+		do_full_routine = qfalse;
+	}
+	else if (self->client->ps.weapon == WP_SABER && self->client->ps.saberInFlight)
+	{
+		//saber not currently in use or available, attempt to use our hands instead.
+		do_full_routine = qfalse;
+	}
+
+	if (!(self->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK))
+	{
+		if (self->s.number >= MAX_CLIENTS && !G_ControlledByPlayer(self))
+		{
+			//bots just randomly parry to make up for them not intelligently parrying.
+			if (self->client->ps.weapon == WP_SABER && (!self->client->ps.SaberActive() || self->client->ps.saberInFlight))
+			{
+				return;
+			}
+		}
+		else
+		{
+			return;
+		}
 	}
 
 	if (self->client->ps.SaberLength() <= 0)
@@ -13444,8 +13446,7 @@ void wp_saber_start_missile_block_check(gentity_t* self, const usercmd_t* ucmd)
 					return;
 				}
 
-				if (!(self->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK) && self->client->ps.saberBlockingTime <
-					level.time)
+				if (self->client->ps.saberBlockingTime < level.time)
 				{
 					return;
 				}
@@ -13877,7 +13878,7 @@ void wp_saber_start_missile_block_check(gentity_t* self, const usercmd_t* ucmd)
 				blocker->client->ps.saberBlocked = blockedfor_quad(closest_swing_quad);
 				blocker->client->ps.userInt3 |= 1 << FLAG_PREBLOCK;
 			}
-			else if (blocker->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK || blocker->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK)
+			else if (blocker->health > 0)
 			{
 				wp_saber_block_non_random_missile(blocker, incoming->currentOrigin, qtrue);
 			}
@@ -14456,7 +14457,7 @@ void WP_ResistForcePush(gentity_t* self, const gentity_t* pusher, const qboolean
 		return;
 	}
 
-	if (PM_SaberInKata(static_cast<saberMoveName_t>(self->client->ps.saber_move)) || PM_InKataAnim(
+	if (PM_SaberInKata(static_cast<saber_moveName_t>(self->client->ps.saber_move)) || PM_InKataAnim(
 		self->client->ps.torsoAnim))
 	{
 		//don't throw saber when in special attack (alt+attack)
@@ -15046,7 +15047,7 @@ static qboolean playeris_resisting_force_throw(const gentity_t* player, gentity_
 		return qfalse;
 	}
 
-	if (PM_SaberInKata(static_cast<saberMoveName_t>(player->client->ps.saber_move)) || PM_InKataAnim(
+	if (PM_SaberInKata(static_cast<saber_moveName_t>(player->client->ps.saber_move)) || PM_InKataAnim(
 		player->client->ps.torsoAnim))
 	{
 		//don't throw saber when in special attack (alt+attack)
@@ -15135,7 +15136,7 @@ static qboolean ShouldPlayerResistForceThrow(const gentity_t* player, gentity_t*
 		return qfalse;
 	}
 
-	if (PM_SaberInKata(static_cast<saberMoveName_t>(player->client->ps.saber_move)) || PM_InKataAnim(
+	if (PM_SaberInKata(static_cast<saber_moveName_t>(player->client->ps.saber_move)) || PM_InKataAnim(
 		player->client->ps.torsoAnim))
 	{
 		//don't throw saber when in special attack (alt+attack)
@@ -15288,7 +15289,7 @@ void ForceThrow(gentity_t* self, qboolean pull, qboolean fake)
 		return;
 	}
 
-	if (PM_SaberInKata(static_cast<saberMoveName_t>(self->client->ps.saber_move)))
+	if (PM_SaberInKata(static_cast<saber_moveName_t>(self->client->ps.saber_move)))
 	{
 		return;
 	}
@@ -22814,7 +22815,7 @@ void WP_DeactivateLightSaber(const gentity_t* self, const qboolean clear_length)
 		if (clear_length)
 		{
 			self->client->ps.SetSaberLength(0);
-			PM_SetSaberMove(LS_DRAW);
+			PM_Setsaber_move(LS_DRAW);
 		}
 		G_SoundIndexOnEnt(self, CHAN_WEAPON, self->client->ps.saber[0].soundOff);
 	}
@@ -25378,7 +25379,7 @@ void ForceGrasp(gentity_t* self)
 	if (!trace_ent || trace_ent == self/*???*/ || trace_ent->bmodel || (trace_ent->health <= 0 && trace_ent->takedamage) || (trace_ent->NPC && trace_ent->NPC->scriptFlags & SCF_NO_FORCE))
 	{
 		return;
-	}
+}
 	//rww - RAGDOLL_BEGIN
 #endif
 	//rww - RAGDOLL_END
@@ -28481,8 +28482,8 @@ static void wp_force_power_run(gentity_t* self, forcePowers_t force_power, userc
 				}
 				grip_ent->painDebounceTime = level.time + 2000;
 			}
+			}
 		}
-	}
 	break;
 	case FP_REPULSE:
 	{
@@ -28663,7 +28664,7 @@ static void wp_force_power_run(gentity_t* self, forcePowers_t force_power, userc
 	default:
 		break;
 	}
-}
+	}
 
 void WP_CheckForcedPowers(gentity_t* self, usercmd_t* ucmd)
 {

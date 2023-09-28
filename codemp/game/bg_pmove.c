@@ -11552,7 +11552,7 @@ void PM_FinishWeaponChange(void)
 			{
 				//holding second saber, activate it.
 				pm->ps->saberHolstered = 1;
-				PM_SetSaberMove(LS_DRAW);
+				PM_Setsaber_move(LS_DRAW);
 			}
 			else
 			{
@@ -11567,14 +11567,14 @@ void PM_FinishWeaponChange(void)
 			if (g_entities[pm->ps->client_num].r.svFlags & SVF_BOT || pm_entSelf->s.eType == ET_NPC)
 			{
 				// Some special bot stuff.
-				PM_SetSaberMove(LS_DRAW);
+				PM_Setsaber_move(LS_DRAW);
 			}
 			else
 #endif
 			{
 				if (PM_RunningAnim(pm->ps->legsAnim) || pm->ps->groundEntityNum == ENTITYNUM_NONE || in_camera)
 				{
-					PM_SetSaberMove(LS_DRAW);
+					PM_Setsaber_move(LS_DRAW);
 				}
 				else if (PM_WalkingAnim(pm->ps->legsAnim))
 				{
@@ -11613,11 +11613,11 @@ void PM_FinishWeaponChange(void)
 					else if (saber1 && saber1->type == SABER_GRIE || saber1 && saber1->type == SABER_GRIE4)
 						//saber GRIEVOUS
 					{
-						PM_SetSaberMove(LS_DRAW3);
+						PM_Setsaber_move(LS_DRAW3);
 					}
 					else
 					{
-						PM_SetSaberMove(LS_DRAW2);
+						PM_Setsaber_move(LS_DRAW2);
 					}
 				}
 			}
@@ -17643,7 +17643,7 @@ void PM_CheckInVehicleSaberAttackAnim(void)
 
 	PM_CheckClearSaberBlock();
 
-	saberMoveName_t saber_move = LS_INVALID;
+	saber_moveName_t saber_move = LS_INVALID;
 	switch (pm->ps->torsoAnim)
 	{
 	case BOTH_VS_ATR_S:
@@ -17668,14 +17668,14 @@ void PM_CheckInVehicleSaberAttackAnim(void)
 			if (!pm->ps->torsoTimer)
 			{
 				//anim was done, set it back to ready
-				PM_SetSaberMove(LS_READY);
+				PM_Setsaber_move(LS_READY);
 				pm->ps->saber_move = LS_READY;
 				pm->ps->weaponstate = WEAPON_IDLE;
 				if (pm->cmd.buttons & BUTTON_ATTACK)
 				{
 					if (!pm->ps->weaponTime)
 					{
-						PM_SetSaberMove(saber_move);
+						PM_Setsaber_move(saber_move);
 						pm->ps->weaponstate = WEAPON_FIRING;
 						pm->ps->weaponTime = pm->ps->torsoTimer;
 					}
@@ -17685,10 +17685,10 @@ void PM_CheckInVehicleSaberAttackAnim(void)
 		else if (pm->ps->torsoTimer
 			&& !pm->ps->weaponTime)
 		{
-			PM_SetSaberMove(LS_READY);
+			PM_Setsaber_move(LS_READY);
 			pm->ps->saber_move = LS_READY;
 			pm->ps->weaponstate = WEAPON_IDLE;
-			PM_SetSaberMove(saber_move);
+			PM_Setsaber_move(saber_move);
 			pm->ps->weaponstate = WEAPON_FIRING;
 			pm->ps->weaponTime = pm->ps->torsoTimer;
 		}

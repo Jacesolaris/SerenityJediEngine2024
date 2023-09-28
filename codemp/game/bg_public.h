@@ -60,7 +60,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #define DEFAULT_REDTEAM_NAME	"Empire"
 #define DEFAULT_BLUETEAM_NAME	"Rebellion"
 
-#define CURRENT_SJE_CLIENTVERSION		"Year-23,Month-09,Day-27,BuildNum-09" // build date
+#define CURRENT_SJE_CLIENTVERSION		"Year-23,Month-09,Day-28,BuildNum-10" // build date
 
 #define	STEPSIZE		18
 
@@ -1644,7 +1644,7 @@ typedef enum {
 	LS_KNOCK_LEFT,
 
 	LS_MOVE_MAX
-} saberMoveName_t;
+} saber_moveName_t;
 
 typedef enum {
 	Q_BR,
@@ -1666,8 +1666,8 @@ typedef struct saber_moveData_s {
 	unsigned animSetFlags;
 	int blend_time;
 	int blocking;
-	saberMoveName_t chain_idle;			// What move to call if the attack button is not pressed at the end of this anim
-	saberMoveName_t chain_attack;		// What move to call if the attack button (and nothing else) is pressed
+	saber_moveName_t chain_idle;			// What move to call if the attack button is not pressed at the end of this anim
+	saber_moveName_t chain_attack;		// What move to call if the attack button (and nothing else) is pressed
 	qboolean trailLength;
 } saber_moveData_t;
 
@@ -1987,7 +1987,7 @@ qboolean PM_SaberInIdle(int move);
 qboolean PM_FlippingAnim(int anim);
 qboolean PM_SpinningSaberAnim(int anim);
 qboolean pm_saber_in_special_attack(int anim);
-qboolean PM_SaberInKata(saberMoveName_t saber_move);
+qboolean PM_SaberInKata(saber_moveName_t saber_move);
 qboolean PM_InKataAnim(int anim);
 qboolean PM_KickingAnim(int anim);
 qboolean PM_PunchAnim(int anim);

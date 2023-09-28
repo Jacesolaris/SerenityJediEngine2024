@@ -3082,13 +3082,13 @@ qboolean Kyle_CanDoGrab(void)
 	return qfalse;
 }
 
-saberMoveName_t G_PickAutoMultiKick(gentity_t* self, qboolean allowSingles, qboolean storeMove)
+saber_moveName_t G_PickAutoMultiKick(gentity_t* self, qboolean allowSingles, qboolean storeMove)
 {
 	return LS_NONE;
 }
 
 extern qboolean G_CanKickEntity(const gentity_t* self, const gentity_t* target);
-extern saberMoveName_t G_PickAutoKick(gentity_t* self, const gentity_t* enemy);
+extern saber_moveName_t G_PickAutoKick(gentity_t* self, const gentity_t* enemy);
 extern float NPC_EnemyRangeFromBolt(int bolt_index);
 extern qboolean PM_SaberInTransition(int move);
 extern void ForceDrain(gentity_t* self);

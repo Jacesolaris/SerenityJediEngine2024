@@ -4742,9 +4742,11 @@ qboolean client_userinfo_changed(const int client_num)
 			|| Class_Model(model, "am_vader")
 			|| Class_Model(model, "darthvader")
 			|| Class_Model(model, "vadervmm")
-			|| Class_Model(model, "t_vader"))
+			|| Class_Model(model, "t_vader")
+			|| Class_Model(model, "darthplagueis")
+			|| Class_Model(model, "savage_opress"))
 		{
-			client->pers.botmodelscale = BOTZIZE_MASSIVE;
+			client->pers.botmodelscale = BOTZIZE_LARGE;
 			client->pers.nextbotclass = BCLASS_LORDVADER;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
@@ -5639,7 +5641,7 @@ qboolean AllForceDisabled(const int force)
 			{
 				return qfalse;
 			}
-}
+		}
 
 		return qtrue;
 	}

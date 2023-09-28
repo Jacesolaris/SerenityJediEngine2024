@@ -48,25 +48,24 @@ extern qboolean WP_SabersCheckLock(gentity_t* ent1, gentity_t* ent2);
 extern void PM_AddFatigue(playerState_t* ps, int fatigue);
 extern void G_AddVoiceEvent(const gentity_t* self, int event, int speak_debounce_time);
 extern qboolean npc_is_dark_jedi(const gentity_t* self);
-extern saberMoveName_t PM_BrokenParryForParry(int move);
-extern saberMoveName_t pm_broken_parry_for_attack(int move);
+extern saber_moveName_t PM_BrokenParryForParry(int move);
+extern saber_moveName_t pm_broken_parry_for_attack(int move);
 extern qboolean PM_InGetUp(const playerState_t* ps);
 extern qboolean PM_InForceGetUp(const playerState_t* ps);
 extern qboolean G_ControlledByPlayer(const gentity_t* self);
 extern qboolean WP_BrokenBoltBlockKnockBack(gentity_t* victim);
 extern void wp_block_points_regenerate(const gentity_t* self, int override_amt);
 extern void PM_AddBlockFatigue(playerState_t* ps, int fatigue);
-extern saberMoveName_t pm_block_the_attack(int move);
+extern saber_moveName_t pm_block_the_attack(int move);
 extern int g_block_the_attack(int move);
-extern saberMoveName_t PM_SaberBounceForAttack(int move);
+extern saber_moveName_t PM_SaberBounceForAttack(int move);
 extern void G_Stagger(gentity_t* hit_ent);
-extern void G_FatigueBPKnockaway(gentity_t* blocker);
+extern void g_fatigue_bp_knockaway(gentity_t* blocker);
 extern qboolean PM_SuperBreakLoseAnim(int anim);
 extern qboolean ButterFingers(gentity_t* saberent, gentity_t* saber_owner, const gentity_t* other, const trace_t* tr);
 extern qboolean PM_SaberInnonblockableAttack(int anim);
 extern qboolean pm_saber_in_special_attack(int anim);
 extern qboolean PM_VelocityForBlockedMove(const playerState_t* ps, vec3_t throw_dir);
-extern void PM_VelocityForSaberMove(const playerState_t* ps, vec3_t throw_dir);
 extern int G_GetParryForBlock(int block);
 extern qboolean WP_SaberMBlock(gentity_t* blocker, gentity_t* attacker, int saber_num, int blade_num);
 extern qboolean WP_SaberParry(gentity_t* blocker, gentity_t* attacker, int saber_num, int blade_num);
@@ -408,8 +407,7 @@ void sab_beh_animate_small_bounce(gentity_t* attacker)
 	else
 	{
 		attacker->client->ps.userInt3 |= 1 << FLAG_SLOWBOUNCE;
-		attacker->client->ps.saberBounceMove = LS_D1_BR + (saber_moveData[attacker->client->ps.saber_move].startQuad -
-			Q_BR);
+		attacker->client->ps.saberBounceMove = LS_D1_BR + (saber_moveData[attacker->client->ps.saber_move].startQuad -Q_BR);
 		attacker->client->ps.saberBlocked = BLOCKED_ATK_BOUNCE;
 	}
 }
@@ -846,7 +844,7 @@ qboolean sab_beh_attack_vs_block(gentity_t* attacker, gentity_t* blocker, const 
 				G_Stagger(blocker);
 			}
 
-			if ((d_attackinfo.integer || g_DebugSaberCombat.integer) && !(blocker->r.svFlags & SVF_BOT))
+			if ((d_attackinfo.integer || g_DebugSaberCombat.integer))
 			{
 				Com_Printf(S_COLOR_ORANGE"Attacker All the rest of the types of contact\n");
 			}
@@ -907,7 +905,7 @@ qboolean sab_beh_block_vs_attack(gentity_t* blocker, gentity_t* attacker, const 
 			else
 			{
 				//Low points = bad blocks
-				G_FatigueBPKnockaway(blocker);
+				g_fatigue_bp_knockaway(blocker);
 
 				PM_AddBlockFatigue(&blocker->client->ps, BLOCKPOINTS_DANGER);
 
@@ -1183,7 +1181,7 @@ qboolean sab_beh_block_vs_attack(gentity_t* blocker, gentity_t* attacker, const 
 			else
 			{
 				//Low points = bad blocks
-				G_FatigueBPKnockaway(blocker);
+				g_fatigue_bp_knockaway(blocker);
 				PM_AddBlockFatigue(&blocker->client->ps, BLOCKPOINTS_TEN);
 			}
 			if (d_blockinfo.integer || g_DebugSaberCombat.integer)

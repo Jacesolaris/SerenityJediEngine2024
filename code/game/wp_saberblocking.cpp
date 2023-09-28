@@ -50,14 +50,13 @@ extern qboolean PM_InKnockDown(const playerState_t* ps);
 extern qboolean PM_SaberInTransitionAny(int move);
 extern void G_AddVoiceEvent(const gentity_t* self, int event, int speak_debounce_time);
 extern qboolean npc_is_dark_jedi(const gentity_t* self);
-extern saberMoveName_t pm_broken_parry_for_attack(int move);
+extern saber_moveName_t pm_broken_parry_for_attack(int move);
 extern qboolean PM_InGetUp(const playerState_t* ps);
 extern qboolean PM_InForceGetUp(const playerState_t* ps);
 extern qboolean PM_SaberInParry(int move);
-extern saberMoveName_t PM_KnockawayForParry(int move);
+extern saber_moveName_t PM_KnockawayForParry(int move);
 extern int G_KnockawayForParry(int move);
 extern qboolean PM_VelocityForBlockedMove(const playerState_t* ps, vec3_t throwDir);
-extern void PM_VelocityForSaberMove(const playerState_t* ps, vec3_t throw_dir);
 extern qboolean WP_SaberLose(gentity_t* self, vec3_t throw_dir);
 extern cvar_t* g_saberAutoBlocking;
 extern qboolean WP_SabersCheckLock(gentity_t* ent1, gentity_t* ent2);
@@ -67,18 +66,18 @@ extern void G_Knockdown(gentity_t* self, gentity_t* attacker, const vec3_t push_
 extern qboolean PM_SuperBreakWinAnim(int anim);
 extern void PM_AddFatigue(playerState_t* ps, int fatigue);
 extern qboolean WP_SaberBlockNonRandom(gentity_t* self, vec3_t hitloc, qboolean missileBlock);
-extern saberMoveName_t PM_BrokenParryForParry(int move);
+extern saber_moveName_t PM_BrokenParryForParry(int move);
 extern void PM_AddBlockFatigue(playerState_t* ps, int fatigue);
 extern void G_Stagger(gentity_t* hit_ent);
-extern void G_FatigueBPKnockaway(gentity_t* blocker);
+extern void g_fatigue_bp_knockaway(gentity_t* blocker);
 extern void G_StaggerAttacker(gentity_t* atk);
 extern void G_BounceAttacker(gentity_t* atk);
 extern void wp_block_points_regenerate(const gentity_t* self, int override_amt);
-extern saberMoveName_t PM_SaberBounceForAttack(int move);
+extern saber_moveName_t PM_SaberBounceForAttack(int move);
 extern void WP_SaberDrop(const gentity_t* self, gentity_t* saber);
 extern qboolean PM_SaberInnonblockableAttack(int anim);
 extern qboolean pm_saber_in_special_attack(int anim);
-extern qboolean PM_SaberInKata(saberMoveName_t saber_move);
+extern qboolean PM_SaberInKata(saber_moveName_t saber_move);
 extern void wp_saber_clear_damage_for_ent_num(gentity_t* attacker, int entity_num, int saber_num, int blade_num);
 extern cvar_t* d_slowmoaction;
 extern void G_StartStasisEffect(const gentity_t* ent, int me_flags = 0, int length = 1000, float time_scale = 0.0f,
@@ -430,8 +429,7 @@ void sab_beh_animate_small_bounce(gentity_t* attacker)
 	else
 	{
 		attacker->client->ps.userInt3 |= 1 << FLAG_SLOWBOUNCE;
-		attacker->client->ps.saberBounceMove = LS_D1_BR + (saber_moveData[attacker->client->ps.saber_move].startQuad -
-			Q_BR);
+		attacker->client->ps.saberBounceMove = LS_D1_BR + (saber_moveData[attacker->client->ps.saber_move].startQuad -Q_BR);
 		attacker->client->ps.saberBlocked = BLOCKED_ATK_BOUNCE;
 	}
 }
@@ -656,7 +654,7 @@ qboolean sab_beh_attack_vs_attack(gentity_t* attacker, gentity_t* blocker, const
 		//set otherOwner
 		sab_beh_add_balance(blocker, 1);
 	}
-	else if (PM_SaberInKata(static_cast<saberMoveName_t>(attacker->client->ps.saber_move)))
+	else if (PM_SaberInKata(static_cast<saber_moveName_t>(attacker->client->ps.saber_move)))
 	{
 		sab_beh_add_balance(attacker, 1);
 		//set otherOwner
@@ -675,7 +673,7 @@ qboolean sab_beh_attack_vs_attack(gentity_t* attacker, gentity_t* blocker, const
 			PM_AddBlockFatigue(&blocker->client->ps, BLOCKPOINTS_TEN);
 		}
 	}
-	else if (PM_SaberInKata(static_cast<saberMoveName_t>(blocker->client->ps.saber_move)))
+	else if (PM_SaberInKata(static_cast<saber_moveName_t>(blocker->client->ps.saber_move)))
 	{
 		sab_beh_add_balance(attacker, -1);
 		//set otherOwner
@@ -924,7 +922,7 @@ qboolean sab_beh_block_vs_attack(gentity_t* blocker, gentity_t* attacker, const 
 			else
 			{
 				//Low points = bad blocks
-				G_FatigueBPKnockaway(blocker);
+				g_fatigue_bp_knockaway(blocker);
 
 				PM_AddBlockFatigue(&blocker->client->ps, BLOCKPOINTS_DANGER);
 
@@ -1218,7 +1216,7 @@ qboolean sab_beh_block_vs_attack(gentity_t* blocker, gentity_t* attacker, const 
 			else
 			{
 				//Low points = bad blocks
-				G_FatigueBPKnockaway(blocker);
+				g_fatigue_bp_knockaway(blocker);
 				PM_AddBlockFatigue(&blocker->client->ps, BLOCKPOINTS_TEN);
 			}
 			if (d_blockinfo->integer || g_DebugSaberCombat->integer)

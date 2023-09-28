@@ -466,7 +466,6 @@ typedef struct bot_state_s
 	int saberLockDebounce;
 
 	int walkTime; //timer for walking
-	int full_thinktime; //debouncer for full AI processing.
 	int BOTjumpState; //bot jump state
 	//[AotCTCAI]
 

@@ -481,7 +481,7 @@ qboolean PM_SaberInAttack(const int move)
 	return qfalse;
 }
 
-qboolean PM_SaberInKata(const saberMoveName_t saber_move)
+qboolean PM_SaberInKata(const saber_moveName_t saber_move)
 {
 	switch (saber_move)
 	{
@@ -502,7 +502,7 @@ qboolean PM_SaberInKata(const saberMoveName_t saber_move)
 	return qfalse;
 }
 
-qboolean PM_SaberInOverHeadSlash(const saberMoveName_t saber_move)
+qboolean PM_SaberInOverHeadSlash(const saber_moveName_t saber_move)
 {
 	switch (saber_move)
 	{
@@ -515,7 +515,7 @@ qboolean PM_SaberInOverHeadSlash(const saberMoveName_t saber_move)
 	return qfalse;
 }
 
-qboolean PM_SaberInBackAttack(const saberMoveName_t saber_move)
+qboolean PM_SaberInBackAttack(const saber_moveName_t saber_move)
 {
 	switch (saber_move)
 	{
@@ -1888,7 +1888,7 @@ qboolean PM_SaberCanInterruptMove(const int move, const int anim)
 	return qtrue;
 }
 
-saberMoveName_t pm_broken_parry_for_attack(const int move)
+saber_moveName_t pm_broken_parry_for_attack(const int move)
 {
 	switch (saber_moveData[move].startQuad)
 	{
@@ -1913,7 +1913,7 @@ saberMoveName_t pm_broken_parry_for_attack(const int move)
 	return LS_NONE;
 }
 
-saberMoveName_t pm_block_the_attack(const int move)
+saber_moveName_t pm_block_the_attack(const int move)
 {
 	switch (move)
 	{
@@ -1960,7 +1960,7 @@ int g_block_the_attack(const int move)
 	}
 }
 
-saberMoveName_t PM_KnockawayForParry(const int move)
+saber_moveName_t PM_KnockawayForParry(const int move)
 {
 	switch (move)
 	{
@@ -1982,7 +1982,7 @@ saberMoveName_t PM_KnockawayForParry(const int move)
 	}
 }
 
-saberMoveName_t PM_KnockawayForParryOld(const int move)
+saber_moveName_t PM_KnockawayForParryOld(const int move)
 {
 	switch (move)
 	{
@@ -2004,7 +2004,7 @@ saberMoveName_t PM_KnockawayForParryOld(const int move)
 	}
 }
 
-saberMoveName_t PM_AnimateOldKnockBack(const int move)
+saber_moveName_t PM_AnimateOldKnockBack(const int move)
 {
 	switch (move)
 	{
@@ -2484,7 +2484,7 @@ qboolean BG_StabDownAnim(const int anim)
 	return qfalse;
 }
 
-saberMoveName_t PM_SaberBounceForAttack(const int move)
+saber_moveName_t PM_SaberBounceForAttack(const int move)
 {
 	switch (saber_moveData[move].startQuad)
 	{
@@ -6161,7 +6161,7 @@ void pm_saber_start_trans_anim(const int client_num, const int saber_anim_level,
 			}
 			else if (saber_anim_level == SS_MEDIUM)
 			{
-				const float realisticanimscale = 0.95f;
+				const float realisticanimscale = 1.0f;
 				*anim_speed *= realisticanimscale;
 			}
 			else if (saber_anim_level == SS_STRONG)

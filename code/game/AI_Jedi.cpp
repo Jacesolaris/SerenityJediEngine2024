@@ -81,12 +81,12 @@ extern qboolean PM_InAirKickingAnim(int anim);
 extern qboolean PM_KickingAnim(int anim);
 extern qboolean PM_StabDownAnim(int anim);
 extern qboolean PM_SuperBreakLoseAnim(int anim);
-extern qboolean PM_SaberInKata(saberMoveName_t saber_move);
+extern qboolean PM_SaberInKata(saber_moveName_t saber_move);
 extern qboolean PM_InRollIgnoreTimer(const playerState_t* ps);
 extern qboolean PM_PainAnim(int anim);
 extern qboolean G_CanKickEntity(const gentity_t* self, const gentity_t* target);
-extern saberMoveName_t G_PickAutoKick(const gentity_t* self, const gentity_t* enemy, qboolean store_move);
-extern saberMoveName_t g_pick_auto_multi_kick(gentity_t* self, qboolean allow_singles, qboolean store_move);
+extern saber_moveName_t G_PickAutoKick(const gentity_t* self, const gentity_t* enemy, qboolean store_move);
+extern saber_moveName_t g_pick_auto_multi_kick(gentity_t* self, qboolean allow_singles, qboolean store_move);
 extern qboolean NAV_DirSafe(const gentity_t* self, vec3_t dir, float dist);
 extern qboolean NAV_MoveDirSafe(const gentity_t* self, const usercmd_t* cmd, float distScale = 1.0f);
 extern float NPC_EnemyRangeFromBolt(int bolt_index);
@@ -2142,7 +2142,7 @@ static void jedi_combat_distance(const int enemy_dist)
 		&& NPC->enemy
 		&& NPC->enemy->client
 		&& in_front(NPC->enemy->currentOrigin, NPC->currentOrigin, NPC->client->ps.viewangles, 0.7f)
-		&& PM_SaberInKata(static_cast<saberMoveName_t>(NPC->enemy->client->ps.saber_move)))
+		&& PM_SaberInKata(static_cast<saber_moveName_t>(NPC->enemy->client->ps.saber_move)))
 	{
 		//whoa, back off!!!
 		if (Q_irand(0, 1))
@@ -4525,7 +4525,7 @@ qboolean Jedi_InNoAIAnim(const gentity_t* self)
 		|| PM_StabDownAnim(NPC->client->ps.legsAnim)
 		|| PM_InAirKickingAnim(NPC->client->ps.legsAnim)
 		|| PM_InRollIgnoreTimer(&NPC->client->ps)
-		|| PM_SaberInKata(static_cast<saberMoveName_t>(NPC->client->ps.saber_move))
+		|| PM_SaberInKata(static_cast<saber_moveName_t>(NPC->client->ps.saber_move))
 		|| PM_SuperBreakWinAnim(NPC->client->ps.torsoAnim)
 		|| PM_SuperBreakLoseAnim(NPC->client->ps.torsoAnim))
 	{

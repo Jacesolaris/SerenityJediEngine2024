@@ -1530,7 +1530,6 @@ void remove_color_escape_sequences(char* text)
 BotAI
 ==============
 */
-extern vmCvar_t bot_cpu_usage;
 
 int bot_ai(const int client, const float thinktime)
 {
@@ -1601,7 +1600,6 @@ int bot_ai(const int client, const float thinktime)
 	start = trap->Milliseconds();
 #endif
 	standard_bot_ai(bs);
-	bs->full_thinktime = level.time + (100 - bot_cpu_usage.integer);
 #ifdef _DEBUG
 	end = trap->Milliseconds();
 
