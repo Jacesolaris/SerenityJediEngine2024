@@ -11052,10 +11052,14 @@ qboolean manual_saberblocking(const gentity_t* defender)
 		return qfalse;
 	}
 
-	if (SaberAttacking(defender) && (defender->s.number >= MAX_CLIENTS && !G_ControlledByPlayer(defender)))
+	if (SaberAttacking(defender))
 	{
-		//bots just randomly parry to make up for them not intelligently parrying.
-		return qtrue;
+		if (defender->s.number >= MAX_CLIENTS && !G_ControlledByPlayer(defender) && defender->client->ps.weapon == WP_SABER)
+		{
+			//bots just randomly parry to make up for them not intelligently parrying.
+			return qtrue;
+		}
+		return qfalse;
 	}
 
 	if (!(defender->client->buttons & BUTTON_BLOCK))
@@ -13858,16 +13862,16 @@ void wp_saber_start_missile_block_check(gentity_t* self, const usercmd_t* ucmd)
 		{
 			gentity_t* blocker = &g_entities[incoming->ownerNum];
 
-			if (!self->client->ps.SaberActive())
+			if (!blocker->client->ps.SaberActive())
 			{
-				self->client->ps.SaberActivate();
+				blocker->client->ps.SaberActivate();
 			}
 			if (closest_swing_block && blocker->health > 0)
 			{
 				blocker->client->ps.saberBlocked = blockedfor_quad(closest_swing_quad);
 				blocker->client->ps.userInt3 |= 1 << FLAG_PREBLOCK;
 			}
-			else if (blocker->health > 0)
+			else if (blocker->health > 0 && (blocker->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK || blocker->client->ps.ManualBlockingFlags & 1 << MBF_NPCBLOCKING))
 			{
 				wp_saber_block_non_random_missile(blocker, incoming->currentOrigin, qtrue);
 			}
@@ -25368,7 +25372,7 @@ void ForceGrasp(gentity_t* self)
 	if (!trace_ent || trace_ent == self/*???*/ || trace_ent->bmodel || (trace_ent->health <= 0 && trace_ent->takedamage) || (trace_ent->NPC && trace_ent->NPC->scriptFlags & SCF_NO_FORCE))
 	{
 		return;
-}
+	}
 	//rww - RAGDOLL_BEGIN
 #endif
 	//rww - RAGDOLL_END
@@ -28471,8 +28475,8 @@ static void wp_force_power_run(gentity_t* self, forcePowers_t force_power, userc
 				}
 				grip_ent->painDebounceTime = level.time + 2000;
 			}
-			}
 		}
+	}
 	break;
 	case FP_REPULSE:
 	{
@@ -28653,7 +28657,7 @@ static void wp_force_power_run(gentity_t* self, forcePowers_t force_power, userc
 	default:
 		break;
 	}
-	}
+}
 
 void WP_CheckForcedPowers(gentity_t* self, usercmd_t* ucmd)
 {

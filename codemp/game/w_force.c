@@ -4865,6 +4865,11 @@ static qboolean playeris_resisting_force_throw(const gentity_t* player, gentity_
 		return qfalse;
 	}
 
+	if (!WP_ForcePowerUsable(player, FP_ABSORB))
+	{
+		return qfalse;
+	}
+
 	if (manual_forceblocking(player))
 	{
 		// player was pushing, or player's force push/pull is high enough to try to stop me
@@ -4905,18 +4910,23 @@ qboolean ShouldPlayerResistForceThrow(const gentity_t* self, const gentity_t* th
 
 	if (PM_KnockDownAnimExtended(self->client->ps.legsAnim) || PM_KnockDownAnimExtended(self->client->ps.torsoAnim))
 	{
-		return qfalse;
+		return 0;
 	}
 
 	if (PM_SaberInKata(self->client->ps.saber_move))
 	{
 		//don't throw saber when in special attack (alt+attack)
-		return qfalse;
+		return 0;
 	}
 
 	if (!WP_CounterForce(thrower, self, pull ? FP_PULL : FP_PUSH))
 	{
 		//wasn't able to counter due to generic counter issue
+		return 0;
+	}
+
+	if (!WP_ForcePowerUsable(self, FP_ABSORB))
+	{
 		return 0;
 	}
 
@@ -7987,11 +7997,7 @@ void SeekerDroneUpdate(gentity_t* self)
 	{
 		en = &g_entities[self->client->ps.genericEnemyIndex];
 
-		if (!en || !en->client)
-		{
-			self->client->ps.genericEnemyIndex = ENTITYNUM_NONE;
-		}
-		else if (en->s.number == self->s.number)
+		if (en->s.number == self->s.number)
 		{
 			self->client->ps.genericEnemyIndex = ENTITYNUM_NONE;
 		}

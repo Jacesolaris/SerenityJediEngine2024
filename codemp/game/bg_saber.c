@@ -6061,6 +6061,7 @@ weapChecks:
 			return;
 		}
 		int both = qfalse;
+
 		if (pm->ps->torsoAnim == BOTH_FORCELONGLEAP_ATTACK
 			|| pm->ps->torsoAnim == BOTH_FORCELONGLEAP_ATTACK2
 			|| pm->ps->torsoAnim == BOTH_FORCELONGLEAP_LAND

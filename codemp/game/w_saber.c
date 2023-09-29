@@ -8010,33 +8010,29 @@ void wp_saber_start_missile_block_check(gentity_t* self, usercmd_t* ucmd)
 		{
 			gentity_t* blocker = &g_entities[incoming->r.ownerNum];
 
-			//make sure your saber is on but only if it's turned off now.
 			if (self->client->ps.saberHolstered == 2)
 			{
 				WP_ActivateSaber(self);
 			}
-
 			if (closest_swing_block && blocker->health > 0)
 			{
 				blocker->client->ps.saberBlocked = blockedfor_quad(closest_swing_quad);
 				blocker->client->ps.userInt3 |= 1 << FLAG_PREBLOCK;
 			}
-			else if (blocker->health > 0)
+			else if (blocker->health > 0 && (blocker->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK || blocker->client->ps.ManualBlockingFlags & 1 << MBF_NPCBLOCKING))
 			{
 				wp_saber_block_non_random_missile(blocker, incoming->r.currentOrigin, qtrue);
 			}
 			else
 			{
 				vec3_t diff, start, end;
-				float scale;
 				VectorSubtract(incoming->r.currentOrigin, self->r.currentOrigin, diff);
-				scale = VectorLength(diff);
+				float scale = VectorLength(diff);
 				VectorNormalize2(incoming->s.pos.trDelta, ent_dir);
 				VectorMA(incoming->r.currentOrigin, scale, ent_dir, start);
 				VectorCopy(self->r.currentOrigin, end);
 				end[2] += self->maxs[2] * 0.75f;
-				trap->Trace(&trace, start, incoming->mins, incoming->maxs, end, incoming->s.number, MASK_SHOT, qfalse,
-					0, 0);
+				trap->Trace(&trace, start, incoming->mins, incoming->maxs, end, incoming->s.number, MASK_SHOT, qfalse, 0, 0);
 
 				jedi_dodge_evasion(self, incoming->owner, &trace, HL_NONE);
 			}
@@ -8606,7 +8602,7 @@ void DownedSaberThink(gentity_t* saberent)
 		saberent->s.apos.trType = TR_STATIONARY;
 
 		return;
-	}
+		}
 
 	G_RunObject(saberent);
 	saberent->nextthink = level.time;
@@ -8671,8 +8667,8 @@ void DrownedSaberTouch(gentity_t* self, gentity_t* other, trace_t* trace)
 			//make activation noise if we have one.
 			G_Sound(other, CHAN_WEAPON, other->client->saber[0].soundOn);
 		}
+		}
 	}
-}
 
 void saberReactivate(gentity_t* saberent, gentity_t* saber_owner)
 {
@@ -9885,7 +9881,7 @@ void UpdateClientRenderinfo(gentity_t* self, vec3_t render_origin, vec3_t render
 
 		VectorCopy(self->client->ps.origin, ri->eyePoint);
 		ri->eyePoint[2] += self->client->ps.viewheight;
-}
+	}
 }
 
 #define STAFF_KICK_RANGE 16
@@ -11785,7 +11781,7 @@ void wp_saber_position_update(gentity_t* self, usercmd_t* ucmd)
 			self->client->ps.ammo[AMMO_THERMAL]--;
 			G_SetAnim(self, NULL, SETANIM_TORSO, BOTH_MELEE1, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
 		}
-	}
+}
 
 	if (PM_PunchAnim(self->client->ps.torsoAnim))
 	{
@@ -13117,10 +13113,14 @@ qboolean manual_saberblocking(const gentity_t* defender)
 		return qfalse;
 	}
 
-	if (SaberAttacking(defender) && defender->r.svFlags & SVF_BOT)
+	if (SaberAttacking(defender))
 	{
-		//bots just randomly parry to make up for them not intelligently parrying.
-		return qtrue;
+		if (defender->r.svFlags & SVF_BOT)
+		{
+			//bots just randomly parry to make up for them not intelligently parrying.
+			return qtrue;
+		}
+		return qfalse;
 	}
 
 	if (!(defender->client->buttons & BUTTON_BLOCK))

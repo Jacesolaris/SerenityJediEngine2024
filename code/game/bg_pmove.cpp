@@ -10804,14 +10804,31 @@ static void PM_Footsteps()
 							}
 							else
 							{
-								if (holding_block)
+								if (holding_block && pm->ps->sprintFuel > 15) // staff sprint here
 								{
 									//This controls saber movement anims //JaceSolaris
 									PM_SetAnim(pm, SETANIM_BOTH, BOTH_RUN_STAFF, set_anim_flags);
+
+									if (!(pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING))
+									{
+										pm->ps->PlayerEffectFlags |= 1 << PEF_SPRINTING;
+										g_entities[pm->ps->client_num].client->IsSprinting = qtrue;
+										if (pm->ps->sprintFuel < 17) // single sprint here
+										{
+											pm->ps->sprintFuel -= 10;
+										}
+									}
 								}
 								else
 								{
 									PM_SetAnim(pm, SETANIM_BOTH, BOTH_RUN1, set_anim_flags);
+
+									if (pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING || pm->ps->PlayerEffectFlags & 1	<< PEF_WEAPONSPRINTING)
+									{
+										pm->ps->PlayerEffectFlags &= ~(1 << PEF_SPRINTING);
+										pm->ps->PlayerEffectFlags &= ~(1 << PEF_WEAPONSPRINTING);
+										g_entities[pm->ps->client_num].client->IsSprinting = qfalse;
+									}
 								}
 							}
 						}
@@ -10834,14 +10851,31 @@ static void PM_Footsteps()
 							}
 							else
 							{
-								if (holding_block)
+								if (holding_block && pm->ps->sprintFuel > 15) //dual sprint here
 								{
 									//This controls saber movement anims //JaceSolaris
 									PM_SetAnim(pm, SETANIM_BOTH, BOTH_RUN_DUAL, set_anim_flags);
+
+									if (!(pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING))
+									{
+										pm->ps->PlayerEffectFlags |= 1 << PEF_SPRINTING;
+										g_entities[pm->ps->client_num].client->IsSprinting = qtrue;
+										if (pm->ps->sprintFuel < 17) // single sprint here
+										{
+											pm->ps->sprintFuel -= 10;
+										}
+									}
 								}
 								else
 								{
 									PM_SetAnim(pm, SETANIM_BOTH, BOTH_RUN1, set_anim_flags);
+
+									if (pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING || pm->ps->PlayerEffectFlags & 1 << PEF_WEAPONSPRINTING)
+									{
+										pm->ps->PlayerEffectFlags &= ~(1 << PEF_SPRINTING);
+										pm->ps->PlayerEffectFlags &= ~(1 << PEF_WEAPONSPRINTING);
+										g_entities[pm->ps->client_num].client->IsSprinting = qfalse;
+									}
 								}
 							}
 						}
@@ -10889,14 +10923,31 @@ static void PM_Footsteps()
 									}
 									else
 									{
-										if (holding_block)
+										if (holding_block && pm->ps->sprintFuel > 10) // single sprint here
 										{
 											//This controls saber movement anims //JaceSolaris
 											PM_SetAnim(pm, SETANIM_BOTH, BOTH_SPRINT_SABER, set_anim_flags);
+
+											if (!(pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING))
+											{
+												pm->ps->PlayerEffectFlags |= 1 << PEF_SPRINTING;
+												g_entities[pm->ps->client_num].client->IsSprinting = qtrue;
+												if (pm->ps->sprintFuel < 17) // single sprint here
+												{
+													pm->ps->sprintFuel -= 10;
+												}
+											}
 										}
 										else
 										{
 											PM_SetAnim(pm, SETANIM_BOTH, BOTH_RUN1, set_anim_flags);
+
+											if (pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING || pm->ps->PlayerEffectFlags & 1 << PEF_WEAPONSPRINTING)
+											{
+												pm->ps->PlayerEffectFlags &= ~(1 << PEF_SPRINTING);
+												pm->ps->PlayerEffectFlags &= ~(1 << PEF_WEAPONSPRINTING);
+												g_entities[pm->ps->client_num].client->IsSprinting = qfalse;
+											}
 										}
 									}
 								}
@@ -10904,14 +10955,6 @@ static void PM_Footsteps()
 						}
 					}
 					//////////////////////////////// end saber running anims /////////////////////////////////
-
-					if (pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING || pm->ps->PlayerEffectFlags & 1 <<
-						PEF_WEAPONSPRINTING)
-					{
-						pm->ps->PlayerEffectFlags &= ~(1 << PEF_SPRINTING);
-						pm->ps->PlayerEffectFlags &= ~(1 << PEF_WEAPONSPRINTING);
-						g_entities[pm->ps->client_num].client->IsSprinting = qfalse;
-					}
 				} // NON SABER WEAPONS RUNNING
 				else if (pm->ps->weapon == WP_BLASTER_PISTOL || pm->ps->weapon == WP_BRYAR_PISTOL)
 				{
