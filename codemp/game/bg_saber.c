@@ -613,45 +613,6 @@ saber_moveName_t transitionMove[Q_NUM_QUADS][Q_NUM_QUADS] =
 	}
 };
 
-qboolean PM_VelocityForBlockedMove(const playerState_t* ps, vec3_t throw_dir)
-{
-	vec3_t v_forward;
-	vec3_t v_right;
-	vec3_t v_up;
-
-	AngleVectors(ps->viewangles, v_forward, v_right, v_up);
-	switch (ps->saberBlocked)
-	{
-	case BLOCKED_UPPER_RIGHT:
-		VectorScale(v_right, 1, throw_dir);
-		VectorMA(throw_dir, 1, v_up, throw_dir);
-		break;
-	case BLOCKED_UPPER_LEFT:
-		VectorScale(v_right, -1, throw_dir);
-		VectorMA(throw_dir, 1, v_up, throw_dir);
-		break;
-	case BLOCKED_LOWER_RIGHT:
-		VectorScale(v_right, 1, throw_dir);
-		VectorMA(throw_dir, -1, v_up, throw_dir);
-		break;
-	case BLOCKED_LOWER_LEFT:
-		VectorScale(v_right, -1, throw_dir);
-		VectorMA(throw_dir, -1, v_up, throw_dir);
-		break;
-	case BLOCKED_TOP:
-		VectorScale(v_up, 2, throw_dir);
-		break;
-	case BLOCKED_FRONT:
-		VectorScale(v_up, 2, throw_dir);
-		break;
-	default:
-		return qfalse;
-	}
-	VectorMA(throw_dir, 2, v_forward, throw_dir);
-	VectorScale(throw_dir, 250, throw_dir);
-	return qtrue;
-}
-
 saber_moveName_t PM_NPCSaberAttackFromQuad(const int quad)
 {
 	//pick another one

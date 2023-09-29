@@ -56,7 +56,6 @@ extern qboolean PM_InForceGetUp(const playerState_t* ps);
 extern qboolean PM_SaberInParry(int move);
 extern saber_moveName_t PM_KnockawayForParry(int move);
 extern int G_KnockawayForParry(int move);
-extern qboolean PM_VelocityForBlockedMove(const playerState_t* ps, vec3_t throwDir);
 extern qboolean WP_SaberLose(gentity_t* self, vec3_t throw_dir);
 extern cvar_t* g_saberAutoBlocking;
 extern qboolean WP_SabersCheckLock(gentity_t* ent1, gentity_t* ent2);

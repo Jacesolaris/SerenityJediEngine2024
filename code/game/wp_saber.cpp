@@ -142,7 +142,6 @@ extern qboolean PM_SaberInLungeStab(saber_moveName_t saber_move);
 extern qboolean PM_StabDownAnim(int anim);
 extern qboolean PM_LungRollAnim(int anim);
 extern int PM_PowerLevelForSaberAnim(const playerState_t* ps, int saber_num = 0);
-extern qboolean PM_VelocityForBlockedMove(const playerState_t* ps, vec3_t throwDir);
 extern qboolean PM_SaberCanInterruptMove(int move, int anim);
 extern int Jedi_ReCalcParryTime(const gentity_t* self, evasionType_t evasionType);
 extern qboolean jedi_dodge_evasion(gentity_t* self, gentity_t* shooter, trace_t* tr, int hit_loc);

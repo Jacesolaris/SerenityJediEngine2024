@@ -546,42 +546,6 @@ saber_moveName_t transitionMove[Q_NUM_QUADS][Q_NUM_QUADS] =
 	}
 };
 
-qboolean PM_VelocityForBlockedMove(const playerState_t* ps, vec3_t throwDir)
-{
-	vec3_t v_forward, v_right, v_up;
-	AngleVectors(ps->viewangles, v_forward, v_right, v_up);
-	switch (ps->saberBlocked)
-	{
-	case BLOCKED_UPPER_RIGHT:
-		VectorScale(v_right, 1, throwDir);
-		VectorMA(throwDir, 1, v_up, throwDir);
-		break;
-	case BLOCKED_UPPER_LEFT:
-		VectorScale(v_right, -1, throwDir);
-		VectorMA(throwDir, 1, v_up, throwDir);
-		break;
-	case BLOCKED_LOWER_RIGHT:
-		VectorScale(v_right, 1, throwDir);
-		VectorMA(throwDir, -1, v_up, throwDir);
-		break;
-	case BLOCKED_LOWER_LEFT:
-		VectorScale(v_right, -1, throwDir);
-		VectorMA(throwDir, -1, v_up, throwDir);
-		break;
-	case BLOCKED_TOP:
-		VectorScale(v_up, 2, throwDir);
-		break;
-	case BLOCKED_FRONT:
-		VectorScale(v_up, 2, throwDir);
-		break;
-	default:
-		return qfalse;
-	}
-	VectorMA(throwDir, 2, v_forward, throwDir);
-	VectorScale(throwDir, 250, throwDir); //FIXME: pass in the throw strength?
-	return qtrue;
-}
-
 int PM_AnimLevelForSaberAnim(const int anim)
 {
 	if (anim >= BOTH_A1_T__B_ && anim <= BOTH_D1_B____)
