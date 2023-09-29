@@ -106,6 +106,7 @@ struct weaponinfo_s;
 #define ACTION_KICK     		0x0800000
 #define ACTION_BLOCK     		0x10000000
 #define ACTION_GLOAT     		0x20000000
+#define ACTION_FLOURISH   		0x80000000
 
 //the bot input, will be converted to a usercmd_t
 typedef struct bot_input_s

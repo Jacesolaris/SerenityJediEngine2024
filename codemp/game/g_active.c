@@ -2802,18 +2802,16 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 					case SS_MEDIUM:
 						if (saber1 && saber1->type == SABER_OBIWAN) //saber kylo
 						{
-							NPC_SetAnim(ent, SETANIM_TORSO, BOTH_SHOWOFF_OBI,
-								SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+							NPC_SetAnim(ent, SETANIM_TORSO, BOTH_SHOWOFF_OBI,SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 						}
 						else
 						{
-							NPC_SetAnim(ent, SETANIM_TORSO, BOTH_ENGAGETAUNT,
-								SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+							NPC_SetAnim(ent, SETANIM_TORSO, BOTH_ENGAGETAUNT,SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 						}
 						break;
 					case SS_STRONG:
 					case SS_DESANN:
-						if (saber1 && saber1->type == SABER_VADER) //saber kylo
+						if (saber1 && saber1->type == SABER_VADER || ent->client->pers.botclass == BCLASS_LORDVADER) //saber kylo
 						{
 							NPC_SetAnim(ent, SETANIM_TORSO, BOTH_VADERTAUNT, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 						}
@@ -2891,7 +2889,7 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 						break;
 					case SS_STRONG:
 					case SS_DESANN:
-						if (saber1 && saber1->type == SABER_VADER) //saber kylo
+						if (saber1 && saber1->type == SABER_VADER || ent->client->pers.botclass == BCLASS_LORDVADER) //saber kylo
 						{
 							NPC_SetAnim(ent, SETANIM_TORSO, BOTH_VADERTAUNT, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 						}
@@ -3159,13 +3157,11 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 					case SS_MEDIUM:
 						if (saber1 && saber1->type == SABER_OBIWAN) //saber kylo
 						{
-							NPC_SetAnim(ent, SETANIM_TORSO, BOTH_SHOWOFF_OBI,
-								SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+							NPC_SetAnim(ent, SETANIM_TORSO, BOTH_SHOWOFF_OBI,SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 						}
 						else
 						{
-							NPC_SetAnim(ent, SETANIM_TORSO, BOTH_SHOWOFF_MEDIUM,
-								SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+							NPC_SetAnim(ent, SETANIM_TORSO, BOTH_SHOWOFF_MEDIUM,SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 						}
 						break;
 					case SS_STRONG:
@@ -3192,13 +3188,11 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 					case SS_MEDIUM:
 						if (saber1 && saber1->type == SABER_OBIWAN) //saber kylo
 						{
-							NPC_SetAnim(ent, SETANIM_TORSO, BOTH_SHOWOFF_OBI,
-								SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+							NPC_SetAnim(ent, SETANIM_TORSO, BOTH_SHOWOFF_OBI,SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 						}
 						else
 						{
-							NPC_SetAnim(ent, SETANIM_TORSO, BOTH_SHOWOFF_MEDIUM,
-								SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+							NPC_SetAnim(ent, SETANIM_TORSO, BOTH_SHOWOFF_MEDIUM,SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 						}
 						break;
 					case SS_STRONG:
@@ -3548,7 +3542,7 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 					break;
 				case SS_STRONG:
 				case SS_DESANN:
-					if (saber1 && saber1->type == SABER_VADER) //saber kylo
+					if (saber1 && saber1->type == SABER_VADER || ent->client->pers.botclass == BCLASS_LORDVADER) //saber kylo
 					{
 						NPC_SetAnim(ent, SETANIM_TORSO, BOTH_VADERTAUNT, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 					}
@@ -3626,7 +3620,7 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 					break;
 				case SS_STRONG:
 				case SS_DESANN:
-					if (saber1 && saber1->type == SABER_VADER) //saber kylo
+					if (saber1 && saber1->type == SABER_VADER || ent->client->pers.botclass == BCLASS_LORDVADER) //saber kylo
 					{
 						NPC_SetAnim(ent, SETANIM_TORSO, BOTH_VADERTAUNT, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 					}

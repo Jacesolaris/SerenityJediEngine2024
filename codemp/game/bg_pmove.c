@@ -14273,6 +14273,11 @@ static void PM_BotGesture(void)
 		return;
 	}
 
+	if (PM_SaberInAttack(pm->ps->saber_move) || pm->ps->saberLockTime >= pm->cmd.serverTime)
+	{
+		return;
+	}
+
 	if (!pm->ps->m_iVehicleNum)
 	{
 		if (pm->cmd.buttons & BUTTON_GESTURE)
@@ -15794,11 +15799,6 @@ void BG_AdjustClientSpeed(playerState_t* ps, const usercmd_t* cmd, const int svT
 		//move slower when low on health
 		ps->speed *= 0.90f;
 	}
-	//else if (PM_MeleeblockAnim(ps->torsoAnim) || PM_MeleeblockHoldAnim(ps->torsoAnim))
-	//{
-	//	//move slower when low on health
-	//	ps->speed *= 0.60f;
-	//}
 	else if (BG_SprintAnim(pm->ps->legsAnim))
 	{
 		if (pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING)

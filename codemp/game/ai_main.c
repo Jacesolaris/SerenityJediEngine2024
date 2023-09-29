@@ -47,10 +47,10 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 //bot states
 bot_state_t* botstates[MAX_CLIENTS];
-int walktime[MAX_CLIENTS]; //timer for walking
-int blocktime[MAX_CLIENTS]; //timer for blocking
-int gesturetime[MAX_CLIENTS]; //timer for taunting
-int nexttaunt[MAX_CLIENTS];
+int walktime[MAX_CLIENTS];
+int next_kick[MAX_CLIENTS];
+int next_gloat[MAX_CLIENTS];
+int next_flourish[MAX_CLIENTS];
 #define	APEX_HEIGHT		200.0f
 //data stuff
 qboolean bot_will_fall[MAX_CLIENTS];
@@ -1208,6 +1208,7 @@ void bot_input_to_user_command(bot_input_t* bi, usercmd_t* ucmd, int delta_angle
 	if (bi->actionflags & ACTION_USE) ucmd->buttons |= BUTTON_BOTUSE;
 	if (bi->actionflags & ACTION_BLOCK) ucmd->buttons |= BUTTON_BLOCK;
 	if (bi->actionflags & ACTION_GLOAT) ucmd->buttons |= BUTTON_GLOAT;
+	if (bi->actionflags & ACTION_FLOURISH) ucmd->buttons |= BUTTON_FLOURISH;
 
 	if (use_time < level.time && Q_irand(1, 10) < 5)
 	{
@@ -1313,6 +1314,7 @@ void bot_update_input(bot_state_t* bs, const int time, const int elapsed_time)
 {
 	bot_input_t bi;
 	int j;
+	const int saber_range = SABER_ATTACK_RANGE;
 
 	//add the delta angles to the bot's current view angles
 	for (j = 0; j < 3; j++)
@@ -1366,7 +1368,7 @@ void bot_update_input(bot_state_t* bs, const int time, const int elapsed_time)
 		}
 	}
 
-	if (gesturetime[bs->cur_ps.client_num] <= level.time && bot_thinklevel.integer >= 0)
+	if (next_kick[bs->cur_ps.client_num] <= level.time && bot_thinklevel.integer >= 0)
 	{
 		if (bs->currentEnemy
 			&& bs->currentEnemy->client
@@ -1375,45 +1377,34 @@ void bot_update_input(bot_state_t* bs, const int time, const int elapsed_time)
 			&& !bs->doAttack
 			&& !bs->doAltAttack
 			&& bs->currentEnemy->client->ps.groundEntityNum != ENTITYNUM_NONE
-			&& VectorDistance(g_entities[bs->cur_ps.client_num].r.currentOrigin,
-				bs->currentEnemy->r.currentOrigin) < 300
-			|| gesturetime[bs->cur_ps.client_num] > level.time)
+			&& VectorDistance(g_entities[bs->cur_ps.client_num].r.currentOrigin, bs->currentEnemy->r.currentOrigin) < saber_range
+			|| next_kick[bs->cur_ps.client_num] > level.time)
 		{
-			if (visible(&g_entities[bs->cur_ps.client_num], bs->currentEnemy) || gesturetime[bs->cur_ps.client_num] >
-				level.time)
+			if (visible(&g_entities[bs->cur_ps.client_num], bs->currentEnemy) || next_kick[bs->cur_ps.client_num] > level.time)
 			{
-				const int saber_range = SABER_ATTACK_RANGE;
-
-				if (bs->frame_Enemy_Len <= saber_range)
-				{
-					bi.actionflags |= ACTION_KICK;
-				}
-				else
-				{
-					bi.actionflags |= ACTION_GESTURE;
-				}
+				bi.actionflags |= ACTION_KICK;
 
 				int check_val = bot_thinklevel.integer;
 
 				if (check_val <= 0)
 					check_val = 1;
 
-				gesturetime[bs->cur_ps.client_num] = level.time + 40000 / check_val;
+				next_kick[bs->cur_ps.client_num] = level.time + 20000 / check_val;
 			}
 			else
 			{
 				// Reset.
-				gesturetime[bs->cur_ps.client_num] = 0;
+				next_kick[bs->cur_ps.client_num] = 0;
 			}
 		}
 		else
 		{
 			// Reset.
-			gesturetime[bs->cur_ps.client_num] = 0;
+			next_kick[bs->cur_ps.client_num] = 0;
 		}
 	}
 
-	if (nexttaunt[bs->cur_ps.client_num] <= level.time && bot_thinklevel.integer >= 0)
+	if (next_gloat[bs->cur_ps.client_num] <= level.time && bot_thinklevel.integer >= 0)
 	{
 		if (bs->currentEnemy
 			&& bs->currentEnemy->client
@@ -1424,10 +1415,9 @@ void bot_update_input(bot_state_t* bs, const int time, const int elapsed_time)
 			&& bs->currentEnemy->client->ps.groundEntityNum != ENTITYNUM_NONE
 			&& VectorDistance(g_entities[bs->cur_ps.client_num].r.currentOrigin,
 				bs->currentEnemy->r.currentOrigin) < 300
-			|| nexttaunt[bs->cur_ps.client_num] > level.time)
+			|| next_gloat[bs->cur_ps.client_num] > level.time)
 		{
-			if (visible(&g_entities[bs->cur_ps.client_num], bs->currentEnemy) || nexttaunt[bs->cur_ps.client_num] >
-				level.time)
+			if (visible(&g_entities[bs->cur_ps.client_num], bs->currentEnemy) || next_gloat[bs->cur_ps.client_num] > level.time)
 			{
 				bi.actionflags |= ACTION_GLOAT;
 
@@ -1436,18 +1426,55 @@ void bot_update_input(bot_state_t* bs, const int time, const int elapsed_time)
 				if (check_val <= 0)
 					check_val = 1;
 
-				nexttaunt[bs->cur_ps.client_num] = level.time + 20000 / check_val;
+				next_gloat[bs->cur_ps.client_num] = level.time + 30000 / check_val;
 			}
 			else
 			{
 				// Reset.
-				nexttaunt[bs->cur_ps.client_num] = 0;
+				next_gloat[bs->cur_ps.client_num] = 0;
 			}
 		}
 		else
 		{
 			// Reset.
-			nexttaunt[bs->cur_ps.client_num] = 0;
+			next_gloat[bs->cur_ps.client_num] = 0;
+		}
+	}
+
+	if (next_flourish[bs->cur_ps.client_num] <= level.time && bot_thinklevel.integer >= 0)
+	{
+		if (bs->currentEnemy
+			&& bs->currentEnemy->client
+			&& bs->currentEnemy->health > 0
+			&& bs->jumpTime <= level.time // Don't gesture during jumping...
+			&& !bs->doAttack
+			&& !bs->doAltAttack
+			&& bs->currentEnemy->client->ps.groundEntityNum != ENTITYNUM_NONE
+			&& VectorDistance(g_entities[bs->cur_ps.client_num].r.currentOrigin,
+				bs->currentEnemy->r.currentOrigin) < 300
+			|| next_flourish[bs->cur_ps.client_num] > level.time)
+		{
+			if (visible(&g_entities[bs->cur_ps.client_num], bs->currentEnemy) || next_flourish[bs->cur_ps.client_num] > level.time)
+			{
+				bi.actionflags |= ACTION_FLOURISH;
+
+				int check_val = bot_thinklevel.integer;
+
+				if (check_val <= 0)
+					check_val = 1;
+
+				next_flourish[bs->cur_ps.client_num] = level.time + 60000 / check_val;
+			}
+			else
+			{
+				// Reset.
+				next_flourish[bs->cur_ps.client_num] = 0;
+			}
+		}
+		else
+		{
+			// Reset.
+			next_flourish[bs->cur_ps.client_num] = 0;
 		}
 	}
 
@@ -5603,7 +5630,6 @@ int scan_for_enemies(bot_state_t* bs)
 {
 	float has_enemy_dist = 0;
 	qboolean no_attack_non_jm = qfalse;
-
 	float closest = 999999;
 	int i = 0;
 	int bestindex = -1;
@@ -5684,12 +5710,8 @@ int scan_for_enemies(bot_state_t* bs)
 				//make us think the Jedi Master is close so we'll attack him above all
 				distcheck = 1;
 			}
-			if (g_entities[bs->client].health < 75)
-			{
-				//I need a doctor!
-				request_siege_assistance(bs, REQUEST_MEDIC);
-			}
-			else if (g_entities[bs->client].health < 30)
+			
+			if (g_entities[bs->client].health < 30)
 			{
 				//Sniper!
 				request_siege_assistance(bs, REQUEST_MEDIC);
@@ -5941,12 +5963,8 @@ void advanced_scanfor_enemies(bot_state_t* bs)
 				//make us think the Jedi Master is close so we'll attack him above all
 				distcheck = 1;
 			}
-			if (g_entities[bs->client].health < 75)
-			{
-				//I need a doctor!
-				request_siege_assistance(bs, REQUEST_MEDIC);
-			}
-			else if (g_entities[bs->client].health < 30)
+			
+			if (g_entities[bs->client].health < 30)
 			{
 				//Sniper!
 				request_siege_assistance(bs, REQUEST_MEDIC);

@@ -7527,20 +7527,9 @@ void wp_saber_start_missile_block_check(gentity_t* self, usercmd_t* ucmd)
 		do_full_routine = qfalse;
 	}
 
-	if (!(self->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK))
+	if (!(self->r.svFlags & SVF_BOT) && !(self->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK))
 	{
-		if (self->r.svFlags & SVF_BOT)
-		{
-			//bots just randomly parry to make up for them not intelligently parrying.
-			if (self->client->ps.weapon == WP_SABER && (BG_SabersOff(&self->client->ps) || self->client->ps.saberInFlight))
-			{
-				return;
-			}
-		}
-		else
-		{
-			return;
-		}
+		return;
 	}
 
 	if (!walk_check(self)

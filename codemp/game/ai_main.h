@@ -464,12 +464,7 @@ typedef struct bot_state_s
 	//debouncer for the saberlock button presses.  So you can boost the bot fps without
 	//problems.
 	int saberLockDebounce;
-
-	int walkTime; //timer for walking
 	int BOTjumpState; //bot jump state
-	//[AotCTCAI]
-
-	//[TABBots]
 	int PathFindDebounce; //debouncer for A* path finding checks.
 
 	//debouncer for the more CPU intensive higher level thinking.  No point in checking to see if

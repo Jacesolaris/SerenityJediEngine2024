@@ -3379,7 +3379,7 @@ void Cmd_SaberAttackCycle_f(gentity_t* ent)
 		//not busy, set it now
 		ent->client->ps.fd.saber_anim_level = select_level;
 
-		if (!(ent->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK)) // lets do a movement when changing styles // need better anims for this
+		if (!(ent->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK) && !PM_SaberInAttack(ent->client->ps.saber_move) && ent->client->ps.saberLockTime < level.time) // lets do a movement when changing styles // need better anims for this
 		{
 			if (select_level == SS_DUAL)
 			{

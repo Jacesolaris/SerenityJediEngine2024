@@ -623,7 +623,7 @@ static cvarTable_t cvarTable[] = {
 	{&cg_gunMomentumInterval, "cg_gunMomentumInterval", "75", CVAR_ARCHIVE},
 
 	{&cg_jumpSounds, "cg_jumpSounds", "1", CVAR_ARCHIVE},
-	{&cg_rollSounds, "cg_rollSounds", "1", CVAR_ARCHIVE},
+	{&cg_rollSounds, "cg_rollSounds", "2", CVAR_ARCHIVE},
 
 	{&cg_missionstatusscreen, "cg_missionstatusscreen", "1", CVAR_ARCHIVE},
 
