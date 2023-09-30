@@ -101,7 +101,7 @@ extern qboolean PM_CanRollFromSoulCal(const playerState_t* ps);
 extern saber_moveName_t PM_SaberBackflipAttackMove();
 extern qboolean PM_CheckBackflipAttackMove();
 extern qboolean PM_SaberInDamageMove(int move);
-extern saber_moveName_t PM_SaberLungeAttackMove(qboolean fallbackToNormalLunge);
+extern saber_moveName_t PM_SaberLungeAttackMove(qboolean fallback_to_normal_lunge);
 extern qboolean PM_InSecondaryStyle();
 extern qboolean PM_KnockDownAnimExtended(int anim);
 extern void G_StartMatrixEffect(const gentity_t* ent, int me_flags = 0, int length = 1000, float time_scale = 0.0f,
@@ -14120,7 +14120,7 @@ saber_moveName_t PM_NPCSaberAttackFromQuad(const int quad)
 	return newmove;
 }
 
-int PM_SaberMoveQuadrantForMovement(const usercmd_t* ucmd)
+int PM_saber_moveQuadrantForMovement(const usercmd_t* ucmd)
 {
 	if (ucmd->rightmove > 0)
 	{
@@ -15298,7 +15298,7 @@ saber_moveName_t G_PickAutoKick(const gentity_t* self, const gentity_t* enemy, c
 					kick_move = LS_KICK_F_AIR;
 					break;
 				case LS_KICK_F2:
-					kick_move = LS_KICK_F_AIR;
+					kick_move = LS_KICK_F_AIR2;
 					break;
 				case LS_KICK_B:
 					kick_move = LS_KICK_B_AIR;
@@ -15506,10 +15506,10 @@ saber_moveName_t g_pick_auto_multi_kick(gentity_t* self, const qboolean allow_si
 
 qboolean PM_PickAutoMultiKick(const qboolean allow_singles)
 {
-	const saber_moveName_t kickMove = g_pick_auto_multi_kick(pm->gent, allow_singles, qfalse);
-	if (kickMove != LS_NONE)
+	const saber_moveName_t kick_move = g_pick_auto_multi_kick(pm->gent, allow_singles, qfalse);
+	if (kick_move != LS_NONE)
 	{
-		PM_Setsaber_move(kickMove);
+		PM_Setsaber_move(kick_move);
 		return qtrue;
 	}
 	return qfalse;
@@ -15595,7 +15595,7 @@ qboolean PM_CheckUpsideDownAttack()
 	return qfalse;
 }
 
-qboolean PM_SaberMoveOkayForKata()
+qboolean PM_saber_moveOkayForKata()
 {
 	if (g_saberNewControlScheme->integer)
 	{
@@ -15624,7 +15624,7 @@ qboolean PM_CanDoKata()
 	}
 
 	if (!pm->ps->saberInFlight //not throwing saber
-		&& PM_SaberMoveOkayForKata()
+		&& PM_saber_moveOkayForKata()
 		&& !PM_SaberInKata(static_cast<saber_moveName_t>(pm->ps->saber_move))
 		&& !PM_InKataAnim(pm->ps->legsAnim)
 		&& !PM_InKataAnim(pm->ps->torsoAnim)
@@ -15833,8 +15833,10 @@ void PM_TryAirKick(const saber_moveName_t kick_move)
 				switch (kick_move)
 				{
 				case LS_KICK_F_AIR:
-				case LS_KICK_F_AIR2:
 					PM_Setsaber_move(LS_KICK_F);
+					break;
+				case LS_KICK_F_AIR2:
+					PM_Setsaber_move(LS_KICK_F2);
 					break;
 				case LS_KICK_B_AIR:
 					PM_Setsaber_move(LS_KICK_B);
@@ -16850,7 +16852,7 @@ qboolean PM_SaberBlocking()
 					else
 					{
 						//player
-						int newQuad = PM_SaberMoveQuadrantForMovement(&pm->cmd);
+						int newQuad = PM_saber_moveQuadrantForMovement(&pm->cmd);
 						while (newQuad == saber_moveData[pm->ps->saber_move].startQuad)
 						{
 							//player is still in same attack quad, don't repeat that attack because it looks bad,

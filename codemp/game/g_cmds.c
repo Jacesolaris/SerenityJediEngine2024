@@ -3395,7 +3395,7 @@ void Cmd_SaberAttackCycle_f(gentity_t* ent)
 			}
 			if (ent->client->ps.saberHolstered)
 			{
-				G_Sound(ent, CHAN_AUTO, G_SoundIndex("sound/weapons/saber/saber_catch.wav"));
+				G_Sound(ent, CHAN_AUTO, G_SoundIndex("sound/weapons/saber/saber_catch.mp3"));
 			}
 			else
 			{

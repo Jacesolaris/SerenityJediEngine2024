@@ -3154,11 +3154,11 @@ void player_die(gentity_t* self, const gentity_t* inflictor, gentity_t* attacker
 
 	if (self->r.svFlags & SVF_BOT)
 	{
-		if (self->client->botclass == BCLASS_BOBAFETT
-			|| self->client->botclass == BCLASS_ROCKETTROOPER
-			|| self->client->botclass == BCLASS_MANDOLORIAN
-			|| self->client->botclass == BCLASS_MANDOLORIAN1
-			|| self->client->botclass == BCLASS_MANDOLORIAN2)
+		if (self->client->pers.botclass == BCLASS_BOBAFETT
+			|| self->client->pers.botclass == BCLASS_ROCKETTROOPER
+			|| self->client->pers.botclass == BCLASS_MANDOLORIAN
+			|| self->client->pers.botclass == BCLASS_MANDOLORIAN1
+			|| self->client->pers.botclass == BCLASS_MANDOLORIAN2)
 		{
 			if (self->client->ps.eFlags2 & EF2_FLYING || self->client->ps.groundEntityNum == ENTITYNUM_NONE)
 			{
@@ -7355,11 +7355,11 @@ void G_Damage(gentity_t* targ, gentity_t* inflictor, gentity_t* attacker, vec3_t
 					Boba_FlyStop(targ);
 				}
 
-				if (client->botclass == BCLASS_BOBAFETT
-					|| client->botclass == BCLASS_ROCKETTROOPER
-					|| client->botclass == BCLASS_MANDOLORIAN
-					|| client->botclass == BCLASS_MANDOLORIAN1
-					|| client->botclass == BCLASS_MANDOLORIAN2)
+				if (client->pers.botclass == BCLASS_BOBAFETT
+					|| client->pers.botclass == BCLASS_ROCKETTROOPER
+					|| client->pers.botclass == BCLASS_MANDOLORIAN
+					|| client->pers.botclass == BCLASS_MANDOLORIAN1
+					|| client->pers.botclass == BCLASS_MANDOLORIAN2)
 				{
 					// DEMP2 also disables npc jetpack
 					Boba_FlyStop(targ);

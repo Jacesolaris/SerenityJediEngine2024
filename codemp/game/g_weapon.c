@@ -839,7 +839,6 @@ DISRUPTOR
 ======================================================================
 */
 extern int WP_SaberBlockCost(gentity_t* defender, const gentity_t* attacker, vec3_t hit_loc);
-extern qboolean G_DoDodge(gentity_t* self, gentity_t* shooter, vec3_t dmg_origin, int hit_loc, int* dmg, int mod);
 //---------------------------------------------------------
 static void WP_DisruptorMainFire(gentity_t* ent)
 //---------------------------------------------------------
@@ -4182,27 +4181,27 @@ void WP_FireMelee(gentity_t* ent, qboolean alt_fire)
 				//do a tad bit more damage on the second swing
 				dmg = MELEE_SWING2_DAMAGE;
 			}
-			if (ent->client->botclass == BCLASS_GRAN)
+			if (ent->client->pers.botclass == BCLASS_GRAN)
 			{
 				//do a tad bit more damage IF WOOKIE CLASS // SERENITY
 				dmg = MELEE_SWING_EXTRA_DAMAGE;
 			}
-			if (ent->client->botclass == BCLASS_CHEWIE)
+			if (ent->client->pers.botclass == BCLASS_CHEWIE)
 			{
 				//do a tad bit more damage IF WOOKIE CLASS // SERENITY
 				dmg = MELEE_SWING_WOOKIE_DAMAGE;
 			}
-			if (ent->client->botclass == BCLASS_WOOKIE)
+			if (ent->client->pers.botclass == BCLASS_WOOKIE)
 			{
 				//do a tad bit more damage IF WOOKIE CLASS // SERENITY
 				dmg = MELEE_SWING_WOOKIE_DAMAGE;
 			}
-			if (ent->client->botclass == BCLASS_WOOKIEMELEE)
+			if (ent->client->pers.botclass == BCLASS_WOOKIEMELEE)
 			{
 				//do a tad bit more damage IF WOOKIE CLASS // SERENITY
 				dmg = MELEE_SWING_WOOKIE_DAMAGE;
 			}
-			if (ent->client->botclass == BCLASS_SBD)
+			if (ent->client->pers.botclass == BCLASS_SBD)
 			{
 				//do a tad bit more damage IF WOOKIE CLASS // SERENITY
 				dmg = MELEE_SWING_EXTRA_DAMAGE;

@@ -728,9 +728,9 @@ qboolean Boba_StopKnockdown(gentity_t* self, const gentity_t* pusher, const vec3
 	vec3_t pDir, fwd, right, ang;
 
 	if (self->client->NPC_class != CLASS_BOBAFETT
-		|| self->client->botclass != BCLASS_BOBAFETT
-		|| self->client->botclass != BCLASS_MANDOLORIAN1
-		|| self->client->botclass != BCLASS_MANDOLORIAN2)
+		|| self->client->pers.botclass != BCLASS_BOBAFETT
+		|| self->client->pers.botclass != BCLASS_MANDOLORIAN1
+		|| self->client->pers.botclass != BCLASS_MANDOLORIAN2)
 	{
 		return qfalse;
 	}

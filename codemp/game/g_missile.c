@@ -1132,7 +1132,7 @@ qboolean G_MissileImpact(gentity_t* ent, trace_t* trace)
 			{
 				//What I'm wondering is why this isn't in the NPC pain funcs. But this is what SP does, so whatever.
 				const class_t npc_class = other->client->NPC_class;
-				const bclass_t bot_class = other->client->botclass;
+				const bclass_t bot_class = other->client->pers.botclass;
 
 				// If we are a robot and we aren't currently doing the full body electricity...
 				if (npc_class == CLASS_SEEKER || npc_class == CLASS_PROBE || npc_class == CLASS_MOUSE ||

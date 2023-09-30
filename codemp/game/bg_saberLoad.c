@@ -67,6 +67,7 @@ stringID_table_t saberTable[] =
 {
 	ENUM2STRING(SABER_NONE),
 	ENUM2STRING(SABER_SINGLE),
+	ENUM2STRING(SABER_SINGLE_CLASSIC),
 	ENUM2STRING(SABER_STAFF),
 	ENUM2STRING(SABER_BROAD),
 	ENUM2STRING(SABER_PRONG),
@@ -473,6 +474,10 @@ saberType_t TranslateSaberType(const char* name)
 	if (!Q_stricmp(name, "SABER_SINGLE"))
 	{
 		return SABER_SINGLE;
+	}
+	if (!Q_stricmp(name, "SABER_SINGLE_CLASSIC"))
+	{
+		return SABER_SINGLE_CLASSIC;
 	}
 	if (!Q_stricmp(name, "SABER_STAFF"))
 	{

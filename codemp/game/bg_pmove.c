@@ -13428,9 +13428,9 @@ void PM_Weapon(void)
 				&& !PM_InKnockDown(pm->ps)) //not already in a kick
 			{
 				//player kicks
-				int kickMove = PM_MeleeMoveForConditions();
+				int kick_move = PM_MeleeMoveForConditions();
 
-				if (kickMove != -1)
+				if (kick_move != -1)
 				{
 					if (pm->ps->groundEntityNum == ENTITYNUM_NONE)
 					{
@@ -13441,56 +13441,56 @@ void PM_Weapon(void)
 							gDist > 64.0f && //strict minimum
 							gDist > -pm->ps->velocity[2] - 64.0f)
 						{
-							switch (kickMove)
+							switch (kick_move)
 							{
 							case LS_KICK_F:
-								kickMove = LS_KICK_F_AIR;
+								kick_move = LS_KICK_F_AIR;
 								break;
 							case LS_KICK_F2:
-								kickMove = LS_KICK_F_AIR;
+								kick_move = LS_KICK_F_AIR2;
 								break;
 							case LS_KICK_B:
-								kickMove = LS_KICK_B_AIR;
+								kick_move = LS_KICK_B_AIR;
 								break;
 							case LS_KICK_B2:
-								kickMove = LS_KICK_B_AIR;
+								kick_move = LS_KICK_B_AIR;
 								break;
 							case LS_KICK_B3:
-								kickMove = LS_KICK_B_AIR;
+								kick_move = LS_KICK_B_AIR;
 								break;
 							case LS_SLAP_R:
-								kickMove = LS_KICK_R_AIR;
+								kick_move = LS_KICK_R_AIR;
 								break;
 							case LS_SMACK_R:
-								kickMove = LS_KICK_R_AIR;
+								kick_move = LS_KICK_R_AIR;
 								break;
 							case LS_KICK_R:
-								kickMove = LS_KICK_R_AIR;
+								kick_move = LS_KICK_R_AIR;
 								break;
 							case LS_SLAP_L:
-								kickMove = LS_KICK_L_AIR;
+								kick_move = LS_KICK_L_AIR;
 								break;
 							case LS_SMACK_L:
-								kickMove = LS_KICK_L_AIR;
+								kick_move = LS_KICK_L_AIR;
 								break;
 							case LS_KICK_L:
-								kickMove = LS_KICK_L_AIR;
+								kick_move = LS_KICK_L_AIR;
 								break;
 							default: //oh well, can't do any other kick move while in-air
-								kickMove = -1;
+								kick_move = -1;
 								break;
 							}
 						}
 						else
 						{
 							//off ground, but too close to ground
-							kickMove = -1;
+							kick_move = -1;
 						}
 					}
 				}
-				if (kickMove != -1)
+				if (kick_move != -1)
 				{
-					int kickAnim = saber_moveData[kickMove].animToUse;
+					int kickAnim = saber_moveData[kick_move].animToUse;
 
 					if (kickAnim != -1)
 					{
@@ -14017,14 +14017,14 @@ void PM_Weapon(void)
 					!BG_InRoll(pm->ps, pm->ps->legsAnim) &&
 					pm->ps->communicatingflags & 1 << KICKING)
 				{
-					int kickMove = PM_CheckKick();
-					if (kickMove == LS_HILT_BASH)
+					int kick_move = PM_CheckKick();
+					if (kick_move == LS_HILT_BASH)
 					{
 						//yeah.. no hilt to bash with!
-						kickMove = LS_KICK_F;
+						kick_move = LS_KICK_F;
 					}
 
-					if (kickMove != -1)
+					if (kick_move != -1)
 					{
 						if (pm->ps->groundEntityNum == ENTITYNUM_NONE)
 						{
@@ -14038,36 +14038,57 @@ void PM_Weapon(void)
 								gDist > -pm->ps->velocity[2] - 64.0f)
 								//make sure we are high to ground relative to downward velocity as well
 							{
-								switch (kickMove)
+								switch (kick_move)
 								{
 								case LS_KICK_F:
-									kickMove = LS_KICK_F_AIR2;
+									kick_move = LS_KICK_F_AIR;
+									break;
+								case LS_KICK_F2:
+									kick_move = LS_KICK_F_AIR2;
 									break;
 								case LS_KICK_B:
-									kickMove = LS_KICK_B_AIR;
+									kick_move = LS_KICK_B_AIR;
+									break;
+								case LS_KICK_B2:
+									kick_move = LS_KICK_B_AIR;
+									break;
+								case LS_KICK_B3:
+									kick_move = LS_KICK_B_AIR;
+									break;
+								case LS_SLAP_R:
+									kick_move = LS_KICK_R_AIR;
+									break;
+								case LS_SMACK_R:
+									kick_move = LS_KICK_R_AIR;
 									break;
 								case LS_KICK_R:
-									kickMove = LS_KICK_R_AIR;
+									kick_move = LS_KICK_R_AIR;
+									break;
+								case LS_SLAP_L:
+									kick_move = LS_KICK_L_AIR;
+									break;
+								case LS_SMACK_L:
+									kick_move = LS_KICK_L_AIR;
 									break;
 								case LS_KICK_L:
-									kickMove = LS_KICK_L_AIR;
+									kick_move = LS_KICK_L_AIR;
 									break;
 								default: //oh well, can't do any other kick move while in-air
-									kickMove = -1;
+									kick_move = -1;
 									break;
 								}
 							}
 							else
 							{
 								//off ground, but too close to ground
-								kickMove = -1;
+								kick_move = -1;
 							}
 						}
 					}
 
-					if (kickMove != -1)
+					if (kick_move != -1)
 					{
-						int kickAnim = saber_moveData[kickMove].animToUse;
+						int kickAnim = saber_moveData[kick_move].animToUse;
 
 						if (kickAnim != -1)
 						{
@@ -14102,15 +14123,15 @@ void PM_Weapon(void)
 					&& !PM_InKnockDown(pm->ps)) //not already in a kick
 				{
 					//player kicks
-					int kickMove = PM_MeleeMoveForConditions();
+					int kick_move = PM_MeleeMoveForConditions();
 
-					if (kickMove == LS_HILT_BASH)
+					if (kick_move == LS_HILT_BASH)
 					{
 						//yeah.. no hilt to bash with!
-						kickMove = LS_KICK_F2;
+						kick_move = LS_KICK_F2;
 					}
 
-					if (kickMove != -1)
+					if (kick_move != -1)
 					{
 						if (pm->ps->groundEntityNum == ENTITYNUM_NONE)
 						{
@@ -14122,57 +14143,57 @@ void PM_Weapon(void)
 								gDist > -pm->ps->velocity[2] - 64.0f)
 								//make sure we are high to ground relative to downward velocity as well
 							{
-								switch (kickMove)
+								switch (kick_move)
 								{
 								case LS_KICK_F:
-									kickMove = LS_KICK_F_AIR;
+									kick_move = LS_KICK_F_AIR;
 									break;
 								case LS_KICK_F2:
-									kickMove = LS_KICK_F_AIR;
+									kick_move = LS_KICK_F_AIR2;
 									break;
 								case LS_KICK_B:
-									kickMove = LS_KICK_B_AIR;
+									kick_move = LS_KICK_B_AIR;
 									break;
 								case LS_KICK_B2:
-									kickMove = LS_KICK_B_AIR;
+									kick_move = LS_KICK_B_AIR;
 									break;
 								case LS_KICK_B3:
-									kickMove = LS_KICK_B_AIR;
+									kick_move = LS_KICK_B_AIR;
 									break;
 								case LS_SLAP_R:
-									kickMove = LS_KICK_R_AIR;
+									kick_move = LS_KICK_R_AIR;
 									break;
 								case LS_SMACK_R:
-									kickMove = LS_KICK_R_AIR;
+									kick_move = LS_KICK_R_AIR;
 									break;
 								case LS_KICK_R:
-									kickMove = LS_KICK_R_AIR;
+									kick_move = LS_KICK_R_AIR;
 									break;
 								case LS_SLAP_L:
-									kickMove = LS_KICK_L_AIR;
+									kick_move = LS_KICK_L_AIR;
 									break;
 								case LS_SMACK_L:
-									kickMove = LS_KICK_L_AIR;
+									kick_move = LS_KICK_L_AIR;
 									break;
 								case LS_KICK_L:
-									kickMove = LS_KICK_L_AIR;
+									kick_move = LS_KICK_L_AIR;
 									break;
 								default: //oh well, can't do any other kick move while in-air
-									kickMove = -1;
+									kick_move = -1;
 									break;
 								}
 							}
 							else
 							{
 								//off ground, but too close to ground
-								kickMove = -1;
+								kick_move = -1;
 							}
 						}
 					}
 
-					if (kickMove != -1)
+					if (kick_move != -1)
 					{
-						int kickAnim = saber_moveData[kickMove].animToUse;
+						int kickAnim = saber_moveData[kick_move].animToUse;
 
 						if (kickAnim != -1)
 						{

@@ -80,7 +80,7 @@ void CorpsePhysics(gentity_t* self)
 		GM_Dying(self);
 	}
 
-	/*if (self->client->botclass == BCLASS_GALAKMECH)
+	/*if (self->client->pers.botclass == BCLASS_GALAKMECH)
 	{
 		GM_Dying(self);
 	}*/
@@ -258,7 +258,7 @@ void NPC_RemoveBody(gentity_t* ent)
 			return;
 		}
 
-		//if (self->client->botclass == BCLASS_GALAKMECH)
+		//if (self->client->pers.botclass == BCLASS_GALAKMECH)
 		//{//never disappears
 		//	return;
 		//}

@@ -1231,7 +1231,7 @@ saber_moveName_t PM_CheckStabDown(void)
 	return LS_NONE;
 }
 
-int PM_SaberMoveQuadrantForMovement(const usercmd_t* ucmd)
+int PM_saber_moveQuadrantForMovement(const usercmd_t* ucmd)
 {
 	if (ucmd->rightmove > 0)
 	{
@@ -1294,7 +1294,7 @@ qboolean PM_SaberInBounce(const int move)
 	return qfalse;
 }
 
-int saberMoveTransitionAngle[Q_NUM_QUADS][Q_NUM_QUADS] =
+int saber_moveTransitionAngle[Q_NUM_QUADS][Q_NUM_QUADS] =
 {
 	{
 		0, //Q_BR,Q_BR,
@@ -1384,7 +1384,7 @@ int PM_SaberAttackChainAngle(const int move1, const int move2)
 	{
 		return -1;
 	}
-	return saberMoveTransitionAngle[saber_moveData[move1].endQuad][saber_moveData[move2].startQuad];
+	return saber_moveTransitionAngle[saber_moveData[move1].endQuad][saber_moveData[move2].startQuad];
 }
 
 qboolean PM_SaberKataDone(const int curmove, const int newmove)
@@ -2531,7 +2531,15 @@ saber_moveName_t PM_SaberLungeAttackMove(const qboolean noSpecials)
 		AngleVectors(fwdAngles, jumpFwd, NULL, NULL);
 		VectorScale(jumpFwd, 150, pm->ps->velocity);
 		PM_AddEvent(EV_JUMP);
-		return LS_PULL_ATTACK_STAB;
+
+		if (pm->ps->fd.forcePower < BLOCKPOINTS_KNOCKAWAY)
+		{
+			return LS_A_LUNGE;
+		}
+		else
+		{
+			return LS_PULL_ATTACK_STAB;
+		}
 	}
 	if (pm->ps->fd.saber_anim_level == SS_DUAL)
 	{
@@ -3564,12 +3572,12 @@ qboolean PM_CheckUpsideDownAttack(void)
 	return qfalse;
 }
 
-void PM_TryAirKick(const saber_moveName_t kickMove)
+void PM_TryAirKick(const saber_moveName_t kick_move)
 {
 	if (pm->ps->groundEntityNum < ENTITYNUM_NONE)
 	{
 		//just do it
-		PM_Setsaber_move(kickMove);
+		PM_Setsaber_move(kick_move);
 	}
 	else
 	{
@@ -3582,7 +3590,7 @@ void PM_TryAirKick(const saber_moveName_t kickMove)
 			gDist > -pm->ps->velocity[2] - 64.0f)
 			//make sure we are high to ground relative to downward velocity as well
 		{
-			PM_Setsaber_move(kickMove);
+			PM_Setsaber_move(kick_move);
 		}
 		else
 		{
@@ -3594,11 +3602,13 @@ void PM_TryAirKick(const saber_moveName_t kickMove)
 			else
 			{
 				//high close enough to ground to do a normal kick, convert it
-				switch (kickMove)
+				switch (kick_move)
 				{
 				case LS_KICK_F_AIR:
-				case LS_KICK_F_AIR2:
 					PM_Setsaber_move(LS_KICK_F);
+					break;
+				case LS_KICK_F_AIR2:
+					PM_Setsaber_move(LS_KICK_F2);
 					break;
 				case LS_KICK_B_AIR:
 					PM_Setsaber_move(LS_KICK_B);
@@ -3722,7 +3732,7 @@ int PM_CheckKick(void)
 
 int PM_MeleeMoveForConditions(void)
 {
-	int kickMove = -1;
+	int kick_move = -1;
 
 	if (!PM_SaberInBounce(pm->ps->saber_move)
 		&& !PM_SaberInKnockaway(pm->ps->saber_move)
@@ -3748,11 +3758,11 @@ int PM_MeleeMoveForConditions(void)
 				{
 					if (pm->ps->weapon == WP_SABER && !BG_SabersOff(pm->ps))
 					{
-						kickMove = LS_SLAP_R;
+						kick_move = LS_SLAP_R;
 					}
 					else
 					{
-						kickMove = LS_KICK_R;
+						kick_move = LS_KICK_R;
 					}
 				}
 			}
@@ -3767,11 +3777,11 @@ int PM_MeleeMoveForConditions(void)
 				{
 					if (pm->ps->weapon == WP_SABER && !BG_SabersOff(pm->ps))
 					{
-						kickMove = LS_SLAP_L;
+						kick_move = LS_SLAP_L;
 					}
 					else
 					{
-						kickMove = LS_KICK_L;
+						kick_move = LS_KICK_L;
 					}
 				}
 			}
@@ -3790,11 +3800,11 @@ int PM_MeleeMoveForConditions(void)
 				else if (pm->ps->groundEntityNum != ENTITYNUM_NONE && pm->ps->weapon == WP_SABER && !
 					BG_SabersOff(pm->ps))
 				{
-					kickMove = LS_KICK_F2;
+					kick_move = LS_KICK_F2;
 				}
 				else
 				{
-					kickMove = LS_KICK_F;
+					kick_move = LS_KICK_F;
 				}
 			}
 			else if (pm->ps->groundEntityNum == ENTITYNUM_NONE || pm->cmd.upmove > 0)
@@ -3806,11 +3816,11 @@ int PM_MeleeMoveForConditions(void)
 				//kick back
 				if (PM_CrouchingAnim(pm->ps->legsAnim))
 				{
-					kickMove = LS_KICK_B3;
+					kick_move = LS_KICK_B3;
 				}
 				else
 				{
-					kickMove = LS_KICK_B2;
+					kick_move = LS_KICK_B2;
 				}
 			}
 			pm->cmd.forwardmove = 0;
@@ -3820,13 +3830,13 @@ int PM_MeleeMoveForConditions(void)
 		}
 	}
 
-	return kickMove;
+	return kick_move;
 }
 
 qboolean PM_InSlopeAnim(int anim);
 qboolean PM_RunningAnim(int anim);
 
-qboolean PM_SaberMoveOkayForKata(void)
+qboolean PM_saber_moveOkayForKata(void)
 {
 	if (pm->ps->saber_move == LS_READY
 		|| PM_SaberInReflect(pm->ps->saber_move)
@@ -3840,7 +3850,7 @@ qboolean PM_SaberMoveOkayForKata(void)
 qboolean PM_CanDoKata(void)
 {
 	if (!pm->ps->saberInFlight //not throwing saber
-		&& PM_SaberMoveOkayForKata()
+		&& PM_saber_moveOkayForKata()
 		&& !PM_SaberInKata(pm->ps->saber_move)
 		&& !PM_InKataAnim(pm->ps->legsAnim)
 		&& !PM_InKataAnim(pm->ps->torsoAnim)
@@ -4689,7 +4699,7 @@ qboolean PM_SaberBlocking(void)
 #endif
 					{
 						//player
-						int newQuad = PM_SaberMoveQuadrantForMovement(&pm->cmd);
+						int newQuad = PM_saber_moveQuadrantForMovement(&pm->cmd);
 
 						while (newQuad == saber_moveData[pm->ps->saber_move].startQuad)
 						{
@@ -5768,7 +5778,7 @@ weapChecks:
 							kick_move = LS_KICK_F_AIR;
 							break;
 						case LS_KICK_F2:
-							kick_move = LS_KICK_F_AIR;
+							kick_move = LS_KICK_F_AIR2;
 							break;
 						case LS_KICK_B:
 							kick_move = LS_KICK_B_AIR;
@@ -7252,13 +7262,34 @@ qboolean PM_DoKick(void)
 				switch (kick_move)
 				{
 				case LS_KICK_F:
+					kick_move = LS_KICK_F_AIR;
+					break;
+				case LS_KICK_F2:
 					kick_move = LS_KICK_F_AIR2;
 					break;
 				case LS_KICK_B:
 					kick_move = LS_KICK_B_AIR;
 					break;
+				case LS_KICK_B2:
+					kick_move = LS_KICK_B_AIR;
+					break;
+				case LS_KICK_B3:
+					kick_move = LS_KICK_B_AIR;
+					break;
+				case LS_SLAP_R:
+					kick_move = LS_KICK_R_AIR;
+					break;
+				case LS_SMACK_R:
+					kick_move = LS_KICK_R_AIR;
+					break;
 				case LS_KICK_R:
 					kick_move = LS_KICK_R_AIR;
+					break;
+				case LS_SLAP_L:
+					kick_move = LS_KICK_L_AIR;
+					break;
+				case LS_SMACK_L:
+					kick_move = LS_KICK_L_AIR;
 					break;
 				case LS_KICK_L:
 					kick_move = LS_KICK_L_AIR;
@@ -7292,7 +7323,7 @@ qboolean PM_DoKick(void)
 qboolean PM_DoSlap(void)
 {
 	//perform a kick.
-	int kickMove = -1;
+	int kick_move = -1;
 
 	if (!PM_SaberInBounce(pm->ps->saber_move)
 		&& !PM_SaberInKnockaway(pm->ps->saber_move)
@@ -7305,10 +7336,10 @@ qboolean PM_DoSlap(void)
 		&& pm->ps->communicatingflags & 1 << KICKING) //not already in a kick
 	{
 		//player kicks
-		kickMove = PM_MeleeMoveForConditions();
+		kick_move = PM_MeleeMoveForConditions();
 	}
 
-	if (kickMove != -1)
+	if (kick_move != -1)
 	{
 		if (pm->ps->groundEntityNum == ENTITYNUM_NONE)
 		{
@@ -7320,43 +7351,43 @@ qboolean PM_DoSlap(void)
 				g_dist > -pm->ps->velocity[2] - 64.0f)
 				//make sure we are high to ground relative to downward velocity as well
 			{
-				switch (kickMove)
+				switch (kick_move)
 				{
 				case LS_KICK_F:
-					kickMove = LS_KICK_F_AIR;
+					kick_move = LS_KICK_F_AIR;
 					break;
 				case LS_KICK_F2:
-					kickMove = LS_KICK_F_AIR;
+					kick_move = LS_KICK_F_AIR2;
 					break;
 				case LS_KICK_B:
-					kickMove = LS_KICK_B_AIR;
+					kick_move = LS_KICK_B_AIR;
 					break;
 				case LS_KICK_B2:
-					kickMove = LS_KICK_B_AIR;
+					kick_move = LS_KICK_B_AIR;
 					break;
 				case LS_KICK_B3:
-					kickMove = LS_KICK_B_AIR;
+					kick_move = LS_KICK_B_AIR;
 					break;
 				case LS_SLAP_R:
-					kickMove = LS_KICK_R_AIR;
+					kick_move = LS_KICK_R_AIR;
 					break;
 				case LS_SMACK_R:
-					kickMove = LS_KICK_R_AIR;
+					kick_move = LS_KICK_R_AIR;
 					break;
 				case LS_KICK_R:
-					kickMove = LS_KICK_R_AIR;
+					kick_move = LS_KICK_R_AIR;
 					break;
 				case LS_SLAP_L:
-					kickMove = LS_KICK_L_AIR;
+					kick_move = LS_KICK_L_AIR;
 					break;
 				case LS_SMACK_L:
-					kickMove = LS_KICK_L_AIR;
+					kick_move = LS_KICK_L_AIR;
 					break;
 				case LS_KICK_L:
-					kickMove = LS_KICK_L_AIR;
+					kick_move = LS_KICK_L_AIR;
 					break;
 				default: //oh well, can't do any other kick move while in-air
-					kickMove = -1;
+					kick_move = -1;
 					break;
 				}
 			}
@@ -7366,14 +7397,14 @@ qboolean PM_DoSlap(void)
 				if (g_dist > 128.0f || pm->ps->velocity[2] >= 0)
 				{
 					//off ground, but too close to ground
-					kickMove = -1;
+					kick_move = -1;
 				}
 			}
 		}
 
-		if (kickMove != -1 && BG_EnoughForcePowerForMove(FATIGUE_SABERATTACK))
+		if (kick_move != -1 && BG_EnoughForcePowerForMove(FATIGUE_SABERATTACK))
 		{
-			PM_Setsaber_move(kickMove);
+			PM_Setsaber_move(kick_move);
 			return qtrue;
 		}
 	}

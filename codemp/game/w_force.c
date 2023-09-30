@@ -3228,7 +3228,7 @@ void force_lightning_damage(gentity_t* self, gentity_t* trace_ent, vec3_t dir, c
 					}
 
 					const class_t npc_class = trace_ent->client->NPC_class;
-					const bclass_t botclass = trace_ent->client->botclass;
+					const bclass_t botclass = trace_ent->client->pers.botclass;
 
 					if (trace_ent->health <= 0 || (botclass == BCLASS_SEEKER || botclass == BCLASS_SBD ||
 						botclass == BCLASS_MANDOLORIAN || botclass == BCLASS_MANDOLORIAN1 || botclass ==
@@ -9235,11 +9235,11 @@ qboolean jedi_dodge_evasion(gentity_t* self, const gentity_t* shooter, trace_t* 
 	}
 
 	if (self->r.svFlags & SVF_BOT
-		&& (self->client->botclass == BCLASS_SBD ||
-			self->client->botclass == BCLASS_BATTLEDROID ||
-			self->client->botclass == BCLASS_DROIDEKA ||
-			self->client->botclass == BCLASS_PROTOCOL ||
-			self->client->botclass == BCLASS_JAWA))
+		&& (self->client->pers.botclass == BCLASS_SBD ||
+			self->client->pers.botclass == BCLASS_BATTLEDROID ||
+			self->client->pers.botclass == BCLASS_DROIDEKA ||
+			self->client->pers.botclass == BCLASS_PROTOCOL ||
+			self->client->pers.botclass == BCLASS_JAWA))
 	{
 		// don't get Dodge.
 		return qfalse;
@@ -9325,10 +9325,10 @@ qboolean jedi_dodge_evasion(gentity_t* self, const gentity_t* shooter, trace_t* 
 	}
 
 	if (self->r.svFlags & SVF_BOT
-		&& (self->client->botclass != BCLASS_MANDOLORIAN &&
-			self->client->botclass != BCLASS_MANDOLORIAN1 &&
-			self->client->botclass != BCLASS_MANDOLORIAN2 &&
-			self->client->botclass != BCLASS_BOBAFETT) &&
+		&& (self->client->pers.botclass != BCLASS_MANDOLORIAN &&
+			self->client->pers.botclass != BCLASS_MANDOLORIAN1 &&
+			self->client->pers.botclass != BCLASS_MANDOLORIAN2 &&
+			self->client->pers.botclass != BCLASS_BOBAFETT) &&
 		self->client->ps.fd.forcePower < FATIGUE_DODGEINGBOT)
 	{
 		//must have enough force power
@@ -9341,10 +9341,10 @@ qboolean jedi_dodge_evasion(gentity_t* self, const gentity_t* shooter, trace_t* 
 	}
 
 	if (self->r.svFlags & SVF_BOT
-		&& (self->client->botclass != BCLASS_MANDOLORIAN &&
-			self->client->botclass != BCLASS_MANDOLORIAN1 &&
-			self->client->botclass != BCLASS_MANDOLORIAN2 &&
-			self->client->botclass != BCLASS_BOBAFETT))
+		&& (self->client->pers.botclass != BCLASS_MANDOLORIAN &&
+			self->client->pers.botclass != BCLASS_MANDOLORIAN1 &&
+			self->client->pers.botclass != BCLASS_MANDOLORIAN2 &&
+			self->client->pers.botclass != BCLASS_BOBAFETT))
 	{
 		PM_AddFatigue(&self->client->ps, FATIGUE_DODGEINGBOT);
 	}

@@ -1590,15 +1590,15 @@ void space_touch(gentity_t* self, const gentity_t* other, trace_t* trace)
 			return;
 		}
 	}
-	//if (other->client->botclass == BCLASS_PROBE
-	//	|| other->client->botclass == BCLASS_INTERROGATOR
-	//	|| other->client->botclass == BCLASS_MARK1
-	//	|| other->client->botclass == BCLASS_MARK2
-	//	|| other->client->botclass == BCLASS_SENTRY
-	//	//|| other->client->botclass == BCLASS_ATST
-	//	|| other->client->botclass == BCLASS_SBD
-	//	|| other->client->botclass == BCLASS_BATTLEDROID
-	//	|| other->client->botclass == BCLASS_DROIDEKA)
+	//if (other->client->pers.botclass == BCLASS_PROBE
+	//	|| other->client->pers.botclass == BCLASS_INTERROGATOR
+	//	|| other->client->pers.botclass == BCLASS_MARK1
+	//	|| other->client->pers.botclass == BCLASS_MARK2
+	//	|| other->client->pers.botclass == BCLASS_SENTRY
+	//	//|| other->client->pers.botclass == BCLASS_ATST
+	//	|| other->client->pers.botclass == BCLASS_SBD
+	//	|| other->client->pers.botclass == BCLASS_BATTLEDROID
+	//	|| other->client->pers.botclass == BCLASS_DROIDEKA)
 	//{
 	//	//if they are droids, then let that protect them from THE HORRORS OF SPACE.
 	//	other->client->inSpaceSuffocation = 0;

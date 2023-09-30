@@ -2076,6 +2076,7 @@ void UI_SaberDrawBlade(itemDef_t* item, const char* saberName, int saberModel, s
 		switch (saberType)
 		{
 		case SABER_SINGLE:
+		case SABER_SINGLE_CLASSIC:
 		case SABER_UNSTABLE:
 		case SABER_THIN:
 		case SABER_SFX:

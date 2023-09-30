@@ -4217,11 +4217,11 @@ int wp_player_must_dodge(const gentity_t* self, const gentity_t* shooter)
 	}
 
 	if (self->r.svFlags & SVF_BOT
-		&& (self->client->botclass == BCLASS_SBD ||
-			self->client->botclass == BCLASS_BATTLEDROID ||
-			self->client->botclass == BCLASS_DROIDEKA ||
-			self->client->botclass == BCLASS_PROTOCOL ||
-			self->client->botclass == BCLASS_JAWA))
+		&& (self->client->pers.botclass == BCLASS_SBD ||
+			self->client->pers.botclass == BCLASS_BATTLEDROID ||
+			self->client->pers.botclass == BCLASS_DROIDEKA ||
+			self->client->pers.botclass == BCLASS_PROTOCOL ||
+			self->client->pers.botclass == BCLASS_JAWA))
 	{
 		// don't get Dodge.
 		return qfalse;
@@ -5073,6 +5073,49 @@ void WP_SaberBounceSound(gentity_t* ent, const int saber_num, const int blade_nu
 	}
 }
 
+void WP_SaberBounceOnWallSound(gentity_t* ent, const int saber_num, const int blade_num)
+{
+	if (!ent || !ent->client)
+	{
+		return;
+	}
+	const int index = Q_irand(1, 90);
+	const int classicindex = Q_irand(1, 30);
+
+	if (!WP_SaberBladeUseSecondBladeStyle(&ent->client->saber[saber_num], blade_num)
+		&& ent->client->saber[saber_num].bounceSound[0])
+	{
+		G_Sound(ent, CHAN_AUTO, ent->client->saber[saber_num].bounceSound[Q_irand(0, 2)]);
+	}
+	else if (WP_SaberBladeUseSecondBladeStyle(&ent->client->saber[saber_num], blade_num)
+		&& ent->client->saber[saber_num].bounce2Sound[0])
+	{
+		G_Sound(ent, CHAN_AUTO, ent->client->saber[saber_num].bounce2Sound[Q_irand(0, 2)]);
+	}
+
+	else if (!WP_SaberBladeUseSecondBladeStyle(&ent->client->saber[saber_num], blade_num)
+		&& ent->client->saber[saber_num].blockSound[0])
+	{
+		G_Sound(ent, CHAN_AUTO, ent->client->saber[saber_num].blockSound[Q_irand(0, 2)]);
+	}
+	else if (WP_SaberBladeUseSecondBladeStyle(&ent->client->saber[saber_num], blade_num)
+		&& ent->client->saber[saber_num].block2Sound[0])
+	{
+		G_Sound(ent, CHAN_AUTO, ent->client->saber[saber_num].block2Sound[Q_irand(0, 2)]);
+	}
+	else
+	{
+		if (ent->client->saber[saber_num].type == SABER_SINGLE_CLASSIC)
+		{
+			G_Sound(ent, CHAN_AUTO, G_SoundIndex(va("sound/weapons/saber/classicblock%d.mp3", classicindex)));
+		}
+		else
+		{
+			G_Sound(ent, CHAN_AUTO, G_SoundIndex(va("sound/weapons/saber/saberblock%d.mp3", index)));
+		}
+	}
+}
+
 static QINLINE void G_SetViewLockDebounce(const gentity_t* self)
 {
 	if (!walk_check(self))
@@ -5643,10 +5686,10 @@ qboolean G_DoDodge(gentity_t* self, gentity_t* shooter, vec3_t dmg_origin, int h
 
 	if (self->r.svFlags & SVF_BOT
 		&& (self->client->ps.weapon != WP_SABER &&
-			self->client->botclass != BCLASS_MANDOLORIAN &&
-			self->client->botclass != BCLASS_MANDOLORIAN1 &&
-			self->client->botclass != BCLASS_MANDOLORIAN2 &&
-			self->client->botclass != BCLASS_BOBAFETT)
+			self->client->pers.botclass != BCLASS_MANDOLORIAN &&
+			self->client->pers.botclass != BCLASS_MANDOLORIAN1 &&
+			self->client->pers.botclass != BCLASS_MANDOLORIAN2 &&
+			self->client->pers.botclass != BCLASS_BOBAFETT)
 		|| self->client->ps.fd.forcePower < FATIGUE_DODGEINGBOT)
 		// if your not a mando or jedi or low FP then you cant dodge
 	{
@@ -6254,19 +6297,19 @@ qboolean G_DoSaberDodge(gentity_t* dodger, gentity_t* attacker, vec3_t dmg_origi
 
 	if ((dodger->r.svFlags & SVF_BOT
 		&& dodger->client->ps.weapon != WP_SABER
-		&& dodger->client->botclass != BCLASS_MANDOLORIAN
-		&& dodger->client->botclass != BCLASS_MANDOLORIAN1
-		&& dodger->client->botclass != BCLASS_MANDOLORIAN2
-		&& dodger->client->botclass != BCLASS_BOBAFETT))// if your not a mando or jedi then you cant dodge
+		&& dodger->client->pers.botclass != BCLASS_MANDOLORIAN
+		&& dodger->client->pers.botclass != BCLASS_MANDOLORIAN1
+		&& dodger->client->pers.botclass != BCLASS_MANDOLORIAN2
+		&& dodger->client->pers.botclass != BCLASS_BOBAFETT))// if your not a mando or jedi then you cant dodge
 	{
 		return qfalse;
 	}
 
 	if (dodger->r.svFlags & SVF_BOT
-		&& dodger->client->botclass == BCLASS_MANDOLORIAN
-		&& dodger->client->botclass == BCLASS_MANDOLORIAN1
-		&& dodger->client->botclass == BCLASS_MANDOLORIAN2
-		&& dodger->client->botclass == BCLASS_BOBAFETT && dodger->client->ps.fd.forcePower <= FATIGUE_DODGEINGBOT)// if your a mando low FP then you cant dodge
+		&& dodger->client->pers.botclass == BCLASS_MANDOLORIAN
+		&& dodger->client->pers.botclass == BCLASS_MANDOLORIAN1
+		&& dodger->client->pers.botclass == BCLASS_MANDOLORIAN2
+		&& dodger->client->pers.botclass == BCLASS_BOBAFETT && dodger->client->ps.fd.forcePower <= FATIGUE_DODGEINGBOT)// if your a mando low FP then you cant dodge
 	{
 		return qfalse;
 	}
@@ -7390,7 +7433,7 @@ static QINLINE qboolean check_saber_damage(gentity_t* self, const int r_saber_nu
 						LS_A_JUMP_PALP_)) //or in the strong jump-fwd-attack "death from above" move
 				{
 					//do bounce sound & force feedback
-					WP_SaberBounceSound(self, r_saber_num, r_blade_num);
+					WP_SaberBounceOnWallSound(self, r_saber_num, r_blade_num);
 					self->client->ps.saberBlocked = BLOCKED_ATK_BOUNCE;
 					self->client->ps.saberBounceMove = LS_D1_BR + (saber_moveData[self->client->ps.saber_move].startQuad -
 						Q_BR);
@@ -7757,9 +7800,9 @@ void wp_saber_start_missile_block_check(gentity_t* self, usercmd_t* ucmd)
 						(dot1 = DotProduct(dir, forward)) < SABER_REFLECT_MISSILE_CONE))
 				{
 					//TD is close enough to hurt me, I'm on the ground and the thing is at rest or behind me and about to blow up, or I don't have force-push so force-jump!
-					if (self->client->botclass == BCLASS_BOBAFETT
-						|| self->client->botclass == BCLASS_MANDOLORIAN1
-						|| self->client->botclass == BCLASS_MANDOLORIAN2)
+					if (self->client->pers.botclass == BCLASS_BOBAFETT
+						|| self->client->pers.botclass == BCLASS_MANDOLORIAN1
+						|| self->client->pers.botclass == BCLASS_MANDOLORIAN2)
 					{
 						//jump out of the way
 						self->client->ps.fd.forceJumpCharge = 480;
@@ -7767,9 +7810,9 @@ void wp_saber_start_missile_block_check(gentity_t* self, usercmd_t* ucmd)
 					}
 				}
 				else if (self->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK
-					&& self->client->botclass != BCLASS_BOBAFETT
-					&& self->client->botclass != BCLASS_MANDOLORIAN1
-					&& self->client->botclass != BCLASS_MANDOLORIAN2)
+					&& self->client->pers.botclass != BCLASS_BOBAFETT
+					&& self->client->pers.botclass != BCLASS_MANDOLORIAN1
+					&& self->client->pers.botclass != BCLASS_MANDOLORIAN2)
 				{
 					ForceThrow(self, qfalse);
 					PM_AddFatigue(&self->client->ps, FORCE_DEFLECT_PUSH);
@@ -7798,9 +7841,9 @@ void wp_saber_start_missile_block_check(gentity_t* self, usercmd_t* ucmd)
 						vec3_t throw_dir;
 						//make the gesture
 						if (self->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK
-							&& self->client->botclass != BCLASS_BOBAFETT
-							&& self->client->botclass != BCLASS_MANDOLORIAN1
-							&& self->client->botclass != BCLASS_MANDOLORIAN2)
+							&& self->client->pers.botclass != BCLASS_BOBAFETT
+							&& self->client->pers.botclass != BCLASS_MANDOLORIAN1
+							&& self->client->pers.botclass != BCLASS_MANDOLORIAN2)
 						{
 							ForceThrow(self, qfalse);
 							PM_AddFatigue(&self->client->ps, FORCE_DEFLECT_PUSH);
@@ -7831,9 +7874,9 @@ void wp_saber_start_missile_block_check(gentity_t* self, usercmd_t* ucmd)
 				&& DotProduct(dir, forward) < SABER_REFLECT_MISSILE_CONE)
 			{
 				//try to evade it
-				if (self->client->botclass == BCLASS_BOBAFETT
-					|| self->client->botclass == BCLASS_MANDOLORIAN1
-					|| self->client->botclass == BCLASS_MANDOLORIAN2)
+				if (self->client->pers.botclass == BCLASS_BOBAFETT
+					|| self->client->pers.botclass == BCLASS_MANDOLORIAN1
+					|| self->client->pers.botclass == BCLASS_MANDOLORIAN2)
 				{
 					//jump out of the way
 					self->client->ps.fd.forceJumpCharge = 480;
@@ -7841,9 +7884,9 @@ void wp_saber_start_missile_block_check(gentity_t* self, usercmd_t* ucmd)
 				}
 			}
 			else if (self->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK
-				&& self->client->botclass != BCLASS_BOBAFETT
-				&& self->client->botclass != BCLASS_MANDOLORIAN1
-				&& self->client->botclass != BCLASS_MANDOLORIAN2)
+				&& self->client->pers.botclass != BCLASS_BOBAFETT
+				&& self->client->pers.botclass != BCLASS_MANDOLORIAN1
+				&& self->client->pers.botclass != BCLASS_MANDOLORIAN2)
 			{
 				if (!self->s.number && self->client->ps.fd.forcePowerLevel[FP_PUSH] == 1 && dist >= 192)
 				{
@@ -8630,7 +8673,7 @@ void DrownedSaberTouch(gentity_t* self, gentity_t* other, trace_t* trace)
 
 		self->r.contents = CONTENTS_LIGHTSABER;
 
-		G_Sound(self, CHAN_AUTO, G_SoundIndex("sound/weapons/saber/saber_catch.wav"));
+		G_Sound(self, CHAN_AUTO, G_SoundIndex("sound/weapons/saber/saber_catch.mp3"));
 
 		other->client->ps.saberInFlight = qfalse;
 		other->client->ps.saberEntityState = 0;
@@ -9339,7 +9382,7 @@ void saberBackToOwner(gentity_t* saberent)
 
 		if (owner_len <= 32)
 		{
-			G_Sound(saberent, CHAN_AUTO, G_SoundIndex("sound/weapons/saber/saber_catch.wav"));
+			G_Sound(saberent, CHAN_AUTO, G_SoundIndex("sound/weapons/saber/saber_catch.mp3"));
 
 			saber_owner->client->ps.saberInFlight = qfalse;
 			saber_owner->client->ps.saberEntityState = 0;
@@ -10554,27 +10597,27 @@ static void G_PunchSomeMofos(gentity_t* ent)
 					//do a tad bit more damage on the second swing
 					dmg = MELEE_SWING2_DAMAGE;
 				}
-				if (ent->client->botclass == BCLASS_GRAN)
+				if (ent->client->pers.botclass == BCLASS_GRAN)
 				{
 					//do a tad bit more damage IF WOOKIE CLASS // SERENITY
 					dmg = MELEE_SWING_EXTRA_DAMAGE;
 				}
-				if (ent->client->botclass == BCLASS_CHEWIE)
+				if (ent->client->pers.botclass == BCLASS_CHEWIE)
 				{
 					//do a tad bit more damage IF WOOKIE CLASS // SERENITY
 					dmg = MELEE_SWING_WOOKIE_DAMAGE;
 				}
-				if (ent->client->botclass == BCLASS_WOOKIE)
+				if (ent->client->pers.botclass == BCLASS_WOOKIE)
 				{
 					//do a tad bit more damage IF WOOKIE CLASS // SERENITY
 					dmg = MELEE_SWING_WOOKIE_DAMAGE;
 				}
-				if (ent->client->botclass == BCLASS_WOOKIEMELEE)
+				if (ent->client->pers.botclass == BCLASS_WOOKIEMELEE)
 				{
 					//do a tad bit more damage IF WOOKIE CLASS // SERENITY
 					dmg = MELEE_SWING_WOOKIE_DAMAGE;
 				}
-				if (ent->client->botclass == BCLASS_SBD)
+				if (ent->client->pers.botclass == BCLASS_SBD)
 				{
 					//do a tad bit more damage IF WOOKIE CLASS // SERENITY
 					dmg = MELEE_SWING_EXTRA_DAMAGE;
@@ -13230,8 +13273,8 @@ qboolean manual_meleeblocking(const gentity_t* defender) //Is this guy blocking 
 
 qboolean manual_melee_dodging(const gentity_t* defender) //Is this guy dodgeing or not?
 {
-	if (defender->client->NPC_class == BCLASS_BOBAFETT || defender->client->botclass == BCLASS_MANDOLORIAN || defender->
-		client->botclass == BCLASS_MANDOLORIAN1 || defender->client->botclass == BCLASS_MANDOLORIAN2)
+	if (defender->client->NPC_class == BCLASS_BOBAFETT || defender->client->pers.botclass == BCLASS_MANDOLORIAN || defender->
+		client->pers.botclass == BCLASS_MANDOLORIAN1 || defender->client->pers.botclass == BCLASS_MANDOLORIAN2)
 	{
 		return qfalse;
 	}
@@ -15243,7 +15286,7 @@ saber_moveName_t G_PickAutoKick(gentity_t* self, const gentity_t* enemy)
 					kick_move = LS_KICK_F_AIR;
 					break;
 				case LS_KICK_F2:
-					kick_move = LS_KICK_F_AIR;
+					kick_move = LS_KICK_F_AIR2;
 					break;
 				case LS_KICK_B:
 					kick_move = LS_KICK_B_AIR;
@@ -15290,7 +15333,7 @@ saber_moveName_t G_PickAutoKick(gentity_t* self, const gentity_t* enemy)
 	}
 	if (kick_move != LS_NONE)
 	{
-		//we have a kickmove, do it!
+		//we have a kick_move, do it!
 		const int kick_anim = saber_moveData[kick_move].animToUse;
 		if (kick_anim != -1)
 		{

@@ -109,7 +109,7 @@ qboolean PM_SuperBreakLoseAnim(int anim);
 qboolean PM_LockedAnim(int anim);
 saber_moveName_t PM_SaberFlipOverAttackMove();
 qboolean PM_CheckFlipOverAttackMove(qboolean checkEnemy);
-saber_moveName_t PM_SaberLungeAttackMove(qboolean fallbackToNormalLunge);
+saber_moveName_t PM_SaberLungeAttackMove(qboolean fallback_to_normal_lunge);
 qboolean PM_CheckLungeAttackMove();
 extern qboolean PM_SpinningSaberAnim(int anim);
 extern qboolean PM_BounceAnim(int anim);
@@ -2655,7 +2655,7 @@ saber_moveName_t PM_AttackMoveForQuad(const int quad)
 	return LS_NONE;
 }
 
-int saberMoveTransitionAngle[Q_NUM_QUADS][Q_NUM_QUADS] =
+int saber_moveTransitionAngle[Q_NUM_QUADS][Q_NUM_QUADS] =
 {
 	{
 		0, //Q_BR,Q_BR,
@@ -2745,7 +2745,7 @@ int PM_SaberAttackChainAngle(const int move1, const int move2)
 	{
 		return -1;
 	}
-	return saberMoveTransitionAngle[saber_moveData[move1].endQuad][saber_moveData[move2].startQuad];
+	return saber_moveTransitionAngle[saber_moveData[move1].endQuad][saber_moveData[move2].startQuad];
 }
 
 qboolean PM_SaberKataDone(const int curmove = LS_NONE, const int newmove = LS_NONE)
@@ -3307,8 +3307,10 @@ qboolean PM_InSecondaryStyle()
 	return qfalse;
 }
 
-saber_moveName_t PM_SaberLungeAttackMove(const qboolean fallbackToNormalLunge)
+saber_moveName_t PM_SaberLungeAttackMove(const qboolean fallback_to_normal_lunge)
 {
+	vec3_t fwd_angles, jumpFwd;
+
 	WP_ForcePowerDrain(pm->gent, FP_SABER_OFFENSE, SABER_ALT_ATTACK_POWER_FB);
 
 	//see if we have an overridden (or cancelled) lunge move
@@ -3377,12 +3379,24 @@ saber_moveName_t PM_SaberLungeAttackMove(const qboolean fallbackToNormalLunge)
 		return LS_SPINATTACK;
 		break;
 	case SS_TAVION:
-		return LS_PULL_ATTACK_STAB;
-		break;
+		VectorCopy(pm->ps->viewangles, fwd_angles);
+		fwd_angles[PITCH] = fwd_angles[ROLL] = 0;
+		//do the lunge
+		AngleVectors(fwd_angles, jumpFwd, nullptr, nullptr);
+		VectorScale(jumpFwd, 150, pm->ps->velocity);
+		pm->ps->velocity[2] = 50;
+		PM_AddEvent(EV_JUMP);
+
+		if (pm->ps->forcePower < BLOCKPOINTS_KNOCKAWAY)
+		{
+			return LS_A_LUNGE;
+		}
+		else
+		{
+			return LS_PULL_ATTACK_STAB;
+		}
 		break;
 	case SS_FAST:
-		vec3_t fwd_angles, jumpFwd;
-
 		VectorCopy(pm->ps->viewangles, fwd_angles);
 		fwd_angles[PITCH] = fwd_angles[ROLL] = 0;
 		//do the lunge
@@ -3394,10 +3408,8 @@ saber_moveName_t PM_SaberLungeAttackMove(const qboolean fallbackToNormalLunge)
 		break;
 	case SS_STRONG:
 	case SS_DESANN:
-		if (fallbackToNormalLunge)
+		if (fallback_to_normal_lunge)
 		{
-			vec3_t fwd_angles, jumpFwd;
-
 			VectorCopy(pm->ps->viewangles, fwd_angles);
 			fwd_angles[PITCH] = fwd_angles[ROLL] = 0;
 			//do the lunge
@@ -3413,10 +3425,8 @@ saber_moveName_t PM_SaberLungeAttackMove(const qboolean fallbackToNormalLunge)
 		}
 		break;
 	default: //normal lunge
-		if (fallbackToNormalLunge)
+		if (fallback_to_normal_lunge)
 		{
-			vec3_t fwd_angles, jumpFwd;
-
 			VectorCopy(pm->ps->viewangles, fwd_angles);
 			fwd_angles[PITCH] = fwd_angles[ROLL] = 0;
 			//do the lunge
