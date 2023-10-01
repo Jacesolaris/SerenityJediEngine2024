@@ -80,7 +80,7 @@ extern qboolean PM_WalkingAnim(int anim);
 extern qboolean PM_WindAnim(int anim);
 extern qboolean PM_StandingAtReadyAnim(int anim);
 extern vmCvar_t cg_com_outcast;
-extern qboolean PM_SaberInnonblockableAttack(int anim);
+extern qboolean pm_saber_innonblockable_attack(int anim);
 extern qboolean NPC_IsMando(const gentity_t* self);
 extern qboolean NPC_IsOversized(const gentity_t* self);
 extern qboolean BG_SaberInPartialDamageMove(gentity_t* self);
@@ -6193,7 +6193,7 @@ void CG_AddRefEntityWithPowerups(refEntity_t* ent, int powerups, centity_t* cent
 	{
 		if (cg_SaberInnonblockableAttackWarning.integer == 1 || cg_DebugSaberCombat.integer)
 		{
-			if (PM_SaberInnonblockableAttack(cent->currentState.torsoAnim) && !(cent->currentState.powerups & 1 <<
+			if (pm_saber_innonblockable_attack(cent->currentState.torsoAnim) && !(cent->currentState.powerups & 1 <<
 				PW_CLOAKED))
 			{
 				ent->renderfx |= RF_RGB_TINT;

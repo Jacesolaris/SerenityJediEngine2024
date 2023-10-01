@@ -42,7 +42,7 @@ extern qboolean PM_WindAnim(int anim);
 extern qboolean PM_InKataAnim(int anim);
 extern qboolean PM_StandingAtReadyAnim(int anim);
 extern qboolean PM_WalkingOrRunningAnim(int anim);
-extern qboolean PM_SaberInnonblockableAttack(int anim);
+extern qboolean pm_saber_innonblockable_attack(int anim);
 
 #define MIN_SABERBLADE_DRAW_LENGTH 0.5f
 
@@ -19852,7 +19852,7 @@ stillDoSaber:
 	{
 		if (cg_SaberInnonblockableAttackWarning.integer)
 		{
-			if (PM_SaberInnonblockableAttack(cent->currentState.torsoAnim) && !(cent->currentState.powerups & 1 <<
+			if (pm_saber_innonblockable_attack(cent->currentState.torsoAnim) && !(cent->currentState.powerups & 1 <<
 				PW_CLOAKED))
 			{
 				legs.renderfx &= ~RF_FORCE_ENT_ALPHA;

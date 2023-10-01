@@ -2609,7 +2609,6 @@ qboolean client_userinfo_changed(const int client_num)
 		if (Class_Model(model, "model_siege")
 			|| Class_Model(model, "atst")
 			|| Class_Model(model, "gonk")
-			|| Class_Model(model, "hazardtrooper")
 			|| Class_Model(model, "lambdashuttle")
 			|| Class_Model(model, "marka_ragnos")
 			|| Class_Model(model, "probe")
@@ -2635,11 +2634,17 @@ qboolean client_userinfo_changed(const int client_num)
 			|| Class_Model(model, "darthkrayt_mp")
 			|| Class_Model(model, "darthkrayt_r_mp")
 			|| Class_Model(model, "darthphobos_mp")
+			|| Class_Model(model, "darthdesolous")
+			|| Class_Model(model, "md_gua_am")
+			|| Class_Model(model, "md_gua2_am")
 			|| Class_Model(model, "royal")
 			|| Class_Model(model, "royal/default_b")
+			|| Class_Model(model, "royalcombatguard")
 			|| Class_Model(model, "reva")
 			|| Class_Model(model, "Jerec")
 			|| Class_Model(model, "jerec_mp")
+			|| Class_Model(model, "jerec_mp/classic")
+			|| Class_Model(model, "jerec_mp/robed")
 			|| Class_Model(model, "jerec_lowpoly_mp")
 			|| Class_Model(model, "darth_talon")
 			|| Class_Model(model, "darth_talon/")
@@ -2654,11 +2659,27 @@ qboolean client_userinfo_changed(const int client_num)
 			|| Class_Model(model, "Jerec2")
 			|| Class_Model(model, "darthmaul_mp")
 			|| Class_Model(model, "cyber_maul_mp")
+			|| Class_Model(model, "cyber_maul_mp/robed")
+			|| Class_Model(model, "cyber_maul_mp/hood")
 			|| Class_Model(model, "Maula/main")
+			|| Class_Model(model, "maul_rebels_mp")
+			|| Class_Model(model, "maul_rebels_mp/shirtless_hooded")
+			|| Class_Model(model, "maul_rebels_mp/shirtless_cowelbase")
+			|| Class_Model(model, "maul_rebels_mp/shirtless")
+			|| Class_Model(model, "maul_rebels_mp/desert")
+			|| Class_Model(model, "maul_rebels_mp/twinsuns")
+			|| Class_Model(model, "md_maul")
+			|| Class_Model(model, "md_maul_robed")
+			|| Class_Model(model, "md_maul_hooded")
+			|| Class_Model(model, "md_maul_wots")
 			|| Class_Model(model, "Maula")
 			|| Class_Model(model, "maulb")
 			|| Class_Model(model, "maulb/main")
 			|| Class_Model(model, "maulsp")
+			|| Class_Model(model, "7thsister")
+			|| Class_Model(model, "5thbrother")
+			|| Class_Model(model, "8thbrother")
+			|| Class_Model(model, "grandinquisitor")
 			|| Class_Model(model, "maulsp/main")
 			|| Class_Model(model, "sithstalker_mp")
 			|| Class_Model(model, "Sith_Stalker2")
@@ -2679,8 +2700,14 @@ qboolean client_userinfo_changed(const int client_num)
 			|| Class_Model(model, "stk_temple_eg_mp")
 			|| Class_Model(model, "stk_tie_fs_mp")
 			|| Class_Model(model, "stk_training_gear_mp")
+			|| Class_Model(model, "starkiller_tfu2_mp/kamino_tsg")
+			|| Class_Model(model, "starkiller_tfu2_mp/tie_fs")
+			|| Class_Model(model, "starkiller_tfu2_mp")
+			|| Class_Model(model, "starkiller_tfu2_mp/hero_armor")
 			|| Class_Model(model, "dooku_mp")
 			|| Class_Model(model, "dooku_tcw_mp")
+			|| Class_Model(model, "md_dooku")
+			|| Class_Model(model, "dooku_tcw_mp/unrobed")
 			|| Class_Model(model, "dooku_totj_mp")
 			|| Class_Model(model, "maul_cyber_tcw_mp")
 			|| Class_Model(model, "maul_rebels_mp")
@@ -2688,6 +2715,8 @@ qboolean client_userinfo_changed(const int client_num)
 			|| Class_Model(model, "maul_wots_mp")
 			|| Class_Model(model, "lord_stk_mp")
 			|| Class_Model(model, "lord_stk_tat_mp")
+			|| Class_Model(model, "md_stk_jhunter")
+			|| Class_Model(model, "maw_intro")
 			|| Class_Model(model, "maw_mp"))
 		{
 			client->pers.nextbotclass = BCLASS_SITHWORRIOR1;
@@ -2709,6 +2738,8 @@ qboolean client_userinfo_changed(const int client_num)
 			|| Class_Model(model, "alorablue")
 			|| Class_Model(model, "alora2")
 			|| Class_Model(model, "mara")
+			|| Class_Model(model, "mara_jumpsuit")
+			|| Class_Model(model, "darthtalon")
 			|| Class_Model(model, "malak")
 			|| Class_Model(model, "malek"))
 		{
@@ -2803,6 +2834,7 @@ qboolean client_userinfo_changed(const int client_num)
 			|| Class_Model(model, "sthan/main")
 			|| Class_Model(model, "ceclonepilot/main")
 			|| Class_Model(model, "stormpilot")
+			|| Class_Model(model, "scouttrooper")
 			|| Class_Model(model, "stormpilot/blue")
 			|| Class_Model(model, "stormpilot/red")
 			|| Class_Model(model, "stormpilot/main")
@@ -2812,7 +2844,10 @@ qboolean client_userinfo_changed(const int client_num)
 			|| Class_Model(model, "jedi_st_poe")
 			|| Class_Model(model, "Krennic")
 			|| Class_Model(model, "dash_rendar/default")
-			|| Class_Model(model, "dash_rendar"))
+			|| Class_Model(model, "dash_rendar")
+			|| Class_Model(model, "hux")
+			|| Class_Model(model, "hux/coat")
+			|| Class_Model(model, "hux/coat_hat"))
 		{
 			client->pers.nextbotclass = BCLASS_STORMPILOT;
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
@@ -2833,16 +2868,64 @@ qboolean client_userinfo_changed(const int client_num)
 			|| Class_Model(model, "Bountyhunter3/default")
 			|| Class_Model(model, "boba_fett_mp")
 			|| Class_Model(model, "bobafett_mp/esb")
+			|| Class_Model(model, "bobafett")
 			|| Class_Model(model, "boba_fett")
+			|| Class_Model(model, "bobafett/esb")
 			|| Class_Model(model, "boba_fett/main")
 			|| Class_Model(model, "boba_fett/main2")
 			|| Class_Model(model, "jangoJA_fett/")
 			|| Class_Model(model, "jangoJA_fett/main")
 			|| Class_Model(model, "jangoJA_fett/main2")
 			|| Class_Model(model, "jangoJA_fett/default")
-			|| Class_Model(model, "jangofett_mp"))
+			|| Class_Model(model, "md_jango")
+			|| Class_Model(model, "md_jango_geo")
+			|| Class_Model(model, "md_jango_dual_player")
+			|| Class_Model(model, "bokatan")
+			|| Class_Model(model, "bokatan/nohelm")
+			|| Class_Model(model, "bobafett/mand1")
+			|| Class_Model(model, "bobafett/nohelm")
+			|| Class_Model(model, "bobafett/mand2")
+			|| Class_Model(model, "bobafett/nohelm2")
+			|| Class_Model(model, "dindjarin")
+			|| Class_Model(model, "mando_arm")
+			|| Class_Model(model, "sabine")
+			|| Class_Model(model, "mando_arm/jetpack")
+			|| Class_Model(model, "pazvizsla")
+			|| Class_Model(model, "dindjarin/jetpack"))
 		{
 			client->pers.nextbotclass = BCLASS_BOBAFETT;
+			client->pers.botmodelscale = BOTZIZE_NORMAL;
+			if (!(ent->r.svFlags & SVF_BOT))
+			{
+				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
+					GT_SIEGE)
+				{
+					client->ps.stats[STAT_HEALTH] = ent->health = 0;
+					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
+					trap->UnlinkEntity((sharedEntity_t*)ent);
+				}
+				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
+			}
+		}
+		else if (Class_Model(model, "durge/jetpack"))
+		{
+			client->pers.nextbotclass = BCLASS_BOBAFETT;
+			client->pers.botmodelscale = BOTZIZE_MASSIVE;
+			if (!(ent->r.svFlags & SVF_BOT))
+			{
+				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
+					GT_SIEGE)
+				{
+					client->ps.stats[STAT_HEALTH] = ent->health = 0;
+					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
+					trap->UnlinkEntity((sharedEntity_t*)ent);
+				}
+				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
+			}
+		}
+		else if (Class_Model(model, "jangofett_mp"))
+		{
+			client->pers.nextbotclass = BCLASS_JANGO_NOJP;
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
@@ -2885,23 +2968,11 @@ qboolean client_userinfo_changed(const int client_num)
 			|| Class_Model(model, "chewbacca/default")
 			|| Class_Model(model, "chewbacca/red")
 			|| Class_Model(model, "chewbacca/blue")
-			|| Class_Model(model, "cadbane"))
-		{
-			client->pers.botmodelscale = BOTZIZE_MASSIVE;
-			client->pers.nextbotclass = BCLASS_CHEWIE;
-			if (!(ent->r.svFlags & SVF_BOT))
-			{
-				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
-					GT_SIEGE)
-				{
-					client->ps.stats[STAT_HEALTH] = ent->health = 0;
-					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
-					trap->UnlinkEntity((sharedEntity_t*)ent);
-				}
-				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
-			}
-		}
-		else if (Class_Model(model, "wookiee/default"))
+			|| Class_Model(model, "cadbane")
+			|| Class_Model(model, "embo")
+			|| Class_Model(model, "durge")
+			|| Class_Model(model, "wookiee/default")
+			|| Class_Model(model, "krrsantan"))
 		{
 			client->pers.botmodelscale = BOTZIZE_MASSIVE;
 			client->pers.nextbotclass = BCLASS_CHEWIE;
@@ -3024,6 +3095,7 @@ qboolean client_userinfo_changed(const int client_num)
 			|| Class_Model(model, "desann/blue")
 			|| Class_Model(model, "desann/dark_robed")
 			|| Class_Model(model, "desann/unrobed")
+			|| Class_Model(model, "desann/robed")
 			|| Class_Model(model, "desann/default"))
 		{
 			client->pers.botmodelscale = BOTZIZE_LARGE;
@@ -3041,6 +3113,14 @@ qboolean client_userinfo_changed(const int client_num)
 			}
 		}
 		else if (Class_Model(model, "kylo_ren")
+			|| Class_Model(model, "ren")
+			|| Class_Model(model, "kylo_ren_mp/nomask")
+			|| Class_Model(model, "kylo_ren_mp/nohood")
+			|| Class_Model(model, "kylo_ren_mp/tlj_nomaskb")
+			|| Class_Model(model, "kylo_ren_mp/tlj")
+			|| Class_Model(model, "kylo_ren_mp/ros_nomask")
+			|| Class_Model(model, "kylo_ren_mp/ros")
+			|| Class_Model(model, "kylo_ren_mp/ros_hood")
 			|| Class_Model(model, "kylo")
 			|| Class_Model(model, "kylomp")
 			|| Class_Model(model, "kylo_ren_mp")
@@ -3049,6 +3129,8 @@ qboolean client_userinfo_changed(const int client_num)
 			|| Class_Model(model, "kylo_ren/")
 			|| Class_Model(model, "Matt_TRT")
 			|| Class_Model(model, "batman_begins")
+			|| Class_Model(model, "secondsister")
+			|| Class_Model(model, "9thsister")
 			|| Class_Model(model, "kylo_ren_nomask"))
 		{
 			client->pers.botmodelscale = BOTZIZE_TALL;
@@ -3207,8 +3289,7 @@ qboolean client_userinfo_changed(const int client_num)
 		else if (Class_Model(model, "imperial")
 			|| Class_Model(model, "imperial/main")
 			|| Class_Model(model, "imperial/main2")
-			|| Class_Model(model, "imperial/main3")
-			|| Class_Model(model, "imperialcommando"))
+			|| Class_Model(model, "imperial/main3"))
 		{
 			client->pers.nextbotclass = BCLASS_IMPERIAL;
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
@@ -3260,6 +3341,7 @@ qboolean client_userinfo_changed(const int client_num)
 			}
 		}
 		else if (Class_Model(model, "jan")
+			|| Class_Model(model, "jan/df2")
 			|| Class_Model(model, "jan/red")
 			|| Class_Model(model, "jan/blue")
 			|| Class_Model(model, "leia_TFA")
@@ -3285,6 +3367,8 @@ qboolean client_userinfo_changed(const int client_num)
 			|| Class_Model(model, "st_finn")
 			|| Class_Model(model, "jedi_st_finn")
 			|| Class_Model(model, "padme/main")
+			|| Class_Model(model, "md_pad_ga")
+			|| Class_Model(model, "md_padme_mus")
 			|| Class_Model(model, "leia_hoth")
 			|| Class_Model(model, "leia_hoth/default")
 			|| Class_Model(model, "atton")
@@ -3342,12 +3426,39 @@ qboolean client_userinfo_changed(const int client_num)
 			}
 		}
 		else if (Class_Model(model, "jedi")
+			|| Class_Model(model, "md_ongree")
+			|| Class_Model(model, "md_jed1")
+			|| Class_Model(model, "md_jed2")
+			|| Class_Model(model, "md_jed3")
+			|| Class_Model(model, "md_jed4")
+			|| Class_Model(model, "md_jed5")
+			|| Class_Model(model, "md_jed6")
+			|| Class_Model(model, "md_jed7")
+			|| Class_Model(model, "md_jed8")
+			|| Class_Model(model, "md_jed9")
+			|| Class_Model(model, "md_jed10")
+			|| Class_Model(model, "md_jed11")
+			|| Class_Model(model, "md_jed12")
+			|| Class_Model(model, "md_jed13")
+			|| Class_Model(model, "md_jed14")
+			|| Class_Model(model, "md_jed15")
+			|| Class_Model(model, "md_jed16")
+			|| Class_Model(model, "md_tarados")
+			|| Class_Model(model, "theory")
+			|| Class_Model(model, "md_sora")
+			|| Class_Model(model, "jedi/j2")
+			|| Class_Model(model, "boc_mp")
+			|| Class_Model(model, "asharad_hett_mp")
+			|| Class_Model(model, "asharad_hett_mp/tusken")
 			|| Class_Model(model, "chirrut")
+			|| Class_Model(model, "taron_malicos")
 			|| Class_Model(model, "taron_malicos_mp")
 			|| Class_Model(model, "tarados_gon_mp")
 			|| Class_Model(model, "zabrak_rots_mp")
 			|| Class_Model(model, "sariss_mp")
+			|| Class_Model(model, "sariss_mp/cape")
 			|| Class_Model(model, "saesee_tiin_mp")
+			|| Class_Model(model, "saesee_tiin_mp/robed")
 			|| Class_Model(model, "sora_bulq_mp")
 			|| Class_Model(model, "redathgom_mp")
 			|| Class_Model(model, "revan_jedi_mp")
@@ -3361,14 +3472,20 @@ qboolean client_userinfo_changed(const int client_num)
 			|| Class_Model(model, "jedi_female3a_mp")
 			|| Class_Model(model, "jedi_nikto_mp")
 			|| Class_Model(model, "quinlan_vos")
+			|| Class_Model(model, "md_quinlan")
 			|| Class_Model(model, "quinlan_vos2")
 			|| Class_Model(model, "jedi_st_tiplee_mp")
 			|| Class_Model(model, "jedi_st_tiplee/")
 			|| Class_Model(model, "Eeth_Koth/main")
 			|| Class_Model(model, "Eeth_Koth_mp")
+			|| Class_Model(model, "eeth_koth_mp/cw")
+			|| Class_Model(model, "md_eeth_koth")
 			|| Class_Model(model, "st_tiplee/default")
 			|| Class_Model(model, "st_tiplee")
+			|| Class_Model(model, "tiplee")
+			|| Class_Model(model, "tiplee/tiplar")
 			|| Class_Model(model, "even_piell_mp")
+			|| Class_Model(model, "md_even_piell")
 			|| Class_Model(model, "mja/")
 			|| Class_Model(model, "mja/main")
 			|| Class_Model(model, "mj/")
@@ -3380,8 +3497,11 @@ qboolean client_userinfo_changed(const int client_num)
 			|| Class_Model(model, "mmKiadimundi/main")
 			|| Class_Model(model, "bar/main")
 			|| Class_Model(model, "shaak_ti/main")
+			|| Class_Model(model, "shaakti_tfu_mp")
 			|| Class_Model(model, "lu/main")
+			|| Class_Model(model, "cin_drallig_mp/cw")
 			|| Class_Model(model, "cin_drallig_mp")
+			|| Class_Model(model, "cin_drallig_mp/old")
 			|| Class_Model(model, "cin_drallig_tm")
 			|| Class_Model(model, "cin_drallig_tm/")
 			|| Class_Model(model, "cin_drallig_tm/default")
@@ -3398,9 +3518,11 @@ qboolean client_userinfo_changed(const int client_num)
 			|| Class_Model(model, "mlkfisto/main")
 			|| Class_Model(model, "kit_fisto/default")
 			|| Class_Model(model, "kit_fisto")
+			|| Class_Model(model, "kitfisto_cw_mp")
 			|| Class_Model(model, "ki_adi_mundi_mp")
 			|| Class_Model(model, "Coleman/main")
-			|| Class_Model(model, "coleman_trebor_vm")
+			|| Class_Model(model, "Coleman/main")
+			|| Class_Model(model, "coleman_mp")
 			|| Class_Model(model, "coleman_trebor_vm/")
 			|| Class_Model(model, "coleman_trebor_vm/default")
 			|| Class_Model(model, "saesee_tiin/main")
@@ -3475,12 +3597,24 @@ qboolean client_userinfo_changed(const int client_num)
 			|| Class_Model(model, "Wolverine")
 			|| Class_Model(model, "SD_tmnt")
 			|| Class_Model(model, "yun_mp")
+			|| Class_Model(model, "md_agen")
+			|| Class_Model(model, "md_agen_robed")
 			|| Class_Model(model, "jedi_hm")
+			|| Class_Model(model, "md_foul_moudama")
+			|| Class_Model(model, "md_micah_robed")
+			|| Class_Model(model, "md_tsuichoi")
+			|| Class_Model(model, "md_redath_robed")
+			|| Class_Model(model, "md_zett_jukassa")
 			|| Class_Model(model, "jedi_hm_mp")
+			|| Class_Model(model, "md_jed_nikto")
+			|| Class_Model(model, "md_jed_nikto_robed")
+			|| Class_Model(model, "md_joopi_robed")
+			|| Class_Model(model, "md_koffi_robed")
 			|| Class_Model(model, "ExileMaleLightSide")
 			|| Class_Model(model, "ExileMaleLightSideUR")
 			|| Class_Model(model, "Kavar")
 			|| Class_Model(model, "kentomarek_mp")
+			|| Class_Model(model, "kentomarek_mp/wii")
 			|| Class_Model(model, "joopi_she_mp")
 			|| Class_Model(model, "jtguard_boss_mp")
 			|| Class_Model(model, "jtguard_mp")
@@ -3510,7 +3644,11 @@ qboolean client_userinfo_changed(const int client_num)
 			|| Class_Model(model, "cal_kestis/default3")
 			|| Class_Model(model, "cal_kestis/default4")
 			|| Class_Model(model, "ezrabridger_mp")
+			|| Class_Model(model, "ezra")
+			|| Class_Model(model, "ezrabridger")
 			|| Class_Model(model, "kanan_mp")
+			|| Class_Model(model, "kanan")
+			|| Class_Model(model, "kanan/blind")
 			|| Class_Model(model, "foul_moudama_mp")
 			|| Class_Model(model, "koffi_arana_mp")
 			|| Class_Model(model, "koffi_arana_mp")
@@ -3539,22 +3677,39 @@ qboolean client_userinfo_changed(const int client_num)
 			|| Class_Model(model, "Female_Jedi")
 			|| Class_Model(model, "aayla_mp")
 			|| Class_Model(model, "aayla")
+			|| Class_Model(model, "md_bultar")
+			|| Class_Model(model, "md_bultar_robed")
 			|| Class_Model(model, "barriss_mp")
+			|| Class_Model(model, "md_barriss")
 			|| Class_Model(model, "barriss_offee_mp")
 			|| Class_Model(model, "lxjade/main")
 			|| Class_Model(model, "ahsoka_mp")
+			|| Class_Model(model, "ahsoka_tm")
 			|| Class_Model(model, "ahsoka_rebels_mp")
 			|| Class_Model(model, "anakin_ep2_mp")
+			|| Class_Model(model, "anakin_ep2_mp/hood")
+			|| Class_Model(model, "md_stass_allie")
+			|| Class_Model(model, "md_stass_allie_robed")
+			|| Class_Model(model, "md_sarissa_jeng")
+			|| Class_Model(model, "caleb_dume_mp/robed")
+			|| Class_Model(model, "caleb_dume_mp/hooded")
+			|| Class_Model(model, "caleb_dume_mp")
 			|| Class_Model(model, "jedi_hf")
 			|| Class_Model(model, "jedi_zf")
 			|| Class_Model(model, "jedi_tf")
+			|| Class_Model(model, "yun_mp")
+			|| Class_Model(model, "md_serra")
+			|| Class_Model(model, "md_jocasta")
 			|| Class_Model(model, "stass_allie_mp")
 			|| Class_Model(model, "serraketo_mp")
 			|| Class_Model(model, "sarissa_jeng_mp")
 			|| Class_Model(model, "depabillaba_mp")
 			|| Class_Model(model, "depabillaba_tcw_mp")
+			|| Class_Model(model, "depabillaba_tcw_mp/robed")
+			|| Class_Model(model, "depabillaba_tcw_mp/hooded")
 			|| Class_Model(model, "ExileFemaleLightSide")
 			|| Class_Model(model, "ExileFemaleLightSideUR")
+			|| Class_Model(model, "adi_gallia_mp/robed")
 			|| Class_Model(model, "adi_gallia_mp"))
 		{
 			client->pers.botmodelscale = BOTZIZE_SMALL;
@@ -3594,8 +3749,15 @@ qboolean client_userinfo_changed(const int client_num)
 			|| Class_Model(model, "obiwan_ep3_mp")
 			|| Class_Model(model, "obiwan_ep3_mp/exile")
 			|| Class_Model(model, "obiwan_cw_mp")
+			|| Class_Model(model, "obiwan_cw_mp/helmet")
 			|| Class_Model(model, "obiwan_ep1_mp")
+			|| Class_Model(model, "obiwan_ep1_mp/hooded")
 			|| Class_Model(model, "obiwan_ep2_mp")
+			|| Class_Model(model, "obiwan_ep2_mp/robed")
+			|| Class_Model(model, "obiwan_ep2_mp/hooded")
+			|| Class_Model(model, "obiwan_ep3_mp/robed")
+			|| Class_Model(model, "obiwan_ep3_mp/hood")
+			|| Class_Model(model, "obiwan_ep3_mp/bw")
 			|| Class_Model(model, "obiwan_tcw_mp")
 			|| Class_Model(model, "ntobiwan/main2"))
 		{
@@ -3617,10 +3779,12 @@ qboolean client_userinfo_changed(const int client_num)
 			|| Class_Model(model, "agen_kolar_mp")
 			|| Class_Model(model, "ahsoka_s7_mp")
 			|| Class_Model(model, "anakin_mp")
+			|| Class_Model(model, "anakin_mp/robed")
+			|| Class_Model(model, "anakin_mp/hood")
 			|| Class_Model(model, "anakin_tcw_mp")
-			|| Class_Model(model, "bastila_mp")
-			|| Class_Model(model, "asajj_mp")
-			|| Class_Model(model, "asajj_bh_mp"))
+			|| Class_Model(model, "anakin_tcw_mp/cw")
+			|| Class_Model(model, "anakin_swolo_mp")
+			|| Class_Model(model, "bastila_mp"))
 		{
 			client->pers.nextbotclass = BCLASS_JEDIMASTER;
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
@@ -3655,9 +3819,21 @@ qboolean client_userinfo_changed(const int client_num)
 			}
 		}
 		else if (Class_Model(model, "kyle")
+			|| Class_Model(model, "kyledf1")
+			|| Class_Model(model, "kyledf2/coat")
 			|| Class_Model(model, "kyle/main")
 			|| Class_Model(model, "kyle/red")
 			|| Class_Model(model, "kyle/blue")
+			|| Class_Model(model, "kyledf2")
+			|| Class_Model(model, "kyle_mots")
+			|| Class_Model(model, "kyle_alternate")
+			|| Class_Model(model, "kyle_sj")
+			|| Class_Model(model, "kyle_jedimaster")
+			|| Class_Model(model, "kyle_jedimaster/default_emperor")
+			|| Class_Model(model, "kyle_lowremake")
+			|| Class_Model(model, "kyle_officer")
+			|| Class_Model(model, "kyle_df2low")
+			|| Class_Model(model, "kyle_old")
 			|| Class_Model(model, "Jedi_Genericfemale")
 			|| Class_Model(model, "macewinduv3")
 			|| Class_Model(model, "mace_windu")
@@ -3666,14 +3842,22 @@ qboolean client_userinfo_changed(const int client_num)
 			|| Class_Model(model, "jedi_quigon")
 			|| Class_Model(model, "Quigon")
 			|| Class_Model(model, "fisto_mp")
+			|| Class_Model(model, "fisto_mp/robed")
+			|| Class_Model(model, "fisto_mp/cw")
 			|| Class_Model(model, "quigon_mp")
+			|| Class_Model(model, "quigon_mp/robed")
+			|| Class_Model(model, "quigon_mp/poncho")
+			|| Class_Model(model, "quigon_mp/ghost")
 			|| Class_Model(model, "plo_koon_mp")
+			|| Class_Model(model, "plo_koon_mp/jpb")
 			|| Class_Model(model, "plo_tcw_mp")
 			|| Class_Model(model, "quinlan_vos_mp")
 			|| Class_Model(model, "saesee_tiin_mp")
 			|| Class_Model(model, "ki_adi_mundi_mp")
 			|| Class_Model(model, "kota_mp")
+			|| Class_Model(model, "qu_rahn")
 			|| Class_Model(model, "kota_drunk_mp")
+			|| Class_Model(model, "kota_mp/blind")
 			|| Class_Model(model, "jedi_kk")
 			|| Class_Model(model, "hs_kenobi_rots")
 			|| Class_Model(model, "jedi_kenobi")
@@ -3682,7 +3866,12 @@ qboolean client_userinfo_changed(const int client_num)
 			|| Class_Model(model, "moMace_Windu/main")
 			|| Class_Model(model, "muwindu/main")
 			|| Class_Model(model, "macewindu_mp")
+			|| Class_Model(model, "macewindu_mp/ghost")
+			|| Class_Model(model, "macewindu_mp/hooded")
+			|| Class_Model(model, "macewindu_mp/robed")
+			|| Class_Model(model, "macewindu_mp/cw")
 			|| Class_Model(model, "macewindu_cw_mp")
+			|| Class_Model(model, "macewindu_mp/totj")
 			|| Class_Model(model, "oppo_rancisis_mp"))
 		{
 			client->pers.nextbotclass = BCLASS_KYLE;
@@ -3784,6 +3973,7 @@ qboolean client_userinfo_changed(const int client_num)
 			}
 		}
 		else if (Class_Model(model, "luke")
+			|| Class_Model(model, "ben_swolo_mp")
 			|| Class_Model(model, "luke/")
 			|| Class_Model(model, "lukejka")
 			|| Class_Model(model, "lukejka/")
@@ -3791,7 +3981,10 @@ qboolean client_userinfo_changed(const int client_num)
 			|| Class_Model(model, "rey/head_a1|torso_a1|lower_a1")
 			|| Class_Model(model, "rey")
 			|| Class_Model(model, "rey_mp")
+			|| Class_Model(model, "rey_mp/resistance")
 			|| Class_Model(model, "rey_skywalker_mp")
+			|| Class_Model(model, "rey_skywalker_mp/hood")
+			|| Class_Model(model, "rey_mp/jedi")
 			|| Class_Model(model, "st_rey")
 			|| Class_Model(model, "jedi_st_rey")
 			|| Class_Model(model, "lb/")
@@ -3819,6 +4012,7 @@ qboolean client_userinfo_changed(const int client_num)
 			|| Class_Model(model, "jedi_anakint")
 			|| Class_Model(model, "jedi_anakin")
 			|| Class_Model(model, "adi/main")
+			|| Class_Model(model, "md_adi_tcw")
 			|| Class_Model(model, "shaak_ti/main")
 			|| Class_Model(model, "mgaaylasecura/")
 			|| Class_Model(model, "mgaaylasecura/main")
@@ -3850,6 +4044,8 @@ qboolean client_userinfo_changed(const int client_num)
 			|| Class_Model(model, "luke_rotj_mp/master")
 			|| Class_Model(model, "luke_rotj_mp/tm_tunic")
 			|| Class_Model(model, "luke_rotj_mp/default_fd")
+			|| Class_Model(model, "luke_tfa_mp/cloak_glove")
+			|| Class_Model(model, "luke_tfa_mp/hood_glove")
 			|| Class_Model(model, "galen_arena_cg_mp")
 			|| Class_Model(model, "galen_hero_armor_mp")
 			|| Class_Model(model, "galen_kamino_tsg_mp")
@@ -3870,7 +4066,10 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (Class_Model(model, "ea_ep2anakin"))
+		else if (Class_Model(model, "ea_ep2anakin")
+			|| Class_Model(model, "ahsoka_tm")
+			|| Class_Model(model, "purgetrooper")
+			|| Class_Model(model, "purgetrooper/staff"))
 		{
 			client->pers.nextbotclass = BCLASS_DUELS;
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
@@ -4030,13 +4229,18 @@ qboolean client_userinfo_changed(const int client_num)
 			}
 		}
 		else if (Class_Model(model, "rebel")
+			|| Class_Model(model, "rose_tico")
+			|| Class_Model(model, "queen_amidala")
 			|| Class_Model(model, "rebel_pilot_tfu")
 			|| Class_Model(model, "militiasaboteur")
 			|| Class_Model(model, "militiatrooper")
 			|| Class_Model(model, "rebel/main")
 			|| Class_Model(model, "rebel/red")
 			|| Class_Model(model, "rebel/blue")
-			|| Class_Model(model, "ackbar"))
+			|| Class_Model(model, "poe")
+			|| Class_Model(model, "poe/helmet")
+			|| Class_Model(model, "poe/officer")
+			|| Class_Model(model, "poe/resistance"))
 		{
 			client->pers.nextbotclass = BCLASS_REBEL;
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
@@ -4061,6 +4265,8 @@ qboolean client_userinfo_changed(const int client_num)
 			|| Class_Model(model, "reborn/acrobat")
 			|| Class_Model(model, "reborn_new")
 			|| Class_Model(model, "reborn_twin")
+			|| Class_Model(model, "reborn_twin/boss")
+			|| Class_Model(model, "reborn_new_f")
 			|| Class_Model(model, "ExileFemaleDarkSide")
 			|| Class_Model(model, "ExileFemaleDarkSideUR"))
 		{
@@ -4188,59 +4394,41 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (Class_Model(model, "cc/main")
-			|| Class_Model(model, "sdt/")
-			|| Class_Model(model, "bs/")
-			|| Class_Model(model, "snowtrooper")
+		else if (Class_Model(model, "snowtrooper")
 			|| Class_Model(model, "snowtrooper/blue")
 			|| Class_Model(model, "snowtrooper/red")
-			|| Class_Model(model, "arc")
-			|| Class_Model(model, "cn")
-			|| Class_Model(model, "cp")
-			|| Class_Model(model, "ccm")
-			|| Class_Model(model, "ccm/main")
-			|| Class_Model(model, "cc/")
 			|| Class_Model(model, "stormtrooper")
-			|| Class_Model(model, "TR_8R")
-			|| Class_Model(model, "TR_8R_normal")
+			|| Class_Model(model, "stormtrooper/officer")
 			|| Class_Model(model, "FN-2187")
-			|| Class_Model(model, "NRSD_mp")
-			|| Class_Model(model, "captainphasma")
 			|| Class_Model(model, "stormtrooper_tfa")
+			|| Class_Model(model, "stormie_tfa")
+			|| Class_Model(model, "stormie_tfa/pauldron")
 			|| Class_Model(model, "stormtrooper/blue")
 			|| Class_Model(model, "stormtrooper/red")
 			|| Class_Model(model, "stormtrooper/main")
 			|| Class_Model(model, "stormtrooper/main2")
-			|| Class_Model(model, "bh")
-			|| Class_Model(model, "ct")
-			|| Class_Model(model, "ct/main2")
-			|| Class_Model(model, "ct/main3")
-			|| Class_Model(model, "ct/main4")
-			|| Class_Model(model, "ct/main5")
-			|| Class_Model(model, "ct/main6")
-			|| Class_Model(model, "cb")
-			|| Class_Model(model, "cbe")
-			|| Class_Model(model, "cdy/")
-			|| Class_Model(model, "cdy/main")
-			|| Class_Model(model, "cdy/main2")
-			|| Class_Model(model, "smuggler2/default")
-			|| Class_Model(model, "trooper1/default")
-			|| Class_Model(model, "trooper2/default")
 			|| Class_Model(model, "swamptrooper")
 			|| Class_Model(model, "swamptrooper/blue")
 			|| Class_Model(model, "swamptrooper/red")
 			|| Class_Model(model, "First_Order_Riot_Trooper")
 			|| Class_Model(model, "sullustan")
-			|| Class_Model(model, "clonetrooper_p1_mp")
-			|| Class_Model(model, "clonetrooper_p2_mp")
+			|| Class_Model(model, "rex_old")
+			|| Class_Model(model, "rex_endor")
 			|| Class_Model(model, "bossk")
 			|| Class_Model(model, "greedo")
 			|| Class_Model(model, "bolla_ropal_mp")
-			|| Class_Model(model, "deathtrooper")
-			|| Class_Model(model, "deathtrooper/commander")
-			|| Class_Model(model, "shoretrooper")
-			|| Class_Model(model, "shoretrooper/tank")
-			|| Class_Model(model, "bibfortuna"))
+			|| Class_Model(model, "bibfortuna")
+			|| Class_Model(model, "greef")
+			|| Class_Model(model, "caradune")
+			|| Class_Model(model, "hondo")
+			|| Class_Model(model, "vizam")
+			|| Class_Model(model, "stshock")
+			|| Class_Model(model, "stshock/commander")
+			|| Class_Model(model, "501st_stormie")
+			|| Class_Model(model, "shadow_stormtrooper")
+			|| Class_Model(model, "evotrooper")
+			|| Class_Model(model, "evotrooper/shadow")
+			|| Class_Model(model, "satine"))
 		{
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
 			client->pers.nextbotclass = BCLASS_STORMTROOPER;
@@ -4256,7 +4444,82 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (Class_Model(model, "captainphasma")
+		else if (Class_Model(model, "cc/main")
+			|| Class_Model(model, "sdt/")
+			|| Class_Model(model, "bs/")
+			|| Class_Model(model, "arc")
+			|| Class_Model(model, "cn")
+			|| Class_Model(model, "cp")
+			|| Class_Model(model, "ccm")
+			|| Class_Model(model, "ccm/main")
+			|| Class_Model(model, "cc/")
+			|| Class_Model(model, "gideon")
+			|| Class_Model(model, "darktrooper_tv_mp")
+			|| Class_Model(model, "thrawn")
+			|| Class_Model(model, "hera")
+			|| Class_Model(model, "TR_8R")
+			|| Class_Model(model, "TR_8R_normal")
+			|| Class_Model(model, "bh")
+			|| Class_Model(model, "ct")
+			|| Class_Model(model, "ct/main2")
+			|| Class_Model(model, "ct/main3")
+			|| Class_Model(model, "ct/main4")
+			|| Class_Model(model, "ct/main5")
+			|| Class_Model(model, "ct/main6")
+			|| Class_Model(model, "cb")
+			|| Class_Model(model, "cbe")
+			|| Class_Model(model, "cdy/")
+			|| Class_Model(model, "cdy/main")
+			|| Class_Model(model, "cdy/main2")
+			|| Class_Model(model, "smuggler2/default")
+			|| Class_Model(model, "trooper1/default")
+			|| Class_Model(model, "trooper2/default")
+			|| Class_Model(model, "clonetrooper_p1_mp")
+			|| Class_Model(model, "clonetrooper_p2_mp")
+			|| Class_Model(model, "md_clone_assassin")
+			|| Class_Model(model, "deathtrooper")
+			|| Class_Model(model, "deathtrooper/commander")
+			|| Class_Model(model, "shoretrooper")
+			|| Class_Model(model, "shoretrooper/tank")
+			|| Class_Model(model, "shoretrooper/elite")
+			|| Class_Model(model, "501st_stormie/officer")
+			|| Class_Model(model, "jumptrooper_tfu")
+			|| Class_Model(model, "md_clo_cody")
+			|| Class_Model(model, "md_clo_rex")
+			|| Class_Model(model, "md_clo_fox")
+			|| Class_Model(model, "md_clo_fives")
+			|| Class_Model(model, "md_clo_neyo")
+			|| Class_Model(model, "md_clo_vaughn")
+			|| Class_Model(model, "md_clo_ep2")
+			|| Class_Model(model, "md_clo_212th")
+			|| Class_Model(model, "md_clo_212_airborne")
+			|| Class_Model(model, "md_clo_13th")
+			|| Class_Model(model, "md_clo4")
+			|| Class_Model(model, "md_clo1_jt")
+			|| Class_Model(model, "md_clo2_jt")
+			|| Class_Model(model, "md_clo_red_player")
+			|| Class_Model(model, "md_clo_red2_player")
+			|| Class_Model(model, "md_clo6_rt_player")
+			|| Class_Model(model, "md_clo_332")
+			|| Class_Model(model, "md_clo_327")
+			|| Class_Model(model, "md_clo_shadow"))
+		{
+			client->pers.botmodelscale = BOTZIZE_NORMAL;
+			client->pers.nextbotclass = BCLASS_CLONETROOPER;
+			if (!(ent->r.svFlags & SVF_BOT))
+			{
+				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
+					GT_SIEGE)
+				{
+					client->ps.stats[STAT_HEALTH] = ent->health = 0;
+					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
+					trap->UnlinkEntity((sharedEntity_t*)ent);
+				}
+				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
+			}
+		}
+		else if (Class_Model(model, "phasma")
+			|| Class_Model(model, "captainphasma")
 			|| Class_Model(model, "CaptainPhasmaK"))
 		{
 			client->pers.botmodelscale = BOTZIZE_TALL;
@@ -4278,7 +4541,10 @@ qboolean client_userinfo_changed(const int client_num)
 			|| Class_Model(model, "Itho2")
 			|| Class_Model(model, "Itho3")
 			|| Class_Model(model, "Itho4")
-			|| Class_Model(model, "ithorian"))
+			|| Class_Model(model, "ithorian")
+			|| Class_Model(model, "nrep_sold")
+			|| Class_Model(model, "NRSD_mp")
+			|| Class_Model(model, "nrsd_mp"))
 		{
 			client->pers.nextbotclass = BCLASS_STORMTROOPER;
 			client->pers.botmodelscale = BOTZIZE_MASSIVE;
@@ -4301,8 +4567,12 @@ qboolean client_userinfo_changed(const int client_num)
 			|| Class_Model(model, "tavion_new/blue")
 			|| Class_Model(model, "tavion_new/red")
 			|| Class_Model(model, "tavion_new/main")
+			|| Class_Model(model, "asajj_ns_mp")
+			|| Class_Model(model, "asajj_bh_mp/disguise")
 			|| Class_Model(model, "asajj")
 			|| Class_Model(model, "assajv")
+			|| Class_Model(model, "asajj_mp")
+			|| Class_Model(model, "asajj_bh_mp")
 			|| Class_Model(model, "AssajjCW"))
 		{
 			client->pers.nextbotclass = BCLASS_TAVION;
@@ -4349,12 +4619,16 @@ qboolean client_userinfo_changed(const int client_num)
 			|| Class_Model(model, "bkzam/main3")
 			|| Class_Model(model, "4lom/main")
 			|| Class_Model(model, "4lom/")
-			|| Class_Model(model, "asharad_hett_mp")
 			|| Class_Model(model, "tusken")
+			|| Class_Model(model, "md_tus1_tc")
+			|| Class_Model(model, "md_tus2_tc")
+			|| Class_Model(model, "md_tus5_tc")
 			|| Class_Model(model, "tusken/main")
 			|| Class_Model(model, "tusken/blue")
 			|| Class_Model(model, "tusken/red")
-			|| Class_Model(model, "boushh/default"))
+			|| Class_Model(model, "boushh/default")
+			|| Class_Model(model, "fennec")
+			|| Class_Model(model, "fennec/helmet"))
 		{
 			client->pers.nextbotclass = BCLASS_TUSKEN_SNIPER;
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
@@ -4406,6 +4680,7 @@ qboolean client_userinfo_changed(const int client_num)
 		}
 		else if (Class_Model(model, "ugnaught")
 			|| Class_Model(model, "ew/main")
+			|| Class_Model(model, "kuiil")
 			|| Class_Model(model, "ew"))
 		{
 			client->pers.botmodelscale = BOTZIZE_SMALLER;
@@ -4477,6 +4752,7 @@ qboolean client_userinfo_changed(const int client_num)
 			|| Class_Model(model, "SBD")
 			|| Class_Model(model, "SBD2")
 			|| Class_Model(model, "sbd_mp")
+			|| Class_Model(model, "md_sbd_am")
 			|| Class_Model(model, "Super_Battle_Droid")
 			|| Class_Model(model, "Super Battle Droid")
 			|| Class_Model(model, "superbattledroid")
@@ -4507,7 +4783,12 @@ qboolean client_userinfo_changed(const int client_num)
 			|| Class_Model(model, "hk47")
 			|| Class_Model(model, "hk50")
 			|| Class_Model(model, "hk51")
-			|| Class_Model(model, "Wardroid"))
+			|| Class_Model(model, "Wardroid")
+			|| Class_Model(model, "battledroid_geonosis")
+			|| Class_Model(model, "battledroid_comm")
+			|| Class_Model(model, "battledroid_sniper")
+			|| Class_Model(model, "battledroid_pilot")
+			|| Class_Model(model, "battledroid_security"))
 		{
 			client->pers.nextbotclass = BCLASS_BATTLEDROID;
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
@@ -4566,9 +4847,14 @@ qboolean client_userinfo_changed(const int client_num)
 			|| Class_Model(model, "jedi_yoda")
 			|| Class_Model(model, "yoda")
 			|| Class_Model(model, "yaddle_mp")
+			|| Class_Model(model, "yoda_mp/ghost")
 			|| Class_Model(model, "yoda_mp")
+			|| Class_Model(model, "yoda_mp/hr")
+			|| Class_Model(model, "yoda_mp/cw")
+			|| Class_Model(model, "yoda_mp/ep2")
 			|| Class_Model(model, "yodavm")
-			|| Class_Model(model, "pic_mp"))
+			|| Class_Model(model, "pic_mp")
+			|| Class_Model(model, "grogu"))
 		{
 			client->pers.botmodelscale = BOTZIZE_SMALLEST;
 			client->pers.nextbotclass = BCLASS_YODA;
@@ -4588,13 +4874,17 @@ qboolean client_userinfo_changed(const int client_num)
 			|| Class_Model(model, "youngshak")
 			|| Class_Model(model, "youngfem")
 			|| Class_Model(model, "youngling")
+			|| Class_Model(model, "md_youngling")
+			|| Class_Model(model, "md_you5")
+			|| Class_Model(model, "md_you4")
 			|| Class_Model(model, "youngling/default")
 			|| Class_Model(model, "halsey_mp")
+			|| Class_Model(model, "halsey_mp/cw")
 			|| Class_Model(model, "knox_mp")
 			|| Class_Model(model, "nahdar_mp")
+			|| Class_Model(model, "nahdar_mp/robed")
 			|| Class_Model(model, "tsuichoi_mp")
-			|| Class_Model(model, "zett_jukassa_mp")
-			|| Class_Model(model, "caleb_dume_mp"))
+			|| Class_Model(model, "zett_jukassa_mp"))
 		{
 			client->pers.botmodelscale = BOTZIZE_SMALLER;
 			client->pers.nextbotclass = BCLASS_JEDI;
@@ -4643,9 +4933,14 @@ qboolean client_userinfo_changed(const int client_num)
 			}
 		}
 		else if (Class_Model(model, "jarjar")
+			|| Class_Model(model, "md_jarjar")
+			|| Class_Model(model, "md_gungan_warrior")
 			|| Class_Model(model, "gungan")
+			|| Class_Model(model, "md_gunray")
 			|| Class_Model(model, "gunray_mp")
 			|| Class_Model(model, "rune_mp")
+			|| Class_Model(model, "md_wat_tambor")
+			|| Class_Model(model, "md_shu_mai")
 			|| Class_Model(model, "gunray_ep3_mp"))
 		{
 			client->pers.botmodelscale = BOTZIZE_LARGER;
@@ -4706,6 +5001,7 @@ qboolean client_userinfo_changed(const int client_num)
 		else if (Class_Model(model, "droideka")
 			|| Class_Model(model, "droideka/main")
 			|| Class_Model(model, "droideka_mp")
+			|| Class_Model(model, "md_dro_am")
 			|| Class_Model(model, "khadmiral/main")
 			|| Class_Model(model, "khadmiral/main2")
 			|| Class_Model(model, "dustil")
@@ -4766,14 +5062,21 @@ qboolean client_userinfo_changed(const int client_num)
 			|| Class_Model(model, "sithworrior2/default")
 			|| Class_Model(model, "darth_sidious")
 			|| Class_Model(model, "sidious")
+			|| Class_Model(model, "md_ani_bw")
+			|| Class_Model(model, "md_ani_sith")
 			|| Class_Model(model, "sidious/main")
 			|| Class_Model(model, "sidious/main2")
 			|| Class_Model(model, "sidious/")
+			|| Class_Model(model, "md_sidious")
+			|| Class_Model(model, "md_sidious_ep3_robed")
+			|| Class_Model(model, "md_sidious_ep2")
+			|| Class_Model(model, "md_sidious_ep3_red")
 			|| Class_Model(model, "t_palpatine_sith")
 			|| Class_Model(model, "hs_dooku")
 			|| Class_Model(model, "jedi_dooku")
 			|| Class_Model(model, "t_palpatine")
 			|| Class_Model(model, "palpatine")
+			|| Class_Model(model, "md_palpatine")
 			|| Class_Model(model, "emperor/")
 			|| Class_Model(model, "emperor/main")
 			|| Class_Model(model, "sithinquisitor2/default")
@@ -4783,10 +5086,12 @@ qboolean client_userinfo_changed(const int client_num)
 			|| Class_Model(model, "darthrevan")
 			|| Class_Model(model, "darthsion")
 			|| Class_Model(model, "palpatine_mp")
+			|| Class_Model(model, "palpatine_mp/robed_tcw")
 			|| Class_Model(model, "palpatine_boc_mp")
 			|| Class_Model(model, "palpatine_fa_mp")
 			|| Class_Model(model, "palpatine_holo_mp")
 			|| Class_Model(model, "palpatine_ros_mp")
+			|| Class_Model(model, "palpatine_ros_mp/blind")
 			|| Class_Model(model, "darthtraya"))
 		{
 			client->pers.nextbotclass = BCLASS_SITHLORD;
@@ -4803,9 +5108,30 @@ qboolean client_userinfo_changed(const int client_num)
 				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
 			}
 		}
-		else if (Class_Model(model, "snoke"))
+		else if (Class_Model(model, "snoke")
+			|| Class_Model(model, "mothertalzin"))
 		{
 			client->pers.nextbotclass = BCLASS_SITHLORD;
+			client->pers.botmodelscale = BOTZIZE_TALL;
+			if (!(ent->r.svFlags & SVF_BOT))
+			{
+				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
+					GT_SIEGE)
+				{
+					client->ps.stats[STAT_HEALTH] = ent->health = 0;
+					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
+					trap->UnlinkEntity((sharedEntity_t*)ent);
+				}
+				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
+			}
+		}
+		else if (Class_Model(model, "pong_krell")
+			|| Class_Model(model, "md_jbrute")
+			|| Class_Model(model, "praetorian_guard")
+			|| Class_Model(model, "praetorian_guard/secondguard")
+			|| Class_Model(model, "praetorian_guard/thirdguard"))
+		{
+			client->pers.nextbotclass = BCLASS_DUELS;
 			client->pers.botmodelscale = BOTZIZE_TALL;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
@@ -4827,7 +5153,11 @@ qboolean client_userinfo_changed(const int client_num)
 			|| Class_Model(model, "grievous_utapau")
 			|| Class_Model(model, "grievous4")
 			|| Class_Model(model, "grievous")
+			|| Class_Model(model, "md_grievous")
+			|| Class_Model(model, "md_grievous4")
+			|| Class_Model(model, "md_grievous_robed")
 			|| Class_Model(model, "grievous_mp")
+			|| Class_Model(model, "sabertraining_droid")
 			|| Class_Model(model, "jedi_gri"))
 		{
 			client->pers.botmodelscale = BOTZIZE_MASSIVE;
@@ -4853,6 +5183,7 @@ qboolean client_userinfo_changed(const int client_num)
 			|| Class_Model(model, "ma/main4")
 			|| Class_Model(model, "ma")
 			|| Class_Model(model, "gorc_mp")
+			|| Class_Model(model, "md_magnaguard")
 			|| Class_Model(model, "magnaguard")
 			|| Class_Model(model, "magnaguard_mp"))
 		{
@@ -4879,7 +5210,9 @@ qboolean client_userinfo_changed(const int client_num)
 			|| Class_Model(model, "Sith_Assassin")
 			|| Class_Model(model, "Sith_Assassin2")
 			|| Class_Model(model, "Sith_Assassin2Master")
-			|| Class_Model(model, "sith_warrior"))
+			|| Class_Model(model, "sith_warrior")
+			|| Class_Model(model, "sithtrooper")
+			|| Class_Model(model, "sithtrooper/officer"))
 		{
 			client->pers.botmodelscale = BOTZIZE_NORMAL;
 			client->pers.nextbotclass = BCLASS_SITH;
@@ -5319,8 +5652,8 @@ char* ClientConnect(int client_num, const qboolean firstTime, const qboolean isB
 				//	client->pers.connected = CON_DISCONNECTED;
 				return "Too many connections from the same IP";
 			}
-		}
 	}
+}
 
 	if (ent->inuse)
 	{
@@ -5981,7 +6314,7 @@ tryTorso:
 				//want to remove the support bone too then
 				trap->G2API_SetBoneAnim(self->ghoul2, 0, "lhumerus", 0, 1, 0, 0, level.time, -1, 0);
 				trap->G2API_RemoveBone(self->ghoul2, "lhumerus", 0);
-			}
+	}
 
 			assert(brokenBone);
 
@@ -5991,7 +6324,7 @@ tryTorso:
 			//Now remove it
 			trap->G2API_RemoveBone(self->ghoul2, brokenBone, 0);
 			self->client->brokenLimbs &= ~broken;
-		}
+}
 	}
 #endif
 }
@@ -7191,6 +7524,15 @@ void ClientSpawn(gentity_t* ent)
 					client->skillLevel[SK_CRYOBAN] = FORCE_LEVEL_3;
 					client->ps.ammo[AMMO_THERMAL] = 4;
 					break;
+				case BCLASS_CLONETROOPER:
+					client->ps.stats[STAT_WEAPONS] |= 1 << WP_MELEE;
+					client->ps.stats[STAT_ARMOR] = 100;
+					client->ps.stats[STAT_WEAPONS] |= 1 << WP_REPEATER;
+					client->skillLevel[SK_REPEATER] = FORCE_LEVEL_3;
+					client->ps.ammo[AMMO_BLASTER] = 900;
+					client->ps.ammo[AMMO_POWERCELL] = 500;
+					client->ps.ammo[AMMO_METAL_BOLTS] = 900;
+					break;
 				case BCLASS_PLAYER:
 					client->ps.stats[STAT_WEAPONS] |= 1 << WP_BLASTER;
 					client->skillLevel[SK_BLASTER] = FORCE_LEVEL_3;
@@ -7939,6 +8281,14 @@ void ClientSpawn(gentity_t* ent)
 			client->ps.stats[STAT_MAX_HEALTH] = 100;
 			client->ps.stats[STAT_HOLDABLE_ITEMS] |= 1 << HI_MEDPAC;
 			break;
+		case BCLASS_CLONETROOPER:
+			client->ps.stats[STAT_HOLDABLE_ITEMS] |= 1 << HI_SEEKER;
+			client->ps.stats[STAT_HOLDABLE_ITEMS] |= 1 << HI_EWEB;
+			client->ps.stats[STAT_HOLDABLE_ITEMS] |= 1 << HI_SHIELD;
+			client->ps.stats[STAT_ARMOR] = 100;
+			client->ps.stats[STAT_MAX_HEALTH] = 100;
+			client->ps.stats[STAT_HOLDABLE_ITEMS] |= 1 << HI_MEDPAC;
+			break;
 		case BCLASS_PLAYER:
 			client->ps.stats[STAT_ARMOR] = 100;
 			client->ps.stats[STAT_MAX_HEALTH] = 100;
@@ -8065,6 +8415,7 @@ void ClientSpawn(gentity_t* ent)
 		case BCLASS_IPPERIALAGENT1:
 		case BCLASS_IPPERIALAGENT2:
 		case BCLASS_IPPERIALAGENT3:
+		case BCLASS_CLONETROOPER:
 		case BCLASS_PLAYER:
 			client->ps.fd.forcePowerLevel[FP_HEAL] = FORCE_LEVEL_0;
 			client->ps.fd.forcePowerLevel[FP_LEVITATION] = FORCE_LEVEL_0;

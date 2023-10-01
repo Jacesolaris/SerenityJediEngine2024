@@ -196,7 +196,7 @@ extern qboolean BG_InKnockDown(int anim);
 extern saber_moveName_t PM_BrokenParryForParry(int move);
 extern qboolean PM_SaberInDamageMove(int move);
 extern qboolean PM_SaberDoDamageAnim(int anim);
-extern qboolean PM_SaberInnonblockableAttack(int anim);
+extern qboolean pm_saber_innonblockable_attack(int anim);
 extern qboolean PM_Saberinstab(int move);
 extern qboolean PM_RestAnim(int anim);
 extern qboolean PM_KickingAnim(int anim);
@@ -13845,15 +13845,18 @@ void wp_saber_start_missile_block_check(gentity_t* self, const usercmd_t* ucmd)
 					self->client->ps.forcePowerDebounce[FP_SABER_DEFENSE] = level.time + Q_irand(1000, 2000);
 				}
 			}
-			else if (jedi_saber_block_go(self, &self->NPC->last_ucmd, nullptr, nullptr, incoming) != EVASION_NONE
-				&& self->client->NPC_class != CLASS_ROCKETTROOPER
-				&& self->client->NPC_class != CLASS_BOBAFETT
-				&& self->client->NPC_class != CLASS_MANDO)
+			else if (jedi_saber_block_go(self, &self->NPC->last_ucmd, nullptr, nullptr, incoming) != EVASION_NONE)
 			{
-				//make sure to turn on your saber if it's not on
-				if (self->client->NPC_class != CLASS_REBORN || self->s.weapon == WP_SABER)
+				if (self->client->NPC_class != CLASS_ROCKETTROOPER
+					&& self->client->NPC_class != CLASS_BOBAFETT
+					&& self->client->NPC_class != CLASS_MANDO
+					&& self->client->NPC_class != CLASS_REBORN)
 				{
-					self->client->ps.SaberActivate();
+					//make sure to turn on your saber if it's not on
+					if (self->s.weapon == WP_SABER)
+					{
+						self->client->ps.SaberActivate();
+					}
 				}
 			}
 		}
@@ -13861,9 +13864,9 @@ void wp_saber_start_missile_block_check(gentity_t* self, const usercmd_t* ucmd)
 		{
 			gentity_t* blocker = &g_entities[incoming->ownerNum];
 
-			if (!blocker->client->ps.SaberActive())
+			if (self->client && !self->client->ps.SaberActive())
 			{
-				blocker->client->ps.SaberActivate();
+				self->client->ps.SaberActivate();
 			}
 			if (closest_swing_block && blocker->health > 0)
 			{
@@ -15286,7 +15289,7 @@ void ForceThrow(gentity_t* self, qboolean pull, qboolean fake)
 		return;
 	}
 
-	if (PM_SaberInnonblockableAttack(self->client->ps.torsoAnim))
+	if (pm_saber_innonblockable_attack(self->client->ps.torsoAnim))
 	{
 		return;
 	}
@@ -29300,7 +29303,7 @@ void G_SaberBounce(const gentity_t* attacker, gentity_t* victim)
 		return;
 	}
 
-	if (PM_SaberInnonblockableAttack(attacker->client->ps.torsoAnim))
+	if (pm_saber_innonblockable_attack(attacker->client->ps.torsoAnim))
 	{
 		return;
 	}

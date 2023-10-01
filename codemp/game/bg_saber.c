@@ -7451,7 +7451,7 @@ qboolean BG_SaberInFullDamageMove(const playerState_t* ps, const int anim_index)
 		//in attack animation
 		if ((ps->saber_move == LS_A_FLIP_STAB || ps->saber_move == LS_A_FLIP_SLASH
 			|| ps->saber_move == BOTH_JUMPFLIPSTABDOWN || ps->saber_move == BOTH_JUMPFLIPSLASHDOWN1)
-			&& (torso_anim_point >= 0.30f && torso_anim_point <= 0.95f)) //assumes that the dude is
+			&& (torso_anim_point >= 0.30f && torso_anim_point <= 0.75f)) //assumes that the dude is
 		{
 			//flip attacks shouldn't do damage during the whole move.
 			return qtrue;
@@ -7490,7 +7490,7 @@ qboolean BG_SaberInPartialDamageMove(const playerState_t* ps, const int anim_ind
 
 	if ((ps->saber_move == LS_A_FLIP_STAB || ps->saber_move == LS_A_FLIP_SLASH
 		|| ps->saber_move == BOTH_JUMPFLIPSTABDOWN || ps->saber_move == BOTH_JUMPFLIPSLASHDOWN1)
-		&& (torso_anim_point >= 0.30f && torso_anim_point <= 0.95f)) //assumes that the dude is
+		&& (torso_anim_point >= 0.30f && torso_anim_point <= 0.75f)) //assumes that the dude is
 	{
 		//flip attacks shouldn't do damage during the whole move.
 		return qtrue;

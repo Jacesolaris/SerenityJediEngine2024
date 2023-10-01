@@ -279,6 +279,8 @@ typedef enum
 	BCLASS_OBJECT,
 	// new ones for MD
 	BCLASS_OBIWAN,
+	BCLASS_JANGO_NOJP,
+	BCLASS_CLONETROOPER,
 
 	BCLASS_NUM_CLASSES
 } bclass_t;

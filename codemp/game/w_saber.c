@@ -102,7 +102,7 @@ extern saber_moveName_t pm_block_the_attack(int move);
 extern int g_block_the_attack(int move);
 void WP_BlockPointsDrain(const gentity_t* self, int fatigue);
 extern int Jedi_ReCalcParryTime(const gentity_t* self, evasionType_t evasion_type);
-extern qboolean PM_SaberInnonblockableAttack(int anim);
+extern qboolean pm_saber_innonblockable_attack(int anim);
 extern qboolean NPC_IsAlive(const gentity_t* self, const gentity_t* npc);
 //////////////////////////////////////////////////
 extern qboolean sab_beh_attack_vs_block(gentity_t* attacker, gentity_t* blocker, int saber_num, int blade_num, vec3_t hit_loc);
@@ -2564,7 +2564,7 @@ void G_SaberBounce(const gentity_t* attacker, gentity_t* victim)
 		return;
 	}
 
-	if (PM_SaberInnonblockableAttack(attacker->client->ps.torsoAnim))
+	if (pm_saber_innonblockable_attack(attacker->client->ps.torsoAnim))
 	{
 		return;
 	}
@@ -8028,16 +8028,20 @@ void wp_saber_start_missile_block_check(gentity_t* self, usercmd_t* ucmd)
 					self->client->ps.fd.forcePowerDebounce[FP_SABER_DEFENSE] = level.time + Q_irand(1000, 2000);
 				}
 			}
-			else if (self->client->NPC_class != CLASS_ROCKETTROOPER
-				&& jedi_saber_block_go(self, &self->NPC->last_ucmd, NULL, NULL, incoming, 0.0f) != EVASION_NONE)
+			else if (jedi_saber_block_go(self, &self->NPC->last_ucmd, NULL, NULL, incoming, 0.0f) != EVASION_NONE)
 			{
 				//make sure to turn on your saber if it's not on
 				if (self->client->NPC_class != CLASS_BOBAFETT
-					|| self->client->pers.botclass != BCLASS_BOBAFETT
-					|| self->client->pers.botclass != BCLASS_MANDOLORIAN1
-					|| self->client->pers.botclass != BCLASS_MANDOLORIAN2)
+					&& self->client->NPC_class != CLASS_ROCKETTROOPER
+					&& self->client->NPC_class != CLASS_REBORN
+					&& self->client->pers.botclass != BCLASS_BOBAFETT
+					&& self->client->pers.botclass != BCLASS_MANDOLORIAN1
+					&& self->client->pers.botclass != BCLASS_MANDOLORIAN2)
 				{
-					WP_ActivateSaber(self);
+					if (self->s.weapon == WP_SABER)
+					{
+						WP_ActivateSaber(self);
+					}
 				}
 			}
 		}
@@ -8045,7 +8049,7 @@ void wp_saber_start_missile_block_check(gentity_t* self, usercmd_t* ucmd)
 		{
 			gentity_t* blocker = &g_entities[incoming->r.ownerNum];
 
-			if (self->client->ps.saberHolstered == 2)
+			if (self->client && self->client->ps.saberHolstered == 2)
 			{
 				WP_ActivateSaber(self);
 			}
