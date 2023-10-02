@@ -7023,11 +7023,16 @@ void PM_Setsaber_move(saber_moveName_t new_move)
 			{
 				parts = SETANIM_BOTH;
 			}
-			else if (!(pm->ps->pm_flags & PMF_DUCKED)
-				&& (new_move == LS_SPINATTACK_DUAL || new_move == LS_SPINATTACK || new_move == LS_SPINATTACK_GRIEV ||
-					new_move == LS_GRIEVOUS_SPECIAL))
+			else if ((new_move == LS_SPINATTACK_DUAL || new_move == LS_SPINATTACK || new_move == LS_SPINATTACK_GRIEV || new_move == LS_GRIEVOUS_SPECIAL))
 			{
-				parts = SETANIM_BOTH;
+				if (pm->ps->pm_flags & PMF_DUCKED)
+				{
+					parts = SETANIM_BOTH;
+				}
+				else
+				{
+					parts = SETANIM_TORSO;
+				}
 			}
 		}
 

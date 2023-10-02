@@ -12193,27 +12193,28 @@ void standard_bot_ai(bot_state_t* bs)
 			if (g_entities[bs->client].client->ps.fd.saber_anim_level != SS_STAFF
 				&& g_entities[bs->client].client->ps.fd.saber_anim_level != SS_DUAL)
 			{
-				if (bs->currentEnemy->health > 75
+				if (bs->currentEnemy->client->ps.fd.blockPoints > BLOCKPOINTS_MISSILE
 					&& g_entities[bs->client].client->ps.fd.forcePowerLevel[FP_SABER_OFFENSE] > 2)
 				{
 					if (g_entities[bs->client].client->ps.fd.saber_anim_level != SS_STRONG
-						&& bs->saberPower)
-					{ //if we are up against someone with a lot of health and we have a strong attack available, then h4q them
+						&& g_entities[bs->client].client->ps.fd.saber_anim_level != SS_DESANN && bs->saberPower)
+					{ //if we are up against someone with a lot of blockpoints and we have a strong attack available, then h4q them
 						Cmd_SaberAttackCycle_f(&g_entities[bs->client]);
 					}
 				}
-				else if (bs->currentEnemy->health > 40
+				else if (bs->currentEnemy->client->ps.fd.blockPoints > BLOCKPOINTS_FOURTY
 					&& g_entities[bs->client].client->ps.fd.forcePowerLevel[FP_SABER_OFFENSE] > 1)
 				{
 					if (g_entities[bs->client].client->ps.fd.saber_anim_level != SS_MEDIUM)
-					{ //they're down on health a little, use level 2 if we can
+					{ //they're down on blockpoints a little, use level 2 if we can
 						Cmd_SaberAttackCycle_f(&g_entities[bs->client]);
 					}
 				}
 				else
 				{
-					if (g_entities[bs->client].client->ps.fd.saber_anim_level != SS_FAST)
-					{ //they've gone below 40 health, go at them with quick attacks
+					if (g_entities[bs->client].client->ps.fd.saber_anim_level != SS_FAST
+						&& g_entities[bs->client].client->ps.fd.saber_anim_level != SS_TAVION)
+					{ //they've gone below 40 blockpoints, go at them with quick attacks
 						Cmd_SaberAttackCycle_f(&g_entities[bs->client]);
 					}
 				}

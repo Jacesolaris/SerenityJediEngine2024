@@ -1101,11 +1101,12 @@ qboolean sab_beh_block_vs_attack(gentity_t* blocker, gentity_t* attacker, const 
 					}
 					else
 					{
+						WP_SaberMBlockDirection(blocker, hit_loc, qfalse);
+
 						if (blocker->r.svFlags & SVF_BOT) //NPC only
 						{
 							g_do_m_block_response(blocker);
 						}
-						WP_SaberMBlockDirection(blocker, hit_loc, qfalse);
 
 						if ((d_blockinfo.integer || g_DebugSaberCombat.integer) && !(blocker->r.svFlags & SVF_BOT))
 						{
@@ -1116,14 +1117,19 @@ qboolean sab_beh_block_vs_attack(gentity_t* blocker, gentity_t* attacker, const 
 					}
 				}
 
+				G_Sound(blocker, CHAN_AUTO, G_SoundIndex(va("sound/weapons/saber/saber_goodparry%d.mp3", Q_irand(1, 3))));
+
+				if ((d_blockinfo.integer || g_DebugSaberCombat.integer) && !(blocker->r.svFlags & SVF_BOT))
+				{
+					Com_Printf(S_COLOR_CYAN"Blocker Other types of block and npc,s\n");
+				}
+
 				//just so blocker knows that he has parried the attacker
 				blocker->client->ps.saberEventFlags |= SEF_PARRIED;
 				//just so attacker knows that he was blocked
 				attacker->client->ps.saberEventFlags |= SEF_BLOCKED;
 				//since it was parried, take away any damage done
 				wp_saber_clear_damage_for_ent_num(attacker, blocker->s.number, saber_num, blade_num);
-
-				G_Sound(blocker, CHAN_AUTO, G_SoundIndex(va("sound/weapons/saber/saber_goodparry%d.mp3", Q_irand(1, 3))));
 			}
 			else
 			{

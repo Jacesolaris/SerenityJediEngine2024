@@ -1537,6 +1537,8 @@ struct gentity_s
 	int npc_roll_time;
 	qboolean npc_roll_start;
 	int npc_roll_direction;
+	int saberPowerTime;
+	qboolean saberPower;
 
 	void sg_export(
 		ojk::SavedGameHelper& saved_game) const
@@ -1741,6 +1743,8 @@ struct gentity_s
 		saved_game.write<int32_t>(reloadTime);
 		saved_game.write<int32_t>(reloadCooldown);
 		saved_game.write<int32_t>(TimeOfWeaponDrop);
+		saved_game.write<int32_t>(saberPowerTime);
+		saved_game.write<int32_t>(saberPower);
 	}
 
 	void sg_import(
@@ -1946,6 +1950,8 @@ struct gentity_s
 		saved_game.read<int32_t>(reloadTime);
 		saved_game.read<int32_t>(reloadCooldown);
 		saved_game.read<int32_t>(TimeOfWeaponDrop);
+		saved_game.read<int32_t>(saberPowerTime);
+		saved_game.read<int32_t>(saberPower);
 	}
 };
 #endif //#ifdef GAME_INCLUDE

@@ -9727,9 +9727,6 @@ static void PM_Footsteps(void)
 			&& !PM_SaberInBrokenParry(pm->ps->saber_move)
 			|| PM_SaberStanceAnim(pm->ps->legsAnim)
 			|| PM_SaberDrawPutawayAnim(pm->ps->legsAnim)
-			|| pm->ps->legsAnim == BOTH_SPINATTACK6 //not a full-body spin, just spinning the saber
-			|| pm->ps->legsAnim == BOTH_SPINATTACK7 //not a full-body spin, just spinning the saber
-			|| pm->ps->legsAnim == BOTH_SPINATTACKGRIEVOUS //not a full-body spin, just spinning the saber
 			|| pm->ps->legsAnim == BOTH_BUTTON_HOLD
 			|| pm->ps->legsAnim == BOTH_BUTTON_RELEASE
 			|| pm->ps->legsAnim == BOTH_THERMAL_READY
@@ -9755,11 +9752,7 @@ static void PM_Footsteps(void)
 	//
 	pm->xyspeed = sqrt(pm->ps->velocity[0] * pm->ps->velocity[0] + pm->ps->velocity[1] * pm->ps->velocity[1]);
 
-	if (pm->ps->saber_move == LS_SPINATTACK)
-	{
-		PM_ContinueLegsAnim(pm->ps->torsoAnim);
-	}
-	else if (pm->ps->groundEntityNum == ENTITYNUM_NONE)
+	if (pm->ps->groundEntityNum == ENTITYNUM_NONE)
 	{
 		// airborne leaves position in cycle intact, but doesn't advance
 		if (pm->waterlevel > 1)
@@ -9930,12 +9923,7 @@ static void PM_Footsteps(void)
 		return;
 	}
 
-	if (pm->ps->saber_move == LS_SPINATTACK)
-	{
-		bobmove = 0.2f;
-		PM_ContinueLegsAnim(pm->ps->torsoAnim);
-	}
-	else if (pm->ps->pm_flags & PMF_DUCKED)
+	if (pm->ps->pm_flags & PMF_DUCKED)
 	{
 		int rolled = 0;
 
@@ -10289,7 +10277,7 @@ static void PM_Footsteps(void)
 							}
 						}
 
-						if (pm->ps->pm_flags & PMF_BLOCK_HELD && pm->ps->sprintFuel > 15)
+						if (pm->cmd.buttons & BUTTON_BLOCK && pm->ps->sprintFuel > 15)
 						{
 							if (pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING)
 							{
@@ -10363,7 +10351,7 @@ static void PM_Footsteps(void)
 							desiredAnim = BOTH_RUN3_MP;
 						}
 
-						if (pm->ps->pm_flags & PMF_BLOCK_HELD && pm->ps->sprintFuel > 15)
+						if (pm->cmd.buttons & BUTTON_BLOCK && pm->ps->sprintFuel > 15)
 						{
 							if (pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING)
 							{
@@ -10414,7 +10402,7 @@ static void PM_Footsteps(void)
 							desiredAnim = BOTH_RUN6;
 						}
 
-						if (pm->ps->pm_flags & PMF_BLOCK_HELD && pm->ps->sprintFuel > 15)
+						if (pm->cmd.buttons & BUTTON_BLOCK && pm->ps->sprintFuel > 15)
 						{
 							if (pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING)
 							{
@@ -10483,7 +10471,7 @@ static void PM_Footsteps(void)
 							desiredAnim = BOTH_RUN7;
 						}
 
-						if (pm->ps->pm_flags & PMF_BLOCK_HELD && pm->ps->sprintFuel > 15)
+						if (pm->cmd.buttons & BUTTON_BLOCK && pm->ps->sprintFuel > 15)
 						{
 							if (pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING)
 							{
@@ -10533,7 +10521,7 @@ static void PM_Footsteps(void)
 							desiredAnim = BOTH_RUN6;
 						}
 
-						if (pm->ps->pm_flags & PMF_BLOCK_HELD && pm->ps->sprintFuel > 15)
+						if (pm->cmd.buttons & BUTTON_BLOCK && pm->ps->sprintFuel > 15)
 						{
 							if (pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING)
 							{
@@ -10806,7 +10794,7 @@ static void PM_Footsteps(void)
 										}
 #endif
 									}
-							}
+								}
 								else
 								{
 									if (pm->ps->stats[STAT_HEALTH] <= 70 && pm->ps->stats[STAT_HEALTH] >= 40)
@@ -10835,10 +10823,10 @@ static void PM_Footsteps(void)
 										else if (saber1 && saber1->type == SABER_GRIE4) //saber kylo
 										{
 											PM_SetAnim(SETANIM_BOTH, BOTH_RUN7, set_anim_flags);
-									}
+										}
 										else
 										{
-											if (holding_block && pm->ps->sprintFuel > 10) // single sprint here
+											if (holding_block && pm->ps->sprintFuel > 15) // single sprint here
 											{
 												PM_SetAnim(SETANIM_BOTH, BOTH_SPRINT_SABER_MP, set_anim_flags);
 
@@ -10868,10 +10856,10 @@ static void PM_Footsteps(void)
 												}
 											}
 										}
+									}
 								}
+							}
 						}
-					}
-					}
 						else // holding saber but its off
 						{
 							if (pm->ps->stats[STAT_HEALTH] <= 70 && pm->ps->stats[STAT_HEALTH] >= 40)
@@ -15856,40 +15844,6 @@ void BG_AdjustClientSpeed(playerState_t* ps, const usercmd_t* cmd, const int svT
 			ps->speed *= 0.2f;
 	}
 
-	// slow down spin/crouch if un-nerfed
-#ifdef _GAME
-	if (!(m_nerf.integer & 1 << EOC_SPINATTACK) && (ps->saber_move == LS_SPINATTACK_DUAL || ps->saber_move ==
-		LS_SPINATTACK || ps->saber_move == LS_SPINATTACK_GRIEV))
-#else
-	if (!(cgs.m_nerf & 1 << EOC_SPINATTACK) && (ps->saber_move == LS_SPINATTACK_DUAL || ps->saber_move == LS_SPINATTACK
-		|| ps->saber_move == LS_SPINATTACK_GRIEV))
-#endif
-	{
-		ps->speed *= 0.5;
-	}
-
-	// slow down dual specials if un-nerfed
-#ifdef _GAME
-	if (!(m_nerf.integer & 1 << EOC_DUALSPECIAL) && (ps->saber_move == LS_JUMPATTACK_DUAL || ps->saber_move ==
-		LS_GRIEVOUS_LUNGE))
-#else
-	if (!(cgs.m_nerf & 1 << EOC_DUALSPECIAL) && (ps->saber_move == LS_JUMPATTACK_DUAL || ps->saber_move ==
-		LS_GRIEVOUS_LUNGE))
-#endif
-	{
-		ps->speed *= 0.66;
-	}
-
-	// slow down staff specials if un-nerfed
-#ifdef _GAME
-	if (!(m_nerf.integer & 1 << EOC_STAFFSPECIAL) && ps->saber_move == LS_JUMPATTACK_STAFF_RIGHT)
-#else
-	if (!(cgs.m_nerf & 1 << EOC_STAFFSPECIAL) && ps->saber_move == LS_JUMPATTACK_STAFF_RIGHT)
-#endif
-	{
-		ps->speed *= 0.66;
-	}
-
 	if (pm->ps->stats[STAT_HEALTH] <= 25)
 	{
 		//move slower when low on health
@@ -17554,15 +17508,6 @@ static QINLINE void PM_CmdForSaberMoves(usercmd_t* ucmd)
 			}
 		}
 		ucmd->forwardmove = ucmd->rightmove = ucmd->upmove = 0;
-	}
-	//STAFF/DUAL SPIN ATTACK
-	else if (pm->ps->saber_move == LS_SPINATTACK ||
-		pm->ps->saber_move == LS_SPINATTACK_DUAL ||
-		pm->ps->saber_move == LS_SPINATTACK_GRIEV)
-	{
-		ucmd->forwardmove = ucmd->rightmove = ucmd->upmove = 0;
-		//lock their viewangles during these attacks.
-		PM_SetPMViewAngle(pm->ps, pm->ps->viewangles, ucmd);
 	}
 	else if (PM_SaberInBrokenParry(pm->ps->saber_move))
 	{

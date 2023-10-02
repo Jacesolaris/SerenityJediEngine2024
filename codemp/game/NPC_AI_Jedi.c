@@ -2561,7 +2561,7 @@ static void Jedi_Advance(void)
 extern qboolean WP_SaberCanTurnOffSomeBlades(const saberInfo_t* saber);
 extern qboolean G_ValidSaberStyle(const gentity_t* ent, int saber_style);
 
-static void Jedi_Adjustsaber_anim_level(const gentity_t* self, int new_level)
+static void jedi_adjust_saber_anim_level(const gentity_t* self, int new_level)
 {
 	if (!self || !self->client)
 	{
@@ -2946,7 +2946,7 @@ static void Jedi_CheckDecreasesaber_anim_level(void)
 		//not attacking
 		if (TIMER_Done(NPCS.NPC, "saberLevelDebounce") && !Q_irand(0, 10))
 		{
-			Jedi_Adjustsaber_anim_level(NPCS.NPC, Q_irand(SS_FAST, SS_TAVION)); //random
+			jedi_adjust_saber_anim_level(NPCS.NPC, Q_irand(SS_FAST, SS_TAVION)); //random
 			TIMER_Set(NPCS.NPC, "saberLevelDebounce", Q_irand(3000, 10000));
 		}
 	}
@@ -7315,7 +7315,7 @@ static void Jedi_CombatTimersUpdate(const int enemy_dist)
 			{
 				//advance!
 				Jedi_Aggression(NPCS.NPC, 1); //get closer
-				Jedi_Adjustsaber_anim_level(NPCS.NPC, NPCS.NPC->client->ps.fd.saber_anim_level - 1); //use a faster attack
+				jedi_adjust_saber_anim_level(NPCS.NPC, NPCS.NPC->client->ps.fd.saber_anim_level - 1); //use a faster attack
 			}
 			else
 			{
@@ -7326,7 +7326,7 @@ static void Jedi_CombatTimersUpdate(const int enemy_dist)
 				}
 				if (!Q_irand(0, 1))
 				{
-					Jedi_Adjustsaber_anim_level(NPCS.NPC, NPCS.NPC->client->ps.fd.saber_anim_level - 1);
+					jedi_adjust_saber_anim_level(NPCS.NPC, NPCS.NPC->client->ps.fd.saber_anim_level - 1);
 				}
 			}
 			if (d_JediAI.integer || g_DebugSaberCombat.integer)
@@ -7367,7 +7367,7 @@ static void Jedi_CombatTimersUpdate(const int enemy_dist)
 			}
 			if (!Q_irand(0, 2))
 			{
-				Jedi_Adjustsaber_anim_level(NPCS.NPC, NPCS.NPC->client->ps.fd.saber_anim_level + 1);
+				jedi_adjust_saber_anim_level(NPCS.NPC, NPCS.NPC->client->ps.fd.saber_anim_level + 1);
 			}
 			newFlags &= ~SEF_HITENEMY;
 		}
@@ -7387,7 +7387,7 @@ static void Jedi_CombatTimersUpdate(const int enemy_dist)
 				{
 					Jedi_Aggression(NPCS.NPC, -2); //really should back off!
 				}
-				Jedi_Adjustsaber_anim_level(NPCS.NPC, NPCS.NPC->client->ps.fd.saber_anim_level + 1);
+				jedi_adjust_saber_anim_level(NPCS.NPC, NPCS.NPC->client->ps.fd.saber_anim_level + 1);
 				//use a stronger attack
 				if (d_JediAI.integer || g_DebugSaberCombat.integer)
 				{
@@ -7407,7 +7407,7 @@ static void Jedi_CombatTimersUpdate(const int enemy_dist)
 				}
 				if (!Q_irand(0, 1))
 				{
-					Jedi_Adjustsaber_anim_level(NPCS.NPC, NPCS.NPC->client->ps.fd.saber_anim_level + 1);
+					jedi_adjust_saber_anim_level(NPCS.NPC, NPCS.NPC->client->ps.fd.saber_anim_level + 1);
 				}
 			}
 			newFlags &= ~SEF_BLOCKED;
@@ -7422,7 +7422,7 @@ static void Jedi_CombatTimersUpdate(const int enemy_dist)
 			newFlags &= ~SEF_DEFLECTED;
 			if (!Q_irand(0, 3))
 			{
-				Jedi_Adjustsaber_anim_level(NPCS.NPC, NPCS.NPC->client->ps.fd.saber_anim_level - 1);
+				jedi_adjust_saber_anim_level(NPCS.NPC, NPCS.NPC->client->ps.fd.saber_anim_level - 1);
 			}
 		}
 		if (NPCS.NPC->client->ps.saberEventFlags & SEF_HITWALL)
@@ -7435,7 +7435,7 @@ static void Jedi_CombatTimersUpdate(const int enemy_dist)
 			//hit some other damagable object
 			if (!Q_irand(0, 3))
 			{
-				Jedi_Adjustsaber_anim_level(NPCS.NPC, NPCS.NPC->client->ps.fd.saber_anim_level - 1);
+				jedi_adjust_saber_anim_level(NPCS.NPC, NPCS.NPC->client->ps.fd.saber_anim_level - 1);
 			}
 			newFlags &= ~SEF_HITOBJECT;
 		}
@@ -7615,7 +7615,7 @@ static qboolean Jedi_AttackDecide(const int enemy_dist)
 			//try to attack straight from a parry
 			NPCS.NPC->client->ps.weaponTime = NPCS.NPCInfo->shotTime = NPCS.NPC->attackDebounceTime = 0;
 			NPCS.NPC->client->ps.saberBlocked = BLOCKED_NONE;
-			Jedi_Adjustsaber_anim_level(NPCS.NPC, SS_FAST); //try to follow-up with a quick attack
+			jedi_adjust_saber_anim_level(NPCS.NPC, SS_FAST); //try to follow-up with a quick attack
 			WeaponThink();
 			return qtrue;
 		}
@@ -8728,7 +8728,7 @@ void NPC_Jedi_Pain(gentity_t* self, gentity_t* attacker, const int damage)
 		if (!Q_irand(0, 3))
 		{
 			//ouch... maybe switch up which saber power level we're using
-			Jedi_Adjustsaber_anim_level(self, Q_irand(SS_FAST, SS_TAVION));
+			jedi_adjust_saber_anim_level(self, Q_irand(SS_FAST, SS_TAVION));
 		}
 		if (!Q_irand(0, 1))
 		{

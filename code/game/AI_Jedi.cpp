@@ -1556,7 +1556,7 @@ static qboolean Jedi_Advance()
 	return Jedi_Move(NPC->enemy, qfalse);
 }
 
-static void Jedi_Adjustsaber_anim_level(const gentity_t* self, const int new_level)
+static void jedi_adjust_saber_anim_level(const gentity_t* self, const int new_level)
 {
 	if (!self || !self->client)
 	{
@@ -1867,11 +1867,11 @@ static void Jedi_Adjustsaber_anim_level(const gentity_t* self, const int new_lev
 	}
 	if (new_level < SS_FAST)
 	{
-		Jedi_Adjustsaber_anim_level(NPC, Q_irand(SS_FAST, SS_STAFF));
+		jedi_adjust_saber_anim_level(NPC, Q_irand(SS_FAST, SS_STAFF));
 	}
 	else if (new_level > SS_STAFF)
 	{
-		Jedi_Adjustsaber_anim_level(NPC, Q_irand(SS_FAST, SS_STAFF));
+		jedi_adjust_saber_anim_level(NPC, Q_irand(SS_FAST, SS_STAFF));
 	}
 	//use the different attacks, how often they switch and under what circumstances
 	if (!(self->client->ps.saberStylesKnown & 1 << new_level))
@@ -1924,7 +1924,7 @@ static void Jedi_CheckDecreasesaber_anim_level()
 		//not attacking
 		if (TIMER_Done(NPC, "saberLevelDebounce") && !Q_irand(0, 10))
 		{
-			Jedi_Adjustsaber_anim_level(NPC, Q_irand(SS_FAST, SS_TAVION)); //random
+			jedi_adjust_saber_anim_level(NPC, Q_irand(SS_FAST, SS_TAVION)); //random
 			TIMER_Set(NPC, "saberLevelDebounce", Q_irand(3000, 10000));
 		}
 	}
@@ -2236,6 +2236,58 @@ static void jedi_combat_distance(const int enemy_dist)
 		// Try to heal...
 		ForceHeal(NPC);
 		TIMER_Set(NPC, "heal", Q_irand(10000, 15000));
+	}
+
+	if (!in_camera
+		&& NPC->enemy
+		&& enemy_dist < 200
+		&& NPC_IsAlive(NPC, NPC->enemy)
+		&& NPC->enemy->s.weapon == WP_SABER
+		&& NPC->client->ps.weapon == WP_SABER)
+	{
+		if (NPC->saberPowerTime < level.time)
+		{
+			//Don't just use strong attacks constantly, switch around a bit
+			if (Q_irand(1, 10) <= 5)
+			{
+				NPC->saberPower = qtrue;
+			}
+			else
+			{
+				NPC->saberPower = qfalse;
+			}
+
+			NPC->saberPowerTime = level.time + Q_irand(3000, 15000);
+		}
+		if (NPC->client->ps.saber_anim_level != SS_STAFF
+			&& NPC->client->ps.saber_anim_level != SS_DUAL)
+		{
+			if (NPC->enemy->client->ps.blockPoints > BLOCKPOINTS_MISSILE &&
+				NPC->client->ps.forcePowerLevel[FP_SABER_OFFENSE] > FORCE_LEVEL_2)
+			{
+				if (NPC->client->ps.saber_anim_level != SS_STRONG &&
+					NPC->client->ps.saber_anim_level != SS_DESANN && NPC->saberPower)
+				{ //if we are up against someone with a lot of blockpoints and we have a strong attack available, then h4q them
+					jedi_adjust_saber_anim_level(NPC, Q_irand(SS_DESANN, SS_STRONG)); //use a faster attack
+				}
+			}
+			else if (NPC->enemy->client->ps.blockPoints > BLOCKPOINTS_FOURTY &&
+				NPC->client->ps.forcePowerLevel[FP_SABER_OFFENSE] > FORCE_LEVEL_1)
+			{
+				if (NPC->client->ps.saber_anim_level != SS_MEDIUM)
+				{ //they're down on blockpoints a little, use level 2 if we can
+					jedi_adjust_saber_anim_level(NPC, SS_MEDIUM); //use a faster attack
+				}
+			}
+			else
+			{
+				if (NPC->client->ps.saber_anim_level != SS_FAST
+					&& NPC->client->ps.saber_anim_level != SS_TAVION)
+				{ //they've gone below 40 blockpoints, go at them with quick attacks
+					jedi_adjust_saber_anim_level(NPC, Q_irand(SS_DESANN, SS_FAST)); //use a faster attack
+				}
+			}
+		}
 	}
 
 	// SLAP
@@ -7066,7 +7118,7 @@ static void Jedi_CombatTimersUpdate(const int enemy_dist)
 					|| NPC->client->ps.saber_anim_level == SS_TAVION)
 				{
 					//my saber is not in a parrying position
-					Jedi_Adjustsaber_anim_level(NPC, NPC->client->ps.saber_anim_level - 1); //use a faster attack
+					jedi_adjust_saber_anim_level(NPC, NPC->client->ps.saber_anim_level - 1); //use a faster attack
 				}
 			}
 			else
@@ -7083,7 +7135,7 @@ static void Jedi_CombatTimersUpdate(const int enemy_dist)
 						|| NPC->client->ps.saber_anim_level == SS_TAVION)
 					{
 						//my saber is not in a parrying position
-						Jedi_Adjustsaber_anim_level(NPC, NPC->client->ps.saber_anim_level - 1); //use a faster attack
+						jedi_adjust_saber_anim_level(NPC, NPC->client->ps.saber_anim_level - 1); //use a faster attack
 					}
 				}
 			}
@@ -7124,7 +7176,7 @@ static void Jedi_CombatTimersUpdate(const int enemy_dist)
 			}
 			if (!Q_irand(0, 2))
 			{
-				Jedi_Adjustsaber_anim_level(NPC, NPC->client->ps.saber_anim_level + 1);
+				jedi_adjust_saber_anim_level(NPC, NPC->client->ps.saber_anim_level + 1);
 			}
 			newFlags &= ~SEF_HITENEMY;
 		}
@@ -7143,7 +7195,7 @@ static void Jedi_CombatTimersUpdate(const int enemy_dist)
 				{
 					Jedi_Aggression(NPC, -2); //really should back off!
 				}
-				Jedi_Adjustsaber_anim_level(NPC, NPC->client->ps.saber_anim_level + 1); //use a stronger attack
+				jedi_adjust_saber_anim_level(NPC, NPC->client->ps.saber_anim_level + 1); //use a stronger attack
 				if (d_JediAI->integer || g_DebugSaberCombat->integer)
 				{
 					gi.Printf("(%d) KNOCK-BLOCKED: agg %d\n", level.time, NPCInfo->stats.aggression);
@@ -7161,7 +7213,7 @@ static void Jedi_CombatTimersUpdate(const int enemy_dist)
 				}
 				if (!Q_irand(0, 1))
 				{
-					Jedi_Adjustsaber_anim_level(NPC, NPC->client->ps.saber_anim_level + 1);
+					jedi_adjust_saber_anim_level(NPC, NPC->client->ps.saber_anim_level + 1);
 				}
 			}
 			newFlags &= ~SEF_BLOCKED;
@@ -7172,7 +7224,7 @@ static void Jedi_CombatTimersUpdate(const int enemy_dist)
 			newFlags &= ~SEF_DEFLECTED;
 			if (!Q_irand(0, 3))
 			{
-				Jedi_Adjustsaber_anim_level(NPC, NPC->client->ps.saber_anim_level - 1);
+				jedi_adjust_saber_anim_level(NPC, NPC->client->ps.saber_anim_level - 1);
 			}
 		}
 		if (NPC->client->ps.saberEventFlags & SEF_HITWALL)
@@ -7185,7 +7237,7 @@ static void Jedi_CombatTimersUpdate(const int enemy_dist)
 			//hit some other damagable object
 			if (!Q_irand(0, 3))
 			{
-				Jedi_Adjustsaber_anim_level(NPC, NPC->client->ps.saber_anim_level - 1);
+				jedi_adjust_saber_anim_level(NPC, NPC->client->ps.saber_anim_level - 1);
 			}
 			newFlags &= ~SEF_HITOBJECT;
 		}
@@ -7346,31 +7398,6 @@ static qboolean Jedi_AttackDecide(const int enemy_dist)
 			return qtrue;
 		}
 	}
-
-	//if (npc_is_saber_master(NPC) && NPC->client->ps.blockPoints > BLOCKPOINTS_FULL)
-	//{
-	//	//tavion, fencers, jedi trainer are all good at following up a parry with an attack
-	//	if (PM_SaberInKnockaway(NPC->client->ps.saber_move) && NPC->client->ps.saberBlocked != BLOCKED_PARRY_BROKEN)
-	//	{
-	//		//try to attack straight from a knockaway
-	//		NPC->client->ps.weaponTime = NPCInfo->shotTime = NPC->attackDebounceTime = 0;
-	//		NPC->client->ps.saberBlocked = BLOCKED_NONE;
-
-	//		if (!(NPC->client->ps.saber_anim_level == SS_STAFF) && !(NPC->client->ps.saber_anim_level == SS_DUAL))
-	//		{
-	//			if (NPC->client->ps.saber_anim_level == SS_TAVION)
-	//			{
-	//				Jedi_Adjustsaber_anim_level(NPC, SS_FAST); //try to follow-up with an attack
-	//			}
-	//			else
-	//			{
-	//				Jedi_Adjustsaber_anim_level(NPC, SS_MEDIUM); //try to follow-up with an attack
-	//			}
-	//		}
-	//		WeaponThink(qtrue);
-	//		return qtrue;
-	//	}
-	//}
 
 	//try to hit them if we can
 	if (!enemy_in_striking_range)
@@ -8549,7 +8576,7 @@ void NPC_Jedi_Pain(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, c
 		if (!Q_irand(0, 3))
 		{
 			//ouch... maybe switch up which saber power level we're using
-			Jedi_Adjustsaber_anim_level(self, Q_irand(SS_FAST, SS_TAVION));
+			jedi_adjust_saber_anim_level(self, Q_irand(SS_FAST, SS_TAVION));
 		}
 		if (!Q_irand(0, 1)) //damage > 20 || self->health < 40 ||
 		{

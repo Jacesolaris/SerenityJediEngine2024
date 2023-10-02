@@ -1134,7 +1134,7 @@ qboolean sab_beh_block_vs_attack(gentity_t* blocker, gentity_t* attacker, const 
 
 						if (blocker->NPC && !G_ControlledByPlayer(blocker)) //NPC only
 						{
-							g_do_m_block_response(attacker);
+							g_do_m_block_response(blocker);
 						}
 
 						if ((d_blockinfo->integer || g_DebugSaberCombat->integer) && (blocker->NPC && !

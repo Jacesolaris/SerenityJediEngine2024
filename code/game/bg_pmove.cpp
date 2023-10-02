@@ -10923,7 +10923,7 @@ static void PM_Footsteps()
 									}
 									else
 									{
-										if (holding_block && pm->ps->sprintFuel > 10) // single sprint here
+										if (holding_block && pm->ps->sprintFuel > 15) // single sprint here
 										{
 											//This controls saber movement anims //JaceSolaris
 											PM_SetAnim(pm, SETANIM_BOTH, BOTH_SPRINT_SABER, set_anim_flags);
@@ -10964,7 +10964,7 @@ static void PM_Footsteps()
 					}
 					else
 					{
-						if (is_holding_block_button(pm->gent) && pm->ps->sprintFuel > 15)
+						if (pm->cmd.buttons & BUTTON_BLOCK && pm->ps->sprintFuel > 15)
 						{
 							if (pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING)
 							{
@@ -11065,7 +11065,7 @@ static void PM_Footsteps()
 							PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN3, set_anim_flags);
 						}
 
-						if (is_holding_block_button(pm->gent) && pm->ps->sprintFuel > 15)
+						if (pm->cmd.buttons & BUTTON_BLOCK && pm->ps->sprintFuel > 15)
 						{
 							if (pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING)
 							{
@@ -11106,7 +11106,7 @@ static void PM_Footsteps()
 						PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN6, set_anim_flags);
 					}
 
-					if (is_holding_block_button(pm->gent) && pm->ps->sprintFuel > 15)
+					if (pm->cmd.buttons & BUTTON_BLOCK && pm->ps->sprintFuel > 15)
 					{
 						if (pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING)
 						{
@@ -11150,7 +11150,7 @@ static void PM_Footsteps()
 							PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN7, set_anim_flags);
 						}
 
-						if (is_holding_block_button(pm->gent) && pm->ps->sprintFuel > 15)
+						if (pm->cmd.buttons & BUTTON_BLOCK && pm->ps->sprintFuel > 15)
 						{
 							if (pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING)
 							{
@@ -11301,7 +11301,7 @@ static void PM_Footsteps()
 					}
 					else
 					{
-						if (is_holding_block_button(pm->gent) && pm->ps->sprintFuel > 15)
+						if (pm->cmd.buttons & BUTTON_BLOCK && pm->ps->sprintFuel > 15)
 						{
 							PM_SetAnim(pm, SETANIM_LEGS, BOTH_SPRINT, set_anim_flags);
 
