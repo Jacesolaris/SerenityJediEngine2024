@@ -3292,8 +3292,12 @@ void CG_DrawHUD(const centity_t* cent)
 		return;
 	}
 
-	if (cg.predicted_player_state.pm_flags & PMF_FOLLOW || cg.predicted_player_state.persistant[PERS_TEAM] ==
-		TEAM_SPECTATOR)
+	if (cg.predicted_player_state.pm_flags & PMF_FOLLOW || cg.predicted_player_state.persistant[PERS_TEAM] == TEAM_SPECTATOR)
+	{
+		return;
+	}
+
+	if (cg.predicted_player_state.communicatingflags & (1 << CF_SABERLOCKING) && g_saberLockCinematicCamera.integer)
 	{
 		return;
 	}
@@ -3735,6 +3739,11 @@ void CG_DrawForceSelect(void)
 		return;
 	}
 
+	if (cg.predicted_player_state.communicatingflags & (1 << CF_SABERLOCKING) && g_saberLockCinematicCamera.integer)
+	{
+		return;
+	}
+
 	// count the number of powers owned
 	int count = 0;
 
@@ -3881,6 +3890,11 @@ void cg_draw_inventory_select(void)
 	}
 
 	if (!cg.snap->ps.stats[STAT_HOLDABLE_ITEM] || !cg.snap->ps.stats[STAT_HOLDABLE_ITEMS])
+	{
+		return;
+	}
+
+	if (cg.predicted_player_state.communicatingflags & (1 << CF_SABERLOCKING) && g_saberLockCinematicCamera.integer)
 	{
 		return;
 	}
@@ -5208,6 +5222,11 @@ static float CG_DrawFPS(const float y)
 	static int previous, lastupdate;
 	const int x_offset = 0;
 
+	if (cg.predicted_player_state.communicatingflags & (1 << CF_SABERLOCKING) && g_saberLockCinematicCamera.integer)
+	{
+		return y;
+	}
+
 	// don't use serverTime, because that will be drifting to
 	// correct for internet lag changes, timescales, timedemos, etc
 	const int t = trap->Milliseconds();
@@ -5331,6 +5350,11 @@ float cg_draw_radar(float y)
 
 	if (cg.predicted_player_state.pm_flags & PMF_FOLLOW || cg.predicted_player_state.persistant[PERS_TEAM] ==
 		TEAM_SPECTATOR)
+	{
+		return y;
+	}
+
+	if (cg.predicted_player_state.communicatingflags & (1 << CF_SABERLOCKING) && g_saberLockCinematicCamera.integer)
 	{
 		return y;
 	}
@@ -5995,6 +6019,11 @@ static float CG_DrawTimer(const float y)
 	seconds -= mins * 60;
 	const int tens = seconds / 10;
 	seconds -= tens * 10;
+
+	if (cg.predicted_player_state.communicatingflags & (1 << CF_SABERLOCKING) && g_saberLockCinematicCamera.integer)
+	{
+		return y;
+	}
 
 	const char* s = va("%i:%i%i", mins, tens, seconds);
 	const int w = CG_DrawStrlen(s) * BIGCHAR_WIDTH;
@@ -7184,6 +7213,11 @@ static void CG_DrawCrosshair(vec3_t world_point, const int ch_ent_valid)
 		return;
 	}
 
+	if (cg.predicted_player_state.communicatingflags & (1 << CF_SABERLOCKING) && g_saberLockCinematicCamera.integer)
+	{
+		return;
+	}
+
 	if (world_point)
 	{
 		VectorCopy(world_point, cg_crosshairPos);
@@ -7718,6 +7752,11 @@ void CG_SaberClashFlare(void)
 		return;
 	}
 
+	if (cg.predicted_player_state.communicatingflags & (1 << CF_SABERLOCKING))
+	{
+		return;
+	}
+
 	// Don't do clashes for things that are behind us
 	VectorSubtract(cg_saberFlashPos, cg.refdef.vieworg, dif);
 
@@ -7753,9 +7792,7 @@ void CG_SaberClashFlare(void)
 	VectorSet4(color, 0.8f, 0.8f, 0.8f, 1.0f);
 	trap->R_SetColor(color);
 
-	CG_DrawPic(x - v * 300, y - v * 300,
-		v * 600, v * 600,
-		trap->R_RegisterShader("gfx/effects/saberFlare"));
+	CG_DrawPic(x - v * 300, y - v * 300,v * 600, v * 600,trap->R_RegisterShader("gfx/effects/saberFlare"));
 }
 
 void CG_SaberBlockFlare(void)

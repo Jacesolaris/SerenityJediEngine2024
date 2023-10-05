@@ -3767,6 +3767,11 @@ void cg_draw_inventory_select()
 		return;
 	}
 
+	if (cg.predicted_player_state.communicatingflags & (1 << CF_SABERLOCKING) && cg_saberLockCinematicCamera.integer)
+	{
+		return;
+	}
+
 	const bool is_on_veh = G_IsRidingVehicle(cg_entities[0].gent) != nullptr;
 
 	if (is_on_veh) //PM_WeaponOkOnVehicle
@@ -4380,6 +4385,11 @@ void CG_DrawForceSelect()
 	}
 
 	if (cg.forcepowerSelectTime + WEAPON_SELECT_TIME < cg.time) // Time is up for the HUD to display
+	{
+		return;
+	}
+
+	if (cg.predicted_player_state.communicatingflags & (1 << CF_SABERLOCKING) && cg_saberLockCinematicCamera.integer)
 	{
 		return;
 	}

@@ -1570,6 +1570,11 @@ void CG_DrawIconBackground(void)
 		return;
 	}
 
+	if (cg.predicted_player_state.communicatingflags & (1 << CF_SABERLOCKING) && g_saberLockCinematicCamera.integer)
+	{
+		return;
+	}
+
 	if (cg.predicted_player_state.m_iVehicleNum)
 	{
 		//I'm in a vehicle
@@ -1745,6 +1750,11 @@ void CG_DrawWeaponSelect(void)
 
 	// don't display if dead
 	if (cg.predicted_player_state.stats[STAT_HEALTH] <= 0)
+	{
+		return;
+	}
+
+	if (cg.predicted_player_state.communicatingflags & (1 << CF_SABERLOCKING) && g_saberLockCinematicCamera.integer)
 	{
 		return;
 	}

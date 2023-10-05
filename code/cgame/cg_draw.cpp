@@ -3181,6 +3181,11 @@ static void CG_DrawHUD(const centity_t* cent)
 		return;
 	}
 
+	if (cg.predicted_player_state.communicatingflags & (1 << CF_SABERLOCKING) && cg_saberLockCinematicCamera.integer)
+	{
+		return;
+	}
+
 	// Are we in zoom mode or the HUD is turned off?
 	if (cg.zoomMode != 0 || !cg_drawHUD.integer)
 	{
@@ -4709,6 +4714,11 @@ static void CG_DrawCrosshair(vec3_t world_point)
 	if (cg.zoomMode > 0 && cg.zoomMode < 3)
 	{
 		//not while scoped
+		return;
+	}
+
+	if (cg.predicted_player_state.communicatingflags & (1 << CF_SABERLOCKING) && cg_saberLockCinematicCamera.integer)
+	{
 		return;
 	}
 
@@ -6320,6 +6330,11 @@ static float CG_DrawFPS(const float y)
 	static int previous, lastupdate;
 	constexpr int x_offset = 0;
 
+	if (cg.predicted_player_state.communicatingflags & (1 << CF_SABERLOCKING) && cg_saberLockCinematicCamera.integer)
+	{
+		return y;
+	}
+
 	// don't use serverTime, because that will be drifting to
 	// correct for internet lag changes, timescales, timedemos, etc
 	const int t = cgi_Milliseconds();
@@ -6363,6 +6378,11 @@ static float CG_DrawTimer(const float y)
 	seconds -= mins * 60;
 	const int tens = seconds / 10;
 	seconds -= tens * 10;
+
+	if (cg.predicted_player_state.communicatingflags & (1 << CF_SABERLOCKING) && cg_saberLockCinematicCamera.integer)
+	{
+		return y;
+	}
 
 	const char* s = va("%i:%i%i", mins, tens, seconds);
 
@@ -6408,6 +6428,11 @@ float cg_draw_radar(const float y)
 	}
 
 	if (cg.snap->ps.viewEntity > 0 && cg.snap->ps.viewEntity < ENTITYNUM_WORLD)
+	{
+		return y;
+	}
+
+	if (cg.predicted_player_state.communicatingflags & (1 << CF_SABERLOCKING) && cg_saberLockCinematicCamera.integer)
 	{
 		return y;
 	}
@@ -7459,6 +7484,11 @@ void CG_DrawIconBackground()
 
 	// Are we in zoom mode or the HUD is turned off?
 	if (cg.zoomMode != 0 || !cg_drawHUD.integer)
+	{
+		return;
+	}
+
+	if (cg.predicted_player_state.communicatingflags & (1 << CF_SABERLOCKING) && cg_saberLockCinematicCamera.integer)
 	{
 		return;
 	}

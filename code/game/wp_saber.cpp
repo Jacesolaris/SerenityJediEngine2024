@@ -7906,10 +7906,8 @@ void WP_SaberDamageTrace(gentity_t* ent, int saber_num, int blade_num)
 
 	if (ent->client->ps.saberLockTime > level.time)
 	{
-		if (ent->s.number < ent->client->ps.saberLockEnemy
-			&& !Q_irand(0, 3))
+		if (ent->s.number < ent->client->ps.saberLockEnemy)
 		{
-			//need to make some kind of effect
 			vec3_t hit_norm = { 0, 0, 1 };
 
 			if (wp_sabers_intersection(ent, &g_entities[ent->client->ps.saberLockEnemy], g_saberFlashPos))
