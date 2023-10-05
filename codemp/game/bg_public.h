@@ -60,7 +60,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #define DEFAULT_REDTEAM_NAME	"Empire"
 #define DEFAULT_BLUETEAM_NAME	"Rebellion"
 
-#define CURRENT_SJE_CLIENTVERSION		"Year-23,Month-10,Day-03,BuildNum-02" // build date
+#define CURRENT_SJE_CLIENTVERSION		"Year-23,Month-10,Day-05,BuildNum-03" // build date
 
 #define	STEPSIZE		18
 
@@ -722,8 +722,6 @@ typedef enum {
 #define EF_JETPACK				(1<<29)		//rww - wearing a jetpack
 #define EF_JETPACK_FLAMING		(1<<30)		//rww - jetpack fire effect
 #define EF_FORCE_VISIBLE		(1<<31)		// Always visible with force sight
-#define	EF_JETPACK_HOVER		(1<<31)
-#define	EF_DUAL_WEAPONS			(1<<31)
 
 //These new EF2_??? flags were added for NPCs, they really should not be used often.
 //NOTE: we only allow 10 of these!
@@ -738,6 +736,9 @@ typedef enum {
 #define	EF2_NOT_USED_1			(1<<8)		// not used
 #define EF2_BOWCASTERSCOPE		(1<<9)      //[BowcasterScope]
 #define EF2_PLAYERHIT			(1<<10)     //[SPShield]
+#define	EF3_JETPACK_HOVER		(1<<11)
+#define	EF3_DUAL_WEAPONS			(1<<12)
+#define	EF3_JETPACK_NO_MODEL	(1<<13)
 
 #define	EF_AWARD_EXCELLENT	     0x00000008		// draw an excellent sprite
 #define	EF_AWARD_GAUNTLET	     0x00000040		// draw a gauntlet sprite

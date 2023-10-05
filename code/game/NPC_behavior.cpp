@@ -43,7 +43,7 @@ extern void CG_Cube(vec3_t mins, vec3_t maxs, vec3_t color, float alpha);
 extern void NPC_CheckGetNewWeapon();
 extern qboolean PM_InKnockDown(const playerState_t* ps);
 extern void NPC_AimAdjust(int change);
-extern qboolean G_StandardHumanoid(gentity_t* self);
+extern qboolean g_standard_humanoid(gentity_t* self);
 /*
  void NPC_BSAdvanceFight (void)
 
@@ -1256,7 +1256,7 @@ qboolean NPC_CanSurrender()
 		default:
 			break;
 		}
-		if (!G_StandardHumanoid(NPC))
+		if (!g_standard_humanoid(NPC))
 		{
 			return qfalse;
 		}

@@ -769,7 +769,7 @@ void ai_mod_jump(bot_state_t* bs)
 		{
 			// Jetpacker.. Jetpack ON!
 			bs->cur_ps.eFlags |= EF_JETPACK_ACTIVE;
-			bs->cur_ps.eFlags |= EF_JETPACK_HOVER;
+			bs->cur_ps.eFlags |= EF3_JETPACK_HOVER;
 			bs->cur_ps.eFlags |= EF_JETPACK_FLAMING;
 			bs->jumpHoldTime = (bs->forceJumpChargeTime + level.time) / 2 + 50000;
 		}
@@ -780,7 +780,7 @@ void ai_mod_jump(bot_state_t* bs)
 			// Jetpacker.. Jetpack ON!
 			bs->cur_ps.eFlags |= EF_JETPACK_ACTIVE;
 			bs->cur_ps.eFlags |= EF_JETPACK_FLAMING; //going up
-			bs->cur_ps.eFlags |= EF_JETPACK_HOVER;
+			bs->cur_ps.eFlags |= EF3_JETPACK_HOVER;
 			bs->jumpHoldTime = (bs->forceJumpChargeTime + level.time) / 2 + 50000;
 		}
 		bs->BOTjumpState = JS_FACING;
@@ -4740,7 +4740,7 @@ void wp_constant_routine(bot_state_t* bs)
 			bs->cur_ps.eFlags = PM_JETPACK;
 			bs->cur_ps.eFlags |= EF_JETPACK_ACTIVE;
 			bs->cur_ps.eFlags |= EF_JETPACK_FLAMING;
-			bs->cur_ps.eFlags |= EF_JETPACK_HOVER;
+			bs->cur_ps.eFlags |= EF3_JETPACK_HOVER;
 			bs->jumpHoldTime = (bs->forceJumpChargeTime + level.time) / 2 + 50000;
 		}
 
@@ -4790,7 +4790,7 @@ void wp_constant_routine(bot_state_t* bs)
 			bs->cur_ps.eFlags = PM_JETPACK;
 			bs->cur_ps.eFlags |= EF_JETPACK_ACTIVE;
 			bs->cur_ps.eFlags |= EF_JETPACK_FLAMING;
-			bs->cur_ps.eFlags |= EF_JETPACK_HOVER;
+			bs->cur_ps.eFlags |= EF3_JETPACK_HOVER;
 			bs->jumpHoldTime = ((bs->forceJumpChargeTime + level.time) / 2) + 50000;
 		}
 		if (bs->origin[2] + 16 < bs->wpCurrent->origin[2])
@@ -4851,7 +4851,7 @@ void WPTouchRoutine(bot_state_t* bs)
 			bs->cur_ps.eFlags = PM_JETPACK;
 			bs->cur_ps.eFlags |= EF_JETPACK_ACTIVE;
 			bs->cur_ps.eFlags |= EF_JETPACK_FLAMING;
-			bs->cur_ps.eFlags |= EF_JETPACK_HOVER;
+			bs->cur_ps.eFlags |= EF3_JETPACK_HOVER;
 			bs->jumpHoldTime = ((bs->forceJumpChargeTime + level.time) / 2) + 50000;
 		}
 		bs->jumpTime = level.time + 100;
@@ -4866,7 +4866,7 @@ void WPTouchRoutine(bot_state_t* bs)
 			bs->cur_ps.eFlags = PM_JETPACK;
 			bs->cur_ps.eFlags |= EF_JETPACK_ACTIVE;
 			bs->cur_ps.eFlags |= EF_JETPACK_FLAMING;
-			bs->cur_ps.eFlags |= EF_JETPACK_HOVER;
+			bs->cur_ps.eFlags |= EF3_JETPACK_HOVER;
 			bs->jumpHoldTime = 50000;
 		}
 		bs->jumpTime = level.time + 100;
@@ -5091,7 +5091,7 @@ int bot_trace_jump(bot_state_t* bs, vec3_t traceto)
 			bs->cur_ps.eFlags = PM_JETPACK;
 			bs->cur_ps.eFlags |= EF_JETPACK_ACTIVE;
 			bs->cur_ps.eFlags |= EF_JETPACK_FLAMING;
-			bs->cur_ps.eFlags |= EF_JETPACK_HOVER;
+			bs->cur_ps.eFlags |= EF3_JETPACK_HOVER;
 			bs->jumpHoldTime = (bs->forceJumpChargeTime + level.time) / 2 + 50000;
 		}
 
@@ -5104,7 +5104,7 @@ int bot_trace_jump(bot_state_t* bs, vec3_t traceto)
 				bs->cur_ps.eFlags = PM_JETPACK;
 				bs->cur_ps.eFlags |= EF_JETPACK_ACTIVE;
 				bs->cur_ps.eFlags |= EF_JETPACK_FLAMING;
-				bs->cur_ps.eFlags |= EF_JETPACK_HOVER;
+				bs->cur_ps.eFlags |= EF3_JETPACK_HOVER;
 				bs->jumpHoldTime = (bs->forceJumpChargeTime + level.time) / 2 + 50000;
 			}
 			else

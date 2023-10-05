@@ -1426,7 +1426,7 @@ void Jetpack_Off(const gentity_t* ent)
 	}
 	if (!PM_InKnockDown(&ent->client->ps))
 	{
-		if (ent->client->ps.eFlags & EF_DUAL_WEAPONS)
+		if (ent->client->ps.eFlags & EF3_DUAL_WEAPONS)
 		{
 			ent->client->ps.torsoAnim = WeaponReadyAnim2[ent->client->ps.weapon];
 			ent->client->ps.legsAnim = WeaponReadyAnim2[ent->client->ps.weapon];

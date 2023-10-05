@@ -6552,12 +6552,37 @@ qboolean BG_SprintAnim(const int anim)
 	return qfalse;
 }
 
-qboolean BG_SprintSaberAnim(const int anim)
+qboolean BG_SaberSprintAnim(const int anim)
 {
 	switch (anim)
 	{
 	case BOTH_SPRINT_SABER:
 	case BOTH_SPRINT_SABER_MP:
+	case BOTH_RUN_DUAL:
+	case BOTH_RUN_STAFF:
+		return qtrue;
+	default:;
+	}
+	return qfalse;
+}
+
+qboolean BG_WeaponSprintAnim(const int anim)
+{
+	switch (anim)
+	{
+	case BOTH_SPRINT:
+	case BOTH_SPRINT_MP:
+	case BOTH_RUN1:
+	case BOTH_RUN2:
+	case BOTH_RUN3:
+	case BOTH_RUN3_MP:
+	case BOTH_RUN4:
+	case BOTH_RUN5:
+	case BOTH_RUN6:
+	case BOTH_RUN7:
+	case BOTH_RUN8:
+	case BOTH_RUN9:
+	case BOTH_RUN10:
 		return qtrue;
 	default:;
 	}

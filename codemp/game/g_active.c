@@ -74,7 +74,8 @@ extern qboolean BG_IsAlreadyinTauntAnim(int anim);
 qboolean WP_SaberStyleValidForSaber(const saberInfo_t* saber1, const saberInfo_t* saber2, int saber_holstered, int saber_anim_level);
 extern qboolean PM_SaberInBashedAnim(int anim);
 extern qboolean saberKnockOutOfHand(gentity_t* saberent, gentity_t* saber_owner, vec3_t velocity);
-extern qboolean BG_SprintSaberAnim(int anim);
+extern qboolean BG_SaberSprintAnim(int anim);
+extern qboolean BG_WeaponSprintAnim(int anim);
 
 void P_SetTwitchInfo(gclient_t* client)
 {
@@ -2659,7 +2660,7 @@ typedef enum tauntTypes_e
 qboolean IsHoldingGun(const gentity_t* ent);
 extern saberInfo_t* BG_MySaber(int client_num, int saber_num);
 extern qboolean PM_CrouchAnim(int anim);
-extern qboolean is_holding_block_button(const gentity_t* defender);
+extern qboolean Block_Button_Held(const gentity_t* defender);
 void ReloadGun(gentity_t* ent);
 void CancelReload(gentity_t* ent);
 extern qboolean PM_RestAnim(int anim);
@@ -2667,7 +2668,7 @@ extern qboolean PM_RestAnim(int anim);
 void G_SetTauntAnim(gentity_t* ent, int taunt)
 {
 	const saberInfo_t* saber1 = BG_MySaber(ent->client_num, 0);
-	const qboolean holding_block = ent->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;//Normal Blocking
+	const qboolean is_holding_block_button = ent->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;//Normal Blocking
 
 	// dead clients dont get to spam taunt
 	if (ent->client->ps.stats[STAT_HEALTH] <= 0)
@@ -2702,7 +2703,7 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 		}
 	}
 
-	if (holding_block || is_holding_block_button(ent))
+	if (is_holding_block_button || Block_Button_Held(ent))
 	{
 		return;
 	}
@@ -2802,11 +2803,11 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 					case SS_MEDIUM:
 						if (saber1 && saber1->type == SABER_OBIWAN) //saber kylo
 						{
-							NPC_SetAnim(ent, SETANIM_TORSO, BOTH_SHOWOFF_OBI,SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+							NPC_SetAnim(ent, SETANIM_TORSO, BOTH_SHOWOFF_OBI, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 						}
 						else
 						{
-							NPC_SetAnim(ent, SETANIM_TORSO, BOTH_ENGAGETAUNT,SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+							NPC_SetAnim(ent, SETANIM_TORSO, BOTH_ENGAGETAUNT, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 						}
 						break;
 					case SS_STRONG:
@@ -3157,11 +3158,11 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 					case SS_MEDIUM:
 						if (saber1 && saber1->type == SABER_OBIWAN) //saber kylo
 						{
-							NPC_SetAnim(ent, SETANIM_TORSO, BOTH_SHOWOFF_OBI,SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+							NPC_SetAnim(ent, SETANIM_TORSO, BOTH_SHOWOFF_OBI, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 						}
 						else
 						{
-							NPC_SetAnim(ent, SETANIM_TORSO, BOTH_SHOWOFF_MEDIUM,SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+							NPC_SetAnim(ent, SETANIM_TORSO, BOTH_SHOWOFF_MEDIUM, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 						}
 						break;
 					case SS_STRONG:
@@ -3188,11 +3189,11 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 					case SS_MEDIUM:
 						if (saber1 && saber1->type == SABER_OBIWAN) //saber kylo
 						{
-							NPC_SetAnim(ent, SETANIM_TORSO, BOTH_SHOWOFF_OBI,SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+							NPC_SetAnim(ent, SETANIM_TORSO, BOTH_SHOWOFF_OBI, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 						}
 						else
 						{
-							NPC_SetAnim(ent, SETANIM_TORSO, BOTH_SHOWOFF_MEDIUM,SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+							NPC_SetAnim(ent, SETANIM_TORSO, BOTH_SHOWOFF_MEDIUM, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 						}
 						break;
 					case SS_STRONG:
@@ -4070,7 +4071,7 @@ once for each server frame, which makes for smooth demo recording.
 */
 extern qboolean WP_SaberCanTurnOffSomeBlades(const saberInfo_t* saber);
 extern qboolean player_locked;
-extern qboolean G_StandardHumanoid(gentity_t* self);
+extern qboolean g_standard_humanoid(gentity_t* self);
 extern void Weapon_AltStun_Fire(gentity_t* ent);
 
 void ClientThink_real(gentity_t* ent)
@@ -4721,25 +4722,61 @@ void ClientThink_real(gentity_t* ent)
 			{
 				if (!(ent->r.svFlags & SVF_BOT))
 				{
-					client->ps.speed *= 1.50f;
+					if (client->pers.botclass == BCLASS_LORDVADER)
+					{
+						client->ps.speed *= 1.15f;
+					}
+					else if (client->pers.botclass == BCLASS_YODA)
+					{
+						client->ps.speed *= 1.70f;
+					}
+					else
+					{
+						client->ps.speed *= 1.50f;
+					}
 				}
 			}
 		}
-		else if (BG_SprintSaberAnim(ent->client->ps.legsAnim))
+		else if (BG_SaberSprintAnim(ent->client->ps.legsAnim))
 		{
 			if (ent->client->ps.PlayerEffectFlags & 1 << PEF_SPRINTING)
 			{
 				if (!(ent->r.svFlags & SVF_BOT))
 				{
-					client->ps.speed *= 1.60f;
+					if (client->pers.botclass == BCLASS_LORDVADER)
+					{
+						client->ps.speed *= 1.15f;
+					}
+					else if (client->pers.botclass == BCLASS_YODA)
+					{
+						client->ps.speed *= 1.70f;
+					}
+					else
+					{
+						client->ps.speed *= 1.60f;
+					}
 				}
 			}
 		}
-		else if (ent->client->ps.PlayerEffectFlags & 1 << PEF_WEAPONSPRINTING)
+		else if (BG_WeaponSprintAnim(client->ps.legsAnim))
 		{
-			if (!(ent->r.svFlags & SVF_BOT))
+			if (ent->client->ps.PlayerEffectFlags & 1 << PEF_WEAPONSPRINTING)
 			{
-				client->ps.speed *= 1.30f;
+				if (!(ent->r.svFlags & SVF_BOT))
+				{
+					if (client->pers.botclass == BCLASS_LORDVADER)
+					{
+						client->ps.speed *= 1.10f;
+					}
+					else if (client->pers.botclass == BCLASS_YODA)
+					{
+						client->ps.speed *= 1.70f;
+					}
+					else
+					{
+						client->ps.speed *= 1.30f;
+					}
+				}
 			}
 		}
 		else if (client->ps.weapon == WP_BRYAR_PISTOL ||

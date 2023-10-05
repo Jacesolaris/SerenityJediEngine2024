@@ -2557,7 +2557,7 @@ qboolean G_GetRootSurfNameWithVariant(gentity_t* ent, const char* root_surf_name
 	return qfalse;
 }
 
-extern qboolean G_StandardHumanoid(gentity_t* self);
+extern qboolean g_standard_humanoid(gentity_t* self);
 
 qboolean G_DoDismembermentnormal(gentity_t* self, vec3_t point, const int mod, const int hit_loc,
 	const qboolean force = qfalse)
@@ -2565,7 +2565,7 @@ qboolean G_DoDismembermentnormal(gentity_t* self, vec3_t point, const int mod, c
 	if (mod == MOD_SABER) //only lightsaber
 	{
 		//FIXME: don't do strcmps here
-		if (G_StandardHumanoid(self)
+		if (g_standard_humanoid(self)
 			&& (force || g_dismemberProbabilities->value > 0.0f))
 		{
 			//either it's a forced dismemberment or we're using probabilities (which are checked before this) or we've done enough damage to this location
@@ -2717,7 +2717,7 @@ qboolean G_DoDismemberment(gentity_t* self, vec3_t point, const int mod, const i
 {
 	if (mod == MOD_SABER) //only lightsaber
 	{
-		if (G_StandardHumanoid(self)
+		if (g_standard_humanoid(self)
 			&& (force || g_dismemberProbabilities->value > 0.0f))
 		{
 			const char* limb_bone = nullptr, * rotate_bone = nullptr, * limb_tag_name = nullptr, * stub_tag_name = nullptr;
@@ -2895,7 +2895,7 @@ qboolean G_DoDismembermentcin(gentity_t* self, vec3_t point, const int mod, cons
 {
 	if (mod == MOD_SABER) //only lightsaber
 	{
-		if (G_StandardHumanoid(self)
+		if (g_standard_humanoid(self)
 			&& force)
 		{
 			const char* limb_bone = nullptr, * rotate_bone = nullptr, * limb_tag_name = nullptr, * stub_tag_name = nullptr;
@@ -3051,7 +3051,7 @@ qboolean G_DoGunDismemberment(gentity_t* self, vec3_t point, const int mod, cons
 		|| mod == MOD_HEADSHOT
 		|| mod == MOD_BODYSHOT)
 	{
-		if (G_StandardHumanoid(self) && !NPC_IsNotDismemberable(self)
+		if (g_standard_humanoid(self) && !NPC_IsNotDismemberable(self)
 			&& g_dismemberProbabilities->value > 0.0f)
 		{
 			const char* limb_bone = nullptr, * rotate_bone = nullptr, * limb_tag_name = nullptr, * stub_tag_name = nullptr;
@@ -3206,7 +3206,7 @@ qboolean G_DoExplosiveDismemberment(gentity_t* self, vec3_t point, const int mod
 		|| mod == MOD_DETPACK
 		|| mod == MOD_LASERTRIP)
 	{
-		if (G_StandardHumanoid(self) && !NPC_IsNotDismemberable(self)
+		if (g_standard_humanoid(self) && !NPC_IsNotDismemberable(self)
 			&& g_dismemberProbabilities->value > 0.0f)
 		{
 			const char* limb_bone = nullptr, * rotate_bone = nullptr, * limb_tag_name = nullptr, * stub_tag_name = nullptr;
@@ -5704,7 +5704,7 @@ void player_die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, cons
 	//rww - RAGDOLL_BEGIN
 	if (g_broadsword->integer && self->client->NPC_class != CLASS_SBD && self->client->NPC_class != CLASS_DROIDEKA)
 	{
-		if (self->client && (!self->NPC || !G_StandardHumanoid(self)))
+		if (self->client && (!self->NPC || !g_standard_humanoid(self)))
 		{
 			PM_SetLegsAnimTimer(self, &self->client->ps.legsAnimTimer, -1);
 			PM_SetTorsoAnimTimer(self, &self->client->ps.torsoAnimTimer, -1);
@@ -6425,7 +6425,7 @@ void G_CheckKnockdown(gentity_t* targ, gentity_t* attacker, vec3_t new_dir, cons
 		}
 	}
 
-	if (!targ->client || targ->client->NPC_class == CLASS_PROTOCOL || !G_StandardHumanoid(targ))
+	if (!targ->client || targ->client->NPC_class == CLASS_PROTOCOL || !g_standard_humanoid(targ))
 	{
 		return;
 	}
@@ -6503,7 +6503,7 @@ void G_CheckLightningKnockdown(gentity_t* targ, gentity_t* attacker, vec3_t new_
 		}
 	}
 
-	if (!targ->client || targ->client->NPC_class == CLASS_PROTOCOL || !G_StandardHumanoid(targ))
+	if (!targ->client || targ->client->NPC_class == CLASS_PROTOCOL || !g_standard_humanoid(targ))
 	{
 		return;
 	}
@@ -8146,7 +8146,7 @@ void G_Damage(gentity_t* targ, gentity_t* inflictor, gentity_t* attacker, const 
 		}
 	}
 
-	if (targ->client && G_StandardHumanoid(targ) && !NPC_IsNotDismemberable(targ))
+	if (targ->client && g_standard_humanoid(targ) && !NPC_IsNotDismemberable(targ))
 	{
 		// set the last client who damaged the target
 		targ->client->lasthurt_client = attacker->s.number;
@@ -8162,7 +8162,7 @@ void G_Damage(gentity_t* targ, gentity_t* inflictor, gentity_t* attacker, const 
 		}
 	}
 
-	if (targ->client && attacker->client && targ->health > 0 && G_StandardHumanoid(targ) && !
+	if (targ->client && attacker->client && targ->health > 0 && g_standard_humanoid(targ) && !
 		NPC_IsNotDismemberable(targ))
 	{
 		//do head shots

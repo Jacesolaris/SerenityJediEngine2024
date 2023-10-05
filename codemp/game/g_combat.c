@@ -4153,7 +4153,7 @@ int CheckArmor(const gentity_t* ent, const int damage, const int dflags, const i
 
 void G_Knockdown(gentity_t* self, gentity_t* attacker, const vec3_t push_dir, float strength,
 	qboolean break_saber_lock);
-extern qboolean G_StandardHumanoid(gentity_t* self);
+extern qboolean g_standard_humanoid(gentity_t* self);
 
 void G_CheckKnockdown(gentity_t* targ, gentity_t* attacker, vec3_t new_dir, const int dflags, const int mod)
 {
@@ -4179,7 +4179,7 @@ void G_CheckKnockdown(gentity_t* targ, gentity_t* attacker, vec3_t new_dir, cons
 		}
 	}
 
-	if (!targ->client || targ->client->NPC_class == CLASS_PROTOCOL || !G_StandardHumanoid(targ))
+	if (!targ->client || targ->client->NPC_class == CLASS_PROTOCOL || !g_standard_humanoid(targ))
 	{
 		return;
 	}
@@ -4236,7 +4236,7 @@ void G_CheckLightningKnockdown(gentity_t* targ, gentity_t* attacker, vec3_t new_
 		}
 	}
 
-	if (!targ->client || targ->client->NPC_class == CLASS_PROTOCOL || !G_StandardHumanoid(targ))
+	if (!targ->client || targ->client->NPC_class == CLASS_PROTOCOL || !g_standard_humanoid(targ))
 	{
 		return;
 	}
@@ -4708,6 +4708,8 @@ void G_Dismember(const gentity_t* ent, const gentity_t* enemy, vec3_t point, con
 	char stub_name[MAX_QPATH];
 	char stub_cap_name[MAX_QPATH];
 
+	const int old_team = ent->client->sess.sessionTeam;
+
 	if (limb_type == G2_MODELPART_HEAD)
 	{
 		Q_strncpyz(limb_name, "head", sizeof limb_name);
@@ -4868,7 +4870,7 @@ void G_Dismember(const gentity_t* ent, const gentity_t* enemy, vec3_t point, con
 		}
 	}
 
-	if (ent->s.eType == ET_NPC && ent->ghoul2 && limb_name[0] && stub_cap_name[0])
+	if (ent->client && ent->s.eType == ET_NPC && ent->ghoul2 && limb_name[0] && stub_cap_name[0])
 	{
 		//if it's an npc remove these surfs on the server too. For players we don't even care cause there's no further dismemberment after death.
 		trap->G2API_SetSurfaceOnOff(ent->ghoul2, limb_name, 0x00000100);
@@ -4878,18 +4880,19 @@ void G_Dismember(const gentity_t* ent, const gentity_t* enemy, vec3_t point, con
 	if (level.gametype >= GT_TEAM && ent->s.eType != ET_NPC)
 	{
 		//Team game
-		switch (ent->client->sess.sessionTeam)
+		switch (old_team)
 		{
-		case TEAM_RED:
-			limb->s.customRGBA[0] = 255;
-			limb->s.customRGBA[1] = 0;
-			limb->s.customRGBA[2] = 0;
-			break;
 
 		case TEAM_BLUE:
 			limb->s.customRGBA[0] = 0;
 			limb->s.customRGBA[1] = 0;
 			limb->s.customRGBA[2] = 255;
+			break;
+
+		case TEAM_RED:
+			limb->s.customRGBA[0] = 255;
+			limb->s.customRGBA[1] = 0;
+			limb->s.customRGBA[2] = 0;
 			break;
 
 		default:
@@ -7512,7 +7515,7 @@ void G_Damage(gentity_t* targ, gentity_t* inflictor, gentity_t* attacker, vec3_t
 		Team_CheckHurtCarrier(targ, attacker);
 	}
 
-	if (targ->client && G_StandardHumanoid(targ))
+	if (targ->client && g_standard_humanoid(targ))
 	{
 		// set the last client who damaged the target
 		targ->client->lasthurt_client = attacker->s.number;
@@ -7528,7 +7531,7 @@ void G_Damage(gentity_t* targ, gentity_t* inflictor, gentity_t* attacker, vec3_t
 		}
 	}
 
-	if (targ->client && attacker->client && targ->health > 0 && G_StandardHumanoid(targ))
+	if (targ->client && attacker->client && targ->health > 0 && g_standard_humanoid(targ))
 	{
 		//do head shots
 		if (inflictor->s.weapon == WP_BLASTER

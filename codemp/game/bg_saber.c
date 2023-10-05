@@ -5004,7 +5004,7 @@ void PM_WeaponLightsaber(void)
 
 	const saberInfo_t* saber1 = BG_MySaber(pm->ps->client_num, 0);
 
-	const qboolean holding_block = pm->ps->ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
+	const qboolean is_holding_block_button = pm->ps->ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
 	//Holding Block Button
 	const qboolean active_blocking = pm->ps->ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK ? qtrue : qfalse;
 	//Active Blocking
@@ -5193,7 +5193,7 @@ void PM_WeaponLightsaber(void)
 			else
 #endif
 			{
-				if (holding_block && pm->cmd.buttons & BUTTON_WALKING)
+				if (is_holding_block_button && pm->cmd.buttons & BUTTON_WALKING)
 				{
 					if (pm->ps->fd.saber_anim_level == SS_DUAL)
 					{
@@ -5700,7 +5700,7 @@ weapChecks:
 			else
 #endif
 			{
-				if (holding_block && pm->cmd.buttons & BUTTON_WALKING)
+				if (is_holding_block_button && pm->cmd.buttons & BUTTON_WALKING)
 				{
 					if (pm->ps->fd.saber_anim_level == SS_DUAL)
 					{
@@ -5873,7 +5873,7 @@ weapChecks:
 		}
 		// check for fire
 		//This section dictates want happens when you quit holding down attack.
-		else if (!(pm->cmd.buttons & BUTTON_ATTACK) || holding_block || walking_blocking || active_blocking)
+		else if (!(pm->cmd.buttons & BUTTON_ATTACK) || is_holding_block_button || walking_blocking || active_blocking)
 		{
 			//not attacking
 			pm->ps->weaponTime = 0;
@@ -6013,7 +6013,7 @@ weapChecks:
 		if (pm->ps->weaponTime > 0)
 		{
 			// Last attack is not yet complete.
-			if (holding_block && pm->cmd.buttons & BUTTON_WALKING)
+			if (is_holding_block_button && pm->cmd.buttons & BUTTON_WALKING)
 			{
 				if (pm->ps->fd.saber_anim_level == SS_DUAL)
 				{
@@ -6287,7 +6287,7 @@ weapChecks:
 				else
 #endif
 				{
-					if (holding_block && pm->cmd.buttons & BUTTON_WALKING)
+					if (is_holding_block_button && pm->cmd.buttons & BUTTON_WALKING)
 					{
 						if (pm->ps->fd.saber_anim_level == SS_DUAL)
 						{
@@ -6340,7 +6340,7 @@ weapChecks:
 
 	pm->ps->weaponstate = WEAPON_FIRING;
 
-	if (pm->ps->weaponTime > 0 && holding_block && pm->cmd.buttons & BUTTON_WALKING)
+	if (pm->ps->weaponTime > 0 && is_holding_block_button && pm->cmd.buttons & BUTTON_WALKING)
 	{
 		if (pm->ps->fd.saber_anim_level == SS_STAFF)
 		{
@@ -6567,7 +6567,7 @@ void PM_Setsaber_move(saber_moveName_t new_move)
 	const saberInfo_t* saber1 = BG_MySaber(pm->ps->client_num, 0);
 	const saberInfo_t* saber2 = BG_MySaber(pm->ps->client_num, 1);
 
-	const qboolean holding_block = pm->ps->ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
+	const qboolean is_holding_block_button = pm->ps->ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
 	//Holding Block Button
 	if (new_move == LS_READY || new_move == LS_A_FLIP_STAB || new_move == LS_A_FLIP_SLASH)
 	{
@@ -6806,7 +6806,7 @@ void PM_Setsaber_move(saber_moveName_t new_move)
 			else
 #endif
 			{
-				if (holding_block && pm->cmd.buttons & BUTTON_WALKING)
+				if (is_holding_block_button && pm->cmd.buttons & BUTTON_WALKING)
 				{
 					if (pm->ps->fd.saber_anim_level == SS_DUAL)
 					{
@@ -6831,7 +6831,7 @@ void PM_Setsaber_move(saber_moveName_t new_move)
 		if (pm->ps->pm_flags & PMF_DUCKED)
 		{
 			//Playing torso walk anims while crouched makes you look like a monkey
-			if (holding_block && pm->cmd.buttons & BUTTON_WALKING)
+			if (is_holding_block_button && pm->cmd.buttons & BUTTON_WALKING)
 			{
 				if (pm->ps->fd.saber_anim_level == SS_DUAL)
 				{
@@ -6863,7 +6863,7 @@ void PM_Setsaber_move(saber_moveName_t new_move)
 			else
 #endif
 			{
-				if (holding_block && pm->cmd.buttons & BUTTON_WALKING)
+				if (is_holding_block_button && pm->cmd.buttons & BUTTON_WALKING)
 				{
 					if (pm->ps->fd.saber_anim_level == SS_DUAL)
 					{
@@ -6896,7 +6896,7 @@ void PM_Setsaber_move(saber_moveName_t new_move)
 			else
 #endif
 			{
-				if (holding_block && pm->cmd.buttons & BUTTON_WALKING)
+				if (is_holding_block_button && pm->cmd.buttons & BUTTON_WALKING)
 				{
 					if (pm->ps->fd.saber_anim_level == SS_DUAL)
 					{
@@ -6986,10 +6986,10 @@ void PM_Setsaber_move(saber_moveName_t new_move)
 			pm->ps->legsTimer = pm->ps->torsoTimer = 0;
 		}
 		else if (!pm->cmd.forwardmove && !pm->cmd.rightmove && !pm->cmd.upmove && !(pm->ps->pm_flags & PMF_DUCKED) ||
-			holding_block && pm->cmd.buttons & BUTTON_WALKING)
+			is_holding_block_button && pm->cmd.buttons & BUTTON_WALKING)
 		{
 			//not trying to run, duck or jump
-			if (holding_block && pm->cmd.buttons & BUTTON_WALKING
+			if (is_holding_block_button && pm->cmd.buttons & BUTTON_WALKING
 				&& !PM_SaberInParry(new_move)
 				&& !PM_SaberInKnockaway(new_move)
 				&& !PM_SaberInBrokenParry(new_move)
@@ -7429,10 +7429,10 @@ void PM_SaberFakeFlagUpdate(const int new_move)
 
 void PM_SaberPerfectBlockUpdate(const int new_move)
 {
-	const qboolean holding_block = pm->ps->ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
+	const qboolean is_holding_block_button = pm->ps->ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
 
 	//checks to see if the flag needs to be removed.
-	if ((!(holding_block)) || PM_SaberInBounce(new_move) || PM_SaberInMassiveBounce(pm->ps->torsoAnim) || PM_SaberInAttack(new_move))
+	if ((!(is_holding_block_button)) || PM_SaberInBounce(new_move) || PM_SaberInMassiveBounce(pm->ps->torsoAnim) || PM_SaberInAttack(new_move))
 	{
 		pm->ps->userInt3 &= ~(1 << FLAG_PERFECTBLOCK);
 	}

@@ -55,7 +55,7 @@ int GROUND_TIME[MAX_GENTITIES];
 #ifdef _GAME
 extern void G_CheapWeaponFire(int ent_num, int ev);
 extern qboolean TryGrapple(gentity_t* ent); //g_cmds.c
-extern qboolean G_StandardHumanoid(gentity_t* self);
+extern qboolean g_standard_humanoid(gentity_t* self);
 #endif // _GAME
 
 extern qboolean BG_FullBodyTauntAnim(int anim);
@@ -75,7 +75,6 @@ extern void PM_SetMeleeBlock(void);
 extern qboolean PM_MeleeblockAnim(int anim);
 extern qboolean PM_ForceAnim(int anim);
 extern qboolean BG_SprintAnim(int anim);
-extern qboolean BG_SprintSaberAnim(int anim);
 qboolean PM_CrouchAnim(int anim);
 extern qboolean in_camera;
 extern qboolean PM_InRoll(const playerState_t* ps);
@@ -519,13 +518,13 @@ QINLINE PM_GetWeaponReadyAnim(void)
 {
 	if (pm->cmd.buttons & BUTTON_WALKING && pm->cmd.buttons & BUTTON_BLOCK)
 	{
-		if (pm->ps->eFlags & EF_DUAL_WEAPONS && pm->ps->weapon == WP_BRYAR_PISTOL)
+		if (pm->ps->eFlags & EF3_DUAL_WEAPONS && pm->ps->weapon == WP_BRYAR_PISTOL)
 		{
 			return WeaponAimingAnim2[pm->ps->weapon];
 		}
 		return WeaponAimingAnim[pm->ps->weapon];
 	}
-	if (pm->ps->eFlags & EF_DUAL_WEAPONS && pm->ps->weapon == WP_BRYAR_PISTOL)
+	if (pm->ps->eFlags & EF3_DUAL_WEAPONS && pm->ps->weapon == WP_BRYAR_PISTOL)
 	{
 		return WeaponReadyAnim2[pm->ps->weapon];
 	}
@@ -615,7 +614,7 @@ int PM_IdlePoseForsaber_anim_level(void)
 
 	const saberInfo_t* saber1 = BG_MySaber(pm->ps->client_num, 0);
 
-	const qboolean holding_block = pm->ps->ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
+	const qboolean is_holding_block_button = pm->ps->ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
 	//Holding Block Button
 
 	if (!pm->ps->saberEntityNum)
@@ -655,7 +654,7 @@ int PM_IdlePoseForsaber_anim_level(void)
 		{
 			if (pm->cmd.buttons & BUTTON_WALKING &&
 				PM_SaberWalkAnim(pm->ps->legsAnim) &&
-				!holding_block &&
+				!is_holding_block_button &&
 				pm->cmd.forwardmove > 0 ||
 				pm->cmd.rightmove > 0 ||
 				pm->cmd.rightmove < 0)
@@ -692,7 +691,7 @@ int PM_IdlePoseForsaber_anim_level(void)
 			}
 			if (pm->cmd.buttons & BUTTON_WALKING &&
 				PM_SaberWalkAnim(pm->ps->legsAnim) &&
-				!holding_block &&
+				!is_holding_block_button &&
 				pm->cmd.forwardmove > 0)
 			{
 				if (pm->ps->fd.saber_anim_level == SS_DUAL)
@@ -727,7 +726,7 @@ int PM_IdlePoseForsaber_anim_level(void)
 			}
 			if (pm->cmd.buttons & BUTTON_WALKING &&
 				PM_SaberWalkAnim(pm->ps->legsAnim) &&
-				!holding_block &&
+				!is_holding_block_button &&
 				pm->cmd.forwardmove < 0 ||
 				pm->cmd.rightmove > 0 ||
 				pm->cmd.rightmove < 0)
@@ -773,7 +772,7 @@ int PM_IdlePoseForsaber_anim_level(void)
 				else
 				{
 					//simple saber attack
-					if (holding_block)
+					if (is_holding_block_button)
 					{
 						if (saber1 && saber1->type == SABER_GRIE)
 						{
@@ -801,7 +800,7 @@ int PM_IdlePoseForsaber_anim_level(void)
 				}
 				else
 				{
-					if (holding_block)
+					if (is_holding_block_button)
 					{
 						if (saber1 && (saber1->type == SABER_BACKHAND
 							|| saber1->type == SABER_ASBACKHAND)) //saber backhand
@@ -820,7 +819,7 @@ int PM_IdlePoseForsaber_anim_level(void)
 				}
 				break;
 			case SS_FAST:
-				if (holding_block)
+				if (is_holding_block_button)
 				{
 					if (saber1 && saber1->type == SABER_YODA) //yoda
 					{
@@ -864,7 +863,7 @@ int PM_IdlePoseForsaber_anim_level(void)
 				}
 				break;
 			case SS_MEDIUM:
-				if (holding_block)
+				if (is_holding_block_button)
 				{
 					if (saber1 && saber1->type == SABER_YODA) //yoda
 					{
@@ -908,7 +907,7 @@ int PM_IdlePoseForsaber_anim_level(void)
 				}
 				break;
 			case SS_STRONG:
-				if (holding_block)
+				if (is_holding_block_button)
 				{
 					if (saber1 && saber1->type == SABER_YODA) //yoda
 					{
@@ -952,7 +951,7 @@ int PM_IdlePoseForsaber_anim_level(void)
 				}
 				break;
 			case SS_TAVION:
-				if (holding_block)
+				if (is_holding_block_button)
 				{
 					if (saber1 && saber1->type == SABER_YODA) //yoda
 					{
@@ -996,7 +995,7 @@ int PM_IdlePoseForsaber_anim_level(void)
 				}
 				break;
 			case SS_DESANN:
-				if (holding_block)
+				if (is_holding_block_button)
 				{
 					if (saber1 && saber1->type == SABER_YODA) //yoda
 					{
@@ -1041,7 +1040,7 @@ int PM_IdlePoseForsaber_anim_level(void)
 				break;
 			case SS_NONE:
 			default:
-				if (holding_block)
+				if (is_holding_block_button)
 				{
 					if (saber1 && saber1->type == SABER_YODA) //yoda
 					{
@@ -9690,7 +9689,7 @@ static void PM_Footsteps(void)
 	int old;
 	int set_anim_flags = 0;
 
-	const qboolean holding_block = pm->ps->ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
+	const qboolean is_holding_block_button = pm->ps->ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
 	//Holding Block Button
 
 	const saberInfo_t* saber1 = BG_MySaber(pm->ps->client_num, 0);
@@ -9879,7 +9878,7 @@ static void PM_Footsteps(void)
 								else
 #endif
 								{
-									if (holding_block && pm->cmd.buttons & BUTTON_WALKING)
+									if (is_holding_block_button && pm->cmd.buttons & BUTTON_WALKING)
 									{
 										if (pm->ps->fd.saber_anim_level == SS_DUAL)
 										{
@@ -10082,10 +10081,6 @@ static void PM_Footsteps(void)
 				// has a special run animation :D
 				desiredAnim = BOTH_VADERRUN1;
 			}
-			//else if (pm->ps->client_num >= MAX_CLIENTS && pm_entSelf && pm_entSelf->s.NPC_class == CLASS_DESANN)
-			//{// has a special run animation :D
-			//	desiredAnim = BOTH_VADERRUN1;
-			//}
 			else if (pm->ps->pm_flags & PMF_BACKWARDS_RUN)
 			{
 				if (pm->ps->weapon != WP_SABER)
@@ -10192,7 +10187,7 @@ static void PM_Footsteps(void)
 					}
 					else if (pm->ps->weapon == WP_BRYAR_PISTOL)
 					{
-						if (pm->ps->eFlags & EF_DUAL_WEAPONS)
+						if (pm->ps->eFlags & EF3_DUAL_WEAPONS)
 						{
 							if (!pm->ps->weaponTime)
 							{
@@ -10288,6 +10283,10 @@ static void PM_Footsteps(void)
 								pm->ps->PlayerEffectFlags |= 1 << PEF_WEAPONSPRINTING;
 #ifdef _GAME
 								g_entities[pm->ps->client_num].client->IsSprinting = qtrue;
+								if (pm->ps->sprintFuel < 17) // single sprint here
+								{
+									pm->ps->sprintFuel -= 10;
+								}
 #endif
 							}
 						}
@@ -10362,6 +10361,10 @@ static void PM_Footsteps(void)
 								pm->ps->PlayerEffectFlags |= 1 << PEF_WEAPONSPRINTING;
 #ifdef _GAME
 								g_entities[pm->ps->client_num].client->IsSprinting = qtrue;
+								if (pm->ps->sprintFuel < 17) // single sprint here
+								{
+									pm->ps->sprintFuel -= 10;
+								}
 #endif
 							}
 						}
@@ -10413,6 +10416,10 @@ static void PM_Footsteps(void)
 								pm->ps->PlayerEffectFlags |= 1 << PEF_WEAPONSPRINTING;
 #ifdef _GAME
 								g_entities[pm->ps->client_num].client->IsSprinting = qtrue;
+								if (pm->ps->sprintFuel < 17) // single sprint here
+								{
+									pm->ps->sprintFuel -= 10;
+								}
 #endif
 							}
 						}
@@ -10482,6 +10489,10 @@ static void PM_Footsteps(void)
 								pm->ps->PlayerEffectFlags |= 1 << PEF_WEAPONSPRINTING;
 #ifdef _GAME
 								g_entities[pm->ps->client_num].client->IsSprinting = qtrue;
+								if (pm->ps->sprintFuel < 17) // single sprint here
+								{
+									pm->ps->sprintFuel -= 10;
+								}
 #endif
 							}
 						}
@@ -10532,6 +10543,10 @@ static void PM_Footsteps(void)
 								pm->ps->PlayerEffectFlags |= 1 << PEF_WEAPONSPRINTING;
 #ifdef _GAME
 								g_entities[pm->ps->client_num].client->IsSprinting = qtrue;
+								if (pm->ps->sprintFuel < 17) // single sprint here
+								{
+									pm->ps->sprintFuel -= 10;
+								}
 #endif
 							}
 						}
@@ -10616,6 +10631,10 @@ static void PM_Footsteps(void)
 									pm->ps->PlayerEffectFlags |= 1 << PEF_SPRINTING;
 #ifdef _GAME
 									g_entities[pm->ps->client_num].client->IsSprinting = qtrue;
+									if (pm->ps->sprintFuel < 17) // single sprint here
+									{
+										pm->ps->sprintFuel -= 10;
+									}
 #endif
 								}
 							}
@@ -10670,7 +10689,7 @@ static void PM_Footsteps(void)
 									}
 									else
 									{
-										if (holding_block && pm->ps->sprintFuel > 15) // staff sprint here
+										if (is_holding_block_button && pm->ps->sprintFuel > 15) // staff sprint here
 										{
 											PM_SetAnim(SETANIM_BOTH, BOTH_RUN_STAFF, set_anim_flags);
 
@@ -10731,7 +10750,7 @@ static void PM_Footsteps(void)
 									}
 									else
 									{
-										if (holding_block && pm->ps->sprintFuel > 15) //dual sprint here
+										if (is_holding_block_button && pm->ps->sprintFuel > 15) //dual sprint here
 										{
 											if (saber1 && saber1->type == SABER_GRIE)
 											{
@@ -10807,53 +10826,53 @@ static void PM_Footsteps(void)
 									}
 									else
 									{
-										if (saber1 && (saber1->type == SABER_BACKHAND
-											|| saber1->type == SABER_ASBACKHAND)) //saber backhand
+										if (is_holding_block_button && pm->ps->sprintFuel > 15) // single sprint here
 										{
-											PM_SetAnim(SETANIM_BOTH, BOTH_RUN_STAFF, set_anim_flags);
-										}
-										else if (saber1 && saber1->type == SABER_YODA) //saber yoda
-										{
-											PM_SetAnim(SETANIM_BOTH, BOTH_RUN10, set_anim_flags);
-										}
-										else if (saber1 && saber1->type == SABER_GRIE) //saber kylo
-										{
-											PM_SetAnim(SETANIM_BOTH, BOTH_RUN7, set_anim_flags);
-										}
-										else if (saber1 && saber1->type == SABER_GRIE4) //saber kylo
-										{
-											PM_SetAnim(SETANIM_BOTH, BOTH_RUN7, set_anim_flags);
-										}
-										else
-										{
-											if (holding_block && pm->ps->sprintFuel > 15) // single sprint here
+											if (saber1 && (saber1->type == SABER_BACKHAND
+												|| saber1->type == SABER_ASBACKHAND)) //saber backhand
 											{
-												PM_SetAnim(SETANIM_BOTH, BOTH_SPRINT_SABER_MP, set_anim_flags);
-
-												if (!(pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING))
-												{
-													pm->ps->PlayerEffectFlags |= 1 << PEF_SPRINTING;
-#ifdef _GAME
-													g_entities[pm->ps->client_num].client->IsSprinting = qtrue;
-													if (pm->ps->sprintFuel < 17) // single sprint here
-													{
-														pm->ps->sprintFuel -= 10;
-													}
-#endif
-												}
+												PM_SetAnim(SETANIM_BOTH, BOTH_RUN_STAFF, set_anim_flags);
+											}
+											else if (saber1 && saber1->type == SABER_YODA) //saber yoda
+											{
+												PM_SetAnim(SETANIM_BOTH, BOTH_RUN10, set_anim_flags);
+											}
+											else if (saber1 && saber1->type == SABER_GRIE) //saber kylo
+											{
+												PM_SetAnim(SETANIM_BOTH, BOTH_RUN7, set_anim_flags);
+											}
+											else if (saber1 && saber1->type == SABER_GRIE4) //saber kylo
+											{
+												PM_SetAnim(SETANIM_BOTH, BOTH_RUN7, set_anim_flags);
 											}
 											else
 											{
-												PM_SetAnim(SETANIM_BOTH, BOTH_RUN1, set_anim_flags);
+												PM_SetAnim(SETANIM_BOTH, BOTH_SPRINT_SABER_MP, set_anim_flags);
+											}
 
-												if (pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING || pm->ps->PlayerEffectFlags & 1 << PEF_WEAPONSPRINTING)
-												{
-													pm->ps->PlayerEffectFlags &= ~(1 << PEF_SPRINTING);
-													pm->ps->PlayerEffectFlags &= ~(1 << PEF_WEAPONSPRINTING);
+											if (!(pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING))
+											{
+												pm->ps->PlayerEffectFlags |= 1 << PEF_SPRINTING;
 #ifdef _GAME
-													g_entities[pm->ps->client_num].client->IsSprinting = qfalse;
-#endif
+												g_entities[pm->ps->client_num].client->IsSprinting = qtrue;
+												if (pm->ps->sprintFuel < 17) // single sprint here
+												{
+													pm->ps->sprintFuel -= 10;
 												}
+#endif
+											}
+										}
+										else
+										{
+											PM_SetAnim(SETANIM_BOTH, BOTH_RUN1, set_anim_flags);
+
+											if (pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING || pm->ps->PlayerEffectFlags & 1 << PEF_WEAPONSPRINTING)
+											{
+												pm->ps->PlayerEffectFlags &= ~(1 << PEF_SPRINTING);
+												pm->ps->PlayerEffectFlags &= ~(1 << PEF_WEAPONSPRINTING);
+#ifdef _GAME
+												g_entities[pm->ps->client_num].client->IsSprinting = qfalse;
+#endif
 											}
 										}
 									}
@@ -11044,7 +11063,7 @@ static void PM_Footsteps(void)
 					}
 					else if (pm->ps->weapon == WP_BRYAR_PISTOL)
 					{
-						if (pm->ps->eFlags & EF_DUAL_WEAPONS)
+						if (pm->ps->eFlags & EF3_DUAL_WEAPONS)
 						{
 							if (!pm->ps->weaponTime)
 							{
@@ -11529,7 +11548,7 @@ PM_BeginWeaponChange
 */
 void PM_BeginWeaponChange(const int weapon)
 {
-	const qboolean holding_block = pm->ps->ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
+	const qboolean is_holding_block_button = pm->ps->ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
 	//Holding Block Button
 	const qboolean active_blocking = pm->ps->ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK ? qtrue : qfalse;
 	//Active Blocking
@@ -11549,7 +11568,7 @@ void PM_BeginWeaponChange(const int weapon)
 		return;
 	}
 
-	if (pm->ps->weapon == WP_SABER && (holding_block || active_blocking))
+	if (pm->ps->weapon == WP_SABER && (is_holding_block_button || active_blocking))
 	{
 		return;
 	}
@@ -11557,7 +11576,7 @@ void PM_BeginWeaponChange(const int weapon)
 	if (pm->ps->weapon == WP_BRYAR_PISTOL)
 	{
 		//Changing weaps, remove dual weaps
-		pm->ps->eFlags &= ~EF_DUAL_WEAPONS;
+		pm->ps->eFlags &= ~EF3_DUAL_WEAPONS;
 	}
 
 	// turn of any kind of zooming when weapon switching.
@@ -11601,13 +11620,13 @@ void PM_FinishWeaponChange(void)
 		pm_entSelf->s.botclass == BCLASS_MANDOLORIAN2))
 	{
 		//player playing as boba fett
-		pm->ps->eFlags |= EF_DUAL_WEAPONS;
+		pm->ps->eFlags |= EF3_DUAL_WEAPONS;
 	}
 #ifdef _GAME
 	else if (weapon == WP_BRYAR_PISTOL && g_entities[pm->ps->client_num].client->skillLevel[SK_PISTOL] >= FORCE_LEVEL_3)
 	{
 		//Changed weaps, add dual weaps
-		pm->ps->eFlags |= EF_DUAL_WEAPONS;
+		pm->ps->eFlags |= EF3_DUAL_WEAPONS;
 	}
 #endif
 
@@ -12782,7 +12801,7 @@ void PM_Weapon(void)
 	bgEntity_t* veh = NULL;
 	qboolean vehicleRocketLock = qfalse;
 
-	const qboolean holding_block = pm->ps->ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
+	const qboolean is_holding_block_button = pm->ps->ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
 	//Holding Block Button
 
 #if 0
@@ -13538,7 +13557,7 @@ void PM_Weapon(void)
 	{
 		if (pm->ps->client_num < MAX_CLIENTS && pm->ps->ammo[weaponData[pm->ps->weapon].ammoIndex] != -1)
 		{
-			if (pm->ps->eFlags & EF_DUAL_WEAPONS)
+			if (pm->ps->eFlags & EF3_DUAL_WEAPONS)
 			{
 				if (pm->ps->ammo[weaponData[pm->ps->weapon].ammoIndex] < weaponData[pm->ps->weapon].energyPerShot * 2
 					&&
@@ -13673,7 +13692,7 @@ void PM_Weapon(void)
 				else
 #endif
 				{
-					if (holding_block && pm->cmd.buttons & BUTTON_WALKING)
+					if (is_holding_block_button && pm->cmd.buttons & BUTTON_WALKING)
 					{
 						if (pm->ps->fd.saber_anim_level == SS_DUAL)
 						{
@@ -14220,7 +14239,7 @@ void PM_Weapon(void)
 	}
 	else if (pm->ps->weapon == WP_BRYAR_PISTOL)
 	{
-		if (pm->ps->eFlags & EF_DUAL_WEAPONS)
+		if (pm->ps->eFlags & EF3_DUAL_WEAPONS)
 		{
 			PM_StartTorsoAnim(WeaponAttackAnim2[pm->ps->weapon]);
 		}
@@ -14231,7 +14250,7 @@ void PM_Weapon(void)
 	}
 	else
 	{
-		if (pm->ps->eFlags & EF_DUAL_WEAPONS && pm->ps->weapon == WP_BRYAR_PISTOL)
+		if (pm->ps->eFlags & EF3_DUAL_WEAPONS && pm->ps->weapon == WP_BRYAR_PISTOL)
 		{
 			PM_StartTorsoAnim(WeaponAttackAnim2[pm->ps->weapon]);
 		}
@@ -14257,7 +14276,7 @@ void PM_Weapon(void)
 		amount = weaponData[pm->ps->weapon].energyPerShot;
 	}
 
-	if (pm->ps->eFlags & EF_DUAL_WEAPONS && pm->ps->weapon == WP_BRYAR_PISTOL)
+	if (pm->ps->eFlags & EF3_DUAL_WEAPONS && pm->ps->weapon == WP_BRYAR_PISTOL)
 	{
 		amount *= 2;
 	}
@@ -15854,43 +15873,6 @@ void BG_AdjustClientSpeed(playerState_t* ps, const usercmd_t* cmd, const int svT
 		//move slower when low on health
 		ps->speed *= 0.90f;
 	}
-	else if (BG_SprintAnim(pm->ps->legsAnim))
-	{
-		if (pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING)
-		{
-#ifdef _GAME
-			if (!g_entities[pm->ps->client_num].r.svFlags & SVF_BOT)
-			{
-				ps->speed *= 1.60f;
-			}
-#endif
-		}
-	}
-	else if (pm->ps->PlayerEffectFlags & 1 << PEF_WEAPONSPRINTING)
-	{
-#ifdef _GAME
-		if (!g_entities[pm->ps->client_num].r.svFlags & SVF_BOT)
-		{
-			ps->speed *= 1.30f;
-		}
-#endif
-	}
-	else if (BG_SprintSaberAnim(pm->ps->legsAnim))
-	{
-#ifdef _GAME
-		if (!g_entities[pm->ps->client_num].r.svFlags & SVF_BOT)
-		{
-			ps->speed *= 1.60f;
-		}
-#endif
-	}
-	else if (pm->ps->weapon == WP_BRYAR_PISTOL ||
-		pm->ps->weapon == WP_THERMAL ||
-		pm->ps->weapon == WP_TRIP_MINE ||
-		pm->ps->weapon == WP_DET_PACK)
-	{
-		ps->speed *= 0.85f;
-	}
 	else if (PM_SaberInAttack(ps->saber_move) && cmd->forwardmove < 0)
 	{
 		//if running backwards while attacking, don't run as fast.
@@ -16987,8 +16969,8 @@ void BG_G2PlayerAngles(void* ghoul2, const int motionBolt, entityState_t* cent, 
 
 	// allow yaw to drift a bit
 	if (cent->legsAnim != BOTH_STAND1 ||
-		(cent->torsoAnim != WeaponReadyAnim[cent->weapon] && !(cent->eFlags & EF_DUAL_WEAPONS) ||
-			cent->torsoAnim != WeaponReadyAnim2[cent->weapon] && cent->eFlags & EF_DUAL_WEAPONS))
+		(cent->torsoAnim != WeaponReadyAnim[cent->weapon] && !(cent->eFlags & EF3_DUAL_WEAPONS) ||
+			cent->torsoAnim != WeaponReadyAnim2[cent->weapon] && cent->eFlags & EF3_DUAL_WEAPONS))
 	{
 		// if not standing still, always point all in the same direction
 		//cent->pe.torso.yawing = qtrue;	// always center
@@ -19044,13 +19026,13 @@ void PmoveSingle(pmove_t* pmove)
 		{
 			pm->ps->eFlags |= EF_JETPACK_FLAMING; //going up
 			pm->ps->eFlags |= EF_JETPACK_ACTIVE;
-			pm->ps->eFlags |= EF_JETPACK_HOVER;
+			pm->ps->eFlags |= EF3_JETPACK_HOVER;
 		}
 		else
 		{
 			pm->ps->eFlags &= ~EF_JETPACK_FLAMING; //idling
 			pm->ps->eFlags |= EF_JETPACK_ACTIVE;
-			pm->ps->eFlags &= ~EF_JETPACK_HOVER;
+			pm->ps->eFlags &= ~EF3_JETPACK_HOVER;
 		}
 	}
 
@@ -19111,7 +19093,7 @@ void PmoveSingle(pmove_t* pmove)
 			&& pm->cmd.upmove == 0)
 		{
 			// Hover at this height...
-			pm->ps->eFlags |= EF_JETPACK_HOVER;
+			pm->ps->eFlags |= EF3_JETPACK_HOVER;
 			pm->ps->eFlags &= ~EF_JETPACK_ACTIVE;
 			pm->ps->eFlags &= ~EF_JETPACK_FLAMING;
 			pm->ps->pm_type = PM_JETPACK;
@@ -19122,7 +19104,7 @@ void PmoveSingle(pmove_t* pmove)
 			// On the ground. Make sure jetpack is deactivated...
 			pm->ps->eFlags &= ~EF_JETPACK_ACTIVE;
 			pm->ps->eFlags &= ~EF_JETPACK_FLAMING;
-			pm->ps->eFlags &= ~EF_JETPACK_HOVER;
+			pm->ps->eFlags &= ~EF3_JETPACK_HOVER;
 			pm->ps->pm_type = PM_NORMAL;
 		}
 	}

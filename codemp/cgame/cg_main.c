@@ -1413,6 +1413,7 @@ static void CG_RegisterGraphics(void)
 	cgs.effects.mSaberBlock = trap->FX_RegisterEffect("saber/saber_block.efx");
 	cgs.effects.mSaberprfectBlock = trap->FX_RegisterEffect("saber/saber_goodparry.efx");
 	cgs.effects.mSaberBodyHit = trap->FX_RegisterEffect("saber/saber_bodyhit.efx");
+	cgs.effects.mSaberlimb_Bolton = trap->FX_RegisterEffect("saber/limb_bolton.efx");
 	cgs.effects.mSaberBloodSparks = trap->FX_RegisterEffect("saber/blood_sparks_mp.efx");
 	cgs.effects.mSaberBloodSparksSmall = trap->FX_RegisterEffect("saber/blood_sparks_25_mp.efx");
 	cgs.effects.mSaberBloodSparksMid = trap->FX_RegisterEffect("saber/blood_sparks_50_mp.efx");
@@ -1423,7 +1424,7 @@ static void CG_RegisterGraphics(void)
 	cgs.effects.mBlasterSmoke = trap->FX_RegisterEffect("blaster/smoke_bolton");
 	cgs.effects.mForceConfustionOld = trap->FX_RegisterEffect("force/confusion_old.efx");
 	cgs.effects.mSaberFriction = trap->FX_RegisterEffect("saber/saber_friction.efx");
-	cgs.effects.mSaberLock = trap->FX_RegisterEffect("saber/saber_lock.efx");
+	cgs.effects.mSaberLock = trap->FX_RegisterEffect("saber/saber_lock2.efx");
 
 	cgs.effects.forceLightning = trap->FX_RegisterEffect("effects/force/lightning.efx");
 	cgs.effects.forceLightningWide = trap->FX_RegisterEffect("effects/force/lightningwide.efx");

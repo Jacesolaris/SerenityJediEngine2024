@@ -26,7 +26,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #include "g_functions.h"
 #include "wp_saber.h"
 
-extern qboolean G_StandardHumanoid(gentity_t* ent);
+extern qboolean g_standard_humanoid(gentity_t* ent);
 extern void G_AddVoiceEvent(const gentity_t* self, int event, int speak_debounce_time);
 extern qboolean Q3_TaskIDPending(const gentity_t* ent, taskID_t taskType);
 extern void NPC_AimAdjust(int change);
@@ -856,7 +856,7 @@ void NPC_BSGM_Attack()
 		if (!NPC->client->ps.powerups[PW_GALAK_SHIELD]
 			&& enemyDist < MELEE_DIST_SQUARED
 			&& in_front(NPC->enemy->currentOrigin, NPC->currentOrigin, NPC->client->ps.viewangles, 0.3f)
-			&& G_StandardHumanoid(NPC->enemy)) //within 80 and in front
+			&& g_standard_humanoid(NPC->enemy)) //within 80 and in front
 		{
 			//our shield is down, and enemy within 80, if very close, use melee attack to slap away
 			if (TIMER_Done(NPC, "attackDelay"))

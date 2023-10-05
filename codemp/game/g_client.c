@@ -6836,7 +6836,7 @@ void ClientSpawn(gentity_t* ent)
 			client->ps.ammo[AMMO_BLASTER] = ammoData[AMMO_BLASTER].max;
 			client->ps.ammo[AMMO_METAL_BOLTS] = ammoData[AMMO_METAL_BOLTS].max;
 			client->skillLevel[SK_PISTOL] = FORCE_LEVEL_3;
-			client->ps.eFlags |= EF_DUAL_WEAPONS;
+			client->ps.eFlags |= EF3_DUAL_WEAPONS;
 			client->skillLevel[SK_BLASTER] = FORCE_LEVEL_3;
 			client->skillLevel[SK_THERMAL] = FORCE_LEVEL_3;
 			client->skillLevel[SK_BOWCASTER] = FORCE_LEVEL_3;
@@ -6957,7 +6957,7 @@ void ClientSpawn(gentity_t* ent)
 					client->skillLevel[SK_ACROBATICS] = FORCE_LEVEL_3;
 					client->ps.stats[STAT_WEAPONS] |= 1 << WP_BRYAR_PISTOL;
 					client->skillLevel[SK_PISTOL] = FORCE_LEVEL_3;
-					client->ps.eFlags |= EF_DUAL_WEAPONS;
+					client->ps.eFlags |= EF3_DUAL_WEAPONS;
 					client->ps.ammo[AMMO_BLASTER] = 900;
 					client->ps.ammo[AMMO_POWERCELL] = 500;
 					client->ps.ammo[AMMO_METAL_BOLTS] = 900;
@@ -6972,7 +6972,7 @@ void ClientSpawn(gentity_t* ent)
 					client->skillLevel[SK_BLASTERRATEOFFIREUPGRADE] = FORCE_LEVEL_3;
 					client->ps.stats[STAT_WEAPONS] |= 1 << WP_BRYAR_PISTOL;
 					client->skillLevel[SK_PISTOL] = FORCE_LEVEL_3;
-					client->ps.eFlags |= EF_DUAL_WEAPONS;
+					client->ps.eFlags |= EF3_DUAL_WEAPONS;
 					client->ps.ammo[AMMO_BLASTER] = 900;
 					client->ps.ammo[AMMO_POWERCELL] = 500;
 					client->ps.ammo[AMMO_METAL_BOLTS] = 900;
@@ -7321,7 +7321,7 @@ void ClientSpawn(gentity_t* ent)
 					client->skillLevel[SK_BLASTER] = FORCE_LEVEL_3;
 					client->ps.stats[STAT_WEAPONS] |= 1 << WP_BRYAR_PISTOL;
 					client->skillLevel[SK_PISTOL] = FORCE_LEVEL_3;
-					client->ps.eFlags |= EF_DUAL_WEAPONS;
+					client->ps.eFlags |= EF3_DUAL_WEAPONS;
 					client->ps.ammo[AMMO_BLASTER] = 900;
 					client->ps.ammo[AMMO_POWERCELL] = 500;
 					client->ps.ammo[AMMO_METAL_BOLTS] = 900;
@@ -7337,7 +7337,7 @@ void ClientSpawn(gentity_t* ent)
 					client->skillLevel[SK_BLASTER] = FORCE_LEVEL_3;
 					client->ps.stats[STAT_WEAPONS] |= 1 << WP_BRYAR_PISTOL;
 					client->skillLevel[SK_PISTOL] = FORCE_LEVEL_3;
-					client->ps.eFlags |= EF_DUAL_WEAPONS;
+					client->ps.eFlags |= EF3_DUAL_WEAPONS;
 					client->ps.ammo[AMMO_BLASTER] = 900;
 					client->ps.ammo[AMMO_POWERCELL] = 500;
 					client->ps.ammo[AMMO_METAL_BOLTS] = 900;
@@ -7354,7 +7354,7 @@ void ClientSpawn(gentity_t* ent)
 					client->skillLevel[SK_ACROBATICS] = FORCE_LEVEL_3;
 					client->ps.stats[STAT_WEAPONS] |= 1 << WP_BRYAR_PISTOL;
 					client->skillLevel[SK_PISTOL] = FORCE_LEVEL_3;
-					client->ps.eFlags |= EF_DUAL_WEAPONS;
+					client->ps.eFlags |= EF3_DUAL_WEAPONS;
 					client->ps.ammo[AMMO_BLASTER] = 900;
 					client->ps.ammo[AMMO_POWERCELL] = 500;
 					client->ps.ammo[AMMO_METAL_BOLTS] = 900;
@@ -7464,7 +7464,7 @@ void ClientSpawn(gentity_t* ent)
 					client->ps.stats[STAT_WEAPONS] |= 1 << WP_MELEE;
 					client->ps.stats[STAT_WEAPONS] |= 1 << WP_BRYAR_PISTOL;
 					client->skillLevel[SK_PISTOL] = FORCE_LEVEL_3;
-					client->ps.eFlags |= EF_DUAL_WEAPONS;
+					client->ps.eFlags |= EF3_DUAL_WEAPONS;
 					client->ps.ammo[AMMO_BLASTER] = 900;
 					client->ps.ammo[AMMO_POWERCELL] = 500;
 					client->ps.ammo[AMMO_METAL_BOLTS] = 900;
@@ -7514,7 +7514,7 @@ void ClientSpawn(gentity_t* ent)
 					client->skillLevel[SK_ACROBATICS] = FORCE_LEVEL_3;
 					client->ps.stats[STAT_WEAPONS] |= 1 << WP_BRYAR_PISTOL;
 					client->skillLevel[SK_PISTOL] = FORCE_LEVEL_3;
-					client->ps.eFlags |= EF_DUAL_WEAPONS;
+					client->ps.eFlags |= EF3_DUAL_WEAPONS;
 					client->ps.ammo[AMMO_BLASTER] = 900;
 					client->ps.ammo[AMMO_POWERCELL] = 500;
 					client->ps.ammo[AMMO_METAL_BOLTS] = 900;
@@ -7575,7 +7575,7 @@ void ClientSpawn(gentity_t* ent)
 					client->skillLevel[SK_CRYOBAN] = FORCE_LEVEL_3;
 					if (client->skillLevel[SK_PISTOL] >= FORCE_LEVEL_3 && ent->client->ps.weapon == WP_BRYAR_PISTOL)
 					{
-						client->ps.eFlags |= EF_DUAL_WEAPONS;
+						client->ps.eFlags |= EF3_DUAL_WEAPONS;
 					}
 					break;
 				}
@@ -7616,7 +7616,7 @@ void ClientSpawn(gentity_t* ent)
 				client->skillLevel[SK_CRYOBAN] = FORCE_LEVEL_3;
 				if (client->skillLevel[SK_PISTOL] >= FORCE_LEVEL_3 && ent->client->ps.weapon == WP_BRYAR_PISTOL)
 				{
-					client->ps.eFlags |= EF_DUAL_WEAPONS;
+					client->ps.eFlags |= EF3_DUAL_WEAPONS;
 				}
 			}
 		}
@@ -8719,7 +8719,7 @@ void ClientSpawn(gentity_t* ent)
 				G_SetAnim(ent, NULL, SETANIM_TORSO, TORSO_RAISEWEAP1,
 					SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD | SETANIM_FLAG_HOLDLESS, 0);
 
-				if (client->ps.eFlags & EF_DUAL_WEAPONS)
+				if (client->ps.eFlags & EF3_DUAL_WEAPONS)
 				{
 					client->ps.legsAnim = WeaponReadyAnim2[client->ps.weapon];
 				}
@@ -9027,7 +9027,7 @@ void ClientDisconnect(const int client_num)
 	G_ClearClientLog(client_num);
 }
 
-qboolean G_StandardHumanoid(gentity_t* self)
+qboolean g_standard_humanoid(gentity_t* self)
 {
 	char gla_name[MAX_QPATH];
 

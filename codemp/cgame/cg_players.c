@@ -2221,7 +2221,7 @@ void CG_NewClientInfo(int client_num, qboolean entities_initialized)
 				cg_entities[client_num].ghoul2weapon = CG_G2WeaponInstance(
 					&cg_entities[client_num], cg_entities[client_num].currentState.weapon);
 
-				if (cg_entities[client_num].currentState.eFlags & EF_DUAL_WEAPONS &&
+				if (cg_entities[client_num].currentState.eFlags & EF3_DUAL_WEAPONS &&
 					cg_entities[client_num].currentState.weapon == WP_BRYAR_PISTOL)
 				{
 					cg_entities[client_num].ghoul2weapon2 = CG_G2WeaponInstance2(
@@ -3194,7 +3194,7 @@ static void CG_SetLerpFrameAnimation(centity_t* cent, clientInfo_t* ci, lerpFram
 	int flags = BONE_ANIM_OVERRIDE_FREEZE;
 	const float old_speed = lf->animationSpeed;
 
-	const qboolean holding_block = cent->currentState.ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
+	const qboolean is_holding_block_button = cent->currentState.ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
 	const qboolean active_blocking = cent->currentState.ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK
 		? qtrue
 		: qfalse;
@@ -3300,7 +3300,7 @@ static void CG_SetLerpFrameAnimation(centity_t* cent, clientInfo_t* ci, lerpFram
 		if (!PM_WalkingOrRunningAnim(cent->currentState.legsAnim) && !PM_InKataAnim(cent->currentState.torsoAnim))
 		{
 			//make smooth animations
-			if ((active_blocking || holding_block) && cent->currentState.saber_move == LS_READY)
+			if ((active_blocking || is_holding_block_button) && cent->currentState.saber_move == LS_READY)
 			{
 				blend_time *= 1.8f;
 			}
@@ -3320,7 +3320,7 @@ static void CG_SetLerpFrameAnimation(centity_t* cent, clientInfo_t* ci, lerpFram
 				resume_frame = qtrue;
 			}
 			lf->animationTorsoSpeed = anim_speed_mult;
-			if ((active_blocking || holding_block) && cent->currentState.saber_move == LS_READY)
+			if ((active_blocking || is_holding_block_button) && cent->currentState.saber_move == LS_READY)
 			{
 				blend_time *= 1.8f;
 			}
@@ -3731,7 +3731,7 @@ static void CG_PlayerAnimation(centity_t* cent, int* legs_old, int* legs, float*
 
 	const int client_num = cent->currentState.client_num;
 
-	const qboolean holding_block = cent->currentState.ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
+	const qboolean is_holding_block_button = cent->currentState.ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
 	const qboolean active_blocking = cent->currentState.ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK
 		? qtrue
 		: qfalse;
@@ -3791,7 +3791,7 @@ static void CG_PlayerAnimation(centity_t* cent, int* legs_old, int* legs, float*
 		if (!PM_WalkingOrRunningAnim(cent->currentState.legsAnim) && !PM_InKataAnim(cent->currentState.torsoAnim))
 		{
 			//make smooth animations
-			if ((active_blocking || holding_block) && cent->currentState.saber_move == LS_READY)
+			if ((active_blocking || is_holding_block_button) && cent->currentState.saber_move == LS_READY)
 			{
 				speed_scale *= 0.3f;
 			}
@@ -17356,7 +17356,7 @@ void CG_Player(centity_t* cent)
 
 				if (cent->currentState.eFlags & EF_JETPACK_ACTIVE
 					|| cent->currentState.eFlags & EF_JETPACK_FLAMING
-					|| cent->currentState.eFlags & EF_JETPACK_HOVER)
+					|| cent->currentState.eFlags & EF3_JETPACK_HOVER)
 				{
 					//create effects
 					//Play the effect
@@ -17643,8 +17643,8 @@ void CG_Player(centity_t* cent)
 			cent->currentState.NPC_class != CLASS_REMOTE && cent->currentState.NPC_class != CLASS_SEEKER) &&
 		(cent->ghoul2weapon != CG_G2WeaponInstance(cent, cent->currentState.weapon) ||
 			cent->ghoul2weapon2 != CG_G2WeaponInstance2(cent, cent->currentState.weapon) &&
-			cent->currentState.eFlags & EF_DUAL_WEAPONS ||
-			cent->ghoul2weapon2 != NULL && !(cent->currentState.eFlags & EF_DUAL_WEAPONS)) &&
+			cent->currentState.eFlags & EF3_DUAL_WEAPONS ||
+			cent->ghoul2weapon2 != NULL && !(cent->currentState.eFlags & EF3_DUAL_WEAPONS)) &&
 		!(cent->currentState.eFlags & EF_DEAD) && !cent->torsoBolt &&
 		cg.snap && (cent->currentState.number != cg.snap->ps.client_num || cg.snap->ps.pm_flags & PMF_FOLLOW))
 	{
@@ -17703,7 +17703,7 @@ void CG_Player(centity_t* cent)
 
 			cent->weapon = cent->currentState.weapon;
 			cent->ghoul2weapon = CG_G2WeaponInstance(cent, cent->currentState.weapon);
-			if (cent->currentState.eFlags & EF_DUAL_WEAPONS && cent->currentState.weapon == WP_BRYAR_PISTOL)
+			if (cent->currentState.eFlags & EF3_DUAL_WEAPONS && cent->currentState.weapon == WP_BRYAR_PISTOL)
 			{
 				cent->ghoul2weapon2 = CG_G2WeaponInstance2(cent, cent->currentState.weapon);
 			}
@@ -19811,7 +19811,7 @@ stillDoSaber:
 	//
 	if (cent->currentState.weapon != WP_EMPLACED_GUN)
 	{
-		if (cent->currentState.eFlags & EF_DUAL_WEAPONS && cent->currentState.weapon == WP_BRYAR_PISTOL)
+		if (cent->currentState.eFlags & EF3_DUAL_WEAPONS && cent->currentState.weapon == WP_BRYAR_PISTOL)
 		{
 			cg_add_player_weaponduals(&legs, NULL, cent, root_angles, qtrue, qtrue);
 		}

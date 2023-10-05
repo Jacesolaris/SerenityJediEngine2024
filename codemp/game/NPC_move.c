@@ -1526,7 +1526,7 @@ void NPC_ApplyRoff(void)
 
 qboolean NPC_IsJetpacking(const gentity_t* self)
 {
-	if (self->s.eFlags & EF_JETPACK_ACTIVE || self->s.eFlags & EF_JETPACK_FLAMING || self->s.eFlags & EF_JETPACK_HOVER)
+	if (self->s.eFlags & EF_JETPACK_ACTIVE || self->s.eFlags & EF_JETPACK_FLAMING || self->s.eFlags & EF3_JETPACK_HOVER)
 	{
 		return qtrue;
 	}

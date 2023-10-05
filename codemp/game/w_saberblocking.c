@@ -398,7 +398,7 @@ void sab_beh_animate_small_bounce(gentity_t* attacker)
 	else
 	{
 		attacker->client->ps.userInt3 |= 1 << FLAG_SLOWBOUNCE;
-		attacker->client->ps.saberBounceMove = LS_D1_BR + (saber_moveData[attacker->client->ps.saber_move].startQuad -Q_BR);
+		attacker->client->ps.saberBounceMove = LS_D1_BR + (saber_moveData[attacker->client->ps.saber_move].startQuad - Q_BR);
 		attacker->client->ps.saberBlocked = BLOCKED_ATK_BOUNCE;
 	}
 }
@@ -835,7 +835,6 @@ qboolean sab_beh_attack_vs_block(gentity_t* attacker, gentity_t* blocker, const 
 			{
 				if (pm_saber_innonblockable_attack(blocker->client->ps.torsoAnim))
 				{
-
 					sab_beh_animate_heavy_slow_bounce_attacker(attacker);
 
 					sab_beh_add_balance(blocker, -MPCOST_PARRIED);
@@ -961,7 +960,7 @@ qboolean sab_beh_block_vs_attack(gentity_t* blocker, gentity_t* attacker, const 
 					{
 						CGCam_BlockShakeMP(blocker->s.origin, blocker, 0.45f, 100);
 					}
-					G_Sound(blocker, CHAN_AUTO,G_SoundIndex(va("sound/weapons/saber/saber_perfectblock%d.mp3", Q_irand(1, 3))));
+					G_Sound(blocker, CHAN_AUTO, G_SoundIndex(va("sound/weapons/saber/saber_perfectblock%d.mp3", Q_irand(1, 3))));
 
 					if ((d_blockinfo.integer || g_DebugSaberCombat.integer) && !(blocker->r.svFlags & SVF_BOT))
 					{

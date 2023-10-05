@@ -1543,7 +1543,7 @@ static const char* g_effectorStringTable[] =
 	nullptr //always terminate
 };
 
-extern qboolean G_StandardHumanoid(gentity_t* self);
+extern qboolean g_standard_humanoid(gentity_t* self);
 extern void PM_SetTorsoAnimTimer(gentity_t* ent, int* torsoAnimTimer, int time);
 extern void PM_SetLegsAnimTimer(gentity_t* ent, int* legsAnimTimer, int time);
 extern qboolean G_ReleaseEntity(const gentity_t* grabber);

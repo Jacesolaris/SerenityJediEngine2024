@@ -2555,7 +2555,7 @@ qboolean WP_SabersCheckLock(gentity_t* ent1, gentity_t* ent2)
 	}
 }
 
-extern qboolean G_StandardHumanoid(gentity_t* self);
+extern qboolean g_standard_humanoid(gentity_t* self);
 
 void G_SaberBounce(const gentity_t* attacker, gentity_t* victim)
 {
@@ -2574,7 +2574,7 @@ void G_SaberBounce(const gentity_t* attacker, gentity_t* victim)
 		return;
 	}
 
-	if (!G_StandardHumanoid(victim))
+	if (!g_standard_humanoid(victim))
 	{
 		return;
 	}
@@ -5882,7 +5882,7 @@ qboolean G_DoDodge(gentity_t* self, gentity_t* shooter, vec3_t dmg_origin, int h
 			self->client->jetPackOn = qtrue;
 			self->client->ps.eFlags |= EF_JETPACK_ACTIVE;
 			self->client->ps.eFlags |= EF_JETPACK_FLAMING;
-			self->client->ps.eFlags |= EF_JETPACK_HOVER;
+			self->client->ps.eFlags |= EF3_JETPACK_HOVER;
 			Boba_FlyStart(self);
 			self->client->ps.fd.forceJumpCharge = 280;
 			self->client->jetPackTime = level.time + 30000;
@@ -5914,7 +5914,7 @@ qboolean G_DoDodge(gentity_t* self, gentity_t* shooter, vec3_t dmg_origin, int h
 			self->client->jetPackOn = qtrue;
 			self->client->ps.eFlags |= EF_JETPACK_ACTIVE;
 			self->client->ps.eFlags |= EF_JETPACK_FLAMING;
-			self->client->ps.eFlags |= EF_JETPACK_HOVER;
+			self->client->ps.eFlags |= EF3_JETPACK_HOVER;
 			Boba_FlyStart(self);
 			self->client->ps.fd.forceJumpCharge = 280;
 			self->client->jetPackTime = (self->client->jetPackTime + level.time) / 2 + 10000;
@@ -5933,7 +5933,7 @@ qboolean G_DoDodge(gentity_t* self, gentity_t* shooter, vec3_t dmg_origin, int h
 			self->client->jetPackOn = qtrue;
 			self->client->ps.eFlags |= EF_JETPACK_ACTIVE;
 			self->client->ps.eFlags |= EF_JETPACK_FLAMING;
-			self->client->ps.eFlags |= EF_JETPACK_HOVER;
+			self->client->ps.eFlags |= EF3_JETPACK_HOVER;
 			Boba_FlyStart(self);
 			self->client->ps.fd.forceJumpCharge = 280;
 			self->client->jetPackTime = (self->client->jetPackTime + level.time) / 2 + 10000;
@@ -5952,7 +5952,7 @@ qboolean G_DoDodge(gentity_t* self, gentity_t* shooter, vec3_t dmg_origin, int h
 			self->client->jetPackOn = qtrue;
 			self->client->ps.eFlags |= EF_JETPACK_ACTIVE;
 			self->client->ps.eFlags |= EF_JETPACK_FLAMING;
-			self->client->ps.eFlags |= EF_JETPACK_HOVER;
+			self->client->ps.eFlags |= EF3_JETPACK_HOVER;
 			Boba_FlyStart(self);
 			self->client->ps.fd.forceJumpCharge = 280;
 			self->client->jetPackTime = (self->client->jetPackTime + level.time) / 2 + 10000;
@@ -6447,7 +6447,7 @@ qboolean G_DoSaberDodge(gentity_t* dodger, gentity_t* attacker, vec3_t dmg_origi
 			dodger->client->jetPackOn = qtrue;
 			dodger->client->ps.eFlags |= EF_JETPACK_ACTIVE;
 			dodger->client->ps.eFlags |= EF_JETPACK_FLAMING;
-			dodger->client->ps.eFlags |= EF_JETPACK_HOVER;
+			dodger->client->ps.eFlags |= EF3_JETPACK_HOVER;
 			Boba_FlyStart(dodger);
 			dodger->client->ps.fd.forceJumpCharge = 280;
 			dodger->client->jetPackTime = level.time + 30000;
@@ -6479,7 +6479,7 @@ qboolean G_DoSaberDodge(gentity_t* dodger, gentity_t* attacker, vec3_t dmg_origi
 			dodger->client->jetPackOn = qtrue;
 			dodger->client->ps.eFlags |= EF_JETPACK_ACTIVE;
 			dodger->client->ps.eFlags |= EF_JETPACK_FLAMING;
-			dodger->client->ps.eFlags |= EF_JETPACK_HOVER;
+			dodger->client->ps.eFlags |= EF3_JETPACK_HOVER;
 			Boba_FlyStart(dodger);
 			dodger->client->ps.fd.forceJumpCharge = 280;
 			dodger->client->jetPackTime = (dodger->client->jetPackTime + level.time) / 2 + 10000;
@@ -6498,7 +6498,7 @@ qboolean G_DoSaberDodge(gentity_t* dodger, gentity_t* attacker, vec3_t dmg_origi
 			dodger->client->jetPackOn = qtrue;
 			dodger->client->ps.eFlags |= EF_JETPACK_ACTIVE;
 			dodger->client->ps.eFlags |= EF_JETPACK_FLAMING;
-			dodger->client->ps.eFlags |= EF_JETPACK_HOVER;
+			dodger->client->ps.eFlags |= EF3_JETPACK_HOVER;
 			Boba_FlyStart(dodger);
 			dodger->client->ps.fd.forceJumpCharge = 280;
 			dodger->client->jetPackTime = (dodger->client->jetPackTime + level.time) / 2 + 10000;
@@ -6517,7 +6517,7 @@ qboolean G_DoSaberDodge(gentity_t* dodger, gentity_t* attacker, vec3_t dmg_origi
 			dodger->client->jetPackOn = qtrue;
 			dodger->client->ps.eFlags |= EF_JETPACK_ACTIVE;
 			dodger->client->ps.eFlags |= EF_JETPACK_FLAMING;
-			dodger->client->ps.eFlags |= EF_JETPACK_HOVER;
+			dodger->client->ps.eFlags |= EF3_JETPACK_HOVER;
 			Boba_FlyStart(dodger);
 			dodger->client->ps.fd.forceJumpCharge = 280;
 			dodger->client->jetPackTime = (dodger->client->jetPackTime + level.time) / 2 + 10000;
@@ -6825,7 +6825,7 @@ static QINLINE qboolean check_saber_damage(gentity_t* self, const int r_saber_nu
 	const float hilt_radius = self->client->saber[r_saber_num].blade[r_blade_num].radius * 1.2f;
 	const qboolean saber_in_kill_move = PM_SaberInKillMove(self->client->ps.saber_move);
 
-	const qboolean self_holding_block = self->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
+	const qboolean self_is_holding_block_button = self->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
 	//Normal Blocking
 	const qboolean self_active_blocking = self->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK
 		? qtrue
@@ -6862,7 +6862,7 @@ static QINLINE qboolean check_saber_damage(gentity_t* self, const int r_saber_nu
 		VectorClear(saber_tr_mins); //
 		VectorClear(saber_tr_maxs); //
 	} //
-	else if (self_holding_block || self_active_blocking || self_m_blocking || //
+	else if (self_is_holding_block_button || self_active_blocking || self_m_blocking || //
 		BG_SaberInFullDamageMove(&self->client->ps, self->localAnimIndex)) //
 	{
 		//Setting things up so the game always does realistic box traces for the sabers.    //
@@ -7031,7 +7031,7 @@ static QINLINE qboolean check_saber_damage(gentity_t* self, const int r_saber_nu
 		dmg = SABER_NONATTACK_DAMAGE;
 		idle_damage = qtrue;
 	}
-	else if ((self_holding_block || self_active_blocking || self_m_blocking || self->client->ps.saberManualBlockingTime > level.time) && !(self->r.svFlags & SVF_BOT))
+	else if ((self_is_holding_block_button || self_active_blocking || self_m_blocking || self->client->ps.saberManualBlockingTime > level.time) && !(self->r.svFlags & SVF_BOT))
 	{
 		//Dont do damage if holding block.
 		dmg = SABER_NO_DAMAGE;
@@ -8205,7 +8205,7 @@ static QINLINE qboolean CheckThrownSaberDamaged(gentity_t* saberent, gentity_t* 
 						G_Damage(ent, saber_owner, saber_owner, dir, tr.endpos, saberent->damage, dflags, MOD_SABER);
 					}
 
-					te = G_TempEntity(tr.endpos, EV_SABER_BODY_HIT);
+					te = G_TempEntity(tr.endpos, EV_SABER_HIT);
 					te->s.otherEntityNum = ent->s.number;
 					te->s.otherEntityNum2 = saber_owner->s.number;
 					te->s.weapon = 0; //saber_num
@@ -9932,12 +9932,12 @@ qboolean WP_AbsorbKick(gentity_t* hit_ent, const gentity_t* pusher, const vec3_t
 {
 	const qboolean active_blocking = hit_ent->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK ? qtrue : qfalse;
 	//manual Blocking
-	const qboolean holding_block = hit_ent->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
+	const qboolean is_holding_block_button = hit_ent->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
 	//Normal Blocking
 	const qboolean npc_blocking = hit_ent->client->ps.ManualBlockingFlags & 1 << MBF_NPCKICKBLOCK ? qtrue : qfalse;
 	//NPC Blocking
 
-	if (PlayerCanAbsorbKick(hit_ent, push_dir) && (holding_block || active_blocking) && !(hit_ent->r.svFlags & SVF_BOT))
+	if (PlayerCanAbsorbKick(hit_ent, push_dir) && (is_holding_block_button || active_blocking) && !(hit_ent->r.svFlags & SVF_BOT))
 		//player only
 	{
 		if (hit_ent->client->ps.fd.blockPoints > 50)
@@ -11755,7 +11755,7 @@ void wp_saber_position_update(gentity_t* self, usercmd_t* ucmd)
 
 	saberInfo_t* saber1 = BG_MySaber(self->client_num, 0);
 
-	const qboolean self_holding_block = self->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
+	const qboolean self_is_holding_block_button = self->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
 
 #ifndef FINAL_BUILD
 	int viewlock = 0;
@@ -12849,7 +12849,7 @@ nextStep:
 				{
 					//Super duper interplotation system
 					if (level.time - self->client->saber[r_saber_num].blade[r_blade_num].trail.lastTime < 100 && (
-						BG_SaberInFullDamageMove(&self->client->ps, self->localAnimIndex) || self_holding_block))
+						BG_SaberInFullDamageMove(&self->client->ps, self->localAnimIndex) || self_is_holding_block_button))
 					{
 						vec3_t olddir;
 						float dist = (d_saberBoxTraceSize.value + self->client->saber[r_saber_num].blade[r_blade_num].
@@ -13081,7 +13081,7 @@ float manual_forceblocking(const gentity_t* defender)
 	return qtrue;
 }
 
-qboolean is_holding_block_button(const gentity_t* defender)
+qboolean Block_Button_Held(const gentity_t* defender)
 {
 	if (defender->client->ps.pm_flags & PMF_BLOCK_HELD)
 	{
@@ -13377,7 +13377,7 @@ int PlayerCanAbsorbKick(const gentity_t* defender, const vec3_t push_dir) //Can 
 {
 	vec3_t p_l_angles, p_l_fwd;
 
-	const qboolean holding_block = defender->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
+	const qboolean is_holding_block_button = defender->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
 	//Normal Blocking
 
 	if (!defender || !defender->client)
@@ -13385,7 +13385,7 @@ int PlayerCanAbsorbKick(const gentity_t* defender, const vec3_t push_dir) //Can 
 		//non-humanoids can't absorb kicks.
 		return qfalse;
 	}
-	if (!holding_block) // Must be holding Block button
+	if (!is_holding_block_button) // Must be holding Block button
 	{
 		// Not doing any blocking can't absorb kicks.
 		return qfalse;

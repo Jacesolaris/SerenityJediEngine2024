@@ -1025,7 +1025,7 @@ static void G_SetSkin(gentity_t* ent)
 	}
 }
 
-qboolean G_StandardHumanoid(gentity_t* self)
+qboolean g_standard_humanoid(gentity_t* self)
 {
 	if (!self || !self->ghoul2.size())
 	{
@@ -1219,7 +1219,7 @@ qboolean G_StandardHumanoid(gentity_t* self)
 	return qfalse;
 }
 
-qboolean G_StandardHumanoid(const char* gla_name)
+qboolean g_standard_humanoid(const char* gla_name)
 {
 	if (gla_name)
 	{
@@ -1621,7 +1621,7 @@ qboolean G_SetG2PlayerModelInfo(gentity_t* ent, const char* model_name, const ch
 			ent->handRBolt = ent->kneeLBolt = ent->kneeRBolt = ent->footLBolt =
 			ent->footRBolt = -1;
 		// now turn on the bolt in the hand - this one would be best always turned on.
-		if (G_StandardHumanoid(ent))
+		if (g_standard_humanoid(ent))
 		{
 			//only _humanoid skeleton is expected to have these
 			ent->headBolt = gi.G2API_AddBolt(&ent->ghoul2[ent->playerModel], "*head_eyes");

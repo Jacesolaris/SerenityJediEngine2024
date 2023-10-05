@@ -1228,7 +1228,7 @@ void NPC_BSWander(void)
 }
 
 //check to see if this type of NPC can surrender
-extern qboolean G_StandardHumanoid(gentity_t* self);
+extern qboolean g_standard_humanoid(gentity_t* self);
 
 qboolean NPC_CanSurrender(void)
 {
@@ -1292,7 +1292,7 @@ qboolean NPC_CanSurrender(void)
 		default:
 			break;
 		}
-		if (!G_StandardHumanoid(NPCS.NPC))
+		if (!g_standard_humanoid(NPCS.NPC))
 		{
 			return qfalse;
 		}

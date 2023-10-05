@@ -121,7 +121,8 @@ extern int PM_InGrappleMove(int move);
 extern qboolean walk_check(const gentity_t* self);
 extern qboolean PM_SaberInBrokenParry(int move);
 extern qboolean BG_SprintAnim(int anim);
-extern qboolean BG_SprintSaberAnim(int anim);
+extern qboolean BG_SaberSprintAnim(int anim);
+extern qboolean BG_WeaponSprintAnim(int anim);
 extern void Weapon_GrapplingHook_Fire(gentity_t* ent);
 extern qboolean PlayerAffectedByStasis();
 extern void sab_beh_animate_slow_bounce_blocker(gentity_t* blocker);
@@ -2276,12 +2277,12 @@ qboolean WP_AbsorbKick(gentity_t* hit_ent, const gentity_t* pusher, const vec3_t
 {
 	const qboolean active_blocking = hit_ent->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK ? qtrue : qfalse;
 	//manual Blocking
-	const qboolean holding_block = hit_ent->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
+	const qboolean is_holding_block_button = hit_ent->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
 	//Normal Blocking
 	const qboolean NPCBlocking = hit_ent->client->ps.ManualBlockingFlags & 1 << MBF_NPCKICKBLOCK ? qtrue : qfalse;
 	//NPC Blocking
 
-	if (PlayerCanAbsorbKick(hit_ent, push_dir) && (holding_block || active_blocking) && (hit_ent->s.number < MAX_CLIENTS ||
+	if (PlayerCanAbsorbKick(hit_ent, push_dir) && (is_holding_block_button || active_blocking) && (hit_ent->s.number < MAX_CLIENTS ||
 		G_ControlledByPlayer(hit_ent))) //player only
 	{
 		if (hit_ent->client->ps.blockPoints > 50)
@@ -6565,7 +6566,7 @@ ClientAlterSpeed
 This function is called ONLY from ClientThinkReal, and is responsible for setting client ps.speed
 ==============
 */
-extern qboolean G_StandardHumanoid(gentity_t* self);
+extern qboolean g_standard_humanoid(gentity_t* self);
 
 void ClientAlterSpeed(gentity_t* ent, usercmd_t* ucmd, const qboolean controlledByPlayer,
 	float vehicleFrameTimeModifier)
@@ -6727,9 +6728,13 @@ void ClientAlterSpeed(gentity_t* ent, usercmd_t* ucmd, const qboolean controlled
 	else
 	{
 		//Client sets ucmds and such for speed alterations
-		client->ps.speed = g_speed->value; //default is 320
+		client->ps.speed = g_speed->value;
 
-		if (client->ps.stats[STAT_HEALTH] <= 25)
+		if (client->ps.heldClient < ENTITYNUM_WORLD)
+		{
+			client->ps.speed *= 0.3f;
+		}
+		else if (client->ps.stats[STAT_HEALTH] <= 25)
 		{
 			//move slower when low on health
 			client->ps.speed *= 0.85f;
@@ -6743,31 +6748,66 @@ void ClientAlterSpeed(gentity_t* ent, usercmd_t* ucmd, const qboolean controlled
 		{
 			if (ent->client->ps.PlayerEffectFlags & 1 << PEF_SPRINTING)
 			{
-				if (G_StandardHumanoid(ent) && (ent->s.number < MAX_CLIENTS || G_ControlledByPlayer(ent)))
+				if ((ent->s.number < MAX_CLIENTS || G_ControlledByPlayer(ent)))
 				{
-					client->ps.speed *= 1.50f;
+					if (client->NPC_class == CLASS_VADER)
+					{
+						client->ps.speed *= 1.15f;
+					}
+					else if (client->NPC_class == CLASS_YODA)
+					{
+						client->ps.speed *= 1.60f;
+					}
+					else
+					{
+						client->ps.speed *= 1.50f;
+					}
 				}
 			}
 		}
-		else if (BG_SprintSaberAnim(client->ps.legsAnim))
+		else if (BG_SaberSprintAnim(client->ps.legsAnim))
 		{
-			if (G_StandardHumanoid(ent) && (ent->s.number < MAX_CLIENTS || G_ControlledByPlayer(ent)))
+			if (ent->client->ps.PlayerEffectFlags & 1 << PEF_SPRINTING)
 			{
-				client->ps.speed *= 1.30f;
+				if ((ent->s.number < MAX_CLIENTS || G_ControlledByPlayer(ent)))
+				{
+					if (client->NPC_class == CLASS_VADER)
+					{
+						client->ps.speed *= 1.15f;
+					}
+					else if (client->NPC_class == CLASS_YODA)
+					{
+						client->ps.speed *= 1.65f;
+					}
+					else
+					{
+						client->ps.speed *= 1.60f;
+					}
+				}
 			}
 		}
-		else if (client->ps.PlayerEffectFlags & 1 << PEF_WEAPONSPRINTING)
+		else if (BG_WeaponSprintAnim(client->ps.legsAnim))
 		{
-			if (G_StandardHumanoid(ent) && (ent->s.number < MAX_CLIENTS || G_ControlledByPlayer(ent)))
+			if (ent->client->ps.PlayerEffectFlags & 1 << PEF_WEAPONSPRINTING)
 			{
-				client->ps.speed *= 1.30f;
+				if ((ent->s.number < MAX_CLIENTS || G_ControlledByPlayer(ent)))
+				{
+					if (client->NPC_class == CLASS_VADER)
+					{
+						client->ps.speed *= 1.10f;
+					}
+					else if (client->NPC_class == CLASS_YODA)
+					{
+						client->ps.speed *= 1.60f;
+					}
+					else
+					{
+						client->ps.speed *= 1.30f;
+					}
+				}
 			}
 		}
-		else if (client->ps.heldClient < ENTITYNUM_WORLD)
-		{
-			client->ps.speed *= 0.3f;
-		}
-		else if (client->ps.weapon == WP_BLASTER_PISTOL ||
+		else if (client->ps.weapon == WP_BRYAR_PISTOL ||
 			client->ps.weapon == WP_THERMAL ||
 			client->ps.weapon == WP_DET_PACK ||
 			client->ps.weapon == WP_TRIP_MINE)

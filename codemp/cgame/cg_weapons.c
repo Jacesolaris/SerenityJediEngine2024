@@ -1455,7 +1455,7 @@ void CG_AddViewWeapon(playerState_t* ps)
 	// add everything onto the hand
 	CG_AddPlayerWeapon(&hand, ps, &cg_entities[cg.predicted_player_state.client_num], angles, qfalse);
 
-	if (ps->eFlags & EF_DUAL_WEAPONS && ps->weapon == WP_BRYAR_PISTOL)
+	if (ps->eFlags & EF3_DUAL_WEAPONS && ps->weapon == WP_BRYAR_PISTOL)
 	{
 		memset(&hand, 0, sizeof hand);
 		// set up gun position
@@ -3411,7 +3411,7 @@ void CG_CopyG2WeaponInstance(const centity_t* cent, const int weapon_num, void* 
 			else
 			{
 				trap->G2API_CopySpecificGhoul2Model(CG_G2WeaponInstance(cent, weapon_num), 0, to_ghoul2, 1);
-				if (cent->currentState.eFlags & EF_DUAL_WEAPONS && cent->currentState.weapon == WP_BRYAR_PISTOL)
+				if (cent->currentState.eFlags & EF3_DUAL_WEAPONS && cent->currentState.weapon == WP_BRYAR_PISTOL)
 				{
 					trap->G2API_CopySpecificGhoul2Model(CG_G2WeaponInstance2(cent, weapon_num), 0, to_ghoul2, 2);
 				}
@@ -3470,14 +3470,14 @@ void CG_CheckPlayerG2Weapons(const playerState_t* ps, centity_t* cent)
 
 	if (cent->ghoul2 && (cent->ghoul2weapon != CG_G2WeaponInstance(cent, ps->weapon) ||
 		cent->ghoul2weapon2 != CG_G2WeaponInstance2(cent, cent->currentState.weapon) &&
-		cent->currentState.eFlags & EF_DUAL_WEAPONS && cent->currentState.weapon != WP_SABER ||
-		cent->ghoul2weapon2 != NULL && (!(cent->currentState.eFlags & EF_DUAL_WEAPONS) ||
+		cent->currentState.eFlags & EF3_DUAL_WEAPONS && cent->currentState.weapon != WP_SABER ||
+		cent->ghoul2weapon2 != NULL && (!(cent->currentState.eFlags & EF3_DUAL_WEAPONS) ||
 			cent->currentState.weapon == WP_SABER)) && ps->client_num == cent->currentState.number)
 	{
 		CG_CopyG2WeaponInstance(cent, ps->weapon, cent->ghoul2);
 		cent->ghoul2weapon = CG_G2WeaponInstance(cent, ps->weapon);
 
-		if (cent->currentState.eFlags & EF_DUAL_WEAPONS && ps->weapon == WP_BRYAR_PISTOL)
+		if (cent->currentState.eFlags & EF3_DUAL_WEAPONS && ps->weapon == WP_BRYAR_PISTOL)
 		{
 			cent->ghoul2weapon2 = CG_G2WeaponInstance2(cent, ps->weapon);
 		}

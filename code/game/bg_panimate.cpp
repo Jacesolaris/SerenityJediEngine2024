@@ -3959,7 +3959,7 @@ saber_moveName_t PM_SaberFlipOverAttackMove()
 	VectorCopy(pm->ps->viewangles, fwd_angles);
 	fwd_angles[PITCH] = fwd_angles[ROLL] = 0;
 	AngleVectors(fwd_angles, jumpFwd, nullptr, nullptr);
-	
+
 	if (pm->ps->saber_anim_level == SS_FAST || pm->ps->saber_anim_level == SS_TAVION)
 	{
 		VectorScale(jumpFwd, 200, pm->ps->velocity);
@@ -6482,12 +6482,37 @@ qboolean BG_SprintAnim(const int anim)
 	return qfalse;
 }
 
-qboolean BG_SprintSaberAnim(const int anim)
+qboolean BG_SaberSprintAnim(const int anim)
 {
 	switch (anim)
 	{
 	case BOTH_SPRINT_SABER:
 	case BOTH_SPRINT_SABER_MP:
+	case BOTH_RUN_DUAL:
+	case BOTH_RUN_STAFF:
+		return qtrue;
+	default:;
+	}
+	return qfalse;
+}
+
+qboolean BG_WeaponSprintAnim(const int anim)
+{
+	switch (anim)
+	{
+	case BOTH_SPRINT:
+	case BOTH_SPRINT_MP:
+	case BOTH_RUN1:
+	case BOTH_RUN2:
+	case BOTH_RUN3:
+	case BOTH_RUN3_MP:
+	case BOTH_RUN4:
+	case BOTH_RUN5:
+	case BOTH_RUN6:
+	case BOTH_RUN7:
+	case BOTH_RUN8:
+	case BOTH_RUN9:
+	case BOTH_RUN10:
 		return qtrue;
 	default:;
 	}
@@ -6514,7 +6539,7 @@ void PM_TorsoAnimLightsaber()
 	// WEAPON_READY
 	// *********************************************************
 
-	const qboolean holding_block = pm->ps->ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
+	const qboolean is_holding_block_button = pm->ps->ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
 	//Holding Block Button
 	const qboolean active_blocking = pm->ps->ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK ? qtrue : qfalse;
 	//Active Blocking
@@ -6559,7 +6584,7 @@ void PM_TorsoAnimLightsaber()
 			else
 			{
 				if (!g_noIgniteTwirl->integer && !IsSurrendering(pm->gent) && !active_blocking
-					&& !holding_block)
+					&& !is_holding_block_button)
 				{
 					if (PM_RunningAnim(pm->ps->legsAnim) || pm->ps->groundEntityNum == ENTITYNUM_NONE || in_camera)
 					{
@@ -6654,7 +6679,7 @@ void PM_TorsoAnimLightsaber()
 			else
 			{
 				if (!g_noIgniteTwirl->integer && !IsSurrendering(pm->gent) && !active_blocking
-					&& !holding_block)
+					&& !is_holding_block_button)
 				{
 					if (PM_RunningAnim(pm->ps->legsAnim) || pm->ps->groundEntityNum == ENTITYNUM_NONE || in_camera)
 					{
@@ -6734,7 +6759,7 @@ void PM_TorsoAnimLightsaber()
 							|| pm->ps->legsAnim == BOTH_WALKBACK2)
 							&& pm->ps->saberBlockingTime < cg.time
 							&& !active_blocking
-							&& !holding_block
+							&& !is_holding_block_button
 							&& !walking_blocking)
 						{
 							//running w/1-handed weapon uses full-body anim
@@ -7116,7 +7141,7 @@ void PM_TorsoAnimLightsaber()
 								|| pm->ps->legsAnim == BOTH_WALKBACK2)
 								&& pm->ps->saberBlockingTime < cg.time
 								&& !active_blocking
-								&& !holding_block
+								&& !is_holding_block_button
 								&& !walking_blocking)
 							{
 								//running w/1-handed weapon uses full-body anim

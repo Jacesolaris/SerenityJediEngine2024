@@ -3353,7 +3353,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 				}
 				else
 				{
-					trap->FX_PlayEffectID(cgs.effects.mSaberBodyHit, es->origin, fx_dir, -1, -1, qfalse);
+					trap->FX_PlayEffectID(cgs.effects.mSaberlimb_Bolton, es->origin, fx_dir, -1, -1, qfalse);
 				}
 			}
 			else
@@ -3513,7 +3513,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 					|| cg.predicted_player_state.weapon == WP_SABER || cg.predicted_player_state.weapon == WP_MELEE)
 				{
 					//h4q3ry
-					if (cent->currentState.eFlags & EF_DUAL_WEAPONS)
+					if (cent->currentState.eFlags & EF3_DUAL_WEAPONS)
 					{
 						CG_GetClientWeaponMuzzleBoltPointduals(cent->currentState.eventParm, cent->currentState.origin2,
 							qtrue);
@@ -3562,7 +3562,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 					cg.renderingThirdPerson)
 				{
 					//h4q3ry
-					if (cent->currentState.eFlags & EF_DUAL_WEAPONS)
+					if (cent->currentState.eFlags & EF3_DUAL_WEAPONS)
 					{
 						CG_GetClientWeaponMuzzleBoltPointduals(cent->currentState.eventParm, cent->currentState.origin2,
 							qtrue);
