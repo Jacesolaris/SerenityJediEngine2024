@@ -6441,10 +6441,12 @@ bool TorsoAgainstWindTest(gentity_t* ent)
 				vec3_t fwd;
 				VectorScale(wind_dir, -1.0f, wind_dir);
 				AngleVectors(pm->gent->currentAngles, fwd, nullptr, nullptr);
+
 				if (DotProduct(fwd, wind_dir) > 0.65f)
 				{
-					if (ent->client->ps.weapon != WP_SABER && !(pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING) && !(pm
-						->ps->PlayerEffectFlags & 1 << PEF_WEAPONSPRINTING))
+					if (ent->client->ps.weapon != WP_SABER &&
+						!(pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING) &&
+						!(pm->ps->PlayerEffectFlags & 1 << PEF_WEAPONSPRINTING))
 					{
 						if (ent->client && ent->client->ps.torsoAnim != BOTH_WIND)
 						{

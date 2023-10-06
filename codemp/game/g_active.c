@@ -4728,7 +4728,7 @@ void ClientThink_real(gentity_t* ent)
 					}
 					else if (client->pers.botclass == BCLASS_YODA)
 					{
-						client->ps.speed *= 1.70f;
+						client->ps.speed *= 1.60f;
 					}
 					else
 					{
@@ -4749,7 +4749,7 @@ void ClientThink_real(gentity_t* ent)
 					}
 					else if (client->pers.botclass == BCLASS_YODA)
 					{
-						client->ps.speed *= 1.70f;
+						client->ps.speed *= 1.65f;
 					}
 					else
 					{
@@ -4770,7 +4770,7 @@ void ClientThink_real(gentity_t* ent)
 					}
 					else if (client->pers.botclass == BCLASS_YODA)
 					{
-						client->ps.speed *= 1.70f;
+						client->ps.speed *= 1.60f;
 					}
 					else
 					{
