@@ -5746,7 +5746,7 @@ void ClientThink_real(gentity_t* ent)
 
 	memset(&pmove, 0, sizeof pmove);
 
-	if (ent->flags & FL_FORCE_GESTURE)
+	if (client && ent->flags & FL_FORCE_GESTURE)
 	{
 		ent->flags &= ~FL_FORCE_GESTURE;
 		ent->client->pers.cmd.buttons |= BUTTON_GESTURE;

@@ -4756,7 +4756,7 @@ void G_RunFrame(const int levelTime)
 				}
 			}
 
-			if (ent->client->jetPackOn || ent->client->flamethrowerOn)
+			if (!(ent->r.svFlags & SVF_BOT) && (ent->client->jetPackOn || ent->client->flamethrowerOn))
 			{
 				//using jetpack, drain fuel
 				if (ent->client->jetPackDebReduce < level.time)

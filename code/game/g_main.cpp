@@ -2239,7 +2239,7 @@ void G_RunFrame(const int levelTime)
 
 			//////////////////////JETPACKFUEL//////////////////////////////////////////////////////////
 
-			if (ent->client->jetPackOn || ent->client->flamethrowerOn)
+			if ((ent->s.number < MAX_CLIENTS || G_ControlledByPlayer(ent)) && (ent->client->jetPackOn || ent->client->flamethrowerOn))
 			{
 				//using jetpack, drain fuel
 				if (ent->client->jetPackDebReduce < level.time)
@@ -2390,7 +2390,7 @@ void G_RunFrame(const int levelTime)
 	else if (navTime > 2)
 	{
 		gi.Printf(S_COLOR_GREEN"total nav time: %d\n", navTime);
-}
+	}
 #endif//	AI_TIMERS
 
 	extern int delayedShutDown;
