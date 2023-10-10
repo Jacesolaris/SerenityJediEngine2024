@@ -2953,7 +2953,7 @@ void CL_Init(void)
 	Cmd_AddCommand("cmd", CL_ForwardToServer_f, "Forward command to server");
 	Cmd_AddCommand("globalservers", CL_GlobalServers_f, "Query the masterserver for serverlist");
 	Cmd_AddCommand("addFavorite", CL_AddFavorite_f, "Add server to favorites");
-	Cmd_AddCommand("record", CL_Record_f, "Record a demo");
+	Cmd_AddCommand("recorddemo", CL_Record_f, "Record a demo");
 	Cmd_AddCommand("demo", CL_PlayDemo_f, "Playback a demo");
 	Cmd_SetCommandCompletionFunc("demo", CL_CompleteDemoName);
 	Cmd_AddCommand("stoprecord", CL_StopRecord_f, "Stop recording a demo");

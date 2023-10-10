@@ -501,6 +501,10 @@ void JMSaberTouch(gentity_t* self, gentity_t* other, trace_t* trace)
 
 	if (g_spawnInvulnerability.integer)
 	{
+		if (!(other->r.svFlags & SVF_BOT))
+		{
+			other->client->ps.powerups[PW_INVINCIBLE] = level.time + g_spawnInvulnerability.integer;
+		}
 		other->client->ps.eFlags |= EF_INVULNERABLE;
 		other->client->invulnerableTimer = level.time + g_spawnInvulnerability.integer;
 	}
@@ -1306,12 +1310,14 @@ void ClientRespawn(gentity_t* ent)
 		{
 			if (ent->client->tempSpectate <= level.time)
 			{
-				int minDel = g_siegeRespawn.integer * 2000;
-				if (minDel < 20000)
+				int minDel = g_ffaRespawn.integer * 4000;
+
+				if (minDel < 40000)
 				{
-					minDel = 20000;
+					minDel = 40000;
 				}
 				g_Spectator(ent);
+
 				ent->client->tempSpectate = level.time + minDel;
 
 				// Respawn time.
@@ -1320,6 +1326,8 @@ void ClientRespawn(gentity_t* ent)
 					gentity_t* te = G_TempEntity(ent->client->ps.origin, EV_SIEGESPEC);
 					te->s.time = g_ffaRespawnTimerCheck;
 					te->s.owner = ent->s.number;
+
+					ent->client->ps.powerups[PW_INVINCIBLE] = level.time + minDel;
 				}
 				return;
 			}
@@ -2590,12 +2598,12 @@ qboolean client_userinfo_changed(const int client_num)
 			if (g_noPadawanNames.integer != 0)
 			{
 				client->pers.padawantimer = 30;
-				client->pers.ampadawan = 1;
+				client->pers.isapadawan = 1;
 			}
 		}
 		else
 		{
-			client->pers.ampadawan = 0;
+			client->pers.isapadawan = 0;
 		}
 	}
 
@@ -5652,8 +5660,8 @@ char* ClientConnect(int client_num, const qboolean firstTime, const qboolean isB
 				//	client->pers.connected = CON_DISCONNECTED;
 				return "Too many connections from the same IP";
 			}
+		}
 	}
-}
 
 	if (ent->inuse)
 	{
@@ -6314,7 +6322,7 @@ tryTorso:
 				//want to remove the support bone too then
 				trap->G2API_SetBoneAnim(self->ghoul2, 0, "lhumerus", 0, 1, 0, 0, level.time, -1, 0);
 				trap->G2API_RemoveBone(self->ghoul2, "lhumerus", 0);
-	}
+			}
 
 			assert(brokenBone);
 
@@ -6324,7 +6332,7 @@ tryTorso:
 			//Now remove it
 			trap->G2API_RemoveBone(self->ghoul2, brokenBone, 0);
 			self->client->brokenLimbs &= ~broken;
-}
+		}
 	}
 #endif
 }
@@ -8733,8 +8741,13 @@ void ClientSpawn(gentity_t* ent)
 
 			if (g_spawnInvulnerability.integer)
 			{
-				ent->client->ps.eFlags |= EF_INVULNERABLE;
-				ent->client->invulnerableTimer = level.time + g_spawnInvulnerability.integer;
+				if (!(ent->r.svFlags & SVF_BOT))
+				{
+					client->ps.powerups[PW_INVINCIBLE] = level.time + g_spawnInvulnerability.integer;
+					ent->flags |= FL_GODMODE;
+				}
+				client->ps.eFlags |= EF_INVULNERABLE;
+				client->invulnerableTimer = level.time + g_spawnInvulnerability.integer;
 			}
 
 			// fire the targets of the spawn point

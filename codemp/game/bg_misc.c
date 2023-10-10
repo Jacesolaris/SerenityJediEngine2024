@@ -2940,9 +2940,7 @@ const char* eventnames[] = {
 	"EV_DEATH3",
 	"EV_OBITUARY",
 
-#ifdef BASE_COMPAT
 	"EV_POWERUP_QUAD",
-#endif // BASE_COMPAT
 
 	"EV_POWERUP_BATTLESUIT",
 
@@ -3023,7 +3021,7 @@ void BG_AddPredictableEventToPlayerstate(const int new_event, const int event_pa
 	ps->events[ps->eventSequence & MAX_PS_EVENTS - 1] = new_event;
 	ps->eventParms[ps->eventSequence & MAX_PS_EVENTS - 1] = event_parm;
 	ps->eventSequence++;
-}
+	}
 
 /*
 ========================

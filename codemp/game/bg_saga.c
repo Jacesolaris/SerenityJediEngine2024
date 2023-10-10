@@ -164,9 +164,7 @@ stringID_table_t HoldableTable[] =
 stringID_table_t PowerupTable[] =
 {
 	ENUM2STRING(PW_NONE),
-#ifdef BASE_COMPAT
 	ENUM2STRING(PW_MEDITATE),
-#endif // BASE_COMPAT
 	ENUM2STRING(PW_BATTLESUIT),
 	ENUM2STRING(PW_PULL),
 	ENUM2STRING(PW_REDFLAG),

@@ -8740,7 +8740,11 @@ void WP_ForcePowersUpdate(gentity_t* self, usercmd_t* ucmd)
 				G_Sound(self, CHAN_WEAPON, G_SoundIndex("sound/effects/fireburst"));
 				Flamethrower_Fire(self);
 				FlamethrowerDebounceTime = level.time;
-				self->client->ps.jetpackFuel -= FLAMETHROWER_FUELCOST;
+
+				if (!(self->r.svFlags & SVF_BOT))
+				{
+					self->client->ps.jetpackFuel -= FLAMETHROWER_FUELCOST;
+				}
 			}
 		}
 	}

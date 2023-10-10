@@ -701,7 +701,7 @@ typedef struct clientPersistant_s
 	int save_score;
 
 	int	padawantimer;
-	qboolean	ampadawan;
+	qboolean	isapadawan;
 } clientPersistant_t;
 
 typedef struct renderInfo_s

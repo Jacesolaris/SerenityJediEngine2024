@@ -1347,15 +1347,15 @@ void ClientTimerActions(gentity_t* ent, const int msec)
 		Player_CheckBurn(ent);
 		Player_CheckFreeze(ent);
 
-		if (client->pers.padawantimer >= 3 && client->pers.ampadawan == 1 && g_noPadawanNames.integer != 0)
+		if (client->pers.padawantimer >= 3 && client->pers.isapadawan == 1 && g_noPadawanNames.integer != 0)
 		{
 			trap->SendServerCommand(ent - g_entities, va("cp \"The Name ^1padawan ^7is not allowed here!\nPlease change it in ^3%d seconds,\nor your name will be changed.\n\"", client->pers.padawantimer));
 			client->pers.padawantimer--;
 		}
 
-		if ((client->pers.padawantimer == 2 || client->pers.padawantimer == 1) && client->pers.ampadawan == 1 && g_noPadawanNames.integer != 0)
+		if ((client->pers.padawantimer == 2 || client->pers.padawantimer == 1) && client->pers.isapadawan == 1 && g_noPadawanNames.integer != 0)
 		{
-			client->pers.ampadawan = 0;
+			client->pers.isapadawan = 0;
 			G_Rename_Player(&g_entities[client_num], PickName());
 			trap->SendServerCommand(ent - g_entities, va("cp \"^1Padawan names are not allowed, you have been ^1forcefully renamed.\n\""));
 		}
@@ -4379,7 +4379,30 @@ void ClientThink_real(gentity_t* ent)
 		if (ent->client->invulnerableTimer <= level.time)
 		{
 			ent->client->ps.eFlags &= ~EF_INVULNERABLE;
+			if (ent->flags & FL_GODMODE)
+			{
+				ent->flags &= ~FL_GODMODE;
+			}
 		}
+	}
+
+	if (ent && ent->client && (ent->client->ps.eFlags & EF_TALK))
+	{
+		//#ifdef _GAME
+				//if (g_chat_protection.integer == 1 && !ent->client->ps.duelInProgress && !ent->client->pers.isbeingpunished)
+				//{
+		ent->flags |= FL_GODMODE;
+		//}
+//#endif
+	}
+	else
+	{
+		//#ifdef _GAME
+				//if (g_chat_protection.integer == 1 && !ent->client->ps.duelInProgress && !ent->client->pers.isbeingpunished)
+				//{
+		ent->flags &= ~FL_GODMODE;
+		//}
+//#endif
 	}
 
 	if (ent && ent->s.eType != ET_NPC)
@@ -4935,8 +4958,14 @@ void ClientThink_real(gentity_t* ent)
 
 				if (g_spawnInvulnerability.integer)
 				{
-					ent->client->ps.eFlags |= EF_INVULNERABLE;
-					ent->client->invulnerableTimer = level.time + g_spawnInvulnerability.integer;
+					if (!(ent->r.svFlags & SVF_BOT))
+					{
+						client->ps.powerups[PW_INVINCIBLE] = level.time + g_spawnInvulnerability.integer;
+						ent->flags |= FL_GODMODE;
+					}
+
+					client->ps.eFlags |= EF_INVULNERABLE;
+					client->invulnerableTimer = level.time + g_spawnInvulnerability.integer;
 				}
 			}
 		}
@@ -6687,6 +6716,14 @@ void ClientThink_real(gentity_t* ent)
 				forceRes = 1;
 			}
 			else if (level.gametype == GT_SIEGE && g_siegeRespawn.integer)
+			{
+				//wave respawning on
+				forceRes = 1;
+			}
+			else if ((level.gametype == GT_FFA ||
+				level.gametype == GT_TEAM ||
+				level.gametype == GT_CTF) &&
+				g_ffaRespawnTimer.integer)
 			{
 				//wave respawning on
 				forceRes = 1;

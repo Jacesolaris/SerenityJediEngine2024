@@ -3853,8 +3853,8 @@ void check_for_shorter_routes(bot_state_t* bs, const int newwpindex)
 			bs->forceJumping = bs->jumpTime;
 #endif
 		}
-		}
 	}
+}
 
 //Find the origin location of a given entity
 void find_origins(const gentity_t* ent, vec3_t origin)
@@ -5712,7 +5712,7 @@ int scan_for_enemies(bot_state_t* bs)
 				distcheck = 1;
 			}
 
-			if (g_entities[bs->client].health < 30)
+			if (g_entities[i].client->ps.weapon != WP_SABER && g_entities[bs->client].health < 30)
 			{
 				//Sniper!
 				request_siege_assistance(bs, REQUEST_MEDIC);
@@ -5965,7 +5965,7 @@ void advanced_scanfor_enemies(bot_state_t* bs)
 				distcheck = 1;
 			}
 
-			if (g_entities[bs->client].health < 30)
+			if (g_entities[i].client->ps.weapon != WP_SABER && g_entities[bs->client].health < 30)
 			{
 				//Sniper!
 				request_siege_assistance(bs, REQUEST_MEDIC);
@@ -10435,7 +10435,8 @@ int bot_use_inventory_item(bot_state_t* bs)
 			goto wantuseitem;
 		}
 	}
-	if (bs->cur_ps.stats[STAT_HOLDABLE_ITEMS] & 1 << HI_JETPACK && bs->cur_ps.jetpackFuel > 50)
+
+	if (bs->cur_ps.stats[STAT_HOLDABLE_ITEMS] & 1 << HI_JETPACK && bs->cur_ps.jetpackFuel > 30)
 	{
 		if (bs->currentEnemy && bs->frame_Enemy_Vis && bs->runningToEscapeThreat)
 		{
@@ -10806,7 +10807,7 @@ void standard_bot_ai(bot_state_t* bs)
 		}
 
 		return;
-	}
+}
 #endif
 
 	if (bot_forgimmick.integer)

@@ -230,5 +230,6 @@ XCVAR_DEF(g_saberLockCinematicCamera, "0", NULL, CVAR_ARCHIVE, qtrue)
 XCVAR_DEF(g_saberdebug, "0", NULL, CVAR_ARCHIVE, qtrue)
 XCVAR_DEF(g_cheatoverride, "0", NULL, CVAR_NONE, qfalse)
 XCVAR_DEF(g_noPadawanNames, "1", NULL, CVAR_ARCHIVE, qfalse)
+XCVAR_DEF(g_ffaRespawn, "10", NULL, CVAR_ARCHIVE, qtrue)
 
 #undef XCVAR_DEF
