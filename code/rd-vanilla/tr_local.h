@@ -778,11 +778,11 @@ void		R_ModelBounds(qhandle_t handle, vec3_t mins, vec3_t maxs);
 void		R_Modellist_f();
 
 //====================================================
-constexpr auto MAX_DRAWIMAGES = 2048;
-constexpr auto MAX_LIGHTMAPS = 256;
-constexpr auto MAX_SKINS = 1024;
+constexpr auto MAX_DRAWIMAGES = 4096;
+constexpr auto MAX_LIGHTMAPS = 512;
+constexpr auto MAX_SKINS = 2048;
 
-constexpr auto MAX_DRAWSURFS = 0x10000;
+constexpr auto MAX_DRAWSURFS = 0x20000;
 #define	DRAWSURF_MASK			(MAX_DRAWSURFS-1)
 
 /*

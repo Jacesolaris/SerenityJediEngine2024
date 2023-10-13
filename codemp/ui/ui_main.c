@@ -1074,6 +1074,12 @@ void UI_SetActiveMenu(uiMenuCommand_t menu)
 				UI_LoadSingleMenuFile(va("ui/%s.menu", buf));
 				Menus_ActivateByName(buf);
 			}
+			return;
+		case UIMENU_ADMIN:
+			trap->Key_SetCatcher(KEYCATCH_UI);
+			Menus_CloseAll();
+			Menus_ActivateByName("ingame_admin");
+			return;
 		}
 	}
 }
@@ -5181,6 +5187,10 @@ static void UI_Update(const char* name)
 		Q_strncpyz(buf, UI_Cvar_VariableString("ui_Name"), sizeof buf);
 		trap->Cvar_Set("name", buf);
 	}
+	else if (Q_stricmp(name, "ui_SetAdminPass") == 0)
+	{
+		trap->Cmd_ExecuteText(EXEC_APPEND, va("adminlogin \"%s\"\n", UI_Cvar_VariableString("ui_adminpass")));
+	}
 	else if (Q_stricmp(name, "ui_setRate") == 0)
 	{
 		const float rate = trap->Cvar_VariableValue("rate");
@@ -5199,6 +5209,10 @@ static void UI_Update(const char* name)
 			trap->Cvar_Set("cl_maxpackets", "15");
 			trap->Cvar_Set("cl_packetdup", "1"); // favor lower bandwidth
 		}
+	}
+	else if (Q_stricmp(name, "ui_GetAdminPass") == 0)
+	{
+		trap->Cvar_Set("ui_adminpass", UI_Cvar_VariableString("g_adminpassword"));
 	}
 	else if (!Q_stricmp(name, "ui_GetName"))
 	{
@@ -7779,6 +7793,27 @@ static void UI_RunMenuScript(char** args)
 			trap->Key_SetCatcher(KEYCATCH_UI);
 			Menus_CloseAll();
 			Menus_ActivateByName("main");
+		}
+		else if (Q_stricmp(name, "AdminMenuKick") == 0)
+		{
+			if (uiInfo.playerIndex >= 0 && uiInfo.playerIndex < uiInfo.playerCount)
+			{
+				trap->Cmd_ExecuteText(EXEC_APPEND, va("Adminkick \"%i\"\n", uiInfo.playerIndexes[uiInfo.playerIndex]));
+			}
+		}
+		else if (Q_stricmp(name, "AdminMenuChangeMap") == 0)
+		{
+			if (ui_netGametype.integer >= 0 && ui_netGametype.integer < uiInfo.numGameTypes && ui_currentNetMap.integer >= 0 && ui_currentNetMap.integer < uiInfo.mapCount)
+			{
+				trap->Cmd_ExecuteText(EXEC_APPEND, va("Adminchangemap %i %s\n", uiInfo.gameTypes[ui_netGametype.integer].gtEnum, uiInfo.mapList[ui_currentNetMap.integer].mapLoadName));
+			}
+		}
+		else if (Q_stricmp(name, "AdminMenuPunish") == 0)
+		{
+			if (uiInfo.playerIndex >= 0 && uiInfo.playerIndex < uiInfo.playerCount)
+			{
+				trap->Cmd_ExecuteText(EXEC_APPEND, va("Adminpunish \"%i\"\n", uiInfo.playerIndexes[uiInfo.playerIndex]));
+			}
 		}
 		else
 		{
@@ -10889,6 +10924,7 @@ void UI_Init(qboolean inGameLoad)
 		char buf[MAX_NETNAME] = { 0 };
 		Q_strncpyz(buf, UI_Cvar_VariableString("name"), sizeof buf);
 		trap->Cvar_Register(NULL, "ui_Name", buf, CVAR_INTERNAL);
+		trap->Cvar_Register(NULL, "ui_adminpass", UI_Cvar_VariableString("g_adminpassword"), CVAR_INTERNAL);
 	}
 
 	Menus_CloseAll();

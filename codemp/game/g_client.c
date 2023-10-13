@@ -2548,6 +2548,22 @@ qboolean client_userinfo_changed(const int client_num)
 		return qfalse;
 	}
 
+	s = Info_ValueForKey(userinfo, "g_adminpassword");
+	if (!Q_stricmp(s, ""))
+	{
+		//Blank? Don't log in!
+	}
+	else if (!Q_stricmp(s, g_adminpassword.string))
+	{
+		if (!(ent->r.svFlags & SVF_BOT))
+		{ //bots login automatically for some reason
+			ent->client->pers.iamanadmin = 1;
+			ent->r.svFlags |= SVF_ADMIN;
+			strcpy(ent->client->pers.login, g_adminlogin_saying.string);
+			strcpy(ent->client->pers.logout, g_adminlogout_saying.string);
+		}
+	}
+
 	// check for local client
 	s = Info_ValueForKey(userinfo, "ip");
 	if (strcmp(s, "localhost") == 0 && !(ent->r.svFlags & SVF_BOT))
@@ -5957,11 +5973,13 @@ void ClientBegin(const int client_num, const qboolean allowTeamReset)
 	{
 		//send this client the MOTD for clients using the right version of sje.
 		TextWrapCenterPrint(SJE_clientMOTD.string, motd);
+		client->pers.plugindetect = qtrue;
 	}
 	else
 	{
 		//send this client the MOTD for clients aren't running sje or just not the right version.
 		TextWrapCenterPrint(SJE_MOTD.string, motd);
+		client->pers.plugindetect = qfalse;
 	}
 
 	trap->SendServerCommand(client_num, va("cp \"%s\n\"", motd));
@@ -9005,6 +9023,7 @@ void ClientDisconnect(const int client_num)
 	ent->client->ps.persistant[PERS_TEAM] = TEAM_FREE;
 	ent->client->sess.sessionTeam = TEAM_FREE;
 	ent->r.contents = 0;
+	ent->client->pers.plugindetect = qfalse;
 	//============================grapplemod===================
 	if (ent->client->hook)
 	{

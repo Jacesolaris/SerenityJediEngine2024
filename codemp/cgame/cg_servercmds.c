@@ -1415,6 +1415,11 @@ static void CG_menubrief_f(void)
 	trap->OpenUIMenu(UIMENU_BRIEFING);
 }
 
+static void CG_AdminMenu_f(void)
+{
+	trap->OpenUIMenu(UIMENU_ADMIN);
+}
+
 static void CG_inGameCinematic_f(void)
 {
 	fileHandle_t file;
@@ -1771,6 +1776,7 @@ static serverCommand_t commands[] = {
 	{"inGameCinematic", CG_inGameCinematic_f},
 	{"LMSWin", CG_LMSWin_f},
 	{"LMSLose", CG_LMSLose_f},
+	{"openadminmenu", CG_AdminMenu_f},
 };
 
 static const size_t num_commands = ARRAY_LEN(commands);

@@ -803,11 +803,11 @@ void		R_Modellist_f(void);
 
 //====================================================
 
-#define	MAX_DRAWIMAGES			2048
-#define	MAX_LIGHTMAPS			256
-#define	MAX_SKINS				1024
+#define	MAX_DRAWIMAGES			4096
+#define	MAX_LIGHTMAPS			512
+#define	MAX_SKINS				2048
 
-#define	MAX_DRAWSURFS			0x10000
+#define	MAX_DRAWSURFS			0x20000
 #define	DRAWSURF_MASK			(MAX_DRAWSURFS-1)
 
 /*
@@ -1182,6 +1182,7 @@ extern	cvar_t* r_simpleMipMaps;
 
 extern	cvar_t* r_showImages;
 extern	cvar_t* r_debugSort;
+extern	cvar_t* r_debugStyle;
 
 extern	cvar_t* r_marksOnTriangleMeshes;
 

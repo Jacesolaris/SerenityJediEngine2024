@@ -184,8 +184,9 @@ qhandle_t RE_RegisterSkin(const char* name)
 		return 0;
 	}
 
-	if (strlen(name) >= MAX_QPATH) {
-		ri->Printf(PRINT_ALL, "Skin name exceeds MAX_QPATH\n");
+	if (strlen(name) >= MAX_SKINNAME_PATH)
+	{
+		ri->Printf(PRINT_ALL, "Skin name exceeds MAX_SKINNAME_PATH\n");
 		return 0;
 	}
 

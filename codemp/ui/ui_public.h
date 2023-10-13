@@ -48,7 +48,8 @@ typedef enum uiMenuCommand_e {
 	UIMENU_VOICECHAT,
 	UIMENU_CLOSEALL,
 	UIMENU_CLASSSEL,
-	UIMENU_BRIEFING
+	UIMENU_BRIEFING,
+	UIMENU_ADMIN
 } uiMenuCommand_t;
 
 #define SORT_HOST			0

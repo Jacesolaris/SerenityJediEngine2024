@@ -1451,6 +1451,7 @@ void R_SetViewFogIndex()
 		tr.refdef.fogIndex = 0;
 	}
 }
+void RE_SetLightStyle(int style, int colors);
 
 /*
 ================
@@ -1465,6 +1466,20 @@ void R_RenderView(const viewParms_t* parms)
 	if (parms->viewportWidth <= 0 || parms->viewportHeight <= 0)
 	{
 		return;
+	}
+
+	if (r_debugStyle->integer >= 0)
+	{
+		int			i;
+		color4ub_t	whitecolor = { 0xff, 0xff, 0xff, 0xff };
+		color4ub_t	blackcolor = { 0x00, 0x00, 0x00, 0xff };
+
+		byteAlias_t* ba = (byteAlias_t*)&blackcolor;
+		for (i = 0; i < MAX_LIGHT_STYLES; i++) {
+			RE_SetLightStyle(i, ba->i);
+		}
+		ba = (byteAlias_t*)&whitecolor;
+		RE_SetLightStyle(r_debugStyle->integer, ba->i);
 	}
 
 	tr.viewCount++;

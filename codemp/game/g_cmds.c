@@ -46,6 +46,7 @@ int AcceptBotCommand(const char* cmd, const gentity_t* pl);
 void WP_SetSaber(int ent_num, saberInfo_t* sabers, int saber_num, const char* saberName);
 
 void Cmd_NPC_f(gentity_t* ent);
+void Cmd_AdminNPC_f(gentity_t* ent);
 void SetTeamQuick(const gentity_t* ent, int team, qboolean doBegin);
 extern void G_RemoveWeather(void);
 extern void G_SetTauntAnim(gentity_t* ent, int taunt);
@@ -295,6 +296,101 @@ int client_numberFromString(const gentity_t* to, const char* s, const qboolean a
 
 	trap->SendServerCommand(to - g_entities, va("print \"User %s is not on the server\n\"", s));
 	return -1;
+}
+
+void SanitizeString2(char* in, char* out)
+{
+	int i = 0;
+	int r = 0;
+
+	while (in[i])
+	{
+		if (i >= MAX_NAME_LENGTH - 1)
+		{ //the ui truncates the name here..
+			break;
+		}
+
+		if (in[i] == '^')
+		{
+			if (in[i + 1] >= 48 && //'0'
+				in[i + 1] <= 57) //'9'
+			{ //only skip it if there's a number after it for the color
+				i += 2;
+				continue;
+			}
+			else
+			{ //just skip the ^
+				i++;
+				continue;
+			}
+		}
+
+		if (in[i] < 32)
+		{
+			i++;
+			continue;
+		}
+
+		out[r] = tolower(in[i]);
+		r++;
+		i++;
+	}
+	out[r] = 0;
+}
+
+int G_ClientNumberFromStrippedSubstring(const char* name)
+{
+	char		s2[MAX_STRING_CHARS];
+	char		n2[MAX_STRING_CHARS];
+	int			i, match = -1;
+	gclient_t* cl;
+
+	// check for a name match
+	SanitizeString2((char*)name, s2);
+
+	for (i = 0; i < level.numConnectedClients; i++)
+	{
+		cl = &level.clients[level.sortedClients[i]];
+		SanitizeString2(cl->pers.netname, n2);
+		if (strstr(n2, s2))
+		{
+			if (match != -1)
+			{ //found more than one match
+				return -2;
+			}
+			match = level.sortedClients[i];
+		}
+	}
+
+	return match;
+}
+
+int G_ClientNumberFromArg(char* name)
+{
+	int client_id = 0;
+	char* cp;
+
+	cp = name;
+	while (*cp)
+	{
+		if (*cp >= '0' && *cp <= '9') cp++;
+		else
+		{
+			client_id = -1; //mark as alphanumeric
+			break;
+		}
+	}
+
+	if (client_id == 0)
+	{ // arg is assumed to be client number
+		client_id = atoi(name);
+	}
+	// arg is client name
+	if (client_id == -1)
+	{
+		client_id = G_ClientNumberFromStrippedSubstring(name);
+	}
+	return client_id;
 }
 
 /*
@@ -2444,11 +2540,236 @@ void Svcmd_ToggleAllowVote_f(void)
 		g_allowVote.integer & 1 << index ? "^2Enabled" : "^1Disabled");
 }
 
+void CG_AdminMenu(gentity_t* ent)
+{
+	if (!(ent->r.svFlags & SVF_ADMIN))
+	{
+		trap->SendServerCommand(ent - g_entities, "print \"Must login with /adminlogin (password)\n\"");
+		return;
+	}
+
+	trap->SendServerCommand(ent - g_entities, "openadminmenu");
+}
+
+void Cmd_ChangeMap(gentity_t* ent)
+{
+	char   arg1[MAX_STRING_CHARS];
+
+	if (!(ent->r.svFlags & SVF_ADMIN))
+	{
+		trap->SendServerCommand(ent - g_entities, "print \"Must login with /adminlogin (password)\n\"");
+		return;
+	}
+
+	trap->Argv(1, arg1, sizeof(arg1));
+	trap->SendConsoleCommand(EXEC_APPEND, va("g_gametype %s\n", arg1));
+	G_LogPrintf("ChangeMap admin command executed by SERVER to GAMETYPE:%s", arg1);
+	trap->Argv(2, arg1, sizeof(arg1));
+	trap->SendConsoleCommand(EXEC_APPEND, va("map %s\n", arg1));
+	G_LogPrintf(" MAP:%s.\n", arg1);
+}
+
+void Cmd_Punish(gentity_t* ent)
+{
+	int client_id = -1;
+	char   arg1[MAX_STRING_CHARS];
+
+	if (!(ent->r.svFlags & SVF_ADMIN))
+	{
+		trap->SendServerCommand(ent - g_entities, "print \"Must login with /adminlogin (password)\n\"");
+		return;
+	}
+
+	trap->Argv(1, arg1, sizeof(arg1));
+	client_id = G_ClientNumberFromArg(arg1);
+
+	if (client_id == -1)
+	{
+		trap->SendServerCommand(ent - g_entities, va("print \"Can't find client ID for %s\n\"", arg1));
+		return;
+	}
+	if (client_id == -2)
+	{
+		trap->SendServerCommand(ent - g_entities, va("print \"Ambiguous client ID for %s\n\"", arg1));
+		return;
+	}
+	if (client_id >= MAX_CLIENTS || client_id < 0)
+	{
+		trap->SendServerCommand(ent - g_entities, va("print \"Bad client ID for %s\n\"", arg1));
+		return;
+	}
+	// either we have the client id or the string did not match
+	if (!g_entities[client_id].inuse)
+	{ // check to make sure client slot is in use
+		trap->SendServerCommand(ent - g_entities, va("print \"Client %s is not active\n\"", arg1));
+		return;
+	}
+	if (g_entities[client_id].client->ps.duelInProgress == 1)
+	{
+		trap->SendServerCommand(ent - g_entities, va("print \"Client is currently dueling. Please wait for them to finish.\n\""));
+		return;
+	}
+
+	if (g_entities[client_id].health > 0)
+	{
+		gentity_t* kEnt = &g_entities[client_id];
+
+		G_ScreenShake(g_entities[client_id].client->ps.origin, &g_entities[client_id], 3.0f, 2000, qtrue);
+
+		G_LogPrintf("Punishment admin command executed by %s on %s.\n", ent->client->pers.netname, g_entities[client_id].client->pers.netname);
+
+		trap->SendServerCommand(-1, va("cp \"%s^7\n%s\n\"", g_entities[client_id].client->pers.netname, g_adminpunishment_saying.string));
+
+		g_entities[client_id].client->ps.velocity[2] += 1000;
+		g_entities[client_id].client->pers.isbeingpunished = 1;
+		g_entities[client_id].client->ps.forceDodgeAnim = 0;
+		g_entities[client_id].client->ps.forceHandExtend = HANDEXTEND_KNOCKDOWN;
+		g_entities[client_id].client->ps.forceHandExtendTime = level.time + Q3_INFINITE;
+		g_entities[client_id].client->ps.quickerGetup = qfalse;
+
+		if (kEnt->inuse && kEnt->client)
+		{
+			g_entities[client_id].flags &= ~FL_GODMODE;
+			g_entities[client_id].client->ps.stats[STAT_HEALTH] = kEnt->health = -99999;
+			player_die(kEnt, kEnt, kEnt, 100000, MOD_SUICIDE);
+		}
+	}
+	else
+	{
+		return;
+	}
+}
+
+void Cmd_Kick(gentity_t* ent)
+{
+	int client_id = -1;
+	char   arg1[MAX_STRING_CHARS];
+
+	if (!(ent->r.svFlags & SVF_ADMIN))
+	{
+		trap->SendServerCommand(ent - g_entities, "print \"Must login with /adminlogin (password)\n\"");
+		return;
+	}
+
+	trap->Argv(1, arg1, sizeof(arg1));
+	client_id = G_ClientNumberFromArg(arg1);
+
+	if (client_id == -1)
+	{
+		trap->SendServerCommand(ent - g_entities, va("print \"Can't find client ID for %s\n\"", arg1));
+		return;
+	}
+	if (client_id == -2)
+	{
+		trap->SendServerCommand(ent - g_entities, va("print \"Ambiguous client ID for %s\n\"", arg1));
+		return;
+	}
+	if (client_id >= MAX_CLIENTS || client_id < 0)
+	{
+		trap->SendServerCommand(ent - g_entities, va("print \"Bad client ID for %s\n\"", arg1));
+		return;
+	}
+	// either we have the client id or the string did not match
+	if (!g_entities[client_id].inuse)
+	{ // check to make sure client slot is in use
+		trap->SendServerCommand(ent - g_entities, va("print \"Client %s is not active\n\"", arg1));
+		return;
+	}
+	if (client_id == ent->client->ps.client_num)
+	{
+		trap->SendServerCommand(ent - g_entities, va("print \"You cant kick yourself.\n\""));
+		return;
+	}
+	if (g_entities[client_id].client->sess.spectatorState == SPECTATOR_FOLLOW)
+	{
+		g_entities[client_id].client->sess.spectatorState = SPECTATOR_FREE;
+	}
+	trap->DropClient(client_id, "was Kicked");
+
+	G_LogPrintf("Kick command executed by %s on %s.\n", ent->client->pers.netname, g_entities[client_id].client->pers.netname);
+}
+
+void Cmd_AdminLogin(gentity_t* ent)
+{
+	char   password[MAX_STRING_CHARS];
+
+	trap->Cvar_Set("cl_noprint", "0");
+
+	if (trap->Argc() != 2)
+	{
+		trap->SendServerCommand(ent - g_entities, va("print \"Usage: /adminlogin <password>\n\""));
+		return;
+	}
+
+	if (ent->r.svFlags & SVF_ADMIN)
+	{
+		trap->SendServerCommand(ent - g_entities, va("print \"You are already logged in. Type in /adminlogout to remove admin status.\n\""));
+		return;
+	}
+
+	trap->Argv(1, password, sizeof(password)); // password
+
+	if (ent->client->pers.plugindetect == qtrue)
+	{
+		if (strcmp(password, g_adminpassword.string) == 0)
+		{
+			strcpy(ent->client->pers.login, g_adminlogin_saying.string);
+			strcpy(ent->client->pers.logout, g_adminlogout_saying.string);
+
+			ent->client->pers.iamanadmin = 1;
+
+			ent->r.svFlags |= SVF_ADMIN;
+
+			G_LogPrintf("%s %s\n", ent->client->pers.netname, ent->client->pers.login);
+
+			trap->SendServerCommand(-1, va("print \"%s ^7%s\n\"", ent->client->pers.netname, ent->client->pers.login));
+
+			Com_Printf("-----Now type Adminmenu to see admin commands ----------\n");
+			Com_Printf("--------------------------------------------------------\n");
+			Com_Printf("-----Adminlogout---To log out as admin------------------\n");
+			Com_Printf("--------------------------------------------------------\n");
+			Com_Printf("-----Adminchangemap <Map name>--To change the map-------\n");
+			Com_Printf("--------------------------------------------------------\n");
+			Com_Printf("-----Adminpunish <Player name>--To punish the player----\n");
+			Com_Printf("--------------------------------------------------------\n");
+			Com_Printf("-----Adminkick <Player name>----To kick the player------\n");
+			Com_Printf("--------------------------------------------------------\n");
+			Com_Printf("-----Adminnpc spawn <NPC name>--To spawn an npc---------\n");
+			Com_Printf("--------------------------------------------------------\n");
+			Com_Printf("-----Type seta g_cheatoverride 1 to override cheats-----\n");
+			Com_Printf("--------------------------------------------------------\n");
+		}
+		else
+		{
+			trap->SendServerCommand(ent - g_entities, va("print \"Incorrect password.\n\""));
+		}
+	}
+	else
+	{
+		trap->SendServerCommand(ent - g_entities, va("cp \"^1You are not qualified to be admin.\n\""));
+	}
+}
+
+void Cmd_AdminLogout(gentity_t* ent)
+{
+	if (ent->r.svFlags & SVF_ADMIN)
+	{
+		G_LogPrintf("%s %s\n", ent->client->pers.netname, ent->client->pers.logout);
+
+		trap->SendServerCommand(-1, va("print \"%s ^7%s\n\"", ent->client->pers.netname, ent->client->pers.logout));
+
+		ent->client->pers.iamanadmin = 0;
+		ent->r.svFlags &= ~SVF_ADMIN;
+		ent->client->pers.bitvalue = 0;
+	}
+}
+
 void Cmd_CallVote_f(gentity_t* ent)
 {
 	int i;
 	char arg1[MAX_CVAR_VALUE_STRING] = { 0 };
 	char arg2[MAX_CVAR_VALUE_STRING] = { 0 };
+	voteString_t* vote = NULL;
 
 	// not allowed to vote at all
 	if (!g_allowVote.integer)
@@ -2546,7 +2867,8 @@ void Cmd_CallVote_f(gentity_t* ent)
 	}
 
 validVote:
-	const voteString_t* vote = &validVoteStrings[i];
+	vote = &validVoteStrings[i];
+
 	if (!(vote->validGT & 1 << level.gametype))
 	{
 		trap->SendServerCommand(ent - g_entities, va("print \"%s is not applicable in this gametype.\n\"", arg1));
@@ -3905,6 +4227,14 @@ command_t commands[] = {
 	{"vote", Cmd_Vote_f, CMD_NOINTERMISSION},
 	{"where", Cmd_Where_f, CMD_NOINTERMISSION},
 	{"sje", Cmd_NPC_f, CMD_CHEATOVERRIDE | CMD_ALIVE},
+	// Movieduels secrect commands
+	{"Adminlogin", Cmd_AdminLogin, 0},
+	{"Adminlogout", Cmd_AdminLogout, 0},
+	{"Adminnpc", Cmd_AdminNPC_f, CMD_CHEATOVERRIDE | CMD_ALIVE},
+	{"Adminchangemap", Cmd_ChangeMap, CMD_NOINTERMISSION},
+	{"Adminpunish", Cmd_Punish, CMD_NOINTERMISSION},
+	{"Adminkick", Cmd_Kick, CMD_NOINTERMISSION},
+	{"Adminmenu", CG_AdminMenu, CMD_NOINTERMISSION},
 };
 static const size_t num_commands = ARRAY_LEN(commands);
 

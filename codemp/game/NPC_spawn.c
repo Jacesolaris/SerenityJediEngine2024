@@ -5129,6 +5129,34 @@ void Cmd_NPC_f(gentity_t* ent)
 	}
 }
 
+void Cmd_AdminNPC_f(gentity_t* ent)
+{
+	char cmd[1024];
+
+	if (!(ent->r.svFlags & SVF_ADMIN))
+	{
+		trap->SendServerCommand(ent - g_entities, "print \"Must login with /adminlogin (password)\n\"");
+		return;
+	}
+
+	trap->Argv(1, cmd, 1024);
+
+	if (!cmd[0])
+	{
+		Com_Printf("Valid NPC commands are:\n");
+		Com_Printf(" spawn [NPC type (from NPCs.cfg)]\n");
+		Com_Printf(" kill [NPC targetname] or [all(kills all NPCs)] or 'team [teamname]'\n");
+	}
+	else if (Q_stricmp(cmd, "spawn") == 0)
+	{
+		NPC_Spawn_f(ent);
+	}
+	else if (Q_stricmp(cmd, "kill") == 0)
+	{
+		NPC_Kill_f();
+	}
+}
+
 /*QUAKED NPC_Rax(1 0 0) (-16 -16 -24) (16 16 40) FUN x x x DROPTOFLOOR CINEMATIC NOTSOLID STARTINSOLID SHY
 FUN - Makes him magically the funnest thing ever in any game ever made. (actually does nothing, it'll just be fun by the power of suggestion).
 DROPTOFLOOR - NPC can be in air, but will spawn on the closest floor surface below it

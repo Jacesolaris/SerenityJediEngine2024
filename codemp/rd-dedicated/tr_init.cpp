@@ -163,6 +163,7 @@ cvar_t* r_ambientScale;
 cvar_t* r_directedScale;
 cvar_t* r_debugLight;
 cvar_t* r_debugSort;
+cvar_t* r_debugStyle;
 
 // the limits apply to the sum of all scenes in a frame --
 // the main view, all the 3D icons, etc
@@ -400,6 +401,7 @@ void R_Register()
 	r_showImages = ri->Cvar_Get("r_showImages", "0", CVAR_CHEAT, "");
 	r_debugLight = ri->Cvar_Get("r_debuglight", "0", CVAR_TEMP, "");
 	r_debugSort = ri->Cvar_Get("r_debugSort", "0", CVAR_CHEAT, "");
+	r_debugStyle = ri->Cvar_Get("r_debugStyle", "-1", CVAR_CHEAT, "");
 	r_dlightStyle = ri->Cvar_Get("r_dlightStyle", "1", CVAR_TEMP, "");
 	r_surfaceSprites = ri->Cvar_Get("r_surfaceSprites", "1", CVAR_TEMP, "");
 	r_AdvancedsurfaceSprites = ri->Cvar_Get("ui_r_detailtextures", "1", CVAR_TEMP, "");

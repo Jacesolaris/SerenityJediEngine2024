@@ -475,7 +475,7 @@ SOCKET NET_IPSocket(char* net_interface, const int port, int* err)
 	Com_Printf("----- Client Initialization -----\n");
 	Com_Printf("-----------------------------------------------------------------\n");
 	Com_Printf("---------- Genuine SerenityJediEngine-(Solaris Edition)----------\n");
-	Com_Printf("---------------------Build date 10/10/2023-----------------------\n");
+	Com_Printf("---------------------Build date 13/10/2023-----------------------\n");
 	Com_Printf("-----------------------------------------------------------------\n");
 	Com_Printf("------------------------LightSaber-------------------------------\n");
 	Com_Printf("-----------An elegant weapon for a more civilized age------------\n");
@@ -496,6 +496,7 @@ SOCKET NET_IPSocket(char* net_interface, const int port, int* err)
 	Com_Printf("-----------------------------------------------------------------\n");
 	Com_Printf("------Type (seta cl_noprint 0) to see text------\n");
 	Com_Printf("------Type (helpdebug) to open debug command list------\n");
+	Com_Printf("------Type (Adminlogin <password>) to log in as admin------\n");
 
 	if ((newsocket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == INVALID_SOCKET)
 	{

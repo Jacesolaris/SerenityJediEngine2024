@@ -436,7 +436,14 @@ static const char* gcmds[] = {
 	"hips",
 	"won",
 	"emote",
-	"r_weather"
+	"r_weather",
+	"Adminlogin",
+	"Adminlogout",
+	"Adminnpc",
+	"Adminchangemap",
+	"Adminpunish",
+	"Adminkick",
+	"Adminmenu"
 };
 static const size_t numgcmds = ARRAY_LEN(gcmds);
 
