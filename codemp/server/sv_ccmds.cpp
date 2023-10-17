@@ -338,7 +338,7 @@ static void SV_MapRestart_f(void)
 	SV_RestartGame();
 
 	// run a few frames to allow everything to settle
-	for (i = 0; i < 3; i++)
+	for (i = 0; i < 4; i++)
 	{
 		GVM_RunFrame(sv.time);
 		sv.time += 100;

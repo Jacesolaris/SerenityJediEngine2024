@@ -330,11 +330,19 @@ int Huff_Receive(node_t* node, int* ch, byte* fin)
 }
 
 /* Get a symbol */
-void Huff_offsetReceive(node_t* node, int* ch, byte* fin, int* offset)
+void Huff_offsetReceive(node_t* node, int* ch, byte* fin, int* offset, int maxoffset)
 {
 	bloc = *offset;
+
 	while (node && node->symbol == INTERNAL_NODE)
 	{
+		if (bloc >= maxoffset)
+		{
+			*ch = 0;
+			*offset = maxoffset + 1;
+			return;
+		}
+
 		if (get_bit(fin))
 		{
 			node = node->right;
@@ -348,21 +356,25 @@ void Huff_offsetReceive(node_t* node, int* ch, byte* fin, int* offset)
 	{
 		*ch = 0;
 		return;
-		//		Com_Error(ERR_DROP, "Illegal tree!\n");
 	}
 	*ch = node->symbol;
 	*offset = bloc;
 }
 
 /* Send the prefix code for this node */
-static void send(node_t* node, node_t* child, byte* fout)
+static void send(node_t* node, node_t* child, byte* fout, int maxoffset)
 {
 	if (node->parent)
 	{
-		send(node->parent, node, fout);
+		send(node->parent, node, fout, maxoffset);
 	}
 	if (child)
 	{
+		if (bloc >= maxoffset)
+		{
+			bloc = maxoffset + 1;
+			return;
+		}
 		if (node->right == child)
 		{
 			add_bit(1, fout);
@@ -375,12 +387,12 @@ static void send(node_t* node, node_t* child, byte* fout)
 }
 
 /* Send a symbol */
-void Huff_transmit(huff_t* huff, const int ch, byte* fout)
+void Huff_transmit(huff_t* huff, const int ch, byte* fout, int maxoffset)
 {
 	if (huff->loc[ch] == nullptr)
 	{
 		/* node_t hasn't been transmitted, send a NYT, then the symbol */
-		Huff_transmit(huff, NYT, fout);
+		Huff_transmit(huff, NYT, fout, maxoffset);
 		for (int i = 7; i >= 0; i--)
 		{
 			add_bit(static_cast<char>(ch >> i & 0x1), fout);
@@ -388,14 +400,14 @@ void Huff_transmit(huff_t* huff, const int ch, byte* fout)
 	}
 	else
 	{
-		send(huff->loc[ch], nullptr, fout);
+		send(huff->loc[ch], nullptr, fout, maxoffset);
 	}
 }
 
-void Huff_offsetTransmit(const huff_t* huff, const int ch, byte* fout, int* offset)
+void Huff_offsetTransmit(const huff_t* huff, const int ch, byte* fout, int* offset, int maxoffset)
 {
 	bloc = *offset;
-	send(huff->loc[ch], nullptr, fout);
+	send(huff->loc[ch], nullptr, fout, maxoffset);
 	*offset = bloc;
 }
 
@@ -490,7 +502,7 @@ void Huff_Compress(msg_t* mbuf, const int offset)
 	for (int i = 0; i < size; i++)
 	{
 		const int ch = buffer[i];
-		Huff_transmit(&huff, ch, seq); /* Transmit symbol */
+		Huff_transmit(&huff, ch, seq, size << 3); /* Transmit symbol */
 		Huff_addRef(&huff, static_cast<byte>(ch)); /* Do update */
 	}
 

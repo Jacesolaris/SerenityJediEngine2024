@@ -1512,6 +1512,7 @@ typedef struct siegePers_s
 #define FLAG_ATTACKFATIGUE 	19
 #define FLAG_MBLOCKBOUNCE   20
 #define FLAG_PERFECTBLOCK   21
+#define FLAG_SLIGHTFATIGUE  22
 
 #define DODGE_BOLTBLOCK			2	//standard DP cost to block a missile bolt
 #define DODGE_BOWCASTERBLOCK	5

@@ -672,7 +672,7 @@ void SV_SpawnServer(char* server, const qboolean killBots, const ForceReload_e e
 	sv_gametype->modified = qfalse;
 
 	// run a few frames to allow everything to settle
-	for (i = 0; i < 3; i++)
+	for (i = 0; i < 4; i++)
 	{
 		//rww - RAGDOLL_BEGIN
 		re->G2API_SetTime(sv.time, 0);

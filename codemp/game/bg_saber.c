@@ -6600,6 +6600,15 @@ void PM_Setsaber_move(saber_moveName_t new_move)
 		pm->ps->userInt3 &= ~(1 << FLAG_ATTACKFATIGUE);
 	}
 
+	if (pm->ps->saberFatigueChainCount > MISHAPLEVEL_LIGHT)
+	{
+		pm->ps->userInt3 |= 1 << FLAG_ATTACKFATIGUE;
+	}
+	else
+	{
+		pm->ps->userInt3 &= ~(1 << FLAG_ATTACKFATIGUE);
+	}
+
 	if (pm->ps->fd.blockPoints > BLOCK_POINTS_MAX)
 	{
 		//for the sake of being able to send the value over the net within a reasonable bit count
