@@ -49,14 +49,6 @@ option(BuildSPEngine "Whether to create projects for the SP engine (SerenityJedi
 option(BuildSPGame "Whether to create projects for the SP gamecode (SerenityJediEngine2024-gamex86.dll)" ON)
 option(BuildSPRdVanilla "Whether to create projects for the SP default renderer (SerenityJediEngine2024-rdsp_x86.dll)" ON)
 
-option(BuildJK2SPEngine "Whether to create projects for the jk2 SP engine (SerenityJediEngineJO2023-SP.exe)" OFF)
-option(BuildJK2SPGame "Whether to create projects for the jk2 sp gamecode mod (SerenityJediEngineJO2023-gamex86.dll)" OFF)
-option(BuildJK2SPRdVanilla "Whether to create projects for the jk2 sp renderer (SerenityJediEngineJO2023-josp_x86.dll)" OFF)
-
-option(BuildJK2SPRdRend2 "Whether to create projects for the EXPERIMENTAL jk2 SP rend2 renderer (rdjosp-rend2_x86.dll)" OFF)
-
-option(BuildTests "Whether to build automatic unit tests (requires Boost)" OFF)
-
 Include(CMakeDependentOption)
 CMAKE_DEPENDENT_OPTION(BuildSymbolServer "Build WIP Windows Symbol Server (experimental and unused)" OFF "NOT WIN32 OR NOT MSVC" OFF)
 
