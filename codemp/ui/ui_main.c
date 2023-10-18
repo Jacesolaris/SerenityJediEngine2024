@@ -5271,7 +5271,7 @@ static void UI_Update(const char* name)
 			trap->Cvar_SetValue("ui_r_texturebits", 32);
 			trap->Cvar_SetValue("ui_r_fastSky", 0);
 			trap->Cvar_SetValue("ui_r_inGameVideo", 1);
-			trap->Cvar_SetValue("ui_cg_shadows", 2);
+			trap->Cvar_SetValue("ui_cg_shadows", 3);
 			trap->Cvar_Set("ui_r_texturemode", "GL_LINEAR_MIPMAP_LINEAR");
 			break;
 
@@ -5447,7 +5447,7 @@ void UI_GetVideoSetup(void)
 	trap->Cvar_Register(NULL, "ui_r_fastSky", "0", CVAR_ROM | CVAR_INTERNAL);
 	trap->Cvar_Register(NULL, "ui_r_inGameVideo", "0", CVAR_ROM | CVAR_INTERNAL);
 	trap->Cvar_Register(NULL, "ui_r_allowExtensions", "0", CVAR_ROM | CVAR_INTERNAL);
-	trap->Cvar_Register(NULL, "ui_cg_shadows", "2", CVAR_ROM | CVAR_INTERNAL);
+	trap->Cvar_Register(NULL, "ui_cg_shadows", "3", CVAR_ROM | CVAR_INTERNAL);
 	trap->Cvar_Register(NULL, "ui_r_modified", "0", CVAR_ROM | CVAR_INTERNAL);
 
 	// Copy over the real video cvars into their temporary counterparts

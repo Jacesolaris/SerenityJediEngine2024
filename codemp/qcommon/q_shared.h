@@ -43,7 +43,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #define CLIENT_WINDOW_TITLE "SerenityJediEngine2024 (MP)"
 #define CLIENT_CONSOLE_TITLE "SerenityJediEngine2024 Console (MP)"
 #define HOMEPATH_NAME_UNIX "SerenityJediEngine2024"
-#define HOMEPATH_NAME_WIN "SJE"
+#define HOMEPATH_NAME_WIN "SerenityJediEngine"
 #define HOMEPATH_NAME_MACOSX HOMEPATH_NAME_WIN
 
 #define	BASEGAME "base"

@@ -3855,7 +3855,7 @@ static void UI_Update(const char* name)
 			Cvar_SetValue("ui_r_texturebits", 32);
 			Cvar_SetValue("ui_r_fastSky", 0);
 			Cvar_SetValue("ui_r_inGameVideo", 1);
-			Cvar_SetValue("ui_cg_shadows", 2);
+			Cvar_SetValue("ui_cg_shadows", 3);
 			Cvar_Set("ui_r_texturemode", "GL_LINEAR_MIPMAP_LINEAR");
 			break;
 

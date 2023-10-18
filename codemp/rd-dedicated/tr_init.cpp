@@ -281,6 +281,8 @@ qboolean R_GetModeInfo(int* width, int* height, const int mode)
 static void R_ModeList_f(void)
 {
 	Com_Printf("\n");
+	Com_Printf("Mode -2: Use desktop resolution\n");
+	Com_Printf("Mode -1: Use r_customWidth and r_customHeight variables\n");
 	for (int i = 0; i < s_numVidModes; i++)
 	{
 		Com_Printf("%s\n", r_vidModes[i].description);
@@ -351,7 +353,7 @@ void R_Register()
 	r_depthbits = ri->Cvar_Get("r_depthbits", "0", CVAR_ARCHIVE_ND | CVAR_LATCH, "");
 	r_overBrightBits = ri->Cvar_Get("r_overBrightBits", "0", CVAR_ARCHIVE_ND | CVAR_LATCH, "");
 	r_ignorehwgamma = ri->Cvar_Get("r_ignorehwgamma", "0", CVAR_ARCHIVE_ND | CVAR_LATCH, "");
-	r_mode = ri->Cvar_Get("r_mode", "4", CVAR_ARCHIVE | CVAR_LATCH, "");
+	r_mode = ri->Cvar_Get("r_mode", "-2", CVAR_ARCHIVE | CVAR_LATCH, "");
 	r_fullscreen = ri->Cvar_Get("r_fullscreen", "0", CVAR_ARCHIVE | CVAR_LATCH, "");
 	r_noborder = ri->Cvar_Get("r_noborder", "0", CVAR_ARCHIVE | CVAR_LATCH, "");
 	r_centerWindow = ri->Cvar_Get("r_centerWindow", "0", CVAR_ARCHIVE | CVAR_LATCH, "");
@@ -440,7 +442,7 @@ void R_Register()
 	r_offsetUnits = ri->Cvar_Get("r_offsetunits", "-2", CVAR_CHEAT, "");
 	r_lockpvs = ri->Cvar_Get("r_lockpvs", "0", CVAR_CHEAT, "");
 	r_noportals = ri->Cvar_Get("r_noportals", "0", CVAR_CHEAT, "");
-	r_shadows = ri->Cvar_Get("cg_shadows", "2", CVAR_NONE, "");
+	r_shadows = ri->Cvar_Get("cg_shadows", "3", CVAR_NONE, "");
 	r_shadowRange = ri->Cvar_Get("r_shadowRange", "1000", CVAR_NONE, "");
 	r_maxpolys = ri->Cvar_Get("r_maxpolys", XSTRING(DEFAULT_MAX_POLYS), CVAR_NONE, "");
 	r_maxpolyverts = ri->Cvar_Get("r_maxpolyverts", XSTRING(DEFAULT_MAX_POLYVERTS), CVAR_NONE, "");

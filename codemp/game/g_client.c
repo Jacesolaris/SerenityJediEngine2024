@@ -5067,7 +5067,7 @@ qboolean client_userinfo_changed(const int client_num)
 			|| Class_Model(model, "savage_opress"))
 		{
 			client->pers.botmodelscale = BOTZIZE_LARGE;
-			client->pers.nextbotclass = BCLASS_LORDVADER;
+			client->pers.nextbotclass = BCLASS_VADER;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
 				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
@@ -6935,7 +6935,7 @@ void ClientSpawn(gentity_t* ent)
 				case BCLASS_PADAWAN:
 				case BCLASS_GRIEVOUS:
 				case BCLASS_SITHLORD:
-				case BCLASS_LORDVADER:
+				case BCLASS_VADER:
 				case BCLASS_SITH:
 				case BCLASS_APPRENTICE:
 				case BCLASS_JEDIKNIGHT1:
@@ -8111,7 +8111,7 @@ void ClientSpawn(gentity_t* ent)
 			client->ps.stats[STAT_MAX_HEALTH] = 200;
 			client->ps.stats[STAT_HOLDABLE_ITEMS] |= 1 << HI_MEDPAC;
 			break;
-		case BCLASS_LORDVADER:
+		case BCLASS_VADER:
 			client->ps.stats[STAT_ARMOR] = 500;
 			client->ps.stats[STAT_MAX_HEALTH] = 250;
 			client->ps.stats[STAT_HOLDABLE_ITEMS] |= 1 << HI_MEDPAC;
@@ -8373,7 +8373,7 @@ void ClientSpawn(gentity_t* ent)
 		case BCLASS_PADAWAN:
 		case BCLASS_GRIEVOUS:
 		case BCLASS_SITHLORD:
-		case BCLASS_LORDVADER:
+		case BCLASS_VADER:
 		case BCLASS_SITH:
 		case BCLASS_APPRENTICE:
 		case BCLASS_JEDIKNIGHT1:

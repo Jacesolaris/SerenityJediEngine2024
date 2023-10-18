@@ -1669,7 +1669,7 @@ void R_Register()
 	r_offsetUnits = ri->Cvar_Get("r_offsetunits", "-2", CVAR_CHEAT, "");
 	r_lockpvs = ri->Cvar_Get("r_lockpvs", "0", CVAR_CHEAT, "");
 	r_noportals = ri->Cvar_Get("r_noportals", "0", CVAR_CHEAT, "");
-	r_shadows = ri->Cvar_Get("cg_shadows", "2", CVAR_NONE, "");
+	r_shadows = ri->Cvar_Get("cg_shadows", "3", CVAR_NONE, "");
 	r_shadowRange = ri->Cvar_Get("r_shadowRange", "1000", CVAR_NONE, "");
 	r_marksOnTriangleMeshes = ri->Cvar_Get("r_marksOnTriangleMeshes", "0", CVAR_ARCHIVE_ND, "");
 	r_aspectCorrectFonts = ri->Cvar_Get("r_aspectCorrectFonts", "0", CVAR_ARCHIVE, "");

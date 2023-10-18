@@ -5736,14 +5736,6 @@ weapChecks:
 	// *********************************************************
 	// Check for WEAPON ATTACK
 	// *********************************************************
-
-	if (pm->ps->saberInFlight && pm->ps->forceHandExtend != HANDEXTEND_SABERPULL
-		&& pm->cmd.buttons & BUTTON_ALT_ATTACK && pm->ps->communicatingflags & 1 << KICKING)
-	{
-		//don't have our saber so we can punch instead.
-		PM_DoKick();
-		return;
-	}
 	if (pm->ps->saberInFlight && pm->ps->forceHandExtend != HANDEXTEND_SABERPULL
 		&& pm->cmd.buttons & BUTTON_KICK && pm->ps->communicatingflags & 1 << KICKING)
 	{

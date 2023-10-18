@@ -695,27 +695,30 @@ void Svcmd_SaberAttackCycle_f()
 	{
 		cg.saber_anim_levelPending = saber_anim_level;
 
-		if (!(self->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK) && !PM_SaberInAttack(self->client->ps.saber_move) && self->client->ps.saberLockTime < level.time) // lets do a movement when changing styles // need better anims for this
+		if (!self->client->ps.saberInFlight)
 		{
-			if (saber_anim_level == SS_DUAL)
+			if (!(self->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK) && !PM_SaberInAttack(self->client->ps.saber_move) && self->client->ps.saberLockTime < level.time) // lets do a movement when changing styles // need better anims for this
 			{
-				NPC_SetAnim(self, SETANIM_TORSO, BOTH_STAND2TO1, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
-			}
-			else if (saber_anim_level == SS_STAFF)
-			{
-				NPC_SetAnim(self, SETANIM_TORSO, BOTH_STAND2TO1, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
-			}
-			else
-			{
-				NPC_SetAnim(self, SETANIM_TORSO, BOTH_STAND2TO1, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
-			}
-			if (self->client->ps.SaberActive())
-			{
-				G_Sound(self, G_SoundIndex(va("sound/weapons/saber/lowswing%d", Q_irand(1, 7))));
-			}
-			else
-			{
-				G_Sound(self, G_SoundIndex("sound/weapons/saber/saber_catch.mp3"));
+				if (saber_anim_level == SS_DUAL)
+				{
+					NPC_SetAnim(self, SETANIM_TORSO, BOTH_STAND2TO1, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+				}
+				else if (saber_anim_level == SS_STAFF)
+				{
+					NPC_SetAnim(self, SETANIM_TORSO, BOTH_STAND2TO1, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+				}
+				else
+				{
+					NPC_SetAnim(self, SETANIM_TORSO, BOTH_STAND2TO1, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+				}
+				if (self->client->ps.SaberActive())
+				{
+					G_Sound(self, G_SoundIndex(va("sound/weapons/saber/lowswing%d", Q_irand(1, 7))));
+				}
+				else
+				{
+					G_Sound(self, G_SoundIndex("sound/weapons/saber/saber_catch.mp3"));
+				}
 			}
 		}
 	}

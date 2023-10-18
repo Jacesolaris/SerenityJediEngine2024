@@ -127,7 +127,7 @@ qboolean R_GetModeInfo(int* width, int* height, const int mode)
 /*
 ** R_ModeList_f
 */
-static void R_ModeList_f()
+static void R_ModeList_f(void)
 {
 	Com_Printf("\n");
 	Com_Printf("Mode -2: Use desktop resolution\n");
@@ -745,7 +745,7 @@ window_t WIN_Init(const windowDesc_t* window_desc, glconfig_t* glConfig)
 	r_customheight = Cvar_Get("r_customheight", "1024", CVAR_ARCHIVE | CVAR_LATCH);
 	r_swapInterval = Cvar_Get("r_swapInterval", "0", CVAR_ARCHIVE_ND);
 	r_stereo = Cvar_Get("r_stereo", "0", CVAR_ARCHIVE_ND | CVAR_LATCH);
-	r_mode = Cvar_Get("r_mode", "4", CVAR_ARCHIVE | CVAR_LATCH);
+	r_mode = Cvar_Get("r_mode", "-2", CVAR_ARCHIVE | CVAR_LATCH);
 	r_displayRefresh = Cvar_Get("r_displayRefresh", "0", CVAR_LATCH);
 	Cvar_CheckRange(r_displayRefresh, 0, 240, qtrue);
 

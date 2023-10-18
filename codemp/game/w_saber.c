@@ -8588,13 +8588,11 @@ void DownedSaberThink(gentity_t* saberent)
 		saber_own->client->ps.saberCanThrow = qfalse;
 
 		return;
-		}
+	}
 
-	if ((saber_own->client->pers.cmd.buttons & BUTTON_ATTACK
-		&& !PM_SaberInMassiveBounce(saber_own->client->ps.torsoAnim)
-		&& !saber_own->client->ps.torsoAnim == BOTH_LOSE_SABER
-		&& level.time - saber_own->client->saberKnockedTime > MAX_PLAYER_LEAVE_TIME
-		|| saberent->s.pos.trType == TR_STATIONARY && (saber_own->client->pers.cmd.buttons & BUTTON_ALT_ATTACK || saber_own->client->pers.cmd.buttons & BUTTON_ATTACK))
+	if ((level.time - saber_own->client->saberKnockedTime > MAX_PLAYER_LEAVE_TIME && saber_own->client->pers.cmd.buttons & BUTTON_ATTACK) ||
+		(saberent->s.pos.trType == TR_STATIONARY &&
+			(saber_own->client->pers.cmd.buttons & BUTTON_ATTACK || saber_own->client->ps.forceHandExtend == HANDEXTEND_SABERPULL))
 		&& !(saber_own->r.svFlags & SVF_BOT))
 	{
 		//we want to pull the saber back.
@@ -8641,11 +8639,11 @@ void DownedSaberThink(gentity_t* saberent)
 		saberent->s.apos.trType = TR_STATIONARY;
 
 		return;
-		}
+	}
 
 	G_RunObject(saberent);
 	saberent->nextthink = level.time;
-	}
+}
 
 void DrownedSaberTouch(gentity_t* self, gentity_t* other, trace_t* trace)
 {
@@ -8706,8 +8704,8 @@ void DrownedSaberTouch(gentity_t* self, gentity_t* other, trace_t* trace)
 			//make activation noise if we have one.
 			G_Sound(other, CHAN_WEAPON, other->client->saber[0].soundOn);
 		}
-		}
 	}
+}
 
 void saberReactivate(gentity_t* saberent, gentity_t* saber_owner)
 {
@@ -11820,7 +11818,7 @@ void wp_saber_position_update(gentity_t* self, usercmd_t* ucmd)
 			self->client->ps.ammo[AMMO_THERMAL]--;
 			G_SetAnim(self, NULL, SETANIM_TORSO, BOTH_MELEE1, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
 		}
-}
+	}
 
 	if (PM_PunchAnim(self->client->ps.torsoAnim))
 	{
@@ -12399,32 +12397,19 @@ nextStep:
 
 				saberent->s.saberInFlight = qtrue;
 
-				if (saber1 && saber1
-					->
-					type == SABER_VADER
-					)
+				if (self->client->ps.fd.saber_anim_level == SS_STAFF)
 				{
 					saberent->s.apos.trType = TR_LINEAR;
 					saberent->s.apos.trDelta[0] = 0;
-					saberent->s.apos.trDelta[1] = 600;
+					saberent->s.apos.trDelta[1] = 800;
 					saberent->s.apos.trDelta[2] = 0;
 				}
 				else
 				{
-					if (self->client->ps.fd.saber_anim_level == SS_STAFF)
-					{
-						saberent->s.apos.trType = TR_LINEAR;
-						saberent->s.apos.trDelta[0] = 0;
-						saberent->s.apos.trDelta[1] = 800;
-						saberent->s.apos.trDelta[2] = 0;
-					}
-					else
-					{
-						saberent->s.apos.trType = TR_LINEAR;
-						saberent->s.apos.trDelta[0] = 600;
-						saberent->s.apos.trDelta[1] = 0;
-						saberent->s.apos.trDelta[2] = 0;
-					}
+					saberent->s.apos.trType = TR_LINEAR;;
+					saberent->s.apos.trDelta[0] = 600;
+					saberent->s.apos.trDelta[1] = 0;
+					saberent->s.apos.trDelta[2] = 0;
 				}
 
 				saberent->s.pos.trType = TR_LINEAR;
@@ -15661,8 +15646,7 @@ qboolean WP_SaberIsOff(const gentity_t* self, const int saber_num)
 		//one saber off, one saber on, depends on situation.
 	{
 		//one saber off, one saber on, depends on situation.
-		if (self->client->ps.fd.saber_anim_level == SS_DUAL && self->client->ps.saberInFlight && !self->client->ps.
-			saberEntityNum)
+		if (self->client->ps.fd.saber_anim_level == SS_DUAL && self->client->ps.saberInFlight && !self->client->ps.	saberEntityNum)
 		{
 			//special case where the secondary blade is lit instead of the primary
 			if (saber_num == 0)
