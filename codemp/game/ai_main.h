@@ -179,7 +179,7 @@ typedef struct bot_state_s
 	int inuse; //true if this state is used by a bot client
 	int botthink_residual; //residual for the bot thinks
 	int client; //client number of the bot
-	int entitynum; //entity number of the bot
+	int entity_num; //entity number of the bot
 	playerState_t cur_ps; //current player state
 	usercmd_t lastucmd; //usercmd from last frame
 	bot_settings_t settings; //several bot settings

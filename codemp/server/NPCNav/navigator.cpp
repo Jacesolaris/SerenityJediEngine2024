@@ -929,11 +929,11 @@ void CNavigator::ShowNodes(void)
 		constexpr qboolean showRadius = qfalse;
 		//if( NAVDEBUG_showRadius )
 		{
-			dist = DistanceSquared(SV_GentityNum(0)->r.currentOrigin, position);
+			dist = DistanceSquared(SV_Gentity_num(0)->r.currentOrigin, position);
 		}
 		if (dist < 1048576)
 		{
-			if (SV_inPVS(SV_GentityNum(0)->r.currentOrigin, position))
+			if (SV_inPVS(SV_Gentity_num(0)->r.currentOrigin, position))
 			{
 				(*ni)->Draw(showRadius);
 			}
@@ -959,12 +959,12 @@ void CNavigator::ShowEdges(void)
 	{
 		vec3_t start;
 		(*ni)->GetPosition(start);
-		if (DistanceSquared(SV_GentityNum(0)->r.currentOrigin, start) >= 1048576)
+		if (DistanceSquared(SV_Gentity_num(0)->r.currentOrigin, start) >= 1048576)
 		{
 			continue;
 		}
 
-		if (!SV_inPVS(SV_GentityNum(0)->r.currentOrigin, start))
+		if (!SV_inPVS(SV_Gentity_num(0)->r.currentOrigin, start))
 		{
 			continue;
 		}
@@ -991,12 +991,12 @@ void CNavigator::ShowEdges(void)
 			//Set this as drawn
 			drawMap[id][(*ni)->GetID()] = true;
 
-			if (DistanceSquared(SV_GentityNum(0)->r.currentOrigin, end) >= 1048576)
+			if (DistanceSquared(SV_Gentity_num(0)->r.currentOrigin, end) >= 1048576)
 			{
 				continue;
 			}
 
-			if (!SV_inPVS(SV_GentityNum(0)->r.currentOrigin, end))
+			if (!SV_inPVS(SV_Gentity_num(0)->r.currentOrigin, end))
 				continue;
 
 			/*
@@ -1076,7 +1076,7 @@ void CNavigator::CheckBlockedEdges(void)
 						}
 						else if (trace.allsolid || trace.startsolid)
 						{
-							//FIXME: the entitynum would be none here, so how do we know if this is stuck inside an ent or the world?
+							//FIXME: the entity_num would be none here, so how do we know if this is stuck inside an ent or the world?
 						}
 						else
 						{
@@ -2068,7 +2068,7 @@ qboolean CNavigator::CheckFailedEdge(failedEdge_t* failedEdge) const
 		{
 			vec3_t start, end, mins, maxs;
 			int ignore, clipmask;
-			const sharedEntity_t* ent = SV_GentityNum(failedEdge->ent_id);
+			const sharedEntity_t* ent = SV_Gentity_num(failedEdge->ent_id);
 			//(failedEdge->ent_id<ENTITYNUM_WORLD)?&g_entities[failedEdge->ent_id]:NULL;
 			int hitEntNum;
 

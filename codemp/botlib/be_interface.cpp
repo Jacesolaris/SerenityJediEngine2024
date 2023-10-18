@@ -106,7 +106,7 @@ qboolean Validclient_number(const int num, char* str)
 // Returns:					-
 // Changes Globals:		-
 //===========================================================================
-qboolean ValidEntityNumber(const int num, char* str)
+qboolean Validentity_number(const int num, char* str)
 {
 	if (num < 0 || num > botlibglobals.maxentities)
 	{
@@ -308,7 +308,7 @@ int Export_BotLibLoadMap(const char* mapname)
 int Export_BotLibUpdateEntity(const int ent, bot_entitystate_t* state)
 {
 	if (!BotLibSetup("BotUpdateEntity")) return BLERR_LIBRARYNOTSETUP;
-	if (!ValidEntityNumber(ent, "BotUpdateEntity")) return BLERR_INVALIDENTITYNUMBER;
+	if (!Validentity_number(ent, "BotUpdateEntity")) return BLERR_INVALIDentity_numBER;
 
 	return AAS_UpdateEntity(ent, state);
 } //end of the function Export_BotLibUpdateEntity
@@ -864,7 +864,7 @@ static void Init_AI_Export(ai_export_t* ai) {
 GetBotLibAPI
 ============
 */
-botlib_export_t* GetBotLibAPI(const int apiVersion, botlib_import_t* import) {
+botlib_export_t * GetBotLibAPI(const int apiVersion, botlib_import_t * import) {
 	assert(import);   // bk001129 - this wasn't set for base/
 	botimport = *import;
 	assert(botimport.Print);   // bk001129 - pars pro toto

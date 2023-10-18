@@ -637,25 +637,22 @@ qboolean WP_SaberBladeDoTransitionDamage(const saberInfo_t* saber, const int bla
 	return qfalse;
 }
 
-qboolean WP_UseFirstValidSaberStyle(const saberInfo_t* saber1, const saberInfo_t* saber2, const int saber_holstered,
-	int* saber_anim_level)
+qboolean WP_UseFirstValidSaberStyle(const saberInfo_t* saber1, const saberInfo_t* saber2, const int saber_holstered, int* saber_anim_level)
 {
 	qboolean styleInvalid = qfalse;
 	qboolean saber1Active, saber2Active;
 	qboolean dualSabers = qfalse;
+	int	validStyles = 0, styleNum;
 
 	if (saber2 && saber2->model[0])
-	{
 		dualSabers = qtrue;
-	}
 
 	//dual
 	if (dualSabers)
 	{
 		if (saber_holstered > 1)
 			saber1Active = saber2Active = qfalse;
-		else if (saber_holstered > 0)
-		{
+		else if (saber_holstered > 0) {
 			saber1Active = qtrue;
 			saber2Active = qfalse;
 		}
@@ -663,22 +660,19 @@ qboolean WP_UseFirstValidSaberStyle(const saberInfo_t* saber1, const saberInfo_t
 			saber1Active = saber2Active = qtrue;
 	}
 	// single/staff
-	else
-	{
+	else {
 		saber2Active = qfalse;
 		if (!saber1 || !saber1->model[0])
 			saber1Active = qfalse;
 		//staff
-		else if (saber1->numBlades > 1)
-		{
+		else if (saber1->numBlades > 1) {
 			if (saber_holstered > 1)
 				saber1Active = qfalse;
 			else
 				saber1Active = qtrue;
 		}
 		//single
-		else
-		{
+		else {
 			if (saber_holstered)
 				saber1Active = qfalse;
 			else
@@ -687,12 +681,12 @@ qboolean WP_UseFirstValidSaberStyle(const saberInfo_t* saber1, const saberInfo_t
 	}
 
 	//initially, all styles are valid
-	int validStyles = (1 << SS_NUM_SABER_STYLES) - 2; // mask off 1<<SS_NONE
+	validStyles = (1 << SS_NUM_SABER_STYLES) - 2; // mask off 1<<SS_NONE
 
 	// check for invalid styles
 	if (saber1Active && saber1 && saber1->model[0] && saber1->stylesForbidden)
 	{
-		if (saber1->stylesForbidden & 1 << *saber_anim_level)
+		if ((saber1->stylesForbidden & (1 << *saber_anim_level)))
 		{
 			//not a valid style for first saber!
 			styleInvalid = qtrue;
@@ -703,8 +697,7 @@ qboolean WP_UseFirstValidSaberStyle(const saberInfo_t* saber1, const saberInfo_t
 	{
 		if (saber2Active && saber2->stylesForbidden)
 		{
-			if (saber2->stylesForbidden & 1 << *saber_anim_level)
-			{
+			if ((saber2->stylesForbidden & (1 << *saber_anim_level))) {
 				//not a valid style for second saber!
 				styleInvalid = qtrue;
 				//only the ones both sabers allow is valid
@@ -715,14 +708,21 @@ qboolean WP_UseFirstValidSaberStyle(const saberInfo_t* saber1, const saberInfo_t
 
 	if (!validStyles)
 	{
-		Com_Printf(S_COLOR_YELLOW"No valid saber styles\n");
+		if (dualSabers)
+		{
+			Com_Printf("WARNING: No valid saber styles for %s/%s", saber1->name, saber2->name);
+		}
+		else
+		{
+			Com_Printf("WARNING: No valid saber styles for %s", saber1->name);
+		}
 	}
 	//using an invalid style and have at least one valid style to use, so switch to it
 	else if (styleInvalid)
 	{
-		for (int styleNum = SS_FAST; styleNum < SS_NUM_SABER_STYLES; styleNum++)
+		for (styleNum = SS_FAST; styleNum < SS_NUM_SABER_STYLES; styleNum++)
 		{
-			if (validStyles & 1 << styleNum)
+			if ((validStyles & (1 << styleNum)))
 			{
 				*saber_anim_level = styleNum;
 				return qtrue;
@@ -732,66 +732,53 @@ qboolean WP_UseFirstValidSaberStyle(const saberInfo_t* saber1, const saberInfo_t
 	return qfalse;
 }
 
-qboolean WP_SaberStyleValidForSaber(const saberInfo_t* saber1, const saberInfo_t* saber2, const int saber_holstered,
-	const int saber_anim_level)
+qboolean WP_SaberStyleValidForSaber(const saberInfo_t* saber1, const saberInfo_t* saber2, const int saber_holstered, int saber_anim_level)
 {
 	qboolean saber1Active, saber2Active;
 	qboolean dualSabers = qfalse;
 
 	if (saber2 && saber2->model[0])
-	{
 		dualSabers = qtrue;
-	}
 
-	if (dualSabers)
-	{
+	if (dualSabers) {
 		if (saber_holstered > 1)
-		{
 			saber1Active = saber2Active = qfalse;
-		}
-		else if (saber_holstered > 0)
-		{
+		else if (saber_holstered > 0) {
 			saber1Active = qtrue;
 			saber2Active = qfalse;
 		}
 		else
-		{
 			saber1Active = saber2Active = qtrue;
-		}
 	}
 	else
 	{
 		saber2Active = qfalse;
-
 		if (!saber1 || !saber1->model[0])
-		{
 			saber1Active = qfalse;
-		} //staff
+
+		//staff
 		else if (saber1->numBlades > 1)
-		{
-			saber1Active = saber_holstered > 1 ? qfalse : qtrue;
-		} //single
+			saber1Active = (saber_holstered > 1) ? qfalse : qtrue;
+
+		//single
 		else
-		{
 			saber1Active = saber_holstered ? qfalse : qtrue;
-		}
 	}
 
 	if (saber1Active && saber1 && saber1->model[0] && saber1->stylesForbidden)
 	{
-		if (saber1->stylesForbidden & 1 << saber_anim_level)
+		if ((saber1->stylesForbidden & (1 << saber_anim_level)))
 		{
 			return qfalse;
 		}
 	}
+
 	if (dualSabers && saber2Active && saber2 && saber2->model[0])
 	{
 		if (saber2->stylesForbidden)
 		{
-			if (saber2->stylesForbidden & 1 << saber_anim_level)
-			{
+			if ((saber2->stylesForbidden & (1 << saber_anim_level)))
 				return qfalse;
-			}
 		}
 		//now: if using dual sabers, only dual and tavion (if given with this saber) are allowed
 		if (saber_anim_level != SS_DUAL)
@@ -800,11 +787,10 @@ qboolean WP_SaberStyleValidForSaber(const saberInfo_t* saber1, const saberInfo_t
 			{
 				return qfalse;
 			}
-			if (saber1)
+			else
 			{
 				//see if "tavion" style is okay
-				if (!(saber1Active && saber1->stylesLearned & 1 << SS_TAVION) || !(saber2->stylesLearned & 1 <<
-					SS_TAVION))
+				if (!(saber1Active && (saber1->stylesLearned & (1 << SS_TAVION))) || !(saber2->stylesLearned & (1 << SS_TAVION)))
 				{
 					return qfalse;
 				}
@@ -2843,7 +2829,7 @@ static void WP_SaberSetupKeywordHash(void)
 	hashSetup = qtrue;
 }
 
-qboolean WP_SaberParseParms(const char* saberName, saberInfo_t* saber)
+qboolean WP_SaberParseParms(const char* saber_name, saberInfo_t* saber)
 {
 	const char* token, * p;
 	char useSaber[SABER_NAME_LENGTH];
@@ -2859,13 +2845,13 @@ qboolean WP_SaberParseParms(const char* saberName, saberInfo_t* saber)
 	//Set defaults so that, if it fails, there's at least something there
 	wp_saber_set_defaults(saber);
 
-	if (!VALIDSTRING(saberName))
+	if (!VALIDSTRING(saber_name))
 	{
 		Q_strncpyz(useSaber, DEFAULT_SABER, sizeof useSaber);
 		triedDefault = qtrue;
 	}
 	else
-		Q_strncpyz(useSaber, saberName, sizeof useSaber);
+		Q_strncpyz(useSaber, saber_name, sizeof useSaber);
 
 	//try to parse it out
 	p = saberParms;
@@ -2934,13 +2920,13 @@ qboolean WP_SaberParseParms(const char* saberName, saberInfo_t* saber)
 	return qtrue;
 }
 
-qboolean WP_SaberParseParm(const char* saberName, const char* parmname, char* saberData)
+qboolean WP_SaberParseParm(const char* saber_name, const char* parmname, char* saberData)
 {
 	const char* token;
 	const char* value;
 	const char* p;
 
-	if (!saberName || !saberName[0])
+	if (!saber_name || !saber_name[0])
 	{
 		return qfalse;
 	}
@@ -2958,7 +2944,7 @@ qboolean WP_SaberParseParm(const char* saberName, const char* parmname, char* sa
 			return qfalse;
 		}
 
-		if (!Q_stricmp(token, saberName))
+		if (!Q_stricmp(token, saber_name))
 		{
 			break;
 		}
@@ -2981,7 +2967,7 @@ qboolean WP_SaberParseParm(const char* saberName, const char* parmname, char* sa
 		token = COM_ParseExt(&p, qtrue);
 		if (!token[0])
 		{
-			Com_Printf(S_COLOR_RED"ERROR: unexpected EOF while parsing '%s'\n", saberName);
+			Com_Printf(S_COLOR_RED"ERROR: unexpected EOF while parsing '%s'\n", saber_name);
 			return qfalse;
 		}
 
@@ -3006,10 +2992,10 @@ qboolean WP_SaberParseParm(const char* saberName, const char* parmname, char* sa
 	return qfalse;
 }
 
-qboolean WP_SaberValidForPlayerInMP(const char* saberName)
+qboolean WP_SaberValidForPlayerInMP(const char* saber_name)
 {
 	char allowed[8] = { 0 };
-	if (!WP_SaberParseParm(saberName, "notInMP", allowed))
+	if (!WP_SaberParseParm(saber_name, "notInMP", allowed))
 	{
 		//not defined, default is yes
 		return qtrue;
@@ -3049,13 +3035,13 @@ void WP_RemoveSaber(saberInfo_t* sabers, const int saber_num)
 	//	}
 }
 
-void WP_SetSaber(const int ent_num, saberInfo_t* sabers, const int saber_num, const char* saberName)
+void WP_SetSaber(const int ent_num, saberInfo_t* sabers, const int saber_num, const char* saber_name)
 {
 	if (!sabers)
 	{
 		return;
 	}
-	if (Q_stricmp("none", saberName) == 0 || Q_stricmp("remove", saberName) == 0)
+	if (Q_stricmp("none", saber_name) == 0 || Q_stricmp("remove", saber_name) == 0)
 	{
 		if (saber_num != 0)
 		{
@@ -3066,13 +3052,13 @@ void WP_SetSaber(const int ent_num, saberInfo_t* sabers, const int saber_num, co
 	}
 
 	if (ent_num < MAX_CLIENTS &&
-		!WP_SaberValidForPlayerInMP(saberName))
+		!WP_SaberValidForPlayerInMP(saber_name))
 	{
 		WP_SaberParseParms(DEFAULT_SABER, &sabers[saber_num]); //get saber info
 	}
 	else
 	{
-		WP_SaberParseParms(saberName, &sabers[saber_num]); //get saber info
+		WP_SaberParseParms(saber_name, &sabers[saber_num]); //get saber info
 	}
 	if (sabers[1].saberFlags & SFL_TWO_HANDED)
 	{
@@ -3162,10 +3148,10 @@ void WP_SaberLoadParms()
 }
 
 #ifdef UI_BUILD
-qboolean WP_IsSaberTwoHanded(const char* saberName)
+qboolean WP_IsSaberTwoHanded(const char* saber_name)
 {
 	char twoHandedString[8] = { 0 };
-	WP_SaberParseParm(saberName, "twoHanded", twoHandedString);
+	WP_SaberParseParm(saber_name, "twoHanded", twoHandedString);
 	if (!twoHandedString[0])
 	{
 		//not defined defaults to "no"
@@ -3193,7 +3179,7 @@ void WP_SaberGetHiltInfo(const char* singleHilts[MAX_SABER_HILTS], const char* s
 			//invalid name
 			continue;
 		}
-		const char* saberName = String_Alloc(token);
+		const char* saber_name = String_Alloc(token);
 		//see if there's a "{" on the next line
 		SkipRestOfLine(&p);
 
@@ -3204,32 +3190,32 @@ void WP_SaberGetHiltInfo(const char* singleHilts[MAX_SABER_HILTS], const char* s
 		}
 
 		//this is a saber name
-		if (!WP_SaberValidForPlayerInMP(saberName))
+		if (!WP_SaberValidForPlayerInMP(saber_name))
 		{
 			SkipBracedSection(&p, 0);
 			continue;
 		}
 
-		if (WP_IsSaberTwoHanded(saberName))
+		if (WP_IsSaberTwoHanded(saber_name))
 		{
 			if (numStaffHilts < MAX_SABER_HILTS - 1) //-1 because we have to NULL terminate the list
 			{
-				staffHilts[numStaffHilts++] = saberName;
+				staffHilts[numStaffHilts++] = saber_name;
 			}
 			else
 			{
-				Com_Printf("WARNING: too many two-handed sabers, ignoring saber '%s'\n", saberName);
+				Com_Printf("WARNING: too many two-handed sabers, ignoring saber '%s'\n", saber_name);
 			}
 		}
 		else
 		{
 			if (numSingleHilts < MAX_SABER_HILTS - 1) //-1 because we have to NULL terminate the list
 			{
-				singleHilts[numSingleHilts++] = saberName;
+				singleHilts[numSingleHilts++] = saber_name;
 			}
 			else
 			{
-				Com_Printf("WARNING: too many one-handed sabers, ignoring saber '%s'\n", saberName);
+				Com_Printf("WARNING: too many one-handed sabers, ignoring saber '%s'\n", saber_name);
 			}
 		}
 		//skip the whole braced section and move on to the next entry

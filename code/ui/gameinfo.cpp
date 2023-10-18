@@ -43,7 +43,7 @@ extern void WP_LoadWeaponParms();
 GI_Init
 ===============
 */
-void GI_Init(gameinfo_import_t* import)
+void GI_Init(gameinfo_import_t * import)
 {
 	WP_LoadWeaponParms();
 }

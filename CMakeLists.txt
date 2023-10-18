@@ -42,6 +42,9 @@ option(BuildMPGame "Whether to create projects for the MP server-side gamecode (
 option(BuildMPCGame "Whether to create projects for the MP clientside gamecode (SerenityJediEngine2024-cgamex86.dll)" ON)
 option(BuildMPUI "Whether to create projects for the MP UI code (SerenityJediEngine2024-uix86.dll)" ON)
 
+option(BuildMPRend2 "Whether to create projects for the EXPERIMENTAL MP rend2 renderer (SerenityJediEngine2024-rdmp-rend2_x86.dll)" ON)
+option(BuildSPRend2 "Whether to create projects for the EXPERIMENTAL SP rend2 renderer (SerenityJediEngine2024-rdsp-rend2_x86.dll)" ON)
+
 option(BuildSPEngine "Whether to create projects for the SP engine (SerenityJediEngine2024-SP.exe)" ON)
 option(BuildSPGame "Whether to create projects for the SP gamecode (SerenityJediEngine2024-gamex86.dll)" ON)
 option(BuildSPRdVanilla "Whether to create projects for the SP default renderer (SerenityJediEngine2024-rdsp_x86.dll)" ON)
@@ -49,6 +52,8 @@ option(BuildSPRdVanilla "Whether to create projects for the SP default renderer 
 option(BuildJK2SPEngine "Whether to create projects for the jk2 SP engine (SerenityJediEngineJO2023-SP.exe)" OFF)
 option(BuildJK2SPGame "Whether to create projects for the jk2 sp gamecode mod (SerenityJediEngineJO2023-gamex86.dll)" OFF)
 option(BuildJK2SPRdVanilla "Whether to create projects for the jk2 sp renderer (SerenityJediEngineJO2023-josp_x86.dll)" OFF)
+
+option(BuildJK2SPRdRend2 "Whether to create projects for the EXPERIMENTAL jk2 SP rend2 renderer (rdjosp-rend2_x86.dll)" OFF)
 
 option(BuildTests "Whether to build automatic unit tests (requires Boost)" OFF)
 
@@ -161,6 +166,9 @@ set(MPDed "SerenityJediEngine2024-DED.${Architecture}")
 set(MPGame "SerenityJediEngine2024-mpgame${Architecture}")
 set(MPCGame "SerenityJediEngine2024-cgame${Architecture}")
 set(MPUI "SerenityJediEngine2024-ui${Architecture}")
+
+set(MPRend2 "SerenityJediEngine2024-rdmp-rend2_${Architecture}")
+set(SPRend2 "SerenityJediEngine2024-rdsp-rend2_${Architecture}")
 
 set(JK2SPEngine "SerenityJediEngineJO2023-SP.${Architecture}")
 set(JK2SPGame "SerenityJediEngineJO2023-game${Architecture}")

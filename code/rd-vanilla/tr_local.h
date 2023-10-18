@@ -771,8 +771,9 @@ constexpr auto MAX_MOD_KNOWN = 1024;
 
 void		R_ModelInit();
 model_t* R_GetModelByHandle(qhandle_t index);
-void		R_LerpTag(orientation_t* tag, qhandle_t handle, int start_frame, int end_frame,
-	float frac, const char* tagName);
+
+int R_LerpTag(orientation_t* tag, qhandle_t handle, int startFrame, int endFrame, float frac, const char* tagName);
+
 void		R_ModelBounds(qhandle_t handle, vec3_t mins, vec3_t maxs);
 
 void		R_Modellist_f();
@@ -813,7 +814,7 @@ constexpr auto QSORT_FOGNUM_SHIFT = 2;
 constexpr auto QSORT_REFENTITYNUM_SHIFT = 7;
 #define	QSORT_SHADERNUM_SHIFT	(QSORT_REFENTITYNUM_SHIFT+REFENTITYNUM_BITS)
 // Note: 32nd bit is reserved for RF_ALPHA_FADE voodoo magic
-// see R_AddEntitySurfaces tr.shiftedEntityNum
+// see R_AddEntitySurfaces tr.shiftedentity_num
 #if (QSORT_SHADERNUM_SHIFT+SHADERNUM_BITS) > 31
 #error "Need to update sorting, too many bits."
 #endif
@@ -943,8 +944,8 @@ using trGlobals_t = struct {
 
 	trRefEntity_t* currentEntity;
 	trRefEntity_t			worldEntity;		// point currentEntity at this when rendering world
-	int						currentEntityNum;
-	unsigned				shiftedEntityNum;	// currentEntityNum << QSORT_REFENTITYNUM_SHIFT (possible with high bit set for RF_ALPHA_FADE)
+	int						currententity_num;
+	unsigned				shiftedentity_num;	// currententity_num << QSORT_REFENTITYNUM_SHIFT (possible with high bit set for RF_ALPHA_FADE)
 	model_t* current_model;
 
 	viewParms_t				viewParms;

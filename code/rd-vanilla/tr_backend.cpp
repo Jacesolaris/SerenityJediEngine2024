@@ -648,7 +648,7 @@ void RB_RenderDrawSurfList(drawSurf_t* drawSurfs, const int numDrawSurfs) {
 	RB_BeginDrawingView();
 
 	// draw everything
-	int oldEntityNum = -1;
+	int oldentity_num = -1;
 	backEnd.currentEntity = &tr.worldEntity;
 	shader_t* oldShader = nullptr;
 	int oldFogNum = -1;
@@ -671,7 +671,7 @@ void RB_RenderDrawSurfList(drawSurf_t* drawSurfs, const int numDrawSurfs) {
 		if (g_bRenderGlowingObjects && !shader->hasGlow)
 		{
 			shader = oldShader;
-			entity_num = oldEntityNum;
+			entity_num = oldentity_num;
 			fogNum = oldFogNum;
 			dlighted = oldDlighted;
 			continue;
@@ -721,7 +721,7 @@ void RB_RenderDrawSurfList(drawSurf_t* drawSurfs, const int numDrawSurfs) {
 
 				//assure the info is back to the last set state
 				shader = oldShader;
-				entity_num = oldEntityNum;
+				entity_num = oldentity_num;
 				fogNum = oldFogNum;
 				dlighted = oldDlighted;
 
@@ -733,7 +733,7 @@ void RB_RenderDrawSurfList(drawSurf_t* drawSurfs, const int numDrawSurfs) {
 		}
 
 		if (shader != oldShader || fogNum != oldFogNum || dlighted != oldDlighted
-			|| entity_num != oldEntityNum && !shader->entityMergable)
+			|| entity_num != oldentity_num && !shader->entityMergable)
 		{
 			if (oldShader != nullptr) {
 				RB_EndSurface();
@@ -753,7 +753,7 @@ void RB_RenderDrawSurfList(drawSurf_t* drawSurfs, const int numDrawSurfs) {
 		//
 		// change the modelview matrix if needed
 		//
-		if (entity_num != oldEntityNum) {
+		if (entity_num != oldentity_num) {
 			depthRange = qfalse;
 
 			if (entity_num != REFENTITYNUM_WORLD) {
@@ -808,7 +808,7 @@ void RB_RenderDrawSurfList(drawSurf_t* drawSurfs, const int numDrawSurfs) {
 				oldDepthRange = depthRange;
 			}
 
-			oldEntityNum = entity_num;
+			oldentity_num = entity_num;
 		}
 
 		// add the triangles for this surface

@@ -229,20 +229,20 @@ using displayContextDef_t = struct
 
 	//rww - ghoul2 stuff. Add whatever you need here, remember to set it in _UI_Init or it will crash when you try to use it.
 	qboolean(*g2_SetSkin)(CGhoul2Info* ghl_info, qhandle_t customSkin, qhandle_t renderSkin);
-	qboolean(*g2_SetBoneAnim)(CGhoul2Info* ghl_info, const char* boneName, int start_frame, int end_frame,
-		int flags, float animSpeed, int current_time, float setFrame, int blend_time);
+	qboolean(*g2_SetBoneAnim)(CGhoul2Info* ghl_info, const char* bone_name, int start_frame, int end_frame,
+		int flags, float anim_speed, int current_time, float set_frame, int blend_time);
 	qboolean(*g2_RemoveGhoul2Model)(CGhoul2Info_v& ghl_info, int model_index);
-	int (*g2_InitGhoul2Model)(CGhoul2Info_v& ghoul2, const char* fileName, int, qhandle_t customSkin,
+	int (*g2_InitGhoul2Model)(CGhoul2Info_v& ghoul2, const char* file_name, int, qhandle_t customSkin,
 		qhandle_t customShader, int modelFlags, int lodBias);
 	void (*g2_CleanGhoul2Models)(CGhoul2Info_v& ghoul2);
-	int (*g2_AddBolt)(CGhoul2Info* ghl_info, const char* boneName);
+	int (*g2_AddBolt)(CGhoul2Info* ghl_info, const char* bone_name);
 	qboolean(*g2_GetBoltMatrix)(CGhoul2Info_v& ghoul2, int model_index, int bolt_index, mdxaBone_t* matrix,
 		const vec3_t angles, const vec3_t position, int frameNum, qhandle_t* model_list,
 		const vec3_t scale);
 	void (*g2_GiveMeVectorFromMatrix)(mdxaBone_t& bolt_matrix, Eorientations flags, vec3_t& vec);
 
 	//Utility functions that don't immediately redirect to ghoul2 functions
-	int (*g2hilev_SetAnim)(CGhoul2Info* ghl_info, const char* boneName, int animNum, qboolean freeze);
+	int (*g2hilev_SetAnim)(CGhoul2Info* ghl_info, const char* bone_name, int animNum, qboolean freeze);
 
 	float yscale;
 	float xscale;
@@ -513,7 +513,7 @@ qboolean PC_ParseString(const char** string);
 qboolean PC_ParseStringMem(const char** out);
 void PC_ParseWarning(const char* message);
 qboolean PC_String_Parse(int handle, const char** out);
-int PC_StartParseSession(const char* fileName, char** buffer);
+int PC_StartParseSession(const char* file_name, char** buffer);
 char* PC_ParseExt();
 qboolean PC_ParseInt(int* number);
 qboolean PC_ParseFloat(float* number);

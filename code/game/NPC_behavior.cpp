@@ -632,7 +632,7 @@ void NPC_BSFollowLeader()
 
 	STEER::Activate(NPC);
 	{
-		if (NPC->client->leader->client && NPC->client->leader->client->ps.groundEntityNum != ENTITYNUM_NONE)
+		if (NPC->client->leader->client && NPC->client->leader->client->ps.groundentity_num != ENTITYNUM_NONE)
 		{
 			// If Too Close, Back Away Some
 			//------------------------------
@@ -796,7 +796,7 @@ void NPC_BSJump()
 			CG_Cube(p1, p2, NPCDEBUG_BLUE, 0.5);
 		}
 
-		if (NPC->s.groundEntityNum != ENTITYNUM_NONE)
+		if (NPC->s.groundentity_num != ENTITYNUM_NONE)
 		{
 			//Landed, start landing anim
 			//FIXME: if the
@@ -1370,7 +1370,7 @@ qboolean NPC_CheckSurrender()
 		return qfalse;
 	}
 	if (!Q3_TaskIDPending(NPC, TID_MOVE_NAV) //not scripted to go somewhere
-		&& NPC->client->ps.groundEntityNum != ENTITYNUM_NONE //not in the air
+		&& NPC->client->ps.groundentity_num != ENTITYNUM_NONE //not in the air
 		&& !NPC->client->ps.weaponTime && !PM_InKnockDown(&NPC->client->ps) //not firing and not on the ground
 		&& NPC->enemy && NPC->enemy->client && NPC->enemy->enemy == NPC && NPC->enemy->s.weapon != WP_NONE && (NPC->
 			enemy->s.weapon != WP_MELEE || (NPC->enemy->client->NPC_class == CLASS_RANCOR || NPC->enemy->client->
@@ -1508,7 +1508,7 @@ qboolean NPC_CheckSubmit(const qboolean no_escape = qfalse)
 		return qfalse;
 	}
 	if (!Q3_TaskIDPending(NPC, TID_MOVE_NAV) //not scripted to go somewhere
-		&& NPC->client->ps.groundEntityNum != ENTITYNUM_NONE //not in the air
+		&& NPC->client->ps.groundentity_num != ENTITYNUM_NONE //not in the air
 		&& !NPC->client->ps.weaponTime && !PM_InKnockDown(&NPC->client->ps) //not firing and not on the ground
 		&& NPC->enemy && NPC->enemy->client && NPC->enemy->s.weapon != WP_NONE && (NPC->enemy->s.weapon != WP_MELEE || (
 			NPC->enemy->client->NPC_class == CLASS_RANCOR || NPC->enemy->client->NPC_class == CLASS_WAMPA))

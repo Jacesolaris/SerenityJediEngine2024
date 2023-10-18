@@ -597,10 +597,10 @@ void cg_add_player_weaponduals(refEntity_t* parent, playerState_t* ps, centity_t
 	if ((ps || cg.renderingThirdPerson || cg.predicted_player_state.client_num != cent->currentState.number || cg_trueguns
 		.
 		integer) &&
-		(cent->currentState.modelindex2 == WEAPON_CHARGING_ALT && cent->currentState.weapon == WP_BRYAR_PISTOL ||
-			cent->currentState.modelindex2 == WEAPON_CHARGING_ALT && cent->currentState.weapon == WP_BRYAR_OLD ||
-			cent->currentState.weapon == WP_BOWCASTER && cent->currentState.modelindex2 == WEAPON_CHARGING ||
-			cent->currentState.weapon == WP_DEMP2 && cent->currentState.modelindex2 == WEAPON_CHARGING_ALT))
+		(cent->currentState.model_index2 == WEAPON_CHARGING_ALT && cent->currentState.weapon == WP_BRYAR_PISTOL ||
+			cent->currentState.model_index2 == WEAPON_CHARGING_ALT && cent->currentState.weapon == WP_BRYAR_OLD ||
+			cent->currentState.weapon == WP_BOWCASTER && cent->currentState.model_index2 == WEAPON_CHARGING ||
+			cent->currentState.weapon == WP_DEMP2 && cent->currentState.model_index2 == WEAPON_CHARGING_ALT))
 	{
 		int shader = 0;
 		float val = 0.0f;
@@ -1037,10 +1037,10 @@ void CG_AddPlayerWeapon(refEntity_t* parent, playerState_t* ps, centity_t* cent,
 	if ((ps || cg.renderingThirdPerson || cg.predicted_player_state.client_num != cent->currentState.number || cg_trueguns
 		.
 		integer) &&
-		(cent->currentState.modelindex2 == WEAPON_CHARGING_ALT && cent->currentState.weapon == WP_BRYAR_PISTOL ||
-			cent->currentState.modelindex2 == WEAPON_CHARGING_ALT && cent->currentState.weapon == WP_BRYAR_OLD ||
-			cent->currentState.weapon == WP_BOWCASTER && cent->currentState.modelindex2 == WEAPON_CHARGING ||
-			cent->currentState.weapon == WP_DEMP2 && cent->currentState.modelindex2 == WEAPON_CHARGING_ALT))
+		(cent->currentState.model_index2 == WEAPON_CHARGING_ALT && cent->currentState.weapon == WP_BRYAR_PISTOL ||
+			cent->currentState.model_index2 == WEAPON_CHARGING_ALT && cent->currentState.weapon == WP_BRYAR_OLD ||
+			cent->currentState.weapon == WP_BOWCASTER && cent->currentState.model_index2 == WEAPON_CHARGING ||
+			cent->currentState.weapon == WP_DEMP2 && cent->currentState.model_index2 == WEAPON_CHARGING_ALT))
 	{
 		int shader = 0;
 		float val = 0.0f;
@@ -2251,7 +2251,7 @@ void CG_Weapon_f(void)
 	{
 		if (cg.snap->ps.weaponTime < 1)
 		{
-			if (!cg.snap->ps.saberHolstered && CG_WeaponSelectable(WP_MELEE))
+			if (!cg.snap->ps.saber_holstered && CG_WeaponSelectable(WP_MELEE))
 			{
 				num = WP_MELEE;
 
@@ -2779,14 +2779,14 @@ qboolean CG_VehicleWeaponImpact(centity_t* cent)
 {
 	//see if this is a missile entity that's owned by a vehicle and should do a special, overridden impact effect
 	if (cent->currentState.eFlags & EF_JETPACK_ACTIVE //hack so we know we're a vehicle Weapon shot
-		&& cent->currentState.otherEntityNum2
-		&& g_vehWeaponInfo[cent->currentState.otherEntityNum2].iImpactFX)
+		&& cent->currentState.otherentity_num2
+		&& g_vehWeaponInfo[cent->currentState.otherentity_num2].iImpactFX)
 	{
 		//missile is from a special vehWeapon
 		vec3_t normal;
 		ByteToDir(cent->currentState.eventParm, normal);
 
-		trap->FX_PlayEffectID(g_vehWeaponInfo[cent->currentState.otherEntityNum2].iImpactFX, cent->lerpOrigin, normal,
+		trap->FX_PlayEffectID(g_vehWeaponInfo[cent->currentState.otherentity_num2].iImpactFX, cent->lerpOrigin, normal,
 			-1, -1, qfalse);
 		return qtrue;
 	}
@@ -3495,10 +3495,10 @@ void CG_CheckPlayerG2Weapons(const playerState_t* ps, centity_t* cent)
 		{
 			cent->ghoul2weapon2 = NULL;
 		}
-		if (cent->weapon == WP_SABER && cent->weapon != ps->weapon && !ps->saberHolstered)
+		if (cent->weapon == WP_SABER && cent->weapon != ps->weapon && !ps->saber_holstered)
 		{
 			//switching away from the saber
-			if (cgs.clientinfo[ps->client_num].saber[0].soundOff && !ps->saberHolstered)
+			if (cgs.clientinfo[ps->client_num].saber[0].soundOff && !ps->saber_holstered)
 			{
 				trap->S_StartSound(cent->lerpOrigin, cent->currentState.number, CHAN_AUTO,
 					cgs.clientinfo[ps->client_num].saber[0].soundOff);
@@ -3506,7 +3506,7 @@ void CG_CheckPlayerG2Weapons(const playerState_t* ps, centity_t* cent)
 
 			if (cgs.clientinfo[ps->client_num].saber[1].soundOff &&
 				cgs.clientinfo[ps->client_num].saber[1].model[0] &&
-				!ps->saberHolstered)
+				!ps->saber_holstered)
 			{
 				trap->S_StartSound(cent->lerpOrigin, cent->currentState.number, CHAN_AUTO,
 					cgs.clientinfo[ps->client_num].saber[1].soundOff);

@@ -57,7 +57,7 @@ static qboolean	R_CullGrid(const srfGridMesh_t* cv) {
 		return qtrue;
 	}
 
-	if (tr.currentEntityNum != REFENTITYNUM_WORLD) {
+	if (tr.currententity_num != REFENTITYNUM_WORLD) {
 		sphere_cull = R_CullLocalPointAndRadius(cv->localOrigin, cv->meshRadius);
 	}
 	else {
@@ -748,8 +748,8 @@ void R_AddWorldSurfaces()
 		return;
 	}
 
-	tr.currentEntityNum = REFENTITYNUM_WORLD;
-	tr.shiftedEntityNum = tr.currentEntityNum << QSORT_REFENTITYNUM_SHIFT;
+	tr.currententity_num = REFENTITYNUM_WORLD;
+	tr.shiftedentity_num = tr.currententity_num << QSORT_REFENTITYNUM_SHIFT;
 
 	// determine which leaves are in the PVS / areamask
 	R_MarkLeaves();

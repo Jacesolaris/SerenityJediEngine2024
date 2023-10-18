@@ -73,7 +73,7 @@ struct weaponinfo_s;
 //botlib error codes
 #define BLERR_NOERROR					0	//no error
 #define BLERR_LIBRARYNOTSETUP			1	//library not setup
-#define BLERR_INVALIDENTITYNUMBER		2	//invalid entity number
+#define BLERR_INVALIDentity_numBER		2	//invalid entity number
 #define BLERR_NOAASFILE					3	//no AAS file available
 #define BLERR_CANNOTOPENAASFILE			4	//cannot open AAS file
 #define BLERR_WRONGAASFILEID			5	//incorrect AAS file id
@@ -162,8 +162,8 @@ typedef struct bot_entitystate_s
 	vec3_t	maxs;			// bounding box maximums
 	int		groundent;		// ground entity
 	int		solid;			// solid type
-	int		modelindex;		// model used
-	int		modelindex2;	// weapons, CTF flags, etc
+	int		model_index;		// model used
+	int		model_index2;	// weapons, CTF flags, etc
 	int		frame;			// model frame number
 	int		event;			// impulse events -- muzzle flashes, footsteps, etc
 	int		eventParm;		// even parameter
@@ -442,7 +442,7 @@ typedef struct botlib_export_s
 } botlib_export_t;
 
 //linking of bot library
-botlib_export_t* GetBotLibAPI(int apiVersion, botlib_import_t* import);
+botlib_export_t * GetBotLibAPI(int apiVersion, botlib_import_t * import);
 
 /* Library variables:
 

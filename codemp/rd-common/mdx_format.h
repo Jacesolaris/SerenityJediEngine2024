@@ -349,7 +349,7 @@ typedef struct mdxaHeader_s {
 
 	// frames and bones are shared by all levels of detail
 	//
-	int			numFrames;
+	int			num_frames;
 	int			ofsFrames;			// points at mdxaFrame_t array
 	int			numBones;			// (no offset to these since they're inside the frames array)
 	int			ofsCompBonePool;	// offset to global compressed-bone pool that all frames use

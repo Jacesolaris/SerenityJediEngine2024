@@ -1520,7 +1520,7 @@ siegeTeam_t* BG_SiegeFindThemeForTeam(const int team)
 
 #if defined(_GAME) || defined(_CGAME) //only for game/cgame
 //precache all the sabers for the active classes for the team
-extern qboolean WP_SaberParseParms(const char* saberName, saberInfo_t* saber); //bg_saberLoad.cpp
+extern qboolean WP_SaberParseParms(const char* saber_name, saberInfo_t* saber); //bg_saberLoad.cpp
 extern int BG_ModelCache(const char* model_name, const char* skin_name); //bg_misc.c
 
 void BG_PrecacheSabersForSiegeTeam(const int team)
@@ -1531,7 +1531,7 @@ void BG_PrecacheSabersForSiegeTeam(const int team)
 
 	if (t)
 	{
-		char* saberName;
+		char* saber_name;
 		int i = 0;
 
 		while (i < t->numClasses)
@@ -1543,20 +1543,20 @@ void BG_PrecacheSabersForSiegeTeam(const int team)
 				switch (sNum)
 				{
 				case 0:
-					saberName = &t->classes[i]->saber1[0];
+					saber_name = &t->classes[i]->saber1[0];
 					break;
 				case 1:
-					saberName = &t->classes[i]->saber2[0];
+					saber_name = &t->classes[i]->saber2[0];
 					break;
 				default:
-					saberName = NULL;
+					saber_name = NULL;
 					break;
 				}
 
-				if (saberName && saberName[0])
+				if (saber_name && saber_name[0])
 				{
-					WP_SaberParseParms(saberName, &saber);
-					if (!Q_stricmp(saberName, saber.name))
+					WP_SaberParseParms(saber_name, &saber);
+					if (!Q_stricmp(saber_name, saber.name))
 					{
 						//found the matching saber
 						if (saber.model[0])

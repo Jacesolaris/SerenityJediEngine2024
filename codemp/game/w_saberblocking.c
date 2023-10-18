@@ -85,7 +85,7 @@ void sab_beh_saber_should_be_disarmed_attacker(gentity_t* attacker, const gentit
 	{
 		G_Stagger(attacker);
 
-		ButterFingers(&g_entities[attacker->client->ps.saberEntityNum], attacker, blocker, &tr);
+		ButterFingers(&g_entities[attacker->client->ps.saberentity_num], attacker, blocker, &tr);
 	}
 }
 
@@ -97,7 +97,7 @@ void sab_beh_saber_should_be_disarmed_blocker(gentity_t* blocker, const gentity_
 	{
 		G_Stagger(blocker);
 
-		ButterFingers(&g_entities[blocker->client->ps.saberEntityNum], blocker, attacker, &tr);
+		ButterFingers(&g_entities[blocker->client->ps.saberentity_num], blocker, attacker, &tr);
 	}
 }
 

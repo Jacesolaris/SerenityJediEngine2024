@@ -242,7 +242,7 @@ void SV_CreateBaseline(void)
 {
 	for (int entnum = 1; entnum < sv.num_entities; entnum++)
 	{
-		sharedEntity_t* svent = SV_GentityNum(entnum);
+		sharedEntity_t* svent = SV_Gentity_num(entnum);
 		if (!svent->r.linked)
 		{
 			continue;
@@ -728,7 +728,7 @@ void SV_SpawnServer(char* server, const qboolean killBots, const ForceReload_e e
 				{
 					client_t* client = &svs.clients[i];
 					client->state = CS_ACTIVE;
-					sharedEntity_t* ent = SV_GentityNum(i);
+					sharedEntity_t* ent = SV_Gentity_num(i);
 					ent->s.number = i;
 					client->gentity = ent;
 

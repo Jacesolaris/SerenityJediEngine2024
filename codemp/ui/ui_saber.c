@@ -32,7 +32,7 @@ USER INTERFACE SABER LOADING & DISPLAY CODE
 #include "ui_shared.h"
 
 void WP_SaberLoadParms();
-qboolean WP_SaberParseParm(const char* saberName, const char* parmname, char* saberData);
+qboolean WP_SaberParseParm(const char* saber_name, const char* parmname, char* saberData);
 saber_colors_t TranslateSaberColor(const char* name);
 const char* SaberColorToString(saber_colors_t color);
 saber_styles_t TranslateSaberStyle(const char* name);
@@ -162,25 +162,25 @@ void UI_CacheSaberGlowGraphics(void)
 	unstableRedSaberCoreShader = trap->R_RegisterShaderNoMip("gfx/effects/sabers/saber_blade_unstable");
 }
 
-qboolean UI_SaberModelForSaber(const char* saberName, char* saberModel)
+qboolean UI_SaberModelForSaber(const char* saber_name, char* saberModel)
 {
-	return WP_SaberParseParm(saberName, "saberModel", saberModel);
+	return WP_SaberParseParm(saber_name, "saberModel", saberModel);
 }
 
-qboolean UI_SaberSkinForSaber(const char* saberName, char* saberSkin)
+qboolean UI_SaberSkinForSaber(const char* saber_name, char* saberSkin)
 {
-	return WP_SaberParseParm(saberName, "customSkin", saberSkin);
+	return WP_SaberParseParm(saber_name, "customSkin", saberSkin);
 }
 
-qboolean UI_SaberTypeForSaber(const char* saberName, char* saberType)
+qboolean UI_SaberTypeForSaber(const char* saber_name, char* saberType)
 {
-	return WP_SaberParseParm(saberName, "saberType", saberType);
+	return WP_SaberParseParm(saber_name, "saberType", saberType);
 }
 
-int UI_saber_numBladesForSaber(const char* saberName)
+int UI_saber_numBladesForSaber(const char* saber_name)
 {
 	char	numBladesString[8] = { 0 };
-	WP_SaberParseParm(saberName, "numBlades", numBladesString);
+	WP_SaberParseParm(saber_name, "numBlades", numBladesString);
 	int numBlades = atoi(numBladesString);
 	if (numBlades < 1)
 	{
@@ -193,12 +193,12 @@ int UI_saber_numBladesForSaber(const char* saberName)
 	return numBlades;
 }
 
-qboolean UI_SaberShouldDrawBlade(const char* saberName, int blade_num)
+qboolean UI_SaberShouldDrawBlade(const char* saber_name, int blade_num)
 {
 	int bladeStyle2Start = 0, noBlade = 0;
 	char	bladeStyle2StartString[8] = { 0 };
 	char	noBladeString[8] = { 0 };
-	WP_SaberParseParm(saberName, "bladeStyle2Start", bladeStyle2StartString);
+	WP_SaberParseParm(saber_name, "bladeStyle2Start", bladeStyle2StartString);
 	if (bladeStyle2StartString[0])
 	{
 		bladeStyle2Start = atoi(bladeStyle2StartString);
@@ -206,7 +206,7 @@ qboolean UI_SaberShouldDrawBlade(const char* saberName, int blade_num)
 	if (bladeStyle2Start
 		&& blade_num >= bladeStyle2Start)
 	{//use second blade style
-		WP_SaberParseParm(saberName, "noBlade2", noBladeString);
+		WP_SaberParseParm(saber_name, "noBlade2", noBladeString);
 		if (noBladeString[0])
 		{
 			noBlade = atoi(noBladeString);
@@ -214,7 +214,7 @@ qboolean UI_SaberShouldDrawBlade(const char* saberName, int blade_num)
 	}
 	else
 	{//use first blade style
-		WP_SaberParseParm(saberName, "noBlade", noBladeString);
+		WP_SaberParseParm(saber_name, "noBlade", noBladeString);
 		if (noBladeString[0])
 		{
 			noBlade = atoi(noBladeString);
@@ -223,10 +223,10 @@ qboolean UI_SaberShouldDrawBlade(const char* saberName, int blade_num)
 	return noBlade == 0;
 }
 
-qboolean UI_IsSaberTwoHanded(const char* saberName)
+qboolean UI_IsSaberTwoHanded(const char* saber_name)
 {
 	char	twoHandedString[8] = { 0 };
-	WP_SaberParseParm(saberName, "twoHanded", twoHandedString);
+	WP_SaberParseParm(saber_name, "twoHanded", twoHandedString);
 	if (!twoHandedString[0])
 	{//not defined defaults to "no"
 		return qfalse;
@@ -235,11 +235,11 @@ qboolean UI_IsSaberTwoHanded(const char* saberName)
 	return twoHanded != 0;
 }
 
-float UI_SaberBladeLengthForSaber(const char* saberName, int blade_num)
+float UI_SaberBladeLengthForSaber(const char* saber_name, int blade_num)
 {
 	char	lengthString[8] = { 0 };
 	float	length = 40.0f;
-	WP_SaberParseParm(saberName, "saberLength", lengthString);
+	WP_SaberParseParm(saber_name, "saberLength", lengthString);
 	if (lengthString[0])
 	{
 		length = atof(lengthString);
@@ -249,7 +249,7 @@ float UI_SaberBladeLengthForSaber(const char* saberName, int blade_num)
 		}
 	}
 
-	WP_SaberParseParm(saberName, va("saberLength%d", blade_num + 1), lengthString);
+	WP_SaberParseParm(saber_name, va("saberLength%d", blade_num + 1), lengthString);
 	if (lengthString[0])
 	{
 		length = atof(lengthString);
@@ -262,11 +262,11 @@ float UI_SaberBladeLengthForSaber(const char* saberName, int blade_num)
 	return length;
 }
 
-float UI_SaberBladeRadiusForSaber(const char* saberName, int blade_num)
+float UI_SaberBladeRadiusForSaber(const char* saber_name, int blade_num)
 {
 	char	radiusString[8] = { 0 };
 	float	radius = 3.0f;
-	WP_SaberParseParm(saberName, "saberRadius", radiusString);
+	WP_SaberParseParm(saber_name, "saberRadius", radiusString);
 	if (radiusString[0])
 	{
 		radius = atof(radiusString);
@@ -276,7 +276,7 @@ float UI_SaberBladeRadiusForSaber(const char* saberName, int blade_num)
 		}
 	}
 
-	WP_SaberParseParm(saberName, va("saberRadius%d", blade_num + 1), radiusString);
+	WP_SaberParseParm(saber_name, va("saberRadius%d", blade_num + 1), radiusString);
 	if (radiusString[0])
 	{
 		radius = atof(radiusString);
@@ -289,10 +289,10 @@ float UI_SaberBladeRadiusForSaber(const char* saberName, int blade_num)
 	return radius;
 }
 
-qboolean UI_SaberProperNameForSaber(const char* saberName, char* saberProperName)
+qboolean UI_SaberProperNameForSaber(const char* saber_name, char* saberProperName)
 {
 	char	stringedSaberName[1024];
-	const qboolean ret = WP_SaberParseParm(saberName, "name", stringedSaberName);
+	const qboolean ret = WP_SaberParseParm(saber_name, "name", stringedSaberName);
 	// if it's a stringed reference translate it
 	if (ret && stringedSaberName[0] == '@')
 	{
@@ -307,10 +307,10 @@ qboolean UI_SaberProperNameForSaber(const char* saberName, char* saberProperName
 	return ret;
 }
 
-qboolean UI_SaberValidForPlayerInMP(const char* saberName)
+qboolean UI_SaberValidForPlayerInMP(const char* saber_name)
 {
 	char allowed[8] = { 0 };
-	if (!WP_SaberParseParm(saberName, "notInMP", allowed))
+	if (!WP_SaberParseParm(saber_name, "notInMP", allowed))
 	{//not defined, default is yes
 		return qtrue;
 	}
@@ -2013,7 +2013,7 @@ void UI_DoCustomSaber(vec3_t origin, vec3_t dir, float length, float lengthMax, 
 	}
 }
 
-void UI_SaberDrawBlade(itemDef_t* item, const char* saberName, int saberModel, saberType_t saberType, vec3_t origin, vec3_t angles, int blade_num)
+void UI_SaberDrawBlade(itemDef_t* item, const char* saber_name, int saberModel, saberType_t saberType, vec3_t origin, vec3_t angles, int blade_num)
 {
 	char bladeColorString[MAX_QPATH];
 	vec3_t	bladeOrigin = { 0 };
@@ -2042,8 +2042,8 @@ void UI_SaberDrawBlade(itemDef_t* item, const char* saberName, int saberModel, s
 
 	const saber_colors_t bladeColor = TranslateSaberColor(bladeColorString);
 
-	const float bladeLength = UI_SaberBladeLengthForSaber(saberName, blade_num);
-	const float bladeRadius = UI_SaberBladeRadiusForSaber(saberName, blade_num);
+	const float bladeLength = UI_SaberBladeLengthForSaber(saber_name, blade_num);
+	const float bladeRadius = UI_SaberBladeRadiusForSaber(saber_name, blade_num);
 
 	const char* tagName = va("*blade%d", blade_num + 1);
 	int bolt = trap->G2API_AddBolt(item->ghoul2, saberModel, tagName);

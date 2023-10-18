@@ -85,7 +85,7 @@ void CorpsePhysics(gentity_t* self)
 		GM_Dying(self);
 	}*/
 	//FIXME: match my pitch and roll for the slope of my groundPlane
-	if (self->client->ps.groundEntityNum != ENTITYNUM_NONE && !(self->s.eFlags & EF_DISINTEGRATION))
+	if (self->client->ps.groundentity_num != ENTITYNUM_NONE && !(self->s.eFlags & EF_DISINTEGRATION))
 	{
 		//on the ground
 		//FIXME: check 4 corners
@@ -282,10 +282,10 @@ void NPC_RemoveBody(gentity_t* ent)
 			}
 			//if ( self->enemy )
 			{
-				if (ent->client && ent->client->ps.saberEntityNum > 0 && ent->client->ps.saberEntityNum <
+				if (ent->client && ent->client->ps.saberentity_num > 0 && ent->client->ps.saberentity_num <
 					ENTITYNUM_WORLD)
 				{
-					gentity_t* saberent = &g_entities[ent->client->ps.saberEntityNum];
+					gentity_t* saberent = &g_entities[ent->client->ps.saberentity_num];
 					if (saberent)
 					{
 						G_FreeEntity(saberent);
@@ -530,7 +530,7 @@ static void DeadThink(void)
 	}
 
 	// If the player is on the ground and the resting position contents haven't been set yet...(BounceCount tracks the contents)
-	if (NPCS.NPC->bounceCount < 0 && NPCS.NPC->s.groundEntityNum >= 0)
+	if (NPCS.NPC->bounceCount < 0 && NPCS.NPC->s.groundentity_num >= 0)
 	{
 		// if client is in a nodrop area, make him/her nodraw
 		const int contents = NPCS.NPC->bounceCount = trap->PointContents(NPCS.NPC->r.currentOrigin, -1);
@@ -2168,7 +2168,7 @@ void NPC_Think(gentity_t* self)
 			&& NPCS.NPC->client->NPC_class == CLASS_ROCKETTROOPER
 			&& NPCS.NPC->client->ps.fd.forceGripBeingGripped > level.time
 			&& NPCS.NPC->client->ps.eFlags2 & EF2_FLYING
-			&& NPCS.NPC->client->ps.groundEntityNum == ENTITYNUM_NONE)
+			&& NPCS.NPC->client->ps.groundentity_num == ENTITYNUM_NONE)
 		{
 			//reduce velocity
 			VectorScale(NPCS.NPC->client->ps.velocity, 0.75f, NPCS.NPC->client->ps.velocity);

@@ -73,44 +73,44 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 // NOTENOTE Update this so that it is in sync.
 //item numbers (make sure they are in sync with bg_itemlist in bg_misc.c)
 //pickups
-#define MODELINDEX_ARMOR			1
-#define MODELINDEX_HEALTH			2
+#define model_index_ARMOR			1
+#define model_index_HEALTH			2
 //items
-#define MODELINDEX_SEEKER			3
-#define MODELINDEX_MEDPAC			4
-#define MODELINDEX_DATAPAD			5
-#define MODELINDEX_BINOCULARS		6
-#define MODELINDEX_SENTRY_GUN		7
-#define MODELINDEX_GOGGLES			8
+#define model_index_SEEKER			3
+#define model_index_MEDPAC			4
+#define model_index_DATAPAD			5
+#define model_index_BINOCULARS		6
+#define model_index_SENTRY_GUN		7
+#define model_index_GOGGLES			8
 //weapons
-#define MODELINDEX_STUN_BATON		9
-#define MODELINDEX_SABER			10
-#define MODELINDEX_BRYAR_PISTOL		11
-#define MODELINDEX_BLASTER			12
-#define MODELINDEX_DISRUPTOR		13
-#define MODELINDEX_BOWCASTER		14
-#define MODELINDEX_REPEATER			15
-#define MODELINDEX_DEMP2			16
-#define MODELINDEX_FLECHETTE		17
-#define MODELINDEX_ROCKET_LAUNCHER	18
-#define MODELINDEX_THERMAL			19
-#define MODELINDEX_TRIP_MINE		20
-#define MODELINDEX_DET_PACK			21
+#define model_index_STUN_BATON		9
+#define model_index_SABER			10
+#define model_index_BRYAR_PISTOL		11
+#define model_index_BLASTER			12
+#define model_index_DISRUPTOR		13
+#define model_index_BOWCASTER		14
+#define model_index_REPEATER			15
+#define model_index_DEMP2			16
+#define model_index_FLECHETTE		17
+#define model_index_ROCKET_LAUNCHER	18
+#define model_index_THERMAL			19
+#define model_index_TRIP_MINE		20
+#define model_index_DET_PACK			21
 //ammo
-#define MODELINDEX_AMMO_FORCE		22
-#define MODELINDEX_AMMO_BLASTER		23
-#define MODELINDEX_AMMO_BOLTS		24
-#define MODELINDEX_AMMO_ROCKETS		25
+#define model_index_AMMO_FORCE		22
+#define model_index_AMMO_BLASTER		23
+#define model_index_AMMO_BOLTS		24
+#define model_index_AMMO_ROCKETS		25
 //powerups
-#define MODELINDEX_REDFLAG			26
-#define MODELINDEX_BLUEFLAG			27
-#define MODELINDEX_SCOUT			28
-#define MODELINDEX_GUARD			29
-#define MODELINDEX_DOUBLER			30
-#define MODELINDEX_AMMOREGEN		31
-#define MODELINDEX_NEUTRALFLAG		32
-#define MODELINDEX_REDCUBE			33
-#define MODELINDEX_BLUECUBE			34
+#define model_index_REDFLAG			26
+#define model_index_BLUEFLAG			27
+#define model_index_SCOUT			28
+#define model_index_GUARD			29
+#define model_index_DOUBLER			30
+#define model_index_AMMOREGEN		31
+#define model_index_NEUTRALFLAG		32
+#define model_index_REDCUBE			33
+#define model_index_BLUECUBE			34
 
 //
 #define weapon_index_STUN_BATON		1

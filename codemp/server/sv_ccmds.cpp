@@ -1884,14 +1884,14 @@ static int SV_FindLeafFolders(const char* baseFolder, char* result, const int ma
 	int resultCount = 0;
 	const int numFiles = FS_GetFileList(baseFolder, "/", fileList, MAX_OSPATH * maxResults);
 
-	char* fileName = fileList;
+	char* file_name = fileList;
 	for (int i = 0; i < numFiles; i++)
 	{
-		if (Q_stricmp(fileName, ".") && Q_stricmp(fileName, ".."))
+		if (Q_stricmp(file_name, ".") && Q_stricmp(file_name, ".."))
 		{
 			char fullFolder[MAX_OSPATH];
 			char* nextResult = nullptr;
-			Com_sprintf(fullFolder, sizeof fullFolder, "%s/%s", baseFolder, fileName);
+			Com_sprintf(fullFolder, sizeof fullFolder, "%s/%s", baseFolder, file_name);
 			if (result != nullptr)
 			{
 				nextResult = &result[maxFolderLength * resultCount];
@@ -1916,7 +1916,7 @@ static int SV_FindLeafFolders(const char* baseFolder, char* result, const int ma
 				}
 			}
 		}
-		fileName += strlen(fileName) + 1;
+		file_name += strlen(file_name) + 1;
 	}
 
 	Z_Free(fileList);

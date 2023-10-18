@@ -147,8 +147,8 @@ void turretG2_set_models(gentity_t* self, const qboolean dying)
 	{
 		if (!(self->spawnflags & SPF_TURRETG2_TURBO))
 		{
-			self->s.modelindex = G_ModelIndex(name2);
-			self->s.modelindex2 = G_ModelIndex(name);
+			self->s.model_index = G_model_index(name2);
+			self->s.model_index2 = G_model_index(name);
 		}
 
 		trap->G2API_RemoveGhoul2Model(&self->ghoul2, 0);
@@ -157,9 +157,9 @@ void turretG2_set_models(gentity_t* self, const qboolean dying)
 		/*
 		trap->G2API_InitGhoul2Model( &self->ghoul2,
 									name2,
-									0, //base->s.modelindex,
+									0, //base->s.model_index,
 									//note, this is not the same kind of index - this one's referring to the actual
-									//index of the model in the g2 instance, whereas modelindex is the index of a
+									//index of the model in the g2 instance, whereas model_index is the index of a
 									//configstring -rww
 									0,
 									0,
@@ -171,14 +171,14 @@ void turretG2_set_models(gentity_t* self, const qboolean dying)
 	{
 		if (!(self->spawnflags & SPF_TURRETG2_TURBO))
 		{
-			self->s.modelindex = G_ModelIndex(name);
-			self->s.modelindex2 = G_ModelIndex(name2);
+			self->s.model_index = G_model_index(name);
+			self->s.model_index2 = G_model_index(name2);
 			//set the new onw
 			trap->G2API_InitGhoul2Model(&self->ghoul2,
 				name,
-				0, //base->s.modelindex,
+				0, //base->s.model_index,
 				//note, this is not the same kind of index - this one's referring to the actual
-				//index of the model in the g2 instance, whereas modelindex is the index of a
+				//index of the model in the g2 instance, whereas model_index is the index of a
 				//configstring -rww
 				0,
 				0,
@@ -187,13 +187,13 @@ void turretG2_set_models(gentity_t* self, const qboolean dying)
 		}
 		else
 		{
-			self->s.modelindex = G_ModelIndex(name3);
+			self->s.model_index = G_model_index(name3);
 			//set the new onw
 			trap->G2API_InitGhoul2Model(&self->ghoul2,
 				name3,
-				0, //base->s.modelindex,
+				0, //base->s.model_index,
 				//note, this is not the same kind of index - this one's referring to the actual
-				//index of the model in the g2 instance, whereas modelindex is the index of a
+				//index of the model in the g2 instance, whereas model_index is the index of a
 				//configstring -rww
 				0,
 				0,
@@ -310,7 +310,7 @@ void turretG2_die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, in
 
 	self->s.weapon = 0; // crosshair code uses this to mark crosshair red
 
-	if (self->s.modelindex2)
+	if (self->s.model_index2)
 	{
 		// switch to damage model if we should
 		turretG2_set_models(self, qtrue);

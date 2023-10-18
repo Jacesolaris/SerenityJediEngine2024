@@ -512,7 +512,7 @@ typedef struct sharedRagDollUpdateParams_s {
 
 //rww - update parms for ik bone stuff
 typedef struct sharedIKMoveParams_s {
-	char boneName[512]; //name of bone
+	char bone_name[512]; //name of bone
 	vec3_t desiredOrigin; //world coordinate that this bone should be attempting to reach
 	vec3_t origin; //world coordinate of the entity who owns the g2 instance that owns the bone
 	float movementSpeed; //how fast the bone should move toward the destination
@@ -835,8 +835,8 @@ Ghoul2 Insert Start
 typedef struct CollisionRecord_s
 {
 	float		mDistance;
-	int			mEntityNum;
-	int			mModelIndex;
+	int			mentity_num;
+	int			mmodel_index;
 	int			mPolyIndex;
 	int			mSurfaceIndex;
 	vec3_t		mCollisionPosition;
@@ -940,7 +940,7 @@ typedef enum {
 #define	GENTITYNUM_BITS		12 //10		// don't need to send any more //serenity does, got this from doom 3 code and it works hey hey
 #define	MAX_GENTITIES		(1<<GENTITYNUM_BITS)
 
-// entitynums are communicated with GENTITY_BITS, so any reserved
+// entity_nums are communicated with GENTITY_BITS, so any reserved
 // values thatare going to be communcated over the net need to
 // also be in this range
 #define	ENTITYNUM_NONE		(MAX_GENTITIES-1)
@@ -1013,7 +1013,7 @@ typedef struct forcedata_s {
 	float		forceJumpCharge;					//you're current forceJump charge-up level, increases the longer you hold the force jump button down
 	int			forceJumpSound;
 	int			forceJumpAddTime;
-	int			forceGripEntityNum;					//what entity I'm gripping
+	int			forceGripentity_num;					//what entity I'm gripping
 	int			forceGripDamageDebounceTime;		//debounce for grip damage
 	float		forceGripBeingGripped;				//if > level.time then client is in someone's grip
 	int			forceGripCripple;					//if != 0 then make it so this client can't move quickly (he's being gripped)
@@ -1137,7 +1137,7 @@ typedef struct playerState_s {
 
 	int			useTime;
 
-	int			groundEntityNum;// ENTITYNUM_NONE = in air
+	int			groundentity_num;// ENTITYNUM_NONE = in air
 
 	int			legsTimer;		// don't change low priority animations until this runs out
 	int			legsAnim;
@@ -1223,7 +1223,7 @@ typedef struct playerState_s {
 	int			saberLockHitIncrementTime; //so we don't add a hit per attack button press more than once per server frame
 	qboolean	saberLockAdvance; //do an advance (sent across net as 1 bit)
 
-	int			saberEntityNum;
+	int			saberentity_num;
 	float		saberEntityDist;
 	int			saberEntityState;
 	int			saberThrowDelay;
@@ -1300,7 +1300,7 @@ typedef struct playerState_s {
 	int         saberFatigueChainCount;
 	int			BlasterAttackChainCount;
 
-	int			saberHolstered;
+	int			saber_holstered;
 
 	int			forceAllowDeactivateTime;
 	int			lastKickedEntNum;
@@ -1781,7 +1781,7 @@ typedef struct addElectricityArgStruct_s {
 	int flags;
 } addElectricityArgStruct_t;
 
-// if entityState->solid == SOLID_BMODEL, modelindex is an inline model number
+// if entityState->solid == SOLID_BMODEL, model_index is an inline model number
 #define	SOLID_BMODEL	0xffffff
 
 typedef enum {
@@ -1847,10 +1847,10 @@ typedef struct entityState_s {
 
 	int		emplacedOwner;
 
-	int		otherEntityNum;	// shotgun sources, etc
-	int		otherEntityNum2;
+	int		otherentity_num;	// shotgun sources, etc
+	int		otherentity_num2;
 
-	int		groundEntityNum;	// ENTITYNUM_NONE = in air
+	int		groundentity_num;	// ENTITYNUM_NONE = in air
 
 	int		constantLight;	// r + (g<<8) + (b<<16) + (intensity<<24)
 	int		loopSound;		// constantly loop this sound
@@ -1860,16 +1860,16 @@ typedef struct entityState_s {
 
 	int		modelGhoul2;
 	int		g2radius;
-	int		modelindex;
-	int		modelindex2;
+	int		model_index;
+	int		model_index2;
 	int		client_num;		// 0 to (MAX_CLIENTS - 1), for players and corpses
 	int		frame;
 
 	qboolean	saberInFlight;
-	int			saberEntityNum;
+	int			saberentity_num;
 	int			saber_move;
 	int			forcePowersActive;
-	int			saberHolstered;//sent in only only 2 bits - should be 0, 1 or 2
+	int			saber_holstered;//sent in only only 2 bits - should be 0, 1 or 2
 
 	qboolean	isJediMaster;
 

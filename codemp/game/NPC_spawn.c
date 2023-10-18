@@ -129,30 +129,30 @@ int wp_set_saber_model(gclient_t* client, class_t npcClass)
 	//		client->ps.saber[0].model = DEFAULT_SABER_MODEL;
 	//		break;
 	//	}
-	//	return (G_ModelIndex(client->ps.saber[0].model));
+	//	return (G_model_index(client->ps.saber[0].model));
 	//}
 	//else
 	//{
 	//	switch (npcClass)
 	//	{
 	//	case CLASS_DESANN://Desann
-	//		return (G_ModelIndex("models/weapons2/saber_desann/saber_w.glm"));
+	//		return (G_model_index("models/weapons2/saber_desann/saber_w.glm"));
 	//		break;
 	//	case CLASS_VADER://Desann
-	//		return (G_ModelIndex("models/weapons2/saber_VaderEp5/saber_w.glm"));
+	//		return (G_model_index("models/weapons2/saber_VaderEp5/saber_w.glm"));
 	//		break;
 	//	case CLASS_LUKE://Luke
-	//		return (G_ModelIndex("models/weapons2/saber_luke/saber_w.glm"));
+	//		return (G_model_index("models/weapons2/saber_luke/saber_w.glm"));
 	//		break;
 	//	case CLASS_YODA://Luke
-	//		return (G_ModelIndex("models/weapons2/saber_yoda/saber_w.glm"));
+	//		return (G_model_index("models/weapons2/saber_yoda/saber_w.glm"));
 	//		break;
 	//	case CLASS_PLAYER://Kyle NPC and player
 	//	case CLASS_KYLE://Kyle NPC and player
-	//		return (G_ModelIndex(DEFAULT_SABER_MODEL));
+	//		return (G_model_index(DEFAULT_SABER_MODEL));
 	//		break;
 	//	default://reborn and tavion and everyone else
-	//		return (G_ModelIndex(DEFAULT_SABER_MODEL));
+	//		return (G_model_index(DEFAULT_SABER_MODEL));
 	//		break;
 	//	}
 	//}
@@ -446,7 +446,7 @@ void NPC_SetMiscDefaultData(gentity_t* ent)
 	{
 		//if I'm equipped with a saber, initialize it (them)
 		wp_saber_init_blade_data(ent);
-		ent->client->ps.saberHolstered = 2;
+		ent->client->ps.saber_holstered = 2;
 		Jedi_ClearTimers(ent);
 		ent->client->ps.fd.blockPoints = BLOCK_POINTS_MAX;
 	}
@@ -1374,7 +1374,7 @@ void NPC_Begin(gentity_t* ent)
 		}
 	}
 
-	ent->s.groundEntityNum = ENTITYNUM_NONE;
+	ent->s.groundentity_num = ENTITYNUM_NONE;
 	ent->mass = 10;
 	ent->takedamage = qtrue;
 
@@ -1609,7 +1609,7 @@ void NPC_Begin(gentity_t* ent)
 	//_VectorCopy( client->pers.cmd_angles, ucmd.angles );
 	VectorCopyM(client->pers.cmd.angles, ucmd.angles);
 
-	ent->client->ps.groundEntityNum = ENTITYNUM_NONE;
+	ent->client->ps.groundentity_num = ENTITYNUM_NONE;
 
 	if (ent->NPC->aiFlags & NPCAI_MATCHPLAYERWEAPON)
 	{
@@ -1679,7 +1679,7 @@ void NPC_Begin(gentity_t* ent)
 					{
 						droidEnt->client->ps.m_iVehicleNum =
 							droidEnt->s.m_iVehicleNum =
-							//droidEnt->s.otherEntityNum2 =
+							//droidEnt->s.otherentity_num2 =
 							droidEnt->s.owner =
 							droidEnt->r.ownerNum = ent->s.number;
 						ent->m_pVehicle->m_pDroidUnit = (bgEntity_t*)droidEnt;
@@ -2670,7 +2670,7 @@ qboolean NPC_VehiclePrecache(const gentity_t* spawner)
 		return qfalse;
 	}
 
-	G_ModelIndex(va("$%s", spawner->NPC_type)); //make sure the thing is frickin precached
+	G_model_index(va("$%s", spawner->NPC_type)); //make sure the thing is frickin precached
 	//now cache his model/skin/anim config
 	const vehicleInfo_t* pVehInfo = &g_vehicleInfo[iVehIndex];
 	if (pVehInfo->model && pVehInfo->model[0])

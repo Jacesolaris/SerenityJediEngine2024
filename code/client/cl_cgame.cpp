@@ -138,19 +138,19 @@ CL_GetParseEntityState
 ====================
 */
 /*
-qboolean	CL_GetParseEntityState( int parseEntityNumber, entityState_t *state ) {
+qboolean	CL_GetParseEntityState( int parseentity_number, entityState_t *state ) {
 	// can't return anything that hasn't been parsed yet
-	if ( parseEntityNumber >= cl.parseEntitiesNum ) {
+	if ( parseentity_number >= cl.parseEntitiesNum ) {
 		Com_Error( ERR_DROP, "CL_GetParseEntityState: %i >= %i",
-			parseEntityNumber, cl.parseEntitiesNum );
+			parseentity_number, cl.parseEntitiesNum );
 	}
 
 	// can't return anything that has been overwritten in the circular buffer
-	if ( parseEntityNumber <= cl.parseEntitiesNum - MAX_PARSE_ENTITIES ) {
+	if ( parseentity_number <= cl.parseEntitiesNum - MAX_PARSE_ENTITIES ) {
 		return qfalse;
 	}
 
-	*state = cl.parseEntities[ parseEntityNumber & ( MAX_PARSE_ENTITIES - 1 ) ];
+	*state = cl.parseEntities[ parseentity_number & ( MAX_PARSE_ENTITIES - 1 ) ];
 	return qtrue;
 }
 */

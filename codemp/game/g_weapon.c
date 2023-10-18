@@ -615,7 +615,7 @@ void WP_FireTurboLaserMissile(gentity_t* ent, vec3_t start, vec3_t dir)
 	gentity_t* missile = create_missile(start, dir, velocity, 10000, ent, qfalse);
 
 	//use a custom shot effect
-	missile->s.otherEntityNum2 = ent->genericValue14;
+	missile->s.otherentity_num2 = ent->genericValue14;
 	//use a custom impact effect
 	missile->s.emplacedOwner = ent->genericValue15;
 
@@ -1223,7 +1223,7 @@ void WP_DisruptorAltFire(gentity_t* ent)
 		{
 			if (trace_ent->takedamage && trace_ent->client)
 			{
-				tent->s.otherEntityNum = trace_ent->s.number;
+				tent->s.otherentity_num = trace_ent->s.number;
 
 				// Create a simple impact type mark
 				tent = G_TempEntity(tr.endpos, EV_MISSILE_MISS);
@@ -2343,7 +2343,7 @@ void rocketThink(gentity_t* ent)
 		ent->random *= 0.9f;
 
 		if (ent->enemy->client
-			&& ent->enemy->client->ps.groundEntityNum != ENTITYNUM_NONE)
+			&& ent->enemy->client->ps.groundentity_num != ENTITYNUM_NONE)
 		{
 			//tracking a client who's on the ground, aim at the floor...?
 			// Try to crash into the ground if we get close enough to do splash damage
@@ -2394,7 +2394,7 @@ static void WP_FireRocket(gentity_t* ent, const qboolean alt_fire)
 
 		//Shove us backwards for half a second
 		VectorMA(ent->client->ps.velocity, -200, forward, ent->client->ps.velocity);
-		ent->client->ps.groundEntityNum = ENTITYNUM_NONE;
+		ent->client->ps.groundentity_num = ENTITYNUM_NONE;
 
 		if (ent->client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_HALF)
 		{
@@ -3217,7 +3217,7 @@ void CreateLaserTrap(gentity_t* laser_trap, vec3_t start, gentity_t* owner)
 	VectorSet(laser_trap->r.maxs, LT_SIZE, LT_SIZE, LT_SIZE);
 	laser_trap->clipmask = MASK_SHOT;
 	laser_trap->s.solid = 2;
-	laser_trap->s.modelindex = G_ModelIndex("models/weapons2/laser_trap/laser_trap_w.glm");
+	laser_trap->s.model_index = G_model_index("models/weapons2/laser_trap/laser_trap_w.glm");
 	laser_trap->s.modelGhoul2 = 1;
 	laser_trap->s.g2radius = 40;
 
@@ -3374,7 +3374,7 @@ void charge_stick(gentity_t* self, gentity_t* other, trace_t* trace)
 		&& trace->plane.normal[2] > 0)
 	{
 		//stick to it?
-		self->s.groundEntityNum = other->s.number;
+		self->s.groundentity_num = other->s.number;
 	}
 	else if (other && other->s.number < ENTITYNUM_WORLD &&
 		(other->client || !other->s.weapon))
@@ -3525,7 +3525,7 @@ void drop_charge(gentity_t* self, vec3_t start, vec3_t dir)
 	bolt->s.eType = ET_GENERAL;
 	bolt->s.g2radius = 100;
 	bolt->s.modelGhoul2 = 1;
-	bolt->s.modelindex = G_ModelIndex("models/weapons2/detpack/det_pack_proj.glm");
+	bolt->s.model_index = G_model_index("models/weapons2/detpack/det_pack_proj.glm");
 
 	bolt->parent = self;
 	bolt->r.ownerNum = self->s.number;
@@ -3729,7 +3729,7 @@ static void WP_FireConcussionAlt(gentity_t* ent)
 
 	//Shove us backwards for half a second
 	VectorMA(ent->client->ps.velocity, -200, forward, ent->client->ps.velocity);
-	ent->client->ps.groundEntityNum = ENTITYNUM_NONE;
+	ent->client->ps.groundentity_num = ENTITYNUM_NONE;
 
 	if (ent->client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_HALF)
 	{
@@ -4645,7 +4645,7 @@ gentity_t* WP_FireVehicleWeapon(gentity_t* ent, vec3_t start, vec3_t dir, const 
 			}
 			missile->nextthink = level.time + veh_weapon->iLifeTime;
 		}
-		missile->s.otherEntityNum2 = veh_weapon - &g_vehWeaponInfo[0];
+		missile->s.otherentity_num2 = veh_weapon - &g_vehWeaponInfo[0];
 		missile->s.eFlags |= EF_JETPACK_ACTIVE;
 		//homing
 		if (veh_weapon->fHoming)
@@ -4704,7 +4704,7 @@ gentity_t* WP_FireVehicleWeapon(gentity_t* ent, vec3_t start, vec3_t dir, const 
 						if (missile->enemy->s.NPC_class == CLASS_VEHICLE)
 						{
 							//let vehicle know we've locked on to them
-							missile->s.otherEntityNum = missile->enemy->s.number;
+							missile->s.otherentity_num = missile->enemy->s.number;
 						}
 					}
 				}
@@ -5660,7 +5660,7 @@ void FireWeapon(gentity_t* ent, const qboolean alt_fire)
 	// We should probably just use this as a default behavior, in special cases, just set alert to false.
 	if (alert > 0)
 	{
-		if (ent->client->ps.groundEntityNum == ENTITYNUM_WORLD //FIXME: check for sand contents type?
+		if (ent->client->ps.groundentity_num == ENTITYNUM_WORLD //FIXME: check for sand contents type?
 			&& ent->s.weapon != WP_STUN_BATON
 			&& ent->s.weapon != WP_MELEE
 			//&& ent->s.weapon != WP_TUSKEN_STAFF //RAFIXME - Impliment?
@@ -5985,7 +5985,7 @@ void emplaced_gun_update(gentity_t* self)
 		if (self->activator->client->pers.cmd.buttons & BUTTON_USE && !self->genericValue1)
 		{
 			self->activator->client->ps.emplacedIndex = 0;
-			self->activator->client->ps.saberHolstered = 0;
+			self->activator->client->ps.saber_holstered = 0;
 			self->nextthink = level.time + 50;
 			return;
 		}
@@ -6005,7 +6005,7 @@ void emplaced_gun_update(gentity_t* self)
 		self->activator->r.ownerNum = ENTITYNUM_NONE;
 		self->activator->client->ps.emplacedTime = level.time + 1000;
 		self->activator->client->ps.emplacedIndex = 0;
-		self->activator->client->ps.saberHolstered = 0;
+		self->activator->client->ps.saber_holstered = 0;
 		self->activator = NULL;
 
 		self->s.activeForcePass = 0;
@@ -6096,7 +6096,7 @@ void SP_emplaced_gun(gentity_t* ent)
 
 	G_SpawnFloat("constraint", "60", &ent->s.origin2[0]);
 
-	ent->s.modelindex = G_ModelIndex((char*)name);
+	ent->s.model_index = G_model_index((char*)name);
 	ent->s.modelGhoul2 = 1;
 	ent->s.g2radius = 110;
 
@@ -6181,7 +6181,7 @@ void SP_emplaced_eweb(gentity_t* ent)
 
 	G_SpawnFloat("constraint", "60", &ent->s.origin2[0]);
 
-	ent->s.modelindex = G_ModelIndex((char*)name);
+	ent->s.model_index = G_model_index((char*)name);
 	ent->s.modelGhoul2 = 1;
 	ent->s.g2radius = 110;
 

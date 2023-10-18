@@ -36,7 +36,7 @@ extern qboolean G_ClearViewEntity(gentity_t* ent);
 extern void G_Knockdown(gentity_t* self, gentity_t* attacker, const vec3_t push_dir, float strength,
 	qboolean break_saber_lock);
 
-extern void WP_SetSaber(gentity_t* ent, int saber_num, const char* saberName);
+extern void WP_SetSaber(gentity_t* ent, int saber_num, const char* saber_name);
 extern void WP_RemoveSaber(gentity_t* ent, int saber_num);
 extern saber_colors_t TranslateSaberColor(const char* name);
 extern qboolean WP_SaberBladeUseSecondBladeStyle(const saberInfo_t* saber, int blade_num);
@@ -602,11 +602,11 @@ void Svcmd_SaberAttackCycle_f()
 		&& self->client->ps.saber[1].Active())
 	{
 		allowedStyles |= 1 << SS_DUAL;
+
 		for (int styleNum = SS_NONE + 1; styleNum < SS_NUM_SABER_STYLES; styleNum++)
 		{
 			if (styleNum == SS_TAVION
-				&& (self->client->ps.saber[0].stylesLearned & 1 << SS_TAVION || self->client->ps.saber[1].stylesLearned
-					& 1 << SS_TAVION) //was given this style by one of my sabers
+				&& (self->client->ps.saber[0].stylesLearned & 1 << SS_TAVION || self->client->ps.saber[1].stylesLearned & 1 << SS_TAVION) //was given this style by one of my sabers
 				&& !(self->client->ps.saber[0].stylesForbidden & 1 << SS_TAVION)
 				&& !(self->client->ps.saber[1].stylesForbidden & 1 << SS_TAVION))
 			{
@@ -1500,7 +1500,7 @@ static void Svcmd_Grab_f()
 
 static void Svcmd_Knockdown_f()
 {
-	if (g_entities[0].s.groundEntityNum == ENTITYNUM_NONE)
+	if (g_entities[0].s.groundentity_num == ENTITYNUM_NONE)
 	{
 	}
 	else
@@ -1511,7 +1511,7 @@ static void Svcmd_Knockdown_f()
 
 static void Svcmd_PlayerModel_f()
 {
-	if (g_entities[0].s.groundEntityNum == ENTITYNUM_NONE && PM_InLedgeMove(g_entities[0].client->ps.legsAnim))
+	if (g_entities[0].s.groundentity_num == ENTITYNUM_NONE && PM_InLedgeMove(g_entities[0].client->ps.legsAnim))
 	{
 		g_entities[0].client->ps.pm_flags &= ~PMF_STUCK_TO_WALL;
 		g_entities[0].client->ps.legsAnimTimer = 0;

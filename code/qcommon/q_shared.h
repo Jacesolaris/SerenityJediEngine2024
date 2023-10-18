@@ -244,6 +244,7 @@ constexpr auto LS_NUM_STYLES = 32;
 #define	LS_SWITCH_START			(LS_STYLES_START+LS_NUM_STYLES)
 constexpr auto LS_NUM_SWITCH = 32;
 #define MAX_LIGHT_STYLES		64
+#define	LS_LSNONE			0xff
 
 // print levels from renderer (FIXME: set up for game / cgame?)
 using printParm_t = enum
@@ -390,7 +391,7 @@ public:
 	~COM_ParseSession() { COM_EndParseSession(); };
 };
 
-int COM_GetCurrentParseLine();
+int COM_GetCurrentParseLine(void);
 char* COM_Parse(const char** data_p);
 char* COM_ParseExt(const char** data_p, qboolean allow_line_breaks);
 int COM_Compress(char* data_p);
@@ -404,6 +405,7 @@ qboolean COM_ParseVec4(const char** buffer, vec4_t* c);
 void COM_MatchToken(char** buf_p, char* match);
 
 int Q_parseSaberColor(const char* p, float* color);
+qboolean SkipBracedSection(const char** program, int depth);
 void SkipBracedSection(const char** program);
 void SkipRestOfLine(const char** data);
 
@@ -654,7 +656,7 @@ constexpr auto GENTITYNUM_BITS = 12;
 //10		// don't need to send any more //serenity does, got this from doom 3 code and it works hey hey;
 #define	MAX_GENTITIES		(1<<GENTITYNUM_BITS)
 
-// entitynums are communicated with GENTITY_BITS, so any reserved
+// entity_nums are communicated with GENTITY_BITS, so any reserved
 // values thatare going to be communcated over the net need to
 // also be in this range
 #define	ENTITYNUM_NONE		(MAX_GENTITIES-1)
@@ -1837,7 +1839,7 @@ public:
 	int delta_angles[3]; // add to command angles to get view direction
 	// changed by spawns, rotating objects, and teleporters
 
-	int groundEntityNum; // ENTITYNUM_NONE = in air
+	int groundentity_num; // ENTITYNUM_NONE = in air
 	int legsAnim; //
 	int legsAnimTimer; // don't change low priority animations on legs until this runs out
 	int torsoAnim; //
@@ -2097,7 +2099,7 @@ public:
 #ifdef JK2_MODE
 	float		saberLengthOld;
 #endif
-	int saberEntityNum;
+	int saberentity_num;
 	float saberEntityDist;
 	int saberThrowTime;
 	int saberEntityState;
@@ -2142,11 +2144,11 @@ public:
 	float forceJumpZStart; //So when you land, you don't get hurt as much
 	float forceJumpCharge;
 	//you're current forceJump charge-up level, increases the longer you hold the force jump button down
-	int forceGripEntityNum; //what entity I'm gripping
+	int forceGripentity_num; //what entity I'm gripping
 	vec3_t forceGripOrg; //where the gripped ent should be lifted to
 
 #ifndef JK2_MODE
-	int forceDrainEntityNum; //what entity I'm draining
+	int forceDrainentity_num; //what entity I'm draining
 	vec3_t forceDrainOrg; //where the drained ent should be lifted to
 #endif // !JK2_MODE
 
@@ -2281,7 +2283,7 @@ public:
 		saved_game.write<int32_t>(friction);
 		saved_game.write<int32_t>(speed);
 		saved_game.write<int32_t>(delta_angles);
-		saved_game.write<int32_t>(groundEntityNum);
+		saved_game.write<int32_t>(groundentity_num);
 		saved_game.write<int32_t>(legsAnim);
 		saved_game.write<int32_t>(legsAnimTimer);
 		saved_game.write<int32_t>(torsoAnim);
@@ -2357,7 +2359,7 @@ public:
 		saved_game.write<float>(saberLengthOld);
 #endif // JK2_MODE
 
-		saved_game.write<int32_t>(saberEntityNum);
+		saved_game.write<int32_t>(saberentity_num);
 		saved_game.write<float>(saberEntityDist);
 		saved_game.write<int32_t>(saberThrowTime);
 		saved_game.write<int32_t>(saberEntityState);
@@ -2401,11 +2403,11 @@ public:
 		saved_game.write<int32_t>(forcePowerLevel);
 		saved_game.write<float>(forceJumpZStart);
 		saved_game.write<float>(forceJumpCharge);
-		saved_game.write<int32_t>(forceGripEntityNum);
+		saved_game.write<int32_t>(forceGripentity_num);
 		saved_game.write<float>(forceGripOrg);
 
 #ifndef JK2_MODE
-		saved_game.write<int32_t>(forceDrainEntityNum);
+		saved_game.write<int32_t>(forceDrainentity_num);
 		saved_game.write<float>(forceDrainOrg);
 #endif // !JK2_MODE
 
@@ -2537,7 +2539,7 @@ public:
 		saved_game.read<int32_t>(friction);
 		saved_game.read<int32_t>(speed);
 		saved_game.read<int32_t>(delta_angles);
-		saved_game.read<int32_t>(groundEntityNum);
+		saved_game.read<int32_t>(groundentity_num);
 		saved_game.read<int32_t>(legsAnim);
 		saved_game.read<int32_t>(legsAnimTimer);
 		saved_game.read<int32_t>(torsoAnim);
@@ -2613,7 +2615,7 @@ public:
 		saved_game.read<float>(saberLengthOld);
 #endif // JK2_MODE
 
-		saved_game.read<int32_t>(saberEntityNum);
+		saved_game.read<int32_t>(saberentity_num);
 		saved_game.read<float>(saberEntityDist);
 		saved_game.read<int32_t>(saberThrowTime);
 		saved_game.read<int32_t>(saberEntityState);
@@ -2657,11 +2659,11 @@ public:
 		saved_game.read<int32_t>(forcePowerLevel);
 		saved_game.read<float>(forceJumpZStart);
 		saved_game.read<float>(forceJumpCharge);
-		saved_game.read<int32_t>(forceGripEntityNum);
+		saved_game.read<int32_t>(forceGripentity_num);
 		saved_game.read<float>(forceGripOrg);
 
 #ifndef JK2_MODE
-		saved_game.read<int32_t>(forceDrainEntityNum);
+		saved_game.read<int32_t>(forceDrainentity_num);
 		saved_game.read<float>(forceDrainOrg);
 #endif // !JK2_MODE
 
@@ -2970,10 +2972,10 @@ using entityState_t = struct entityState_s
 	vec3_t angles;
 	vec3_t angles2;
 
-	int otherEntityNum; // shotgun sources, etc
-	int otherEntityNum2;
+	int otherentity_num; // shotgun sources, etc
+	int otherentity_num2;
 
-	int groundEntityNum; // -1 = in air
+	int groundentity_num; // -1 = in air
 
 	int constantLight; // r + (g<<8) + (b<<16) + (intensity<<24)
 	int loopSound; // constantly loop this sound
@@ -3114,9 +3116,9 @@ using entityState_t = struct entityState_s
 		saved_game.write<float>(origin2);
 		saved_game.write<float>(angles);
 		saved_game.write<float>(angles2);
-		saved_game.write<int32_t>(otherEntityNum);
-		saved_game.write<int32_t>(otherEntityNum2);
-		saved_game.write<int32_t>(groundEntityNum);
+		saved_game.write<int32_t>(otherentity_num);
+		saved_game.write<int32_t>(otherentity_num2);
+		saved_game.write<int32_t>(groundentity_num);
 		saved_game.write<int32_t>(constantLight);
 		saved_game.write<int32_t>(loopSound);
 		saved_game.write<int32_t>(modelindex);
@@ -3230,9 +3232,9 @@ using entityState_t = struct entityState_s
 		saved_game.read<float>(origin2);
 		saved_game.read<float>(angles);
 		saved_game.read<float>(angles2);
-		saved_game.read<int32_t>(otherEntityNum);
-		saved_game.read<int32_t>(otherEntityNum2);
-		saved_game.read<int32_t>(groundEntityNum);
+		saved_game.read<int32_t>(otherentity_num);
+		saved_game.read<int32_t>(otherentity_num2);
+		saved_game.read<int32_t>(groundentity_num);
 		saved_game.read<int32_t>(constantLight);
 		saved_game.read<int32_t>(loopSound);
 		saved_game.read<int32_t>(modelindex);
@@ -3405,7 +3407,7 @@ using sharedRagDollUpdateParams_t = struct
 //rww - update parms for ik bone stuff
 using sharedIKMoveParams_t = struct
 {
-	char boneName[512]; //name of bone
+	char bone_name[512]; //name of bone
 	vec3_t desiredOrigin; //world coordinate that this bone should be attempting to reach
 	vec3_t origin; //world coordinate of the entity who owns the g2 instance that owns the bone
 	float movementSpeed; //how fast the bone should move toward the destination
@@ -3480,7 +3482,7 @@ Ghoul2 Insert End
 constexpr auto MAX_PARSEFILES = 16;
 using parseData_t = struct parseData_s
 {
-	char fileName[MAX_QPATH]; // Name of current file being read in
+	char file_name[MAX_QPATH]; // Name of current file being read in
 	int com_lines; // Number of lines read in
 	int com_tokenline;
 	const char* bufferStart; // Start address of buffer holding data that was read in

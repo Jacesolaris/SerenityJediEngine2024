@@ -626,7 +626,7 @@ void SV_ClipMoveToEntities(moveclip_t* clip)
 
 	if (clip->pass_entity_num != ENTITYNUM_NONE)
 	{
-		owner = SV_GentityNum(clip->pass_entity_num)->owner;
+		owner = SV_Gentity_num(clip->pass_entity_num)->owner;
 	}
 	else
 	{
@@ -778,7 +778,7 @@ void SV_ClipMoveToEntities(moveclip_t* clip)
 				// set our trace record size
 				for (z = 0; z < MAX_G2_COLLISIONS; z++)
 				{
-					if (clip->trace.G2CollisionMap[z].mEntityNum != -1)
+					if (clip->trace.G2CollisionMap[z].mentity_num != -1)
 					{
 						old_trace_rec_size++;
 					}
@@ -825,7 +825,7 @@ void SV_ClipMoveToEntities(moveclip_t* clip)
 
 				for (z = 0; z < MAX_G2_COLLISIONS; z++)
 				{
-					if (clip->trace.G2CollisionMap[z].mEntityNum != -1)
+					if (clip->trace.G2CollisionMap[z].mentity_num != -1)
 					{
 						new_trace_rec_size++;
 					}
@@ -840,7 +840,7 @@ void SV_ClipMoveToEntities(moveclip_t* clip)
 				{
 					for (z = 0; z < MAX_G2_COLLISIONS; z++)
 					{
-						if (clip->trace.G2CollisionMap[z].mEntityNum == touch->s.number)
+						if (clip->trace.G2CollisionMap[z].mentity_num == touch->s.number)
 						{
 							clip->trace.plane.normal[0] = clip->trace.G2CollisionMap[z].mCollisionNormal[0];
 							clip->trace.plane.normal[1] = clip->trace.G2CollisionMap[z].mCollisionNormal[1];

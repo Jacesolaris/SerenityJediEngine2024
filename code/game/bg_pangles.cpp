@@ -107,8 +107,8 @@ void BG_IK_MoveLimb(CGhoul2Info_v& ghoul2, const int bolt_index, const char* ani
 		VectorCopy(scale, ik_p.scale);
 
 		//base pose frames for the limb
-		ik_p.start_frame = anim->firstFrame + anim->numFrames;
-		ik_p.end_frame = anim->firstFrame + anim->numFrames;
+		ik_p.start_frame = anim->firstFrame + anim->num_frames;
+		ik_p.end_frame = anim->firstFrame + anim->num_frames;
 
 		//ikP.forceAnimOnBone = qfalse; //let it use existing anim if it's the same as this one.
 
@@ -202,7 +202,7 @@ void BG_IK_MoveLimb(CGhoul2Info_v& ghoul2, const int bolt_index, const char* ani
 		}
 		VectorCopy(origin, ik_m.origin); //our position in the world.
 
-		ik_m.boneName[0] = 0;
+		ik_m.bone_name[0] = 0;
 		if (gi.G2API_IKMove(ghoul2, time, &ik_m))
 		{
 			//now do the standard model animate stuff with ragdoll update params.
@@ -1529,7 +1529,7 @@ qboolean PM_AdjustAnglesForHeldByMonster(gentity_t* ent, const gentity_t* monste
 qboolean G_OkayToLean(const playerState_t* ps, const usercmd_t* cmd, const qboolean interrupt_okay)
 {
 	if ((ps->client_num < MAX_CLIENTS || G_ControlledByPlayer(&g_entities[ps->client_num])) //player
-		&& ps->groundEntityNum != ENTITYNUM_NONE //on ground
+		&& ps->groundentity_num != ENTITYNUM_NONE //on ground
 		&& (interrupt_okay //okay to interrupt a lean
 			&& !PM_CrouchAnim(ps->legsAnim)
 			&& PM_DodgeAnim(ps->torsoAnim)
@@ -1552,7 +1552,7 @@ qboolean G_OkayToLean(const playerState_t* ps, const usercmd_t* cmd, const qbool
 qboolean G_OkayToDoStandingBlock(const playerState_t* ps, const usercmd_t* cmd, const qboolean interrupt_okay)
 {
 	if ((ps->client_num < MAX_CLIENTS || G_ControlledByPlayer(&g_entities[ps->client_num])) //player
-		&& ps->groundEntityNum != ENTITYNUM_NONE //on ground
+		&& ps->groundentity_num != ENTITYNUM_NONE //on ground
 		&& (interrupt_okay //okay to interrupt a lean
 			&& PM_DodgeAnim(ps->torsoAnim)
 			|| PM_BlockAnim(ps->torsoAnim) || PM_BlockDualAnim(ps->torsoAnim) || PM_BlockStaffAnim(ps->torsoAnim)
@@ -1960,7 +1960,7 @@ void PM_UpdateViewAngles(int saber_anim_level, playerState_t* ps, usercmd_t* cmd
 				{
 					ps->torsoAnimTimer += extra_hold_time;
 				}
-				if (ps->groundEntityNum != ENTITYNUM_NONE && !cmd->upmove)
+				if (ps->groundentity_num != ENTITYNUM_NONE && !cmd->upmove)
 				{
 					NPC_SetAnim(gent, SETANIM_LEGS, anim, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 					ps->legsAnimTimer = ps->torsoAnimTimer;
@@ -2255,7 +2255,7 @@ void PM_UpdateViewAngles(int saber_anim_level, playerState_t* ps, usercmd_t* cmd
 					{
 						ps->torsoAnimTimer += extra_hold_time;
 					}
-					if (ps->groundEntityNum != ENTITYNUM_NONE && !cmd->upmove)
+					if (ps->groundentity_num != ENTITYNUM_NONE && !cmd->upmove)
 					{
 						NPC_SetAnim(gent, SETANIM_LEGS, anim, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 						ps->legsAnimTimer = ps->torsoAnimTimer;
@@ -2514,7 +2514,7 @@ void PM_UpdateViewAngles(int saber_anim_level, playerState_t* ps, usercmd_t* cmd
 				{
 					ps->torsoAnimTimer += extra_hold_time;
 				}
-				if (ps->groundEntityNum != ENTITYNUM_NONE && !cmd->upmove)
+				if (ps->groundentity_num != ENTITYNUM_NONE && !cmd->upmove)
 				{
 					NPC_SetAnim(gent, SETANIM_LEGS, anim, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 					ps->legsAnimTimer = ps->torsoAnimTimer;

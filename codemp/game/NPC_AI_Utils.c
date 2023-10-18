@@ -96,7 +96,7 @@ int AI_GetGroupSize2(gentity_t* ent, const int radius)
 
 extern int NAV_FindClosestWaypointForPoint(const gentity_t* ent, vec3_t point);
 
-int AI_ClosestGroupEntityNumToPoint(const AIGroupInfo_t* group, vec3_t point)
+int AI_ClosestGroupentity_numToPoint(const AIGroupInfo_t* group, vec3_t point)
 {
 	int best_cost = Q3_INFINITE;
 	int closest = ENTITYNUM_NONE;

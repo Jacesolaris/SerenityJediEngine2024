@@ -152,7 +152,7 @@ void SV_CreateBaseline()
 {
 	for (int entnum = 0; entnum < ge->num_entities; entnum++)
 	{
-		gentity_t* svent = SV_GentityNum(entnum);
+		gentity_t* svent = SV_Gentity_num(entnum);
 		if (!svent->inuse)
 		{
 			continue;

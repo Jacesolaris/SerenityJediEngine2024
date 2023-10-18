@@ -1571,7 +1571,7 @@ void CG_SaberClashFlare()
 	{
 		return;
 	}
-	
+
 	if (cg.predicted_player_state.communicatingflags & (1 << CF_SABERLOCKING))
 	{
 		return;
@@ -1613,7 +1613,7 @@ void CG_SaberClashFlare()
 	VectorSet(color, 0.8f, 0.8f, 0.8f);
 	cgi_R_SetColor(color);
 
-	CG_DrawPic(x - v * 300 * cgs.widthRatioCoef, y - v * 300,v * 600 * cgs.widthRatioCoef, v * 600,cgi_R_RegisterShader("gfx/effects/saberFlare"));
+	CG_DrawPic(x - v * 300 * cgs.widthRatioCoef, y - v * 300, v * 600 * cgs.widthRatioCoef, v * 600, cgi_R_RegisterShader("gfx/effects/saberFlare"));
 }
 
 void CG_SaberBlockFlare()

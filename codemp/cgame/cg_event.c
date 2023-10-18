@@ -233,8 +233,8 @@ static void CG_Obituary(entityState_t* ent)
 	clientInfo_t* ci;
 	qboolean veh_message = qfalse;
 
-	target = ent->otherEntityNum;
-	attacker = ent->otherEntityNum2;
+	target = ent->otherentity_num;
+	attacker = ent->otherentity_num2;
 	mod = ent->eventParm;
 
 	if (target < 0 || target >= MAX_CLIENTS)
@@ -1327,7 +1327,7 @@ void CG_G2MarkEvent(entityState_t* es)
 	//es->origin should be the hit location of the projectile,
 	//whereas es->origin2 is the predicted position of the
 	//projectile. (based on the trajectory upon impact) -rww
-	centity_t* p_owner = &cg_entities[es->otherEntityNum];
+	centity_t* p_owner = &cg_entities[es->otherentity_num];
 	vec3_t start_point;
 	float size = 0.0f;
 	qhandle_t shader = 0;
@@ -1350,14 +1350,14 @@ void CG_G2MarkEvent(entityState_t* es)
 
 		CG_G2Trace(&tr, es->origin, NULL, NULL, es->origin2, ignore, MASK_PLAYERSOLID);
 
-		if (tr.entity_num != es->otherEntityNum)
+		if (tr.entity_num != es->otherentity_num)
 		{
 			//try again if we hit an ent but not the one we wanted.
 			if (tr.entity_num < ENTITYNUM_WORLD)
 			{
 				ignore = tr.entity_num;
 				CG_G2Trace(&tr, es->origin, NULL, NULL, es->origin2, ignore, MASK_PLAYERSOLID);
-				if (tr.entity_num != es->otherEntityNum)
+				if (tr.entity_num != es->otherentity_num)
 				{
 					//didn't manage to collide with the desired person. No mark will be placed then.
 					return;
@@ -1377,19 +1377,19 @@ void CG_G2MarkEvent(entityState_t* es)
 	{
 		// a vehicle weapon, make it a larger size mark
 		//OR base this on the size of the thing you hit?
-		if (g_vehWeaponInfo[es->otherEntityNum2].fG2MarkSize)
+		if (g_vehWeaponInfo[es->otherentity_num2].fG2MarkSize)
 		{
-			size = flrand(0.6f, 1.4f) * g_vehWeaponInfo[es->otherEntityNum2].fG2MarkSize;
+			size = flrand(0.6f, 1.4f) * g_vehWeaponInfo[es->otherentity_num2].fG2MarkSize;
 		}
 		else
 		{
 			size = flrand(32.0f, 72.0f);
 		}
 		//specify mark shader in vehWeapon file
-		if (g_vehWeaponInfo[es->otherEntityNum2].iG2MarkShaderHandle)
+		if (g_vehWeaponInfo[es->otherentity_num2].iG2MarkShaderHandle)
 		{
 			//have one we want to use instead of defaults
-			shader = g_vehWeaponInfo[es->otherEntityNum2].iG2MarkShaderHandle;
+			shader = g_vehWeaponInfo[es->otherentity_num2].iG2MarkShaderHandle;
 		}
 	}
 	switch (es->weapon)
@@ -1637,7 +1637,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 
 			memset(cent->npcClient, 0, sizeof(clientInfo_t));
 			cent->npcClient->ghoul2Model = NULL;
-			cent->npcClient->gender = FindGender(CG_ConfigString(CS_MODELS + cent->currentState.modelindex), cent);
+			cent->npcClient->gender = FindGender(CG_ConfigString(CS_MODELS + cent->currentState.model_index), cent);
 		}
 
 		assert(cent->npcClient);
@@ -1977,9 +1977,9 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 		DEBUGNAME("EV_GLOBAL_DUEL");
 		//used for beginning of power duels
 		//if (cg.predicted_player_state.persistant[PERS_TEAM] != TEAM_SPECTATOR)
-		if (es->otherEntityNum == cg.predicted_player_state.client_num ||
-			es->otherEntityNum2 == cg.predicted_player_state.client_num ||
-			es->groundEntityNum == cg.predicted_player_state.client_num)
+		if (es->otherentity_num == cg.predicted_player_state.client_num ||
+			es->otherentity_num2 == cg.predicted_player_state.client_num ||
+			es->groundentity_num == cg.predicted_player_state.client_num)
 		{
 			CG_CenterPrint(CG_GetStringEdString("MP_SVGAME", "BEGIN_DUEL"), 120, GIANTCHAR_WIDTH * 2);
 			trap->S_StartLocalSound(cgs.media.countFightSound, CHAN_ANNOUNCER);
@@ -2557,7 +2557,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 			int index;
 			qboolean newindex = qfalse;
 
-			index = cg_entities[es->eventParm].currentState.modelindex; // player predicted
+			index = cg_entities[es->eventParm].currentState.model_index; // player predicted
 
 			if (index < 1 && cg_entities[es->eventParm].currentState.isJediMaster)
 			{
@@ -2908,18 +2908,18 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 			int hit_sound = trap->S_RegisterSound(va("sound/weapons/saber/saberhit%i.mp3", Q_irand(1, 15)));
 			int kill_sound = trap->S_RegisterSound(va("sound/weapons/saber/saberkill%i.wav", Q_irand(1, 17)));
 
-			if (es->otherEntityNum2 >= 0
-				&& es->otherEntityNum2 < ENTITYNUM_NONE)
+			if (es->otherentity_num2 >= 0
+				&& es->otherentity_num2 < ENTITYNUM_NONE)
 			{
 				//we have a specific person who is causing this effect, see if we should override it with any custom saber effects/sounds
 				clientInfo_t* client = NULL;
-				if (cg_entities[es->otherEntityNum2].currentState.eType == ET_NPC)
+				if (cg_entities[es->otherentity_num2].currentState.eType == ET_NPC)
 				{
-					client = cg_entities[es->otherEntityNum2].npcClient;
+					client = cg_entities[es->otherentity_num2].npcClient;
 				}
-				else if (es->otherEntityNum2 < MAX_CLIENTS)
+				else if (es->otherentity_num2 < MAX_CLIENTS)
 				{
-					client = &cgs.clientinfo[es->otherEntityNum2];
+					client = &cgs.clientinfo[es->otherentity_num2];
 				}
 
 				if (client && client->infoValid)
@@ -3167,13 +3167,13 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 			//the hit. This being the case, we can store these indecies and the current time in order to do
 			//some visual tricks on the client between frames to make it look like we're actually continuing
 			//to hit between server frames.
-			if (es->otherEntityNum != ENTITYNUM_NONE && es->otherEntityNum2 != ENTITYNUM_NONE)
+			if (es->otherentity_num != ENTITYNUM_NONE && es->otherentity_num2 != ENTITYNUM_NONE)
 			{
 				centity_t* saber_owner;
 
-				saber_owner = &cg_entities[es->otherEntityNum2];
+				saber_owner = &cg_entities[es->otherentity_num2];
 
-				saber_owner->serverSaberHitIndex = es->otherEntityNum;
+				saber_owner->serverSaberHitIndex = es->otherentity_num;
 				saber_owner->serverSaberHitTime = cg.time;
 
 				if (es->eventParm)
@@ -3200,17 +3200,17 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 				qhandle_t block_sound = trap->S_RegisterSound(va("sound/weapons/saber/saberblock%d", Q_irand(1, 90)));
 				qhandle_t knock_sound = trap->S_RegisterSound(va("sound/weapons/saber/saberknock%d", Q_irand(1, 4)));
 
-				if (es->otherEntityNum2 >= 0 && es->otherEntityNum2 < ENTITYNUM_NONE)
+				if (es->otherentity_num2 >= 0 && es->otherentity_num2 < ENTITYNUM_NONE)
 				{
 					//we have a specific person who is causing this effect, see if we should override it with any custom saber effects/sounds
 					clientInfo_t* client = NULL;
-					if (cg_entities[es->otherEntityNum2].currentState.eType == ET_NPC)
+					if (cg_entities[es->otherentity_num2].currentState.eType == ET_NPC)
 					{
-						client = cg_entities[es->otherEntityNum2].npcClient;
+						client = cg_entities[es->otherentity_num2].npcClient;
 					}
-					else if (es->otherEntityNum2 < MAX_CLIENTS)
+					else if (es->otherentity_num2 < MAX_CLIENTS)
 					{
-						client = &cgs.clientinfo[es->otherEntityNum2];
+						client = &cgs.clientinfo[es->otherentity_num2];
 					}
 					if (client && client->infoValid)
 					{
@@ -3498,11 +3498,11 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 				{	// sound originated from a client, but not one of the duelers
 					doit = 0;
 				}
-				else if (es->number >= MAX_CLIENTS && es->otherEntityNum != ENTITYNUM_NONE &&
-					es->otherEntityNum != cg.snap->ps.client_num &&
-					es->otherEntityNum != cg.snap->ps.duelIndex)
-				{  // sound generated by an temp entity in a snap, the otherEntityNum should be the orinating
-				   // client number (by hack!). If otherEntityNum is ENTITYNUM_NONE, then it is one of the many sounds
+				else if (es->number >= MAX_CLIENTS && es->otherentity_num != ENTITYNUM_NONE &&
+					es->otherentity_num != cg.snap->ps.client_num &&
+					es->otherentity_num != cg.snap->ps.duelIndex)
+				{  // sound generated by an temp entity in a snap, the otherentity_num should be the orinating
+				   // client number (by hack!). If otherentity_num is ENTITYNUM_NONE, then it is one of the many sounds
 				   // I don't bother filtering, so play it. Otherwise, if not from the duelers, supress it
 					doit = 0;
 				}
@@ -3547,11 +3547,11 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 				{	// sound originated from a client, but not one of the duelers
 					doit = 0;
 				}
-				else if (es->number >= MAX_CLIENTS && es->otherEntityNum != ENTITYNUM_NONE &&
-					es->otherEntityNum != cg.snap->ps.client_num &&
-					es->otherEntityNum != cg.snap->ps.duelIndex)
-				{  // sound generated by an temp entity in a snap, the otherEntityNum should be the orinating
-				   // client number (by hack!). If otherEntityNum is ENTITYNUM_NONE, then it is one of the many sounds
+				else if (es->number >= MAX_CLIENTS && es->otherentity_num != ENTITYNUM_NONE &&
+					es->otherentity_num != cg.snap->ps.client_num &&
+					es->otherentity_num != cg.snap->ps.duelIndex)
+				{  // sound generated by an temp entity in a snap, the otherentity_num should be the orinating
+				   // client number (by hack!). If otherentity_num is ENTITYNUM_NONE, then it is one of the many sounds
 				   // I don't bother filtering, so play it. Otherwise, if not from the duelers, supress it
 					doit = 0;
 				}
@@ -3611,11 +3611,11 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 				{	// sound originated from a client, but not one of the duelers
 					doit = 0;
 				}
-				else if (es->number >= MAX_CLIENTS && es->otherEntityNum != ENTITYNUM_NONE &&
-					es->otherEntityNum != cg.snap->ps.client_num &&
-					es->otherEntityNum != cg.snap->ps.duelIndex)
-				{  // sound generated by an temp entity in a snap, the otherEntityNum should be the orinating
-				   // client number (by hack!). If otherEntityNum is ENTITYNUM_NONE, then it is one of the many sounds
+				else if (es->number >= MAX_CLIENTS && es->otherentity_num != ENTITYNUM_NONE &&
+					es->otherentity_num != cg.snap->ps.client_num &&
+					es->otherentity_num != cg.snap->ps.duelIndex)
+				{  // sound generated by an temp entity in a snap, the otherentity_num should be the orinating
+				   // client number (by hack!). If otherentity_num is ENTITYNUM_NONE, then it is one of the many sounds
 				   // I don't bother filtering, so play it. Otherwise, if not from the duelers, supress it
 					doit = 0;
 				}
@@ -3725,7 +3725,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 
 	case EV_SCREENSHAKE:
 		DEBUGNAME("EV_SCREENSHAKE");
-		if (!es->modelindex || cg.predicted_player_state.client_num == es->modelindex - 1)
+		if (!es->model_index || cg.predicted_player_state.client_num == es->model_index - 1)
 		{
 			CGCam_Shake(es->angles[0], es->time);
 		}
@@ -3739,7 +3739,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 			CGCam_BlockShake(es->angles[0], es->time);
 		}*/
 
-		if (!es->modelindex || cg.predicted_player_state.client_num == es->modelindex - 1)
+		if (!es->model_index || cg.predicted_player_state.client_num == es->model_index - 1)
 		{
 			CGCam_BlockShake(es->angles[0], es->time);
 		}
@@ -3871,11 +3871,11 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 				{	// sound originated from a client, but not one of the duelers
 					doit = 0;
 				}
-				else if (es->number >= MAX_CLIENTS && es->otherEntityNum != ENTITYNUM_NONE &&
-					es->otherEntityNum != cg.snap->ps.client_num &&
-					es->otherEntityNum != cg.snap->ps.duelIndex)
-				{  // sound generated by an temp entity in a snap, the otherEntityNum should be the orinating
-				   // client number (by hack!). If otherEntityNum is ENTITYNUM_NONE, then it is one of the many sounds
+				else if (es->number >= MAX_CLIENTS && es->otherentity_num != ENTITYNUM_NONE &&
+					es->otherentity_num != cg.snap->ps.client_num &&
+					es->otherentity_num != cg.snap->ps.duelIndex)
+				{  // sound generated by an temp entity in a snap, the otherentity_num should be the orinating
+				   // client number (by hack!). If otherentity_num is ENTITYNUM_NONE, then it is one of the many sounds
 				   // I don't bother filtering, so play it. Otherwise, if not from the duelers, supress it
 					doit = 0;
 				}
@@ -3918,11 +3918,11 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 				{	// sound originated from a client, but not one of the duelers
 					doit = 0;
 				}
-				else if (es->number >= MAX_CLIENTS && es->otherEntityNum != ENTITYNUM_NONE &&
-					es->otherEntityNum != cg.snap->ps.client_num &&
-					es->otherEntityNum != cg.snap->ps.duelIndex)
-				{  // sound generated by an temp entity in a snap, the otherEntityNum should be the orinating
-				   // client number (by hack!). If otherEntityNum is ENTITYNUM_NONE, then it is one of the many sounds
+				else if (es->number >= MAX_CLIENTS && es->otherentity_num != ENTITYNUM_NONE &&
+					es->otherentity_num != cg.snap->ps.client_num &&
+					es->otherentity_num != cg.snap->ps.duelIndex)
+				{  // sound generated by an temp entity in a snap, the otherentity_num should be the orinating
+				   // client number (by hack!). If otherentity_num is ENTITYNUM_NONE, then it is one of the many sounds
 				   // I don't bother filtering, so play it. Otherwise, if not from the duelers, supress it
 					doit = 0;
 				}
@@ -3967,7 +3967,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 
 	case EV_SCOREPLUM:
 		DEBUGNAME("EV_SCOREPLUM");
-		CG_ScorePlum(cent->currentState.otherEntityNum, cent->lerpOrigin, cent->currentState.time);
+		CG_ScorePlum(cent->currentState.otherentity_num, cent->lerpOrigin, cent->currentState.time);
 		break;
 
 	case EV_CTFMESSAGE:
@@ -4096,9 +4096,9 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 			if (cg.snap->ps.duelInProgress)
 			{ // this client is dueling
 				// note special encoding:
-				//  otherentityNum has owner number
-				//  otherentityNum2 has hit entitiy number
-				if (es->otherEntityNum != cg.snap->ps.client_num && es->otherEntityNum != cg.snap->ps.duelIndex)
+				//  otherentity_num has owner number
+				//  otherentity_num2 has hit entitiy number
+				if (es->otherentity_num != cg.snap->ps.client_num && es->otherentity_num != cg.snap->ps.duelIndex)
 				{
 					doit = 0;
 				}
@@ -4142,9 +4142,9 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 			if (cg.snap->ps.duelInProgress)
 			{ // this client is dueling
 				// note special encoding:
-				//  otherentityNum has owner number
-				//  otherentityNum2 has hit entitiy number
-				if (es->otherEntityNum != cg.snap->ps.client_num && es->otherEntityNum != cg.snap->ps.duelIndex)
+				//  otherentity_num has owner number
+				//  otherentity_num2 has hit entitiy number
+				if (es->otherentity_num != cg.snap->ps.client_num && es->otherentity_num != cg.snap->ps.duelIndex)
 				{
 					doit = 0;
 				}
@@ -4188,9 +4188,9 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 			if (cg.snap->ps.duelInProgress)
 			{ // this client is dueling
 				// note special encoding:
-				//  otherentityNum has owner number
-				//  otherentityNum2 has hit entitiy number
-				if (es->otherEntityNum != cg.snap->ps.client_num && es->otherEntityNum != cg.snap->ps.duelIndex)
+				//  otherentity_num has owner number
+				//  otherentity_num2 has hit entitiy number
+				if (es->otherentity_num != cg.snap->ps.client_num && es->otherentity_num != cg.snap->ps.duelIndex)
 				{
 					doit = 0;
 				}
@@ -4226,11 +4226,11 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 			if (cg.snap->ps.duelInProgress)
 			{ // this client is dueling
 				// note special encoding:
-				//  otherentityNum has owner number
+				//  otherentity_num has owner number
 				//  if owner num is ENTITYNUM_NONE then always play it
-				if (es->otherEntityNum != ENTITYNUM_NONE &&
-					es->otherEntityNum != cg.snap->ps.client_num &&
-					es->otherEntityNum != cg.snap->ps.duelIndex)
+				if (es->otherentity_num != ENTITYNUM_NONE &&
+					es->otherentity_num != cg.snap->ps.client_num &&
+					es->otherentity_num != cg.snap->ps.duelIndex)
 				{
 					doit = 0;
 				}
@@ -4330,11 +4330,11 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 			if (cg.snap->ps.duelInProgress)
 			{ // this client is dueling
 				// note special encoding:
-				//  otherentityNum has owner number
+				//  otherentity_num has owner number
 				//  if owner num is ENTITYNUM_NONE then always play it
-				if (es->otherEntityNum != ENTITYNUM_NONE &&
-					es->otherEntityNum != cg.snap->ps.client_num &&
-					es->otherEntityNum != cg.snap->ps.duelIndex)
+				if (es->otherentity_num != ENTITYNUM_NONE &&
+					es->otherentity_num != cg.snap->ps.client_num &&
+					es->otherentity_num != cg.snap->ps.duelIndex)
 				{
 					doit = 0;
 				}
@@ -4457,9 +4457,9 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 
 	case EV_VOICECMD_SOUND:
 		DEBUGNAME("EV_VOICECMD_SOUND");
-		if (es->groundEntityNum < MAX_CLIENTS && es->groundEntityNum >= 0)
+		if (es->groundentity_num < MAX_CLIENTS && es->groundentity_num >= 0)
 		{
-			int entnum = es->groundEntityNum;
+			int entnum = es->groundentity_num;
 			sfxHandle_t sfx = cgs.gameSounds[es->eventParm];
 			clientInfo_t* ci = &cgs.clientinfo[entnum];
 			centity_t* v_chat_ent = &cg_entities[entnum];
@@ -4504,8 +4504,8 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 
 	case EV_GENERAL_SOUND:
 		DEBUGNAME("EV_GENERAL_SOUND");
-		if (es->saberEntityNum == TRACK_CHANNEL_2 || es->saberEntityNum == TRACK_CHANNEL_3 ||
-			es->saberEntityNum == TRACK_CHANNEL_5)
+		if (es->saberentity_num == TRACK_CHANNEL_2 || es->saberentity_num == TRACK_CHANNEL_3 ||
+			es->saberentity_num == TRACK_CHANNEL_5)
 		{
 			//channels 2 and 3 are for speed and rage, 5 for sight
 			if (cgs.gameSounds[es->eventParm])
@@ -4517,12 +4517,12 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 		{
 			if (cgs.gameSounds[es->eventParm])
 			{
-				trap->S_StartSound(NULL, es->number, es->saberEntityNum, cgs.gameSounds[es->eventParm]);
+				trap->S_StartSound(NULL, es->number, es->saberentity_num, cgs.gameSounds[es->eventParm]);
 			}
 			else
 			{
 				s = CG_ConfigString(CS_SOUNDS + es->eventParm);
-				trap->S_StartSound(NULL, es->number, es->saberEntityNum, CG_CustomSound(es->number, s));
+				trap->S_StartSound(NULL, es->number, es->saberentity_num, CG_CustomSound(es->number, s));
 			}
 		}
 		break;
@@ -4696,7 +4696,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 	case EV_DEBRIS:
 		DEBUGNAME("EV_DEBRIS");
 		CG_Chunks(es->owner, es->origin, es->origin2, es->angles2, es->speed, es->eventParm,
-			es->trickedentindex, es->modelindex, es->apos.trBase[0]);
+			es->trickedentindex, es->model_index, es->apos.trBase[0]);
 		break;
 
 	case EV_MISC_MODEL_EXP:
@@ -4839,7 +4839,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 	case EV_SHIELD_HIT:
 		DEBUGNAME("EV_SHIELD_HIT");
 		ByteToDir(es->eventParm, dir);
-		CG_PlayerShieldHit(es->otherEntityNum, dir, es->time2);
+		CG_PlayerShieldHit(es->otherentity_num, dir, es->time2);
 		break;
 
 	case EV_DEBUG_LINE:
@@ -4893,7 +4893,7 @@ void CG_CheckEvents(centity_t* cent)
 		// if this is a player event set the entity number of the client entity number
 		if (cent->currentState.eFlags & EF_PLAYER_EVENT)
 		{
-			cent->currentState.number = cent->currentState.otherEntityNum;
+			cent->currentState.number = cent->currentState.otherentity_num;
 		}
 
 		cent->previousEvent = 1;

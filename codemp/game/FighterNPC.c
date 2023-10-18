@@ -479,7 +479,7 @@ static void ProcessMoveCommands(Vehicle_t* p_veh)
 		p_veh->m_ucmd.forwardmove = 127;
 	}
 #endif
-	else if ((parent_ps->speed || parent_ps->groundEntityNum == ENTITYNUM_NONE ||
+	else if ((parent_ps->speed || parent_ps->groundentity_num == ENTITYNUM_NONE ||
 		p_veh->m_ucmd.forwardmove || p_veh->m_ucmd.upmove > 0) && p_veh->m_LandTrace.fraction >= 0.05f)
 	{
 		if (p_veh->m_ucmd.forwardmove > 0 && speedInc)

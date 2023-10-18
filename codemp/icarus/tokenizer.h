@@ -409,8 +409,8 @@ public:
 	virtual void Error(int theError, const char* errString);
 	virtual void Error(const char* errString, int theError = TKERR_UNKNOWN);
 
-	CToken* GetToken(unsigned onFlags = 0, unsigned offFlags = 0);
-	CToken* GetToken(keywordArray_t* keywords, unsigned onFlags, unsigned offFlags);
+	CToken* GetToken(unsigned onFlags = 0, unsigned off_flags = 0);
+	CToken* GetToken(keywordArray_t* keywords, unsigned onFlags, unsigned off_flags);
 	void PutBackToken(CToken* theToken, bool commented = false, const char* addedChars = nullptr,
 		bool bIgnoreThisTokenType = false);
 	bool RequireToken(int tokenType);

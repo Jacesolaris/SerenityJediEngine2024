@@ -285,7 +285,7 @@ void CM_TestInLeaf(traceWork_t* tw, trace_t& trace, cLeaf_t* leaf, clipMap_t* lo
 			}
 		}
 	}
-	}
+}
 
 /*
 ==================
@@ -640,7 +640,7 @@ void CM_TraceThroughBrush(traceWork_t * tw, trace_t & trace, cbrush_t * brush, c
 			{
 				trace.fraction = tw->enterFrac;
 				trace.plane = *tw->clipplane;
-				trace.surfaceFlags = cmg.shaders[tw->leadside->shaderNum].surfaceFlags;
+				trace.surfaceFlags = cmg.shaders[tw->leadside->shader_num].surfaceFlags;
 				trace.contents = brush->contents;
 			}
 		}
@@ -736,7 +736,7 @@ void CM_TraceThroughLeaf(traceWork_t * tw, trace_t & trace, clipMap_t * local, c
 			}
 		}
 	}
-	}
+}
 
 #define RADIUS_EPSILON		1.0f
 
@@ -1123,7 +1123,7 @@ void CM_TraceToLeaf(traceWork_t * tw, trace_t & trace, cLeaf_t * leaf, clipMap_t
 			}
 		}
 	}
-	}
+}
 
 /*
 ==================

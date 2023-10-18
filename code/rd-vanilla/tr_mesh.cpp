@@ -288,14 +288,14 @@ void R_AddMD3Surfaces(trRefEntity_t* ent) {
 	const auto personal_model = static_cast<qboolean>(ent->e.renderfx & RF_THIRD_PERSON && !tr.viewParms.isPortal);
 
 	if (ent->e.renderfx & RF_CAP_FRAMES) {
-		if (ent->e.frame > tr.current_model->md3[0]->numFrames - 1)
-			ent->e.frame = tr.current_model->md3[0]->numFrames - 1;
-		if (ent->e.oldframe > tr.current_model->md3[0]->numFrames - 1)
-			ent->e.oldframe = tr.current_model->md3[0]->numFrames - 1;
+		if (ent->e.frame > tr.current_model->md3[0]->num_frames - 1)
+			ent->e.frame = tr.current_model->md3[0]->num_frames - 1;
+		if (ent->e.oldframe > tr.current_model->md3[0]->num_frames - 1)
+			ent->e.oldframe = tr.current_model->md3[0]->num_frames - 1;
 	}
 	else if (ent->e.renderfx & RF_WRAP_FRAMES) {
-		ent->e.frame %= tr.current_model->md3[0]->numFrames;
-		ent->e.oldframe %= tr.current_model->md3[0]->numFrames;
+		ent->e.frame %= tr.current_model->md3[0]->num_frames;
+		ent->e.oldframe %= tr.current_model->md3[0]->num_frames;
 	}
 
 	//
@@ -304,9 +304,9 @@ void R_AddMD3Surfaces(trRefEntity_t* ent) {
 	// when the surfaces are rendered, they don't need to be
 	// range checked again.
 	//
-	if (ent->e.frame >= tr.current_model->md3[0]->numFrames
+	if (ent->e.frame >= tr.current_model->md3[0]->num_frames
 		|| ent->e.frame < 0
-		|| ent->e.oldframe >= tr.current_model->md3[0]->numFrames
+		|| ent->e.oldframe >= tr.current_model->md3[0]->num_frames
 		|| ent->e.oldframe < 0)
 	{
 		ri.Printf(PRINT_ALL, "R_AddMD3Surfaces: no such frame %d to %d for '%s'\n",

@@ -974,7 +974,7 @@ static void player_restore_from_prev_level(gentity_t* ent)
 			}
 			assert(i == NUM_FORCE_POWERS);
 
-			client->ps.forceGripEntityNum = client->ps.forceDrainEntityNum = ENTITYNUM_NONE;
+			client->ps.forceGripentity_num = client->ps.forceDrainentity_num = ENTITYNUM_NONE;
 		}
 	}
 }
@@ -1445,7 +1445,7 @@ void G_NextTestAxes()
 	}
 }
 
-void G_BoneOrientationsForClass(const int NPC_class, const char* boneName, Eorientations* oUp, Eorientations* oRt,
+void G_BoneOrientationsForClass(const int NPC_class, const char* bone_name, Eorientations* oUp, Eorientations* oRt,
 	Eorientations* oFwd)
 {
 	//defaults
@@ -1469,7 +1469,7 @@ void G_BoneOrientationsForClass(const int NPC_class, const char* boneName, Eorie
 		//*oUp = POSITIVE_Z;
 		//*oRt = NEGATIVE_X;
 		//*oFwd = NEGATIVE_Y;
-		if (Q_stricmp("pelvis", boneName) == 0)
+		if (Q_stricmp("pelvis", bone_name) == 0)
 		{
 			//child of root
 			//in ModView:
@@ -1498,8 +1498,8 @@ void G_BoneOrientationsForClass(const int NPC_class, const char* boneName, Eorie
 		}
 		break;
 	case CLASS_SABER_DROID:
-		if (Q_stricmp("pelvis", boneName) == 0
-			|| Q_stricmp("thoracic", boneName) == 0)
+		if (Q_stricmp("pelvis", bone_name) == 0
+			|| Q_stricmp("thoracic", bone_name) == 0)
 		{
 			*oUp = NEGATIVE_X;
 			*oRt = NEGATIVE_Z;
@@ -1513,7 +1513,7 @@ void G_BoneOrientationsForClass(const int NPC_class, const char* boneName, Eorie
 		}
 		break;
 	case CLASS_WAMPA:
-		if (Q_stricmp("pelvis", boneName) == 0)
+		if (Q_stricmp("pelvis", bone_name) == 0)
 		{
 			*oUp = NEGATIVE_X;
 			*oRt = POSITIVE_Y;
@@ -1531,9 +1531,9 @@ void G_BoneOrientationsForClass(const int NPC_class, const char* boneName, Eorie
 		}
 		break;
 	case CLASS_ASSASSIN_DROID:
-		if (Q_stricmp("pelvis", boneName) == 0
-			|| Q_stricmp("lower_lumbar", boneName) == 0
-			|| Q_stricmp("upper_lumbar", boneName) == 0)
+		if (Q_stricmp("pelvis", bone_name) == 0
+			|| Q_stricmp("lower_lumbar", bone_name) == 0
+			|| Q_stricmp("upper_lumbar", bone_name) == 0)
 		{
 			//only these 3 bones on them are wrong
 			//*oUp = POSITIVE_X;
@@ -1545,9 +1545,9 @@ void G_BoneOrientationsForClass(const int NPC_class, const char* boneName, Eorie
 		}
 		break;
 	case CLASS_DROIDEKA:
-		if (Q_stricmp("pelvis", boneName) == 0
-			|| Q_stricmp("lower_lumbar", boneName) == 0
-			|| Q_stricmp("upper_lumbar", boneName) == 0)
+		if (Q_stricmp("pelvis", bone_name) == 0
+			|| Q_stricmp("lower_lumbar", bone_name) == 0
+			|| Q_stricmp("upper_lumbar", bone_name) == 0)
 		{
 			//only these 3 bones on them are wrong
 			//*oUp = POSITIVE_X;
@@ -2684,7 +2684,7 @@ void G_ChangePlayerModel(gentity_t* ent, const char* newModel)
 		return;
 	}
 
-	if (ent->client && (ent->client->moveType == MT_FLYSWIM || ent->s.groundEntityNum == ENTITYNUM_NONE ||
+	if (ent->client && (ent->client->moveType == MT_FLYSWIM || ent->s.groundentity_num == ENTITYNUM_NONE ||
 		JET_Flying(ent) || ent->client->flamethrowerOn)
 		&& (ent->client->NPC_class == CLASS_BOBAFETT
 			|| ent->client->NPC_class == CLASS_MANDO
@@ -2729,7 +2729,7 @@ void G_ChangePlayerModel(gentity_t* ent, const char* newModel)
 		g_create_g2_attached_weapon_model(ent, weaponData[ent->client->ps.weapon].weaponMdl, ent->handLBolt, 1);
 	}
 
-	if (ent->client->ps.groundEntityNum == ENTITYNUM_NONE && PM_InLedgeMove(ent->client->ps.legsAnim))
+	if (ent->client->ps.groundentity_num == ENTITYNUM_NONE && PM_InLedgeMove(ent->client->ps.legsAnim))
 	{
 		ent->client->ps.pm_flags &= ~PMF_STUCK_TO_WALL;
 		ent->client->ps.legsAnimTimer = 0;
@@ -3170,7 +3170,7 @@ qboolean client_spawn(gentity_t* ent, SavedGameJustLoaded_e e_saved_game_just_lo
 
 		// clear entity values
 		client->ps.stats[STAT_MAX_HEALTH] = client->pers.maxHealth;
-		ent->s.groundEntityNum = ENTITYNUM_NONE;
+		ent->s.groundentity_num = ENTITYNUM_NONE;
 		ent->client = &level.clients[index];
 		ent->mass = 10;
 		ent->takedamage = qtrue;
@@ -3380,7 +3380,7 @@ qboolean client_spawn(gentity_t* ent, SavedGameJustLoaded_e e_saved_game_just_lo
 		VectorCopyM(client->pers.cmd_angles, ucmd.angles);
 		ucmd.weapon = client->ps.weapon;
 		// client think calls Pmove which sets the client->ps.weapon to ucmd.weapon, so ...
-		ent->client->ps.groundEntityNum = ENTITYNUM_NONE;
+		ent->client->ps.groundentity_num = ENTITYNUM_NONE;
 		ClientThink(ent - g_entities, &ucmd);
 
 		// run the presend to set anything else

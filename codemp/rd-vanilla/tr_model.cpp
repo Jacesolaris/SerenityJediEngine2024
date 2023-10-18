@@ -318,7 +318,7 @@ void* RE_RegisterServerModels_Malloc(const int iSize, void* pvDiskBufferIfJustLo
 		}
 		*/
 		//No. Bad.
-		* pqbAlreadyFound = qtrue;	// tell caller not to re-Endian or re-Shader this binary
+		*pqbAlreadyFound = qtrue;	// tell caller not to re-Endian or re-Shader this binary
 	}
 
 	ModelBin.iLastLevelUsedOn = RE_RegisterMedia_GetLevel();
@@ -694,7 +694,7 @@ qboolean ServerLoadMDXA(model_t* mod, void* buffer, const char* mod_name, qboole
 
 		LL(mdxa->ident);
 		LL(mdxa->version);
-		LL(mdxa->numFrames);
+		LL(mdxa->num_frames);
 		LL(mdxa->ofsFrames);
 		LL(mdxa->numBones);
 		LL(mdxa->ofsCompBonePool);
@@ -702,7 +702,7 @@ qboolean ServerLoadMDXA(model_t* mod, void* buffer, const char* mod_name, qboole
 		LL(mdxa->ofsEnd);
 	}
 
-	if (mdxa->numFrames < 1)
+	if (mdxa->num_frames < 1)
 	{
 		return qfalse;
 	}
@@ -742,7 +742,7 @@ qboolean ServerLoadMDXA(model_t* mod, void* buffer, const char* mod_name, qboole
 	// Find the largest index by iterating through all frames.
 	// It is not guaranteed that the compressed bone pool resides
 	// at the end of the file.
-	for (i = 0; i < mdxa->numFrames; i++)
+	for (i = 0; i < mdxa->num_frames; i++)
 	{
 		for (j = 0; j < mdxa->numBones; j++)
 		{
@@ -1404,7 +1404,7 @@ static qboolean R_LoadMD3(model_t* mod, int lod, void* buffer, const char* name,
 
 		LL(mod->md3[lod]->ident);
 		LL(mod->md3[lod]->version);
-		LL(mod->md3[lod]->numFrames);
+		LL(mod->md3[lod]->num_frames);
 		LL(mod->md3[lod]->numTags);
 		LL(mod->md3[lod]->numSurfaces);
 		LL(mod->md3[lod]->ofsFrames);
@@ -1413,7 +1413,7 @@ static qboolean R_LoadMD3(model_t* mod, int lod, void* buffer, const char* name,
 		LL(mod->md3[lod]->ofsEnd);
 	}
 
-	if (mod->md3[lod]->numFrames < 1) {
+	if (mod->md3[lod]->num_frames < 1) {
 		ri->Printf(PRINT_ALL, S_COLOR_YELLOW  "R_LoadMD3: %s has no frames\n", name);
 		return qfalse;
 	}
@@ -1426,7 +1426,7 @@ static qboolean R_LoadMD3(model_t* mod, int lod, void* buffer, const char* name,
 #ifdef Q3_BIG_ENDIAN
 	// swap all the frames
 	frame = (md3Frame_t*)((byte*)mod->md3[lod] + mod->md3[lod]->ofsFrames);
-	for (i = 0; i < mod->md3[lod]->numFrames; i++, frame++) {
+	for (i = 0; i < mod->md3[lod]->num_frames; i++, frame++) {
 		LF(frame->radius);
 		for (j = 0; j < 3; j++) {
 			LF(frame->bounds[0][j]);
@@ -1437,7 +1437,7 @@ static qboolean R_LoadMD3(model_t* mod, int lod, void* buffer, const char* name,
 
 	// swap all the tags
 	tag = (md3Tag_t*)((byte*)mod->md3[lod] + mod->md3[lod]->ofsTags);
-	for (i = 0; i < mod->md3[lod]->numTags * mod->md3[lod]->numFrames; i++, tag++) {
+	for (i = 0; i < mod->md3[lod]->numTags * mod->md3[lod]->num_frames; i++, tag++) {
 		for (j = 0; j < 3; j++) {
 			LF(tag->origin[j]);
 			LF(tag->axis[0][j]);
@@ -1451,7 +1451,7 @@ static qboolean R_LoadMD3(model_t* mod, int lod, void* buffer, const char* name,
 	surf = (md3Surface_t*)((byte*)mod->md3[lod] + mod->md3[lod]->ofsSurfaces);
 	for (int i = 0; i < mod->md3[lod]->numSurfaces; i++) {
 		LL(surf->flags);
-		LL(surf->numFrames);
+		LL(surf->num_frames);
 		LL(surf->numShaders);
 		LL(surf->numTriangles);
 		LL(surf->ofsTriangles);
@@ -1512,7 +1512,7 @@ static qboolean R_LoadMD3(model_t* mod, int lod, void* buffer, const char* name,
 
 		// swap all the XyzNormals
 		xyz = (md3XyzNormal_t*)((byte*)surf + surf->ofsXyzNormals);
-		for (j = 0; j < surf->num_verts * surf->numFrames; j++, xyz++)
+		for (j = 0; j < surf->num_verts * surf->num_frames; j++, xyz++)
 		{
 			LS(xyz->xyz[0]);
 			LS(xyz->xyz[1]);
@@ -1603,10 +1603,10 @@ void R_ModelFree(void)
 
 /*
 ================
-R_Modellist_f
+R_model_list_f
 ================
 */
-void R_Modellist_f(void) {
+void R_model_list_f(void) {
 	int total = 0;
 	for (int i = 1; i < tr.numModels; i++) {
 		model_t* mod = tr.models[i];
@@ -1636,9 +1636,9 @@ R_GetTag
 ================
 */
 static md3Tag_t* R_GetTag(md3Header_t* mod, int frame, const char* tagName) {
-	if (frame >= mod->numFrames) {
+	if (frame >= mod->num_frames) {
 		// it is possible to have a bad frame while changing models, so don't error
-		frame = mod->numFrames - 1;
+		frame = mod->num_frames - 1;
 	}
 
 	md3Tag_t* tag = (md3Tag_t*)((byte*)mod + mod->ofsTags) + frame * mod->numTags;

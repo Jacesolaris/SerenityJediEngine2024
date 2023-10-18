@@ -1280,9 +1280,9 @@ A small lizard carried on the player, which prevents the possessor from using an
 */
 {
 	"item_ysalimari",
-	"sound/player/ysalimari.wav",
+	"sound/player/ysalimari->wav",
 	{
-		"models/map_objects/mp/ysalimari.md3",
+		"models/map_objects/mp/ysalimari->md3",
 		0, 0, 0
 	},
 	/* view */ NULL,
@@ -2424,12 +2424,12 @@ bgEntity_t* pm_entBot = NULL;
 
 qboolean BG_CanItemBeGrabbed(const int gametype, const entityState_t* ent, const playerState_t* ps)
 {
-	if (ent->modelindex < 1 || ent->modelindex >= bg_numItems)
+	if (ent->model_index < 1 || ent->model_index >= bg_numItems)
 	{
 		Com_Error(ERR_DROP, "BG_CanItemBeGrabbed: index out of range");
 	}
 
-	const gitem_t* item = &bg_itemlist[ent->modelindex];
+	const gitem_t* item = &bg_itemlist[ent->model_index];
 
 	if (item->giType == IT_WEAPON && item->giTag == WP_BRYAR_OLD)
 	{
@@ -2634,20 +2634,20 @@ qboolean BG_CanItemBeGrabbed(const int gametype, const entityState_t* ent, const
 	case IT_TEAM: // team items, such as flags
 		if (gametype == GT_CTF || gametype == GT_CTY)
 		{
-			// ent->modelindex2 is non-zero on items if they are dropped
+			// ent->model_index2 is non-zero on items if they are dropped
 			// we need to know this because we can pick up our dropped flag (and return it)
 			// but we can't pick up our flag at base
 			if (ps->persistant[PERS_TEAM] == TEAM_RED)
 			{
 				if (item->giTag == PW_BLUEFLAG ||
-					item->giTag == PW_REDFLAG && ent->modelindex2 ||
+					item->giTag == PW_REDFLAG && ent->model_index2 ||
 					item->giTag == PW_REDFLAG && ps->powerups[PW_BLUEFLAG])
 					return qtrue;
 			}
 			else if (ps->persistant[PERS_TEAM] == TEAM_BLUE)
 			{
 				if (item->giTag == PW_REDFLAG ||
-					item->giTag == PW_BLUEFLAG && ent->modelindex2 ||
+					item->giTag == PW_BLUEFLAG && ent->model_index2 ||
 					item->giTag == PW_BLUEFLAG && ps->powerups[PW_REDFLAG])
 					return qtrue;
 			}
@@ -3021,7 +3021,7 @@ void BG_AddPredictableEventToPlayerstate(const int new_event, const int event_pa
 	ps->events[ps->eventSequence & MAX_PS_EVENTS - 1] = new_event;
 	ps->eventParms[ps->eventSequence & MAX_PS_EVENTS - 1] = event_parm;
 	ps->eventSequence++;
-	}
+}
 
 /*
 ========================
@@ -3306,7 +3306,7 @@ void BG_PlayerStateToEntityState(playerState_t* ps, entityState_t* s, const qboo
 	s->eFlags2 = ps->eFlags2;
 
 	s->saberInFlight = ps->saberInFlight;
-	s->saberEntityNum = ps->saberEntityNum;
+	s->saberentity_num = ps->saberentity_num;
 	s->saber_move = ps->saber_move;
 	s->forcePowersActive = ps->fd.forcePowersActive;
 
@@ -3319,9 +3319,9 @@ void BG_PlayerStateToEntityState(playerState_t* ps, entityState_t* s, const qboo
 		s->bolt1 = 0;
 	}
 
-	s->otherEntityNum2 = ps->emplacedIndex;
+	s->otherentity_num2 = ps->emplacedIndex;
 
-	s->saberHolstered = ps->saberHolstered;
+	s->saber_holstered = ps->saber_holstered;
 
 	if (ps->genericEnemyIndex != -1)
 	{
@@ -3355,7 +3355,7 @@ void BG_PlayerStateToEntityState(playerState_t* ps, entityState_t* s, const qboo
 	}
 
 	s->weapon = ps->weapon;
-	s->groundEntityNum = ps->groundEntityNum;
+	s->groundentity_num = ps->groundentity_num;
 	s->ManualBlockingFlags = ps->ManualBlockingFlags; //Blockingflag on OK
 	s->ManualBlockingTime = ps->ManualBlockingTime; //Blocking time 1 on
 	s->ManualblockStartTime = ps->ManualblockStartTime; //Blocking 2
@@ -3413,7 +3413,7 @@ void BG_PlayerStateToEntityState(playerState_t* ps, entityState_t* s, const qboo
 	s->userInt3 = ps->userInt3;
 
 	//NOT INCLUDED IN ENTITYSTATETOPLAYERSTATE:
-	s->modelindex2 = ps->weaponstate;
+	s->model_index2 = ps->weaponstate;
 	s->constantLight = ps->weaponChargeTime;
 
 	VectorCopy(ps->lastHitLoc, s->origin2);
@@ -3515,7 +3515,7 @@ void BG_PlayerStateToEntityStateExtraPolate(playerState_t* ps, entityState_t* s,
 	s->eFlags2 = ps->eFlags2;
 
 	s->saberInFlight = ps->saberInFlight;
-	s->saberEntityNum = ps->saberEntityNum;
+	s->saberentity_num = ps->saberentity_num;
 	s->saber_move = ps->saber_move;
 	s->forcePowersActive = ps->fd.forcePowersActive;
 
@@ -3528,9 +3528,9 @@ void BG_PlayerStateToEntityStateExtraPolate(playerState_t* ps, entityState_t* s,
 		s->bolt1 = 0;
 	}
 
-	s->otherEntityNum2 = ps->emplacedIndex;
+	s->otherentity_num2 = ps->emplacedIndex;
 
-	s->saberHolstered = ps->saberHolstered;
+	s->saber_holstered = ps->saber_holstered;
 
 	if (ps->genericEnemyIndex != -1)
 	{
@@ -3563,7 +3563,7 @@ void BG_PlayerStateToEntityStateExtraPolate(playerState_t* ps, entityState_t* s,
 		ps->entityEventSequence++;
 	}
 	s->weapon = ps->weapon;
-	s->groundEntityNum = ps->groundEntityNum;
+	s->groundentity_num = ps->groundentity_num;
 	s->ManualBlockingFlags = ps->ManualBlockingFlags; //Blockingflag on OK
 	s->ManualBlockingTime = ps->ManualBlockingTime; //Blocking time 1 on
 	s->ManualblockStartTime = ps->ManualblockStartTime; //Blocking 2
@@ -3621,7 +3621,7 @@ void BG_PlayerStateToEntityStateExtraPolate(playerState_t* ps, entityState_t* s,
 	s->userInt3 = ps->userInt3;
 
 	//NOT INCLUDED IN ENTITYSTATETOPLAYERSTATE:
-	s->modelindex2 = ps->weaponstate;
+	s->model_index2 = ps->weaponstate;
 	s->constantLight = ps->weaponChargeTime;
 
 	VectorCopy(ps->lastHitLoc, s->origin2);
@@ -3688,7 +3688,7 @@ int BG_ModelCache(const char* model_name, const char* skin_name)
 	return trap->R_RegisterModel(model_name);
 #endif // _CGAME
 #endif // _GAME
-	}
+}
 
 #if defined(_GAME)
 #define MAX_POOL_SIZE	3000000 //1024000

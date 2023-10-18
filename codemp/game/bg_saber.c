@@ -1183,7 +1183,7 @@ saber_moveName_t PM_CheckStabDown(void)
 		return LS_NONE;
 	}
 
-	if (pm->ps->groundEntityNum == ENTITYNUM_NONE)
+	if (pm->ps->groundentity_num == ENTITYNUM_NONE)
 	{
 		//sorry must be on ground!
 		return LS_NONE;
@@ -2000,7 +2000,7 @@ void PM_SaberLocked(void)
 					{
 						cur_frame = ceil(current_frame) + strength;
 						//advance my frame one
-						if (cur_frame >= anim->firstFrame + anim->numFrames)
+						if (cur_frame >= anim->firstFrame + anim->num_frames)
 						{
 							//I won!  Break out
 							PM_SaberLockBreak(genemy, qtrue, strength);
@@ -2009,7 +2009,7 @@ void PM_SaberLocked(void)
 							return;
 						}
 						PM_SetAnimFrame(pm->ps, cur_frame);
-						remaining = anim->firstFrame + anim->numFrames - cur_frame;
+						remaining = anim->firstFrame + anim->num_frames - cur_frame;
 					}
 				}
 				else
@@ -2019,7 +2019,7 @@ void PM_SaberLocked(void)
 					{
 						cur_frame = ceil(current_frame) + strength;
 						//advance my frame one
-						if (cur_frame >= anim->firstFrame + anim->numFrames)
+						if (cur_frame >= anim->firstFrame + anim->num_frames)
 						{
 							//I won!  Break out
 							PM_SaberLockBreak(genemy, qtrue, strength);
@@ -2028,7 +2028,7 @@ void PM_SaberLocked(void)
 							return;
 						}
 						PM_SetAnimFrame(pm->ps, cur_frame);
-						remaining = anim->firstFrame + anim->numFrames - cur_frame;
+						remaining = anim->firstFrame + anim->num_frames - cur_frame;
 					}
 					else
 					{
@@ -2062,7 +2062,7 @@ void PM_SaberLocked(void)
 					}
 					else
 					{
-						PM_SetAnimFrame(genemy, anim->firstFrame + anim->numFrames - remaining);
+						PM_SetAnimFrame(genemy, anim->firstFrame + anim->num_frames - remaining);
 					}
 				}
 				else
@@ -2074,7 +2074,7 @@ void PM_SaberLocked(void)
 						{
 							BG_AddPredictableEventToPlayerstate(EV_PAIN, floor((float)80 / 100 * 100.0f), genemy);
 						}
-						PM_SetAnimFrame(genemy, anim->firstFrame + anim->numFrames - remaining);
+						PM_SetAnimFrame(genemy, anim->firstFrame + anim->num_frames - remaining);
 					}
 					else
 					{
@@ -2127,7 +2127,7 @@ void PM_SaberLocked(void)
 						{
 							cur_frame = ceil(current_frame) + strength;
 							//advance my frame one
-							if (cur_frame >= anim->firstFrame + anim->numFrames)
+							if (cur_frame >= anim->firstFrame + anim->num_frames)
 							{
 								//I won!  Break out
 								PM_SaberLockBreak(genemy, qtrue, strength);
@@ -2138,7 +2138,7 @@ void PM_SaberLocked(void)
 								return;
 							}
 							PM_SetAnimFrame(pm->ps, cur_frame);
-							remaining = anim->firstFrame + anim->numFrames - cur_frame;
+							remaining = anim->firstFrame + anim->num_frames - cur_frame;
 						}
 					}
 					else
@@ -2148,7 +2148,7 @@ void PM_SaberLocked(void)
 						{
 							cur_frame = ceil(current_frame) + strength;
 							//advance my frame one
-							if (cur_frame >= anim->firstFrame + anim->numFrames)
+							if (cur_frame >= anim->firstFrame + anim->num_frames)
 							{
 								//I won!  Break out
 								PM_SaberLockBreak(genemy, qtrue, strength);
@@ -2159,7 +2159,7 @@ void PM_SaberLocked(void)
 								return;
 							}
 							PM_SetAnimFrame(pm->ps, cur_frame);
-							remaining = anim->firstFrame + anim->numFrames - cur_frame;
+							remaining = anim->firstFrame + anim->num_frames - cur_frame;
 						}
 						else
 						{
@@ -2195,7 +2195,7 @@ void PM_SaberLocked(void)
 						}
 						else
 						{
-							PM_SetAnimFrame(genemy, anim->firstFrame + anim->numFrames - remaining);
+							PM_SetAnimFrame(genemy, anim->firstFrame + anim->num_frames - remaining);
 						}
 					}
 					else
@@ -2207,7 +2207,7 @@ void PM_SaberLocked(void)
 							{
 								BG_AddPredictableEventToPlayerstate(EV_PAIN, floor((float)80 / 100 * 100.0f), genemy);
 							}
-							PM_SetAnimFrame(genemy, anim->firstFrame + anim->numFrames - remaining);
+							PM_SetAnimFrame(genemy, anim->firstFrame + anim->num_frames - remaining);
 						}
 						else
 						{
@@ -3006,7 +3006,7 @@ saber_moveName_t PM_CheckPullAttack(void)
 
 	if ((pm->ps->saber_move == LS_READY || PM_SaberInReturn(pm->ps->saber_move) || PM_SaberInReflect(pm->ps->saber_move))
 		//ready
-		&& pm->ps->groundEntityNum != ENTITYNUM_NONE
+		&& pm->ps->groundentity_num != ENTITYNUM_NONE
 		&& pm->ps->fd.saber_anim_level >= SS_FAST
 		&& pm->ps->fd.saber_anim_level <= SS_STRONG
 		&& pm->ps->powerups[PW_DISINT_4] > pm->cmd.serverTime
@@ -3274,7 +3274,7 @@ saber_moveName_t PM_SaberAttackForMovement(const saber_moveName_t curmove)
 			if (!noSpecials &&
 				(pm->ps->fd.saber_anim_level == SS_DUAL || pm->ps->fd.saber_anim_level == SS_STAFF) &&
 				pm->ps->fd.forceRageRecoveryTime < pm->cmd.serverTime &&
-				(pm->ps->groundEntityNum != ENTITYNUM_NONE || PM_GroundDistance() <= 40) &&
+				(pm->ps->groundentity_num != ENTITYNUM_NONE || PM_GroundDistance() <= 40) &&
 				pm->ps->velocity[2] >= 0 &&
 				(pm->cmd.upmove > 0 || pm->ps->pm_flags & PMF_JUMP_HELD) &&
 				!PM_SaberInTransitionAny(pm->ps->saber_move) &&
@@ -3322,7 +3322,7 @@ saber_moveName_t PM_SaberAttackForMovement(const saber_moveName_t curmove)
 
 				WP_ForcePowerDrain(pm->ps, FP_SABER_OFFENSE, SABER_ALT_ATTACK_POWER_FB);
 			}
-			else if (pm->ps->groundEntityNum != ENTITYNUM_NONE &&
+			else if (pm->ps->groundentity_num != ENTITYNUM_NONE &&
 				pm->ps->pm_flags & PMF_DUCKED &&
 				pm->ps->weaponTime <= 0 &&
 				!pm_saber_in_special_attack(pm->ps->torsoAnim) &&
@@ -3352,7 +3352,7 @@ saber_moveName_t PM_SaberAttackForMovement(const saber_moveName_t curmove)
 				pm->ps->fd.saber_anim_level == SS_STAFF &&
 				pm->ps->fd.forceRageRecoveryTime < pm->cmd.serverTime &&
 				pm->ps->fd.forcePowerLevel[FP_LEVITATION] > FORCE_LEVEL_1 &&
-				(pm->ps->groundEntityNum != ENTITYNUM_NONE || PM_GroundDistance() <= 40) &&
+				(pm->ps->groundentity_num != ENTITYNUM_NONE || PM_GroundDistance() <= 40) &&
 				pm->ps->velocity[2] >= 0 &&
 				(pm->cmd.upmove > 0 || pm->ps->pm_flags & PMF_JUMP_HELD) &&
 				!PM_SaberInTransitionAny(pm->ps->saber_move) &&
@@ -3574,7 +3574,7 @@ qboolean PM_CheckUpsideDownAttack(void)
 
 void PM_TryAirKick(const saber_moveName_t kick_move)
 {
-	if (pm->ps->groundEntityNum < ENTITYNUM_NONE)
+	if (pm->ps->groundentity_num < ENTITYNUM_NONE)
 	{
 		//just do it
 		PM_Setsaber_move(kick_move);
@@ -3647,7 +3647,7 @@ int PM_CheckKick(void)
 			if (pm->cmd.rightmove > 0)
 			{
 				//kick right
-				if (pm->ps->groundEntityNum == ENTITYNUM_NONE || pm->cmd.upmove > 0)
+				if (pm->ps->groundentity_num == ENTITYNUM_NONE || pm->cmd.upmove > 0)
 				{
 					PM_TryAirKick(LS_KICK_R_AIR);
 				}
@@ -3666,7 +3666,7 @@ int PM_CheckKick(void)
 			else
 			{
 				//kick left
-				if (pm->ps->groundEntityNum == ENTITYNUM_NONE || pm->cmd.upmove > 0)
+				if (pm->ps->groundentity_num == ENTITYNUM_NONE || pm->cmd.upmove > 0)
 				{
 					PM_TryAirKick(LS_KICK_L_AIR);
 				}
@@ -3690,11 +3690,11 @@ int PM_CheckKick(void)
 			if (pm->cmd.forwardmove > 0)
 			{
 				//kick fwd
-				if (pm->ps->groundEntityNum == ENTITYNUM_NONE || pm->cmd.upmove > 0)
+				if (pm->ps->groundentity_num == ENTITYNUM_NONE || pm->cmd.upmove > 0)
 				{
 					PM_TryAirKick(LS_KICK_F_AIR);
 				}
-				else if (pm->ps->groundEntityNum != ENTITYNUM_NONE && pm->ps->weapon == WP_SABER && !
+				else if (pm->ps->groundentity_num != ENTITYNUM_NONE && pm->ps->weapon == WP_SABER && !
 					BG_SabersOff(pm->ps))
 				{
 					kick_move = LS_KICK_F2;
@@ -3704,7 +3704,7 @@ int PM_CheckKick(void)
 					kick_move = LS_KICK_F;
 				}
 			}
-			else if (pm->ps->groundEntityNum == ENTITYNUM_NONE || pm->cmd.upmove > 0)
+			else if (pm->ps->groundentity_num == ENTITYNUM_NONE || pm->cmd.upmove > 0)
 			{
 				PM_TryAirKick(LS_KICK_B_AIR);
 			}
@@ -3750,7 +3750,7 @@ int PM_MeleeMoveForConditions(void)
 			if (pm->cmd.rightmove > 0)
 			{
 				//kick right
-				if (pm->ps->groundEntityNum == ENTITYNUM_NONE || pm->cmd.upmove > 0)
+				if (pm->ps->groundentity_num == ENTITYNUM_NONE || pm->cmd.upmove > 0)
 				{
 					PM_TryAirKick(LS_KICK_R_AIR);
 				}
@@ -3769,7 +3769,7 @@ int PM_MeleeMoveForConditions(void)
 			else
 			{
 				//kick left
-				if (pm->ps->groundEntityNum == ENTITYNUM_NONE || pm->cmd.upmove > 0)
+				if (pm->ps->groundentity_num == ENTITYNUM_NONE || pm->cmd.upmove > 0)
 				{
 					PM_TryAirKick(LS_KICK_L_AIR);
 				}
@@ -3793,11 +3793,11 @@ int PM_MeleeMoveForConditions(void)
 			if (pm->cmd.forwardmove > 0)
 			{
 				//kick fwd
-				if (pm->ps->groundEntityNum == ENTITYNUM_NONE || pm->cmd.upmove > 0)
+				if (pm->ps->groundentity_num == ENTITYNUM_NONE || pm->cmd.upmove > 0)
 				{
 					PM_TryAirKick(LS_KICK_F_AIR);
 				}
-				else if (pm->ps->groundEntityNum != ENTITYNUM_NONE && pm->ps->weapon == WP_SABER && !
+				else if (pm->ps->groundentity_num != ENTITYNUM_NONE && pm->ps->weapon == WP_SABER && !
 					BG_SabersOff(pm->ps))
 				{
 					kick_move = LS_KICK_F2;
@@ -3807,7 +3807,7 @@ int PM_MeleeMoveForConditions(void)
 					kick_move = LS_KICK_F;
 				}
 			}
-			else if (pm->ps->groundEntityNum == ENTITYNUM_NONE || pm->cmd.upmove > 0)
+			else if (pm->ps->groundentity_num == ENTITYNUM_NONE || pm->cmd.upmove > 0)
 			{
 				PM_TryAirKick(LS_KICK_B_AIR);
 			}
@@ -3854,7 +3854,7 @@ qboolean PM_CanDoKata(void)
 		&& !PM_SaberInKata(pm->ps->saber_move)
 		&& !PM_InKataAnim(pm->ps->legsAnim)
 		&& !PM_InKataAnim(pm->ps->torsoAnim)
-		&& pm->ps->groundEntityNum != ENTITYNUM_NONE //not in the air
+		&& pm->ps->groundentity_num != ENTITYNUM_NONE //not in the air
 		&& pm->cmd.buttons & BUTTON_ATTACK //pressing attack
 		&& pm->cmd.buttons & BUTTON_ALT_ATTACK //pressing alt attack
 		&& !pm->cmd.forwardmove //not moving f/b
@@ -4156,7 +4156,7 @@ void PM_SetMeleeBlock(void)
 				pm->cmd.rightmove = 0;
 				pm->cmd.upmove = 0;
 			}
-			if (pm->ps->groundEntityNum != ENTITYNUM_NONE && !pm->cmd.upmove)
+			if (pm->ps->groundentity_num != ENTITYNUM_NONE && !pm->cmd.upmove)
 			{
 				PM_SetAnim(SETANIM_LEGS, anim, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 				pm->ps->legsTimer = pm->ps->torsoTimer;
@@ -5087,10 +5087,10 @@ void PM_WeaponLightsaber(void)
 					if (PM_CanDoRollStab())
 					{
 						//make sure the saber is on for this move!
-						if (pm->ps->saberHolstered == 2)
+						if (pm->ps->saber_holstered == 2)
 						{
 							//all the way off
-							pm->ps->saberHolstered = 0;
+							pm->ps->saber_holstered = 0;
 							PM_AddEvent(EV_SABER_UNHOLSTER);
 						}
 						PM_Setsaber_move(LS_ROLL_STAB);
@@ -5223,7 +5223,7 @@ void PM_WeaponLightsaber(void)
 				if (!pm->ps->m_iVehicleNum)
 				{
 					//don't let em unholster the saber by attacking while on vehicle
-					pm->ps->saberHolstered = 0;
+					pm->ps->saber_holstered = 0;
 					PM_AddEvent(EV_SABER_UNHOLSTER);
 				}
 				else
@@ -5243,14 +5243,14 @@ void PM_WeaponLightsaber(void)
 		goto weapChecks;
 	}
 
-	if (!pm->ps->saberEntityNum && pm->ps->saberInFlight)
+	if (!pm->ps->saberentity_num && pm->ps->saberInFlight)
 	{
 		//this means our saber has been knocked away
 		if (pm->ps->fd.saber_anim_level == SS_DUAL)
 		{
-			if (pm->ps->saberHolstered > 1 || !pm->ps->saberHolstered)
+			if (pm->ps->saber_holstered > 1 || !pm->ps->saber_holstered)
 			{
-				pm->ps->saberHolstered = 1;
+				pm->ps->saber_holstered = 1;
 			}
 		}
 		else
@@ -5287,8 +5287,7 @@ void PM_WeaponLightsaber(void)
 				}
 			}
 		}
-		else if (!PM_SaberThrowable() && pm->cmd.buttons & BUTTON_ALT_ATTACK && pm->ps->communicatingflags & 1 <<
-			KICKING) //not trying to swing the saber
+		else if (!PM_SaberThrowable() && pm->cmd.buttons & BUTTON_ALT_ATTACK && pm->ps->communicatingflags & 1 << KICKING) //not trying to swing the saber
 		{
 			//kick instead of doing a throw
 			if (PM_DoKick())
@@ -5305,7 +5304,7 @@ void PM_WeaponLightsaber(void)
 				return;
 			}
 		}
-		else if (pm->ps->saberInFlight && pm->ps->saberEntityNum)
+		else if (pm->ps->saberInFlight && pm->ps->saberentity_num)
 		{
 			//saber is already in flight continue moving it with the force.
 			switch (pm->ps->fd.saber_anim_level)
@@ -5359,8 +5358,7 @@ void PM_WeaponLightsaber(void)
 					//This will get set to false again once the saber makes it back to its owner game-side
 					if (!pm->ps->saberInFlight)
 					{
-						pm->ps->fd.forcePower -= forcePowerNeeded[pm->ps->fd.forcePowerLevel[FP_SABERTHROW]][
-							FP_SABERTHROW];
+						pm->ps->fd.forcePower -= forcePowerNeeded[pm->ps->fd.forcePowerLevel[FP_SABERTHROW]][FP_SABERTHROW];
 					}
 
 					pm->ps->saberInFlight = qtrue;
@@ -5755,7 +5753,7 @@ weapChecks:
 
 			if (kick_move != -1)
 			{
-				if (pm->ps->groundEntityNum == ENTITYNUM_NONE)
+				if (pm->ps->groundentity_num == ENTITYNUM_NONE)
 				{
 					//if in air, convert kick to an in-air kick
 					const float gDist = PM_GroundDistance();
@@ -5941,16 +5939,16 @@ weapChecks:
 						if (pm->ps->saberFatigueChainCount < MISHAPLEVEL_MAX)
 						{
 							pm->ps->saberFatigueChainCount++;
-			}
-		}
-	}
+						}
+					}
+				}
 				else
 #endif
 				{
 					//player gets his by directional control
 					newmove = saber_moveData[curmove].chain_idle; //oops, not attacking, so don't chain
 				}
-}
+			}
 			else
 			{
 				PM_Setsaber_move(LS_READY);
@@ -6036,9 +6034,9 @@ weapChecks:
 		if (pm->cmd.buttons & BUTTON_ATTACK && pm->ps->torsoAnim == BOTH_FORCELONGLEAP_START)
 		{
 			//only 1 attack you can do from this anim
-			if (pm->ps->saberHolstered == 2)
+			if (pm->ps->saber_holstered == 2)
 			{
-				pm->ps->saberHolstered = 0;
+				pm->ps->saber_holstered = 0;
 				PM_AddEvent(EV_SABER_UNHOLSTER);
 			}
 			PM_Setsaber_move(LS_LEAP_ATTACK2);
@@ -6118,7 +6116,7 @@ weapChecks:
 				{
 					//NPCs use more randomized attacks the more skilled they are
 					newmove = PM_NPCSaberAttackFromQuad(saber_moveData[curmove].endQuad);
-			}
+				}
 				else
 #endif
 				{
@@ -6156,7 +6154,7 @@ weapChecks:
 					//cannot chain this time
 					newmove = saber_moveData[curmove].chain_idle;
 				}
-		}
+			}
 
 			if (newmove != LS_NONE)
 			{
@@ -6207,7 +6205,7 @@ weapChecks:
 				anim = saber_moveData[newmove].animToUse;
 			}
 
-			if (!pm->cmd.forwardmove && !pm->cmd.rightmove && pm->cmd.upmove >= 0 && pm->ps->groundEntityNum !=
+			if (!pm->cmd.forwardmove && !pm->cmd.rightmove && pm->cmd.upmove >= 0 && pm->ps->groundentity_num !=
 				ENTITYNUM_NONE)
 			{
 				//not moving at all, so set the anim on entire body
@@ -6304,10 +6302,10 @@ weapChecks:
 			newmove = LS_READY;
 		}
 
-		if (pm->ps->saberHolstered == 2 && pm->watertype != CONTENTS_WATER)
+		if (pm->ps->saber_holstered == 2 && pm->watertype != CONTENTS_WATER)
 		{
 			//turn on the saber if it's not on
-			pm->ps->saberHolstered = 0;
+			pm->ps->saber_holstered = 0;
 			PM_AddEvent(EV_SABER_UNHOLSTER);
 		}
 
@@ -6495,7 +6493,7 @@ void PM_SetJumped(const float height, const qboolean force)
 	pm->ps->velocity[2] = height;
 	pml.groundPlane = qfalse;
 	pml.walking = qfalse;
-	pm->ps->groundEntityNum = ENTITYNUM_NONE;
+	pm->ps->groundentity_num = ENTITYNUM_NONE;
 	pm->ps->pm_flags |= PMF_JUMP_HELD;
 	pm->ps->pm_flags |= PMF_JUMPING;
 	pm->cmd.upmove = 0;
@@ -6771,7 +6769,7 @@ void PM_Setsaber_move(saber_moveName_t new_move)
 		|| new_move == LS_KICK_R_AIR
 		|| new_move == LS_KICK_L_AIR)
 	{
-		if (pm->ps->groundEntityNum != ENTITYNUM_NONE)
+		if (pm->ps->groundentity_num != ENTITYNUM_NONE)
 		{
 			PM_SetJumped(200, qtrue);
 		}
@@ -6920,7 +6918,7 @@ void PM_Setsaber_move(saber_moveName_t new_move)
 		}
 
 		parts = SETANIM_TORSO;
-			}
+	}
 
 	if (!pm->ps->m_iVehicleNum)
 	{
@@ -7018,7 +7016,7 @@ void PM_Setsaber_move(saber_moveName_t new_move)
 				&& !PM_PainAnim(pm->ps->legsAnim)
 				&& !PM_InSpecialJump(pm->ps->legsAnim)
 				&& !PM_InSlopeAnim(pm->ps->legsAnim)
-				&& pm->ps->groundEntityNum != ENTITYNUM_NONE
+				&& pm->ps->groundentity_num != ENTITYNUM_NONE
 				&& !(pm->ps->pm_flags & PMF_DUCKED)
 				&& new_move != LS_PUTAWAY)
 			{
@@ -7236,7 +7234,7 @@ saberInfo_t* BG_MySaber(int client_num, int saber_num)
 #endif
 
 	return NULL;
-		}
+}
 
 qboolean PM_DoKick(void)
 {
@@ -7255,7 +7253,7 @@ qboolean PM_DoKick(void)
 
 	if (kick_move != -1)
 	{
-		if (pm->ps->groundEntityNum == ENTITYNUM_NONE)
+		if (pm->ps->groundentity_num == ENTITYNUM_NONE)
 		{
 			//if in air, convert kick to an in-air kick
 			const float g_dist = PM_GroundDistance();
@@ -7347,7 +7345,7 @@ qboolean PM_DoSlap(void)
 
 	if (kick_move != -1)
 	{
-		if (pm->ps->groundEntityNum == ENTITYNUM_NONE)
+		if (pm->ps->groundentity_num == ENTITYNUM_NONE)
 		{
 			//if in air, convert kick to an in-air kick
 			const float g_dist = PM_GroundDistance();

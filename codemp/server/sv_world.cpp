@@ -41,7 +41,7 @@ clip_handle_t SV_clip_handleForEntity(const sharedEntity_t* ent)
 	if (ent->r.bmodel)
 	{
 		// explicit hulls in the BSP model
-		return CM_InlineModel(ent->s.modelindex);
+		return CM_InlineModel(ent->s.model_index);
 	}
 	if (ent->r.svFlags & SVF_CAPSULE)
 	{
@@ -506,7 +506,7 @@ SV_ClipToEntity
 void SV_ClipToEntity(trace_t* trace, const vec3_t start, const vec3_t mins, const vec3_t maxs, const vec3_t end,
 	const int entity_num, const int contentmask, const int capsule)
 {
-	const sharedEntity_t* touch = SV_GentityNum(entity_num);
+	const sharedEntity_t* touch = SV_Gentity_num(entity_num);
 
 	Com_Memset(trace, 0, sizeof(trace_t));
 
@@ -566,7 +566,7 @@ static void SV_ClipMoveToEntities(moveclip_t* clip)
 
 	if (clip->pass_entity_num != ENTITYNUM_NONE)
 	{
-		passOwnerNum = SV_GentityNum(clip->pass_entity_num)->r.ownerNum;
+		passOwnerNum = SV_Gentity_num(clip->pass_entity_num)->r.ownerNum;
 		if (passOwnerNum == ENTITYNUM_NONE)
 		{
 			passOwnerNum = -1;
@@ -577,7 +577,7 @@ static void SV_ClipMoveToEntities(moveclip_t* clip)
 		passOwnerNum = -1;
 	}
 
-	if (SV_GentityNum(clip->pass_entity_num)->r.svFlags & SVF_OWNERNOTSHARED)
+	if (SV_Gentity_num(clip->pass_entity_num)->r.svFlags & SVF_OWNERNOTSHARED)
 	{
 		thisOwnerShared = 0;
 	}
@@ -588,7 +588,7 @@ static void SV_ClipMoveToEntities(moveclip_t* clip)
 		{
 			return;
 		}
-		sharedEntity_t* touch = SV_GentityNum(touchlist[i]);
+		sharedEntity_t* touch = SV_Gentity_num(touchlist[i]);
 
 		// see if we should ignore this entity
 		if (clip->pass_entity_num != ENTITYNUM_NONE)
@@ -708,7 +708,7 @@ static void SV_ClipMoveToEntities(moveclip_t* clip)
 				// set our trace record size
 				for (z = 0; z < MAX_G2_COLLISIONS; z++)
 				{
-					if (clip->trace.G2CollisionMap[z].mEntityNum != -1)
+					if (clip->trace.G2CollisionMap[z].mentity_num != -1)
 					{
 						oldTraceRecSize++;
 					}
@@ -721,7 +721,7 @@ static void SV_ClipMoveToEntities(moveclip_t* clip)
 
 				for (z = 0; z < MAX_G2_COLLISIONS; z++)
 				{
-					if (clip->trace.G2CollisionMap[z].mEntityNum != -1)
+					if (clip->trace.G2CollisionMap[z].mentity_num != -1)
 					{
 						newTraceRecSize++;
 					}
@@ -765,7 +765,7 @@ static void SV_ClipMoveToEntities(moveclip_t* clip)
 			memset(&G2Trace, 0, sizeof G2Trace);
 			while (t_n < MAX_G2_COLLISIONS)
 			{
-				G2Trace[t_n].mEntityNum = -1;
+				G2Trace[t_n].mentity_num = -1;
 				t_n++;
 			}
 
@@ -809,13 +809,13 @@ static void SV_ClipMoveToEntities(moveclip_t* clip)
 			t_n = 0;
 			while (t_n < MAX_G2_COLLISIONS)
 			{
-				if (G2Trace[t_n].mEntityNum == touch->s.number)
+				if (G2Trace[t_n].mentity_num == touch->s.number)
 				{
 					//ok, valid
 					best_tr = t_n;
 					break;
 				}
-				if (G2Trace[t_n].mEntityNum == -1)
+				if (G2Trace[t_n].mentity_num == -1)
 				{
 					//there should not be any after the first -1
 					break;
@@ -837,7 +837,7 @@ static void SV_ClipMoveToEntities(moveclip_t* clip)
 				if (clip->traceFlags & G2TRFLAG_GETSURFINDEX)
 				{
 					//we have requested that surfaceFlags be stomped over with the g2 hit surface index.
-					if (clip->trace.entity_num == G2Trace[best_tr].mEntityNum)
+					if (clip->trace.entity_num == G2Trace[best_tr].mentity_num)
 					{
 						clip->trace.surfaceFlags = G2Trace[best_tr].mSurfaceIndex;
 					}
@@ -952,7 +952,7 @@ int SV_PointContents(const vec3_t p, const int pass_entity_num)
 		{
 			continue;
 		}
-		const sharedEntity_t* hit = SV_GentityNum(touch[i]);
+		const sharedEntity_t* hit = SV_Gentity_num(touch[i]);
 		// might intersect, so do an exact clip
 		const clip_handle_t clip_handle = SV_clip_handleForEntity(hit);
 

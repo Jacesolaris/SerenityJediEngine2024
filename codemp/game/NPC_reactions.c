@@ -369,7 +369,7 @@ void NPC_ChoosePainAnimation(gentity_t* self, const gentity_t* other, vec3_t poi
 		{
 			self->painDebounceTime = level.time + 4000;
 		}
-		const int animLength = bgAllAnims[self->localAnimIndex].anims[pain_anim].numFrames * fabs(
+		const int animLength = bgAllAnims[self->localAnimIndex].anims[pain_anim].num_frames * fabs(
 			bgHumanoidAnimations[pain_anim].frameLerp);
 
 		self->painDebounceTime = level.time + animLength;
@@ -585,7 +585,7 @@ void npc_push(gentity_t* self, gentity_t* other, trace_t* trace)
 				gripper = &g_entities[i];
 				if (gripper && gripper->client)
 				{
-					if (gripper->client->ps.fd.forceGripEntityNum == other->client->ps.client_num)
+					if (gripper->client->ps.fd.forceGripentity_num == other->client->ps.client_num)
 						break;
 				}
 			}

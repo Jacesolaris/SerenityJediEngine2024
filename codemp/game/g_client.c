@@ -50,10 +50,8 @@ extern qboolean WP_SaberCanTurnOffSomeBlades(const saberInfo_t* saber);
 extern qboolean G_ValidSaberStyle(const gentity_t* ent, int saber_style);
 extern void Player_CheckBurn(const gentity_t* self);
 extern void Player_CheckFreeze(const gentity_t* self);
-extern qboolean WP_SaberStyleValidForSaber(const saberInfo_t* saber1, const saberInfo_t* saber2, int saber_holstered,
-	int saber_anim_level);
-extern qboolean WP_UseFirstValidSaberStyle(const saberInfo_t* saber1, const saberInfo_t* saber2, int saber_holstered,
-	int* saber_anim_level);
+extern qboolean WP_SaberStyleValidForSaber(const saberInfo_t* saber1, const saberInfo_t* saber2, int saber_holstered, int saber_anim_level);
+extern qboolean WP_UseFirstValidSaberStyle(const saberInfo_t* saber1, const saberInfo_t* saber2, int saber_holstered, int* saber_anim_level);
 
 forcedata_t Client_Force[MAX_CLIENTS];
 
@@ -365,7 +363,7 @@ void ThrowSaberToAttacker(gentity_t* self, const gentity_t* attacker)
 		//someone killed us and we had the saber thrown, so actually move this saber to the saber location
 		//if we killed ourselves with saber thrown, however, same suicide rules of respawning at spawn spot still
 		//apply.
-		const gentity_t* flyingsaber = &g_entities[self->client->ps.saberEntityNum];
+		const gentity_t* flyingsaber = &g_entities[self->client->ps.saberentity_num];
 
 		if (flyingsaber && flyingsaber->inuse)
 		{
@@ -430,7 +428,7 @@ void JMSaberThink(gentity_t* ent)
 			VectorCopy(ent->enemy->s.pos.trBase, ent->s.pos.trBase);
 			VectorCopy(ent->enemy->s.pos.trBase, ent->s.origin);
 			VectorCopy(ent->enemy->s.pos.trBase, ent->r.currentOrigin);
-			ent->s.modelindex = G_ModelIndex(DEFAULT_SABER_MODEL);
+			ent->s.model_index = G_model_index(DEFAULT_SABER_MODEL);
 			ent->s.eFlags &= ~(EF_NODRAW);
 			ent->s.modelGhoul2 = 1;
 			ent->s.eType = ET_MISSILE;
@@ -474,7 +472,7 @@ void JMSaberTouch(gentity_t* self, gentity_t* other, trace_t* trace)
 		return;
 	}
 
-	if (!self->s.modelindex)
+	if (!self->s.model_index)
 	{
 		return;
 	}
@@ -541,7 +539,7 @@ void JMSaberTouch(gentity_t* self, gentity_t* other, trace_t* trace)
 	self->pos2[0] = 1;
 	self->pos2[1] = level.time + JMSABER_RESPAWN_TIME;
 
-	self->s.modelindex = 0;
+	self->s.model_index = 0;
 	self->s.eFlags |= EF_NODRAW;
 	self->s.modelGhoul2 = 0;
 	self->s.eType = ET_GENERAL;
@@ -566,7 +564,7 @@ void SP_info_jedimaster_start(gentity_t* ent)
 
 	ent->flags = FL_BOUNCE_HALF;
 
-	ent->s.modelindex = G_ModelIndex(DEFAULT_SABER_MODEL);
+	ent->s.model_index = G_model_index(DEFAULT_SABER_MODEL);
 	ent->s.modelGhoul2 = 1;
 	ent->s.g2radius = 20;
 	//ent->s.eType = ET_GENERAL;
@@ -1152,7 +1150,7 @@ static qboolean CopyToBodyQue(gentity_t* ent)
 	body->timestamp = level.time;
 	body->physicsObject = qtrue;
 	body->physicsBounce = 0.0f; // don't bounce
-	if (body->s.groundEntityNum == ENTITYNUM_NONE)
+	if (body->s.groundentity_num == ENTITYNUM_NONE)
 	{
 		body->s.pos.trType = TR_GRAVITY;
 		body->s.pos.trTime = level.time;
@@ -2059,11 +2057,11 @@ void SetupGameGhoul2Model(gentity_t* ent, char* modelname, char* skinName)
 					if (ent->client->NPC_class == CLASS_VEHICLE)
 					{
 						//vehicles are tricky and send over their vehicle names as the model (the model is then retrieved based on the vehicle name)
-						ent->s.modelindex = G_ModelIndex(vehicleName);
+						ent->s.model_index = G_model_index(vehicleName);
 					}
 					else
 					{
-						ent->s.modelindex = G_ModelIndex(modelFullPath);
+						ent->s.model_index = G_model_index(modelFullPath);
 					}
 				}
 			}
@@ -2266,7 +2264,7 @@ if desired.
 ============
 */
 
-qboolean G_SetSaber(gentity_t* ent, int saber_num, char* saberName, qboolean siegeOverride);
+qboolean G_SetSaber(const gentity_t* ent, const int saber_num, const char* saber_name, const qboolean siege_override);
 void G_ValidateSiegeClassForTeam(const gentity_t* ent, int team);
 
 typedef struct userinfoValidate_s
@@ -5789,7 +5787,7 @@ char* ClientConnect(int client_num, const qboolean firstTime, const qboolean isB
 
 void G_WriteClientSessionData(const gclient_t* client);
 
-void WP_SetSaber(int ent_num, saberInfo_t* sabers, int saber_num, const char* saberName);
+void WP_SetSaber(int ent_num, saberInfo_t* sabers, int saber_num, const char* saber_name);
 
 /*
 ===========
@@ -6038,7 +6036,7 @@ void G_BreakArm(gentity_t* ent, const int arm)
 	{
 		if (ent->client->saber[1].model[0] &&
 			ent->client->ps.weapon == WP_SABER &&
-			!ent->client->ps.saberHolstered &&
+			!ent->client->ps.saber_holstered &&
 			ent->client->saber[1].soundOff)
 		{
 			//the left arm shuts off its saber upon being broken
@@ -6084,7 +6082,7 @@ void G_UpdateClientAnims(gentity_t* self, float animSpeedScale)
 	static int legsAnim;
 	static int firstFrame, lastFrame;
 	static int aFlags;
-	static float animSpeed, lAnimSpeedScale;
+	static float anim_speed, lAnimSpeedScale;
 	qboolean setTorso = qfalse;
 
 	torsoAnim = self->client->ps.torsoAnim;
@@ -6106,7 +6104,7 @@ void G_UpdateClientAnims(gentity_t* self, float animSpeedScale)
 
 	if (self->localAnimIndex > 1 &&
 		bgAllAnims[self->localAnimIndex].anims[legsAnim].firstFrame == 0 &&
-		bgAllAnims[self->localAnimIndex].anims[legsAnim].numFrames == 0)
+		bgAllAnims[self->localAnimIndex].anims[legsAnim].num_frames == 0)
 	{
 		//We'll allow this for non-humanoids.
 		goto tryTorso;
@@ -6114,8 +6112,8 @@ void G_UpdateClientAnims(gentity_t* self, float animSpeedScale)
 
 	if (self->client->legsAnimExecute != legsAnim || self->client->legsLastFlip != self->client->ps.legsFlip)
 	{
-		animSpeed = 50.0f / bgAllAnims[self->localAnimIndex].anims[legsAnim].frameLerp;
-		lAnimSpeedScale = animSpeed *= animSpeedScale;
+		anim_speed = 50.0f / bgAllAnims[self->localAnimIndex].anims[legsAnim].frameLerp;
+		lAnimSpeedScale = anim_speed *= animSpeedScale;
 
 		if (bgAllAnims[self->localAnimIndex].anims[legsAnim].loopFrames != -1)
 		{
@@ -6126,17 +6124,17 @@ void G_UpdateClientAnims(gentity_t* self, float animSpeedScale)
 			aFlags = BONE_ANIM_OVERRIDE_FREEZE;
 		}
 
-		if (animSpeed < 0)
+		if (anim_speed < 0)
 		{
 			lastFrame = bgAllAnims[self->localAnimIndex].anims[legsAnim].firstFrame;
 			firstFrame = bgAllAnims[self->localAnimIndex].anims[legsAnim].firstFrame + bgAllAnims[self->localAnimIndex].
-				anims[legsAnim].numFrames;
+				anims[legsAnim].num_frames;
 		}
 		else
 		{
 			firstFrame = bgAllAnims[self->localAnimIndex].anims[legsAnim].firstFrame;
 			lastFrame = bgAllAnims[self->localAnimIndex].anims[legsAnim].firstFrame + bgAllAnims[self->localAnimIndex].
-				anims[legsAnim].numFrames;
+				anims[legsAnim].num_frames;
 		}
 
 		aFlags |= BONE_ANIM_BLEND;
@@ -6152,7 +6150,7 @@ tryTorso:
 	{
 		if (self->localAnimIndex > 1 &&
 			bgAllAnims[self->localAnimIndex].anims[torsoAnim].firstFrame == 0 &&
-			bgAllAnims[self->localAnimIndex].anims[torsoAnim].numFrames == 0)
+			bgAllAnims[self->localAnimIndex].anims[torsoAnim].num_frames == 0)
 
 		{
 			//If this fails as well just return.
@@ -6171,15 +6169,15 @@ tryTorso:
 	{
 		static int f;
 		aFlags = 0;
-		animSpeed = 0;
+		anim_speed = 0;
 
 		f = torsoAnim;
 
 		pm_saber_start_trans_anim(self->s.number, self->client->ps.fd.saber_anim_level, self->client->ps.weapon, f,
 			&animSpeedScale, self->client->ps.userInt3);
 
-		animSpeed = 50.0f / bgAllAnims[self->localAnimIndex].anims[f].frameLerp;
-		lAnimSpeedScale = animSpeed *= animSpeedScale;
+		anim_speed = 50.0f / bgAllAnims[self->localAnimIndex].anims[f].frameLerp;
+		lAnimSpeedScale = anim_speed *= animSpeedScale;
 
 		if (bgAllAnims[self->localAnimIndex].anims[f].loopFrames != -1)
 		{
@@ -6193,17 +6191,17 @@ tryTorso:
 		aFlags |= BONE_ANIM_BLEND;
 		//since client defaults to blend. Not sure if this will make much difference if any on client position, but it's here just for the sake of matching them.
 
-		if (animSpeed < 0)
+		if (anim_speed < 0)
 		{
 			lastFrame = bgAllAnims[self->localAnimIndex].anims[f].firstFrame;
 			firstFrame = bgAllAnims[self->localAnimIndex].anims[f].firstFrame + bgAllAnims[self->localAnimIndex].anims[
-				f].numFrames;
+				f].num_frames;
 		}
 		else
 		{
 			firstFrame = bgAllAnims[self->localAnimIndex].anims[f].firstFrame;
 			lastFrame = bgAllAnims[self->localAnimIndex].anims[f].firstFrame + bgAllAnims[self->localAnimIndex].anims[f]
-				.numFrames;
+				.num_frames;
 		}
 
 		trap->G2API_SetBoneAnim(self->ghoul2, 0, "lower_lumbar", firstFrame, lastFrame, aFlags, lAnimSpeedScale,
@@ -6241,7 +6239,7 @@ tryTorso:
 			self->client->brokenLimbs = self->client->ps.brokenLimbs;
 
 			armFirstFrame = armAnim->firstFrame;
-			armLastFrame = armAnim->firstFrame + armAnim->numFrames;
+			armLastFrame = armAnim->firstFrame + armAnim->num_frames;
 			armAnimSpeed = 50.0f / armAnim->frameLerp;
 			armFlags = (BONE_ANIM_OVERRIDE_LOOP | BONE_ANIM_BLEND);
 
@@ -6276,8 +6274,8 @@ tryTorso:
 					armAnim = &bgAllAnims[self->localAnimIndex].anims[BOTH_ATTACK2];
 
 					//armFirstFrame = armAnim->firstFrame;
-					armFirstFrame = armAnim->firstFrame + armAnim->numFrames;
-					armLastFrame = armAnim->firstFrame + armAnim->numFrames;
+					armFirstFrame = armAnim->firstFrame + armAnim->num_frames;
+					armLastFrame = armAnim->firstFrame + armAnim->num_frames;
 					armAnimSpeed = 50.0f / armAnim->frameLerp;
 					armFlags = (BONE_ANIM_OVERRIDE_LOOP | BONE_ANIM_BLEND);
 
@@ -6303,7 +6301,7 @@ tryTorso:
 					//Now set the left arm to "support" the right one
 					armAnim = &bgAllAnims[self->localAnimIndex].anims[BOTH_STAND2];
 					armFirstFrame = armAnim->firstFrame;
-					armLastFrame = armAnim->firstFrame + armAnim->numFrames;
+					armLastFrame = armAnim->firstFrame + armAnim->num_frames;
 					armAnimSpeed = 50.0f / armAnim->frameLerp;
 					armFlags = (BONE_ANIM_OVERRIDE_LOOP | BONE_ANIM_BLEND);
 
@@ -6429,6 +6427,32 @@ void ClientSpawn(gentity_t* ent)
 				// they don't match up, force the user info
 				Info_SetValueForKey(userinfo, key, saber);
 				trap->SetUserinfo(ent->s.number, userinfo);
+			}
+		}
+
+		if (ent->client->saber[0].model[0] && ent->client->saber[1].model[0])
+		{ //dual
+			ent->client->ps.fd.saber_anim_levelBase = ent->client->ps.fd.saber_anim_level = ent->client->ps.fd.saberDrawAnimLevel = SS_DUAL;
+		}
+		else if ((ent->client->saber[0].saberFlags & SFL_TWO_HANDED))
+		{ //staff
+			ent->client->ps.fd.saber_anim_level = ent->client->ps.fd.saberDrawAnimLevel = SS_STAFF;
+		}
+		else
+		{
+			ent->client->sess.saberLevel = Com_Clampi(SS_FAST, SS_STRONG, ent->client->sess.saberLevel);
+			ent->client->ps.fd.saber_anim_levelBase = ent->client->ps.fd.saber_anim_level = ent->client->ps.fd.saberDrawAnimLevel = ent->client->sess.saberLevel;
+
+			// limit our saber style to our force points allocated to saber offense
+			if (level.gametype != GT_SIEGE && ent->client->ps.fd.saber_anim_level > ent->client->ps.fd.forcePowerLevel[FP_SABER_OFFENSE])
+				ent->client->ps.fd.saber_anim_levelBase = ent->client->ps.fd.saber_anim_level = ent->client->ps.fd.saberDrawAnimLevel = ent->client->sess.saberLevel = ent->client->ps.fd.forcePowerLevel[FP_SABER_OFFENSE];
+		}
+		if (level.gametype != GT_SIEGE)
+		{// let's just make sure the styles we chose are cool
+			if (!WP_SaberStyleValidForSaber(&ent->client->saber[0], &ent->client->saber[1], ent->client->ps.saber_holstered, ent->client->ps.fd.saber_anim_level))
+			{
+				WP_UseFirstValidSaberStyle(&ent->client->saber[0], &ent->client->saber[1], ent->client->ps.saber_holstered, &ent->client->ps.fd.saber_anim_level);
+				ent->client->ps.fd.saber_anim_levelBase = ent->client->saberCycleQueue = ent->client->ps.fd.saber_anim_level;
 			}
 		}
 	}
@@ -6601,7 +6625,7 @@ void ClientSpawn(gentity_t* ent)
 
 	savedForce = client->ps.fd;
 
-	savesaber_num = client->ps.saberEntityNum;
+	savesaber_num = client->ps.saberentity_num;
 
 	savedSiegeIndex = client->siegeClass;
 
@@ -6661,7 +6685,7 @@ void ClientSpawn(gentity_t* ent)
 	}
 
 	//or the saber ent num
-	client->ps.saberEntityNum = savesaber_num;
+	client->ps.saberentity_num = savesaber_num;
 	client->saberStoredIndex = savesaber_num;
 
 	client->ps.fd = savedForce;
@@ -6717,7 +6741,7 @@ void ClientSpawn(gentity_t* ent)
 	client->ps.eFlags = flags;
 	client->mGameFlags = gameFlags;
 
-	client->ps.groundEntityNum = ent->s.groundEntityNum = ENTITYNUM_NONE;
+	client->ps.groundentity_num = ent->s.groundentity_num = ENTITYNUM_NONE;
 	ent->client = &level.clients[index];
 	ent->playerState = &ent->client->ps;
 	ent->takedamage = qtrue;
@@ -8626,18 +8650,18 @@ void ClientSpawn(gentity_t* ent)
 		&& ent->client->ps.fd.saber_anim_level != SS_DUAL)
 	{
 		//using dual sabers, but not the dual style, turn off blade
-		ent->client->ps.saberHolstered = 1;
+		ent->client->ps.saber_holstered = 1;
 	}
 	else if (ent->client->saber[0].numBlades > 1
 		&& WP_SaberCanTurnOffSomeBlades(&ent->client->saber[0])
 		&& ent->client->ps.fd.saber_anim_level != SS_STAFF)
 	{
 		//using staff saber, but not the staff style, turn off blade
-		ent->client->ps.saberHolstered = 1;
+		ent->client->ps.saber_holstered = 1;
 	}
 	else
 	{
-		ent->client->ps.saberHolstered = 0;
+		ent->client->ps.saber_holstered = 0;
 	}
 
 	// health will count down towards max_health
@@ -9016,7 +9040,7 @@ void ClientDisconnect(const int client_num)
 	G_ClearTeamVote(ent, ent->client->sess.sessionTeam);
 
 	trap->UnlinkEntity((sharedEntity_t*)ent);
-	ent->s.modelindex = 0;
+	ent->s.model_index = 0;
 	ent->inuse = qfalse;
 	ent->classname = "disconnected";
 	ent->client->pers.connected = CON_DISCONNECTED;

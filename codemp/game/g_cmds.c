@@ -43,7 +43,7 @@ extern qboolean in_camera;
 int AcceptBotCommand(const char* cmd, const gentity_t* pl);
 //end rww
 
-void WP_SetSaber(int ent_num, saberInfo_t* sabers, int saber_num, const char* saberName);
+void WP_SetSaber(int ent_num, saberInfo_t* sabers, int saber_num, const char* saber_name);
 
 void Cmd_NPC_f(gentity_t* ent);
 void Cmd_AdminNPC_f(gentity_t* ent);
@@ -1581,74 +1581,48 @@ argCheck:
 	}
 }
 
-extern qboolean WP_SaberStyleValidForSaber(const saberInfo_t* saber1, const saberInfo_t* saber2, int saber_holstered,
-	int saber_anim_level);
-extern qboolean WP_UseFirstValidSaberStyle(const saberInfo_t* saber1, const saberInfo_t* saber2, int saber_holstered,
-	int* saber_anim_level);
+extern qboolean WP_SaberStyleValidForSaber(const saberInfo_t* saber1, const saberInfo_t* saber2, int saber_holstered, int saber_anim_level);
+extern qboolean WP_UseFirstValidSaberStyle(const saberInfo_t* saber1, const saberInfo_t* saber2, int saber_holstered, int* saber_anim_level);
 
 qboolean G_ValidSaberStyle(const gentity_t* ent, int saber_style);
-
 qboolean G_SetSaber(const gentity_t* ent, const int saber_num, const char* saber_name, const qboolean siege_override)
 {
-	char trunc_saber_name[MAX_QPATH] = { 0 };
+	char truncSaberName[MAX_QPATH] = { 0 };
 
 	if (!siege_override && level.gametype == GT_SIEGE && ent->client->siegeClass != -1 &&
-		(bgSiegeClasses[ent->client->siegeClass].saberStance || bgSiegeClasses[ent->client->siegeClass].saber1[0] ||
-			bgSiegeClasses[ent->client->siegeClass].saber2[0]))
-	{
-		//don't let it be changed if the siege class has forced any saber-related things
+		(bgSiegeClasses[ent->client->siegeClass].saberStance || bgSiegeClasses[ent->client->siegeClass].saber1[0] || bgSiegeClasses[ent->client->siegeClass].saber2[0]))
+	{ //don't let it be changed if the siege class has forced any saber-related things
 		return qfalse;
 	}
 
-	Q_strncpyz(trunc_saber_name, saber_name, sizeof trunc_saber_name);
+	Q_strncpyz(truncSaberName, saber_name, sizeof(truncSaberName));
 
-	if (saber_num == 0 && (!Q_stricmp("none", trunc_saber_name) || !Q_stricmp("remove", trunc_saber_name)))
-	{
-		//can't remove saber 0 like this
-		Q_strncpyz(trunc_saber_name, DEFAULT_SABER, sizeof trunc_saber_name);
+	if (saber_num == 0 && (!Q_stricmp("none", truncSaberName) || !Q_stricmp("remove", truncSaberName)))
+	{ //can't remove saber 0 like this
+		Q_strncpyz(truncSaberName, DEFAULT_SABER, sizeof(truncSaberName));
 	}
 
 	//Set the saber with the arg given. If the arg is
 	//not a valid sabername defaults will be used.
-	WP_SetSaber(ent->s.number, ent->client->saber, saber_num, trunc_saber_name);
+	WP_SetSaber(ent->s.number, ent->client->saber, saber_num, truncSaberName);
 
 	if (!ent->client->saber[0].model[0])
 	{
 		assert(0); //should never happen!
-		Q_strncpyz(ent->client->pers.saber1, DEFAULT_SABER, sizeof ent->client->pers.saber1);
+		Q_strncpyz(ent->client->pers.saber1, DEFAULT_SABER, sizeof(ent->client->pers.saber1));
 	}
 	else
-		Q_strncpyz(ent->client->pers.saber1, ent->client->saber[0].name, sizeof ent->client->pers.saber1);
+		Q_strncpyz(ent->client->pers.saber1, ent->client->saber[0].name, sizeof(ent->client->pers.saber1));
 
 	if (!ent->client->saber[1].model[0])
-		Q_strncpyz(ent->client->pers.saber2, "none", sizeof ent->client->pers.saber2);
+		Q_strncpyz(ent->client->pers.saber2, "none", sizeof(ent->client->pers.saber2));
 	else
-		Q_strncpyz(ent->client->pers.saber2, ent->client->saber[1].name, sizeof ent->client->pers.saber2);
+		Q_strncpyz(ent->client->pers.saber2, ent->client->saber[1].name, sizeof(ent->client->pers.saber2));
 
-	if (!G_ValidSaberStyle(ent, ent->client->ps.fd.saber_anim_level))
+	if (!WP_SaberStyleValidForSaber(&ent->client->saber[0], &ent->client->saber[1], ent->client->ps.saber_holstered, ent->client->ps.fd.saber_anim_level))
 	{
-		//had an illegal style, revert to default
-		if ((ent->client->saber[0].type == SABER_BACKHAND))
-		{
-			ent->client->ps.fd.saber_anim_level = SS_STAFF;
-		}
-		else if ((ent->client->saber[0].type == SABER_ASBACKHAND))
-		{
-			ent->client->ps.fd.saber_anim_level = SS_STAFF;
-		}
-		else if ((ent->client->saber[0].type == SABER_STAFF_MAUL))
-		{
-			ent->client->ps.fd.saber_anim_level = SS_STAFF;
-		}
-		else if ((ent->client->saber[0].type == SABER_ELECTROSTAFF))
-		{
-			ent->client->ps.fd.saber_anim_level = SS_STAFF;
-		}
-		else
-		{
-			ent->client->ps.fd.saber_anim_level = SS_MEDIUM;
-		}
-		ent->client->saberCycleQueue = ent->client->ps.fd.saber_anim_level;
+		WP_UseFirstValidSaberStyle(&ent->client->saber[0], &ent->client->saber[1], ent->client->ps.saber_holstered, &ent->client->ps.fd.saber_anim_level);
+		ent->client->ps.fd.saber_anim_levelBase = ent->client->saberCycleQueue = ent->client->ps.fd.saber_anim_level;
 	}
 
 	return qtrue;
@@ -2130,7 +2104,7 @@ static void Cmd_VoiceCommand_f(gentity_t* ent)
 	if (level.gametype >= GT_TEAM)
 	{
 		gentity_t* te = G_TempEntity(vec3_origin, EV_VOICECMD_SOUND);
-		te->s.groundEntityNum = ent->s.number;
+		te->s.groundentity_num = ent->s.number;
 		te->s.eventParm = G_SoundIndex((char*)bg_customSiegeSoundNames[i]);
 		te->r.svFlags |= SVF_BROADCAST;
 	}
@@ -3428,10 +3402,11 @@ void Cmd_ToggleSaber_f(gentity_t* ent)
 		if (veh->m_pVehicle && veh->m_pVehicle->m_pVehicleInfo->type == VH_FIGHTER)
 			return;
 	}
+
 	if (ent->client->ps.fd.forceGripCripple)
 	{
 		//if they are being gripped, don't let them unholster their saber
-		if (ent->client->ps.saberHolstered)
+		if (ent->client->ps.saber_holstered)
 		{
 			return;
 		}
@@ -3439,7 +3414,7 @@ void Cmd_ToggleSaber_f(gentity_t* ent)
 
 	if (ent->client->ps.saberInFlight)
 	{
-		if (ent->client->ps.saberEntityNum)
+		if (ent->client->ps.saberentity_num)
 		{
 			//our saber is dead, Try pulling it back.
 			ent->client->ps.forceHandExtend = HANDEXTEND_SABERPULL;
@@ -3465,9 +3440,9 @@ void Cmd_ToggleSaber_f(gentity_t* ent)
 
 	if (ent->client && ent->client->ps.weaponTime < 1 && ent->watertype != CONTENTS_WATER)
 	{
-		if (ent->client->ps.saberHolstered == 2)
+		if (ent->client->ps.saber_holstered == 2)
 		{
-			ent->client->ps.saberHolstered = 0;
+			ent->client->ps.saber_holstered = 0;
 
 			if (ent->client->saber[0].soundOn)
 			{
@@ -3480,7 +3455,7 @@ void Cmd_ToggleSaber_f(gentity_t* ent)
 		}
 		else
 		{
-			ent->client->ps.saberHolstered = 2;
+			ent->client->ps.saber_holstered = 2;
 			if (ent->client->saber[0].soundOff)
 			{
 				G_Sound(ent, CHAN_AUTO, ent->client->saber[0].soundOff);
@@ -3528,35 +3503,25 @@ qboolean G_ValidSaberStyle(const gentity_t* ent, const int saber_style)
 
 void Cmd_SaberAttackCycle_f(gentity_t* ent)
 {
-	int select_level;
+	int select_level = 0;
+	qboolean usingSiegeStyle = qfalse;
 
-	if (ent->client->ps.weapon != WP_SABER)
-	{
-		return;
-	}
-
-	if ((ent->client->saber[0].type == SABER_BACKHAND) && ent->client->ps.fd.saber_anim_level == SS_STAFF)
-	{
-		return;
-	}
-
-	if ((ent->client->saber[0].type == SABER_ASBACKHAND) && ent->client->ps.fd.saber_anim_level == SS_STAFF)
-	{
-		return;
-	}
-
-	if ((ent->client->saber[0].type == SABER_STAFF_MAUL) && ent->client->ps.fd.saber_anim_level == SS_STAFF)
-	{
-		return;
-	}
-
-	if ((ent->client->saber[0].type == SABER_ELECTROSTAFF) && ent->client->ps.fd.saber_anim_level == SS_STAFF)
+	if (!ent || !ent->client)
 	{
 		return;
 	}
 
 	if (level.intermissionQueued || level.intermissiontime)
 	{
+		trap->SendServerCommand(ent - g_entities, va("print \"%s (saberAttackCycle)\n\"", G_GetStringEdString("MP_SVGAME", "CANNOT_TASK_INTERMISSION")));
+		return;
+	}
+
+	if (ent->health <= 0
+		|| ent->client->tempSpectate >= level.time
+		|| ent->client->sess.sessionTeam == TEAM_SPECTATOR)
+	{
+		trap->SendServerCommand(ent - g_entities, va("print \"%s\n\"", G_GetStringEdString("MP_SVGAME", "MUSTBEALIVE")));
 		return;
 	}
 
@@ -3584,9 +3549,136 @@ void Cmd_SaberAttackCycle_f(gentity_t* ent)
 			return;
 	}
 
-	if (ent->client->saberCycleQueue)
+	if (ent->client->ps.weapon != WP_SABER)
 	{
-		//resume off of the queue if we haven't gotten a chance to update it yet
+		return;
+	}
+
+	if ((ent->client->saber[0].type == SABER_BACKHAND) && ent->client->ps.fd.saber_anim_level == SS_STAFF)
+	{
+		return;
+	}
+
+	if ((ent->client->saber[0].type == SABER_ASBACKHAND) && ent->client->ps.fd.saber_anim_level == SS_STAFF)
+	{
+		return;
+	}
+
+	if ((ent->client->saber[0].type == SABER_STAFF_MAUL) && ent->client->ps.fd.saber_anim_level == SS_STAFF)
+	{
+		return;
+	}
+
+	if ((ent->client->saber[0].type == SABER_ELECTROSTAFF) && ent->client->ps.fd.saber_anim_level == SS_STAFF)
+	{
+		return;
+	}
+
+	if (ent->client->saber[0].model[0] && ent->client->saber[1].model[0])
+	{ //no cycling for akimbo
+		if (WP_SaberCanTurnOffSomeBlades(&ent->client->saber[1]))
+		{//can turn second saber off
+			if (ent->client->ps.saber_holstered == 1)
+			{//have one holstered
+				//unholster it
+				G_Sound(ent, CHAN_AUTO, ent->client->saber[1].soundOn);
+				ent->client->ps.saber_holstered = 0;
+				//g_active should take care of this, but...
+				ent->client->ps.fd.saber_anim_level = SS_DUAL;
+			}
+			else if (ent->client->ps.saber_holstered == 0)
+			{//have none holstered
+				if ((ent->client->saber[1].saberFlags2 & SFL2_NO_MANUAL_DEACTIVATE))
+				{//can't turn it off manually
+				}
+				else if (ent->client->saber[1].bladeStyle2Start > 0
+					&& (ent->client->saber[1].saberFlags2 & SFL2_NO_MANUAL_DEACTIVATE2))
+				{//can't turn it off manually
+				}
+				else
+				{
+					//turn it off
+					G_Sound(ent, CHAN_AUTO, ent->client->saber[1].soundOff);
+					ent->client->ps.saber_holstered = 1;
+					//g_active should take care of this, but...
+					ent->client->ps.fd.saber_anim_level = SS_FAST;
+				}
+			}
+
+			if (d_saberStanceDebug.integer)
+			{
+				trap->SendServerCommand(ent - g_entities, va("print \"SABERSTANCEDEBUG: Attempted to toggle dual saber blade.\n\""));
+			}
+			return;
+		}
+	}
+	else if (ent->client->saber[0].numBlades > 1
+		&& WP_SaberCanTurnOffSomeBlades(&ent->client->saber[0]))
+	{ //use staff stance then.
+		if (ent->client->ps.saber_holstered == 1)
+		{//second blade off
+			if (ent->client->ps.saberInFlight)
+			{//can't turn second blade back on if it's in the air, you naughty boy!
+				if (d_saberStanceDebug.integer)
+				{
+					trap->SendServerCommand(ent - g_entities, va("print \"SABERSTANCEDEBUG: Attempted to toggle staff blade in air.\n\""));
+				}
+				return;
+			}
+			//turn it on
+			G_Sound(ent, CHAN_AUTO, ent->client->saber[0].soundOn);
+			ent->client->ps.saber_holstered = 0;
+			//g_active should take care of this, but...
+			if (ent->client->saber[0].stylesForbidden)
+			{//have a style we have to use
+				WP_UseFirstValidSaberStyle(&ent->client->saber[0], &ent->client->saber[1], ent->client->ps.saber_holstered, &select_level);
+				if (ent->client->ps.weaponTime <= 0)
+				{ //not busy, set it now
+					ent->client->ps.fd.saber_anim_level = select_level;
+				}
+				else
+				{ //can't set it now or we might cause unexpected chaining, so queue it
+					ent->client->saberCycleQueue = select_level;
+				}
+			}
+		}
+		else if (ent->client->ps.saber_holstered == 0)
+		{//both blades on
+			if ((ent->client->saber[0].saberFlags2 & SFL2_NO_MANUAL_DEACTIVATE))
+			{//can't turn it off manually
+			}
+			else if (ent->client->saber[0].bladeStyle2Start > 0
+				&& (ent->client->saber[0].saberFlags2 & SFL2_NO_MANUAL_DEACTIVATE2))
+			{//can't turn it off manually
+			}
+			else
+			{
+				//turn second one off
+				G_Sound(ent, CHAN_AUTO, ent->client->saber[0].soundOff);
+				ent->client->ps.saber_holstered = 1;
+				//g_active should take care of this, but...
+				if (ent->client->saber[0].singleBladeStyle != SS_NONE)
+				{
+					if (ent->client->ps.weaponTime <= 0)
+					{ //not busy, set it now
+						ent->client->ps.fd.saber_anim_level = ent->client->saber[0].singleBladeStyle;
+					}
+					else
+					{ //can't set it now or we might cause unexpected chaining, so queue it
+						ent->client->saberCycleQueue = ent->client->saber[0].singleBladeStyle;
+					}
+				}
+			}
+		}
+		if (d_saberStanceDebug.integer)
+		{
+			trap->SendServerCommand(ent - g_entities, va("print \"SABERSTANCEDEBUG: Attempted to toggle staff blade.\n\""));
+		}
+		return;
+	}
+
+	if (ent->client->saberCycleQueue)
+	{ //resume off of the queue if we haven't gotten a chance to update it yet
 		select_level = ent->client->saberCycleQueue;
 	}
 	else
@@ -3597,22 +3689,20 @@ void Cmd_SaberAttackCycle_f(gentity_t* ent)
 	if (level.gametype == GT_SIEGE &&
 		ent->client->siegeClass != -1 &&
 		bgSiegeClasses[ent->client->siegeClass].saberStance)
-	{
-		//we have a flag of useable stances so cycle through it instead
+	{ //we have a flag of useable stances so cycle through it instead
 		int i = select_level + 1;
 
+		usingSiegeStyle = qtrue;
+
 		while (i != select_level)
-		{
-			//cycle around upward til we hit the next style or end up back on this one
+		{ //cycle around upward til we hit the next style or end up back on this one
 			if (i >= SS_NUM_SABER_STYLES)
-			{
-				//loop back around to the first valid
+			{ //loop back around to the first valid
 				i = SS_FAST;
 			}
 
 			if (bgSiegeClasses[ent->client->siegeClass].saberStance & (1 << i))
-			{
-				//we can use this one, select it and break out.
+			{ //we can use this one, select it and break out.
 				select_level = i;
 				break;
 			}
@@ -3621,18 +3711,16 @@ void Cmd_SaberAttackCycle_f(gentity_t* ent)
 
 		if (d_saberStanceDebug.integer)
 		{
-			trap->SendServerCommand(ent - g_entities,
-				va("print \"SABERSTANCEDEBUG: Attempted to cycle given class stance.\n\""));
+			trap->SendServerCommand(ent - g_entities, va("print \"SABERSTANCEDEBUG: Attempted to cycle given class stance.\n\""));
 		}
 	}
 	else
 	{
-		//normal style selection
 		select_level++;
 
-		for (int attempts = 0; attempts < SS_STAFF; attempts++)
+		for (int attempts = 0; attempts < SS_TAVION; attempts++)
 		{
-			if (select_level > SS_STAFF)
+			if (select_level > SS_TAVION)
 			{
 				if ((ent->client->saber[0].type == SABER_BACKHAND))
 				{
@@ -3657,49 +3745,26 @@ void Cmd_SaberAttackCycle_f(gentity_t* ent)
 			select_level++;
 		}
 
-		//handle saber activation/deactivation based on the style transition
-		if (ent->client->saber[0].model[0] && ent->client->saber[1].model[0]
-			&& WP_SaberCanTurnOffSomeBlades(&ent->client->saber[1]))
+		/*if (select_level > ent->client->ps.fd.forcePowerLevel[FP_SABER_OFFENSE])
 		{
-			//using dual sabers
-			if (select_level != SS_DUAL && ent->client->ps.saberHolstered == 0 && !ent->client->ps.saberInFlight)
-			{
-				//not using dual style, turn off the other blade
-				G_Sound(ent, CHAN_AUTO, ent->client->saber[1].soundOff);
-				ent->client->ps.saberHolstered = 1;
-			}
-			else if (select_level == SS_DUAL && ent->client->ps.saberHolstered == 1 && !ent->client->ps.saberInFlight)
-			{
-				G_Sound(ent, CHAN_AUTO, ent->client->saber[1].soundOn);
-				ent->client->ps.saberHolstered = 0;
-			}
-		}
-		else if (ent->client->saber[0].numBlades > 1
-			&& WP_SaberCanTurnOffSomeBlades(&ent->client->saber[0]))
-		{
-			//use staff stance then.
-			if (select_level != SS_STAFF && ent->client->ps.saberHolstered == 0 && !ent->client->ps.saberInFlight)
-			{
-				G_Sound(ent, CHAN_AUTO, ent->client->saber[0].soundOff);
-				ent->client->ps.saberHolstered = 1;
-			}
-			else if (select_level == SS_STAFF && ent->client->ps.saberHolstered == 1 && !ent->client->ps.saberInFlight)
-			{
-				G_Sound(ent, CHAN_AUTO, ent->client->saber[0].soundOn);
-				ent->client->ps.saberHolstered = 0;
-			}
-		}
+			select_level = FORCE_LEVEL_1;
+		}*/
+
 		if (d_saberStanceDebug.integer)
 		{
-			trap->SendServerCommand(ent - g_entities,
-				va("print \"SABERSTANCEDEBUG: Attempted to cycle stance normally.\n\""));
+			trap->SendServerCommand(ent - g_entities, va("print \"SABERSTANCEDEBUG: Attempted to cycle stance normally.\n\""));
 		}
 	}
 
-	if (ent->client->ps.weaponTime <= 0)
+	if (!usingSiegeStyle)
 	{
-		//not busy, set it now
-		ent->client->ps.fd.saber_anim_level = select_level;
+		//make sure it's valid, change it if not
+		WP_UseFirstValidSaberStyle(&ent->client->saber[0], &ent->client->saber[1], ent->client->ps.saber_holstered, &select_level);
+	}
+
+	if (ent->client->ps.weaponTime <= 0)
+	{ //not busy, set it now
+		ent->client->ps.fd.saber_anim_levelBase = ent->client->ps.fd.saber_anim_level = select_level;
 
 		if (!ent->client->ps.saberInFlight)
 		{
@@ -3717,7 +3782,7 @@ void Cmd_SaberAttackCycle_f(gentity_t* ent)
 				{
 					G_SetAnim(ent, &ent->client->pers.cmd, SETANIM_TORSO, BOTH_STAND2TO1, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
 				}
-				if (ent->client->ps.saberHolstered)
+				if (ent->client->ps.saber_holstered)
 				{
 					G_Sound(ent, CHAN_AUTO, G_SoundIndex("sound/weapons/saber/saber_catch.mp3"));
 				}
@@ -3729,9 +3794,8 @@ void Cmd_SaberAttackCycle_f(gentity_t* ent)
 		}
 	}
 	else
-	{
-		//can't set it now or we might cause unexpected chaining, so queue it
-		ent->client->saberCycleQueue = select_level;
+	{ //can't set it now or we might cause unexpected chaining, so queue it
+		ent->client->ps.fd.saber_anim_levelBase = ent->client->saberCycleQueue = select_level;
 	}
 }
 
@@ -3832,7 +3896,7 @@ void Cmd_EngageDuel_f(gentity_t* ent)
 			G_SetAnim(challenged, &ent->client->pers.cmd, SETANIM_BOTH, BOTH_BOW,
 				SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
 
-			if (!ent->client->ps.saberHolstered)
+			if (!ent->client->ps.saber_holstered)
 			{
 				if (ent->client->saber[0].soundOff)
 				{
@@ -3846,9 +3910,9 @@ void Cmd_EngageDuel_f(gentity_t* ent)
 				ent->client->ps.ManualBlockingFlags &= ~(1 << HOLDINGBLOCK);
 				ent->client->ps.ManualBlockingFlags &= ~(1 << HOLDINGBLOCKANDATTACK);
 				ent->client->ps.weaponTime = 400;
-				ent->client->ps.saberHolstered = 2;
+				ent->client->ps.saber_holstered = 2;
 			}
-			if (!challenged->client->ps.saberHolstered)
+			if (!challenged->client->ps.saber_holstered)
 			{
 				if (challenged->client->saber[0].soundOff)
 				{
@@ -3860,7 +3924,7 @@ void Cmd_EngageDuel_f(gentity_t* ent)
 					G_Sound(challenged, CHAN_AUTO, challenged->client->saber[1].soundOff);
 				}
 				challenged->client->ps.weaponTime = 400;
-				challenged->client->ps.saberHolstered = 2;
+				challenged->client->ps.saber_holstered = 2;
 			}
 
 			//fully heal duelers at the start of duels
@@ -4042,10 +4106,10 @@ qboolean TryGrapple(gentity_t* ent)
 		return qfalse;
 	}
 
-	if (ent->client->ps.weapon == WP_SABER && !ent->client->ps.saberHolstered)
+	if (ent->client->ps.weapon == WP_SABER && !ent->client->ps.saber_holstered)
 	{
 		Cmd_ToggleSaber_f(ent);
-		if (!ent->client->ps.saberHolstered)
+		if (!ent->client->ps.saber_holstered)
 		{
 			//must have saber holstered
 			return qfalse;
@@ -4089,7 +4153,7 @@ void Cmd_TargetUse_f(gentity_t* ent)
 
 void Cmd_TheDestroyer_f(gentity_t* ent)
 {
-	if (!ent->client->ps.saberHolstered || ent->client->ps.weapon != WP_SABER)
+	if (!ent->client->ps.saber_holstered || ent->client->ps.weapon != WP_SABER)
 		return;
 
 	Cmd_ToggleSaber_f(ent);

@@ -777,7 +777,7 @@ AddSoundEvent
 */
 qboolean RemoveOldestAlert();
 
-void AddSoundEvent(gentity_t* owner, vec3_t position, const float radius, const alertEventLevel_e alertLevel,const qboolean needLOS,const qboolean onGround)
+void AddSoundEvent(gentity_t* owner, vec3_t position, const float radius, const alertEventLevel_e alertLevel, const qboolean needLOS, const qboolean onGround)
 {
 	if (level.numAlertEvents >= MAX_ALERT_EVENTS)
 	{

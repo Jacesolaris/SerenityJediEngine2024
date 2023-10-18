@@ -35,7 +35,7 @@ void WP_FireTurboLaserMissile(gentity_t* ent, vec3_t start, vec3_t dir)
 	gentity_t* missile = create_missile(start, dir, velocity, 10000, ent, qfalse);
 
 	//use a custom shot effect
-	//missile->s.otherEntityNum2 = G_EffectIndex( "turret/turb_shot" );
+	//missile->s.otherentity_num2 = G_EffectIndex( "turret/turb_shot" );
 	//use a custom impact effect
 	//missile->s.emplacedOwner = G_EffectIndex( "turret/turb_impact" );
 

@@ -67,6 +67,12 @@ TAGDEF(DEFLATE),				// Temp memory used by zlib32
 TAGDEF(POINTCACHE),					// weather effects
 TAGDEF(NEWDEL),
 TAGDEF(MINIZIP),
+
+TAGDEF(GRIDMESH),					// some specific temp workspace that only seems to be in the MP codebase
+TAGDEF(GENERAL),
+TAGDEF(GHOUL2_GORE),
+TAGDEF(TEMP_HUNKALLOC),
+
 TAGDEF(COUNT)
 
 //////////////// eof //////////////

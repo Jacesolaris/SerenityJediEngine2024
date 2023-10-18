@@ -577,7 +577,7 @@ void NPC_Precache(gentity_t* spawner)
 			}
 			else
 			{
-				//Q_strncpyz( ri.headModelName, value, sizeof(ri.headModelName), qtrue);
+				//Q_strncpyz( ri->headModelName, value, sizeof(ri->headModelName), qtrue);
 			}
 			md3Model = qtrue;
 			continue;
@@ -596,7 +596,7 @@ void NPC_Precache(gentity_t* spawner)
 			}
 			else
 			{
-				//Q_strncpyz( ri.torsoModelName, value, sizeof(ri.torsoModelName), qtrue);
+				//Q_strncpyz( ri->torsoModelName, value, sizeof(ri->torsoModelName), qtrue);
 			}
 			md3Model = qtrue;
 			continue;
@@ -791,7 +791,7 @@ void NPC_Precache(gentity_t* spawner)
 				//append it after a *
 				strcat(modelName, va("*%s", customSkin));
 			}
-			G_ModelIndex(modelName);
+			G_model_index(modelName);
 		}
 	}
 
@@ -2567,18 +2567,18 @@ qboolean NPC_ParseParms(const char* npc_name, gentity_t* npc)
 			//saber name
 			if (!Q_stricmp(token, "saber"))
 			{
-				char* saberName;
+				char* saber_name;
 
 				if (COM_ParseString(&p, &value))
 				{
 					continue;
 				}
 
-				saberName = (char*)BG_TempAlloc(4096); //G_NewString( value );
-				strcpy(saberName, value);
+				saber_name = (char*)BG_TempAlloc(4096); //G_NewString( value );
+				strcpy(saber_name, value);
 
-				WP_SaberParseParms(saberName, &npc->client->saber[0]);
-				npcSaber1 = G_ModelIndex(va("@%s", saberName));
+				WP_SaberParseParms(saber_name, &npc->client->saber[0]);
+				npcSaber1 = G_model_index(va("@%s", saber_name));
 
 				BG_TempFree(4096);
 				continue;
@@ -2595,10 +2595,10 @@ qboolean NPC_ParseParms(const char* npc_name, gentity_t* npc)
 				if (!(npc->client->saber[0].saberFlags & SFL_TWO_HANDED))
 				{
 					//can't use a second saber if first one is a two-handed saber...?
-					char* saberName = BG_TempAlloc(4096); //G_NewString( value );
-					strcpy(saberName, value);
+					char* saber_name = BG_TempAlloc(4096); //G_NewString( value );
+					strcpy(saber_name, value);
 
-					WP_SaberParseParms(saberName, &npc->client->saber[1]);
+					WP_SaberParseParms(saber_name, &npc->client->saber[1]);
 					if (npc->client->saber[1].saberFlags & SFL_TWO_HANDED)
 					{
 						//tsk tsk, can't use a twoHanded saber as second saber
@@ -2607,7 +2607,7 @@ qboolean NPC_ParseParms(const char* npc_name, gentity_t* npc)
 					else
 					{
 						//NPC->client->ps.dualSabers = qtrue;
-						npcSaber2 = G_ModelIndex(va("@%s", saberName));
+						npcSaber2 = G_model_index(va("@%s", saber_name));
 					}
 					BG_TempFree(4096);
 				}
@@ -3455,7 +3455,7 @@ qboolean NPC_ParseParms(const char* npc_name, gentity_t* npc)
 		if (npcSaber1 == 0)
 		{
 			//use "kyle" for a default then
-			npcSaber1 = G_ModelIndex("@Kyle");
+			npcSaber1 = G_model_index("@Kyle");
 			WP_SaberParseParms(DEFAULT_SABER, &npc->client->saber[0]);
 		}
 
@@ -3492,7 +3492,7 @@ qboolean NPC_ParseParms(const char* npc_name, gentity_t* npc)
 	}
 	else
 	{
-		npc->s.modelindex = G_ModelIndex(va("models/players/%s/lower.md3", playerModel));
+		npc->s.model_index = G_model_index(va("models/players/%s/lower.md3", playerModel));
 	}
 
 	return qtrue;

@@ -342,7 +342,7 @@ Build a client snapshot structure
 =============================================================================
 */
 
-using snapshotEntityNumbers_t = struct snapshotEntityNumbers_s
+using snapshotentity_numbers_t = struct snapshotentity_numbers_s
 {
 	int numSnapshotEntities;
 	int snapshotEntities[MAX_SNAPSHOT_ENTITIES];
@@ -350,10 +350,10 @@ using snapshotEntityNumbers_t = struct snapshotEntityNumbers_s
 
 /*
 =======================
-SV_QsortEntityNumbers
+SV_Qsortentity_numbers
 =======================
 */
-static int QDECL SV_QsortEntityNumbers(const void* a, const void* b)
+static int QDECL SV_Qsortentity_numbers(const void* a, const void* b)
 {
 	const int* ea = (int*)a;
 	const int* eb = (int*)b;
@@ -376,7 +376,7 @@ static int QDECL SV_QsortEntityNumbers(const void* a, const void* b)
 SV_AddEntToSnapshot
 ===============
 */
-static void SV_AddEntToSnapshot(svEntity_t* svEnt, sharedEntity_t* gEnt, snapshotEntityNumbers_t* eNums)
+static void SV_AddEntToSnapshot(svEntity_t* svEnt, sharedEntity_t* gEnt, snapshotentity_numbers_t* eNums)
 {
 	// if we have already added this entity to this snapshot, don't add again
 	if (svEnt->snapshotCounter == sv.snapshotCounter)
@@ -403,7 +403,7 @@ SV_AddEntitiesVisibleFromPoint
 float g_svCullDist = -1.0f;
 
 static void SV_AddEntitiesVisibleFromPoint(vec3_t origin, clientSnapshot_t* frame,
-	snapshotEntityNumbers_t* eNums, qboolean portal)
+	snapshotentity_numbers_t* eNums, qboolean portal)
 {
 	int i;
 
@@ -426,7 +426,7 @@ static void SV_AddEntitiesVisibleFromPoint(vec3_t origin, clientSnapshot_t* fram
 
 	for (int e = 0; e < sv.num_entities; e++)
 	{
-		sharedEntity_t* ent = SV_GentityNum(e);
+		sharedEntity_t* ent = SV_Gentity_num(e);
 
 		// never send entities that aren't linked in
 		if (!ent->r.linked)
@@ -606,7 +606,7 @@ For viewing through other player's eyes, client can be something other than clie
 static void SV_BuildClientSnapshot(client_t* client)
 {
 	vec3_t org;
-	snapshotEntityNumbers_t entityNumbers{};
+	snapshotentity_numbers_t entity_numbers{};
 	int i;
 	sharedEntity_t* ent;
 	entityState_t* state;
@@ -619,7 +619,7 @@ static void SV_BuildClientSnapshot(client_t* client)
 	clientSnapshot_t* frame = &client->frames[client->netchan.outgoingSequence & PACKET_MASK];
 
 	// clear everything in this snapshot
-	entityNumbers.numSnapshotEntities = 0;
+	entity_numbers.numSnapshotEntities = 0;
 	Com_Memset(frame->areabits, 0, sizeof frame->areabits);
 
 	frame->num_entities = 0;
@@ -641,7 +641,7 @@ static void SV_BuildClientSnapshot(client_t* client)
 	if (ps->m_iVehicleNum)
 	{
 		//get the vehicle's playerstate too then
-		sharedEntity_t* veh = SV_GentityNum(ps->m_iVehicleNum);
+		sharedEntity_t* veh = SV_Gentity_num(ps->m_iVehicleNum);
 
 		if (veh && veh->playerState)
 		{
@@ -672,14 +672,14 @@ static void SV_BuildClientSnapshot(client_t* client)
 
 	// add all the entities directly visible to the eye, which
 	// may include portal entities that merge other viewpoints
-	SV_AddEntitiesVisibleFromPoint(org, frame, &entityNumbers, qfalse);
+	SV_AddEntitiesVisibleFromPoint(org, frame, &entity_numbers, qfalse);
 
 	// if there were portals visible, there may be out of order entities
 	// in the list which will need to be resorted for the delta compression
 	// to work correctly.  This also catches the error condition
 	// of an entity being included twice.
-	qsort(entityNumbers.snapshotEntities, entityNumbers.numSnapshotEntities,
-		sizeof entityNumbers.snapshotEntities[0], SV_QsortEntityNumbers);
+	qsort(entity_numbers.snapshotEntities, entity_numbers.numSnapshotEntities,
+		sizeof entity_numbers.snapshotEntities[0], SV_Qsortentity_numbers);
 
 	// now that all viewpoint's areabits have been OR'd together, invert
 	// all of them to make it a mask vector, which is what the renderer wants
@@ -691,9 +691,9 @@ static void SV_BuildClientSnapshot(client_t* client)
 	// copy the entity states out
 	frame->num_entities = 0;
 	frame->first_entity = svs.nextSnapshotEntities;
-	for (i = 0; i < entityNumbers.numSnapshotEntities; i++)
+	for (i = 0; i < entity_numbers.numSnapshotEntities; i++)
 	{
-		ent = SV_GentityNum(entityNumbers.snapshotEntities[i]);
+		ent = SV_Gentity_num(entity_numbers.snapshotEntities[i]);
 		state = &svs.snapshotEntities[svs.nextSnapshotEntities % svs.numSnapshotEntities];
 		*state = ent->s;
 		svs.nextSnapshotEntities++;

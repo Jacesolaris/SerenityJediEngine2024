@@ -2325,7 +2325,7 @@ static void CG_AddRefentForAutoMap(const centity_t* cent)
 	else
 	{
 		//then assume a standard indexed model
-		ent.hModel = cgs.game_models[cent->currentState.modelindex];
+		ent.hModel = cgs.game_models[cent->currentState.model_index];
 	}
 
 	trap->R_AddRefEntityToScene(&ent);

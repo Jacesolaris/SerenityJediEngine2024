@@ -172,7 +172,7 @@ qboolean G_TryPushingEntity(gentity_t* check, gentity_t* pusher, vec3_t move, ve
 	// EF_MOVER_STOP will just stop when contacting another entity
 	// instead of pushing it, but entities can still ride on top of it
 	if ( ( pusher->s.eFlags & EF_MOVER_STOP ) &&
-		check->s.groundEntityNum != pusher->s.number ) {
+		check->s.groundentity_num != pusher->s.number ) {
 		return qfalse;
 	}
 	*/
@@ -218,9 +218,9 @@ qboolean G_TryPushingEntity(gentity_t* check, gentity_t* pusher, vec3_t move, ve
 	}
 
 	// may have pushed them off an edge
-	if (check->s.groundEntityNum != pusher->s.number)
+	if (check->s.groundentity_num != pusher->s.number)
 	{
-		check->s.groundEntityNum = ENTITYNUM_NONE;
+		check->s.groundentity_num = ENTITYNUM_NONE;
 	}
 
 	/*
@@ -257,7 +257,7 @@ qboolean G_TryPushingEntity(gentity_t* check, gentity_t* pusher, vec3_t move, ve
 	block = G_TestEntityPosition(check);
 	if (!block)
 	{
-		check->s.groundEntityNum = ENTITYNUM_NONE;
+		check->s.groundentity_num = ENTITYNUM_NONE;
 		pushed_p--;
 		return qtrue;
 	}
@@ -364,8 +364,8 @@ qboolean g_mover_push(gentity_t* pusher, vec3_t move, vec3_t amove, gentity_t** 
 	{
 		gentity_t* check = entity_list[e];
 
-		if (check->s.eFlags & EF_MISSILE_STICK && (not_moving || check->s.groundEntityNum < 0 || check->s.
-			groundEntityNum >= ENTITYNUM_NONE))
+		if (check->s.eFlags & EF_MISSILE_STICK && (not_moving || check->s.groundentity_num < 0 || check->s.
+			groundentity_num >= ENTITYNUM_NONE))
 		{
 			// special case hack for sticky things, destroy it if we aren't attached to the thing that is moving, but the moving thing is pushing us
 			G_Damage(check, pusher, pusher, nullptr, nullptr, 99999, 0, MOD_CRUSH);
@@ -409,7 +409,7 @@ qboolean g_mover_push(gentity_t* pusher, vec3_t move, vec3_t amove, gentity_t** 
 		}
 
 		// if the entity is standing on the pusher, it will definitely be moved
-		if (check->s.groundEntityNum != pusher->s.number)
+		if (check->s.groundentity_num != pusher->s.number)
 		{
 			// see if the ent needs to be tested
 			if (check->absmin[0] >= maxs[0]

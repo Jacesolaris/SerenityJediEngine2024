@@ -212,13 +212,13 @@ qboolean UI_ParseLiteral(const char** data, const char* string)
 	return qfalse;
 }
 
-qboolean UI_SaberParseParm(const char* saberName, const char* parmname, char* saberData)
+qboolean UI_SaberParseParm(const char* saber_name, const char* parmname, char* saberData)
 {
 	const char* token;
 	const char* value;
 	const char* p;
 
-	if (!saberName || !saberName[0])
+	if (!saber_name || !saber_name[0])
 	{
 		return qfalse;
 	}
@@ -237,7 +237,7 @@ qboolean UI_SaberParseParm(const char* saberName, const char* parmname, char* sa
 			return qfalse;
 		}
 
-		if (!Q_stricmp(token, saberName))
+		if (!Q_stricmp(token, saber_name))
 		{
 			break;
 		}
@@ -262,7 +262,7 @@ qboolean UI_SaberParseParm(const char* saberName, const char* parmname, char* sa
 		token = COM_ParseExt(&p, qtrue);
 		if (!token[0])
 		{
-			ui.Printf(S_COLOR_RED"ERROR: unexpected EOF while parsing '%s'\n", saberName);
+			ui.Printf(S_COLOR_RED"ERROR: unexpected EOF while parsing '%s'\n", saber_name);
 			COM_EndParseSession();
 			return qfalse;
 		}
@@ -290,30 +290,30 @@ qboolean UI_SaberParseParm(const char* saberName, const char* parmname, char* sa
 	return qfalse;
 }
 
-qboolean UI_SaberProperNameForSaber(const char* saberName, char* saberProperName)
+qboolean UI_SaberProperNameForSaber(const char* saber_name, char* saberProperName)
 {
-	return UI_SaberParseParm(saberName, "name", saberProperName);
+	return UI_SaberParseParm(saber_name, "name", saberProperName);
 }
 
-qboolean UI_SaberModelForSaber(const char* saberName, char* saberModel)
+qboolean UI_SaberModelForSaber(const char* saber_name, char* saberModel)
 {
-	return UI_SaberParseParm(saberName, "saberModel", saberModel);
+	return UI_SaberParseParm(saber_name, "saberModel", saberModel);
 }
 
-qboolean UI_SaberSkinForSaber(const char* saberName, char* saberSkin)
+qboolean UI_SaberSkinForSaber(const char* saber_name, char* saberSkin)
 {
-	return UI_SaberParseParm(saberName, "customSkin", saberSkin);
+	return UI_SaberParseParm(saber_name, "customSkin", saberSkin);
 }
 
-qboolean UI_SaberTypeForSaber(const char* saberName, char* saberType)
+qboolean UI_SaberTypeForSaber(const char* saber_name, char* saberType)
 {
-	return UI_SaberParseParm(saberName, "saberType", saberType);
+	return UI_SaberParseParm(saber_name, "saberType", saberType);
 }
 
-int UI_saber_numBladesForSaber(const char* saberName)
+int UI_saber_numBladesForSaber(const char* saber_name)
 {
 	char numBladesString[8] = { 0 };
-	UI_SaberParseParm(saberName, "numBlades", numBladesString);
+	UI_SaberParseParm(saber_name, "numBlades", numBladesString);
 	int numBlades = atoi(numBladesString);
 	if (numBlades < 1)
 	{
@@ -326,12 +326,12 @@ int UI_saber_numBladesForSaber(const char* saberName)
 	return numBlades;
 }
 
-qboolean UI_SaberShouldDrawBlade(const char* saberName, int blade_num)
+qboolean UI_SaberShouldDrawBlade(const char* saber_name, int blade_num)
 {
 	int bladeStyle2Start = 0, noBlade = 0;
 	char bladeStyle2StartString[8] = { 0 };
 	char noBladeString[8] = { 0 };
-	UI_SaberParseParm(saberName, "bladeStyle2Start", bladeStyle2StartString);
+	UI_SaberParseParm(saber_name, "bladeStyle2Start", bladeStyle2StartString);
 	if (bladeStyle2StartString[0])
 	{
 		bladeStyle2Start = atoi(bladeStyle2StartString);
@@ -340,7 +340,7 @@ qboolean UI_SaberShouldDrawBlade(const char* saberName, int blade_num)
 		&& blade_num >= bladeStyle2Start)
 	{
 		//use second blade style
-		UI_SaberParseParm(saberName, "noBlade2", noBladeString);
+		UI_SaberParseParm(saber_name, "noBlade2", noBladeString);
 		if (noBladeString[0])
 		{
 			noBlade = atoi(noBladeString);
@@ -349,7 +349,7 @@ qboolean UI_SaberShouldDrawBlade(const char* saberName, int blade_num)
 	else
 	{
 		//use first blade style
-		UI_SaberParseParm(saberName, "noBlade", noBladeString);
+		UI_SaberParseParm(saber_name, "noBlade", noBladeString);
 		if (noBladeString[0])
 		{
 			noBlade = atoi(noBladeString);
@@ -358,11 +358,11 @@ qboolean UI_SaberShouldDrawBlade(const char* saberName, int blade_num)
 	return static_cast<qboolean>(noBlade == 0);
 }
 
-float UI_SaberBladeLengthForSaber(const char* saberName, int blade_num)
+float UI_SaberBladeLengthForSaber(const char* saber_name, int blade_num)
 {
 	char lengthString[8] = { 0 };
 	float length = 40.0f;
-	UI_SaberParseParm(saberName, "saberLength", lengthString);
+	UI_SaberParseParm(saber_name, "saberLength", lengthString);
 	if (lengthString[0])
 	{
 		length = atof(lengthString);
@@ -372,7 +372,7 @@ float UI_SaberBladeLengthForSaber(const char* saberName, int blade_num)
 		}
 	}
 
-	UI_SaberParseParm(saberName, va("saberLength%d", blade_num + 1), lengthString);
+	UI_SaberParseParm(saber_name, va("saberLength%d", blade_num + 1), lengthString);
 	if (lengthString[0])
 	{
 		length = atof(lengthString);
@@ -385,11 +385,11 @@ float UI_SaberBladeLengthForSaber(const char* saberName, int blade_num)
 	return length;
 }
 
-float UI_SaberBladeRadiusForSaber(const char* saberName, int blade_num)
+float UI_SaberBladeRadiusForSaber(const char* saber_name, int blade_num)
 {
 	char radiusString[8] = { 0 };
 	float radius = 3.0f;
-	UI_SaberParseParm(saberName, "saberRadius", radiusString);
+	UI_SaberParseParm(saber_name, "saberRadius", radiusString);
 	if (radiusString[0])
 	{
 		radius = atof(radiusString);
@@ -399,7 +399,7 @@ float UI_SaberBladeRadiusForSaber(const char* saberName, int blade_num)
 		}
 	}
 
-	UI_SaberParseParm(saberName, va("saberRadius%d", blade_num + 1), radiusString);
+	UI_SaberParseParm(saber_name, va("saberRadius%d", blade_num + 1), radiusString);
 	if (radiusString[0])
 	{
 		radius = atof(radiusString);
@@ -2322,7 +2322,7 @@ saberType_t TranslateSaberType(const char* name)
 	return SABER_SINGLE;
 }
 
-void UI_SaberDrawBlade(itemDef_t* item, const char* saberName, int saberModel, saberType_t saberType, vec3_t origin,
+void UI_SaberDrawBlade(itemDef_t* item, const char* saber_name, int saberModel, saberType_t saberType, vec3_t origin,
 	float curYaw, int blade_num)
 {
 	char bladeColorString[MAX_QPATH];
@@ -2361,8 +2361,8 @@ void UI_SaberDrawBlade(itemDef_t* item, const char* saberName, int saberModel, s
 	}
 	const saber_colors_t bladeColor = TranslateSaberColor(bladeColorString);
 
-	const float bladeLength = UI_SaberBladeLengthForSaber(saberName, blade_num);
-	const float bladeRadius = UI_SaberBladeRadiusForSaber(saberName, blade_num);
+	const float bladeLength = UI_SaberBladeLengthForSaber(saber_name, blade_num);
+	const float bladeRadius = UI_SaberBladeRadiusForSaber(saber_name, blade_num);
 	vec3_t bladeOrigin = { 0 };
 	vec3_t axis[3] = {};
 	mdxaBone_t bolt_matrix;
@@ -2795,12 +2795,12 @@ void UI_SaberAttachToChar(itemDef_t* item)
 {
 	int numSabers = 1;
 
-	if (item->ghoul2.size() > 2 && item->ghoul2[2].mModelindex >= 0)
+	if (item->ghoul2.size() > 2 && item->ghoul2[2].mmodel_index >= 0)
 	{
 		//remove any extra models
 		DC->g2_RemoveGhoul2Model(item->ghoul2, 2);
 	}
-	if (item->ghoul2.size() > 1 && item->ghoul2[1].mModelindex >= 0)
+	if (item->ghoul2.size() > 1 && item->ghoul2[1].mmodel_index >= 0)
 	{
 		//remove any extra models
 		DC->g2_RemoveGhoul2Model(item->ghoul2, 1);

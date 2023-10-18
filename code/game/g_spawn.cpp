@@ -298,7 +298,7 @@ field_t fields[] = {
 	{"fxfile", FOFS(fxFile), F_LSTRING},
 	{"fxfile2", FOFS(cameraGroup), F_LSTRING},
 	{"noVisTime", FOFS(end_frame), F_INT}, //for NPC_Vehicle
-	{"endFrame", FOFS(end_frame), F_INT}, //for func_usable shader animation
+	{"end_frame", FOFS(end_frame), F_INT}, //for func_usable shader animation
 	{"linear", FOFS(alt_fire), F_INT}, //for movers to use linear movement
 	{"weapon",FOFS(paintarget), F_LSTRING}, //for misc_weapon_shooter only
 

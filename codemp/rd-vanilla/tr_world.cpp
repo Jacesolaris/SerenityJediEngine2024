@@ -60,7 +60,7 @@ static qboolean	R_CullGrid(const srfGridMesh_t* cv) {
 		return qtrue;
 	}
 
-	if (tr.currentEntityNum != REFENTITYNUM_WORLD) {
+	if (tr.currententity_num != REFENTITYNUM_WORLD) {
 		sphereCull = R_CullLocalPointAndRadius(cv->localOrigin, cv->meshRadius);
 	}
 	else {
@@ -573,7 +573,7 @@ float GetQuadArea(vec3_t v1, vec3_t v2, vec3_t v3, vec3_t v4)
 		dis2[0] * dis2[0] + dis2[1] * dis2[1] + dis2[2] * dis2[2];
 }
 
-void RE_GetBModelVerts(const int bmodelIndex, vec3_t* verts, vec3_t normal)
+void RE_GetBModelVerts(const int bmodel_index, vec3_t* verts, vec3_t normal)
 {
 	msurface_t* surfs;
 	srfSurfaceFace_t* face;
@@ -582,7 +582,7 @@ void RE_GetBModelVerts(const int bmodelIndex, vec3_t* verts, vec3_t normal)
 	int					maxDist[2] = { 0,0 };
 	int					maxIndx[2] = { 0,0 };
 
-	const model_t* pModel = R_GetModelByHandle(bmodelIndex);
+	const model_t* pModel = R_GetModelByHandle(bmodel_index);
 	const bmodel_t* bmodel = pModel->bmodel;
 
 	// Loop through all surfaces on the brush and find the best two candidates
@@ -1509,7 +1509,8 @@ static const byte* R_ClusterPVS(const int cluster) {
 R_inPVS
 =================
 */
-qboolean R_inPVS(const vec3_t p1, const vec3_t p2, const byte* mask) {
+qboolean R_inPVS(const vec3_t p1, const vec3_t p2, const byte* mask)
+{
 	int leafnum = ri->CM_PointLeafnum(p1);
 	int cluster = ri->CM_LeafCluster(leafnum);
 
@@ -1617,8 +1618,8 @@ void R_AddWorldSurfaces()
 		return;
 	}
 
-	tr.currentEntityNum = REFENTITYNUM_WORLD;
-	tr.shiftedEntityNum = tr.currentEntityNum << QSORT_REFENTITYNUM_SHIFT;
+	tr.currententity_num = REFENTITYNUM_WORLD;
+	tr.shiftedentity_num = tr.currententity_num << QSORT_REFENTITYNUM_SHIFT;
 
 	// determine which leaves are in the PVS / areamask
 	R_MarkLeaves();

@@ -156,7 +156,7 @@ gentity_t* create_missile(vec3_t org, vec3_t dir, const float vel, const int lif
 	missile->s.eType = ET_MISSILE;
 	missile->owner = owner;
 	//lmo tag owner info into state for duel Nox
-	missile->s.otherEntityNum = owner->s.number;
+	missile->s.otherentity_num = owner->s.number;
 
 	const Vehicle_t* p_veh = G_IsRidingVehicle(owner);
 
@@ -281,7 +281,7 @@ int G_GetHitLocFromTrace(trace_t* trace, const int mod)
 	int hit_loc = HL_NONE;
 	for (auto& i : trace->G2CollisionMap)
 	{
-		if (i.mEntityNum == -1)
+		if (i.mentity_num == -1)
 		{
 			break;
 		}
@@ -289,8 +289,8 @@ int G_GetHitLocFromTrace(trace_t* trace, const int mod)
 		CCollisionRecord& coll = i;
 		if (coll.mFlags & G2_FRONTFACE)
 		{
-			G_GetHitLocFromSurfName(&g_entities[coll.mEntityNum],
-				gi.G2API_GetSurfaceName(&g_entities[coll.mEntityNum].ghoul2[coll.mModelIndex],
+			G_GetHitLocFromSurfName(&g_entities[coll.mentity_num],
+				gi.G2API_GetSurfaceName(&g_entities[coll.mentity_num].ghoul2[coll.mModelIndex],
 					coll.mSurfaceIndex), &hit_loc, coll.mCollisionPosition,
 				nullptr, nullptr, mod);
 			//we only want the first "entrance wound", so break
@@ -829,8 +829,8 @@ void WP_FireVehicleWeapon(gentity_t* ent, vec3_t start, vec3_t dir, const vehWea
 		{
 			missile->owner = ent;
 		}
-		missile->s.otherEntityNum = ent->s.number;
-		missile->s.otherEntityNum2 = vehWeapon - &g_vehWeaponInfo[0];
+		missile->s.otherentity_num = ent->s.number;
+		missile->s.otherentity_num2 = vehWeapon - &g_vehWeaponInfo[0];
 
 		if (vehWeapon->iLifeTime)
 		{
@@ -1424,7 +1424,6 @@ void G_AddBlasterAttackChainCount(const gentity_t* ent, int amount)
 	}
 }
 
-
 extern void FireOverheatFail(gentity_t* ent);
 //---------------------------------------------------------
 void FireWeapon(gentity_t* ent, const qboolean alt_fire)
@@ -1436,7 +1435,7 @@ void FireWeapon(gentity_t* ent, const qboolean alt_fire)
 	// track shots taken for accuracy tracking.
 	ent->client->ps.persistant[PERS_ACCURACY_SHOTS]++;
 
-	if (PM_ReloadAnim(ent->client->ps.torsoAnim) ||	PM_WeponRestAnim(ent->client->ps.torsoAnim))
+	if (PM_ReloadAnim(ent->client->ps.torsoAnim) || PM_WeponRestAnim(ent->client->ps.torsoAnim))
 	{
 		return;
 	}
@@ -1913,7 +1912,7 @@ void FireWeapon(gentity_t* ent, const qboolean alt_fire)
 	// We should probably just use this as a default behavior, in special cases, just set alert to false.
 	if (ent->s.number == 0 && alert > 0)
 	{
-		if (ent->client->ps.groundEntityNum == ENTITYNUM_WORLD //FIXME: check for sand contents type?
+		if (ent->client->ps.groundentity_num == ENTITYNUM_WORLD //FIXME: check for sand contents type?
 			&& ent->s.weapon != WP_STUN_BATON
 			&& ent->s.weapon != WP_MELEE
 			&& ent->s.weapon != WP_TUSKEN_STAFF

@@ -1353,14 +1353,14 @@ static void CG_BodyQueueCopy(centity_t* cent, const int client_num, const int kn
 		{
 			anim = &bgAllAnims[source->localAnimIndex].anims[source->currentState.torsoAnim];
 		}
-		const float animSpeed = 50.0f / anim->frameLerp;
+		const float anim_speed = 50.0f / anim->frameLerp;
 
 		if (!fallBack)
 		{
 			//this will just set us to the last frame of the animation, in theory
 			aNum = cgs.clientinfo[source->currentState.number].frame + 1;
 
-			while (aNum >= anim->firstFrame + anim->numFrames)
+			while (aNum >= anim->firstFrame + anim->num_frames)
 			{
 				aNum--;
 			}
@@ -1368,7 +1368,7 @@ static void CG_BodyQueueCopy(centity_t* cent, const int client_num, const int kn
 			if (aNum < anim->firstFrame - 1)
 			{
 				//wrong animation...?
-				aNum = anim->firstFrame + anim->numFrames - 1;
+				aNum = anim->firstFrame + anim->num_frames - 1;
 			}
 		}
 		else
@@ -1376,11 +1376,11 @@ static void CG_BodyQueueCopy(centity_t* cent, const int client_num, const int kn
 			aNum = anim->firstFrame;
 		}
 
-		const int eFrame = anim->firstFrame + anim->numFrames;
+		const int eFrame = anim->firstFrame + anim->num_frames;
 
-		trap->G2API_SetBoneAnim(cent->ghoul2, 0, "upper_lumbar", aNum, eFrame, flags, animSpeed, cg.time, -1, 150);
-		trap->G2API_SetBoneAnim(cent->ghoul2, 0, "model_root", aNum, eFrame, flags, animSpeed, cg.time, -1, 150);
-		trap->G2API_SetBoneAnim(cent->ghoul2, 0, "Motion", aNum, eFrame, flags, animSpeed, cg.time, -1, 150);
+		trap->G2API_SetBoneAnim(cent->ghoul2, 0, "upper_lumbar", aNum, eFrame, flags, anim_speed, cg.time, -1, 150);
+		trap->G2API_SetBoneAnim(cent->ghoul2, 0, "model_root", aNum, eFrame, flags, anim_speed, cg.time, -1, 150);
+		trap->G2API_SetBoneAnim(cent->ghoul2, 0, "Motion", aNum, eFrame, flags, anim_speed, cg.time, -1, 150);
 	}
 
 	//After we create the bodyqueue, regenerate any limbs on the real instance

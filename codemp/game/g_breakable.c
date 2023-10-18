@@ -147,11 +147,11 @@ void misc_model_breakable_die(gentity_t* self, const gentity_t* inflictor, genti
 	self->think = NULL;
 	self->nextthink = -1;
 
-	if (self->s.modelindex2 != -1 && !(self->spawnflags & 8))
+	if (self->s.model_index2 != -1 && !(self->spawnflags & 8))
 	{
-		//FIXME: modelindex doesn't get set to -1 if the damage model doesn't exist
+		//FIXME: model_index doesn't get set to -1 if the damage model doesn't exist
 		self->r.svFlags |= SVF_BROKEN;
-		self->s.modelindex = self->s.modelindex2;
+		self->s.model_index = self->s.model_index2;
 		G_ActivateBehavior(self, BSET_DEATH);
 	}
 	else
@@ -257,13 +257,13 @@ void misc_model_use(gentity_t* self, const gentity_t* other, gentity_t* activato
 		//Usemodels toggling
 		if (self->spawnflags & 32)
 		{
-			if (self->s.modelindex == self->sound1to2)
+			if (self->s.model_index == self->sound1to2)
 			{
-				self->s.modelindex = self->sound2to1;
+				self->s.model_index = self->sound2to1;
 			}
 			else
 			{
-				self->s.modelindex = self->sound1to2;
+				self->s.model_index = self->sound1to2;
 			}
 		}
 
@@ -299,19 +299,19 @@ void health_shutdown(gentity_t* self)
 		// Switch to and animate its used up model.
 		if (!Q_stricmp(self->model, "models/mapobjects/stasis/plugin2.md3"))
 		{
-			self->s.modelindex = self->s.modelindex2;
+			self->s.model_index = self->s.model_index2;
 		}
 		else if (!Q_stricmp(self->model, "models/mapobjects/borg/plugin2.md3"))
 		{
-			self->s.modelindex = self->s.modelindex2;
+			self->s.model_index = self->s.model_index2;
 		}
 		else if (!Q_stricmp(self->model, "models/mapobjects/stasis/plugin2_floor.md3"))
 		{
-			self->s.modelindex = self->s.modelindex2;
+			self->s.model_index = self->s.model_index2;
 		}
 		else if (!Q_stricmp(self->model, "models/mapobjects/forge/panels.md3"))
 		{
-			self->s.modelindex = self->s.modelindex2;
+			self->s.model_index = self->s.model_index2;
 		}
 
 		trap->LinkEntity((sharedEntity_t*)self);
@@ -629,7 +629,7 @@ void misc_model_breakable_init(gentity_t* ent)
 			ent->s.origin[1], ent->s.origin[2]);
 	}
 	//Main model
-	ent->s.modelindex = ent->sound2to1 = G_ModelIndex(ent->model);
+	ent->s.model_index = ent->sound2to1 = G_model_index(ent->model);
 
 	if (ent->spawnflags & 1)
 	{
@@ -908,7 +908,7 @@ void SP_misc_model_breakable(gentity_t* ent)
 		{
 			//no dmodel
 			strcat(damageModel, "_d1.md3");
-			ent->s.modelindex2 = G_ModelIndex(damageModel);
+			ent->s.model_index2 = G_model_index(damageModel);
 		}
 	}
 
@@ -917,7 +917,7 @@ void SP_misc_model_breakable(gentity_t* ent)
 	{
 		//has umodel
 		strcat(useModel, "_u1.md3");
-		ent->sound1to2 = G_ModelIndex(useModel);
+		ent->sound1to2 = G_model_index(useModel);
 	}
 
 	G_SpawnVector("mins", "-16 -16 -16", ent->r.mins);
