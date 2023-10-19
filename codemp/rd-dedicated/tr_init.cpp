@@ -297,7 +297,7 @@ using consoleCommand_t = struct consoleCommand_s
 };
 
 static consoleCommand_t commands[] = {
-	{"modellist", R_Modellist_f},
+	{"model_list", R_model_list_f},
 	{"modelist", R_ModeList_f},
 	{"modelcacheinfo", RE_RegisterModels_Info_f},
 };
@@ -675,7 +675,7 @@ refexport_t* get_ref_api(const int api_version, refimport_t* rimp)
 	re.G2API_SetBoneAnim = G2API_SetBoneAnim;
 	re.G2API_SetBoneAnimIndex = G2API_SetBoneAnimIndex;
 	re.G2API_SetBoneIKState = G2API_SetBoneIKState;
-	re.G2API_SetGhoul2ModelIndexes = G2API_SetGhoul2ModelIndexes;
+	re.G2API_SetGhoul2model_indexes = G2API_SetGhoul2model_indexes;
 	re.G2API_SetGhoul2ModelFlags = G2API_SetGhoul2ModelFlags;
 	re.G2API_SetLodBias = G2API_SetLodBias;
 	re.G2API_SetNewOrigin = G2API_SetNewOrigin;

@@ -627,7 +627,7 @@ void trigger_push_touch(gentity_t* self, gentity_t* other, trace_t* trace)
 	if (self->spawnflags & PUSH_CONVEYOR)
 	{
 		// only push player if he's on the ground
-		if (other->s.groundEntityNum == ENTITYNUM_NONE)
+		if (other->s.groundentity_num == ENTITYNUM_NONE)
 		{
 			return;
 		}

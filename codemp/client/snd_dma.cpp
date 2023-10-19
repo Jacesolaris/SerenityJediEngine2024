@@ -1467,7 +1467,7 @@ void S_StartAmbientSound(const vec3_t origin, const int entity_num, const unsign
 		return;
 	}
 	if (!origin && (entity_num < 0 || entity_num >= MAX_GENTITIES))
-		Com_Error(ERR_DROP, "S_StartAmbientSound: bad entitynum %i", entity_num);
+		Com_Error(ERR_DROP, "S_StartAmbientSound: bad entity_num %i", entity_num);
 
 	if (sfxHandle < 0 || sfxHandle >= s_numSfx)
 		Com_Error(ERR_DROP, "S_StartAmbientSound: handle %i out of range", sfxHandle);
@@ -1577,7 +1577,7 @@ void S_StartSound(const vec3_t origin, const int entity_num, const int entchanne
 
 	if (!origin && (entity_num < 0 || entity_num >= MAX_GENTITIES))
 	{
-		Com_Error(ERR_DROP, "S_StartSound: bad entitynum %i", entity_num);
+		Com_Error(ERR_DROP, "S_StartSound: bad entity_num %i", entity_num);
 	}
 
 	if (sfxHandle < 0 || sfxHandle >= s_numSfx)
@@ -2371,7 +2371,7 @@ void S_UpdateEntityPosition(const int entity_num, const vec3_t origin)
 {
 	if (entity_num < 0 || entity_num >= MAX_GENTITIES)
 	{
-		Com_Error(ERR_DROP, "S_UpdateEntityPosition: bad entitynum %i", entity_num);
+		Com_Error(ERR_DROP, "S_UpdateEntityPosition: bad entity_num %i", entity_num);
 	}
 
 #ifdef USE_OPENAL

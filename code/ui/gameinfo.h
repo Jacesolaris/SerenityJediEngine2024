@@ -39,6 +39,6 @@ using gameinfo_import_t = struct
 	void (*Printf)(const char* fmt, ...);
 };
 
-void GI_Init(gameinfo_import_t* import);
+void GI_Init(gameinfo_import_t * import);
 
 #endif

@@ -355,13 +355,13 @@ int UI_ParseAnimationFile(const char* filename, animation_t* animset, qboolean i
 	// parse the text
 	text_p = UIPAFtext;
 
-	//FIXME: have some way of playing anims backwards... negative numFrames?
+	//FIXME: have some way of playing anims backwards... negative num_frames?
 
 	//initialize anim array so that from 0 to MAX_ANIMATIONS, set default values of 0 1 0 100
 	for (i = 0; i < MAX_ANIMATIONS; i++)
 	{
 		animset[i].firstFrame = 0;
-		animset[i].numFrames = 0;
+		animset[i].num_frames = 0;
 		animset[i].loopFrames = -1;
 		animset[i].frameLerp = 100;
 	}
@@ -400,7 +400,7 @@ int UI_ParseAnimationFile(const char* filename, animation_t* animset, qboolean i
 		{
 			break;
 		}
-		animset[animNum].numFrames = atoi(token);
+		animset[animNum].num_frames = atoi(token);
 
 		token = COM_Parse(&text_p);
 		if (!token)
@@ -437,7 +437,7 @@ int UI_ParseAnimationFile(const char* filename, animation_t* animset, qboolean i
 	{
 		if (animTable[i].name != NULL)		// This animation reference exists.
 		{
-			if (animset[i].firstFrame <= 0 && animset[i].numFrames <=0)
+			if (animset[i].firstFrame <= 0 && animset[i].num_frames <=0)
 			{	// This is an empty animation reference.
 				Com_Printf("***ANIMTABLE reference #%d (%s) is empty!\n", i, animTable[i].name);
 			}
@@ -4990,19 +4990,19 @@ static void UI_LoadDemosInDirectory(loadDemoContext_t* ctx, const char* director
 
 		// Iterate through child directories
 		char* childDirListBase = ctx->dirListHead;
-		char* fileName = dirList;
+		char* file_name = dirList;
 		for (i = 0; i < numFiles; i++)
 		{
-			const size_t len = strlen(fileName);
+			const size_t len = strlen(file_name);
 
-			if (Q_stricmp(fileName, ".") && Q_stricmp(fileName, "..") && len)
-				UI_LoadDemosInDirectory(ctx, va("%s/%s", directory, fileName));
+			if (Q_stricmp(file_name, ".") && Q_stricmp(file_name, "..") && len)
+				UI_LoadDemosInDirectory(ctx, va("%s/%s", directory, file_name));
 
 			ctx->dirListHead = childDirListBase;
-			fileName += len + 1;
+			file_name += len + 1;
 		}
 
-		assert(fileName + 1 == childDirListBase);
+		assert(file_name + 1 == childDirListBase);
 	}
 
 	ctx->depth--;
@@ -5447,7 +5447,7 @@ void UI_GetVideoSetup(void)
 	trap->Cvar_Register(NULL, "ui_r_fastSky", "0", CVAR_ROM | CVAR_INTERNAL);
 	trap->Cvar_Register(NULL, "ui_r_inGameVideo", "0", CVAR_ROM | CVAR_INTERNAL);
 	trap->Cvar_Register(NULL, "ui_r_allowExtensions", "0", CVAR_ROM | CVAR_INTERNAL);
-	trap->Cvar_Register(NULL, "ui_cg_shadows", "3", CVAR_ROM | CVAR_INTERNAL);
+	trap->Cvar_Register(NULL, "ui_cg_shadows", "2", CVAR_ROM | CVAR_INTERNAL);
 	trap->Cvar_Register(NULL, "ui_r_modified", "0", CVAR_ROM | CVAR_INTERNAL);
 
 	// Copy over the real video cvars into their temporary counterparts
@@ -5522,7 +5522,7 @@ static void UI_UpdateCharacterCvars(void)
 	trap->Cvar_Set("char_color_red", UI_Cvar_VariableString("ui_char_color_red"));
 	trap->Cvar_Set("char_color_green", UI_Cvar_VariableString("ui_char_color_green"));
 	trap->Cvar_Set("char_color_blue", UI_Cvar_VariableString("ui_char_color_blue"));
-	trap->Cvar_Set("ui_selectedModelIndex", "-1");
+	trap->Cvar_Set("ui_selectedmodel_index", "-1");
 }
 
 static void UI_GetCharacterCvars(void)
@@ -5839,7 +5839,7 @@ static void UI_SetSaberBoxesandHilts(void)
 	}
 }
 
-extern qboolean UI_SaberSkinForSaber(const char* saberName, char* saberSkin);
+extern qboolean UI_SaberSkinForSaber(const char* saber_name, char* saberSkin);
 extern qboolean ItemParse_asset_model_go(itemDef_t* item, const char* name, int* runTimeLength);
 extern qboolean ItemParse_model_g2skin_go(itemDef_t* item, const char* skinName);
 
@@ -6072,7 +6072,7 @@ static void UI_ResetCharacterListBoxes(void)
 const char* saberSingleHiltInfo[MAX_SABER_HILTS];
 const char* saberStaffHiltInfo[MAX_SABER_HILTS];
 
-qboolean UI_SaberProperNameForSaber(const char* saberName, char* saberProperName);
+qboolean UI_SaberProperNameForSaber(const char* saber_name, char* saberProperName);
 void WP_SaberGetHiltInfo(const char* singleHilts[MAX_SABER_HILTS], const char* staffHilts[MAX_SABER_HILTS]);
 
 static void UI_UpdateCharacter(qboolean changedModel)
@@ -9407,7 +9407,7 @@ static qhandle_t UI_FeederItemImage(float feederID, int index)
 		{
 			//we want it to load them as it draws them, like the TA feeder
 			//return uiInfo.q3HeadIcons[index];
-			const int selModel = trap->Cvar_VariableValue("ui_selectedModelIndex");
+			const int selModel = trap->Cvar_VariableValue("ui_selectedmodel_index");
 
 			if (selModel != -1)
 			{
@@ -9664,7 +9664,7 @@ qboolean UI_FeederSelection(float feederFloat, int index, itemDef_t* item)
 		int actual = 0;
 		UI_SelectedTeamHead(index, &actual);
 		uiInfo.q3SelectedHead = index;
-		trap->Cvar_Set("ui_selectedModelIndex", va("%i", index));
+		trap->Cvar_Set("ui_selectedmodel_index", va("%i", index));
 		index = actual;
 		if (index >= 0 && index < uiInfo.q3HeadCount)
 		{
@@ -11570,7 +11570,7 @@ GetModuleAPI
 
 uiImport_t* trap = NULL;
 
-Q_EXPORT uiExport_t* QDECL GetModuleAPI(int apiVersion, uiImport_t* import)
+Q_EXPORT uiExport_t * QDECL GetModuleAPI(int apiVersion, uiImport_t * import)
 {
 	static uiExport_t uie = { 0 };
 

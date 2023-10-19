@@ -2865,13 +2865,13 @@ void WP_RemoveSecondSaber(gentity_t* ent, const int saber_num)
 	}
 }
 
-void WP_SetSaber(gentity_t* ent, const int saber_num, const char* saberName)
+void WP_SetSaber(gentity_t* ent, const int saber_num, const char* saber_name)
 {
 	if (!ent || !ent->client)
 	{
 		return;
 	}
-	if (Q_stricmp("none", saberName) == 0 || Q_stricmp("remove", saberName) == 0)
+	if (Q_stricmp("none", saber_name) == 0 || Q_stricmp("remove", saber_name) == 0)
 	{
 		WP_RemoveSaber(ent, saber_num);
 		return;
@@ -2881,7 +2881,7 @@ void WP_SetSaber(gentity_t* ent, const int saber_num, const char* saberName)
 		gi.G2API_RemoveGhoul2Model(ent->ghoul2, ent->weaponModel[saber_num]);
 		ent->weaponModel[saber_num] = -1;
 	}
-	WP_SaberParseParms(saberName, &ent->client->ps.saber[saber_num]); //get saber info
+	WP_SaberParseParms(saber_name, &ent->client->ps.saber[saber_num]); //get saber info
 	if (ent->client->ps.saber[saber_num].stylesLearned)
 	{
 		ent->client->ps.saberStylesKnown |= ent->client->ps.saber[saber_num].stylesLearned;
@@ -3032,7 +3032,7 @@ qboolean WP_BreakSaber(gentity_t* ent, const char* surfName, const saberType_t s
 		}
 		broken = qtrue;
 		//change my saberent's model and skin to match my new right-hand saber
-		wp_set_saber_ent_model_skin(ent, &g_entities[ent->client->ps.saberEntityNum]);
+		wp_set_saber_ent_model_skin(ent, &g_entities[ent->client->ps.saberentity_num]);
 	}
 
 	if (originalNumBlades <= 1)

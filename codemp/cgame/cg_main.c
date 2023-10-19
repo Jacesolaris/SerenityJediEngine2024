@@ -94,13 +94,13 @@ qboolean CG_NoUseableForce(void)
 static int C_PointContents(void)
 {
 	const TCGPointContents* data = &cg.sharedBuffer.pointContents;
-	return CG_PointContents(data->mPoint, data->mPassEntityNum);
+	return CG_PointContents(data->mPoint, data->mPassentity_num);
 }
 
 static void C_GetLerpOrigin(void)
 {
 	TCGVectorData* data = &cg.sharedBuffer.vectorData;
-	VectorCopy(cg_entities[data->mEntityNum].lerpOrigin, data->mPoint);
+	VectorCopy(cg_entities[data->mentity_num].lerpOrigin, data->mPoint);
 }
 
 // only used by FX system to pass to getboltmat
@@ -108,19 +108,19 @@ static void C_GetLerpData(void)
 {
 	TCGGetBoltData* data = &cg.sharedBuffer.getBoltData;
 
-	VectorCopy(cg_entities[data->mEntityNum].lerpOrigin, data->mOrigin);
-	VectorCopy(cg_entities[data->mEntityNum].modelScale, data->mScale);
-	VectorCopy(cg_entities[data->mEntityNum].lerpAngles, data->mAngles);
-	if (cg_entities[data->mEntityNum].currentState.eType == ET_PLAYER)
+	VectorCopy(cg_entities[data->mentity_num].lerpOrigin, data->mOrigin);
+	VectorCopy(cg_entities[data->mentity_num].modelScale, data->mScale);
+	VectorCopy(cg_entities[data->mentity_num].lerpAngles, data->mAngles);
+	if (cg_entities[data->mentity_num].currentState.eType == ET_PLAYER)
 	{
 		// normal player
 		data->mAngles[PITCH] = 0.0f;
 		data->mAngles[ROLL] = 0.0f;
 	}
-	else if (cg_entities[data->mEntityNum].currentState.eType == ET_NPC)
+	else if (cg_entities[data->mentity_num].currentState.eType == ET_NPC)
 	{
 		// an NPC
-		const Vehicle_t* p_veh = cg_entities[data->mEntityNum].m_pVehicle;
+		const Vehicle_t* p_veh = cg_entities[data->mentity_num].m_pVehicle;
 		if (!p_veh)
 		{
 			// for vehicles, we may or may not want to 0 out pitch and roll
@@ -756,7 +756,6 @@ static void CG_RegisterSounds(void)
 
 	trap->S_RegisterSound("sound/weapons/saber/saberlockstart.mp3");
 	trap->S_RegisterSound("sound/weapons/saber/saberlockend.mp3");
-
 
 	for (i = 1; i < 5; i++)
 	{
@@ -3380,7 +3379,7 @@ GetModuleAPI
 
 cgameImport_t* trap = NULL;
 
-Q_EXPORT cgameExport_t* QDECL GetModuleAPI(const int apiVersion, cgameImport_t* import)
+Q_EXPORT cgameExport_t * QDECL GetModuleAPI(const int apiVersion, cgameImport_t * import)
 {
 	static cgameExport_t cge = { 0 };
 

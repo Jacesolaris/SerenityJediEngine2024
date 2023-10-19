@@ -599,25 +599,25 @@ extern qboolean PM_CheckGrabWall(trace_t* trace);
 
 qboolean PM_ClientImpact(const trace_t* trace, qboolean damageSelf)
 {
-	const int otherEntityNum = trace->entity_num;
+	const int otherentity_num = trace->entity_num;
 
 	if (!pm_entSelf)
 	{
 		return qfalse;
 	}
 
-	if (otherEntityNum >= ENTITYNUM_WORLD)
+	if (otherentity_num >= ENTITYNUM_WORLD)
 	{
 		return qfalse;
 	}
 
-	const gentity_t* trace_ent = &g_entities[otherEntityNum];
+	const gentity_t* trace_ent = &g_entities[otherentity_num];
 
 	if (VectorLength(pm->ps->velocity) >= 100 && pm_entSelf->s.NPC_class != CLASS_VEHICLE && pm->ps->lastOnGround + 100
 		< level.time)
 	{
-		Client_CheckImpactBBrush((gentity_t*)pm_entSelf, &g_entities[otherEntityNum]);
-		//DoImpact((gentity_t*)(pm_entSelf), &g_entities[otherEntityNum], damageSelf, trace);
+		Client_CheckImpactBBrush((gentity_t*)pm_entSelf, &g_entities[otherentity_num]);
+		//DoImpact((gentity_t*)(pm_entSelf), &g_entities[otherentity_num], damageSelf, trace);
 	}
 
 	if (!trace_ent

@@ -171,7 +171,7 @@ void G_PlayEffect(const int fx_id, const int ent_num, const vec3_t fwd)
 
 	gentity_t* tent = G_TempEntity(g_entities[ent_num].currentOrigin, EV_PLAY_EFFECT);
 	tent->s.eventParm = fx_id;
-	tent->s.otherEntityNum = ent_num;
+	tent->s.otherentity_num = ent_num;
 	VectorSet(tent->maxs, FX_ENT_RADIUS, FX_ENT_RADIUS, FX_ENT_RADIUS);
 	VectorScale(tent->maxs, -1, tent->mins);
 	VectorCopy(fwd, tent->pos3);
@@ -186,7 +186,7 @@ void G_PlayEffect(const char* name, const int client_num)
 {
 	gentity_t* tent = G_TempEntity(g_entities[client_num].currentOrigin, EV_PLAY_MUZZLE_EFFECT);
 	tent->s.eventParm = G_EffectIndex(name);
-	tent->s.otherEntityNum = client_num;
+	tent->s.otherentity_num = client_num;
 	VectorSet(tent->maxs, FX_ENT_RADIUS, FX_ENT_RADIUS, FX_ENT_RADIUS);
 	VectorScale(tent->maxs, -1, tent->mins);
 }
@@ -1227,7 +1227,7 @@ void G_AddEvent(gentity_t* ent, int event, int event_parm)
 
 		temp = G_Spawn();
 		temp->s.eType = ET_EVENT_ONLY;
-		temp->s.otherEntityNum = ent->s.number;
+		temp->s.otherentity_num = ent->s.number;
 		G_SetOrigin(temp, ent->s.origin);
 		G_AddEvent(temp, event, eventParm);
 		temp->freeAfterEvent = qtrue;
@@ -1837,7 +1837,7 @@ qboolean CanUseInfrontOf(const gentity_t* ent)
 		else if (target->e_UseFunc == useF_misc_atst_use)
 		{
 			//drivable AT-ST from JK2
-			if (ent->client->ps.groundEntityNum != target->s.number)
+			if (ent->client->ps.groundentity_num != target->s.number)
 			{
 				//must be standing on it to use it
 				return qfalse;
@@ -1966,7 +1966,7 @@ tryJetPack:
 		|| ent->client->NPC_class == CLASS_MANDO
 		|| ent->client->NPC_class == CLASS_ROCKETTROOPER)
 	{
-		if ((ent->client->jetPackOn || ent->client->ps.groundEntityNum == ENTITYNUM_NONE) && ent->client->ps.jetpackFuel
+		if ((ent->client->jetPackOn || ent->client->ps.groundentity_num == ENTITYNUM_NONE) && ent->client->ps.jetpackFuel
 		> 10)
 		{
 			ItemUse_Jetpack(ent);
@@ -2140,10 +2140,10 @@ void removeBoltSurface(gentity_t* ent)
 
 	// check first to be sure the bolt is still there on the model
 	if (hit_ent->ghoul2.size() > ent->damage &&
-		hit_ent->ghoul2[ent->damage].mModelindex != -1 &&
+		hit_ent->ghoul2[ent->damage].mmodel_index != -1 &&
 		hit_ent->ghoul2[ent->damage].mSlist.size() > static_cast<unsigned>(ent->aimDebounceTime) &&
 		hit_ent->ghoul2[ent->damage].mSlist[ent->aimDebounceTime].surface != -1 &&
-		hit_ent->ghoul2[ent->damage].mSlist[ent->aimDebounceTime].offFlags == G2SURFACEFLAG_GENERATED)
+		hit_ent->ghoul2[ent->damage].mSlist[ent->aimDebounceTime].off_flags == G2SURFACEFLAG_GENERATED)
 	{
 		// remove the bolt
 		gi.G2API_RemoveBolt(&hit_ent->ghoul2[ent->damage], ent->attackDebounceTime);

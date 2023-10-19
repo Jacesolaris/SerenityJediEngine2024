@@ -190,7 +190,7 @@ qboolean ValidateBoard(Vehicle_t* p_veh, bgEntity_t* p_ent)
 		if (p_veh->m_pVehicleInfo->type == VH_WALKER)
 		{
 			//I know, I know, this should by in the walker's validateboard()
-			if (!ent->client || ent->client->ps.groundEntityNum != parent->s.number)
+			if (!ent->client || ent->client->ps.groundentity_num != parent->s.number)
 			{
 				//can only steal an occupied AT-ST if you're on top (by the hatch)
 				return qfalse;
@@ -586,7 +586,7 @@ void G_EjectDroidUnit(Vehicle_t* p_veh, const qboolean kill)
 {
 	p_veh->m_pDroidUnit->s.m_iVehicleNum = ENTITYNUM_NONE;
 	p_veh->m_pDroidUnit->s.owner = ENTITYNUM_NONE;
-	//	p_veh->m_pDroidUnit->s.otherEntityNum2 = ENTITYNUM_NONE;
+	//	p_veh->m_pDroidUnit->s.otherentity_num2 = ENTITYNUM_NONE;
 #ifdef _GAME
 	{
 		gentity_t* droidEnt = (gentity_t*)p_veh->m_pDroidUnit;

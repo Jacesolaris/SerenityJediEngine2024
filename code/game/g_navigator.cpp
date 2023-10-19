@@ -237,7 +237,7 @@ public:
 	float mDistance; // DO NOT REMOVE THIS: It's a serious runtime optimization for A*
 
 	unsigned short mOwnerNum; // Converted to short.  Largest entity number is 1024
-	unsigned short mEntityNum; // Converted to short.  Largest entity number is 1024
+	unsigned short mentity_num; // Converted to short.  Largest entity number is 1024
 	enum EWayEdgeFlags
 	{
 		WE_NONE = 0,
@@ -561,9 +561,9 @@ public:
 			return false;
 		}
 
-		if (Edge.mEntityNum != ENTITYNUM_NONE)
+		if (Edge.mentity_num != ENTITYNUM_NONE)
 		{
-			const gentity_t* ent = &g_entities[Edge.mEntityNum];
+			const gentity_t* ent = &g_entities[Edge.mentity_num];
 			if (ent)
 			{
 				// Can The Actor Navigate Through The Breakable Entity?
@@ -572,7 +572,7 @@ public:
 					mActor->NPC &&
 					mActor->NPC->aiFlags & NPCAI_NAV_THROUGH_BREAKABLES &&
 					Edge.BlockingBreakable() &&
-					G_EntIsBreakable(Edge.mEntityNum, mActor)
+					G_EntIsBreakable(Edge.mentity_num, mActor)
 					)
 				{
 					return true;
@@ -713,7 +713,7 @@ public:
 		Edge.mNodeA = A;
 		Edge.mNodeB = B;
 		Edge.mDistance = NodeA.mPoint.Dist(NodeB.mPoint);
-		Edge.mEntityNum = ENTITYNUM_NONE;
+		Edge.mentity_num = ENTITYNUM_NONE;
 		Edge.mOwnerNum = ENTITYNUM_NONE;
 		Edge.mFlags.clear();
 		Edge.mFlags.set_bit(CWayEdge::WE_VALID);
@@ -1366,7 +1366,7 @@ bool NAV::TestEdge(const TNodeHandle NodeA, const TNodeHandle NodeB, const qbool
 		if (CanGo && !hit_character)
 		{
 			ent->wayedge = at_handle;
-			at.mEntityNum = EntHit;
+			at.mentity_num = EntHit;
 			at.mFlags.set_bit(CWayEdge::WE_CANBEINVAL);
 
 			// Add It To The Edge Map
@@ -2188,7 +2188,7 @@ void NAV::WayEdgesNowClear(gentity_t* ent)
 				{
 					CWayEdge& edge = mGraph.get_edge(EdgeHandle);
 					edge.mFlags.set_bit(CWayEdge::WE_VALID);
-					edge.mEntityNum = ENTITYNUM_NONE;
+					edge.mentity_num = ENTITYNUM_NONE;
 					edge.mOwnerNum = ENTITYNUM_NONE;
 				}
 			}
@@ -4330,7 +4330,7 @@ bool STEER::GoTo(gentity_t* actor, gentity_t* target, const float reachedRadius,
 	// Check To See If It Is Safe To Attempt Steering Toward The Target Position
 	//---------------------------------------------------------------------------
 	if (
-		//(target->client && target->client->ps.groundEntityNum==ENTITYNUM_NONE) ||
+		//(target->client && target->client->ps.groundentity_num==ENTITYNUM_NONE) ||
 		!SafeToGoTo(actor, target->currentOrigin, NAV::GetNearestNode(target))
 		)
 	{
@@ -5272,7 +5272,7 @@ bool STEER::Reached(gentity_t* actor, const vec3_t& target, const float targetRa
 		return true;
 	}
 
-	//	if (target->client && target->client->ps.groundEntityNum == ENTITYNUM_NONE)
+	//	if (target->client && target->client->ps.groundentity_num == ENTITYNUM_NONE)
 	//	{
 	//		TargetPos -= ActorPos;
 	//		if (fabsf(TargetPos[2]<(targetRadius*8)))

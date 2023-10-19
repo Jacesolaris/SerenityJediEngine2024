@@ -527,10 +527,10 @@ qboolean PlaceShield(gentity_t* playerent)
 			shield->parent = playerent;
 
 			// Set team number.
-			shield->s.otherEntityNum2 = playerent->client->sess.sessionTeam;
+			shield->s.otherentity_num2 = playerent->client->sess.sessionTeam;
 
 			shield->s.eType = ET_SPECIAL;
-			shield->s.modelindex = HI_SHIELD; // this'll be used in CG_Useable() for rendering.
+			shield->s.model_index = HI_SHIELD; // this'll be used in CG_Useable() for rendering.
 			shield->classname = shieldItem->classname;
 
 			shield->r.contents = CONTENTS_TRIGGER;
@@ -540,13 +540,13 @@ qboolean PlaceShield(gentity_t* playerent)
 			shield->use = 0; //Use_Item;
 
 			// allow to ride movers
-			shield->s.groundEntityNum = tr.entity_num;
+			shield->s.groundentity_num = tr.entity_num;
 
 			G_SetOrigin(shield, tr.endpos);
 
 			shield->s.eFlags &= ~EF_NODRAW;
 			shield->r.svFlags &= ~SVF_NOCLIENT;
-			shield->s.otherEntityNum = playerent->s.number; //mark owner info for duel
+			shield->s.otherentity_num = playerent->s.number; //mark owner info for duel
 
 			trap->LinkEntity((sharedEntity_t*)shield);
 
@@ -1186,7 +1186,7 @@ void ItemUse_Sentry(gentity_t* ent)
 	gentity_t* sentry = G_Spawn();
 
 	sentry->classname = "sentryGun";
-	sentry->s.modelindex = G_ModelIndex("models/items/psgun.glm"); //replace ASAP
+	sentry->s.model_index = G_model_index("models/items/psgun.glm"); //replace ASAP
 
 	sentry->s.g2radius = 30.0f;
 	sentry->s.modelGhoul2 = 1;
@@ -1225,7 +1225,7 @@ void ItemUse_Sentry(gentity_t* ent)
 	trap->LinkEntity((sharedEntity_t*)sentry);
 
 	sentry->s.owner = ent->s.number;
-	sentry->s.otherEntityNum = ent->s.number; // mark owner info for duel
+	sentry->s.otherentity_num = ent->s.number; // mark owner info for duel
 	sentry->s.weapon = WP_TURRET; //so I can identify the entity as sentry gun client side
 	sentry->s.shouldtarget = qtrue;
 	if (level.gametype >= GT_TEAM)
@@ -1270,7 +1270,7 @@ void ItemUse_Sentry2(gentity_t* ent)
 	gentity_t* sentry = G_Spawn();
 
 	sentry->classname = "sentryGun";
-	sentry->s.modelindex = G_ModelIndex("models/items/psgun.glm"); //replace ASAP
+	sentry->s.model_index = G_model_index("models/items/psgun.glm"); //replace ASAP
 
 	sentry->s.g2radius = 30.0f;
 	sentry->s.modelGhoul2 = 1;
@@ -1755,7 +1755,7 @@ void G_SpecialSpawnItem(gentity_t* ent, gitem_t* item)
 	VectorSet(ent->r.maxs, 8, 8, 16);
 
 	ent->s.eType = ET_ITEM;
-	ent->s.modelindex = ent->item - bg_itemlist; // store item number in modelindex
+	ent->s.model_index = ent->item - bg_itemlist; // store item number in model_index
 
 	ent->r.contents = CONTENTS_TRIGGER;
 	ent->touch = Touch_Item;
@@ -2395,7 +2395,7 @@ gentity_t* EWeb_Create(gentity_t* spawner)
 	//set up the g2 model info
 	ent->s.modelGhoul2 = 1;
 	ent->s.g2radius = 128;
-	ent->s.modelindex = G_ModelIndex((char*)modelName);
+	ent->s.model_index = G_model_index((char*)modelName);
 
 	trap->G2API_InitGhoul2Model(&ent->ghoul2, modelName, 0, 0, 0, 0, 0);
 
@@ -3234,13 +3234,13 @@ void Touch_Item(gentity_t* ent, gentity_t* other, trace_t* trace)
 		if (!ent->speed)
 		{
 			gentity_t* te = G_TempEntity(ent->s.pos.trBase, EV_GLOBAL_ITEM_PICKUP);
-			te->s.eventParm = ent->s.modelindex;
+			te->s.eventParm = ent->s.model_index;
 			te->r.svFlags |= SVF_BROADCAST;
 		}
 		else
 		{
 			gentity_t* te = G_TempEntity(ent->s.pos.trBase, EV_GLOBAL_ITEM_PICKUP);
-			te->s.eventParm = ent->s.modelindex;
+			te->s.eventParm = ent->s.model_index;
 			// only send this temp entity to a single client
 			te->r.svFlags |= SVF_SINGLECLIENT;
 			te->r.singleClient = other->s.number;
@@ -3336,12 +3336,12 @@ gentity_t* LaunchItem(gitem_t* item, vec3_t origin, vec3_t velocity)
 	gentity_t* dropped = G_Spawn();
 
 	dropped->s.eType = ET_ITEM;
-	dropped->s.modelindex = item - bg_itemlist; // store item number in modelindex
-	if (dropped->s.modelindex < 0)
+	dropped->s.model_index = item - bg_itemlist; // store item number in model_index
+	if (dropped->s.model_index < 0)
 	{
-		dropped->s.modelindex = 0;
+		dropped->s.model_index = 0;
 	}
-	dropped->s.modelindex2 = 1; // This is non-zero is it's a dropped item
+	dropped->s.model_index2 = 1; // This is non-zero is it's a dropped item
 
 	dropped->classname = item->classname;
 	dropped->item = item;
@@ -3578,8 +3578,8 @@ void FinishSpawningItem(gentity_t* ent)
 	VectorSet(ent->r.maxs, 8, 8, 16);
 
 	ent->s.eType = ET_ITEM;
-	ent->s.modelindex = ent->item - bg_itemlist; // store item number in modelindex
-	ent->s.modelindex2 = 0; // zero indicates this isn't a dropped item
+	ent->s.model_index = ent->item - bg_itemlist; // store item number in model_index
+	ent->s.model_index2 = 0; // zero indicates this isn't a dropped item
 
 	ent->r.contents = CONTENTS_TRIGGER;
 	ent->touch = Touch_Item;
@@ -3587,10 +3587,10 @@ void FinishSpawningItem(gentity_t* ent)
 	ent->use = Use_Item;
 
 	// create a Ghoul2 model if the world model is a glm
-	/*	item = &bg_itemlist[ ent->s.modelindex ];
+	/*	item = &bg_itemlist[ ent->s.model_index ];
 		if (!Q_stricmp(&item->world_model[0][strlen(item->world_model[0]) - 4], ".glm"))
 		{
-			trap->G2API_InitGhoul2Model(&ent->s, item->world_model[0], G_ModelIndex(item->world_model[0] ), 0, 0, 0, 0);
+			trap->G2API_InitGhoul2Model(&ent->s, item->world_model[0], G_model_index(item->world_model[0] ), 0, 0, 0, 0);
 			ent->s.radius = 60;
 		}
 	*/
@@ -3622,7 +3622,7 @@ void FinishSpawningItem(gentity_t* ent)
 		ent->r.maxs[2] += 0.1f;
 
 		// allow to ride movers
-		ent->s.groundEntityNum = tr.entity_num;
+		ent->s.groundentity_num = tr.entity_num;
 
 		G_SetOrigin(ent, tr.endpos);
 	}
@@ -3955,7 +3955,7 @@ void G_BounceItem(gentity_t* ent, trace_t* trace)
 		trace->endpos[2] += 1.0; // make sure it is off ground
 		SnapVector(trace->endpos);
 		G_SetOrigin(ent, trace->endpos);
-		ent->s.groundEntityNum = trace->entity_num;
+		ent->s.groundentity_num = trace->entity_num;
 		return;
 	}
 
@@ -4007,7 +4007,7 @@ void G_RunItem(gentity_t* ent)
 	int mask;
 
 	// if groundentity has been set to ENTITYNUM_NONE, it may have been pushed off an edge
-	if (ent->s.groundEntityNum == ENTITYNUM_NONE)
+	if (ent->s.groundentity_num == ENTITYNUM_NONE)
 	{
 		if (ent->s.pos.trType != TR_GRAVITY)
 		{

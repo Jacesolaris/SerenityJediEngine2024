@@ -116,7 +116,7 @@ gotnewcl:
 	// this is the only place a client_t is ever initialized
 	*newcl = temp;
 	const int client_num = newcl - svs.clients;
-	gentity_t* ent = SV_GentityNum(client_num);
+	gentity_t* ent = SV_Gentity_num(client_num);
 	newcl->gentity = ent;
 
 	// save the address
@@ -252,7 +252,7 @@ void SV_ClientEnterWorld(client_t* client, const usercmd_t* cmd, const SavedGame
 
 	// set up the entity for the client
 	const int client_num = client - svs.clients;
-	gentity_t* ent = SV_GentityNum(client_num);
+	gentity_t* ent = SV_Gentity_num(client_num);
 	ent->s.number = client_num;
 	client->gentity = ent;
 

@@ -827,7 +827,7 @@ void CG_Player(centity_t* cent);
 void CG_ResetPlayerEntity(centity_t* cent);
 void CG_AddRefEntityWithPowerups(refEntity_t* ent, int powerups, centity_t* cent);
 void CG_GetTagWorldPosition(refEntity_t* model, const char* tag, vec3_t pos, vec3_t axis[3]);
-void CG_PlayerShieldHit(int entitynum, vec3_t dir, int amount);
+void CG_PlayerShieldHit(int entity_num, vec3_t dir, int amount);
 
 //
 // cg_predict.c

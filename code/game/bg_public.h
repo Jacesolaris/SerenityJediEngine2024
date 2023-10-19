@@ -734,17 +734,17 @@ class animation_t
 {
 public:
 	unsigned short firstFrame;
-	unsigned short numFrames;
+	unsigned short num_frames;
 	short frameLerp; // msec between frames
 	//initial lerp is abs(frameLerp)
-	signed char loopFrames; // 0 to numFrames, -1 = no loop
+	signed char loopFrames; // 0 to num_frames, -1 = no loop
 	unsigned char glaIndex;
 
 	void sg_export(
 		ojk::SavedGameHelper& saved_game) const
 	{
 		saved_game.write<uint16_t>(firstFrame);
-		saved_game.write<uint16_t>(numFrames);
+		saved_game.write<uint16_t>(num_frames);
 		saved_game.write<int16_t>(frameLerp);
 		saved_game.write<int8_t>(loopFrames);
 		saved_game.write<uint8_t>(glaIndex);
@@ -754,7 +754,7 @@ public:
 		ojk::SavedGameHelper& saved_game)
 	{
 		saved_game.read<uint16_t>(firstFrame);
-		saved_game.read<uint16_t>(numFrames);
+		saved_game.read<uint16_t>(num_frames);
 		saved_game.read<int16_t>(frameLerp);
 		saved_game.read<int8_t>(loopFrames);
 		saved_game.read<uint8_t>(glaIndex);

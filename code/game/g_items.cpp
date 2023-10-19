@@ -35,7 +35,7 @@ extern void CrystalAmmoSettings(gentity_t* ent);
 extern void ChangeWeapon(const gentity_t* ent, int new_weapon);
 extern qboolean PM_InKnockDown(const playerState_t* ps);
 extern qboolean PM_InGetUp(const playerState_t* ps);
-extern void WP_SetSaber(gentity_t* ent, int saber_num, const char* saberName);
+extern void WP_SetSaber(gentity_t* ent, int saber_num, const char* saber_name);
 extern void WP_RemoveSaber(gentity_t* ent, int saber_num);
 extern void wp_saber_fall_sound(const gentity_t* owner, const gentity_t* saber);
 extern saber_colors_t TranslateSaberColor(const char* name);
@@ -1318,7 +1318,7 @@ void FinishSpawningItem(gentity_t* ent)
 		}
 
 		// allow to ride movers
-		ent->s.groundEntityNum = tr.entity_num;
+		ent->s.groundentity_num = tr.entity_num;
 
 		G_SetOrigin(ent, tr.endpos);
 	}
@@ -1558,7 +1558,7 @@ void G_BounceItem(gentity_t* ent, trace_t* trace)
 	{
 		//stop
 		G_SetOrigin(ent, trace->endpos);
-		ent->s.groundEntityNum = trace->entity_num;
+		ent->s.groundentity_num = trace->entity_num;
 		if (droppedSaber)
 		{
 			//a dropped saber item
@@ -1630,7 +1630,7 @@ void G_RunItem(gentity_t* ent)
 	int mask;
 
 	// if groundentity has been set to -1, it may have been pushed off an edge
-	if (ent->s.groundEntityNum == ENTITYNUM_NONE)
+	if (ent->s.groundentity_num == ENTITYNUM_NONE)
 	{
 		if (ent->s.pos.trType != TR_GRAVITY)
 		{

@@ -125,7 +125,7 @@ using client_t = struct client_s
 	int lastMessageNum; // for delta compression
 	int cmdNum; // command number last executed
 	int lastClientCommand; // reliable client message sequence
-	gentity_t* gentity; // SV_GentityNum(client_num)
+	gentity_t* gentity; // SV_Gentity_num(client_num)
 	char name[MAX_NAME_LENGTH]; // extracted from userinfo, high bits masked
 	byte* download; // file being downloaded
 	int downloadsize; // total bytes (can't use EOF because of paks)
@@ -225,7 +225,7 @@ void SV_SendClientSnapshot(client_t* client);
 //
 // sv_game.c
 //
-gentity_t* SV_GentityNum(int num);
+gentity_t* SV_Gentity_num(int num);
 svEntity_t* SV_SvEntityForGentity(gentity_t* gEnt);
 gentity_t* SV_GEntityForSvEntity(svEntity_t* svEnt);
 void SV_InitGameProgs();

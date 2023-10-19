@@ -2989,26 +2989,26 @@ void misc_atst_setanim(gentity_t* self, const int bone, const int anim)
 	}
 	int firstFrame = -1;
 	int lastFrame = -1;
-	float animSpeed = 0;
+	float anim_speed = 0;
 	//try to get anim ranges from the animation.cfg for an AT-ST
 	for (int i = 0; i < level.numKnownAnimFileSets; i++)
 	{
 		if (!Q_stricmp("atst", level.knownAnimFileSets[i].filename))
 		{
 			firstFrame = level.knownAnimFileSets[i].animations[anim].firstFrame;
-			lastFrame = firstFrame + level.knownAnimFileSets[i].animations[anim].numFrames;
-			animSpeed = 50.0f / level.knownAnimFileSets[i].animations[anim].frameLerp;
+			lastFrame = firstFrame + level.knownAnimFileSets[i].animations[anim].num_frames;
+			anim_speed = 50.0f / level.knownAnimFileSets[i].animations[anim].frameLerp;
 			break;
 		}
 	}
-	if (firstFrame != -1 && lastFrame != -1 && animSpeed != 0)
+	if (firstFrame != -1 && lastFrame != -1 && anim_speed != 0)
 	{
 		if (!gi.G2API_SetBoneAnimIndex(&self->ghoul2[self->playerModel], bone, firstFrame,
-			lastFrame, BONE_ANIM_OVERRIDE_FREEZE | BONE_ANIM_BLEND, animSpeed,
+			lastFrame, BONE_ANIM_OVERRIDE_FREEZE | BONE_ANIM_BLEND, anim_speed,
 			cg.time ? cg.time : level.time, -1, 150))
 		{
 			gi.G2API_SetBoneAnimIndex(&self->ghoul2[self->playerModel], bone, firstFrame,
-				lastFrame, BONE_ANIM_OVERRIDE_FREEZE, animSpeed,
+				lastFrame, BONE_ANIM_OVERRIDE_FREEZE, anim_speed,
 				cg.time ? cg.time : level.time, -1, 150);
 		}
 	}
@@ -3054,7 +3054,7 @@ void misc_atst_use(gentity_t* self, gentity_t* other, gentity_t* activator)
 	if (activator->client->NPC_class != CLASS_ATST)
 	{
 		//get in the ATST
-		if (activator->client->ps.groundEntityNum != self->s.number)
+		if (activator->client->ps.groundentity_num != self->s.number)
 		{
 			//can only get in if on top of me...
 			//we *could* even check for the hatch surf...?

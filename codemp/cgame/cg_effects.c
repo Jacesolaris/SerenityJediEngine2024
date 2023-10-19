@@ -676,11 +676,11 @@ Break glass with fancy method
 */
 void CG_GlassShatter(const int entnum, vec3_t dmg_pt, vec3_t dmg_dir, const float dmg_radius, const int max_shards)
 {
-	if (cgs.inlineDrawModel[cg_entities[entnum].currentState.modelindex])
+	if (cgs.inlineDrawModel[cg_entities[entnum].currentState.model_index])
 	{
 		vec3_t normal;
 		vec3_t verts[4];
-		trap->R_GetBModelVerts(cgs.inlineDrawModel[cg_entities[entnum].currentState.modelindex], verts, normal);
+		trap->R_GetBModelVerts(cgs.inlineDrawModel[cg_entities[entnum].currentState.model_index], verts, normal);
 		CG_DoGlass(verts, dmg_pt, dmg_dir, dmg_radius, max_shards);
 	}
 	//otherwise something awful has happened.

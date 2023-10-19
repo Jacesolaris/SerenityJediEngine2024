@@ -786,7 +786,7 @@ void Tavion_ScepterSlam()
 					if (radius_ents[i]->health > 0)
 					{
 						if (dist < half_rad
-							|| radius_ents[i]->client->ps.groundEntityNum != ENTITYNUM_NONE)
+							|| radius_ents[i]->client->ps.groundentity_num != ENTITYNUM_NONE)
 						{
 							//within range of my fist or within ground-shaking range and not in the air
 							G_Knockdown(radius_ents[i], NPC, vec3_origin, 500, qtrue);
@@ -1328,7 +1328,7 @@ qboolean NPC_MoveDirClear(const int forwardmove, const int rightmove, const qboo
 		return qtrue;
 	}
 
-	if (NPC->client->ps.groundEntityNum == ENTITYNUM_NONE)
+	if (NPC->client->ps.groundentity_num == ENTITYNUM_NONE)
 	{
 		//in the air
 		return qtrue;
@@ -1380,7 +1380,7 @@ qboolean NPC_MoveDirClear(const int forwardmove, const int rightmove, const qboo
 
 		if (NPC->NPC->goalEntity->client)
 		{
-			if (NPC->NPC->goalEntity->client->ps.groundEntityNum == ENTITYNUM_NONE)
+			if (NPC->NPC->goalEntity->client->ps.groundentity_num == ENTITYNUM_NONE)
 			{
 				enemy_in_air = qtrue;
 			}
@@ -2041,8 +2041,8 @@ qboolean Kyle_CanDoGrab()
 				if (TIMER_Done(NPC, "NPC_GrabPlayerDebounce"))
 				{
 					//okay to grab again
-					if (NPC->client->ps.groundEntityNum != ENTITYNUM_NONE
-						&& NPC->enemy->client->ps.groundEntityNum != ENTITYNUM_NONE)
+					if (NPC->client->ps.groundentity_num != ENTITYNUM_NONE
+						&& NPC->enemy->client->ps.groundentity_num != ENTITYNUM_NONE)
 					{
 						//me and enemy are on ground
 						if (!PM_InOnGroundAnim(&NPC->enemy->client->ps))
@@ -2076,8 +2076,8 @@ qboolean Kyle_CanDoGrab()
 				if (TIMER_Done(NPC, "grabEnemyDebounce"))
 				{
 					//okay to grab again
-					if (NPC->client->ps.groundEntityNum != ENTITYNUM_NONE
-						&& NPC->enemy->client->ps.groundEntityNum != ENTITYNUM_NONE)
+					if (NPC->client->ps.groundentity_num != ENTITYNUM_NONE
+						&& NPC->enemy->client->ps.groundentity_num != ENTITYNUM_NONE)
 					{
 						//me and enemy are on ground
 						if (!PM_InOnGroundAnim(&NPC->enemy->client->ps))
@@ -3164,7 +3164,7 @@ static void jedi_combat_distance(const int enemy_dist)
 		if (NPC->enemy && (NPC->enemy->client->ps.eFlags & EF_FORCE_GRIPPED || NPC->enemy->client->ps.eFlags & EF_FORCE_GRABBED))
 		{
 			//They're being gripped, rush them!
-			if (NPC->enemy->client->ps.groundEntityNum != ENTITYNUM_NONE)
+			if (NPC->enemy->client->ps.groundentity_num != ENTITYNUM_NONE)
 			{
 				//they're on the ground, so advance
 				if (TIMER_Done(NPC, "parryTime") || NPCInfo->rank > RANK_LT)
@@ -3270,7 +3270,7 @@ static void jedi_combat_distance(const int enemy_dist)
 				enemy->client->ps.forcePowersActive & 1 << FP_GRASP))
 			{
 				//They're choking someone, probably an ally, run at them and do some sort of attack
-				if (NPC->enemy->client->ps.groundEntityNum != ENTITYNUM_NONE)
+				if (NPC->enemy->client->ps.groundentity_num != ENTITYNUM_NONE)
 				{
 					//they're on the ground, so advance
 					if (TIMER_Done(NPC, "parryTime") || NPCInfo->rank > RANK_LT)
@@ -3524,7 +3524,7 @@ static void jedi_combat_distance(const int enemy_dist)
 					if (TIMER_Done(NPC, "parryTime") || NPCInfo->rank > RANK_LT)
 					{
 						//not parrying
-						if (!NPC->enemy->client || NPC->enemy->client->ps.groundEntityNum != ENTITYNUM_NONE)
+						if (!NPC->enemy->client || NPC->enemy->client->ps.groundentity_num != ENTITYNUM_NONE)
 						{
 							//they're on the ground, so advance
 							if (enemy_dist > 200 || !(NPCInfo->scriptFlags & SCF_DONT_FIRE))
@@ -3577,7 +3577,7 @@ static void jedi_combat_distance(const int enemy_dist)
 				if (TIMER_Done(NPC, "parryTime") || NPCInfo->rank > RANK_LT)
 				{
 					//not parrying
-					if (!NPC->enemy->client || NPC->enemy->client->ps.groundEntityNum != ENTITYNUM_NONE)
+					if (!NPC->enemy->client || NPC->enemy->client->ps.groundentity_num != ENTITYNUM_NONE)
 					{
 						//they're on the ground, so advance
 						Jedi_Advance();
@@ -3676,7 +3676,7 @@ qboolean jedi_disruptor_dodge_evasion(gentity_t* self, gentity_t* shooter, trace
 		return qfalse;
 	}
 
-	if (self->client->ps.groundEntityNum == ENTITYNUM_NONE)
+	if (self->client->ps.groundentity_num == ENTITYNUM_NONE)
 	{
 		//can't dodge in mid-air
 		return qfalse;
@@ -3713,15 +3713,15 @@ qboolean jedi_disruptor_dodge_evasion(gentity_t* self, gentity_t* shooter, trace
 		{
 			for (auto& z : tr->G2CollisionMap)
 			{
-				if (z.mEntityNum == -1)
+				if (z.mentity_num == -1)
 				{
 					//actually, completely break out of this for loop since nothing after this in the aray should ever be valid either
 					continue;
 				}
 
 				CCollisionRecord& coll = z;
-				G_GetHitLocFromSurfName(&g_entities[coll.mEntityNum],
-					gi.G2API_GetSurfaceName(&g_entities[coll.mEntityNum].ghoul2[coll.mModelIndex],
+				G_GetHitLocFromSurfName(&g_entities[coll.mentity_num],
+					gi.G2API_GetSurfaceName(&g_entities[coll.mentity_num].ghoul2[coll.mModelIndex],
 						coll.mSurfaceIndex), &hit_loc, coll.mCollisionPosition,
 					nullptr, nullptr, MOD_UNKNOWN);
 				//only want the first
@@ -3888,7 +3888,7 @@ qboolean jedi_dodge_evasion(gentity_t* self, gentity_t* shooter, trace_t* tr, in
 		return qfalse; //dont do
 	}
 
-	if (self->client->ps.groundEntityNum == ENTITYNUM_NONE)
+	if (self->client->ps.groundentity_num == ENTITYNUM_NONE)
 	{
 		//can't dodge in mid-air
 		return qfalse;
@@ -3922,15 +3922,15 @@ qboolean jedi_dodge_evasion(gentity_t* self, gentity_t* shooter, trace_t* tr, in
 		{
 			for (auto& z : tr->G2CollisionMap)
 			{
-				if (z.mEntityNum == -1)
+				if (z.mentity_num == -1)
 				{
 					//actually, completely break out of this for loop since nothing after this in the aray should ever be valid either
 					continue; //break;//
 				}
 
 				CCollisionRecord& coll = z;
-				G_GetHitLocFromSurfName(&g_entities[coll.mEntityNum],
-					gi.G2API_GetSurfaceName(&g_entities[coll.mEntityNum].ghoul2[coll.mModelIndex],
+				G_GetHitLocFromSurfName(&g_entities[coll.mentity_num],
+					gi.G2API_GetSurfaceName(&g_entities[coll.mentity_num].ghoul2[coll.mModelIndex],
 						coll.mSurfaceIndex), &hit_loc, coll.mCollisionPosition,
 					nullptr, nullptr, MOD_UNKNOWN);
 				//only want the first
@@ -4634,7 +4634,7 @@ qboolean Jedi_InNoAIAnim(const gentity_t* self)
 void Jedi_CheckJumpEvasionSafety(usercmd_t* cmd, const evasionType_t evasionType)
 {
 	if (evasionType != EVASION_OTHER //not a FlipEvasion, which does it's own safety checks
-		&& NPC->client->ps.groundEntityNum != ENTITYNUM_NONE)
+		&& NPC->client->ps.groundentity_num != ENTITYNUM_NONE)
 	{
 		//on terra firma right now
 		if (NPC->client->ps.velocity[2] > 0
@@ -4793,7 +4793,7 @@ evasionType_t jedi_saber_block_go(gentity_t* self, usercmd_t* cmd, vec3_t p_hitl
 				|| self->client->ps.forcePower < BLOCKPOINTS_HALF))
 			{
 				//acrobat or fencer or above
-				if (self->client->ps.groundEntityNum != ENTITYNUM_NONE && //on the ground
+				if (self->client->ps.groundentity_num != ENTITYNUM_NONE && //on the ground
 					!(self->client->ps.pm_flags & PMF_DUCKED) && cmd->upmove >= 0 && TIMER_Done(self, "duck")
 					//not ducking
 					&& !PM_InRoll(&self->client->ps) //not rolling
@@ -4895,7 +4895,7 @@ evasionType_t jedi_saber_block_go(gentity_t* self, usercmd_t* cmd, vec3_t p_hitl
 						}
 					}
 
-					if (self->client->ps.groundEntityNum != ENTITYNUM_NONE)
+					if (self->client->ps.groundentity_num != ENTITYNUM_NONE)
 					{
 						if (zdiff > 5)
 						{
@@ -4967,7 +4967,7 @@ evasionType_t jedi_saber_block_go(gentity_t* self, usercmd_t* cmd, vec3_t p_hitl
 						}
 					}
 
-					if (self->client->ps.groundEntityNum != ENTITYNUM_NONE)
+					if (self->client->ps.groundentity_num != ENTITYNUM_NONE)
 					{
 						if (zdiff > 5)
 						{
@@ -5008,7 +5008,7 @@ evasionType_t jedi_saber_block_go(gentity_t* self, usercmd_t* cmd, vec3_t p_hitl
 					}
 				}
 
-				if (self->client->ps.groundEntityNum != ENTITYNUM_NONE)
+				if (self->client->ps.groundentity_num != ENTITYNUM_NONE)
 				{
 					duck_chance = 4;
 				}
@@ -5020,7 +5020,7 @@ evasionType_t jedi_saber_block_go(gentity_t* self, usercmd_t* cmd, vec3_t p_hitl
 		}
 		else
 		{
-			if (self->client->ps.groundEntityNum != ENTITYNUM_NONE)
+			if (self->client->ps.groundentity_num != ENTITYNUM_NONE)
 			{
 				TIMER_Start(self, "duck", Q_irand(500, 1500));
 				evasion_type = EVASION_DUCK;
@@ -5036,7 +5036,7 @@ evasionType_t jedi_saber_block_go(gentity_t* self, usercmd_t* cmd, vec3_t p_hitl
 		if (zdiff < -10)
 		{
 			//hmm, pretty low, but not low enough to use the low block, so we need to duck
-			if (self->client->ps.groundEntityNum != ENTITYNUM_NONE)
+			if (self->client->ps.groundentity_num != ENTITYNUM_NONE)
 			{
 				TIMER_Start(self, "duck", Q_irand(500, 1500));
 				evasion_type = EVASION_DUCK;
@@ -5224,7 +5224,7 @@ evasionType_t jedi_saber_block_go(gentity_t* self, usercmd_t* cmd, vec3_t p_hitl
 		if (saber_busy || zdiff < -36 && (zdiff < -44 || !Q_irand(0, 2)))
 		{
 			//jump!
-			if (self->client->ps.groundEntityNum == ENTITYNUM_NONE)
+			if (self->client->ps.groundentity_num == ENTITYNUM_NONE)
 			{
 				//already in air, duck to pull up legs
 				TIMER_Start(self, "duck", Q_irand(500, 1500));
@@ -5578,7 +5578,7 @@ static evasionType_t Jedi_CheckEvadeSpecialAttacks()
 									{
 										Com_Printf("%s rolling left from roll-stab!\n", NPC->NPC_type);
 									}
-									if (NPC->client->ps.groundEntityNum != ENTITYNUM_NONE)
+									if (NPC->client->ps.groundentity_num != ENTITYNUM_NONE)
 									{
 										//fuck it, just force it
 										NPC_SetAnim(NPC, SETANIM_BOTH, BOTH_ROLL_L,
@@ -5605,7 +5605,7 @@ static evasionType_t Jedi_CheckEvadeSpecialAttacks()
 									{
 										Com_Printf("%s rolling right from roll-stab!\n", NPC->NPC_type);
 									}
-									if (NPC->client->ps.groundEntityNum != ENTITYNUM_NONE)
+									if (NPC->client->ps.groundentity_num != ENTITYNUM_NONE)
 									{
 										//fuck it, just force it
 										NPC_SetAnim(NPC, SETANIM_BOTH, BOTH_ROLL_R,
@@ -6156,7 +6156,7 @@ static void Jedi_EvasionSaber(vec3_t enemy_movedir, const float enemy_dist, vec3
 	}
 
 	if (NPC->enemy->client->ps.saberInFlight
-		&& NPC->enemy->client->ps.saberEntityNum != ENTITYNUM_NONE
+		&& NPC->enemy->client->ps.saberentity_num != ENTITYNUM_NONE
 		&& NPC->enemy->client->ps.saberEntityState != SES_RETURNING)
 	{
 		//enemy is shooting lightning
@@ -6219,7 +6219,7 @@ static void Jedi_EvasionSaber(vec3_t enemy_movedir, const float enemy_dist, vec3
 				{
 					vec3_t saber_dir2_me;
 					vec3_t saber_move_dir;
-					const gentity_t* saber = &g_entities[NPC->enemy->client->ps.saberEntityNum];
+					const gentity_t* saber = &g_entities[NPC->enemy->client->ps.saberentity_num];
 					VectorSubtract(NPC->currentOrigin, saber->currentOrigin, saber_dir2_me);
 					const float saber_dist = VectorNormalize(saber_dir2_me);
 					VectorCopy(saber->s.pos.trDelta, saber_move_dir);
@@ -7736,7 +7736,7 @@ static qboolean Jedi_TryJump(const gentity_t* goal)
 	}
 	if (TIMER_Done(NPC, "jumpChaseDebounce"))
 	{
-		if (!goal->client || goal->client->ps.groundEntityNum != ENTITYNUM_NONE)
+		if (!goal->client || goal->client->ps.groundentity_num != ENTITYNUM_NONE)
 		{
 			if (!PM_InKnockDown(&NPC->client->ps) && !PM_InRoll(&NPC->client->ps))
 			{
@@ -7911,7 +7911,7 @@ static void Jedi_CheckEnemyMovement(const float enemy_dist)
 	if (!(NPCInfo->aiFlags & NPCAI_BOSS_CHARACTER))
 	{
 		if (PM_KickingAnim(NPC->enemy->client->ps.legsAnim)
-			&& NPC->client->ps.groundEntityNum != ENTITYNUM_NONE
+			&& NPC->client->ps.groundentity_num != ENTITYNUM_NONE
 			//FIXME: I'm relatively close to him
 			&& (NPC->enemy->client->ps.legsAnim == BOTH_A7_KICK_RL
 				|| NPC->enemy->client->ps.legsAnim == BOTH_A7_KICK_BF
@@ -7927,7 +7927,7 @@ static void Jedi_CheckEnemyMovement(const float enemy_dist)
 		else if (NPC->enemy->client->ps.torsoAnim == BOTH_A7_HILT
 			|| NPC->enemy->client->ps.torsoAnim == BOTH_SMACK_R
 			|| NPC->enemy->client->ps.torsoAnim == BOTH_SMACK_L
-			&& NPC->client->ps.groundEntityNum != ENTITYNUM_NONE)
+			&& NPC->client->ps.groundentity_num != ENTITYNUM_NONE)
 		{
 			//run into the hilt bash
 			ucmd.forwardmove = ucmd.rightmove = ucmd.upmove = 0;
@@ -7936,7 +7936,7 @@ static void Jedi_CheckEnemyMovement(const float enemy_dist)
 		}
 		else if ((NPC->enemy->client->ps.torsoAnim == BOTH_A6_FB
 			|| NPC->enemy->client->ps.torsoAnim == BOTH_A6_LR)
-			&& NPC->client->ps.groundEntityNum != ENTITYNUM_NONE)
+			&& NPC->client->ps.groundentity_num != ENTITYNUM_NONE)
 		{
 			//run into the attack
 			//FIXME : only if on R/L or F/B?
@@ -7972,7 +7972,7 @@ static void Jedi_CheckEnemyMovement(const float enemy_dist)
 				|| NPC->enemy->client->ps.legsAnim == BOTH_WALL_RUN_RIGHT_FLIP)
 			{
 				//he's flipping off a wall
-				if (NPC->enemy->client->ps.groundEntityNum == ENTITYNUM_NONE)
+				if (NPC->enemy->client->ps.groundentity_num == ENTITYNUM_NONE)
 				{
 					//still in air
 					if (enemy_dist < 256)
@@ -8411,8 +8411,8 @@ static void Jedi_Combat()
 	if (NPC->client->NPC_class != CLASS_BOBAFETT && NPC->client->NPC_class != CLASS_MANDO)
 	{
 		//Update our seen enemy position
-		if (!NPC->enemy->client || NPC->enemy->client->ps.groundEntityNum != ENTITYNUM_NONE && NPC->client->ps.
-			groundEntityNum != ENTITYNUM_NONE)
+		if (!NPC->enemy->client || NPC->enemy->client->ps.groundentity_num != ENTITYNUM_NONE && NPC->client->ps.
+			groundentity_num != ENTITYNUM_NONE)
 		{
 			VectorCopy(NPC->enemy->currentOrigin, NPCInfo->enemyLastSeenLocation);
 		}
@@ -8879,7 +8879,7 @@ static void Jedi_Patrol()
 						{
 							vec3_t saber_dir2_me;
 							vec3_t saber_move_dir;
-							const gentity_t* saber = &g_entities[enemy->client->ps.saberEntityNum];
+							const gentity_t* saber = &g_entities[enemy->client->ps.saberentity_num];
 							VectorSubtract(NPC->currentOrigin, saber->currentOrigin, saber_dir2_me);
 							const float saber_dist = VectorNormalize(saber_dir2_me);
 							VectorCopy(saber->s.pos.trDelta, saber_move_dir);
@@ -9055,10 +9055,10 @@ void NPC_BSJedi_FollowLeader()
 	if (NPC->client->ps.saberInFlight)
 	{
 		//saber is not in hand
-		if (NPC->client->ps.saberEntityNum < ENTITYNUM_NONE && NPC->client->ps.saberEntityNum > 0) //player is 0
+		if (NPC->client->ps.saberentity_num < ENTITYNUM_NONE && NPC->client->ps.saberentity_num > 0) //player is 0
 		{
 			//
-			if (g_entities[NPC->client->ps.saberEntityNum].s.pos.trType == TR_STATIONARY)
+			if (g_entities[NPC->client->ps.saberentity_num].s.pos.trType == TR_STATIONARY)
 			{
 				//fell to the ground, try to pick it up...
 				if (Jedi_CanPullBackSaber(NPC))
@@ -9068,7 +9068,7 @@ void NPC_BSJedi_FollowLeader()
 					//		otherwise we could end up running away from it while it's on its
 					//		way back to us and we could lose it again.
 					NPC->client->ps.saberBlocked = BLOCKED_NONE;
-					NPCInfo->goalEntity = &g_entities[NPC->client->ps.saberEntityNum];
+					NPCInfo->goalEntity = &g_entities[NPC->client->ps.saberentity_num];
 					ucmd.buttons |= BUTTON_ATTACK;
 					ucmd.buttons &= ~BUTTON_ALT_ATTACK;
 					if (NPC->enemy && NPC->enemy->health > 0)
@@ -9184,7 +9184,7 @@ qboolean Jedi_CheckKataAttack()
 				&& !(ucmd.buttons & BUTTON_ALT_ATTACK))
 			{
 				//not already going to do a kata move somehow
-				if (NPC->client->ps.groundEntityNum != ENTITYNUM_NONE)
+				if (NPC->client->ps.groundentity_num != ENTITYNUM_NONE)
 				{
 					//on the ground
 					if (ucmd.upmove <= 0 && NPC->client->ps.forceJumpCharge <= 0)
@@ -9267,8 +9267,8 @@ static void Jedi_Attack()
 			&& NPC->client->NPC_class != CLASS_SAND_CREATURE
 			&& NPC->client->NPC_class != CLASS_VADER
 			&& NPC->client->NPC_class != CLASS_DESANN
-			&& NPC->client->ps.groundEntityNum != ENTITYNUM_NONE
-			&& NPC->enemy->client->ps.groundEntityNum != ENTITYNUM_NONE
+			&& NPC->client->ps.groundentity_num != ENTITYNUM_NONE
+			&& NPC->enemy->client->ps.groundentity_num != ENTITYNUM_NONE
 			&& !PM_SaberInAttack(NPC->client->ps.saber_move) //not attacking
 			&& !PM_SaberInStart(NPC->client->ps.saber_move) //not starting an attack
 			&& !PM_SpinningSaberAnim(NPC->client->ps.torsoAnim) //not in a saber spin
@@ -9291,8 +9291,8 @@ static void Jedi_Attack()
 			&& NPC->client->NPC_class != CLASS_SAND_CREATURE
 			&& NPC->client->NPC_class != CLASS_VADER
 			&& NPC->client->NPC_class != CLASS_DESANN
-			&& NPC->client->ps.groundEntityNum != ENTITYNUM_NONE
-			&& NPC->enemy->client->ps.groundEntityNum != ENTITYNUM_NONE
+			&& NPC->client->ps.groundentity_num != ENTITYNUM_NONE
+			&& NPC->enemy->client->ps.groundentity_num != ENTITYNUM_NONE
 			&& !PM_SaberInAttack(NPC->client->ps.saber_move) //not attacking
 			&& !PM_SaberInStart(NPC->client->ps.saber_move) //not starting an attack
 			&& !PM_SpinningSaberAnim(NPC->client->ps.torsoAnim) //not in a saber spin
@@ -9315,8 +9315,8 @@ static void Jedi_Attack()
 			&& NPC->client->NPC_class != CLASS_SAND_CREATURE
 			&& NPC->client->NPC_class != CLASS_VADER
 			&& NPC->client->NPC_class != CLASS_DESANN
-			&& NPC->client->ps.groundEntityNum != ENTITYNUM_NONE
-			&& NPC->enemy->client->ps.groundEntityNum != ENTITYNUM_NONE
+			&& NPC->client->ps.groundentity_num != ENTITYNUM_NONE
+			&& NPC->enemy->client->ps.groundentity_num != ENTITYNUM_NONE
 			&& !PM_SaberInAttack(NPC->client->ps.saber_move) //not attacking
 			&& !PM_SaberInStart(NPC->client->ps.saber_move) //not starting an attack
 			&& !PM_SpinningSaberAnim(NPC->client->ps.torsoAnim) //not in a saber spin
@@ -9402,8 +9402,8 @@ static void Jedi_Attack()
 			&& NPC->client->NPC_class != CLASS_SAND_CREATURE
 			&& NPC->client->NPC_class != CLASS_VADER
 			&& NPC->client->NPC_class != CLASS_DESANN
-			&& NPC->client->ps.groundEntityNum != ENTITYNUM_NONE
-			&& NPC->enemy->client->ps.groundEntityNum != ENTITYNUM_NONE
+			&& NPC->client->ps.groundentity_num != ENTITYNUM_NONE
+			&& NPC->enemy->client->ps.groundentity_num != ENTITYNUM_NONE
 			&& !PM_SaberInAttack(NPC->client->ps.saber_move) //not attacking
 			&& !PM_SaberInStart(NPC->client->ps.saber_move) //not starting an attack
 			&& !PM_SpinningSaberAnim(NPC->client->ps.torsoAnim) //not in a saber spin
@@ -9582,16 +9582,16 @@ static void Jedi_Attack()
 	if (NPC->client->ps.saberInFlight)
 	{
 		//saber is not in hand
-		if (NPC->client->ps.saberEntityNum < ENTITYNUM_NONE && NPC->client->ps.saberEntityNum > 0) //player is 0
+		if (NPC->client->ps.saberentity_num < ENTITYNUM_NONE && NPC->client->ps.saberentity_num > 0) //player is 0
 		{
 			//
-			if (g_entities[NPC->client->ps.saberEntityNum].s.pos.trType == TR_STATIONARY)
+			if (g_entities[NPC->client->ps.saberentity_num].s.pos.trType == TR_STATIONARY)
 			{
 				//fell to the ground, try to pick it up
 				if (Jedi_CanPullBackSaber(NPC))
 				{
 					NPC->client->ps.saberBlocked = BLOCKED_NONE;
-					NPCInfo->goalEntity = &g_entities[NPC->client->ps.saberEntityNum];
+					NPCInfo->goalEntity = &g_entities[NPC->client->ps.saberentity_num];
 					ucmd.buttons |= BUTTON_ATTACK;
 					ucmd.buttons &= ~BUTTON_ALT_ATTACK;
 					if (NPC->enemy && NPC->enemy->health > 0)
@@ -9828,7 +9828,7 @@ static void Jedi_Attack()
 		VectorClear(NPC->client->ps.moveDir);
 	}
 
-	if (NPC->client->ps.groundEntityNum == ENTITYNUM_NONE)
+	if (NPC->client->ps.groundentity_num == ENTITYNUM_NONE)
 	{
 		//don't push while in air, throws off jumps!
 		//FIXME: if we are in the air over a drop near a ledge, should we try to push back towards the ledge?
@@ -10112,8 +10112,8 @@ qboolean Kothos_HealRosh()
 			//BEG HACK LINE
 			gentity_t* tent = G_TempEntity(NPC->currentOrigin, EV_KOTHOS_BEAM);
 			tent->svFlags |= SVF_BROADCAST;
-			tent->s.otherEntityNum = NPC->s.number;
-			tent->s.otherEntityNum2 = NPC->client->leader->s.number;
+			tent->s.otherentity_num = NPC->s.number;
+			tent->s.otherentity_num2 = NPC->client->leader->s.number;
 			//END HACK LINE
 
 			NPC->client->leader->health += Q_irand(1 + g_spskill->integer * 2, 4 + g_spskill->integer * 3);
@@ -10567,7 +10567,7 @@ qboolean Jedi_InSpecialMove()
 	if (PM_SuperBreakWinAnim(NPC->client->ps.torsoAnim))
 	{
 		NPC_FaceEnemy(qtrue);
-		if (NPC->client->ps.groundEntityNum != ENTITYNUM_NONE)
+		if (NPC->client->ps.groundentity_num != ENTITYNUM_NONE)
 		{
 			VectorClear(NPC->client->ps.velocity);
 		}

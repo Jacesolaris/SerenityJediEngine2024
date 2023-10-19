@@ -71,7 +71,7 @@ extern float manual_npc_kick_absorbing(const gentity_t* defender);
 extern qboolean PM_WalkingAnim(int anim);
 extern qboolean PM_RunningAnim(int anim);
 extern qboolean BG_IsAlreadyinTauntAnim(int anim);
-qboolean WP_SaberStyleValidForSaber(const saberInfo_t* saber1, const saberInfo_t* saber2, int saber_holstered, int saber_anim_level);
+qboolean WP_SaberStyleValidForSaber(const saberInfo_t* saber1, const saberInfo_t* saber2, const int saber_holstered, const int saber_anim_level);
 extern qboolean PM_SaberInBashedAnim(int anim);
 extern qboolean saberKnockOutOfHand(gentity_t* saberent, gentity_t* saber_owner, vec3_t velocity);
 extern qboolean BG_SaberSprintAnim(int anim);
@@ -562,7 +562,7 @@ void DoImpact(gentity_t* self, gentity_t* other, const qboolean damageSelf)
 						//aw, fuck it, clients no longer take impact damage from other clients, unless you're the player
 						if (other->client //he's a client
 							&& self->client //I'm a client
-							&& other->client->ps.fd.forceGripEntityNum == self->s.number) //he's force-gripping me
+							&& other->client->ps.fd.forceGripentity_num == self->s.number) //he's force-gripping me
 						{
 							//don't damage the other guy if he's gripping me
 						}
@@ -629,7 +629,7 @@ void DoImpact(gentity_t* self, gentity_t* other, const qboolean damageSelf)
 			{//health here is used to simulate structural integrity
 				if ((self->s.weapon == WP_SABER)
 					&& self->client
-					&& self->client->ps.groundEntityNum < ENTITYNUM_NONE
+					&& self->client->ps.groundentity_num < ENTITYNUM_NONE
 					&& magnitude < 1000)
 				{//players and jedi take less impact damage
 					//allow for some lenience on high falls
@@ -789,7 +789,7 @@ void DoImpactPlayer(gentity_t* self, gentity_t* other, const qboolean damageSelf
 			if (magnitude >= 100 + self->health && self->s.number >= MAX_CLIENTS && self->s.weapon != WP_SABER ||
 				magnitude >= 700)
 			{
-				if (self->s.weapon == WP_SABER && self->client && self->client->ps.groundEntityNum < ENTITYNUM_NONE &&
+				if (self->s.weapon == WP_SABER && self->client && self->client->ps.groundentity_num < ENTITYNUM_NONE &&
 					magnitude < 1000)
 				{
 					//players and jedi take less impact damage
@@ -1316,7 +1316,7 @@ void ClientTimerActions(gentity_t* ent, const int msec)
 			&& !PM_InKnockDown(&ent->client->ps)
 			&& ent->client->ps.saberLockTime < level.time
 			&& ent->client->ps.saberBlockingTime < level.time
-			&& ent->client->ps.groundEntityNum != ENTITYNUM_NONE)
+			&& ent->client->ps.groundentity_num != ENTITYNUM_NONE)
 		{
 			if (!(ent->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK))
 			{
@@ -1333,7 +1333,7 @@ void ClientTimerActions(gentity_t* ent, const int msec)
 			&& !PM_InKnockDown(&ent->client->ps)
 			&& ent->client->ps.saberLockTime < level.time
 			&& ent->client->ps.saberBlockingTime < level.time
-			&& ent->client->ps.groundEntityNum != ENTITYNUM_NONE)
+			&& ent->client->ps.groundentity_num != ENTITYNUM_NONE)
 		{
 			WP_SaberFatigueRegenerate(1);
 		}
@@ -1844,7 +1844,7 @@ void SendPendingPredictableEvents(playerState_t* ps)
 		t->s.number = number;
 		t->s.eType = ET_EVENTS + event;
 		t->s.eFlags |= EF_PLAYER_EVENT;
-		t->s.otherEntityNum = ps->client_num;
+		t->s.otherentity_num = ps->client_num;
 		// send to everyone except the client who generated the event
 		t->r.svFlags |= SVF_NOTSINGLECLIENT;
 		t->r.singleClient = ps->client_num;
@@ -3671,7 +3671,7 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 
 		if (anim != -1)
 		{
-			if (ent->client->ps.groundEntityNum != ENTITYNUM_NONE)
+			if (ent->client->ps.groundentity_num != ENTITYNUM_NONE)
 			{
 				int parts = SETANIM_TORSO;
 
@@ -5791,14 +5791,14 @@ void ClientThink_real(gentity_t* ent)
 	}
 
 	if (ent->client->ps.otherKillerTime > level.time &&
-		ent->client->ps.groundEntityNum != ENTITYNUM_NONE &&
+		ent->client->ps.groundentity_num != ENTITYNUM_NONE &&
 		ent->client->ps.otherKillerDebounceTime < level.time)
 	{
 		ent->client->ps.otherKillerTime = 0;
 		ent->client->ps.otherKiller = ENTITYNUM_NONE;
 	}
 	else if (ent->client->ps.otherKillerTime > level.time &&
-		ent->client->ps.groundEntityNum == ENTITYNUM_NONE)
+		ent->client->ps.groundentity_num == ENTITYNUM_NONE)
 	{
 		if (ent->client->ps.otherKillerDebounceTime < level.time + 100)
 		{
@@ -6084,10 +6084,10 @@ void ClientThink_real(gentity_t* ent)
 			}
 			if (ent->m_pVehicle->m_pVehicleInfo->type == VH_WALKER)
 			{
-				if (ent->client->ps.groundEntityNum != ENTITYNUM_NONE)
+				if (ent->client->ps.groundentity_num != ENTITYNUM_NONE)
 				{
 					//ATST crushes anything underneath it
-					gentity_t* under = &g_entities[ent->client->ps.groundEntityNum];
+					gentity_t* under = &g_entities[ent->client->ps.groundentity_num];
 					if (under && under->health && under->takedamage)
 					{
 						vec3_t down = { 0, 0, -1 };
@@ -6129,17 +6129,17 @@ void ClientThink_real(gentity_t* ent)
 
 			if (clientLost && clientLost->inuse && clientLost->client)
 			{
-				saberKnockOutOfHand(&g_entities[clientLost->client->ps.saberEntityNum], clientLost, vec3_origin);
+				saberKnockOutOfHand(&g_entities[clientLost->client->ps.saberentity_num], clientLost, vec3_origin);
 			}
 		}
 
 		pmove.checkDuelLoss = 0;
 	}
 
-	if (ent->client->ps.groundEntityNum < ENTITYNUM_WORLD)
+	if (ent->client->ps.groundentity_num < ENTITYNUM_WORLD)
 	{
 		//standing on an ent
-		gentity_t* groundEnt = &g_entities[ent->client->ps.groundEntityNum];
+		gentity_t* groundEnt = &g_entities[ent->client->ps.groundentity_num];
 		if (groundEnt
 			&& groundEnt->s.eType == ET_NPC
 			&& groundEnt->s.NPC_class == CLASS_VEHICLE
@@ -6430,7 +6430,7 @@ void ClientThink_real(gentity_t* ent)
 			}
 			else
 			{
-				if (ent->client->ps.eFlags2 & EF2_FLYING || ent->s.groundEntityNum == ENTITYNUM_NONE || PM_CrouchAnim(
+				if (ent->client->ps.eFlags2 & EF2_FLYING || ent->s.groundentity_num == ENTITYNUM_NONE || PM_CrouchAnim(
 					ent->client->ps.legsAnim))
 				{
 					//Boba_FireWristMissile(ent, BOBA_MISSILE_VIBROBLADE);
@@ -6472,7 +6472,7 @@ void ClientThink_real(gentity_t* ent)
 			}
 			else
 			{
-				if (ent->client->ps.eFlags2 & EF2_FLYING || ent->s.groundEntityNum == ENTITYNUM_NONE || PM_CrouchAnim(
+				if (ent->client->ps.eFlags2 & EF2_FLYING || ent->s.groundentity_num == ENTITYNUM_NONE || PM_CrouchAnim(
 					ent->client->ps.legsAnim))
 				{
 					//Boba_FireWristMissile(ent, BOBA_MISSILE_VIBROBLADE);

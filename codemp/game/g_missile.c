@@ -625,9 +625,9 @@ void g_run_stuck_missile(gentity_t* ent)
 {
 	if (ent->takedamage)
 	{
-		if (ent->s.groundEntityNum >= 0 && ent->s.groundEntityNum < ENTITYNUM_WORLD)
+		if (ent->s.groundentity_num >= 0 && ent->s.groundentity_num < ENTITYNUM_WORLD)
 		{
-			gentity_t* other = &g_entities[ent->s.groundEntityNum];
+			gentity_t* other = &g_entities[ent->s.groundentity_num];
 
 			if (!VectorCompare(vec3_origin, other->s.pos.trDelta) && other->s.pos.trType != TR_STATIONARY ||
 				!VectorCompare(vec3_origin, other->s.apos.trDelta) && other->s.apos.trType != TR_STATIONARY)
@@ -672,7 +672,7 @@ gentity_t* create_missile(vec3_t org, vec3_t dir, const float vel, const int lif
 	missile->parent = owner;
 	missile->r.ownerNum = owner->s.number;
 	//lmo tag owner info into state for duel Nox
-	missile->s.otherEntityNum = owner->s.number;
+	missile->s.otherentity_num = owner->s.number;
 
 	if (alt_fire)
 	{
@@ -1228,7 +1228,7 @@ killProj:
 			{
 				G_Damage(other, ent, ent, v, ent->r.currentOrigin, TASER_DAMAGE, DAMAGE_NO_KNOCKBACK, MOD_CRUSH);
 			}
-			nent->s.otherEntityNum2 = other->s.number;
+			nent->s.otherentity_num2 = other->s.number;
 			ent->enemy = other;
 			v[0] = other->r.currentOrigin[0] + (other->r.mins[0] + other->r.maxs[0]) * 0.5f;
 			v[1] = other->r.currentOrigin[1] + (other->r.mins[1] + other->r.maxs[1]) * 0.5f;
@@ -1274,7 +1274,7 @@ killProj:
 		if (other->takedamage || other->client || other->s.eType == ET_MOVER)
 		{
 			G_PlayEffectID(G_EffectIndex("stunBaton/flesh_impact"), trace->endpos, trace->plane.normal);
-			nent->s.otherEntityNum2 = other->s.number;
+			nent->s.otherentity_num2 = other->s.number;
 			ent->enemy = other;
 
 			if (other->takedamage && other->client)
@@ -1332,7 +1332,7 @@ killProj:
 	if (other->takedamage && other->client && !is_knocked_saber)
 	{
 		G_AddEvent(ent, EV_MISSILE_HIT, DirToByte(trace->plane.normal));
-		ent->s.otherEntityNum = other->s.number;
+		ent->s.otherentity_num = other->s.number;
 	}
 	else if (trace->surfaceFlags & SURF_METALSTEPS)
 	{
@@ -1464,11 +1464,11 @@ void g_run_missile(gentity_t* ent)
 
 		if (!tr_g.startsolid && !tr_g.allsolid && tr_g.entity_num == ENTITYNUM_WORLD)
 		{
-			ent->s.groundEntityNum = tr_g.entity_num;
+			ent->s.groundentity_num = tr_g.entity_num;
 		}
 		else
 		{
-			ent->s.groundEntityNum = ENTITYNUM_NONE;
+			ent->s.groundentity_num = ENTITYNUM_NONE;
 		}
 	}
 
@@ -1514,7 +1514,7 @@ void g_run_missile(gentity_t* ent)
 			BG_EvaluateTrajectory(&ent->s.pos, level.time, ent->s.origin2);
 
 			//the index for whoever we are hitting
-			ent->s.otherEntityNum = tr.entity_num;
+			ent->s.otherentity_num = tr.entity_num;
 
 			if (VectorCompare(ent->s.origin, ent->s.origin2))
 			{
@@ -1545,7 +1545,7 @@ void g_run_missile(gentity_t* ent)
 			return;
 		}
 
-		if (tr.entity_num == ent->s.otherEntityNum)
+		if (tr.entity_num == ent->s.otherentity_num)
 		{
 			//if the impact event other and the trace ent match then it's ok to do the g2 mark
 			ent->s.trickedentindex = 1;
@@ -1567,7 +1567,7 @@ passthrough:
 
 	if (ent->s.weapon == G2_MODEL_PART)
 	{
-		if (ent->s.groundEntityNum == ENTITYNUM_WORLD)
+		if (ent->s.groundentity_num == ENTITYNUM_WORLD)
 		{
 			ent->s.pos.trType = TR_LINEAR;
 			VectorClear(ent->s.pos.trDelta);
@@ -1616,7 +1616,7 @@ gentity_t* fire_grapple(gentity_t* self, vec3_t start, vec3_t dir)
 	hook->target_ent = NULL;
 	hook->s.pos.trType = TR_LINEAR;
 	hook->s.pos.trTime = level.time - MISSILE_PRESTEP_TIME; // move a bit on the very first frame
-	hook->s.otherEntityNum = self->s.number; // use to match beam in client
+	hook->s.otherentity_num = self->s.number; // use to match beam in client
 	VectorCopy(start, hook->s.pos.trBase);
 	VectorScale(dir, g_grapple_shoot_speed.integer, hook->s.pos.trDelta); // lmo scale speed!
 	SnapVector(hook->s.pos.trDelta); // save net bandwidth
@@ -1644,7 +1644,7 @@ gentity_t* fire_stun(gentity_t* self, vec3_t start, vec3_t dir)
 	stun->target_ent = NULL;
 	stun->s.pos.trType = TR_LINEAR;
 	stun->s.pos.trTime = level.time - MISSILE_PRESTEP_TIME;
-	stun->s.otherEntityNum = self->s.number;
+	stun->s.otherentity_num = self->s.number;
 	VectorCopy(start, stun->s.pos.trBase);
 	VectorScale(dir, 2000, stun->s.pos.trDelta);
 	SnapVector(stun->s.pos.trDelta);

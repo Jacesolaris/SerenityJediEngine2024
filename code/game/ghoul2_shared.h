@@ -41,7 +41,7 @@ int G2API_GetTime(int arg_time); // this may or may not return arg depending on 
 // we save the whole surfaceInfo_t struct
 struct surfaceInfo_t
 {
-	int offFlags; // what the flags are for this model
+	int off_flags; // what the flags are for this model
 	int surface;
 	// index into array held inside the model definition of pointers to the actual surface data loaded in - used by both client and game
 	float genBarycentricJ; // point 0 barycentric coors
@@ -50,7 +50,7 @@ struct surfaceInfo_t
 	int genLod; // used to determine original lod of original surface and poly hit location
 
 	surfaceInfo_t() :
-		offFlags(0),
+		off_flags(0),
 		surface(0),
 		genBarycentricJ(0),
 		genBarycentricI(0),
@@ -62,7 +62,7 @@ struct surfaceInfo_t
 	void sg_export(
 		ojk::SavedGameHelper& saved_game) const
 	{
-		saved_game.write<int32_t>(offFlags);
+		saved_game.write<int32_t>(off_flags);
 		saved_game.write<int32_t>(surface);
 		saved_game.write<float>(genBarycentricJ);
 		saved_game.write<float>(genBarycentricI);
@@ -73,7 +73,7 @@ struct surfaceInfo_t
 	void sg_import(
 		ojk::SavedGameHelper& saved_game)
 	{
-		saved_game.read<int32_t>(offFlags);
+		saved_game.read<int32_t>(off_flags);
 		saved_game.read<int32_t>(surface);
 		saved_game.read<float>(genBarycentricJ);
 		saved_game.read<float>(genBarycentricI);
@@ -112,7 +112,7 @@ struct boneInfo_t
 	int end_frame; // end frame for animation NOTE anim actually ends on end_frame+1
 	int startTime; // time we started this animation
 	int pauseTime; // time we paused this animation - 0 if not paused
-	float animSpeed;
+	float anim_speed;
 	// speed at which this anim runs. 1.0f means full speed of animation incoming - ie if anim is 20hrtz, we run at 20hrts. If 5hrts, we run at 5 hrts
 	float blendFrame; // frame PLUS LERP value to blend from
 	int blendLerpFrame; // frame to lerp the blend frame with.
@@ -198,7 +198,7 @@ struct boneInfo_t
 		end_frame(0),
 		startTime(0),
 		pauseTime(0),
-		animSpeed(0),
+		anim_speed(0),
 		blendFrame(0),
 		blendLerpFrame(0),
 		blend_time(0),
@@ -260,7 +260,7 @@ struct boneInfo_t
 		saved_game.write<int32_t>(end_frame);
 		saved_game.write<int32_t>(startTime);
 		saved_game.write<int32_t>(pauseTime);
-		saved_game.write<float>(animSpeed);
+		saved_game.write<float>(anim_speed);
 		saved_game.write<float>(blendFrame);
 		saved_game.write<int32_t>(blendLerpFrame);
 		saved_game.write<int32_t>(blend_time);
@@ -336,7 +336,7 @@ struct boneInfo_t
 		saved_game.read<int32_t>(end_frame);
 		saved_game.read<int32_t>(startTime);
 		saved_game.read<int32_t>(pauseTime);
-		saved_game.read<float>(animSpeed);
+		saved_game.read<float>(anim_speed);
 		saved_game.read<float>(blendFrame);
 		saved_game.read<int32_t>(blendLerpFrame);
 		saved_game.read<int32_t>(blend_time);
@@ -407,13 +407,13 @@ struct boneInfo_t
 struct boltInfo_t
 {
 	int boneNumber; // bone number bolt attaches to
-	int surfaceNumber; // surface number bolt attaches to
+	int surface_number; // surface number bolt attaches to
 	int surfaceType;
 	// if we attach to a surface, this tells us if it is an original surface or a generated one - doesn't go across the network
 	int boltUsed; // nor does this
 	boltInfo_t() :
 		boneNumber(-1),
-		surfaceNumber(-1),
+		surface_number(-1),
 		surfaceType(0),
 		boltUsed(0)
 	{
@@ -423,7 +423,7 @@ struct boltInfo_t
 		ojk::SavedGameHelper& saved_game) const
 	{
 		saved_game.write<int32_t>(boneNumber);
-		saved_game.write<int32_t>(surfaceNumber);
+		saved_game.write<int32_t>(surface_number);
 		saved_game.write<int32_t>(surfaceType);
 		saved_game.write<int32_t>(boltUsed);
 	}
@@ -432,7 +432,7 @@ struct boltInfo_t
 		ojk::SavedGameHelper& saved_game)
 	{
 		saved_game.read<int32_t>(boneNumber);
-		saved_game.read<int32_t>(surfaceNumber);
+		saved_game.read<int32_t>(surface_number);
 		saved_game.read<int32_t>(surfaceType);
 		saved_game.read<int32_t>(boltUsed);
 	}
@@ -452,7 +452,7 @@ constexpr auto GHOUL2_NORENDER = 0x002;
 constexpr auto GHOUL2_NOMODEL = 0x004;
 constexpr auto GHOUL2_NEWORIGIN = 0x008;
 
-// NOTE order in here matters. We save out from mModelindex to mFlags, but not the STL vectors that are at the top or the bottom.
+// NOTE order in here matters. We save out from mmodel_index to mFlags, but not the STL vectors that are at the top or the bottom.
 class CBoneCache;
 struct model_s;
 //struct mdxaHeader_t;
@@ -486,8 +486,8 @@ public:
 	boltInfo_v mBltlist;
 	boneInfo_v mBlist;
 	// save from here (do not put any ptrs etc within this save block unless you adds special handlers to G2_SaveGhoul2Models / G2_LoadGhoul2Models!!!!!!!!!!!!
-#define BSAVE_START_FIELD mModelindex	// this is the start point for loadsave, keep it up to date it you change anything
-	int mModelindex;
+#define BSAVE_START_FIELD mmodel_index	// this is the start point for loadsave, keep it up to date it you change anything
+	int mmodel_index;
 	int animModelIndexOffset;
 	qhandle_t mCustomShader;
 	qhandle_t mCustomSkin;
@@ -524,7 +524,7 @@ public:
 	const mdxaHeader_t* aHeader;
 
 	CGhoul2Info() :
-		mModelindex(-1),
+		mmodel_index(-1),
 		animModelIndexOffset(0),
 		mCustomShader(0),
 		mCustomSkin(0),
@@ -556,7 +556,7 @@ public:
 	void sg_export(
 		ojk::SavedGameHelper& saved_game) const
 	{
-		saved_game.write<int32_t>(mModelindex);
+		saved_game.write<int32_t>(mmodel_index);
 
 #ifndef JK2_MODE
 		saved_game.write<int32_t>(animModelIndexOffset);
@@ -584,7 +584,7 @@ public:
 	void sg_import(
 		ojk::SavedGameHelper& saved_game)
 	{
-		saved_game.read<int32_t>(mModelindex);
+		saved_game.read<int32_t>(mmodel_index);
 
 #ifndef JK2_MODE
 		saved_game.read<int32_t>(animModelIndexOffset);
@@ -795,7 +795,7 @@ class CCollisionRecord
 {
 public:
 	float mDistance;
-	int mEntityNum;
+	int mentity_num;
 	int mModelIndex;
 	int mPolyIndex;
 	int mSurfaceIndex;
@@ -809,7 +809,7 @@ public:
 
 	CCollisionRecord() :
 		mDistance(100000),
-		mEntityNum(-1), mModelIndex(0), mPolyIndex(0), mSurfaceIndex(0), mCollisionPosition{}, mCollisionNormal{},
+		mentity_num(-1), mModelIndex(0), mPolyIndex(0), mSurfaceIndex(0), mCollisionPosition{}, mCollisionNormal{},
 		mFlags(0),
 		mMaterial(0),
 		mLocation(0),
@@ -821,7 +821,7 @@ public:
 		ojk::SavedGameHelper& saved_game) const
 	{
 		saved_game.write<float>(mDistance);
-		saved_game.write<int32_t>(mEntityNum);
+		saved_game.write<int32_t>(mentity_num);
 		saved_game.write<int32_t>(mModelIndex);
 		saved_game.write<int32_t>(mPolyIndex);
 		saved_game.write<int32_t>(mSurfaceIndex);
@@ -838,7 +838,7 @@ public:
 		ojk::SavedGameHelper& saved_game)
 	{
 		saved_game.read<float>(mDistance);
-		saved_game.read<int32_t>(mEntityNum);
+		saved_game.read<int32_t>(mentity_num);
 		saved_game.read<int32_t>(mModelIndex);
 		saved_game.read<int32_t>(mPolyIndex);
 		saved_game.read<int32_t>(mSurfaceIndex);

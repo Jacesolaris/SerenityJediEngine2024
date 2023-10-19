@@ -98,7 +98,7 @@ using cinematics_t = struct cinematics_s
 
 using cin_cache_t = struct cin_cache_s
 {
-	char fileName[MAX_OSPATH];
+	char file_name[MAX_OSPATH];
 	int CIN_WIDTH, CIN_HEIGHT;
 	int xpos, ypos, width, height;
 	qboolean looping, holdAtEnd, dirty, alterGameState, silent, shader;
@@ -149,7 +149,7 @@ void CIN_CloseAllVideos(void)
 {
 	for (int i = 0; i < MAX_VIDEO_HANDLES; i++)
 	{
-		if (cinTable[i].fileName[0] != 0)
+		if (cinTable[i].file_name[0] != 0)
 		{
 			CIN_StopCinematic(i);
 		}
@@ -160,7 +160,7 @@ static int CIN_HandleForVideo(void)
 {
 	for (int i = 0; i < MAX_VIDEO_HANDLES; i++)
 	{
-		if (cinTable[i].fileName[0] == 0)
+		if (cinTable[i].file_name[0] == 0)
 		{
 			return i;
 		}
@@ -1178,7 +1178,7 @@ static void RoQReset(void)
 	if (currentHandle < 0) return;
 
 	FS_FCloseFile(cinTable[currentHandle].iFile);
-	FS_FOpenFileRead(cinTable[currentHandle].fileName, &cinTable[currentHandle].iFile, qtrue);
+	FS_FOpenFileRead(cinTable[currentHandle].file_name, &cinTable[currentHandle].iFile, qtrue);
 	// let the background thread start reading ahead
 	FS_Read(cin.file, 16, cinTable[currentHandle].iFile);
 	RoQ_init();
@@ -1427,7 +1427,7 @@ static void RoQShutdown(void)
 		}
 		CL_handle = -1;
 	}
-	cinTable[currentHandle].fileName[0] = 0;
+	cinTable[currentHandle].file_name[0] = 0;
 	currentHandle = -1;
 }
 
@@ -1441,7 +1441,7 @@ e_status CIN_StopCinematic(const int handle)
 	if (handle < 0 || handle >= MAX_VIDEO_HANDLES || cinTable[handle].status == FMV_EOF) return FMV_EOF;
 	currentHandle = handle;
 
-	Com_DPrintf("trFMV::stop(), closing %s\n", cinTable[currentHandle].fileName);
+	Com_DPrintf("trFMV::stop(), closing %s\n", cinTable[currentHandle].file_name);
 
 	if (!cinTable[currentHandle].buf)
 	{
@@ -1567,7 +1567,7 @@ int CIN_PlayCinematic(const char* arg, const int x, const int y, const int w, co
 	{
 		for (int i = 0; i < MAX_VIDEO_HANDLES; i++)
 		{
-			if (strcmp(cinTable[i].fileName, name) == 0)
+			if (strcmp(cinTable[i].file_name, name) == 0)
 			{
 				return i;
 			}
@@ -1581,16 +1581,16 @@ int CIN_PlayCinematic(const char* arg, const int x, const int y, const int w, co
 
 	cin.currentHandle = currentHandle;
 
-	strcpy(cinTable[currentHandle].fileName, name);
+	strcpy(cinTable[currentHandle].file_name, name);
 
 	cinTable[currentHandle].ROQSize = 0;
-	cinTable[currentHandle].ROQSize = FS_FOpenFileRead(cinTable[currentHandle].fileName, &cinTable[currentHandle].iFile,
+	cinTable[currentHandle].ROQSize = FS_FOpenFileRead(cinTable[currentHandle].file_name, &cinTable[currentHandle].iFile,
 		qtrue);
 
 	if (cinTable[currentHandle].ROQSize <= 0)
 	{
 		Com_DPrintf("cinematic failed to open %s\n", arg);
-		cinTable[currentHandle].fileName[0] = 0;
+		cinTable[currentHandle].file_name[0] = 0;
 		return -1;
 	}
 

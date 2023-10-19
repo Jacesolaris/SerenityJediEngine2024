@@ -1980,13 +1980,13 @@ void Q3_RemoveEnt(gentity_t* victim)
 			G_FreeEntity(victim->NPC->tempGoal);
 			victim->NPC->tempGoal = NULL;
 		}
-		if (victim->client->ps.saberEntityNum != ENTITYNUM_NONE && victim->client->ps.saberEntityNum > 0)
+		if (victim->client->ps.saberentity_num != ENTITYNUM_NONE && victim->client->ps.saberentity_num > 0)
 		{
-			if (g_entities[victim->client->ps.saberEntityNum].inuse)
+			if (g_entities[victim->client->ps.saberentity_num].inuse)
 			{
-				G_FreeEntity(&g_entities[victim->client->ps.saberEntityNum]);
+				G_FreeEntity(&g_entities[victim->client->ps.saberentity_num]);
 			}
-			victim->client->ps.saberEntityNum = ENTITYNUM_NONE;
+			victim->client->ps.saberentity_num = ENTITYNUM_NONE;
 		}
 		//Disappear in half a second
 		victim->think = G_FreeEntity;
@@ -9078,7 +9078,7 @@ void ICam_Follow(const char* cameraGroup, const float speed, const float initLer
 		return;
 	}
 
-	//figure out the entityNums of the entities in this cameraGroup
+	//figure out the entity_nums of the entities in this cameraGroup
 	while (NULL != (from = G_Find(from, FOFS(cameraGroup), cameraGroup)))
 	{
 		if (num_subjects >= 16) //MAX_CAMERA_GROUP_SUBJECTS
@@ -9316,14 +9316,14 @@ void ToggleNPCWinterGear(gentity_t* ent)
 	//toggles the winter gear for an NPC
 	char model[MAX_QPATH];
 
-	if (!ent->s.modelindex)
+	if (!ent->s.model_index)
 	{
 		//no model?!
 		return;
 	}
 
 	//get the model name for this NPC
-	trap->GetConfigstring(CS_MODELS + ent->s.modelindex, model, MAX_QPATH);
+	trap->GetConfigstring(CS_MODELS + ent->s.model_index, model, MAX_QPATH);
 
 	if (WinterGear)
 	{
@@ -9340,7 +9340,7 @@ void ToggleNPCWinterGear(gentity_t* ent)
 				strcpy(skinname, "torso_g1|lower_e1\0");
 			}
 
-			ent->s.modelindex = G_ModelIndex(model);
+			ent->s.model_index = G_model_index(model);
 		}
 	}
 }

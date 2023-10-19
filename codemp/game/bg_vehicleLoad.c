@@ -82,9 +82,9 @@ typedef enum
 	VF_WEAPON,
 	// take string, resolve into index into VehWeaponParms
 	VF_MODEL,
-	// take the string, get the G_ModelIndex
+	// take the string, get the G_model_index
 	VF_MODEL_CLIENT,
-	// (cgame only) take the string, get the G_ModelIndex
+	// (cgame only) take the string, get the G_model_index
 	VF_EFFECT,
 	// take the string, get the G_EffectIndex
 	VF_EFFECT_CLIENT,
@@ -212,16 +212,16 @@ static qboolean BG_ParseVehWeaponParm(vehWeaponInfo_t* vehWeapon, const char* pa
 	case VF_WEAPON: // take string, resolve into index into VehWeaponParms
 		//*(int *)(b+vehWeaponField->ofs) = VEH_Vehweapon_indexForName( value );
 		break;
-	case VF_MODEL: // take the string, get the G_ModelIndex
+	case VF_MODEL: // take the string, get the G_model_index
 #ifdef _GAME
-		* (int*)(b + vehWeaponField->ofs) = G_ModelIndex(value);
+		* (int*)(b + vehWeaponField->ofs) = G_model_index(value);
 #else
 		* (int*)(b + vehWeaponField->ofs) = trap->R_RegisterModel(value);
 #endif
 		break;
-	case VF_MODEL_CLIENT: // (MP cgame only) take the string, get the G_ModelIndex
+	case VF_MODEL_CLIENT: // (MP cgame only) take the string, get the G_model_index
 #ifdef _GAME
-		* (int*)(b + vehWeaponField->ofs) = G_ModelIndex(value);
+		* (int*)(b + vehWeaponField->ofs) = G_model_index(value);
 #else
 		* (int*)(b + vehWeaponField->ofs) = trap->R_RegisterModel(value);
 #endif
@@ -883,16 +883,16 @@ static qboolean BG_ParseVehicleParm(vehicleInfo_t* vehicle, const char* parmName
 	case VF_WEAPON: // take string, resolve into index into VehWeaponParms
 		*(int*)(b + vehField->ofs) = VEH_Vehweapon_indexForName(value);
 		break;
-	case VF_MODEL: // take the string, get the G_ModelIndex
+	case VF_MODEL: // take the string, get the G_model_index
 #ifdef _GAME
-		* (int*)(b + vehField->ofs) = G_ModelIndex(value);
+		* (int*)(b + vehField->ofs) = G_model_index(value);
 #else
 		* (int*)(b + vehField->ofs) = trap->R_RegisterModel(value);
 #endif
 		break;
-	case VF_MODEL_CLIENT: // (MP cgame only) take the string, get the G_ModelIndex
+	case VF_MODEL_CLIENT: // (MP cgame only) take the string, get the G_model_index
 #ifdef _GAME
-		//*(int *)(b+vehField->ofs) = G_ModelIndex( value );
+		//*(int *)(b+vehField->ofs) = G_model_index( value );
 #else
 		* (int*)(b + vehField->ofs) = trap->R_RegisterModel(value);
 #endif
@@ -1233,7 +1233,7 @@ int veh_load_vehicle(const char* vehicle_name)
 	if (vehicle->model)
 	{
 #ifdef _GAME
-		vehicle->model_index = G_ModelIndex(va("models/players/%s/model.glm", vehicle->model));
+		vehicle->model_index = G_model_index(va("models/players/%s/model.glm", vehicle->model));
 #else
 		vehicle->model_index = trap->R_RegisterModel(va("models/players/%s/model.glm", vehicle->model));
 #endif

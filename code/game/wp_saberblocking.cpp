@@ -428,7 +428,7 @@ void sab_beh_animate_small_bounce(gentity_t* attacker)
 	else
 	{
 		attacker->client->ps.userInt3 |= 1 << FLAG_SLOWBOUNCE;
-		attacker->client->ps.saberBounceMove = LS_D1_BR + (saber_moveData[attacker->client->ps.saber_move].startQuad -Q_BR);
+		attacker->client->ps.saberBounceMove = LS_D1_BR + (saber_moveData[attacker->client->ps.saber_move].startQuad - Q_BR);
 		attacker->client->ps.saberBlocked = BLOCKED_ATK_BOUNCE;
 	}
 }
@@ -855,7 +855,6 @@ qboolean sab_beh_attack_vs_block(gentity_t* attacker, gentity_t* blocker, const 
 			{
 				if (pm_saber_innonblockable_attack(blocker->client->ps.torsoAnim))
 				{
-
 					sab_beh_animate_heavy_slow_bounce_attacker(attacker);
 
 					sab_beh_add_balance(blocker, -MPCOST_PARRIED);
@@ -918,7 +917,7 @@ qboolean sab_beh_block_vs_attack(gentity_t* blocker, gentity_t* attacker, const 
 					}
 				}
 
-				if ((d_blockinfo->integer || g_DebugSaberCombat->integer) && blocker->s.number < MAX_CLIENTS ||	G_ControlledByPlayer(blocker))
+				if ((d_blockinfo->integer || g_DebugSaberCombat->integer) && blocker->s.number < MAX_CLIENTS || G_ControlledByPlayer(blocker))
 				{
 					gi.Printf(S_COLOR_CYAN"Blocker was disarmed with very low bp, recharge bp 20bp\n");
 				}
@@ -937,7 +936,7 @@ qboolean sab_beh_block_vs_attack(gentity_t* blocker, gentity_t* attacker, const 
 
 				PM_AddBlockFatigue(&blocker->client->ps, BLOCKPOINTS_DANGER);
 
-				if ((d_blockinfo->integer || g_DebugSaberCombat->integer) && (blocker->s.number < MAX_CLIENTS ||G_ControlledByPlayer(blocker)))
+				if ((d_blockinfo->integer || g_DebugSaberCombat->integer) && (blocker->s.number < MAX_CLIENTS || G_ControlledByPlayer(blocker)))
 				{
 					gi.Printf(S_COLOR_CYAN"Blocker stagger drain 4 bp\n");
 				}
@@ -1014,7 +1013,7 @@ qboolean sab_beh_block_vs_attack(gentity_t* blocker, gentity_t* attacker, const 
 					}
 					else
 					{
-						if (attacker->client->ps.saber_anim_level == SS_DESANN || attacker->client->ps.saber_anim_level ==	SS_STRONG)
+						if (attacker->client->ps.saber_anim_level == SS_DESANN || attacker->client->ps.saber_anim_level == SS_STRONG)
 						{
 							WP_SaberFatiguedParry(blocker, attacker, saber_num, blade_num);
 						}
@@ -1036,7 +1035,7 @@ qboolean sab_beh_block_vs_attack(gentity_t* blocker, gentity_t* attacker, const 
 						CGCam_BlockShakeSP(0.45f, 100);
 					}
 
-					if ((d_blockinfo->integer || g_DebugSaberCombat->integer) && blocker->s.number < MAX_CLIENTS ||	G_ControlledByPlayer(blocker))
+					if ((d_blockinfo->integer || g_DebugSaberCombat->integer) && blocker->s.number < MAX_CLIENTS || G_ControlledByPlayer(blocker))
 					{
 						gi.Printf(S_COLOR_CYAN"Blocker Spamming block + attack cost 5\n");
 					}

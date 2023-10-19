@@ -285,7 +285,7 @@ static void CG_ClipMoveToEntities(const vec3_t start, const vec3_t mins, const v
 		if (ent->solid == SOLID_BMODEL)
 		{
 			// special value for bmodel
-			cmodel = trap->CM_InlineModel(ent->modelindex);
+			cmodel = trap->CM_InlineModel(ent->model_index);
 			VectorCopy(cent->lerpAngles, angles);
 			BG_EvaluateTrajectory(&cent->currentState.pos, cg.physicsTime, origin);
 		}
@@ -412,7 +412,7 @@ void CG_TraceItem(trace_t* result, const vec3_t start, const vec3_t mins, const 
 	{
 		const centity_t* cent = cg_triggerEntities[i];
 		const entityState_t* ent = &cent->currentState;
-		const gitem_t* item = &bg_itemlist[ent->modelindex];
+		const gitem_t* item = &bg_itemlist[ent->model_index];
 		vec3_t item_mins, item_maxs;
 
 		if (ent->number == skip_number)
@@ -507,7 +507,7 @@ int CG_PointContents(const vec3_t point, const int pass_entity_num)
 			continue;
 		}
 
-		const clip_handle_t cmodel = trap->CM_InlineModel(ent->modelindex);
+		const clip_handle_t cmodel = trap->CM_InlineModel(ent->model_index);
 		if (!cmodel)
 		{
 			continue;
@@ -674,7 +674,7 @@ static void CG_TouchItem(centity_t* cent)
 		return; // can't hold it
 	}
 
-	const gitem_t* item = &bg_itemlist[cent->currentState.modelindex];
+	const gitem_t* item = &bg_itemlist[cent->currentState.model_index];
 
 	//Currently there is no reliable way of knowing if the client has touched a certain item before another if they are next to each other, or rather
 	//if the server has touched them in the same order. This results often in grabbing an item in the prediction and the server giving you the other
@@ -802,7 +802,7 @@ static void CG_TouchTriggerPrediction(void)
 			continue;
 		}
 
-		const clip_handle_t cmodel = trap->CM_InlineModel(ent->modelindex);
+		const clip_handle_t cmodel = trap->CM_InlineModel(ent->model_index);
 		if (!cmodel)
 		{
 			continue;
@@ -870,7 +870,7 @@ static QINLINE void CG_EntityStateToPlayerState(entityState_t* s, playerState_t*
 	ps->eFlags = s->eFlags;
 
 	ps->saberInFlight = s->saberInFlight;
-	ps->saberEntityNum = s->saberEntityNum;
+	ps->saberentity_num = s->saberentity_num;
 
 	ps->fd.forcePowersActive = s->forcePowersActive;
 
@@ -892,7 +892,7 @@ static QINLINE void CG_EntityStateToPlayerState(entityState_t* s, playerState_t*
 		ps->dualBlade = qfalse;
 	}
 
-	ps->emplacedIndex = s->otherEntityNum2;
+	ps->emplacedIndex = s->otherentity_num2;
 
 	ps->saber_holstered = s->saber_holstered; //reuse bool in entitystate for players differently
 
@@ -924,7 +924,7 @@ static QINLINE void CG_EntityStateToPlayerState(entityState_t* s, playerState_t*
 	}
 
 	ps->weapon = s->weapon;
-	ps->groundEntityNum = s->groundEntityNum;
+	ps->groundentity_num = s->groundentity_num;
 
 	for ( i = 0 ; i < MAX_POWERUPS ; i++ ) {
 		if (s->powerups & (1 << i))
@@ -1254,7 +1254,7 @@ void CG_PredictPlayerState(void)
 				vec3_t delta;
 				vec3_t adjusted;
 				CG_AdjustPositionForMover(cg.predictedVehicleState.origin,
-					cg.predictedVehicleState.groundEntityNum, cg.physicsTime, cg.oldTime,
+					cg.predictedVehicleState.groundentity_num, cg.physicsTime, cg.oldTime,
 					adjusted);
 
 				if (cg_showVehMiss.integer)
@@ -1330,7 +1330,7 @@ void CG_PredictPlayerState(void)
 				vec3_t delta;
 				vec3_t adjusted;
 				CG_AdjustPositionForMover(cg.predicted_player_state.origin,
-					cg.predicted_player_state.groundEntityNum, cg.physicsTime, cg.oldTime,
+					cg.predicted_player_state.groundentity_num, cg.physicsTime, cg.oldTime,
 					adjusted);
 
 				if (cg_showMiss.integer)
@@ -1551,14 +1551,14 @@ void CG_PredictPlayerState(void)
 	if (CG_Piloting(cg.predicted_player_state.m_iVehicleNum))
 	{
 		CG_AdjustPositionForMover(cg.predictedVehicleState.origin,
-			cg.predictedVehicleState.groundEntityNum,
+			cg.predictedVehicleState.groundentity_num,
 			cg.physicsTime, cg.time, cg.predictedVehicleState.origin);
 	}
 	else
 	{
 		// adjust for the movement of the groundentity
 		CG_AdjustPositionForMover(cg.predicted_player_state.origin,
-			cg.predicted_player_state.groundEntityNum,
+			cg.predicted_player_state.groundentity_num,
 			cg.physicsTime, cg.time, cg.predicted_player_state.origin);
 	}
 

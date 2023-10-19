@@ -209,7 +209,7 @@ typedef struct clientInfo_s {
 	void* ghoul2Weapons[MAX_SABERS];
 	void* ghoul2HolsterWeapons[MAX_SABERS];
 
-	char			saberName[64];
+	char			saber_name[64];
 	char			saber2Name[64];
 
 	char			name[MAX_QPATH];
@@ -2051,7 +2051,7 @@ void CG_ResetPlayerEntity(centity_t* cent);
 void CG_AddRefEntityWithPowerups(const refEntity_t* ent, const entityState_t* state);
 void CG_NewClientInfo(int client_num, qboolean entities_initialized);
 sfxHandle_t	CG_CustomSound(int client_num, const char* sound_name);
-void CG_PlayerShieldHit(int entitynum, vec3_t dir, int amount);
+void CG_PlayerShieldHit(int entity_num, vec3_t dir, int amount);
 
 //
 // cg_predict.c

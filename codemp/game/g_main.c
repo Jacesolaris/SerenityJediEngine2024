@@ -599,7 +599,7 @@ void G_InitGame(int levelTime, int randomSeed, int restart)
 
 	if (level.gametype == GT_SINGLE_PLAYER || trap->Cvar_VariableIntegerValue("com_buildScript"))
 	{
-		G_ModelIndex(SP_PODIUM_MODEL);
+		G_model_index(SP_PODIUM_MODEL);
 		G_SoundIndex("sound/player/gurp1.wav");
 		G_SoundIndex("sound/player/gurp2.wav");
 	}
@@ -2462,7 +2462,7 @@ void MoveClientToIntermission(gentity_t* ent)
 	ent->client->ps.eFlags2 = 0;
 	ent->s.eFlags2 = 0;
 	ent->s.eType = ET_GENERAL;
-	ent->s.modelindex = 0;
+	ent->s.model_index = 0;
 	ent->s.loopSound = 0;
 	ent->s.loopIsSoundset = qfalse;
 	ent->s.event = 0;
@@ -3654,9 +3654,9 @@ void CheckTournament(void)
 				gentity_t* te = G_TempEntity(vec3_origin, EV_GLOBAL_DUEL);
 				te->r.svFlags |= SVF_BROADCAST;
 				//this is really pretty nasty, but..
-				te->s.otherEntityNum = level.sortedClients[0];
-				te->s.otherEntityNum2 = level.sortedClients[1];
-				te->s.groundEntityNum = level.sortedClients[2];
+				te->s.otherentity_num = level.sortedClients[0];
+				te->s.otherentity_num2 = level.sortedClients[1];
+				te->s.groundentity_num = level.sortedClients[2];
 
 				trap->SetConfigstring(CS_CLIENT_DUELISTS, va("%i|%i|%i", level.sortedClients[0], level.sortedClients[1],
 					level.sortedClients[2]));
@@ -3695,9 +3695,9 @@ void CheckTournament(void)
 					gentity_t* te = G_TempEntity(vec3_origin, EV_GLOBAL_DUEL);
 					te->r.svFlags |= SVF_BROADCAST;
 					//this is really pretty nasty, but..
-					te->s.otherEntityNum = level.sortedClients[0];
-					te->s.otherEntityNum2 = level.sortedClients[1];
-					te->s.groundEntityNum = level.sortedClients[2];
+					te->s.otherentity_num = level.sortedClients[0];
+					te->s.otherentity_num2 = level.sortedClients[1];
+					te->s.groundentity_num = level.sortedClients[2];
 
 					trap->SetConfigstring(CS_CLIENT_DUELISTS, va("%i|%i|%i", level.sortedClients[0],
 						level.sortedClients[1], level.sortedClients[2]));
@@ -4349,7 +4349,7 @@ void G_RunFrame(const int levelTime)
 		g_siegeRespawnCheck = level.time + g_siegeRespawn.integer * 1000;
 	}
 
-	if ((level.gametype == GT_FFA 
+	if ((level.gametype == GT_FFA
 		|| level.gametype == GT_TEAM
 		|| level.gametype == GT_CTF) &&
 		g_ffaRespawnTimer.integer &&
@@ -4770,7 +4770,7 @@ void G_RunFrame(const int levelTime)
 					{
 						if (!(ent->r.svFlags & SVF_BOT))
 						{
-							if (ent->client->ps.groundEntityNum == ENTITYNUM_NONE)
+							if (ent->client->ps.groundentity_num == ENTITYNUM_NONE)
 							{
 								//in midair
 								ent->client->ps.jetpackFuel--;
@@ -4794,7 +4794,7 @@ void G_RunFrame(const int levelTime)
 					ent->client->jetPackDebReduce = level.time + JETPACK_DEFUEL_RATE;
 				}
 			}
-			else if (ent->client->ps.jetpackFuel < 100 && ent->client->ps.groundEntityNum != ENTITYNUM_NONE)
+			else if (ent->client->ps.jetpackFuel < 100 && ent->client->ps.groundentity_num != ENTITYNUM_NONE)
 			{
 				//recharge jetpack
 				if (ent->client->jetPackDebRecharge < level.time && !ent->client->flamethrowerOn)
@@ -5032,7 +5032,7 @@ void G_RunFrame(const int levelTime)
 #endif
 
 	g_LastFrameTime = level.time;
-		}
+}
 
 const char* G_GetStringEdString(char* refSection, char* refName)
 {

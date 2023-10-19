@@ -194,7 +194,7 @@ static void g_missile_stick(gentity_t* missile, gentity_t* other, trace_t* tr)
 	if (other->s.eType == ET_MOVER || other->e_DieFunc == dieF_funcBBrushDie || other->e_DieFunc == dieF_funcGlassDie)
 	{
 		// movers and breakable brushes need extra info...so sticky missiles can ride lifts and blow up when the thing they are attached to goes away.
-		missile->s.groundEntityNum = tr->entity_num;
+		missile->s.groundentity_num = tr->entity_num;
 	}
 }
 
@@ -1408,12 +1408,12 @@ void g_missile_impacted(gentity_t* ent, gentity_t* other, vec3_t impact_pos, vec
 	if (other && other->takedamage && other->client)
 	{
 		G_AddEvent(ent, EV_MISSILE_HIT, DirToByte(normal));
-		ent->s.otherEntityNum = other->s.number;
+		ent->s.otherentity_num = other->s.number;
 	}
 	else
 	{
 		G_AddEvent(ent, EV_MISSILE_MISS, DirToByte(normal));
-		ent->s.otherEntityNum = other->s.number;
+		ent->s.otherentity_num = other->s.number;
 	}
 
 	VectorCopy(normal, ent->pos1);
@@ -1755,7 +1755,7 @@ void g_missile_impact(gentity_t* ent, trace_t* trace, const int hit_loc = HL_NON
 
 				GEntity_PainFunc(other, ent, ent, other->currentOrigin, 0, MOD_IMPACT);
 			}
-			nent->s.otherEntityNum2 = other->s.number;
+			nent->s.otherentity_num2 = other->s.number;
 			ent->enemy = other;
 			v[0] = other->currentOrigin[0] + (other->mins[0] + other->maxs[0]) * 0.5f;
 			v[1] = other->currentOrigin[1] + (other->mins[1] + other->maxs[1]) * 0.5f;
@@ -1801,7 +1801,7 @@ void g_missile_impact(gentity_t* ent, trace_t* trace, const int hit_loc = HL_NON
 		if (other->client || other->s.eType == ET_MOVER)
 		{
 			G_PlayEffect("stunBaton/flesh_impact", ent->currentOrigin);
-			nent->s.otherEntityNum2 = other->s.number;
+			nent->s.otherentity_num2 = other->s.number;
 			ent->enemy = other;
 
 			if (other->takedamage && other->client)
@@ -2010,9 +2010,9 @@ void g_run_stuck_missile(gentity_t* ent)
 {
 	if (ent->takedamage)
 	{
-		if (ent->s.groundEntityNum >= 0 && ent->s.groundEntityNum < ENTITYNUM_WORLD)
+		if (ent->s.groundentity_num >= 0 && ent->s.groundentity_num < ENTITYNUM_WORLD)
 		{
-			gentity_t* other = &g_entities[ent->s.groundEntityNum];
+			gentity_t* other = &g_entities[ent->s.groundentity_num];
 
 			if (!VectorCompare(vec3_origin, other->s.pos.trDelta) && other->s.pos.trType != TR_STATIONARY ||
 				!VectorCompare(vec3_origin, other->s.apos.trDelta) && other->s.apos.trType != TR_STATIONARY)
@@ -2462,13 +2462,13 @@ void g_run_missile(gentity_t* ent)
 		// did we hit or go near a Ghoul2 model?
 		for (auto& i : tr.G2CollisionMap)
 		{
-			if (i.mEntityNum == -1)
+			if (i.mentity_num == -1)
 			{
 				break;
 			}
 
 			CCollisionRecord& coll = i;
-			const gentity_t* hit_ent = &g_entities[coll.mEntityNum];
+			const gentity_t* hit_ent = &g_entities[coll.mentity_num];
 
 			// process collision records here...
 			// make sure we only do this once, not for all the entrance wounds we might generate
@@ -2476,9 +2476,9 @@ void g_run_missile(gentity_t* ent)
 			{
 				if (tr_hit_loc == HL_NONE)
 				{
-					G_GetHitLocFromSurfName(&g_entities[coll.mEntityNum],
+					G_GetHitLocFromSurfName(&g_entities[coll.mentity_num],
 						gi.G2API_GetSurfaceName(
-							&g_entities[coll.mEntityNum].ghoul2[coll.mModelIndex],
+							&g_entities[coll.mentity_num].ghoul2[coll.mModelIndex],
 							coll.mSurfaceIndex), &tr_hit_loc, coll.mCollisionPosition, nullptr,
 						nullptr, ent->methodOfDeath);
 				}
@@ -2613,7 +2613,7 @@ gentity_t* fire_grapple(gentity_t* self, vec3_t start, vec3_t dir)
 	hook->target_ent = nullptr;
 	hook->s.pos.trType = TR_LINEAR;
 	hook->s.pos.trTime = level.time - MISSILE_PRESTEP_TIME;
-	hook->s.otherEntityNum = self->s.number;
+	hook->s.otherentity_num = self->s.number;
 	VectorCopy(start, hook->s.pos.trBase);
 	VectorScale(dir, 900, hook->s.pos.trDelta);
 	SnapVector(hook->s.pos.trDelta);
@@ -2641,7 +2641,7 @@ gentity_t* fire_stun(gentity_t* self, vec3_t start, vec3_t dir)
 	stun->target_ent = nullptr;
 	stun->s.pos.trType = TR_LINEAR;
 	stun->s.pos.trTime = level.time - MISSILE_PRESTEP_TIME;
-	stun->s.otherEntityNum = self->s.number;
+	stun->s.otherentity_num = self->s.number;
 	VectorCopy(start, stun->s.pos.trBase);
 	VectorScale(dir, 2000, stun->s.pos.trDelta);
 	SnapVector(stun->s.pos.trDelta);

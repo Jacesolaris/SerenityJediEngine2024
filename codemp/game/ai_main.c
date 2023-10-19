@@ -575,7 +575,7 @@ void set_enemy_path(bot_state_t* bs)
 	AngleVectors(b_angle, fwd, NULL, NULL);
 
 	if (!bs->currentEnemy // No enemy!
-		|| check_fall_by_vectors(bs->origin, fwd, &g_entities[bs->entitynum]) == qtrue) // We're gonna fall!!!
+		|| check_fall_by_vectors(bs->origin, fwd, &g_entities[bs->entity_num]) == qtrue) // We're gonna fall!!!
 	{
 		if (bs->wpCurrent)
 		{
@@ -598,7 +598,7 @@ void ai_mod_jump(bot_state_t* bs)
 	vec3_t dir, p1, p2, apex;
 	float time, height, forward, z, xy, dist;
 	float apex_height;
-	gentity_t* bot = &g_entities[bs->entitynum];
+	gentity_t* bot = &g_entities[bs->entity_num];
 
 	if (!bs->currentEnemy)
 	{
@@ -728,7 +728,7 @@ void ai_mod_jump(bot_state_t* bs)
 			else
 				bot->client->ps.velocity[2] = -16;
 		}
-		else if (bot->s.groundEntityNum != ENTITYNUM_NONE)
+		else if (bot->s.groundentity_num != ENTITYNUM_NONE)
 		{
 			//Landed, start landing anim
 			//FIXME: if the
@@ -1377,7 +1377,7 @@ void bot_update_input(bot_state_t* bs, const int time, const int elapsed_time)
 		if (bs->currentEnemy
 			&& bs->currentEnemy->client
 			&& bs->currentEnemy->health > 0
-			&& bs->currentEnemy->client->ps.groundEntityNum != ENTITYNUM_NONE
+			&& bs->currentEnemy->client->ps.groundentity_num != ENTITYNUM_NONE
 			&& VectorDistance(g_entities[bs->cur_ps.client_num].r.currentOrigin, bs->currentEnemy->r.currentOrigin) < SABER_KICK_RANGE
 			|| next_kick[bs->cur_ps.client_num] > level.time)
 		{
@@ -1413,7 +1413,7 @@ void bot_update_input(bot_state_t* bs, const int time, const int elapsed_time)
 			&& bs->jumpTime <= level.time // Don't gesture during jumping...
 			&& !bs->doAttack
 			&& !bs->doAltAttack
-			&& bs->currentEnemy->client->ps.groundEntityNum != ENTITYNUM_NONE
+			&& bs->currentEnemy->client->ps.groundentity_num != ENTITYNUM_NONE
 			&& VectorDistance(g_entities[bs->cur_ps.client_num].r.currentOrigin,
 				bs->currentEnemy->r.currentOrigin) < 300
 			|| next_gloat[bs->cur_ps.client_num] > level.time)
@@ -1450,7 +1450,7 @@ void bot_update_input(bot_state_t* bs, const int time, const int elapsed_time)
 			&& bs->jumpTime <= level.time // Don't gesture during jumping...
 			&& !bs->doAttack
 			&& !bs->doAltAttack
-			&& bs->currentEnemy->client->ps.groundEntityNum != ENTITYNUM_NONE
+			&& bs->currentEnemy->client->ps.groundentity_num != ENTITYNUM_NONE
 			&& VectorDistance(g_entities[bs->cur_ps.client_num].r.currentOrigin,
 				bs->currentEnemy->r.currentOrigin) < 300
 			|| next_flourish[bs->cur_ps.client_num] > level.time)
@@ -1747,7 +1747,7 @@ int bot_ai_setup_client(const int client, const struct bot_settings_s* settings)
 	bs->ws = trap->BotAllocWeaponState();
 
 	bs->inuse = qtrue;
-	bs->entitynum = client;
+	bs->entity_num = client;
 	bs->setupcount = 4;
 	bs->entergame_time = FloatTime();
 	bs->ms = trap->BotAllocMoveState();
@@ -1812,7 +1812,7 @@ void bot_reset_state(bot_state_t* bs)
 	memcpy(&ps, &bs->cur_ps, sizeof(playerState_t));
 	const int inuse = bs->inuse;
 	const int client = bs->client;
-	const int entitynum = bs->entitynum;
+	const int entity_num = bs->entity_num;
 	const int movestate = bs->ms;
 	const int goalstate = bs->gs;
 	const int weaponstate = bs->ws;
@@ -1827,7 +1827,7 @@ void bot_reset_state(bot_state_t* bs)
 	memcpy(&bs->settings, &settings, sizeof(bot_settings_t));
 	bs->inuse = inuse;
 	bs->client = client;
-	bs->entitynum = entitynum;
+	bs->entity_num = entity_num;
 	bs->entergame_time = entergame_time;
 	//reset several states
 	if (bs->ms) trap->BotResetMoveState(bs->ms);
@@ -3363,7 +3363,7 @@ void bot_move(bot_state_t* bs, vec3_t dest, const qboolean wptravel, qboolean st
 			//never strafe during when jumping somewhere
 			strafe = qfalse;
 
-			if (bs->cur_ps.groundEntityNum != ENTITYNUM_NONE &&
+			if (bs->cur_ps.groundentity_num != ENTITYNUM_NONE &&
 				(diststart < distend || bs->origin[2] < bs->wpCurrent->origin[2]))
 			{
 				//before jump attempt
@@ -3384,7 +3384,7 @@ void bot_move(bot_state_t* bs, vec3_t dest, const qboolean wptravel, qboolean st
 
 			//make sure we're stopped or moving towards our goal before jumping
 			if (diststart < distend && (VectorCompare(vec3_origin, velocity) || DotProduct(velocity, viewang) > .7)
-				|| bs->cur_ps.groundEntityNum == ENTITYNUM_NONE)
+				|| bs->cur_ps.groundentity_num == ENTITYNUM_NONE)
 			{
 				//moving towards to our jump target or not moving at all or already on route and not already near the target.
 				//hold down jump until we're pretty sure that we'll hit our target by just falling onto it.
@@ -4746,12 +4746,12 @@ void wp_constant_routine(bot_state_t* bs)
 		}
 
 		if (height_dif > 40 && bs->cur_ps.fd.forcePowersKnown & 1 << FP_LEVITATION && (bs->cur_ps.fd.forceJumpCharge
-			< forceJumpStrength[bs->cur_ps.fd.forcePowerLevel[FP_LEVITATION]] - 100 || bs->cur_ps.groundEntityNum ==
+			< forceJumpStrength[bs->cur_ps.fd.forcePowerLevel[FP_LEVITATION]] - 100 || bs->cur_ps.groundentity_num ==
 			ENTITYNUM_NONE))
 		{
 			//alright, let's jump
 			bs->forceJumpChargeTime = level.time + 1000;
-			if (bs->cur_ps.groundEntityNum != ENTITYNUM_NONE && bs->jumpPrep < level.time - 300)
+			if (bs->cur_ps.groundentity_num != ENTITYNUM_NONE && bs->jumpPrep < level.time - 300)
 			{
 				bs->jumpPrep = level.time + 700;
 			}
@@ -4962,7 +4962,7 @@ int bot_trace_strafe(const bot_state_t* bs, vec3_t traceto)
 	vec3_t forward, right;
 	trace_t tr;
 
-	if (bs->cur_ps.groundEntityNum == ENTITYNUM_NONE)
+	if (bs->cur_ps.groundentity_num == ENTITYNUM_NONE)
 	{
 		//don't do this in the air, it can be.. dangerous.
 		return 0;
@@ -9396,7 +9396,7 @@ int saber_bot_fallback_navigation(bot_state_t* bs)
 	else
 	{
 		// No current enemy. Randomize. Fallback code.
-		if (next_point[bs->entitynum] < level.time
+		if (next_point[bs->entity_num] < level.time
 			|| VectorDistance(bs->goalPosition, bs->origin) < 64
 			|| !(bs->velocity[0] < 32
 				&& bs->velocity[1] < 32
@@ -9438,7 +9438,7 @@ int saber_bot_fallback_navigation(bot_state_t* bs)
 					found = qtrue;
 			}
 
-			next_point[bs->entitynum] = level.time + 2000 + rand() % 5 * 1000;
+			next_point[bs->entity_num] = level.time + 2000 + rand() % 5 * 1000;
 		}
 		else
 		{
@@ -9457,7 +9457,7 @@ int saber_bot_fallback_navigation(bot_state_t* bs)
 	if (tr.fraction == 1)
 	{
 		// Visible point.
-		if (check_fall_by_vectors(bs->origin, ang, &g_entities[bs->entitynum]) == qtrue)
+		if (check_fall_by_vectors(bs->origin, ang, &g_entities[bs->entity_num]) == qtrue)
 		{
 			// We would fall.
 			VectorCopy(bs->origin, bs->goalPosition); // Stay still.
@@ -9478,7 +9478,7 @@ int saber_bot_fallback_navigation(bot_state_t* bs)
 	{
 		int tries = 0;
 
-		while (check_fall_by_vectors(bs->origin, ang, &g_entities[bs->entitynum]) == qtrue && tries <= bot_thinklevel.
+		while (check_fall_by_vectors(bs->origin, ang, &g_entities[bs->entity_num]) == qtrue && tries <= bot_thinklevel.
 			integer)
 		{
 			// Keep trying until we get something valid? Too much CPU maybe?
@@ -10377,7 +10377,7 @@ qboolean bot_buy_item(bot_state_t* bs, const char* msg)
 				{
 					gentity_t* te = G_TempEntity(g_entities[bs->client].s.pos.trBase, EV_ITEM_PICKUP);
 					te->s.eventParm = te - g_entities;
-					te->s.modelindex = j;
+					te->s.model_index = j;
 					te->s.number = bs->client;
 				}
 				return qtrue;
@@ -10453,7 +10453,7 @@ int bot_use_inventory_item(bot_state_t* bs)
 			bs->cur_ps.stats[STAT_HOLDABLE_ITEM] = BG_GetItemIndexByTag(HI_JETPACK, IT_HOLDABLE);
 			goto wantuseitem;
 		}
-		if (bs->cur_ps.groundEntityNum == ENTITYNUM_NONE)
+		if (bs->cur_ps.groundentity_num == ENTITYNUM_NONE)
 		{
 			bs->cur_ps.stats[STAT_HOLDABLE_ITEM] = BG_GetItemIndexByTag(HI_JETPACK, IT_HOLDABLE);
 			goto wantuseitem;
@@ -10471,7 +10471,7 @@ int bot_use_inventory_item(bot_state_t* bs)
 			bs->cur_ps.stats[STAT_HOLDABLE_ITEM] = BG_GetItemIndexByTag(HI_FLAMETHROWER, IT_HOLDABLE);
 			goto wantuseitem;
 		}
-		if (bs->currentEnemy && bs->frame_Enemy_Len <= MELEE_ATTACK_RANGE && bs->cur_ps.groundEntityNum ==
+		if (bs->currentEnemy && bs->frame_Enemy_Len <= MELEE_ATTACK_RANGE && bs->cur_ps.groundentity_num ==
 			ENTITYNUM_NONE)
 		{
 			bs->cur_ps.stats[STAT_HOLDABLE_ITEM] = BG_GetItemIndexByTag(IT_HOLDABLE, IT_HOLDABLE);
@@ -10807,7 +10807,7 @@ void standard_bot_ai(bot_state_t* bs)
 		}
 
 		return;
-}
+	}
 #endif
 
 	if (bot_forgimmick.integer)
@@ -11252,7 +11252,7 @@ void standard_bot_ai(bot_state_t* bs)
 				forceHostile = 0;
 			}
 		}
-		else if (bs->cur_ps.saberInFlight && !bs->cur_ps.saberEntityNum)
+		else if (bs->cur_ps.saberInFlight && !bs->cur_ps.saberentity_num)
 		{
 			//we've lost our saber.
 			//check to see if we can get the saber back yet.
@@ -11851,9 +11851,9 @@ void standard_bot_ai(bot_state_t* bs)
 		}
 	}
 
-	if (bs->currentEnemy && bs->entitynum < MAX_CLIENTS)
+	if (bs->currentEnemy && bs->entity_num < MAX_CLIENTS)
 	{
-		if (g_entities[bs->entitynum].health <= 0 || bs->currentEnemy->health <= 0)
+		if (g_entities[bs->entity_num].health <= 0 || bs->currentEnemy->health <= 0)
 		{
 			//dont do it if there dead...doh
 		}
@@ -11863,24 +11863,24 @@ void standard_bot_ai(bot_state_t* bs)
 			float xy;
 			qboolean will_fall = qfalse;
 
-			if (next_bot_fallcheck[bs->entitynum] < level.time)
+			if (next_bot_fallcheck[bs->entity_num] < level.time)
 			{
 				vec3_t fwd;
-				if (check_fall_by_vectors(bs->origin, fwd, &g_entities[bs->entitynum]) == qtrue)
+				if (check_fall_by_vectors(bs->origin, fwd, &g_entities[bs->entity_num]) == qtrue)
 				{
 					will_fall = qtrue;
 				}
-				if (bot_will_fall[bs->entitynum])
+				if (bot_will_fall[bs->entity_num])
 				{
-					next_bot_fallcheck[bs->entitynum] = level.time + 50;
-					bot_will_fall[bs->entitynum] = will_fall;
+					next_bot_fallcheck[bs->entity_num] = level.time + 50;
+					bot_will_fall[bs->entity_num] = will_fall;
 				}
 			}
 			else
 			{
 				vec3_t p2;
 				vec3_t p1;
-				will_fall = bot_will_fall[bs->entitynum];
+				will_fall = bot_will_fall[bs->entity_num];
 				if (bs->origin[2] > bs->currentEnemy->r.currentOrigin[2])
 				{
 					VectorCopy(bs->origin, p1);
@@ -11909,7 +11909,7 @@ void standard_bot_ai(bot_state_t* bs)
 				&& bs->currentEnemy->r.currentOrigin[2] > bs->origin[2] + 32
 				&& bs->currentEnemy->health > 0
 				&& bs->currentEnemy->client
-				&& bs->currentEnemy->client->ps.groundEntityNum != ENTITYNUM_NONE)
+				&& bs->currentEnemy->client->ps.groundentity_num != ENTITYNUM_NONE)
 			{
 				// Jump to enemy. NPC style! They are above us. Do a Jump.
 				bs->BOTjumpState = JS_FACING;
@@ -11923,7 +11923,7 @@ void standard_bot_ai(bot_state_t* bs)
 				&& bs->currentEnemy->r.currentOrigin[2] < bs->origin[2] - 32
 				&& bs->currentEnemy->health > 0
 				&& bs->currentEnemy->client
-				&& bs->currentEnemy->client->ps.groundEntityNum != ENTITYNUM_NONE)
+				&& bs->currentEnemy->client->ps.groundentity_num != ENTITYNUM_NONE)
 			{
 				// Jump to enemy. NPC style! They are below us.
 				bs->BOTjumpState = JS_FACING;
@@ -11937,7 +11937,7 @@ void standard_bot_ai(bot_state_t* bs)
 				&& bs->currentEnemy->r.currentOrigin[2] > bs->origin[2] + 32
 				&& bs->currentEnemy->health > 0
 				&& bs->currentEnemy->client
-				&& bs->currentEnemy->client->ps.groundEntityNum != ENTITYNUM_NONE)
+				&& bs->currentEnemy->client->ps.groundentity_num != ENTITYNUM_NONE)
 			{
 				// Jump to enemy. NPC style! They are above us. Do a Jump.
 				bs->BOTjumpState = JS_FACING;
@@ -11951,7 +11951,7 @@ void standard_bot_ai(bot_state_t* bs)
 				&& bs->currentEnemy->r.currentOrigin[2] < bs->origin[2] - 32
 				&& bs->currentEnemy->health > 0
 				&& bs->currentEnemy->client
-				&& bs->currentEnemy->client->ps.groundEntityNum != ENTITYNUM_NONE)
+				&& bs->currentEnemy->client->ps.groundentity_num != ENTITYNUM_NONE)
 			{
 				// Jump to enemy. NPC style! They are below us.
 				bs->BOTjumpState = JS_FACING;
@@ -12552,7 +12552,7 @@ void standard_bot_ai(bot_state_t* bs)
 			{
 				trap->EA_MoveForward(bs->client);
 			}
-			if (g_entities[bs->client].client->ps.groundEntityNum == ENTITYNUM_NONE)
+			if (g_entities[bs->client].client->ps.groundentity_num == ENTITYNUM_NONE)
 			{
 				g_entities[bs->client].client->ps.pm_flags |= PMF_JUMP_HELD;
 			}
@@ -12706,7 +12706,7 @@ void standard_bot_ai(bot_state_t* bs)
 
 	if (bs->cur_ps.weapon == WP_SABER &&
 		bs->cur_ps.saberInFlight &&
-		!bs->cur_ps.saberEntityNum)
+		!bs->cur_ps.saberentity_num)
 	{
 		//saber knocked away, keep trying to get it back
 		bs->doAttack = 1;

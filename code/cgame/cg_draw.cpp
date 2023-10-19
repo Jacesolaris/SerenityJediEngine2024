@@ -6181,11 +6181,11 @@ static void CG_DrawRocketLocking(const int lock_ent_num)
 			else if (!cg.renderingThirdPerson && (cg_trueguns.integer || cg.snap->ps.weapon == WP_SABER
 				|| cg.snap->ps.weapon == WP_MELEE) && cg_truefov.value)
 			{
-				sz -= (cg_truefov.value - cg_zoomFov) / 90.0f;
+				sz -= (cg_truefov.value - cg_zoomFov) / 80.0f;
 			}
 			else
 			{
-				sz -= (cg_fov.value - cg_zoomFov) / 90.0f;
+				sz -= (cg_fov.value - cg_zoomFov) / 80.0f;
 			}
 		}
 
@@ -6441,8 +6441,7 @@ float cg_draw_radar(const float y)
 	color[0] = color[1] = color[2] = 1.0f;
 	color[3] = 0.6f;
 	cgi_R_SetColor(color);
-	CG_DrawPic(RADAR_X + x_offset + 5, y + 5, RADAR_RADIUS_X * 2 - 11, RADAR_RADIUS * 2 - 11,
-		cgs.media.radarScanShader);
+	CG_DrawPic(RADAR_X + x_offset + 5, y + 5, RADAR_RADIUS_X * 2 - 11, RADAR_RADIUS * 2 - 11, cgs.media.radarScanShader);
 	CG_DrawPic(RADAR_X + x_offset, y, RADAR_RADIUS_X * 2, RADAR_RADIUS * 2, cgs.media.radarShader);
 
 	// Draw all of the radar entities.  Draw them backwards so players are drawn last
@@ -6690,8 +6689,8 @@ float cg_draw_radar(const float y)
 				{
 					//I'm in a vehicle
 					//if it's targeting me, then play an alarm sound if I'm in a vehicle
-					if (cent->currentState.otherEntityNum == cg.predicted_player_state.client_num || cent->
-						currentState.otherEntityNum == cg.predicted_player_state.m_iVehicleNum)
+					if (cent->currentState.otherentity_num == cg.predicted_player_state.client_num || cent->
+						currentState.otherentity_num == cg.predicted_player_state.m_iVehicleNum)
 					{
 						if (radarLockSoundDebounceTime < cg.time)
 						{

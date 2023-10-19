@@ -840,26 +840,26 @@ static qboolean CG_RunLerpFrame(clientInfo_t* ci, lerpFrame_t* lf, const int new
 		}
 
 		int f = (lf->frameTime - lf->animationTime) / anim_frame_time;
-		if (f >= anim->numFrames)
+		if (f >= anim->num_frames)
 		{
 			//Reached the end of the anim
 			//FIXME: Need to set a flag here to TASK_COMPLETE
-			f -= anim->numFrames;
+			f -= anim->num_frames;
 			if (anim->loopFrames != -1) //Before 0 meant no loop
 			{
-				if (anim->numFrames - anim->loopFrames == 0)
+				if (anim->num_frames - anim->loopFrames == 0)
 				{
-					f %= anim->numFrames;
+					f %= anim->num_frames;
 				}
 				else
 				{
-					f %= anim->numFrames - anim->loopFrames;
+					f %= anim->num_frames - anim->loopFrames;
 				}
 				f += anim->loopFrames;
 			}
 			else
 			{
-				f = anim->numFrames - 1;
+				f = anim->num_frames - 1;
 				if (f < 0)
 				{
 					f = 0;
@@ -872,7 +872,7 @@ static qboolean CG_RunLerpFrame(clientInfo_t* ci, lerpFrame_t* lf, const int new
 
 		if (anim->frameLerp < 0)
 		{
-			lf->frame = anim->firstFrame + anim->numFrames - 1 - f;
+			lf->frame = anim->firstFrame + anim->num_frames - 1 - f;
 		}
 		else
 		{
@@ -921,7 +921,7 @@ static void CG_ClearLerpFrame(clientInfo_t* ci, lerpFrame_t* lf, const int anima
 	if (lf->animation->frameLerp < 0)
 	{
 		//Plays backwards
-		lf->oldFrame = lf->frame = lf->animation->firstFrame + lf->animation->numFrames;
+		lf->oldFrame = lf->frame = lf->animation->firstFrame + lf->animation->num_frames;
 	}
 	else
 	{
@@ -1214,7 +1214,7 @@ static void CG_PlayerAnimEventDo(centity_t* cent, animevent_t* anim_event)
 		//make him jump
 		if (cent && cent->gent && cent->gent->client)
 		{
-			if (cent->gent->client->ps.groundEntityNum != ENTITYNUM_NONE)
+			if (cent->gent->client->ps.groundentity_num != ENTITYNUM_NONE)
 			{
 				//on something
 				vec3_t fwd, rt, up;
@@ -1296,7 +1296,7 @@ static void CG_PlayerAnimEvents(const int anim_file_index, const qboolean torso,
 				//a looping anim!
 				loop_anim = qtrue;
 				first_frame = animation->firstFrame;
-				last_frame = animation->firstFrame + animation->numFrames;
+				last_frame = animation->firstFrame + animation->num_frames;
 			}
 		}
 	}
@@ -2233,7 +2233,7 @@ static void CG_ATSTLegsYaw(centity_t* cent, vec3_t trailing_legs_angles)
 }
 
 extern qboolean G_ClassHasBadBones(int NPC_class);
-extern void G_BoneOrientationsForClass(int NPC_class, const char* boneName, Eorientations* oUp, Eorientations* oRt,
+extern void G_BoneOrientationsForClass(int NPC_class, const char* bone_name, Eorientations* oUp, Eorientations* oRt,
 	Eorientations* oFwd);
 extern qboolean PM_FlippingAnim(int anim);
 extern qboolean PM_SpinningSaberAnim(int anim);
@@ -2872,7 +2872,7 @@ static void CG_G2PlayerAngles(centity_t* cent, vec3_t legs[3], vec3_t angles)
 				{
 					//don't turn legs if in a spinning saber transition
 					//FIXME: use actual swing/clamp tolerances?
-					if (cent->gent->client->ps.groundEntityNum != ENTITYNUM_NONE && !PM_InRoll(&cent->gent->client->ps))
+					if (cent->gent->client->ps.groundentity_num != ENTITYNUM_NONE && !PM_InRoll(&cent->gent->client->ps))
 					{
 						//on the ground
 						CG_PlayerLegsYawFromMovement(cent, cent->gent->client->ps.velocity, &angles[YAW],
@@ -3002,7 +3002,7 @@ static void CG_G2PlayerAngles(centity_t* cent, vec3_t legs[3], vec3_t angles)
 								cent->gent->hipsBone,
 								animations[turn_anim].firstFrame,
 								animations[turn_anim].firstFrame + animations[turn_anim].
-								numFrames,
+								num_frames,
 								BONE_ANIM_OVERRIDE_LOOP
 								/*|BONE_ANIM_OVERRIDE_FREEZE|BONE_ANIM_BLEND*/, anim_speed,
 								cg.time, -1, 100);
@@ -3083,7 +3083,7 @@ static void CG_G2PlayerAngles(centity_t* cent, vec3_t legs[3], vec3_t angles)
 				|| (cent->gent->client->NPC_class == CLASS_BOBAFETT || cent->gent->client->NPC_class == CLASS_MANDO
 					|| cent->gent->client->NPC_class == CLASS_ROCKETTROOPER) && cent->gent->client->moveType ==
 				MT_FLYSWIM)
-				&& cent->gent->client->ps.groundEntityNum == ENTITYNUM_NONE)
+				&& cent->gent->client->ps.groundentity_num == ENTITYNUM_NONE)
 			{
 				vec3_t cent_fwd, centRt;
 				float div_factor = 1.0f;
@@ -3215,7 +3215,7 @@ static void CG_G2PlayerAngles(centity_t* cent, vec3_t legs[3], vec3_t angles)
 			angles[PITCH] = 0;
 
 			//FIXME: use actual swing/clamp tolerances?
-			if (cent->gent->client->ps.groundEntityNum != ENTITYNUM_NONE)
+			if (cent->gent->client->ps.groundentity_num != ENTITYNUM_NONE)
 			{
 				//on the ground
 				CG_PlayerLegsYawFromMovement(cent, cent->gent->client->ps.velocity, &angles[YAW], cent->lerpAngles[YAW],
@@ -4591,7 +4591,7 @@ static void CG_ForceRepulseRefraction(vec3_t org, const centity_t* cent, const f
 
 	//scale from 1.0f to 0.1f then hold at 0.1 for the rest of the duration
 	if ((cent->gent->client->ps.weapon == WP_NONE || cent->gent->client->ps.weapon == WP_MELEE)
-		&& cent->gent->client->ps.forcePowersActive & 1 << FP_PUSH && cent->gent->client->ps.groundEntityNum ==
+		&& cent->gent->client->ps.forcePowersActive & 1 << FP_PUSH && cent->gent->client->ps.groundentity_num ==
 		ENTITYNUM_NONE)
 	{
 		scale = 1.0f;
@@ -4615,7 +4615,7 @@ static void CG_ForceRepulseRefraction(vec3_t org, const centity_t* cent, const f
 
 	//start alpha at 244, fade to 10
 	if ((cent->gent->client->ps.weapon == WP_NONE || cent->gent->client->ps.weapon == WP_MELEE)
-		&& cent->gent->client->ps.forcePowersActive & 1 << FP_PUSH && cent->gent->client->ps.groundEntityNum ==
+		&& cent->gent->client->ps.forcePowersActive & 1 << FP_PUSH && cent->gent->client->ps.groundentity_num ==
 		ENTITYNUM_NONE)
 	{
 		alpha = 244.0f;
@@ -6147,7 +6147,7 @@ void CG_AddRefEntityWithPowerups(refEntity_t* ent, int powerups, centity_t* cent
 	//------------------------------------------------------
 
 	if (powerups & 1 << PW_INVINCIBLE
-		&& cent->gent->client->ps.groundEntityNum != ENTITYNUM_NONE
+		&& cent->gent->client->ps.groundentity_num != ENTITYNUM_NONE
 		&& cent->gent->health > 1)
 	{
 		theFxScheduler.PlayEffect(cgs.effects.forceInvincibility, cent->lerpOrigin);
@@ -6442,16 +6442,16 @@ void CG_AddRefEntityWithPowerups(refEntity_t* ent, int powerups, centity_t* cent
 constexpr auto MAX_SHIELD_TIME = 2000.0;
 constexpr auto MIN_SHIELD_TIME = 2000.0;
 
-void CG_PlayerShieldHit(const int entitynum, vec3_t dir, const int amount)
+void CG_PlayerShieldHit(const int entity_num, vec3_t dir, const int amount)
 {
 	int time;
 
-	if (entitynum < 0 || entitynum >= MAX_GENTITIES)
+	if (entity_num < 0 || entity_num >= MAX_GENTITIES)
 	{
 		return;
 	}
 
-	centity_t* cent = &cg_entities[entitynum];
+	centity_t* cent = &cg_entities[entity_num];
 
 	if (cent->currentState.weapon == WP_SABER)
 	{
@@ -6476,14 +6476,14 @@ void CG_PlayerShieldHit(const int entitynum, vec3_t dir, const int amount)
 	cent->shieldHitTime = cg.time + 250;
 }
 
-void CG_PlayerShieldRecharging(const int entitynum)
+void CG_PlayerShieldRecharging(const int entity_num)
 {
-	if (entitynum < 0 || entitynum >= MAX_GENTITIES)
+	if (entity_num < 0 || entity_num >= MAX_GENTITIES)
 	{
 		return;
 	}
 
-	centity_t* cent = &cg_entities[entitynum];
+	centity_t* cent = &cg_entities[entity_num];
 	cent->shieldRechargeTime = cg.time + 1000;
 }
 
@@ -6596,7 +6596,7 @@ static void CG_G2SetHeadAnim(const centity_t* cent, const int anim)
 	const float time_scale_mod = cg_timescale.value ? 1.0 / cg_timescale.value : 1.0;
 	const float anim_speed = 50.0f / animations[anim].frameLerp * time_scale_mod;
 
-	if (animations[anim].numFrames <= 0)
+	if (animations[anim].num_frames <= 0)
 	{
 		return;
 	}
@@ -6604,19 +6604,19 @@ static void CG_G2SetHeadAnim(const centity_t* cent, const int anim)
 	{
 		anim_flags |= BONE_ANIM_OVERRIDE_FREEZE;
 	}
-	// animSpeed is 1.0 if the frameLerp (ms/frame) is 50 (20 fps).
+	// anim_speed is 1.0 if the frameLerp (ms/frame) is 50 (20 fps).
 	int first_frame;
 	int last_frame;
 	if (anim_speed < 0)
 	{
 		//play anim backwards
 		last_frame = animations[anim].firstFrame - 1;
-		first_frame = animations[anim].numFrames - 1 + animations[anim].firstFrame;
+		first_frame = animations[anim].num_frames - 1 + animations[anim].firstFrame;
 	}
 	else
 	{
 		first_frame = animations[anim].firstFrame;
-		last_frame = animations[anim].numFrames + animations[anim].firstFrame;
+		last_frame = animations[anim].num_frames + animations[anim].firstFrame;
 	}
 
 	// first decide if we are doing an animation on the head already
@@ -12038,7 +12038,7 @@ void CG_CheckSaberInWater(const centity_t* cent, const centity_t* scent, const i
 		scent->gent->ghoul2.size() <= model_index ||
 		scent->gent->ghoul2[model_index].mBltlist.size() <= 0 ||
 		//using a camera puts away your saber so you have no bolts
-		scent->gent->ghoul2[model_index].mModelindex == -1)
+		scent->gent->ghoul2[model_index].mmodel_index == -1)
 	{
 		return;
 	}
@@ -12095,7 +12095,7 @@ static void CG_AddSaberBladeGo(const centity_t* cent, centity_t* scent, const in
 		if (!scent ||
 			model_index == -1 ||
 			scent->gent->ghoul2.size() <= model_index ||
-			scent->gent->ghoul2[model_index].mModelindex == -1)
+			scent->gent->ghoul2[model_index].mmodel_index == -1)
 		{
 			return;
 		}
@@ -14760,10 +14760,10 @@ void CG_Player(centity_t* cent)
 									//play it on the saber
 									if (cg_saberOnSoundTime[cent->currentState.number] < cg.time)
 									{
-										cgi_S_UpdateEntityPosition(cent->gent->client->ps.saberEntityNum,
-											g_entities[cent->gent->client->ps.saberEntityNum].
+										cgi_S_UpdateEntityPosition(cent->gent->client->ps.saberentity_num,
+											g_entities[cent->gent->client->ps.saberentity_num].
 											currentOrigin);
-										cgi_S_StartSound(nullptr, cent->gent->client->ps.saberEntityNum, CHAN_AUTO,
+										cgi_S_StartSound(nullptr, cent->gent->client->ps.saberentity_num, CHAN_AUTO,
 											saber_on_sound);
 										cg_saberOnSoundTime[cent->currentState.number] = cg.time;
 										//so we don't play multiple on sounds at one time
@@ -15158,7 +15158,7 @@ void CG_Player(centity_t* cent)
 					}
 					if (cent->gent->weaponModel[cent->gent->count] != -1
 						&& cent->gent->ghoul2.size() > cent->gent->weaponModel[cent->gent->count]
-						&& cent->gent->ghoul2[cent->gent->weaponModel[cent->gent->count]].mModelindex != -1)
+						&& cent->gent->ghoul2[cent->gent->weaponModel[cent->gent->count]].mmodel_index != -1)
 					{
 						//get whichever one we're using now
 						mdxaBone_t matrix;
@@ -15177,7 +15177,7 @@ void CG_Player(centity_t* cent)
 						&& cent->gent->weaponModel[old_one] != -1 //have a second weapon
 						&& cent->gent->ghoul2.size() > cent->gent->weaponModel[old_one]
 						//have a valid ghoul model index
-						&& cent->gent->ghoul2[cent->gent->weaponModel[old_one]].mModelindex != -1)
+						&& cent->gent->ghoul2[cent->gent->weaponModel[old_one]].mmodel_index != -1)
 						//model exists and was loaded
 					{
 						//saboteur commando, toggle the muzzle point back and forth between the two pistols each time he fires
@@ -15207,7 +15207,7 @@ void CG_Player(centity_t* cent)
 					}
 					if (cent->gent->weaponModel[cent->gent->count] != -1
 						&& cent->gent->ghoul2.size() > cent->gent->weaponModel[cent->gent->count]
-						&& cent->gent->ghoul2[cent->gent->weaponModel[cent->gent->count]].mModelindex != -1)
+						&& cent->gent->ghoul2[cent->gent->weaponModel[cent->gent->count]].mmodel_index != -1)
 					{
 						//get whichever one we're using now
 						mdxaBone_t matrix;
@@ -15226,7 +15226,7 @@ void CG_Player(centity_t* cent)
 						&& cent->gent->weaponModel[old_one] != -1 //have a second weapon
 						&& cent->gent->ghoul2.size() > cent->gent->weaponModel[old_one]
 						//have a valid ghoul model index
-						&& cent->gent->ghoul2[cent->gent->weaponModel[old_one]].mModelindex != -1)
+						&& cent->gent->ghoul2[cent->gent->weaponModel[old_one]].mmodel_index != -1)
 						//model exists and was loaded
 					{
 						//saboteur commando, toggle the muzzle point back and forth between the two pistols each time he fires
@@ -15255,7 +15255,7 @@ void CG_Player(centity_t* cent)
 					}
 					if (cent->gent->weaponModel[cent->gent->count] != -1
 						&& cent->gent->ghoul2.size() > cent->gent->weaponModel[cent->gent->count]
-						&& cent->gent->ghoul2[cent->gent->weaponModel[cent->gent->count]].mModelindex != -1)
+						&& cent->gent->ghoul2[cent->gent->weaponModel[cent->gent->count]].mmodel_index != -1)
 					{
 						//get whichever one we're using now
 						mdxaBone_t matrix;
@@ -15274,7 +15274,7 @@ void CG_Player(centity_t* cent)
 						&& cent->gent->weaponModel[old_one] != -1 //have a second weapon
 						&& cent->gent->ghoul2.size() > cent->gent->weaponModel[old_one]
 						//have a valid ghoul model index
-						&& cent->gent->ghoul2[cent->gent->weaponModel[old_one]].mModelindex != -1)
+						&& cent->gent->ghoul2[cent->gent->weaponModel[old_one]].mmodel_index != -1)
 						//model exists and was loaded
 					{
 						//saboteur commando, toggle the muzzle point back and forth between the two pistols each time he fires
@@ -15290,7 +15290,7 @@ void CG_Player(centity_t* cent)
 				}
 				else if (cent->gent->weaponModel[0] != -1 &&
 					cent->gent->ghoul2.size() > cent->gent->weaponModel[0] &&
-					cent->gent->ghoul2[cent->gent->weaponModel[0]].mModelindex != -1)
+					cent->gent->ghoul2[cent->gent->weaponModel[0]].mmodel_index != -1)
 				{
 					mdxaBone_t matrix;
 					// figure out where the actual model muzzle is
@@ -15805,7 +15805,7 @@ void CG_Player(centity_t* cent)
 			}
 
 			if (cent->gent->client->ps.forcePowersActive & 1 << FP_DRAIN
-				&& cent->gent->client->ps.forceDrainEntityNum >= ENTITYNUM_WORLD)
+				&& cent->gent->client->ps.forceDrainentity_num >= ENTITYNUM_WORLD)
 			{
 				//doing the draining and not on a single person
 				vec3_t t_ang;
@@ -15854,7 +15854,7 @@ void CG_Player(centity_t* cent)
 		if (cent->gent->client->ps.powerups[PW_FORCE_PUSH] > cg.time)
 		{
 			if ((cent->gent->client->ps.weapon == WP_NONE || cent->gent->client->ps.weapon == WP_MELEE) && cent->gent->
-				client->ps.groundEntityNum == ENTITYNUM_NONE)
+				client->ps.groundentity_num == ENTITYNUM_NONE)
 			{
 				vec3_t blue;
 				VectorScale(colorTable[CT_LTBLUE1], 255.0f, blue);
@@ -15882,7 +15882,7 @@ void CG_Player(centity_t* cent)
 		else if (cent->gent->client->ps.powerups[PW_FORCE_PUSH_RHAND] > cg.time)
 		{
 			if ((cent->gent->client->ps.weapon == WP_NONE || cent->gent->client->ps.weapon == WP_MELEE) && cent->gent->
-				client->ps.groundEntityNum == ENTITYNUM_NONE)
+				client->ps.groundentity_num == ENTITYNUM_NONE)
 			{
 				vec3_t blue;
 				VectorScale(colorTable[CT_LTBLUE1], 255.0f, blue);

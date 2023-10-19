@@ -280,7 +280,7 @@ PFNGLUNLOCKARRAYSEXTPROC qglUnlockArraysEXT;
 bool g_bTextureRectangleHack = false;
 
 void RE_SetLightStyle(int style, int color);
-void RE_GetBModelVerts(int bmodelIndex, vec3_t* verts, vec3_t normal);
+void RE_GetBModelVerts(int bmodel_index, vec3_t* verts, vec3_t normal);
 
 void R_Splash()
 {
@@ -1537,7 +1537,7 @@ static consoleCommand_t	commands[] = {
 	{ "r_atihack",			R_AtiHackToggle_f },
 	{ "r_we",				R_WorldEffect_f },
 	{ "imagecacheinfo",		RE_RegisterImages_Info_f },
-	{ "modellist",			R_Modellist_f },
+	{ "model_list",			R_model_list_f },
 	{ "modelcacheinfo",		RE_RegisterModels_Info_f },
 	{ "weather",			R_SetWeatherEffect_f },
 	{ "r_weather",			R_WeatherEffect_f },
@@ -2136,7 +2136,7 @@ extern "C" {
 		re.G2API_SetBoneAnim = G2API_SetBoneAnim;
 		re.G2API_SetBoneAnimIndex = G2API_SetBoneAnimIndex;
 		re.G2API_SetBoneIKState = G2API_SetBoneIKState;
-		re.G2API_SetGhoul2ModelIndexes = G2API_SetGhoul2ModelIndexes;
+		re.G2API_SetGhoul2model_indexes = G2API_SetGhoul2model_indexes;
 		re.G2API_SetGhoul2ModelFlags = G2API_SetGhoul2ModelFlags;
 		re.G2API_SetLodBias = G2API_SetLodBias;
 		re.G2API_SetNewOrigin = G2API_SetNewOrigin;

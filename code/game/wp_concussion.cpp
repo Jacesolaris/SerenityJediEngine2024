@@ -58,7 +58,7 @@ static void WP_FireConcussionAlt(gentity_t* ent)
 
 	//Shove us backwards for half a second
 	VectorMA(ent->client->ps.velocity, -200, forward_vec, ent->client->ps.velocity);
-	ent->client->ps.groundEntityNum = ENTITYNUM_NONE;
+	ent->client->ps.groundentity_num = ENTITYNUM_NONE;
 
 	if (ent->client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_HALF)
 	{

@@ -5348,8 +5348,7 @@ float cg_draw_radar(float y)
 		return y;
 	}
 
-	if (cg.predicted_player_state.pm_flags & PMF_FOLLOW || cg.predicted_player_state.persistant[PERS_TEAM] ==
-		TEAM_SPECTATOR)
+	if (cg.predicted_player_state.pm_flags & PMF_FOLLOW || cg.predicted_player_state.persistant[PERS_TEAM] == TEAM_SPECTATOR)
 	{
 		return y;
 	}
@@ -5372,8 +5371,7 @@ float cg_draw_radar(float y)
 	color[3] = 0.6f;
 	trap->R_SetColor(color);
 
-	CG_DrawPic(RADAR_X + x_offset + 5, y + 5, RADAR_RADIUS_X * 2 - 11, RADAR_RADIUS * 2 - 11,
-		cgs.media.radarScanShader);
+	CG_DrawPic(RADAR_X + x_offset + 5, y + 5, RADAR_RADIUS_X * 2 - 11, RADAR_RADIUS * 2 - 11, cgs.media.radarScanShader);
 	CG_DrawPic(RADAR_X + x_offset, y, RADAR_RADIUS * 2, RADAR_RADIUS * 2, cgs.media.radarShader);
 
 	if (cgs.gametype == GT_FFA)
@@ -5824,8 +5822,8 @@ float cg_draw_radar(float y)
 				{
 					//I'm in a vehicle
 					//if it's targetting me, then play an alarm sound if I'm in a vehicle
-					if (cent->currentState.otherEntityNum == cg.predicted_player_state.client_num || cent->currentState.
-						otherEntityNum == cg.predicted_player_state.m_iVehicleNum)
+					if (cent->currentState.otherentity_num == cg.predicted_player_state.client_num || cent->currentState.
+						otherentity_num == cg.predicted_player_state.m_iVehicleNum)
 					{
 						if (radarLockSoundDebounceTime < cg.time)
 						{
@@ -5981,11 +5979,7 @@ float cg_draw_radar(float y)
 			arrow_w = arrow_base_scale * RADAR_RADIUS / 128;
 			arrow_h = arrow_base_scale * RADAR_RADIUS / 128;
 
-			CG_DrawRotatePic2(RADAR_X + RADAR_RADIUS + sin(angle) * distance + x_offset,
-				y + RADAR_RADIUS + cos(angle) * distance,
-				arrow_w, arrow_h,
-				360 - cent->lerpAngles[YAW] + cg.predicted_player_state.viewangles[YAW],
-				cgs.media.mAutomapPlayerIcon);
+			CG_DrawRotatePic2(RADAR_X + RADAR_RADIUS + sin(angle) * distance + x_offset, y + RADAR_RADIUS + cos(angle) * distance, arrow_w, arrow_h, 360 - cent->lerpAngles[YAW] + cg.predicted_player_state.viewangles[YAW], cgs.media.mAutomapPlayerIcon);
 			break;
 		}
 		}
@@ -5997,8 +5991,7 @@ float cg_draw_radar(float y)
 	arrow_h = arrow_base_scale * RADAR_RADIUS / 128;
 
 	trap->R_SetColor(colorWhite);
-	CG_DrawRotatePic2(RADAR_X + RADAR_RADIUS + x_offset, y + RADAR_RADIUS, arrow_w, arrow_h, 0,
-		cgs.media.mAutomapPlayerIcon);
+	CG_DrawRotatePic2(RADAR_X + RADAR_RADIUS + x_offset, y + RADAR_RADIUS, arrow_w, arrow_h, 0, cgs.media.mAutomapPlayerIcon);
 
 	return y + RADAR_RADIUS * 2;
 }
@@ -7792,7 +7785,7 @@ void CG_SaberClashFlare(void)
 	VectorSet4(color, 0.8f, 0.8f, 0.8f, 1.0f);
 	trap->R_SetColor(color);
 
-	CG_DrawPic(x - v * 300, y - v * 300,v * 600, v * 600,trap->R_RegisterShader("gfx/effects/saberFlare"));
+	CG_DrawPic(x - v * 300, y - v * 300, v * 600, v * 600, trap->R_RegisterShader("gfx/effects/saberFlare"));
 }
 
 void CG_SaberBlockFlare(void)
@@ -10212,7 +10205,7 @@ static void CG_DrawSiegeHUDItem(void)
 	}
 	else
 	{
-		handle = cgs.game_models[cent->currentState.modelindex];
+		handle = cgs.game_models[cent->currentState.model_index];
 		g2 = NULL;
 	}
 

@@ -571,7 +571,7 @@ bool ValidateBoard(Vehicle_t* p_veh, bgEntity_t* p_ent)
 		if (p_veh->m_pVehicleInfo->type == VH_WALKER)
 		{
 			//I know, I know, this should by in the walker's validateboard()
-			if (!ent->client || ent->client->ps.groundEntityNum != parent->s.number)
+			if (!ent->client || ent->client->ps.groundentity_num != parent->s.number)
 			{
 				//can only steal an occupied AT-ST if you're on top (by the hatch)
 				return false;
@@ -990,7 +990,7 @@ void G_EjectDroidUnit(Vehicle_t* p_veh, qboolean kill)
 #else
 	p_veh->m_pDroidUnit->owner = nullptr;
 #endif
-	//	p_veh->m_pDroidUnit->s.otherEntityNum2 = ENTITYNUM_NONE;
+	//	p_veh->m_pDroidUnit->s.otherentity_num2 = ENTITYNUM_NONE;
 #ifdef QAGAME
 	{
 		gentity_t* droidEnt = (gentity_t*)p_veh->m_pDroidUnit;
@@ -2197,7 +2197,7 @@ static bool UpdateRider(Vehicle_t* p_veh, bgEntity_t* pRider, usercmd_t* pUmcd)
 	}
 
 	return true;
-}
+	}
 
 #ifdef _JK2MP //we want access to this one clientside, but it's the only
 //generic vehicle function we care about over there

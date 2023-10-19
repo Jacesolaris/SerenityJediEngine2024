@@ -141,7 +141,7 @@ int G_BoneIndex(const char* name)
 Ghoul2 Insert End
 */
 
-int G_ModelIndex(const char* name)
+int G_model_index(const char* name)
 {
 #ifdef _DEBUG_MODEL_PATH_ON_SERVER
 	//debug to see if we are shoving data into configstrings for models that don't exist, and if
@@ -154,7 +154,7 @@ int G_ModelIndex(const char* name)
 		trap->FS_Open(va("models/%s", name), &fh, FS_READ);
 		if (!fh)
 		{
-			Com_Printf("ERROR: Server tried to modelindex %s but it doesn't exist.\n", name);
+			Com_Printf("ERROR: Server tried to model_index %s but it doesn't exist.\n", name);
 		}
 	}
 
@@ -1183,9 +1183,9 @@ void G_FreeEntity(gentity_t* ed)
 		//this "client" structure is one of our dynamically allocated ones, so free the memory
 		int saberEntNum = -1;
 		int i = 0;
-		if (ed->client->ps.saberEntityNum)
+		if (ed->client->ps.saberentity_num)
 		{
-			saberEntNum = ed->client->ps.saberEntityNum;
+			saberEntNum = ed->client->ps.saberentity_num;
 		}
 		else if (ed->client->saberStoredIndex)
 		{
@@ -1521,11 +1521,11 @@ gentity_t* G_ScreenShake(vec3_t org, const gentity_t* target, const float intens
 
 	if (target)
 	{
-		te->s.modelindex = target->s.number + 1;
+		te->s.model_index = target->s.number + 1;
 	}
 	else
 	{
-		te->s.modelindex = 0;
+		te->s.model_index = 0;
 	}
 
 	if (global)
@@ -1545,11 +1545,11 @@ gentity_t* CGCam_BlockShakeMP(vec3_t org, const gentity_t* target, const float i
 
 	if (target)
 	{
-		te->s.modelindex = target->s.number + 1;
+		te->s.model_index = target->s.number + 1;
 	}
 	else
 	{
-		te->s.modelindex = 0;
+		te->s.model_index = 0;
 	}
 
 	te->r.svFlags &= ~SVF_BROADCAST;
@@ -1589,7 +1589,7 @@ void G_Sound(gentity_t* ent, const int channel, const int soundIndex)
 
 	gentity_t* te = G_SoundTempEntity(ent->r.currentOrigin, EV_GENERAL_SOUND, channel);
 	te->s.eventParm = soundIndex;
-	te->s.saberEntityNum = channel;
+	te->s.saberentity_num = channel;
 
 	if (ent && ent->client && channel > TRACK_CHANNEL_NONE)
 	{
@@ -1622,7 +1622,7 @@ void G_SoundAtLoc(vec3_t loc, const int channel, const int soundIndex)
 {
 	gentity_t* te = G_TempEntity(loc, EV_GENERAL_SOUND);
 	te->s.eventParm = soundIndex;
-	te->s.saberEntityNum = channel;
+	te->s.saberentity_num = channel;
 }
 
 /*
@@ -1939,7 +1939,7 @@ void TryUse(gentity_t* ent)
 	{ //then grab the body
 		target->s.eFlags |= EF_RAG; //make sure it's in rag state
 		if (!ent->s.number)
-		{ //switch cl 0 and entitynum_none, so we can operate on the "if non-0" concept
+		{ //switch cl 0 and entity_num_none, so we can operate on the "if non-0" concept
 			target->s.ragAttach = ENTITYNUM_NONE;
 		}
 		else
@@ -2088,7 +2088,7 @@ tryJetPack:
 	//if we got here, we didn't actually use anything else, so try to toggle jetpack if we are in the air, or if it is already on
 	if (ent->client->ps.stats[STAT_HOLDABLE_ITEMS] & 1 << HI_JETPACK)
 	{
-		if ((ent->client->jetPackOn || ent->client->ps.groundEntityNum == ENTITYNUM_NONE) && ent->client->ps.jetpackFuel
+		if ((ent->client->jetPackOn || ent->client->ps.groundentity_num == ENTITYNUM_NONE) && ent->client->ps.jetpackFuel
 		> 10)
 		{
 			ItemUse_Jetpack(ent);

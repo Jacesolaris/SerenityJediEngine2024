@@ -3874,7 +3874,7 @@ Finds and loads all .shader files, combining them into
 a single large text block that can be scanned for shader names
 =====================
 */
-constexpr auto MAX_SHADER_FILES = 8192;
+#define	MAX_SHADER_FILES	4096
 static void Scan_And_Load_Shader_Files()
 {
 	char* buffers[MAX_SHADER_FILES]{};

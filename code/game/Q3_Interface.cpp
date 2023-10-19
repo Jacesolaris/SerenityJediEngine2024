@@ -66,7 +66,7 @@ extern void G_PlayDoorSound(gentity_t* ent, int type);
 extern void NPC_SetLookTarget(const gentity_t* self, int ent_num, int clear_time);
 extern void NPC_ClearLookTarget(const gentity_t* self);
 extern void WP_SaberSetColor(const gentity_t* ent, int saber_num, int blade_num, const char* colorName);
-extern void WP_SetSaber(gentity_t* ent, int saber_num, const char* saberName);
+extern void WP_SetSaber(gentity_t* ent, int saber_num, const char* saber_name);
 extern qboolean PM_HasAnimation(const gentity_t* ent, int animation);
 extern void G_ChangePlayerModel(gentity_t* ent, const char* newModel);
 extern void WP_SetSaberOrigin(gentity_t* self, vec3_t new_org);
@@ -6853,13 +6853,13 @@ static void Q3_RemoveEnt(gentity_t* victim)
 			G_FreeEntity(victim->NPC->tempGoal);
 			victim->NPC->tempGoal = nullptr;
 		}
-		if (victim->client->ps.saberEntityNum != ENTITYNUM_NONE && victim->client->ps.saberEntityNum > 0)
+		if (victim->client->ps.saberentity_num != ENTITYNUM_NONE && victim->client->ps.saberentity_num > 0)
 		{
-			if (g_entities[victim->client->ps.saberEntityNum].inuse)
+			if (g_entities[victim->client->ps.saberentity_num].inuse)
 			{
-				G_FreeEntity(&g_entities[victim->client->ps.saberEntityNum]);
+				G_FreeEntity(&g_entities[victim->client->ps.saberentity_num]);
 			}
-			victim->client->ps.saberEntityNum = ENTITYNUM_NONE;
+			victim->client->ps.saberentity_num = ENTITYNUM_NONE;
 		}
 		//Disappear in half a second
 		victim->e_ThinkFunc = thinkF_G_FreeEntity;

@@ -143,7 +143,7 @@ void CFxScheduler::AddLoopedEffects()
 			// Find out where the entity currently is
 			const auto data = reinterpret_cast<TCGVectorData*>(cl.mSharedMemory);
 
-			data->mEntityNum = ent_num;
+			data->mentity_num = ent_num;
 			CGVM_GetLerpOrigin();
 
 			PlayEffect(mLoopedEffectArray[i].mId, data->mPoint, nullptr, mLoopedEffectArray[i].mBoltInfo,
@@ -907,7 +907,7 @@ void CFxScheduler::PlayEffect(const int id, vec3_t origin, matrix3_t axis, const
 					// Find out where the entity currently is
 					const auto data = reinterpret_cast<TCGVectorData*>(cl.mSharedMemory);
 
-					data->mEntityNum = entity_num;
+					data->mentity_num = entity_num;
 					CGVM_GetLerpOrigin();
 					CreateEffect(prim, data->mPoint, axis, -delay, fxParm);
 				}
@@ -1076,7 +1076,7 @@ void CFxScheduler::AddScheduledEffects(const bool portal)
 					// Find out where the entity currently is
 					const auto data = reinterpret_cast<TCGVectorData*>(cl.mSharedMemory);
 
-					data->mEntityNum = effect->mEntNum;
+					data->mentity_num = effect->mEntNum;
 					CGVM_GetLerpOrigin();
 					CreateEffect(effect->mpTemplate,
 						data->mPoint, effect->mAxis,

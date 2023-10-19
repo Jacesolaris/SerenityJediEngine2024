@@ -145,7 +145,7 @@ void TurretClientRun(centity_t* ent)
 {
 	if (!ent->ghoul2)
 	{
-		trap->G2API_InitGhoul2Model(&ent->ghoul2, CG_ConfigString(CS_MODELS + ent->currentState.modelindex), 0, 0, 0, 0,
+		trap->G2API_InitGhoul2Model(&ent->ghoul2, CG_ConfigString(CS_MODELS + ent->currentState.model_index), 0, 0, 0, 0,
 			0);
 
 		if (!ent->ghoul2)

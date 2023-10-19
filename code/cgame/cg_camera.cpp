@@ -112,7 +112,7 @@ void CGCam_Enable()
 		if (g_entities[0].client->ps.saberInFlight && g_entities[0].client->ps.saber[0].Active())
 		{
 			//saber is out
-			gentity_t* saberent = &g_entities[g_entities[0].client->ps.saberEntityNum];
+			gentity_t* saberent = &g_entities[g_entities[0].client->ps.saberentity_num];
 			if (saberent)
 			{
 				WP_SaberCatch(&g_entities[0], saberent, qfalse);

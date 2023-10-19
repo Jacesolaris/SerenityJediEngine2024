@@ -43,7 +43,7 @@ extern qboolean in_camera;
 int AcceptBotCommand(const char* cmd, const gentity_t* pl);
 //end rww
 
-void WP_SetSaber(int ent_num, saberInfo_t* sabers, int saber_num, const char* saberName);
+void WP_SetSaber(int ent_num, saberInfo_t* sabers, int saber_num, const char* saber_name);
 
 void Cmd_NPC_f(gentity_t* ent);
 void Cmd_AdminNPC_f(gentity_t* ent);
@@ -2104,7 +2104,7 @@ static void Cmd_VoiceCommand_f(gentity_t* ent)
 	if (level.gametype >= GT_TEAM)
 	{
 		gentity_t* te = G_TempEntity(vec3_origin, EV_VOICECMD_SOUND);
-		te->s.groundEntityNum = ent->s.number;
+		te->s.groundentity_num = ent->s.number;
 		te->s.eventParm = G_SoundIndex((char*)bg_customSiegeSoundNames[i]);
 		te->r.svFlags |= SVF_BROADCAST;
 	}
@@ -3402,6 +3402,7 @@ void Cmd_ToggleSaber_f(gentity_t* ent)
 		if (veh->m_pVehicle && veh->m_pVehicle->m_pVehicleInfo->type == VH_FIGHTER)
 			return;
 	}
+
 	if (ent->client->ps.fd.forceGripCripple)
 	{
 		//if they are being gripped, don't let them unholster their saber
@@ -3413,7 +3414,7 @@ void Cmd_ToggleSaber_f(gentity_t* ent)
 
 	if (ent->client->ps.saberInFlight)
 	{
-		if (ent->client->ps.saberEntityNum)
+		if (ent->client->ps.saberentity_num)
 		{
 			//our saber is dead, Try pulling it back.
 			ent->client->ps.forceHandExtend = HANDEXTEND_SABERPULL;

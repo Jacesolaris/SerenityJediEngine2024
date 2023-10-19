@@ -1391,7 +1391,7 @@ void CFxScheduler::AddScheduledEffects(const bool portal)
 					{
 						if (effect->mModelNum >= 0 && effect->mModelNum < cent.gent->ghoul2.size())
 						{
-							if (cent.gent->ghoul2[effect->mModelNum].mModelindex >= 0)
+							if (cent.gent->ghoul2[effect->mModelNum].mmodel_index >= 0)
 							{
 								doesBoltExist = static_cast<qboolean>(theFxHelper.GetOriginAxisFromBolt(
 									cent, effect->mModelNum, effect->mBoltNum, origin, axis) != 0);

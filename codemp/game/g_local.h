@@ -708,7 +708,6 @@ typedef struct clientPersistant_s
 	char		logout[1024];
 	qboolean	plugindetect;
 	qboolean	isbeingpunished;
-
 } clientPersistant_t;
 
 typedef struct renderInfo_s
@@ -789,7 +788,7 @@ typedef struct renderInfo_s
 
 typedef struct
 {
-	int EntityNum;
+	int entity_num;
 	int Debounce;
 	int saber_num;
 	int blade_num;
@@ -937,7 +936,7 @@ struct gclient_s
 	int cloakDebReduce;
 
 	int saberStoredIndex;
-	//stores saberEntityNum from playerstate for when it's set to 0 (indicating saber was knocked out of the air)
+	//stores saberentity_num from playerstate for when it's set to 0 (indicating saber was knocked out of the air)
 
 	int saberKnockedTime; //if saber gets knocked away, can't pull it back until this value is < level.time
 
@@ -1453,7 +1452,7 @@ void save_registered_items(void);
 //
 // g_utils.c
 //
-int G_ModelIndex(const char* name);
+int G_model_index(const char* name);
 int G_SoundIndex(const char* name);
 int G_SoundSetIndex(const char* name);
 int G_EffectIndex(const char* name);

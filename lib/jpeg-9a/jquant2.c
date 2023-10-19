@@ -229,7 +229,7 @@ prescan_quantize(const j_decompress_ptr cinfo, const JSAMPARRAY input_buf,
 			/* get pixel value and index into the histogram */
 			register histptr histp = &histogram[GETJSAMPLE(ptr[0]) >> C0_SHIFT]
 				[GETJSAMPLE(ptr[1]) >> C1_SHIFT]
-			[GETJSAMPLE(ptr[2]) >> C2_SHIFT];
+				[GETJSAMPLE(ptr[2]) >> C2_SHIFT];
 			/* increment, check for overflow and undo increment if so. */
 			if (++(*histp) <= 0)
 				(*histp)--;

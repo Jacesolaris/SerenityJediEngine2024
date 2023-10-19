@@ -287,9 +287,9 @@ public:
 
 // assorted Ghoul 2 functions.
 // list all surfaces associated with a model
-void G2_List_Model_Surfaces(const char* fileName)
+void G2_List_Model_Surfaces(const char* file_name)
 {
-	const model_t* mod_m = R_GetModelByHandle(RE_RegisterModel(fileName));
+	const model_t* mod_m = R_GetModelByHandle(RE_RegisterModel(file_name));
 
 	auto surf = reinterpret_cast<mdxmSurfHierarchy_t*>(reinterpret_cast<byte*>(mod_m->mdxm) + mod_m->mdxm->ofsSurfHierarchy);
 	auto surface = reinterpret_cast<mdxmSurface_t*>(reinterpret_cast<byte*>(mod_m->mdxm) + mod_m->mdxm->ofsLODs + sizeof(mdxmLOD_t));
@@ -313,9 +313,9 @@ void G2_List_Model_Surfaces(const char* fileName)
 }
 
 // list all bones associated with a model
-void G2_List_Model_Bones(const char* fileName, int frame)
+void G2_List_Model_Bones(const char* file_name, int frame)
 {
-	const model_t* mod_m = R_GetModelByHandle(RE_RegisterModel(fileName));
+	const model_t* mod_m = R_GetModelByHandle(RE_RegisterModel(file_name));
 	const model_t* mod_a = R_GetModelByHandle(mod_m->mdxm->animIndex);
 	// 	mdxaFrame_t		*aframe=0;
 	//	int				frameSize;
@@ -358,10 +358,10 @@ void G2_List_Model_Bones(const char* fileName, int frame)
  *    true if we successfully obtained a filename, false otherwise
  *
  ************************************************************************************************/
-qboolean G2_GetAnimFileName(const char* fileName, char** filename)
+qboolean G2_GetAnimFileName(const char* file_name, char** filename)
 {
 	// find the model we want
-	const model_t* mod = R_GetModelByHandle(RE_RegisterModel(fileName));
+	const model_t* mod = R_GetModelByHandle(RE_RegisterModel(file_name));
 
 	if (mod && mod->mdxm && mod->mdxm->animName[0] != 0)
 	{
@@ -525,20 +525,20 @@ void G2_TransformSurfaces(const int surface_num, surfaceInfo_v& rootSList,
 	const surfaceInfo_t* surfOverride = G2_FindOverrideSurface(surface_num, rootSList);
 
 	// really, we should use the default flags for this surface unless it's been overriden
-	int offFlags = surfInfo->flags;
+	int off_flags = surfInfo->flags;
 
 	if (surfOverride)
 	{
-		offFlags = surfOverride->offFlags;
+		off_flags = surfOverride->off_flags;
 	}
 	// if this surface is not off, add it to the shader render list
-	if (!offFlags)
+	if (!off_flags)
 	{
 		R_TransformEachSurface(surface, scale, G2VertSpace, TransformedVertArray, bone_cache);
 	}
 
 	// if we are turning off all descendants, then stop this recursion now
-	if (offFlags & G2SURFACEFLAG_NODESCENDANTS)
+	if (off_flags & G2SURFACEFLAG_NODESCENDANTS)
 	{
 		return;
 	}
@@ -1118,14 +1118,14 @@ static bool G2_TracePolys(const mdxmSurface_t* surface, const mdxmSurfHierarchy_
 			int i = 0;
 			for (; i < MAX_G2_COLLISIONS; i++)
 			{
-				if (TS.collRecMap[i].mEntityNum == -1)
+				if (TS.collRecMap[i].mentity_num == -1)
 				{
 					CCollisionRecord& newCol = TS.collRecMap[i];
 					vec3_t			  	distVect;
 					float				x_pos = 0, y_pos = 0;
 
 					newCol.mPolyIndex = j;
-					newCol.mEntityNum = TS.ent_num;
+					newCol.mentity_num = TS.ent_num;
 					newCol.mSurfaceIndex = surface->thisSurfaceIndex;
 					newCol.mModelIndex = TS.model_index;
 					if (face > 0)
@@ -1348,12 +1348,12 @@ static bool G2_RadiusTracePolys(
 		int i = 0;
 		for (; i < MAX_G2_COLLISIONS; i++)
 		{
-			if (TS.collRecMap[i].mEntityNum == -1)
+			if (TS.collRecMap[i].mentity_num == -1)
 			{
 				CCollisionRecord& newCol = TS.collRecMap[i];
 
 				newCol.mPolyIndex = j;
-				newCol.mEntityNum = TS.ent_num;
+				newCol.mentity_num = TS.ent_num;
 				newCol.mSurfaceIndex = surface->thisSurfaceIndex;
 				newCol.mModelIndex = TS.model_index;
 				//					if (face>0)
@@ -1458,16 +1458,16 @@ static void G2_TraceSurfaces(CTraceSurface& TS)
 	}
 
 	// really, we should use the default flags for this surface unless it's been overriden
-	int offFlags = surfInfo->flags;
+	int off_flags = surfInfo->flags;
 
 	// set the off flags if we have some
 	if (surfOverride)
 	{
-		offFlags = surfOverride->offFlags;
+		off_flags = surfOverride->off_flags;
 	}
 
 	// if this surface is not off, try to hit it
-	if (!offFlags)
+	if (!off_flags)
 	{
 #ifdef _G2_GORE
 		if (TS.collRecMap)
@@ -1510,7 +1510,7 @@ static void G2_TraceSurfaces(CTraceSurface& TS)
 	}
 
 	// if we are turning off all descendants, then stop this recursion now
-	if (offFlags & G2SURFACEFLAG_NODESCENDANTS)
+	if (off_flags & G2SURFACEFLAG_NODESCENDANTS)
 	{
 		return;
 	}
@@ -1566,7 +1566,7 @@ void G2_TraceModels(CGhoul2Info_v& ghoul2, vec3_t rayStart, vec3_t rayEnd, CColl
 #ifdef _G2_GORE
 		goreModelIndex = i;
 		// don't bother with models that we don't care about.
-		if (g.mModelindex == -1)
+		if (g.mmodel_index == -1)
 		{
 			continue;
 		}
@@ -1871,7 +1871,7 @@ void G2_LoadGhoul2Model(CGhoul2Info_v& ghoul2, const char* buffer)
 	for (decltype(model_count) i = 0; i < model_count; ++i)
 	{
 		ghoul2[i].mSkelFrameNum = 0;
-		ghoul2[i].mModelindex = -1;
+		ghoul2[i].mmodel_index = -1;
 		ghoul2[i].mFileName[0] = 0;
 		ghoul2[i].mValid = false;
 
@@ -1879,9 +1879,9 @@ void G2_LoadGhoul2Model(CGhoul2Info_v& ghoul2, const char* buffer)
 		ghoul2[i].sg_import(
 			saved_game);
 
-		if (ghoul2[i].mModelindex != -1 && ghoul2[i].mFileName[0])
+		if (ghoul2[i].mmodel_index != -1 && ghoul2[i].mFileName[0])
 		{
-			ghoul2[i].mModelindex = i;
+			ghoul2[i].mmodel_index = i;
 
 			::G2_SetupModelPointers(
 				&ghoul2[i]);

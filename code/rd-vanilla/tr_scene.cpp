@@ -98,8 +98,8 @@ void R_AddPolygonSurfaces() {
 	int			i;
 	srfPoly_t* poly;
 
-	tr.currentEntityNum = REFENTITYNUM_WORLD;
-	tr.shiftedEntityNum = tr.currentEntityNum << QSORT_REFENTITYNUM_SHIFT;
+	tr.currententity_num = REFENTITYNUM_WORLD;
+	tr.shiftedentity_num = tr.currententity_num << QSORT_REFENTITYNUM_SHIFT;
 
 	for (i = 0, poly = tr.refdef.polys; i < tr.refdef.numPolys; i++, poly++) {
 		const shader_t* sh = R_GetShaderByHandle(poly->h_shader);

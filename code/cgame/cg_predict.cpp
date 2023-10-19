@@ -321,9 +321,9 @@ qboolean CG_CheckModifyUCmd(usercmd_t* cmd, vec3_t viewangles)
 
 qboolean CG_OnMovingPlat(const playerState_t* ps)
 {
-	if (ps->groundEntityNum != ENTITYNUM_NONE)
+	if (ps->groundentity_num != ENTITYNUM_NONE)
 	{
-		const entityState_t* es = &cg_entities[ps->groundEntityNum].currentState;
+		const entityState_t* es = &cg_entities[ps->groundentity_num].currentState;
 		if (es->eType == ET_MOVER)
 		{
 			//on a mover
@@ -422,9 +422,9 @@ void CG_InterpolatePlayerState(const qboolean grab_angles)
 
 	bool on_plat = false;
 	const centity_t* pent = nullptr;
-	if (out->groundEntityNum > 0)
+	if (out->groundentity_num > 0)
 	{
-		pent = &cg_entities[out->groundEntityNum];
+		pent = &cg_entities[out->groundentity_num];
 		if (pent->currentState.eType == ET_MOVER)
 
 		{

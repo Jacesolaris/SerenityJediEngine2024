@@ -455,7 +455,7 @@ qboolean PM_CanSetWeaponReadyAnim(void)
 	if (pm->ps->pm_type != PM_JETPACK
 		&& pm->ps->weaponstate != WEAPON_FIRING
 		&& (!pm->cmd.forwardmove && !pm->cmd.rightmove
-			|| (pm->ps->groundEntityNum == ENTITYNUM_NONE
+			|| (pm->ps->groundentity_num == ENTITYNUM_NONE
 				|| pm->cmd.buttons & BUTTON_WALKING && pm->cmd.forwardmove > 0)
 			&& (PM_WalkingAnim(pm->ps->torsoAnim)
 				|| PM_RunningAnim(pm->ps->torsoAnim))))
@@ -539,7 +539,7 @@ int PM_ReadyPoseForsaber_anim_level(void)
 	const saberInfo_t* saber1 = BG_MySaber(pm->ps->client_num, 0);
 	const saberInfo_t* saber2 = BG_MySaber(pm->ps->client_num, 1);
 
-	if (!pm->ps->saberEntityNum)
+	if (!pm->ps->saberentity_num)
 	{
 		//lost it
 		return BOTH_STAND1;
@@ -617,7 +617,7 @@ int PM_IdlePoseForsaber_anim_level(void)
 	const qboolean is_holding_block_button = pm->ps->ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
 	//Holding Block Button
 
-	if (!pm->ps->saberEntityNum)
+	if (!pm->ps->saberentity_num)
 	{
 		//lost it
 		return BOTH_STAND1;
@@ -1096,7 +1096,7 @@ int PM_ReadyPoseForsaber_anim_levelBOT(void)
 	const saberInfo_t* saber1 = BG_MySaber(pm->ps->client_num, 0);
 	const saberInfo_t* saber2 = BG_MySaber(pm->ps->client_num, 1);
 
-	if (!pm->ps->saberEntityNum)
+	if (!pm->ps->saberentity_num)
 	{
 		//lost it
 		return BOTH_STAND1;
@@ -1420,7 +1420,7 @@ int PM_ReadyPoseForsaber_anim_levelDucked(void)
 	const saberInfo_t* saber1 = BG_MySaber(pm->ps->client_num, 0);
 	const saberInfo_t* saber2 = BG_MySaber(pm->ps->client_num, 1);
 
-	if (!pm->ps->saberEntityNum)
+	if (!pm->ps->saberentity_num)
 	{
 		//lost it
 		return BOTH_STAND1;
@@ -2725,7 +2725,7 @@ void PM_ClipVelocity(vec3_t in, vec3_t normal, vec3_t out, const float overbounc
 	if (pm->stepSlideFix)
 	{
 		if (pm->ps->client_num < MAX_CLIENTS //normal player
-			&& pm->ps->groundEntityNum != ENTITYNUM_NONE //on the ground
+			&& pm->ps->groundentity_num != ENTITYNUM_NONE //on the ground
 			&& normal[2] < MIN_WALK_NORMAL) //sliding against a steep slope
 		{
 			//if walking on the ground, don't slide up slopes that are too steep to walk on
@@ -2808,7 +2808,7 @@ static void PM_Friction(void)
 						|| pm->ps->legsAnim == BOTH_FORCELONGLEAP_LAND2)
 					{
 						//super forward jump
-						if (pm->ps->groundEntityNum != ENTITYNUM_NONE)
+						if (pm->ps->groundentity_num != ENTITYNUM_NONE)
 						{
 							//not in air
 							if (pm->cmd.forwardmove < 0)
@@ -2857,7 +2857,7 @@ static void PM_Friction(void)
 		drop += speed * pm_waterfriction * pm->waterlevel * pml.frametime;
 	}
 	// If on a client then there is no friction
-	else if (pm->ps->groundEntityNum < MAX_CLIENTS)
+	else if (pm->ps->groundentity_num < MAX_CLIENTS)
 	{
 		drop = 0;
 	}
@@ -3138,7 +3138,7 @@ qboolean PM_ForceJumpingUp(void)
 		return qfalse;
 	}
 
-	if (pm->ps->groundEntityNum == ENTITYNUM_NONE && //in air
+	if (pm->ps->groundentity_num == ENTITYNUM_NONE && //in air
 		pm->ps->pm_flags & PMF_JUMP_HELD && //jumped
 		pm->ps->fd.forcePowerLevel[FP_LEVITATION] > FORCE_LEVEL_0 && //force-jump capable
 		pm->ps->velocity[2] > 0) //going up
@@ -3239,7 +3239,7 @@ qboolean PM_AdjustAngleForWallRun(playerState_t* ps, usercmd_t* ucmd, const qboo
 
 		if (trace.fraction < 1.0f
 			&& (trace.plane.normal[2] >= 0.0f && trace.plane.normal[2] <= 0.4f))
-			//&& ent->client->ps.groundEntityNum == ENTITYNUM_NONE )
+			//&& ent->client->ps.groundentity_num == ENTITYNUM_NONE )
 		{
 			trace_t trace2;
 			vec3_t traceTo2;
@@ -3959,7 +3959,7 @@ qboolean PM_CheckGrabWall(const trace_t* trace)
 		//must be alive
 		return qfalse;
 	}
-	if (pm->ps->groundEntityNum != ENTITYNUM_NONE)
+	if (pm->ps->groundentity_num != ENTITYNUM_NONE)
 	{
 		//must be in air
 		return qfalse;
@@ -4124,7 +4124,7 @@ qboolean PM_CanForceFall()
 		&& !(pm->ps->pm_flags & PMF_JUMP_HELD) // have to have released jump since last press
 		&& pm->cmd.upmove > 10 // pressing the jump button
 		&& pm->ps->velocity[2] < FORCEFALLVELOCITY // falling
-		&& pm->ps->groundEntityNum == ENTITYNUM_NONE // in the air
+		&& pm->ps->groundentity_num == ENTITYNUM_NONE // in the air
 		&& pm->ps->fd.forcePowerLevel[FP_LEVITATION] > FORCE_LEVEL_1 //have force jump level 2 or above
 		&& pm->ps->fd.forcePower > FM_FORCEFALL // have atleast 5 force power points
 		&& pm->waterlevel < 2 // above water level
@@ -4284,7 +4284,7 @@ static qboolean pm_check_jump(void)
 		}
 	}
 
-	if (pm->ps->groundEntityNum != ENTITYNUM_NONE || pm->ps->origin[2] < pm->ps->fd.forceJumpZStart)
+	if (pm->ps->groundentity_num != ENTITYNUM_NONE || pm->ps->origin[2] < pm->ps->fd.forceJumpZStart)
 	{
 		pm->ps->fd.forcePowersActive &= ~(1 << FP_LEVITATION);
 	}
@@ -4394,7 +4394,7 @@ static qboolean pm_check_jump(void)
 		if (pm->cmd.upmove > 0 && pm->ps->jetpackFuel > 10)
 		{
 			//turn on/go up
-			if (pm->ps->groundEntityNum == ENTITYNUM_NONE && !(pm->ps->pm_flags & PMF_JUMP_HELD))
+			if (pm->ps->groundentity_num == ENTITYNUM_NONE && !(pm->ps->pm_flags & PMF_JUMP_HELD))
 			{
 				//double-tap - must activate while in air
 #ifdef _GAME
@@ -4448,7 +4448,7 @@ static qboolean pm_check_jump(void)
 				{
 					//still in anim, but it's run out
 					pm->ps->fd.forcePowersActive |= 1 << FP_LEVITATION;
-					if (pm->ps->groundEntityNum == ENTITYNUM_NONE)
+					if (pm->ps->groundentity_num == ENTITYNUM_NONE)
 					{
 						//still in air?
 						//hold it for another 50ms
@@ -4459,7 +4459,7 @@ static qboolean pm_check_jump(void)
 					//in land-slide anim
 					//FIXME: force some forward movement?  Less if holding back?
 				}
-				if (pm->ps->groundEntityNum == ENTITYNUM_NONE //still in air
+				if (pm->ps->groundentity_num == ENTITYNUM_NONE //still in air
 					&& pm->ps->origin[2] < pm->ps->fd.forceJumpZStart) //dropped below original jump start
 				{
 					//slow down
@@ -4481,7 +4481,7 @@ static qboolean pm_check_jump(void)
 				&& pm->ps->fd.forcePowersActive & 1 << FP_SPEED //force-speed is on
 				&& pm->cmd.forwardmove > 0 //pushing forward
 				&& !pm->cmd.rightmove //not strafing
-				&& pm->ps->groundEntityNum != ENTITYNUM_NONE //not in mid-air
+				&& pm->ps->groundentity_num != ENTITYNUM_NONE //not in mid-air
 				&& !(pm->ps->pm_flags & PMF_JUMP_HELD)
 				&& pm->ps->fd.forcePowerDebounce[FP_SPEED] <= 500
 				//have to have just started the force speed within the last half second
@@ -4515,7 +4515,7 @@ static qboolean pm_check_jump(void)
 				pm->ps->velocity[2] = 240;
 				pml.groundPlane = qfalse;
 				pml.walking = qfalse;
-				pm->ps->groundEntityNum = ENTITYNUM_NONE;
+				pm->ps->groundentity_num = ENTITYNUM_NONE;
 				pm->ps->fd.forceJumpZStart = pm->ps->origin[2];
 				pm->ps->pm_flags |= PMF_JUMP_HELD;
 				pm->ps->pm_flags |= PMF_JUMPING | PMF_SLOW_MO_FALL;
@@ -4739,7 +4739,7 @@ static qboolean pm_check_jump(void)
 #endif
 
 	//Not jumping
-	if (pm->cmd.upmove < 10 && pm->ps->groundEntityNum != ENTITYNUM_NONE)
+	if (pm->cmd.upmove < 10 && pm->ps->groundentity_num != ENTITYNUM_NONE)
 	{
 		return qfalse;
 	}
@@ -4866,7 +4866,7 @@ static qboolean pm_check_jump(void)
 			}
 		}
 
-		if (pm->ps->groundEntityNum != ENTITYNUM_NONE)
+		if (pm->ps->groundentity_num != ENTITYNUM_NONE)
 		{
 			//on the ground
 			//check for left-wall and right-wall special jumps
@@ -5421,7 +5421,7 @@ static qboolean pm_check_jump(void)
 		}
 	}
 
-	if (pm->ps->groundEntityNum == ENTITYNUM_NONE)
+	if (pm->ps->groundentity_num == ENTITYNUM_NONE)
 	{
 		if (!(pm->waterlevel == 1 && pm->cmd.upmove > 0 && pm->ps->fd.forcePowerLevel[FP_LEVITATION] == FORCE_LEVEL_3 &&
 			pm->ps->fd.forcePower >= 5))
@@ -5456,7 +5456,7 @@ static qboolean pm_check_jump(void)
 	pml.groundPlane = qfalse;
 	pml.walking = qfalse;
 	pm->ps->pm_flags |= PMF_JUMP_HELD;
-	pm->ps->groundEntityNum = ENTITYNUM_NONE;
+	pm->ps->groundentity_num = ENTITYNUM_NONE;
 	PM_SetForceJumpZStart(pm->ps->origin[2]);
 
 	PM_AddEvent(EV_JUMP);
@@ -5565,7 +5565,7 @@ void PM_CheckGrab(void)
 	float lerpyaw = 0;
 	qboolean skip_Cmdtrace = qfalse;
 
-	if (pm->ps->groundEntityNum != ENTITYNUM_NONE && pm->ps->inAirAnim)
+	if (pm->ps->groundentity_num != ENTITYNUM_NONE && pm->ps->inAirAnim)
 	{
 		//not in the air don't attempt a ledge grab
 		return;
@@ -6051,7 +6051,7 @@ static void PM_FlyVehicleMove(void)
 	//smove = pm->cmd.rightmove;
 
 	// normal slowdown
-	if (pm->ps->gravity && pm->ps->velocity[2] < 0 && pm->ps->groundEntityNum == ENTITYNUM_NONE)
+	if (pm->ps->gravity && pm->ps->velocity[2] < 0 && pm->ps->groundentity_num == ENTITYNUM_NONE)
 	{
 		//falling
 		const float zVel = pm->ps->velocity[2];
@@ -6061,7 +6061,7 @@ static void PM_FlyVehicleMove(void)
 	else
 	{
 		PM_Friction();
-		if (pm->ps->velocity[2] < 0 && pm->ps->groundEntityNum != ENTITYNUM_NONE)
+		if (pm->ps->velocity[2] < 0 && pm->ps->groundentity_num != ENTITYNUM_NONE)
 		{
 			pm->ps->velocity[2] = 0; // ignore slope movement
 		}
@@ -6898,7 +6898,7 @@ static void PM_WalkMove(void)
 	if (pml.groundTrace.surfaceFlags & SURF_SLICK || pm->ps->pm_flags & PMF_TIME_KNOCKBACK || pm->ps->pm_flags &
 		PMF_TIME_NOFRICTION)
 	{
-		if (pm->ps->gravity >= 0 && pm->ps->groundEntityNum != ENTITYNUM_NONE && !VectorLengthSquared(pm->ps->velocity)
+		if (pm->ps->gravity >= 0 && pm->ps->groundentity_num != ENTITYNUM_NONE && !VectorLengthSquared(pm->ps->velocity)
 			&& pml.groundTrace.plane.normal[2] == 1.0)
 		{
 			//on ground and not moving and on level ground, no reason to do stupid fucking gravity with the clipvelocity!!!!
@@ -7679,7 +7679,7 @@ static int PM_CorrectAllSolid(trace_t* trace)
 		}
 	}
 
-	pm->ps->groundEntityNum = ENTITYNUM_NONE;
+	pm->ps->groundentity_num = ENTITYNUM_NONE;
 	pml.groundPlane = qfalse;
 	pml.walking = qfalse;
 
@@ -7728,7 +7728,7 @@ static void PM_GroundTraceMissed(void)
 		//jetpacking
 	}
 	//If the anim is choke3, act like we just went into the air because we aren't in a float
-	else if (pm->ps->groundEntityNum != ENTITYNUM_NONE || pm->ps->legsAnim == BOTH_CHOKE3 || pm->ps->legsAnim ==
+	else if (pm->ps->groundentity_num != ENTITYNUM_NONE || pm->ps->legsAnim == BOTH_CHOKE3 || pm->ps->legsAnim ==
 		BOTH_CHOKE4)
 	{
 		// we just transitioned into freefall
@@ -7783,7 +7783,7 @@ static void PM_GroundTraceMissed(void)
 		&& g_entities[pm->ps->client_num].client->NPC_class != CLASS_DESANN) //desann never falls to his death
 	{
 		gentity_t* self = &g_entities[pm->ps->client_num];
-		if (pm->ps->groundEntityNum == ENTITYNUM_NONE)
+		if (pm->ps->groundentity_num == ENTITYNUM_NONE)
 		{
 			if (pm->ps->stats[STAT_HEALTH] > 0
 				&& !(self->NPC->aiFlags & NPCAI_DIE_ON_IMPACT)
@@ -7952,7 +7952,7 @@ static void PM_GroundTraceMissed(void)
 		pm->ps->inAirAnim = qtrue;
 	}
 
-	pm->ps->groundEntityNum = ENTITYNUM_NONE;
+	pm->ps->groundentity_num = ENTITYNUM_NONE;
 	pml.groundPlane = qfalse;
 	pml.walking = qfalse;
 }
@@ -8113,7 +8113,7 @@ static void PM_GroundTrace(void)
 			PM_JumpForDir();
 		}
 
-		pm->ps->groundEntityNum = ENTITYNUM_NONE;
+		pm->ps->groundentity_num = ENTITYNUM_NONE;
 		pml.groundPlane = qfalse;
 		pml.walking = qfalse;
 		return;
@@ -8126,7 +8126,7 @@ static void PM_GroundTrace(void)
 		{
 			Com_Printf("%i:steep\n", c_pmove);
 		}
-		pm->ps->groundEntityNum = ENTITYNUM_NONE;
+		pm->ps->groundentity_num = ENTITYNUM_NONE;
 		pml.groundPlane = qtrue;
 		pml.walking = qfalse;
 		return;
@@ -8150,7 +8150,7 @@ static void PM_GroundTrace(void)
 		pm->ps->pm_time = 0;
 	}
 
-	if (pm->ps->groundEntityNum == ENTITYNUM_NONE)
+	if (pm->ps->groundentity_num == ENTITYNUM_NONE)
 	{
 		// just hit the ground
 		if (pm->debugLevel)
@@ -8227,7 +8227,7 @@ static void PM_GroundTrace(void)
 		}
 	}
 
-	pm->ps->groundEntityNum = trace.entity_num;
+	pm->ps->groundentity_num = trace.entity_num;
 	pm->ps->lastOnGround = pm->cmd.serverTime;
 
 	if (!pm->ps->client_num)
@@ -9751,7 +9751,7 @@ static void PM_Footsteps(void)
 	//
 	pm->xyspeed = sqrt(pm->ps->velocity[0] * pm->ps->velocity[0] + pm->ps->velocity[1] * pm->ps->velocity[1]);
 
-	if (pm->ps->groundEntityNum == ENTITYNUM_NONE)
+	if (pm->ps->groundentity_num == ENTITYNUM_NONE)
 	{
 		// airborne leaves position in cycle intact, but doesn't advance
 		if (pm->waterlevel > 1)
@@ -11115,7 +11115,7 @@ static void PM_Footsteps(void)
 						{
 							desiredAnim = BOTH_WALKBACK1;
 						}
-						else if (pm->ps->saber_holstered && (!pm->ps->saberInFlight || pm->ps->saberEntityNum))
+						else if (pm->ps->saber_holstered && (!pm->ps->saberInFlight || pm->ps->saberentity_num))
 						{
 							desiredAnim = BOTH_WALKBACK1;
 						}
@@ -11133,7 +11133,7 @@ static void PM_Footsteps(void)
 						{
 							desiredAnim = BOTH_WALKBACK1;
 						}
-						else if (pm->ps->saber_holstered && (!pm->ps->saberInFlight || pm->ps->saberEntityNum))
+						else if (pm->ps->saberHolstered && (!pm->ps->saberInFlight || pm->ps->saberEntityNum))
 						{
 							desiredAnim = BOTH_WALKBACK1;
 						}
@@ -11348,7 +11348,7 @@ static void PM_Footsteps(void)
 #endif
 							}
 						}
-						else if (pm->ps->saber_holstered && (!pm->ps->saberInFlight || pm->ps->saberEntityNum))
+						else if (pm->ps->saberHolstered && (!pm->ps->saberInFlight || pm->ps->saberEntityNum))
 						{
 							desiredAnim = BOTH_WALK1;
 						}
@@ -11777,7 +11777,7 @@ void PM_FinishWeaponChange(void)
 
 	if (weapon == WP_SABER)
 	{
-		if (!pm->ps->saberEntityNum && pm->ps->saberInFlight)
+		if (!pm->ps->saberentity_num && pm->ps->saberInFlight)
 		{
 			//our saber is currently dropped.  Don't allow the dropped blade to be activated.
 			if (pm->ps->fd.saber_anim_level == SS_DUAL)
@@ -11804,7 +11804,7 @@ void PM_FinishWeaponChange(void)
 			else
 #endif
 			{
-				if (PM_RunningAnim(pm->ps->legsAnim) || pm->ps->groundEntityNum == ENTITYNUM_NONE || in_camera)
+				if (PM_RunningAnim(pm->ps->legsAnim) || pm->ps->groundentity_num == ENTITYNUM_NONE || in_camera)
 				{
 					PM_Setsaber_move(LS_DRAW);
 				}
@@ -13122,7 +13122,7 @@ void PM_Weapon(void)
 				pm->ps->weapon == WP_SABER && pm->ps->saber_holstered)
 			{
 				//2-handed PUSH
-				if (pm->ps->groundEntityNum == ENTITYNUM_NONE)
+				if (pm->ps->groundentity_num == ENTITYNUM_NONE)
 				{
 					desiredAnim = BOTH_SUPERPUSH;
 
@@ -13343,7 +13343,7 @@ void PM_Weapon(void)
 				pm->ps->weapon == WP_SABER && pm->ps->saber_holstered)
 			{
 				//2-handed PUSH
-				if (pm->ps->groundEntityNum == ENTITYNUM_NONE)
+				if (pm->ps->groundentity_num == ENTITYNUM_NONE)
 				{
 					desiredAnim = BOTH_SUPERPUSH;
 				}
@@ -13373,7 +13373,7 @@ void PM_Weapon(void)
 			pm->ps->legsTimer = pm->ps->torsoTimer = 1;
 		}
 		else if (pm->ps->forceHandExtend == HANDEXTEND_DODGE || pm->ps->forceHandExtend == HANDEXTEND_KNOCKDOWN ||
-			pm->ps->forceHandExtend == HANDEXTEND_CHOKE && pm->ps->groundEntityNum == ENTITYNUM_NONE)
+			pm->ps->forceHandExtend == HANDEXTEND_CHOKE && pm->ps->groundentity_num == ENTITYNUM_NONE)
 		{
 			//special case, play dodge anim on whole body, choke anim too if off ground
 			if (seperateOnTorso)
@@ -13584,7 +13584,7 @@ void PM_Weapon(void)
 
 				if (kick_move != -1)
 				{
-					if (pm->ps->groundEntityNum == ENTITYNUM_NONE)
+					if (pm->ps->groundentity_num == ENTITYNUM_NONE)
 					{
 						//if in air, convert kick to an in-air kick
 						float gDist = PM_GroundDistance();
@@ -14178,7 +14178,7 @@ void PM_Weapon(void)
 
 					if (kick_move != -1)
 					{
-						if (pm->ps->groundEntityNum == ENTITYNUM_NONE)
+						if (pm->ps->groundentity_num == ENTITYNUM_NONE)
 						{
 							//if in air, convert kick to an in-air kick
 							float gDist = PM_GroundDistance();
@@ -14285,7 +14285,7 @@ void PM_Weapon(void)
 
 					if (kick_move != -1)
 					{
-						if (pm->ps->groundEntityNum == ENTITYNUM_NONE)
+						if (pm->ps->groundentity_num == ENTITYNUM_NONE)
 						{
 							//if in air, convert kick to an in-air kick
 							float gDist = PM_GroundDistance();
@@ -14829,7 +14829,7 @@ qboolean BG_UnrestrainedPitchRoll(const playerState_t* ps, const Vehicle_t* p_ve
 qboolean G_OkayToLean(const playerState_t* ps, const usercmd_t* uscmd, const qboolean interruptOkay)
 {
 	if (ps->client_num < MAX_CLIENTS //player
-		&& ps->groundEntityNum != ENTITYNUM_NONE //on ground
+		&& ps->groundentity_num != ENTITYNUM_NONE //on ground
 		&& (interruptOkay //okay to interrupt a lean
 			&& !PM_CrouchAnim(ps->legsAnim)
 			&& PM_DodgeAnim(ps->torsoAnim)
@@ -14851,7 +14851,7 @@ qboolean G_OkayToLean(const playerState_t* ps, const usercmd_t* uscmd, const qbo
 qboolean G_OkayToDoStandingBlock(const playerState_t* ps, const usercmd_t* uscmd, const qboolean interruptOkay)
 {
 	if (ps->client_num < MAX_CLIENTS //player
-		&& ps->groundEntityNum != ENTITYNUM_NONE //on ground
+		&& ps->groundentity_num != ENTITYNUM_NONE //on ground
 		&& (interruptOkay //okay to interrupt a lean
 			&& PM_DodgeAnim(ps->torsoAnim)
 			|| PM_BlockAnim(ps->torsoAnim) || PM_BlockDualAnim(ps->torsoAnim) || PM_BlockStaffAnim(ps->torsoAnim)
@@ -15182,7 +15182,7 @@ void PM_UpdateViewAngles(int saber_anim_level, playerState_t* ps, const usercmd_
 				{
 					ps->torsoTimer += extraHoldTime;
 				}
-				if (ps->groundEntityNum != ENTITYNUM_NONE && !pm->cmd.upmove)
+				if (ps->groundentity_num != ENTITYNUM_NONE && !pm->cmd.upmove)
 				{
 					PM_SetAnim(SETANIM_LEGS, anim, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 					ps->legsTimer = ps->torsoTimer;
@@ -15470,7 +15470,7 @@ void PM_UpdateViewAngles(int saber_anim_level, playerState_t* ps, const usercmd_
 					{
 						ps->torsoTimer += extraHoldTime;
 					}
-					if (ps->groundEntityNum != ENTITYNUM_NONE && !pm->cmd.upmove)
+					if (ps->groundentity_num != ENTITYNUM_NONE && !pm->cmd.upmove)
 					{
 						PM_SetAnim(SETANIM_LEGS, anim, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 						ps->legsTimer = ps->torsoTimer;
@@ -15631,7 +15631,7 @@ void PM_AdjustAttackStates(pmove_t* pmove)
 				// not already zooming, so do it now
 				pmove->ps->zoomMode = 1;
 				pmove->ps->zoomLocked = qfalse;
-				pmove->ps->zoomFov = 90.0f; //cg_fov.value;
+				pmove->ps->zoomFov = 80.0f; //cg_fov.value;
 				pmove->ps->zoomLockTime = pmove->cmd.serverTime + 50;
 				PM_AddEvent(EV_DISRUPTOR_ZOOMSOUND);
 			}
@@ -15953,12 +15953,12 @@ void BG_AdjustClientSpeed(playerState_t* ps, const usercmd_t* cmd, const int svT
 		ps->speed = 0;
 	}
 
-	if (cmd->forwardmove < 0 && !(cmd->buttons & BUTTON_WALKING) && pm->ps->groundEntityNum != ENTITYNUM_NONE)
+	if (cmd->forwardmove < 0 && !(cmd->buttons & BUTTON_WALKING) && pm->ps->groundentity_num != ENTITYNUM_NONE)
 	{
 		//running backwards is slower than running forwards (like SP)
 		ps->speed *= 0.75f;
 	}
-	if (cmd->forwardmove < 0 && cmd->buttons & BUTTON_WALKING && pm->ps->groundEntityNum != ENTITYNUM_NONE)
+	if (cmd->forwardmove < 0 && cmd->buttons & BUTTON_WALKING && pm->ps->groundentity_num != ENTITYNUM_NONE)
 	{
 		//walking backwards also makes a player move a little slower
 		if (pm->ps->ManualBlockingFlags & 1 << HOLDINGBLOCK)
@@ -15974,7 +15974,7 @@ void BG_AdjustClientSpeed(playerState_t* ps, const usercmd_t* cmd, const int svT
 	if (!cmd->forwardmove
 		&& cmd->rightmove
 		&& !(cmd->buttons & BUTTON_WALKING)
-		&& pm->ps->groundEntityNum != ENTITYNUM_NONE)
+		&& pm->ps->groundentity_num != ENTITYNUM_NONE)
 	{
 		//pure strafe running is slower.
 		ps->speed *= 0.75f;
@@ -16305,8 +16305,8 @@ void BG_IK_MoveArm(void* ghoul2, const int lHandBolt, const int time, const enti
 		VectorCopy(scale, ikP.scale);
 
 		//base pose frames for the limb
-		ikP.start_frame = bgHumanoidAnimations[basepose_anim].firstFrame + bgHumanoidAnimations[basepose_anim].numFrames;
-		ikP.end_frame = bgHumanoidAnimations[basepose_anim].firstFrame + bgHumanoidAnimations[basepose_anim].numFrames;
+		ikP.start_frame = bgHumanoidAnimations[basepose_anim].firstFrame + bgHumanoidAnimations[basepose_anim].num_frames;
+		ikP.end_frame = bgHumanoidAnimations[basepose_anim].firstFrame + bgHumanoidAnimations[basepose_anim].num_frames;
 
 		ikP.forceAnimOnBone = qfalse; //let it use existing anim if it's the same as this one.
 
@@ -16383,7 +16383,7 @@ void BG_IK_MoveArm(void* ghoul2, const int lHandBolt, const int time, const enti
 		}
 		VectorCopy(origin, ikM.origin); //our position in the world.
 
-		ikM.boneName[0] = 0;
+		ikM.bone_name[0] = 0;
 		if (trap->G2API_IKMove(ghoul2, time, &ikM))
 		{
 			//now do the standard model animate stuff with ragdoll update params.
@@ -16406,7 +16406,7 @@ void BG_IK_MoveArm(void* ghoul2, const int lHandBolt, const int time, const enti
 	else if (*ikInProgress)
 	{
 		//kill it
-		float cFrame, animSpeed;
+		float cFrame, anim_speed;
 		int sFrame, eFrame, flags;
 
 		trap->G2API_SetBoneIKState(ghoul2, time, "lhumerus", IKS_NONE, NULL);
@@ -16419,9 +16419,9 @@ void BG_IK_MoveArm(void* ghoul2, const int lHandBolt, const int time, const enti
 			NEGATIVE_Z, NULL, 0, time);
 
 		//Get the anim/frames that the pelvis is on exactly, and match the left arm back up with them again.
-		trap->G2API_GetBoneAnim(ghoul2, "pelvis", time, &cFrame, &sFrame, &eFrame, &flags, &animSpeed, 0, 0);
-		trap->G2API_SetBoneAnim(ghoul2, 0, "lhumerus", sFrame, eFrame, flags, animSpeed, time, sFrame, 300);
-		trap->G2API_SetBoneAnim(ghoul2, 0, "lradius", sFrame, eFrame, flags, animSpeed, time, sFrame, 300);
+		trap->G2API_GetBoneAnim(ghoul2, "pelvis", time, &cFrame, &sFrame, &eFrame, &flags, &anim_speed, 0, 0);
+		trap->G2API_SetBoneAnim(ghoul2, 0, "lhumerus", sFrame, eFrame, flags, anim_speed, time, sFrame, 300);
+		trap->G2API_SetBoneAnim(ghoul2, 0, "lradius", sFrame, eFrame, flags, anim_speed, time, sFrame, 300);
 
 		//And finally, get rid of all the ik state effector data by calling with null bone name (similar to how we init it).
 		trap->G2API_SetBoneIKState(ghoul2, time, NULL, IKS_NONE, NULL);
@@ -16448,7 +16448,7 @@ qboolean BG_ClassHasBadBones(const int NPC_class)
 }
 
 //used to set the proper orientations for the funky NPC class bone structures.
-void BG_BoneOrientationsForClass(const int NPC_class, const char* boneName, int* oUp, int* oRt, int* oFwd)
+void BG_BoneOrientationsForClass(const int NPC_class, const char* bone_name, int* oUp, int* oRt, int* oFwd)
 {
 	//defaults
 	*oUp = POSITIVE_X;
@@ -16458,9 +16458,9 @@ void BG_BoneOrientationsForClass(const int NPC_class, const char* boneName, int*
 	switch (NPC_class)
 	{
 	case CLASS_RANCOR:
-		if (Q_stricmp("pelvis", boneName) == 0
-			|| Q_stricmp("lower_lumbar", boneName) == 0
-			|| Q_stricmp("upper_lumbar", boneName) == 0)
+		if (Q_stricmp("pelvis", bone_name) == 0
+			|| Q_stricmp("lower_lumbar", bone_name) == 0
+			|| Q_stricmp("upper_lumbar", bone_name) == 0)
 		{
 			//only these 3 bones on them are wrong
 			*oUp = NEGATIVE_X;
@@ -16470,7 +16470,7 @@ void BG_BoneOrientationsForClass(const int NPC_class, const char* boneName, int*
 		break;
 	case CLASS_ROCKETTROOPER:
 	case CLASS_HAZARD_TROOPER:
-		if (Q_stricmp("pelvis", boneName) == 0)
+		if (Q_stricmp("pelvis", bone_name) == 0)
 		{
 			//child of root
 			//actual, when differences with root are accounted for:
@@ -16487,8 +16487,8 @@ void BG_BoneOrientationsForClass(const int NPC_class, const char* boneName, int*
 		}
 		break;
 	case CLASS_SABER_DROID:
-		if (Q_stricmp("pelvis", boneName) == 0
-			|| Q_stricmp("thoracic", boneName) == 0)
+		if (Q_stricmp("pelvis", bone_name) == 0
+			|| Q_stricmp("thoracic", bone_name) == 0)
 		{
 			*oUp = NEGATIVE_X;
 			*oRt = NEGATIVE_Z;
@@ -16502,7 +16502,7 @@ void BG_BoneOrientationsForClass(const int NPC_class, const char* boneName, int*
 		}
 		break;
 	case CLASS_WAMPA:
-		if (Q_stricmp("pelvis", boneName) == 0)
+		if (Q_stricmp("pelvis", bone_name) == 0)
 		{
 			*oUp = NEGATIVE_X;
 			*oRt = POSITIVE_Y;
@@ -16517,9 +16517,9 @@ void BG_BoneOrientationsForClass(const int NPC_class, const char* boneName, int*
 		}
 		break;
 	case CLASS_ASSASSIN_DROID:
-		if (Q_stricmp("pelvis", boneName) == 0
-			|| Q_stricmp("lower_lumbar", boneName) == 0
-			|| Q_stricmp("upper_lumbar", boneName) == 0)
+		if (Q_stricmp("pelvis", bone_name) == 0
+			|| Q_stricmp("lower_lumbar", bone_name) == 0
+			|| Q_stricmp("upper_lumbar", bone_name) == 0)
 		{
 			//only these 3 bones on them are wrong
 			*oUp = NEGATIVE_X;
@@ -17213,7 +17213,7 @@ void BG_G2PlayerAngles(void* ghoul2, const int motionBolt, entityState_t* cent, 
 	velPos[1] = cent_lerpOrigin[1] + velocity[1];
 	velPos[2] = cent_lerpOrigin[2]; // + velocity[2];
 
-	if (cent->groundEntityNum == ENTITYNUM_NONE ||
+	if (cent->groundentity_num == ENTITYNUM_NONE ||
 		cent->forceFrame ||
 		cent->weapon == WP_EMPLACED_GUN && emplaced)
 	{
@@ -17507,10 +17507,10 @@ static QINLINE void PM_CmdForSaberMoves(usercmd_t* ucmd)
 				&& aLen - pm->ps->legsTimer >= 400) //not in beginning
 			{
 				//one of the two jumps
-				if (pm->ps->groundEntityNum != ENTITYNUM_NONE)
+				if (pm->ps->groundentity_num != ENTITYNUM_NONE)
 				{
 					//still on ground?
-					if (pm->ps->groundEntityNum >= MAX_CLIENTS)
+					if (pm->ps->groundentity_num >= MAX_CLIENTS)
 					{
 						//jump!
 						pm->ps->velocity[2] = 250; //400;
@@ -17574,7 +17574,7 @@ static QINLINE void PM_CmdForSaberMoves(usercmd_t* ucmd)
 			if (pm->ps->legsTimer >= lenMin && pm->ps->legsTimer < lenMax)
 			{
 				//one of the two jumps
-				if (pm->ps->groundEntityNum != ENTITYNUM_NONE)
+				if (pm->ps->groundentity_num != ENTITYNUM_NONE)
 				{
 					//still on ground?
 					//jump!
@@ -17596,7 +17596,7 @@ static QINLINE void PM_CmdForSaberMoves(usercmd_t* ucmd)
 			}
 		}
 
-		if (pm->ps->groundEntityNum == ENTITYNUM_NONE)
+		if (pm->ps->groundentity_num == ENTITYNUM_NONE)
 		{
 			//can only turn when your feet hit the ground
 			if (PM_AdjustAnglesForDualJumpAttack(pm->ps, ucmd))
@@ -17615,7 +17615,7 @@ static QINLINE void PM_CmdForSaberMoves(usercmd_t* ucmd)
 			&& aLen - pm->ps->legsTimer >= 400) //not in beginning
 		{
 			//middle of anim
-			if (pm->ps->groundEntityNum != ENTITYNUM_NONE)
+			if (pm->ps->groundentity_num != ENTITYNUM_NONE)
 			{
 				//still on ground?
 				vec3_t yawAngles, backDir;
@@ -18240,7 +18240,7 @@ void PM_MoveForKata(usercmd_t* ucmd)
 			&& pm->ps->legsTimer < 2850)
 		{
 			//the jump
-			if (pm->ps->groundEntityNum != ENTITYNUM_NONE)
+			if (pm->ps->groundentity_num != ENTITYNUM_NONE)
 			{
 				//still on ground?
 				//jump!
@@ -18731,7 +18731,7 @@ void PmoveSingle(pmove_t* pmove)
 	{
 		pm->cmd.rightmove = 0;
 		pm->cmd.upmove = 0;
-		if (pm->ps->groundEntityNum != ENTITYNUM_NONE)
+		if (pm->ps->groundentity_num != ENTITYNUM_NONE)
 		{
 			//hit the ground
 			pm->cmd.forwardmove = 0;
@@ -18759,7 +18759,7 @@ void PmoveSingle(pmove_t* pmove)
 	if (pm->ps->saber_move == LS_A_JUMP_T__B_ || pm->ps->saber_move == LS_A_JUMP_PALP_)
 	{
 		//can't move during leap
-		if (pm->ps->groundEntityNum != ENTITYNUM_NONE)
+		if (pm->ps->groundentity_num != ENTITYNUM_NONE)
 		{
 			//hit the ground
 			pm->cmd.forwardmove = 0;
@@ -19035,7 +19035,7 @@ void PmoveSingle(pmove_t* pmove)
 		VectorSet(fwdAng, 0.0f, pm->ps->viewangles[YAW], 0.0f);
 
 		AngleVectors(fwdAng, vFwd, NULL, NULL);
-		if (pm->ps->groundEntityNum == ENTITYNUM_NONE)
+		if (pm->ps->groundentity_num == ENTITYNUM_NONE)
 		{
 			const float savZ = pm->ps->velocity[2];
 			VectorScale(vFwd, 100, pm->ps->velocity);
@@ -19192,7 +19192,7 @@ void PmoveSingle(pmove_t* pmove)
 	// set groundentity
 	PM_GroundTrace();
 
-	if (pm->ps->groundEntityNum == ENTITYNUM_WORLD)
+	if (pm->ps->groundentity_num == ENTITYNUM_WORLD)
 	{
 		GROUND_TIME[pm->ps->client_num] = pm->cmd.serverTime;
 	}
@@ -19217,7 +19217,7 @@ void PmoveSingle(pmove_t* pmove)
 			pm->ps->pm_type = PM_NORMAL;
 		}
 		else if (pm->ps->eFlags & EF_JETPACK
-			&& pm->ps->groundEntityNum != ENTITYNUM_WORLD
+			&& pm->ps->groundentity_num != ENTITYNUM_WORLD
 			&& pm->cmd.upmove > 0)
 		{
 			// Have jetpack and jumping, make sure jetpack is active...
@@ -19233,7 +19233,7 @@ void PmoveSingle(pmove_t* pmove)
 		}
 		else if (pm->ps->eFlags & EF_JETPACK
 			&& pm->ps->pm_type == PM_JETPACK
-			&& pm->ps->groundEntityNum != ENTITYNUM_WORLD
+			&& pm->ps->groundentity_num != ENTITYNUM_WORLD
 			&& pm->ps->velocity[2] < 0
 			&& pm->cmd.upmove == 0)
 		{
@@ -19260,7 +19260,7 @@ void PmoveSingle(pmove_t* pmove)
 		PM_HoverTrace();
 	}
 
-	if (pm->ps->groundEntityNum != ENTITYNUM_NONE)
+	if (pm->ps->groundentity_num != ENTITYNUM_NONE)
 	{
 		//on ground
 		pm->ps->fd.forceJumpZStart = 0;
@@ -19315,11 +19315,11 @@ void PmoveSingle(pmove_t* pmove)
 	if (!pm->ps->m_iVehicleNum &&
 		pm_entSelf->s.NPC_class != CLASS_VEHICLE &&
 		pm_entSelf->s.NPC_class != CLASS_RANCOR &&
-		pm->ps->groundEntityNum < ENTITYNUM_WORLD &&
-		pm->ps->groundEntityNum >= MAX_CLIENTS)
+		pm->ps->groundentity_num < ENTITYNUM_WORLD &&
+		pm->ps->groundentity_num >= MAX_CLIENTS)
 	{
 		//I am a player client, not riding on a vehicle, and potentially standing on an NPC
-		bgEntity_t* p_ent = PM_BGEntForNum(pm->ps->groundEntityNum);
+		bgEntity_t* p_ent = PM_BGEntForNum(pm->ps->groundentity_num);
 
 		if (p_ent && p_ent->s.eType == ET_NPC &&
 			p_ent->s.NPC_class != CLASS_VEHICLE) //don't bounce on vehicles

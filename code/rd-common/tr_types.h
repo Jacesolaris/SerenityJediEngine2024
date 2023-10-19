@@ -281,7 +281,8 @@ using textureCompression_t = enum
 {
 	TC_NONE,
 	TC_S3TC,
-	TC_S3TC_DXT
+	TC_S3TC_DXT,
+	TC_S3TC_ARB
 };
 
 using glconfig_t = struct glconfig_s

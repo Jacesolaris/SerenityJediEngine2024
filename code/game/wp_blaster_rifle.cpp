@@ -259,7 +259,6 @@ void WP_FireJangoWristMissile(gentity_t* ent, vec3_t start, vec3_t dir, const qb
 
 	missile->damage = damage;
 
-
 	missile->dflags = DAMAGE_DEATH_KNOCKBACK | DAMAGE_EXTRA_KNOCKBACK;
 	if (alt_fire)
 	{
@@ -427,7 +426,6 @@ void WP_FireDroidekaDualPistolMissileDuals(gentity_t* ent, vec3_t start, vec3_t 
 
 	missile->damage = damage;
 
-
 	missile->dflags = DAMAGE_DEATH_KNOCKBACK | DAMAGE_EXTRA_KNOCKBACK;
 	if (alt_fire)
 	{
@@ -511,7 +509,6 @@ void WP_FireDroidekaDualPistolMissile(gentity_t* ent, vec3_t start, vec3_t dir, 
 	}
 
 	missile->damage = damage;
-
 
 	missile->dflags = DAMAGE_DEATH_KNOCKBACK | DAMAGE_EXTRA_KNOCKBACK;
 	if (alt_fire)

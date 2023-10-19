@@ -404,7 +404,7 @@ void ScorePlum(const gentity_t* ent, vec3_t origin, const int score)
 	plum->r.svFlags |= SVF_SINGLECLIENT;
 	plum->r.singleClient = ent->s.number;
 	//
-	plum->s.otherEntityNum = ent->s.number;
+	plum->s.otherentity_num = ent->s.number;
 	plum->s.time = score;
 }
 
@@ -962,7 +962,7 @@ static int G_CheckSpecialDeathAnim(gentity_t* self)
 	else if (G_InKnockDown(&self->client->ps))
 	{
 		//since these happen a lot, let's handle them case by case
-		int anim_length = bgAllAnims[self->localAnimIndex].anims[self->client->ps.legsAnim].numFrames * fabs(
+		int anim_length = bgAllAnims[self->localAnimIndex].anims[self->client->ps.legsAnim].num_frames * fabs(
 			bgHumanoidAnimations[self->client->ps.legsAnim].frameLerp);
 		switch (self->client->ps.legsAnim)
 		{
@@ -2024,7 +2024,7 @@ int G_CheckLedgeDive(gentity_t* self, const float check_dist, const vec3_t check
 		VectorClear(self->client->ps.velocity);
 		g_throw(self, fall_forward_dir, 85);
 		self->client->ps.velocity[2] = 100;
-		self->client->ps.groundEntityNum = ENTITYNUM_NONE;
+		self->client->ps.groundentity_num = ENTITYNUM_NONE;
 	}
 	else if (try_opposite)
 	{
@@ -2035,7 +2035,7 @@ int G_CheckLedgeDive(gentity_t* self, const float check_dist, const vec3_t check
 			VectorClear(self->client->ps.velocity);
 			g_throw(self, fall_forward_dir, 85);
 			self->client->ps.velocity[2] = 100;
-			self->client->ps.groundEntityNum = ENTITYNUM_NONE;
+			self->client->ps.groundentity_num = ENTITYNUM_NONE;
 		}
 	}
 	if (!cliff_fall && try_perp)
@@ -2762,15 +2762,15 @@ void G_BroadcastObit(gentity_t* self, const gentity_t* inflictor, const gentity_
 	{
 		gentity_t* ent = G_TempEntity(self->r.currentOrigin, EV_OBITUARY);
 		ent->s.eventParm = means_of_death;
-		ent->s.otherEntityNum = self->s.number;
+		ent->s.otherentity_num = self->s.number;
 		if (attacker)
 		{
-			ent->s.otherEntityNum2 = attacker->s.number;
+			ent->s.otherentity_num2 = attacker->s.number;
 		}
 		else
 		{
 			//???
-			ent->s.otherEntityNum2 = killer;
+			ent->s.otherentity_num2 = killer;
 		}
 		if (inflictor
 			&& !Q_stricmp("vehicle_proj", inflictor->classname))
@@ -2778,7 +2778,7 @@ void G_BroadcastObit(gentity_t* self, const gentity_t* inflictor, const gentity_
 			//a vehicle missile
 			ent->s.eventParm = MOD_VEHICLE;
 			//store index into g_vehWeaponInfo
-			ent->s.weapon = inflictor->s.otherEntityNum2 + 1;
+			ent->s.weapon = inflictor->s.otherentity_num2 + 1;
 			//store generic rocket or blaster type of missile
 			ent->s.generic1 = inflictor->s.weapon;
 		}
@@ -3022,12 +3022,12 @@ void player_die(gentity_t* self, const gentity_t* inflictor, gentity_t* attacker
 	self->client->ps.emplacedIndex = 0;
 
 	G_BreakArm(self, 0); //unbreak anything we have broken
-	self->client->ps.saberEntityNum = self->client->saberStoredIndex;
+	self->client->ps.saberentity_num = self->client->saberStoredIndex;
 	//in case we died while our saber was knocked away.
 
 	if (self->client->ps.weapon == WP_SABER && self->client->saberKnockedTime)
 	{
-		gentity_t* saber_ent = &g_entities[self->client->ps.saberEntityNum];
+		gentity_t* saber_ent = &g_entities[self->client->ps.saberentity_num];
 		self->client->saberKnockedTime = 0;
 		saberReactivate(saber_ent, self);
 		saber_ent->r.contents = CONTENTS_LIGHTSABER;
@@ -3160,7 +3160,7 @@ void player_die(gentity_t* self, const gentity_t* inflictor, gentity_t* attacker
 			|| self->client->pers.botclass == BCLASS_MANDOLORIAN1
 			|| self->client->pers.botclass == BCLASS_MANDOLORIAN2)
 		{
-			if (self->client->ps.eFlags2 & EF2_FLYING || self->client->ps.groundEntityNum == ENTITYNUM_NONE)
+			if (self->client->ps.eFlags2 & EF2_FLYING || self->client->ps.groundentity_num == ENTITYNUM_NONE)
 			{
 				Boba_FlyStop(self);
 			}
@@ -3353,8 +3353,8 @@ void player_die(gentity_t* self, const gentity_t* inflictor, gentity_t* attacker
 	{
 		gentity_t* ent = G_TempEntity(self->r.currentOrigin, EV_OBITUARY);
 		ent->s.eventParm = means_of_death;
-		ent->s.otherEntityNum = self->s.number;
-		ent->s.otherEntityNum2 = killer;
+		ent->s.otherentity_num = self->s.number;
+		ent->s.otherentity_num2 = killer;
 		ent->r.svFlags = SVF_BROADCAST; // send to everyone
 		ent->s.isJediMaster = was_jedi_master;
 	}
@@ -3676,7 +3676,7 @@ void player_die(gentity_t* self, const gentity_t* inflictor, gentity_t* attacker
 			}
 
 			self->client->respawnTime = level.time + 1000;
-			//((self->client->animations[anim].numFrames*40)/(50.0f / self->client->animations[anim].frameLerp))+300;
+			//((self->client->animations[anim].num_frames*40)/(50.0f / self->client->animations[anim].frameLerp))+300;
 
 			const int s_pm_type = self->client->ps.pm_type;
 			self->client->ps.pm_type = PM_NORMAL; //don't want pm type interfering with our setanim calls.
@@ -3693,7 +3693,7 @@ void player_die(gentity_t* self, const gentity_t* inflictor, gentity_t* attacker
 			//if ((dflags&DAMAGE_DISMEMBER)
 			//	&& G_DoDismemberment(self, self->pos1, meansOfDeath, damage, hit_loc))
 			//{//we did dismemberment and our death anim is okay to override
-			//	if (hit_loc == HL_HAND_RT && self->locationDamage[hit_loc] >= Q3_INFINITE && self->client->ps.groundEntityNum != ENTITYNUM_NONE)
+			//	if (hit_loc == HL_HAND_RT && self->locationDamage[hit_loc] >= Q3_INFINITE && self->client->ps.groundentity_num != ENTITYNUM_NONE)
 			//	{//just lost our right hand and we're on the ground, use the special anim
 			//		NPC_SetAnim(self, SETANIM_BOTH, BOTH_RIGHTHANDCHOPPEDOFF, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 			//	}
@@ -3951,7 +3951,7 @@ void PlayerPain(gentity_t* self, const int damage)
 				{
 					//strong attacks and spins cannot be interrupted by pain, no pain when in knockdown
 					int parts;
-					if (self->client->ps.groundEntityNum != ENTITYNUM_NONE &&
+					if (self->client->ps.groundentity_num != ENTITYNUM_NONE &&
 						!PM_SpinningSaberAnim(self->client->ps.legsAnim) &&
 						!PM_FlippingAnim(self->client->ps.legsAnim) &&
 						!PM_InSpecialJump(self->client->ps.legsAnim) &&
@@ -4184,7 +4184,7 @@ void G_CheckKnockdown(gentity_t* targ, gentity_t* attacker, vec3_t new_dir, cons
 		return;
 	}
 
-	if (targ->client->ps.groundEntityNum == ENTITYNUM_NONE)
+	if (targ->client->ps.groundentity_num == ENTITYNUM_NONE)
 	{
 		//already in air
 		return;
@@ -4241,7 +4241,7 @@ void G_CheckLightningKnockdown(gentity_t* targ, gentity_t* attacker, vec3_t new_
 		return;
 	}
 
-	if (targ->client->ps.groundEntityNum == ENTITYNUM_NONE)
+	if (targ->client->ps.groundentity_num == ENTITYNUM_NONE)
 	{
 		//already in air
 		return;
@@ -4634,8 +4634,8 @@ void G_GetDismemberBolt(gentity_t* self, vec3_t bolt_point, const int limbType)
 		bolt_angles[2] = -bolt_matrix.matrix[2][1];
 
 		gentity_t* te = G_TempEntity(bolt_point, EV_SABER_BODY_HIT);
-		te->s.otherEntityNum = self->s.number;
-		te->s.otherEntityNum2 = ENTITYNUM_NONE;
+		te->s.otherentity_num = self->s.number;
+		te->s.otherentity_num2 = ENTITYNUM_NONE;
 		te->s.weapon = 0; //saber_num
 		te->s.legsAnim = 0; //blade_num
 
@@ -4787,11 +4787,11 @@ void G_Dismember(const gentity_t* ent, const gentity_t* enemy, vec3_t point, con
 	limb->s.eType = ET_GENERAL;
 	limb->s.weapon = G2_MODEL_PART;
 	limb->s.modelGhoul2 = limb_type;
-	limb->s.modelindex = ent->s.number;
+	limb->s.model_index = ent->s.number;
 	if (!ent->client)
 	{
-		limb->s.modelindex = -1;
-		limb->s.otherEntityNum2 = ent->s.number;
+		limb->s.model_index = -1;
+		limb->s.otherentity_num2 = ent->s.number;
 	}
 
 	VectorClear(limb->s.apos.trDelta);
@@ -4882,7 +4882,6 @@ void G_Dismember(const gentity_t* ent, const gentity_t* enemy, vec3_t point, con
 		//Team game
 		switch (old_team)
 		{
-
 		case TEAM_BLUE:
 			limb->s.customRGBA[0] = 0;
 			limb->s.customRGBA[1] = 0;
@@ -6275,7 +6274,7 @@ void G_ApplyVehicleOtherKiller(const gentity_t* targ, const gentity_t* inflictor
 		targ->client->otherKillerMOD = mod;
 		if (inflictor && !Q_stricmp("vehicle_proj", inflictor->classname))
 		{
-			targ->client->otherKillerVehWeapon = inflictor->s.otherEntityNum2 + 1;
+			targ->client->otherKillerVehWeapon = inflictor->s.otherentity_num2 + 1;
 			targ->client->otherKillerWeaponType = inflictor->s.weapon;
 		}
 		else
@@ -7446,7 +7445,7 @@ void G_Damage(gentity_t* targ, gentity_t* inflictor, gentity_t* attacker, vec3_t
 			if (!testTrace.startsolid &&
 				!testTrace.allsolid &&
 				testTrace.entity_num == targ->s.number &&
-				testTrace.G2CollisionMap[0].mEntityNum != -1)
+				testTrace.G2CollisionMap[0].mentity_num != -1)
 			{
 				if (chance_of_fizz > 0)
 				{
@@ -7657,7 +7656,7 @@ void G_Damage(gentity_t* targ, gentity_t* inflictor, gentity_t* attacker, vec3_t
 			gentity_t* ev_ent;
 			// Send off an event to show a shield shell on the player, pointing in the right direction.
 			ev_ent = G_TempEntity(targ->r.currentOrigin, EV_SHIELD_HIT);
-			ev_ent->s.otherEntityNum = targ->s.number;
+			ev_ent->s.otherentity_num = targ->s.number;
 			ev_ent->s.eventParm = DirToByte(dir);
 			ev_ent->s.time2 = shield_absorbed;
 		}
@@ -7933,7 +7932,7 @@ void G_DamageFromKiller(gentity_t* p_ent, const gentity_t* p_veh_ent, gentity_t*
 					//fake up the inflictor
 					temp_inflictor = qtrue;
 					inflictor->classname = "vehicle_proj";
-					inflictor->s.otherEntityNum2 = p_veh_ent->client->otherKillerVehWeapon - 1;
+					inflictor->s.otherentity_num2 = p_veh_ent->client->otherKillerVehWeapon - 1;
 					inflictor->s.weapon = p_veh_ent->client->otherKillerWeaponType;
 				}
 			}

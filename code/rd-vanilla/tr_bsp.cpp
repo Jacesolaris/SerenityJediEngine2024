@@ -317,7 +317,7 @@ static shader_t* ShaderForShaderNum(int shader_num, const int* lightmap_num, con
 
 	/*	if ( r_fullbright->integer )
 		{
-			lightmapNum = lightmapsFullBright;
+			lightmap_num = lightmapsFullBright;
 			styles = vertexStyles;
 		}
 	*/
@@ -343,7 +343,7 @@ static void ParseFace(const dsurface_t* ds, mapVert_t* verts, msurface_t* surf, 
 
 	for (i = 0; i < MAXLIGHTMAPS; i++)
 	{
-		lightmap_num[i] = LittleLong ds->lightmapNum[i];
+		lightmap_num[i] = LittleLong ds->lightmap_num[i];
 		if (lightmap_num[i] >= 0)
 		{
 			lightmap_num[i] += world_data.startLightMapIndex;
@@ -358,7 +358,7 @@ static void ParseFace(const dsurface_t* ds, mapVert_t* verts, msurface_t* surf, 
 	}
 
 	// get shader value
-	surf->shader = ShaderForShaderNum(ds->shaderNum, lightmap_num, ds->lightmapStyles, ds->vertexStyles, world_data);
+	surf->shader = ShaderForShaderNum(ds->shader_num, lightmap_num, ds->lightmapStyles, ds->vertexStyles, world_data);
 	if (r_singleShader->integer && !surf->shader->sky) {
 		surf->shader = tr.defaultShader;
 	}
@@ -428,7 +428,7 @@ static void ParseMesh(const dsurface_t* ds, mapVert_t* verts, msurface_t* surf, 
 
 	for (i = 0; i < MAXLIGHTMAPS; i++)
 	{
-		lightmap_num[i] = LittleLong ds->lightmapNum[i];
+		lightmap_num[i] = LittleLong ds->lightmap_num[i];
 		if (lightmap_num[i] >= 0)
 		{
 			lightmap_num[i] += world_data.startLightMapIndex;
@@ -443,14 +443,14 @@ static void ParseMesh(const dsurface_t* ds, mapVert_t* verts, msurface_t* surf, 
 	}
 
 	// get shader value
-	surf->shader = ShaderForShaderNum(ds->shaderNum, lightmap_num, ds->lightmapStyles, ds->vertexStyles, world_data);
+	surf->shader = ShaderForShaderNum(ds->shader_num, lightmap_num, ds->lightmapStyles, ds->vertexStyles, world_data);
 	if (r_singleShader->integer && !surf->shader->sky) {
 		surf->shader = tr.defaultShader;
 	}
 
 	// we may have a nodraw surface, because they might still need to
 	// be around for movement clipping
-	if (world_data.shaders[LittleLong ds->shaderNum].surfaceFlags & SURF_NODRAW) {
+	if (world_data.shaders[LittleLong ds->shader_num].surfaceFlags & SURF_NODRAW) {
 		surf->data = &skip_data;
 		return;
 	}
@@ -511,7 +511,7 @@ static void ParseTriSurf(const dsurface_t* ds, mapVert_t* verts, msurface_t* sur
 	}
 
 	// get shader
-	surf->shader = ShaderForShaderNum(ds->shaderNum, lightmapsVertex, ds->lightmapStyles, ds->vertexStyles, world_data);
+	surf->shader = ShaderForShaderNum(ds->shader_num, lightmapsVertex, ds->lightmapStyles, ds->vertexStyles, world_data);
 	if (r_singleShader->integer && !surf->shader->sky) {
 		surf->shader = tr.defaultShader;
 	}
@@ -587,7 +587,7 @@ static void ParseFlare(const dsurface_t* ds, msurface_t* surf, const world_t& wo
 	}
 
 	// get shader
-	surf->shader = ShaderForShaderNum(ds->shaderNum, lightmaps, ds->lightmapStyles, ds->vertexStyles, world_data);
+	surf->shader = ShaderForShaderNum(ds->shader_num, lightmaps, ds->lightmapStyles, ds->vertexStyles, world_data);
 	if (r_singleShader->integer && !surf->shader->sky) {
 		surf->shader = tr.defaultShader;
 	}

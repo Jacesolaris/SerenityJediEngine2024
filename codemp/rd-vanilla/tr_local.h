@@ -49,6 +49,40 @@ using eDLightTypes = enum
 	DLIGHT_PROJECTED
 };
 
+typedef enum {
+	MOD_BAD,
+	MOD_BRUSH,
+	MOD_MESH,
+	/*
+	Ghoul2 Insert Start
+	*/
+	MOD_MDXM,
+	MOD_MDXA
+	/*
+	Ghoul2 Insert End
+	*/
+} modtype_t;
+
+typedef struct model_s {
+	char		name[MAX_QPATH];
+	modtype_t	type;
+	int			index;				// model = tr.models[model->index]
+
+	int			dataSize;			// just for listing purposes
+	struct bmodel_s* bmodel;			// only if type == MOD_BRUSH
+	md3Header_t* md3[MD3_MAX_LODS];	// only if type == MOD_MESH
+	/*
+	Ghoul2 Insert Start
+	*/
+	mdxmHeader_t* mdxm;				// only if type == MOD_GL2M which is a GHOUL II Mesh file NOT a GHOUL II animation file
+	mdxaHeader_t* mdxa;				// only if type == MOD_GL2A which is a GHOUL II Animation file
+	/*
+	Ghoul2 Insert End
+	*/
+	int			 numLods;
+	qboolean	bspInstance;
+} model_t;
+
 using dlight_t = struct dlight_s {
 	eDLightTypes	mType;
 
@@ -799,7 +833,7 @@ int			R_LerpTag(orientation_t* tag, qhandle_t handle, int start_frame, int end_f
 	float frac, const char* tagName);
 void		R_ModelBounds(qhandle_t handle, vec3_t mins, vec3_t maxs);
 
-void		R_Modellist_f(void);
+void		R_model_list_f(void);
 
 //====================================================
 
@@ -963,8 +997,8 @@ using trGlobals_t = struct trGlobals_s {
 
 	trRefEntity_t* currentEntity;
 	trRefEntity_t			worldEntity;		// point currentEntity at this when rendering world
-	int						currentEntityNum;
-	int						shiftedEntityNum;	// currentEntityNum << QSORT_REFENTITYNUM_SHIFT
+	int						currententity_num;
+	int						shiftedentity_num;	// currententity_num << QSORT_REFENTITYNUM_SHIFT
 	model_t* current_model;
 
 	viewParms_t				viewParms;

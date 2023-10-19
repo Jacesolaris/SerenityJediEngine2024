@@ -60,7 +60,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #define DEFAULT_REDTEAM_NAME	"Empire"
 #define DEFAULT_BLUETEAM_NAME	"Rebellion"
 
-#define CURRENT_SJE_CLIENTVERSION		"Year-23,Month-10,Day-19,BuildNum-11" // build date
+#define CURRENT_SJE_CLIENTVERSION		"Year-23,Month-10,Day-18,BuildNum-10" // build date
 
 #define	STEPSIZE		18
 
@@ -361,10 +361,10 @@ movement on the server game.
 #pragma pack(push, 1)
 typedef struct animation_s {
 	unsigned short		firstFrame;
-	unsigned short		numFrames;
+	unsigned short		num_frames;
 	short				frameLerp;			// msec between frames
 	//initialLerp is abs(frameLerp)
-	signed char			loopFrames;			// 0 to numFrames
+	signed char			loopFrames;			// 0 to num_frames
 } animation_t;
 #pragma pack(pop)
 
@@ -408,7 +408,7 @@ extern stringID_table_t footstepTypeTable[NUM_FOOTSTEP_TYPES + 1];
 #define	AED_EFFECTINDEX				0
 #define	AED_BOLTINDEX				1
 #define	AED_EFFECT_PROBABILITY		2
-#define	AED_MODELINDEX				3
+#define	AED_model_index				3
 //indices for AEV_FIRE data
 #define	AED_FIRE_ALT				0
 #define	AED_FIRE_PROBABILITY		1
@@ -1361,7 +1361,7 @@ qboolean	BG_CanItemBeGrabbed(int gametype, const entityState_t* ent, const playe
 #define	MASK_OPAQUE				(CONTENTS_SOLID|CONTENTS_SLIME|CONTENTS_LAVA|CONTENTS_TERRAIN)
 #define	MASK_SHOT				(CONTENTS_SOLID|CONTENTS_BODY|CONTENTS_CORPSE|CONTENTS_TERRAIN)
 
-// ET_FX States (stored in modelindex2)
+// ET_FX States (stored in model_index2)
 
 #define	FX_STATE_OFF			0
 #define FX_STATE_ONE_SHOT		1

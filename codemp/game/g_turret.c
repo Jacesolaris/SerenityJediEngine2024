@@ -105,14 +105,14 @@ void auto_turret_die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker,
 
 	self->s.weapon = 0; // crosshair code uses this to mark crosshair red
 
-	if (self->s.modelindex2)
+	if (self->s.model_index2)
 	{
 		// switch to damage model if we should
-		self->s.modelindex = self->s.modelindex2;
+		self->s.model_index = self->s.model_index2;
 
-		if (self->target_ent && self->target_ent->s.modelindex2)
+		if (self->target_ent && self->target_ent->s.model_index2)
 		{
-			self->target_ent->s.modelindex = self->target_ent->s.modelindex2;
+			self->target_ent->s.model_index = self->target_ent->s.model_index2;
 		}
 
 		VectorCopy(self->r.currentAngles, self->s.apos.trBase);
@@ -164,7 +164,7 @@ static void turret_fire(gentity_t* ent, vec3_t start, vec3_t dir)
 	gentity_t* bolt = G_Spawn();
 
 	//use a custom shot effect
-	bolt->s.otherEntityNum2 = ent->genericValue14;
+	bolt->s.otherentity_num2 = ent->genericValue14;
 	//use a custom impact effect
 	bolt->s.emplacedOwner = ent->genericValue15;
 
@@ -720,8 +720,8 @@ void SP_misc_turret(gentity_t* base)
 		return;
 	}
 
-	base->s.modelindex2 = G_ModelIndex("models/map_objects/hoth/turret_bottom.md3");
-	base->s.modelindex = G_ModelIndex("models/map_objects/hoth/turret_base.md3");
+	base->s.model_index2 = G_model_index("models/map_objects/hoth/turret_bottom.md3");
+	base->s.model_index = G_model_index("models/map_objects/hoth/turret_base.md3");
 
 	G_SpawnString("icon", "", &s);
 	if (s && s[0])
@@ -774,7 +774,7 @@ void SP_misc_panel_turret(gentity_t* self)
 		G_SoundIndex("sound/movers/objects/ladygun_on");
 	}
 
-	self->s.modelindex = G_ModelIndex("models/map_objects/imp_mine/ladyluck_gun.md3");
+	self->s.model_index = G_model_index("models/map_objects/imp_mine/ladyluck_gun.md3");
 
 	self->soundPos1 = G_SoundIndex("sound/movers/camera_on.mp3");
 	self->soundPos2 = G_SoundIndex("sound/movers/camera_off.mp3");
@@ -810,8 +810,8 @@ qboolean turret_base_spawn_top(gentity_t* base)
 		return qfalse;
 	}
 
-	top->s.modelindex = G_ModelIndex("models/map_objects/hoth/turret_top_new.md3");
-	top->s.modelindex2 = G_ModelIndex("models/map_objects/hoth/turret_top.md3");
+	top->s.model_index = G_model_index("models/map_objects/hoth/turret_top_new.md3");
+	top->s.model_index2 = G_model_index("models/map_objects/hoth/turret_top.md3");
 	G_SetAngles(top, base->s.angles);
 	VectorCopy(base->s.origin, org);
 	org[2] += 128;

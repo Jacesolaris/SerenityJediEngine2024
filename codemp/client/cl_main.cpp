@@ -2498,6 +2498,7 @@ static IHeapAllocator* GetG2VertSpaceServer(void)
 }
 
 #define DEFAULT_RENDER_LIBRARY "SerenityJediEngine2024-rdmp"
+//#define DEFAULT_RENDER_LIBRARY "SerenityJediEngine2024-rdmp-rend2"
 
 void CL_InitRef(void)
 {
@@ -2526,7 +2527,7 @@ void CL_InitRef(void)
 
 	memset(&ri, 0, sizeof ri);
 
-	const auto get_ref_api = static_cast<GetRefAPI_t>(Sys_LoadFunction(rendererLib, "get_ref_api"));
+	const auto get_ref_api = static_cast<get_ref_api_t>(Sys_LoadFunction(rendererLib, "get_ref_api"));
 	if (!get_ref_api)
 		Com_Error(ERR_FATAL, "Can't load symbol get_ref_api: '%s'", Sys_LibraryError());
 

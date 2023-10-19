@@ -2829,7 +2829,7 @@ static void WP_SaberSetupKeywordHash(void)
 	hashSetup = qtrue;
 }
 
-qboolean WP_SaberParseParms(const char* saberName, saberInfo_t* saber)
+qboolean WP_SaberParseParms(const char* saber_name, saberInfo_t* saber)
 {
 	const char* token, * p;
 	char useSaber[SABER_NAME_LENGTH];
@@ -2845,13 +2845,13 @@ qboolean WP_SaberParseParms(const char* saberName, saberInfo_t* saber)
 	//Set defaults so that, if it fails, there's at least something there
 	wp_saber_set_defaults(saber);
 
-	if (!VALIDSTRING(saberName))
+	if (!VALIDSTRING(saber_name))
 	{
 		Q_strncpyz(useSaber, DEFAULT_SABER, sizeof useSaber);
 		triedDefault = qtrue;
 	}
 	else
-		Q_strncpyz(useSaber, saberName, sizeof useSaber);
+		Q_strncpyz(useSaber, saber_name, sizeof useSaber);
 
 	//try to parse it out
 	p = saberParms;
@@ -2920,13 +2920,13 @@ qboolean WP_SaberParseParms(const char* saberName, saberInfo_t* saber)
 	return qtrue;
 }
 
-qboolean WP_SaberParseParm(const char* saberName, const char* parmname, char* saberData)
+qboolean WP_SaberParseParm(const char* saber_name, const char* parmname, char* saberData)
 {
 	const char* token;
 	const char* value;
 	const char* p;
 
-	if (!saberName || !saberName[0])
+	if (!saber_name || !saber_name[0])
 	{
 		return qfalse;
 	}
@@ -2944,7 +2944,7 @@ qboolean WP_SaberParseParm(const char* saberName, const char* parmname, char* sa
 			return qfalse;
 		}
 
-		if (!Q_stricmp(token, saberName))
+		if (!Q_stricmp(token, saber_name))
 		{
 			break;
 		}
@@ -2967,7 +2967,7 @@ qboolean WP_SaberParseParm(const char* saberName, const char* parmname, char* sa
 		token = COM_ParseExt(&p, qtrue);
 		if (!token[0])
 		{
-			Com_Printf(S_COLOR_RED"ERROR: unexpected EOF while parsing '%s'\n", saberName);
+			Com_Printf(S_COLOR_RED"ERROR: unexpected EOF while parsing '%s'\n", saber_name);
 			return qfalse;
 		}
 
@@ -2992,10 +2992,10 @@ qboolean WP_SaberParseParm(const char* saberName, const char* parmname, char* sa
 	return qfalse;
 }
 
-qboolean WP_SaberValidForPlayerInMP(const char* saberName)
+qboolean WP_SaberValidForPlayerInMP(const char* saber_name)
 {
 	char allowed[8] = { 0 };
-	if (!WP_SaberParseParm(saberName, "notInMP", allowed))
+	if (!WP_SaberParseParm(saber_name, "notInMP", allowed))
 	{
 		//not defined, default is yes
 		return qtrue;
@@ -3035,13 +3035,13 @@ void WP_RemoveSaber(saberInfo_t* sabers, const int saber_num)
 	//	}
 }
 
-void WP_SetSaber(const int ent_num, saberInfo_t* sabers, const int saber_num, const char* saberName)
+void WP_SetSaber(const int ent_num, saberInfo_t* sabers, const int saber_num, const char* saber_name)
 {
 	if (!sabers)
 	{
 		return;
 	}
-	if (Q_stricmp("none", saberName) == 0 || Q_stricmp("remove", saberName) == 0)
+	if (Q_stricmp("none", saber_name) == 0 || Q_stricmp("remove", saber_name) == 0)
 	{
 		if (saber_num != 0)
 		{
@@ -3052,13 +3052,13 @@ void WP_SetSaber(const int ent_num, saberInfo_t* sabers, const int saber_num, co
 	}
 
 	if (ent_num < MAX_CLIENTS &&
-		!WP_SaberValidForPlayerInMP(saberName))
+		!WP_SaberValidForPlayerInMP(saber_name))
 	{
 		WP_SaberParseParms(DEFAULT_SABER, &sabers[saber_num]); //get saber info
 	}
 	else
 	{
-		WP_SaberParseParms(saberName, &sabers[saber_num]); //get saber info
+		WP_SaberParseParms(saber_name, &sabers[saber_num]); //get saber info
 	}
 	if (sabers[1].saberFlags & SFL_TWO_HANDED)
 	{
@@ -3148,10 +3148,10 @@ void WP_SaberLoadParms()
 }
 
 #ifdef UI_BUILD
-qboolean WP_IsSaberTwoHanded(const char* saberName)
+qboolean WP_IsSaberTwoHanded(const char* saber_name)
 {
 	char twoHandedString[8] = { 0 };
-	WP_SaberParseParm(saberName, "twoHanded", twoHandedString);
+	WP_SaberParseParm(saber_name, "twoHanded", twoHandedString);
 	if (!twoHandedString[0])
 	{
 		//not defined defaults to "no"
@@ -3179,7 +3179,7 @@ void WP_SaberGetHiltInfo(const char* singleHilts[MAX_SABER_HILTS], const char* s
 			//invalid name
 			continue;
 		}
-		const char* saberName = String_Alloc(token);
+		const char* saber_name = String_Alloc(token);
 		//see if there's a "{" on the next line
 		SkipRestOfLine(&p);
 
@@ -3190,32 +3190,32 @@ void WP_SaberGetHiltInfo(const char* singleHilts[MAX_SABER_HILTS], const char* s
 		}
 
 		//this is a saber name
-		if (!WP_SaberValidForPlayerInMP(saberName))
+		if (!WP_SaberValidForPlayerInMP(saber_name))
 		{
 			SkipBracedSection(&p, 0);
 			continue;
 		}
 
-		if (WP_IsSaberTwoHanded(saberName))
+		if (WP_IsSaberTwoHanded(saber_name))
 		{
 			if (numStaffHilts < MAX_SABER_HILTS - 1) //-1 because we have to NULL terminate the list
 			{
-				staffHilts[numStaffHilts++] = saberName;
+				staffHilts[numStaffHilts++] = saber_name;
 			}
 			else
 			{
-				Com_Printf("WARNING: too many two-handed sabers, ignoring saber '%s'\n", saberName);
+				Com_Printf("WARNING: too many two-handed sabers, ignoring saber '%s'\n", saber_name);
 			}
 		}
 		else
 		{
 			if (numSingleHilts < MAX_SABER_HILTS - 1) //-1 because we have to NULL terminate the list
 			{
-				singleHilts[numSingleHilts++] = saberName;
+				singleHilts[numSingleHilts++] = saber_name;
 			}
 			else
 			{
-				Com_Printf("WARNING: too many one-handed sabers, ignoring saber '%s'\n", saberName);
+				Com_Printf("WARNING: too many one-handed sabers, ignoring saber '%s'\n", saber_name);
 			}
 		}
 		//skip the whole braced section and move on to the next entry
