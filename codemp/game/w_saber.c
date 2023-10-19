@@ -1060,9 +1060,9 @@ void WP_DeactivateSaber(gentity_t* self)
 	self->client->ps.ManualBlockingFlags &= ~(1 << PERFECTBLOCKING);
 	self->client->ps.ManualBlockingFlags &= ~(1 << MBF_NPCBLOCKING);
 	//keep my saber off!
-	if (!self->client->ps.saberHolstered)
+	if (!self->client->ps.saber_holstered)
 	{
-		self->client->ps.saberHolstered = 2;
+		self->client->ps.saber_holstered = 2;
 
 		//Doesn't matter ATM
 		if (self->client->saber[0].soundOff)
@@ -1099,9 +1099,9 @@ void WP_ActivateSaber(gentity_t* self)
 		return;
 	}
 
-	if (self->client->ps.saberHolstered == 2 && self->watertype != CONTENTS_WATER)
+	if (self->client->ps.saber_holstered == 2 && self->watertype != CONTENTS_WATER)
 	{
-		self->client->ps.saberHolstered = 0;
+		self->client->ps.saber_holstered = 0;
 		if (self->client->saber[0].soundOn)
 		{
 			G_Sound(self, CHAN_WEAPON, self->client->saber[0].soundOn);
@@ -1321,7 +1321,7 @@ static QINLINE void SetSaberBoxSize(gentity_t* saberent)
 		|| owner->client->saber[0].numBlades > 1)
 	{
 		//dual sabers or multi-blade saber
-		if (owner->client->ps.saberHolstered > 1)
+		if (owner->client->ps.saber_holstered > 1)
 		{
 			//entirely off
 			//no blocking at all
@@ -1333,7 +1333,7 @@ static QINLINE void SetSaberBoxSize(gentity_t* saberent)
 	else
 	{
 		//single saber
-		if (owner->client->ps.saberHolstered)
+		if (owner->client->ps.saber_holstered)
 		{
 			//off
 			//no blocking at all
@@ -1356,7 +1356,7 @@ static QINLINE void SetSaberBoxSize(gentity_t* saberent)
 				break;
 			}
 			if (dual_sabers
-				&& owner->client->ps.saberHolstered == 1
+				&& owner->client->ps.saber_holstered == 1
 				&& j == 1)
 			{
 				//this mother is holstered, get outta here.
@@ -1376,7 +1376,7 @@ static QINLINE void SetSaberBoxSize(gentity_t* saberent)
 						if (owner->client->saber[j].numBlades > 1)
 						{
 							//with multiple blades
-							if (owner->client->ps.saberHolstered == 1)
+							if (owner->client->ps.saber_holstered == 1)
 							{
 								//all blades after the first one are off
 								break;
@@ -2491,14 +2491,14 @@ qboolean WP_SabersCheckLock(gentity_t* ent1, gentity_t* ent2)
 	}
 	if (ent1->client->saber[1].model
 		&& ent1->client->saber[1].model[0]
-		&& !ent1->client->ps.saberHolstered
+		&& !ent1->client->ps.saber_holstered
 		&& ent1->client->saber[1].saberFlags & SFL_NOT_LOCKABLE)
 	{
 		return qfalse;
 	}
 	if (ent2->client->saber[1].model
 		&& ent2->client->saber[1].model[0]
-		&& !ent2->client->ps.saberHolstered
+		&& !ent2->client->ps.saber_holstered
 		&& ent2->client->saber[1].saberFlags & SFL_NOT_LOCKABLE)
 	{
 		return qfalse;
@@ -3090,7 +3090,7 @@ static QINLINE qboolean g_saber_collide(gentity_t* atk, const gentity_t* def, ve
 		return qfalse;
 	}
 
-	if (def->client->ps.saberHolstered == 2)
+	if (def->client->ps.saber_holstered == 2)
 	{
 		//no sabers on.
 		trace_clear(tr, atk_end);
@@ -8049,7 +8049,7 @@ void wp_saber_start_missile_block_check(gentity_t* self, usercmd_t* ucmd)
 		{
 			gentity_t* blocker = &g_entities[incoming->r.ownerNum];
 
-			if (self->client && self->client->ps.saberHolstered == 2)
+			if (self->client && self->client->ps.saber_holstered == 2)
 			{
 				WP_ActivateSaber(self);
 			}
@@ -8697,7 +8697,7 @@ void DrownedSaberTouch(gentity_t* self, gentity_t* other, trace_t* trace)
 		WP_SaberRemoveG2Model(self);
 
 		//auto reactive the blade
-		other->client->ps.saberHolstered = 0;
+		other->client->ps.saber_holstered = 0;
 
 		if (other->client->saber[0].soundOn)
 		{
@@ -8839,11 +8839,11 @@ void saberKnockDown(gentity_t* saberent, gentity_t* saber_owner, const gentity_t
 	if (saber_owner->client->ps.fd.saber_anim_level == SS_DUAL)
 	{
 		//only switch off one blade if player is in the dual styley.
-		saber_owner->client->ps.saberHolstered = 1;
+		saber_owner->client->ps.saber_holstered = 1;
 	}
 	else
 	{
-		saber_owner->client->ps.saberHolstered = 2;
+		saber_owner->client->ps.saber_holstered = 2;
 	}
 }
 
@@ -9015,7 +9015,7 @@ qboolean saberCheckKnockdown_DuelLoss(gentity_t* saberent, gentity_t* saberOwner
 	{
 		disarm_chance += other->client->saber[0].disarmBonus;
 		if (other->client->saber[1].model[0]
-			&& !other->client->ps.saberHolstered)
+			&& !other->client->ps.saber_holstered)
 		{
 			disarm_chance += other->client->saber[1].disarmBonus;
 		}
@@ -9168,7 +9168,7 @@ qboolean saberCheckKnockdown_BrokenParry(gentity_t* saberent, gentity_t* saberOw
 		{
 			disarm_chance += other->client->saber[0].disarmBonus;
 			if (other->client->saber[1].model[0]
-				&& !other->client->ps.saberHolstered)
+				&& !other->client->ps.saber_holstered)
 			{
 				disarm_chance += other->client->saber[1].disarmBonus;
 			}
@@ -9370,7 +9370,7 @@ void saberBackToOwner(gentity_t* saberent)
 	if (saber_owner->client->ps.saberEntityNum == saberent->s.number)
 	{
 		if (!(saber_owner->client->saber[0].saberFlags & SFL_RETURN_DAMAGE)
-			|| saber_owner->client->ps.saberHolstered)
+			|| saber_owner->client->ps.saber_holstered)
 		{
 			saberent->s.saberInFlight = qfalse;
 		}
@@ -9421,7 +9421,7 @@ void saberBackToOwner(gentity_t* saberent)
 			saberent->genericValue5 = 0;
 			saberent->nextthink = level.time + 50;
 			WP_SaberRemoveG2Model(saberent);
-			saber_owner->client->ps.saberHolstered = 0;
+			saber_owner->client->ps.saber_holstered = 0;
 
 			if (saber_owner->client->saber[0].soundOn)
 			{
@@ -9986,7 +9986,7 @@ qboolean WP_AbsorbKick(gentity_t* hit_ent, const gentity_t* pusher, const vec3_t
 		AddFatigueMeleeBonus(pusher, hit_ent);
 		G_Sound(hit_ent, CHAN_BODY, G_SoundIndex(va("sound/weapons/melee/punch%d", Q_irand(1, 4))));
 
-		if (!hit_ent->client->ps.saberHolstered)
+		if (!hit_ent->client->ps.saber_holstered)
 		{
 			if (hit_ent->client->saber[0].soundOff)
 			{
@@ -9996,7 +9996,7 @@ qboolean WP_AbsorbKick(gentity_t* hit_ent, const gentity_t* pusher, const vec3_t
 			{
 				G_Sound(hit_ent, CHAN_WEAPON, hit_ent->client->saber[1].soundOff);
 			}
-			hit_ent->client->ps.saberHolstered = 2;
+			hit_ent->client->ps.saber_holstered = 2;
 		}
 	}
 	else if (pusher->client->ps.torsoAnim == BOTH_WOOKIE_SLAP || pusher->client->ps.torsoAnim == BOTH_TUSKENLUNGE1)
@@ -10008,7 +10008,7 @@ qboolean WP_AbsorbKick(gentity_t* hit_ent, const gentity_t* pusher, const vec3_t
 		AddFatigueMeleeBonus(pusher, hit_ent);
 		G_Sound(hit_ent, CHAN_BODY, G_SoundIndex(va("sound/weapons/melee/punch%d", Q_irand(1, 4))));
 
-		if (!hit_ent->client->ps.saberHolstered)
+		if (!hit_ent->client->ps.saber_holstered)
 		{
 			if (hit_ent->client->saber[0].soundOff)
 			{
@@ -10018,7 +10018,7 @@ qboolean WP_AbsorbKick(gentity_t* hit_ent, const gentity_t* pusher, const vec3_t
 			{
 				G_Sound(hit_ent, CHAN_WEAPON, hit_ent->client->saber[1].soundOff);
 			}
-			hit_ent->client->ps.saberHolstered = 2;
+			hit_ent->client->ps.saber_holstered = 2;
 		}
 	}
 	else if (pusher->client->ps.legsAnim == BOTH_A7_KICK_F
@@ -10043,7 +10043,7 @@ qboolean WP_AbsorbKick(gentity_t* hit_ent, const gentity_t* pusher, const vec3_t
 			G_Sound(hit_ent, CHAN_BODY, G_SoundIndex("sound/movers/objects/saber_slam"));
 		}
 
-		if (!hit_ent->client->ps.saberHolstered)
+		if (!hit_ent->client->ps.saber_holstered)
 		{
 			if (hit_ent->client->saber[0].soundOff)
 			{
@@ -10053,7 +10053,7 @@ qboolean WP_AbsorbKick(gentity_t* hit_ent, const gentity_t* pusher, const vec3_t
 			{
 				G_Sound(hit_ent, CHAN_WEAPON, hit_ent->client->saber[1].soundOff);
 			}
-			hit_ent->client->ps.saberHolstered = 2;
+			hit_ent->client->ps.saber_holstered = 2;
 		}
 	}
 	else if (pusher->client->ps.legsAnim == BOTH_A7_KICK_B) //for the roundhouse
@@ -10064,7 +10064,7 @@ qboolean WP_AbsorbKick(gentity_t* hit_ent, const gentity_t* pusher, const vec3_t
 		AddFatigueMeleeBonus(pusher, hit_ent);
 		G_Sound(hit_ent, CHAN_BODY, G_SoundIndex(va("sound/weapons/melee/punch%d", Q_irand(1, 4))));
 
-		if (!hit_ent->client->ps.saberHolstered)
+		if (!hit_ent->client->ps.saber_holstered)
 		{
 			if (hit_ent->client->saber[0].soundOff)
 			{
@@ -10074,7 +10074,7 @@ qboolean WP_AbsorbKick(gentity_t* hit_ent, const gentity_t* pusher, const vec3_t
 			{
 				G_Sound(hit_ent, CHAN_WEAPON, hit_ent->client->saber[1].soundOff);
 			}
-			hit_ent->client->ps.saberHolstered = 2;
+			hit_ent->client->ps.saber_holstered = 2;
 		}
 	}
 	else if (pusher->client->ps.legsAnim == BOTH_A7_KICK_B2) //for the backkick
@@ -10085,7 +10085,7 @@ qboolean WP_AbsorbKick(gentity_t* hit_ent, const gentity_t* pusher, const vec3_t
 		AddFatigueMeleeBonus(pusher, hit_ent);
 		G_Sound(hit_ent, CHAN_BODY, G_SoundIndex(va("sound/weapons/melee/punch%d", Q_irand(1, 4))));
 
-		if (!hit_ent->client->ps.saberHolstered)
+		if (!hit_ent->client->ps.saber_holstered)
 		{
 			if (hit_ent->client->saber[0].soundOff)
 			{
@@ -10095,7 +10095,7 @@ qboolean WP_AbsorbKick(gentity_t* hit_ent, const gentity_t* pusher, const vec3_t
 			{
 				G_Sound(hit_ent, CHAN_WEAPON, hit_ent->client->saber[1].soundOff);
 			}
-			hit_ent->client->ps.saberHolstered = 2;
+			hit_ent->client->ps.saber_holstered = 2;
 		}
 	}
 	else if (pusher->client->ps.legsAnim == BOTH_A7_KICK_B3) //for the backkick
@@ -10106,7 +10106,7 @@ qboolean WP_AbsorbKick(gentity_t* hit_ent, const gentity_t* pusher, const vec3_t
 		AddFatigueMeleeBonus(pusher, hit_ent);
 		G_Sound(hit_ent, CHAN_BODY, G_SoundIndex(va("sound/weapons/melee/punch%d", Q_irand(1, 4))));
 
-		if (!hit_ent->client->ps.saberHolstered)
+		if (!hit_ent->client->ps.saber_holstered)
 		{
 			if (hit_ent->client->saber[0].soundOff)
 			{
@@ -10116,7 +10116,7 @@ qboolean WP_AbsorbKick(gentity_t* hit_ent, const gentity_t* pusher, const vec3_t
 			{
 				G_Sound(hit_ent, CHAN_WEAPON, hit_ent->client->saber[1].soundOff);
 			}
-			hit_ent->client->ps.saberHolstered = 2;
+			hit_ent->client->ps.saber_holstered = 2;
 		}
 	}
 	else if (pusher->client->ps.legsAnim == BOTH_A7_KICK_R || pusher->client->ps.legsAnim == BOTH_A7_KICK_L)
@@ -10127,7 +10127,7 @@ qboolean WP_AbsorbKick(gentity_t* hit_ent, const gentity_t* pusher, const vec3_t
 		AddFatigueMeleeBonus(pusher, hit_ent);
 		G_Sound(hit_ent, CHAN_BODY, G_SoundIndex(va("sound/weapons/melee/punch%d", Q_irand(1, 4))));
 
-		if (!hit_ent->client->ps.saberHolstered)
+		if (!hit_ent->client->ps.saber_holstered)
 		{
 			if (hit_ent->client->saber[0].soundOff)
 			{
@@ -10137,7 +10137,7 @@ qboolean WP_AbsorbKick(gentity_t* hit_ent, const gentity_t* pusher, const vec3_t
 			{
 				G_Sound(hit_ent, CHAN_WEAPON, hit_ent->client->saber[1].soundOff);
 			}
-			hit_ent->client->ps.saberHolstered = 2;
+			hit_ent->client->ps.saber_holstered = 2;
 		}
 	}
 	else if (pusher->client->ps.torsoAnim == BOTH_A7_SLAP_R || pusher->client->ps.torsoAnim == BOTH_SMACK_R)
@@ -10149,7 +10149,7 @@ qboolean WP_AbsorbKick(gentity_t* hit_ent, const gentity_t* pusher, const vec3_t
 		AddFatigueMeleeBonus(pusher, hit_ent);
 		G_Sound(hit_ent, CHAN_BODY, G_SoundIndex(va("sound/weapons/melee/punch%d", Q_irand(1, 4))));
 
-		if (!hit_ent->client->ps.saberHolstered)
+		if (!hit_ent->client->ps.saber_holstered)
 		{
 			if (hit_ent->client->saber[0].soundOff)
 			{
@@ -10159,7 +10159,7 @@ qboolean WP_AbsorbKick(gentity_t* hit_ent, const gentity_t* pusher, const vec3_t
 			{
 				G_Sound(hit_ent, CHAN_WEAPON, hit_ent->client->saber[1].soundOff);
 			}
-			hit_ent->client->ps.saberHolstered = 2;
+			hit_ent->client->ps.saber_holstered = 2;
 		}
 	}
 	else if (pusher->client->ps.torsoAnim == BOTH_A7_SLAP_L || pusher->client->ps.torsoAnim == BOTH_SMACK_L)
@@ -10171,7 +10171,7 @@ qboolean WP_AbsorbKick(gentity_t* hit_ent, const gentity_t* pusher, const vec3_t
 		AddFatigueMeleeBonus(pusher, hit_ent);
 		G_Sound(hit_ent, CHAN_BODY, G_SoundIndex(va("sound/weapons/melee/punch%d", Q_irand(1, 4))));
 
-		if (!hit_ent->client->ps.saberHolstered)
+		if (!hit_ent->client->ps.saber_holstered)
 		{
 			if (hit_ent->client->saber[0].soundOff)
 			{
@@ -10181,7 +10181,7 @@ qboolean WP_AbsorbKick(gentity_t* hit_ent, const gentity_t* pusher, const vec3_t
 			{
 				G_Sound(hit_ent, CHAN_WEAPON, hit_ent->client->saber[1].soundOff);
 			}
-			hit_ent->client->ps.saberHolstered = 2;
+			hit_ent->client->ps.saber_holstered = 2;
 		}
 	}
 	else if (pusher->client->ps.torsoAnim == BOTH_A7_HILT) //for the hiltbash
@@ -10200,7 +10200,7 @@ qboolean WP_AbsorbKick(gentity_t* hit_ent, const gentity_t* pusher, const vec3_t
 		WP_BlockPointsDrain(hit_ent, FATIGUE_BP_ABSORB);
 		G_Sound(hit_ent, CHAN_BODY, G_SoundIndex(va("sound/weapons/melee/punch%d", Q_irand(1, 4))));
 
-		if (!hit_ent->client->ps.saberHolstered)
+		if (!hit_ent->client->ps.saber_holstered)
 		{
 			if (hit_ent->client->saber[0].soundOff)
 			{
@@ -10210,7 +10210,7 @@ qboolean WP_AbsorbKick(gentity_t* hit_ent, const gentity_t* pusher, const vec3_t
 			{
 				G_Sound(hit_ent, CHAN_WEAPON, hit_ent->client->saber[1].soundOff);
 			}
-			hit_ent->client->ps.saberHolstered = 2;
+			hit_ent->client->ps.saber_holstered = 2;
 		}
 	}
 	return qtrue;
@@ -11697,9 +11697,9 @@ static void G_GrabSomeMofos(gentity_t* self)
 				if (grabbed->client->ps.weapon == WP_SABER)
 				{
 					//turn it off
-					if (!grabbed->client->ps.saberHolstered)
+					if (!grabbed->client->ps.saber_holstered)
 					{
-						grabbed->client->ps.saberHolstered = 2;
+						grabbed->client->ps.saber_holstered = 2;
 						if (grabbed->client->saber[0].soundOff)
 						{
 							G_Sound(grabbed, CHAN_AUTO, grabbed->client->saber[0].soundOff);
@@ -11937,9 +11937,9 @@ void wp_saber_position_update(gentity_t* self, usercmd_t* ucmd)
 					if (grappler->client->ps.weapon == WP_SABER)
 					{
 						//make sure their saber is shut off
-						if (!grappler->client->ps.saberHolstered)
+						if (!grappler->client->ps.saber_holstered)
 						{
-							grappler->client->ps.saberHolstered = 2;
+							grappler->client->ps.saber_holstered = 2;
 							if (grappler->client->saber[0].soundOff)
 							{
 								G_Sound(grappler, CHAN_AUTO, grappler->client->saber[0].soundOff);
@@ -12232,7 +12232,7 @@ void wp_saber_position_update(gentity_t* self, usercmd_t* ucmd)
 			{
 				//but can throw it if only have 1 blade on
 				if (self->client->saber[0].numBlades > 1
-					&& self->client->ps.saberHolstered == 1)
+					&& self->client->ps.saber_holstered == 1)
 				{
 					//have multiple blades and only one blade on
 					self->client->ps.saberCanThrow = qtrue; //qfalse;
@@ -12567,7 +12567,7 @@ nextStep:
 			if (r_saber_num > 0
 				&& self->client->saber[1].model
 				&& self->client->saber[1].model[0]
-				&& self->client->ps.saberHolstered == 1
+				&& self->client->ps.saber_holstered == 1
 				&& (!self->client->ps.saberInFlight || self->client->ps.saberEntityNum))
 			{
 				//don't to saber 2 if it's off
@@ -12586,7 +12586,7 @@ nextStep:
 					&& r_blade_num > 0 //more than one blade
 					&& !self->client->saber[1].model[0] //not using dual blades
 					&& self->client->saber[r_saber_num].numBlades > 1 //using a multi-bladed saber
-					&& self->client->ps.saberHolstered == 1) //
+					&& self->client->ps.saber_holstered == 1) //
 				{
 					//don't to extra blades if they're off
 					break;
@@ -13338,7 +13338,7 @@ float manual_npc_saberblocking(const gentity_t* defender)
 		return qfalse;
 	}
 
-	if (defender->client->ps.weapon == WP_SABER && defender->client->ps.saberHolstered)
+	if (defender->client->ps.weapon == WP_SABER && defender->client->ps.saber_holstered)
 	{
 		//saber not currently in use or available.
 		return qfalse;
@@ -13523,7 +13523,7 @@ float manual_npc_kick_absorbing(const gentity_t* defender)
 	}
 
 	if (defender->client->ps.weapon == WP_SABER
-		&& defender->client->ps.saberHolstered)
+		&& defender->client->ps.saber_holstered)
 	{
 		//saber not currently in use or available.
 		return qfalse;
@@ -15636,7 +15636,7 @@ void DebounceSaberImpact(const gentity_t* self, const gentity_t* other_saberer, 
 qboolean WP_SaberIsOff(const gentity_t* self, const int saber_num)
 {
 	//this function checks to see if a given saber is off.
-	switch (self->client->ps.saberHolstered)
+	switch (self->client->ps.saber_holstered)
 	{
 	case 0:
 		//all sabers on
@@ -15699,8 +15699,8 @@ qboolean WP_BladeIsOff(const gentity_t* self, const int saber_num, const int bla
 		//saber is off, all blades are off
 		return qtrue;
 	}
-	//saber is on, secondary blades status is based on saberHolstered value.
-	if (blade_num > 0 && self->client->ps.saberHolstered == 1)
+	//saber is on, secondary blades status is based on saber_holstered value.
+	if (blade_num > 0 && self->client->ps.saber_holstered == 1)
 	{
 		//secondaries are off
 		return qtrue;
@@ -15715,7 +15715,7 @@ qboolean wp_using_dual_saber_as_primary(const playerState_t* ps)
 	//as their primary saber when their primary saber is dropped.
 	if (ps->fd.saber_anim_level == SS_DUAL
 		&& ps->saberInFlight
-		&& ps->saberHolstered)
+		&& ps->saber_holstered)
 	{
 		return qtrue;
 	}

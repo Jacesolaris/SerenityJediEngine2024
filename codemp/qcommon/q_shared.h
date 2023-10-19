@@ -1300,7 +1300,7 @@ typedef struct playerState_s {
 	int         saberFatigueChainCount;
 	int			BlasterAttackChainCount;
 
-	int			saberHolstered;
+	int			saber_holstered;
 
 	int			forceAllowDeactivateTime;
 	int			lastKickedEntNum;
@@ -1869,7 +1869,7 @@ typedef struct entityState_s {
 	int			saberEntityNum;
 	int			saber_move;
 	int			forcePowersActive;
-	int			saberHolstered;//sent in only only 2 bits - should be 0, 1 or 2
+	int			saber_holstered;//sent in only only 2 bits - should be 0, 1 or 2
 
 	qboolean	isJediMaster;
 

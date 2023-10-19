@@ -1006,7 +1006,7 @@ void G_CheckSpecialPersistentEvents(gentity_t* ent)
 		//lightsaber
 		if (g_entities[ent->s.owner].inuse && g_entities[ent->s.owner].client)
 		{
-			if (!g_entities[ent->s.owner].client->ps.saberHolstered)
+			if (!g_entities[ent->s.owner].client->ps.saber_holstered)
 			{
 				//it's on
 				//sight event

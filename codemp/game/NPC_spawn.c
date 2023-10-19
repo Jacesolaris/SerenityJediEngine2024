@@ -446,7 +446,7 @@ void NPC_SetMiscDefaultData(gentity_t* ent)
 	{
 		//if I'm equipped with a saber, initialize it (them)
 		wp_saber_init_blade_data(ent);
-		ent->client->ps.saberHolstered = 2;
+		ent->client->ps.saber_holstered = 2;
 		Jedi_ClearTimers(ent);
 		ent->client->ps.fd.blockPoints = BLOCK_POINTS_MAX;
 	}

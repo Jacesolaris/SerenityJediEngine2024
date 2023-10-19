@@ -50,10 +50,8 @@ extern qboolean WP_SaberCanTurnOffSomeBlades(const saberInfo_t* saber);
 extern qboolean G_ValidSaberStyle(const gentity_t* ent, int saber_style);
 extern void Player_CheckBurn(const gentity_t* self);
 extern void Player_CheckFreeze(const gentity_t* self);
-extern qboolean WP_SaberStyleValidForSaber(const saberInfo_t* saber1, const saberInfo_t* saber2, int saber_holstered,
-	int saber_anim_level);
-extern qboolean WP_UseFirstValidSaberStyle(const saberInfo_t* saber1, const saberInfo_t* saber2, int saber_holstered,
-	int* saber_anim_level);
+extern qboolean WP_SaberStyleValidForSaber(const saberInfo_t* saber1, const saberInfo_t* saber2, int saber_holstered, int saber_anim_level);
+extern qboolean WP_UseFirstValidSaberStyle(const saberInfo_t* saber1, const saberInfo_t* saber2, int saber_holstered, int* saber_anim_level);
 
 forcedata_t Client_Force[MAX_CLIENTS];
 
@@ -6038,7 +6036,7 @@ void G_BreakArm(gentity_t* ent, const int arm)
 	{
 		if (ent->client->saber[1].model[0] &&
 			ent->client->ps.weapon == WP_SABER &&
-			!ent->client->ps.saberHolstered &&
+			!ent->client->ps.saber_holstered &&
 			ent->client->saber[1].soundOff)
 		{
 			//the left arm shuts off its saber upon being broken
@@ -6429,6 +6427,32 @@ void ClientSpawn(gentity_t* ent)
 				// they don't match up, force the user info
 				Info_SetValueForKey(userinfo, key, saber);
 				trap->SetUserinfo(ent->s.number, userinfo);
+			}
+		}
+
+		if (ent->client->saber[0].model[0] && ent->client->saber[1].model[0])
+		{ //dual
+			ent->client->ps.fd.saber_anim_levelBase = ent->client->ps.fd.saber_anim_level = ent->client->ps.fd.saberDrawAnimLevel = SS_DUAL;
+		}
+		else if ((ent->client->saber[0].saberFlags & SFL_TWO_HANDED))
+		{ //staff
+			ent->client->ps.fd.saber_anim_level = ent->client->ps.fd.saberDrawAnimLevel = SS_STAFF;
+		}
+		else
+		{
+			ent->client->sess.saberLevel = Com_Clampi(SS_FAST, SS_STRONG, ent->client->sess.saberLevel);
+			ent->client->ps.fd.saber_anim_levelBase = ent->client->ps.fd.saber_anim_level = ent->client->ps.fd.saberDrawAnimLevel = ent->client->sess.saberLevel;
+
+			// limit our saber style to our force points allocated to saber offense
+			if (level.gametype != GT_SIEGE && ent->client->ps.fd.saber_anim_level > ent->client->ps.fd.forcePowerLevel[FP_SABER_OFFENSE])
+				ent->client->ps.fd.saber_anim_levelBase = ent->client->ps.fd.saber_anim_level = ent->client->ps.fd.saberDrawAnimLevel = ent->client->sess.saberLevel = ent->client->ps.fd.forcePowerLevel[FP_SABER_OFFENSE];
+		}
+		if (level.gametype != GT_SIEGE)
+		{// let's just make sure the styles we chose are cool
+			if (!WP_SaberStyleValidForSaber(&ent->client->saber[0], &ent->client->saber[1], ent->client->ps.saber_holstered, ent->client->ps.fd.saber_anim_level))
+			{
+				WP_UseFirstValidSaberStyle(&ent->client->saber[0], &ent->client->saber[1], ent->client->ps.saber_holstered, &ent->client->ps.fd.saber_anim_level);
+				ent->client->ps.fd.saber_anim_levelBase = ent->client->saberCycleQueue = ent->client->ps.fd.saber_anim_level;
 			}
 		}
 	}
@@ -8626,18 +8650,18 @@ void ClientSpawn(gentity_t* ent)
 		&& ent->client->ps.fd.saber_anim_level != SS_DUAL)
 	{
 		//using dual sabers, but not the dual style, turn off blade
-		ent->client->ps.saberHolstered = 1;
+		ent->client->ps.saber_holstered = 1;
 	}
 	else if (ent->client->saber[0].numBlades > 1
 		&& WP_SaberCanTurnOffSomeBlades(&ent->client->saber[0])
 		&& ent->client->ps.fd.saber_anim_level != SS_STAFF)
 	{
 		//using staff saber, but not the staff style, turn off blade
-		ent->client->ps.saberHolstered = 1;
+		ent->client->ps.saber_holstered = 1;
 	}
 	else
 	{
-		ent->client->ps.saberHolstered = 0;
+		ent->client->ps.saber_holstered = 0;
 	}
 
 	// health will count down towards max_health

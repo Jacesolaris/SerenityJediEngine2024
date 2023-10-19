@@ -126,7 +126,7 @@ void NPC_BSSaberDroid_Patrol(void)
 		&& TIMER_Done(NPCS.NPC, "inactiveDelay"))
 	{
 		//we want to turn off our saber if we need to.
-		if (!NPCS.NPC->client->ps.saberHolstered)
+		if (!NPCS.NPC->client->ps.saber_holstered)
 		{
 			//saber is on.
 			WP_DeactivateSaber(NPCS.NPC, qfalse);
@@ -320,7 +320,7 @@ void NPC_BSSD_Default(void)
 	else //if ( NPC->enemy )
 	{
 		//have an enemy
-		if (NPCS.NPC->client->ps.saberHolstered == 2)
+		if (NPCS.NPC->client->ps.saber_holstered == 2)
 		{
 			//turn saber on
 			WP_ActivateSaber(NPCS.NPC);

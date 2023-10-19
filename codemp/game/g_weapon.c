@@ -5985,7 +5985,7 @@ void emplaced_gun_update(gentity_t* self)
 		if (self->activator->client->pers.cmd.buttons & BUTTON_USE && !self->genericValue1)
 		{
 			self->activator->client->ps.emplacedIndex = 0;
-			self->activator->client->ps.saberHolstered = 0;
+			self->activator->client->ps.saber_holstered = 0;
 			self->nextthink = level.time + 50;
 			return;
 		}
@@ -6005,7 +6005,7 @@ void emplaced_gun_update(gentity_t* self)
 		self->activator->r.ownerNum = ENTITYNUM_NONE;
 		self->activator->client->ps.emplacedTime = level.time + 1000;
 		self->activator->client->ps.emplacedIndex = 0;
-		self->activator->client->ps.saberHolstered = 0;
+		self->activator->client->ps.saber_holstered = 0;
 		self->activator = NULL;
 
 		self->s.activeForcePass = 0;

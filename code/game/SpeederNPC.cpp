@@ -475,7 +475,7 @@ static void ProcessMoveCommands(Vehicle_t* p_veh)
 		if ((parent_ps && parent_ps->electrifyTime > cur_time) ||
 			(p_veh->m_pPilot->playerState &&
 				(p_veh->m_pPilot->playerState->weapon == WP_MELEE ||
-					(p_veh->m_pPilot->playerState->weapon == WP_SABER && p_veh->m_pPilot->playerState->saberHolstered))))
+					(p_veh->m_pPilot->playerState->weapon == WP_SABER && p_veh->m_pPilot->playerState->saber_holstered))))
 		{
 #endif
 			if (cur_time - p_veh->m_iTurboTime > p_veh->m_pVehicleInfo->turboRecharge)

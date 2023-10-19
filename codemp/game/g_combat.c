@@ -3181,7 +3181,7 @@ void player_die(gentity_t* self, const gentity_t* inflictor, gentity_t* attacker
 	//Cheap method until/if I decide to put fancier stuff in (e.g. sabers falling out of hand and slowly
 	//holstering on death like sp)
 	if (self->client->ps.weapon == WP_SABER &&
-		!self->client->ps.saberHolstered &&
+		!self->client->ps.saber_holstered &&
 		self->client->ps.saberEntityNum)
 	{
 		if (!self->client->ps.saberInFlight &&
@@ -5896,7 +5896,7 @@ void G_Knockdown(gentity_t* self, gentity_t* attacker, const vec3_t push_dir, fl
 		//racc - check to see if an NPC should get conventently kicked off a nearby cliff.
 		G_CheckLedgeDive(self, 72, push_dir, qfalse, qfalse);
 
-		if (!self->client->ps.saberHolstered)
+		if (!self->client->ps.saber_holstered)
 		{
 			if (self->client->saber[0].soundOff)
 			{
@@ -5906,7 +5906,7 @@ void G_Knockdown(gentity_t* self, gentity_t* attacker, const vec3_t push_dir, fl
 			{
 				G_Sound(self, CHAN_WEAPON, self->client->saber[1].soundOff);
 			}
-			self->client->ps.saberHolstered = 2;
+			self->client->ps.saber_holstered = 2;
 		}
 
 		if (!PM_RollingAnim(self->client->ps.legsAnim)
@@ -6044,7 +6044,7 @@ void G_KnockOver(gentity_t* self, gentity_t* attacker, const vec3_t push_dir, fl
 		}
 		G_CheckLedgeDive(self, 72, push_dir, qfalse, qfalse);
 
-		if (!self->client->ps.saberHolstered)
+		if (!self->client->ps.saber_holstered)
 		{
 			if (self->client->saber[0].soundOff)
 			{
@@ -6054,7 +6054,7 @@ void G_KnockOver(gentity_t* self, gentity_t* attacker, const vec3_t push_dir, fl
 			{
 				G_Sound(self, CHAN_WEAPON, self->client->saber[1].soundOff);
 			}
-			self->client->ps.saberHolstered = 2;
+			self->client->ps.saber_holstered = 2;
 		}
 
 		if (!PM_RollingAnim(self->client->ps.legsAnim)

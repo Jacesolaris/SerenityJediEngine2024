@@ -1945,7 +1945,7 @@ void Jedi_Cloak(gentity_t* self)
 				G_Sound(self, CHAN_ITEM, G_SoundIndex("sound/chars/shadowtrooper/cloak.wav"));
 				self->client->ps.cloakFuel -= 15;
 
-				if (self->client->ps.saberHolstered > 1)
+				if (self->client->ps.saber_holstered > 1)
 				{
 					NPC_SetAnim(self, SETANIM_TORSO, BOTH_FORCE_PROTECT_FAST,
 						SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
@@ -1986,7 +1986,7 @@ void Jedi_CheckCloak(void)
 		&& NPCS.NPC->client->NPC_class == CLASS_SHADOWTROOPER
 		&& Q_stricmpn("shadowtrooper", NPCS.NPC->NPC_type, 13) == 0)
 	{
-		if ( // !NPCS.NPC->client->ps.saberHolstered ||
+		if ( // !NPCS.NPC->client->ps.saber_holstered ||
 			NPCS.NPC->health <= 0 ||
 			NPCS.NPC->client->ps.saberInFlight ||
 			NPCS.NPC->client->ps.fd.forceGripBeingGripped > level.time ||
@@ -3034,7 +3034,7 @@ void Kyle_TryGrab(void)
 	VectorClear(NPCS.NPC->client->ps.moveDir);
 	NPCS.ucmd.rightmove = NPCS.ucmd.forwardmove = NPCS.ucmd.upmove = 0;
 	NPCS.NPC->painDebounceTime = level.time + NPCS.NPC->client->ps.torsoTimer;
-	NPCS.NPC->client->ps.saberHolstered = 2;
+	NPCS.NPC->client->ps.saber_holstered = 2;
 }
 
 extern qboolean PM_InOnGroundAnim(const int anim);
@@ -6333,7 +6333,7 @@ static void Jedi_EvasionSaber(vec3_t enemy_movedir, const float enemy_dist, vec3
 	{
 		if ((!NPCS.NPC->client->ps.saberInFlight || //their saber isn't in the air
 			NPCS.NPC->client->saber[1].model && NPCS.NPC->client->saber[1].model[0]
-			&& NPCS.NPC->client->ps.saberHolstered != 2) //or they still have their second saber
+			&& NPCS.NPC->client->ps.saber_holstered != 2) //or they still have their second saber
 			&& Jedi_SaberBlock())
 		{
 			//blocked/evaded
@@ -7489,7 +7489,7 @@ static void Jedi_CombatIdle(const int enemy_dist)
 					|| NPCS.NPC->client->pers.nextbotclass != BCLASS_BOBAFETT
 					|| NPCS.NPC->client->pers.nextbotclass != BCLASS_MANDOLORIAN1
 					|| NPCS.NPC->client->pers.nextbotclass != BCLASS_MANDOLORIAN2
-					&& !NPCS.NPC->client->ps.saberHolstered
+					&& !NPCS.NPC->client->ps.saber_holstered
 					&& !Q_irand(0, 5))
 				{
 					//taunt even more, turn off the saber
@@ -8630,7 +8630,7 @@ static void Jedi_Combat(void)
 		//not holding back
 		if ((!NPCS.NPC->client->ps.saberInFlight //saber in had
 			|| NPCS.NPC->client->ps.fd.saber_anim_level == SS_DUAL
-			&& NPCS.NPC->client->ps.saberHolstered != 2) //or we have another saber in our hands
+			&& NPCS.NPC->client->ps.saber_holstered != 2) //or we have another saber in our hands
 			&& (!(NPCS.NPC->client->ps.fd.forcePowersActive & 1 << FP_GRIP)
 				|| NPCS.NPC->client->ps.fd.forcePowerLevel[FP_GRIP] < FORCE_LEVEL_2))
 		{
@@ -9027,13 +9027,13 @@ static void Jedi_Patrol(void)
 						//if the enemy is close enough, or threw his saber, take him as the enemy
 						//FIXME: what if he throws a thermal detonator?
 						if (enemy_dist < 220 * 220 || NPCS.NPCInfo->investigateCount >= 3 && !NPCS.NPC->client->ps.
-							saberHolstered)
+							saber_holstered)
 						{
 							G_SetEnemy(NPCS.NPC, enemy);
 							NPCS.NPCInfo->stats.aggression = 3;
 							break;
 						}
-						if (enemy->client->ps.saberInFlight && !enemy->client->ps.saberHolstered)
+						if (enemy->client->ps.saberInFlight && !enemy->client->ps.saber_holstered)
 						{
 							vec3_t saberDir2Me;
 							vec3_t saberMoveDir;
@@ -9589,7 +9589,7 @@ static void Jedi_Attack(void)
 				NPCS.NPC->client->ps.fd.forcePowerDebounce[FP_SABER_DEFENSE] = level.time + 500;
 			}
 			NPCS.NPC->client->ps.saberBlocked = BLOCKED_NONE;
-			if (!NPCS.NPC->client->ps.saberHolstered && NPCS.NPC->client->ps.saberInFlight)
+			if (!NPCS.NPC->client->ps.saber_holstered && NPCS.NPC->client->ps.saberInFlight)
 			{
 				//saber is still on (or we're trying to pull it back), count down erosion and keep facing the enemy
 				Jedi_AggressionErosion(-3);
@@ -9604,7 +9604,7 @@ static void Jedi_Attack(void)
 				}
 				TIMER_Set(NPCS.NPC, "gloatTime", 10000);
 			}
-			if (!NPCS.NPC->client->ps.saberHolstered || NPCS.NPC->client->ps.saberInFlight || !TIMER_Done(
+			if (!NPCS.NPC->client->ps.saber_holstered || NPCS.NPC->client->ps.saberInFlight || !TIMER_Done(
 				NPCS.NPC, "gloatTime"))
 			{
 				//keep walking
@@ -10431,7 +10431,7 @@ qboolean Jedi_InSpecialMove(void)
 									SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 								NPCS.NPC->client->ps.torsoTimer = NPCS.NPC->client->ps.legsTimer = -1;
 								//hold the animation
-								NPCS.NPC->client->ps.saberHolstered = 2; //turn saber off.
+								NPCS.NPC->client->ps.saber_holstered = 2; //turn saber off.
 								NPCS.NPCInfo->ignorePain = qtrue;
 							}
 						}

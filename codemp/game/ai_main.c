@@ -1352,9 +1352,9 @@ void bot_update_input(bot_state_t* bs, const int time, const int elapsed_time)
 			{
 				bi.actionflags |= ACTION_WALK;
 				walktime[bs->cur_ps.client_num] = level.time + 2000;
-				if (bs->cur_ps.saberHolstered)
+				if (bs->cur_ps.saber_holstered)
 				{
-					bs->cur_ps.saberHolstered = 0;
+					bs->cur_ps.saber_holstered = 0;
 				}
 			}
 			else

@@ -2232,7 +2232,7 @@ void CG_NewClientInfo(int client_num, qboolean entities_initialized)
 					cg_entities[client_num].ghoul2weapon2 = NULL;
 				}
 			}
-			if (!cg_entities[client_num].currentState.saberHolstered)
+			if (!cg_entities[client_num].currentState.saber_holstered)
 			{
 				//if not holstered set length and desired length for both blades to full right now.
 				int j;
@@ -17658,11 +17658,11 @@ void CG_Player(centity_t* cent)
 			{
 				if (cent->weapon == WP_SABER
 					&& cent->weapon != cent->currentState.weapon
-					&& !cent->currentState.saberHolstered)
+					&& !cent->currentState.saber_holstered)
 				{
 					//switching away from the saber
 					if (ci->saber[0].soundOff
-						&& !cent->currentState.saberHolstered)
+						&& !cent->currentState.saber_holstered)
 					{
 						trap->S_StartSound(cent->lerpOrigin, cent->currentState.number, CHAN_AUTO,
 							ci->saber[0].soundOff);
@@ -17670,7 +17670,7 @@ void CG_Player(centity_t* cent)
 
 					if (ci->saber[1].soundOff &&
 						ci->saber[1].model[0] &&
-						!cent->currentState.saberHolstered)
+						!cent->currentState.saber_holstered)
 					{
 						trap->S_StartSound(cent->lerpOrigin, cent->currentState.number, CHAN_AUTO,
 							ci->saber[1].soundOff);
@@ -18919,7 +18919,7 @@ stillDoSaber:
 	}
 	else if (cent->currentState.weapon == WP_SABER)
 	{
-		if (cent->currentState.saberHolstered < 2 &&
+		if (cent->currentState.saber_holstered < 2 &&
 			(!cent->currentState.saberInFlight //saber not in flight
 				|| ci->saber[1].soundLoop) //??? //racc - or we have dual sabers
 			&& !(cent->currentState.eFlags & EF_DEAD)) //still alive
@@ -19175,7 +19175,7 @@ stillDoSaber:
 				{
 					//owner is pulling is back
 					if (!(ci->saber[0].saberFlags & SFL_RETURN_DAMAGE)
-						|| cent->currentState.saberHolstered)
+						|| cent->currentState.saber_holstered)
 					{
 						vec3_t owndir;
 
@@ -19214,7 +19214,7 @@ stillDoSaber:
 				blade_angles[ROLL] = 0;
 
 				//racc - set blade length of first saber for rendering
-				if (cent->currentState.saberHolstered == 0)
+				if (cent->currentState.saber_holstered == 0)
 				{
 					BG_SI_SetDesiredLength(&ci->saber[0], -1, -1);
 				}
@@ -19225,7 +19225,7 @@ stillDoSaber:
 
 				// basejka code
 				if (ci->saber[0].numBlades > 1 //staff
-					&& cent->currentState.saberHolstered == 1) //extra blades off
+					&& cent->currentState.saber_holstered == 1) //extra blades off
 				{
 					//only first blade should be on
 					BG_SI_SetDesiredLength(&ci->saber[0], 0, -1);
@@ -19238,7 +19238,7 @@ stillDoSaber:
 
 				//racc - set render for the second saber's blade as needed
 				if (ci->saber[1].model //dual sabers
-					&& cent->currentState.saberHolstered == 1) //second one off
+					&& cent->currentState.saber_holstered == 1) //second one off
 				{
 					BG_SI_SetDesiredLength(&ci->saber[1], 0, -1);
 				}
@@ -19246,7 +19246,7 @@ stillDoSaber:
 				{
 					BG_SI_SetDesiredLength(&ci->saber[1], -1, -1);
 				}
-				if (cent->currentState.saberHolstered < 2)
+				if (cent->currentState.saber_holstered < 2)
 				{
 					int l = 0;
 					int k = 0;
@@ -19263,7 +19263,7 @@ stillDoSaber:
 						while (k < ci->saber[l].numBlades)
 						{
 							if (l == 0 //first saber
-								&& cent->currentState.saberHolstered == 1 //extra blades should be off
+								&& cent->currentState.saber_holstered == 1 //extra blades should be off
 								&& k > 0) //this is an extra blade
 							{
 								//extra blades off
@@ -19320,7 +19320,7 @@ stillDoSaber:
 		else
 		{
 			//saber is not in a throw.
-			if (cent->currentState.saberHolstered == 2)
+			if (cent->currentState.saber_holstered == 2)
 			{
 				//all blades off
 				BG_SI_SetDesiredLength(&ci->saber[0], 0, -1);
@@ -19330,7 +19330,7 @@ stillDoSaber:
 			{
 				//racc - at least some of our blades are active.
 				if (ci->saber[0].numBlades > 1 //staff
-					&& cent->currentState.saberHolstered == 1) //extra blades off
+					&& cent->currentState.saber_holstered == 1) //extra blades off
 				{
 					//only first blade should be on
 					BG_SI_SetDesiredLength(&ci->saber[0], 0, -1);
@@ -19341,7 +19341,7 @@ stillDoSaber:
 					BG_SI_SetDesiredLength(&ci->saber[0], -1, -1);
 				}
 				if (ci->saber[1].model //dual sabers
-					&& cent->currentState.saberHolstered == 1) //second one off
+					&& cent->currentState.saber_holstered == 1) //second one off
 				{
 					if (cent->currentState.saberInFlight && !cent->currentState.saberEntityNum)
 					{
@@ -19461,7 +19461,7 @@ stillDoSaber:
 
 			while (k < ci->saber[l].numBlades)
 			{
-				if (cent->currentState.saberHolstered == 1 //extra blades should be off
+				if (cent->currentState.saber_holstered == 1 //extra blades should be off
 					&& k > 0 //this is an extra blade
 					&& ci->saber[l].blade[k].length <= 0) //it's completely off
 				{
@@ -19470,7 +19470,7 @@ stillDoSaber:
 					CG_AddSaberBlade(cent, cent, 0, l, k, legs.origin, root_angles, qfalse, qtrue);
 				}
 				else if (ci->saber[1].model[0] //we have a second saber
-					&& cent->currentState.saberHolstered == 1 //it should be off
+					&& cent->currentState.saber_holstered == 1 //it should be off
 					&& l > 0 //and this is the second one
 					&& ci->saber[l].blade[k].length <= 0) //it's completely off
 				{
@@ -20463,7 +20463,7 @@ void CG_ResetPlayerEntity(centity_t* cent)
 			CG_CopyG2WeaponInstance(cent, cent->currentState.weapon, cent->ghoul2);
 			cent->ghoul2weapon = CG_G2WeaponInstance(cent, cent->currentState.weapon);
 		}
-		if (!cent->currentState.saberHolstered)
+		if (!cent->currentState.saber_holstered)
 		{
 			//if not holstered set length and desired length for both blades to full right now.
 			BG_SI_SetDesiredLength(&ci->saber[0], 0, -1);

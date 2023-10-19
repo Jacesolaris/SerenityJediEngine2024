@@ -1240,7 +1240,7 @@ qboolean WP_ForcePowerUsable(const gentity_t* self, const forcePowers_t forcePow
 		}
 	}
 
-	if (!self->client->ps.saberHolstered)
+	if (!self->client->ps.saber_holstered)
 	{
 		if (self->client->saber[0].saberFlags & SFL_TWO_HANDED)
 		{
@@ -2965,7 +2965,7 @@ qboolean melee_block_lightning(gentity_t* attacker, gentity_t* defender)
 	const qboolean melee_light_block = qtrue;
 
 	if (defender->client->ps.weapon == WP_SABER
-		|| defender->client->ps.saberHolstered == 2
+		|| defender->client->ps.saber_holstered == 2
 		|| defender->client->ps.saberInFlight)
 	{
 		return qfalse;
@@ -3262,7 +3262,7 @@ void force_lightning_damage(gentity_t* self, gentity_t* trace_ent, vec3_t dir, c
 					{
 						if (manual_saberblocking(trace_ent)
 							&& trace_ent->client->ps.fd.forcePower > 20
-							&& !trace_ent->client->ps.saberHolstered
+							&& !trace_ent->client->ps.saber_holstered
 							&& !trace_ent->client->ps.saberInFlight //saber in hand
 							&& InFOV3(self->r.currentOrigin, trace_ent->r.currentOrigin,
 								trace_ent->client->ps.viewangles,
@@ -5344,7 +5344,7 @@ void ForceThrow(gentity_t* self, qboolean pull)
 		FORCE_LEVEL_2
 		&& (self->s.weapon == WP_MELEE ||
 			self->s.weapon == WP_NONE ||
-			self->s.weapon == WP_SABER && self->client->ps.saberHolstered))
+			self->s.weapon == WP_SABER && self->client->ps.saber_holstered))
 	{
 		damage_level = FORCE_LEVEL_3;
 	}
@@ -5352,7 +5352,7 @@ void ForceThrow(gentity_t* self, qboolean pull)
 		FORCE_LEVEL_3
 		&& (self->s.weapon == WP_MELEE ||
 			self->s.weapon == WP_NONE ||
-			self->s.weapon == WP_SABER && self->client->ps.saberHolstered))
+			self->s.weapon == WP_SABER && self->client->ps.saber_holstered))
 	{
 		damage_level = FORCE_LEVEL_2;
 	}
@@ -5428,7 +5428,7 @@ void ForceThrow(gentity_t* self, qboolean pull)
 		//RACC - Force Push
 		if (self->client->ps.weapon == WP_MELEE ||
 			self->client->ps.weapon == WP_NONE ||
-			self->client->ps.weapon == WP_SABER && self->client->ps.saberHolstered)
+			self->client->ps.weapon == WP_SABER && self->client->ps.saber_holstered)
 		{
 			//2-handed PUSH
 			if (self->client->ps.groundEntityNum == ENTITYNUM_NONE)
@@ -6297,7 +6297,7 @@ void ForceThrow(gentity_t* self, qboolean pull)
 					{
 						if (self->client->ps.weapon == WP_MELEE ||
 							self->client->ps.weapon == WP_NONE ||
-							self->client->ps.weapon == WP_SABER && self->client->ps.saberHolstered)
+							self->client->ps.weapon == WP_SABER && self->client->ps.saber_holstered)
 						{
 							//2-handed PUSH
 							if (self->client->ps.groundEntityNum == ENTITYNUM_NONE)
@@ -6446,7 +6446,7 @@ void ForceThrow(gentity_t* self, qboolean pull)
 
 							if (self->client->ps.weapon == WP_MELEE || self->client->ps.weapon == WP_NONE && self->
 								client->ps.groundEntityNum == ENTITYNUM_NONE
-								|| self->client->ps.weapon == WP_SABER && self->client->ps.saberHolstered && self->
+								|| self->client->ps.weapon == WP_SABER && self->client->ps.saber_holstered && self->
 								client->ps.groundEntityNum == ENTITYNUM_NONE)
 							{
 								RepulseDamage(self, push_target[x], tr.endpos, damage_level);
@@ -6507,7 +6507,7 @@ void ForceThrow(gentity_t* self, qboolean pull)
 
 							if (self->client->ps.weapon == WP_MELEE || self->client->ps.weapon == WP_NONE && self->
 								client->ps.groundEntityNum == ENTITYNUM_NONE
-								|| self->client->ps.weapon == WP_SABER && self->client->ps.saberHolstered && self->
+								|| self->client->ps.weapon == WP_SABER && self->client->ps.saber_holstered && self->
 								client->ps.groundEntityNum == ENTITYNUM_NONE)
 							{
 								RepulseDamage(self, push_target[x], tr.endpos, damage_level);
@@ -6534,7 +6534,7 @@ void ForceThrow(gentity_t* self, qboolean pull)
 
 							if (self->client->ps.weapon == WP_MELEE || self->client->ps.weapon == WP_NONE && self->
 								client->ps.groundEntityNum == ENTITYNUM_NONE
-								|| self->client->ps.weapon == WP_SABER && self->client->ps.saberHolstered && self->
+								|| self->client->ps.weapon == WP_SABER && self->client->ps.saber_holstered && self->
 								client->ps.groundEntityNum == ENTITYNUM_NONE)
 							{
 								RepulseDamage(self, push_target[x], tr.endpos, damage_level);
@@ -6560,7 +6560,7 @@ void ForceThrow(gentity_t* self, qboolean pull)
 
 							if (self->client->ps.weapon == WP_MELEE || self->client->ps.weapon == WP_NONE && self->
 								client->ps.groundEntityNum == ENTITYNUM_NONE
-								|| self->client->ps.weapon == WP_SABER && self->client->ps.saberHolstered && self->
+								|| self->client->ps.weapon == WP_SABER && self->client->ps.saber_holstered && self->
 								client->ps.groundEntityNum == ENTITYNUM_NONE)
 							{
 								RepulseDamage(self, push_target[x], tr.endpos, damage_level);
@@ -6585,7 +6585,7 @@ void ForceThrow(gentity_t* self, qboolean pull)
 
 							if (self->client->ps.weapon == WP_MELEE || self->client->ps.weapon == WP_NONE && self->
 								client->ps.groundEntityNum == ENTITYNUM_NONE
-								|| self->client->ps.weapon == WP_SABER && self->client->ps.saberHolstered && self->
+								|| self->client->ps.weapon == WP_SABER && self->client->ps.saber_holstered && self->
 								client->ps.groundEntityNum == ENTITYNUM_NONE)
 							{
 								RepulseDamage(self, push_target[x], tr.endpos, damage_level);
@@ -6627,7 +6627,7 @@ void ForceThrow(gentity_t* self, qboolean pull)
 
 							if (self->client->ps.weapon == WP_MELEE || self->client->ps.weapon == WP_NONE && self->
 								client->ps.groundEntityNum == ENTITYNUM_NONE
-								|| self->client->ps.weapon == WP_SABER && self->client->ps.saberHolstered && self->
+								|| self->client->ps.weapon == WP_SABER && self->client->ps.saber_holstered && self->
 								client->ps.groundEntityNum == ENTITYNUM_NONE)
 							{
 								RepulseDamage(self, push_target[x], tr.endpos, damage_level);
@@ -6654,7 +6654,7 @@ void ForceThrow(gentity_t* self, qboolean pull)
 
 							if (self->client->ps.weapon == WP_MELEE || self->client->ps.weapon == WP_NONE && self->
 								client->ps.groundEntityNum == ENTITYNUM_NONE
-								|| self->client->ps.weapon == WP_SABER && self->client->ps.saberHolstered && self->
+								|| self->client->ps.weapon == WP_SABER && self->client->ps.saber_holstered && self->
 								client->ps.groundEntityNum == ENTITYNUM_NONE)
 							{
 								RepulseDamage(self, push_target[x], tr.endpos, damage_level);
@@ -6680,7 +6680,7 @@ void ForceThrow(gentity_t* self, qboolean pull)
 
 							if (self->client->ps.weapon == WP_MELEE || self->client->ps.weapon == WP_NONE && self->
 								client->ps.groundEntityNum == ENTITYNUM_NONE
-								|| self->client->ps.weapon == WP_SABER && self->client->ps.saberHolstered && self->
+								|| self->client->ps.weapon == WP_SABER && self->client->ps.saber_holstered && self->
 								client->ps.groundEntityNum == ENTITYNUM_NONE)
 							{
 								RepulseDamage(self, push_target[x], tr.endpos, damage_level);
@@ -6705,7 +6705,7 @@ void ForceThrow(gentity_t* self, qboolean pull)
 
 							if (self->client->ps.weapon == WP_MELEE || self->client->ps.weapon == WP_NONE && self->
 								client->ps.groundEntityNum == ENTITYNUM_NONE
-								|| self->client->ps.weapon == WP_SABER && self->client->ps.saberHolstered && self->
+								|| self->client->ps.weapon == WP_SABER && self->client->ps.saber_holstered && self->
 								client->ps.groundEntityNum == ENTITYNUM_NONE)
 							{
 								RepulseDamage(self, push_target[x], tr.endpos, damage_level);
@@ -8629,7 +8629,7 @@ void WP_ForcePowersUpdate(gentity_t* self, usercmd_t* ucmd)
 		self->client->ps.fd.forceGripCripple = 1;
 
 		//keep the saber off during this period
-		if (self->client->ps.weapon == WP_SABER && !self->client->ps.saberHolstered)
+		if (self->client->ps.weapon == WP_SABER && !self->client->ps.saber_holstered)
 		{
 			Cmd_ToggleSaber_f(self);
 		}

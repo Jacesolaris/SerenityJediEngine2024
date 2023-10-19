@@ -406,7 +406,7 @@ void R_Register()
 	r_debugStyle = ri->Cvar_Get("r_debugStyle", "-1", CVAR_CHEAT, "");
 	r_dlightStyle = ri->Cvar_Get("r_dlightStyle", "1", CVAR_TEMP, "");
 	r_surfaceSprites = ri->Cvar_Get("r_surfaceSprites", "1", CVAR_TEMP, "");
-	r_AdvancedsurfaceSprites = ri->Cvar_Get("ui_r_detailtextures", "1", CVAR_TEMP, "");
+	r_AdvancedsurfaceSprites = ri->Cvar_Get("r_advancedlod", "1", CVAR_ARCHIVE_ND, "");
 	r_surfaceWeather = ri->Cvar_Get("r_surfaceWeather", "0", CVAR_TEMP, "");
 	r_windSpeed = ri->Cvar_Get("r_windSpeed", "0", CVAR_NONE, "");
 	r_windAngle = ri->Cvar_Get("r_windAngle", "0", CVAR_NONE, "");

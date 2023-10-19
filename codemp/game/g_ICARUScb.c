@@ -7481,7 +7481,7 @@ static void Q3_SetSaberActive(const int ent_id, const qboolean active)
 		}
 	}
 	//was reversed
-	if (!ent->client->ps.saberHolstered && !active)
+	if (!ent->client->ps.saber_holstered && !active)
 	{
 		Cmd_ToggleSaber_f(ent);
 	}

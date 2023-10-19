@@ -894,7 +894,7 @@ static QINLINE void CG_EntityStateToPlayerState(entityState_t* s, playerState_t*
 
 	ps->emplacedIndex = s->otherEntityNum2;
 
-	ps->saberHolstered = s->saberHolstered; //reuse bool in entitystate for players differently
+	ps->saber_holstered = s->saber_holstered; //reuse bool in entitystate for players differently
 
 	ps->genericEnemyIndex = -1; //no real option for this
 
@@ -1403,7 +1403,7 @@ void CG_PredictPlayerState(void)
 
 		//THIS is pretty much bad, but...
 		cg_pmove.ps->fd.saber_anim_levelBase = cg_pmove.ps->fd.saber_anim_level;
-		if (cg_pmove.ps->saberHolstered == 1)
+		if (cg_pmove.ps->saber_holstered == 1)
 		{
 			if (ci->saber[0].numBlades > 0)
 			{
