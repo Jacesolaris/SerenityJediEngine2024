@@ -12580,7 +12580,7 @@ nextStep:
 				&& self->client->saber[1].model
 				&& self->client->saber[1].model[0]
 				&& self->client->ps.saber_holstered == 1
-				&& (!self->client->ps.saberInFlight || self->client->ps.saberEntityNum))
+				&& (!self->client->ps.saberInFlight || self->client->ps.saberentity_num))
 			{
 				//don't to saber 2 if it's off
 				break;

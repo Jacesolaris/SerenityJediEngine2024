@@ -25,7 +25,7 @@ set(InOpenJK TRUE)
 
 
 # Project name
-set(ProjectName "SerenityJediEngine2024" CACHE STRING "Project Name")
+set(ProjectName "SerenityJediEngine2024-Rend2" CACHE STRING "Project Name")
 project(${ProjectName})
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})

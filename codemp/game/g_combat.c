@@ -3182,7 +3182,7 @@ void player_die(gentity_t* self, const gentity_t* inflictor, gentity_t* attacker
 	//holstering on death like sp)
 	if (self->client->ps.weapon == WP_SABER &&
 		!self->client->ps.saber_holstered &&
-		self->client->ps.saberEntityNum)
+		self->client->ps.saberentity_num)
 	{
 		if (!self->client->ps.saberInFlight &&
 			self->client->saber[0].soundOff)

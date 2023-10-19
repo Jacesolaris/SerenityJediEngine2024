@@ -6445,9 +6445,9 @@ void ForceThrow(gentity_t* self, qboolean pull)
 							G_Sound(push_target[x], CHAN_BODY, G_SoundIndex("sound/weapons/force/pushed.mp3"));
 
 							if (self->client->ps.weapon == WP_MELEE || self->client->ps.weapon == WP_NONE && self->
-								client->ps.groundEntityNum == ENTITYNUM_NONE
+								client->ps.groundentity_num == ENTITYNUM_NONE
 								|| self->client->ps.weapon == WP_SABER && self->client->ps.saber_holstered && self->
-								client->ps.groundEntityNum == ENTITYNUM_NONE)
+								client->ps.groundentity_num == ENTITYNUM_NONE)
 							{
 								RepulseDamage(self, push_target[x], tr.endpos, damage_level);
 							}
@@ -6506,9 +6506,9 @@ void ForceThrow(gentity_t* self, qboolean pull)
 							push_power_mod = 200;
 
 							if (self->client->ps.weapon == WP_MELEE || self->client->ps.weapon == WP_NONE && self->
-								client->ps.groundEntityNum == ENTITYNUM_NONE
-								|| self->client->ps.weapon == WP_SABER && self->client->ps.saberHolstered && self->
-								client->ps.groundEntityNum == ENTITYNUM_NONE)
+								client->ps.groundentity_num == ENTITYNUM_NONE
+								|| self->client->ps.weapon == WP_SABER && self->client->ps.saber_holstered && self->
+								client->ps.groundentity_num == ENTITYNUM_NONE)
 							{
 								RepulseDamage(self, push_target[x], tr.endpos, damage_level);
 							}
@@ -6533,9 +6533,9 @@ void ForceThrow(gentity_t* self, qboolean pull)
 							push_power_mod = 250;
 
 							if (self->client->ps.weapon == WP_MELEE || self->client->ps.weapon == WP_NONE && self->
-								client->ps.groundEntityNum == ENTITYNUM_NONE
-								|| self->client->ps.weapon == WP_SABER && self->client->ps.saberHolstered && self->
-								client->ps.groundEntityNum == ENTITYNUM_NONE)
+								client->ps.groundentity_num == ENTITYNUM_NONE
+								|| self->client->ps.weapon == WP_SABER && self->client->ps.saber_holstered && self->
+								client->ps.groundentity_num == ENTITYNUM_NONE)
 							{
 								RepulseDamage(self, push_target[x], tr.endpos, damage_level);
 							}
@@ -6559,9 +6559,9 @@ void ForceThrow(gentity_t* self, qboolean pull)
 							push_power_mod = 200;
 
 							if (self->client->ps.weapon == WP_MELEE || self->client->ps.weapon == WP_NONE && self->
-								client->ps.groundEntityNum == ENTITYNUM_NONE
-								|| self->client->ps.weapon == WP_SABER && self->client->ps.saberHolstered && self->
-								client->ps.groundEntityNum == ENTITYNUM_NONE)
+								client->ps.groundentity_num == ENTITYNUM_NONE
+								|| self->client->ps.weapon == WP_SABER && self->client->ps.saber_holstered && self->
+								client->ps.groundentity_num == ENTITYNUM_NONE)
 							{
 								RepulseDamage(self, push_target[x], tr.endpos, damage_level);
 							}
@@ -6584,9 +6584,9 @@ void ForceThrow(gentity_t* self, qboolean pull)
 							G_Sound(push_target[x], CHAN_BODY, G_SoundIndex("sound/weapons/force/pushed.mp3"));
 
 							if (self->client->ps.weapon == WP_MELEE || self->client->ps.weapon == WP_NONE && self->
-								client->ps.groundEntityNum == ENTITYNUM_NONE
-								|| self->client->ps.weapon == WP_SABER && self->client->ps.saberHolstered && self->
-								client->ps.groundEntityNum == ENTITYNUM_NONE)
+								client->ps.groundentity_num == ENTITYNUM_NONE
+								|| self->client->ps.weapon == WP_SABER && self->client->ps.saber_holstered && self->
+								client->ps.groundentity_num == ENTITYNUM_NONE)
 							{
 								RepulseDamage(self, push_target[x], tr.endpos, damage_level);
 							}
@@ -6626,9 +6626,9 @@ void ForceThrow(gentity_t* self, qboolean pull)
 							G_Sound(push_target[x], CHAN_BODY, G_SoundIndex("sound/weapons/force/pushed.mp3"));
 
 							if (self->client->ps.weapon == WP_MELEE || self->client->ps.weapon == WP_NONE && self->
-								client->ps.groundEntityNum == ENTITYNUM_NONE
-								|| self->client->ps.weapon == WP_SABER && self->client->ps.saberHolstered && self->
-								client->ps.groundEntityNum == ENTITYNUM_NONE)
+								client->ps.groundentity_num == ENTITYNUM_NONE
+								|| self->client->ps.weapon == WP_SABER && self->client->ps.saber_holstered && self->
+								client->ps.groundentity_num == ENTITYNUM_NONE)
 							{
 								RepulseDamage(self, push_target[x], tr.endpos, damage_level);
 							}
@@ -6653,9 +6653,9 @@ void ForceThrow(gentity_t* self, qboolean pull)
 							G_Sound(push_target[x], CHAN_BODY, G_SoundIndex("sound/weapons/force/pushed.mp3"));
 
 							if (self->client->ps.weapon == WP_MELEE || self->client->ps.weapon == WP_NONE && self->
-								client->ps.groundEntityNum == ENTITYNUM_NONE
-								|| self->client->ps.weapon == WP_SABER && self->client->ps.saberHolstered && self->
-								client->ps.groundEntityNum == ENTITYNUM_NONE)
+								client->ps.groundentity_num == ENTITYNUM_NONE
+								|| self->client->ps.weapon == WP_SABER && self->client->ps.saber_holstered && self->
+								client->ps.groundentity_num == ENTITYNUM_NONE)
 							{
 								RepulseDamage(self, push_target[x], tr.endpos, damage_level);
 							}
@@ -6679,9 +6679,9 @@ void ForceThrow(gentity_t* self, qboolean pull)
 							G_Sound(push_target[x], CHAN_BODY, G_SoundIndex("sound/weapons/force/pushed.mp3"));
 
 							if (self->client->ps.weapon == WP_MELEE || self->client->ps.weapon == WP_NONE && self->
-								client->ps.groundEntityNum == ENTITYNUM_NONE
-								|| self->client->ps.weapon == WP_SABER && self->client->ps.saberHolstered && self->
-								client->ps.groundEntityNum == ENTITYNUM_NONE)
+								client->ps.groundentity_num == ENTITYNUM_NONE
+								|| self->client->ps.weapon == WP_SABER && self->client->ps.saber_holstered && self->
+								client->ps.groundentity_num == ENTITYNUM_NONE)
 							{
 								RepulseDamage(self, push_target[x], tr.endpos, damage_level);
 							}
@@ -6704,9 +6704,9 @@ void ForceThrow(gentity_t* self, qboolean pull)
 							G_Sound(push_target[x], CHAN_BODY, G_SoundIndex("sound/weapons/force/pushed.mp3"));
 
 							if (self->client->ps.weapon == WP_MELEE || self->client->ps.weapon == WP_NONE && self->
-								client->ps.groundEntityNum == ENTITYNUM_NONE
-								|| self->client->ps.weapon == WP_SABER && self->client->ps.saberHolstered && self->
-								client->ps.groundEntityNum == ENTITYNUM_NONE)
+								client->ps.groundentity_num == ENTITYNUM_NONE
+								|| self->client->ps.weapon == WP_SABER && self->client->ps.saber_holstered && self->
+								client->ps.groundentity_num == ENTITYNUM_NONE)
 							{
 								RepulseDamage(self, push_target[x], tr.endpos, damage_level);
 							}

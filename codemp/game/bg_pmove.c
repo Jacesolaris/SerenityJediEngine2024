@@ -11133,7 +11133,7 @@ static void PM_Footsteps(void)
 						{
 							desiredAnim = BOTH_WALKBACK1;
 						}
-						else if (pm->ps->saberHolstered && (!pm->ps->saberInFlight || pm->ps->saberEntityNum))
+						else if (pm->ps->saber_holstered && (!pm->ps->saberInFlight || pm->ps->saberentity_num))
 						{
 							desiredAnim = BOTH_WALKBACK1;
 						}
@@ -11348,7 +11348,7 @@ static void PM_Footsteps(void)
 #endif
 							}
 						}
-						else if (pm->ps->saberHolstered && (!pm->ps->saberInFlight || pm->ps->saberEntityNum))
+						else if (pm->ps->saber_holstered && (!pm->ps->saberInFlight || pm->ps->saberentity_num))
 						{
 							desiredAnim = BOTH_WALK1;
 						}
