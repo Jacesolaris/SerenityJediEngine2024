@@ -399,6 +399,8 @@ extern cvar_t* cl_newgameplusJKA;
 extern cvar_t* cl_newgameplusJKO;
 extern cvar_t* cl_com_outcast;
 
+extern cvar_t* cl_com_rend2;
+
 /*
 ==================
 SCR_DrawScreenField

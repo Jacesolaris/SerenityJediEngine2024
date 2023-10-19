@@ -170,7 +170,7 @@ jpeg_finish_compress(const j_compress_ptr cinfo)
 			/* We bypass the main controller and invoke coef controller directly;
 			 * all work is being done from the coefficient buffer.
 			 */
-			if (!(*cinfo->coef->compress_data) (cinfo, (JSAMPIMAGE)NULL))
+			if (!(*cinfo->coef->compress_data) (cinfo, (JSAMp_image)NULL))
 				ERREXIT(cinfo, JERR_CANT_SUSPEND);
 		}
 		(*cinfo->master->finish_pass) (cinfo);

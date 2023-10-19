@@ -444,6 +444,7 @@ vmCvar_t ui_char_model_angle;
 vmCvar_t ui_com_outcast;
 vmCvar_t ui_g_newgameplusJKA;
 vmCvar_t ui_g_newgameplusJKO;
+vmCvar_t ui_com_rend2;
 
 static void UI_UpdateScreenshot()
 {
@@ -557,6 +558,8 @@ static cvarTable_t cvarTable[] =
 	{&ui_char_model_angle, "ui_char_model_angle", "175", nullptr, 0},
 
 	{&ui_com_outcast, "com_outcast", "0", nullptr, CVAR_ARCHIVE | CVAR_SAVEGAME | CVAR_NORESTART},
+
+	{&ui_com_rend2, "com_rend2", "0", nullptr, CVAR_ARCHIVE | CVAR_SAVEGAME | CVAR_NORESTART},
 
 	{&r_ratiofix, "r_ratiofix", "0", UI_Set2DRatio, CVAR_ARCHIVE},
 

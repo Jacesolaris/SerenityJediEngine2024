@@ -39,8 +39,8 @@ extern vmCvar_t cg_gunMomentumFall;
 extern vmCvar_t cg_gunMomentumEnable;
 extern vmCvar_t cg_gunMomentumInterval;
 extern vmCvar_t cg_SpinningBarrels;
-extern void G_StartNextItemEffect(gentity_t* ent, int me_flags = 0, int length = 1000, float time_scale = 0.0f,
-	int spin_time = 0);
+extern void G_StartNextItemEffect(gentity_t* ent, int me_flags = 0, int length = 1000, float time_scale = 0.0f, int spin_time = 0);
+extern vmCvar_t cg_com_rend2;
 
 extern qboolean PM_ReloadAnim(int anim);
 extern void FX_DEMP2_ProjectileThink(centity_t* cent, const weaponInfo_s* weapon);
@@ -927,7 +927,10 @@ void CG_RegisterWeapon(const int weapon_num)
 		MAKERGB(weaponInfo->missileDlightColor, 1, 0.75f, 0.6f);
 		weaponInfo->missileModel = cgi_R_RegisterModel("models/weapons2/golan_arms/projectileMain.md3");
 		weaponInfo->alt_missileModel = cgi_R_RegisterModel("models/weapons2/golan_arms/projectileMain.md3");
-		weaponInfo->missileTrailFunc = CG_StunTrail;
+		if (cg_com_rend2.integer == 0) //rend2 is off
+		{
+			weaponInfo->missileTrailFunc = CG_StunTrail;
+		}
 		break;
 
 	case WP_TURRET:

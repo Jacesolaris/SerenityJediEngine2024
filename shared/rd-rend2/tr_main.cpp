@@ -2002,7 +2002,7 @@ static void R_AddEntitySurface(const trRefdef_t* refdef, trRefEntity_t* ent, int
 			}
 		}
 		break;
-#ifndef REND2_SP
+		//#ifndef REND2_SP
 	case RT_ENT_CHAIN:
 		shader = R_GetShaderByHandle(ent->e.customShader);
 		R_AddDrawSurf(
@@ -2014,9 +2014,9 @@ static void R_AddEntitySurface(const trRefdef_t* refdef, trRefEntity_t* ent, int
 			R_IsPostRenderEntity(ent),
 			0 /* cubeMap */);
 		break;
-#endif
+		//#endif
 	default:
-		ri.Error(ERR_DROP, "R_AddEntitySurfaces: Bad reType");
+		ri.Error(ERR_DROP, "R_AddEntitySurfaces: Bad reType Rend2");
 	}
 }
 
@@ -2680,10 +2680,10 @@ qboolean R_AddPortalView(const trRefdef_t* refdef)
 				}
 			}
 			break;
-#ifndef REND2_SP
+			//#ifndef REND2_SP
 		case RT_ENT_CHAIN:
 			break;
-#endif
+			//#endif
 		default:
 			break;
 		}

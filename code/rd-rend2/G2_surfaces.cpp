@@ -442,16 +442,16 @@ void G2_RemoveRedundantGeneratedSurfaces(surfaceInfo_v& slist, int* activeSurfac
 	}
 }
 
-qboolean G2_SetRootSurface(CGhoul2Info_v& ghoul2, const int modelIndex, const char* surface_name)
+qboolean G2_SetRootSurface(CGhoul2Info_v& ghoul2, const int model_index, const char* surface_name)
 {
 	int					surf;
 	uint32_t			flags;
 
-	assert(modelIndex >= 0 && modelIndex < ghoul2.size());
-	assert(ghoul2[modelIndex].current_model && ghoul2[modelIndex].animModel);
+	assert(model_index >= 0 && model_index < ghoul2.size());
+	assert(ghoul2[model_index].current_model && ghoul2[model_index].animModel);
 
-	model_t* mod_m = (model_t*)ghoul2[modelIndex].current_model;
-	model_t* mod_a = (model_t*)ghoul2[modelIndex].animModel;
+	model_t* mod_m = (model_t*)ghoul2[model_index].current_model;
+	model_t* mod_a = (model_t*)ghoul2[model_index].animModel;
 	mdxmHeader_t* mdxm = mod_m->data.glm->header;
 	mdxaHeader_t* mdxa = mod_a->data.gla;
 
@@ -466,7 +466,7 @@ qboolean G2_SetRootSurface(CGhoul2Info_v& ghoul2, const int modelIndex, const ch
 	if (surf != -1)
 	{
 		// set the root surface
-		ghoul2[modelIndex].mSurfaceRoot = surf;
+		ghoul2[model_index].mSurfaceRoot = surf;
 
 		return qtrue;
 	}

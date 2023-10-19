@@ -113,8 +113,8 @@ expand_right_edge(const JSAMPARRAY image_data, const int num_rows,
 
 METHODDEF(void)
 sep_downsample(const j_compress_ptr cinfo,
-	const JSAMPIMAGE input_buf, const JDIMENSION in_row_index,
-	const JSAMPIMAGE output_buf, const JDIMENSION out_row_group_index)
+	const JSAMp_image input_buf, const JDIMENSION in_row_index,
+	const JSAMp_image output_buf, const JDIMENSION out_row_group_index)
 {
 	const my_downsample_ptr downsample = (my_downsample_ptr)cinfo->downsample;
 	int ci;

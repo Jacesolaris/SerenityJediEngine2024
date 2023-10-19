@@ -1786,30 +1786,30 @@ static qboolean SV_G2API_HaveWeGhoul2Models(void* ghoul2)
 }
 
 static qboolean SV_G2API_GetBoltMatrix(void* ghoul2, const int model_index, const int bolt_index, mdxaBone_t* matrix,
-	const vec3_t angles, const vec3_t position, const int frameNum,
+	const vec3_t angles, const vec3_t position, const int frame_num,
 	qhandle_t* model_list, vec3_t scale)
 {
 	return re->G2API_GetBoltMatrix(*static_cast<CGhoul2Info_v*>(ghoul2), model_index, bolt_index, matrix, angles,
-		position, frameNum, model_list, scale);
+		position, frame_num, model_list, scale);
 }
 
 static qboolean SV_G2API_GetBoltMatrix_NoReconstruct(void* ghoul2, const int model_index, const int bolt_index,
 	mdxaBone_t* matrix, const vec3_t angles, const vec3_t position,
-	const int frameNum, qhandle_t* model_list, vec3_t scale)
+	const int frame_num, qhandle_t* model_list, vec3_t scale)
 {
 	re->G2API_BoltMatrixReconstruction(qfalse);
 	return re->G2API_GetBoltMatrix(*static_cast<CGhoul2Info_v*>(ghoul2), model_index, bolt_index, matrix, angles,
-		position, frameNum, model_list, scale);
+		position, frame_num, model_list, scale);
 }
 
 static qboolean SV_G2API_GetBoltMatrix_NoRecNoRot(void* ghoul2, const int model_index, const int bolt_index,
 	mdxaBone_t* matrix, const vec3_t angles, const vec3_t position,
-	const int frameNum, qhandle_t* model_list, vec3_t scale)
+	const int frame_num, qhandle_t* model_list, vec3_t scale)
 {
 	re->G2API_BoltMatrixReconstruction(qfalse);
 	re->G2API_BoltMatrixSPMethod(qtrue);
 	return re->G2API_GetBoltMatrix(*static_cast<CGhoul2Info_v*>(ghoul2), model_index, bolt_index, matrix, angles,
-		position, frameNum, model_list, scale);
+		position, frame_num, model_list, scale);
 }
 
 static int SV_G2API_InitGhoul2Model(void** ghoul2Ptr, const char* file_name, const int model_index,
@@ -1858,27 +1858,27 @@ static void SV_G2API_CleanGhoul2Models(void** ghoul2Ptr)
 
 static qboolean SV_G2API_SetBoneAngles(void* ghoul2, const int model_index, const char* bone_name, const vec3_t angles,
 	const int flags, const int up, const int right, const int forward,
-	qhandle_t* model_list, const int blend_time, const int current_time)
+	qhandle_t* model_list, const int blend_time, const int acurrent_time)
 {
 	return re->G2API_SetBoneAngles(*static_cast<CGhoul2Info_v*>(ghoul2), model_index, bone_name, angles, flags,
 		static_cast<const Eorientations>(up), static_cast<const Eorientations>(right),
-		static_cast<const Eorientations>(forward), model_list, blend_time, current_time);
+		static_cast<const Eorientations>(forward), model_list, blend_time, acurrent_time);
 }
 
 static qboolean SV_G2API_SetBoneAnim(void* ghoul2, const int model_index, const char* bone_name, const int start_frame,
-	const int end_frame, const int flags, const float anim_speed, const int current_time,
+	const int end_frame, const int flags, const float anim_speed, const int acurrent_time,
 	const float set_frame, const int blend_time)
 {
 	return re->G2API_SetBoneAnim(*static_cast<CGhoul2Info_v*>(ghoul2), model_index, bone_name, start_frame, end_frame,
-		flags, anim_speed, current_time, set_frame, blend_time);
+		flags, anim_speed, acurrent_time, set_frame, blend_time);
 }
 
-static qboolean SV_G2API_GetBoneAnim(void* ghoul2, const char* bone_name, const int current_time, float* current_frame,
+static qboolean SV_G2API_GetBoneAnim(void* ghoul2, const char* bone_name, const int acurrent_time, float* current_frame,
 	int* start_frame, int* end_frame, int* flags, float* anim_speed, int* model_list,
 	const int model_index)
 {
 	CGhoul2Info_v& g2 = *static_cast<CGhoul2Info_v*>(ghoul2);
-	return re->G2API_GetBoneAnim(g2, model_index, bone_name, current_time, current_frame, start_frame, end_frame, flags,
+	return re->G2API_GetBoneAnim(g2, model_index, bone_name, acurrent_time, current_frame, start_frame, end_frame, flags,
 		anim_speed, model_list);
 }
 
@@ -2020,20 +2020,20 @@ static void SV_G2API_SetRagDoll(void* ghoul2, sharedRagDollParams_t* params)
 
 static void SV_G2API_AnimateG2Models(void* ghoul2, const int time, sharedRagDollUpdateParams_t* params)
 {
-	CRagDollUpdateParams rduParams;
+	CRagDollUpdateParams rdu_params;
 
 	if (!params)
 		return;
 
-	VectorCopy(params->angles, rduParams.angles);
-	VectorCopy(params->position, rduParams.position);
-	VectorCopy(params->scale, rduParams.scale);
-	VectorCopy(params->velocity, rduParams.velocity);
+	VectorCopy(params->angles, rdu_params.angles);
+	VectorCopy(params->position, rdu_params.position);
+	VectorCopy(params->scale, rdu_params.scale);
+	VectorCopy(params->velocity, rdu_params.velocity);
 
-	rduParams.me = params->me;
-	rduParams.settleFrame = params->settleFrame;
+	rdu_params.me = params->me;
+	rdu_params.settleFrame = params->settleFrame;
 
-	re->G2API_AnimateG2ModelsRag(*static_cast<CGhoul2Info_v*>(ghoul2), time, &rduParams);
+	re->G2API_AnimateG2ModelsRag(*static_cast<CGhoul2Info_v*>(ghoul2), time, &rdu_params);
 }
 
 static qboolean SV_G2API_RagPCJConstraint(void* ghoul2, const char* bone_name, vec3_t min, vec3_t max)
@@ -3255,22 +3255,22 @@ intptr_t SV_GameSystemCalls(intptr_t* args)
 	case G_G2_ANIMATEG2MODELS:
 	{
 		const sharedRagDollUpdateParams_t* rduParamst = static_cast<sharedRagDollUpdateParams_t*>(VMA(3));
-		CRagDollUpdateParams rduParams;
+		CRagDollUpdateParams rdu_params;
 
 		if (!rduParamst)
 		{
 			return 0;
 		}
 
-		VectorCopy(rduParamst->angles, rduParams.angles);
-		VectorCopy(rduParamst->position, rduParams.position);
-		VectorCopy(rduParamst->scale, rduParams.scale);
-		VectorCopy(rduParamst->velocity, rduParams.velocity);
+		VectorCopy(rduParamst->angles, rdu_params.angles);
+		VectorCopy(rduParamst->position, rdu_params.position);
+		VectorCopy(rduParamst->scale, rdu_params.scale);
+		VectorCopy(rduParamst->velocity, rdu_params.velocity);
 
-		rduParams.me = rduParamst->me;
-		rduParams.settleFrame = rduParamst->settleFrame;
+		rdu_params.me = rduParamst->me;
+		rdu_params.settleFrame = rduParamst->settleFrame;
 
-		re->G2API_AnimateG2ModelsRag(*reinterpret_cast<CGhoul2Info_v*>(args[1]), args[2], &rduParams);
+		re->G2API_AnimateG2ModelsRag(*reinterpret_cast<CGhoul2Info_v*>(args[1]), args[2], &rdu_params);
 	}
 	return 0;
 

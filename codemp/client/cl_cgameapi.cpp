@@ -588,32 +588,32 @@ static qboolean CL_G2API_HaveWeGhoul2Models(void* ghoul2)
 }
 
 static qboolean CL_G2API_GetBoltMatrix(void* ghoul2, const int model_index, const int bolt_index, mdxaBone_t* matrix,
-	const vec3_t angles, const vec3_t position, const int frameNum,
+	const vec3_t angles, const vec3_t position, const int frame_num,
 	qhandle_t* model_list, vec3_t scale)
 {
 	if (!ghoul2) return qfalse;
 	return re->G2API_GetBoltMatrix(*static_cast<CGhoul2Info_v*>(ghoul2), model_index, bolt_index, matrix, angles,
-		position, frameNum, model_list, scale);
+		position, frame_num, model_list, scale);
 }
 
 static qboolean CL_G2API_GetBoltMatrix_NoReconstruct(void* ghoul2, const int model_index, const int bolt_index,
 	mdxaBone_t* matrix, const vec3_t angles, const vec3_t position,
-	const int frameNum, qhandle_t* model_list, vec3_t scale)
+	const int frame_num, qhandle_t* model_list, vec3_t scale)
 {
 	if (!ghoul2) return qfalse;
 	re->G2API_BoltMatrixReconstruction(qfalse);
 	return re->G2API_GetBoltMatrix(*static_cast<CGhoul2Info_v*>(ghoul2), model_index, bolt_index, matrix, angles,
-		position, frameNum, model_list, scale);
+		position, frame_num, model_list, scale);
 }
 
 static qboolean CL_G2API_GetBoltMatrix_NoRecNoRot(void* ghoul2, const int model_index, const int bolt_index,
 	mdxaBone_t* matrix, const vec3_t angles, const vec3_t position,
-	const int frameNum, qhandle_t* model_list, vec3_t scale)
+	const int frame_num, qhandle_t* model_list, vec3_t scale)
 {
 	if (!ghoul2) return qfalse;
 	re->G2API_BoltMatrixSPMethod(qtrue);
 	return re->G2API_GetBoltMatrix(*static_cast<CGhoul2Info_v*>(ghoul2), model_index, bolt_index, matrix, angles,
-		position, frameNum, model_list, scale);
+		position, frame_num, model_list, scale);
 }
 
 static int CL_G2API_InitGhoul2Model(void** ghoul2Ptr, const char* file_name, const int model_index,

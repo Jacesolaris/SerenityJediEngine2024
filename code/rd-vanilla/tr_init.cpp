@@ -188,6 +188,8 @@ cvar_t* broadsword_dircap;
 
 cvar_t* r_ratiofix;
 
+cvar_t* r_com_rend2;
+
 // More bullshit needed for the proper modular renderer
 cvar_t* sv_mapname;
 cvar_t* sv_mapChecksum;
@@ -309,6 +311,11 @@ void R_Splash()
 		qglTexCoord2f(1, 1);
 		qglVertex2f(x2, y2);
 		qglEnd();
+	}
+
+	if (r_com_rend2->integer != 0)
+	{
+		ri.Cvar_Set("com_rend2", "0");
 	}
 
 	ri.WIN_Present(&window);
@@ -1710,6 +1717,8 @@ void R_Register()
 	r_environmentMapping = ri.Cvar_Get("r_environmentMapping", "1", CVAR_ARCHIVE_ND);
 
 	r_screenshotJpegQuality = ri.Cvar_Get("r_screenshotJpegQuality", "95", CVAR_ARCHIVE_ND);
+
+	r_com_rend2 = ri.Cvar_Get("com_rend2", "0", CVAR_ARCHIVE | CVAR_SAVEGAME | CVAR_NORESTART);
 
 	ri.Cvar_CheckRange(r_screenshotJpegQuality, 10, 100, qtrue);
 

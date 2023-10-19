@@ -269,6 +269,8 @@ cvar_t* r_dynamicGlowHeight;
 cvar_t* r_debugContext;
 cvar_t* r_debugWeather;
 
+cvar_t* r_com_rend2;
+
 cvar_t* r_aspectCorrectFonts;
 
 extern void	RB_SetGL2D(void);
@@ -284,13 +286,42 @@ static void R_Splash()
 
 	GL_Cull(CT_TWO_SIDED);
 
-	image_t* pImage = R_FindImageFile("menu/splash", IMGTYPE_COLORALPHA, IMGFLAG_NONE);
-	if (pImage)
-		GL_Bind(pImage);
+	image_t* p_image;
+	const int splash_pick = rand() % 5;
+
+	switch (splash_pick)
+	{
+	case 0:
+		p_image = R_FindImageFile("menu/splash5", IMGTYPE_COLORALPHA, IMGFLAG_NONE);
+		break;
+	case 1:
+		p_image = R_FindImageFile("menu/splash4", IMGTYPE_COLORALPHA, IMGFLAG_NONE);
+		break;
+	case 2:
+		p_image = R_FindImageFile("menu/splash3", IMGTYPE_COLORALPHA, IMGFLAG_NONE);
+		break;
+	case 3:
+		p_image = R_FindImageFile("menu/splash2", IMGTYPE_COLORALPHA, IMGFLAG_NONE);
+		break;
+	case 4:
+		p_image = R_FindImageFile("menu/splash1", IMGTYPE_COLORALPHA, IMGFLAG_NONE);
+		break;
+	default:
+		p_image = R_FindImageFile("menu/splash", IMGTYPE_COLORALPHA, IMGFLAG_NONE);
+		break;
+	}
+
+	if (p_image)
+		GL_Bind(p_image);
 
 	GL_State(GLS_DEPTHTEST_DISABLE);
 	GLSL_BindProgram(&tr.splashScreenShader);
 	RB_InstantTriangle();
+
+	if (r_com_rend2->integer != 1)
+	{
+		ri->Cvar_Set("com_rend2", "1");
+	}
 
 	ri->WIN_Present(&window);
 }
@@ -1634,6 +1665,10 @@ void R_Register(void)
 	broadsword_effcorr = ri->Cvar_Get("broadsword_effcorr", "1", CVAR_NONE, "");
 	broadsword_ragtobase = ri->Cvar_Get("broadsword_ragtobase", "2", CVAR_NONE, "");
 	broadsword_dircap = ri->Cvar_Get("broadsword_dircap", "64", CVAR_NONE, "");
+
+	r_debugWeather = ri->Cvar_Get("r_debugWeather", "0", CVAR_ARCHIVE, "");
+
+	r_com_rend2 = ri->Cvar_Get("com_rend2", "0", CVAR_ARCHIVE | CVAR_NORESTART, "");
 	/*
 	Ghoul2 Insert End
 	*/

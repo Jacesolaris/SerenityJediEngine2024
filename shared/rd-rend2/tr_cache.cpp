@@ -177,7 +177,7 @@ void CModelCacheManager::DumpNonPure(void)
 
 	for (auto it = files.begin(); it != files.end(); /* empty */)
 	{
-		int iChecksum;
+		int iChecksum{};
 #ifndef REND2_SP
 		int iInPak = ri.FS_FileIsInPAK(it->path, &iChecksum);
 #else

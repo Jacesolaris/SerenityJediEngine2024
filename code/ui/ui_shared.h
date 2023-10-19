@@ -237,7 +237,7 @@ using displayContextDef_t = struct
 	void (*g2_CleanGhoul2Models)(CGhoul2Info_v& ghoul2);
 	int (*g2_AddBolt)(CGhoul2Info* ghl_info, const char* bone_name);
 	qboolean(*g2_GetBoltMatrix)(CGhoul2Info_v& ghoul2, int model_index, int bolt_index, mdxaBone_t* matrix,
-		const vec3_t angles, const vec3_t position, int frameNum, qhandle_t* model_list,
+		const vec3_t angles, const vec3_t position, int frame_num, qhandle_t* model_list,
 		const vec3_t scale);
 	void (*g2_GiveMeVectorFromMatrix)(mdxaBone_t& bolt_matrix, Eorientations flags, vec3_t& vec);
 

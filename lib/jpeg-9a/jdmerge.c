@@ -46,7 +46,7 @@ typedef struct {
 
 	/* Pointer to routine to do actual upsampling/conversion of one row group */
 	JMETHOD(void, upmethod, (j_decompress_ptr cinfo,
-		JSAMPIMAGE input_buf, JDIMENSION in_row_group_ctr,
+		JSAMp_image input_buf, JDIMENSION in_row_group_ctr,
 		JSAMPARRAY output_buf));
 
 	/* Private state for YCC->RGB conversion */
@@ -139,7 +139,7 @@ start_pass_merged_upsample(const j_decompress_ptr cinfo)
 
 METHODDEF(void)
 merged_2v_upsample(const j_decompress_ptr cinfo,
-	const JSAMPIMAGE input_buf, JDIMENSION* in_row_group_ctr,
+	const JSAMp_image input_buf, JDIMENSION* in_row_group_ctr,
 	JDIMENSION in_row_groups_avail,
 	const JSAMPARRAY output_buf, JDIMENSION* out_row_ctr,
 	JDIMENSION out_rows_avail)
@@ -189,7 +189,7 @@ merged_2v_upsample(const j_decompress_ptr cinfo,
 
 METHODDEF(void)
 merged_1v_upsample(const j_decompress_ptr cinfo,
-	const JSAMPIMAGE input_buf, JDIMENSION* in_row_group_ctr,
+	const JSAMp_image input_buf, JDIMENSION* in_row_group_ctr,
 	JDIMENSION in_row_groups_avail,
 	const JSAMPARRAY output_buf, JDIMENSION* out_row_ctr,
 	JDIMENSION out_rows_avail)
@@ -220,7 +220,7 @@ merged_1v_upsample(const j_decompress_ptr cinfo,
 
 METHODDEF(void)
 h2v1_merged_upsample(const j_decompress_ptr cinfo,
-	const JSAMPIMAGE input_buf, const JDIMENSION in_row_group_ctr,
+	const JSAMp_image input_buf, const JDIMENSION in_row_group_ctr,
 	const JSAMPARRAY output_buf)
 {
 	const my_upsample_ptr upsample = (my_upsample_ptr)cinfo->upsample;
@@ -278,7 +278,7 @@ h2v1_merged_upsample(const j_decompress_ptr cinfo,
 
 METHODDEF(void)
 h2v2_merged_upsample(const j_decompress_ptr cinfo,
-	const JSAMPIMAGE input_buf, const JDIMENSION in_row_group_ctr,
+	const JSAMp_image input_buf, const JDIMENSION in_row_group_ctr,
 	const JSAMPARRAY output_buf)
 {
 	const my_upsample_ptr upsample = (my_upsample_ptr)cinfo->upsample;

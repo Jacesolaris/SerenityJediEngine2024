@@ -85,7 +85,7 @@ start_pass_upsample(const j_decompress_ptr cinfo)
 
 METHODDEF(void)
 sep_upsample(const j_decompress_ptr cinfo,
-	const JSAMPIMAGE input_buf, JDIMENSION* in_row_group_ctr,
+	const JSAMp_image input_buf, JDIMENSION* in_row_group_ctr,
 	JDIMENSION in_row_groups_avail,
 	const JSAMPARRAY output_buf, JDIMENSION* out_row_ctr,
 	JDIMENSION out_rows_avail)

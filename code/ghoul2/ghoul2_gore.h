@@ -121,22 +121,22 @@ public:
 
 	virtual void EffectorCollision(const SRagDollEffectorCollision& data)
 	{
-		assert(0); // you probably meant to override this
+		//assert(0); // you probably meant to override this
 	}
 
 	virtual void RagDollBegin()
 	{
-		assert(0); // you probably meant to override this
+		//assert(0); // you probably meant to override this
 	}
 
 	virtual void RagDollSettled()
 	{
-		assert(0); // you probably meant to override this
+		//assert(0); // you probably meant to override this
 	}
 
 	virtual void Collision()
 	{
-		assert(0); // you probably meant to override this
+		//assert(0); // you probably meant to override this
 		// we had a collision, uhh I guess call SetRagDoll RP_DEATH_COLLISION
 	}
 

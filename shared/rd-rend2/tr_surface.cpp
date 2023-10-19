@@ -1294,7 +1294,7 @@ static void DoBoltSeg(vec3_t start, vec3_t end, vec3_t right, float radius)
 		VectorCopy(cur, old);
 		oldPerc = perc;
 	}
-	}
+}
 
 //------------------------------------------
 static void RB_SurfaceElectricity()
@@ -2394,6 +2394,7 @@ static void RB_SurfaceEntity(surfaceType_t * surfType) {
 	case RT_ORIENTEDLINE:
 		RB_SurfaceOrientedLine();
 		break;
+#else
 	case RT_ENT_CHAIN:
 	{
 		static trRefEntity_t tempEnt = *backEnd.currentEntity;
@@ -2418,7 +2419,6 @@ static void RB_SurfaceEntity(surfaceType_t * surfType) {
 		}
 	}
 	break;
-#else
 	case RT_LATHE:
 		RB_SurfaceLathe();
 		break;

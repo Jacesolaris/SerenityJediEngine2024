@@ -3320,7 +3320,7 @@ void R_CreateBuiltinImages(void) {
 	if (r_dlightMode->integer >= 2)
 	{
 		tr.pointShadowArrayImage = R_Create2DImageArray(
-			va("*pointshadowmapImage"),
+			va("*pointshadowmap_image"),
 			NULL,
 			DSHADOW_MAP_SIZE,
 			DSHADOW_MAP_SIZE,

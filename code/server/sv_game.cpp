@@ -689,13 +689,9 @@ static qboolean SV_G2API_SetAnimIndex(CGhoul2Info* ghl_info, const int index)
 	return re.G2API_SetAnimIndex(ghl_info, index);
 }
 
-static qboolean SV_G2API_SetBoneAnim(CGhoul2Info* ghl_info, const char* bone_name, const int start_frame,
-	const int end_frame,
-	const int flags, const float anim_speed, const int acurrent_time,
-	const float set_frame, const int blend_time)
+static qboolean SV_G2API_SetBoneAnim(CGhoul2Info* ghl_info, const char* bone_name, const int start_frame,const int end_frame,const int flags, const float anim_speed, const int acurrent_time,const float set_frame, const int blend_time)
 {
-	return re.G2API_SetBoneAnim(ghl_info, bone_name, start_frame, end_frame, flags,
-		anim_speed, acurrent_time, set_frame, blend_time);
+	return re.G2API_SetBoneAnim(ghl_info, bone_name, start_frame, end_frame, flags,	anim_speed, acurrent_time, set_frame, blend_time);
 }
 
 static qboolean SV_G2API_SetBoneAnimIndex(CGhoul2Info* ghl_info, const int index, const int start_frame,
@@ -716,14 +712,9 @@ static qboolean SV_G2API_SetBoneAngles(CGhoul2Info* ghl_info, const char* bone_n
 		model_list, blend_time, acurrent_time);
 }
 
-static qboolean SV_G2API_SetBoneAnglesOffset(CGhoul2Info* ghl_info, const char* bone_name, const vec3_t angles,
-	const int flags,
-	const Eorientations up, const Eorientations right,
-	const Eorientations forward, qhandle_t* model_list,
-	const int blend_time, const int current_time, const vec3_t offset)
+static qboolean SV_G2API_SetBoneAnglesOffset(CGhoul2Info* ghl_info, const char* bone_name, const vec3_t angles, const int flags, const Eorientations up, const Eorientations left, const Eorientations forward, qhandle_t* model_list, const int blend_time, const int acurrent_time, const vec3_t offset)
 {
-	return re.G2API_SetBoneAnglesOffset(ghl_info, bone_name, angles, flags, up, right, forward, model_list, blend_time,
-		current_time, offset);
+	return re.G2API_SetBoneAnglesOffset(ghl_info, bone_name, angles, flags, up, left, forward, nullptr, blend_time, acurrent_time, nullptr);
 }
 
 static qboolean SV_G2API_SetBoneAnglesIndex(CGhoul2Info* ghl_info, const int index, const vec3_t angles, const int flags,

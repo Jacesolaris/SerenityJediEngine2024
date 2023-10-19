@@ -120,7 +120,7 @@ METHODDEF(void)
 pre_process_data(const j_compress_ptr cinfo,
 	const JSAMPARRAY input_buf, JDIMENSION* in_row_ctr,
 	const JDIMENSION in_rows_avail,
-	const JSAMPIMAGE output_buf, JDIMENSION* out_row_group_ctr,
+	const JSAMp_image output_buf, JDIMENSION* out_row_group_ctr,
 	const JDIMENSION out_row_groups_avail)
 {
 	const my_prep_ptr prep = (my_prep_ptr)cinfo->prep;
@@ -187,7 +187,7 @@ METHODDEF(void)
 pre_process_context(const j_compress_ptr cinfo,
 	const JSAMPARRAY input_buf, JDIMENSION* in_row_ctr,
 	const JDIMENSION in_rows_avail,
-	const JSAMPIMAGE output_buf, JDIMENSION* out_row_group_ctr,
+	const JSAMp_image output_buf, JDIMENSION* out_row_group_ctr,
 	const JDIMENSION out_row_groups_avail)
 {
 	const my_prep_ptr prep = (my_prep_ptr)cinfo->prep;

@@ -44,6 +44,7 @@ keyGlobals_t kg;
 extern cvar_t* cl_newgameplusJKA;
 extern cvar_t* cl_newgameplusJKO;
 extern cvar_t* cl_com_outcast;
+extern cvar_t* cl_rend2;
 
 // do NOT blithely change any of the key names (3rd field) here, since they have to match the key binds
 //	in the CFG files, they're also prepended with "KEYNAME_" when looking up StripEd references

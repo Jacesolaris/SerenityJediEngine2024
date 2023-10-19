@@ -204,7 +204,7 @@ public:
 	vec3_t				rayEnd;
 	CCollisionRecord* collRecMap;
 	const int			ent_num;
-	const int			modelIndex;
+	const int			model_index;
 	const skin_t* skin;
 #ifdef _WIN32
 	const struct shader_t* cust_shader;
@@ -260,7 +260,7 @@ public:
 		, lod(initlod)
 		, collRecMap(initcollRecMap)
 		, ent_num(initentNum)
-		, modelIndex(initmodelIndex)
+		, model_index(initmodelIndex)
 		, skin(initskin)
 		, cust_shader(initcust_shader)
 		, TransformedVertsArray(initTransformedVertsArray)
@@ -563,9 +563,9 @@ void G2_TransformSurfaces(int surfaceNum, surfaceInfo_v& rootSList,
 
 // main calling point for the model transform for collision detection. At this point all of the skeleton has been transformed.
 #ifdef _G2_GORE
-void G2_TransformModel(CGhoul2Info_v& ghoul2, const int frameNum, vec3_t scale, CMiniHeap* G2VertSpace, int use_lod, const bool ApplyGore, const SSkinGoreData* gore)
+void G2_TransformModel(CGhoul2Info_v& ghoul2, const int frame_num, vec3_t scale, CMiniHeap* G2VertSpace, int use_lod, const bool ApplyGore, const SSkinGoreData* gore)
 #else
-void G2_TransformModel(CGhoul2Info_v& ghoul2, const int frameNum, vec3_t scale, CMiniHeap* G2VertSpace, int use_lod)
+void G2_TransformModel(CGhoul2Info_v& ghoul2, const int frame_num, vec3_t scale, CMiniHeap* G2VertSpace, int use_lod)
 #endif
 {
 	int				i, lod;
@@ -621,7 +621,7 @@ void G2_TransformModel(CGhoul2Info_v& ghoul2, const int frameNum, vec3_t scale, 
 		assert(g.mBoneCache);
 		assert(G2_MODEL_OK(&g));
 		// stop us building this model more than once per frame
-		g.mMeshFrameNum = frameNum;
+		g.mMeshFrameNum = frame_num;
 
 		// decide the LOD
 #ifdef _G2_GORE
@@ -1161,7 +1161,7 @@ static bool G2_TracePolys(const mdxmSurface_t* surface, const mdxmSurfHierarchy_
 					newCol.mPolyIndex = j;
 					newCol.mentity_num = TS.ent_num;
 					newCol.mSurfaceIndex = surface->thisSurfaceIndex;
-					newCol.mModelIndex = TS.modelIndex;
+					newCol.mModelIndex = TS.model_index;
 					if (face > 0)
 					{
 						newCol.mFlags = G2_FRONTFACE;
@@ -1391,7 +1391,7 @@ static bool G2_RadiusTracePolys(
 					newCol.mPolyIndex = j;
 					newCol.mentity_num = TS.ent_num;
 					newCol.mSurfaceIndex = surface->thisSurfaceIndex;
-					newCol.mModelIndex = TS.modelIndex;
+					newCol.mModelIndex = TS.model_index;
 					//					if (face>0)
 					//					{
 					newCol.mFlags = G2_FRONTFACE;

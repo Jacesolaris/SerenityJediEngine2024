@@ -71,7 +71,7 @@ extern "C" {
 
 	typedef JSAMPLE FAR* JSAMPROW;	/* ptr to one image row of pixel samples. */
 	typedef JSAMPROW* JSAMPARRAY;	/* ptr to some rows (a 2-D sample array) */
-	typedef JSAMPARRAY* JSAMPIMAGE;	/* a 3-D sample array: top index is color */
+	typedef JSAMPARRAY* JSAMp_image;	/* a 3-D sample array: top index is color */
 
 	typedef JCOEF JBLOCK[DCTSIZE2];	/* one block of coefficients */
 	typedef JBLOCK FAR* JBLOCKROW;	/* pointer to one row of coefficient blocks */
@@ -997,7 +997,7 @@ extern "C" {
 
 	/* Replaces jpeg_write_scanlines when writing raw downsampled data. */
 	EXTERN(JDIMENSION) jpeg_write_raw_data JPP((j_compress_ptr cinfo,
-		JSAMPIMAGE data,
+		JSAMp_image data,
 		JDIMENSION num_lines));
 
 	/* Write a special marker.  See libjpeg.txt concerning safe usage. */
@@ -1035,7 +1035,7 @@ extern "C" {
 
 	/* Replaces jpeg_read_scanlines when reading raw downsampled data. */
 	EXTERN(JDIMENSION) jpeg_read_raw_data JPP((j_decompress_ptr cinfo,
-		JSAMPIMAGE data,
+		JSAMp_image data,
 		JDIMENSION max_lines));
 
 	/* Additional entry points for buffered-image mode. */

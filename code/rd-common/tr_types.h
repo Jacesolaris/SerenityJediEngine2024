@@ -134,6 +134,7 @@ using refEntityType_t = enum
 	// doesn't draw anything, just info for portals
 	RT_CLOUDS,
 	RT_LIGHTNING,
+	RT_ENT_CHAIN,
 
 	RT_MAX_REF_ENTITY_TYPE
 };
@@ -237,6 +238,17 @@ using refEntity_t = struct
 	Ghoul2 Insert End
 	*/
 	byte newShaderRGBA[MAX_NEW_ENT_RGB][4]; // colors used by colorSrc=vertex shaders
+
+	union
+	{
+		//		int			skinNum;		// inline skin index
+		//		ivec3_t		terxelCoords;	// coords of patch for RT_TERXELS
+		struct
+		{
+			int		miniStart;
+			int		miniCount;
+		} uMini;
+	} uRefEnt;
 };
 
 constexpr auto MAX_RENDER_STRINGS = 8;

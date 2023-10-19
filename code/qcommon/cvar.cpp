@@ -1447,6 +1447,8 @@ void Cvar_Init()
 
 	g_Weather = Cvar_Get("r_weather", "0", CVAR_ARCHIVE);
 
+	com_rend2 = Cvar_Get("com_rend2", "0", CVAR_ARCHIVE | CVAR_SAVEGAME | CVAR_NORESTART);
+
 	Cmd_AddCommand("print", Cvar_Print_f);
 	Cmd_SetCommandCompletionFunc("print", Cvar_CompleteCvarName);
 	Cmd_AddCommand("toggle", Cvar_Toggle_f);

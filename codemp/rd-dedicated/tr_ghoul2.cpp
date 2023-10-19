@@ -125,7 +125,7 @@ static inline int G2_Find_Bone_ByNum(const model_t* mod, boneInfo_v& blist, cons
 }
 #endif
 
-constexpr static mdxaBone_t identityMatrix =
+constexpr static mdxaBone_t identity_matrix =
 {
 	{
 		{0.0f, -1.0f, 0.0f, 0.0f},
@@ -583,8 +583,8 @@ void G2_GetBoneBasepose(const CGhoul2Info& ghoul2, const int bone_num, mdxaBone_
 	if (!ghoul2.mBoneCache)
 	{
 		// yikes
-		ret_basepose = const_cast<mdxaBone_t*>(&identityMatrix);
-		ret_basepose_inv = const_cast<mdxaBone_t*>(&identityMatrix);
+		ret_basepose = const_cast<mdxaBone_t*>(&identity_matrix);
+		ret_basepose_inv = const_cast<mdxaBone_t*>(&identity_matrix);
 		return;
 	}
 	assert(ghoul2.mBoneCache);
@@ -651,10 +651,10 @@ void G2_GetBoneMatrixLow(const CGhoul2Info& ghoul2, const int bone_num, const ve
 {
 	if (!ghoul2.mBoneCache)
 	{
-		retMatrix = identityMatrix;
+		retMatrix = identity_matrix;
 		// yikes
-		ret_basepose = const_cast<mdxaBone_t*>(&identityMatrix);
-		ret_basepose_inv = const_cast<mdxaBone_t*>(&identityMatrix);
+		ret_basepose = const_cast<mdxaBone_t*>(&identity_matrix);
+		ret_basepose_inv = const_cast<mdxaBone_t*>(&identity_matrix);
 		return;
 	}
 	mdxaBone_t bolt;
@@ -711,10 +711,10 @@ int G2_GetParentBoneMatrixLow(const CGhoul2Info& ghoul2, const int bone_num, con
 		if (parent < 0 || parent >= bone_cache.header->numBones)
 		{
 			parent = -1;
-			retMatrix = identityMatrix;
+			retMatrix = identity_matrix;
 			// yikes
-			ret_basepose = const_cast<mdxaBone_t*>(&identityMatrix);
-			ret_basepose_inv = const_cast<mdxaBone_t*>(&identityMatrix);
+			ret_basepose = const_cast<mdxaBone_t*>(&identity_matrix);
+			ret_basepose_inv = const_cast<mdxaBone_t*>(&identity_matrix);
 		}
 		else
 		{
@@ -2743,7 +2743,7 @@ void G2_GetBoltMatrixLow(CGhoul2Info& ghoul2, int boltNum, const vec3_t scale, m
 {
 	if (!ghoul2.mBoneCache)
 	{
-		retMatrix = identityMatrix;
+		retMatrix = identity_matrix;
 		return;
 	}
 	assert(ghoul2.mBoneCache);
@@ -2753,7 +2753,7 @@ void G2_GetBoltMatrixLow(CGhoul2Info& ghoul2, int boltNum, const vec3_t scale, m
 
 	if (boltList.size() < 1)
 	{
-		retMatrix = identityMatrix;
+		retMatrix = identity_matrix;
 		return;
 	}
 
@@ -2821,7 +2821,7 @@ void G2_GetBoltMatrixLow(CGhoul2Info& ghoul2, int boltNum, const vec3_t scale, m
 	else
 	{
 		// we have a bolt without a bone or surface, not a huge problem but we ought to at least clear the bolt matrix
-		retMatrix = identityMatrix;
+		retMatrix = identity_matrix;
 	}
 }
 
@@ -2851,12 +2851,12 @@ static void RootMatrix(CGhoul2Info_v& ghoul2, const int time, const vec3_t scale
 				tempMatrix.matrix[2][2] = 1.0f;
 				tempMatrix.matrix[2][3] = -bolt.matrix[2][3];
 				//				Inverse_Matrix(&bolt, &tempMatrix);
-				Multiply_3x4Matrix(&retMatrix, &tempMatrix, const_cast<mdxaBone_t*>(&identityMatrix));
+				Multiply_3x4Matrix(&retMatrix, &tempMatrix, const_cast<mdxaBone_t*>(&identity_matrix));
 				return;
 			}
 		}
 	}
-	retMatrix = identityMatrix;
+	retMatrix = identity_matrix;
 }
 
 #if 0
@@ -2910,7 +2910,7 @@ bool G2_NeedsRecalc(CGhoul2Info* ghl_info, const int frame_num)
 G2_ConstructGhoulSkeleton - builds a complete skeleton for all ghoul models in a CGhoul2Info_v class	- using LOD 0
 ==============
 */
-void G2_ConstructGhoulSkeleton(CGhoul2Info_v& ghoul2, const int frameNum, const bool checkForNewOrigin,
+void G2_ConstructGhoulSkeleton(CGhoul2Info_v& ghoul2, const int frame_num, const bool checkForNewOrigin,
 	const vec3_t scale)
 {
 #ifdef G2_PERFORMANCE_ANALYSIS
@@ -2925,11 +2925,11 @@ void G2_ConstructGhoulSkeleton(CGhoul2Info_v& ghoul2, const int frameNum, const 
 
 	if (checkForNewOrigin)
 	{
-		RootMatrix(ghoul2, frameNum, scale, rootMatrix);
+		RootMatrix(ghoul2, frame_num, scale, rootMatrix);
 	}
 	else
 	{
-		rootMatrix = identityMatrix;
+		rootMatrix = identity_matrix;
 	}
 
 	G2_Sort_Models(ghoul2, model_list, &modelCount);
@@ -2949,15 +2949,15 @@ void G2_ConstructGhoulSkeleton(CGhoul2Info_v& ghoul2, const int frameNum, const 
 
 				mdxaBone_t bolt;
 				G2_GetBoltMatrixLow(ghoul2[boltMod], boltNum, scale, bolt);
-				G2_TransformGhoulBones(ghoul2[i].mBlist, bolt, ghoul2[i], frameNum, checkForNewOrigin);
+				G2_TransformGhoulBones(ghoul2[i].mBlist, bolt, ghoul2[i], frame_num, checkForNewOrigin);
 			}
 #ifdef _G2_LISTEN_SERVER_OPT
-			else if (ghoul2[i].entity_num == ENTITYNUM_NONE || ghoul2[i].mSkelFrameNum != frameNum)
+			else if (ghoul2[i].entity_num == ENTITYNUM_NONE || ghoul2[i].mSkelFrameNum != frame_num)
 #else
 			else
 #endif
 			{
-				G2_TransformGhoulBones(ghoul2[i].mBlist, rootMatrix, ghoul2[i], frameNum, checkForNewOrigin);
+				G2_TransformGhoulBones(ghoul2[i].mBlist, rootMatrix, ghoul2[i], frame_num, checkForNewOrigin);
 			}
 		}
 	}

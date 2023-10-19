@@ -237,7 +237,7 @@ typedef struct
 	int			iUploadWidth;
 	int			iUploadHeight;
 	int			iScratchPadNumber;
-	image_t* pImage;	// old image screen
+	image_t* p_image;	// old image screen
 	image_t* pDissolve;	// fuzzy thing
 	image_t* pBlack;	// small black image for clearing
 	int			iStartTime;	// 0 = not processing
@@ -267,7 +267,7 @@ Dissolve_t Dissolve = { 0 };
 
 static void RE_Blit(float fX0, float fY0, float fX1, float fY1, float fX2, float fY2, float fX3, float fY3,
 	//float fU0, float fV0, float fU1, float fV1, float fU2, float fV2, float fU3, float fV3,
-	image_t* pImage, int iGLState, bool atest
+	image_t* p_image, int iGLState, bool atest
 )
 {
 	//
@@ -280,7 +280,7 @@ static void RE_Blit(float fX0, float fY0, float fX1, float fY1, float fX2, float
 
 	GL_State(iGLState);
 	GL_Cull(CT_TWO_SIDED);
-	GL_BindToTMU(pImage, TB_COLORMAP);
+	GL_BindToTMU(p_image, TB_COLORMAP);
 
 	shaderProgram_t* shaderProgram = atest ? &tr.genericShader[GENERICDEF_USE_ALPHA_TEST] : &tr.genericShader[0];
 	GLSL_BindProgram(shaderProgram);
@@ -585,14 +585,14 @@ qboolean RE_ProcessDissolve(void)
 				//
 				x0 = 0.0f;
 				y0 = 0.0f;
-				x1 = fXScaleFactor * Dissolve.pImage->width;
+				x1 = fXScaleFactor * Dissolve.p_image->width;
 				y1 = y0;
 				x2 = x1;
-				y2 = fYScaleFactor * Dissolve.pImage->height;
+				y2 = fYScaleFactor * Dissolve.p_image->height;
 				x3 = x0;
 				y3 = y2;
 
-				RE_Blit(x0, y0, x1, y1, x2, y2, x3, y3, Dissolve.pImage, GLS_DEPTHFUNC_EQUAL, false);
+				RE_Blit(x0, y0, x1, y1, x2, y2, x3, y3, Dissolve.p_image, GLS_DEPTHFUNC_EQUAL, false);
 			}
 		}
 
@@ -724,7 +724,7 @@ qboolean RE_InitDissolve(qboolean bForceCircularExtroWipe)
 				&Dissolve.iUploadHeight	// int *piHeight
 			);
 
-			Dissolve.pImage = R_CreateImage("*DissolveImage",		// const char *name
+			Dissolve.p_image = R_CreateImage("*DissolveImage",		// const char *name
 				pbScreenSprite,			// const byte *pic
 				Dissolve.iUploadWidth,	// int width
 				Dissolve.iUploadHeight,	// int height

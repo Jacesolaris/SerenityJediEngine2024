@@ -43,20 +43,20 @@ typedef my_post_controller* my_post_ptr;
 /* Forward declarations */
 METHODDEF(void) post_process_1pass
 JPP((j_decompress_ptr cinfo,
-	JSAMPIMAGE input_buf, JDIMENSION* in_row_group_ctr,
+	JSAMp_image input_buf, JDIMENSION* in_row_group_ctr,
 	JDIMENSION in_row_groups_avail,
 	JSAMPARRAY output_buf, JDIMENSION* out_row_ctr,
 	JDIMENSION out_rows_avail));
 #ifdef QUANT_2PASS_SUPPORTED
 METHODDEF(void) post_process_prepass
 JPP((j_decompress_ptr cinfo,
-	JSAMPIMAGE input_buf, JDIMENSION* in_row_group_ctr,
+	JSAMp_image input_buf, JDIMENSION* in_row_group_ctr,
 	JDIMENSION in_row_groups_avail,
 	JSAMPARRAY output_buf, JDIMENSION* out_row_ctr,
 	JDIMENSION out_rows_avail));
 METHODDEF(void) post_process_2pass
 JPP((j_decompress_ptr cinfo,
-	JSAMPIMAGE input_buf, JDIMENSION* in_row_group_ctr,
+	JSAMp_image input_buf, JDIMENSION* in_row_group_ctr,
 	JDIMENSION in_row_groups_avail,
 	JSAMPARRAY output_buf, JDIMENSION* out_row_ctr,
 	JDIMENSION out_rows_avail));
@@ -121,7 +121,7 @@ start_pass_dpost(const j_decompress_ptr cinfo, const J_BUF_MODE pass_mode)
 
 METHODDEF(void)
 post_process_1pass(const j_decompress_ptr cinfo,
-	const JSAMPIMAGE input_buf, JDIMENSION* in_row_group_ctr,
+	const JSAMp_image input_buf, JDIMENSION* in_row_group_ctr,
 	const JDIMENSION in_row_groups_avail,
 	const JSAMPARRAY output_buf, JDIMENSION* out_row_ctr,
 	const JDIMENSION out_rows_avail)
@@ -152,7 +152,7 @@ post_process_1pass(const j_decompress_ptr cinfo,
 
 METHODDEF(void)
 post_process_prepass(const j_decompress_ptr cinfo,
-	const JSAMPIMAGE input_buf, JDIMENSION* in_row_group_ctr,
+	const JSAMp_image input_buf, JDIMENSION* in_row_group_ctr,
 	const JDIMENSION in_row_groups_avail,
 	JSAMPARRAY output_buf, JDIMENSION* out_row_ctr,
 	JDIMENSION out_rows_avail)
@@ -194,7 +194,7 @@ post_process_prepass(const j_decompress_ptr cinfo,
 
 METHODDEF(void)
 post_process_2pass(const j_decompress_ptr cinfo,
-	JSAMPIMAGE input_buf, JDIMENSION* in_row_group_ctr,
+	JSAMp_image input_buf, JDIMENSION* in_row_group_ctr,
 	JDIMENSION in_row_groups_avail,
 	const JSAMPARRAY output_buf, JDIMENSION* out_row_ctr,
 	const JDIMENSION out_rows_avail)

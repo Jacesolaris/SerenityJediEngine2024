@@ -57,6 +57,7 @@ void UI_ForceMenuOff()
 extern vmCvar_t ui_g_newgameplusJKA;
 extern vmCvar_t ui_g_newgameplusJKO;
 extern vmCvar_t ui_com_outcast;
+extern vmCvar_t ui_com_rend2;
 
 /*
 =================

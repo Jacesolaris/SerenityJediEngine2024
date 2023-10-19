@@ -264,6 +264,8 @@ cvar_t* g_saberLockCinematicCamera;
 
 cvar_t* g_remove_unused_weapons;
 
+cvar_t* com_rend2;
+
 qboolean stop_icarus = qfalse;
 
 extern char* G_GetLocationForEnt(const gentity_t* ent);
@@ -847,8 +849,7 @@ void G_InitCvars()
 
 	gi.cvar("g_clearstats", "1", CVAR_ROM | CVAR_NORESTART);
 
-	g_InvertedHolsteredSabers = gi.
-		cvar("g_InvertedHolsteredSabers", "0", CVAR_ARCHIVE | CVAR_SAVEGAME | CVAR_NORESTART);
+	g_InvertedHolsteredSabers = gi.cvar("g_InvertedHolsteredSabers", "0", CVAR_ARCHIVE | CVAR_SAVEGAME | CVAR_NORESTART);
 	//if 1, saber faces up when holstered not down
 
 	g_noIgniteTwirl = gi.cvar("g_noIgniteTwirl", "0", CVAR_ARCHIVE); //if 1, don't do ignite twirl
@@ -887,6 +888,8 @@ void G_InitCvars()
 	g_attackskill = gi.cvar("g_attackskill", "3", CVAR_ARCHIVE);
 
 	g_saberLockCinematicCamera = gi.cvar("g_saberLockCinematicCamera", "0", CVAR_ARCHIVE);
+
+	com_rend2 = gi.cvar("com_rend2", "0", CVAR_ARCHIVE | CVAR_SAVEGAME | CVAR_NORESTART);
 }
 
 /*

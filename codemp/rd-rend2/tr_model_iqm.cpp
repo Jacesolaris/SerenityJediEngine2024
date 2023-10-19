@@ -26,7 +26,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #define	LL(x) x=LittleLong(x)
 
 // 3x4 identity matrix
-static float identityMatrix[12] = {
+static float identity_matrix[12] = {
 	1, 0, 0, 0,
 	0, 1, 0, 0,
 	0, 0, 1, 0
@@ -954,10 +954,10 @@ static void ComputePoseMats(iqmData_t* data, int frame, int oldframe,
 		for (i = 0; i < data->num_joints; i++, joint++) {
 			if (*joint >= 0) {
 				Matrix34Multiply(mat + 12 * *joint,
-					identityMatrix, mat + 12 * i);
+					identity_matrix, mat + 12 * i);
 			}
 			else {
-				Com_Memcpy(mat + 12 * i, identityMatrix, 12 * sizeof(float));
+				Com_Memcpy(mat + 12 * i, identity_matrix, 12 * sizeof(float));
 			}
 		}
 		return;
@@ -1074,7 +1074,7 @@ void RB_IQMSurfaceAnim(surfaceType_t* surface) {
 
 		if (data->num_poses == 0 || numWeights == 0) {
 			// no blend joint, use identity matrix.
-			Com_Memcpy(vtxMat, identityMatrix, 12 * sizeof(float));
+			Com_Memcpy(vtxMat, identity_matrix, 12 * sizeof(float));
 		}
 		else {
 			// compute the vertex matrix by blending the up to

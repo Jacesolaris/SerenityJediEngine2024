@@ -122,7 +122,7 @@ typedef struct {
 	/* Remaining fields are only used in the context case. */
 
 	/* These are the master pointers to the funny-order pointer lists. */
-	JSAMPIMAGE xbuffer[2];	/* pointers to weird pointer lists */
+	JSAMp_image xbuffer[2];	/* pointers to weird pointer lists */
 
 	int whichptr;			/* indicates which pointer set is now in use */
 	int context_state;		/* process_data state machine status */
@@ -164,7 +164,7 @@ alloc_funny_pointers(const j_decompress_ptr cinfo)
 	/* Get top-level space for component array pointers.
 	 * We alloc both arrays with one call to save a few cycles.
 	 */
-	mainp->xbuffer[0] = (JSAMPIMAGE)
+	mainp->xbuffer[0] = (JSAMp_image)
 		(*cinfo->mem->alloc_small) ((j_common_ptr)cinfo, JPOOL_IMAGE,
 			cinfo->num_components * 2 * SIZEOF(JSAMPARRAY));
 	mainp->xbuffer[1] = mainp->xbuffer[0] + cinfo->num_components;
@@ -446,7 +446,7 @@ process_data_crank_post(const j_decompress_ptr cinfo,
 	const JSAMPARRAY output_buf, JDIMENSION* out_row_ctr,
 	const JDIMENSION out_rows_avail)
 {
-	(*cinfo->post->post_process_data) (cinfo, (JSAMPIMAGE)NULL,
+	(*cinfo->post->post_process_data) (cinfo, (JSAMp_image)NULL,
 		(JDIMENSION*)NULL, (JDIMENSION)0,
 		output_buf, out_row_ctr, out_rows_avail);
 }

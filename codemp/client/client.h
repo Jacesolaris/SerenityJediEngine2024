@@ -234,7 +234,7 @@ using clientConnection_t = struct clientConnection_s
 
 	int timeDemoFrames; // counter of rendered frames
 	int timeDemoStart; // cls.realtime before first frame
-	int timeDemoBaseTime; // each frame will be at this time + frameNum * 50
+	int timeDemoBaseTime; // each frame will be at this time + frame_num * 50
 
 	float aviVideoFrameRemainder;
 	float aviSoundFrameRemainder;

@@ -446,6 +446,8 @@ vmCvar_t cg_newgameplusJKO;
 
 vmCvar_t cg_saberLockCinematicCamera;
 
+vmCvar_t cg_com_rend2;
+
 using cvarTable_t = struct
 {
 	vmCvar_t* vmCvar;
@@ -638,10 +640,7 @@ static cvarTable_t cvarTable[] = {
 	{&r_ratiofix, "r_ratiofix", "0", CVAR_ARCHIVE},
 	{&cg_hudRatio, "cg_hudRatio", "1", CVAR_ARCHIVE},
 
-	{
-		&cg_SaberInnonblockableAttackWarning, "g_SaberInnonblockableAttackWarning", "0",
-		CVAR_ARCHIVE | CVAR_SAVEGAME | CVAR_NORESTART
-	},
+	{&cg_SaberInnonblockableAttackWarning, "g_SaberInnonblockableAttackWarning", "0",CVAR_ARCHIVE | CVAR_SAVEGAME | CVAR_NORESTART},
 	{&cg_IsSaberDoingAttackDamage, "g_IsSaberDoingAttackDamage", "0", CVAR_ARCHIVE},
 	{&cg_DebugSaberCombat, "g_DebugSaberCombat", "0", CVAR_ARCHIVE},
 
@@ -650,6 +649,8 @@ static cvarTable_t cvarTable[] = {
 	{&cg_newgameplusJKO, "g_newgameplusJKO", "0", CVAR_ARCHIVE | CVAR_SAVEGAME | CVAR_NORESTART},
 
 	{&cg_saberLockCinematicCamera, "g_saberLockCinematicCamera", "0", CVAR_ARCHIVE },
+
+	{&cg_com_rend2, "com_rend2", "0", CVAR_ARCHIVE | CVAR_SAVEGAME | CVAR_NORESTART },
 };
 
 static constexpr size_t cvarTableSize = std::size(cvarTable);

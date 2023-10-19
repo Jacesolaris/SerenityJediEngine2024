@@ -2301,7 +2301,7 @@ static void G2_RagDoll(CGhoul2Info_v& ghoul2_v, const int g2_index, CRagDollUpda
 #endif
 
 	//	params->DebugLine(handPos,handPos2,false);
-	const int frameNum = G2API_GetTime(0);
+	const int frame_num = G2API_GetTime(0);
 	CGhoul2Info& ghoul2 = ghoul2_v[g2_index];
 	assert(ghoul2.mFileName[0]);
 	boneInfo_v& blist = ghoul2.mBlist;
@@ -2351,7 +2351,7 @@ static void G2_RagDoll(CGhoul2Info_v& ghoul2_v, const int g2_index, CRagDollUpda
 			if (bone.flags & BONE_ANGLES_RAGDOLL)
 			{
 				// check for state transitions
-				decay = G2_RagSetState(ghoul2, bone, frameNum, d_pos); // set the current state
+				decay = G2_RagSetState(ghoul2, bone, frame_num, d_pos); // set the current state
 				if (ragState == ERS_SETTLED)
 				{
 #if 0
@@ -2395,7 +2395,7 @@ static void G2_RagDoll(CGhoul2Info_v& ghoul2_v, const int g2_index, CRagDollUpda
 	if (iters)
 	{
 		constexpr bool reset_origin = false;
-		if (!G2_RagDollSetup(ghoul2, frameNum, reset_origin, d_pos, any_rendered))
+		if (!G2_RagDollSetup(ghoul2, frame_num, reset_origin, d_pos, any_rendered))
 		{
 			return;
 		}
@@ -2403,7 +2403,7 @@ static void G2_RagDoll(CGhoul2Info_v& ghoul2_v, const int g2_index, CRagDollUpda
 
 		for (int i = 0; i < iters; i++)
 		{
-			G2_RagDollCurrentPosition(ghoul2_v, g2_index, frameNum, params->angles, d_pos, params->scale);
+			G2_RagDollCurrentPosition(ghoul2_v, g2_index, frame_num, params->angles, d_pos, params->scale);
 
 			if (G2_RagDollSettlePositionNumeroTrois(ghoul2_v, params, cur_time))
 			{
@@ -2435,7 +2435,7 @@ static void G2_RagDoll(CGhoul2Info_v& ghoul2_v, const int g2_index, CRagDollUpda
 		//OutputDebugString(va("%f \n",worldMins[2]));
 		//		params->DebugLine(worldMins,worldMaxs,true);
 #endif
-		G2_RagDollCurrentPosition(ghoul2_v, g2_index, frameNum, params->angles, params->position, params->scale);
+		G2_RagDollCurrentPosition(ghoul2_v, g2_index, frame_num, params->angles, params->position, params->scale);
 		//		SV_UnlinkEntity(params->me);
 		//		params->me->SetMins(BB_SHOOTING_SIZE,ragBoneMins);
 		//		params->me->SetMaxs(BB_SHOOTING_SIZE,ragBoneMaxs);

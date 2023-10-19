@@ -1648,7 +1648,7 @@ void BG_GetVehicleSkinName(char* skinname)
 extern int BG_GetTime(void);
 extern int trap_G2API_AddBolt(void* ghoul2, int model_index, const char* bone_name);
 extern qboolean trap_G2API_GetBoltMatrix(void* ghoul2, const int model_index, const int bolt_index, mdxaBone_t* matrix,
-	const vec3_t angles, const vec3_t position, const int frameNum, qhandle_t* model_list, vec3_t scale);
+	const vec3_t angles, const vec3_t position, const int frame_num, qhandle_t* model_list, vec3_t scale);
 void AttachRidersGeneric(Vehicle_t* p_veh)
 {
 	// If we have a pilot, attach him to the driver tag.

@@ -93,6 +93,8 @@ cvar_t* cl_newgameplusJKA;
 cvar_t* cl_newgameplusJKO;
 cvar_t* cl_com_outcast;
 
+cvar_t* cl_com_rend2;
+
 clientActive_t cl;
 clientConnection_t clc;
 clientStatic_t cls;
@@ -1549,6 +1551,8 @@ void CL_Init()
 	cl_newgameplusJKO = Cvar_Get("g_newgameplusJKO", "0", CVAR_ARCHIVE | CVAR_SAVEGAME | CVAR_NORESTART);
 
 	cl_com_outcast = Cvar_Get("com_outcast", "0", CVAR_ARCHIVE | CVAR_SAVEGAME | CVAR_NORESTART);
+
+	cl_com_rend2 = Cvar_Get("com_rend2", "0", CVAR_ARCHIVE | CVAR_SAVEGAME | CVAR_NORESTART);
 
 	//
 	// register our commands

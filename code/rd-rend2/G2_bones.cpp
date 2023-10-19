@@ -1084,10 +1084,10 @@ void G2_Animate_Bone_List(CGhoul2Info_v& ghoul2, const int current_time, const i
   rag stuff
 
 */
-static void G2_RagDollSolve(CGhoul2Info_v& ghoul2_v, int g2_index, float decay, int frameNum, const vec3_t currentOrg, bool LimitAngles, CRagDollUpdateParams* params = nullptr);
-static void G2_RagDollCurrentPosition(CGhoul2Info_v& ghoul2_v, int g2_index, int frameNum, const vec3_t angles, const vec3_t position, const vec3_t scale);
+static void G2_RagDollSolve(CGhoul2Info_v& ghoul2_v, int g2_index, float decay, int frame_num, const vec3_t currentOrg, bool LimitAngles, CRagDollUpdateParams* params = nullptr);
+static void G2_RagDollCurrentPosition(CGhoul2Info_v& ghoul2_v, int g2_index, int frame_num, const vec3_t angles, const vec3_t position, const vec3_t scale);
 static bool G2_RagDollSettlePositionNumeroTrois(CGhoul2Info_v& ghoul2_v, const vec3_t currentOrg, CRagDollUpdateParams* params, int curTime);
-static bool G2_RagDollSetup(CGhoul2Info& ghoul2, int frameNum, bool resetOrigin, const vec3_t origin, bool anyRendered);
+static bool G2_RagDollSetup(CGhoul2Info& ghoul2, int frame_num, bool resetOrigin, const vec3_t origin, bool anyRendered);
 
 void G2_GetBoneBasepose(CGhoul2Info& ghoul2, int bone_num, mdxaBone_t*& retBasepose, mdxaBone_t*& retBaseposeInv);
 int G2_GetBoneDependents(CGhoul2Info& ghoul2, int bone_num, int* tempDependents, int maxDep);
@@ -2044,7 +2044,7 @@ void G2_SetRagDollBullet(CGhoul2Info& ghoul2, const vec3_t rayStart, const vec3_
 	}
 }
 
-static float G2_RagSetState(CGhoul2Info& ghoul2, boneInfo_t& bone, int frameNum, const vec3_t origin, bool& resetOrigin)
+static float G2_RagSetState(CGhoul2Info& ghoul2, boneInfo_t& bone, int frame_num, const vec3_t origin, bool& resetOrigin)
 {
 	ragOriginChange = DistanceSquared(origin, bone.extraVec1);
 	VectorSubtract(origin, bone.extraVec1, ragOriginChangeDir);
@@ -2057,18 +2057,18 @@ static float G2_RagSetState(CGhoul2Info& ghoul2, boneInfo_t& bone, int frameNum,
 	if (ghoul2.mFlags & GHOUL2_RAG_FORCESOLVE)
 	{
 		ragState = ERS_DYNAMIC;
-		if (frameNum > bone.firstCollisionTime + dynamicTime)
+		if (frame_num > bone.firstCollisionTime + dynamicTime)
 		{
 			VectorCopy(origin, bone.extraVec1);
 			if (ragOriginChange > 15.0f)
 			{ //if we moved, or if this bone is still in solid
-				bone.firstCollisionTime = frameNum;
+				bone.firstCollisionTime = frame_num;
 			}
 			else
 			{
 				// settle out
 				bone.firstCollisionTime = 0;
-				bone.restTime = frameNum;
+				bone.restTime = frame_num;
 				ragState = ERS_SETTLING;
 			}
 		}
@@ -2076,18 +2076,18 @@ static float G2_RagSetState(CGhoul2Info& ghoul2, boneInfo_t& bone, int frameNum,
 	else if (bone.firstCollisionTime > 0)
 	{
 		ragState = ERS_DYNAMIC;
-		if (frameNum > bone.firstCollisionTime + dynamicTime)
+		if (frame_num > bone.firstCollisionTime + dynamicTime)
 		{
 			VectorCopy(origin, bone.extraVec1);
 			if (ragOriginChange > 15.0f)
 			{ //if we moved, or if this bone is still in solid
-				bone.firstCollisionTime = frameNum;
+				bone.firstCollisionTime = frame_num;
 			}
 			else
 			{
 				// settle out
 				bone.firstCollisionTime = 0;
-				bone.restTime = frameNum;
+				bone.restTime = frame_num;
 				ragState = ERS_SETTLING;
 			}
 		}
@@ -2095,7 +2095,7 @@ static float G2_RagSetState(CGhoul2Info& ghoul2, boneInfo_t& bone, int frameNum,
 	}
 	else if (bone.restTime > 0)
 	{
-		decay = 1.0f - (frameNum - bone.restTime) / float(dynamicTime);
+		decay = 1.0f - (frame_num - bone.restTime) / float(dynamicTime);
 		if (decay < 0.0f)
 		{
 			decay = 0.0f;
@@ -2107,12 +2107,12 @@ static float G2_RagSetState(CGhoul2Info& ghoul2, boneInfo_t& bone, int frameNum,
 		float	magicFactor8 = 1.0f; // Power for decay
 		decay = pow(decay, magicFactor8);
 		ragState = ERS_SETTLING;
-		if (frameNum > bone.restTime + settleTime)
+		if (frame_num > bone.restTime + settleTime)
 		{
 			VectorCopy(origin, bone.extraVec1);
 			if (ragOriginChange > 15.0f)
 			{
-				bone.restTime = frameNum;
+				bone.restTime = frame_num;
 			}
 			else
 			{
@@ -2127,12 +2127,12 @@ static float G2_RagSetState(CGhoul2Info& ghoul2, boneInfo_t& bone, int frameNum,
 	{
 		if (bone.RagFlags & RAG_PCJ_IK_CONTROLLED)
 		{
-			bone.firstCollisionTime = frameNum;
+			bone.firstCollisionTime = frame_num;
 			ragState = ERS_DYNAMIC;
 		}
 		else if (ragOriginChange > 15.0f)
 		{
-			bone.firstCollisionTime = frameNum;
+			bone.firstCollisionTime = frame_num;
 			ragState = ERS_DYNAMIC;
 		}
 		else
@@ -2146,7 +2146,7 @@ static float G2_RagSetState(CGhoul2Info& ghoul2, boneInfo_t& bone, int frameNum,
 	return decay;
 }
 
-static bool G2_RagDollSetup(CGhoul2Info& ghoul2, int frameNum, bool resetOrigin, const vec3_t origin, bool anyRendered)
+static bool G2_RagDollSetup(CGhoul2Info& ghoul2, int frame_num, bool resetOrigin, const vec3_t origin, bool anyRendered)
 {
 	int minSurvivingBone = 10000;
 	//int minSurvivingBoneAt=-1;
@@ -2227,7 +2227,7 @@ static bool G2_RagDollSetup(CGhoul2Info& ghoul2, int frameNum, bool resetOrigin,
 				rag[bone.boneNumber] = &bone;
 				ragBlistIndex[bone.boneNumber] = i;
 
-				bone.lastTimeUpdated = frameNum;
+				bone.lastTimeUpdated = frame_num;
 				if (resetOrigin)
 				{
 					VectorCopy(origin, bone.extraVec1); // this is only done incase a limb is removed
@@ -2314,7 +2314,7 @@ static void G2_RagDoll(CGhoul2Info_v& ghoul2_v, int g2_index, CRagDollUpdatePara
 #endif
 
 	//	params->DebugLine(handPos,handPos2,false);
-	int frameNum = G2API_GetTime(0);
+	int frame_num = G2API_GetTime(0);
 	CGhoul2Info& ghoul2 = ghoul2_v[g2_index];
 	assert(ghoul2.mFileName[0]);
 	boneInfo_v& blist = ghoul2.mBlist;
@@ -2366,7 +2366,7 @@ static void G2_RagDoll(CGhoul2Info_v& ghoul2_v, int g2_index, CRagDollUpdatePara
 			if (bone.flags & BONE_ANGLES_RAGDOLL)
 			{
 				// check for state transitions
-				decay = G2_RagSetState(ghoul2, bone, frameNum, dPos, resetOrigin); // set the current state
+				decay = G2_RagSetState(ghoul2, bone, frame_num, dPos, resetOrigin); // set the current state
 
 				if (ragState == ERS_SETTLED)
 				{
@@ -2420,7 +2420,7 @@ static void G2_RagDoll(CGhoul2Info_v& ghoul2_v, int g2_index, CRagDollUpdatePara
 	*/
 	if (iters)
 	{
-		if (!G2_RagDollSetup(ghoul2, frameNum, resetOrigin, dPos, anyRendered))
+		if (!G2_RagDollSetup(ghoul2, frame_num, resetOrigin, dPos, anyRendered))
 		{
 			return;
 		}
@@ -2428,7 +2428,7 @@ static void G2_RagDoll(CGhoul2Info_v& ghoul2_v, int g2_index, CRagDollUpdatePara
 
 		for (int i = 0; i < iters; i++)
 		{
-			G2_RagDollCurrentPosition(ghoul2_v, g2_index, frameNum, params->angles, dPos, params->scale);
+			G2_RagDollCurrentPosition(ghoul2_v, g2_index, frame_num, params->angles, dPos, params->scale);
 
 			if (G2_RagDollSettlePositionNumeroTrois(ghoul2_v, dPos, params, curTime))
 			{
@@ -2443,7 +2443,7 @@ static void G2_RagDoll(CGhoul2Info_v& ghoul2_v, int g2_index, CRagDollUpdatePara
 #endif
 			}
 			//params->position[2] += 16;
-			G2_RagDollSolve(ghoul2_v, g2_index, decay * 2.0f, frameNum, dPos, true, params);
+			G2_RagDollSolve(ghoul2_v, g2_index, decay * 2.0f, frame_num, dPos, true, params);
 		}
 	}
 
@@ -2460,7 +2460,7 @@ static void G2_RagDoll(CGhoul2Info_v& ghoul2_v, int g2_index, CRagDollUpdatePara
 		//Com_OPrintf(va("%f \n",worldMins[2]);
 		//		params->DebugLine(worldMins,worldMaxs,true);
 #endif
-		G2_RagDollCurrentPosition(ghoul2_v, g2_index, frameNum, params->angles, params->position, params->scale);
+		G2_RagDollCurrentPosition(ghoul2_v, g2_index, frame_num, params->angles, params->position, params->scale);
 		//		SV_UnlinkEntity(params->me);
 		//		params->me->SetMins(BB_SHOOTING_SIZE,ragBoneMins);
 		//		params->me->SetMaxs(BB_SHOOTING_SIZE,ragBoneMaxs);
@@ -2500,12 +2500,12 @@ static inline char* G2_Get_Bone_Name(CGhoul2Info* ghl_info, boneInfo_v& blist, i
 
 char* G2_GetBoneNameFromSkel(CGhoul2Info& ghoul2, int bone_num);
 
-static void G2_RagDollCurrentPosition(CGhoul2Info_v& ghoul2_v, int g2_index, int frameNum, const vec3_t angles, const vec3_t position, const vec3_t scale)
+static void G2_RagDollCurrentPosition(CGhoul2Info_v& ghoul2_v, int g2_index, int frame_num, const vec3_t angles, const vec3_t position, const vec3_t scale)
 {
 	CGhoul2Info& ghoul2 = ghoul2_v[g2_index];
 	assert(ghoul2.mFileName[0]);
 	G2_GenerateWorldMatrix(angles, position);
-	G2_ConstructGhoulSkeleton(ghoul2_v, frameNum, false, scale);
+	G2_ConstructGhoulSkeleton(ghoul2_v, frame_num, false, scale);
 
 	float totalWt = 0.0f;
 	int i;
@@ -3745,7 +3745,7 @@ static inline void G2_BoneSnap(CGhoul2Info_v& ghoul2_v, boneInfo_t& bone, CRagDo
 	*/
 }
 
-static void G2_RagDollSolve(CGhoul2Info_v& ghoul2_v, const int g2_index, const float decay, int frameNum, const vec3_t currentOrg, bool limitAngles, CRagDollUpdateParams* params)
+static void G2_RagDollSolve(CGhoul2Info_v& ghoul2_v, const int g2_index, const float decay, int frame_num, const vec3_t currentOrg, bool limitAngles, CRagDollUpdateParams* params)
 {
 	int i;
 
@@ -4065,7 +4065,7 @@ static void G2_IKReposition(const vec3_t currentOrg, CRagDollUpdateParams* param
 	}
 }
 
-static void G2_IKSolve(CGhoul2Info_v& ghoul2_v, int g2_index, float decay, int frameNum, const vec3_t currentOrg, bool limitAngles)
+static void G2_IKSolve(CGhoul2Info_v& ghoul2_v, int g2_index, float decay, int frame_num, const vec3_t currentOrg, bool limitAngles)
 {
 	int i;
 
@@ -4230,7 +4230,7 @@ static void G2_DoIK(CGhoul2Info_v& ghoul2_v, int g2_index, CRagDollUpdateParams*
 		return;
 	}
 
-	int frameNum = G2API_GetTime(0);
+	int frame_num = G2API_GetTime(0);
 	CGhoul2Info& ghoul2 = ghoul2_v[g2_index];
 	assert(ghoul2.mFileName[0]);
 
@@ -4242,7 +4242,7 @@ static void G2_DoIK(CGhoul2Info_v& ghoul2_v, int g2_index, CRagDollUpdateParams*
 
 	if (iters)
 	{
-		if (!G2_RagDollSetup(ghoul2, frameNum, resetOrigin, params->position, anyRendered))
+		if (!G2_RagDollSetup(ghoul2, frame_num, resetOrigin, params->position, anyRendered))
 		{
 			return;
 		}
@@ -4250,17 +4250,17 @@ static void G2_DoIK(CGhoul2Info_v& ghoul2_v, int g2_index, CRagDollUpdateParams*
 		// ok, now our data structures are compact and set up in topological order
 		for (i = 0; i < iters; i++)
 		{
-			G2_RagDollCurrentPosition(ghoul2_v, g2_index, frameNum, params->angles, params->position, params->scale);
+			G2_RagDollCurrentPosition(ghoul2_v, g2_index, frame_num, params->angles, params->position, params->scale);
 
 			G2_IKReposition(params->position, params);
 
-			G2_IKSolve(ghoul2_v, g2_index, decay * 2.0f, frameNum, params->position, true);
+			G2_IKSolve(ghoul2_v, g2_index, decay * 2.0f, frame_num, params->position, true);
 		}
 	}
 
 	if (params->me != ENTITYNUM_NONE)
 	{
-		G2_RagDollCurrentPosition(ghoul2_v, g2_index, frameNum, params->angles, params->position, params->scale);
+		G2_RagDollCurrentPosition(ghoul2_v, g2_index, frame_num, params->angles, params->position, params->scale);
 	}
 }
 

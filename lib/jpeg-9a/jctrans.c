@@ -263,7 +263,7 @@ start_pass_coef(const j_compress_ptr cinfo, const J_BUF_MODE pass_mode)
  */
 
 METHODDEF(boolean)
-compress_output(const j_compress_ptr cinfo, JSAMPIMAGE input_buf)
+compress_output(const j_compress_ptr cinfo, JSAMp_image input_buf)
 {
 	const my_coef_ptr coef = (my_coef_ptr)cinfo->coef;
 	const JDIMENSION last_MCU_col = cinfo->MCUs_per_row - 1;

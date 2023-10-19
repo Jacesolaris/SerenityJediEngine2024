@@ -227,11 +227,6 @@ cvar_t* r_noPrecacheGLA;
 cvar_t* r_noServerGhoul2; // In SP renderer CVAR is actually r_noghoul2!
 cvar_t* r_Ghoul2AnimSmooth = 0;
 cvar_t* r_Ghoul2UnSqashAfterSmooth = 0;
-//cvar_t	*r_Ghoul2UnSqash;
-//cvar_t	*r_Ghoul2TimeBase=0; from single player
-//cvar_t	*r_Ghoul2NoLerp;
-//cvar_t	*r_Ghoul2NoBlend;
-//cvar_t	*r_Ghoul2BlendMultiplier=0;
 
 cvar_t* broadsword = 0;
 cvar_t* broadsword_kickbones = 0;
@@ -282,6 +277,8 @@ cvar_t* r_modelpoolmegs;
 cvar_t* r_environmentMapping;
 cvar_t* r_ext_compressed_lightmaps;
 
+cvar_t* r_com_rend2;
+
 #define ri_Cvar_Get_NoComm(varname, value, flag, comment) ri.Cvar_Get(varname, value, flag)
 
 #ifdef REND2_SP
@@ -317,13 +314,42 @@ static void R_Splash()
 
 	GL_Cull(CT_TWO_SIDED);
 
-	image_t* pImage = R_FindImageFile("menu/splash", IMGTYPE_COLORALPHA, IMGFLAG_NONE);
-	if (pImage)
-		GL_Bind(pImage);
+	image_t* p_image;
+	const int splash_pick = rand() % 5;
+
+	switch (splash_pick)
+	{
+	case 0:
+		p_image = R_FindImageFile("menu/splash5", IMGTYPE_COLORALPHA, IMGFLAG_NONE);
+		break;
+	case 1:
+		p_image = R_FindImageFile("menu/splash4", IMGTYPE_COLORALPHA, IMGFLAG_NONE);
+		break;
+	case 2:
+		p_image = R_FindImageFile("menu/splash3", IMGTYPE_COLORALPHA, IMGFLAG_NONE);
+		break;
+	case 3:
+		p_image = R_FindImageFile("menu/splash2", IMGTYPE_COLORALPHA, IMGFLAG_NONE);
+		break;
+	case 4:
+		p_image = R_FindImageFile("menu/splash1", IMGTYPE_COLORALPHA, IMGFLAG_NONE);
+		break;
+	default:
+		p_image = R_FindImageFile("menu/splash", IMGTYPE_COLORALPHA, IMGFLAG_NONE);
+		break;
+	}
+
+	if (p_image)
+		GL_Bind(p_image);
 
 	GL_State(GLS_DEPTHTEST_DISABLE);
 	GLSL_BindProgram(&tr.splashScreenShader);
 	RB_InstantTriangle();
+
+	if (r_com_rend2->integer != 1)
+	{
+		ri.Cvar_Set("com_rend2", "1");
+	}
 
 	ri.WIN_Present(&window);
 }
@@ -1669,6 +1695,8 @@ void R_Register(void)
 	broadsword_effcorr = ri_Cvar_Get_NoComm("broadsword_effcorr", "1", CVAR_TEMP, "");
 	broadsword_ragtobase = ri_Cvar_Get_NoComm("broadsword_ragtobase", "2", CVAR_TEMP, "");
 	broadsword_dircap = ri_Cvar_Get_NoComm("broadsword_dircap", "64", CVAR_TEMP, "");
+
+	r_com_rend2 = ri.Cvar_Get("com_rend2", "0", CVAR_ARCHIVE | CVAR_SAVEGAME | CVAR_NORESTART);
 	/*
 	Ghoul2 Insert End
 	*/
@@ -2231,7 +2259,7 @@ void C_LevelLoadEnd(void)
 }
 
 extern void RE_GetModelBounds(const refEntity_t* ref_ent, vec3_t bounds1, vec3_t bounds2);
-extern void G2API_AnimateG2ModelsRag(CGhoul2Info_v& ghoul2, int acurrent_time, CRagDollUpdateParams* params);
+extern void G2API_AnimateG2ModelsRag(CGhoul2Info_v& ghoul2, const int acurrent_time, CRagDollUpdateParams* params);
 extern qboolean G2API_GetRagBonePos(CGhoul2Info_v& ghoul2, const char* bone_name, vec3_t pos, vec3_t entAngles, vec3_t entPos, vec3_t entScale);
 extern qboolean G2API_RagEffectorKick(CGhoul2Info_v& ghoul2, const char* bone_name, vec3_t velocity);
 extern qboolean G2API_RagForceSolve(CGhoul2Info_v& ghoul2, qboolean force);

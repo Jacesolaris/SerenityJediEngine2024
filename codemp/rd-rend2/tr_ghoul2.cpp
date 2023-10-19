@@ -113,12 +113,12 @@ qboolean G2_SetupModelPointers(CGhoul2Info_v& ghoul2);
 extern cvar_t* r_Ghoul2AnimSmooth;
 extern cvar_t* r_Ghoul2UnSqashAfterSmooth;
 
-static const mdxaBone_t identityMatrix =
+constexpr static mdxaBone_t identity_matrix =
 {
 	{
-		{ 0.0f, -1.0f, 0.0f, 0.0f },
-		{ 1.0f, 0.0f, 0.0f, 0.0f },
-		{ 0.0f, 0.0f, 1.0f, 0.0f }
+		{0.0f, -1.0f, 0.0f, 0.0f},
+		{1.0f, 0.0f, 0.0f, 0.0f},
+		{0.0f, 0.0f, 1.0f, 0.0f}
 	}
 };
 
@@ -616,8 +616,8 @@ void G2_GetBoneBasepose(
 	if (!ghoul2.mBoneCache)
 	{
 		// yikes
-		retBasepose = const_cast<mdxaBone_t*>(&identityMatrix);
-		retBaseposeInv = const_cast<mdxaBone_t*>(&identityMatrix);
+		retBasepose = const_cast<mdxaBone_t*>(&identity_matrix);
+		retBaseposeInv = const_cast<mdxaBone_t*>(&identity_matrix);
 		return;
 	}
 
@@ -700,10 +700,10 @@ void G2_GetBoneMatrixLow(
 {
 	if (!ghoul2.mBoneCache)
 	{
-		retMatrix = identityMatrix;
+		retMatrix = identity_matrix;
 		// yikes
-		retBasepose = const_cast<mdxaBone_t*>(&identityMatrix);
-		retBaseposeInv = const_cast<mdxaBone_t*>(&identityMatrix);
+		retBasepose = const_cast<mdxaBone_t*>(&identity_matrix);
+		retBaseposeInv = const_cast<mdxaBone_t*>(&identity_matrix);
 		return;
 	}
 
@@ -775,11 +775,11 @@ int G2_GetParentBoneMatrixLow(
 		if (parent < 0 || parent >= bone_cache.header->numBones)
 		{
 			parent = -1;
-			retMatrix = identityMatrix;
+			retMatrix = identity_matrix;
 
 			// yikes
-			retBasepose = const_cast<mdxaBone_t*>(&identityMatrix);
-			retBaseposeInv = const_cast<mdxaBone_t*>(&identityMatrix);
+			retBasepose = const_cast<mdxaBone_t*>(&identity_matrix);
+			retBaseposeInv = const_cast<mdxaBone_t*>(&identity_matrix);
 		}
 		else
 		{
@@ -3012,7 +3012,7 @@ void G2_GetBoltMatrixLow(
 {
 	if (!ghoul2.mBoneCache)
 	{
-		retMatrix = identityMatrix;
+		retMatrix = identity_matrix;
 		return;
 	}
 
@@ -3022,7 +3022,7 @@ void G2_GetBoltMatrixLow(
 	boltInfo_v& boltList = ghoul2.mBltlist;
 	if (boltList.empty() || boltNum >= boltList.size())
 	{
-		retMatrix = identityMatrix;
+		retMatrix = identity_matrix;
 		return;
 	}
 
@@ -3079,7 +3079,7 @@ void G2_GetBoltMatrixLow(
 	{
 		// we have a bolt without a bone or surface, not a huge problem but we
 		// ought to at least clear the bolt matrix
-		retMatrix = identityMatrix;
+		retMatrix = identity_matrix;
 	}
 }
 
@@ -3119,12 +3119,12 @@ static void RootMatrix(
 			tempMatrix.matrix[2][2] = 1.0f;
 			tempMatrix.matrix[2][3] = -bolt.matrix[2][3];
 
-			retMatrix = tempMatrix * identityMatrix;
+			retMatrix = tempMatrix * identity_matrix;
 			return;
 		}
 	}
 
-	retMatrix = identityMatrix;
+	retMatrix = identity_matrix;
 }
 
 /*
@@ -3295,11 +3295,11 @@ void R_AddGhoulSurfaces(trRefEntity_t* ent, int entity_num)
 qboolean G2API_OverrideServerWithClientData(CGhoul2Info* serverInstance);
 #endif
 
-bool G2_NeedsRecalc(CGhoul2Info* ghl_info, int frameNum)
+bool G2_NeedsRecalc(CGhoul2Info* ghl_info, int frame_num)
 {
 	G2_SetupModelPointers(ghl_info);
 	// not sure if I still need this test, probably
-	if (ghl_info->mSkelFrameNum != frameNum ||
+	if (ghl_info->mSkelFrameNum != frame_num ||
 		!ghl_info->mBoneCache ||
 		ghl_info->mBoneCache->mod != ghl_info->current_model)
 	{
@@ -3310,7 +3310,7 @@ bool G2_NeedsRecalc(CGhoul2Info* ghl_info, int frameNum)
 			return false;
 		}
 #endif
-		ghl_info->mSkelFrameNum = frameNum;
+		ghl_info->mSkelFrameNum = frame_num;
 		return true;
 	}
 	return false;
@@ -3325,7 +3325,7 @@ using LOD 0
 */
 void G2_ConstructGhoulSkeleton(
 	CGhoul2Info_v& ghoul2,
-	const int frameNum,
+	const int frame_num,
 	bool checkForNewOrigin,
 	const vec3_t scale)
 {
@@ -3341,11 +3341,11 @@ void G2_ConstructGhoulSkeleton(
 
 	if (checkForNewOrigin)
 	{
-		RootMatrix(ghoul2, frameNum, scale, rootMatrix);
+		RootMatrix(ghoul2, frame_num, scale, rootMatrix);
 	}
 	else
 	{
-		rootMatrix = identityMatrix;
+		rootMatrix = identity_matrix;
 	}
 
 	G2_Sort_Models(ghoul2, model_list, ARRAY_LEN(model_list), &modelCount);
@@ -3372,19 +3372,19 @@ void G2_ConstructGhoulSkeleton(
 				g2Info.mBlist,
 				bolt,
 				g2Info,
-				frameNum,
+				frame_num,
 				checkForNewOrigin);
 		}
 		else
 #ifdef _G2_LISTEN_SERVER_OPT
-			if (g2Info.entity_num == ENTITYNUM_NONE || g2Info.mSkelFrameNum != frameNum)
+			if (g2Info.entity_num == ENTITYNUM_NONE || g2Info.mSkelFrameNum != frame_num)
 #endif
 			{
 				G2_TransformGhoulBones(
 					g2Info.mBlist,
 					rootMatrix,
 					g2Info,
-					frameNum,
+					frame_num,
 					checkForNewOrigin);
 			}
 	}

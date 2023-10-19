@@ -523,9 +523,9 @@ void G2_TransformSurfaces(int surface_num, surfaceInfo_v& rootSList,
 
 // main calling point for the model transform for collision detection. At this point all of the skeleton has been transformed.
 #ifdef _G2_GORE
-void G2_TransformModel(CGhoul2Info_v& ghoul2, const int frameNum, vec3_t scale, IHeapAllocator* G2VertSpace, int use_lod, bool ApplyGore)
+void G2_TransformModel(CGhoul2Info_v& ghoul2, const int frame_num, vec3_t scale, IHeapAllocator* G2VertSpace, int use_lod, bool ApplyGore)
 #else
-void G2_TransformModel(CGhoul2Info_v& ghoul2, const int frameNum, vec3_t scale, IHeapAllocator* G2VertSpace, int use_lod)
+void G2_TransformModel(CGhoul2Info_v& ghoul2, const int frame_num, vec3_t scale, IHeapAllocator* G2VertSpace, int use_lod)
 #endif
 {
 	int				i, lod;
@@ -572,7 +572,7 @@ void G2_TransformModel(CGhoul2Info_v& ghoul2, const int frameNum, vec3_t scale, 
 		assert(g.mBoneCache);
 		//		assert(G2_MODEL_OK(&g));
 				// stop us building this model more than once per frame
-		g.mMeshFrameNum = frameNum;
+		g.mMeshFrameNum = frame_num;
 
 		// decide the LOD
 #ifdef _G2_GORE

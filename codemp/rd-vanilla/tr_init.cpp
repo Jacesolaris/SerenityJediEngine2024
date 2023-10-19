@@ -217,6 +217,8 @@ cvar_t* broadsword_effcorr = nullptr;
 cvar_t* broadsword_ragtobase = nullptr;
 cvar_t* broadsword_dircap = nullptr;
 
+cvar_t* r_com_rend2;
+
 /*
 Ghoul2 Insert End
 */
@@ -335,6 +337,11 @@ void R_Splash()
 	qglTexCoord2f(1, 1);
 	qglVertex2f(x2, y2);
 	qglEnd();
+
+	if (r_com_rend2->integer != 0)
+	{
+		ri->Cvar_Set("com_rend2", "0");
+	}
 
 	ri->WIN_Present(&window);
 }
@@ -1698,6 +1705,8 @@ void R_Register()
 	broadsword_dircap = ri->Cvar_Get("broadsword_dircap", "64", CVAR_NONE, "");
 
 	r_weather = ri->Cvar_Get("r_weather", "0", CVAR_ARCHIVE, "");
+
+	r_com_rend2 = ri->Cvar_Get("com_rend2", "0", CVAR_ARCHIVE | CVAR_NORESTART, "");
 	/*
 	Ghoul2 Insert End
 	*/

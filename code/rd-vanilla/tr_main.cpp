@@ -1257,7 +1257,7 @@ void R_SortDrawSurfs(drawSurf_t* drawSurfs, int numDrawSurfs)
 R_AddEntitySurfaces
 =============
 */
-void R_AddEntitySurfaces()
+void R_AddEntitySurfaces(void)
 {
 	shader_t* shader;
 
@@ -1374,7 +1374,7 @@ void R_AddEntitySurfaces()
 			}
 			break;
 		default:
-			Com_Error(ERR_DROP, "R_AddEntitySurfaces: Bad reType");
+			Com_Error(ERR_DROP, "R_AddEntitySurfaces: Bad reType Vanilla");
 		}
 	}
 }

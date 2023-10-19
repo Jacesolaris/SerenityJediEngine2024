@@ -59,6 +59,7 @@ static float sabersCrossed;
 static int saberHitEntity;
 static int numVictims = 0;
 extern cvar_t* com_outcast;
+extern cvar_t* com_rend2;
 extern cvar_t* g_dismemberProbabilities;
 extern cvar_t* g_sex;
 extern cvar_t* g_timescale;
@@ -681,9 +682,7 @@ void g_create_g2_holstered_weapon_model(gentity_t* ent, const char* ps_weapon_mo
 			if (holster_origin != -1)
 			{
 				constexpr vec3_t origin = { 0, 0, 0 };
-				gi.G2API_GetBoltMatrix(ent->ghoul2, ent->holsterModel[weapon_num], holster_origin, &bolt_matrix2,
-					origin,
-					origin, 0, nullptr, ent->s.modelScale);
+				gi.G2API_GetBoltMatrix(ent->ghoul2, ent->holsterModel[weapon_num], holster_origin, &bolt_matrix2, origin, origin, 0, nullptr, ent->s.modelScale);
 			}
 			gi.G2API_AttachG2Model(&ent->ghoul2[ent->holsterModel[weapon_num]], &ent->ghoul2[ent->playerModel],
 				bolt_num, ent->playerModel);
@@ -696,9 +695,10 @@ void g_create_g2_holstered_weapon_model(gentity_t* ent, const char* ps_weapon_mo
 				}
 				else
 				{
-					gi.G2API_SetBoneAnglesOffset(&ent->ghoul2[ent->holsterModel[weapon_num]],
-						"ModView internal default", angles, BONE_ANGLES_PREMULT, POSITIVE_X,
-						NEGATIVE_Y, NEGATIVE_Z, nullptr, 0, 0, offset);
+					if (com_rend2->integer == 0) //rend2 is off
+					{
+						gi.G2API_SetBoneAnglesOffset(&ent->ghoul2[ent->holsterModel[weapon_num]], "ModView internal default", angles, BONE_ANGLES_PREMULT, POSITIVE_X, NEGATIVE_Y, NEGATIVE_Z, nullptr, 0, 0, offset);
+					}
 				}
 			}
 			else
@@ -713,8 +713,7 @@ void g_create_g2_holstered_weapon_model(gentity_t* ent, const char* ps_weapon_mo
 	}
 }
 
-void g_create_g2_attached_weapon_model(gentity_t* ent, const char* ps_weapon_model, const int bolt_num,
-	const int weapon_num)
+void g_create_g2_attached_weapon_model(gentity_t* ent, const char* ps_weapon_model, const int bolt_num, const int weapon_num)
 {
 	if (!ps_weapon_model)
 	{

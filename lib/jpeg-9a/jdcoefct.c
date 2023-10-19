@@ -64,15 +64,15 @@ typedef my_coef_controller* my_coef_ptr;
 
 /* Forward declarations */
 METHODDEF(int) decompress_onepass
-JPP((j_decompress_ptr cinfo, JSAMPIMAGE output_buf));
+JPP((j_decompress_ptr cinfo, JSAMp_image output_buf));
 #ifdef D_MULTISCAN_FILES_SUPPORTED
 METHODDEF(int) decompress_data
-JPP((j_decompress_ptr cinfo, JSAMPIMAGE output_buf));
+JPP((j_decompress_ptr cinfo, JSAMp_image output_buf));
 #endif
 #ifdef BLOCK_SMOOTHING_SUPPORTED
 LOCAL(boolean) smoothing_ok JPP((j_decompress_ptr cinfo));
 METHODDEF(int) decompress_smooth_data
-JPP((j_decompress_ptr cinfo, JSAMPIMAGE output_buf));
+JPP((j_decompress_ptr cinfo, JSAMp_image output_buf));
 #endif
 
 LOCAL(void)
@@ -142,7 +142,7 @@ start_output_pass(const j_decompress_ptr cinfo)
  */
 
 METHODDEF(int)
-decompress_onepass(const j_decompress_ptr cinfo, const JSAMPIMAGE output_buf)
+decompress_onepass(const j_decompress_ptr cinfo, const JSAMp_image output_buf)
 {
 	const my_coef_ptr coef = (my_coef_ptr)cinfo->coef;
 	const JDIMENSION last_MCU_col = cinfo->MCUs_per_row - 1;
@@ -300,7 +300,7 @@ consume_data(const j_decompress_ptr cinfo)
  */
 
 METHODDEF(int)
-decompress_data(const j_decompress_ptr cinfo, const JSAMPIMAGE output_buf)
+decompress_data(const j_decompress_ptr cinfo, const JSAMp_image output_buf)
 {
 	const my_coef_ptr coef = (my_coef_ptr)cinfo->coef;
 	const JDIMENSION last_iMCU_row = cinfo->total_iMCU_rows - 1;
@@ -436,7 +436,7 @@ smoothing_ok(const j_decompress_ptr cinfo)
  */
 
 METHODDEF(int)
-decompress_smooth_data(j_decompress_ptr cinfo, JSAMPIMAGE output_buf)
+decompress_smooth_data(j_decompress_ptr cinfo, JSAMp_image output_buf)
 {
 	my_coef_ptr coef = (my_coef_ptr)cinfo->coef;
 	JDIMENSION last_iMCU_row = cinfo->total_iMCU_rows - 1;
