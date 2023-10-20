@@ -8869,7 +8869,7 @@ void WP_SaberAddG2Model(gentity_t* saberent, const char* saber_model, const qhan
 	{
 		saberent->s.model_index = G_model_index(DEFAULT_SABER_MODEL);
 	}
-	//FIXME: use customSkin?
+	//FIXME: use custom_skin?
 	trap->G2API_InitGhoul2Model(&saberent->ghoul2, saber_model, saberent->s.model_index, saber_skin, 0, 0, 0);
 }
 

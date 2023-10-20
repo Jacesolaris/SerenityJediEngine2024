@@ -405,14 +405,14 @@ void R_AddMD3Surfaces(trRefEntity_t* ent, int entity_num) {
 	//
 	surface = model->surfaces;
 	for (i = 0; i < model->numSurfaces; i++) {
-		if (ent->e.customShader) {
-			shader = R_GetShaderByHandle(ent->e.customShader);
+		if (ent->e.custom_shader) {
+			shader = R_GetShaderByHandle(ent->e.custom_shader);
 		}
-		else if (ent->e.customSkin > 0 && ent->e.customSkin < tr.numSkins) {
+		else if (ent->e.custom_skin > 0 && ent->e.custom_skin < tr.numSkins) {
 			skin_t* skin;
 			int		j;
 
-			skin = R_GetSkinByHandle(ent->e.customSkin);
+			skin = R_GetSkinByHandle(ent->e.custom_skin);
 
 			// match the surface name to something in the skin file
 			shader = tr.defaultShader;

@@ -777,11 +777,9 @@ qhandle_t G2API_PrecacheGhoul2Model(const char* file_name)
 void CL_InitRef(void);
 
 // initialise all that needs to be on a new Ghoul II model
-int G2API_InitGhoul2Model(CGhoul2Info_v** ghoul2Ptr, const char* file_name, int model_index, qhandle_t customSkin,
-	qhandle_t customShader, int modelFlags, int lodBias)
+int G2API_InitGhoul2Model(CGhoul2Info_v** ghoul2Ptr, const char* file_name, const int model_index, const qhandle_t custom_skin, const qhandle_t custom_shader, const int model_flags, const int lod_bias)
 {
-	int				model;
-	CGhoul2Info		newModel;
+	int model;
 
 	// are we actually asking for a model to be loaded.
 	if (!file_name || !file_name[0])
@@ -790,7 +788,7 @@ int G2API_InitGhoul2Model(CGhoul2Info_v** ghoul2Ptr, const char* file_name, int 
 		return -1;
 	}
 
-	if (!(*ghoul2Ptr))
+	if (!*ghoul2Ptr)
 	{
 		*ghoul2Ptr = new CGhoul2Info_v;
 #ifdef _FULL_G2_LEAK_CHECKING
@@ -807,7 +805,7 @@ int G2API_InitGhoul2Model(CGhoul2Info_v** ghoul2Ptr, const char* file_name, int 
 #endif
 	}
 
-	CGhoul2Info_v& ghoul2 = *(*ghoul2Ptr);
+	CGhoul2Info_v& ghoul2 = **ghoul2Ptr;
 
 	// find a free spot in the list
 	for (model = 0; model < ghoul2.size(); model++)
@@ -819,7 +817,8 @@ int G2API_InitGhoul2Model(CGhoul2Info_v** ghoul2Ptr, const char* file_name, int 
 		}
 	}
 	if (model == ghoul2.size())
-	{	//init should not be used to create additional models, only the first one
+	{
+		//init should not be used to create additional models, only the first one
 		assert(ghoul2.size() < 4); //use G2API_CopySpecificG2Model to add models
 		ghoul2.push_back(CGhoul2Info());
 	}
@@ -835,9 +834,9 @@ int G2API_InitGhoul2Model(CGhoul2Info_v** ghoul2Ptr, const char* file_name, int 
 	{
 		G2_Init_Bone_List(ghoul2[model].mBlist, ghoul2[model].aHeader->numBones);
 		G2_Init_Bolt_List(ghoul2[model].mBltlist);
-		ghoul2[model].mCustomShader = customShader;
-		ghoul2[model].mCustomSkin = customSkin;
-		ghoul2[model].mLodBias = lodBias;
+		ghoul2[model].mCustomShader = custom_shader;
+		ghoul2[model].mCustomSkin = custom_skin;
+		ghoul2[model].mLodBias = lod_bias;
 		ghoul2[model].mAnimFrameDefault = 0;
 		ghoul2[model].mFlags = 0;
 
@@ -846,24 +845,24 @@ int G2API_InitGhoul2Model(CGhoul2Info_v** ghoul2Ptr, const char* file_name, int 
 	return ghoul2[model].mmodel_index;
 }
 
-qboolean G2API_SetLodBias(CGhoul2Info* ghl_info, int lodBias)
+qboolean G2API_SetLodBias(CGhoul2Info* ghl_info, int lod_bias)
 {
 	if (ghl_info)
 	{
-		ghl_info->mLodBias = lodBias;
+		ghl_info->mLodBias = lod_bias;
 		return qtrue;
 	}
 	return qfalse;
 }
 
 void G2_SetSurfaceOnOffFromSkin(CGhoul2Info* ghl_info, qhandle_t renderSkin);
-qboolean G2API_SetSkin(CGhoul2Info_v& ghoul2, int model_index, qhandle_t customSkin, qhandle_t renderSkin)
+qboolean G2API_SetSkin(CGhoul2Info_v& ghoul2, int model_index, qhandle_t custom_skin, qhandle_t renderSkin)
 {
 	CGhoul2Info* ghl_info = &ghoul2[model_index];
 
 	if (ghl_info)
 	{
-		ghl_info->mCustomSkin = customSkin;
+		ghl_info->mCustomSkin = custom_skin;
 		if (renderSkin)
 		{//this is going to set the surfs on/off matching the skin file
 			G2_SetSurfaceOnOffFromSkin(ghl_info, renderSkin);
@@ -874,11 +873,11 @@ qboolean G2API_SetSkin(CGhoul2Info_v& ghoul2, int model_index, qhandle_t customS
 	return qfalse;
 }
 
-qboolean G2API_SetShader(CGhoul2Info* ghl_info, qhandle_t customShader)
+qboolean G2API_SetShader(CGhoul2Info* ghl_info, qhandle_t custom_shader)
 {
 	if (ghl_info)
 	{
-		ghl_info->mCustomShader = customShader;
+		ghl_info->mCustomShader = custom_shader;
 		return qtrue;
 	}
 	return qfalse;
@@ -1142,7 +1141,7 @@ qboolean G2API_RemoveGhoul2Models(CGhoul2Info_v** ghlRemove)
 }
 
 //check if a bone exists on skeleton without actually adding to the bone list -rww
-qboolean G2API_DoesBoneExist(CGhoul2Info_v& ghoul2, int model_index, const char* bone_name)
+qboolean G2API_DoesBoneExist(CGhoul2Info_v& ghoul2, const int model_index, const char* bone_name)
 {
 	CGhoul2Info* ghl_info = &ghoul2[model_index];
 
@@ -2157,10 +2156,7 @@ qboolean G2API_HaveWeGhoul2Models(const CGhoul2Info_v& ghoul2)
 
 // run through the Ghoul2 models and set each of the mModel values to the
 // correct one from the cgs.gameModel offset lsit
-void G2API_SetGhoul2model_indexes(
-	CGhoul2Info_v& ghoul2,
-	qhandle_t* model_list,
-	qhandle_t* skinList)
+void G2API_SetGhoul2model_indexes(CGhoul2Info_v& ghoul2,qhandle_t* model_list,qhandle_t* skinList)
 {
 	return;
 #if 0

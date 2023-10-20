@@ -763,8 +763,7 @@ qhandle_t G2API_PrecacheGhoul2Model(const char* file_name)
 }
 
 // initialise all that needs to be on a new Ghoul II model
-int G2API_InitGhoul2Model(CGhoul2Info_v& ghoul2, const char* file_name, int, const qhandle_t custom_skin,
-	const qhandle_t custom_shader, int model_flags, const int lod_bias)
+int G2API_InitGhoul2Model(CGhoul2Info_v& ghoul2, const char* file_name, const int model_index, const qhandle_t custom_skin, const qhandle_t custom_shader, const int model_flags, const int lod_bias)
 {
 	int model;
 

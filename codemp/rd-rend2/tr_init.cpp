@@ -274,7 +274,7 @@ cvar_t* r_com_rend2;
 cvar_t* r_aspectCorrectFonts;
 
 extern void	RB_SetGL2D(void);
-static void R_Splash()
+void R_Splash()
 {
 	const GLfloat black[] = { 0.0f, 0.0f, 0.0f, 1.0f };
 
@@ -1450,7 +1450,7 @@ void R_Register(void)
 	// latched and archived variables
 	//
 	r_allowExtensions = ri->Cvar_Get("r_allowExtensions", "1", CVAR_ARCHIVE | CVAR_LATCH, "Allow GL extensions");
-	r_ext_compressed_textures = ri->Cvar_Get("r_ext_compress_textures", "0", CVAR_ARCHIVE | CVAR_LATCH, "Disable/enable texture compression");
+	r_ext_compressed_textures = ri->Cvar_Get("r_ext_compress_textures", "1", CVAR_ARCHIVE | CVAR_LATCH, "Disable/enable texture compression");
 	r_ext_multitexture = ri->Cvar_Get("r_ext_multitexture", "1", CVAR_ARCHIVE | CVAR_LATCH, "Unused");
 	r_ext_compiled_vertex_array = ri->Cvar_Get("r_ext_compiled_vertex_array", "1", CVAR_ARCHIVE | CVAR_LATCH, "Unused");
 	r_ext_texture_env_add = ri->Cvar_Get("r_ext_texture_env_add", "1", CVAR_ARCHIVE | CVAR_LATCH, "Unused");
@@ -1466,7 +1466,7 @@ void R_Register(void)
 	r_arb_buffer_storage = ri->Cvar_Get("r_arb_buffer_storage", "0", CVAR_ARCHIVE | CVAR_LATCH, "Disable/enable buffer storage GL extension");
 	r_ext_texture_filter_anisotropic = ri->Cvar_Get("r_ext_texture_filter_anisotropic", "16", CVAR_ARCHIVE, "Disable/enable anisotropic texture filtering");
 
-	r_dynamicGlow = ri->Cvar_Get("r_dynamicGlow", "0", CVAR_ARCHIVE, "");
+	r_dynamicGlow = ri->Cvar_Get("r_dynamicGlow", "1", CVAR_ARCHIVE, "");
 	r_dynamicGlowPasses = ri->Cvar_Get("r_dynamicGlowPasses", "5", CVAR_ARCHIVE, "");
 	r_dynamicGlowDelta = ri->Cvar_Get("r_dynamicGlowDelta", "0.8f", CVAR_ARCHIVE, "");
 	r_dynamicGlowIntensity = ri->Cvar_Get("r_dynamicGlowIntensity", "1.13f", CVAR_ARCHIVE, "");
@@ -1496,7 +1496,7 @@ void R_Register(void)
 	r_externalGLSL = ri->Cvar_Get("r_externalGLSL", "0", CVAR_LATCH, "");
 
 	r_hdr = ri->Cvar_Get("r_hdr", "1", CVAR_ARCHIVE | CVAR_LATCH, "Disable/enable rendering in HDR");
-	r_floatLightmap = ri->Cvar_Get("r_floatLightmap", "0", CVAR_ARCHIVE | CVAR_LATCH, "Disable/enable HDR lightmap support");
+	r_floatLightmap = ri->Cvar_Get("r_floatLightmap", "1", CVAR_ARCHIVE | CVAR_LATCH, "Disable/enable HDR lightmap support");
 
 	r_toneMap = ri->Cvar_Get("r_toneMap", "1", CVAR_ARCHIVE | CVAR_LATCH, "Disable/enable tonemapping");
 	r_forceToneMap = ri->Cvar_Get("r_forceToneMap", "0", CVAR_CHEAT, "");
@@ -1561,7 +1561,7 @@ void R_Register(void)
 	//
 	r_lodCurveError = ri->Cvar_Get("r_lodCurveError", "250", CVAR_ARCHIVE | CVAR_CHEAT, "");
 	r_lodbias = ri->Cvar_Get("r_lodbias", "0", CVAR_ARCHIVE, "");
-	r_flares = ri->Cvar_Get("r_flares", "0", CVAR_ARCHIVE, "");
+	r_flares = ri->Cvar_Get("r_flares", "1", CVAR_ARCHIVE, "");
 	r_znear = ri->Cvar_Get("r_znear", "4", CVAR_CHEAT, "");
 	ri->Cvar_CheckRange(r_znear, 0.001f, 200, qfalse);
 	r_autolodscalevalue = ri->Cvar_Get("r_autolodscalevalue", "0", CVAR_ROM, "");

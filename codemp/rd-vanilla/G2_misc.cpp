@@ -531,13 +531,13 @@ void G2_TransformModel(CGhoul2Info_v& ghoul2, const int frame_num, vec3_t scale,
 #endif
 {
 	int lod;
-	vec3_t			correctScale;
-	qboolean		firstModelOnly = qfalse;
+	vec3_t correctScale;
+	qboolean firstModelOnly = qfalse;
 
 #ifdef _G2_GORE
 	if (cg_g2MarksAllModels == nullptr)
 	{
-		cg_g2MarksAllModels = ri->Cvar_Get("cg_g2MarksAllModels", "0", 0, "");
+		cg_g2MarksAllModels = ri->Cvar_Get("cg_g2MarksAllModels", "0", 0, "Render marks on all G2 models");
 	}
 
 	if (cg_g2MarksAllModels == nullptr
@@ -573,7 +573,7 @@ void G2_TransformModel(CGhoul2Info_v& ghoul2, const int frame_num, vec3_t scale,
 		}
 		assert(g.mBoneCache);
 		//		assert(G2_MODEL_OK(&g));
-				// stop us building this model more than once per frame
+		// stop us building this model more than once per frame
 		g.mMeshFrameNum = frame_num;
 
 		// decide the LOD
@@ -604,11 +604,14 @@ void G2_TransformModel(CGhoul2Info_v& ghoul2, const int frame_num, vec3_t scale,
 
 		// give us space for the transformed vertex array to be put in
 		if (!(g.mFlags & GHOUL2_ZONETRANSALLOC))
-		{ //do not stomp if we're using zone space
-			g.mTransformedVertsArray = reinterpret_cast<size_t*>(G2VertSpace->MiniHeapAlloc(g.current_model->mdxm->numSurfaces * sizeof(size_t)));
+		{
+			//do not stomp if we're using zone space
+			g.mTransformedVertsArray = reinterpret_cast<size_t*>(G2VertSpace->MiniHeapAlloc(
+				g.current_model->mdxm->numSurfaces * sizeof(size_t)));
 			if (!g.mTransformedVertsArray)
 			{
-				Com_Error(ERR_DROP, "Ran out of transform space for Ghoul2 Models. Adjust MiniHeapSize in SV_SpawnServer.\n");
+				Com_Error(ERR_DROP,
+					"Ran out of transform space for Ghoul2 Models. Adjust MiniHeapSize in SV_SpawnServer.\n");
 			}
 		}
 
@@ -617,7 +620,8 @@ void G2_TransformModel(CGhoul2Info_v& ghoul2, const int frame_num, vec3_t scale,
 		G2_FindOverrideSurface(-1, g.mSlist); //reset the quick surface override lookup;
 		// recursively call the model surface transform
 
-		G2_TransformSurfaces(g.mSurfaceRoot, g.mSlist, g.mBoneCache, g.current_model, lod, correctScale, G2VertSpace, g.mTransformedVertsArray, false);
+		G2_TransformSurfaces(g.mSurfaceRoot, g.mSlist, g.mBoneCache, g.current_model, lod, correctScale, G2VertSpace,
+			g.mTransformedVertsArray, false);
 
 #ifdef _G2_GORE
 		if (ApplyGore && firstModelOnly)
@@ -1464,12 +1468,12 @@ void G2_TraceModels(CGhoul2Info_v& ghoul2, vec3_t rayStart, vec3_t rayEnd, Colli
 	int lod;
 	skin_t* skin;
 	shader_t* cust_shader;
-	qboolean		firstModelOnly = qfalse;
+	qboolean firstModelOnly = qfalse;
 
 #ifdef _G2_GORE
 	if (cg_g2MarksAllModels == nullptr)
 	{
-		cg_g2MarksAllModels = ri->Cvar_Get("cg_g2MarksAllModels", "0", 0, "");
+		cg_g2MarksAllModels = ri->Cvar_Get("cg_g2MarksAllModels", "0", 0, "Render marks on all G2 models");
 	}
 
 	if (cg_g2MarksAllModels == nullptr
@@ -1497,7 +1501,7 @@ void G2_TraceModels(CGhoul2Info_v& ghoul2, vec3_t rayStart, vec3_t rayEnd, Colli
 			continue;
 		}
 		//		assert(G2_MODEL_OK(&ghoul2[i]));
-				// do we really want to collide with this object?
+		// do we really want to collide with this object?
 		if (ghoul2[i].mFlags & GHOUL2_NOCOLLIDE)
 		{
 			continue;

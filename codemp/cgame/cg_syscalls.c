@@ -915,16 +915,16 @@ qboolean trap_G2API_GetBoltMatrix_NoRecNoRot(void* ghoul2, const int model_index
 }
 
 int trap_G2API_InitGhoul2Model(void** ghoul2Ptr, const char* file_name, const int model_index,
-	const qhandle_t customSkin, const qhandle_t customShader, const int modelFlags,
-	const int lodBias)
+	const qhandle_t custom_skin, const qhandle_t custom_shader, const int model_flags,
+	const int lod_bias)
 {
-	return Q_syscall(CG_G2_INITGHOUL2MODEL, ghoul2Ptr, file_name, model_index, customSkin, customShader, modelFlags,
-		lodBias);
+	return Q_syscall(CG_G2_INITGHOUL2MODEL, ghoul2Ptr, file_name, model_index, custom_skin, custom_shader, model_flags,
+		lod_bias);
 }
 
-qboolean trap_G2API_SetSkin(void* ghoul2, const int model_index, const qhandle_t customSkin, const qhandle_t renderSkin)
+qboolean trap_G2API_SetSkin(void* ghoul2, const int model_index, const qhandle_t custom_skin, const qhandle_t renderSkin)
 {
-	return Q_syscall(CG_G2_SETSKIN, ghoul2, model_index, customSkin, renderSkin);
+	return Q_syscall(CG_G2_SETSKIN, ghoul2, model_index, custom_skin, renderSkin);
 }
 
 void trap_G2API_CollisionDetect(CollisionRecord_t* collRecMap, void* ghoul2, const vec3_t angles, const vec3_t position,

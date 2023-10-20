@@ -212,7 +212,7 @@ public:
 	const shader_t* cust_shader;
 #endif
 	intptr_t* TransformedVertsArray;
-	const EG2_Collision	eG2TraceType;
+	const EG2_Collision	e_g2_trace_type;
 	bool				hitOne;
 	float				m_fRadius;
 
@@ -264,7 +264,7 @@ public:
 		, skin(initskin)
 		, cust_shader(initcust_shader)
 		, TransformedVertsArray(initTransformedVertsArray)
-		, eG2TraceType(einitG2TraceType)
+		, e_g2_trace_type(einitG2TraceType)
 		, hitOne(false)
 #ifdef _G2_GORE
 		, m_fRadius(fRadius)
@@ -575,13 +575,13 @@ void G2_TransformModel(CGhoul2Info_v& ghoul2, const int frame_num, vec3_t scale,
 	qboolean		firstModelOnly = qfalse;
 #endif // !JK2_MODE || _G2_GORE
 
-#ifndef JK2_MODE
-	if (cg_g2MarksAllModels == NULL)
+#ifdef _G2_GORE
+	if (cg_g2MarksAllModels == nullptr)
 	{
 		cg_g2MarksAllModels = ri.Cvar_Get("cg_g2MarksAllModels", "0", 0);
 	}
 
-	if (cg_g2MarksAllModels == NULL || !cg_g2MarksAllModels->integer)
+	if (cg_g2MarksAllModels == nullptr || !cg_g2MarksAllModels->integer)
 	{
 		firstModelOnly = qtrue;
 	}
@@ -1239,7 +1239,7 @@ static bool G2_TracePolys(const mdxmSurface_t* surface, const mdxmSurfHierarchy_
 										}
 					*/
 					// exit now if we should
-					if (TS.eG2TraceType == EG2_Collision::G2_RETURNONHIT)
+					if (TS.e_g2_trace_type == EG2_Collision::G2_RETURNONHIT)
 					{
 						TS.hitOne = true;
 						return true;
@@ -1418,7 +1418,7 @@ static bool G2_RadiusTracePolys(
 
 					newCol.mMaterial = newCol.mLocation = 0;
 					// exit now if we should
-					if (TS.eG2TraceType == EG2_Collision::G2_RETURNONHIT)
+					if (TS.e_g2_trace_type == EG2_Collision::G2_RETURNONHIT)
 					{
 						TS.hitOne = true;
 						return true;
@@ -1519,7 +1519,7 @@ static void G2_TraceSurfaces(CTraceSurface& TS)
 				if (G2_RadiusTracePolys(surface,		// const mdxmSurface_t *surface,
 					TS
 				)
-					&& (TS.eG2TraceType == EG2_Collision::G2_RETURNONHIT)
+					&& (TS.e_g2_trace_type == EG2_Collision::G2_RETURNONHIT)
 					)
 				{
 					TS.hitOne = true;
@@ -1530,7 +1530,7 @@ static void G2_TraceSurfaces(CTraceSurface& TS)
 			{
 				// go away and trace the polys in this surface
 				if (G2_TracePolys(surface, surfInfo, TS)
-					&& (TS.eG2TraceType == EG2_Collision::G2_RETURNONHIT)
+					&& (TS.e_g2_trace_type == EG2_Collision::G2_RETURNONHIT)
 					)
 				{
 					// ok, we hit one, *and* we want to return instantly because the returnOnHit is set
@@ -1563,9 +1563,9 @@ static void G2_TraceSurfaces(CTraceSurface& TS)
 }
 
 #ifdef _G2_GORE
-void G2_TraceModels(CGhoul2Info_v& ghoul2, vec3_t rayStart, vec3_t rayEnd, CCollisionRecord* collRecMap, int ent_num, EG2_Collision eG2TraceType, int use_lod, float fRadius, float ssize, float tsize, float theta, int shader, SSkinGoreData* gore, qboolean skipIfLODNotMatch)
+void G2_TraceModels(CGhoul2Info_v& ghoul2, vec3_t rayStart, vec3_t rayEnd, CCollisionRecord* collRecMap, int ent_num, EG2_Collision e_g2_trace_type, int use_lod, float fRadius, const float ssize, const float tsize, const float theta, const int shader, SSkinGoreData* gore, const qboolean skipIfLODNotMatch)
 #else
-void G2_TraceModels(CGhoul2Info_v& ghoul2, vec3_t rayStart, vec3_t rayEnd, CCollisionRecord* collRecMap, int ent_num, EG2_Collision eG2TraceType, int use_lod, float fRadius)
+void G2_TraceModels(CGhoul2Info_v& ghoul2, vec3_t rayStart, vec3_t rayEnd, CCollisionRecord* collRecMap, int ent_num, EG2_Collision e_g2_trace_type, int use_lod, float fRadius)
 #endif
 {
 	int				i, lod;
@@ -1576,13 +1576,13 @@ void G2_TraceModels(CGhoul2Info_v& ghoul2, vec3_t rayStart, vec3_t rayEnd, CColl
 #endif // !JK2_MODE || _G2_GORE
 	int				firstModel = 0;
 
-#ifndef JK2_MODE
-	if (cg_g2MarksAllModels == NULL)
+#ifdef _G2_GORE
+	if (cg_g2MarksAllModels == nullptr)
 	{
 		cg_g2MarksAllModels = ri.Cvar_Get("cg_g2MarksAllModels", "0", 0);
 	}
 
-	if (cg_g2MarksAllModels == NULL
+	if (cg_g2MarksAllModels == nullptr
 		|| !cg_g2MarksAllModels->integer)
 	{
 		firstModelOnly = qtrue;
@@ -1632,7 +1632,7 @@ void G2_TraceModels(CGhoul2Info_v& ghoul2, vec3_t rayStart, vec3_t rayEnd, CColl
 
 		lod = G2_DecideTraceLod(ghoul2[i], use_lod);
 
-#ifndef JK2_MODE
+#ifdef _G2_GORE
 		if (skipIfLODNotMatch)
 		{//we only want to hit this SPECIFIC LOD...
 			if (lod != use_lod)
@@ -1645,9 +1645,9 @@ void G2_TraceModels(CGhoul2Info_v& ghoul2, vec3_t rayStart, vec3_t rayEnd, CColl
 		G2_FindOverrideSurface(-1, ghoul2[i].mSlist);
 
 #ifdef _G2_GORE
-		CTraceSurface TS(g.mSurfaceRoot, ghoul2[i].mSlist, (model_t*)ghoul2[i].current_model, lod, rayStart, rayEnd, collRecMap, ent_num, i, skin, cust_shader, ghoul2[i].mTransformedVertsArray, eG2TraceType, fRadius, ssize, tsize, theta, shader, &g, gore);
+		CTraceSurface TS(g.mSurfaceRoot, ghoul2[i].mSlist, (model_t*)ghoul2[i].current_model, lod, rayStart, rayEnd, collRecMap, ent_num, i, skin, cust_shader, ghoul2[i].mTransformedVertsArray, e_g2_trace_type, fRadius, ssize, tsize, theta, shader, &g, gore);
 #else
-		CTraceSurface TS(g.mSurfaceRoot, ghoul2[i].mSlist, (model_t*)ghoul2[i].current_model, lod, rayStart, rayEnd, collRecMap, ent_num, i, skin, cust_shader, ghoul2[i].mTransformedVertsArray, eG2TraceType, fRadius);
+		CTraceSurface TS(g.mSurfaceRoot, ghoul2[i].mSlist, (model_t*)ghoul2[i].current_model, lod, rayStart, rayEnd, collRecMap, ent_num, i, skin, cust_shader, ghoul2[i].mTransformedVertsArray, e_g2_trace_type, fRadius);
 #endif
 		// start the surface recursion loop
 		G2_TraceSurfaces(TS);

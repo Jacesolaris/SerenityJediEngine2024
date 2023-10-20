@@ -1813,21 +1813,21 @@ static qboolean SV_G2API_GetBoltMatrix_NoRecNoRot(void* ghoul2, const int model_
 }
 
 static int SV_G2API_InitGhoul2Model(void** ghoul2Ptr, const char* file_name, const int model_index,
-	const qhandle_t customSkin, const qhandle_t customShader, const int modelFlags,
-	const int lodBias)
+	const qhandle_t custom_skin, const qhandle_t custom_shader, const int model_flags,
+	const int lod_bias)
 {
 #ifdef _FULL_G2_LEAK_CHECKING
 	g_G2AllocServer = 1;
 #endif
-	return re->G2API_InitGhoul2Model(reinterpret_cast<CGhoul2Info_v**>(ghoul2Ptr), file_name, model_index, customSkin, customShader,
-		modelFlags, lodBias);
+	return re->G2API_InitGhoul2Model(reinterpret_cast<CGhoul2Info_v**>(ghoul2Ptr), file_name, model_index, custom_skin, custom_shader,
+		model_flags, lod_bias);
 }
 
-static qboolean SV_G2API_SetSkin(void* ghoul2, const int model_index, const qhandle_t customSkin,
+static qboolean SV_G2API_SetSkin(void* ghoul2, const int model_index, const qhandle_t custom_skin,
 	const qhandle_t renderSkin)
 {
 	CGhoul2Info_v& g2 = *static_cast<CGhoul2Info_v*>(ghoul2);
-	return re->G2API_SetSkin(g2, model_index, customSkin, renderSkin);
+	return re->G2API_SetSkin(g2, model_index, custom_skin, renderSkin);
 }
 
 static void SV_G2API_CollisionDetect(CollisionRecord_t* collRecMap, void* ghoul2, const vec3_t angles,

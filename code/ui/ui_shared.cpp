@@ -7223,7 +7223,7 @@ void Item_Model_Paint(itemDef_t* item)
 	{
 		ent.ghoul2 = &item->ghoul2;
 		ent.radius = 1000;
-		ent.customSkin = modelPtr->g2skin;
+		ent.custom_skin = modelPtr->g2skin;
 
 		if (item->flags & ITF_ISCHARACTER)
 		{

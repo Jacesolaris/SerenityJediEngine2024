@@ -53,7 +53,7 @@ void CG_GrappleTrail(centity_t* ent, const weaponInfo_t* wi)
 		return; // Don't draw if close
 
 	beam.reType = RT_ELECTRICITY;
-	beam.customShader = cgs.media.electricBodyShader;
+	beam.custom_shader = cgs.media.electricBodyShader;
 
 	AxisClear(beam.axis);
 	beam.shaderRGBA[0] = 0xff;
@@ -86,7 +86,7 @@ void CG_StunTrail(centity_t* ent, const weaponInfo_t* wi)
 		return; // Don't draw if close
 
 	beam.reType = RT_LIGHTNING;
-	beam.customShader = cgs.media.electricBodyShader;
+	beam.custom_shader = cgs.media.electricBodyShader;
 
 	AxisClear(beam.axis);
 	beam.shaderRGBA[0] = 0xff;

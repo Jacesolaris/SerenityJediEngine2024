@@ -624,6 +624,7 @@ fileHandle_t FS_FOpenFileWrite(const char* filename, qboolean safe = qtrue);
 
 int FS_filelength(fileHandle_t f);
 fileHandle_t FS_SV_FOpenFileWrite(const char* filename);
+fileHandle_t FS_SV_FOpenFileAppend(const char* filename);
 int FS_SV_FOpenFileRead(const char* filename, fileHandle_t* fp);
 void FS_SV_Rename(const char* from, const char* to, qboolean safe);
 long FS_FOpenFileRead(const char* filename, fileHandle_t* file, qboolean uniqueFILE);
@@ -882,13 +883,14 @@ void Z_LogHeap( void );
 // later on I'll re-implement __FILE__, __LINE__ etc, but for now...
 //
 #ifdef DEBUG_ZONE_ALLOCS
-void* Z_Malloc(int iSize, memtag_t eTag, qboolean bZeroit = qfalse, int iUnusedAlign = 4);
+void* Z_Malloc(const int iSize, const memtag_t eTag, const qboolean bZeroit = qfalse, const int iUnusedAlign = 4);
 // return memory NOT zero-filled by default
 void* S_Malloc(int iSize); // NOT 0 filled memory only for small allocations
 #else
-void* Z_Malloc(int iSize, memtag_t eTag, qboolean bZeroit = qfalse, int iAlign = 4);	// return memory NOT zero-filled by default
+void* Z_Malloc(const int iSize, const memtag_t eTag, const qboolean bZeroit = qfalse, const int iUnusedAlign = 4);	// return memory NOT zero-filled by default
 void* S_Malloc(int iSize);					// NOT 0 filled memory only for small allocations
 #endif
+
 void Z_MorphMallocTag(void* pv_address, memtag_t eDesiredTag);
 void Z_Validate(void);
 int Z_MemSize(memtag_t eTag);

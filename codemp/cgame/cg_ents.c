@@ -408,7 +408,7 @@ localEntity_t* FX_AddOrientedLine(vec3_t start, vec3_t end, vec3_t normal, const
 	le->refEntity.data.line.stscale = st_scale;
 	le->refEntity.data.line.width = scale;
 
-	le->refEntity.customShader = shader;
+	le->refEntity.custom_shader = shader;
 
 	// set origin
 	VectorCopy(start, le->refEntity.origin);
@@ -567,7 +567,7 @@ void CG_CreateBBRefEnts(entityState_t* s1, vec3_t origin)
 			memset (&point[i], 0, sizeof(refEntity_t));
 			point[i].reType = RT_SPRITE;
 			point[i].radius = 1;
-			point[i].customShader = trap->R_RegisterShader("textures/tests/circle");
+			point[i].custom_shader = trap->R_RegisterShader("textures/tests/circle");
 			point[i].shaderRGBA[0] = 255;
 			point[i].shaderRGBA[1] = 255;
 			point[i].shaderRGBA[2] = 255;
@@ -722,12 +722,12 @@ void CG_Disintegration(centity_t* cent, refEntity_t* ent)
 	ent->endTime = cent->dustTrailTime;
 
 	ent->renderfx |= RF_DISINTEGRATE2;
-	ent->customShader = cgs.media.disruptorShader;
+	ent->custom_shader = cgs.media.disruptorShader;
 	trap->R_AddRefEntityToScene(ent);
 
 	ent->renderfx &= ~RF_DISINTEGRATE2;
 	ent->renderfx |= RF_DISINTEGRATE1;
-	ent->customShader = 0;
+	ent->custom_shader = 0;
 	trap->R_AddRefEntityToScene(ent);
 
 	if (cg.time - ent->endTime < 1000 && timescale.value * timescale.value * Q_flrand(0.0f, 1.0f) > 0.05f)
@@ -1627,17 +1627,17 @@ static void CG_General(centity_t* cent)
 		// make the gun pulse red to warn about it exploding
 		val = (1.0f - (float)(cent->currentState.time - cg.time) / 3200.0f) * 0.3f;
 
-		ent.customShader = trap->R_RegisterShader("gfx/effects/turretflashdie");
+		ent.custom_shader = trap->R_RegisterShader("gfx/effects/turretflashdie");
 		ent.shaderRGBA[0] = (sin(cg.time * 0.04f) * val * 0.4f + val) * 255;
 		ent.shaderRGBA[1] = ent.shaderRGBA[2] = 0;
 
 		ent.shaderRGBA[3] = 100;
 		trap->R_AddRefEntityToScene(&ent);
-		ent.customShader = 0;
+		ent.custom_shader = 0;
 	}
 	else if (cent->currentState.time == -1 && cent->currentState.weapon == WP_EMPLACED_GUN)
 	{
-		ent.customShader = trap->R_RegisterShader("models/map_objects/imp_mine/turret_chair_dmg.tga");
+		ent.custom_shader = trap->R_RegisterShader("models/map_objects/imp_mine/turret_chair_dmg.tga");
 		//trap->R_AddRefEntityToScene( &ent );
 	}
 
@@ -1724,16 +1724,16 @@ static void CG_General(centity_t* cent)
 			if (light_side)
 			{
 				//might be temporary, dunno.
-				ent.customShader = cgs.media.playerShieldDamage;
+				ent.custom_shader = cgs.media.playerShieldDamage;
 			}
 			else
 			{
-				ent.customShader = cgs.media.redSaberGlowShader;
+				ent.custom_shader = cgs.media.redSaberGlowShader;
 			}
 
 			trap->R_AddRefEntityToScene(&ent);
 			ent.renderfx &= ~RF_DISINTEGRATE2;
-			ent.customShader = 0;
+			ent.custom_shader = 0;
 
 			if (cur_time_dif < 2400)
 			{
@@ -1756,11 +1756,11 @@ static void CG_General(centity_t* cent)
 					ent.shaderRGBA[3] = 255;
 					if (rand() & 1)
 					{
-						ent.customShader = cgs.media.electricBodyShader;
+						ent.custom_shader = cgs.media.electricBodyShader;
 					}
 					else
 					{
-						ent.customShader = cgs.media.electricBody2Shader;
+						ent.custom_shader = cgs.media.electricBody2Shader;
 					}
 					if (Q_flrand(0.0f, 1.0f) > 0.9f)
 					{
@@ -1818,7 +1818,7 @@ static void CG_General(centity_t* cent)
 		float wv;
 		addspriteArgStruct_t fx_s_args;
 
-		ent.customShader = cgs.media.solidWhite;
+		ent.custom_shader = cgs.media.solidWhite;
 		ent.renderfx = RF_RGB_TINT;
 		wv = sin(cg.time * 0.003f) * 0.08f + 0.1f;
 		ent.shaderRGBA[0] = wv * 255;
@@ -1854,7 +1854,7 @@ static void CG_General(centity_t* cent)
 		float wv;
 		addspriteArgStruct_t fx_s_args;
 
-		ent.customShader = cgs.media.solidWhite;
+		ent.custom_shader = cgs.media.solidWhite;
 		ent.renderfx = RF_RGB_TINT;
 		wv = sin(cg.time * 0.005f) * 0.08f + 0.1f; //* 0.08f + 0.1f;
 
@@ -2207,7 +2207,7 @@ static void CG_General(centity_t* cent)
 		}
 		ent.renderfx &= ~RF_RGB_TINT;
 		ent.renderfx &= ~RF_FORCE_ENT_ALPHA;
-		ent.customShader = cgs.media.sightShell;
+		ent.custom_shader = cgs.media.sightShell;
 
 		trap->R_AddRefEntityToScene(&ent);
 	}
@@ -2323,7 +2323,7 @@ static void CG_Item(centity_t* cent)
 
 		memset(&ent, 0, sizeof ent);
 
-		ent.customShader = 0;
+		ent.custom_shader = 0;
 		VectorCopy(cent->lerpOrigin, ent.origin);
 		VectorCopy(cent->currentState.angles, cent->lerpAngles);
 		AnglesToAxis(cent->lerpAngles, ent.axis);
@@ -2363,7 +2363,7 @@ static void CG_Item(centity_t* cent)
 		ent.reType = RT_SPRITE;
 		VectorCopy(cent->lerpOrigin, ent.origin);
 		ent.radius = 14;
-		ent.customShader = cg_items[es->model_index].icon;
+		ent.custom_shader = cg_items[es->model_index].icon;
 		ent.shaderRGBA[0] = 255;
 		ent.shaderRGBA[1] = 255;
 		ent.shaderRGBA[2] = 255;
@@ -2401,11 +2401,11 @@ static void CG_Item(centity_t* cent)
 
 			if (item->giTag == PW_FORCE_ENLIGHTENED_LIGHT)
 			{
-				ent.customShader = trap->R_RegisterShader("gfx/misc/mp_light_enlight_disable");
+				ent.custom_shader = trap->R_RegisterShader("gfx/misc/mp_light_enlight_disable");
 			}
 			else
 			{
-				ent.customShader = trap->R_RegisterShader("gfx/misc/mp_dark_enlight_disable");
+				ent.custom_shader = trap->R_RegisterShader("gfx/misc/mp_dark_enlight_disable");
 			}
 		}
 		trap->R_AddRefEntityToScene(&ent);
@@ -2572,11 +2572,11 @@ static void CG_Item(centity_t* cent)
 
 		if (item->giTag == PW_FORCE_ENLIGHTENED_LIGHT)
 		{
-			ent.customShader = trap->R_RegisterShader("gfx/misc/mp_light_enlight_disable");
+			ent.custom_shader = trap->R_RegisterShader("gfx/misc/mp_light_enlight_disable");
 		}
 		else
 		{
-			ent.customShader = trap->R_RegisterShader("gfx/misc/mp_dark_enlight_disable");
+			ent.custom_shader = trap->R_RegisterShader("gfx/misc/mp_dark_enlight_disable");
 		}
 
 		trap->R_AddRefEntityToScene(&ent);
@@ -2592,7 +2592,7 @@ static void CG_Item(centity_t* cent)
 		ent.shaderRGBA[0] = 0;
 		ent.shaderRGBA[1] = 200;
 		ent.shaderRGBA[2] = 85;
-		ent.customShader = cgs.media.itemRespawningPlaceholder;
+		ent.custom_shader = cgs.media.itemRespawningPlaceholder;
 	}
 
 	// increase the size of the weapons when they are presented as items
@@ -2646,7 +2646,7 @@ static void CG_Item(centity_t* cent)
 		if (a > 255)
 			a = 255;
 
-		ent.customShader = cgs.media.itemRespawningRezOut;
+		ent.custom_shader = cgs.media.itemRespawningRezOut;
 
 		/*
 		ent.shaderRGBA[0] = 0;
@@ -2699,7 +2699,7 @@ static void CG_Item(centity_t* cent)
 		barrel.shadowPlane = ent.shadowPlane;
 		barrel.renderfx = ent.renderfx;
 
-		barrel.customShader = ent.customShader;
+		barrel.custom_shader = ent.custom_shader;
 
 		CG_PositionRotatedEntityOnTag( &barrel, &ent, wi->weaponModel, "tag_barrel" );
 
@@ -2800,7 +2800,7 @@ void CG_CreateDistortionTrailPart(const centity_t* cent, const float scale, vec3
 	ScaleModelAxis(&ent);
 
 	ent.hModel = trap->R_RegisterModel("models/weapons2/merr_sonn/trailmodel.md3");
-	ent.customShader = cgs.media.itemRespawningRezOut;
+	ent.custom_shader = cgs.media.itemRespawningRezOut;
 
 #if 1
 	ent.renderfx = RF_DISTORTION | RF_FORCE_ENT_ALPHA;
@@ -3282,7 +3282,7 @@ static void CG_Missile(centity_t* cent)
 		int i;
 		addspriteArgStruct_t fx_s_args;
 
-		ent.customShader = cgs.media.solidWhite;
+		ent.custom_shader = cgs.media.solidWhite;
 		ent.renderfx = RF_RGB_TINT;
 		wv = sin(cg.time * 0.003f) * 0.08f + 0.1f;
 		ent.shaderRGBA[0] = wv * 255;
@@ -3318,7 +3318,7 @@ static void CG_Missile(centity_t* cent)
 			ent.shaderRGBA[2] = 0;
 
 			ent.renderfx |= RF_DEPTHHACK;
-			ent.customShader = cgs.media.forceSightBubble;
+			ent.custom_shader = cgs.media.forceSightBubble;
 
 			trap->R_AddRefEntityToScene(&ent);
 		}

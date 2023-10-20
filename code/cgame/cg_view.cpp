@@ -1543,7 +1543,7 @@ static void CG_DamageBlendBlob()
 	VectorMA(ent.origin, cg.damageY * 8, cg.refdef.viewaxis[2], ent.origin);
 
 	ent.radius = cg.damageValue * 3 * (1.0 - static_cast<float>(t) / max_time);
-	ent.customShader = cgs.media.damageBlendBlobShader;
+	ent.custom_shader = cgs.media.damageBlendBlobShader;
 	ent.shaderRGBA[0] = 180 * (1.0 - static_cast<float>(t) / max_time);
 	ent.shaderRGBA[1] = 50 * (1.0 - static_cast<float>(t) / max_time);
 	ent.shaderRGBA[2] = 50 * (1.0 - static_cast<float>(t) / max_time);

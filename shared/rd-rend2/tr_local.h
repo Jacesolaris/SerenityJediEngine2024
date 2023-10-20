@@ -2149,7 +2149,8 @@ typedef struct mdxmData_s
 	mdxmVBOModel_t* vboModels;
 } mdxmData_t;
 
-typedef struct model_s {
+using model_t = struct model_s
+{
 	char		name[MAX_QPATH];
 	modtype_t	type;
 	int			index;		// model = tr.models[model->index]
@@ -2166,8 +2167,12 @@ typedef struct model_s {
 		mdxaHeader_t* gla;				// type == MOD_MDXA
 	} data;
 
-	int			 numLods;
-} model_t;
+	mdxmHeader_t* mdxm;				// only if type == MOD_GL2M which is a GHOUL II Mesh file NOT a GHOUL II animation file
+	mdxaHeader_t* mdxa;				// only if type == MOD_GL2A which is a GHOUL II Animation file
+
+	unsigned char	numLods;
+	bool			bspInstance;			// model is a bsp instance
+};
 
 #define	MAX_MOD_KNOWN	1024
 

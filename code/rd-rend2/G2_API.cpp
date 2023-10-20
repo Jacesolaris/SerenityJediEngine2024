@@ -741,16 +741,15 @@ qhandle_t G2API_PrecacheGhoul2Model(const char* file_name)
 }
 
 // initialise all that needs to be on a new Ghoul II model
-int G2API_InitGhoul2Model(CGhoul2Info_v& ghoul2, const char* file_name, int model_index, qhandle_t customSkin, qhandle_t customShader, int modelFlags, int lodBias)
+int G2API_InitGhoul2Model(CGhoul2Info_v& ghoul2, const char* file_name, const int model_index, const qhandle_t custom_skin, const qhandle_t custom_shader, const int model_flags, const int lod_bias)
 {
-	int model = -1;
+	int model;
 
 	G2ERROR(file_name && file_name[0], "NULL filename");
 
-	// are we actually asking for a model to be loaded.
 	if (!file_name || !file_name[0])
 	{
-		assert(0);
+		assert(file_name[0]);
 		return -1;
 	}
 
@@ -765,11 +764,10 @@ int G2API_InitGhoul2Model(CGhoul2Info_v& ghoul2, const char* file_name, int mode
 	}
 	if (model == ghoul2.size())
 	{
-		assert(model < 8);	//arb, just catching run-away models (why 4 instead of 8 in MP?)
+		assert(model < 8); //arb, just catching run-away models
 		CGhoul2Info info;
-		Q_strncpyz(info.mFileName, file_name, sizeof(info.mFileName));
+		Q_strncpyz(info.mFileName, file_name, sizeof info.mFileName);
 		info.mmodel_index = 0;
-
 		if (G2_TestModelPointers(&info))
 		{
 			ghoul2.push_back(CGhoul2Info());
@@ -780,8 +778,7 @@ int G2API_InitGhoul2Model(CGhoul2Info_v& ghoul2, const char* file_name, int mode
 		}
 	}
 
-	Q_strncpyz(ghoul2[model].mFileName, file_name, sizeof(ghoul2[model].mFileName));
-
+	Q_strncpyz(ghoul2[model].mFileName, file_name, sizeof ghoul2[model].mFileName);
 	ghoul2[model].mmodel_index = model;
 	if (!G2_TestModelPointers(&ghoul2[model]))
 	{
@@ -792,9 +789,9 @@ int G2API_InitGhoul2Model(CGhoul2Info_v& ghoul2, const char* file_name, int mode
 	{
 		G2_Init_Bone_List(ghoul2[model].mBlist, ghoul2[model].aHeader->numBones);
 		G2_Init_Bolt_List(ghoul2[model].mBltlist);
-		ghoul2[model].mCustomShader = customShader;
-		ghoul2[model].mCustomSkin = customSkin;
-		ghoul2[model].mLodBias = lodBias;
+		ghoul2[model].mCustomShader = custom_shader;
+		ghoul2[model].mCustomSkin = custom_skin;
+		ghoul2[model].mLodBias = lod_bias;
 		ghoul2[model].mAnimFrameDefault = 0;
 		ghoul2[model].mFlags = 0;
 
@@ -803,23 +800,23 @@ int G2API_InitGhoul2Model(CGhoul2Info_v& ghoul2, const char* file_name, int mode
 	return ghoul2[model].mmodel_index;
 }
 
-qboolean G2API_SetLodBias(CGhoul2Info* ghl_info, int lodBias)
+qboolean G2API_SetLodBias(CGhoul2Info* ghl_info, int lod_bias)
 {
 	G2ERROR(ghl_info, "G2API_SetLodBias: NULL ghl_info");
 	if (G2_SetupModelPointers(ghl_info))
 	{
-		ghl_info->mLodBias = lodBias;
+		ghl_info->mLodBias = lod_bias;
 		return qtrue;
 	}
 	return qfalse;
 }
 
-qboolean G2API_SetSkin(CGhoul2Info* ghl_info, qhandle_t customSkin, qhandle_t renderSkin)
+qboolean G2API_SetSkin(CGhoul2Info* ghl_info, qhandle_t custom_skin, qhandle_t renderSkin)
 {
 	G2ERROR(ghl_info, "G2API_SetSkin: NULL ghl_info");
 	if (G2_SetupModelPointers(ghl_info))
 	{
-		ghl_info->mCustomSkin = customSkin;
+		ghl_info->mCustomSkin = custom_skin;
 #ifndef JK2_MODE
 		if (renderSkin)
 		{
@@ -833,12 +830,12 @@ qboolean G2API_SetSkin(CGhoul2Info* ghl_info, qhandle_t customSkin, qhandle_t re
 	return qfalse;
 }
 
-qboolean G2API_SetShader(CGhoul2Info* ghl_info, qhandle_t customShader)
+qboolean G2API_SetShader(CGhoul2Info* ghl_info, qhandle_t custom_shader)
 {
 	G2ERROR(ghl_info, "G2API_SetShader: NULL ghl_info");
 	if (ghl_info)
 	{
-		ghl_info->mCustomShader = customShader;
+		ghl_info->mCustomShader = custom_shader;
 		return qtrue;
 	}
 	return qfalse;
@@ -1014,7 +1011,7 @@ qboolean G2API_SetAnimIndex(CGhoul2Info* ghl_info, const int index)
 }
 
 //check if a bone exists on skeleton without actually adding to the bone list -rww
-qboolean G2API_DoesBoneExist(CGhoul2Info_v& ghoul2, int model_index, const char* bone_name)
+qboolean G2API_DoesBoneExist(CGhoul2Info_v& ghoul2, const int model_index, const char* bone_name)
 {
 	CGhoul2Info* ghl_info = &ghoul2[model_index];
 
@@ -1977,7 +1974,7 @@ void G2API_CollisionDetect(
 	CCollisionRecord* collRecMap, CGhoul2Info_v& ghoul2,
 	const vec3_t angles, const vec3_t position, int frameNumber, int ent_num,
 	vec3_t rayStart, vec3_t rayEnd, vec3_t scale,
-	CMiniHeap* G2VertSpace, EG2_Collision eG2TraceType, int use_lod, float fRadius)
+	CMiniHeap* G2VertSpace, EG2_Collision e_g2_trace_type, int use_lod, float fRadius)
 {
 	// not exactly correct, but doesn't matter
 	G2ERROR(ghoul2.IsValid(), "G2API_CollisionDetect: Invalid ghl_info");
@@ -2010,9 +2007,9 @@ void G2API_CollisionDetect(
 
 		// now walk each model and check the ray against each poly - sigh, this is SO expensive. I wish there was a better way to do this.
 #ifdef _G2_GORE
-		G2_TraceModels(ghoul2, transRayStart, transRayEnd, collRecMap, ent_num, eG2TraceType, use_lod, fRadius, 0, 0, 0, 0, 0, qfalse);
+		G2_TraceModels(ghoul2, transRayStart, transRayEnd, collRecMap, ent_num, e_g2_trace_type, use_lod, fRadius, 0, 0, 0, 0, 0, qfalse);
 #else
-		G2_TraceModels(ghoul2, transRayStart, transRayEnd, collRecMap, ent_num, eG2TraceType, use_lod, fRadius);
+		G2_TraceModels(ghoul2, transRayStart, transRayEnd, collRecMap, ent_num, e_g2_trace_type, use_lod, fRadius);
 #endif
 
 		ri.GetG2VertSpaceServer()->ResetHeap();
@@ -2267,7 +2264,7 @@ qboolean G2API_SkinlessModel(CGhoul2Info_v& ghoul2, int model_index)
 	return qtrue;
 }
 
-int G2API_Ghoul2Size(CGhoul2Info_v& ghoul2)
+int G2API_Ghoul2Size(const CGhoul2Info_v& ghoul2)
 {
 	return ghoul2.size();
 }
@@ -2412,7 +2409,7 @@ qboolean G2_TestModelPointers(CGhoul2Info* ghl_info) // returns true if the mode
 		ghl_info->aHeader = NULL;
 	}
 	return (qboolean)ghl_info->mValid;
-			}
+}
 
 #ifdef G2_PERFORMANCE_ANALYSIS
 #include "qcommon/timing.h"
@@ -2497,7 +2494,7 @@ bool G2_SetupModelPointers(CGhoul2Info* ghl_info) // returns true if the model i
 	G2Time_G2_SetupModelPointers += G2PerformanceTimer_G2_SetupModelPointers.End();
 #endif
 	return (qboolean)ghl_info->mValid;
-	}
+}
 
 bool G2_SetupModelPointers(CGhoul2Info_v& ghoul2) // returns true if any model is properly set up
 {
@@ -2508,7 +2505,7 @@ bool G2_SetupModelPointers(CGhoul2Info_v& ghoul2) // returns true if any model i
 		ret = ret || r;
 	}
 	return ret;
-		}
+}
 
 qboolean G2API_IsGhoul2InfovValid(CGhoul2Info_v& ghoul2)
 {

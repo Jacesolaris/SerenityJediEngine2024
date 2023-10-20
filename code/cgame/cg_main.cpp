@@ -2767,7 +2767,7 @@ void CG_DrawNode(vec3_t origin, const int type)
 	ex->endTime = ex->startTime + 51;
 	VectorCopy(origin, ex->refEntity.origin);
 
-	ex->refEntity.customShader = cgi_R_RegisterShader("gfx/misc/nav_node");
+	ex->refEntity.custom_shader = cgi_R_RegisterShader("gfx/misc/nav_node");
 
 	float scale = 16.0f;
 
@@ -2820,7 +2820,7 @@ void CG_DrawRadius(vec3_t origin, const unsigned int radius, const int type)
 	ex->endTime = ex->startTime + 51;
 	VectorCopy(origin, ex->refEntity.origin);
 
-	ex->refEntity.customShader = cgi_R_RegisterShader("gfx/misc/nav_radius");
+	ex->refEntity.custom_shader = cgi_R_RegisterShader("gfx/misc/nav_radius");
 
 	switch (type)
 	{
@@ -3052,7 +3052,7 @@ void CG_DrawCombatPoint(vec3_t origin, int type)
 	ex->endTime = ex->startTime + 51;
 	VectorCopy(origin, ex->refEntity.origin);
 
-	ex->refEntity.customShader = cgi_R_RegisterShader("gfx/misc/nav_cpoint");
+	ex->refEntity.custom_shader = cgi_R_RegisterShader("gfx/misc/nav_cpoint");
 
 	ex->color[0] = 255;
 	ex->color[1] = 0;

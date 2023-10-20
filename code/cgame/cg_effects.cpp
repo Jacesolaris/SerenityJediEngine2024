@@ -441,7 +441,7 @@ void CG_TestLine(vec3_t start, vec3_t end, const int time, unsigned int color, c
 
 	re->reType = RT_LINE;
 	re->radius = 0.5 * radius;
-	re->customShader = cgs.media.whiteShader;
+	re->custom_shader = cgs.media.whiteShader;
 
 	re->shaderTexCoord[0] = re->shaderTexCoord[1] = 1.0f;
 
@@ -477,7 +477,7 @@ void CG_BlockLine(vec3_t start, vec3_t end, const int time, unsigned int color, 
 
 	re->reType = RT_LINE;
 	re->radius = 0.1 * radius;
-	re->customShader = cgs.media.whiteShader;
+	re->custom_shader = cgs.media.whiteShader;
 
 	re->shaderTexCoord[0] = re->shaderTexCoord[1] = 1.0f;
 
@@ -506,7 +506,7 @@ void CG_StunStartpoint(vec3_t start_pos)
 	VectorCopy(start_pos, model.lightingOrigin);
 	VectorCopy(start_pos, model.origin);
 
-	model.customShader = cgs.media.blueSaberGlowShader;
+	model.custom_shader = cgs.media.blueSaberGlowShader;
 	model.shaderRGBA[0] = model.shaderRGBA[1] = model.shaderRGBA[2] = model.shaderRGBA[3] = 0xff;
 
 	cgi_R_AddRefEntityToScene(&model);
@@ -520,7 +520,7 @@ void CG_GrappleStartpoint(vec3_t start_pos)
 	VectorCopy(start_pos, model.lightingOrigin);
 	VectorCopy(start_pos, model.origin);
 
-	model.customShader = cgs.media.rgbSaberGlowShader;
+	model.custom_shader = cgs.media.rgbSaberGlowShader;
 	model.shaderRGBA[0] = model.shaderRGBA[1] = model.shaderRGBA[2] = model.shaderRGBA[3] = 0xff;
 
 	cgi_R_AddRefEntityToScene(&model);
@@ -541,7 +541,7 @@ void CG_GrappleLine(vec3_t start, vec3_t end, const int time, unsigned int color
 
 	re->reType = RT_LINE;
 	re->radius = 0.5 * radius;
-	re->customShader = cgs.media.electricBodyShader;
+	re->custom_shader = cgs.media.electricBodyShader;
 
 	re->shaderTexCoord[0] = re->shaderTexCoord[1] = 1.0f;
 

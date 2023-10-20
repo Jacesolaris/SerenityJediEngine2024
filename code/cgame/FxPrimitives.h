@@ -315,7 +315,7 @@ public:
 	void SetShader(const qhandle_t sh)
 	{
 		assert(sh);
-		mRefEnt.customShader = sh;
+		mRefEnt.custom_shader = sh;
 	}
 
 	void Init();
@@ -384,7 +384,7 @@ public:
 	void Die() override;
 	bool Update() override;
 
-	void SetShader(const qhandle_t sh) { mRefEnt.customShader = sh; }
+	void SetShader(const qhandle_t sh) { mRefEnt.custom_shader = sh; }
 
 	void SetOrgOffset(const vec3_t o)
 	{

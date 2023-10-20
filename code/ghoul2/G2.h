@@ -100,9 +100,9 @@ void G2_List_Model_Bones(const char* file_name, int frame);
 qboolean G2_GetAnimFileName(const char* file_name, char** filename);
 
 #ifdef _G2_GORE
-void G2_TraceModels(CGhoul2Info_v& ghoul2, vec3_t rayStart, vec3_t rayEnd, CCollisionRecord* collRecMap, int ent_num, EG2_Collision eG2TraceType, int use_lod, float fRadius, float ssize, float tsize, float theta, int shader, SSkinGoreData* gore, qboolean skipIfLODNotMatch);
+void G2_TraceModels(CGhoul2Info_v& ghoul2, vec3_t rayStart, vec3_t rayEnd, CCollisionRecord* collRecMap, int ent_num, EG2_Collision e_g2_trace_type, int use_lod, float fRadius, const float ssize, const float tsize, const float theta, const int shader, SSkinGoreData* gore, const qboolean skipIfLODNotMatch);
 #else
-void G2_TraceModels(CGhoul2Info_v& ghoul2, vec3_t rayStart, vec3_t rayEnd, CCollisionRecord* collRecMap, int ent_num, EG2_Collision eG2TraceType, int use_lod, float fRadius);
+void G2_TraceModels(CGhoul2Info_v& ghoul2, vec3_t rayStart, vec3_t rayEnd, CCollisionRecord* collRecMap, int ent_num, EG2_Collision e_g2_trace_type, int use_lod, float fRadius);
 #endif
 
 void TransformAndTranslatePoint(const vec3_t in, vec3_t out, const mdxaBone_t* mat);
@@ -134,9 +134,8 @@ void SaveGhoul2InfoArray();
 
 qhandle_t G2API_PrecacheGhoul2Model(const char* file_name);
 
-int G2API_InitGhoul2Model(CGhoul2Info_v& ghoul2, const char* file_name, int model_index,
-	qhandle_t custom_skin = NULL_HANDLE,
-	qhandle_t custom_shader = NULL_HANDLE, int model_flags = 0, int lod_bias = 0);
+int G2API_InitGhoul2Model(CGhoul2Info_v& ghoul2, const char* file_name, const int model_index, const qhandle_t custom_skin = NULL_HANDLE, qhandle_t custom_shader = NULL_HANDLE, const int model_flags = 0, const int lod_bias = 0);
+
 qboolean G2API_SetLodBias(CGhoul2Info* ghl_info, int lod_bias);
 qboolean G2API_SetSkin(CGhoul2Info* ghl_info, qhandle_t custom_skin, qhandle_t render_skin = 0);
 qboolean G2API_SetShader(CGhoul2Info* ghl_info, qhandle_t custom_shader);

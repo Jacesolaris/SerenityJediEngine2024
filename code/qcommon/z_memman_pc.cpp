@@ -239,7 +239,7 @@ extern refexport_t re;
 #ifdef DEBUG_ZONE_ALLOCS
 void* _D_Z_Malloc(int iSize, memtag_t eTag, qboolean bZeroit, const char* psFile, int iLine)
 #else
-void* Z_Malloc(const int iSize, const memtag_t eTag, const qboolean bZeroit, int /*unusedAlign*/)
+void* Z_Malloc(const int iSize, const memtag_t eTag, const qboolean bZeroit, int unusedAlign)
 #endif
 {
 	gbMemFreeupOccured = qfalse;

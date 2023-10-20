@@ -778,7 +778,7 @@ static int R_GComputeFogNum(const trRefEntity_t* ent)
 }
 
 // work out lod for this entity.
-static int G2_ComputeLOD(trRefEntity_t* ent, const model_t* current_model, int lodBias)
+static int G2_ComputeLOD(trRefEntity_t* ent, const model_t* current_model, int lod_bias)
 {
 	float flod;
 	float projected_radius;
@@ -789,13 +789,13 @@ static int G2_ComputeLOD(trRefEntity_t* ent, const model_t* current_model, int l
 		return 0;
 	}
 
-	if (r_lodbias->integer > lodBias)
+	if (r_lodbias->integer > lod_bias)
 	{
-		lodBias = r_lodbias->integer;
+		lod_bias = r_lodbias->integer;
 	}
 
 	//**early out, it's going to be max lod
-	if (lodBias >= current_model->numLods)
+	if (lod_bias >= current_model->numLods)
 	{
 		return current_model->numLods - 1;
 	}
@@ -841,7 +841,7 @@ static int G2_ComputeLOD(trRefEntity_t* ent, const model_t* current_model, int l
 		lod = current_model->numLods - 1;
 	}
 
-	lod += lodBias;
+	lod += lod_bias;
 
 	if (lod >= current_model->numLods)
 		lod = current_model->numLods - 1;
@@ -2583,17 +2583,17 @@ void R_AddGhoulSurfaces(trRefEntity_t* ent)
 			// figure out whether we should be using a custom shader for this model
 			//
 			skin = nullptr;
-			if (ent->e.customShader)
+			if (ent->e.custom_shader)
 			{
-				cust_shader = R_GetShaderByHandle(ent->e.customShader);
+				cust_shader = R_GetShaderByHandle(ent->e.custom_shader);
 			}
 			else
 			{
 				cust_shader = nullptr;
 				// figure out the custom skin thing
-				if (ent->e.customSkin)
+				if (ent->e.custom_skin)
 				{
-					skin = R_GetSkinByHandle(ent->e.customSkin);
+					skin = R_GetSkinByHandle(ent->e.custom_skin);
 				}
 				else if (ghoul2[i].mSkin > 0 && ghoul2[i].mSkin < tr.numSkins)
 				{

@@ -1929,7 +1929,7 @@ static void R_AddEntitySurface(const trRefdef_t* refdef, trRefEntity_t* ent, int
 		if ((ent->e.renderfx & RF_THIRD_PERSON) && !tr.viewParms.isPortal) {
 			return;
 		}
-		shader = R_GetShaderByHandle(ent->e.customShader);
+		shader = R_GetShaderByHandle(ent->e.custom_shader);
 		R_AddDrawSurf(
 			&entitySurface,
 			entity_num,
@@ -2004,7 +2004,7 @@ static void R_AddEntitySurface(const trRefdef_t* refdef, trRefEntity_t* ent, int
 		break;
 		//#ifndef REND2_SP
 	case RT_ENT_CHAIN:
-		shader = R_GetShaderByHandle(ent->e.customShader);
+		shader = R_GetShaderByHandle(ent->e.custom_shader);
 		R_AddDrawSurf(
 			&entitySurface,
 			entity_num,
@@ -2342,9 +2342,9 @@ void R_SetupPshadowMaps(trRefdef_t* refdef)
 				if (ent->e.ghoul2 && G2API_HaveWeGhoul2Models(*((CGhoul2Info_v*)ent->e.ghoul2)))
 				{
 					shader_t* cust_shader = nullptr;
-					if (ent->e.customShader)
+					if (ent->e.custom_shader)
 					{
-						cust_shader = R_GetShaderByHandle(ent->e.customShader);
+						cust_shader = R_GetShaderByHandle(ent->e.custom_shader);
 						if (cust_shader->sort != SS_OPAQUE)
 							continue;
 					}

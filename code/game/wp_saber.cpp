@@ -843,7 +843,7 @@ void wp_saber_add_g2_saber_models(gentity_t* ent, const int specific_saber_num)
 
 		if (ent->client->ps.saber[saber_num].skin != nullptr)
 		{
-			//if this saber has a customSkin, use it
+			//if this saber has a custom_skin, use it
 			// lets see if it's out there
 			const int saberSkin = gi.RE_RegisterSkin(ent->client->ps.saber[saber_num].skin);
 			if (saberSkin)
@@ -1132,7 +1132,7 @@ void wp_saber_add_holstered_g2_saber_models(gentity_t* ent, const int specific_s
 
 		if (ent->client->ps.saber[saber_num].skin != nullptr)
 		{
-			//if this saber has a customSkin, use it
+			//if this saber has a custom_skin, use it
 			// lets see if it's out there
 			const int saber_skin = gi.RE_RegisterSkin(ent->client->ps.saber[saber_num].skin);
 			if (saber_skin)
@@ -1479,7 +1479,7 @@ void wp_set_saber_ent_model_skin(const gentity_t* ent, gentity_t* saberent)
 	}
 	else
 	{
-		//if this saber has a customSkin, use it
+		//if this saber has a custom_skin, use it
 		// lets see if it's out there
 		const int saber_skin = gi.RE_RegisterSkin(ent->client->ps.saber[0].skin);
 		if (saber_skin && (new_model || saberent->s.modelindex2 != saber_skin))

@@ -505,9 +505,6 @@ void SP_emplaced_eweb(gentity_t* ent)
 		POSITIVE_Z, NEGATIVE_X, NEGATIVE_Y, nullptr, 0, 0);
 	gi.G2API_SetBoneAnglesIndex(&ent->ghoul2[ent->playerModel], ent->upperLumbarBone, vec3_origin, BONE_ANGLES_POSTMULT,
 		POSITIVE_Z, NEGATIVE_X, NEGATIVE_Y, nullptr, 0, 0);
-	//gi.G2API_SetBoneAngles( &ent->ghoul2[0], "cannon_Yrot", vec3_origin, BONE_ANGLES_POSTMULT, POSITIVE_Y, POSITIVE_Z, POSITIVE_X, NULL);
-	//set the constraints for this guy as an emplaced weapon, and his constraint angles
-	//ent->s.origin2[0] = 60.0f; //60 degrees in either direction
 
 	register_item(FindItemForWeapon(WP_EMPLACED_GUN));
 	ent->s.weapon = WP_EMPLACED_GUN;
@@ -692,8 +689,8 @@ void emplaced_gun_use(gentity_t* self, const gentity_t* other, gentity_t* activa
 			// Run use script
 			G_ActivateBehavior(self, BSET_USE);
 		}
+		}
 	}
-}
 
 //----------------------------------------------------------
 void emplaced_gun_pain(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, const vec3_t point, int damage,

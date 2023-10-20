@@ -78,7 +78,8 @@ int Hunk_MemoryRemaining(void) {
 }
 
 // ZONE
-void* Z_Malloc(const int iSize, const memtag_t eTag, const qboolean bZeroit, const int iUnusedAlign) {
+void* Z_Malloc(const int iSize, const memtag_t eTag, const qboolean bZeroit, const int iUnusedAlign)
+{
 	return ri->Z_Malloc(iSize, eTag, bZeroit, iUnusedAlign);
 }
 

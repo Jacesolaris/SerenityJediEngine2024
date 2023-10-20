@@ -248,11 +248,6 @@ void SP_misc_model_ghoul(gentity_t* ent)
 	VectorCopy(ent->s.angles, ent->s.apos.trBase);
 	ent->health = 1000;
 
-	//	ent->s.modelindex = G_ModelIndex( "models/weapons2/blaster_r/g2blaster_w.glm" );
-	//	gi.G2API_InitGhoul2Model(ent->ghoul2, "models/weapons2/blaster_r/g2blaster_w.glm", ent->s.modelindex);
-	//	gi.G2API_AddBolt(&ent->ghoul2[0], "*weapon");
-	//	gi.G2API_AttachG2Model(&ent->ghoul2[1],&ent->ghoul2[0], 0, 0);
-
 	gi.linkentity(ent);
 
 	animation_t* animations = level.knownAnimFileSets[temp_animFileIndex].animations;

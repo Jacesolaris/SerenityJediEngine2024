@@ -68,7 +68,7 @@ void CG_BubbleTrail(vec3_t start, vec3_t end, const float spacing)
 		re->reType = RT_SPRITE;
 		re->rotation = 0;
 		re->radius = 3;
-		re->customShader = 0; //cgs.media.waterBubbleShader;
+		re->custom_shader = 0; //cgs.media.waterBubbleShader;
 		re->shaderRGBA[0] = 0xff;
 		re->shaderRGBA[1] = 0xff;
 		re->shaderRGBA[2] = 0xff;
@@ -138,7 +138,7 @@ localEntity_t* CG_SmokePuff(const vec3_t p, const vec3_t vel,
 	VectorCopy(p, le->pos.trBase);
 
 	VectorCopy(p, re->origin);
-	re->customShader = h_shader;
+	re->custom_shader = h_shader;
 
 	re->shaderRGBA[0] = le->color[0] * 0xff;
 	re->shaderRGBA[1] = le->color[1] * 0xff;
@@ -189,7 +189,7 @@ void CG_TestLine(vec3_t start, vec3_t end, const int time, unsigned int color, c
 
 	re->reType = RT_LINE;
 	re->radius = 0.5 * radius;
-	re->customShader = cgs.media.whiteShader;
+	re->custom_shader = cgs.media.whiteShader;
 
 	re->shaderTexCoord[0] = re->shaderTexCoord[1] = 1.0f;
 
@@ -226,7 +226,7 @@ void CG_BlockLine(vec3_t start, vec3_t end, const int time, unsigned int color, 
 
 	re->reType = RT_LINE;
 	re->radius = 0.1 * radius;
-	re->customShader = cgs.media.whiteShader;
+	re->custom_shader = cgs.media.whiteShader;
 
 	re->shaderTexCoord[0] = re->shaderTexCoord[1] = 1.0f;
 
@@ -256,7 +256,7 @@ void CG_StunStartpoint(vec3_t start_pos)
 	VectorCopy(start_pos, model.lightingOrigin);
 	VectorCopy(start_pos, model.origin);
 
-	model.customShader = cgs.media.blueSaberGlowShader;
+	model.custom_shader = cgs.media.blueSaberGlowShader;
 	model.shaderRGBA[0] = model.shaderRGBA[1] = model.shaderRGBA[2] = model.shaderRGBA[3] = 0xff;
 
 	trap->R_AddRefEntityToScene(&model);
@@ -270,7 +270,7 @@ void CG_GrappleStartpoint(vec3_t start_pos)
 	VectorCopy(start_pos, model.lightingOrigin);
 	VectorCopy(start_pos, model.origin);
 
-	model.customShader = cgs.media.rgbSaberGlowShader;
+	model.custom_shader = cgs.media.rgbSaberGlowShader;
 	model.shaderRGBA[0] = model.shaderRGBA[1] = model.shaderRGBA[2] = model.shaderRGBA[3] = 0xff;
 
 	trap->R_AddRefEntityToScene(&model);
@@ -291,7 +291,7 @@ void CG_GrappleLine(vec3_t start, vec3_t end, const int time, unsigned int color
 
 	re->reType = RT_LINE;
 	re->radius = 0.5 * radius;
-	re->customShader = cgs.media.electricBodyShader;
+	re->custom_shader = cgs.media.electricBodyShader;
 
 	re->shaderTexCoord[0] = re->shaderTexCoord[1] = 1.0f;
 
@@ -1135,7 +1135,7 @@ localEntity_t* CG_MakeExplosion(vec3_t origin, vec3_t dir,
 	ex->refEntity.shaderTime = ex->startTime / 1000.0f;
 
 	ex->refEntity.hModel = h_model;
-	ex->refEntity.customShader = shader;
+	ex->refEntity.custom_shader = shader;
 	ex->lifeRate = (float)num_frames / msec;
 	ex->leFlags = flags;
 

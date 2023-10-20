@@ -389,7 +389,7 @@ public:
 	virtual bool Cull(void);
 	void Draw(void) override;
 
-	void SetShader(const qhandle_t sh) { mRefEnt.customShader = sh; }
+	void SetShader(const qhandle_t sh) { mRefEnt.custom_shader = sh; }
 
 	void SetOrgOffset(const vec3_t o)
 	{

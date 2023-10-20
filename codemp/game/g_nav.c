@@ -1706,21 +1706,8 @@ void NAV_ClearStoredWaypoints(void)
 
 void NAV_StoreWaypoint(const gentity_t* ent)
 {
-	/*
-	if ( !tempWaypointList )
-	{
-		//tempWaypointList = (waypointData_t *) trap->Malloc(sizeof(waypointData_t)*MAX_STORED_WAYPOINTS, TAG_TEMP_WORKSPACE, qtrue);
-
-		int size = sizeof(waypointData_t)*MAX_STORED_WAYPOINTS;
-		trap->TrueMalloc((void **)&tempWaypointList, size);
-		memset(tempWaypointList, 0, size);
-	}
-	*/
-
 	if (numStoredWaypoints >= MAX_STORED_WAYPOINTS)
 	{
-		//trap->Error( ERR_DROP, "Too many waypoints!  (%d > %d)\n", numStoredWaypoints, MAX_STORED_WAYPOINTS );
-		//rwwFIXMEFIXME: commented this out so I can load some of the SP levels.
 		return;
 	}
 	if (ent->targetname)

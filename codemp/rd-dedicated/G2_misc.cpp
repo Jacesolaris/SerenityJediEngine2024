@@ -532,8 +532,7 @@ void G2_TransformSurfaces(const int surface_num, surfaceInfo_v& rootSList,
 
 // main calling point for the model transform for collision detection. At this point all of the skeleton has been transformed.
 #ifdef _G2_GORE
-void G2_TransformModel(CGhoul2Info_v& ghoul2, const int frame_num, vec3_t scale, IHeapAllocator* G2VertSpace, int use_lod,
-	const bool ApplyGore)
+void G2_TransformModel(CGhoul2Info_v& ghoul2, const int frame_num, vec3_t scale, IHeapAllocator* G2VertSpace, int use_lod, const bool ApplyGore)
 #else
 void G2_TransformModel(CGhoul2Info_v& ghoul2, const int frame_num, vec3_t scale, IHeapAllocator* G2VertSpace, int use_lod)
 #endif
@@ -545,7 +544,7 @@ void G2_TransformModel(CGhoul2Info_v& ghoul2, const int frame_num, vec3_t scale,
 #ifdef _G2_GORE
 	if (cg_g2MarksAllModels == nullptr)
 	{
-		cg_g2MarksAllModels = ri->Cvar_Get("cg_g2MarksAllModels", "0", 0, "");
+		cg_g2MarksAllModels = ri->Cvar_Get("cg_g2MarksAllModels", "0", 0, "Render marks on all G2 models");
 	}
 
 	if (cg_g2MarksAllModels == nullptr
@@ -1476,9 +1475,7 @@ static void G2_TraceSurfaces(CTraceSurface& TS)
 }
 
 #ifdef _G2_GORE
-void G2_TraceModels(CGhoul2Info_v& ghoul2, vec3_t rayStart, vec3_t rayEnd, CollisionRecord_t* collRecMap, int ent_num,
-	int e_g2_trace_type, int use_lod, float fRadius, const float ssize, const float tsize,
-	const float theta, const int shader, SSkinGoreData* gore, const qboolean skipIfLODNotMatch)
+void G2_TraceModels(CGhoul2Info_v& ghoul2, vec3_t rayStart, vec3_t rayEnd, CollisionRecord_t* collRecMap, int ent_num, int e_g2_trace_type, int use_lod, float fRadius, const float ssize, const float tsize, const float theta, const int shader, SSkinGoreData* gore, const qboolean skipIfLODNotMatch)
 #else
 void G2_TraceModels(CGhoul2Info_v& ghoul2, vec3_t rayStart, vec3_t rayEnd, CollisionRecord_t* collRecMap, int ent_num, int e_g2_trace_type, int use_lod, float fRadius)
 #endif
@@ -1491,7 +1488,7 @@ void G2_TraceModels(CGhoul2Info_v& ghoul2, vec3_t rayStart, vec3_t rayEnd, Colli
 #ifdef _G2_GORE
 	if (cg_g2MarksAllModels == nullptr)
 	{
-		cg_g2MarksAllModels = ri->Cvar_Get("cg_g2MarksAllModels", "0", 0, "");
+		cg_g2MarksAllModels = ri->Cvar_Get("cg_g2MarksAllModels", "0", 0, "Render marks on all G2 models");
 	}
 
 	if (cg_g2MarksAllModels == nullptr
@@ -1547,11 +1544,9 @@ void G2_TraceModels(CGhoul2Info_v& ghoul2, vec3_t rayStart, vec3_t rayEnd, Colli
 		lod = G2_DecideTraceLod(ghoul2[i], use_lod);
 #ifdef _G2_GORE
 		if (skipIfLODNotMatch)
-		{
-			//we only want to hit this SPECIFIC LOD...
+		{//we only want to hit this SPECIFIC LOD...
 			if (lod != use_lod)
-			{
-				//doesn't match, skip this model
+			{//doesn't match, skip this model
 				continue;
 			}
 		}

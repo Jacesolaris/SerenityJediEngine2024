@@ -586,8 +586,7 @@ qhandle_t G2API_PrecacheGhoul2Model(const char* file_name)
 }
 
 // initialise all that needs to be on a new Ghoul II model
-int G2API_InitGhoul2Model(CGhoul2Info_v** ghoul2Ptr, const char* file_name, int model_index, const qhandle_t customSkin,
-	const qhandle_t customShader, int modelFlags, const int lodBias)
+int G2API_InitGhoul2Model(CGhoul2Info_v** ghoul2Ptr, const char* file_name, const int model_index, const qhandle_t custom_skin, const qhandle_t custom_shader, const int model_flags, const int lod_bias)
 {
 	int model;
 
@@ -644,9 +643,9 @@ int G2API_InitGhoul2Model(CGhoul2Info_v** ghoul2Ptr, const char* file_name, int 
 	{
 		G2_Init_Bone_List(ghoul2[model].mBlist, ghoul2[model].aHeader->numBones);
 		G2_Init_Bolt_List(ghoul2[model].mBltlist);
-		ghoul2[model].mCustomShader = customShader;
-		ghoul2[model].mCustomSkin = customSkin;
-		ghoul2[model].mLodBias = lodBias;
+		ghoul2[model].mCustomShader = custom_shader;
+		ghoul2[model].mCustomSkin = custom_skin;
+		ghoul2[model].mLodBias = lod_bias;
 		ghoul2[model].mAnimFrameDefault = 0;
 		ghoul2[model].mFlags = 0;
 
@@ -667,14 +666,14 @@ qboolean G2API_SetLodBias(CGhoul2Info* ghl_info, const int lod_bias)
 
 void G2_SetSurfaceOnOffFromSkin(CGhoul2Info* ghl_info, qhandle_t render_skin);
 
-qboolean G2API_SetSkin(CGhoul2Info_v& ghoul2, const int model_index, const qhandle_t customSkin,
+qboolean G2API_SetSkin(CGhoul2Info_v& ghoul2, const int model_index, const qhandle_t custom_skin,
 	const qhandle_t renderSkin)
 {
 	CGhoul2Info* ghl_info = &ghoul2[model_index];
 
 	if (ghl_info)
 	{
-		ghl_info->mCustomSkin = customSkin;
+		ghl_info->mCustomSkin = custom_skin;
 		if (renderSkin)
 		{
 			//this is going to set the surfs on/off matching the skin file

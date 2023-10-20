@@ -1879,7 +1879,7 @@ static void R_AddEntitySurface(const trRefdef_t* refdef, trRefEntity_t* ent, int
 		if ((ent->e.renderfx & RF_THIRD_PERSON) && !tr.viewParms.isPortal) {
 			return;
 		}
-		shader = R_GetShaderByHandle(ent->e.customShader);
+		shader = R_GetShaderByHandle(ent->e.custom_shader);
 		R_AddDrawSurf(
 			&entitySurface,
 			entity_num,
@@ -1953,7 +1953,7 @@ static void R_AddEntitySurface(const trRefdef_t* refdef, trRefEntity_t* ent, int
 		}
 		break;
 	case RT_ENT_CHAIN:
-		shader = R_GetShaderByHandle(ent->e.customShader);
+		shader = R_GetShaderByHandle(ent->e.custom_shader);
 		R_AddDrawSurf(
 			&entitySurface,
 			entity_num,

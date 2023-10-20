@@ -1479,7 +1479,7 @@ void R_Register(void)
 	// latched and archived variables
 	//
 	r_allowExtensions = ri_Cvar_Get_NoComm("r_allowExtensions", "1", CVAR_ARCHIVE | CVAR_LATCH, "Allow GL extensions");
-	r_ext_compressed_textures = ri_Cvar_Get_NoComm("r_ext_compress_textures", "0", CVAR_ARCHIVE | CVAR_LATCH, "Disable/enable texture compression");
+	r_ext_compressed_textures = ri_Cvar_Get_NoComm("r_ext_compress_textures", "1", CVAR_ARCHIVE | CVAR_LATCH, "Disable/enable texture compression");
 	r_ext_compressed_lightmaps = ri.Cvar_Get("r_ext_compress_lightmaps", "0", CVAR_ARCHIVE_ND | CVAR_LATCH);
 	r_ext_multitexture = ri_Cvar_Get_NoComm("r_ext_multitexture", "1", CVAR_ARCHIVE | CVAR_LATCH, "Unused");
 	r_ext_compiled_vertex_array = ri_Cvar_Get_NoComm("r_ext_compiled_vertex_array", "1", CVAR_ARCHIVE | CVAR_LATCH, "Unused");
@@ -1496,7 +1496,7 @@ void R_Register(void)
 	r_arb_buffer_storage = ri_Cvar_Get_NoComm("r_arb_buffer_storage", "0", CVAR_ARCHIVE | CVAR_LATCH, "Disable/enable buffer storage GL extension");
 	r_ext_texture_filter_anisotropic = ri_Cvar_Get_NoComm("r_ext_texture_filter_anisotropic", "16", CVAR_ARCHIVE, "Disable/enable anisotropic texture filtering");
 
-	r_dynamicGlow = ri_Cvar_Get_NoComm("r_dynamicGlow", "0", CVAR_ARCHIVE, "");
+	r_dynamicGlow = ri_Cvar_Get_NoComm("r_dynamicGlow", "1", CVAR_ARCHIVE, "");
 	r_dynamicGlowPasses = ri_Cvar_Get_NoComm("r_dynamicGlowPasses", "5", CVAR_ARCHIVE, "");
 	r_dynamicGlowDelta = ri_Cvar_Get_NoComm("r_dynamicGlowDelta", "0.8f", CVAR_ARCHIVE, "");
 	r_dynamicGlowIntensity = ri_Cvar_Get_NoComm("r_dynamicGlowIntensity", "1.13f", CVAR_ARCHIVE, "");
@@ -1526,7 +1526,7 @@ void R_Register(void)
 	r_externalGLSL = ri_Cvar_Get_NoComm("r_externalGLSL", "0", CVAR_LATCH, "");
 
 	r_hdr = ri_Cvar_Get_NoComm("r_hdr", "1", CVAR_ARCHIVE | CVAR_LATCH, "Disable/enable rendering in HDR");
-	r_floatLightmap = ri_Cvar_Get_NoComm("r_floatLightmap", "0", CVAR_ARCHIVE | CVAR_LATCH, "Disable/enable HDR lightmap support");
+	r_floatLightmap = ri_Cvar_Get_NoComm("r_floatLightmap", "1", CVAR_ARCHIVE | CVAR_LATCH, "Disable/enable HDR lightmap support");
 
 	r_toneMap = ri_Cvar_Get_NoComm("r_toneMap", "1", CVAR_ARCHIVE | CVAR_LATCH, "Disable/enable tonemapping");
 	r_forceToneMap = ri_Cvar_Get_NoComm("r_forceToneMap", "0", CVAR_CHEAT, "");
@@ -1591,7 +1591,7 @@ void R_Register(void)
 	//
 	r_lodCurveError = ri_Cvar_Get_NoComm("r_lodCurveError", "250", CVAR_ARCHIVE | CVAR_CHEAT, "");
 	r_lodbias = ri_Cvar_Get_NoComm("r_lodbias", "0", CVAR_ARCHIVE, "");
-	r_flares = ri_Cvar_Get_NoComm("r_flares", "0", CVAR_ARCHIVE, "");
+	r_flares = ri_Cvar_Get_NoComm("r_flares", "1", CVAR_ARCHIVE, "");
 	r_znear = ri_Cvar_Get_NoComm("r_znear", "4", CVAR_CHEAT, "");
 	ri.Cvar_CheckRange(r_znear, 0.001f, 200, qfalse);
 	r_autolodscalevalue = ri_Cvar_Get_NoComm("r_autolodscalevalue", "0", CVAR_ROM, "");

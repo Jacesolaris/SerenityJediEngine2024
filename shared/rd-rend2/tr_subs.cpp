@@ -63,8 +63,9 @@ void QDECL Com_Error(int level, const char* error, ...)
 }
 
 // ZONE
-void* Z_Malloc(int iSize, memtag_t eTag, qboolean bZeroit, int iAlign) {
-	return ri.Malloc(iSize, eTag, bZeroit, iAlign);
+void* Z_Malloc(const int iSize, const memtag_t eTag, const qboolean bZeroit, const int iUnusedAlign)
+{
+	return ri.Malloc(iSize, eTag, bZeroit, iUnusedAlign);
 }
 
 void* R_Malloc(int iSize, memtag_t eTag)

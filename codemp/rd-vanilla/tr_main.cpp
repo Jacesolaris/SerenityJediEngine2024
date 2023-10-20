@@ -1268,7 +1268,7 @@ void R_AddEntitySurfaces(void)
 			{
 				continue;
 			}
-			shader = R_GetShaderByHandle(ent->e.customShader);
+			shader = R_GetShaderByHandle(ent->e.custom_shader);
 			R_AddDrawSurf(&entitySurface, shader, R_SpriteFogNum(ent), 0);
 			break;
 
@@ -1328,7 +1328,7 @@ void R_AddEntitySurfaces(void)
 			break;
 
 		case RT_ENT_CHAIN:
-			shader = R_GetShaderByHandle(ent->e.customShader);
+			shader = R_GetShaderByHandle(ent->e.custom_shader);
 			R_AddDrawSurf(&entitySurface, shader, R_SpriteFogNum(ent), false);
 			break;
 

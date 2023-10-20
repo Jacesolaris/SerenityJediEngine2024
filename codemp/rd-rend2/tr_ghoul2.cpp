@@ -937,7 +937,7 @@ static int R_GComputeFogNum(trRefEntity_t* ent) {
 }
 
 // work out lod for this entity.
-static int G2_ComputeLOD(trRefEntity_t* ent, const model_t* current_model, int lodBias)
+static int G2_ComputeLOD(trRefEntity_t* ent, const model_t* current_model, int lod_bias)
 {
 	float flod, lodscale;
 	float projectedRadius;
@@ -948,9 +948,9 @@ static int G2_ComputeLOD(trRefEntity_t* ent, const model_t* current_model, int l
 		return(0);
 	}
 
-	if (r_lodbias->integer > lodBias)
+	if (r_lodbias->integer > lod_bias)
 	{
-		lodBias = r_lodbias->integer;
+		lod_bias = r_lodbias->integer;
 	}
 
 	// scale the radius if need be
@@ -1003,7 +1003,7 @@ static int G2_ComputeLOD(trRefEntity_t* ent, const model_t* current_model, int l
 		lod = current_model->numLods - 1;
 	}
 
-	lod += lodBias;
+	lod += lod_bias;
 
 	if (lod >= current_model->numLods)
 		lod = current_model->numLods - 1;
@@ -3214,9 +3214,9 @@ void R_AddGhoulSurfaces(trRefEntity_t* ent, int entity_num)
 		skin_t* skin = nullptr;
 		shader_t* cust_shader = nullptr;
 
-		if (ent->e.customShader)
+		if (ent->e.custom_shader)
 		{
-			cust_shader = R_GetShaderByHandle(ent->e.customShader);
+			cust_shader = R_GetShaderByHandle(ent->e.custom_shader);
 		}
 		else
 		{
@@ -3226,9 +3226,9 @@ void R_AddGhoulSurfaces(trRefEntity_t* ent, int entity_num)
 			{
 				skin = R_GetSkinByHandle(g2Info.mCustomSkin);
 			}
-			else if (ent->e.customSkin)
+			else if (ent->e.custom_skin)
 			{
-				skin = R_GetSkinByHandle(ent->e.customSkin);
+				skin = R_GetSkinByHandle(ent->e.custom_skin);
 			}
 			else if (g2Info.mSkin > 0 && g2Info.mSkin < tr.numSkins)
 			{

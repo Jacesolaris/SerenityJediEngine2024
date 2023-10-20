@@ -61,10 +61,10 @@ static const byte FakeGLAFile[] =
 
 qboolean CModelCacheManager::LoadFile(const char* pFileName, void** ppFileBuffer, qboolean* pbAlreadyCached)
 {
-	char path[MAX_QPATH];
-	NormalizePath(path, pFileName, sizeof(path));
+	char psModelFileName[MAX_QPATH];
+	NormalizePath(psModelFileName, pFileName, sizeof(psModelFileName));
 
-	auto cacheEntry = FindFile(path);
+	auto cacheEntry = FindFile(psModelFileName);
 	if (cacheEntry != std::end(files))
 	{
 		*ppFileBuffer = cacheEntry->pDiskImage;
@@ -76,18 +76,18 @@ qboolean CModelCacheManager::LoadFile(const char* pFileName, void** ppFileBuffer
 	*pbAlreadyCached = qfalse;
 
 	// special case intercept first...
-	if (!strcmp(sDEFAULT_GLA_NAME ".gla", path))
+	if (strcmp(sDEFAULT_GLA_NAME ".gla", psModelFileName) == 0)
 	{
 		// return fake params as though it was found on disk...
-		void* pvFakeGLAFile = R_Malloc(sizeof(FakeGLAFile), TAG_FILESYS, qfalse);
-
-		memcpy(pvFakeGLAFile, &FakeGLAFile[0], sizeof(FakeGLAFile));
+		//
+		void* pvFakeGLAFile = R_Malloc(sizeof FakeGLAFile, TAG_FILESYS, qfalse);
+		memcpy(pvFakeGLAFile, &FakeGLAFile[0], sizeof FakeGLAFile);
 		*ppFileBuffer = pvFakeGLAFile;
-
+		*pbAlreadyCached = qfalse;	// faking it like this should mean that it works fine on the Mac as well
 		return qtrue;
 	}
 
-	int len = ri.FS_ReadFile(path, ppFileBuffer);
+	int len = ri.FS_ReadFile(psModelFileName, ppFileBuffer);
 	if (len == -1 || *ppFileBuffer == NULL)
 	{
 		return qfalse;

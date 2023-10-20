@@ -2665,7 +2665,7 @@ static keywordHash_t saberParseKeywords[] = {
 	{"name", Saber_ParseName, NULL},
 	{"saberType", Saber_ParseSaberType, NULL},
 	{"saberModel", Saber_ParseSaberModel, NULL},
-	{"customSkin", Saber_ParseCustomSkin, NULL},
+	{"custom_skin", Saber_ParseCustomSkin, NULL},
 	{"soundOn", Saber_ParseSoundOn, NULL},
 	{"soundLoop", Saber_ParseSoundLoop, NULL},
 	{"soundOff", Saber_ParseSoundOff, NULL},

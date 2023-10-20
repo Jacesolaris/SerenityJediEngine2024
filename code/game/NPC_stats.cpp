@@ -1846,8 +1846,8 @@ void CG_NPC_Precache(gentity_t* spawner)
 			continue;
 		}
 
-		// customSkin
-		if (!Q_stricmp(token, "customSkin"))
+		// custom_skin
+		if (!Q_stricmp(token, "custom_skin"))
 		{
 			if (COM_ParseString(&p, &value))
 			{
@@ -2718,8 +2718,8 @@ qboolean NPC_ParseParms(const char* npc_name, gentity_t* npc)
 				continue;
 			}
 
-			// customSkin
-			if (!Q_stricmp(token, "customSkin"))
+			// custom_skin
+			if (!Q_stricmp(token, "custom_skin"))
 			{
 				if (COM_ParseString(&p, &value))
 				{

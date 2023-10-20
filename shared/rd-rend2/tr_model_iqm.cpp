@@ -897,11 +897,11 @@ void R_AddIQMSurfaces(trRefEntity_t* ent, int entity_num) {
 	cubemapIndex = R_CubemapForPoint(ent->e.origin);
 
 	for (i = 0; i < data->num_surfaces; i++) {
-		if (ent->e.customShader)
-			shader = R_GetShaderByHandle(ent->e.customShader);
-		else if (ent->e.customSkin > 0 && ent->e.customSkin < tr.numSkins)
+		if (ent->e.custom_shader)
+			shader = R_GetShaderByHandle(ent->e.custom_shader);
+		else if (ent->e.custom_skin > 0 && ent->e.custom_skin < tr.numSkins)
 		{
-			skin = R_GetSkinByHandle(ent->e.customSkin);
+			skin = R_GetSkinByHandle(ent->e.custom_skin);
 			shader = tr.defaultShader;
 
 			for (j = 0; j < skin->numSurfaces; j++)

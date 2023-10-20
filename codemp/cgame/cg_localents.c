@@ -751,7 +751,7 @@ void CG_AddScorePlum(localEntity_t* le)
 	for (int i = 0; i < numdigits; i++)
 	{
 		VectorMA(origin, ((float)numdigits / 2 - i) * NUMBER_SIZE, vec, re->origin);
-		re->customShader = cgs.media.numberShaders[digits[numdigits - 1 - i]];
+		re->custom_shader = cgs.media.numberShaders[digits[numdigits - 1 - i]];
 		trap->R_AddRefEntityToScene(re);
 	}
 }

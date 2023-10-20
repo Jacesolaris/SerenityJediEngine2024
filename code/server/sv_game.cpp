@@ -588,10 +588,10 @@ static qboolean SV_G2API_IKMove(CGhoul2Info_v& ghoul2, const int time, sharedIKM
 }
 
 static int SV_G2API_InitGhoul2Model(CGhoul2Info_v& ghoul2, const char* file_name, const int model_index,
-	const qhandle_t customSkin, const qhandle_t customShader, const int modelFlags,
-	const int lodBias)
+	const qhandle_t custom_skin, const qhandle_t custom_shader, const int model_flags,
+	const int lod_bias)
 {
-	return re.G2API_InitGhoul2Model(ghoul2, file_name, model_index, customSkin, customShader, modelFlags, lodBias);
+	return re.G2API_InitGhoul2Model(ghoul2, file_name, model_index, custom_skin, custom_shader, model_flags, lod_bias);
 }
 
 static qboolean SV_G2API_IsPaused(CGhoul2Info* ghl_info, const char* bone_name)
@@ -689,9 +689,9 @@ static qboolean SV_G2API_SetAnimIndex(CGhoul2Info* ghl_info, const int index)
 	return re.G2API_SetAnimIndex(ghl_info, index);
 }
 
-static qboolean SV_G2API_SetBoneAnim(CGhoul2Info* ghl_info, const char* bone_name, const int start_frame,const int end_frame,const int flags, const float anim_speed, const int acurrent_time,const float set_frame, const int blend_time)
+static qboolean SV_G2API_SetBoneAnim(CGhoul2Info* ghl_info, const char* bone_name, const int start_frame, const int end_frame, const int flags, const float anim_speed, const int acurrent_time, const float set_frame, const int blend_time)
 {
-	return re.G2API_SetBoneAnim(ghl_info, bone_name, start_frame, end_frame, flags,	anim_speed, acurrent_time, set_frame, blend_time);
+	return re.G2API_SetBoneAnim(ghl_info, bone_name, start_frame, end_frame, flags, anim_speed, acurrent_time, set_frame, blend_time);
 }
 
 static qboolean SV_G2API_SetBoneAnimIndex(CGhoul2Info* ghl_info, const int index, const int start_frame,
@@ -708,8 +708,7 @@ static qboolean SV_G2API_SetBoneAngles(CGhoul2Info* ghl_info, const char* bone_n
 	qhandle_t* model_list,
 	const int blend_time, const int acurrent_time)
 {
-	return re.G2API_SetBoneAngles(ghl_info, bone_name, angles, flags, up, left, forward,
-		model_list, blend_time, acurrent_time);
+	return re.G2API_SetBoneAngles(ghl_info, bone_name, angles, flags, up, left, forward, model_list, blend_time, acurrent_time);
 }
 
 static qboolean SV_G2API_SetBoneAnglesOffset(CGhoul2Info* ghl_info, const char* bone_name, const vec3_t angles, const int flags, const Eorientations up, const Eorientations left, const Eorientations forward, qhandle_t* model_list, const int blend_time, const int acurrent_time, const vec3_t offset)
@@ -751,9 +750,9 @@ static qboolean SV_G2API_SetGhoul2ModelFlags(CGhoul2Info* ghl_info, const int fl
 	return re.G2API_SetGhoul2ModelFlags(ghl_info, flags);
 }
 
-static qboolean SV_G2API_SetLodBias(CGhoul2Info* ghl_info, const int lodBias)
+static qboolean SV_G2API_SetLodBias(CGhoul2Info* ghl_info, const int lod_bias)
 {
-	return re.G2API_SetLodBias(ghl_info, lodBias);
+	return re.G2API_SetLodBias(ghl_info, lod_bias);
 }
 
 static qboolean SV_G2API_SetNewOrigin(CGhoul2Info* ghl_info, const int bolt_index)
@@ -771,14 +770,14 @@ static qboolean SV_G2API_SetRootSurface(CGhoul2Info_v& ghl_info, const int model
 	return re.G2API_SetRootSurface(ghl_info, model_index, surface_name);
 }
 
-static qboolean SV_G2API_SetShader(CGhoul2Info* ghl_info, const qhandle_t customShader)
+static qboolean SV_G2API_SetShader(CGhoul2Info* ghl_info, const qhandle_t custom_shader)
 {
-	return re.G2API_SetShader(ghl_info, customShader);
+	return re.G2API_SetShader(ghl_info, custom_shader);
 }
 
-static qboolean SV_G2API_SetSkin(CGhoul2Info* ghl_info, const qhandle_t customSkin, const qhandle_t renderSkin)
+static qboolean SV_G2API_SetSkin(CGhoul2Info* ghl_info, const qhandle_t custom_skin, const qhandle_t renderSkin)
 {
-	return re.G2API_SetSkin(ghl_info, customSkin, renderSkin);
+	return re.G2API_SetSkin(ghl_info, custom_skin, renderSkin);
 }
 
 static qboolean SV_G2API_SetSurfaceOnOff(CGhoul2Info* ghl_info, const char* surface_name, const int flags)

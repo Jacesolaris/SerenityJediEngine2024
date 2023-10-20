@@ -245,9 +245,7 @@ struct boneInfo_t
 		animFrameMatrix(),
 		hasAnimFrameMatrix(0), airTime(0)
 	{
-		matrix.matrix[0][0] = matrix.matrix[0][1] = matrix.matrix[0][2] = matrix.matrix[0][3] =
-			matrix.matrix[1][0] = matrix.matrix[1][1] = matrix.matrix[1][2] = matrix.matrix[1][3] =
-			matrix.matrix[2][0] = matrix.matrix[2][1] = matrix.matrix[2][2] = matrix.matrix[2][3] = 0.0f;
+		Com_Memset(&matrix, 0, sizeof(matrix));
 	}
 
 	void sg_export(

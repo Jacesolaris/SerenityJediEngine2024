@@ -287,7 +287,7 @@ static void R_SetupEntityLightingGrid(trRefEntity_t* ent)
 
 			ref_ent.renderfx = RF_DEPTHHACK;
 			ref_ent.reType = RT_SPRITE;
-			ref_ent.customShader = RE_RegisterShader("gfx/misc/debugAmbient");
+			ref_ent.custom_shader = RE_RegisterShader("gfx/misc/debugAmbient");
 			ref_ent.shaderRGBA[0] = data->ambientLight[0][0];
 			ref_ent.shaderRGBA[1] = data->ambientLight[0][1];
 			ref_ent.shaderRGBA[2] = data->ambientLight[0][2];
@@ -297,7 +297,7 @@ static void R_SetupEntityLightingGrid(trRefEntity_t* ent)
 			RE_AddRefEntityToScene(&ref_ent);
 
 			ref_ent.reType = RT_LINE;
-			ref_ent.customShader = RE_RegisterShader("gfx/misc/debugArrow");
+			ref_ent.custom_shader = RE_RegisterShader("gfx/misc/debugArrow");
 			ref_ent.shaderRGBA[0] = data->directLight[0][0];
 			ref_ent.shaderRGBA[1] = data->directLight[0][1];
 			ref_ent.shaderRGBA[2] = data->directLight[0][2];

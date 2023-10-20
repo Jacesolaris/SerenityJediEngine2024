@@ -128,7 +128,7 @@ void CParticle::Draw(void)
 
 		// add this 2D effect to the proper list. it will get drawn after the trap->RenderScene call
 		theFxScheduler.Add2DEffect(mOrigin1[0], mOrigin1[1], mRefEnt.radius, mRefEnt.radius, color,
-			mRefEnt.customShader);
+			mRefEnt.custom_shader);
 	}
 	else
 	{
@@ -1827,7 +1827,7 @@ void CPoly::Draw(void)
 	}
 
 	// Add this poly
-	theFxHelper.AddPolyToScene(mRefEnt.customShader, mCount, verts);
+	theFxHelper.AddPolyToScene(mRefEnt.custom_shader, mCount, verts);
 	drawnFx++;
 }
 
@@ -2096,7 +2096,7 @@ inline void CBezier::DrawSegment(vec3_t start, vec3_t end, const float texcoord1
 	verts[3].modulate[2] = mRefEnt.shaderRGBA[2] * (1.0f - texcoord2);
 	verts[3].modulate[3] = mRefEnt.shaderRGBA[3];
 
-	theFxHelper.AddPolyToScene(mRefEnt.customShader, 4, verts);
+	theFxHelper.AddPolyToScene(mRefEnt.custom_shader, 4, verts);
 
 	VectorCopy(verts[2].xyz, lastEnd[1]);
 	VectorCopy(verts[3].xyz, lastEnd[0]);
@@ -2261,7 +2261,7 @@ void CFlash::Draw(void)
 		color[3] = mRefEnt.shaderRGBA[3] / 255.0;
 
 		// add this 2D effect to the proper list. it will get drawn after the trap->RenderScene call
-		theFxScheduler.Add2DEffect(mScreenX, mScreenY, mRefEnt.radius, mRefEnt.radius, color, mRefEnt.customShader);
+		theFxScheduler.Add2DEffect(mScreenX, mScreenY, mRefEnt.radius, mRefEnt.radius, color, mRefEnt.custom_shader);
 	}
 	else
 	{

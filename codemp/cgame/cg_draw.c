@@ -504,7 +504,7 @@ void CG_Draw3DModel(const float x, const float y, const float w, const float h, 
 	ent.hModel = model;
 	ent.ghoul2 = ghoul2;
 	ent.radius = g2_radius;
-	ent.customSkin = skin;
+	ent.custom_skin = skin;
 	ent.renderfx = RF_NOSHADOW; // no stencil shadows
 
 	refdef.rdflags = RDF_NOWORLDMODEL;

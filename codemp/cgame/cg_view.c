@@ -1489,7 +1489,7 @@ static void CG_DamageBlendBlob(void)
 	if (cg.snap->ps.damageType == 0)
 	{
 		//pure health
-		ent.customShader = cgs.media.viewPainShader;
+		ent.custom_shader = cgs.media.viewPainShader;
 		ent.shaderRGBA[0] = 180 * (1.0 - (float)t / maxTime);
 		ent.shaderRGBA[1] = 50 * (1.0 - (float)t / maxTime);
 		ent.shaderRGBA[2] = 50 * (1.0 - (float)t / maxTime);
@@ -1498,7 +1498,7 @@ static void CG_DamageBlendBlob(void)
 	else if (cg.snap->ps.damageType == 1)
 	{
 		//pure shields
-		ent.customShader = cgs.media.viewPainShader_Shields;
+		ent.custom_shader = cgs.media.viewPainShader_Shields;
 		ent.shaderRGBA[0] = 50 * (1.0 - (float)t / maxTime);
 		ent.shaderRGBA[1] = 180 * (1.0 - (float)t / maxTime);
 		ent.shaderRGBA[2] = 50 * (1.0 - (float)t / maxTime);
@@ -1507,7 +1507,7 @@ static void CG_DamageBlendBlob(void)
 	else
 	{
 		//shields and health
-		ent.customShader = cgs.media.viewPainShader_ShieldsAndHealth;
+		ent.custom_shader = cgs.media.viewPainShader_ShieldsAndHealth;
 		ent.shaderRGBA[0] = 180 * (1.0 - (float)t / maxTime);
 		ent.shaderRGBA[1] = 180 * (1.0 - (float)t / maxTime);
 		ent.shaderRGBA[2] = 50 * (1.0 - (float)t / maxTime);

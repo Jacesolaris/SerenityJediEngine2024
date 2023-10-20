@@ -564,7 +564,7 @@ void G2_TransformModel(CGhoul2Info_v& ghoul2, const int frame_num, vec3_t scale,
 	qboolean		firstModelOnly = qfalse;
 #endif // !JK2_MODE || _G2_GORE
 
-#ifndef JK2_MODE
+#ifdef _G2_GORE
 	if (cg_g2MarksAllModels == nullptr)
 	{
 		cg_g2MarksAllModels = ri.Cvar_Get("cg_g2MarksAllModels", "0", 0);
@@ -1537,7 +1537,7 @@ void G2_TraceModels(CGhoul2Info_v& ghoul2, vec3_t rayStart, vec3_t rayEnd, CColl
 #endif // !JK2_MODE || _G2_GORE
 	int				firstModel = 0;
 
-#ifndef JK2_MODE
+#ifdef _G2_GORE
 	if (cg_g2MarksAllModels == nullptr)
 	{
 		cg_g2MarksAllModels = ri.Cvar_Get("cg_g2MarksAllModels", "0", 0);
@@ -1604,7 +1604,7 @@ void G2_TraceModels(CGhoul2Info_v& ghoul2, vec3_t rayStart, vec3_t rayEnd, CColl
 
 		lod = G2_DecideTraceLod(g, use_lod);
 
-#ifndef JK2_MODE
+#ifdef _G2_GORE
 		if (skipIfLODNotMatch)
 		{//we only want to hit this SPECIFIC LOD...
 			if (lod != use_lod)

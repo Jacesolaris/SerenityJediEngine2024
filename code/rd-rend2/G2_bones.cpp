@@ -2573,14 +2573,14 @@ int ragSSCount = 0;
 int ragTraceCount = 0;
 #endif
 
-void Rag_Trace(trace_t* results, const vec3_t start, const vec3_t mins, const vec3_t maxs, const vec3_t end, const int passEntityNum, const int contentmask, const EG2_Collision eG2TraceType, const int use_lod)
+void Rag_Trace(trace_t* results, const vec3_t start, const vec3_t mins, const vec3_t maxs, const vec3_t end, const int passEntityNum, const int contentmask, const EG2_Collision e_g2_trace_type, const int use_lod)
 {
 #ifdef _DEBUG
 	int ragPreTrace = ri.Milliseconds();
 #endif
 	// AntiAnti: should we set entity_num?
 	results->entity_num = ENTITYNUM_NONE;
-	ri.SV_Trace(results, start, mins, maxs, end, passEntityNum, contentmask, eG2TraceType, use_lod);
+	ri.SV_Trace(results, start, mins, maxs, end, passEntityNum, contentmask, e_g2_trace_type, use_lod);
 	results->entity_num = results->fraction != 1.0 ? ENTITYNUM_WORLD : ENTITYNUM_NONE;
 
 #ifdef _DEBUG
