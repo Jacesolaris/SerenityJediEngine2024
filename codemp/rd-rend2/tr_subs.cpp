@@ -77,17 +77,17 @@ int Hunk_MemoryRemaining(void) {
 }
 
 // ZONE
-void* Z_Malloc(const int iSize, const memtag_t eTag, const qboolean bZeroit, const int iUnusedAlign)
+void* Z_Malloc(const int i_size, const memtag_t e_tag, const qboolean b_zeroit, const int iUnusedAlign)
 {
-	return ri->Z_Malloc(iSize, eTag, bZeroit, iUnusedAlign);
+	return ri->Z_Malloc(i_size, e_tag, b_zeroit, iUnusedAlign);
 }
 
 void Z_Free(void* ptr) {
 	ri->Z_Free(ptr);
 }
 
-int Z_MemSize(memtag_t eTag) {
-	return ri->Z_MemSize(eTag);
+int Z_MemSize(memtag_t e_tag) {
+	return ri->Z_MemSize(e_tag);
 }
 
 void Z_MorphMallocTag(void* pvBuffer, memtag_t eDesiredTag) {

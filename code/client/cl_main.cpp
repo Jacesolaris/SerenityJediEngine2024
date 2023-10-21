@@ -1170,9 +1170,9 @@ int get_com_frameTime()
 	return com_frameTime;
 }
 
-void* CL_Malloc(const int iSize, const memtag_t eTag, const qboolean bZeroit, int iAlign)
+void* CL_Malloc(const int i_size, const memtag_t e_tag, const qboolean b_zeroit, int iAlign)
 {
-	return Z_Malloc(iSize, eTag, bZeroit);
+	return Z_Malloc(i_size, e_tag, b_zeroit);
 }
 
 /*
@@ -1333,7 +1333,7 @@ void CL_Init()
 
 	Com_Printf("-----------------------------------------------------------------\n");
 	Com_Printf("---------- Genuine SerenityJediEngine-(Solaris Edition)----------\n");
-	Com_Printf("---------------------Build date 20/10/2023-----------------------\n");
+	Com_Printf("---------------------Build date 21/10/2023-----------------------\n");
 	Com_Printf("-----------------------------------------------------------------\n");
 	Com_Printf("------------------------LightSaber-------------------------------\n");
 	Com_Printf("-----------An elegant weapon for a more civilized age------------\n");

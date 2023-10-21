@@ -473,7 +473,7 @@ static cvarTable_t cvarTable[] = {
 	{&cg_drawStatus, "cg_drawStatus", "1", CVAR_ARCHIVE},
 	{&cg_drawHUD, "cg_drawHUD", "1", 0},
 	{&cg_drawTimer, "cg_drawTimer", "0", CVAR_ARCHIVE},
-	{&cg_drawFPS, "cg_drawFPS", "0", CVAR_ARCHIVE},
+	{&cg_drawFPS, "cg_drawFPS", "1", CVAR_ARCHIVE},
 	{&cg_drawSnapshot, "cg_drawSnapshot", "0", CVAR_ARCHIVE},
 	{&cg_drawAmmoWarning, "cg_drawAmmoWarning", "1", CVAR_ARCHIVE},
 	{&cg_drawCrosshair, "cg_drawCrosshair", "2", CVAR_ARCHIVE},
@@ -648,7 +648,7 @@ static cvarTable_t cvarTable[] = {
 
 	{&cg_newgameplusJKO, "g_newgameplusJKO", "0", CVAR_ARCHIVE | CVAR_SAVEGAME | CVAR_NORESTART},
 
-	{&cg_saberLockCinematicCamera, "g_saberLockCinematicCamera", "0", CVAR_ARCHIVE },
+	{&cg_saberLockCinematicCamera, "g_saberLockCinematicCamera", "1", CVAR_ARCHIVE },
 
 	{&cg_com_rend2, "com_rend2", "0", CVAR_ARCHIVE | CVAR_SAVEGAME | CVAR_NORESTART },
 };

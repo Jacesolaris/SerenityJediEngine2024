@@ -169,7 +169,7 @@ qboolean RE_RegisterModels_GetDiskFile(const char* psModelFileName, void** ppvBu
 
 // if return == true, no further action needed by the caller...
 //
-void* RE_RegisterModels_Malloc(const int iSize, void* pvDiskBufferIfJustLoaded, const char* psModelFileName, qboolean* pqbAlreadyFound, const memtag_t eTag)
+void* RE_RegisterModels_Malloc(const int i_size, void* pvDiskBufferIfJustLoaded, const char* psModelFileName, qboolean* pqbAlreadyFound, const memtag_t e_tag)
 {
 	char sModelName[MAX_QPATH];
 
@@ -189,15 +189,15 @@ void* RE_RegisterModels_Malloc(const int iSize, void* pvDiskBufferIfJustLoaded, 
 		//
 		if (pvDiskBufferIfJustLoaded)
 		{
-			R_MorphMallocTag(pvDiskBufferIfJustLoaded, eTag);
+			R_MorphMallocTag(pvDiskBufferIfJustLoaded, e_tag);
 		}
 		else
 		{
-			pvDiskBufferIfJustLoaded = R_Malloc(iSize, eTag, qfalse);
+			pvDiskBufferIfJustLoaded = R_Malloc(i_size, e_tag, qfalse);
 		}
 
 		ModelBin.pModelDiskImage = pvDiskBufferIfJustLoaded;
-		ModelBin.iAllocSize = iSize;
+		ModelBin.iAllocSize = i_size;
 		*pqbAlreadyFound = qfalse;
 	}
 	else

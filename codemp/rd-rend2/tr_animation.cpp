@@ -349,7 +349,7 @@ void RB_MDRSurfaceAnim(mdrSurface_t* surface)
 	triangles = (int*)((byte*)surface + surface->ofsTriangles);
 	indexes = surface->numTriangles * 3;
 	baseIndex = tess.num_indexes;
-	baseVertex = tess.numVertexes;
+	baseVertex = tess.num_vertexes;
 
 	// Set up all triangles.
 	for (j = 0; j < indexes; j++)
@@ -414,5 +414,5 @@ void RB_MDRSurfaceAnim(mdrSurface_t* surface)
 		v = (mdrVertex_t*)&v->weights[v->numWeights];
 	}
 
-	tess.numVertexes += surface->num_verts;
+	tess.num_vertexes += surface->num_verts;
 }

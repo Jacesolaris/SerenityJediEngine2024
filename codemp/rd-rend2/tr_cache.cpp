@@ -98,7 +98,7 @@ qboolean CModelCacheManager::LoadFile(const char* pFileName, void** ppFileBuffer
 	return qtrue;
 }
 
-void* CModelCacheManager::Allocate(int iSize, void* pvDiskBuffer, const char* psModelFileName, qboolean* bAlreadyFound, memtag_t eTag)
+void* CModelCacheManager::Allocate(int i_size, void* pvDiskBuffer, const char* psModelFileName, qboolean* bAlreadyFound, memtag_t e_tag)
 {
 	int		iChecksum;
 	char	sModelName[MAX_QPATH];
@@ -119,14 +119,14 @@ void* CModelCacheManager::Allocate(int iSize, void* pvDiskBuffer, const char* ps
 		/* Create this image. */
 
 		if (pvDiskBuffer)
-			Z_MorphMallocTag(pvDiskBuffer, eTag);
+			Z_MorphMallocTag(pvDiskBuffer, e_tag);
 		else
-			pvDiskBuffer = Z_Malloc(iSize, eTag, qfalse);
+			pvDiskBuffer = Z_Malloc(i_size, e_tag, qfalse);
 
 		files.emplace_back();
 		pFile = &files.back();
 		pFile->pDiskImage = pvDiskBuffer;
-		pFile->iAllocSize = iSize;
+		pFile->iAllocSize = i_size;
 		Q_strncpyz(pFile->path, sModelName, sizeof(pFile->path));
 
 		if (ri->FS_FileIsInPAK(sModelName, &iChecksum))

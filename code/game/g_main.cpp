@@ -887,7 +887,7 @@ void G_InitCvars()
 
 	g_attackskill = gi.cvar("g_attackskill", "3", CVAR_ARCHIVE);
 
-	g_saberLockCinematicCamera = gi.cvar("g_saberLockCinematicCamera", "0", CVAR_ARCHIVE);
+	g_saberLockCinematicCamera = gi.cvar("g_saberLockCinematicCamera", "1", CVAR_ARCHIVE);
 
 	com_rend2 = gi.cvar("com_rend2", "0", CVAR_ARCHIVE | CVAR_SAVEGAME | CVAR_NORESTART);
 }

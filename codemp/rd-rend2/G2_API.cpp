@@ -873,7 +873,7 @@ qboolean G2API_SetSkin(CGhoul2Info_v& ghoul2, int model_index, qhandle_t custom_
 	return qfalse;
 }
 
-qboolean G2API_SetShader(CGhoul2Info* ghl_info, qhandle_t custom_shader)
+qboolean G2API_SetShader(CGhoul2Info* ghl_info, const qhandle_t custom_shader)
 {
 	if (ghl_info)
 	{
@@ -920,13 +920,13 @@ qboolean G2API_SetRootSurface(CGhoul2Info_v& ghoul2, const int model_index, cons
 	return qfalse;
 }
 
-int G2API_AddSurface(CGhoul2Info* ghl_info, int surface_number, int polyNumber, float BarycentricI, float BarycentricJ, int lod)
+int G2API_AddSurface(CGhoul2Info* ghl_info, int surface_number, int poly_number, float barycentric_i, float barycentric_j, int lod)
 {
 	if (G2_SetupModelPointers(ghl_info))
 	{
 		// ensure we flush the cache
 		ghl_info->mMeshFrameNum = 0;
-		return G2_AddSurface(ghl_info, surface_number, polyNumber, BarycentricI, BarycentricJ, lod);
+		return G2_AddSurface(ghl_info, surface_number, poly_number, barycentric_i, barycentric_j, lod);
 	}
 	return -1;
 }
@@ -1318,7 +1318,7 @@ qboolean G2API_SetBoneAnim(CGhoul2Info_v& ghoul2, const int model_index, const c
 	return qfalse;
 }
 
-qboolean G2API_GetBoneAnim(CGhoul2Info_v& ghoul2, const int model_index, const char* bone_name, const int current_time, float* current_frame, int* start_frame, int* end_frame, int* flags, float* anim_speed, int* model_list)
+qboolean G2API_GetBoneAnim(CGhoul2Info_v& ghoul2, const int model_index, const char* bone_name, const int acurrent_time, float* current_frame, int* start_frame, int* end_frame, int* flags, float* anim_speed, int* model_list)
 {
 	assert(start_frame != end_frame); //this is bad
 	assert(start_frame != flags); //this is bad
@@ -1329,7 +1329,7 @@ qboolean G2API_GetBoneAnim(CGhoul2Info_v& ghoul2, const int model_index, const c
 
 	if (G2_SetupModelPointers(ghl_info))
 	{
-		const int aCurrentTime = G2API_GetTime(current_time);
+		const int aCurrentTime = G2API_GetTime(acurrent_time);
 		const qboolean ret = G2_Get_Bone_Anim(ghl_info, ghl_info->mBlist, bone_name, aCurrentTime, current_frame, start_frame, end_frame, flags, anim_speed, model_list, ghl_info->mmodel_index);
 #ifdef _DEBUG
 		/*
@@ -2156,7 +2156,7 @@ qboolean G2API_HaveWeGhoul2Models(const CGhoul2Info_v& ghoul2)
 
 // run through the Ghoul2 models and set each of the mModel values to the
 // correct one from the cgs.gameModel offset lsit
-void G2API_SetGhoul2model_indexes(CGhoul2Info_v& ghoul2,qhandle_t* model_list,qhandle_t* skinList)
+void G2API_SetGhoul2model_indexes(CGhoul2Info_v& ghoul2, qhandle_t* model_list, qhandle_t* skinList)
 {
 	return;
 #if 0
@@ -2283,10 +2283,10 @@ void G2API_CollisionDetectCache(
 					// reworked so we only alloc once!  if we have a pointer,
 					// but not a ghoul2_zonetransalloc flag, then that means it
 					// is a miniheap pointer. Just stomp over it.
-					int iSize =
+					int i_size =
 						g2.current_model->data.glm->header->numSurfaces * 4;
 					g2.mTransformedVertsArray =
-						(size_t*)Z_Malloc(iSize, TAG_GHOUL2, qtrue);
+						(size_t*)Z_Malloc(i_size, TAG_GHOUL2, qtrue);
 				}
 
 				g2.mFlags |= GHOUL2_ZONETRANSALLOC;

@@ -158,8 +158,8 @@ using refexport_t = struct refexport_s
 	// G2API
 	int (*G2API_AddBolt)(CGhoul2Info_v& ghoul2, int model_index, const char* bone_name);
 	int (*G2API_AddBoltSurfNum)(CGhoul2Info* ghl_info, int surf_index);
-	int (*G2API_AddSurface)(CGhoul2Info* ghl_info, int surface_number, int polyNumber, float BarycentricI,
-		float BarycentricJ, int lod);
+	int (*G2API_AddSurface)(CGhoul2Info* ghl_info, int surface_number, int poly_number, float barycentric_i,
+		float barycentric_j, int lod);
 	void (*G2API_AnimateG2ModelsRag)(CGhoul2Info_v& ghoul2, int acurrent_time, CRagDollUpdateParams* params);
 	qboolean(*G2API_AttachEnt)(int* bolt_info, CGhoul2Info_v& ghoul2, int model_index, int toBoltIndex, int ent_num,
 		int toModelNum);
@@ -298,10 +298,10 @@ using refimport_t = struct refimport_s
 	void (*Hunk_FreeTempMemory)(void* buf);
 	void* (*Hunk_Alloc)(int size, ha_pref preference);
 	int (*Hunk_MemoryRemaining)(void);
-	void* (*Z_Malloc)(int iSize, memtag_t eTag, qboolean bZeroit /*= qfalse*/, int iAlign /*= 4*/);
+	void* (*Z_Malloc)(int i_size, memtag_t e_tag, qboolean b_zeroit /*= qfalse*/, int iAlign /*= 4*/);
 	// return memory NOT zero-filled by default
 	void (*Z_Free)(void* ptr);
-	int (*Z_MemSize)(memtag_t eTag);
+	int (*Z_MemSize)(memtag_t e_tag);
 	void (*Z_MorphMallocTag)(void* pvBuffer, memtag_t eDesiredTag);
 
 	void (*Cmd_ExecuteString)(const char* text);

@@ -2201,7 +2201,7 @@ void G2_ProcessSurfaceBolt(const mdxaBone_v& bone_ptr, mdxmSurface_t* surface, c
 	if (surfInfo && surfInfo->off_flags == G2SURFACEFLAG_GENERATED)
 	{
 		const int surfNumber = surfInfo->genPolySurfaceIndex & 0x0ffff;
-		const int polyNumber = surfInfo->genPolySurfaceIndex >> 16 & 0x0ffff;
+		const int poly_number = surfInfo->genPolySurfaceIndex >> 16 & 0x0ffff;
 
 		// find original surface our original poly was in.
 		const auto originalSurf = static_cast<mdxmSurface_t*>(G2_FindSurface(mod, surfNumber, surfInfo->genLod));
@@ -2209,9 +2209,9 @@ void G2_ProcessSurfaceBolt(const mdxaBone_v& bone_ptr, mdxmSurface_t* surface, c
 			ofsTriangles);
 
 		// get the original polys indexes
-		const int index0 = originalTriangleIndexes[polyNumber].indexes[0];
-		const int index1 = originalTriangleIndexes[polyNumber].indexes[1];
-		const int index2 = originalTriangleIndexes[polyNumber].indexes[2];
+		const int index0 = originalTriangleIndexes[poly_number].indexes[0];
+		const int index1 = originalTriangleIndexes[poly_number].indexes[1];
+		const int index2 = originalTriangleIndexes[poly_number].indexes[2];
 
 		// decide where the original verts are
 
@@ -2904,7 +2904,7 @@ void G2_ProcessSurfaceBolt2(CBoneCache& bone_cache, const mdxmSurface_t* surface
 	if (surfInfo && surfInfo->off_flags == G2SURFACEFLAG_GENERATED)
 	{
 		const int surfNumber = surfInfo->genPolySurfaceIndex & 0x0ffff;
-		const int polyNumber = surfInfo->genPolySurfaceIndex >> 16 & 0x0ffff;
+		const int poly_number = surfInfo->genPolySurfaceIndex >> 16 & 0x0ffff;
 
 		// find original surface our original poly was in.
 		const auto originalSurf = static_cast<mdxmSurface_t*>(G2_FindSurface_BC(mod, surfNumber, surfInfo->genLod));
@@ -2912,9 +2912,9 @@ void G2_ProcessSurfaceBolt2(CBoneCache& bone_cache, const mdxmSurface_t* surface
 			ofsTriangles);
 
 		// get the original polys indexes
-		const int index0 = originalTriangleIndexes[polyNumber].indexes[0];
-		const int index1 = originalTriangleIndexes[polyNumber].indexes[1];
-		const int index2 = originalTriangleIndexes[polyNumber].indexes[2];
+		const int index0 = originalTriangleIndexes[poly_number].indexes[0];
+		const int index1 = originalTriangleIndexes[poly_number].indexes[1];
+		const int index2 = originalTriangleIndexes[poly_number].indexes[2];
 
 		// decide where the original verts are
 		auto vert0 = (mdxmVertex_t*)((byte*)originalSurf + originalSurf->ofsVerts);

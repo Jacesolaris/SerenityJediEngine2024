@@ -180,7 +180,7 @@ static void SE_R_ListFiles(const char* psExtension, const char* psDir, std::stri
 		// read it in...
 		//
 		/*		byte *pbData = NULL;
-				int iSize = FS_ReadFile( sFilename, (void **)&pbData);
+				int i_size = FS_ReadFile( sFilename, (void **)&pbData);
 
 				if (pbData)
 				{

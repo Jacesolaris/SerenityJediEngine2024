@@ -323,6 +323,11 @@ void R_Splash()
 		ri->Cvar_Set("com_rend2", "1");
 	}
 
+	if (r_shadows->integer == 2)
+	{
+		ri->Cvar_Set("cg_shadows", "3");
+	}
+
 	ri->WIN_Present(&window);
 }
 

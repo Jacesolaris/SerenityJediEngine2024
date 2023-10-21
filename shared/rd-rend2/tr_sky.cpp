@@ -363,7 +363,7 @@ static void DrawSkySide(struct image_s* image, const int mins[2], const int maxs
 {
 	const uint32_t SKY_BOX_VERTEX_ATTRIBUTES = ATTR_POSITION | ATTR_TEXCOORD0 | ATTR_COLOR | ATTR_NORMAL;
 	int s, t;
-	int firstVertex = tess.numVertexes;
+	int firstVertex = tess.num_vertexes;
 	int minIndex = tess.minIndex;
 	int maxIndex = tess.maxIndex;
 
@@ -375,20 +375,20 @@ static void DrawSkySide(struct image_s* image, const int mins[2], const int maxs
 		for (s = mins[0] + HALF_SKY_SUBDIVISIONS;
 			s <= maxs[0] + HALF_SKY_SUBDIVISIONS; s++)
 		{
-			tess.xyz[tess.numVertexes][0] = s_skyPoints[t][s][0];
-			tess.xyz[tess.numVertexes][1] = s_skyPoints[t][s][1];
-			tess.xyz[tess.numVertexes][2] = s_skyPoints[t][s][2];
-			tess.xyz[tess.numVertexes][3] = 1.0;
+			tess.xyz[tess.num_vertexes][0] = s_skyPoints[t][s][0];
+			tess.xyz[tess.num_vertexes][1] = s_skyPoints[t][s][1];
+			tess.xyz[tess.num_vertexes][2] = s_skyPoints[t][s][2];
+			tess.xyz[tess.num_vertexes][3] = 1.0;
 
-			tess.texCoords[tess.numVertexes][0][0] = s_skyTexCoords[t][s][0];
-			tess.texCoords[tess.numVertexes][0][1] = s_skyTexCoords[t][s][1];
+			tess.texCoords[tess.num_vertexes][0][0] = s_skyTexCoords[t][s][0];
+			tess.texCoords[tess.num_vertexes][0][1] = s_skyTexCoords[t][s][1];
 
-			VectorSet4(tess.vertexColors[tess.numVertexes], 1.0f, 1.0f, 1.0f, 1.0f);
-			tess.normal[tess.numVertexes] = 0;
+			VectorSet4(tess.vertexColors[tess.num_vertexes], 1.0f, 1.0f, 1.0f, 1.0f);
+			tess.normal[tess.num_vertexes] = 0;
 
-			tess.numVertexes++;
+			tess.num_vertexes++;
 
-			if (tess.numVertexes >= SHADER_MAX_VERTEXES)
+			if (tess.num_vertexes >= SHADER_MAX_VERTEXES)
 			{
 				ri.Error(ERR_DROP, "SHADER_MAX_VERTEXES hit in DrawSkySideVBO()");
 			}
@@ -418,7 +418,7 @@ static void DrawSkySide(struct image_s* image, const int mins[2], const int maxs
 	}
 
 	tess.minIndex = firstVertex;
-	tess.maxIndex = tess.numVertexes;
+	tess.maxIndex = tess.num_vertexes;
 	tess.useInternalVBO = qtrue;
 
 	RB_UpdateVBOs(SKY_BOX_VERTEX_ATTRIBUTES);
@@ -484,7 +484,7 @@ static void DrawSkySide(struct image_s* image, const int mins[2], const int maxs
 
 	tess.useInternalVBO = qfalse;
 	tess.num_indexes = tess.firstIndex;
-	tess.numVertexes = firstVertex;
+	tess.num_vertexes = firstVertex;
 	tess.firstIndex = 0;
 	tess.minIndex = minIndex;
 	tess.maxIndex = maxIndex;
@@ -564,7 +564,7 @@ static void DrawSkyBox(shader_t* shader)
 static void FillCloudySkySide(const int mins[2], const int maxs[2], qboolean addIndexes)
 {
 	int s, t;
-	int vertexStart = tess.numVertexes;
+	int vertexStart = tess.num_vertexes;
 	int tHeight, sWidth;
 
 	tHeight = maxs[1] - mins[1] + 1;
@@ -575,13 +575,13 @@ static void FillCloudySkySide(const int mins[2], const int maxs[2], qboolean add
 		for (s = mins[0] + HALF_SKY_SUBDIVISIONS; s <= maxs[0] + HALF_SKY_SUBDIVISIONS; s++)
 		{
 			VectorAdd(s_skyPoints[t][s], backEnd.viewParms.ori.origin,
-				tess.xyz[tess.numVertexes]);
-			tess.texCoords[tess.numVertexes][0][0] = s_skyTexCoords[t][s][0];
-			tess.texCoords[tess.numVertexes][0][1] = s_skyTexCoords[t][s][1];
+				tess.xyz[tess.num_vertexes]);
+			tess.texCoords[tess.num_vertexes][0][0] = s_skyTexCoords[t][s][0];
+			tess.texCoords[tess.num_vertexes][0][1] = s_skyTexCoords[t][s][1];
 
-			tess.numVertexes++;
+			tess.num_vertexes++;
 
-			if (tess.numVertexes >= SHADER_MAX_VERTEXES)
+			if (tess.num_vertexes >= SHADER_MAX_VERTEXES)
 			{
 				ri.Error(ERR_DROP, "SHADER_MAX_VERTEXES hit in FillCloudySkySide()");
 			}
@@ -699,7 +699,7 @@ void R_BuildCloudData(shaderCommands_t* input)
 
 	// set up for drawing
 	tess.num_indexes = 0;
-	tess.numVertexes = 0;
+	tess.num_vertexes = 0;
 	tess.firstIndex = 0;
 	tess.useInternalVBO = qtrue;
 	tess.externalIBO = nullptr;

@@ -460,6 +460,7 @@ constexpr auto LS_NORMAL = 0x00;
 constexpr auto LS_UNUSED = 0xfe;
 #define	LS_NONE			0xff
 #define MAX_LIGHT_STYLES		64
+#define	LS_LSNONE			0xff
 
 using mapVert_t = struct
 {

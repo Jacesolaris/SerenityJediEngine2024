@@ -75,7 +75,7 @@ public:
 	 * Allocate appropriate memory for stuff dealing with cached images
 	 * FIXME: only applies to models?
 	*/
-	void* Allocate(int iSize, void* pvDiskBuffer, const char* psModelFileName, qboolean* bAlreadyFound, memtag_t eTag);
+	void* Allocate(int i_size, void* pvDiskBuffer, const char* psModelFileName, qboolean* bAlreadyFound, memtag_t e_tag);
 	void		DeleteAll(void);
 	void		DumpNonPure();
 

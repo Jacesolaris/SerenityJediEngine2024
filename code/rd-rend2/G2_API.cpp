@@ -830,7 +830,7 @@ qboolean G2API_SetSkin(CGhoul2Info* ghl_info, qhandle_t custom_skin, qhandle_t r
 	return qfalse;
 }
 
-qboolean G2API_SetShader(CGhoul2Info* ghl_info, qhandle_t custom_shader)
+qboolean G2API_SetShader(CGhoul2Info* ghl_info, const qhandle_t custom_shader)
 {
 	G2ERROR(ghl_info, "G2API_SetShader: NULL ghl_info");
 	if (ghl_info)
@@ -871,13 +871,13 @@ qboolean G2API_SetRootSurface(CGhoul2Info_v& ghoul2, const int model_index, cons
 	return qfalse;
 }
 
-int G2API_AddSurface(CGhoul2Info* ghl_info, int surface_number, int polyNumber, float BarycentricI, float BarycentricJ, int lod)
+int G2API_AddSurface(CGhoul2Info* ghl_info, int surface_number, int poly_number, float barycentric_i, float barycentric_j, int lod)
 {
 	if (G2_SetupModelPointers(ghl_info))
 	{
 		// ensure we flush the cache
 		ghl_info->mMeshFrameNum = 0;
-		return G2_AddSurface(ghl_info, surface_number, polyNumber, BarycentricI, BarycentricJ, lod);
+		return G2_AddSurface(ghl_info, surface_number, poly_number, barycentric_i, barycentric_j, lod);
 	}
 	return -1;
 }

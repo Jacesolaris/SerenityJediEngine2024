@@ -296,7 +296,7 @@ namespace
 							continue;
 
 						// Just draw it when batch is full
-						if (tess.numVertexes + 4 >= SHADER_MAX_VERTEXES || tess.num_indexes + 6 >= SHADER_MAX_INDEXES)
+						if (tess.num_vertexes + 4 >= SHADER_MAX_VERTEXES || tess.num_indexes + 6 >= SHADER_MAX_INDEXES)
 						{
 							RB_UpdateVBOs(ATTR_POSITION);
 							GLSL_VertexAttribsState(ATTR_POSITION, NULL);
@@ -310,7 +310,7 @@ namespace
 							RB_CommitInternalBufferData();
 
 							tess.num_indexes = 0;
-							tess.numVertexes = 0;
+							tess.num_vertexes = 0;
 							tess.firstIndex = 0;
 							tess.multiDrawPrimitives = 0;
 							tess.externalIBO = nullptr;
@@ -335,7 +335,7 @@ namespace
 			RB_CommitInternalBufferData();
 
 			tess.num_indexes = 0;
-			tess.numVertexes = 0;
+			tess.num_vertexes = 0;
 			tess.firstIndex = 0;
 			tess.multiDrawPrimitives = 0;
 			tess.externalIBO = nullptr;

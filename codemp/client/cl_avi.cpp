@@ -45,7 +45,7 @@ using aviFileData_t = struct aviFileData_s
 	char file_name[MAX_QPATH];
 	int fileSize;
 	int moviOffset;
-	int moviSize;
+	int movi_size;
 
 	fileHandle_t idxF;
 	int numIndices;
@@ -233,7 +233,7 @@ void CL_WriteAVIHeader(void)
 
 					WRITE_STRING("strf");
 					WRITE_4BYTES(40); //"strf" "chunk" size
-					WRITE_4BYTES(40); //biSize
+					WRITE_4BYTES(40); //bi_size
 					WRITE_4BYTES(afd.width); //biWidth
 					WRITE_4BYTES(afd.height); //biHeight
 					WRITE_2BYTES(1); //biPlanes
@@ -243,13 +243,13 @@ void CL_WriteAVIHeader(void)
 					{
 						WRITE_STRING("MJPG");
 						WRITE_4BYTES(afd.width *
-							afd.height); //biSizeImage
+							afd.height); //bi_sizeImage
 					}
 					else
 					{
 						WRITE_4BYTES(0); // BI_RGB
 						WRITE_4BYTES(afd.width *
-							afd.height * 3); //biSizeImage
+							afd.height * 3); //bi_sizeImage
 					}
 
 					WRITE_4BYTES(0); //biXPelsPetMeter
@@ -417,7 +417,7 @@ qboolean CL_OpenAVIForWriting(const char* file_name)
 	START_CHUNK("idx1");
 	SafeFS_Write(buffer, bufIndex, afd.idxF);
 
-	afd.moviSize = 4; // For the "movi"
+	afd.movi_size = 4; // For the "movi"
 	afd.fileOpen = qtrue;
 
 	return qtrue;
@@ -483,7 +483,7 @@ void CL_WriteAVIVideoFrame(const byte* imageBuffer, const int size)
 	afd.fileSize += chunkSize + paddingSize;
 
 	afd.numVideoFrames++;
-	afd.moviSize += chunkSize + paddingSize;
+	afd.movi_size += chunkSize + paddingSize;
 
 	if (size > afd.maxRecordSize)
 		afd.maxRecordSize = size;
@@ -550,7 +550,7 @@ void CL_WriteAVIAudioFrame(const byte* pcmBuffer, int size)
 		afd.fileSize += chunkSize + paddingSize;
 
 		afd.numAudioFrames++;
-		afd.moviSize += chunkSize + paddingSize;
+		afd.movi_size += chunkSize + paddingSize;
 		afd.a.totalBytes += bytesInBuffer;
 
 		// Index
@@ -642,7 +642,7 @@ qboolean CL_CloseAVI(void)
 	WRITE_4BYTES(afd.fileSize - 8); // "RIFF" size
 
 	bufIndex = afd.moviOffset + 4; // Skip "LIST"
-	WRITE_4BYTES(afd.moviSize);
+	WRITE_4BYTES(afd.movi_size);
 
 	SafeFS_Write(buffer, bufIndex, afd.f);
 

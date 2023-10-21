@@ -2039,7 +2039,7 @@ void G2_ProcessSurfaceBolt(
 	if (surfInfo && surfInfo->off_flags == G2SURFACEFLAG_GENERATED)
 	{
 		int surfNumber = surfInfo->genPolySurfaceIndex & 0x0ffff;
-		int polyNumber = (surfInfo->genPolySurfaceIndex >> 16) & 0x0ffff;
+		int poly_number = (surfInfo->genPolySurfaceIndex >> 16) & 0x0ffff;
 
 		// find original surface our original poly was in.
 		mdxmSurface_t* originalSurf =
@@ -2048,9 +2048,9 @@ void G2_ProcessSurfaceBolt(
 			(mdxmTriangle_t*)((byte*)originalSurf + originalSurf->ofsTriangles);
 
 		// get the original polys indexes
-		int index0 = originalTriangleIndexes[polyNumber].indexes[0];
-		int index1 = originalTriangleIndexes[polyNumber].indexes[1];
-		int index2 = originalTriangleIndexes[polyNumber].indexes[2];
+		int index0 = originalTriangleIndexes[poly_number].indexes[0];
+		int index1 = originalTriangleIndexes[poly_number].indexes[1];
+		int index2 = originalTriangleIndexes[poly_number].indexes[2];
 
 		// decide where the original verts are
 
@@ -2823,7 +2823,7 @@ void G2_ProcessSurfaceBolt2(
 	if (surfInfo && surfInfo->off_flags == G2SURFACEFLAG_GENERATED)
 	{
 		const int surfNumber = surfInfo->genPolySurfaceIndex & 0x0ffff;
-		const int polyNumber = (surfInfo->genPolySurfaceIndex >> 16) & 0x0ffff;
+		const int poly_number = (surfInfo->genPolySurfaceIndex >> 16) & 0x0ffff;
 
 		// find original surface our original poly was in.
 		const mdxmSurface_t* originalSurf =
@@ -2832,9 +2832,9 @@ void G2_ProcessSurfaceBolt2(
 			(mdxmTriangle_t*)((byte*)originalSurf + originalSurf->ofsTriangles);
 
 		// get the original polys indexes
-		const int index0 = originalTriangleIndexes[polyNumber].indexes[0];
-		const int index1 = originalTriangleIndexes[polyNumber].indexes[1];
-		const int index2 = originalTriangleIndexes[polyNumber].indexes[2];
+		const int index0 = originalTriangleIndexes[poly_number].indexes[0];
+		const int index1 = originalTriangleIndexes[poly_number].indexes[1];
+		const int index2 = originalTriangleIndexes[poly_number].indexes[2];
 
 		// decide where the original verts are
 		const mdxmVertex_t* surfVerts =
@@ -3537,7 +3537,7 @@ void RB_SurfaceGhoul(CRenderableSurface* surf)
 	}
 
 	int num_indexes = surface->num_indexes;
-	int numVertexes = surface->numVertexes;
+	int num_vertexes = surface->num_vertexes;
 	int minIndex = surface->minIndex;
 	int maxIndex = surface->maxIndex;
 	int indexOffset = surface->indexOffset;
@@ -3550,7 +3550,7 @@ void RB_SurfaceGhoul(CRenderableSurface* surf)
 		tess.externalIBO = tr.goreIBO;
 
 		num_indexes = surf->alternateTex->num_indexes;
-		numVertexes = surf->alternateTex->num_verts;
+		num_vertexes = surf->alternateTex->num_verts;
 		minIndex = surf->alternateTex->firstVert;
 		maxIndex = surf->alternateTex->firstVert + surf->alternateTex->num_verts;
 		indexOffset = surf->alternateTex->firstIndex;
@@ -3685,7 +3685,7 @@ void RB_SurfaceGhoul(CRenderableSurface* surf)
 	backEnd.pc.c_multidraws++;
 
 	tess.num_indexes += num_indexes;
-	tess.numVertexes += numVertexes;
+	tess.num_vertexes += num_vertexes;
 	tess.useInternalVBO = qfalse;
 	tess.dlightBits |= surf->dlightBits;
 
@@ -4480,7 +4480,7 @@ qboolean R_LoadMDXM(model_t* mod, void* buffer, const char* mod_name, qboolean& 
 			vboMeshes[n].indexOffset = indexOffsets[n];
 			vboMeshes[n].minIndex = baseVertexes[n];
 			vboMeshes[n].maxIndex = baseVertexes[n + 1] - 1;
-			vboMeshes[n].numVertexes = surf->num_verts;
+			vboMeshes[n].num_vertexes = surf->num_verts;
 			vboMeshes[n].num_indexes = surf->numTriangles * 3;
 
 			surf = (mdxmSurface_t*)((byte*)surf + surf->ofsEnd);

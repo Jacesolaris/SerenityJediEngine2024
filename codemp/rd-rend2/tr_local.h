@@ -2093,7 +2093,7 @@ typedef struct mdxmVBOMesh_s
 	int minIndex;
 	int maxIndex;
 	int num_indexes;
-	int numVertexes;
+	int num_vertexes;
 
 	VBO_t* vbo;
 	IBO_t* ibo;
@@ -3014,7 +3014,7 @@ struct shaderCommands_s
 
 	int			firstIndex;
 	int			num_indexes;
-	int			numVertexes;
+	int			num_vertexes;
 	glIndex_t   minIndex;
 	glIndex_t   maxIndex;
 
@@ -3047,7 +3047,7 @@ extern	color4ub_t	styleColors[MAX_LIGHT_STYLES];
 void RB_BeginSurface(shader_t* shader, int fogNum, int cubemapIndex);
 void RB_EndSurface(void);
 void RB_CheckOverflow(int verts, int indexes);
-#define RB_CHECKOVERFLOW(v,i) if (tess.numVertexes + (v) >= SHADER_MAX_VERTEXES || tess.num_indexes + (i) >= SHADER_MAX_INDEXES ) {RB_CheckOverflow(v,i);}
+#define RB_CHECKOVERFLOW(v,i) if (tess.num_vertexes + (v) >= SHADER_MAX_VERTEXES || tess.num_indexes + (i) >= SHADER_MAX_INDEXES ) {RB_CheckOverflow(v,i);}
 
 void R_DrawElementsVBO(int num_indexes, glIndex_t firstIndex, glIndex_t minIndex, glIndex_t maxIndex);
 void RB_StageIteratorGeneric(void);

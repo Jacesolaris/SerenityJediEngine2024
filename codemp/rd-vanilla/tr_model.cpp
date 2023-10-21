@@ -182,7 +182,7 @@ qboolean RE_RegisterModels_GetDiskFile(const char* psModelFileName, void** ppvBu
 //
 // don't use ri->xxx functions in case running on dedicated
 //
-void* RE_RegisterModels_Malloc(const int iSize, void* pvDiskBufferIfJustLoaded, const char* psModelFileName, qboolean* pqbAlreadyFound, const memtag_t eTag)
+void* RE_RegisterModels_Malloc(const int i_size, void* pvDiskBufferIfJustLoaded, const char* psModelFileName, qboolean* pqbAlreadyFound, const memtag_t e_tag)
 {
 	char sModelName[MAX_QPATH];
 
@@ -204,15 +204,15 @@ void* RE_RegisterModels_Malloc(const int iSize, void* pvDiskBufferIfJustLoaded, 
 		//
 		if (pvDiskBufferIfJustLoaded)
 		{
-			Z_MorphMallocTag(pvDiskBufferIfJustLoaded, eTag);
+			Z_MorphMallocTag(pvDiskBufferIfJustLoaded, e_tag);
 		}
 		else
 		{
-			pvDiskBufferIfJustLoaded = Z_Malloc(iSize, eTag, qfalse);
+			pvDiskBufferIfJustLoaded = Z_Malloc(i_size, e_tag, qfalse);
 		}
 
 		ModelBin.pModelDiskImage = pvDiskBufferIfJustLoaded;
-		ModelBin.iAllocSize = iSize;
+		ModelBin.iAllocSize = i_size;
 
 		int iCheckSum;
 		if (ri->FS_FileIsInPAK(sModelName, &iCheckSum) == 1)
@@ -255,7 +255,7 @@ void* RE_RegisterModels_Malloc(const int iSize, void* pvDiskBufferIfJustLoaded, 
 
 // Unfortunately the dedicated server also hates shader loading. So we need an alternate of this func.
 //
-void* RE_RegisterServerModels_Malloc(const int iSize, void* pvDiskBufferIfJustLoaded, const char* psModelFileName, qboolean* pqbAlreadyFound, const memtag_t eTag)
+void* RE_RegisterServerModels_Malloc(const int i_size, void* pvDiskBufferIfJustLoaded, const char* psModelFileName, qboolean* pqbAlreadyFound, const memtag_t e_tag)
 {
 	char sModelName[MAX_QPATH];
 
@@ -275,15 +275,15 @@ void* RE_RegisterServerModels_Malloc(const int iSize, void* pvDiskBufferIfJustLo
 		//
 		if (pvDiskBufferIfJustLoaded)
 		{
-			Z_MorphMallocTag(pvDiskBufferIfJustLoaded, eTag);
+			Z_MorphMallocTag(pvDiskBufferIfJustLoaded, e_tag);
 		}
 		else
 		{
-			pvDiskBufferIfJustLoaded = Z_Malloc(iSize, eTag, qfalse);
+			pvDiskBufferIfJustLoaded = Z_Malloc(i_size, e_tag, qfalse);
 		}
 
 		ModelBin.pModelDiskImage = pvDiskBufferIfJustLoaded;
-		ModelBin.iAllocSize = iSize;
+		ModelBin.iAllocSize = i_size;
 
 		int iCheckSum;
 		if (ri->FS_FileIsInPAK(sModelName, &iCheckSum) == 1)

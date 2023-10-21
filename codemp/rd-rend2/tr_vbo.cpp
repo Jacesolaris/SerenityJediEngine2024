@@ -585,14 +585,14 @@ void RB_UpdateVBOs(unsigned int attribBits)
 	backEnd.pc.c_dynamicVboDraws++;
 
 	// update the default VBO
-	if (tess.numVertexes > 0 && tess.numVertexes <= SHADER_MAX_VERTEXES)
+	if (tess.num_vertexes > 0 && tess.num_vertexes <= SHADER_MAX_VERTEXES)
 	{
 		VBO_t* frameVbo = current_frame->dynamicVbo;
 		GLbitfield mapFlags = GL_MAP_WRITE_BIT | GL_MAP_UNSYNCHRONIZED_BIT;
 		VertexArraysProperties vertexArrays = {};
 		CalculateVertexArraysProperties(attribBits, &vertexArrays);
 
-		int totalVertexDataSize = tess.numVertexes * vertexArrays.vertexDataSize;
+		int totalVertexDataSize = tess.num_vertexes * vertexArrays.vertexDataSize;
 		backEnd.pc.c_dynamicVboTotalSize += totalVertexDataSize;
 
 		if ((current_frame->dynamicVboWriteOffset + totalVertexDataSize) > frameVbo->vertexesSize)
@@ -617,7 +617,7 @@ void RB_UpdateVBOs(unsigned int attribBits)
 
 		// Interleave the data
 		void* writePtr = dstPtr;
-		for (int i = 0; i < tess.numVertexes; i++)
+		for (int i = 0; i < tess.num_vertexes; i++)
 		{
 			for (int j = 0; j < vertexArrays.numVertexArrays; j++)
 			{

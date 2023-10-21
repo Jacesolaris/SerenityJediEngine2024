@@ -451,10 +451,10 @@ static int CG_DrawLoadWeaponsPrintRow(const char* item_name, const int weapons_b
 		{
 			constexpr int y_offset = 0;
 			CG_RegisterWeapon(i);
-			const weaponInfo_t* weapon_info = &cg_weapons[i];
+			const weaponInfo_t* weaponInfo = &cg_weapons[i];
 			end_index = i;
 
-			CG_DrawPic(hold_x, y + y_offset, icon_size, icon_size, weapon_info->weaponIcon);
+			CG_DrawPic(hold_x, y + y_offset, icon_size, icon_size, weaponInfo->weaponIcon);
 
 			printed_icon_cnt++;
 			if (printed_icon_cnt == MAXLOADICONSPERROW)

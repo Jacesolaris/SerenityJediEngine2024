@@ -5143,9 +5143,9 @@ cvar_t* s_soundpoolmegs = nullptr;
 
 // currently passing in sfx as a param in case I want to do something with it later.
 //
-byte* SND_malloc(const int iSize, const sfx_t* sfx)
+byte* SND_malloc(const int i_size, const sfx_t* sfx)
 {
-	const auto pData = static_cast<byte*>(Z_Malloc(iSize, TAG_SND_RAWDATA, qfalse));
+	const auto pData = static_cast<byte*>(Z_Malloc(i_size, TAG_SND_RAWDATA, qfalse));
 	// don't bother asking for zeroed mem
 
 	// if "s_soundpoolmegs" is < 0, then the -ve of the value is the maximum amount of sounds we're allowed to have loaded...
@@ -5180,18 +5180,18 @@ void SND_setup()
 //
 static int SND_MemUsed(const sfx_t* sfx)
 {
-	int iSize = 0;
+	int i_size = 0;
 	if (sfx->pSoundData)
 	{
-		iSize += Z_Size(sfx->pSoundData);
+		i_size += Z_Size(sfx->pSoundData);
 	}
 
 	if (sfx->pMP3StreamHeader)
 	{
-		iSize += Z_Size(sfx->pMP3StreamHeader);
+		i_size += Z_Size(sfx->pMP3StreamHeader);
 	}
 
-	return iSize;
+	return i_size;
 }
 
 // free any allocated sfx mem...

@@ -111,7 +111,7 @@ void RB_ProjectionShadowDeform(void) {
 	light[1] = lightDir[1] * d;
 	light[2] = lightDir[2] * d;
 
-	for (i = 0; i < tess.numVertexes; i++, xyz += 4) {
+	for (i = 0; i < tess.num_vertexes; i++, xyz += 4) {
 		h = DotProduct(xyz, ground) + groundDist;
 
 		xyz[0] -= light[0] * h;

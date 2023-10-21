@@ -123,7 +123,7 @@ int G2_Add_Bolt_Surf_Num(const CGhoul2Info* ghl_info, boltInfo_v& bltlist, const
 
 void G2_Bolt_Not_Found(const char* bone_name);
 
-int G2_Add_Bolt(const CGhoul2Info* ghl_info, boltInfo_v& bltlist, surfaceInfo_v& slist, const char* bone_name)
+int G2_Add_Bolt(const CGhoul2Info* ghl_info, boltInfo_v& bltlist, const surfaceInfo_v& slist, const char* bone_name)
 {
 	assert(ghl_info && ghl_info->mValid);
 	boltInfo_t			temp_bolt;

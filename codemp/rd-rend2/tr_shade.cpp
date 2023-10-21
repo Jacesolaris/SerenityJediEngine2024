@@ -140,7 +140,7 @@ void RB_BeginSurface(shader_t* shader, int fogNum, int cubemapIndex) {
 
 	tess.num_indexes = 0;
 	tess.firstIndex = 0;
-	tess.numVertexes = 0;
+	tess.num_vertexes = 0;
 	tess.multiDrawPrimitives = 0;
 	tess.shader = state;
 	tess.fogNum = fogNum;
@@ -476,7 +476,7 @@ static void ComputeShaderColors(shaderStage_t* pStage, vec4_t baseColor, vec4_t 
 	{
 		int scale;
 
-		for (i = 0; i < tess.numVertexes; i++)
+		for (i = 0; i < tess.num_vertexes; i++)
 		{
 			scale = (tess.svars.colors[i][0] + tess.svars.colors[i][1] + tess.svars.colors[i][2]) / 3;
 			tess.svars.colors[i][0] = tess.svars.colors[i][1] = tess.svars.colors[i][2] = scale;
@@ -1338,7 +1338,7 @@ void RB_ShadowTessEnd(shaderCommands_t* input, const VertexArraysProperties* ver
 		return;
 	}
 
-	if (!input->numVertexes || !input->num_indexes || input->useInternalVBO)
+	if (!input->num_vertexes || !input->num_indexes || input->useInternalVBO)
 	{
 		return;
 	}
@@ -1835,7 +1835,7 @@ static void RB_IterateStagesGeneric(shaderCommands_t* input, const VertexArraysP
 void RB_StageIteratorGeneric(void)
 {
 	shaderCommands_t* input = &tess;
-	if (!input->numVertexes || !input->num_indexes)
+	if (!input->num_vertexes || !input->num_indexes)
 	{
 		return;
 	}
@@ -1965,7 +1965,7 @@ void RB_EndSurface(void) {
 
 	input = &tess;
 
-	if (input->num_indexes == 0 || input->numVertexes == 0) {
+	if (input->num_indexes == 0 || input->num_vertexes == 0) {
 		return;
 	}
 
@@ -2001,7 +2001,7 @@ void RB_EndSurface(void) {
 	// update performance counters
 	//
 	backEnd.pc.c_shaders++;
-	backEnd.pc.c_vertexes += tess.numVertexes;
+	backEnd.pc.c_vertexes += tess.num_vertexes;
 	backEnd.pc.c_indexes += tess.num_indexes;
 	backEnd.pc.c_totalIndexes += tess.num_indexes * tess.numPasses;
 
@@ -2014,7 +2014,7 @@ void RB_EndSurface(void) {
 
 	// clear shader so we can tell we don't have any unclosed surfaces
 	tess.num_indexes = 0;
-	tess.numVertexes = 0;
+	tess.num_vertexes = 0;
 	tess.firstIndex = 0;
 	tess.multiDrawPrimitives = 0;
 	tess.externalIBO = nullptr;

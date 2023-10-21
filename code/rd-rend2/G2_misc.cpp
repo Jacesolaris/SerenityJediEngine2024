@@ -315,34 +315,31 @@ void G2_List_Model_Surfaces(const char* file_name)
 // list all bones associated with a model
 void G2_List_Model_Bones(const char* file_name, int frame)
 {
-	int				x, i;
-	mdxaSkel_t* skel;
-	mdxaSkelOffsets_t* offsets;
-	model_t* mod_m = R_GetModelByHandle(RE_RegisterModel(file_name));
-	model_t* mod_a = R_GetModelByHandle(mod_m->data.glm->header->animIndex);
+	const model_t* mod_m = R_GetModelByHandle(RE_RegisterModel(file_name));
+	const model_t* mod_a = R_GetModelByHandle(mod_m->mdxm->animIndex);
 	// 	mdxaFrame_t		*aframe=0;
 	//	int				frameSize;
-	mdxaHeader_t* header = mod_a->data.gla;
+	mdxaHeader_t* header = mod_a->mdxa;
 
 	// figure out where the offset list is
-	offsets = (mdxaSkelOffsets_t*)((byte*)header + sizeof(mdxaHeader_t));
+	const mdxaSkelOffsets_t* offsets = reinterpret_cast<mdxaSkelOffsets_t*>(reinterpret_cast<byte*>(header) + sizeof(mdxaHeader_t));
 
-	//    frameSize = (size_t)( &((mdxaFrame_t *)0)->boneIndexes[ header->numBones ] );
+	//    frameSize = (int)( &((mdxaFrame_t *)0)->boneIndexes[ header->numBones ] );
 
 	//	aframe = (mdxaFrame_t *)((byte *)header + header->ofsFrames + (frame * frameSize));
 		// walk each bone and list it's name
-	for (x = 0; x < header->numBones; x++)
+	for (int x = 0; x < mod_a->mdxa->numBones; x++)
 	{
-		skel = (mdxaSkel_t*)((byte*)header + sizeof(mdxaHeader_t) + offsets->offsets[x]);
+		const auto skel = reinterpret_cast<mdxaSkel_t*>(reinterpret_cast<byte*>(header) + sizeof(mdxaHeader_t) + offsets->offsets[x]);
 		Com_Printf("Bone %i Name %s\n", x, skel->name);
 
 		Com_Printf("X pos %f, Y pos %f, Z pos %f\n", skel->BasePoseMat.matrix[0][3], skel->BasePoseMat.matrix[1][3], skel->BasePoseMat.matrix[2][3]);
 
 		// if we are in verbose mode give us more details
-		if (r_verbose->integer)
+		if (r_verbose->value)
 		{
 			Com_Printf("Num Descendants %i\n", skel->numChildren);
-			for (i = 0; i < skel->numChildren; i++)
+			for (int i = 0; i < skel->numChildren; i++)
 			{
 				Com_Printf("Num Descendants %i\n", skel->numChildren);
 			}

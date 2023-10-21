@@ -217,7 +217,10 @@ void CG_RegisterWeapon(const int weapon_num)
 		weaponInfo->altMissileModel = trap->R_RegisterModel("models/weapons2/golan_arms/projectileMain.md3");
 		weaponInfo->muzzleEffect = trap->FX_RegisterEffect("stunbaton/muzzle_flash");
 		weaponInfo->altMuzzleEffect = trap->FX_RegisterEffect("stunbaton/muzzle_flash");
-		weaponInfo->missileTrailFunc = CG_StunTrail;
+		if (com_rend2.integer == 0) //rend2 is off
+		{
+			weaponInfo->missileTrailFunc = CG_StunTrail;
+		}
 		break;
 	case WP_MELEE:
 		trap->FX_RegisterEffect("melee/punch_impact");

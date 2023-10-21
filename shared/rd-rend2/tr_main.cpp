@@ -1415,16 +1415,16 @@ static qboolean SurfIsOffscreen(const msurface_t* surface, int entity_num, vec4_
 	RB_BeginSurface(surface->shader, 0, 0);
 	rb_surfaceTable[*surface->data](surface->data);
 
-	if (tess.numVertexes > 128)
+	if (tess.num_vertexes > 128)
 	{
 		// Don't bother trying, just assume it's off-screen and make it look bad. Besides, artists
 		// shouldn't be using this many vertices on a mirror surface anyway :)
 		return qtrue;
 	}
 
-	*numVertices = tess.numVertexes;
+	*numVertices = tess.num_vertexes;
 
-	for (i = 0; i < tess.numVertexes; i++)
+	for (i = 0; i < tess.num_vertexes; i++)
 	{
 		int j;
 		unsigned int pointFlags = 0;
@@ -1922,6 +1922,7 @@ static void R_AddEntitySurface(const trRefdef_t* refdef, trRefEntity_t* ent, int
 	case RT_CLOUDS:
 #endif
 	case RT_CYLINDER:
+	case RT_LIGHTNING:
 	case RT_SABER_GLOW:
 		// self blood sprites, talk balloons, etc should not be drawn in the primary
 		// view.  We can't just do this check for all entities, because md3

@@ -1674,10 +1674,10 @@ static const void* RB_StretchPic(const void* data) {
 	}
 
 	RB_CHECKOVERFLOW(4, 6);
-	int num_verts = tess.numVertexes;
+	int num_verts = tess.num_vertexes;
 	int num_indexes = tess.num_indexes;
 
-	tess.numVertexes += 4;
+	tess.num_vertexes += 4;
 	tess.num_indexes += 6;
 
 	tess.indexes[num_indexes] = num_verts + 3;
@@ -1757,7 +1757,7 @@ static const void* RB_RotatePic(const void* data)
 	}
 
 	RB_CHECKOVERFLOW(4, 6);
-	int num_verts = tess.numVertexes;
+	int num_verts = tess.num_vertexes;
 	int num_indexes = tess.num_indexes;
 
 	float angle = DEG2RAD(cmd->a);
@@ -1770,7 +1770,7 @@ static const void* RB_RotatePic(const void* data)
 		{ cmd->x + cmd->w, cmd->y, 1.0f }
 	};
 
-	tess.numVertexes += 4;
+	tess.num_vertexes += 4;
 	tess.num_indexes += 6;
 
 	tess.indexes[num_indexes] = num_verts + 3;
@@ -1850,7 +1850,7 @@ static const void* RB_RotatePic2(const void* data)
 	}
 
 	RB_CHECKOVERFLOW(4, 6);
-	int num_verts = tess.numVertexes;
+	int num_verts = tess.num_vertexes;
 	int num_indexes = tess.num_indexes;
 
 	float angle = DEG2RAD(cmd->a);
@@ -1863,7 +1863,7 @@ static const void* RB_RotatePic2(const void* data)
 		{ cmd->x, cmd->y, 1.0f }
 	};
 
-	tess.numVertexes += 4;
+	tess.num_vertexes += 4;
 	tess.num_indexes += 6;
 
 	tess.indexes[num_indexes] = num_verts + 3;

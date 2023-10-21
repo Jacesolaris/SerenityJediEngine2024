@@ -409,9 +409,9 @@ void SV_ShutdownGameProgs(qboolean shutdownCin)
 
 // this is a compile-helper function since Z_Malloc can now become a macro with __LINE__ etc
 //
-static void* G_ZMalloc_Helper(const int iSize, const memtag_t eTag, const qboolean bZeroit)
+static void* G_ZMalloc_Helper(const int i_size, const memtag_t e_tag, const qboolean b_zeroit)
 {
-	return Z_Malloc(iSize, eTag, bZeroit);
+	return Z_Malloc(i_size, e_tag, b_zeroit);
 }
 
 static int SV_G2API_AddBolt(CGhoul2Info* ghl_info, const char* bone_name)
@@ -424,11 +424,11 @@ static int SV_G2API_AddBoltSurfNum(CGhoul2Info* ghl_info, const int surf_index)
 	return re.G2API_AddBoltSurfNum(ghl_info, surf_index);
 }
 
-static int SV_G2API_AddSurface(CGhoul2Info* ghl_info, const int surface_number, const int polyNumber,
-	const float BarycentricI,
-	const float BarycentricJ, const int lod)
+static int SV_G2API_AddSurface(CGhoul2Info* ghl_info, const int surface_number, const int poly_number,
+	const float barycentric_i,
+	const float barycentric_j, const int lod)
 {
-	return re.G2API_AddSurface(ghl_info, surface_number, polyNumber, BarycentricI, BarycentricJ, lod);
+	return re.G2API_AddSurface(ghl_info, surface_number, poly_number, barycentric_i, barycentric_j, lod);
 }
 
 static void SV_G2API_AnimateG2Models(CGhoul2Info_v& ghoul2, const int acurrent_time, CRagDollUpdateParams* params)

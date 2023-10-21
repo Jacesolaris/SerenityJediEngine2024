@@ -254,9 +254,9 @@ using game_import_t = struct
 	int* VoiceVolume;
 
 	// dynamic memory allocator for things that need to be freed
-	void* (*Malloc)(int iSize, memtag_t eTag, qboolean bZeroIt); // see qcommon/tags.h for choices
+	void* (*Malloc)(int i_size, memtag_t e_tag, qboolean bZeroIt); // see qcommon/tags.h for choices
 	int (*Free)(void* buf);
-	qboolean(*bIsFromZone)(const void* buf, memtag_t eTag); // see qcommon/tags.h for choices
+	qboolean(*bIsFromZone)(const void* buf, memtag_t e_tag); // see qcommon/tags.h for choices
 
 	/*
 	Ghoul2 Insert Start
@@ -287,7 +287,7 @@ using game_import_t = struct
 	qboolean(*G2API_SetSurfaceOnOff)(CGhoul2Info* ghl_info, const char* surface_name, int flags);
 	qboolean(*G2API_SetRootSurface)(CGhoul2Info_v& ghl_info, int model_index, const char* surface_name);
 	qboolean(*G2API_RemoveSurface)(CGhoul2Info* ghl_info, int index);
-	int (*G2API_AddSurface)(CGhoul2Info* ghl_info, int surface_number, int polyNumber, float BarycentricI, float BarycentricJ, int lod);
+	int (*G2API_AddSurface)(CGhoul2Info* ghl_info, int surface_number, int poly_number, float barycentric_i, float barycentric_j, int lod);
 
 	qboolean(*G2API_GetBoneAnim)(CGhoul2Info* ghl_info, const char* bone_name, int acurrent_time, float* current_frame, int* start_frame, int* end_frame, int* flags, float* anim_speed, int* model_list);
 

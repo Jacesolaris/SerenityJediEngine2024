@@ -49,8 +49,8 @@ extern int SND_FreeOldestSound();
 using zoneHeader_t = struct zoneHeader_s
 {
 	int iMagic;
-	memtag_t eTag;
-	int iSize;
+	memtag_t e_tag;
+	int i_size;
 	zoneHeader_s* pNext;
 	zoneHeader_s* pPrev;
 };
@@ -62,7 +62,7 @@ using zoneTail_t = struct
 
 static zoneTail_t* ZoneTailFromHeader(zoneHeader_t* pHeader)
 {
-	return reinterpret_cast<zoneTail_t*>((char*)pHeader + sizeof * pHeader + pHeader->iSize);
+	return reinterpret_cast<zoneTail_t*>((char*)pHeader + sizeof * pHeader + pHeader->i_size);
 }
 
 #ifdef DETAILED_ZONE_DEBUG_CODE
@@ -78,7 +78,7 @@ using zoneStats_t = struct zoneStats_s
 	// I'm keeping these updated on the fly, since it's quicker for cache-pool
 	//	purposes rather than recalculating each time...
 	//
-	int iSizesPerTag[TAG_COUNT];
+	int i_sizesPerTag[TAG_COUNT];
 	int iCountsPerTag[TAG_COUNT];
 };
 
@@ -166,11 +166,11 @@ StaticMem_t gNumberString[] = {
 
 qboolean gbMemFreeupOccured = qfalse;
 
-void* Z_Malloc(const int iSize, const memtag_t eTag, const qboolean bZeroit, const int iUnusedAlign)
+void* Z_Malloc(const int i_size, const memtag_t e_tag, const qboolean b_zeroit, const int iUnusedAlign)
 {
 	gbMemFreeupOccured = qfalse;
 
-	if (iSize == 0)
+	if (i_size == 0)
 	{
 		auto pMemory = reinterpret_cast<zoneHeader_t*>(&gZeroMalloc);
 		return &pMemory[1];
@@ -178,7 +178,7 @@ void* Z_Malloc(const int iSize, const memtag_t eTag, const qboolean bZeroit, con
 
 	// Add in tracking info
 	//
-	const int iRealSize = iSize + sizeof(zoneHeader_t) + sizeof(zoneTail_t);
+	const int iRealSize = i_size + sizeof(zoneHeader_t) + sizeof(zoneTail_t);
 
 	// Allocate a chunk...
 	//
@@ -190,7 +190,7 @@ void* Z_Malloc(const int iSize, const memtag_t eTag, const qboolean bZeroit, con
 			Sys_Sleep(1000); // sleep for a second, so Windows has a chance to shuffle mem to de-swiss-cheese it
 		}
 
-		if (bZeroit)
+		if (b_zeroit)
 		{
 			pMemory = static_cast<zoneHeader_t*>(calloc(iRealSize, 1));
 		}
@@ -271,17 +271,17 @@ void* Z_Malloc(const int iSize, const memtag_t eTag, const qboolean bZeroit, con
 			//
 			// findlabel:  "recovermem"
 
-			Com_Printf(S_COLOR_RED"Z_Malloc(): Failed to alloc %d bytes (TAG_%s) !!!!!\n", iSize, psTagStrings[eTag]);
+			Com_Printf(S_COLOR_RED"Z_Malloc(): Failed to alloc %d bytes (TAG_%s) !!!!!\n", i_size, psTagStrings[e_tag]);
 			Z_Details_f();
-			Com_Error(ERR_FATAL, "(Repeat): Z_Malloc(): Failed to alloc %d bytes (TAG_%s) !!!!!\n", iSize,
-				psTagStrings[eTag]);
+			Com_Error(ERR_FATAL, "(Repeat): Z_Malloc(): Failed to alloc %d bytes (TAG_%s) !!!!!\n", i_size,
+				psTagStrings[e_tag]);
 		}
 	}
 
 	// Link in
 	pMemory->iMagic = ZONE_MAGIC;
-	pMemory->eTag = eTag;
-	pMemory->iSize = iSize;
+	pMemory->e_tag = e_tag;
+	pMemory->i_size = i_size;
 	pMemory->pNext = TheZone.Header.pNext;
 	TheZone.Header.pNext = pMemory;
 	if (pMemory->pNext)
@@ -296,10 +296,10 @@ void* Z_Malloc(const int iSize, const memtag_t eTag, const qboolean bZeroit, con
 
 	// Update stats...
 	//
-	TheZone.Stats.iCurrent += iSize;
+	TheZone.Stats.iCurrent += i_size;
 	TheZone.Stats.iCount++;
-	TheZone.Stats.iSizesPerTag[eTag] += iSize;
-	TheZone.Stats.iCountsPerTag[eTag]++;
+	TheZone.Stats.i_sizesPerTag[e_tag] += i_size;
+	TheZone.Stats.iCountsPerTag[e_tag]++;
 
 	if (TheZone.Stats.iCurrent > TheZone.Stats.iPeak)
 	{
@@ -348,31 +348,31 @@ void Z_MorphMallocTag(void* pv_address, const memtag_t eDesiredTag)
 	//
 	//	TheZone.Stats.iCurrent	- unchanged
 	//	TheZone.Stats.iCount	- unchanged
-	TheZone.Stats.iSizesPerTag[pMemory->eTag] -= pMemory->iSize;
-	TheZone.Stats.iCountsPerTag[pMemory->eTag]--;
+	TheZone.Stats.i_sizesPerTag[pMemory->e_tag] -= pMemory->i_size;
+	TheZone.Stats.iCountsPerTag[pMemory->e_tag]--;
 
 	// morph...
 	//
-	pMemory->eTag = eDesiredTag;
+	pMemory->e_tag = eDesiredTag;
 
 	// INC new tag stats...
 	//
 	//	TheZone.Stats.iCurrent	- unchanged
 	//	TheZone.Stats.iCount	- unchanged
-	TheZone.Stats.iSizesPerTag[pMemory->eTag] += pMemory->iSize;
-	TheZone.Stats.iCountsPerTag[pMemory->eTag]++;
+	TheZone.Stats.i_sizesPerTag[pMemory->e_tag] += pMemory->i_size;
+	TheZone.Stats.iCountsPerTag[pMemory->e_tag]++;
 }
 
 static void Zone_FreeBlock(zoneHeader_t* pMemory)
 {
-	if (pMemory->eTag != TAG_STATIC) // belt and braces, should never hit this though
+	if (pMemory->e_tag != TAG_STATIC) // belt and braces, should never hit this though
 	{
 		// Update stats...
 		//
 		TheZone.Stats.iCount--;
-		TheZone.Stats.iCurrent -= pMemory->iSize;
-		TheZone.Stats.iSizesPerTag[pMemory->eTag] -= pMemory->iSize;
-		TheZone.Stats.iCountsPerTag[pMemory->eTag]--;
+		TheZone.Stats.iCurrent -= pMemory->i_size;
+		TheZone.Stats.i_sizesPerTag[pMemory->e_tag] -= pMemory->i_size;
+		TheZone.Stats.iCountsPerTag[pMemory->e_tag]--;
 
 		// Sanity checks...
 		//
@@ -407,7 +407,7 @@ int Z_Size(void* pvAddress)
 {
 	const zoneHeader_t* pMemory = static_cast<zoneHeader_t*>(pvAddress) - 1;
 
-	if (pMemory->eTag == TAG_STATIC)
+	if (pMemory->e_tag == TAG_STATIC)
 	{
 		return 0; // kind of
 	}
@@ -417,7 +417,7 @@ int Z_Size(void* pvAddress)
 		Com_Error(ERR_FATAL, "Z_Size(): Not a valid zone header!");
 	}
 
-	return pMemory->iSize;
+	return pMemory->i_size;
 }
 
 // Frees a block of memory...
@@ -432,7 +432,7 @@ void Z_Free(void* pv_address)
 
 	zoneHeader_t* pMemory = static_cast<zoneHeader_t*>(pv_address) - 1;
 
-	if (pMemory->eTag == TAG_STATIC)
+	if (pMemory->e_tag == TAG_STATIC)
 	{
 		return;
 	}
@@ -461,14 +461,14 @@ void Z_Free(void* pv_address)
 	Zone_FreeBlock(pMemory);
 }
 
-int Z_MemSize(const memtag_t eTag)
+int Z_MemSize(const memtag_t e_tag)
 {
-	return TheZone.Stats.iSizesPerTag[eTag];
+	return TheZone.Stats.i_sizesPerTag[e_tag];
 }
 
 // Frees all blocks with the specified tag...
 //
-void Z_TagFree(const memtag_t eTag)
+void Z_TagFree(const memtag_t e_tag)
 {
 	//#ifdef _DEBUG
 	//	int iZoneBlocks = TheZone.Stats.iCount;
@@ -478,7 +478,7 @@ void Z_TagFree(const memtag_t eTag)
 	while (pMemory)
 	{
 		zoneHeader_t* pNext = pMemory->pNext;
-		if (eTag == TAG_ALL || pMemory->eTag == eTag)
+		if (e_tag == TAG_ALL || pMemory->e_tag == e_tag)
 		{
 			Zone_FreeBlock(pMemory);
 		}
@@ -494,9 +494,9 @@ void Z_TagFree(const memtag_t eTag)
 	//#endif
 }
 
-void* S_Malloc(const int iSize)
+void* S_Malloc(const int i_size)
 {
-	return Z_Malloc(iSize, TAG_SMALL);
+	return Z_Malloc(i_size, TAG_SMALL);
 }
 
 #ifdef _DEBUG
@@ -546,7 +546,7 @@ static void Z_Details_f(void)
 	for (int i = 0; i < TAG_COUNT; i++)
 	{
 		const int iThisCount = TheZone.Stats.iCountsPerTag[i];
-		const int iThisSize = TheZone.Stats.iSizesPerTag[i];
+		const int iThisSize = TheZone.Stats.i_sizesPerTag[i];
 
 		if (iThisCount)
 		{
@@ -554,12 +554,12 @@ static void Z_Details_f(void)
 			//	It ignores the left-hand specifier. Sigh, now I've got to do shit like this...
 			//
 			const float fSize = static_cast<float>(iThisSize) / 1024.0f / 1024.0f;
-			const int iSize = fSize;
+			const int i_size = fSize;
 			const int iRemainder = 100.0f * (fSize - floor(fSize));
 			Com_Printf("%20s %9d (%2d.%02dMB) in %6d blocks (%9d average)\n",
 				psTagStrings[i],
 				iThisSize,
-				iSize, iRemainder,
+				i_size, iRemainder,
 				iThisCount, iThisSize / iThisCount
 			);
 		}
@@ -655,7 +655,7 @@ void Com_TouchMemory(void)
 	while (pMemory)
 	{
 		const auto pMem = reinterpret_cast<byte*>(&pMemory[1]);
-		const int j = pMemory->iSize >> 2;
+		const int j = pMemory->i_size >> 2;
 		for (int i = 0; i < j; i += 64)
 		{
 			sum += reinterpret_cast<int*>(pMem)[i];

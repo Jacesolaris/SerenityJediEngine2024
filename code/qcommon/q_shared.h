@@ -244,7 +244,6 @@ constexpr auto LS_NUM_STYLES = 32;
 #define	LS_SWITCH_START			(LS_STYLES_START+LS_NUM_STYLES)
 constexpr auto LS_NUM_SWITCH = 32;
 #define MAX_LIGHT_STYLES		64
-#define	LS_LSNONE			0xff
 
 // print levels from renderer (FIXME: set up for game / cgame?)
 using printParm_t = enum

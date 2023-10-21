@@ -63,25 +63,25 @@ void QDECL Com_Error(int level, const char* error, ...)
 }
 
 // ZONE
-void* Z_Malloc(const int iSize, const memtag_t eTag, const qboolean bZeroit, const int iUnusedAlign)
+void* Z_Malloc(const int i_size, const memtag_t e_tag, const qboolean b_zeroit, const int iUnusedAlign)
 {
-	return ri.Malloc(iSize, eTag, bZeroit, iUnusedAlign);
+	return ri.Malloc(i_size, e_tag, b_zeroit, iUnusedAlign);
 }
 
-void* R_Malloc(int iSize, memtag_t eTag)
+void* R_Malloc(const int i_size, const memtag_t e_tag)
 {
-	return ri.Malloc(iSize, eTag, qtrue, 4);
+	return ri.Malloc(i_size, e_tag, qtrue, 4);
 }
 
-void* R_Malloc(int iSize, memtag_t eTag, qboolean bZeroit)
+void* R_Malloc(const int i_size, const memtag_t e_tag, const qboolean b_zeroit)
 {
-	return ri.Malloc(iSize, eTag, bZeroit, 4);
+	return ri.Malloc(i_size, e_tag, b_zeroit, 4);
 }
 
 #ifdef REND2_SP
-void* R_Malloc(int iSize, memtag_t eTag, qboolean bZeroit, int iAlign)
+void* R_Malloc(const int i_size, const memtag_t e_tag, const qboolean b_zeroit, const int iAlign)
 {
-	return ri.Malloc(iSize, eTag, bZeroit, iAlign);
+	return ri.Malloc(i_size, e_tag, b_zeroit, iAlign);
 }
 
 int Z_Free(void* ptr) {
@@ -98,8 +98,8 @@ void Z_Free(void* ptr) {
 }
 #endif
 
-int Z_MemSize(memtag_t eTag) {
-	return ri.Z_MemSize(eTag);
+int Z_MemSize(memtag_t e_tag) {
+	return ri.Z_MemSize(e_tag);
 }
 
 void Z_MorphMallocTag(void* pvBuffer, memtag_t eDesiredTag) {
@@ -108,9 +108,9 @@ void Z_MorphMallocTag(void* pvBuffer, memtag_t eDesiredTag) {
 
 // HUNK
 #ifdef REND2_SP
-//void* Hunk_Alloc(int iSize, ha_pref preferences)
+//void* Hunk_Alloc(int i_size, ha_pref preferences)
 //{
-//	return Hunk_Alloc(iSize, qtrue);
+//	return Hunk_Alloc(i_size, qtrue);
 //}
 
 void* Hunk_Alloc(int size, ha_pref preference) {

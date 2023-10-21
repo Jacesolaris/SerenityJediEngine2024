@@ -1132,7 +1132,7 @@ qboolean G2API_SetBoneAnim(CGhoul2Info_v& ghoul2, const int model_index, const c
 	return qfalse;
 }
 
-qboolean G2API_GetBoneAnim(CGhoul2Info_v& ghoul2, const int model_index, const char* bone_name, const int current_time, float* current_frame, int* start_frame, int* end_frame, int* flags, float* anim_speed, int* model_list)
+qboolean G2API_GetBoneAnim(CGhoul2Info_v& ghoul2, const int model_index, const char* bone_name, const int acurrent_time, float* current_frame, int* start_frame, int* end_frame, int* flags, float* anim_speed, int* model_list)
 {
 	assert(start_frame != end_frame); //this is bad
 	assert(start_frame != flags); //this is bad
@@ -1143,7 +1143,7 @@ qboolean G2API_GetBoneAnim(CGhoul2Info_v& ghoul2, const int model_index, const c
 
 	if (G2_SetupModelPointers(ghl_info))
 	{
-		const int aCurrentTime = G2API_GetTime(current_time);
+		const int aCurrentTime = G2API_GetTime(acurrent_time);
 		const qboolean ret = G2_Get_Bone_Anim(ghl_info, ghl_info->mBlist, bone_name, aCurrentTime, current_frame, start_frame, end_frame, flags, anim_speed, model_list, ghl_info->mmodel_index);
 #ifdef _DEBUG
 		/*
@@ -2037,8 +2037,8 @@ void G2API_CollisionDetectCache(CollisionRecord_t* collRecMap, CGhoul2Info_v& gh
 					//reworked so we only alloc once!
 					//if we have a pointer, but not a ghoul2_zonetransalloc flag, then that means
 					//it is a miniheap pointer. Just stomp over it.
-					const int iSize = g2.current_model->mdxm->numSurfaces * 4;
-					g2.mTransformedVertsArray = static_cast<size_t*>(Z_Malloc(iSize, TAG_GHOUL2, qtrue));
+					const int i_size = g2.current_model->mdxm->numSurfaces * 4;
+					g2.mTransformedVertsArray = static_cast<size_t*>(Z_Malloc(i_size, TAG_GHOUL2, qtrue));
 				}
 
 				g2.mFlags |= GHOUL2_ZONETRANSALLOC;
@@ -2061,10 +2061,10 @@ void G2API_CollisionDetectCache(CollisionRecord_t* collRecMap, CGhoul2Info_v& gh
 			while (i < ghoul2.size())
 			{
 				CGhoul2Info &g2 = ghoul2[i];
-				int iSize = g2.current_model->mdxm->numSurfaces * 4;
+				int i_size = g2.current_model->mdxm->numSurfaces * 4;
 
-				int *zoneMem = (int *)Z_Malloc(iSize, TAG_GHOUL2, qtrue);
-				memcpy(zoneMem, g2.mTransformedVertsArray, iSize);
+				int *zoneMem = (int *)Z_Malloc(i_size, TAG_GHOUL2, qtrue);
+				memcpy(zoneMem, g2.mTransformedVertsArray, i_size);
 				g2.mTransformedVertsArray = zoneMem;
 				g2.mFlags |= GHOUL2_ZONETRANSALLOC;
 				i++;

@@ -41,9 +41,9 @@ using refimport_t = struct
 	int (*Milliseconds)();
 
 	void (*Hunk_ClearToMark)();
-	void* (*Malloc)(int iSize, memtag_t eTag, qboolean zeroIt, int iAlign);
+	void* (*Malloc)(int i_size, memtag_t e_tag, qboolean zeroIt, int iAlign);
 	int (*Z_Free)(void* memory);
-	int (*Z_MemSize)(memtag_t eTag);
+	int (*Z_MemSize)(memtag_t e_tag);
 	void (*Z_MorphMallocTag)(void* pvBuffer, memtag_t eDesiredTag);
 
 	void (*Cmd_ExecuteString)(const char* text);
@@ -279,7 +279,7 @@ using refexport_t = struct
 	// GHOUL 2 API
 	int (*G2API_AddBolt)(CGhoul2Info* ghl_info, const char* bone_name);
 	int (*G2API_AddBoltSurfNum)(CGhoul2Info* ghl_info, int surf_index);
-	int (*G2API_AddSurface)(CGhoul2Info* ghl_info, int surface_number, int polyNumber, float BarycentricI, float BarycentricJ, int lod);
+	int (*G2API_AddSurface)(CGhoul2Info* ghl_info, int surface_number, int poly_number, float barycentric_i, float barycentric_j, int lod);
 
 	void (*G2API_AnimateG2Models)(CGhoul2Info_v& ghoul2, int acurrent_time, CRagDollUpdateParams* params);
 

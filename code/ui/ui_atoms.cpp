@@ -40,6 +40,11 @@ uiStatic_t uis;
 static void UI_LoadMenu_f();
 static void UI_SaveMenu_f();
 
+extern vmCvar_t ui_g_newgameplusJKA;
+extern vmCvar_t ui_g_newgameplusJKO;
+extern vmCvar_t ui_com_outcast;
+extern vmCvar_t ui_com_rend2;
+
 //locals
 
 /*
@@ -53,11 +58,6 @@ void UI_ForceMenuOff()
 	ui.Key_ClearStates();
 	ui.Cvar_Set("cl_paused", "0");
 }
-
-extern vmCvar_t ui_g_newgameplusJKA;
-extern vmCvar_t ui_g_newgameplusJKO;
-extern vmCvar_t ui_com_outcast;
-extern vmCvar_t ui_com_rend2;
 
 /*
 =================

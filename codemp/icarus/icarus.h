@@ -23,7 +23,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #pragma once
 
 // ICARUS Public Header File
-extern void* ICARUS_Malloc(int iSize);
+extern void* ICARUS_Malloc(int i_size);
 extern void ICARUS_Free(void* pMem);
 
 #include "game/g_public.h"

@@ -57,17 +57,17 @@ class CChid
 {
 private:
 	int		m_iCount;
-	int		m_iSize;
+	int		m_i_size;
 public:
 	CChid()
 	{
 		m_iCount = 0;
-		m_iSize = 0;
+		m_i_size = 0;
 	}
 	void Add(int iLength)
 	{
 		m_iCount++;
-		m_iSize += iLength;
+		m_i_size += iLength;
 	}
 	int GetCount()
 	{
@@ -75,7 +75,7 @@ public:
 	}
 	int GetSize()
 	{
-		return m_iSize;
+		return m_i_size;
 	}
 };
 

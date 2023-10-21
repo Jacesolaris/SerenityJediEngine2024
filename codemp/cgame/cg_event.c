@@ -2731,17 +2731,17 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 		DEBUGNAME("EV_CHANGE_WEAPON");
 		{
 			int weapon = es->eventParm;
-			weaponInfo_t* weapon_info;
+			weaponInfo_t* weaponInfo;
 
 			assert(weapon >= 0 && weapon < MAX_WEAPONS);
 
-			weapon_info = &cg_weapons[weapon];
+			weaponInfo = &cg_weapons[weapon];
 
-			assert(weapon_info);
+			assert(weaponInfo);
 
-			if (weapon_info->selectSound)
+			if (weaponInfo->selectSound)
 			{
-				trap->S_StartSound(NULL, es->number, CHAN_AUTO, weapon_info->selectSound);
+				trap->S_StartSound(NULL, es->number, CHAN_AUTO, weaponInfo->selectSound);
 			}
 			else if (weapon != WP_SABER)
 			{
@@ -2758,9 +2758,9 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 			vec3_t gunpoint, gunangle;
 			mdxaBone_t matrix;
 
-			weaponInfo_t* weapon_info = &cg_weapons[WP_TURRET];
+			weaponInfo_t* weaponInfo = &cg_weapons[WP_TURRET];
 
-			if (!weapon_info->registered)
+			if (!weaponInfo->registered)
 			{
 				CG_RegisterWeapon(WP_TURRET);
 			}
