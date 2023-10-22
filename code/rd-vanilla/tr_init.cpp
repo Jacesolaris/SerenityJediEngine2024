@@ -1739,11 +1739,14 @@ R_Init
 ===============
 */
 extern void R_InitWorldEffects();
-void R_Init() {
+void R_Init()
+{
 	int	err;
 	int i;
 
 	ShaderEntryPtrs_Clear();
+
+	ri.Printf(PRINT_ALL, "----- Loading Vanilla renderer-----\n");
 
 	// clear all our internal state
 	memset(&tr, 0, sizeof tr);
@@ -1810,10 +1813,12 @@ void R_Init() {
 		ri.Printf(PRINT_ALL, "glGetError() = 0x%x\n", err);
 
 	RestoreGhoul2InfoArray();
+
+	ri.Cvar_Set("com_rend2", "0");
+
 	// print info
 	GfxInfo_f();
-
-	//ri.Printf( PRINT_ALL, "----- finished R_Init -----\n" );
+	ri.Printf(PRINT_ALL, "----- Vanilla renderer loaded-----\n");
 }
 
 /*

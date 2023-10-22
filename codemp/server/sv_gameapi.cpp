@@ -1824,10 +1824,10 @@ static int SV_G2API_InitGhoul2Model(void** ghoul2Ptr, const char* file_name, con
 }
 
 static qboolean SV_G2API_SetSkin(void* ghoul2, const int model_index, const qhandle_t custom_skin,
-	const qhandle_t renderSkin)
+	const qhandle_t render_skin)
 {
 	CGhoul2Info_v& g2 = *static_cast<CGhoul2Info_v*>(ghoul2);
-	return re->G2API_SetSkin(g2, model_index, custom_skin, renderSkin);
+	return re->G2API_SetSkin(g2, model_index, custom_skin, render_skin);
 }
 
 static void SV_G2API_CollisionDetect(CollisionRecord_t* collRecMap, void* ghoul2, const vec3_t angles,

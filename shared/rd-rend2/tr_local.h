@@ -3743,7 +3743,7 @@ void RE_TakeVideoFrame(int width, int height,
 // tr_ghoul2.cpp
 #ifdef REND2_SP
 void Create_Matrix(const float* angle, mdxaBone_t* matrix);
-void G2_SetSurfaceOnOffFromSkin(CGhoul2Info* ghl_info, qhandle_t renderSkin);	//tr_ghoul2.cpp
+void G2_SetSurfaceOnOffFromSkin(CGhoul2Info* ghl_info, qhandle_t render_skin);	//tr_ghoul2.cpp
 #endif
 void Mat3x4_Multiply(mdxaBone_t* out, const mdxaBone_t* in2, const mdxaBone_t* in);
 void Mat3x4_Scale(mdxaBone_t* result, const mdxaBone_t* lhs, const float scale);

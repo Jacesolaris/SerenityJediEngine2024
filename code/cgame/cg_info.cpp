@@ -32,6 +32,7 @@ static constexpr short objectiveStartingXpos = 60; // X starting position for ob
 static constexpr int objectiveTextBoxWidth = 500; // Width (in pixels) of text box
 static constexpr int objectiveTextBoxHeight = 300; // Height (in pixels) of text box
 static constexpr short missionYpos = 79;
+extern vmCvar_t cg_com_rend2;
 
 const char* showLoadPowersName[] =
 {
@@ -371,7 +372,7 @@ void CG_DrawDataPadObjectives(const centity_t* cent)
 constexpr auto LOADBAR_CLIP_WIDTH = 256;
 constexpr auto LOADBAR_CLIP_HEIGHT = 64;
 
-static void CG_LoadBar()
+void CG_LoadBar()
 {
 	constexpr int numticks = 9, tickwidth = 40, tickheight = 8;
 	constexpr int tickpadx = 20, tickpady = 12;
@@ -395,10 +396,15 @@ static void CG_LoadBar()
 
 	constexpr int x = (640 - LOADBAR_CLIP_WIDTH) / 2;
 
-	if (cg.loadLCARSStage >= 4)
+	if (cg.loadLCARSStage >= 3)
 	{
 		constexpr int y = 340;
 		CG_DrawPic(x, y, LOADBAR_CLIP_WIDTH, LOADBAR_CLIP_HEIGHT, cgs.media.load_SerenitySaberSystems);
+
+		if (cg_com_rend2.integer == 1) //rend2 is on
+		{
+			cgi_R_Font_DrawString(60, 416, va("Warning: When using Rend2, longer loading times can be expected."), colorTable[CT_WHITE], cgs.media.qhFontSmall, -1, 1.0f);
+		}
 	}
 }
 
@@ -843,7 +849,7 @@ void LoadTips()
 	const int index = rand() % 15;
 	const int time = cgi_Milliseconds();
 
-	if ((SCREENTIP_NEXT_UPDATE_TIME < time || SCREENTIP_NEXT_UPDATE_TIME == 0) && cg.loadLCARSStage <= 6)
+	if ((SCREENTIP_NEXT_UPDATE_TIME < time || SCREENTIP_NEXT_UPDATE_TIME == 0) && cg.loadLCARSStage <= 9)
 	{
 		cgi_Cvar_Set("ui_tipsbriefing", va("@LOADTIPS_TIP%d", index));
 		SCREENTIP_NEXT_UPDATE_TIME = time + 2500;
@@ -903,9 +909,15 @@ void CG_DrawInformation()
 		{
 			CG_DrawLoadingScreen(levelshot, s);
 			CG_MissionCompletion();
-			LoadTips();
+
+			if (cg_com_rend2.integer == 0) //rend2 is off
+			{
+				LoadTips();
+			}
 		}
+
 		cgi_UI_MenuPaintAll();
+
 		CG_LoadBar();
 	}
 

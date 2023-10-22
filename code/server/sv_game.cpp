@@ -775,9 +775,9 @@ static qboolean SV_G2API_SetShader(CGhoul2Info* ghl_info, const qhandle_t custom
 	return re.G2API_SetShader(ghl_info, custom_shader);
 }
 
-static qboolean SV_G2API_SetSkin(CGhoul2Info* ghl_info, const qhandle_t custom_skin, const qhandle_t renderSkin)
+static qboolean SV_G2API_SetSkin(CGhoul2Info* ghl_info, const qhandle_t custom_skin, const qhandle_t render_skin)
 {
-	return re.G2API_SetSkin(ghl_info, custom_skin, renderSkin);
+	return re.G2API_SetSkin(ghl_info, custom_skin, render_skin);
 }
 
 static qboolean SV_G2API_SetSurfaceOnOff(CGhoul2Info* ghl_info, const char* surface_name, const int flags)

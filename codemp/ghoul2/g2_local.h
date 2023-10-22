@@ -300,13 +300,13 @@ qboolean G2API_IsGhoul2InfovValid(const CGhoul2Info_v& ghoul2);
 
 int G2API_InitGhoul2Model(CGhoul2Info_v** ghoul2Ptr, const char* file_name, const int model_index, const qhandle_t custom_skin = NULL_HANDLE, const qhandle_t custom_shader = NULL_HANDLE, const int model_flags = 0, const int lod_bias = 0);
 
-qboolean G2API_SetLodBias(CGhoul2Info* ghl_info, int lod_bias);
-qboolean G2API_SetSkin(CGhoul2Info_v& ghoul2, int model_index, qhandle_t custom_skin, qhandle_t renderSkin);
+qboolean G2API_SetLodBias(CGhoul2Info* ghl_info, const int lod_bias);
+qboolean G2API_SetSkin(CGhoul2Info_v& ghoul2, int model_index, qhandle_t custom_skin, qhandle_t render_skin);
 qboolean G2API_SetShader(CGhoul2Info* ghl_info, const qhandle_t custom_shader);
 qboolean G2API_HasGhoul2ModelOnIndex(CGhoul2Info_v** ghlRemove, int model_index);
 qboolean G2API_RemoveGhoul2Model(CGhoul2Info_v** ghlRemove, int model_index);
 qboolean G2API_RemoveGhoul2Models(CGhoul2Info_v** ghlRemove);
-qboolean G2API_SetSurfaceOnOff(CGhoul2Info_v& ghoul2, const char* surface_name, int flags);
+qboolean G2API_SetSurfaceOnOff(CGhoul2Info_v& ghoul2, const char* surface_name, const int flags);
 int G2API_GetSurfaceOnOff(CGhoul2Info* ghl_info, const char* surface_name);
 qboolean G2API_SetRootSurface(CGhoul2Info_v& ghoul2, int model_index, const char* surface_name);
 qboolean G2API_RemoveSurface(CGhoul2Info* ghl_info, int index);

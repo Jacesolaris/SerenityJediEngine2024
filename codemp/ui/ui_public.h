@@ -371,7 +371,7 @@ typedef struct uiImport_s {
 	qboolean(*G2API_SetBoneIKState)					(void* ghoul2, int time, const char* bone_name, int ikState, sharedSetBoneIKStateParams_t* params);
 	qboolean(*G2API_IKMove)							(void* ghoul2, int time, sharedIKMoveParams_t* params);
 	void			(*G2API_GetSurfaceName)					(void* ghoul2, int surfNumber, int model_index, char* fillBuf);
-	qboolean(*G2API_SetSkin)						(void* ghoul2, int model_index, qhandle_t custom_skin, qhandle_t renderSkin);
+	qboolean(*G2API_SetSkin)						(void* ghoul2, int model_index, qhandle_t custom_skin, qhandle_t render_skin);
 	qboolean(*G2API_AttachG2Model)					(void* ghoul2_from, int model_indexFrom, void* ghoul2_to, int toBoltIndex, int toModel);
 
 	struct {

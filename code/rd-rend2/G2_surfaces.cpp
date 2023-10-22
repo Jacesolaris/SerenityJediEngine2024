@@ -298,9 +298,9 @@ qboolean G2_SetSurfaceOnOff(CGhoul2Info* ghl_info, const char* surface_name, con
 	return G2_SetSurfaceOnOff(ghl_info, ghl_info->mSlist, surface_name, off_flags);
 }
 
-void G2_SetSurfaceOnOffFromSkin(CGhoul2Info* ghl_info, qhandle_t renderSkin)
+void G2_SetSurfaceOnOffFromSkin(CGhoul2Info* ghl_info, qhandle_t render_skin)
 {
-	const skin_t* skin = R_GetSkinByHandle(renderSkin);
+	const skin_t* skin = R_GetSkinByHandle(render_skin);
 
 	//FIXME:  using skin handles means we have to increase the numsurfs in a skin, but reading directly would cause file hits, we need another way to cache or just deal with the larger skin_t
 

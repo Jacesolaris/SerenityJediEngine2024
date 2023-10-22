@@ -2157,9 +2157,9 @@ void G2_GetBoltMatrixLow(CGhoul2Info& ghoul2, const int boltNum, const vec3_t sc
 	}
 }
 
-void G2API_SetSurfaceOnOffFromSkin(CGhoul2Info* ghl_info, const qhandle_t renderSkin)
+void G2API_SetSurfaceOnOffFromSkin(CGhoul2Info* ghl_info, const qhandle_t render_skin)
 {
-	const skin_t* skin = R_GetSkinByHandle(renderSkin);
+	const skin_t* skin = R_GetSkinByHandle(render_skin);
 	//FIXME:  using skin handles means we have to increase the numsurfs in a skin, but reading directly would cause file hits, we need another way to cache or just deal with the larger skin_t
 
 	if (skin)

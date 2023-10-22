@@ -367,7 +367,7 @@ using refexport_t = struct
 	void (*G2API_SetRagDoll)(CGhoul2Info_v& ghoul2, CRagDollParams* parms);
 	qboolean(*G2API_SetRootSurface)(CGhoul2Info_v& ghl_info, int model_index, const char* surface_name);
 	qboolean(*G2API_SetShader)(CGhoul2Info* ghl_info, qhandle_t custom_shader);
-	qboolean(*G2API_SetSkin)(CGhoul2Info* ghl_info, qhandle_t custom_skin, qhandle_t renderSkin);
+	qboolean(*G2API_SetSkin)(CGhoul2Info* ghl_info, qhandle_t custom_skin, qhandle_t render_skin);
 	qboolean(*G2API_SetSurfaceOnOff)(CGhoul2Info* ghl_info, const char* surface_name, int flags);
 	void (*G2API_SetTime)(int current_time, int clock);
 	qboolean(*G2API_StopBoneAnim)(CGhoul2Info* ghl_info, const char* bone_name);

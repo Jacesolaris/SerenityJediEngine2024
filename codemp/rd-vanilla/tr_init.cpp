@@ -1730,12 +1730,14 @@ R_Init
 ===============
 */
 extern void R_InitWorldEffects(); //tr_WorldEffects.cpp
-void R_Init() {
+void R_Init()
+{
 	int i;
 	byte* ptr;
 
-	//	ri->Printf( PRINT_ALL, "----- R_Init -----\n" );
-		// clear all our internal state
+	ri->Printf(PRINT_ALL, "----- Loading Vanilla renderer-----\n");
+
+	// clear all our internal state
 	memset(&tr, 0, sizeof tr);
 	memset(&backEnd, 0, sizeof backEnd);
 	memset(&tess, 0, sizeof tess);
@@ -1815,10 +1817,12 @@ void R_Init() {
 #endif
 
 	RestoreGhoul2InfoArray();
+
+	ri->Cvar_Set("com_rend2", "0");
+
 	// print info
 	GfxInfo_f();
-
-	//	ri->Printf( PRINT_ALL, "----- finished R_Init -----\n" );
+	ri->Printf(PRINT_ALL, "----- Vanilla renderer loaded-----\n");
 }
 
 /*

@@ -184,10 +184,10 @@ qboolean G2_SetSurfaceOnOff(const CGhoul2Info* ghl_info, surfaceInfo_v& slist, c
 	return qfalse;
 }
 
-void G2_SetSurfaceOnOffFromSkin(CGhoul2Info* ghl_info, qhandle_t renderSkin)
+void G2_SetSurfaceOnOffFromSkin(CGhoul2Info* ghl_info, qhandle_t render_skin)
 {
 	int j;
-	const skin_t* skin = R_GetSkinByHandle(renderSkin);
+	const skin_t* skin = R_GetSkinByHandle(render_skin);
 
 	ghl_info->mSlist.clear();	//remove any overrides we had before.
 	ghl_info->mMeshFrameNum = 0;

@@ -232,7 +232,11 @@ void CG_DrawInformation(void)
 	}
 
 	CG_LoadBar();
-	LoadTips();
+
+	if (com_rend2.integer == 0) //rend2 is off
+	{
+		LoadTips();
+	}
 
 	int y = 180 - 32;
 
@@ -483,10 +487,15 @@ void CG_LoadBar(void)
 
 	const int x = (640 - LOADBAR_CLIP_WIDTH) / 2;
 
-	if (cg.loadLCARSStage >= 4)
+	if (cg.loadLCARSStage >= 3)
 	{
 		const int y = 50;
 		CG_DrawPic(x, y, LOADBAR_CLIP_WIDTH, LOADBAR_CLIP_HEIGHT, cgs.media.load_SerenitySaberSystems);
+
+		if (com_rend2.integer == 1) //rend2 is on
+		{
+			CG_DrawProportionalString(300, 390, CG_GetStringEdString("LOADTIPS-MP", "REND2TIP"), UI_CENTER | UI_SMALLFONT | UI_DROPSHADOW, colorWhite);
+		}
 	}
 }
 
@@ -497,7 +506,10 @@ void LoadTips(void)
 	const int time = trap->Milliseconds();
 	const int index = rand() % 15;
 
-	if ((SCREENTIP_NEXT_UPDATE_TIME < time || SCREENTIP_NEXT_UPDATE_TIME == 0) && cg.loadLCARSStage <= 6)
+	if (cg.loadLCARSStage >= 5)
+	{
+	}
+	if ((SCREENTIP_NEXT_UPDATE_TIME < time || SCREENTIP_NEXT_UPDATE_TIME == 0) && cg.loadLCARSStage <= 9)
 	{
 		switch (index)
 		{

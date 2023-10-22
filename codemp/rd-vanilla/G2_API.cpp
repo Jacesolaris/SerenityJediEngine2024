@@ -884,17 +884,17 @@ qboolean G2API_SetLodBias(CGhoul2Info* ghl_info, const int lod_bias)
 
 void G2_SetSurfaceOnOffFromSkin(CGhoul2Info* ghl_info, qhandle_t render_skin);
 
-qboolean G2API_SetSkin(CGhoul2Info_v& ghoul2, const int model_index, const qhandle_t custom_skin, const qhandle_t renderSkin)
+qboolean G2API_SetSkin(CGhoul2Info_v& ghoul2, const int model_index, const qhandle_t custom_skin, const qhandle_t render_skin)
 {
 	CGhoul2Info* ghl_info = &ghoul2[model_index];
 
 	if (G2_SetupModelPointers(ghl_info))
 	{
 		ghl_info->mCustomSkin = custom_skin;
-		if (renderSkin)
+		if (render_skin)
 		{
 			//this is going to set the surfs on/off matching the skin file
-			G2_SetSurfaceOnOffFromSkin(ghl_info, renderSkin);
+			G2_SetSurfaceOnOffFromSkin(ghl_info, render_skin);
 		}
 
 		return qtrue;

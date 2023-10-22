@@ -800,7 +800,7 @@ int G2API_InitGhoul2Model(CGhoul2Info_v& ghoul2, const char* file_name, const in
 	return ghoul2[model].mmodel_index;
 }
 
-qboolean G2API_SetLodBias(CGhoul2Info* ghl_info, int lod_bias)
+qboolean G2API_SetLodBias(CGhoul2Info* ghl_info, const int lod_bias)
 {
 	G2ERROR(ghl_info, "G2API_SetLodBias: NULL ghl_info");
 	if (G2_SetupModelPointers(ghl_info))
@@ -811,18 +811,18 @@ qboolean G2API_SetLodBias(CGhoul2Info* ghl_info, int lod_bias)
 	return qfalse;
 }
 
-qboolean G2API_SetSkin(CGhoul2Info* ghl_info, qhandle_t custom_skin, qhandle_t renderSkin)
+qboolean G2API_SetSkin(CGhoul2Info* ghl_info, const qhandle_t custom_skin, const qhandle_t render_skin)
 {
 	G2ERROR(ghl_info, "G2API_SetSkin: NULL ghl_info");
 	if (G2_SetupModelPointers(ghl_info))
 	{
 		ghl_info->mCustomSkin = custom_skin;
 #ifndef JK2_MODE
-		if (renderSkin)
+		if (render_skin)
 		{
 			// this is going to set the surfs on/off matching the skin file
 			// header moved to tr_local.h, implemented in G2_surface.cpp
-			G2_SetSurfaceOnOffFromSkin(ghl_info, renderSkin);
+			G2_SetSurfaceOnOffFromSkin(ghl_info, render_skin);
 		}
 #endif
 		return qtrue;
