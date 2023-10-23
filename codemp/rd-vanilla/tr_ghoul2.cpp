@@ -2449,20 +2449,20 @@ void RenderSurfaces(CRenderSurface& RS) //also ended up just ripping right from 
 	assert(RS.current_model->mdxm);
 	// back track and get the surfinfo struct for this surface
 	const auto surface = static_cast<mdxmSurface_t*>(G2_FindSurface(RS.current_model, RS.surface_num, RS.lod));
-	const auto surfIndexes = (mdxmHierarchyOffsets_t*)((byte*)RS.current_model->mdxm + sizeof(mdxmHeader_t));
-	const mdxmSurfHierarchy_t* surfInfo = (mdxmSurfHierarchy_t*)((byte*)surfIndexes + surfIndexes->offsets[surface->
+	const auto surf_indexes = (mdxmHierarchyOffsets_t*)((byte*)RS.current_model->mdxm + sizeof(mdxmHeader_t));
+	const mdxmSurfHierarchy_t* surfInfo = (mdxmSurfHierarchy_t*)((byte*)surf_indexes + surf_indexes->offsets[surface->
 		thisSurfaceIndex]);
 
 	// see if we have an override surface in the surface list
-	const surfaceInfo_t* surfOverride = G2_FindOverrideSurface(RS.surface_num, RS.rootSList);
+	const surfaceInfo_t* surf_override = G2_FindOverrideSurface(RS.surface_num, RS.rootSList);
 
 	// really, we should use the default flags for this surface unless it's been overriden
 	off_flags = surfInfo->flags;
 
 	// set the off flags if we have some
-	if (surfOverride)
+	if (surf_override)
 	{
-		off_flags = surfOverride->off_flags;
+		off_flags = surf_override->off_flags;
 	}
 
 	// if this surface is not off, add it to the shader render list
@@ -2713,23 +2713,23 @@ void G2_ConstructUsedBoneList(CConstructBoneList& CBL)
 	// back track and get the surfinfo struct for this surface
 	const mdxmSurface_t* surface = static_cast<mdxmSurface_t*>(G2_FindSurface(
 		CBL.current_model, CBL.surface_num, 0));
-	const mdxmHierarchyOffsets_t* surfIndexes = (mdxmHierarchyOffsets_t*)((byte*)CBL.current_model->mdxm + sizeof(
+	const mdxmHierarchyOffsets_t* surf_indexes = (mdxmHierarchyOffsets_t*)((byte*)CBL.current_model->mdxm + sizeof(
 		mdxmHeader_t));
-	const mdxmSurfHierarchy_t* surfInfo = (mdxmSurfHierarchy_t*)((byte*)surfIndexes + surfIndexes->offsets[surface->
+	const mdxmSurfHierarchy_t* surfInfo = (mdxmSurfHierarchy_t*)((byte*)surf_indexes + surf_indexes->offsets[surface->
 		thisSurfaceIndex]);
 	const model_t* mod_a = R_GetModelByHandle(CBL.current_model->mdxm->animIndex);
 	const mdxaSkelOffsets_t* offsets = (mdxaSkelOffsets_t*)((byte*)mod_a->mdxa + sizeof(mdxaHeader_t));
 
 	// see if we have an override surface in the surface list
-	const surfaceInfo_t* surfOverride = G2_FindOverrideSurface(CBL.surface_num, CBL.rootSList);
+	const surfaceInfo_t* surf_override = G2_FindOverrideSurface(CBL.surface_num, CBL.rootSList);
 
 	// really, we should use the default flags for this surface unless it's been overriden
 	int off_flags = surfInfo->flags;
 
 	// set the off flags if we have some
-	if (surfOverride)
+	if (surf_override)
 	{
-		off_flags = surfOverride->off_flags;
+		off_flags = surf_override->off_flags;
 	}
 
 	// if this surface is not off, add it to the shader render list
@@ -4214,7 +4214,7 @@ qboolean R_LoadMDXM(model_t* mod, void* buffer, const char* mod_name, qboolean& 
 	int* boneRef;
 	mdxmLODSurfOffset_t* indexes;
 	mdxmVertexTexCoord_t* pTexCoords;
-	mdxmHierarchyOffsets_t* surfIndexes;
+	mdxmHierarchyOffsets_t* surf_indexes;
 #endif
 
 	pinmodel = static_cast<mdxmHeader_t*>(buffer);
@@ -4286,7 +4286,7 @@ qboolean R_LoadMDXM(model_t* mod, void* buffer, const char* mod_name, qboolean& 
 
 	surfInfo = (mdxmSurfHierarchy_t*)((byte*)mdxm + mdxm->ofsSurfHierarchy);
 #ifdef Q3_BIG_ENDIAN
-	surfIndexes = (mdxmHierarchyOffsets_t*)((byte*)mdxm + sizeof(mdxmHeader_t));
+	surf_indexes = (mdxmHierarchyOffsets_t*)((byte*)mdxm + sizeof(mdxmHeader_t));
 #endif
 	for (i = 0; i < mdxm->numSurfaces; i++)
 	{
@@ -4322,8 +4322,8 @@ qboolean R_LoadMDXM(model_t* mod, void* buffer, const char* mod_name, qboolean& 
 
 #ifdef Q3_BIG_ENDIAN
 		// swap the surface offset
-		LL(surfIndexes->offsets[i]);
-		assert(surfInfo == (mdxmSurfHierarchy_t*)((byte*)surfIndexes + surfIndexes->offsets[i]));
+		LL(surf_indexes->offsets[i]);
+		assert(surfInfo == (mdxmSurfHierarchy_t*)((byte*)surf_indexes + surf_indexes->offsets[i]));
 #endif
 
 		// find the next surface

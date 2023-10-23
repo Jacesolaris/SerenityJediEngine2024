@@ -2331,21 +2331,21 @@ void RenderSurfaces(CRenderSurface& RS, const trRefEntity_t* ent, int entity_num
 	// back track and get the surfinfo struct for this surface
 	mdxmSurface_t* surface =
 		(mdxmSurface_t*)G2_FindSurface(RS.current_model, RS.surface_num, RS.lod);
-	mdxmHierarchyOffsets_t* surfIndexes = (mdxmHierarchyOffsets_t*)
+	mdxmHierarchyOffsets_t* surf_indexes = (mdxmHierarchyOffsets_t*)
 		((byte*)RS.current_model->data.glm->header + sizeof(mdxmHeader_t));
 	mdxmSurfHierarchy_t* surfInfo = (mdxmSurfHierarchy_t*)
-		((byte*)surfIndexes + surfIndexes->offsets[surface->thisSurfaceIndex]);
+		((byte*)surf_indexes + surf_indexes->offsets[surface->thisSurfaceIndex]);
 
 	// see if we have an override surface in the surface list
-	const surfaceInfo_t* surfOverride = G2_FindOverrideSurface(RS.surface_num, RS.rootSList);
+	const surfaceInfo_t* surf_override = G2_FindOverrideSurface(RS.surface_num, RS.rootSList);
 
 	// really, we should use the default flags for this surface unless it's been overriden
 	off_flags = surfInfo->flags;
 
 	// set the off flags if we have some
-	if (surfOverride)
+	if (surf_override)
 	{
-		off_flags = surfOverride->off_flags;
+		off_flags = surf_override->off_flags;
 	}
 
 	// if this surface is not off, add it to the shader render list
@@ -2554,21 +2554,21 @@ void ProcessModelBoltSurfaces(
 	// back track and get the surfinfo struct for this surface
 	mdxmSurface_t* surface = (mdxmSurface_t*)
 		G2_FindSurface((void*)current_model, surface_num, 0);
-	mdxmHierarchyOffsets_t* surfIndexes = (mdxmHierarchyOffsets_t*)
+	mdxmHierarchyOffsets_t* surf_indexes = (mdxmHierarchyOffsets_t*)
 		((byte*)current_model->data.glm->header + sizeof(mdxmHeader_t));
 	mdxmSurfHierarchy_t* surfInfo = (mdxmSurfHierarchy_t*)
-		((byte*)surfIndexes + surfIndexes->offsets[surface->thisSurfaceIndex]);
+		((byte*)surf_indexes + surf_indexes->offsets[surface->thisSurfaceIndex]);
 
 	// see if we have an override surface in the surface list
-	surfaceInfo_t* surfOverride = G2_FindOverrideSurface(surface_num, rootSList);
+	surfaceInfo_t* surf_override = G2_FindOverrideSurface(surface_num, rootSList);
 
 	// really, we should use the default flags for this surface unless it's been overriden
 	off_flags = surfInfo->flags;
 
 	// set the off flags if we have some
-	if (surfOverride)
+	if (surf_override)
 	{
-		off_flags = surfOverride->off_flags;
+		off_flags = surf_override->off_flags;
 	}
 
 	// is this surface considered a bolt surface?
@@ -2579,7 +2579,7 @@ void ProcessModelBoltSurfaces(
 		// yes - ok, processing time.
 		if (boltNum != -1)
 		{
-			G2_ProcessSurfaceBolt(bonePtr, surface, boltNum, boltList, surfOverride, current_model);
+			G2_ProcessSurfaceBolt(bonePtr, surface, boltNum, boltList, surf_override, current_model);
 		}
 	}
 
@@ -2610,23 +2610,23 @@ void G2_ConstructUsedBoneList(CConstructBoneList& CBL)
 
 	// back track and get the surfinfo struct for this surface
 	const mdxmSurface_t* surface = (mdxmSurface_t*)G2_FindSurface((void*)CBL.current_model, CBL.surface_num, 0);
-	const mdxmHierarchyOffsets_t* surfIndexes = (mdxmHierarchyOffsets_t*)((byte*)mdxm + sizeof(mdxmHeader_t));
-	const mdxmSurfHierarchy_t* surfInfo = (mdxmSurfHierarchy_t*)((byte*)surfIndexes + surfIndexes->offsets[surface->thisSurfaceIndex]);
+	const mdxmHierarchyOffsets_t* surf_indexes = (mdxmHierarchyOffsets_t*)((byte*)mdxm + sizeof(mdxmHeader_t));
+	const mdxmSurfHierarchy_t* surfInfo = (mdxmSurfHierarchy_t*)((byte*)surf_indexes + surf_indexes->offsets[surface->thisSurfaceIndex]);
 	const model_t* mod_a = R_GetModelByHandle(mdxm->animIndex);
 	mdxaHeader_t* mdxa = mod_a->data.gla;
 	const mdxaSkelOffsets_t* offsets = (mdxaSkelOffsets_t*)((byte*)mdxa + sizeof(mdxaHeader_t));
 	const mdxaSkel_t* skel, * childSkel;
 
 	// see if we have an override surface in the surface list
-	const surfaceInfo_t* surfOverride = G2_FindOverrideSurface(CBL.surface_num, CBL.rootSList);
+	const surfaceInfo_t* surf_override = G2_FindOverrideSurface(CBL.surface_num, CBL.rootSList);
 
 	// really, we should use the default flags for this surface unless it's been overriden
 	off_flags = surfInfo->flags;
 
 	// set the off flags if we have some
-	if (surfOverride)
+	if (surf_override)
 	{
-		off_flags = surfOverride->off_flags;
+		off_flags = surf_override->off_flags;
 	}
 
 	// if this surface is not off, add it to the shader render list

@@ -281,7 +281,7 @@ void G2_Init_Bolt_List(boltInfo_v& bltlist)
 }
 
 // remove any bolts that reference original surfaces, generated surfaces, or bones that aren't active anymore
-void G2_RemoveRedundantBolts(boltInfo_v& bltlist, surfaceInfo_v& slist, const int* activeSurfaces, const int* active_bones)
+void G2_RemoveRedundantBolts(boltInfo_v& bltlist, surfaceInfo_v& slist, const int* active_surfaces, const int* active_bones)
 {
 	// walk the bolt list
 	for (size_t i = 0; i < bltlist.size(); i++)
@@ -305,7 +305,7 @@ void G2_RemoveRedundantBolts(boltInfo_v& bltlist, surfaceInfo_v& slist, const in
 				}
 				// no, it's an original, so look for it in the active surfaces list
 				{
-					if (!activeSurfaces[bltlist[i].surface_number])
+					if (!active_surfaces[bltlist[i].surface_number])
 					{
 						// no - we want to remove this bolt, regardless of how many people are using it
 						bltlist[i].boltUsed = 1;

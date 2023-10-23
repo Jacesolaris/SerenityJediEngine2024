@@ -3741,17 +3741,15 @@ void RE_TakeVideoFrame(int width, int height,
 	byte* captureBuffer, byte* encodeBuffer, qboolean motionJpeg);
 
 // tr_ghoul2.cpp
-#ifdef REND2_SP
+//#ifdef REND2_SP
 void Create_Matrix(const float* angle, mdxaBone_t* matrix);
-void G2_SetSurfaceOnOffFromSkin(CGhoul2Info* ghl_info, qhandle_t render_skin);	//tr_ghoul2.cpp
-#endif
+void G2_SetSurfaceOnOffFromSkin(CGhoul2Info* ghl_info, const qhandle_t render_skin);	//tr_ghoul2.cpp
+//#endif
+
 void Mat3x4_Multiply(mdxaBone_t* out, const mdxaBone_t* in2, const mdxaBone_t* in);
 void Mat3x4_Scale(mdxaBone_t* result, const mdxaBone_t* lhs, const float scale);
-void Mat3x4_Lerp(
-	mdxaBone_t* result,
-	const mdxaBone_t* lhs,
-	const mdxaBone_t* rhs,
-	const float t);
+void Mat3x4_Lerp(mdxaBone_t* result, const mdxaBone_t* lhs, const mdxaBone_t* rhs, const float t);
+
 const mdxaBone_t operator +(const mdxaBone_t& lhs, const mdxaBone_t& rhs);
 const mdxaBone_t operator -(const mdxaBone_t& lhs, const mdxaBone_t& rhs);
 const mdxaBone_t operator *(const mdxaBone_t& lhs, const mdxaBone_t& rhs);

@@ -811,22 +811,29 @@ qboolean G2API_SetLodBias(CGhoul2Info* ghl_info, const int lod_bias)
 	return qfalse;
 }
 
+extern void G2API_SetSurfaceOnOffFromSkin(CGhoul2Info* ghl_info, qhandle_t render_skin); //tr_ghoul2.cpp
 qboolean G2API_SetSkin(CGhoul2Info* ghl_info, const qhandle_t custom_skin, const qhandle_t render_skin)
 {
-	G2ERROR(ghl_info, "G2API_SetSkin: NULL ghl_info");
+	G2ERROR(ghl_info, "NULL ghl_info");
+#ifdef JK2_MODE
 	if (G2_SetupModelPointers(ghl_info))
 	{
 		ghl_info->mCustomSkin = custom_skin;
-#ifndef JK2_MODE
-		if (render_skin)
-		{
-			// this is going to set the surfs on/off matching the skin file
-			// header moved to tr_local.h, implemented in G2_surface.cpp
-			G2_SetSurfaceOnOffFromSkin(ghl_info, render_skin);
-		}
-#endif
 		return qtrue;
 	}
+	return qfalse;
+#else
+	if (G2_SetupModelPointers(ghl_info))
+	{
+		ghl_info->mCustomSkin = custom_skin;
+		if (render_skin)
+		{
+			//this is going to set the surfs on/off matching the skin file
+			G2API_SetSurfaceOnOffFromSkin(ghl_info, render_skin);
+		}
+		return qtrue;
+	}
+#endif
 	return qfalse;
 }
 
@@ -871,7 +878,7 @@ qboolean G2API_SetRootSurface(CGhoul2Info_v& ghoul2, const int model_index, cons
 	return qfalse;
 }
 
-int G2API_AddSurface(CGhoul2Info* ghl_info, int surface_number, int poly_number, float barycentric_i, float barycentric_j, int lod)
+int G2API_AddSurface(CGhoul2Info* ghl_info, const int surface_number, const int poly_number, const float barycentric_i, const float barycentric_j, const int lod)
 {
 	if (G2_SetupModelPointers(ghl_info))
 	{
@@ -2142,8 +2149,8 @@ char* G2API_GetSurfaceName(CGhoul2Info* ghl_info, int surfNumber)
 		surf = (mdxmSurface_t*)G2_FindSurface(mod, surfNumber, 0);
 		if (surf)
 		{
-			mdxmHierarchyOffsets_t* surfIndexes = (mdxmHierarchyOffsets_t*)((byte*)ghl_info->current_model->data.glm->header + sizeof(mdxmHeader_t));
-			surfInfo = (mdxmSurfHierarchy_t*)((byte*)surfIndexes + surfIndexes->offsets[surf->thisSurfaceIndex]);
+			mdxmHierarchyOffsets_t* surf_indexes = (mdxmHierarchyOffsets_t*)((byte*)ghl_info->current_model->data.glm->header + sizeof(mdxmHeader_t));
+			surfInfo = (mdxmSurfHierarchy_t*)((byte*)surf_indexes + surf_indexes->offsets[surf->thisSurfaceIndex]);
 			return surfInfo->name;
 		}
 	}

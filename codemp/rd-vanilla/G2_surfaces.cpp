@@ -269,15 +269,15 @@ void G2_FindRecursiveSurface(model_t* current_model, int surface_num, surfaceInf
 	const mdxmSurfHierarchy_t* surf_info = reinterpret_cast<mdxmSurfHierarchy_t*>(reinterpret_cast<byte*>(surf_indexes) + surf_indexes->offsets[surface->thisSurfaceIndex]);
 
 	// see if we have an override surface in the surface list
-	const surfaceInfo_t* surfOverride = G2_FindOverrideSurface(surface_num, root_list);
+	const surfaceInfo_t* surf_override = G2_FindOverrideSurface(surface_num, root_list);
 
 	// really, we should use the default flags for this surface unless it's been overriden
 	int off_flags = surf_info->flags;
 
 	// set the off flags if we have some
-	if (surfOverride)
+	if (surf_override)
 	{
-		off_flags = surfOverride->off_flags;
+		off_flags = surf_override->off_flags;
 	}
 
 	// if this surface is not off, indicate as such in the active surface list
@@ -420,7 +420,7 @@ qboolean G2_SetRootSurface(CGhoul2Info_v& ghoul2, const int model_index, const c
 			model_t				*mod_a = R_GetModelByHandle(mod_m->mdxm->animIndex);
 			int					surf;
 			int					flags;
-			int					*activeSurfaces, *active_bones;
+			int					*active_surfaces, *active_bones;
 
 			// did we find a ghoul 2 model or not?
 			if (!mod_m->mdxm)
@@ -445,12 +445,12 @@ qboolean G2_SetRootSurface(CGhoul2Info_v& ghoul2, const int model_index, const c
 				// firstly, generate a list of active / on surfaces below the root point
 
 				// gimme some space to put this list into
-				activeSurfaces = (int *)Z_Malloc(mod_m->mdxm->numSurfaces * 4, TAG_GHOUL2, qtrue);
-				memset(activeSurfaces, 0, (mod_m->mdxm->numSurfaces * 4));
+				active_surfaces = (int *)Z_Malloc(mod_m->mdxm->numSurfaces * 4, TAG_GHOUL2, qtrue);
+				memset(active_surfaces, 0, (mod_m->mdxm->numSurfaces * 4));
 				active_bones = (int *)Z_Malloc(mod_a->mdxa->numBones * 4, TAG_GHOUL2, qtrue);
 				memset(active_bones, 0, (mod_a->mdxa->numBones * 4));
 
-				G2_FindRecursiveSurface(mod_m, surf, ghoul2[model_index].mSlist, activeSurfaces);
+				G2_FindRecursiveSurface(mod_m, surf, ghoul2[model_index].mSlist, active_surfaces);
 
 				// now generate the used bone list
 				CConstructBoneList	CBL(ghoul2[model_index].mSurfaceRoot,
@@ -462,13 +462,13 @@ qboolean G2_SetRootSurface(CGhoul2Info_v& ghoul2, const int model_index, const c
 				G2_ConstructUsedBoneList(CBL);
 
 				// now remove all procedural or override surfaces that refer to surfaces that arent on this list
-				G2_RemoveRedundantGeneratedSurfaces(ghoul2[model_index].mSlist, activeSurfaces);
+				G2_RemoveRedundantGeneratedSurfaces(ghoul2[model_index].mSlist, active_surfaces);
 
 				// now remove all bones that are pointing at bones that aren't active
 				G2_RemoveRedundantBoneOverrides(ghoul2[model_index].mBlist, active_bones);
 
 				// then remove all bolts that point at surfaces or bones that *arent* active.
-				G2_RemoveRedundantBolts(ghoul2[model_index].mBltlist, ghoul2[model_index].mSlist, activeSurfaces, active_bones);
+				G2_RemoveRedundantBolts(ghoul2[model_index].mBltlist, ghoul2[model_index].mSlist, active_surfaces, active_bones);
 
 				// then remove all models on this ghoul2 instance that use those bolts that are being removed.
 				for (int i=0; i<ghoul2.size(); i++)
@@ -489,7 +489,7 @@ qboolean G2_SetRootSurface(CGhoul2Info_v& ghoul2, const int model_index, const c
 				}
 
 				// remember to free what we used
-				Z_Free(activeSurfaces);
+				Z_Free(active_surfaces);
 				Z_Free(active_bones);
 
 				return (qtrue);

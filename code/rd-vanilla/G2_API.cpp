@@ -897,8 +897,7 @@ qboolean G2API_SetRootSurface(CGhoul2Info_v& ghl_info, const int model_index, co
 	return qfalse;
 }
 
-int G2API_AddSurface(CGhoul2Info* ghl_info, const int surface_number, const int poly_number, const float barycentric_i, const float barycentric_j,
-	const int lod)
+int G2API_AddSurface(CGhoul2Info* ghl_info, const int surface_number, const int poly_number, const float barycentric_i, const float barycentric_j, const int lod)
 {
 	if (G2_SetupModelPointers(ghl_info))
 	{

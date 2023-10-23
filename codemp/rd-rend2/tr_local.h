@@ -2131,6 +2131,14 @@ typedef struct model_s {
 		mdxmData_t* glm;				// type == MOD_MDXM
 		mdxaHeader_t* gla;				// type == MOD_MDXA
 	} data;
+	/*
+	Ghoul2 Insert Start
+	*/
+	mdxmHeader_t* mdxm;				// only if type == MOD_GL2M which is a GHOUL II Mesh file NOT a GHOUL II animation file
+	mdxaHeader_t* mdxa;				// only if type == MOD_GL2A which is a GHOUL II Animation file
+	/*
+	Ghoul2 Insert End
+	*/
 
 	int			 numLods;
 } model_t;

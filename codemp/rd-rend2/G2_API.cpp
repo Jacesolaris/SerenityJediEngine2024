@@ -770,11 +770,8 @@ qhandle_t G2API_PrecacheGhoul2Model(const char* file_name)
 {
 	if (G2_ShouldRegisterServer())
 		return RE_RegisterServerModel(file_name);
-	else
-		return RE_RegisterModel(file_name);
+	return RE_RegisterModel(file_name);
 }
-
-void CL_InitRef(void);
 
 // initialise all that needs to be on a new Ghoul II model
 int G2API_InitGhoul2Model(CGhoul2Info_v** ghoul2Ptr, const char* file_name, const int model_index, const qhandle_t custom_skin, const qhandle_t custom_shader, const int model_flags, const int lod_bias)
@@ -847,7 +844,7 @@ int G2API_InitGhoul2Model(CGhoul2Info_v** ghoul2Ptr, const char* file_name, cons
 
 qboolean G2API_SetLodBias(CGhoul2Info* ghl_info, const int lod_bias)
 {
-	if (ghl_info)
+	if (G2_SetupModelPointers(ghl_info))
 	{
 		ghl_info->mLodBias = lod_bias;
 		return qtrue;
@@ -855,12 +852,13 @@ qboolean G2API_SetLodBias(CGhoul2Info* ghl_info, const int lod_bias)
 	return qfalse;
 }
 
-void G2_SetSurfaceOnOffFromSkin(CGhoul2Info* ghl_info, qhandle_t render_skin);
+void G2_SetSurfaceOnOffFromSkin(CGhoul2Info* ghl_info, const qhandle_t render_skin);
+
 qboolean G2API_SetSkin(CGhoul2Info_v& ghoul2, const int model_index, const qhandle_t custom_skin, const qhandle_t render_skin)
 {
 	CGhoul2Info* ghl_info = &ghoul2[model_index];
 
-	if (ghl_info)
+	if (G2_SetupModelPointers(ghl_info))
 	{
 		ghl_info->mCustomSkin = custom_skin;
 		if (render_skin)
@@ -875,7 +873,7 @@ qboolean G2API_SetSkin(CGhoul2Info_v& ghoul2, const int model_index, const qhand
 
 qboolean G2API_SetShader(CGhoul2Info* ghl_info, const qhandle_t custom_shader)
 {
-	if (ghl_info)
+	if (G2_SetupModelPointers(ghl_info))
 	{
 		ghl_info->mCustomShader = custom_shader;
 		return qtrue;
@@ -885,7 +883,7 @@ qboolean G2API_SetShader(CGhoul2Info* ghl_info, const qhandle_t custom_shader)
 
 qboolean G2API_SetSurfaceOnOff(CGhoul2Info_v& ghoul2, const char* surface_name, const int flags)
 {
-	CGhoul2Info* ghl_info = NULL;
+	CGhoul2Info* ghl_info = nullptr;
 
 	if (ghoul2.size() > 0)
 	{
@@ -903,7 +901,7 @@ qboolean G2API_SetSurfaceOnOff(CGhoul2Info_v& ghoul2, const char* surface_name, 
 
 int G2API_GetSurfaceOnOff(CGhoul2Info* ghl_info, const char* surface_name)
 {
-	if (ghl_info)
+	if (G2_SetupModelPointers(ghl_info))
 	{
 		return G2_IsSurfaceOff(ghl_info, ghl_info->mSlist, surface_name);
 	}
@@ -920,7 +918,7 @@ qboolean G2API_SetRootSurface(CGhoul2Info_v& ghoul2, const int model_index, cons
 	return qfalse;
 }
 
-int G2API_AddSurface(CGhoul2Info* ghl_info, int surface_number, int poly_number, float barycentric_i, float barycentric_j, int lod)
+int G2API_AddSurface(CGhoul2Info* ghl_info, const int surface_number, const int poly_number, const float barycentric_i, const float barycentric_j, const int lod)
 {
 	if (G2_SetupModelPointers(ghl_info))
 	{
@@ -951,7 +949,7 @@ int G2API_GetParentSurface(CGhoul2Info* ghl_info, const int index)
 	return -1;
 }
 
-int G2API_GetSurfaceRenderStatus(CGhoul2Info_v& ghoul2, int model_index, const char* surface_name)
+int G2API_GetSurfaceRenderStatus(CGhoul2Info_v& ghoul2, const int model_index, const char* surface_name)
 {
 	CGhoul2Info* ghl_info = &ghoul2[model_index];
 
@@ -966,7 +964,7 @@ qboolean G2API_HasGhoul2ModelOnIndex(CGhoul2Info_v** ghlRemove, const int model_
 {
 	CGhoul2Info_v& ghl_info = **ghlRemove;
 
-	if (!ghl_info.size() || (ghl_info.size() <= model_index) || (ghl_info[model_index].mmodel_index == -1))
+	if (!ghl_info.size() || ghl_info.size() <= model_index || ghl_info[model_index].mmodel_index == -1)
 	{
 		return qfalse;
 	}
@@ -2646,8 +2644,8 @@ char* G2API_GetSurfaceName(CGhoul2Info_v& ghoul2, int model_index, int surfNumbe
 				Com_Error(ERR_DROP, "G2API_GetSurfaceName: Bad surf num (%i) on surf for instance %s.", surf->thisSurfaceIndex, ghl_info->mFileName);
 			}
 #endif
-			mdxmHierarchyOffsets_t* surfIndexes = (mdxmHierarchyOffsets_t*)((byte*)mdxm + sizeof(mdxmHeader_t));
-			surfInfo = (mdxmSurfHierarchy_t*)((byte*)surfIndexes + surfIndexes->offsets[surf->thisSurfaceIndex]);
+			mdxmHierarchyOffsets_t* surf_indexes = (mdxmHierarchyOffsets_t*)((byte*)mdxm + sizeof(mdxmHeader_t));
+			surfInfo = (mdxmSurfHierarchy_t*)((byte*)surf_indexes + surf_indexes->offsets[surf->thisSurfaceIndex]);
 			return surfInfo->name;
 		}
 	}

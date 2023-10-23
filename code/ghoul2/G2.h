@@ -53,7 +53,7 @@ int G2_AddSurface(CGhoul2Info* ghoul2, const int surface_number, const int poly_
 
 qboolean G2_RemoveSurface(surfaceInfo_v& slist, int index);
 
-const surfaceInfo_t* G2_FindOverrideSurface(int surface_num, const surfaceInfo_v& surface_list);
+const surfaceInfo_t* G2_FindOverrideSurface(const int surface_num, const surfaceInfo_v& surface_list);
 
 int G2_IsSurfaceLegal(const model_s* mod_m, const char* surface_name, uint32_t* flags);
 
@@ -154,7 +154,7 @@ qboolean G2API_RemoveGhoul2Model(CGhoul2Info_v& ghl_info, int model_index);
 qboolean G2API_SetSurfaceOnOff(CGhoul2Info* ghl_info, const char* surface_name, const int flags);
 qboolean G2API_SetRootSurface(CGhoul2Info_v& ghl_info, int model_index, const char* surface_name);
 qboolean G2API_RemoveSurface(CGhoul2Info* ghl_info, int index);
-int G2API_AddSurface(CGhoul2Info* ghl_info, int surface_number, int poly_number, float barycentric_i, float barycentric_j, int lod);
+int G2API_AddSurface(CGhoul2Info* ghl_info, const int surface_number, const int poly_number, const float barycentric_i, const float barycentric_j, const int lod);
 
 qboolean G2API_SetBoneAnim(CGhoul2Info* ghl_info, const char* bone_name, const int start_frame, const int end_frame, const int flags, const float anim_speed, const int acurrent_time, const float set_frame = -1, const int blend_time = -1);
 

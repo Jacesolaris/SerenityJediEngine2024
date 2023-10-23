@@ -664,7 +664,7 @@ qboolean G2API_SetLodBias(CGhoul2Info* ghl_info, const int lod_bias)
 	return qfalse;
 }
 
-void G2_SetSurfaceOnOffFromSkin(CGhoul2Info* ghl_info, qhandle_t render_skin);
+void G2_SetSurfaceOnOffFromSkin(CGhoul2Info* ghl_info, const qhandle_t render_skin);
 
 qboolean G2API_SetSkin(CGhoul2Info_v& ghoul2, const int model_index, const qhandle_t custom_skin, const qhandle_t render_skin)
 {
@@ -674,8 +674,7 @@ qboolean G2API_SetSkin(CGhoul2Info_v& ghoul2, const int model_index, const qhand
 	{
 		ghl_info->mCustomSkin = custom_skin;
 		if (render_skin)
-		{
-			//this is going to set the surfs on/off matching the skin file
+		{//this is going to set the surfs on/off matching the skin file
 			G2_SetSurfaceOnOffFromSkin(ghl_info, render_skin);
 		}
 
@@ -731,9 +730,7 @@ qboolean G2API_SetRootSurface(CGhoul2Info_v& ghoul2, const int model_index, cons
 	return qfalse;
 }
 
-int G2API_AddSurface(CGhoul2Info* ghl_info, const int surface_number, const int poly_number, const float barycentric_i,
-	const float barycentric_j,
-	const int lod)
+int G2API_AddSurface(CGhoul2Info* ghl_info, const int surface_number, const int poly_number, const float barycentric_i, const float barycentric_j, const int lod)
 {
 	if (G2_SetupModelPointers(ghl_info))
 	{
@@ -2366,8 +2363,8 @@ char* G2API_GetSurfaceName(CGhoul2Info_v& ghoul2, const int model_index, const i
 				Com_Error(ERR_DROP, "G2API_GetSurfaceName: Bad surf num (%i) on surf for instance %s.", surf->thisSurfaceIndex, ghl_info->mFileName);
 			}
 #endif
-			const auto surfIndexes = reinterpret_cast<mdxmHierarchyOffsets_t*>(reinterpret_cast<byte*>(mod->mdxm) + sizeof(mdxmHeader_t));
-			surf_info = reinterpret_cast<mdxmSurfHierarchy_t*>(reinterpret_cast<byte*>(surfIndexes) + surfIndexes->offsets[surf->thisSurfaceIndex]);
+			const auto surf_indexes = reinterpret_cast<mdxmHierarchyOffsets_t*>(reinterpret_cast<byte*>(mod->mdxm) + sizeof(mdxmHeader_t));
+			surf_info = reinterpret_cast<mdxmSurfHierarchy_t*>(reinterpret_cast<byte*>(surf_indexes) + surf_indexes->offsets[surf->thisSurfaceIndex]);
 			return surf_info->name;
 		}
 	}

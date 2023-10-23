@@ -489,18 +489,18 @@ void G2_TransformSurfaces(int surface_num, surfaceInfo_v& rootSList,
 	assert(current_model->data.glm && current_model->data.glm->header);
 	// back track and get the surfinfo struct for this surface
 	const mdxmSurface_t* surface = (mdxmSurface_t*)G2_FindSurface((void*)current_model, surface_num, lod);
-	const mdxmHierarchyOffsets_t* surfIndexes = (mdxmHierarchyOffsets_t*)((byte*)current_model->data.glm->header + sizeof(mdxmHeader_t));
-	const mdxmSurfHierarchy_t* surfInfo = (mdxmSurfHierarchy_t*)((byte*)surfIndexes + surfIndexes->offsets[surface->thisSurfaceIndex]);
+	const mdxmHierarchyOffsets_t* surf_indexes = (mdxmHierarchyOffsets_t*)((byte*)current_model->data.glm->header + sizeof(mdxmHeader_t));
+	const mdxmSurfHierarchy_t* surfInfo = (mdxmSurfHierarchy_t*)((byte*)surf_indexes + surf_indexes->offsets[surface->thisSurfaceIndex]);
 
 	// see if we have an override surface in the surface list
-	const surfaceInfo_t* surfOverride = G2_FindOverrideSurface(surface_num, rootSList);
+	const surfaceInfo_t* surf_override = G2_FindOverrideSurface(surface_num, rootSList);
 
 	// really, we should use the default flags for this surface unless it's been overriden
 	int off_flags = surfInfo->flags;
 
-	if (surfOverride)
+	if (surf_override)
 	{
-		off_flags = surfOverride->off_flags;
+		off_flags = surf_override->off_flags;
 	}
 	// if this surface is not off, add it to the shader render list
 	if (!off_flags)
@@ -1377,11 +1377,11 @@ static void G2_TraceSurfaces(CTraceSurface& TS)
 	assert(TS.current_model);
 	assert(TS.current_model->data.glm && TS.current_model->data.glm->header);
 	const mdxmSurface_t* surface = (mdxmSurface_t*)G2_FindSurface(TS.current_model, TS.surface_num, TS.lod);
-	const mdxmHierarchyOffsets_t* surfIndexes = (mdxmHierarchyOffsets_t*)((byte*)TS.current_model->data.glm->header + sizeof(mdxmHeader_t));
-	const mdxmSurfHierarchy_t* surfInfo = (mdxmSurfHierarchy_t*)((byte*)surfIndexes + surfIndexes->offsets[surface->thisSurfaceIndex]);
+	const mdxmHierarchyOffsets_t* surf_indexes = (mdxmHierarchyOffsets_t*)((byte*)TS.current_model->data.glm->header + sizeof(mdxmHeader_t));
+	const mdxmSurfHierarchy_t* surfInfo = (mdxmSurfHierarchy_t*)((byte*)surf_indexes + surf_indexes->offsets[surface->thisSurfaceIndex]);
 
 	// see if we have an override surface in the surface list
-	const surfaceInfo_t* surfOverride = G2_FindOverrideSurface(TS.surface_num, TS.rootSList);
+	const surfaceInfo_t* surf_override = G2_FindOverrideSurface(TS.surface_num, TS.rootSList);
 
 	// don't allow recursion if we've already hit a polygon
 	if (TS.hitOne)
@@ -1393,9 +1393,9 @@ static void G2_TraceSurfaces(CTraceSurface& TS)
 	int off_flags = surfInfo->flags;
 
 	// set the off flags if we have some
-	if (surfOverride)
+	if (surf_override)
 	{
-		off_flags = surfOverride->off_flags;
+		off_flags = surf_override->off_flags;
 	}
 
 	// if this surface is not off, try to hit it
@@ -1630,7 +1630,7 @@ void G2_GenerateWorldMatrix(const vec3_t angles, const vec3_t origin)
 }
 
 // go away and determine what the pointer for a specific surface definition within the model definition is
-void* G2_FindSurface(void* mod_t, int index, int lod)
+void* G2_FindSurface(void* mod_t, const int index, const int lod)
 {
 	// damn include file dependancies
 	model_t* mod = (model_t*)mod_t;
