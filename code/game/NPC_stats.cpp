@@ -4430,7 +4430,7 @@ void NPC_LoadParms() //jka version
 				totallen++;
 				marker++;
 			}
-			len = COM_CompressShader(buffer);
+			len = COM_Compress(buffer);
 
 			if (totallen + len >= MAX_NPC_DATA_SIZE)
 			{
@@ -4482,7 +4482,7 @@ void NPC_LoadParms1() //jko version
 				totallen++;
 				marker++;
 			}
-			len = COM_CompressShader(buffer);
+			len = COM_Compress(buffer);
 
 			if (totallen + len >= MAX_NPC_DATA_SIZE)
 			{
@@ -4533,7 +4533,7 @@ void NPC_LoadParms2() //mod version
 				totallen++;
 				marker++;
 			}
-			len = COM_CompressShader(buffer);
+			len = COM_Compress(buffer);
 
 			if (totallen + len >= MAX_NPC_DATA_SIZE)
 			{
@@ -4583,7 +4583,7 @@ void NPC_LoadParms3() //yav version
 				totallen++;
 				marker++;
 			}
-			len = COM_CompressShader(buffer);
+			len = COM_Compress(buffer);
 
 			if (totallen + len >= MAX_NPC_DATA_SIZE)
 			{
@@ -4634,7 +4634,7 @@ void NPC_LoadParms4() //eoc version
 				totallen++;
 				marker++;
 			}
-			len = COM_CompressShader(buffer);
+			len = COM_Compress(buffer);
 
 			if (totallen + len >= MAX_NPC_DATA_SIZE)
 			{

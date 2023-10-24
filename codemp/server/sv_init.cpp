@@ -559,6 +559,24 @@ void SV_SpawnServer(char* server, const qboolean killBots, const ForceReload_e e
 
 	SV_SendMapChange();
 
+	/*
+	Ghoul2 Insert Start
+	*/
+	// clear out those shaders, images and Models as long as this
+	// isnt a dedicated server.
+	/*
+	if ( !com_dedicated->integer )
+	{
+#ifndef DEDICATED
+		R_InitImages();
+
+		R_InitShaders();
+
+		R_ModelInit();
+#endif
+	}
+	else
+	*/
 	if (com_dedicated->integer)
 	{
 		re->SVModelInit();

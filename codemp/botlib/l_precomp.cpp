@@ -519,7 +519,7 @@ void PC_PrintDefine(define_t *define)
 // Returns:					-
 // Changes Globals:		-
 //============================================================================
-void PC_PrintDefinehashTable(define_t** definehash)
+void PC_PrintDefineHashTable(define_t** definehash)
 {
 	for (int i = 0; i < DEFINEHASHSIZE; i++)
 	{
@@ -530,7 +530,7 @@ void PC_PrintDefinehashTable(define_t** definehash)
 		} //end for
 		Log_Write("\n");
 	} //end for
-} //end of the function PC_PrintDefinehashTable
+} //end of the function PC_PrintDefineHashTable
 //============================================================================
 //
 // Parameter:				-
@@ -3089,7 +3089,7 @@ void FreeSource(source_t* source)
 	indent_t* indent;
 	define_t* nextdefine;
 
-	//PC_PrintDefinehashTable(source->definehash);
+	//PC_PrintDefineHashTable(source->definehash);
 	//free all the scripts
 	while (source->scriptstack)
 	{

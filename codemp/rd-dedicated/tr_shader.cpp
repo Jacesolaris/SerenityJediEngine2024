@@ -37,16 +37,16 @@ static texModInfo_t texMods[MAX_SHADER_STAGES][TR_MAX_TEXMODS];
 static shader_t* hashTable[FILE_HASH_SIZE];
 
 #define MAX_SHADERTEXT_HASH		2048
-static char** shaderTexthashTable[MAX_SHADERTEXT_HASH] = { nullptr };
+static char** shaderTextHashTable[MAX_SHADERTEXT_HASH] = { nullptr };
 
-void KillTheShaderhashTable()
+void KillTheShaderHashTable()
 {
-	memset(shaderTexthashTable, 0, sizeof shaderTexthashTable);
+	memset(shaderTextHashTable, 0, sizeof shaderTextHashTable);
 }
 
-qboolean ShaderhashTableExists()
+qboolean ShaderHashTableExists()
 {
-	if (shaderTexthashTable[0])
+	if (shaderTextHashTable[0])
 	{
 		return qtrue;
 	}
@@ -3025,11 +3025,11 @@ static const char* FindShaderInShaderText(const char* shadername)
 
 	const int hash = generateHashValue(shadername, MAX_SHADERTEXT_HASH);
 
-	if (shaderTexthashTable[hash])
+	if (shaderTextHashTable[hash])
 	{
-		for (int i = 0; shaderTexthashTable[hash][i]; i++)
+		for (int i = 0; shaderTextHashTable[hash][i]; i++)
 		{
-			p = shaderTexthashTable[hash][i];
+			p = shaderTextHashTable[hash][i];
 			token = COM_ParseExt(&p, qtrue);
 			if (!Q_stricmp(token, shadername))
 				return p;
@@ -3156,7 +3156,7 @@ most world construction surfaces.
 
 ===============
 */
-shader_t* R_FindShader(const char* name, const int* lightmap_index, const byte* styles, const qboolean mip_raw_image)
+shader_t* R_FindShader(const char* name, const int* lightmap_index, const byte* styles, qboolean mip_raw_image)
 {
 	char stripped_name[MAX_QPATH];
 	char file_name[MAX_QPATH];
@@ -3507,7 +3507,9 @@ shader_t* R_GetShaderByHandle(const qhandle_t h_shader)
 R_InitShaders
 ==================
 */
-void R_InitShaders(const qboolean server)
+void R_InitShaders(qboolean server)
 {
+	//Com_Printf ("Initializing Shaders\n" );
+
 	memset(hashTable, 0, sizeof hashTable);
 }

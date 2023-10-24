@@ -43,7 +43,6 @@ RE_RegisterSkin
 bool gServerSkinHack = false;
 
 shader_t* R_FindServerShader(const char* name, const int* lightmap_index, const byte* styles);
-
 static char* CommaParse(char** data_p);
 /*
 ===============
@@ -369,7 +368,7 @@ Mangled version of the above function to load .skin files on the server.
 qhandle_t RE_RegisterServerSkin(const char* name) {
 	if (ri->Cvar_VariableIntegerValue("cl_running") &&
 		ri->Com_TheHunkMarkHasBeenMade() &&
-		ShaderhashTableExists())
+		ShaderHashTableExists())
 	{ //If the client is running then we can go straight into the normal registerskin func
 		return RE_RegisterSkin(name);
 	}

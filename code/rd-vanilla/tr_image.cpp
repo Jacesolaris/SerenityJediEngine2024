@@ -70,8 +70,7 @@ static constexpr size_t numTextureModes = std::size(modes);
 return a hash value for the filename
 ================
 */
-long generateHashValue(const char* fname)
-{
+long generateHashValue(const char* fname) {
 	long hash = 0;
 	int i = 0;
 	while (fname[i] != '\0') {

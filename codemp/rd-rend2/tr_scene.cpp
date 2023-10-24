@@ -93,7 +93,7 @@ void R_AddPolygonSurfaces(const trRefdef_t* refdef) {
 
 	int i;
 	for (i = 0, poly = refdef->polys; i < refdef->numPolys; i++, poly++) {
-		shader_t* sh = R_GetShaderByHandle(poly->h_shader);
+		shader_t* sh = R_GetShaderByHandle(poly->hShader);
 		R_AddDrawSurf(
 			(surfaceType_t*)poly,
 			REFENTITYNUM_WORLD,
@@ -111,7 +111,7 @@ RE_AddPolyToScene
 
 =====================
 */
-void RE_AddPolyToScene(qhandle_t h_shader, int num_verts, const polyVert_t* verts, int numPolys) {
+void RE_AddPolyToScene(qhandle_t hShader, int num_verts, const polyVert_t* verts, int numPolys) {
 	srfPoly_t* poly;
 	int			i, j;
 	int			fogIndex;
@@ -132,7 +132,7 @@ void RE_AddPolyToScene(qhandle_t h_shader, int num_verts, const polyVert_t* vert
 
 		poly = &backEndData->polys[r_numpolys];
 		poly->surfaceType = SF_POLY;
-		poly->h_shader = h_shader;
+		poly->hShader = hShader;
 		poly->num_verts = num_verts;
 		poly->verts = &backEndData->polyVerts[r_numpolyverts];
 

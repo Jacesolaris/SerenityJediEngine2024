@@ -269,6 +269,11 @@ void SV_SpawnServer(const char* server, const ForceReload_e eForceReload, const 
 		SV_Startup();
 	}
 
+	// clear out those shaders, images and Models
+	/*R_InitImages();
+	R_InitShaders();
+	R_ModelInit();*/
+
 	re.SVModelInit();
 
 	// allocate the snapshot entities

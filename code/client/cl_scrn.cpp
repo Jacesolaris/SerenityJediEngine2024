@@ -45,6 +45,7 @@ extern cvar_t* cl_com_outcast;
 
 extern cvar_t* cl_com_rend2;
 
+
 /*
 ================
 SCR_DrawNamedPic

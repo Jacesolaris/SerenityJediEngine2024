@@ -144,6 +144,7 @@ void SV_AddServerCommand(client_t* client, const char* cmd) {
 	Q_strncpyz(client->reliableCommands[index], cmd, sizeof(client->reliableCommands[index]));
 }
 
+
 /*
 =================
 SV_SendServerCommand
@@ -186,6 +187,7 @@ void QDECL SV_SendServerCommand(client_t* cl, const char* fmt, ...) {
 		SV_AddServerCommand(client, (char*)message);
 	}
 }
+
 
 /*
 ==============================================================================
@@ -302,6 +304,7 @@ void SV_MasterShutdown(void) {
 	// when the master tries to poll the server, it won't respond, so
 	// it will be removed from the list
 }
+
 
 /*
 ==============================================================================
@@ -788,6 +791,7 @@ void SV_ConnectionlessPacket(netadr_t from, msg_t* msg)
 	}
 }
 
+
 //============================================================================
 
 /*
@@ -851,6 +855,7 @@ void SV_PacketEvent(netadr_t from, msg_t* msg) {
 	// send an out of band disconnect packet to it
 	NET_OutOfBandPrint(NS_SERVER, from, "disconnect");
 }
+
 
 /*
 ===================
@@ -954,6 +959,7 @@ void SV_CheckTimeouts(void) {
 		}
 	}
 }
+
 
 /*
 ==================

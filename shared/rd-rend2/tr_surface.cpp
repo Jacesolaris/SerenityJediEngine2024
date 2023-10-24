@@ -1294,7 +1294,7 @@ static void DoBoltSeg(vec3_t start, vec3_t end, vec3_t right, float radius)
 		VectorCopy(cur, old);
 		oldPerc = perc;
 	}
-	}
+}
 
 static void DoRailCore(const vec3_t start, const vec3_t end, const vec3_t up, const float len, const float span_width)
 {

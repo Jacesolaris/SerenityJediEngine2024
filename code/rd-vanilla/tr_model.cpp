@@ -51,7 +51,7 @@ using modelHash_t = struct modelHash_s
 };
 
 #define FILE_HASH_SIZE		1024
-modelHash_t* mhhashTable[FILE_HASH_SIZE];
+modelHash_t* mhHashTable[FILE_HASH_SIZE];
 
 /*
 Ghoul2 Insert End
@@ -516,8 +516,7 @@ Ghoul2 Insert Start
 return a hash value for the filename
 ================
 */
-static long generateHashValue(const char* fname, const int size)
-{
+static long generateHashValue(const char* fname, const int size) {
 	long hash = 0;
 	int i = 0;
 	while (fname[i] != '\0') {
@@ -538,10 +537,10 @@ void RE_InsertModelIntoHash(const char* name, const model_t* mod)
 	// insert this file into the hash table so we can look it up faster later
 	const auto mh = static_cast<modelHash_t*>(R_Hunk_Alloc(sizeof(modelHash_t), qtrue));
 
-	mh->next = mhhashTable[hash];	// I have the breakpoint triggered here where mhhashTable[986] would be assigned
+	mh->next = mhHashTable[hash];	// I have the breakpoint triggered here where mhHashTable[986] would be assigned
 	mh->handle = mod->index;
 	strcpy(mh->name, name);
-	mhhashTable[hash] = mh;
+	mhHashTable[hash] = mh;
 }
 /*
 Ghoul2 Insert End
@@ -585,7 +584,7 @@ static qhandle_t RE_RegisterModel_Actual(const char* name)
 	//
 	// see if the model is already loaded
 	//_
-	for (mh = mhhashTable[hash]; mh; mh = mh->next) {
+	for (mh = mhHashTable[hash]; mh; mh = mh->next) {
 		if (Q_stricmp(mh->name, name) == 0) {
 			if (tr.models[mh->handle]->type == MOD_BAD)
 			{
@@ -609,7 +608,7 @@ static qhandle_t RE_RegisterModel_Actual(const char* name)
 #endif
 		Com_sprintf(temp, MAX_QPATH, "*%d-0", tr.numBSPModels);
 		hash = generateHashValue(temp, FILE_HASH_SIZE);
-		for (mh = mhhashTable[hash]; mh; mh = mh->next)
+		for (mh = mhHashTable[hash]; mh; mh = mh->next)
 		{
 			if (Q_stricmp(mh->name, temp) == 0)
 			{
@@ -999,7 +998,7 @@ void R_ModelInit()
 	Ghoul2 Insert Start
 	*/
 
-	memset(mhhashTable, 0, sizeof mhhashTable);
+	memset(mhHashTable, 0, sizeof mhHashTable);
 	/*
 	Ghoul2 Insert End
 	*/

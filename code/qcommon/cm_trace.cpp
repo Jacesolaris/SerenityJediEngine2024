@@ -305,7 +305,7 @@ void CM_TestInLeaf(traceWork_t* tw, cLeaf_t* leaf, clipMap_t* local)
 			}
 		}
 	}
-	}
+}
 
 /*
 ==================
@@ -614,7 +614,7 @@ void CM_TraceToLeaf(traceWork_t * tw, cLeaf_t * leaf, clipMap_t * local)
 			}
 		}
 	}
-	}
+}
 
 //=========================================================================================
 

@@ -422,7 +422,7 @@ static GLuint GLSL_CompileGPUShader(
 	return shader;
 }
 
-static const char* GLSL_GetShaderFileSuffix(GLenum shaderType)
+static const char* GLSL_Getshader_filesuffix(GLenum shaderType)
 {
 	static struct
 	{
@@ -452,7 +452,7 @@ static size_t GLSL_LoadGPUShaderSource(
 	char* dest,
 	int destSize)
 {
-	const char* shaderSuffix = GLSL_GetShaderFileSuffix(shaderType);
+	const char* shaderSuffix = GLSL_Getshader_filesuffix(shaderType);
 	assert(shaderSuffix != nullptr);
 
 	char filename[MAX_QPATH];

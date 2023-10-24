@@ -393,7 +393,7 @@ public:
 int COM_GetCurrentParseLine(void);
 char* COM_Parse(const char** data_p);
 char* COM_ParseExt(const char** data_p, qboolean allow_line_breaks);
-int COM_CompressShader(char* data_p);
+int COM_Compress(char* data_p);
 qboolean COM_ParseString(const char** data, const char** s);
 qboolean COM_ParseInt(const char** data, int* i);
 qboolean COM_ParseFloat(const char** data, float* f);

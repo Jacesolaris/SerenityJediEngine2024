@@ -436,7 +436,7 @@ static void GenerateSharedVerticesIndexListSlow(int piTriList_in_and_out[], cons
 static void GenerateSharedVerticesIndexList(int piTriList_in_and_out[], const SMikkTSpaceContext* pContext, const int iNrTrianglesIn)
 {
 	// Generate bounding box
-	int* pihashTable = NULL, * piHashCount = NULL, * piHashOffsets = NULL, * piHashCount2 = NULL;
+	int* piHashTable = NULL, * piHashCount = NULL, * piHashOffsets = NULL, * piHashCount2 = NULL;
 	STmpVert* pTmpVert = NULL;
 	int i = 0, iChannel = 0, k = 0, e = 0;
 	int iMaxCount = 0;
@@ -472,14 +472,14 @@ static void GenerateSharedVerticesIndexList(int piTriList_in_and_out[], const SM
 	}
 
 	// make allocations
-	pihashTable = (int*)malloc(sizeof(int) * iNrTrianglesIn * 3);
+	piHashTable = (int*)malloc(sizeof(int) * iNrTrianglesIn * 3);
 	piHashCount = (int*)malloc(sizeof(int) * g_iCells);
 	piHashOffsets = (int*)malloc(sizeof(int) * g_iCells);
 	piHashCount2 = (int*)malloc(sizeof(int) * g_iCells);
 
-	if (pihashTable == NULL || piHashCount == NULL || piHashOffsets == NULL || piHashCount2 == NULL)
+	if (piHashTable == NULL || piHashCount == NULL || piHashOffsets == NULL || piHashCount2 == NULL)
 	{
-		if (pihashTable != NULL) free(pihashTable);
+		if (piHashTable != NULL) free(piHashTable);
 		if (piHashCount != NULL) free(piHashCount);
 		if (piHashOffsets != NULL) free(piHashOffsets);
 		if (piHashCount2 != NULL) free(piHashCount2);
@@ -514,7 +514,7 @@ static void GenerateSharedVerticesIndexList(int piTriList_in_and_out[], const SM
 		int* pTable = NULL;
 
 		assert(piHashCount2[iCell] < piHashCount[iCell]);
-		pTable = &pihashTable[piHashOffsets[iCell]];
+		pTable = &piHashTable[piHashOffsets[iCell]];
 		pTable[piHashCount2[iCell]] = i;	// vertex i has been inserted.
 		++piHashCount2[iCell];
 	}
@@ -533,7 +533,7 @@ static void GenerateSharedVerticesIndexList(int piTriList_in_and_out[], const SM
 	for (k = 0; k < g_iCells; k++)
 	{
 		// extract table of cell k and amount of entries in it
-		int* pTable = &pihashTable[piHashOffsets[k]];
+		int* pTable = &piHashTable[piHashOffsets[k]];
 		const int iEntries = piHashCount[k];
 		if (iEntries < 2) continue;
 
@@ -553,7 +553,7 @@ static void GenerateSharedVerticesIndexList(int piTriList_in_and_out[], const SM
 	}
 
 	if (pTmpVert != NULL) { free(pTmpVert); }
-	free(pihashTable);
+	free(piHashTable);
 	free(piHashCount);
 	free(piHashOffsets);
 }

@@ -91,8 +91,7 @@ textureMode_t modes[] = {
 return a hash value for the filename
 ================
 */
-static long generateHashValue(const char* fname)
-{
+static long generateHashValue(const char* fname) {
 	int		i;
 	long	hash;
 	char	letter;

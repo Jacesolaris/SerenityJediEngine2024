@@ -1661,7 +1661,7 @@ typedef struct drawSurf_s {
 typedef struct srfPoly_s {
 	surfaceType_t	surfaceType;
 	struct srfPoly_s* next;
-	qhandle_t		h_shader;
+	qhandle_t		hShader;
 	int				fogIndex;
 	int				num_verts;
 	polyVert_t* verts;
@@ -2973,7 +2973,7 @@ void	R_LoadHDRImage(const char* filename, byte** data, int* width, int* height);
 void	R_DeleteTextures(void);
 int		R_SumOfUsedImages(void);
 void	R_InitSkins(void);
-skin_t* R_GetSkinByHandle(qhandle_t h_skin);
+skin_t* R_GetSkinByHandle(qhandle_t hSkin);
 
 int R_ComputeLOD(trRefEntity_t* ent);
 
@@ -2989,13 +2989,12 @@ extern const int lightmapsVertex[MAXLIGHTMAPS];
 extern const int lightmapsFullBright[MAXLIGHTMAPS];
 extern const byte stylesDefault[MAXLIGHTMAPS];
 
-shader_t* R_FindShader(const char* name, const int* lightmap_index, const byte* styles, const qboolean mip_raw_image);
-
-shader_t* R_GetShaderByHandle(const qhandle_t h_shader);
+shader_t* R_FindShader(const char* name, const int* lightmapIndexes, const byte* styles, qboolean mipRawImage);
+shader_t* R_GetShaderByHandle(qhandle_t hShader);
 shader_t* R_FindShaderByName(const char* name);
-void R_InitShaders(const qboolean server);
-void R_ShaderList_f();
-void R_RemapShader(const char* oldShader, const char* newShader, const char* time_offset);
+void		R_InitShaders(qboolean server);
+void		R_ShaderList_f(void);
+void    R_RemapShader(const char* oldShader, const char* newShader, const char* time_offset);
 shader_t* R_CreateShaderFromTextureBundle(
 	const char* name,
 	const textureBundle_t* bundle,
@@ -3312,9 +3311,9 @@ void RE_ClearScene(void);
 void RE_AddRefEntityToScene(const refEntity_t* ent);
 #ifndef REND2_SP
 void RE_AddMiniRefEntityToScene(const miniRefEntity_t* miniRefEnt);
-void RE_AddPolyToScene(qhandle_t h_shader, int num_verts, const polyVert_t* verts, int num = 1);
+void RE_AddPolyToScene(qhandle_t hShader, int num_verts, const polyVert_t* verts, int num = 1);
 #else
-void RE_AddPolyToScene(qhandle_t h_shader, int num_verts, const polyVert_t* verts);
+void RE_AddPolyToScene(qhandle_t hShader, int num_verts, const polyVert_t* verts);
 #endif
 void RE_AddLightToScene(const vec3_t org, float intensity, float r, float g, float b);
 void RE_AddAdditiveLightToScene(const vec3_t org, float intensity, float r, float g, float b);
@@ -3728,9 +3727,9 @@ qhandle_t R_BeginTimedBlockCmd(const char* name);
 void R_EndTimedBlockCmd(qhandle_t timerHandle);
 
 void RE_SetColor(const float* rgba);
-void RE_StretchPic(float x, float y, float w, float h, float s1, float t1, float s2, float t2, qhandle_t h_shader);
-void RE_RotatePic(float x, float y, float w, float h, float s1, float t1, float s2, float t2, float a, qhandle_t h_shader);
-void RE_RotatePic2(float x, float y, float w, float h, float s1, float t1, float s2, float t2, float a, qhandle_t h_shader);
+void RE_StretchPic(float x, float y, float w, float h, float s1, float t1, float s2, float t2, qhandle_t hShader);
+void RE_RotatePic(float x, float y, float w, float h, float s1, float t1, float s2, float t2, float a, qhandle_t hShader);
+void RE_RotatePic2(float x, float y, float w, float h, float s1, float t1, float s2, float t2, float a, qhandle_t hShader);
 #ifdef REND2_SP
 void RE_LAGoggles(void);
 void RE_Scissor(float x, float y, float w, float h);
@@ -3772,12 +3771,12 @@ void R_LoadPackedMaterialImage(shaderStage_t* stage, const char* packedImageName
 image_t* R_BuildSDRSpecGlossImage(shaderStage_t* stage, const char* specImageName, int flags);
 qhandle_t RE_RegisterShader(const char* name);
 qhandle_t RE_RegisterShaderNoMip(const char* name);
-const char* RE_ShaderNameFromIndex(const int index);
+const char* RE_ShaderNameFromIndex(int index);
 image_t* R_CreateImage(const char* name, byte* pic, int width, int height, imgType_t type, int flags, int internalFormat);
 
 float ProjectRadius(float r, vec3_t location);
 void RE_RegisterModels_StoreShaderRequest(const char* psModelFileName, const char* psShaderName, int* piShaderIndexPoke);
-qboolean ShaderhashTableExists(void);
+qboolean ShaderHashTableExists(void);
 void R_ImageLoader_Init(void);
 
 class Allocator;

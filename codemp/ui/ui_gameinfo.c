@@ -383,7 +383,7 @@ static void UI_LoadBotsFromFile(char* filename) {
 
 	trap->FS_Close(f);
 
-	COM_CompressShader(buf);
+	COM_Compress(buf);
 
 	ui_numBots += UI_ParseInfos(buf, MAX_BOTS - ui_numBots, &ui_botInfos[ui_numBots]);
 }

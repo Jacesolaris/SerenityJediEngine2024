@@ -637,7 +637,7 @@ int		COM_GetCurrentParseLine();
 const char* SkipWhitespace(const char* data, qboolean* hasNewLines);
 char* COM_Parse(const char** data_p);
 char* COM_ParseExt(const char** data_p, qboolean allow_line_breaks);
-int		COM_CompressShader(char* data_p);
+int		COM_Compress(char* data_p);
 void	COM_ParseError(char* format, ...);
 void	COM_ParseWarning(char* format, ...);
 qboolean COM_ParseString(const char** data, const char** s);
