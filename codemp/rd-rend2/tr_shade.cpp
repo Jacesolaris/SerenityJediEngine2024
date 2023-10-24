@@ -153,7 +153,7 @@ void RB_BeginSurface(shader_t* shader, int fogNum, int cubemapIndex) {
 	tess.externalIBO = nullptr;
 	tess.useInternalVBO = qtrue;
 
-	tess.shaderTime = backEnd.refdef.floatTime - tess.shader->timeOffset;
+	tess.shaderTime = backEnd.refdef.floatTime - tess.shader->time_offset;
 	if (tess.shader->clampTime && tess.shaderTime >= tess.shader->clampTime) {
 		tess.shaderTime = tess.shader->clampTime;
 	}

@@ -352,7 +352,7 @@ void RB_BeginSurface(shader_t* shader, const int fogNum) {
 	tess.numPasses = state->numUnfoggedPasses;
 	tess.currentStageIteratorFunc = shader->sky ? RB_StageIteratorSky : RB_StageIteratorGeneric;
 
-	tess.shaderTime = backEnd.refdef.floatTime - tess.shader->timeOffset;
+	tess.shaderTime = backEnd.refdef.floatTime - tess.shader->time_offset;
 	if (tess.shader->clampTime && tess.shaderTime >= tess.shader->clampTime) {
 		tess.shaderTime = tess.shader->clampTime;
 	}

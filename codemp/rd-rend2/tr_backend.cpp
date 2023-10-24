@@ -1172,7 +1172,7 @@ static void RB_PrepareForEntity(int entity_num, float originalTime)
 
 	// we have to reset the shaderTime as well otherwise image animations on
 	// the world (like water) continue with the wrong frame
-	tess.shaderTime = backEnd.refdef.floatTime - tess.shader->timeOffset;
+	tess.shaderTime = backEnd.refdef.floatTime - tess.shader->time_offset;
 }
 
 static void RB_SubmitDrawSurfsForDepthFill(
@@ -2444,7 +2444,7 @@ void RB_AddShaderToShaderInstanceUBO(shader_t* shader)
 		shaderInstanceBlock.deformParams0,
 		shaderInstanceBlock.deformParams1);
 	shaderInstanceBlock.portalRange = shader->portalRange;
-	shaderInstanceBlock.time = -shader->timeOffset;
+	shaderInstanceBlock.time = -shader->time_offset;
 
 	shader->ShaderInstanceUboOffset = RB_AddShaderInstanceBlock((void*)&shaderInstanceBlock);
 }

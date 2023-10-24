@@ -415,7 +415,8 @@ because otherwise shadows from different body parts would
 overlap and double darken.
 =================
 */
-void RB_ShadowFinish() {
+void RB_ShadowFinish()
+{
 	if (r_shadows->integer != 2) {
 		return;
 	}
@@ -439,21 +440,13 @@ void RB_ShadowFinish() {
 		qglDisable(GL_CLIP_PLANE0);
 	}
 	GL_Cull(CT_TWO_SIDED);
-	//qglDisable (GL_CULL_FACE);
 
 	GL_Bind(tr.whiteImage);
 
 	qglPushMatrix();
 	qglLoadIdentity();
 
-	//	qglColor3f( 0.6f, 0.6f, 0.6f );
-	//	GL_State( GLS_DEPTHMASK_TRUE | GLS_SRCBLEND_DST_COLOR | GLS_DSTBLEND_ZERO );
-
-	//	qglColor3f( 1, 0, 0 );
-	//	GL_State( GLS_DEPTHMASK_TRUE | GLS_SRCBLEND_ONE | GLS_DSTBLEND_ZERO );
-
 	qglColor4f(0.0f, 0.0f, 0.0f, 0.5f);
-	//GL_State( GLS_DEPTHMASK_TRUE | GLS_SRCBLEND_SRC_ALPHA | GLS_DSTBLEND_ONE_MINUS_SRC_ALPHA );
 	GL_State(GLS_SRCBLEND_SRC_ALPHA | GLS_DSTBLEND_ONE_MINUS_SRC_ALPHA);
 
 	qglBegin(GL_QUADS);

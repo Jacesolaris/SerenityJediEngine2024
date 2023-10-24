@@ -47,7 +47,7 @@ using modelHash_t = struct modelHash_s
 };
 
 #define FILE_HASH_SIZE		1024
-static	modelHash_t* mhHashTable[FILE_HASH_SIZE];
+static	modelHash_t* mhhashTable[FILE_HASH_SIZE];
 
 /*
 Ghoul2 Insert End
@@ -603,7 +603,8 @@ Ghoul2 Insert Start
 return a hash value for the filename
 ================
 */
-static long generateHashValue(const char* fname, const int size) {
+static long generateHashValue(const char* fname, const int size)
+{
 	long hash = 0;
 	int i = 0;
 	while (fname[i] != '\0') {
@@ -624,10 +625,10 @@ void RE_InsertModelIntoHash(const char* name, const model_t* mod)
 	// insert this file into the hash table so we can look it up faster later
 	const auto mh = static_cast<modelHash_t*>(Hunk_Alloc(sizeof(modelHash_t), h_low));
 
-	mh->next = mhHashTable[hash];
+	mh->next = mhhashTable[hash];
 	mh->handle = mod->index;
 	strcpy(mh->name, name);
-	mhHashTable[hash] = mh;
+	mhhashTable[hash] = mh;
 }
 /*
 Ghoul2 Insert End
@@ -1005,7 +1006,7 @@ qhandle_t RE_RegisterServerModel(const char* name) {
 	//
 	// see if the model is already loaded
 	//
-	for (const modelHash_t* mh = mhHashTable[hash]; mh; mh = mh->next) {
+	for (const modelHash_t* mh = mhhashTable[hash]; mh; mh = mh->next) {
 		if (Q_stricmp(mh->name, name) == 0) {
 			return mh->handle;
 		}
@@ -1165,7 +1166,7 @@ static qhandle_t RE_RegisterModel_Actual(const char* name) {
 	//
 	// see if the model is already loaded
 	//
-	for (mh = mhHashTable[hash]; mh; mh = mh->next) {
+	for (mh = mhhashTable[hash]; mh; mh = mh->next) {
 		if (Q_stricmp(mh->name, name) == 0) {
 			return mh->handle;
 		}
@@ -1179,7 +1180,7 @@ static qhandle_t RE_RegisterModel_Actual(const char* name) {
 		RE_LoadWorldMap_Actual(va("maps/%s.bsp", name + 1), tr.bspModels[tr.numBSPModels - 1], tr.numBSPModels);
 		Com_sprintf(temp, MAX_QPATH, "*%d-0", tr.numBSPModels);
 		hash = generateHashValue(temp, FILE_HASH_SIZE);
-		for (mh = mhHashTable[hash]; mh; mh = mh->next)
+		for (mh = mhhashTable[hash]; mh; mh = mh->next)
 		{
 			if (Q_stricmp(mh->name, temp) == 0)
 			{
@@ -1576,18 +1577,18 @@ void R_ModelInit(void)
 
 	// leave a space for NULL model
 	tr.numModels = 0;
-	memset(mhHashTable, 0, sizeof mhHashTable);
+	memset(mhhashTable, 0, sizeof mhhashTable);
 
 	model_t* mod = R_AllocModel();
 	mod->type = MOD_BAD;
 }
 
-extern void KillTheShaderHashTable();
+extern void KillTheShaderhashTable();
 void RE_HunkClearCrap(void)
 { //get your dirty sticky assets off me, you damn dirty hunk!
-	KillTheShaderHashTable();
+	KillTheShaderhashTable();
 	tr.numModels = 0;
-	memset(mhHashTable, 0, sizeof mhHashTable);
+	memset(mhhashTable, 0, sizeof mhhashTable);
 	tr.numShaders = 0;
 	tr.numSkins = 0;
 }

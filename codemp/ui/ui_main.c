@@ -1152,7 +1152,7 @@ char* GetMenuBuffer(const char* filename)
 	trap->FS_Read(buf, len, f);
 	buf[len] = 0;
 	trap->FS_Close(f);
-	//COM_Compress(buf);
+	//COM_CompressShader(buf);
 	return buf;
 }
 

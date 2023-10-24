@@ -37,16 +37,16 @@ static texModInfo_t texMods[MAX_SHADER_STAGES][TR_MAX_TEXMODS];
 static shader_t* hashTable[FILE_HASH_SIZE];
 
 #define MAX_SHADERTEXT_HASH		2048
-static char** shaderTextHashTable[MAX_SHADERTEXT_HASH] = { nullptr };
+static char** shaderTexthashTable[MAX_SHADERTEXT_HASH] = { nullptr };
 
-void KillTheShaderHashTable()
+void KillTheShaderhashTable()
 {
-	memset(shaderTextHashTable, 0, sizeof shaderTextHashTable);
+	memset(shaderTexthashTable, 0, sizeof shaderTexthashTable);
 }
 
-qboolean ShaderHashTableExists()
+qboolean ShaderhashTableExists()
 {
-	if (shaderTextHashTable[0])
+	if (shaderTexthashTable[0])
 	{
 		return qtrue;
 	}
@@ -179,7 +179,7 @@ void R_RemapShader(const char* shader_name, const char* new_shader_name, const c
 	}
 	if (time_offset)
 	{
-		sh2->timeOffset = atof(time_offset);
+		sh2->time_offset = atof(time_offset);
 	}
 }
 
@@ -3025,11 +3025,11 @@ static const char* FindShaderInShaderText(const char* shadername)
 
 	const int hash = generateHashValue(shadername, MAX_SHADERTEXT_HASH);
 
-	if (shaderTextHashTable[hash])
+	if (shaderTexthashTable[hash])
 	{
-		for (int i = 0; shaderTextHashTable[hash][i]; i++)
+		for (int i = 0; shaderTexthashTable[hash][i]; i++)
 		{
-			p = shaderTextHashTable[hash][i];
+			p = shaderTexthashTable[hash][i];
 			token = COM_ParseExt(&p, qtrue);
 			if (!Q_stricmp(token, shadername))
 				return p;
@@ -3156,7 +3156,7 @@ most world construction surfaces.
 
 ===============
 */
-shader_t* R_FindShader(const char* name, const int* lightmap_index, const byte* styles, qboolean mip_raw_image)
+shader_t* R_FindShader(const char* name, const int* lightmap_index, const byte* styles, const qboolean mip_raw_image)
 {
 	char stripped_name[MAX_QPATH];
 	char file_name[MAX_QPATH];
@@ -3507,9 +3507,7 @@ shader_t* R_GetShaderByHandle(const qhandle_t h_shader)
 R_InitShaders
 ==================
 */
-void R_InitShaders(qboolean server)
+void R_InitShaders(const qboolean server)
 {
-	//Com_Printf ("Initializing Shaders\n" );
-
 	memset(hashTable, 0, sizeof hashTable);
 }

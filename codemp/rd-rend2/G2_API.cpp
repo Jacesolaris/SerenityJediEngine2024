@@ -756,7 +756,7 @@ qboolean G2_ShouldRegisterServer(void)
 	if (currentVM && currentVM->slot == VM_GAME)
 	{
 		if (ri->Cvar_VariableIntegerValue("cl_running") &&
-			ri->Com_TheHunkMarkHasBeenMade() && ShaderHashTableExists())
+			ri->Com_TheHunkMarkHasBeenMade() && ShaderhashTableExists())
 		{ //if the hunk has been marked then we are now loading client assets so don't load on server.
 			return qfalse;
 		}

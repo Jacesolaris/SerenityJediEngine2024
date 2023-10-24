@@ -3539,7 +3539,7 @@ void NPC_LoadParms(void)
 			trap->FS_Read(npcParseBuffer, len, f);
 			npcParseBuffer[len] = 0;
 
-			len = COM_Compress(npcParseBuffer);
+			len = COM_CompressShader(npcParseBuffer);
 
 			strcat(marker, npcParseBuffer);
 			strcat(marker, "\n");

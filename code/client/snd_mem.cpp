@@ -791,7 +791,7 @@ static qboolean S_LoadSound_Actual(sfx_t* sfx)
 					// won't return if fails
 
 					{
-						const auto pbUnpackBuffer = static_cast<byte*>(Z_Malloc(iRawp_CmdataSize + 10 + 2304 /* <g> */,TAG_TEMP_WORKSPACE, qfalse));
+						const auto pbUnpackBuffer = static_cast<byte*>(Z_Malloc(iRawp_CmdataSize + 10 + 2304 /* <g> */, TAG_TEMP_WORKSPACE, qfalse));
 						const int iResultBytes = MP3_UnpackRawPCM(sLoadName, data, size, pbUnpackBuffer, qfalse);
 
 						if (iResultBytes != iRawp_CmdataSize)

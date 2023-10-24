@@ -12484,7 +12484,7 @@ CheckTrail:
 						default:
 							VectorSet(rgb1, 0.0f, 64.0f, 255.0f);
 							break;
-					}
+						}
 
 						//Here we will use the happy process of filling a struct in with arguments and passing it to a trap function
 						//so that we can take the struct and fill in an actual CTrail type using the data within it once we get it
@@ -12643,16 +12643,16 @@ CheckTrail:
 
 							trap->FX_AddPrimitive(&fx);
 						}
+					}
 				}
 			}
-		}
 
 			// we must always do this, even if we aren't active..otherwise we won't know where to pick up from
 			VectorCopy(org, saber_trail->base);
 			VectorMA(end, 3.0f, axis[0], saber_trail->tip);
 			saber_trail->lastTime = cg.time;
+		}
 	}
-}
 	else
 	{
 		// Use the supremely hacky SFX Sabers.
@@ -13391,7 +13391,7 @@ JustDoIt:
 			}
 		}
 	}
-	}
+}
 
 int CG_IsMindTricked(const int trick_index1, const int trick_index2, const int trick_index3, const int trick_index4,
 	const int client)
@@ -17255,11 +17255,11 @@ void CG_Player(centity_t* cent)
 #ifdef _DEBUG
 			Com_Printf("Clientinfo instance was valid, duplicating for cent\n");
 #endif
-				trap->G2API_DuplicateGhoul2Instance(ci->ghoul2Model, &cent->ghoul2);
+			trap->G2API_DuplicateGhoul2Instance(ci->ghoul2Model, &cent->ghoul2);
 
-				//Attach the instance to this entity num so we can make use of client-server
-				//shared operations if possible.
-				trap->G2API_AttachInstanceToEntNum(cent->ghoul2, cent->currentState.number, qfalse);
+			//Attach the instance to this entity num so we can make use of client-server
+			//shared operations if possible.
+			trap->G2API_AttachInstanceToEntNum(cent->ghoul2, cent->currentState.number, qfalse);
 
 			if (trap->G2API_AddBolt(cent->ghoul2, 0, "face") == -1)
 			{
@@ -17269,9 +17269,9 @@ void CG_Player(centity_t* cent)
 
 			cent->localAnimIndex = CG_G2SkelForModel(cent->ghoul2);
 			cent->eventAnimIndex = CG_G2EvIndexForModel(cent->ghoul2, cent->localAnimIndex);
-	}
+		}
 		return;
-}
+	}
 
 	if (ci->superSmoothTime)
 	{
@@ -19381,7 +19381,7 @@ stillDoSaber:
 	{
 		BG_SI_SetLengthGradual(&ci->saber[0], cg.time);
 		BG_SI_SetLengthGradual(&ci->saber[1], cg.time);
-}
+	}
 
 	if (draw_player_saber)
 	{
@@ -19485,8 +19485,8 @@ stillDoSaber:
 			}
 
 			l++;
-					}
-				}
+		}
+	}
 
 	if (cent->currentState.saberInFlight && !cent->currentState.saberentity_num)
 	{

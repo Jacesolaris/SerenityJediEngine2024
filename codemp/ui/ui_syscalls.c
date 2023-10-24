@@ -331,8 +331,8 @@ void trap_CIN_DrawCinematic(int handle) {
 void trap_CIN_SetExtents(int handle, int x, int y, int w, int h) {
 	Q_syscall(UI_CIN_SETEXTENTS, handle, x, y, w, h);
 }
-void trap_R_RemapShader(const char* oldShader, const char* newShader, const char* timeOffset) {
-	Q_syscall(UI_R_REMAP_SHADER, oldShader, newShader, timeOffset);
+void trap_R_RemapShader(const char* oldShader, const char* newShader, const char* time_offset) {
+	Q_syscall(UI_R_REMAP_SHADER, oldShader, newShader, time_offset);
 }
 int trap_SP_GetNumLanguages(void) {
 	return Q_syscall(UI_SP_GETNUMLANGUAGES);

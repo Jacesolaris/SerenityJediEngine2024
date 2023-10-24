@@ -246,7 +246,7 @@ typedef enum
 struct goreEnumShader_t
 {
 	goreEnum_t		shaderEnum;
-	char			shaderName[MAX_QPATH];
+	char			shader_name[MAX_QPATH];
 };
 
 struct SSkinGoreData

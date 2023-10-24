@@ -333,7 +333,7 @@ typedef struct uiImport_s {
 	qhandle_t(*R_RegisterSkin)						(const char* name);
 	qhandle_t(*R_RegisterShaderNoMip)				(const char* name);
 	qhandle_t(*R_RegisterFont)						(const char* fontName);
-	void			(*R_RemapShader)						(const char* oldShader, const char* newShader, const char* timeOffset);
+	void			(*R_RemapShader)						(const char* oldShader, const char* newShader, const char* time_offset);
 	void			(*R_RenderScene)						(const refdef_t* fd);
 	void			(*R_SetColor)							(const float* rgba);
 	void			(*R_ShaderNameFromIndex)				(char* name, int index);

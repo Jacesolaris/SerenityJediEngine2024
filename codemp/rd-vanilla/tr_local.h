@@ -474,7 +474,7 @@ using shader_t = struct shader_s {
 	shaderStage_t* stages;
 
 	float clampTime;                                  // time this shader is clamped to
-	float timeOffset;                                 // current time offset for this shader
+	float time_offset;                                 // current time offset for this shader
 
 	// True if this shader has a stage with glow in it (just an optimization).
 	bool hasGlow;
@@ -1373,16 +1373,17 @@ extern	const byte	stylesDefault[MAXLIGHTMAPS];
 qhandle_t RE_RegisterShaderLightMap(const char* name, const int* lightmap_index, const byte* styles);
 qhandle_t		 RE_RegisterShader(const char* name);
 qhandle_t		 RE_RegisterShaderNoMip(const char* name);
-const char* RE_ShaderNameFromIndex(int index);
+const char* RE_ShaderNameFromIndex(const int index);
 qhandle_t RE_RegisterShaderFromImage(const char* name, const int* lightmap_index, const byte* styles, image_t* image);
 
-shader_t* R_FindShader(const char* name, const int* lightmap_index, const byte* styles, qboolean mip_raw_image);
-shader_t* R_GetShaderByHandle(qhandle_t h_shader);
+shader_t* R_FindShader(const char* name, const int* lightmap_index, const byte* styles, const qboolean mip_raw_image);
+
+shader_t* R_GetShaderByHandle(const qhandle_t h_shader);
 shader_t* R_GetShaderByState(int index, long* cycleTime);
 shader_t* R_FindShaderByName(const char* name);
-void		R_InitShaders(qboolean server);
-void		R_ShaderList_f();
-void    R_RemapShader(const char* shader_name, const char* new_shader_name, const char* time_offset);
+void R_InitShaders(const qboolean server);
+void R_ShaderList_f();
+void R_RemapShader(const char* shader_name, const char* new_shader_name, const char* time_offset);
 
 //
 // tr_arb.c
@@ -1850,4 +1851,4 @@ void RB_DrawSurfaceSprites(shaderStage_t* stage, shaderCommands_t* input);
 
 extern refimport_t* ri;
 
-qboolean ShaderHashTableExists();
+qboolean ShaderhashTableExists();

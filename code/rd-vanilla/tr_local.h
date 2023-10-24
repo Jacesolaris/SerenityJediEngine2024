@@ -35,6 +35,11 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 using glIndex_t = unsigned int;
 
 extern refimport_t ri;
+typedef enum {
+	h_high,
+	h_low,
+	h_dontcare
+} ha_pref;
 
 // 13 bits
 // can't be increased without changing bit packing for drawsurfs
@@ -445,7 +450,7 @@ using shader_t = struct shader_s {
 	short		numUnfoggedPasses;
 	shaderStage_t* stages;
 
-	float			timeOffset;                                 // current time offset for this shader
+	float			time_offset;                                 // current time offset for this shader
 
 	// True if this shader has a stage with glow in it (just an optimization).
 	bool hasGlow;
@@ -1294,10 +1299,11 @@ extern	const byte	stylesDefault[MAXLIGHTMAPS];
 qhandle_t		 RE_RegisterShader(const char* name);
 qhandle_t		 RE_RegisterShaderNoMip(const char* name);
 
-shader_t* R_FindShader(const char* name, const int* lightmap_index, const byte* styles, qboolean mip_raw_image);
-shader_t* R_GetShaderByHandle(qhandle_t h_shader);
-void		R_InitShaders();
-void		R_ShaderList_f();
+shader_t* R_FindShader(const char* name, const int* lightmap_index, const byte* styles, const qboolean mip_raw_image);
+
+shader_t* R_GetShaderByHandle(const qhandle_t h_shader);
+void R_InitShaders(const qboolean server);
+void R_ShaderList_f();
 
 //
 // tr_arb.c

@@ -3098,7 +3098,7 @@ void WP_SaberLoadParms()
 				totallen++;
 				marker++;
 			}
-			len = COM_Compress(buffer);
+			len = COM_CompressShader(buffer);
 
 			if (totallen + len >= MAX_SABER_DATA_SIZE)
 			{
@@ -3151,7 +3151,7 @@ void WP_SaberLoadParms2()
 				totallen++;
 				marker++;
 			}
-			len = COM_Compress(buffer);
+			len = COM_CompressShader(buffer);
 
 			if (totallen + len >= MAX_SABER_DATA_SIZE)
 			{

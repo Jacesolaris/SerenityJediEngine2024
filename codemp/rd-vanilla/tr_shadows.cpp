@@ -414,7 +414,8 @@ because otherwise shadows from different body parts would
 overlap and double darken.
 =================
 */
-void RB_ShadowFinish() {
+void RB_ShadowFinish()
+{
 	if (r_shadows->integer != 2) {
 		return;
 	}
@@ -438,21 +439,13 @@ void RB_ShadowFinish() {
 		qglDisable(GL_CLIP_PLANE0);
 	}
 	GL_Cull(CT_TWO_SIDED);
-	//qglDisable (GL_CULL_FACE);
 
 	GL_Bind(tr.whiteImage);
 
 	qglPushMatrix();
 	qglLoadIdentity();
 
-	//	qglColor3f( 0.6f, 0.6f, 0.6f );
-	//	GL_State( GLS_DEPTHMASK_TRUE | GLS_SRCBLEND_DST_COLOR | GLS_DSTBLEND_ZERO );
-
-	//	qglColor3f( 1, 0, 0 );
-	//	GL_State( GLS_DEPTHMASK_TRUE | GLS_SRCBLEND_ONE | GLS_DSTBLEND_ZERO );
-
 	qglColor4f(0.0f, 0.0f, 0.0f, 0.5f);
-	//GL_State( GLS_DEPTHMASK_TRUE | GLS_SRCBLEND_SRC_ALPHA | GLS_DSTBLEND_ONE_MINUS_SRC_ALPHA );
 	GL_State(GLS_SRCBLEND_SRC_ALPHA | GLS_DSTBLEND_ONE_MINUS_SRC_ALPHA);
 
 	qglBegin(GL_QUADS);
@@ -521,17 +514,6 @@ void RB_CaptureScreenImage()
 	const int y = glConfig.vidHeight / 2;
 
 	GL_Bind(tr.screenImage);
-	//using this method, we could pixel-filter the texture and all sorts of crazy stuff.
-	//but, it is slow as hell.
-	/*
-	static byte *tmp = NULL;
-	if (!tmp)
-	{
-		tmp = (byte *)Z_Malloc((sizeof(byte)*4)*(glConfig.vidWidth*glConfig.vidHeight), TAG_ICARUS, qtrue);
-	}
-	qglReadPixels(0, 0, glConfig.vidWidth, glConfig.vidHeight, GL_RGBA, GL_UNSIGNED_BYTE, tmp);
-	qglTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 512, 512, 0, GL_RGBA, GL_UNSIGNED_BYTE, tmp);
-	*/
 
 	if (rad_x > glConfig.maxTextureSize)
 	{

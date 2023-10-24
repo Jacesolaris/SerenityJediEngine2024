@@ -3132,7 +3132,7 @@ void WP_SaberLoadParms()
 		trap->FS_Read(bgSaberParseTBuffer, len, f);
 		bgSaberParseTBuffer[len] = 0;
 
-		len = COM_Compress(bgSaberParseTBuffer);
+		len = COM_CompressShader(bgSaberParseTBuffer);
 
 		Q_strcat(marker, MAX_SABER_DATA_SIZE - totallen, bgSaberParseTBuffer);
 		trap->FS_Close(f);

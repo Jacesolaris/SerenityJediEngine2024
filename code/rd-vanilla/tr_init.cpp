@@ -1802,7 +1802,7 @@ void R_Init()
 	InitOpenGL();
 
 	R_InitImages();
-	R_InitShaders();
+	R_InitShaders(qfalse);
 	R_InitSkins();
 	R_ModelInit();
 	R_InitWorldEffects();
@@ -1982,7 +1982,7 @@ void RE_SVModelInit()
 	tr.numSkins = 0;
 	R_InitImages();
 	//inServer = true;
-	R_InitShaders();
+	R_InitShaders(qfalse);
 	//inServer = false;
 	R_ModelInit();
 }

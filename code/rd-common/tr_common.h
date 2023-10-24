@@ -92,3 +92,4 @@ void R_Free(void* ptr);
 int R_MemSize(memtag_t e_tag);
 void R_MorphMallocTag(void* pvBuffer, memtag_t eDesiredTag);
 void* R_Hunk_Alloc(int i_size, qboolean b_zeroit = qtrue);
+

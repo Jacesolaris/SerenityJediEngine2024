@@ -203,7 +203,7 @@ const char* SkipWhitespace(const char* data, qboolean* hasNewLines)
 	return data;
 }
 
-int COM_Compress(char* data_p)
+int COM_CompressShader(char* data_p)
 {
 	char* out;
 	qboolean newline = qfalse, whitespace = qfalse;

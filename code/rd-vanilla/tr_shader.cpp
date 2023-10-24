@@ -51,7 +51,7 @@ constexpr auto RETAIL_ROCKET_WEDGE_SHADER_HASH = 1217042;
 constexpr auto RETAIL_ARROW_W_SHADER_HASH = 1650186;
 
 constexpr auto FILE_HASH_SIZE = 1024;
-static	shader_t* sh_hashTable[FILE_HASH_SIZE];
+static	shader_t* hashTable[FILE_HASH_SIZE];
 
 const int lightmapsNone[MAXLIGHTMAPS] =
 {
@@ -172,7 +172,7 @@ shader_t* R_FindShaderByName(const char* name) {
 	//
 	// see if the shader is already loaded
 	//
-	for (shader_t* sh = sh_hashTable[hash]; sh; sh = sh->next) {
+	for (shader_t* sh = hashTable[hash]; sh; sh = sh->next) {
 		// NOTE: if there was no shader or image available with the name strippedName
 		// then a default shader is created with lightmapIndex == LIGHTMAP_NONE, so we
 		// have to check all default shaders otherwise for every call to R_FindShader
@@ -187,38 +187,38 @@ shader_t* R_FindShaderByName(const char* name) {
 }
 
 /*
-void R_RemapShader(const char *shaderName, const char *newShaderName, const char *timeOffset) {
+void R_RemapShader(const char *shader_name, const char *new_shader_name, const char *time_offset) {
 	char		strippedName[MAX_QPATH];
 	int			hash;
 	shader_t	*sh, *sh2;
 	qhandle_t	h;
 
-	sh = R_FindShaderByName( shaderName );
+	sh = R_FindShaderByName( shader_name );
 	if (sh == NULL || sh == tr.defaultShader) {
-		h = RE_RegisterShaderLightMap(shaderName, lightmapsNone, stylesDefault);
+		h = RE_RegisterShaderLightMap(shader_name, lightmapsNone, stylesDefault);
 		sh = R_GetShaderByHandle(h);
 	}
 	if (sh == NULL || sh == tr.defaultShader) {
-		ri.Printf( PRINT_WARNING, "WARNING: R_RemapShader: shader %s not found\n", shaderName );
+		ri.Printf( PRINT_WARNING, "WARNING: R_RemapShader: shader %s not found\n", shader_name );
 		return;
 	}
 
-	sh2 = R_FindShaderByName( newShaderName );
+	sh2 = R_FindShaderByName( new_shader_name );
 	if (sh2 == NULL || sh2 == tr.defaultShader) {
-		h = RE_RegisterShaderLightMap(newShaderName, lightmapsNone, stylesDefault);
+		h = RE_RegisterShaderLightMap(new_shader_name, lightmapsNone, stylesDefault);
 		sh2 = R_GetShaderByHandle(h);
 	}
 
 	if (sh2 == NULL || sh2 == tr.defaultShader) {
-		ri.Printf( PRINT_WARNING, "WARNING: R_RemapShader: new shader %s not found\n", newShaderName );
+		ri.Printf( PRINT_WARNING, "WARNING: R_RemapShader: new shader %s not found\n", new_shader_name );
 		return;
 	}
 
 	// remap all the shaders with the given name
 	// even tho they might have different lightmaps
-	COM_StripExtension( shaderName, strippedName, sizeof(strippedName) );
+	COM_StripExtension( shader_name, strippedName, sizeof(strippedName) );
 	hash = generateHashValue(strippedName);
-	for (sh = sh_hashTable[hash]; sh; sh = sh->next) {
+	for (sh = hashTable[hash]; sh; sh = sh->next) {
 		if (Q_stricmp(sh->name, strippedName) == 0) {
 			if (sh != sh2) {
 				sh->remappedShader = sh2;
@@ -227,8 +227,8 @@ void R_RemapShader(const char *shaderName, const char *newShaderName, const char
 			}
 		}
 	}
-	if (timeOffset) {
-		sh2->timeOffset = atof(timeOffset);
+	if (time_offset) {
+		sh2->time_offset = atof(time_offset);
 	}
 }
 */
@@ -2738,8 +2738,10 @@ static void SortNewShader() {
 GeneratePermanentShader
 ====================
 */
-static shader_t* GeneratePermanentShader() {
-	if (tr.numShaders == MAX_SHADERS) {
+static shader_t* GeneratePermanentShader() 
+{
+	if (tr.numShaders == MAX_SHADERS)
+	{
 		tr.iNumDeniedShaders++;
 		ri.Printf(PRINT_WARNING, "WARNING: GeneratePermanentShader - MAX_SHADERS (%d) hit (overflowed by %d)\n", MAX_SHADERS, tr.iNumDeniedShaders);
 		return tr.defaultShader;
@@ -2790,8 +2792,8 @@ static shader_t* GeneratePermanentShader() {
 	SortNewShader();
 
 	const int hash = generateHashValue(new_shader->name);
-	new_shader->next = sh_hashTable[hash];
-	sh_hashTable[hash] = new_shader;
+	new_shader->next = hashTable[hash];
+	hashTable[hash] = new_shader;
 
 	return new_shader;
 }
@@ -3398,7 +3400,7 @@ shader_t* R_FindShader(const char* name, const int* lightmap_index, const byte* 
 	//
 	// see if the shader is already loaded
 	//
-	for (sh = sh_hashTable[hash]; sh; sh = sh->next) {
+	for (sh = hashTable[hash]; sh; sh = sh->next) {
 		// NOTE: if there was no shader or image available with the name strippedName
 		// then a default shader is created with lightmapIndex == LIGHTMAP_NONE, so we
 		// have to check all default shaders otherwise for every call to R_FindShader
@@ -3517,7 +3519,14 @@ This should really only be used for explicit shaders, because there is no
 way to ask for different implicit lighting modes (vertex, lightmap, etc)
 ====================
 */
-qhandle_t RE_RegisterShader(const char* name) {
+qhandle_t RE_RegisterShader(const char* name)
+{
+	if (strlen(name) >= MAX_QPATH)
+	{
+		ri.Printf(PRINT_ALL, "Shader name exceeds MAX_QPATH\n");
+		return 0;
+	}
+
 	const shader_t* sh = R_FindShader(name, lightmaps2d, stylesDefault, qtrue);
 
 	// we want to return 0 if the shader failed to
@@ -3525,7 +3534,8 @@ qhandle_t RE_RegisterShader(const char* name) {
 	// still keep a name allocated for it, so if
 	// something calls RE_RegisterShader again with
 	// the same name, we don't try looking for it again
-	if (sh->defaultShader) {
+	if (sh->defaultShader)
+	{
 		return 0;
 	}
 
@@ -3539,7 +3549,14 @@ RE_RegisterShaderNoMip
 For menu graphics that should never be picmiped
 ====================
 */
-qhandle_t RE_RegisterShaderNoMip(const char* name) {
+qhandle_t RE_RegisterShaderNoMip(const char* name)
+{
+	if (strlen(name) >= MAX_QPATH)
+	{
+		ri.Printf(PRINT_ALL, "Shader name exceeds MAX_QPATH\n");
+		return 0;
+	}
+
 	const shader_t* sh = R_FindShader(name, lightmaps2d, stylesDefault, qfalse);
 
 	// we want to return 0 if the shader failed to
@@ -3547,7 +3564,8 @@ qhandle_t RE_RegisterShaderNoMip(const char* name) {
 	// still keep a name allocated for it, so if
 	// something calls RE_RegisterShader again with
 	// the same name, we don't try looking for it again
-	if (sh->defaultShader) {
+	if (sh->defaultShader)
+	{
 		return 0;
 	}
 
@@ -3562,7 +3580,8 @@ When a handle is passed in by another module, this range checks
 it and returns a valid (possibly default) shader_t to be used internally.
 ====================
 */
-shader_t* R_GetShaderByHandle(const qhandle_t h_shader) {
+shader_t* R_GetShaderByHandle(const qhandle_t h_shader)
+{
 	if (h_shader < 0) {
 		ri.Printf(PRINT_WARNING, "R_GetShaderByHandle: out of range h_shader '%d'\n", h_shader);
 		return tr.defaultShader;
@@ -3687,7 +3706,7 @@ Finds and loads all .shader files, combining them into
 a single large text block that can be scanned for shader names
 =====================
 */
-#define	MAX_SHADER_FILES	4096
+constexpr auto MAX_SHADER_FILES = 8192;
 static void Scan_And_Load_Shader_Files()
 {
 	char* buffers[MAX_SHADER_FILES]{};
@@ -3742,7 +3761,7 @@ static void Scan_And_Load_Shader_Files()
 		ri.FS_FreeFile(buffers[i]);
 	}
 
-	COM_Compress(s_shaderText);
+	COM_CompressShader(s_shaderText);
 
 	// free up memory
 	ri.FS_FreeFileList(shader_files);
@@ -3803,18 +3822,11 @@ static void CreateExternalShaders() {
 R_InitShaders
 ==================
 */
-void R_InitShaders() {
-	//ri.Printf( PRINT_ALL, "Initializing Shaders\n" );
+void R_InitShaders(const qboolean server)
+{
+	ri.Printf(PRINT_ALL, "Initializing Shaders\n");
 
-	memset(sh_hashTable, 0, sizeof sh_hashTable);
-	/*
-	Ghoul2 Insert Start
-	*/
-	//	memset(hitMatReg, 0, sizeof(hitMatReg));
-	//	hitMatCount = 0;
-	/*
-	Ghoul2 Insert End
-	*/
+	memset(hashTable, 0, sizeof hashTable);
 
 	CreateInternalShaders();
 

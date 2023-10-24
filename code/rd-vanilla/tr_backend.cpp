@@ -1507,7 +1507,7 @@ const void* RB_SwapBuffers(const void* data) {
 	if (r_measureOverdraw->integer) {
 		long sum = 0;
 
-		const auto stencilReadback = static_cast<unsigned char*>(R_Malloc(glConfig.vidWidth * glConfig.vidHeight,TAG_TEMP_WORKSPACE, qfalse));
+		const auto stencilReadback = static_cast<unsigned char*>(R_Malloc(glConfig.vidWidth * glConfig.vidHeight, TAG_TEMP_WORKSPACE, qfalse));
 		qglReadPixels(0, 0, glConfig.vidWidth, glConfig.vidHeight, GL_STENCIL_INDEX, GL_UNSIGNED_BYTE, stencilReadback);
 
 		for (int i = 0; i < glConfig.vidWidth * glConfig.vidHeight; i++) {
