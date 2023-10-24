@@ -1164,7 +1164,7 @@ void R_ScreenShot_f() {
 /*
 ** GL_SetDefaultState
 */
-void GL_SetDefaultState()
+void GL_SetDefaultState(void)
 {
 	qglClearDepth(1.0f);
 
@@ -1802,7 +1802,7 @@ void R_Init()
 	InitOpenGL();
 
 	R_InitImages();
-	R_InitShaders();
+	R_InitShaders(qfalse);
 	R_InitSkins();
 	R_ModelInit();
 	R_InitWorldEffects();
@@ -1981,9 +1981,7 @@ void RE_SVModelInit()
 	tr.numShaders = 0;
 	tr.numSkins = 0;
 	R_InitImages();
-	//inServer = true;
-	R_InitShaders();
-	//inServer = false;
+	R_InitShaders(qfalse);
 	R_ModelInit();
 }
 

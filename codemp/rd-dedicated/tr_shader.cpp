@@ -291,8 +291,7 @@ static int NameToSrcBlendMode(const char* name)
 		return GLS_SRCBLEND_ALPHA_SATURATE;
 	}
 
-	Com_Printf(S_COLOR_YELLOW "WARNING: unknown blend mode '%s' in shader '%s', substituting GL_ONE\n", name,
-		shader.name);
+	Com_Printf(S_COLOR_YELLOW "WARNING: unknown blend mode '%s' in shader '%s', substituting GL_ONE\n", name,shader.name);
 	return GLS_SRCBLEND_ONE;
 }
 
@@ -2816,12 +2815,6 @@ static shader_t* FinishShader()
 			const int blend_src_bits = p_stage->stateBits & GLS_SRCBLEND_BITS;
 			const int blend_dst_bits = p_stage->stateBits & GLS_DSTBLEND_BITS;
 
-			// fog color adjustment only works for blend modes that have a contribution
-			// that aproaches 0 as the modulate values aproach 0 --
-			// GL_ONE, GL_ONE
-			// GL_ZERO, GL_ONE_MINUS_SRC_COLOR
-			// GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA
-
 			// modulate, additive
 			if (blend_src_bits == GLS_SRCBLEND_ONE && blend_dst_bits == GLS_DSTBLEND_ONE ||
 				blend_src_bits == GLS_SRCBLEND_ZERO && blend_dst_bits == GLS_DSTBLEND_ONE_MINUS_SRC_COLOR)
@@ -3156,7 +3149,7 @@ most world construction surfaces.
 
 ===============
 */
-shader_t* R_FindShader(const char* name, const int* lightmap_index, const byte* styles, qboolean mip_raw_image)
+shader_t* R_FindShader(const char* name, const int* lightmap_index, const byte* styles, const qboolean mip_raw_image)
 {
 	char stripped_name[MAX_QPATH];
 	char file_name[MAX_QPATH];
@@ -3426,7 +3419,6 @@ qhandle_t RE_RegisterShader(const char* name)
 		Com_Printf("Shader name exceeds MAX_QPATH\n");
 		return 0;
 	}
-
 	const shader_t* sh = R_FindShader(name, lightmaps2d, stylesDefault, qtrue);
 
 	// we want to return 0 if the shader failed to
@@ -3438,7 +3430,6 @@ qhandle_t RE_RegisterShader(const char* name)
 	{
 		return 0;
 	}
-
 	return sh->index;
 }
 
@@ -3507,9 +3498,9 @@ shader_t* R_GetShaderByHandle(const qhandle_t h_shader)
 R_InitShaders
 ==================
 */
-void R_InitShaders(qboolean server)
+void R_InitShaders(const qboolean server)
 {
-	//Com_Printf ("Initializing Shaders\n" );
+	Com_Printf ("Initializing Shaders\n" );
 
 	memset(hashTable, 0, sizeof hashTable);
 }

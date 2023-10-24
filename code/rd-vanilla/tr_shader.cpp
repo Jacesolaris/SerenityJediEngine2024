@@ -51,7 +51,7 @@ constexpr auto RETAIL_ROCKET_WEDGE_SHADER_HASH = 1217042;
 constexpr auto RETAIL_ARROW_W_SHADER_HASH = 1650186;
 
 constexpr auto FILE_HASH_SIZE = 1024;
-static	shader_t* sh_hashTable[FILE_HASH_SIZE];
+static	shader_t* hashTable[FILE_HASH_SIZE];
 
 const int lightmapsNone[MAXLIGHTMAPS] =
 {
@@ -172,7 +172,7 @@ shader_t* R_FindShaderByName(const char* name) {
 	//
 	// see if the shader is already loaded
 	//
-	for (shader_t* sh = sh_hashTable[hash]; sh; sh = sh->next) {
+	for (shader_t* sh = hashTable[hash]; sh; sh = sh->next) {
 		// NOTE: if there was no shader or image available with the name strippedName
 		// then a default shader is created with lightmapIndex == LIGHTMAP_NONE, so we
 		// have to check all default shaders otherwise for every call to R_FindShader
@@ -218,7 +218,7 @@ void R_RemapShader(const char *shader_name, const char *new_shader_name, const c
 	// even tho they might have different lightmaps
 	COM_StripExtension( shader_name, strippedName, sizeof(strippedName) );
 	hash = generateHashValue(strippedName);
-	for (sh = sh_hashTable[hash]; sh; sh = sh->next) {
+	for (sh = hashTable[hash]; sh; sh = sh->next) {
 		if (Q_stricmp(sh->name, strippedName) == 0) {
 			if (sh != sh2) {
 				sh->remappedShader = sh2;
@@ -2790,8 +2790,8 @@ static shader_t* GeneratePermanentShader() {
 	SortNewShader();
 
 	const int hash = generateHashValue(new_shader->name);
-	new_shader->next = sh_hashTable[hash];
-	sh_hashTable[hash] = new_shader;
+	new_shader->next = hashTable[hash];
+	hashTable[hash] = new_shader;
 
 	return new_shader;
 }
@@ -3075,12 +3075,6 @@ static shader_t* FinishShader() {
 			stages[0].stateBits & (GLS_SRCBLEND_BITS | GLS_DSTBLEND_BITS)) {
 			const int blend_src_bits = p_stage->stateBits & GLS_SRCBLEND_BITS;
 			const int blend_dst_bits = p_stage->stateBits & GLS_DSTBLEND_BITS;
-
-			// fog color adjustment only works for blend modes that have a contribution
-			// that aproaches 0 as the modulate values aproach 0 --
-			// GL_ONE, GL_ONE
-			// GL_ZERO, GL_ONE_MINUS_SRC_COLOR
-			// GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA
 
 			// modulate, additive
 			if (blend_src_bits == GLS_SRCBLEND_ONE && blend_dst_bits == GLS_DSTBLEND_ONE ||
@@ -3383,12 +3377,6 @@ shader_t* R_FindShader(const char* name, const int* lightmap_index, const byte* 
 		return tr.defaultShader;
 	}
 
-	// use (fullbright) vertex lighting if the bsp file doesn't have
-	// lightmaps
-/*	if ( lightmapIndex[0] >= 0 && lightmapIndex[0] >= tr.numLightmaps ) {
-		lightmapIndex = lightmapsVertex;
-	}
-*/
 	lightmap_index = R_FindLightmap(lightmap_index);
 
 	COM_StripExtension(name, stripped_name, sizeof stripped_name);
@@ -3398,7 +3386,7 @@ shader_t* R_FindShader(const char* name, const int* lightmap_index, const byte* 
 	//
 	// see if the shader is already loaded
 	//
-	for (sh = sh_hashTable[hash]; sh; sh = sh->next) {
+	for (sh = hashTable[hash]; sh; sh = sh->next) {
 		// NOTE: if there was no shader or image available with the name strippedName
 		// then a default shader is created with lightmapIndex == LIGHTMAP_NONE, so we
 		// have to check all default shaders otherwise for every call to R_FindShader
@@ -3517,7 +3505,13 @@ This should really only be used for explicit shaders, because there is no
 way to ask for different implicit lighting modes (vertex, lightmap, etc)
 ====================
 */
-qhandle_t RE_RegisterShader(const char* name) {
+qhandle_t RE_RegisterShader(const char* name) 
+{
+	if (strlen(name) >= MAX_QPATH)
+	{
+		ri.Printf(PRINT_ALL, "Shader name exceeds MAX_QPATH\n");
+		return 0;
+	}
 	const shader_t* sh = R_FindShader(name, lightmaps2d, stylesDefault, qtrue);
 
 	// we want to return 0 if the shader failed to
@@ -3525,10 +3519,10 @@ qhandle_t RE_RegisterShader(const char* name) {
 	// still keep a name allocated for it, so if
 	// something calls RE_RegisterShader again with
 	// the same name, we don't try looking for it again
-	if (sh->defaultShader) {
+	if (sh->defaultShader) 
+	{
 		return 0;
 	}
-
 	return sh->index;
 }
 
@@ -3757,7 +3751,8 @@ static void Scan_And_Load_Shader_Files()
 CreateInternalShaders
 ====================
 */
-static void CreateInternalShaders() {
+static void CreateInternalShaders(void)
+{
 	tr.numShaders = 0;
 	tr.iNumDeniedShaders = 0;
 
@@ -3792,7 +3787,8 @@ static void CreateInternalShaders() {
 	ARB_InitGlowShaders();
 }
 
-static void CreateExternalShaders() {
+static void CreateExternalShaders(void)
+{
 	tr.projectionShadowShader = R_FindShader("projectionShadow", lightmapsNone, stylesDefault, qtrue);
 	tr.projectionShadowShader->sort = SS_STENCIL_SHADOW;
 	tr.sunShader = R_FindShader("sun", lightmapsVertex, stylesDefault, qtrue);
@@ -3803,22 +3799,18 @@ static void CreateExternalShaders() {
 R_InitShaders
 ==================
 */
-void R_InitShaders() {
-	//ri.Printf( PRINT_ALL, "Initializing Shaders\n" );
+void R_InitShaders(const qboolean server)
+{
+	ri.Printf(PRINT_ALL, "Initializing Shaders\n");
 
-	memset(sh_hashTable, 0, sizeof sh_hashTable);
-	/*
-	Ghoul2 Insert Start
-	*/
-	//	memset(hitMatReg, 0, sizeof(hitMatReg));
-	//	hitMatCount = 0;
-	/*
-	Ghoul2 Insert End
-	*/
+	memset(hashTable, 0, sizeof hashTable);
 
-	CreateInternalShaders();
+	if (!server)
+	{
+		CreateInternalShaders();
 
-	Scan_And_Load_Shader_Files();
+		Scan_And_Load_Shader_Files();
 
-	CreateExternalShaders();
+		CreateExternalShaders();
+	}
 }

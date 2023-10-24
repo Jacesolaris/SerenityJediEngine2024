@@ -1581,7 +1581,7 @@ void R_Register(void)
 	r_shadowCascadeZNear = ri_Cvar_Get_NoComm("r_shadowCascadeZNear", "4", CVAR_ARCHIVE | CVAR_LATCH, "");
 	r_shadowCascadeZFar = ri_Cvar_Get_NoComm("r_shadowCascadeZFar", "3072", CVAR_ARCHIVE | CVAR_LATCH, "");
 	r_shadowCascadeZBias = ri_Cvar_Get_NoComm("r_shadowCascadeZBias", "-320", CVAR_ARCHIVE | CVAR_LATCH, "");
-	r_ignoreDstAlpha = ri_Cvar_Get_NoComm("r_ignoreDstAlpha", "1", CVAR_ARCHIVE | CVAR_LATCH, "");
+	r_ignoreDstAlpha = ri_Cvar_Get_NoComm("r_ignoreDstAlpha", "0", CVAR_ARCHIVE | CVAR_LATCH, "");
 
 	//
 	// temporary latched variables that can only change over a restart

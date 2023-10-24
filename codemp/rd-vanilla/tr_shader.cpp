@@ -2959,12 +2959,6 @@ static shader_t* FinishShader()
 			const int blend_src_bits = p_stage->stateBits & GLS_SRCBLEND_BITS;
 			const int blend_dst_bits = p_stage->stateBits & GLS_DSTBLEND_BITS;
 
-			// fog color adjustment only works for blend modes that have a contribution
-			// that aproaches 0 as the modulate values aproach 0 --
-			// GL_ONE, GL_ONE
-			// GL_ZERO, GL_ONE_MINUS_SRC_COLOR
-			// GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA
-
 			// modulate, additive
 			if (blend_src_bits == GLS_SRCBLEND_ONE && blend_dst_bits == GLS_DSTBLEND_ONE ||
 				blend_src_bits == GLS_SRCBLEND_ZERO && blend_dst_bits == GLS_DSTBLEND_ONE_MINUS_SRC_COLOR) {
@@ -3313,7 +3307,7 @@ most world construction surfaces.
 
 ===============
 */
-shader_t* R_FindShader(const char* name, const int* lightmap_index, const byte* styles, qboolean mip_raw_image)
+shader_t* R_FindShader(const char* name, const int* lightmap_index, const byte* styles, const qboolean mip_raw_image)
 {
 	char		stripped_name[MAX_QPATH];
 	char		file_name[MAX_QPATH];
@@ -3623,12 +3617,13 @@ This should really only be used for explicit shaders, because there is no
 way to ask for different implicit lighting modes (vertex, lightmap, etc)
 ====================
 */
-qhandle_t RE_RegisterShader(const char* name) {
-	if (strlen(name) >= MAX_QPATH) {
+qhandle_t RE_RegisterShader(const char* name)
+{
+	if (strlen(name) >= MAX_QPATH) 
+	{
 		ri->Printf(PRINT_ALL, "Shader name exceeds MAX_QPATH\n");
 		return 0;
 	}
-
 	const shader_t* sh = R_FindShader(name, lightmaps2d, stylesDefault, qtrue);
 
 	// we want to return 0 if the shader failed to
@@ -3636,7 +3631,8 @@ qhandle_t RE_RegisterShader(const char* name) {
 	// still keep a name allocated for it, so if
 	// something calls RE_RegisterShader again with
 	// the same name, we don't try looking for it again
-	if (sh->defaultShader) {
+	if (sh->defaultShader)
+	{
 		return 0;
 	}
 
@@ -4046,7 +4042,8 @@ static void Scan_And_Load_Shader_Files()
 CreateInternalShaders
 ====================
 */
-static void CreateInternalShaders() {
+static void CreateInternalShaders(void)
+{
 	tr.numShaders = 0;
 
 	// init the default shader
@@ -4081,7 +4078,8 @@ static void CreateInternalShaders() {
 	ARB_InitGPUShaders();
 }
 
-static void CreateExternalShaders() {
+static void CreateExternalShaders(void)
+{
 	tr.projectionShadowShader = R_FindShader("projectionShadow", lightmapsNone, stylesDefault, qtrue);
 	tr.projectionShadowShader->sort = SS_STENCIL_SHADOW;
 	tr.sunShader = R_FindShader("sun", lightmapsNone, stylesDefault, qtrue);
@@ -4094,7 +4092,7 @@ R_InitShaders
 */
 void R_InitShaders(const qboolean server)
 {
-	//ri->Printf( PRINT_ALL, "Initializing Shaders\n" );
+	ri->Printf(PRINT_ALL, "Initializing Shaders\n");
 
 	memset(hashTable, 0, sizeof hashTable);
 

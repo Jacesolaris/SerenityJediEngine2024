@@ -1309,7 +1309,7 @@ const void* RB_TakeVideoFrameCmd(const void* data)
 /*
 ** GL_SetDefaultState
 */
-void GL_SetDefaultState()
+void GL_SetDefaultState(void)
 {
 	qglClearDepth(1.0f);
 
@@ -1805,7 +1805,6 @@ void R_Init()
 	R_InitFonts();
 
 	R_ModelInit();
-	//	re.G2VertSpaceServer = &IHeapAllocator_singleton;
 	R_InitDecals();
 
 	R_InitWorldEffects();

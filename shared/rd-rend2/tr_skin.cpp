@@ -23,7 +23,7 @@ RE_RegisterSkin
 
 bool gServerSkinHack = false;
 
-shader_t* R_FindServerShader(const char* name, const int* lightmapIndexes, const byte* styles, qboolean mipRawImage);
+shader_t* R_FindServerShader(const char* name, const int* lightmap_index, const byte* styles, qboolean mip_raw_image);
 static char* CommaParse(char** data_p);
 /*
 ===============

@@ -1435,10 +1435,10 @@ qhandle_t RE_RegisterShaderNoMip(const char* name);
 const char* RE_ShaderNameFromIndex(int index);
 qhandle_t RE_RegisterShaderFromImage(const char* name, const int* lightmap_index, const byte* styles, image_t* image);
 
-shader_t* R_FindShader(const char* name, const int* lightmap_index, const byte* styles, qboolean mip_raw_image);
+shader_t* R_FindShader(const char* name, const int* lightmap_index, const byte* styles, const qboolean mip_raw_image);
 shader_t* R_GetShaderByHandle(qhandle_t h_shader);
 shader_t* R_FindShaderByName(const char* name);
-void R_InitShaders(qboolean server);
+void R_InitShaders(const qboolean server);
 void R_ShaderList_f();
 void R_RemapShader(const char* shader_name, const char* new_shader_name, const char* time_offset);
 
