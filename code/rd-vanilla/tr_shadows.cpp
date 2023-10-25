@@ -188,7 +188,7 @@ void RB_ShadowTessEnd()
 		return;
 	}
 
-	//	if (!tess.dlight_bits)
+	//	if (!tess.dlightBits)
 	//	{
 	//		return;
 	//	}
@@ -199,7 +199,7 @@ void RB_ShadowTessEnd()
 	R_TransformDlights(backEnd.refdef.num_dlights, backEnd.refdef.dlights, &backEnd.ori);
 	/*	while (i < tr.refdef.num_dlights)
 		{
-			if (tess.dlight_bits & (1 << i))
+			if (tess.dlightBits & (1 << i))
 			{
 				dl = &tr.refdef.dlights[i];
 
@@ -298,7 +298,7 @@ void RB_DoShadowTessEnd(vec3_t light_pos)
 		}
 		else
 		{
-			float plane_eq[4]{};
+			float plane_eq[4];
 			plane_eq[0] = v1[1] * (v2[2] - v3[2]) + v2[1] * (v3[2] - v1[2]) + v3[1] * (v1[2] - v2[2]);
 			plane_eq[1] = v1[2] * (v2[0] - v3[0]) + v2[2] * (v3[0] - v1[0]) + v3[2] * (v1[0] - v2[0]);
 			plane_eq[2] = v1[0] * (v2[1] - v3[1]) + v2[0] * (v3[1] - v1[1]) + v3[0] * (v1[1] - v2[1]);
@@ -415,8 +415,7 @@ because otherwise shadows from different body parts would
 overlap and double darken.
 =================
 */
-void RB_ShadowFinish()
-{
+void RB_ShadowFinish() {
 	if (r_shadows->integer != 2) {
 		return;
 	}
@@ -440,13 +439,21 @@ void RB_ShadowFinish()
 		qglDisable(GL_CLIP_PLANE0);
 	}
 	GL_Cull(CT_TWO_SIDED);
+	//qglDisable (GL_CULL_FACE);
 
 	GL_Bind(tr.whiteImage);
 
 	qglPushMatrix();
 	qglLoadIdentity();
 
+	//	qglColor3f( 0.6f, 0.6f, 0.6f );
+	//	GL_State( GLS_DEPTHMASK_TRUE | GLS_SRCBLEND_DST_COLOR | GLS_DSTBLEND_ZERO );
+
+	//	qglColor3f( 1, 0, 0 );
+	//	GL_State( GLS_DEPTHMASK_TRUE | GLS_SRCBLEND_ONE | GLS_DSTBLEND_ZERO );
+
 	qglColor4f(0.0f, 0.0f, 0.0f, 0.5f);
+	//GL_State( GLS_DEPTHMASK_TRUE | GLS_SRCBLEND_SRC_ALPHA | GLS_DSTBLEND_ONE_MINUS_SRC_ALPHA );
 	GL_State(GLS_SRCBLEND_SRC_ALPHA | GLS_DSTBLEND_ONE_MINUS_SRC_ALPHA);
 
 	qglBegin(GL_QUADS);
@@ -472,8 +479,8 @@ RB_ProjectionShadowDeform
 =================
 */
 void RB_ProjectionShadowDeform() {
-	vec3_t	ground{};
-	vec3_t	light{};
+	vec3_t	ground;
+	vec3_t	light;
 	vec3_t	light_dir;
 
 	auto xyz = reinterpret_cast<float*>(tess.xyz);

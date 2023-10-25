@@ -689,8 +689,8 @@ void emplaced_gun_use(gentity_t* self, const gentity_t* other, gentity_t* activa
 			// Run use script
 			G_ActivateBehavior(self, BSET_USE);
 		}
-		}
 	}
+}
 
 //----------------------------------------------------------
 void emplaced_gun_pain(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, const vec3_t point, int damage,

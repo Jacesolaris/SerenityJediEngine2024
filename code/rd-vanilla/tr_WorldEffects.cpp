@@ -693,7 +693,7 @@ public:
 		}
 		else
 		{
-			CVec3		CurPos{};
+			CVec3		CurPos;
 			int			x;
 
 			// Record The Extents Of The World Incase No Other Weather Zones Exist
@@ -1163,7 +1163,7 @@ public:
 
 		// Compute Global Force
 		//----------------------
-		CVec3		force{};
+		CVec3		force;
 		{
 			force.Clear();
 

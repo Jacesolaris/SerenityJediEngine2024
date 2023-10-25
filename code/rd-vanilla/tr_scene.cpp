@@ -98,8 +98,8 @@ void R_AddPolygonSurfaces() {
 	int			i;
 	srfPoly_t* poly;
 
-	tr.currententity_num = REFENTITYNUM_WORLD;
-	tr.shiftedentity_num = tr.currententity_num << QSORT_REFENTITYNUM_SHIFT;
+	tr.currentEntityNum = REFENTITYNUM_WORLD;
+	tr.shiftedEntityNum = tr.currentEntityNum << QSORT_REFENTITYNUM_SHIFT;
 
 	for (i = 0, poly = tr.refdef.polys; i < tr.refdef.numPolys; i++, poly++) {
 		const shader_t* sh = R_GetShaderByHandle(poly->h_shader);
@@ -154,7 +154,7 @@ void RE_AddPolyToScene(const qhandle_t h_shader, const int num_verts, const poly
 		fog_index = 0;
 	}
 	else {
-		vec3_t bounds[2]{};
+		vec3_t bounds[2];
 		// find which fog volume the poly is in
 		VectorCopy(poly->verts[0].xyz, bounds[0]);
 		VectorCopy(poly->verts[0].xyz, bounds[1]);

@@ -696,7 +696,7 @@ qboolean ServerLoadMDXA(model_t* mod, void* buffer, const char* mod_name, qboole
 		LL(mdxa->version);
 		LL(mdxa->num_frames);
 		LL(mdxa->ofsFrames);
-		LL(mdxa->numBones);
+		LL(mdxa->num_bones);
 		LL(mdxa->ofsCompBonePool);
 		LL(mdxa->ofsSkel);
 		LL(mdxa->ofsEnd);
@@ -715,7 +715,7 @@ qboolean ServerLoadMDXA(model_t* mod, void* buffer, const char* mod_name, qboole
 #ifdef Q3_BIG_ENDIAN
 	// swap the bone info
 	offsets = (mdxaSkelOffsets_t*)((byte*)mdxa + sizeof(mdxaHeader_t));
-	for (i = 0; i < mdxa->numBones; i++)
+	for (i = 0; i < mdxa->num_bones; i++)
 	{
 		LL(offsets->offsets[i]);
 		boneInfo = (mdxaSkel_t*)((byte*)mdxa + sizeof(mdxaHeader_t) + offsets->offsets[i]);
@@ -744,9 +744,9 @@ qboolean ServerLoadMDXA(model_t* mod, void* buffer, const char* mod_name, qboole
 	// at the end of the file.
 	for (i = 0; i < mdxa->num_frames; i++)
 	{
-		for (j = 0; j < mdxa->numBones; j++)
+		for (j = 0; j < mdxa->num_bones; j++)
 		{
-			k = (i * mdxa->numBones * 3) + (j * 3);	// iOffsetToIndex
+			k = (i * mdxa->num_bones * 3) + (j * 3);	// iOffsetToIndex
 			pIndex = (mdxaIndex_t*)((byte*)mdxa + mdxa->ofsFrames + k);
 			tmp = (pIndex->iIndex[2] << 16) + (pIndex->iIndex[1] << 8) + (pIndex->iIndex[0]);
 
@@ -827,7 +827,7 @@ qboolean ServerLoadMDXM(model_t* mod, void* buffer, const char* mod_name, qboole
 
 		LL(mdxm->ident);
 		LL(mdxm->version);
-		LL(mdxm->numBones);
+		LL(mdxm->num_bones);
 		LL(mdxm->numLODs);
 		LL(mdxm->ofsLODs);
 		LL(mdxm->numSurfaces);
@@ -1145,21 +1145,13 @@ static qhandle_t RE_RegisterModel_Actual(const char* name) {
 		return 0;
 	}
 
-	if (strlen(name) >= MAX_QPATH) {
-		ri->Printf(PRINT_DEVELOPER, S_COLOR_RED "Model name exceeds MAX_QPATH\n");
+	if (strlen(name) >= MAX_SKINNAME_PATH) {
+		ri->Printf(PRINT_DEVELOPER, S_COLOR_RED "Model name exceeds MAX_SKINNAME_PATH\n");
 		return 0;
 	}
 
-	/*
-	Ghoul2 Insert Start
-	*/
-	//	if (!tr.registered) {
-	//		ri->Printf( PRINT_ALL, S_COLOR_YELLOW  "RE_RegisterModel (%s) called before ready!\n",name );
-	//		return 0;
-	//	}
-		//
-		// search the currently loaded models
-		//
+	// search the currently loaded models
+	//
 	int hash = generateHashValue(name, FILE_HASH_SIZE);
 
 	//
@@ -1173,11 +1165,11 @@ static qhandle_t RE_RegisterModel_Actual(const char* name) {
 
 	if (name[0] == '#')
 	{
-		char		temp[MAX_QPATH];
+		char		temp[MAX_SKINNAME_PATH];
 
 		tr.numBSPModels++;
 		RE_LoadWorldMap_Actual(va("maps/%s.bsp", name + 1), tr.bspModels[tr.numBSPModels - 1], tr.numBSPModels);
-		Com_sprintf(temp, MAX_QPATH, "*%d-0", tr.numBSPModels);
+		Com_sprintf(temp, MAX_SKINNAME_PATH, "*%d-0", tr.numBSPModels);
 		hash = generateHashValue(temp, FILE_HASH_SIZE);
 		for (mh = mhHashTable[hash]; mh; mh = mh->next)
 		{

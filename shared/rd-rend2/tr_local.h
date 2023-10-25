@@ -954,7 +954,7 @@ typedef struct {
 
 typedef struct shader_s {
 	char		name[MAX_QPATH];		// game path, including extension
-	int			lightmapIndex[MAXLIGHTMAPS];	// for a shader to match, both name and all lightmapIndex must match
+	int			lightmapIndex[MAXLIGHTMAPS];	// for a shader to match, both name and all lightmapIndex must match  rend2 sp
 	byte		styles[MAXLIGHTMAPS];
 
 	int			index;					// this shader == tr.shaders[index]
@@ -2186,10 +2186,10 @@ void		R_Modellist_f(void);
 
 //====================================================
 
-#define	MAX_DRAWIMAGES			2048
-#define	MAX_SKINS				1024
+#define	MAX_DRAWIMAGES			4096
+#define	MAX_SKINS				2048
 
-#define	MAX_DRAWSURFS			0x10000
+#define	MAX_DRAWSURFS			0x20000
 #define	DRAWSURF_MASK			(MAX_DRAWSURFS-1)
 
 extern	int gl_filter_min, gl_filter_max;
@@ -2618,6 +2618,7 @@ typedef struct trGlobals_s {
 	int						numShaders;
 	shader_t* shaders[MAX_SHADERS];
 	shader_t* sortedShaders[MAX_SHADERS];
+	int						iNumDeniedShaders;	// used for error-messages only
 
 	int						numSkins;
 	skin_t* skins[MAX_SKINS];
@@ -2989,12 +2990,12 @@ extern const int lightmapsVertex[MAXLIGHTMAPS];
 extern const int lightmapsFullBright[MAXLIGHTMAPS];
 extern const byte stylesDefault[MAXLIGHTMAPS];
 
-shader_t* R_FindShader(const char* name, const int* lightmap_index, const byte* styles, const qboolean mip_raw_image);
+shader_t* R_FindShader(const char* name, const int* lightmapIndex, const byte* styles, const qboolean mip_raw_image);
 shader_t* R_GetShaderByHandle(qhandle_t hShader);
 shader_t* R_FindShaderByName(const char* name);
 void R_InitShaders(const qboolean server);
 void R_ShaderList_f(void);
-void R_RemapShader(const char* oldShader, const char* newShader, const char* time_offset);
+void R_RemapShader(const char* shader_name, const char* new_shader_name, const char* time_offset);
 shader_t* R_CreateShaderFromTextureBundle(
 	const char* name,
 	const textureBundle_t* bundle,

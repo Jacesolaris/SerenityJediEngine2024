@@ -40,11 +40,7 @@ static	texModInfo_t	texMods[MAX_SHADER_STAGES][TR_MAX_TEXMODS];
 
 // Hash value (generated using the generateHashValueForText function) for the original
 // retail JKA shader for gfx/2d/wedge.
-#ifdef JK2_MODE
-constexpr auto RETAIL_ROCKET_WEDGE_SHADER_HASH = 1193966;
-#else
 constexpr auto RETAIL_ROCKET_WEDGE_SHADER_HASH = 1217042;
-#endif
 
 // Hash value (generated using the generateHashValueForText function) for the original
 // retail JKA shader for gfx/menus/radar/arrow_w.
@@ -187,36 +183,36 @@ shader_t* R_FindShaderByName(const char* name) {
 }
 
 /*
-void R_RemapShader(const char *shader_name, const char *new_shader_name, const char *time_offset) {
+void R_RemapShader(const char *shaderName, const char *newShaderName, const char *timeOffset) {
 	char		strippedName[MAX_QPATH];
 	int			hash;
 	shader_t	*sh, *sh2;
 	qhandle_t	h;
 
-	sh = R_FindShaderByName( shader_name );
+	sh = R_FindShaderByName( shaderName );
 	if (sh == NULL || sh == tr.defaultShader) {
-		h = RE_RegisterShaderLightMap(shader_name, lightmapsNone, stylesDefault);
+		h = RE_RegisterShaderLightMap(shaderName, lightmapsNone, stylesDefault);
 		sh = R_GetShaderByHandle(h);
 	}
 	if (sh == NULL || sh == tr.defaultShader) {
-		ri.Printf( PRINT_WARNING, "WARNING: R_RemapShader: shader %s not found\n", shader_name );
+		ri.Printf( PRINT_WARNING, "WARNING: R_RemapShader: shader %s not found\n", shaderName );
 		return;
 	}
 
-	sh2 = R_FindShaderByName( new_shader_name );
+	sh2 = R_FindShaderByName( newShaderName );
 	if (sh2 == NULL || sh2 == tr.defaultShader) {
-		h = RE_RegisterShaderLightMap(new_shader_name, lightmapsNone, stylesDefault);
+		h = RE_RegisterShaderLightMap(newShaderName, lightmapsNone, stylesDefault);
 		sh2 = R_GetShaderByHandle(h);
 	}
 
 	if (sh2 == NULL || sh2 == tr.defaultShader) {
-		ri.Printf( PRINT_WARNING, "WARNING: R_RemapShader: new shader %s not found\n", new_shader_name );
+		ri.Printf( PRINT_WARNING, "WARNING: R_RemapShader: new shader %s not found\n", newShaderName );
 		return;
 	}
 
 	// remap all the shaders with the given name
 	// even tho they might have different lightmaps
-	COM_StripExtension( shader_name, strippedName, sizeof(strippedName) );
+	COM_StripExtension( shaderName, strippedName, sizeof(strippedName) );
 	hash = generateHashValue(strippedName);
 	for (sh = hashTable[hash]; sh; sh = sh->next) {
 		if (Q_stricmp(sh->name, strippedName) == 0) {
@@ -227,8 +223,8 @@ void R_RemapShader(const char *shader_name, const char *new_shader_name, const c
 			}
 		}
 	}
-	if (time_offset) {
-		sh2->time_offset = atof(time_offset);
+	if (timeOffset) {
+		sh2->timeOffset = atof(timeOffset);
 	}
 }
 */
@@ -1263,7 +1259,7 @@ static qboolean ParseStage(shaderStage_t* stage, const char** text)
 		//
 		else if (!Q_stricmp(token, "animMap") || !Q_stricmp(token, "clampanimMap") || !Q_stricmp(token, "oneshotanimMap"))
 		{
-			constexpr auto max_image_animations = 64;
+			constexpr auto max_image_animations = 32;
 			image_t* images[max_image_animations];
 			const bool b_clamp = !Q_stricmp(token, "clampanimMap");
 			const bool one_shot = !Q_stricmp(token, "oneshotanimMap");
@@ -1277,7 +1273,7 @@ static qboolean ParseStage(shaderStage_t* stage, const char** text)
 			stage->bundle[0].imageAnimationSpeed = atof(token);
 			stage->bundle[0].oneShotAnimMap = one_shot;
 
-			// parse up to max_image_animations animations
+			// parse up to MAX_IMAGE_ANIMATIONS animations
 			while (true) {
 				token = COM_ParseExt(text, qfalse);
 				if (!token[0]) {
@@ -1895,35 +1891,27 @@ ParseSkyParms
 skyParms <outerbox> <cloudheight> <innerbox>
 ===============
 */
-static void ParseSkyParms(const char** text)
-{
+static void ParseSkyParms(const char** text) {
 	const char* suf[6] = { "rt", "lf", "bk", "ft", "up", "dn" };
 
 	shader.sky = static_cast<skyParms_t*>(R_Hunk_Alloc(sizeof(skyParms_t), qtrue));
 
 	// outerbox
 	char* token = COM_ParseExt(text, qfalse);
-
-	if (token[0] == 0)
-	{
+	if (token[0] == 0) {
 		ri.Printf(PRINT_WARNING, "WARNING: 'skyParms' missing parameter in shader '%s'\n", shader.name);
 		return;
 	}
-	if (strcmp(token, "-") != 0)
-	{
-		for (int i = 0; i < 6; i++)
-		{
+	if (strcmp(token, "-") != 0) {
+		for (int i = 0; i < 6; i++) {
 			char pathname[MAX_QPATH];
 			Com_sprintf(pathname, sizeof pathname, "%s_%s", token, suf[i]);
 			shader.sky->outerbox[i] = R_FindImageFile(pathname, qtrue, qtrue, static_cast<qboolean>(!shader.noTC), GL_CLAMP);
-			if (!shader.sky->outerbox[i])
-			{
-				if (i)
-				{
+			if (!shader.sky->outerbox[i]) {
+				if (i) {
 					shader.sky->outerbox[i] = shader.sky->outerbox[i - 1];//not found, so let's use the previous image
 				}
-				else
-				{
+				else {
 					shader.sky->outerbox[i] = tr.defaultImage;
 				}
 			}
@@ -1932,25 +1920,19 @@ static void ParseSkyParms(const char** text)
 
 	// cloudheight
 	token = COM_ParseExt(text, qfalse);
-
-	if (token[0] == 0)
-	{
+	if (token[0] == 0) {
 		ri.Printf(PRINT_WARNING, "WARNING: 'skyParms' missing cloudheight in shader '%s'\n", shader.name);
 		return;
 	}
 	shader.sky->cloudHeight = atof(token);
-
-	if (!shader.sky->cloudHeight)
-	{
+	if (!shader.sky->cloudHeight) {
 		shader.sky->cloudHeight = 512;
 	}
 	R_InitSkyTexCoords(shader.sky->cloudHeight);
 
 	// innerbox
 	token = COM_ParseExt(text, qfalse);
-
-	if (strcmp(token, "-") != 0)
-	{
+	if (strcmp(token, "-") != 0) {
 		ri.Printf(PRINT_WARNING, "WARNING: in shader '%s' 'skyParms', innerbox is not supported!", shader.name);
 	}
 }
@@ -2018,25 +2000,12 @@ void ParseSort(const char** text)
 
 // this table is also present in q3map
 
-using infoParm_t = struct infoParm_s
-{
+using infoParm_t = struct infoParm_s {
 	const char* name;
-	uint32_t clearSolid, surfaceFlags, contents;
-
-	infoParm_s() = default;
-
-	bool operator==(const infoParm_s& other) const
-	{
-		return false;
-	}
-
-	infoParm_s(const char* name, const uint32_t& clearSolid, const uint32_t& surfaceFlags, const uint32_t& contents)
-		: name(name), clearSolid(clearSolid), surfaceFlags(surfaceFlags), contents(contents)
-	{
-	}
+	uint32_t	clearSolid, surfaceFlags, contents;
 };
 
-infoParm_t	info_Parms[] = {
+infoParm_t	infoParms[] = {
 	// Game content Flags
 	{ "nonsolid",		~CONTENTS_SOLID,					SURF_NONE,			CONTENTS_NONE },		// special hack to clear solid flag
 	{ "nonopaque",		~CONTENTS_OPAQUE,					SURF_NONE,			CONTENTS_NONE },		// special hack to clear opaque flag
@@ -2077,22 +2046,19 @@ infoParm_t	info_Parms[] = {
 
 /*
 ===============
-parse_surface_parm
+ParseSurfaceParm
 
 surfaceparm <name>
 ===============
 */
-static void parse_surface_parm(const char** text)
+static void ParseSurfaceParm(const char** text)
 {
 	const char* token = COM_ParseExt(text, qfalse);
-
-	for (const auto& num_info_parm : info_Parms)
-	{
-		if (!Q_stricmp(token, num_info_parm.name))
-		{
-			shader.surfaceFlags |= num_info_parm.surfaceFlags;
-			shader.contentFlags |= num_info_parm.contents;
-			shader.contentFlags &= num_info_parm.clearSolid;
+	for (const auto& info_parm : infoParms) {
+		if (!Q_stricmp(token, info_parm.name)) {
+			shader.surfaceFlags |= info_parm.surfaceFlags;
+			shader.contentFlags |= info_parm.contents;
+			shader.contentFlags &= info_parm.clearSolid;
 			break;
 		}
 	}
@@ -2262,7 +2228,7 @@ static qboolean ParseShader(const char** text)
 		}
 		// skip stuff that only q3map or the server needs
 		else if (!Q_stricmp(token, "surfaceParm")) {
-			parse_surface_parm(text);
+			ParseSurfaceParm(text);
 		}
 		// no mip maps
 		else if (!Q_stricmp(token, "nomipmaps"))
@@ -2421,8 +2387,6 @@ static qboolean ParseShader(const char** text)
 		stages[0].stateBits |= GLS_SRCBLEND_SRC_ALPHA | GLS_DSTBLEND_ONE_MINUS_SRC_ALPHA;
 	}
 
-#ifndef JK2_MODE
-
 	// The basejka radar arrow contains an incorrect rgbGen of identity
 	// It only worked because the original code didn't check shaders at all,
 	// thus setcolor worked fine but with fixing RB_RotatePic it no longer
@@ -2437,7 +2401,6 @@ static qboolean ParseShader(const char** text)
 		stages[0].rgbGen = CGEN_VERTEX;
 		stages[0].alphaGen = AGEN_VERTEX;
 	}
-#endif
 
 	COM_EndParseSession();
 	return qtrue;
@@ -2628,26 +2591,26 @@ static void FixRenderCommandList(int newShader) {
 				}
 				case RC_STRETCH_PIC:
 				{
-					const stretchPicCommand_t* sp_Cmd = (const stretchPicCommand_t*)curCmd;
-					curCmd = (const void*)(sp_Cmd + 1);
+					const stretchPicCommand_t* sp_cmd = (const stretchPicCommand_t*)curCmd;
+					curCmd = (const void*)(sp_cmd + 1);
 					break;
 				}
 				case RC_SCISSOR:
 				{
-					const scissorCommand_t* sp_Cmd = (const scissorCommand_t*)curCmd;
-					curCmd = (const void*)(sp_Cmd + 1);
+					const scissorCommand_t* sp_cmd = (const scissorCommand_t*)curCmd;
+					curCmd = (const void*)(sp_cmd + 1);
 					break;
 				}
 				case RC_ROTATE_PIC:
 				{
-					const rotatePicCommand_t* sp_Cmd = (const rotatePicCommand_t*)curCmd;
-					curCmd = (const void*)(sp_Cmd + 1);
+					const rotatePicCommand_t* sp_cmd = (const rotatePicCommand_t*)curCmd;
+					curCmd = (const void*)(sp_cmd + 1);
 					break;
 				}
 				case RC_ROTATE_PIC2:
 				{
-					const rotatePicCommand_t* sp_Cmd = (const rotatePicCommand_t*)curCmd;
-					curCmd = (const void*)(sp_Cmd + 1);
+					const rotatePicCommand_t* sp_cmd = (const rotatePicCommand_t*)curCmd;
+					curCmd = (const void*)(sp_cmd + 1);
 					break;
 				}
 				case RC_DRAW_SURFS:
@@ -3076,6 +3039,12 @@ static shader_t* FinishShader() {
 			const int blend_src_bits = p_stage->stateBits & GLS_SRCBLEND_BITS;
 			const int blend_dst_bits = p_stage->stateBits & GLS_DSTBLEND_BITS;
 
+			// fog color adjustment only works for blend modes that have a contribution
+			// that aproaches 0 as the modulate values aproach 0 --
+			// GL_ONE, GL_ONE
+			// GL_ZERO, GL_ONE_MINUS_SRC_COLOR
+			// GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA
+
 			// modulate, additive
 			if (blend_src_bits == GLS_SRCBLEND_ONE && blend_dst_bits == GLS_DSTBLEND_ONE ||
 				blend_src_bits == GLS_SRCBLEND_ZERO && blend_dst_bits == GLS_DSTBLEND_ONE_MINUS_SRC_COLOR) {
@@ -3377,6 +3346,12 @@ shader_t* R_FindShader(const char* name, const int* lightmap_index, const byte* 
 		return tr.defaultShader;
 	}
 
+	// use (fullbright) vertex lighting if the bsp file doesn't have
+	// lightmaps
+/*	if ( lightmapIndex[0] >= 0 && lightmapIndex[0] >= tr.numLightmaps ) {
+		lightmapIndex = lightmapsVertex;
+	}
+*/
 	lightmap_index = R_FindLightmap(lightmap_index);
 
 	COM_StripExtension(name, stripped_name, sizeof stripped_name);
@@ -3505,13 +3480,7 @@ This should really only be used for explicit shaders, because there is no
 way to ask for different implicit lighting modes (vertex, lightmap, etc)
 ====================
 */
-qhandle_t RE_RegisterShader(const char* name) 
-{
-	if (strlen(name) >= MAX_QPATH)
-	{
-		ri.Printf(PRINT_ALL, "Shader name exceeds MAX_QPATH\n");
-		return 0;
-	}
+qhandle_t RE_RegisterShader(const char* name) {
 	const shader_t* sh = R_FindShader(name, lightmaps2d, stylesDefault, qtrue);
 
 	// we want to return 0 if the shader failed to
@@ -3519,10 +3488,10 @@ qhandle_t RE_RegisterShader(const char* name)
 	// still keep a name allocated for it, so if
 	// something calls RE_RegisterShader again with
 	// the same name, we don't try looking for it again
-	if (sh->defaultShader) 
-	{
+	if (sh->defaultShader) {
 		return 0;
 	}
+
 	return sh->index;
 }
 
@@ -3533,7 +3502,8 @@ RE_RegisterShaderNoMip
 For menu graphics that should never be picmiped
 ====================
 */
-qhandle_t RE_RegisterShaderNoMip(const char* name) {
+qhandle_t RE_RegisterShaderNoMip(const char* name) 
+{
 	const shader_t* sh = R_FindShader(name, lightmaps2d, stylesDefault, qfalse);
 
 	// we want to return 0 if the shader failed to
@@ -3663,15 +3633,121 @@ static void SetupShaderEntryPtrs()
 		}
 		else
 		{
-			Q_strlwr(token);
+			Q_strlwr(token);	// token is always a ptr to com_token here, not the original buffer.
+			//	(Not that it matters, except for reasons of speed by not strlwr'ing the whole buffer)
+
+// token = a string of this shader name, p = ptr within s_shadertext it's found at, so store it...
+//
 			ShaderEntryPtrs_Insert(token, p);
 			SkipRestOfLine(&p);		// now legally skip over this name and go get the next one
 		}
 	}
 
 	COM_EndParseSession();
+
+	//ri.Printf( PRINT_DEVELOPER, "SetupShaderEntryPtrs(): Stored %d shader ptrs\n",ShaderEntryPtrs_Size() );
 }
 #endif
+
+int COM_CompressShader(char* data_p)
+{
+	char* out;
+	qboolean newline = qfalse, whitespace = qfalse;
+
+	char* in = out = data_p;
+	if (in)
+	{
+		int c;
+		while ((c = *in) != 0)
+		{
+			// skip double slash comments
+			if (c == '/' && in[1] == '/')
+			{
+				while (*in && *in != '\n')
+				{
+					in++;
+				}
+			}
+			// skip number sign comments
+			else if (c == '#')
+			{
+				while (*in && *in != '\n')
+				{
+					in++;
+				}
+			}
+			// skip /* */ comments
+			else if (c == '/' && in[1] == '*')
+			{
+				while (*in && (*in != '*' || in[1] != '/'))
+					in++;
+				if (*in)
+					in += 2;
+			}
+			// record when we hit a newline
+			else if (c == '\n' || c == '\r')
+			{
+				newline = qtrue;
+				in++;
+			}
+			// record when we hit whitespace
+			else if (c == ' ' || c == '\t')
+			{
+				whitespace = qtrue;
+				in++;
+				// an actual token
+			}
+			else
+			{
+				// if we have a pending newline, emit it (and it counts as whitespace)
+				if (newline)
+				{
+					*out++ = '\n';
+					newline = qfalse;
+					whitespace = qfalse;
+				} if (whitespace)
+				{
+					*out++ = ' ';
+					whitespace = qfalse;
+				}
+
+				// copy quoted strings unmolested
+				if (c == '"')
+				{
+					*out++ = c;
+					in++;
+					while (true)
+					{
+						c = *in;
+						if (c && c != '"')
+						{
+							*out++ = c;
+							in++;
+						}
+						else
+						{
+							break;
+						}
+					}
+					if (c == '"')
+					{
+						*out++ = c;
+						in++;
+					}
+				}
+				else
+				{
+					*out = c;
+					out++;
+					in++;
+				}
+			}
+		}
+
+		*out = 0;
+	}
+	return out - data_p;
+}
 
 /*
 ====================
@@ -3684,7 +3760,7 @@ a single large text block that can be scanned for shader names
 constexpr auto MAX_SHADER_FILES = 8192;
 static void Scan_And_Load_Shader_Files()
 {
-	char* buffers[MAX_SHADER_FILES]{};
+	char* buffers[MAX_SHADER_FILES];
 	int num_shader_files;
 	int i;
 	long sum = 0;
@@ -3736,7 +3812,7 @@ static void Scan_And_Load_Shader_Files()
 		ri.FS_FreeFile(buffers[i]);
 	}
 
-	COM_Compress(s_shaderText);
+	COM_CompressShader(s_shaderText);
 
 	// free up memory
 	ri.FS_FreeFileList(shader_files);
@@ -3751,8 +3827,7 @@ static void Scan_And_Load_Shader_Files()
 CreateInternalShaders
 ====================
 */
-static void CreateInternalShaders(void)
-{
+static void CreateInternalShaders() {
 	tr.numShaders = 0;
 	tr.iNumDeniedShaders = 0;
 
@@ -3787,8 +3862,7 @@ static void CreateInternalShaders(void)
 	ARB_InitGlowShaders();
 }
 
-static void CreateExternalShaders(void)
-{
+static void CreateExternalShaders() {
 	tr.projectionShadowShader = R_FindShader("projectionShadow", lightmapsNone, stylesDefault, qtrue);
 	tr.projectionShadowShader->sort = SS_STENCIL_SHADOW;
 	tr.sunShader = R_FindShader("sun", lightmapsVertex, stylesDefault, qtrue);

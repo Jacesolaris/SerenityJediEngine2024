@@ -31,7 +31,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 float ProjectRadius(const float r, vec3_t location)
 {
-	vec3_t	p{};
+	vec3_t	p;
 
 	const float c = DotProduct(tr.viewParms.ori.axis[0], tr.viewParms.ori.origin);
 	const float dist = DotProduct(tr.viewParms.ori.axis[0], location) - c;
@@ -67,7 +67,7 @@ R_CullModel
 =============
 */
 static int R_CullModel(md3Header_t* header, const trRefEntity_t* ent) {
-	vec3_t		bounds[2]{};
+	vec3_t		bounds[2];
 
 	// compute frame pointers
 	const md3Frame_t* new_frame = reinterpret_cast<md3Frame_t*>(reinterpret_cast<byte*>(header) + header->ofsFrames) + ent->e.frame;

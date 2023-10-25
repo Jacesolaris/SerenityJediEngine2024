@@ -331,8 +331,8 @@ void trap_CIN_DrawCinematic(int handle) {
 void trap_CIN_SetExtents(int handle, int x, int y, int w, int h) {
 	Q_syscall(UI_CIN_SETEXTENTS, handle, x, y, w, h);
 }
-void trap_R_RemapShader(const char* oldShader, const char* newShader, const char* time_offset) {
-	Q_syscall(UI_R_REMAP_SHADER, oldShader, newShader, time_offset);
+void trap_R_RemapShader(const char* oldShader, const char* new_shader_name, const char* time_offset) {
+	Q_syscall(UI_R_REMAP_SHADER, oldShader, new_shader_name, time_offset);
 }
 int trap_SP_GetNumLanguages(void) {
 	return Q_syscall(UI_SP_GETNUMLANGUAGES);
@@ -439,8 +439,8 @@ void trap_G2API_SetRagDoll(void* ghoul2, sharedRagDollParams_t* params) {
 void trap_G2API_AnimateG2Models(void* ghoul2, int time, sharedRagDollUpdateParams_t* params) {
 	Q_syscall(UI_G2_ANIMATEG2MODELS, ghoul2, time, params);
 }
-qboolean trap_G2API_SetBoneIKState(void* ghoul2, int time, const char* bone_name, int ikState, sharedSetBoneIKStateParams_t* params) {
-	return Q_syscall(UI_G2_SETBONEIKSTATE, ghoul2, time, bone_name, ikState, params);
+qboolean trap_G2API_SetBoneIKState(void* ghoul2, int time, const char* bone_name, int ik_state, sharedSetBoneIKStateParams_t* params) {
+	return Q_syscall(UI_G2_SETBONEIKSTATE, ghoul2, time, bone_name, ik_state, params);
 }
 qboolean trap_G2API_IKMove(void* ghoul2, int time, sharedIKMoveParams_t* params) {
 	return Q_syscall(UI_G2_IKMOVE, ghoul2, time, params);
@@ -448,8 +448,8 @@ qboolean trap_G2API_IKMove(void* ghoul2, int time, sharedIKMoveParams_t* params)
 void trap_G2API_GetSurfaceName(void* ghoul2, int surfNumber, int model_index, char* fillBuf) {
 	Q_syscall(UI_G2_GETSURFACENAME, ghoul2, surfNumber, model_index, fillBuf);
 }
-qboolean trap_G2API_AttachG2Model(void* ghoul2_from, int model_indexFrom, void* ghoul2_to, int toBoltIndex, int toModel) {
-	return Q_syscall(UI_G2_ATTACHG2MODEL, ghoul2_from, model_indexFrom, ghoul2_to, toBoltIndex, toModel);
+qboolean trap_G2API_AttachG2Model(void* ghoul2_from, int model_indexFrom, void* ghoul2_to, int to_bolt_index, int to_model) {
+	return Q_syscall(UI_G2_ATTACHG2MODEL, ghoul2_from, model_indexFrom, ghoul2_to, to_bolt_index, to_model);
 }
 
 // Translate import table funcptrs to syscalls

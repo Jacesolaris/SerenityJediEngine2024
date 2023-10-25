@@ -63,7 +63,7 @@ AddSkyPolygon
 static void AddSkyPolygon(const int nump, vec3_t vecs)
 {
 	int		i;
-	vec3_t	v, av{};
+	vec3_t	v, av;
 	float	s, t, dv;
 	int		axis;
 	float* vp;
@@ -158,10 +158,10 @@ static void ClipSkyPolygon(const int nump, vec3_t vecs, const int stage)
 	float* v;
 	qboolean back;
 	float	d;
-	float	dists[MAX_CLIP_VERTS]{};
-	int		sides[MAX_CLIP_VERTS]{};
-	vec3_t	newv[2][MAX_CLIP_VERTS]{};
-	int		newc[2]{};
+	float	dists[MAX_CLIP_VERTS];
+	int		sides[MAX_CLIP_VERTS];
+	vec3_t	newv[2][MAX_CLIP_VERTS];
+	int		newc[2];
 	int		i;
 
 	if (nump > MAX_CLIP_VERTS - 2)
@@ -267,7 +267,7 @@ void RB_ClipSkyPolygons(const shaderCommands_t* input)
 
 	for (int i = 0; i < input->num_indexes; i += 3)
 	{
-		vec3_t p[5]{};
+		vec3_t p[5];
 		for (int j = 0; j < 3; j++)
 		{
 			VectorSubtract(input->xyz[input->indexes[i + j]],
@@ -306,7 +306,7 @@ static void MakeSkyVec(float s, float t, const int axis, float out_st[2], vec3_t
 		{2,-1,-3}		// look straight down
 	};
 
-	vec3_t		b{};
+	vec3_t		b;
 
 	const float box_size = backEnd.viewParms.zFar / 1.75;		// div sqrt(3)
 	b[0] = s * box_size;
@@ -389,7 +389,7 @@ static void DrawSkyBox(const shader_t* shader)
 
 	for (int i = 0; i < 6; i++)
 	{
-		int sky_mins_subd[2]{}, sky_maxs_subd[2]{};
+		int sky_mins_subd[2], sky_maxs_subd[2];
 
 		sky_mins[0][i] = floor(sky_mins[0][i] * HALF_SKY_SUBDIVISIONS) / HALF_SKY_SUBDIVISIONS;
 		sky_mins[1][i] = floor(sky_mins[1][i] * HALF_SKY_SUBDIVISIONS) / HALF_SKY_SUBDIVISIONS;
@@ -499,7 +499,7 @@ static void FillCloudBox(const int stage)
 {
 	for (int i = 0; i < 6; i++)
 	{
-		int sky_mins_subd[2]{}, sky_maxs_subd[2];
+		int sky_mins_subd[2], sky_maxs_subd[2];
 		float min_t;
 
 		if (true)

@@ -59,9 +59,9 @@ Returns CULL_IN, CULL_CLIP, or CULL_OUT
 int R_CullLocalBox(const vec3_t bounds[2])
 {
 	int i;
-	vec3_t transformed[8]{};
-	float dists[8]{};
-	vec3_t v{};
+	vec3_t transformed[8];
+	float dists[8];
+	vec3_t v;
 	int back;
 
 	if (r_nocull->integer == 1)
@@ -406,7 +406,7 @@ Sets up the modelview matrix for a given viewParm
 */
 void R_RotateForViewer()
 {
-	float viewerMatrix[16]{};
+	float viewerMatrix[16];
 	vec3_t origin;
 
 	memset(&tr.ori, 0, sizeof tr.ori);
@@ -465,7 +465,7 @@ static void SetFarClip()
 	//
 	for (int i = 0; i < 8; i++)
 	{
-		vec3_t v{};
+		vec3_t v;
 
 		if (i & 1)
 		{
@@ -699,7 +699,7 @@ qboolean R_GetPortalOrientations(const drawSurf_t* drawSurf, const int entity_nu
 	orientation_t* surface, orientation_t* camera,
 	vec3_t pvsOrigin, qboolean* mirror)
 {
-	cplane_t originalPlane, plane{};
+	cplane_t originalPlane, plane;
 
 	// create plane axis for the portal we are seeing
 	R_PlaneForSurface(drawSurf->surface, &originalPlane);
@@ -707,7 +707,7 @@ qboolean R_GetPortalOrientations(const drawSurf_t* drawSurf, const int entity_nu
 	// rotate the plane if necessary
 	if (entity_num != REFENTITYNUM_WORLD)
 	{
-		tr.currententity_num = entity_num;
+		tr.currentEntityNum = entity_num;
 		tr.currentEntity = &tr.refdef.entities[entity_num];
 
 		// get the orientation of the entity
@@ -815,7 +815,7 @@ qboolean R_GetPortalOrientations(const drawSurf_t* drawSurf, const int entity_nu
 
 static qboolean IsMirror(const drawSurf_t* drawSurf, const int entity_num)
 {
-	cplane_t originalPlane, plane{};
+	cplane_t originalPlane, plane;
 
 	// create plane axis for the portal we are seeing
 	R_PlaneForSurface(drawSurf->surface, &originalPlane);
@@ -823,7 +823,7 @@ static qboolean IsMirror(const drawSurf_t* drawSurf, const int entity_num)
 	// rotate the plane if necessary
 	if (entity_num != REFENTITYNUM_WORLD)
 	{
-		tr.currententity_num = entity_num;
+		tr.currentEntityNum = entity_num;
 		tr.currentEntity = &tr.refdef.entities[entity_num];
 
 		// get the orientation of the entity
@@ -1110,7 +1110,7 @@ R_Radix
 static QINLINE void R_Radix(const int byte, const int size, drawSurf_t* source, drawSurf_t* dest)
 {
 	int count[256] = { 0 };
-	int index[256]{};
+	int index[256];
 	int i;
 
 	unsigned char* sortKey = reinterpret_cast<unsigned char*>(&source[0].sort) + byte;
@@ -1178,7 +1178,7 @@ void R_AddDrawSurf(const surfaceType_t* surface, const shader_t* shader, int fog
 	// the sort data is packed into a single 32 bit value so it can be
 	// compared quickly during the qsorting process
 	tr.refdef.drawSurfs[index].sort = shader->sortedIndex << QSORT_SHADERNUM_SHIFT
-		| tr.shiftedentity_num | fogIndex << QSORT_FOGNUM_SHIFT | dlightMap;
+		| tr.shiftedEntityNum | fogIndex << QSORT_FOGNUM_SHIFT | dlightMap;
 	tr.refdef.drawSurfs[index].surface = const_cast<surfaceType_t*>(surface);
 	tr.refdef.numDrawSurfs++;
 }
@@ -1257,7 +1257,7 @@ void R_SortDrawSurfs(drawSurf_t* drawSurfs, int numDrawSurfs)
 R_AddEntitySurfaces
 =============
 */
-void R_AddEntitySurfaces(void)
+void R_AddEntitySurfaces()
 {
 	shader_t* shader;
 
@@ -1266,16 +1266,16 @@ void R_AddEntitySurfaces(void)
 		return;
 	}
 
-	for (tr.currententity_num = 0;
-		tr.currententity_num < tr.refdef.num_entities;
-		tr.currententity_num++)
+	for (tr.currentEntityNum = 0;
+		tr.currentEntityNum < tr.refdef.num_entities;
+		tr.currentEntityNum++)
 	{
-		trRefEntity_t* ent = tr.currentEntity = &tr.refdef.entities[tr.currententity_num];
+		trRefEntity_t* ent = tr.currentEntity = &tr.refdef.entities[tr.currentEntityNum];
 
 		ent->needDlights = qfalse;
 
 		// preshift the value we are going to OR into the drawsurf sort
-		tr.shiftedentity_num = tr.currententity_num << QSORT_REFENTITYNUM_SHIFT;
+		tr.shiftedEntityNum = tr.currentEntityNum << QSORT_REFENTITYNUM_SHIFT;
 
 		if (ent->e.renderfx & RF_ALPHA_FADE)
 		{
@@ -1283,7 +1283,7 @@ void R_AddEntitySurfaces(void)
 			// want this to be sorted quite late...like how about last.
 			// I don't want to use the highest bit, since no doubt someone fumbled
 			// handling that as an unsigned quantity somewhere
-			tr.shiftedentity_num |= 0x80000000;
+			tr.shiftedEntityNum |= 0x80000000;
 		}
 		//
 		// the weapon model must be handled special --
@@ -1308,8 +1308,8 @@ void R_AddEntitySurfaces(void)
 		case RT_CLOUDS:
 		case RT_LINE:
 		case RT_ELECTRICITY:
-		case RT_LIGHTNING:
 		case RT_SABER_GLOW:
+		case RT_LIGHTNING:
 			// self blood sprites, talk balloons, etc should not be drawn in the primary
 			// view.  We can't just do this check for all entities, because md3
 			// entities may still want to cast shadows from them
@@ -1374,7 +1374,7 @@ void R_AddEntitySurfaces(void)
 			}
 			break;
 		default:
-			Com_Error(ERR_DROP, "R_AddEntitySurfaces: Bad reType Vanilla");
+			Com_Error(ERR_DROP, "R_AddEntitySurfaces: Bad reType");
 		}
 	}
 }

@@ -356,8 +356,8 @@ qboolean G2_SetRootSurface(CGhoul2Info_v& ghoul2, const int model_index, const c
 		// gimme some space to put this list into
 		active_surfaces = (int*)Z_Malloc(mdxm->numSurfaces * 4, TAG_GHOUL2, qtrue);
 		memset(active_surfaces, 0, (mdxm->numSurfaces * 4));
-		active_bones = (int*)Z_Malloc(mdxa->numBones * 4, TAG_GHOUL2, qtrue);
-		memset(active_bones, 0, (mdxa->numBones * 4));
+		active_bones = (int*)Z_Malloc(mdxa->num_bones * 4, TAG_GHOUL2, qtrue);
+		memset(active_bones, 0, (mdxa->num_bones * 4));
 
 		G2_FindRecursiveSurface(mod_m, surf, ghoul2[model_index].mSlist, active_surfaces);
 
@@ -440,8 +440,8 @@ qboolean G2_SetRootSurface(CGhoul2Info_v& ghoul2, const int model_index, const c
 				// gimme some space to put this list into
 				active_surfaces = (int *)Z_Malloc(mod_m->mdxm->numSurfaces * 4, TAG_GHOUL2, qtrue);
 				memset(active_surfaces, 0, (mod_m->mdxm->numSurfaces * 4));
-				active_bones = (int *)Z_Malloc(mod_a->mdxa->numBones * 4, TAG_GHOUL2, qtrue);
-				memset(active_bones, 0, (mod_a->mdxa->numBones * 4));
+				active_bones = (int *)Z_Malloc(mod_a->mdxa->num_bones * 4, TAG_GHOUL2, qtrue);
+				memset(active_bones, 0, (mod_a->mdxa->num_bones * 4));
 
 				G2_FindRecursiveSurface(mod_m, surf, ghoul2[model_index].mSlist, active_surfaces);
 

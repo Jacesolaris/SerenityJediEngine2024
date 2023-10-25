@@ -46,7 +46,7 @@ static int R_MDRCullModel(mdrHeader_t* header, trRefEntity_t* ent) {
 	mdrFrame_t* oldFrame, * newFrame;
 	int			i, frameSize;
 
-	frameSize = (size_t)(&((mdrFrame_t*)0)->bones[header->numBones]);
+	frameSize = (size_t)(&((mdrFrame_t*)0)->bones[header->num_bones]);
 
 	// compute frame pointers
 	newFrame = (mdrFrame_t*)((byte*)header + header->ofsFrames + frameSize * ent->e.frame);
@@ -147,7 +147,7 @@ int R_MDRComputeFogNum(mdrHeader_t* header, trRefEntity_t* ent) {
 		return 0;
 	}
 
-	frameSize = (size_t)(&((mdrFrame_t*)0)->bones[header->numBones]);
+	frameSize = (size_t)(&((mdrFrame_t*)0)->bones[header->num_bones]);
 
 	// FIXME: non-normalized axis issues
 	mdrFrame = (mdrFrame_t*)((byte*)header + header->ofsFrames + frameSize * ent->e.frame);
@@ -373,7 +373,7 @@ void RB_MDRSurfaceAnim(mdrSurface_t* surface)
 
 	header = (mdrHeader_t*)((byte*)surface + surface->ofsHeader);
 
-	frameSize = (size_t)(&((mdrFrame_t*)0)->bones[header->numBones]);
+	frameSize = (size_t)(&((mdrFrame_t*)0)->bones[header->num_bones]);
 
 	frame = (mdrFrame_t*)((byte*)header + header->ofsFrames +
 		backEnd.currentEntity->e.frame * frameSize);
@@ -406,7 +406,7 @@ void RB_MDRSurfaceAnim(mdrSurface_t* surface)
 	{
 		bonePtr = bones;
 
-		for (i = 0; i < header->numBones * 12; i++)
+		for (i = 0; i < header->num_bones * 12; i++)
 		{
 			((float*)bonePtr)[i] = frontlerp * ((float*)frame->bones)[i] + backlerp * ((float*)oldFrame->bones)[i];
 		}

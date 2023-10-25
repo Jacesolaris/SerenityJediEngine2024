@@ -247,7 +247,7 @@ typedef struct {
 	vec3_t		localOrigin;		// midpoint of bounds, used for sphere cull
 	float		radius;			// dist from localOrigin to corner
 	char		name[16];
-	mdrBone_t	bones[1];		// [numBones]
+	mdrBone_t	bones[1];		// [num_bones]
 } mdrFrame_t;
 
 typedef struct {
@@ -258,7 +258,7 @@ typedef struct {
 	vec3_t          bounds[2];		// bounds of all surfaces of all LOD's for this frame
 	vec3_t          localOrigin;		// midpoint of bounds, used for sphere cull
 	float           radius;			// dist from localOrigin to corner
-	mdrCompBone_t   bones[1];		// [numBones]
+	mdrCompBone_t   bones[1];		// [num_bones]
 } mdrCompFrame_t;
 
 typedef struct {
@@ -280,7 +280,7 @@ typedef struct {
 
 	// frames and bones are shared by all levels of detail
 	int			num_frames;
-	int			numBones;
+	int			num_bones;
 	int			ofsFrames;			// mdrFrame_t[num_frames]
 
 	// each level of detail has completely separate sets of surfaces

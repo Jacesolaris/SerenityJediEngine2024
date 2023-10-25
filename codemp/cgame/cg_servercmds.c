@@ -315,7 +315,7 @@ CG_ShaderStateChanged
 void CG_ShaderStateChanged(void)
 {
 	char originalShader[MAX_QPATH];
-	char newShader[MAX_QPATH];
+	char new_shader_name[MAX_QPATH];
 	char time_offset[16];
 
 	const char* o = CG_ConfigString(CS_SHADERSTATE);
@@ -330,8 +330,8 @@ void CG_ShaderStateChanged(void)
 			char* t = strstr(n, ":");
 			if (t && *t)
 			{
-				strncpy(newShader, n, t - n);
-				newShader[t - n] = 0;
+				strncpy(new_shader_name, n, t - n);
+				new_shader_name[t - n] = 0;
 			}
 			else
 			{
@@ -344,7 +344,7 @@ void CG_ShaderStateChanged(void)
 				strncpy(time_offset, t, o - t);
 				time_offset[o - t] = 0;
 				o++;
-				trap->R_RemapShader(originalShader, newShader, time_offset);
+				trap->R_RemapShader(originalShader, new_shader_name, time_offset);
 			}
 		}
 		else

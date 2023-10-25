@@ -583,7 +583,7 @@ typedef struct cgameImport_s {
 	qhandle_t(*R_RegisterShader)						(const char* name);
 	qhandle_t(*R_RegisterShaderNoMip)				(const char* name);
 	qhandle_t(*R_RegisterSkin)						(const char* name);
-	void			(*R_RemapShader)						(const char* oldShader, const char* newShader, const char* offsetTime);
+	void			(*R_RemapShader)						(const char* oldShader, const char* new_shader_name, const char* offsetTime);
 	void			(*R_RenderScene)						(const refdef_t* fd);
 	void			(*R_SetColor)							(const float* rgba);	// NULL = 1,1,1,1
 	void			(*R_SetLightStyle)						(int style, int color);
@@ -687,7 +687,7 @@ typedef struct cgameImport_s {
 	void			(*G2API_ClearSkinGore)					(void* ghl_info);
 	int				(*G2API_Ghoul2Size)						(void* ghl_info);
 	int				(*G2API_AddBolt)						(void* ghoul2, int model_index, const char* bone_name);
-	qboolean(*G2API_AttachEnt)						(int* bolt_info, void* ghlInfoTo, int toBoltIndex, int ent_num, int toModelNum);
+	qboolean(*G2API_AttachEnt)						(int* bolt_info, void* ghl_info_to, int to_bolt_index, int ent_num, int to_model_num);
 	void			(*G2API_SetBoltInfo)					(void* ghoul2, int model_index, int bolt_info);
 	qboolean(*G2API_SetRootSurface)					(void* ghoul2, int model_index, const char* surface_name);
 	qboolean(*G2API_SetSurfaceOnOff)				(void* ghoul2, const char* surface_name, int flags);
@@ -705,7 +705,7 @@ typedef struct cgameImport_s {
 	qboolean(*G2API_GetRagBonePos)					(void* ghoul2, const char* bone_name, vec3_t pos, vec3_t entAngles, vec3_t entPos, vec3_t entScale);
 	qboolean(*G2API_RagEffectorKick)				(void* ghoul2, const char* bone_name, vec3_t velocity);
 	qboolean(*G2API_RagForceSolve)					(void* ghoul2, qboolean force);
-	qboolean(*G2API_SetBoneIKState)					(void* ghoul2, int time, const char* bone_name, int ikState, sharedSetBoneIKStateParams_t* params);
+	qboolean(*G2API_SetBoneIKState)					(void* ghoul2, int time, const char* bone_name, int ik_state, sharedSetBoneIKStateParams_t* params);
 	qboolean(*G2API_IKMove)							(void* ghoul2, int time, sharedIKMoveParams_t* params);
 	qboolean(*G2API_RemoveBone)						(void* ghoul2, const char* bone_name, int model_index);
 	void			(*G2API_AttachInstanceToEntNum)			(void* ghoul2, int entity_num, qboolean server);

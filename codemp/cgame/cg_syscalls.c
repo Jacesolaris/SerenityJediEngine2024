@@ -495,9 +495,9 @@ void trap_R_SetRefractProp(const float alpha, const float stretch, const qboolea
 	Q_syscall(CG_R_SETREFRACTIONPROP, PASSFLOAT(alpha), PASSFLOAT(stretch), prepost, negate);
 }
 
-void trap_R_RemapShader(const char* oldShader, const char* newShader, const char* time_offset)
+void trap_R_RemapShader(const char* oldShader, const char* new_shader_name, const char* time_offset)
 {
-	Q_syscall(CG_R_REMAP_SHADER, oldShader, newShader, time_offset);
+	Q_syscall(CG_R_REMAP_SHADER, oldShader, new_shader_name, time_offset);
 }
 
 void trap_R_GetLightStyle(const int style, color4ub_t color)
@@ -1039,10 +1039,10 @@ int trap_G2API_AddBolt(void* ghoul2, const int model_index, const char* bone_nam
 	return Q_syscall(CG_G2_ADDBOLT, ghoul2, model_index, bone_name);
 }
 
-qboolean trap_G2API_AttachEnt(int* bolt_info, void* ghlInfoTo, const int toBoltIndex, const int ent_num,
-	const int toModelNum)
+qboolean trap_G2API_AttachEnt(int* bolt_info, void* ghl_info_to, const int to_bolt_index, const int ent_num,
+	const int to_model_num)
 {
-	return Q_syscall(CG_G2_ATTACHENT, bolt_info, ghlInfoTo, toBoltIndex, ent_num, toModelNum);
+	return Q_syscall(CG_G2_ATTACHENT, bolt_info, ghl_info_to, to_bolt_index, ent_num, to_model_num);
 }
 
 void trap_G2API_SetBoltInfo(void* ghoul2, const int model_index, const int bolt_info)
@@ -1131,10 +1131,10 @@ qboolean trap_G2API_RagForceSolve(void* ghoul2, const qboolean force)
 	return Q_syscall(CG_G2_RAGFORCESOLVE, ghoul2, force);
 }
 
-qboolean trap_G2API_SetBoneIKState(void* ghoul2, const int time, const char* bone_name, const int ikState,
+qboolean trap_G2API_SetBoneIKState(void* ghoul2, const int time, const char* bone_name, const int ik_state,
 	sharedSetBoneIKStateParams_t* params)
 {
-	return Q_syscall(CG_G2_SETBONEIKSTATE, ghoul2, time, bone_name, ikState, params);
+	return Q_syscall(CG_G2_SETBONEIKSTATE, ghoul2, time, bone_name, ik_state, params);
 }
 
 qboolean trap_G2API_IKMove(void* ghoul2, const int time, sharedIKMoveParams_t* params)

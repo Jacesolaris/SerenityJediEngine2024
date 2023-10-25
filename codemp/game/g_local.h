@@ -1519,7 +1519,7 @@ void G_AddPredictableEvent(const gentity_t* ent, int event, int eventParm);
 void G_AddEvent(gentity_t* ent, int event, int event_parm);
 void G_SetOrigin(gentity_t* ent, vec3_t origin);
 qboolean G_CheckInSolid(gentity_t* self, qboolean fix);
-void AddRemap(const char* oldShader, const char* newShader, float time_offset);
+void AddRemap(const char* oldShader, const char* new_shader_name, float time_offset);
 const char* BuildShaderStateConfig(void);
 /*
 Ghoul2 Insert Start

@@ -289,23 +289,24 @@ optimization to prevent disk rescanning if they are
 asked for again.
 ====================
 */
-qhandle_t RE_RegisterModel(const char* name) {
+qhandle_t RE_RegisterModel(const char* name)
+{
 	model_t* mod;
 	qhandle_t	hModel;
 	qboolean	orgNameFailed = qfalse;
 	int			orgLoader = -1;
 	int			i;
-	char		localName[MAX_QPATH];
+	char		localName[MAX_SKINNAME_PATH];
 	const char* ext;
-	char		altName[MAX_QPATH];
+	char		altName[MAX_SKINNAME_PATH];
 
 	if (!name || !name[0]) {
 		ri->Printf(PRINT_ALL, "RE_RegisterModel: NULL name\n");
 		return 0;
 	}
 
-	if (strlen(name) >= MAX_QPATH) {
-		ri->Printf(PRINT_ALL, "Model name exceeds MAX_QPATH\n");
+	if (strlen(name) >= MAX_SKINNAME_PATH) {
+		ri->Printf(PRINT_ALL, "Model name exceeds MAX_SKINNAME_PATH\n");
 		return 0;
 	}
 
@@ -327,7 +328,7 @@ qhandle_t RE_RegisterModel(const char* name) {
 	}
 
 	// allocate a new model_t
-	if ((mod = R_AllocModel()) == NULL) {
+	if ((mod = R_AllocModel()) == nullptr) {
 		ri->Printf(PRINT_WARNING, "RE_RegisterModel: R_AllocModel() failed for '%s'\n", name);
 		return 0;
 	}
@@ -343,7 +344,7 @@ qhandle_t RE_RegisterModel(const char* name) {
 	//
 	// load the files
 	//
-	Q_strncpyz(localName, name, MAX_QPATH);
+	Q_strncpyz(localName, name, MAX_SKINNAME_PATH);
 
 	ext = COM_GetExtension(localName);
 
@@ -369,7 +370,7 @@ qhandle_t RE_RegisterModel(const char* name) {
 				// try again without the extension
 				orgNameFailed = qtrue;
 				orgLoader = i;
-				COM_StripExtension(name, localName, MAX_QPATH);
+				COM_StripExtension(name, localName, MAX_SKINNAME_PATH);
 			}
 			else
 			{
@@ -465,7 +466,7 @@ qboolean R_LoadMDXA_Server(model_t* mod, void* buffer, const char* mod_name, qbo
 		LL(mdxa->ident);
 		LL(mdxa->version);
 		LL(mdxa->num_frames);
-		LL(mdxa->numBones);
+		LL(mdxa->num_bones);
 		LL(mdxa->ofsFrames);
 		LL(mdxa->ofsEnd);
 	}
@@ -1245,7 +1246,7 @@ static qboolean R_LoadMDR(model_t* mod, void* buffer, int filesize, const char* 
 	mod->type = MOD_MDR;
 
 	LL(pinmodel->num_frames);
-	LL(pinmodel->numBones);
+	LL(pinmodel->num_bones);
 	LL(pinmodel->ofsFrames);
 
 	// This is a model that uses some type of compressed Bones. We don't want to uncompress every bone for each rendered frame
@@ -1255,12 +1256,12 @@ static qboolean R_LoadMDR(model_t* mod, void* buffer, int filesize, const char* 
 		// mdrFrame_t is larger than mdrCompFrame_t:
 		size += pinmodel->num_frames * sizeof(frame->name);
 		// now add enough space for the uncompressed bones.
-		size += pinmodel->num_frames * pinmodel->numBones * ((sizeof(mdrBone_t) - sizeof(mdrCompBone_t)));
+		size += pinmodel->num_frames * pinmodel->num_bones * ((sizeof(mdrBone_t) - sizeof(mdrCompBone_t)));
 	}
 
 	// simple bounds check
-	if (pinmodel->numBones < 0 ||
-		sizeof(*mdr) + pinmodel->num_frames * (sizeof(*frame) + (pinmodel->numBones - 1) * sizeof(*frame->bones)) > size)
+	if (pinmodel->num_bones < 0 ||
+		sizeof(*mdr) + pinmodel->num_frames * (sizeof(*frame) + (pinmodel->num_bones - 1) * sizeof(*frame->bones)) > size)
 	{
 		ri->Printf(PRINT_WARNING, "R_LoadMDR: %s has broken structure.\n", mod_name);
 		return qfalse;
@@ -1275,7 +1276,7 @@ static qboolean R_LoadMDR(model_t* mod, void* buffer, int filesize, const char* 
 	mdr->version = pinmodel->version;	// Don't need to swap byte order on this one, we already did above.
 	Q_strncpyz(mdr->name, pinmodel->name, sizeof(mdr->name));
 	mdr->num_frames = pinmodel->num_frames;
-	mdr->numBones = pinmodel->numBones;
+	mdr->num_bones = pinmodel->num_bones;
 	mdr->numLODs = LittleLong(pinmodel->numLODs);
 	mdr->numTags = LittleLong(pinmodel->numTags);
 	// We don't care about the other offset values, we'll generate them ourselves while loading.
@@ -1311,7 +1312,7 @@ static qboolean R_LoadMDR(model_t* mod, void* buffer, int filesize, const char* 
 			frame->radius = LittleFloat(cframe->radius);
 			frame->name[0] = '\0';	// No name supplied in the compressed version.
 
-			for (j = 0; j < mdr->numBones; j++)
+			for (j = 0; j < mdr->num_bones; j++)
 			{
 				for (k = 0; k < (sizeof(cframe->bones[j].Comp) / 2); k++)
 				{
@@ -1354,13 +1355,13 @@ static qboolean R_LoadMDR(model_t* mod, void* buffer, int filesize, const char* 
 			frame->radius = LittleFloat(curframe->radius);
 			Q_strncpyz(frame->name, curframe->name, sizeof(frame->name));
 
-			for (j = 0; j < (int)(mdr->numBones * sizeof(mdrBone_t) / 4); j++)
+			for (j = 0; j < (int)(mdr->num_bones * sizeof(mdrBone_t) / 4); j++)
 			{
 				((float*)frame->bones)[j] = LittleFloat(((float*)curframe->bones)[j]);
 			}
 
-			curframe = (mdrFrame_t*)&curframe->bones[mdr->numBones];
-			frame = (mdrFrame_t*)&frame->bones[mdr->numBones];
+			curframe = (mdrFrame_t*)&curframe->bones[mdr->num_bones];
+			frame = (mdrFrame_t*)&frame->bones[mdr->num_bones];
 		}
 	}
 
@@ -1689,7 +1690,7 @@ void R_GetAnimTag(mdrHeader_t* mod, int framenum, const char* tagName, mdvTag_t*
 		{
 			// uncompressed model...
 			//
-			frameSize = (intptr_t)(&((mdrFrame_t*)0)->bones[mod->numBones]);
+			frameSize = (intptr_t)(&((mdrFrame_t*)0)->bones[mod->num_bones]);
 			frame = (mdrFrame_t*)((byte*)mod + mod->ofsFrames + framenum * frameSize);
 
 			for (j = 0; j < 3; j++)

@@ -84,7 +84,7 @@ int G2_Add_Bone(const model_t* mod, boneInfo_v& blist, const char* bone_name)
 	const mdxaSkelOffsets_t* offsets = reinterpret_cast<mdxaSkelOffsets_t*>(reinterpret_cast<byte*>(mod->mdxa) + sizeof(mdxaHeader_t));
 
 	// walk the entire list of bones in the gla file for this model and see if any match the name of the bone we want to find
-	for (x = 0; x < mod->mdxa->numBones; x++)
+	for (x = 0; x < mod->mdxa->num_bones; x++)
 	{
 		skel = reinterpret_cast<mdxaSkel_t*>(reinterpret_cast<byte*>(mod->mdxa) + sizeof(mdxaHeader_t) + offsets->offsets[x]);
 		// if name is the same, we found it
@@ -95,7 +95,7 @@ int G2_Add_Bone(const model_t* mod, boneInfo_v& blist, const char* bone_name)
 	}
 
 	// check to see we did actually make a match with a bone in the model
-	if (x == mod->mdxa->numBones)
+	if (x == mod->mdxa->num_bones)
 	{
 		// didn't find it? Error
 		//assert(0);
@@ -222,8 +222,7 @@ qboolean G2_Stop_Bone_Index(boneInfo_v& blist, const int index, const int flags)
 }
 
 // generate a matrix for a given bone given some new angles for it.
-void G2_Generate_Matrix(const model_t* mod, boneInfo_v& blist, const int index, const float* angles, const int flags,
-	const Eorientations up, const Eorientations left, const Eorientations forward)
+void G2_Generate_Matrix(const model_t* mod, boneInfo_v& blist, const int index, const float* angles, const int flags, const Eorientations up, const Eorientations left, const Eorientations forward)
 {
 	mdxaBone_t		temp1;
 	mdxaBone_t		permutation{};
@@ -608,17 +607,7 @@ qboolean G2_Set_Bone_Angles_Matrix(const char* file_name, boneInfo_v& blist, con
 #define DEBUG_G2_TIMING (0)
 
 // given a model, bone name, a bonelist, a start/end frame number, a anim speed and some anim flags, set up or modify an existing bone entry for a new set of anims
-qboolean G2_Set_Bone_Anim_Index(
-	boneInfo_v& blist,
-	const int index,
-	const int start_frame,
-	const int end_frame,
-	const int flags,
-	const float anim_speed,
-	const int current_time,
-	const float set_frame,
-	const int ablend_time,
-	const int num_frames)
+qboolean G2_Set_Bone_Anim_Index(boneInfo_v& blist, const int index, const int start_frame, const int end_frame, const int flags, const float anim_speed, const int current_time, const float set_frame, const int ablend_time, const int num_frames)
 {
 	int			mod_flags = flags;
 
@@ -796,16 +785,7 @@ qboolean G2_Set_Bone_Anim_Index(
 }
 
 // given a model, bone name, a bonelist, a start/end frame number, a anim speed and some anim flags, set up or modify an existing bone entry for a new set of anims
-qboolean G2_Set_Bone_Anim(const CGhoul2Info* ghl_info,
-	boneInfo_v& blist,
-	const char* bone_name,
-	const int start_frame,
-	const int end_frame,
-	const int flags,
-	const float anim_speed,
-	const int current_time,
-	const float set_frame,
-	const int blend_time)
+qboolean G2_Set_Bone_Anim(const CGhoul2Info* ghl_info, boneInfo_v& blist, const char* bone_name, const int start_frame, const int end_frame, const int flags, const float anim_speed, const int current_time, const float set_frame, const int blend_time)
 {
 	const model_t* mod_a = const_cast<model_t*>(ghl_info->animModel);
 
@@ -1553,7 +1533,7 @@ void G2_ResetRagDoll(CGhoul2Info_v& ghoul2_v)
 	boneInfo_v& blist = ghoul2.mBlist;
 #if 1
 	//Eh, screw it. Ragdoll does a lot of terrible things to the bones that probably aren't directly reversible, so just reset it all.
-	G2_Init_Bone_List(blist, ghoul2.aHeader->numBones);
+	G2_Init_Bone_List(blist, ghoul2.aHeader->num_bones);
 #else //The anims on every bone are messed up too, as are the angles. There's not really any way to get back to a normal state, so just clear the list
 	//and let them re-set their anims/angles gameside.
 	int i = 0;
@@ -3260,7 +3240,7 @@ void G2_RagPrintMatrix(mdxaBone_t* mat)
 #endif
 
 void G2_RagGetBoneBasePoseMatrixLow(const CGhoul2Info& ghoul2, int bone_num, const mdxaBone_t& bone_matrix, mdxaBone_t& ret_matrix, vec3_t scale);
-void G2_RagGetAnimMatrix(CGhoul2Info& ghoul2, int bone_num, mdxaBone_t& matrix, int frame);
+void G2_RagGetAnimMatrix(CGhoul2Info& ghoul2, const int bone_num, mdxaBone_t& matrix, const int frame);
 
 static void G2_RagGetWorldAnimMatrix(CGhoul2Info& ghoul2, const boneInfo_t& bone, CRagDollUpdateParams* params, mdxaBone_t& ret_matrix)
 {
@@ -4662,10 +4642,10 @@ qboolean G2_IKMove(CGhoul2Info_v& ghoul2, int time, sharedIKMoveParams_t* params
 }
 
 // set the bone list to all unused so the bone transformation routine ignores it.
-void G2_Init_Bone_List(boneInfo_v& blist, const int numBones)
+void G2_Init_Bone_List(boneInfo_v& blist, const int num_bones)
 {
 	blist.clear();
-	blist.reserve(numBones);
+	blist.reserve(num_bones);
 }
 
 void G2_RemoveRedundantBoneOverrides(boneInfo_v& blist, const int* active_bones)

@@ -768,7 +768,7 @@ static void CL_G2API_AnimateG2Models(void* ghoul2, const int time, sharedRagDoll
 	re->G2API_AnimateG2ModelsRag(*static_cast<CGhoul2Info_v*>(ghoul2), time, &rdu_params);
 }
 
-static qboolean CL_G2API_SetBoneIKState(void* ghoul2, const int time, const char* bone_name, const int ikState,
+static qboolean CL_G2API_SetBoneIKState(void* ghoul2, const int time, const char* bone_name, const int ik_state,
 	sharedSetBoneIKStateParams_t* params)
 {
 	if (!ghoul2)
@@ -776,7 +776,7 @@ static qboolean CL_G2API_SetBoneIKState(void* ghoul2, const int time, const char
 		return qfalse;
 	}
 
-	return re->G2API_SetBoneIKState(*static_cast<CGhoul2Info_v*>(ghoul2), time, bone_name, ikState, params);
+	return re->G2API_SetBoneIKState(*static_cast<CGhoul2Info_v*>(ghoul2), time, bone_name, ik_state, params);
 }
 
 static qboolean CL_G2API_IKMove(void* ghoul2, const int time, sharedIKMoveParams_t* params)
@@ -802,7 +802,7 @@ static void CL_G2API_GetSurfaceName(void* ghoul2, const int surfNumber, const in
 }
 
 static qboolean CL_G2API_AttachG2Model(void* ghoul2_from, const int model_indexFrom, void* ghoul2_to,
-	const int toBoltIndex, const int toModel)
+	const int to_bolt_index, const int to_model)
 {
 	if (!ghoul2_from || !ghoul2_to)
 	{
@@ -812,7 +812,7 @@ static qboolean CL_G2API_AttachG2Model(void* ghoul2_from, const int model_indexF
 	const auto g2_from = static_cast<CGhoul2Info_v*>(ghoul2_from);
 	const auto g2_to = static_cast<CGhoul2Info_v*>(ghoul2_to);
 
-	return re->G2API_AttachG2Model(*g2_from, model_indexFrom, *g2_to, toBoltIndex, toModel);
+	return re->G2API_AttachG2Model(*g2_from, model_indexFrom, *g2_to, to_bolt_index, to_model);
 }
 
 static void CL_Key_SetCatcher(const int catcher)

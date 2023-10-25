@@ -172,7 +172,7 @@ typedef struct mdxmHeader_s {
 	char		animName[MAX_QPATH];// name of animation file this mesh requires	// note: extension missing
 	int			animIndex;			// filled in by game (carcass defaults it to 0)
 
-	int			numBones;			// (for ingame version-checks only, ensure we don't ref more bones than skel file has)
+	int			num_bones;			// (for ingame version-checks only, ensure we don't ref more bones than skel file has)
 
 	int			numLODs;
 	int			ofsLODs;
@@ -351,7 +351,7 @@ typedef struct mdxaHeader_s {
 	//
 	int			num_frames;
 	int			ofsFrames;			// points at mdxaFrame_t array
-	int			numBones;			// (no offset to these since they're inside the frames array)
+	int			num_bones;			// (no offset to these since they're inside the frames array)
 	int			ofsCompBonePool;	// offset to global compressed-bone pool that all frames use
 	int			ofsSkel;			// offset to mdxaSkel_t info
 
@@ -362,11 +362,11 @@ typedef struct mdxaHeader_s {
 // {
 typedef struct
 {
-	int offsets[1];		// variable sized (mdxaHeader_t->numBones), each offset points to an mdxaSkel_t below
+	int offsets[1];		// variable sized (mdxaHeader_t->num_bones), each offset points to an mdxaSkel_t below
 } mdxaSkelOffsets_t;
 // }
 
-// for each bone...	 (mdxaHeader_t->numBones)
+// for each bone...	 (mdxaHeader_t->num_bones)
 // {
 		// mdxaSkel_t - contains hierarchical info only...
 
@@ -388,7 +388,7 @@ typedef struct mdxaSkel_s {
 	//
 	// access as follows to get the index for a given <iFrameNum, iBoneNum>
 	//
-	// (iFrameNum * mdxaHeader_t->numBones * 3) + (iBoneNum * 3)
+	// (iFrameNum * mdxaHeader_t->num_bones * 3) + (iBoneNum * 3)
 	//
 	//  then read the int at that location and AND it with 0x00FFFFFF. I use the struct below simply for easy searches
 typedef struct

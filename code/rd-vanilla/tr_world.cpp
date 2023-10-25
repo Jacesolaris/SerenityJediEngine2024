@@ -57,7 +57,7 @@ static qboolean	R_CullGrid(const srfGridMesh_t* cv) {
 		return qtrue;
 	}
 
-	if (tr.currententity_num != REFENTITYNUM_WORLD) {
+	if (tr.currentEntityNum != REFENTITYNUM_WORLD) {
 		sphere_cull = R_CullLocalPointAndRadius(cv->localOrigin, cv->meshRadius);
 	}
 	else {
@@ -172,7 +172,7 @@ static int R_DlightFace(srfSurfaceFace_t* face, int dlight_bits) {
 		tr.pc.c_dlightSurfacesCulled++;
 	}
 
-	face->dlight_bits = dlight_bits;
+	face->dlightBits = dlight_bits;
 	return dlight_bits;
 }
 
@@ -197,20 +197,20 @@ static int R_DlightGrid(srfGridMesh_t* grid, int dlight_bits) {
 		tr.pc.c_dlightSurfacesCulled++;
 	}
 
-	grid->dlight_bits = dlight_bits;
+	grid->dlightBits = dlight_bits;
 	return dlight_bits;
 }
 
 static int R_DlightTrisurf(srfTriangles_t* surf, int dlight_bits) {
 	// FIXME: more dlight culling to trisurfs...
-	surf->dlight_bits = dlight_bits;
+	surf->dlightBits = dlight_bits;
 	return dlight_bits;
 #if 0
 	int			i;
 	dlight_t* dl;
 
 	for (i = 0; i < tr.refdef.num_dlights; i++) {
-		if (!(dlight_bits & (1 << i))) {
+		if (!(dlightBits & (1 << i))) {
 			continue;
 		}
 		dl = &tr.refdef.dlights[i];
@@ -221,16 +221,16 @@ static int R_DlightTrisurf(srfTriangles_t* surf, int dlight_bits) {
 			|| dl->origin[2] - dl->radius > grid->meshBounds[1][2]
 			|| dl->origin[2] + dl->radius < grid->meshBounds[0][2]) {
 			// dlight doesn't reach the bounds
-			dlight_bits &= ~(1 << i);
+			dlightBits &= ~(1 << i);
 		}
 	}
 
-	if (!dlight_bits) {
+	if (!dlightBits) {
 		tr.pc.c_dlightSurfacesCulled++;
 	}
 
-	grid->dlight_bits = dlight_bits;
-	return dlight_bits;
+	grid->dlightBits = dlightBits;
+	return dlightBits;
 #endif
 }
 
@@ -269,8 +269,16 @@ static int R_DlightSurface(const msurface_t* surf, int dlight_bits) {
 R_AddWorldSurface
 ======================
 */
-static void R_AddWorldSurface(msurface_t* surf, int dlight_bits, const qboolean no_view_count = qfalse)
-{
+static void R_AddWorldSurface(msurface_t* surf, int dlight_bits, const qboolean no_view_count = qfalse) {
+	/*
+	if ( surf->viewCount == tr.viewCount ) {
+		return;		// already in this view
+	}
+	*/
+
+	//rww - changed this to be like sof2mp's so RMG will look right.
+	//Will this affect anything that is non-rmg?
+
 	if (!no_view_count)
 	{
 		if (surf->viewCount == tr.viewCount)
@@ -278,15 +286,15 @@ static void R_AddWorldSurface(msurface_t* surf, int dlight_bits, const qboolean 
 			// already in this view, but lets make sure all the dlight bits are set
 			if (*surf->data == SF_FACE)
 			{
-				reinterpret_cast<srfSurfaceFace_t*>(surf->data)->dlight_bits |= dlight_bits;
+				reinterpret_cast<srfSurfaceFace_t*>(surf->data)->dlightBits |= dlight_bits;
 			}
 			else if (*surf->data == SF_GRID)
 			{
-				reinterpret_cast<srfGridMesh_t*>(surf->data)->dlight_bits |= dlight_bits;
+				reinterpret_cast<srfGridMesh_t*>(surf->data)->dlightBits |= dlight_bits;
 			}
 			else if (*surf->data == SF_TRIANGLES)
 			{
-				reinterpret_cast<srfTriangles_t*>(surf->data)->dlight_bits |= dlight_bits;
+				reinterpret_cast<srfTriangles_t*>(surf->data)->dlightBits |= dlight_bits;
 			}
 			return;
 		}
@@ -303,8 +311,7 @@ static void R_AddWorldSurface(msurface_t* surf, int dlight_bits, const qboolean 
 	}
 
 	// check for dlighting
-	if (dlight_bits)
-	{
+	if (dlight_bits) {
 		dlight_bits = R_DlightSurface(surf, dlight_bits);
 		dlight_bits = dlight_bits != 0;
 	}
@@ -343,7 +350,7 @@ void R_AddBrushModelSurfaces(trRefEntity_t* ent) {
 	R_DlightBmodel(bmodel, qfalse);
 
 	for (int i = 0; i < bmodel->numSurfaces; i++) {
-		R_AddWorldSurface(bmodel->firstSurface + i, tr.currentEntity->dlight_bits, qtrue);
+		R_AddWorldSurface(bmodel->firstSurface + i, tr.currentEntity->dlightBits, qtrue);
 	}
 }
 
@@ -455,7 +462,7 @@ R_RecursiveWorldNode
 */
 static void R_RecursiveWorldNode(mnode_t* node, int plane_bits, int dlight_bits) {
 	do {
-		int			new_dlights[2]{};
+		int			new_dlights[2];
 
 		// if the node wasn't marked as potentially visible, exit
 		if (node->visframe != tr.visCount) {
@@ -737,10 +744,8 @@ static void R_MarkLeaves() {
 R_AddWorldSurfaces
 =============
 */
-void R_AddWorldSurfaces()
-{
-	if (!r_drawworld->integer)
-	{
+void R_AddWorldSurfaces() {
+	if (!r_drawworld->integer) {
 		return;
 	}
 
@@ -748,8 +753,8 @@ void R_AddWorldSurfaces()
 		return;
 	}
 
-	tr.currententity_num = REFENTITYNUM_WORLD;
-	tr.shiftedentity_num = tr.currententity_num << QSORT_REFENTITYNUM_SHIFT;
+	tr.currentEntityNum = REFENTITYNUM_WORLD;
+	tr.shiftedEntityNum = tr.currentEntityNum << QSORT_REFENTITYNUM_SHIFT;
 
 	// determine which leaves are in the PVS / areamask
 	R_MarkLeaves();

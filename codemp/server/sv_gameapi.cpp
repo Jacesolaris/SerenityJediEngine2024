@@ -2067,10 +2067,10 @@ static qboolean SV_G2API_RagForceSolve(void* ghoul2, const qboolean force)
 	return re->G2API_RagForceSolve(*static_cast<CGhoul2Info_v*>(ghoul2), force);
 }
 
-static qboolean SV_G2API_SetBoneIKState(void* ghoul2, const int time, const char* bone_name, const int ikState,
+static qboolean SV_G2API_SetBoneIKState(void* ghoul2, const int time, const char* bone_name, const int ik_state,
 	sharedSetBoneIKStateParams_t* params)
 {
-	return re->G2API_SetBoneIKState(*static_cast<CGhoul2Info_v*>(ghoul2), time, bone_name, ikState, params);
+	return re->G2API_SetBoneIKState(*static_cast<CGhoul2Info_v*>(ghoul2), time, bone_name, ik_state, params);
 }
 
 static qboolean SV_G2API_IKMove(void* ghoul2, const int time, sharedIKMoveParams_t* params)

@@ -123,7 +123,7 @@ Handles all the complicated wrapping and degenerate cases
 static void MakeMeshNormals(const int width, const int height, drawVert_t ctrl[MAX_GRID_SIZE][MAX_GRID_SIZE]) {
 	int		i, k;
 	vec3_t	delta;
-	qboolean	good[8]{};
+	qboolean	good[8];
 	float		len;
 	static	int	neighbors[8][2] = {
 		{0,1}, {1,1}, {1,0}, {1,-1}, {0,-1}, {-1,-1}, {-1,0}, {-1,1}
@@ -155,7 +155,7 @@ static void MakeMeshNormals(const int width, const int height, drawVert_t ctrl[M
 
 	for (i = 0; i < width; i++) {
 		for (int j = 0; j < height; j++) {
-			vec3_t around[8]{};
+			vec3_t around[8];
 			vec3_t base;
 			vec3_t sum;
 			int count = 0;
@@ -294,8 +294,8 @@ srfGridMesh_t* R_SubdividePatchToGrid(int width, int height,
 	int			i, j, k;
 	drawVert_t	prev, next, mid;
 	int			t;
-	drawVert_t	ctrl[MAX_GRID_SIZE][MAX_GRID_SIZE]{};
-	float		errorTable[2][MAX_GRID_SIZE]{};
+	drawVert_t	ctrl[MAX_GRID_SIZE][MAX_GRID_SIZE];
+	float		errorTable[2][MAX_GRID_SIZE];
 	srfGridMesh_t* grid;
 	drawVert_t* vert;
 	vec3_t		tmpVec;
@@ -316,7 +316,7 @@ srfGridMesh_t* R_SubdividePatchToGrid(int width, int height,
 			// check subdivided midpoints against control points
 			float maxLen = 0;
 			for (i = 0; i < height; i++) {
-				vec3_t		midxyz{};
+				vec3_t		midxyz;
 				vec3_t		vec_out;
 				vec3_t		projected;
 

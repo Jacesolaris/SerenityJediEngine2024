@@ -333,7 +333,7 @@ typedef struct uiImport_s {
 	qhandle_t(*R_RegisterSkin)						(const char* name);
 	qhandle_t(*R_RegisterShaderNoMip)				(const char* name);
 	qhandle_t(*R_RegisterFont)						(const char* fontName);
-	void			(*R_RemapShader)						(const char* oldShader, const char* newShader, const char* time_offset);
+	void			(*R_RemapShader)						(const char* oldShader, const char* new_shader_name, const char* time_offset);
 	void			(*R_RenderScene)						(const refdef_t* fd);
 	void			(*R_SetColor)							(const float* rgba);
 	void			(*R_ShaderNameFromIndex)				(char* name, int index);
@@ -368,11 +368,11 @@ typedef struct uiImport_s {
 	void			(*G2API_SetTime)						(int time, int clock);
 	void			(*G2API_SetRagDoll)						(void* ghoul2, sharedRagDollParams_t* params);
 	void			(*G2API_AnimateG2Models)				(void* ghoul2, int time, sharedRagDollUpdateParams_t* params);
-	qboolean(*G2API_SetBoneIKState)					(void* ghoul2, int time, const char* bone_name, int ikState, sharedSetBoneIKStateParams_t* params);
+	qboolean(*G2API_SetBoneIKState)					(void* ghoul2, int time, const char* bone_name, int ik_state, sharedSetBoneIKStateParams_t* params);
 	qboolean(*G2API_IKMove)							(void* ghoul2, int time, sharedIKMoveParams_t* params);
 	void			(*G2API_GetSurfaceName)					(void* ghoul2, int surfNumber, int model_index, char* fillBuf);
 	qboolean(*G2API_SetSkin)						(void* ghoul2, int model_index, qhandle_t custom_skin, qhandle_t render_skin);
-	qboolean(*G2API_AttachG2Model)					(void* ghoul2_from, int model_indexFrom, void* ghoul2_to, int toBoltIndex, int toModel);
+	qboolean(*G2API_AttachG2Model)					(void* ghoul2_from, int model_indexFrom, void* ghoul2_to, int to_bolt_index, int to_model);
 
 	struct {
 		float			(*R_Font_StrLenPixels)					(const char* text, int iFontIndex, float scale);

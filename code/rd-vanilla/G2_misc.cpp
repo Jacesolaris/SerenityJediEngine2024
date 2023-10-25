@@ -324,11 +324,11 @@ void G2_List_Model_Bones(const char* file_name, int frame)
 	// figure out where the offset list is
 	const mdxaSkelOffsets_t* offsets = reinterpret_cast<mdxaSkelOffsets_t*>(reinterpret_cast<byte*>(header) + sizeof(mdxaHeader_t));
 
-	//    frameSize = (int)( &((mdxaFrame_t *)0)->boneIndexes[ header->numBones ] );
+	//    frameSize = (int)( &((mdxaFrame_t *)0)->boneIndexes[ header->num_bones ] );
 
 	//	aframe = (mdxaFrame_t *)((byte *)header + header->ofsFrames + (frame * frameSize));
 		// walk each bone and list it's name
-	for (int x = 0; x < mod_a->mdxa->numBones; x++)
+	for (int x = 0; x < mod_a->mdxa->num_bones; x++)
 	{
 		const auto skel = reinterpret_cast<mdxaSkel_t*>(reinterpret_cast<byte*>(header) + sizeof(mdxaHeader_t) + offsets->offsets[x]);
 		Com_Printf("Bone %i Name %s\n", x, skel->name);
@@ -518,18 +518,18 @@ void G2_TransformSurfaces(const int surface_num, surfaceInfo_v& rootSList,
 	assert(current_model->mdxm);
 	// back track and get the surfinfo struct for this surface
 	const mdxmSurface_t* surface = static_cast<mdxmSurface_t*>(G2_FindSurface(current_model, surface_num, lod));
-	const mdxmHierarchyOffsets_t* surf_indexes = reinterpret_cast<mdxmHierarchyOffsets_t*>(reinterpret_cast<byte*>(current_model->mdxm) + sizeof(mdxmHeader_t));
-	const mdxmSurfHierarchy_t* surfInfo = reinterpret_cast<mdxmSurfHierarchy_t*>((byte*)surf_indexes + surf_indexes->offsets[surface->thisSurfaceIndex]);
+	const mdxmHierarchyOffsets_t* surfIndexes = reinterpret_cast<mdxmHierarchyOffsets_t*>(reinterpret_cast<byte*>(current_model->mdxm) + sizeof(mdxmHeader_t));
+	const mdxmSurfHierarchy_t* surfInfo = reinterpret_cast<mdxmSurfHierarchy_t*>((byte*)surfIndexes + surfIndexes->offsets[surface->thisSurfaceIndex]);
 
 	// see if we have an override surface in the surface list
-	const surfaceInfo_t* surf_override = G2_FindOverrideSurface(surface_num, rootSList);
+	const surfaceInfo_t* surfOverride = G2_FindOverrideSurface(surface_num, rootSList);
 
 	// really, we should use the default flags for this surface unless it's been overriden
 	int off_flags = surfInfo->flags;
 
-	if (surf_override)
+	if (surfOverride)
 	{
-		off_flags = surf_override->off_flags;
+		off_flags = surfOverride->off_flags;
 	}
 	// if this surface is not off, add it to the shader render list
 	if (!off_flags)
@@ -552,9 +552,9 @@ void G2_TransformSurfaces(const int surface_num, surfaceInfo_v& rootSList,
 
 // main calling point for the model transform for collision detection. At this point all of the skeleton has been transformed.
 #ifdef _G2_GORE
-void G2_TransformModel(CGhoul2Info_v& ghoul2, const int frame_num, vec3_t scale, CMiniHeap* G2VertSpace, int use_lod, const bool ApplyGore, const SSkinGoreData* gore)
+void G2_TransformModel(CGhoul2Info_v& ghoul2, const int frameNum, vec3_t scale, CMiniHeap* G2VertSpace, int use_lod, const bool ApplyGore, const SSkinGoreData* gore)
 #else
-void G2_TransformModel(CGhoul2Info_v& ghoul2, const int frame_num, vec3_t scale, CMiniHeap* G2VertSpace, int use_lod)
+void G2_TransformModel(CGhoul2Info_v& ghoul2, const int frameNum, vec3_t scale, CMiniHeap* G2VertSpace, int use_lod)
 #endif
 {
 	int lod;
@@ -564,7 +564,7 @@ void G2_TransformModel(CGhoul2Info_v& ghoul2, const int frame_num, vec3_t scale,
 	qboolean		firstModelOnly = qfalse;
 #endif // !JK2_MODE || _G2_GORE
 
-#ifdef _G2_GORE
+#ifndef JK2_MODE
 	if (cg_g2MarksAllModels == nullptr)
 	{
 		cg_g2MarksAllModels = ri.Cvar_Get("cg_g2MarksAllModels", "0", 0);
@@ -612,7 +612,7 @@ void G2_TransformModel(CGhoul2Info_v& ghoul2, const int frame_num, vec3_t scale,
 		assert(g.mBoneCache);
 		assert(G2_MODEL_OK(&g));
 		// stop us building this model more than once per frame
-		g.mMeshFrameNum = frame_num;
+		g.mMeshFrameNum = frameNum;
 
 		// decide the LOD
 #ifdef _G2_GORE
@@ -865,7 +865,7 @@ static void G2_GorePolys(const mdxmSurface_t* surface, CTraceSurface& TS, const 
 	for (j = 0; j < num_verts; j++)
 	{
 		const int pos = j * 5;
-		vec3_t delta{};
+		vec3_t delta;
 		delta[0] = verts[pos + 0] - TS.rayStart[0];
 		delta[1] = verts[pos + 1] - TS.rayStart[1];
 		delta[2] = verts[pos + 2] - TS.rayStart[2];
@@ -989,7 +989,7 @@ static void G2_GorePolys(const mdxmSurface_t* surface, CTraceSurface& TS, const 
 			TS.ghoul2info->mGoreSetTag = goreSet->mMyGoreSetTag;
 		}
 		assert(goreSet);
-		SGoreSurface add{};
+		SGoreSurface add;
 		add.shader = TS.goreShader;
 		add.mDeleteTime = 0;
 		if (TS.gore->lifeTime)
@@ -1216,7 +1216,7 @@ static bool G2_TracePolys(const mdxmSurface_t* surface, const mdxmSurfHierarchy_
 			}
 			if (i == MAX_G2_COLLISIONS)
 			{
-				//assert(i != MAX_G2_COLLISIONS);		// run out of collision record space - will probalbly never happen
+				assert(i != MAX_G2_COLLISIONS);		// run out of collision record space - will probalbly never happen
 				TS.hitOne = true;	//force stop recursion
 				return true;	// return true to avoid wasting further time, but no hit will result without a record
 			}
@@ -1233,7 +1233,7 @@ static bool G2_RadiusTracePolys(
 {
 	int		j;
 	vec3_t basis1;
-	vec3_t basis2{};
+	vec3_t basis2;
 	vec3_t taxis;
 	vec3_t saxis;
 
@@ -1284,7 +1284,7 @@ static bool G2_RadiusTracePolys(
 	for (j = 0; j < num_verts; j++)
 	{
 		const int pos = j * 5;
-		vec3_t delta{};
+		vec3_t delta;
 		delta[0] = verts[pos + 0] - TS.rayStart[0];
 		delta[1] = verts[pos + 1] - TS.rayStart[1];
 		delta[2] = verts[pos + 2] - TS.rayStart[2];
@@ -1445,11 +1445,11 @@ static void G2_TraceSurfaces(CTraceSurface& TS)
 	assert(TS.current_model);
 	assert(TS.current_model->mdxm);
 	const mdxmSurface_t* surface = static_cast<mdxmSurface_t*>(G2_FindSurface(TS.current_model, TS.surface_num, TS.lod));
-	const mdxmHierarchyOffsets_t* surf_indexes = reinterpret_cast<mdxmHierarchyOffsets_t*>(reinterpret_cast<byte*>(TS.current_model->mdxm) + sizeof(mdxmHeader_t));
-	const mdxmSurfHierarchy_t* surfInfo = reinterpret_cast<mdxmSurfHierarchy_t*>((byte*)surf_indexes + surf_indexes->offsets[surface->thisSurfaceIndex]);
+	const mdxmHierarchyOffsets_t* surfIndexes = reinterpret_cast<mdxmHierarchyOffsets_t*>(reinterpret_cast<byte*>(TS.current_model->mdxm) + sizeof(mdxmHeader_t));
+	const mdxmSurfHierarchy_t* surfInfo = reinterpret_cast<mdxmSurfHierarchy_t*>((byte*)surfIndexes + surfIndexes->offsets[surface->thisSurfaceIndex]);
 
 	// see if we have an override surface in the surface list
-	const surfaceInfo_t* surf_override = G2_FindOverrideSurface(TS.surface_num, TS.rootSList);
+	const surfaceInfo_t* surfOverride = G2_FindOverrideSurface(TS.surface_num, TS.rootSList);
 
 	// don't allow recursion if we've already hit a polygon
 	if (TS.hitOne)
@@ -1461,9 +1461,9 @@ static void G2_TraceSurfaces(CTraceSurface& TS)
 	int off_flags = surfInfo->flags;
 
 	// set the off flags if we have some
-	if (surf_override)
+	if (surfOverride)
 	{
-		off_flags = surf_override->off_flags;
+		off_flags = surfOverride->off_flags;
 	}
 
 	// if this surface is not off, try to hit it
@@ -1537,7 +1537,7 @@ void G2_TraceModels(CGhoul2Info_v& ghoul2, vec3_t rayStart, vec3_t rayEnd, CColl
 #endif // !JK2_MODE || _G2_GORE
 	int				firstModel = 0;
 
-#ifdef _G2_GORE
+#ifndef JK2_MODE
 	if (cg_g2MarksAllModels == nullptr)
 	{
 		cg_g2MarksAllModels = ri.Cvar_Get("cg_g2MarksAllModels", "0", 0);
@@ -1604,7 +1604,7 @@ void G2_TraceModels(CGhoul2Info_v& ghoul2, vec3_t rayStart, vec3_t rayEnd, CColl
 
 		lod = G2_DecideTraceLod(g, use_lod);
 
-#ifdef _G2_GORE
+#ifndef JK2_MODE
 		if (skipIfLODNotMatch)
 		{//we only want to hit this SPECIFIC LOD...
 			if (lod != use_lod)

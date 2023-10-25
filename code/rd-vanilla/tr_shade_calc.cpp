@@ -93,7 +93,7 @@ static float EvalWaveFormClamped(const waveForm_t* wf)
 */
 void RB_CalcStretchTexCoords(const waveForm_t* wf, float* tex_coords)
 {
-	texModInfo_t tmi{};
+	texModInfo_t tmi;
 
 	const float p = 1.0f / EvalWaveForm(wf);
 
@@ -276,7 +276,7 @@ Change a polygon into a bunch of text polygons
 void DeformText(const char* text) {
 	int		i;
 	vec3_t	origin, width, height;
-	byte	color[4]{};
+	byte	color[4];
 	vec3_t	mid;
 
 	height[0] = 0;
@@ -356,7 +356,7 @@ quads, rebuild them as forward facing sprites
 */
 static void AutospriteDeform()
 {
-	vec3_t	mid{};
+	vec3_t	mid;
 	vec3_t	left_dir, up_dir;
 
 	if (tess.num_vertexes & 3) {
@@ -444,9 +444,9 @@ static void Autosprite2Deform()
 	// we could precalculate a lot of it is an issue, but it would mess up
 	// the shader abstraction
 	for (i = 0, indexes = 0; i < tess.num_vertexes; i += 4, indexes += 6) {
-		float	lengths[2]{};
-		int		nums[2]{};
-		vec3_t	mid[2]{};
+		float	lengths[2];
+		int		nums[2];
+		vec3_t	mid[2];
 		vec3_t	major, minor;
 		float* v1, * v2;
 
@@ -604,7 +604,7 @@ void RB_calc_colorFromEntity(unsigned char* dst_colors)
 void RB_calc_colorFromOneMinusEntity(unsigned char* dst_colors)
 {
 	auto* p_colors = reinterpret_cast<int*>(dst_colors);
-	unsigned char inv_modulate[4]{};
+	unsigned char inv_modulate[4];
 
 	if (!backEnd.currentEntity)
 		return;
@@ -660,7 +660,7 @@ void RB_CalcWaveColor(const waveForm_t* wf, unsigned char* dst_colors)
 {
 	float glow;
 	auto* colors = reinterpret_cast<int*>(dst_colors);
-	byte	color[4]{};
+	byte	color[4];
 
 	if (wf->func == GF_NOISE) {
 		glow = wf->base + R_NoiseGet4f(0, 0, 0, (backEnd.refdef.floatTime + wf->phase) * wf->frequency) * wf->amplitude;
@@ -707,7 +707,7 @@ void RB_CalcWaveAlpha(const waveForm_t* wf, unsigned char* dst_colors)
 */
 void RB_CalcModulateColorsByFog(unsigned char* dst_colors)
 {
-	float	tex_coords[SHADER_MAX_VERTEXES][2]{};
+	float	tex_coords[SHADER_MAX_VERTEXES][2];
 
 	// calculate texcoords so we can derive density
 	// this is not wasted, because it would only have
@@ -727,7 +727,7 @@ void RB_CalcModulateColorsByFog(unsigned char* dst_colors)
 */
 void RB_CalcModulateAlphasByFog(unsigned char* dst_colors)
 {
-	float	tex_coords[SHADER_MAX_VERTEXES][2]{};
+	float	tex_coords[SHADER_MAX_VERTEXES][2];
 
 	// calculate texcoords so we can derive density
 	// this is not wasted, because it would only have
@@ -745,7 +745,7 @@ void RB_CalcModulateAlphasByFog(unsigned char* dst_colors)
 */
 void RB_CalcModulateRGBAsByFog(unsigned char* dst_colors)
 {
-	float	tex_coords[SHADER_MAX_VERTEXES][2]{};
+	float	tex_coords[SHADER_MAX_VERTEXES][2];
 
 	// calculate texcoords so we can derive density
 	// this is not wasted, because it would only have
@@ -786,7 +786,7 @@ void RB_CalcFogTexCoords(float* dst_tex_coords)
 	float		eye_t;
 	qboolean	eye_outside;
 	vec3_t		local_vec;
-	vec4_t		fog_distance_vector{}, fogDepthVector;
+	vec4_t		fog_distance_vector, fogDepthVector;
 
 	const fog_t* fog = tr.world->fogs + tess.fogNum;
 
@@ -966,7 +966,7 @@ void RB_CalcTransformTexCoords(const texModInfo_t* tmi, float* dstTexCoords)
 void RB_CalcRotateTexCoords(const float degs_per_second, float* dst_tex_coords)
 {
 	const float time_scale = backEnd.refdef.floatTime;
-	texModInfo_t tmi{};
+	texModInfo_t tmi;
 
 	const float degs = -degs_per_second * time_scale;
 	const int index = degs * (FUNCTABLE_SIZE / 360.0f);
@@ -994,7 +994,7 @@ vec3_t lightOrigin = { -960, 1980, 96 };		// FIXME: track dynamically
 
 void RB_CalcSpecularAlpha(unsigned char* alphas)
 {
-	vec3_t reflected{};
+	vec3_t reflected;
 	int			b;
 
 	float* v = tess.xyz[0];
@@ -1103,7 +1103,7 @@ void RB_CalcDiffuseColor(unsigned char* colors)
 */
 void RB_CalcDiffuseEntityColor(unsigned char* colors)
 {
-	int				ambient_light_int = 0;
+	int				ambient_light_int;
 	vec3_t			ambient_light;
 	vec3_t			light_dir;
 	vec3_t			directed_light;

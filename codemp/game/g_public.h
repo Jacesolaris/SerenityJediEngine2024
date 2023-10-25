@@ -1114,7 +1114,7 @@ typedef struct gameImport_s {
 	qboolean(*G2API_GetRagBonePos)					(void* ghoul2, const char* bone_name, vec3_t pos, vec3_t entAngles, vec3_t entPos, vec3_t entScale);
 	qboolean(*G2API_RagEffectorKick)				(void* ghoul2, const char* bone_name, vec3_t velocity);
 	qboolean(*G2API_RagForceSolve)					(void* ghoul2, qboolean force);
-	qboolean(*G2API_SetBoneIKState)					(void* ghoul2, int time, const char* bone_name, int ikState, sharedSetBoneIKStateParams_t* params);
+	qboolean(*G2API_SetBoneIKState)					(void* ghoul2, int time, const char* bone_name, int ik_state, sharedSetBoneIKStateParams_t* params);
 	qboolean(*G2API_IKMove)							(void* ghoul2, int time, sharedIKMoveParams_t* params);
 	qboolean(*G2API_RemoveBone)						(void* ghoul2, const char* bone_name, int model_index);
 	void		(*G2API_AttachInstanceToEntNum)			(void* ghoul2, int entity_num, qboolean server);

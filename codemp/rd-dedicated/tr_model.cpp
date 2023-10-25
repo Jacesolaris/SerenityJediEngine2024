@@ -686,7 +686,7 @@ qboolean ServerLoadMDXA(model_t* mod, void* buffer, const char* mod_name, qboole
 		LL(mdxa->ident);
 		LL(mdxa->version);
 		LL(mdxa->num_frames);
-		LL(mdxa->numBones);
+		LL(mdxa->num_bones);
 		LL(mdxa->ofsFrames);
 		LL(mdxa->ofsEnd);
 	}
@@ -709,7 +709,7 @@ qboolean ServerLoadMDXA(model_t* mod, void* buffer, const char* mod_name, qboole
 
 	// swap all the skeletal info
 	boneInfo = (mdxaSkel_t*)((byte*)mdxa + mdxa->ofsSkel);
-	for (i = 0; i < mdxa->numBones; i++)
+	for (i = 0; i < mdxa->num_bones; i++)
 	{
 		LL(boneInfo->numChildren);
 		LL(boneInfo->parent);
@@ -723,7 +723,7 @@ qboolean ServerLoadMDXA(model_t* mod, void* buffer, const char* mod_name, qboole
 	}
 
 	// swap all the frames
-	frameSize = (int)(&((mdxaFrame_t*)0)->bones[mdxa->numBones]);
+	frameSize = (int)(&((mdxaFrame_t*)0)->bones[mdxa->num_bones]);
 	for (i = 0; i < mdxa->num_frames; i++)
 	{
 		cframe = (mdxaFrame_t*)((byte*)mdxa + mdxa->ofsFrames + i * frameSize);
@@ -734,7 +734,7 @@ qboolean ServerLoadMDXA(model_t* mod, void* buffer, const char* mod_name, qboole
 			cframe->bounds[1][j] = LittleFloat(cframe->bounds[1][j]);
 			cframe->localOrigin[j] = LittleFloat(cframe->localOrigin[j]);
 		}
-		for (j = 0; j < mdxa->numBones * sizeof(mdxaBone_t) / 2; j++)
+		for (j = 0; j < mdxa->num_bones * sizeof(mdxaBone_t) / 2; j++)
 		{
 			((short*)cframe->bones)[j] = LittleShort(((short*)cframe->bones)[j]);
 		}
@@ -1128,20 +1128,12 @@ static qhandle_t RE_RegisterModel_Actual(const char* name)
 		return 0;
 	}
 
-	if (strlen(name) >= MAX_QPATH)
+	if (strlen(name) >= MAX_SKINNAME_PATH)
 	{
-		ri->Printf(PRINT_DEVELOPER, S_COLOR_RED "Model name exceeds MAX_QPATH\n");
+		ri->Printf(PRINT_DEVELOPER, S_COLOR_RED "Model name exceeds MAX_SKINNAME_PATH\n");
 		return 0;
 	}
 
-	/*
-	Ghoul2 Insert Start
-	*/
-	//	if (!tr.registered) {
-	//		Com_Printf (S_COLOR_YELLOW  "RE_RegisterModel (%s) called before ready!\n",name );
-	//		return 0;
-	//	}
-	//
 	// search the currently loaded models
 	//
 	int hash = generateHashValue(name, FILE_HASH_SIZE);
@@ -1159,10 +1151,10 @@ static qhandle_t RE_RegisterModel_Actual(const char* name)
 
 	if (name[0] == '#')
 	{
-		char temp[MAX_QPATH];
+		char temp[MAX_SKINNAME_PATH];
 
 		tr.numBSPModels++;
-		Com_sprintf(temp, MAX_QPATH, "*%d-0", tr.numBSPModels);
+		Com_sprintf(temp, MAX_SKINNAME_PATH, "*%d-0", tr.numBSPModels);
 		hash = generateHashValue(temp, FILE_HASH_SIZE);
 		for (mh = mhHashTable[hash]; mh; mh = mh->next)
 		{

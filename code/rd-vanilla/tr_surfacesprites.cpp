@@ -337,10 +337,10 @@ qboolean ss_using_fog = qfalse;
 static void RB_VerticalSurfaceSprite(vec3_t loc, const float width, const float height, const byte light,
 	const byte alpha, const float wind, const float windidle, vec2_t fog, const int hangdown, vec2_t skew, const bool flattened)
 {
-	vec3_t loc2{}, right{};
+	vec3_t loc2, right;
 	float windsway;
-	float points[16]{};
-	color4ub_t color{};
+	float points[16];
+	color4ub_t color;
 
 	const float angle = (loc[0] + loc[1]) * 0.02 + tr.refdef.time * 0.0015;
 
@@ -443,9 +443,9 @@ static void RB_VerticalSurfaceSpriteWindPoint(vec3_t loc, const float width, con
 	const byte alpha, const float wind, const float windidle, vec2_t fog,
 	const int hangdown, vec2_t skew, vec2_t winddiff, float windforce, const bool flattened)
 {
-	vec3_t loc2{}, right{};
+	vec3_t loc2, right;
 	float points[16];
-	color4ub_t color{};
+	color4ub_t color;
 
 	if (windforce > 1)
 		windforce = 1;
@@ -537,12 +537,12 @@ static void RB_DrawVerticalSurfaceSprites(shaderStage_t* stage, shaderCommands_t
 	int curindex, curvert;
 	vec3_t dist;
 	float triarea;
-	vec2_t vec1_to2{}, vec1_to3{};
+	vec2_t vec1_to2, vec1_to3;
 
 	float a1, a2, a3;
 	float l1, l2, l3;
-	vec2_t fog1{}, fog2{}, fog3{};
-	vec2_t winddiff1{}, winddiff2{}, winddiff3{};
+	vec2_t fog1, fog2, fog3;
+	vec2_t winddiff1, winddiff2, winddiff3;
 	float  windforce1, windforce2, windforce3;
 
 	float posi, posj;
@@ -555,8 +555,8 @@ static void RB_DrawVerticalSurfaceSprites(shaderStage_t* stage, shaderCommands_t
 	byte randomindex2;
 
 	vec2_t skew = { 0,0 };
-	vec2_t fogv{};
-	vec2_t winddiffv{};
+	vec2_t fogv;
+	vec2_t winddiffv;
 	float windforce = 0;
 	auto usewindpoint = static_cast<qboolean>(!!(cur_wind_point_active && stage->ss->wind > 0));
 
@@ -837,8 +837,8 @@ static void RB_DrawVerticalSurfaceSprites(shaderStage_t* stage, shaderCommands_t
 
 static void RB_OrientedSurfaceSprite(vec3_t loc, float width, const float height, const byte light, const byte alpha, vec2_t fog, const int faceup)
 {
-	float points[16]{};
-	color4ub_t color{};
+	float points[16];
+	color4ub_t color;
 
 	color[0] = light;
 	color[1] = light;
@@ -921,11 +921,11 @@ static void RB_DrawOrientedSurfaceSprites(const shaderStage_t* stage, const shad
 {
 	int curvert;
 	float minnormal;
-	vec2_t vec1_to2{}, vec1_to3{};
+	vec2_t vec1_to2, vec1_to3;
 
-	vec2_t fog1{}, fog2{}, fog3{};
+	vec2_t fog1, fog2, fog3;
 
-	vec2_t fogv{};
+	vec2_t fogv;
 
 	const float cutdist = stage->ss->fadeMax * rangescalefactor, cutdist2 = cutdist * cutdist;
 	const float fadedist = stage->ss->fadeDist * rangescalefactor, fadedist2 = fadedist * fadedist;
@@ -1104,8 +1104,8 @@ static void RB_DrawOrientedSurfaceSprites(const shaderStage_t* stage, const shad
 
 static void RB_EffectSurfaceSprite(vec3_t loc, float width, const float height, const byte light, const byte alpha, const int faceup)
 {
-	float points[16]{};
-	color4ub_t color{};
+	float points[16];
+	color4ub_t color;
 
 	color[0] = light;	//light;
 	color[1] = light;	//light;
@@ -1188,7 +1188,7 @@ static void RB_DrawEffectSurfaceSprites(shaderStage_t* stage, shaderCommands_t* 
 {
 	int curindex, curvert;
 	float triarea, minnormal;
-	vec2_t vec1_to2{}, vec1_to3{};
+	vec2_t vec1_to2, vec1_to3;
 
 	float a1, a2, a3;
 	float l1, l2, l3;

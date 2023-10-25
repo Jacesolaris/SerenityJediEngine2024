@@ -18,7 +18,7 @@
 // Bolt List handling routines - so entities can attach themselves to any part of the model in question
 
 // Given a bone number, see if that bone is already in our bone list
-int G2_Find_Bolt_Bone_Num(boltInfo_v& bltlist, const int bone_num)
+int G2_Find_Bolt_Bone_Num(const boltInfo_v& bltlist, const int bone_num)
 {
 	if (bone_num == -1)
 	{
@@ -39,7 +39,7 @@ int G2_Find_Bolt_Bone_Num(boltInfo_v& bltlist, const int bone_num)
 }
 
 // Given a bone number, see if that surface is already in our surfacelist list
-int G2_Find_Bolt_Surface_Num(boltInfo_v& bltlist, const int surface_num, const int flags)
+int G2_Find_Bolt_Surface_Num(const boltInfo_v& bltlist, const int surface_num, const int flags)
 {
 	if (surface_num == -1)
 	{
@@ -167,7 +167,7 @@ int G2_Add_Bolt(const CGhoul2Info* ghl_info, boltInfo_v& bltlist, const surfaceI
 	offsets = (mdxaSkelOffsets_t*)((byte*)mdxa + sizeof(mdxaHeader_t));
 
 	// walk the entire list of bones in the gla file for this model and see if any match the name of the bone we want to find
-	for (x = 0; x < mdxa->numBones; x++)
+	for (x = 0; x < mdxa->num_bones; x++)
 	{
 		skel = (mdxaSkel_t*)((byte*)mdxa + sizeof(mdxaHeader_t) + offsets->offsets[x]);
 		// if name is the same, we found it
@@ -178,10 +178,10 @@ int G2_Add_Bolt(const CGhoul2Info* ghl_info, boltInfo_v& bltlist, const surfaceI
 	}
 
 	// check to see we did actually make a match with a bone in the model
-	if (x == mdxa->numBones)
+	if (x == mdxa->num_bones)
 	{
 		// didn't find it? Error
-		//assert(0&&x == mod_a->mdxa->numBones);
+		//assert(0&&x == mod_a->mdxa->num_bones);
 #ifdef _DEBUG
 //		Com_Printf("WARNING: %s not found on skeleton\n", bone_name);
 #endif
@@ -224,7 +224,7 @@ int G2_Add_Bolt(const CGhoul2Info* ghl_info, boltInfo_v& bltlist, const surfaceI
 }
 
 // Given a model handle, and a bone name, we want to remove this bone from the bone override list
-qboolean G2_Remove_Bolt(boltInfo_v& bltlist, int index)
+qboolean G2_Remove_Bolt(boltInfo_v& bltlist, const int index)
 {
 	// did we find it?
 	if (index != -1)

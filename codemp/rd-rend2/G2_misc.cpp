@@ -288,11 +288,11 @@ void G2_List_Model_Bones(const char* file_name, int frame)
 	// figure out where the offset list is
 	offsets = (mdxaSkelOffsets_t*)((byte*)header + sizeof(mdxaHeader_t));
 
-	//    frameSize = (size_t)( &((mdxaFrame_t *)0)->boneIndexes[ header->numBones ] );
+	//    frameSize = (size_t)( &((mdxaFrame_t *)0)->boneIndexes[ header->num_bones ] );
 
 	//	aframe = (mdxaFrame_t *)((byte *)header + header->ofsFrames + (frame * frameSize));
 		// walk each bone and list it's name
-	for (x = 0; x < header->numBones; x++)
+	for (x = 0; x < header->num_bones; x++)
 	{
 		skel = (mdxaSkel_t*)((byte*)header + sizeof(mdxaHeader_t) + offsets->offsets[x]);
 		Com_Printf("Bone %i Name %s\n", x, skel->name);

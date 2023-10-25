@@ -1620,10 +1620,10 @@ qboolean trap_G2API_RagForceSolve(void* ghoul2, const qboolean force)
 	return Q_syscall(G_G2_RAGFORCESOLVE, ghoul2, force);
 }
 
-qboolean trap_G2API_SetBoneIKState(void* ghoul2, const int time, const char* bone_name, const int ikState,
+qboolean trap_G2API_SetBoneIKState(void* ghoul2, const int time, const char* bone_name, const int ik_state,
 	sharedSetBoneIKStateParams_t* params)
 {
-	return Q_syscall(G_G2_SETBONEIKSTATE, ghoul2, time, bone_name, ikState, params);
+	return Q_syscall(G_G2_SETBONEIKSTATE, ghoul2, time, bone_name, ik_state, params);
 }
 
 qboolean trap_G2API_IKMove(void* ghoul2, const int time, sharedIKMoveParams_t* params)

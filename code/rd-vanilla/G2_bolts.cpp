@@ -178,7 +178,7 @@ int G2_Add_Bolt(const CGhoul2Info* ghl_info, boltInfo_v& bltlist, const surfaceI
 
 	int x;
 	// walk the entire list of bones in the gla file for this model and see if any match the name of the bone we want to find
-	for (x = 0; x < ghl_info->aHeader->numBones; x++)
+	for (x = 0; x < ghl_info->aHeader->num_bones; x++)
 	{
 		const mdxaSkel_t* skel = reinterpret_cast<mdxaSkel_t*>((byte*)ghl_info->aHeader + sizeof(mdxaHeader_t) + offsets->offsets[x]);
 		// if name is the same, we found it
@@ -189,10 +189,10 @@ int G2_Add_Bolt(const CGhoul2Info* ghl_info, boltInfo_v& bltlist, const surfaceI
 	}
 
 	// check to see we did actually make a match with a bone in the model
-	if (x == ghl_info->aHeader->numBones)
+	if (x == ghl_info->aHeader->num_bones)
 	{
 		// didn't find it? Error
-		//assert(0&&x == mod_a->mdxa->numBones);
+		//assert(0&&x == mod_a->mdxa->num_bones);
 #if _DEBUG
 		G2_Bolt_Not_Found(bone_name);
 #endif

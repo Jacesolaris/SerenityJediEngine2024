@@ -803,12 +803,12 @@ static int CL_G2API_AddBolt(void* ghoul2, const int model_index, const char* bon
 	return re->G2API_AddBolt(*static_cast<CGhoul2Info_v*>(ghoul2), model_index, bone_name);
 }
 
-static qboolean CL_G2API_AttachEnt(int* bolt_info, void* ghlInfoTo, const int toBoltIndex, const int ent_num,
-	const int toModelNum)
+static qboolean CL_G2API_AttachEnt(int* bolt_info, void* ghl_info_to, const int to_bolt_index, const int ent_num,
+	const int to_model_num)
 {
-	if (!ghlInfoTo) return qfalse;
-	CGhoul2Info_v& g2 = *static_cast<CGhoul2Info_v*>(ghlInfoTo);
-	return re->G2API_AttachEnt(bolt_info, g2, 0, toBoltIndex, ent_num, toModelNum);
+	if (!ghl_info_to) return qfalse;
+	CGhoul2Info_v& g2 = *static_cast<CGhoul2Info_v*>(ghl_info_to);
+	return re->G2API_AttachEnt(bolt_info, g2, 0, to_bolt_index, ent_num, to_model_num);
 }
 
 static void CL_G2API_SetBoltInfo(void* ghoul2, const int model_index, const int bolt_info)
@@ -953,11 +953,11 @@ static qboolean CL_G2API_RagForceSolve(void* ghoul2, const qboolean force)
 	return re->G2API_RagForceSolve(*static_cast<CGhoul2Info_v*>(ghoul2), force);
 }
 
-static qboolean CL_G2API_SetBoneIKState(void* ghoul2, const int time, const char* bone_name, const int ikState,
+static qboolean CL_G2API_SetBoneIKState(void* ghoul2, const int time, const char* bone_name, const int ik_state,
 	sharedSetBoneIKStateParams_t* params)
 {
 	if (!ghoul2) return qfalse;
-	return re->G2API_SetBoneIKState(*static_cast<CGhoul2Info_v*>(ghoul2), time, bone_name, ikState, params);
+	return re->G2API_SetBoneIKState(*static_cast<CGhoul2Info_v*>(ghoul2), time, bone_name, ik_state, params);
 }
 
 static qboolean CL_G2API_IKMove(void* ghoul2, const int time, sharedIKMoveParams_t* params)

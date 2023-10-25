@@ -419,9 +419,9 @@ public:
 	CBoneCache(const model_t* amod, const mdxaHeader_t* aheader)
 		: header(aheader)
 		, mod(amod)
-		, mBones(header->numBones)
-		, mFinalBones(header->numBones)
-		, mSmoothBones(header->numBones)
+		, mBones(header->num_bones)
+		, mFinalBones(header->num_bones)
+		, mSmoothBones(header->num_bones)
 		, mCurrentTouch(3)
 		, mLastTouch(2)
 		, mLastLastTouch(1)
@@ -436,11 +436,11 @@ public:
 
 		Com_Memset(boneMatrices, 0, sizeof(boneMatrices));
 
-		int numBones = header->numBones;
+		int num_bones = header->num_bones;
 		mdxaSkelOffsets_t* offsets =
 			(mdxaSkelOffsets_t*)((byte*)header + sizeof(mdxaHeader_t));
 
-		for (int i = 0; i < numBones; ++i)
+		for (int i = 0; i < num_bones; ++i)
 		{
 			mdxaSkel_t* skel =
 				(mdxaSkel_t*)((byte*)offsets + offsets->offsets[i]);
@@ -574,7 +574,7 @@ int G2_GetBoneDependents(CGhoul2Info& ghoul2, int bone_num, int* tempDependents,
 		}
 
 		*tempDependents = skel->children[i];
-		assert(*tempDependents > 0 && *tempDependents < bone_cache.header->numBones);
+		assert(*tempDependents > 0 && *tempDependents < bone_cache.header->num_bones);
 		maxDep--;
 		tempDependents++;
 		numDependencies++;
@@ -624,7 +624,7 @@ void G2_GetBoneBasepose(
 	assert(ghoul2.mBoneCache);
 	CBoneCache& bone_cache = *ghoul2.mBoneCache;
 	assert(bone_cache.mod);
-	assert(bone_num >= 0 && bone_num < bone_cache.header->numBones);
+	assert(bone_num >= 0 && bone_num < bone_cache.header->num_bones);
 
 	mdxaSkelOffsets_t* offsets =
 		(mdxaSkelOffsets_t*)((byte*)bone_cache.header + sizeof(mdxaHeader_t));
@@ -643,7 +643,7 @@ char* G2_GetBoneNameFromSkel(CGhoul2Info& ghoul2, int bone_num)
 
 	CBoneCache& bone_cache = *ghoul2.mBoneCache;
 	assert(bone_cache.mod);
-	assert(bone_num >= 0 && bone_num < bone_cache.header->numBones);
+	assert(bone_num >= 0 && bone_num < bone_cache.header->num_bones);
 
 	mdxaSkelOffsets_t* offsets =
 		(mdxaSkelOffsets_t*)((byte*)bone_cache.header + sizeof(mdxaHeader_t));
@@ -662,7 +662,7 @@ void G2_RagGetBoneBasePoseMatrixLow(
 	assert(ghoul2.mBoneCache);
 	CBoneCache& bone_cache = *ghoul2.mBoneCache;
 	assert(bone_cache.mod);
-	assert(bone_num >= 0 && bone_num < bone_cache.header->numBones);
+	assert(bone_num >= 0 && bone_num < bone_cache.header->num_bones);
 
 	mdxaSkelOffsets_t* offsets =
 		(mdxaSkelOffsets_t*)((byte*)bone_cache.header + sizeof(mdxaHeader_t));
@@ -711,7 +711,7 @@ void G2_GetBoneMatrixLow(
 	assert(ghoul2.mBoneCache);
 	CBoneCache& bone_cache = *ghoul2.mBoneCache;
 	assert(bone_cache.mod);
-	assert(bone_num >= 0 && bone_num < bone_cache.header->numBones);
+	assert(bone_num >= 0 && bone_num < bone_cache.header->num_bones);
 
 	mdxaSkelOffsets_t* offsets =
 		(mdxaSkelOffsets_t*)((byte*)bone_cache.header + sizeof(mdxaHeader_t));
@@ -769,10 +769,10 @@ int G2_GetParentBoneMatrixLow(
 	{
 		CBoneCache& bone_cache = *ghoul2.mBoneCache;
 		assert(bone_cache.mod);
-		assert(bone_num >= 0 && bone_num < bone_cache.header->numBones);
+		assert(bone_num >= 0 && bone_num < bone_cache.header->num_bones);
 
 		parent = bone_cache.GetParent(bone_num);
-		if (parent < 0 || parent >= bone_cache.header->numBones)
+		if (parent < 0 || parent >= bone_cache.header->num_bones)
 		{
 			parent = -1;
 			retMatrix = identity_matrix;
@@ -1100,9 +1100,9 @@ void G2_CreateMatrixFromQuaterion(mdxaBone_t* mat, vec4_t quat)
 static int G2_GetBonePoolIndex(const mdxaHeader_t* p_mdxa_header, const int i_frame, const int i_bone)
 {
 	assert(i_frame >= 0 && i_frame < p_mdxa_header->num_frames);
-	assert(i_bone >= 0 && i_bone < p_mdxa_header->numBones);
+	assert(i_bone >= 0 && i_bone < p_mdxa_header->num_bones);
 
-	const int iOffsetToIndex = i_frame * p_mdxa_header->numBones * 3 + i_bone * 3;
+	const int iOffsetToIndex = i_frame * p_mdxa_header->num_bones * 3 + i_bone * 3;
 	const mdxaIndex_t* pIndex = reinterpret_cast<mdxaIndex_t*>((byte*)p_mdxa_header + p_mdxa_header->ofsFrames + iOffsetToIndex);
 
 	return (pIndex->iIndex[2] << 16) + (pIndex->iIndex[1] << 8) + pIndex->iIndex[0];
@@ -1668,7 +1668,7 @@ static void G2_TransformBone(int child, CBoneCache& BC)
 	}
 #endif
 
-	assert(child >= 0 && child < BC.header->numBones);
+	assert(child >= 0 && child < BC.header->num_bones);
 
 	// decide where the transformed bone is going
 
@@ -1909,7 +1909,7 @@ static void G2_TransformGhoulBones(
 	assert(ghoul2.aHeader);
 	assert(ghoul2.current_model);
 	assert(ghoul2.current_model->data.glm && ghoul2.current_model->data.glm->header);
-	if (!aHeader->numBones)
+	if (!aHeader->num_bones)
 	{
 		assert(0); // this would be strange
 		return;
@@ -1924,7 +1924,7 @@ static void G2_TransformGhoulBones(
 	}
 	ghoul2.mBoneCache->mod = current_model;
 	ghoul2.mBoneCache->header = aHeader;
-	assert(ghoul2.mBoneCache->mBones.size() == (unsigned)aHeader->numBones);
+	assert(ghoul2.mBoneCache->mBones.size() == (unsigned)aHeader->num_bones);
 
 	ghoul2.mBoneCache->mSmoothingActive = false;
 	ghoul2.mBoneCache->mUnsquash = false;
@@ -4130,7 +4130,7 @@ qboolean R_LoadMDXM(model_t* mod, void* buffer, const char* mod_name, qboolean& 
 	}
 
 	bool isAnOldModelFile = false;
-	if (mdxm->numBones == 72 && strstr(mdxm->animName, "_humanoid"))
+	if (mdxm->num_bones == 72 && strstr(mdxm->animName, "_humanoid"))
 	{
 		isAnOldModelFile = true;
 	}
@@ -4609,7 +4609,7 @@ void ShiftMemoryDown(mdxaSkelOffsets_t* offsets, mdxaHeader_t* mdxa, int bone_in
 
 	// Now add CHILD_PADDING amount to every offset beginning at the offset of
 	// the bone that was moved.
-	while (i < mdxa->numBones)
+	while (i < mdxa->num_bones)
 	{
 		offsets->offsets[i] += CHILD_PADDING;
 		i++;
@@ -4690,7 +4690,7 @@ int BoneParentChildIndex(
 
 	i = 0;
 
-	while (i < mdxa->numBones)
+	while (i < mdxa->num_bones)
 	{
 		bone = (mdxaSkel_t*)((byte*)mdxa + sizeof(mdxaHeader_t) + offsets->offsets[i]);
 
@@ -4792,7 +4792,7 @@ qboolean R_LoadMDXA(model_t* mod, void* buffer, const char* mod_name, qboolean& 
 		LL(mdxa->ident);
 		LL(mdxa->version);
 		LL(mdxa->num_frames);
-		LL(mdxa->numBones);
+		LL(mdxa->num_bones);
 		LL(mdxa->ofsFrames);
 		LL(mdxa->ofsEnd);
 	}
@@ -4809,7 +4809,7 @@ qboolean R_LoadMDXA(model_t* mod, void* buffer, const char* mod_name, qboolean& 
 		// ragdoll.
 		mdxaSkelOffsets_t* offsets = (mdxaSkelOffsets_t*)((byte*)mdxa + sizeof(mdxaHeader_t));
 
-		for (i = 0; i < mdxa->numBones; i++)
+		for (i = 0; i < mdxa->num_bones; i++)
 		{
 			boneInfo = (mdxaSkel_t*)((byte*)offsets + offsets->offsets[i]);
 

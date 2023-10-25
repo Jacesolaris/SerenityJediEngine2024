@@ -31,7 +31,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 typedef struct shaderRemap_s
 {
 	char oldShader[MAX_QPATH];
-	char newShader[MAX_QPATH];
+	char new_shader_name[MAX_QPATH];
 	float time_offset;
 } shaderRemap_t;
 
@@ -40,21 +40,21 @@ typedef struct shaderRemap_s
 int remapCount = 0;
 shaderRemap_t remappedShaders[MAX_SHADER_REMAPS];
 
-void AddRemap(const char* oldShader, const char* newShader, const float time_offset)
+void AddRemap(const char* oldShader, const char* new_shader_name, const float time_offset)
 {
 	for (int i = 0; i < remapCount; i++)
 	{
 		if (Q_stricmp(oldShader, remappedShaders[i].oldShader) == 0)
 		{
 			// found it, just update this one
-			strcpy(remappedShaders[i].newShader, newShader);
+			strcpy(remappedShaders[i].new_shader_name, new_shader_name);
 			remappedShaders[i].time_offset = time_offset;
 			return;
 		}
 	}
 	if (remapCount < MAX_SHADER_REMAPS)
 	{
-		strcpy(remappedShaders[remapCount].newShader, newShader);
+		strcpy(remappedShaders[remapCount].new_shader_name, new_shader_name);
 		strcpy(remappedShaders[remapCount].oldShader, oldShader);
 		remappedShaders[remapCount].time_offset = time_offset;
 		remapCount++;
@@ -69,7 +69,7 @@ const char* BuildShaderStateConfig(void)
 	for (int i = 0; i < remapCount; i++)
 	{
 		char out[MAX_QPATH * 2 + 5];
-		Com_sprintf(out, MAX_QPATH * 2 + 5, "%s=%s:%5.2f@", remappedShaders[i].oldShader, remappedShaders[i].newShader,
+		Com_sprintf(out, MAX_QPATH * 2 + 5, "%s=%s:%5.2f@", remappedShaders[i].oldShader, remappedShaders[i].new_shader_name,
 			remappedShaders[i].time_offset);
 		Q_strcat(buff, sizeof buff, out);
 	}

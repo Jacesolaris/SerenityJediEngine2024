@@ -478,7 +478,7 @@ Apply a color blend over a set of pixels
 ==================
 */
 static void R_BlendOverTexture(byte* data, const int pixel_count, byte blend[4]) {
-	int		premult[3]{};
+	int		premult[3];
 
 	const int inverse_alpha = 255 - blend[3];
 	premult[0] = blend[0] * blend[3];
@@ -1071,13 +1071,13 @@ static void R_CreateDlightImage()
 	}
 	else
 	{	// if we dont get a successful load
-		byte	data[DLIGHT_SIZE][DLIGHT_SIZE][4]{};
+		byte	data[DLIGHT_SIZE][DLIGHT_SIZE][4];
 
 		// make a centered inverse-square falloff blob for dynamic lighting
 		for (int x = 0; x < DLIGHT_SIZE; x++) {
 			for (int y = 0; y < DLIGHT_SIZE; y++) {
-				const float d = (static_cast<float>(DLIGHT_SIZE) / 2 - 0.5f - x) * (static_cast<float>(DLIGHT_SIZE) / 2 - 0.5f - x) +
-					(static_cast<float>(DLIGHT_SIZE) / 2 - 0.5f - y) * (static_cast<float>(DLIGHT_SIZE) / 2 - 0.5f - y);
+				const float d = (DLIGHT_SIZE / 2 - 0.5f - x) * (DLIGHT_SIZE / 2 - 0.5f - x) +
+					(DLIGHT_SIZE / 2 - 0.5f - y) * (DLIGHT_SIZE / 2 - 0.5f - y);
 				int b = 4000 / d;
 				if (b > 255) {
 					b = 255;
@@ -1150,7 +1150,7 @@ R_CreateFogImage
 constexpr auto FOG_S = 256;
 constexpr auto FOG_T = 32;
 static void R_CreateFogImage() {
-	float	border_color[4]{};
+	float	border_color[4];
 
 	const auto data = static_cast<byte*>(R_Malloc(FOG_S * FOG_T * 4, TAG_TEMP_WORKSPACE, qfalse));
 

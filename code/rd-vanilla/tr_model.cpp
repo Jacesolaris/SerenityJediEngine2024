@@ -169,7 +169,7 @@ qboolean RE_RegisterModels_GetDiskFile(const char* psModelFileName, void** ppvBu
 
 // if return == true, no further action needed by the caller...
 //
-void* RE_RegisterModels_Malloc(const int i_size, void* pvDiskBufferIfJustLoaded, const char* psModelFileName, qboolean* pqbAlreadyFound, const memtag_t e_tag)
+void* RE_RegisterModels_Malloc(const int iSize, void* pvDiskBufferIfJustLoaded, const char* psModelFileName, qboolean* pqbAlreadyFound, const memtag_t eTag)
 {
 	char sModelName[MAX_QPATH];
 
@@ -189,15 +189,15 @@ void* RE_RegisterModels_Malloc(const int i_size, void* pvDiskBufferIfJustLoaded,
 		//
 		if (pvDiskBufferIfJustLoaded)
 		{
-			R_MorphMallocTag(pvDiskBufferIfJustLoaded, e_tag);
+			R_MorphMallocTag(pvDiskBufferIfJustLoaded, eTag);
 		}
 		else
 		{
-			pvDiskBufferIfJustLoaded = R_Malloc(i_size, e_tag, qfalse);
+			pvDiskBufferIfJustLoaded = R_Malloc(iSize, eTag, qfalse);
 		}
 
 		ModelBin.pModelDiskImage = pvDiskBufferIfJustLoaded;
-		ModelBin.iAllocSize = i_size;
+		ModelBin.iAllocSize = iSize;
 		*pqbAlreadyFound = qfalse;
 	}
 	else
@@ -448,8 +448,7 @@ model_t* R_GetModelByHandle(const qhandle_t index) {
 model_t* R_GetAnimModelByHandle(const CGhoul2Info* ghl_info, qhandle_t index)
 {
 	// out of range gets the defualt model
-	if (index < 1 || index > tr.numModels)
-	{
+	if (index < 1 || index > tr.numModels) {
 		return tr.models[0];
 	}
 
@@ -461,7 +460,6 @@ model_t* R_GetAnimModelByHandle(const CGhoul2Info* ghl_info, qhandle_t index)
 		index -= ghl_info->animModelIndexOffset;
 		int mapIndex{};
 		constexpr int len = std::size(tr.models);
-
 		for (int i = 0; i < len; i++)
 		{
 			if (!Q_stricmp(va("models/players/_humanoid/_humanoid.gla"), tr.models[i]->name))
@@ -561,7 +559,7 @@ asked for again.
 static qhandle_t RE_RegisterModel_Actual(const char* name)
 {
 	model_t* mod;
-	unsigned* buf = nullptr;
+	unsigned* buf;
 	int			lod;
 	qboolean	loaded;
 	modelHash_t* mh;
@@ -960,6 +958,9 @@ static qboolean R_LoadMD3(model_t* mod, int lod, void* buffer, const char* name,
 }
 
 //=============================================================================
+
+void CM_LoadShaderText(bool forceReload);
+void CM_SetupShaderProperties();
 
 /*
 ** RE_BeginRegistration

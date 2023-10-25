@@ -88,7 +88,7 @@ mdxaBone_t worldMatrixInv;
 qhandle_t goreShader = -1;
 #endif
 
-constexpr static mdxaBone_t identity_matrix =
+constexpr static mdxaBone_t identityMatrix =
 {
 	{
 		{0.0f, -1.0f, 0.0f, 0.0f},
@@ -246,7 +246,7 @@ public:
 		mUnsquash = false;
 		mSmoothFactor = 0.0f;
 
-		mNumBones = header->numBones;
+		mNumBones = header->num_bones;
 		mBones = new SBoneCalc[mNumBones];
 		mFinalBones = static_cast<CTransformBone*>(R_Malloc(sizeof(CTransformBone) * mNumBones, TAG_GHOUL2, qtrue));
 		mSmoothBones = static_cast<CTransformBone*>(R_Malloc(sizeof(CTransformBone) * mNumBones, TAG_GHOUL2, qtrue));
@@ -407,7 +407,7 @@ int G2_GetBoneDependents(CGhoul2Info& ghoul2, const int bone_num, int* temp_depe
 			return i; // number added
 		}
 		*temp_dependents = skel->children[i];
-		assert(*temp_dependents > 0 && *temp_dependents < bone_cache.header->numBones);
+		assert(*temp_dependents > 0 && *temp_dependents < bone_cache.header->num_bones);
 		max_dep--;
 		temp_dependents++;
 		ret++;
@@ -443,14 +443,14 @@ void G2_GetBoneBasepose(const CGhoul2Info& ghoul2, const int bone_num, mdxaBone_
 	if (!ghoul2.mBoneCache)
 	{
 		// yikes
-		ret_basepose = const_cast<mdxaBone_t*>(&identity_matrix);
-		ret_basepose_inv = const_cast<mdxaBone_t*>(&identity_matrix);
+		ret_basepose = const_cast<mdxaBone_t*>(&identityMatrix);
+		ret_basepose_inv = const_cast<mdxaBone_t*>(&identityMatrix);
 		return;
 	}
 	assert(ghoul2.mBoneCache);
 	const CBoneCache& bone_cache = *ghoul2.mBoneCache;
 	assert(bone_cache.mod);
-	assert(bone_num >= 0 && bone_num < bone_cache.header->numBones);
+	assert(bone_num >= 0 && bone_num < bone_cache.header->num_bones);
 
 	const auto offsets = reinterpret_cast<mdxaSkelOffsets_t*>((byte*)bone_cache.header + sizeof(mdxaHeader_t));
 	const auto skel = reinterpret_cast<mdxaSkel_t*>((byte*)bone_cache.header + sizeof(mdxaHeader_t) + offsets->offsets[bone_num]);
@@ -466,7 +466,7 @@ char* G2_GetBoneNameFromSkel(const CGhoul2Info& ghoul2, const int bone_num)
 	}
 	const CBoneCache& bone_cache = *ghoul2.mBoneCache;
 	assert(bone_cache.mod);
-	assert(bone_num >= 0 && bone_num < bone_cache.header->numBones);
+	assert(bone_num >= 0 && bone_num < bone_cache.header->num_bones);
 
 	const auto offsets = reinterpret_cast<mdxaSkelOffsets_t*>((byte*)bone_cache.header + sizeof(mdxaHeader_t));
 	const auto skel = reinterpret_cast<mdxaSkel_t*>((byte*)bone_cache.header + sizeof(mdxaHeader_t) + offsets->offsets[bone_num]);
@@ -480,7 +480,7 @@ void G2_RagGetBoneBasePoseMatrixLow(const CGhoul2Info& ghoul2, const int bone_nu
 	assert(ghoul2.mBoneCache);
 	const CBoneCache& bone_cache = *ghoul2.mBoneCache;
 	assert(bone_cache.mod);
-	assert(bone_num >= 0 && bone_num < bone_cache.header->numBones);
+	assert(bone_num >= 0 && bone_num < bone_cache.header->num_bones);
 
 	const auto offsets = reinterpret_cast<mdxaSkelOffsets_t*>((byte*)bone_cache.header + sizeof(mdxaHeader_t));
 	const auto skel = reinterpret_cast<mdxaSkel_t*>((byte*)bone_cache.header + sizeof(mdxaHeader_t) + offsets->offsets[bone_num]);
@@ -509,17 +509,17 @@ void G2_GetBoneMatrixLow(const CGhoul2Info& ghoul2, const int bone_num, const ve
 {
 	if (!ghoul2.mBoneCache)
 	{
-		ret_matrix = identity_matrix;
+		ret_matrix = identityMatrix;
 		// yikes
-		ret_basepose = const_cast<mdxaBone_t*>(&identity_matrix);
-		ret_basepose_inv = const_cast<mdxaBone_t*>(&identity_matrix);
+		ret_basepose = const_cast<mdxaBone_t*>(&identityMatrix);
+		ret_basepose_inv = const_cast<mdxaBone_t*>(&identityMatrix);
 		return;
 	}
 	mdxaBone_t bolt;
 	assert(ghoul2.mBoneCache);
 	CBoneCache& bone_cache = *ghoul2.mBoneCache;
 	assert(bone_cache.mod);
-	assert(bone_num >= 0 && bone_num < bone_cache.header->numBones);
+	assert(bone_num >= 0 && bone_num < bone_cache.header->num_bones);
 
 	const auto offsets = reinterpret_cast<mdxaSkelOffsets_t*>((byte*)bone_cache.header + sizeof(mdxaHeader_t));
 	const auto skel = reinterpret_cast<mdxaSkel_t*>((byte*)bone_cache.header + sizeof(mdxaHeader_t) + offsets->offsets[bone_num]);
@@ -564,15 +564,15 @@ int G2_GetParentBoneMatrixLow(const CGhoul2Info& ghoul2, const int bone_num, con
 	{
 		const CBoneCache& bone_cache = *ghoul2.mBoneCache;
 		assert(bone_cache.mod);
-		assert(bone_num >= 0 && bone_num < bone_cache.header->numBones);
+		assert(bone_num >= 0 && bone_num < bone_cache.header->num_bones);
 		parent = bone_cache.GetParent(bone_num);
-		if (parent < 0 || parent >= bone_cache.header->numBones)
+		if (parent < 0 || parent >= bone_cache.header->num_bones)
 		{
 			parent = -1;
-			retMatrix = identity_matrix;
+			retMatrix = identityMatrix;
 			// yikes
-			ret_basepose = const_cast<mdxaBone_t*>(&identity_matrix);
-			ret_basepose_inv = const_cast<mdxaBone_t*>(&identity_matrix);
+			ret_basepose = const_cast<mdxaBone_t*>(&identityMatrix);
+			ret_basepose_inv = const_cast<mdxaBone_t*>(&identityMatrix);
 		}
 		else
 		{
@@ -778,7 +778,7 @@ static int R_GComputeFogNum(const trRefEntity_t* ent)
 }
 
 // work out lod for this entity.
-static int G2_ComputeLOD(trRefEntity_t* ent, const model_t* current_model, int lod_bias)
+static int G2_ComputeLOD(trRefEntity_t* ent, const model_t* current_model, int lodBias)
 {
 	float flod;
 	float projected_radius;
@@ -789,13 +789,13 @@ static int G2_ComputeLOD(trRefEntity_t* ent, const model_t* current_model, int l
 		return 0;
 	}
 
-	if (r_lodbias->integer > lod_bias)
+	if (r_lodbias->integer > lodBias)
 	{
-		lod_bias = r_lodbias->integer;
+		lodBias = r_lodbias->integer;
 	}
 
 	//**early out, it's going to be max lod
-	if (lod_bias >= current_model->numLods)
+	if (lodBias >= current_model->numLods)
 	{
 		return current_model->numLods - 1;
 	}
@@ -841,7 +841,7 @@ static int G2_ComputeLOD(trRefEntity_t* ent, const model_t* current_model, int l
 		lod = current_model->numLods - 1;
 	}
 
-	lod += lod_bias;
+	lod += lodBias;
 
 	if (lod >= current_model->numLods)
 		lod = current_model->numLods - 1;
@@ -885,9 +885,9 @@ void Multiply_3x4Matrix(mdxaBone_t* out, const mdxaBone_t* in2, const mdxaBone_t
 static int G2_GetBonePoolIndex(const mdxaHeader_t* p_mdxa_header, const int i_frame, const int i_bone)
 {
 	assert(i_frame >= 0 && i_frame < p_mdxa_header->num_frames);
-	assert(i_bone >= 0 && i_bone < p_mdxa_header->numBones);
+	assert(i_bone >= 0 && i_bone < p_mdxa_header->num_bones);
 
-	const int iOffsetToIndex = i_frame * p_mdxa_header->numBones * 3 + i_bone * 3;
+	const int iOffsetToIndex = i_frame * p_mdxa_header->num_bones * 3 + i_bone * 3;
 	const mdxaIndex_t* pIndex = reinterpret_cast<mdxaIndex_t*>((byte*)p_mdxa_header + p_mdxa_header->ofsFrames + iOffsetToIndex);
 
 	return (pIndex->iIndex[2] << 16) + (pIndex->iIndex[1] << 8) + pIndex->iIndex[0];
@@ -1154,7 +1154,7 @@ int G2_Find_Bone(const CGhoul2Info* ghl_info, const boneInfo_v& blist, const cha
 
 void G2_RagGetAnimMatrix(CGhoul2Info& ghoul2, const int bone_num, mdxaBone_t& matrix, const int frame)
 {
-	mdxaBone_t anim_matrix{};
+	mdxaBone_t anim_matrix;
 	mdxaSkel_t* skel;
 	mdxaSkelOffsets_t* offsets;
 	int parent;
@@ -1282,7 +1282,11 @@ void G2_RagGetAnimMatrix(CGhoul2Info& ghoul2, const int bone_num, mdxaBone_t& ma
 void G2_TransformBone(const int index, const CBoneCache& cb)
 {
 	SBoneCalc& TB = cb.mBones[index];
-	mdxaBone_t tbone[6]{};
+	mdxaBone_t tbone[6];
+	// 	mdxaFrame_t		*aFrame=0;
+	//	mdxaFrame_t		*bFrame=0;
+	//	mdxaFrame_t		*aoldFrame=0;
+	//	mdxaFrame_t		*boldFrame=0;
 	mdxaSkel_t* skel;
 	mdxaSkelOffsets_t* offsets;
 	boneInfo_v& boneList = *cb.rootBoneList;
@@ -1424,7 +1428,7 @@ void G2_TransformBone(const int index, const CBoneCache& cb)
 
 	//	mdxaCompBone_t	*compBonePointer = (mdxaCompBone_t *)((byte *)BC.header + BC.header->ofsCompBonePool);
 
-	assert(index >= 0 && index < cb.header->numBones);
+	assert(index >= 0 && index < cb.header->num_bones);
 	//	assert(bFrame->boneIndexes[child]>=0);
 	//	assert(boldFrame->boneIndexes[child]>=0);
 	//	assert(aFrame->boneIndexes[child]>=0);
@@ -1601,7 +1605,7 @@ void G2_TransformBone(const int index, const CBoneCache& cb)
 
 					const float matrixScale = VectorLength(reinterpret_cast<float*>(&temp));
 
-					mdxaBone_t newMatrixTemp{};
+					mdxaBone_t newMatrixTemp;
 
 					if (HackadelicOnClient)
 					{
@@ -1653,7 +1657,7 @@ void G2_TransformBone(const int index, const CBoneCache& cb)
 				Multiply_3x4Matrix(&temp, &firstPass, &skel->BasePoseMat);
 				const float matrixScale = VectorLength(reinterpret_cast<float*>(&temp));
 
-				mdxaBone_t newMatrixTemp{};
+				mdxaBone_t newMatrixTemp;
 
 				if (HackadelicOnClient)
 				{
@@ -1798,7 +1802,7 @@ void G2_TransformGhoulBones(boneInfo_v& rootBoneList, const mdxaBone_t& rootMatr
 	assert(ghoul2.aHeader);
 	assert(ghoul2.current_model);
 	assert(ghoul2.current_model->mdxm);
-	if (!ghoul2.aHeader->numBones)
+	if (!ghoul2.aHeader->num_bones)
 	{
 		assert(0); // this would be strange
 		return;
@@ -1809,7 +1813,7 @@ void G2_TransformGhoulBones(boneInfo_v& rootBoneList, const mdxaBone_t& rootMatr
 	}
 	ghoul2.mBoneCache->mod = ghoul2.current_model;
 	ghoul2.mBoneCache->header = ghoul2.aHeader;
-	assert(ghoul2.mBoneCache->mNumBones == ghoul2.aHeader->numBones);
+	assert(ghoul2.mBoneCache->mNumBones == ghoul2.aHeader->num_bones);
 
 	ghoul2.mBoneCache->mSmoothingActive = false;
 	ghoul2.mBoneCache->mUnsquash = false;
@@ -1872,7 +1876,7 @@ void G2_TransformGhoulBones(boneInfo_v& rootBoneList, const mdxaBone_t& rootMatr
 
 	//	ghoul2.mBoneCache->mWraithID=0;
 	ghoul2.mBoneCache->frameSize = 0;
-	// can be deleted in new G2 format	//(int)( &((mdxaFrame_t *)0)->boneIndexes[ ghoul2.aHeader->numBones ] );
+	// can be deleted in new G2 format	//(int)( &((mdxaFrame_t *)0)->boneIndexes[ ghoul2.aHeader->num_bones ] );
 
 	ghoul2.mBoneCache->rootBoneList = &rootBoneList;
 	ghoul2.mBoneCache->rootMatrix = rootMatrix;
@@ -1898,14 +1902,14 @@ constexpr auto MDX_TAG_ORIGIN = 2;
 void G2_ProcessSurfaceBolt2(CBoneCache& bone_cache, const mdxmSurface_t* surface, int boltNum, boltInfo_v& boltList,
 	const surfaceInfo_t* surfInfo, const model_t* mod, mdxaBone_t& retMatrix)
 {
-	float pTri[3][3]{};
+	float pTri[3][3];
 	int k;
 
 	// now there are two types of tag surface - model ones and procedural generated types - lets decide which one we have here.
 	if (surfInfo && surfInfo->off_flags == G2SURFACEFLAG_GENERATED)
 	{
 		const int surfNumber = surfInfo->genPolySurfaceIndex & 0x0ffff;
-		const int poly_number = surfInfo->genPolySurfaceIndex >> 16 & 0x0ffff;
+		const int polyNumber = surfInfo->genPolySurfaceIndex >> 16 & 0x0ffff;
 
 		// find original surface our original poly was in.
 		const auto originalSurf = static_cast<mdxmSurface_t*>(G2_FindSurface(mod, surfNumber, surfInfo->genLod));
@@ -1913,9 +1917,9 @@ void G2_ProcessSurfaceBolt2(CBoneCache& bone_cache, const mdxmSurface_t* surface
 			ofsTriangles);
 
 		// get the original polys indexes
-		const int index0 = originalTriangleIndexes[poly_number].indexes[0];
-		const int index1 = originalTriangleIndexes[poly_number].indexes[1];
-		const int index2 = originalTriangleIndexes[poly_number].indexes[2];
+		const int index0 = originalTriangleIndexes[polyNumber].indexes[0];
+		const int index1 = originalTriangleIndexes[polyNumber].indexes[1];
+		const int index2 = originalTriangleIndexes[polyNumber].indexes[2];
 
 		// decide where the original verts are
 		auto vert0 = reinterpret_cast<mdxmVertex_t*>(reinterpret_cast<byte*>(originalSurf) + originalSurf->ofsVerts);
@@ -1982,7 +1986,7 @@ void G2_ProcessSurfaceBolt2(CBoneCache& bone_cache, const mdxmSurface_t* surface
 		}
 
 		vec3_t normal;
-		vec3_t up{};
+		vec3_t up;
 		vec3_t right;
 		vec3_t vec0, vec1;
 		// work out baryCentricK
@@ -2112,7 +2116,7 @@ void G2_GetBoltMatrixLow(CGhoul2Info& ghoul2, const int boltNum, const vec3_t sc
 {
 	if (!ghoul2.mBoneCache)
 	{
-		retMatrix = identity_matrix;
+		retMatrix = identityMatrix;
 		return;
 	}
 	assert(ghoul2.mBoneCache);
@@ -2153,13 +2157,13 @@ void G2_GetBoltMatrixLow(CGhoul2Info& ghoul2, const int boltNum, const vec3_t sc
 	else
 	{
 		// we have a bolt without a bone or surface, not a huge problem but we ought to at least clear the bolt matrix
-		retMatrix = identity_matrix;
+		retMatrix = identityMatrix;
 	}
 }
 
-void G2API_SetSurfaceOnOffFromSkin(CGhoul2Info* ghl_info, const qhandle_t render_skin)
+void G2API_SetSurfaceOnOffFromSkin(CGhoul2Info* ghl_info, const qhandle_t renderSkin)
 {
-	const skin_t* skin = R_GetSkinByHandle(render_skin);
+	const skin_t* skin = R_GetSkinByHandle(renderSkin);
 	//FIXME:  using skin handles means we have to increase the numsurfs in a skin, but reading directly would cause file hits, we need another way to cache or just deal with the larger skin_t
 
 	if (skin)
@@ -2199,20 +2203,20 @@ void RenderSurfaces(CRenderSurface& RS)
 	assert(RS.current_model->mdxm);
 	// back track and get the surfinfo struct for this surface
 	const auto surface = static_cast<mdxmSurface_t*>(G2_FindSurface(RS.current_model, RS.surface_num, RS.lod));
-	const auto surf_indexes = reinterpret_cast<mdxmHierarchyOffsets_t*>(reinterpret_cast<byte*>(RS.current_model->mdxm) + sizeof(mdxmHeader_t));
-	const mdxmSurfHierarchy_t* surfInfo = reinterpret_cast<mdxmSurfHierarchy_t*>((byte*)surf_indexes + surf_indexes->offsets[surface->
+	const auto surfIndexes = reinterpret_cast<mdxmHierarchyOffsets_t*>(reinterpret_cast<byte*>(RS.current_model->mdxm) + sizeof(mdxmHeader_t));
+	const mdxmSurfHierarchy_t* surfInfo = reinterpret_cast<mdxmSurfHierarchy_t*>((byte*)surfIndexes + surfIndexes->offsets[surface->
 		thisSurfaceIndex]);
 
 	// see if we have an override surface in the surface list
-	const surfaceInfo_t* surf_override = G2_FindOverrideSurface(RS.surface_num, RS.rootSList);
+	const surfaceInfo_t* surfOverride = G2_FindOverrideSurface(RS.surface_num, RS.rootSList);
 
 	// really, we should use the default flags for this surface unless it's been overriden
 	off_flags = surfInfo->flags;
 
 	// set the off flags if we have some
-	if (surf_override)
+	if (surfOverride)
 	{
-		off_flags = surf_override->off_flags;
+		off_flags = surfOverride->off_flags;
 	}
 
 	// if this surface is not off, add it to the shader render list
@@ -2466,7 +2470,7 @@ static void RootMatrix(CGhoul2Info_v& ghoul2, const int time, const vec3_t scale
 			if (ghoul2[i].mFlags & GHOUL2_NEWORIGIN)
 			{
 				mdxaBone_t bolt;
-				mdxaBone_t tempMatrix{};
+				mdxaBone_t tempMatrix;
 
 				G2_ConstructGhoulSkeleton(ghoul2, time, false, scale);
 				G2_GetBoltMatrixLow(ghoul2[i], ghoul2[i].mNewOrigin, scale, bolt);
@@ -2482,12 +2486,13 @@ static void RootMatrix(CGhoul2Info_v& ghoul2, const int time, const vec3_t scale
 				tempMatrix.matrix[2][1] = 0.0f;
 				tempMatrix.matrix[2][2] = 1.0f;
 				tempMatrix.matrix[2][3] = -bolt.matrix[2][3];
-				Multiply_3x4Matrix(&retMatrix, &tempMatrix, &identity_matrix);
+				//				Inverse_Matrix(&bolt, &tempMatrix);
+				Multiply_3x4Matrix(&retMatrix, &tempMatrix, &identityMatrix);
 				return;
 			}
 		}
 	}
-	retMatrix = identity_matrix;
+	retMatrix = identityMatrix;
 }
 
 extern cvar_t* r_shadowRange;
@@ -2497,6 +2502,7 @@ static bool bInShadowRange(vec3_t location)
 	const float c = DotProduct(tr.viewParms.ori.axis[0], tr.viewParms.ori.origin);
 	const float dist = DotProduct(tr.viewParms.ori.axis[0], location) - c;
 
+	//	return (dist < tr.distanceCull/1.5f);
 	return dist < r_shadowRange->value;
 }
 
@@ -2545,7 +2551,7 @@ void R_AddGhoulSurfaces(trRefEntity_t* ent)
 	// don't add third_person objects if not in a portal
 	auto personalModel = static_cast<qboolean>(ent->e.renderfx & RF_THIRD_PERSON && !tr.viewParms.isPortal);
 
-	int model_list[32]{};
+	int model_list[32];
 	assert(ghoul2.size() <= 31);
 	model_list[31] = 548;
 
@@ -2668,22 +2674,22 @@ bool G2_NeedsRecalc(CGhoul2Info* ghl_info, const int frame_num)
 G2_ConstructGhoulSkeleton - builds a complete skeleton for all ghoul models in a CGhoul2Info_v class	- using LOD 0
 ==============
 */
-void G2_ConstructGhoulSkeleton(CGhoul2Info_v& ghoul2, const int frame_num, const bool checkForNewOrigin, const vec3_t scale)
+void G2_ConstructGhoulSkeleton(CGhoul2Info_v& ghoul2, const int frameNum, const bool checkForNewOrigin, const vec3_t scale)
 {
 	int modelCount;
 	mdxaBone_t rootMatrix;
 
-	int model_list[32]{};
+	int model_list[32];
 	assert(ghoul2.size() <= 31);
 	model_list[31] = 548;
 
 	if (checkForNewOrigin)
 	{
-		RootMatrix(ghoul2, frame_num, scale, rootMatrix);
+		RootMatrix(ghoul2, frameNum, scale, rootMatrix);
 	}
 	else
 	{
-		rootMatrix = identity_matrix;
+		rootMatrix = identityMatrix;
 	}
 
 	G2_Sort_Models(ghoul2, model_list, &modelCount);
@@ -2703,11 +2709,11 @@ void G2_ConstructGhoulSkeleton(CGhoul2Info_v& ghoul2, const int frame_num, const
 
 				mdxaBone_t bolt;
 				G2_GetBoltMatrixLow(ghoul2[boltMod], boltNum, scale, bolt);
-				G2_TransformGhoulBones(ghoul2[i].mBlist, bolt, ghoul2[i], frame_num, checkForNewOrigin);
+				G2_TransformGhoulBones(ghoul2[i].mBlist, bolt, ghoul2[i], frameNum, checkForNewOrigin);
 			}
 			else
 			{
-				G2_TransformGhoulBones(ghoul2[i].mBlist, rootMatrix, ghoul2[i], frame_num, checkForNewOrigin);
+				G2_TransformGhoulBones(ghoul2[i].mBlist, rootMatrix, ghoul2[i], frameNum, checkForNewOrigin);
 			}
 		}
 	}
@@ -3002,7 +3008,7 @@ void RB_SurfaceGhoul(CRenderableSurface* surf)
 #endif
 
 #ifdef _G2_GORE
-	//CRenderableSurface* storeSurf = surf;
+	//CRenderableSurface *storeSurf = surf;
 
 	while (surf->goreChain)
 	{
@@ -3037,6 +3043,12 @@ void RB_SurfaceGhoul(CRenderableSurface* surf)
 	// NOTE: This is required because a ghoul model might need to be rendered twice a frame (don't cringe,
 	// it's not THAT bad), so we only delete it when doing the glow pass. Warning though, this assumes that
 	// the glow is rendered _second_!!! If that changes, change this!
+	//extern bool g_bRenderGlowingObjects;
+	//extern bool g_bDynamicGlowSupported;
+	//if ( !tess.shader->hasGlow || g_bRenderGlowingObjects || !g_bDynamicGlowSupported || !r_DynamicGlow->integer )
+	//{
+	//delete storeSurf;
+	//}
 #endif
 
 	tess.num_vertexes += surface->num_verts;
@@ -3421,7 +3433,7 @@ qboolean R_LoadMDXM(model_t* mod, void* buffer, const char* mod_name, qboolean& 
 	int* boneRef;
 	mdxmLODSurfOffset_t* indexes;
 	mdxmVertexTexCoord_t* pTexCoords;
-	mdxmHierarchyOffsets_t* surf_indexes;
+	mdxmHierarchyOffsets_t* surfIndexes;
 #endif
 
 	pinmodel = static_cast<mdxmHeader_t*>(buffer);
@@ -3462,7 +3474,7 @@ qboolean R_LoadMDXM(model_t* mod, void* buffer, const char* mod_name, qboolean& 
 
 		LL(mdxm->ident);
 		LL(mdxm->version);
-		LL(mdxm->numBones);
+		LL(mdxm->num_bones);
 		LL(mdxm->numLODs);
 		LL(mdxm->ofsLODs);
 		LL(mdxm->numSurfaces);
@@ -3498,7 +3510,7 @@ qboolean R_LoadMDXM(model_t* mod, void* buffer, const char* mod_name, qboolean& 
 
 #ifndef JK2_MODE
 	bool isAnOldModelFile = false;
-	if (mdxm->numBones == 72 && strstr(mdxm->animName, "_humanoid"))
+	if (mdxm->num_bones == 72 && strstr(mdxm->animName, "_humanoid"))
 	{
 		isAnOldModelFile = true;
 	}
@@ -3510,7 +3522,7 @@ qboolean R_LoadMDXM(model_t* mod, void* buffer, const char* mod_name, qboolean& 
 		return qfalse;
 	}
 #ifndef JK2_MODE
-	if (tr.models[mdxm->animIndex]->mdxa->numBones != mdxm->numBones)
+	if (tr.models[mdxm->animIndex]->mdxa->num_bones != mdxm->num_bones)
 	{
 		if (isAnOldModelFile)
 		{
@@ -3519,10 +3531,10 @@ qboolean R_LoadMDXM(model_t* mod, void* buffer, const char* mod_name, qboolean& 
 		else
 		{
 #ifdef _DEBUG
-			Com_Error(ERR_DROP, "R_LoadMDXM: %s has different bones than anim (%i != %i)\n", mod_name, mdxm->numBones,
-				tr.models[mdxm->animIndex]->mdxa->numBones);
+			Com_Error(ERR_DROP, "R_LoadMDXM: %s has different bones than anim (%i != %i)\n", mod_name, mdxm->num_bones,
+				tr.models[mdxm->animIndex]->mdxa->num_bones);
 #else
-			ri.Printf(PRINT_WARNING, "R_LoadMDXM: %s has different bones than anim (%i != %i)\n", mod_name, mdxm->numBones, tr.models[mdxm->animIndex]->mdxa->numBones);
+			ri.Printf(PRINT_WARNING, "R_LoadMDXM: %s has different bones than anim (%i != %i)\n", mod_name, mdxm->num_bones, tr.models[mdxm->animIndex]->mdxa->num_bones);
 #endif
 		}
 		if (!isAnOldModelFile)
@@ -3542,7 +3554,7 @@ qboolean R_LoadMDXM(model_t* mod, void* buffer, const char* mod_name, qboolean& 
 
 	surfInfo = reinterpret_cast<mdxmSurfHierarchy_t*>(reinterpret_cast<byte*>(mdxm) + mdxm->ofsSurfHierarchy);
 #ifdef Q3_BIG_ENDIAN
-	surf_indexes = (mdxmHierarchyOffsets_t*)((byte*)mdxm + sizeof(mdxmHeader_t));
+	surfIndexes = (mdxmHierarchyOffsets_t*)((byte*)mdxm + sizeof(mdxmHeader_t));
 #endif
 	for (i = 0; i < mdxm->numSurfaces; i++)
 	{
@@ -3592,8 +3604,8 @@ qboolean R_LoadMDXM(model_t* mod, void* buffer, const char* mod_name, qboolean& 
 
 #ifdef Q3_BIG_ENDIAN
 		// swap the surface offset
-		LL(surf_indexes->offsets[i]);
-		assert(surfInfo == (mdxmSurfHierarchy_t*)((byte*)surf_indexes + surf_indexes->offsets[i]));
+		LL(surfIndexes->offsets[i]);
+		assert(surfInfo == (mdxmSurfHierarchy_t*)((byte*)surfIndexes + surfIndexes->offsets[i]));
 #endif
 
 		// find the next surface
@@ -3771,7 +3783,7 @@ qboolean R_LoadMDXA(model_t* mod, void* buffer, const char* mod_name, qboolean& 
 		LL(mdxa->version);
 		LL(mdxa->num_frames);
 		LL(mdxa->ofsFrames);
-		LL(mdxa->numBones);
+		LL(mdxa->num_bones);
 		LL(mdxa->ofsCompBonePool);
 		LL(mdxa->ofsSkel);
 		LL(mdxa->ofsEnd);
@@ -3791,7 +3803,7 @@ qboolean R_LoadMDXA(model_t* mod, void* buffer, const char* mod_name, qboolean& 
 #ifdef Q3_BIG_ENDIAN
 	// swap the bone info
 	offsets = (mdxaSkelOffsets_t*)((byte*)mdxa + sizeof(mdxaHeader_t));
-	for (i = 0; i < mdxa->numBones; i++)
+	for (i = 0; i < mdxa->num_bones; i++)
 	{
 		LL(offsets->offsets[i]);
 		boneInfo = (mdxaSkel_t*)((byte*)mdxa + sizeof(mdxaHeader_t) + offsets->offsets[i]);
@@ -3820,9 +3832,9 @@ qboolean R_LoadMDXA(model_t* mod, void* buffer, const char* mod_name, qboolean& 
 	// at the end of the file.
 	for (i = 0; i < mdxa->num_frames; i++)
 	{
-		for (j = 0; j < mdxa->numBones; j++)
+		for (j = 0; j < mdxa->num_bones; j++)
 		{
-			k = (i * mdxa->numBones * 3) + (j * 3);	// iOffsetToIndex
+			k = (i * mdxa->num_bones * 3) + (j * 3);	// iOffsetToIndex
 			pIndex = (mdxaIndex_t*)((byte*)mdxa + mdxa->ofsFrames + k);
 			tmp = (pIndex->iIndex[2] << 16) + (pIndex->iIndex[1] << 8) + (pIndex->iIndex[0]);
 

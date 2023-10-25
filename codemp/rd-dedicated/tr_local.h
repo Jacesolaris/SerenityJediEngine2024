@@ -445,7 +445,7 @@ using fogParms_t = struct fogParms_s
 using shader_t = struct shader_s
 {
 	char name[MAX_QPATH]; // game path, including extension
-	int lightmapIndex[MAXLIGHTMAPS]; // for a shader to match, both name and lightmapIndex must match
+	int lightmapIndex[MAXLIGHTMAPS]; // for a shader to match, both name and lightmapIndex must match // ded mp
 	byte styles[MAXLIGHTMAPS];
 
 	int index; // this shader == tr.shaders[index]
@@ -1429,13 +1429,13 @@ extern const int lightmapsVertex[MAXLIGHTMAPS];
 extern const int lightmapsFullBright[MAXLIGHTMAPS];
 extern const byte stylesDefault[MAXLIGHTMAPS];
 
-qhandle_t RE_RegisterShaderLightMap(const char* name, const int* lightmap_index, const byte* styles);
+qhandle_t RE_RegisterShaderLightMap(const char* name, const int* lightmapIndex, const byte* styles);
 qhandle_t RE_RegisterShader(const char* name);
 qhandle_t RE_RegisterShaderNoMip(const char* name);
 const char* RE_ShaderNameFromIndex(int index);
-qhandle_t RE_RegisterShaderFromImage(const char* name, const int* lightmap_index, const byte* styles, image_t* image);
+qhandle_t RE_RegisterShaderFromImage(const char* name, const int* lightmapIndex, const byte* styles, image_t* image);
 
-shader_t* R_FindShader(const char* name, const int* lightmap_index, const byte* styles, const qboolean mip_raw_image);
+shader_t* R_FindShader(const char* name, const int* lightmapIndex, const byte* styles, const qboolean mip_raw_image);
 shader_t* R_GetShaderByHandle(qhandle_t h_shader);
 shader_t* R_FindShaderByName(const char* name);
 void R_InitShaders(const qboolean server);

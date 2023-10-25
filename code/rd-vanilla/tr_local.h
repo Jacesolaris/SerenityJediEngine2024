@@ -39,7 +39,7 @@ extern refimport_t ri;
 // 13 bits
 // can't be increased without changing bit packing for drawsurfs
 // see QSORT_SHADERNUM_SHIFT
-#define SHADERNUM_BITS	14
+#define SHADERNUM_BITS	13
 #define MAX_SHADERS		(1<<SHADERNUM_BITS)
 
 using dlight_t = struct dlight_s {
@@ -63,7 +63,7 @@ using trRefEntity_t = struct {
 	vec3_t		ambientLight;	// color normalized to 0-255
 	int			ambientLightInt;	// 32 bit rgba packed
 	vec3_t		directedLight;
-	int			dlight_bits;
+	int			dlightBits;
 };
 
 // trRefdef_t holds everything that comes in refdef_t,
@@ -445,7 +445,7 @@ using shader_t = struct shader_s {
 	short		numUnfoggedPasses;
 	shaderStage_t* stages;
 
-	float			time_offset;                                 // current time offset for this shader
+	float			timeOffset;                                 // current time offset for this shader
 
 	// True if this shader has a stage with glow in it (just an optimization).
 	bool hasGlow;
@@ -566,7 +566,7 @@ using srfGridMesh_t = struct srfGridMesh_s {
 	surfaceType_t	surfaceType;
 
 	// dynamic lighting information
-	int				dlight_bits;
+	int				dlightBits;
 
 	// culling information
 	vec3_t			meshBounds[2];
@@ -597,7 +597,7 @@ using srfSurfaceFace_t = struct {
 	cplane_t	plane;
 
 	// dynamic lighting information
-	int			dlight_bits;
+	int			dlightBits;
 
 	// triangle definitions (no normals at points)
 	int			num_points;
@@ -612,7 +612,7 @@ using srfTriangles_t = struct {
 	surfaceType_t	surfaceType;
 
 	// dynamic lighting information
-	int				dlight_bits;
+	int				dlightBits;
 
 	// culling information (FIXME: use this!)
 	vec3_t			bounds[2];
@@ -773,17 +773,16 @@ void		R_ModelInit();
 model_t* R_GetModelByHandle(qhandle_t index);
 
 int R_LerpTag(orientation_t* tag, qhandle_t handle, int startFrame, int endFrame, float frac, const char* tagName);
-
 void		R_ModelBounds(qhandle_t handle, vec3_t mins, vec3_t maxs);
 
 void		R_Modellist_f();
 
 //====================================================
-constexpr auto MAX_DRAWIMAGES = 4096;
-constexpr auto MAX_LIGHTMAPS = 512;
-constexpr auto MAX_SKINS = 2048;
+constexpr auto MAX_DRAWIMAGES = 2048;
+constexpr auto MAX_LIGHTMAPS = 256;
+constexpr auto MAX_SKINS = 1024;
 
-constexpr auto MAX_DRAWSURFS = 0x20000;
+constexpr auto MAX_DRAWSURFS = 0x10000;
 #define	DRAWSURF_MASK			(MAX_DRAWSURFS-1)
 
 /*
@@ -814,8 +813,8 @@ constexpr auto QSORT_FOGNUM_SHIFT = 2;
 constexpr auto QSORT_REFENTITYNUM_SHIFT = 7;
 #define	QSORT_SHADERNUM_SHIFT	(QSORT_REFENTITYNUM_SHIFT+REFENTITYNUM_BITS)
 // Note: 32nd bit is reserved for RF_ALPHA_FADE voodoo magic
-// see R_AddEntitySurfaces tr.shiftedentity_num
-#if (QSORT_SHADERNUM_SHIFT+SHADERNUM_BITS) > 32
+// see R_AddEntitySurfaces tr.shiftedEntityNum
+#if (QSORT_SHADERNUM_SHIFT+SHADERNUM_BITS) > 31
 #error "Need to update sorting, too many bits."
 #endif
 
@@ -944,8 +943,8 @@ using trGlobals_t = struct {
 
 	trRefEntity_t* currentEntity;
 	trRefEntity_t			worldEntity;		// point currentEntity at this when rendering world
-	int						currententity_num;
-	unsigned				shiftedentity_num;	// currententity_num << QSORT_REFENTITYNUM_SHIFT (possible with high bit set for RF_ALPHA_FADE)
+	int						currentEntityNum;
+	unsigned				shiftedEntityNum;	// currentEntityNum << QSORT_REFENTITYNUM_SHIFT (possible with high bit set for RF_ALPHA_FADE)
 	model_t* current_model;
 
 	viewParms_t				viewParms;
@@ -1100,7 +1099,6 @@ extern cvar_t* r_DynamicGlowIntensity;
 extern cvar_t* r_DynamicGlowSoft;
 extern cvar_t* r_DynamicGlowWidth;
 extern cvar_t* r_DynamicGlowHeight;
-extern cvar_t* r_Dynamic_AMD_Fix;
 
 extern	cvar_t* r_nobind;						// turns off binding to appropriate textures
 extern	cvar_t* r_singleShader;				// make most world faces use default shader
@@ -1250,7 +1248,7 @@ void		RE_RegisterMedia_LevelLoadBegin(const char* psMapName, ForceReload_e eForc
 void		RE_RegisterMedia_LevelLoadEnd();
 int			RE_RegisterMedia_GetLevel();
 qboolean	RE_RegisterModels_LevelLoadEnd(qboolean bDeleteEverythingNotUsedThisLevel = qfalse);
-void* RE_RegisterModels_Malloc(int i_size, void* pvDiskBufferIfJustLoaded, const char* psModelFileName, qboolean* pqbAlreadyFound, memtag_t e_tag);
+void* RE_RegisterModels_Malloc(int iSize, void* pvDiskBufferIfJustLoaded, const char* psModelFileName, qboolean* pqbAlreadyFound, memtag_t eTag);
 void		RE_RegisterModels_StoreShaderRequest(const char* psModelFileName, const char* psShaderName, const int* piShaderIndexPoke);
 void		RE_RegisterModels_Info_f();
 qboolean	RE_RegisterImages_LevelLoadEnd();
@@ -1280,7 +1278,7 @@ void	R_InitImages();
 void	R_DeleteTextures();
 float	R_SumOfUsedImages(qboolean b_use_format);
 void	R_InitSkins();
-skin_t* R_GetSkinByHandle(qhandle_t h_skin);
+skin_t* R_GetSkinByHandle(qhandle_t hSkin);
 
 //
 // tr_shader.c
@@ -1294,10 +1292,10 @@ extern	const byte	stylesDefault[MAXLIGHTMAPS];
 qhandle_t		 RE_RegisterShader(const char* name);
 qhandle_t		 RE_RegisterShaderNoMip(const char* name);
 
-shader_t* R_FindShader(const char* name, const int* lightmap_index, const byte* styles, const qboolean mip_raw_image);
+shader_t* R_FindShader(const char* name, const int* lightmap_index, const byte* styles, qboolean mip_raw_image);
 shader_t* R_GetShaderByHandle(qhandle_t h_shader);
 void R_InitShaders(const qboolean server);
-void R_ShaderList_f();
+void		R_ShaderList_f();
 
 //
 // tr_arb.c
@@ -1338,14 +1336,14 @@ struct shaderCommands_s
 	vec2_t		texCoords[SHADER_MAX_VERTEXES][NUM_TEX_COORDS] QALIGN(16);
 	color4ub_t	vertexColors[SHADER_MAX_VERTEXES] QALIGN(16);
 	byte		vertexAlphas[SHADER_MAX_VERTEXES][4] QALIGN(16);
-	int			vertexdlight_bits[SHADER_MAX_VERTEXES] QALIGN(16);
+	int			vertexDlightBits[SHADER_MAX_VERTEXES] QALIGN(16);
 
 	stageVars_t	svars QALIGN(16);
 
 	shader_t* shader;
 	int			fogNum;
 
-	int			dlight_bits;	// or together of all vertexdlight_bits
+	int			dlightBits;	// or together of all vertexDlightBits
 
 	int			num_indexes;
 	int			num_vertexes;

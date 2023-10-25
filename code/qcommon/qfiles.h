@@ -94,21 +94,21 @@ using pcx_t = struct
 ========================================================================
 */
 
-constexpr auto MD3_IDENT = ('3' << 24) + ('P' << 16) + ('D' << 8) + 'I';
-constexpr auto MD3_VERSION = 15;
+#define MD3_IDENT			(('3'<<24)+('P'<<16)+('D'<<8)+'I')
+#define MD3_VERSION			15
 
 #define MDR_IDENT	(('5'<<24)+('M'<<16)+('D'<<8)+'R')
 #define MDR_VERSION	2
 #define	MDR_MAX_BONES	128
 
 // limits
-constexpr auto MD3_MAX_LODS = 3;
-constexpr auto MD3_MAX_TRIANGLES = 8192; // per surface;
-constexpr auto MD3_MAX_VERTS = 4096; // per surface;
-constexpr auto MD3_MAX_SHADERS = 256; // per surface;
-constexpr auto MD3_MAX_FRAMES = 1024; // per model;
-constexpr auto MD3_MAX_SURFACES = 32 + 32; // per model;
-constexpr auto MD3_MAX_TAGS = 16; // per frame;
+#define MD3_MAX_LODS		3
+#define	MD3_MAX_TRIANGLES	8192	// per surface
+#define MD3_MAX_VERTS		4096	// per surface
+#define MD3_MAX_SHADERS		256		// per surface
+#define MD3_MAX_FRAMES		1024	// per model
+#define	MD3_MAX_SURFACES	32 + 32	// per model
+#define MD3_MAX_TAGS		16		// per frame
 
 // vertex scales
 constexpr auto MD3_XYZ_SCALE = 1.0 / 64;
@@ -212,7 +212,7 @@ typedef struct {
 
 	// frames and bones are shared by all levels of detail
 	int			num_frames;
-	int			numBones;
+	int			num_bones;
 	int			ofsFrames;			// mdrFrame_t[num_frames]
 
 	// each level of detail has completely separate sets of surfaces
@@ -234,7 +234,7 @@ typedef struct {
 	vec3_t		localOrigin;		// midpoint of bounds, used for sphere cull
 	float		radius;			// dist from localOrigin to corner
 	char		name[16];
-	mdrBone_t	bones[1];		// [numBones]
+	mdrBone_t	bones[1];		// [num_bones]
 } mdrFrame_t;
 
 typedef struct {
@@ -299,7 +299,7 @@ typedef struct {
 	vec3_t          bounds[2];		// bounds of all surfaces of all LOD's for this frame
 	vec3_t          localOrigin;		// midpoint of bounds, used for sphere cull
 	float           radius;			// dist from localOrigin to corner
-	mdrCompBone_t   bones[1];		// [numBones]
+	mdrCompBone_t   bones[1];		// [num_bones]
 } mdrCompFrame_t;
 
 /*

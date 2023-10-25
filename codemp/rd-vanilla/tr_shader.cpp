@@ -105,7 +105,8 @@ static void ClearGlobalShader()
 {
 	memset(&shader, 0, sizeof shader);
 	memset(&stages, 0, sizeof stages);
-	for (int i = 0; i < MAX_SHADER_STAGES; i++) {
+	for (int i = 0; i < MAX_SHADER_STAGES; i++)
+	{
 		stages[i].bundle[0].texMods = texMods[i];
 		stages[i].mGLFogColorOverride = GLFOGOVERRIDE_NONE;
 	}
@@ -3210,7 +3211,7 @@ shader_t* R_FindShaderByName(const char* name) {
 	return tr.defaultShader;
 }
 
-inline qboolean IsShader(const shader_t* sh, const char* name, const int* lightmap_index, const byte* styles)
+inline qboolean IsShader(const shader_t* sh, const char* name, const int* lightmapIndex, const byte* styles)
 {
 	if (Q_stricmp(sh->name, name))
 	{
@@ -3221,7 +3222,7 @@ inline qboolean IsShader(const shader_t* sh, const char* name, const int* lightm
 	{
 		for (int i = 0; i < MAXLIGHTMAPS; i++)
 		{
-			if (sh->lightmapIndex[i] != lightmap_index[i])
+			if (sh->lightmapIndex[i] != lightmapIndex[i])
 			{
 				return qfalse;
 			}
@@ -3243,17 +3244,17 @@ inline qboolean IsShader(const shader_t* sh, const char* name, const int* lightm
  ===============
  */
 #define EXTERNAL_LIGHTMAP     "lm_%04d.tga"     // THIS MUST BE IN SYNC WITH Q3MAP2
-static const int* R_FindLightmap(const int* lightmap_index)
+static const int* R_FindLightmap(const int* lightmapIndex)
 {
 	char          file_name[MAX_QPATH];
 
 	// don't bother with vertex lighting
-	if (*lightmap_index < 0)
-		return lightmap_index;
+	if (*lightmapIndex < 0)
+		return lightmapIndex;
 
 	// does this lightmap already exist?
-	if (*lightmap_index < tr.numLightmaps && tr.lightmaps[*lightmap_index] != nullptr)
-		return lightmap_index;
+	if (*lightmapIndex < tr.numLightmaps && tr.lightmaps[*lightmapIndex] != nullptr)
+		return lightmapIndex;
 
 	// bail if no world dir
 	if (tr.worldDir == nullptr)
@@ -3265,7 +3266,7 @@ static const int* R_FindLightmap(const int* lightmap_index)
 	//R_SyncRenderThread();
 
 	// attempt to load an external lightmap
-	Com_sprintf(file_name, sizeof file_name, "%s/" EXTERNAL_LIGHTMAP, tr.worldDir, *lightmap_index);
+	Com_sprintf(file_name, sizeof file_name, "%s/" EXTERNAL_LIGHTMAP, tr.worldDir, *lightmapIndex);
 	image_t* image = R_FindImageFile(file_name, qfalse, qfalse, static_cast<qboolean>(r_ext_compressed_lightmaps->integer), GL_CLAMP);
 	if (image == nullptr)
 	{
@@ -3273,10 +3274,10 @@ static const int* R_FindLightmap(const int* lightmap_index)
 	}
 
 	// add it to the lightmap list
-	if (*lightmap_index >= tr.numLightmaps)
-		tr.numLightmaps = *lightmap_index + 1;
-	tr.lightmaps[*lightmap_index] = image;
-	return lightmap_index;
+	if (*lightmapIndex >= tr.numLightmaps)
+		tr.numLightmaps = *lightmapIndex + 1;
+	tr.lightmaps[*lightmapIndex] = image;
+	return lightmapIndex;
 }
 
 /*
@@ -3307,7 +3308,7 @@ most world construction surfaces.
 
 ===============
 */
-shader_t* R_FindShader(const char* name, const int* lightmap_index, const byte* styles, const qboolean mip_raw_image)
+shader_t* R_FindShader(const char* name, const int* lightmapIndex, const byte* styles, const qboolean mip_raw_image)
 {
 	char		stripped_name[MAX_QPATH];
 	char		file_name[MAX_QPATH];
@@ -3318,20 +3319,13 @@ shader_t* R_FindShader(const char* name, const int* lightmap_index, const byte* 
 		return tr.defaultShader;
 	}
 
-	// use (fullbright) vertex lighting if the bsp file doesn't have
-	// lightmaps
-/*	if ( lightmapIndex[0] >= 0 && lightmapIndex[0] >= tr.numLightmaps )
-	{
-		lightmapIndex = lightmapsVertex;
-	}*/
+	lightmapIndex = R_FindLightmap(lightmapIndex);
 
-	lightmap_index = R_FindLightmap(lightmap_index);
-
-	if (lightmap_index[0] < LIGHTMAP_2D)
+	if (lightmapIndex[0] < LIGHTMAP_2D)
 	{
 		// negative lightmap indexes cause stray pointers (think tr.lightmaps[lightmapIndex])
-		ri->Printf(PRINT_WARNING, "WARNING: shader '%s' has invalid lightmap index of %d\n", name, lightmap_index[0]);
-		lightmap_index = lightmapsVertex;
+		ri->Printf(PRINT_WARNING, "WARNING: shader '%s' has invalid lightmap index of %d\n", name, lightmapIndex[0]);
+		lightmapIndex = lightmapsVertex;
 	}
 
 	COM_StripExtension(name, stripped_name, sizeof stripped_name);
@@ -3346,7 +3340,7 @@ shader_t* R_FindShader(const char* name, const int* lightmap_index, const byte* 
 		// then a default shader is created with lightmapIndex == LIGHTMAP_NONE, so we
 		// have to check all default shaders otherwise for every call to R_FindShader
 		// with that same strippedName a new default shader is created.
-		if (IsShader(sh, stripped_name, lightmap_index, styles))
+		if (IsShader(sh, stripped_name, lightmapIndex, styles))
 		{
 			return sh;
 		}
@@ -3355,7 +3349,7 @@ shader_t* R_FindShader(const char* name, const int* lightmap_index, const byte* 
 	// clear the global shader
 	ClearGlobalShader();
 	Q_strncpyz(shader.name, stripped_name, sizeof shader.name);
-	Com_Memcpy(shader.lightmapIndex, lightmap_index, sizeof shader.lightmapIndex);
+	Com_Memcpy(shader.lightmapIndex, lightmapIndex, sizeof shader.lightmapIndex);
 	Com_Memcpy(shader.styles, styles, sizeof shader.styles);
 
 	//
@@ -3441,7 +3435,7 @@ shader_t* R_FindShader(const char* name, const int* lightmap_index, const byte* 
 	return FinishShader();
 }
 
-shader_t* R_FindServerShader(const char* name, const int* lightmap_index, const byte* styles)
+shader_t* R_FindServerShader(const char* name, const int* lightmapIndex, const byte* styles)
 {
 	char		stripped_name[MAX_QPATH];
 
@@ -3461,7 +3455,7 @@ shader_t* R_FindServerShader(const char* name, const int* lightmap_index, const 
 		// then a default shader is created with lightmapIndex == LIGHTMAP_NONE, so we
 		// have to check all default shaders otherwise for every call to R_FindShader
 		// with that same strippedName a new default shader is created.
-		if (IsShader(sh, stripped_name, lightmap_index, styles))
+		if (IsShader(sh, stripped_name, lightmapIndex, styles))
 		{
 			return sh;
 		}
@@ -3470,14 +3464,14 @@ shader_t* R_FindServerShader(const char* name, const int* lightmap_index, const 
 	// clear the global shader
 	ClearGlobalShader();
 	Q_strncpyz(shader.name, stripped_name, sizeof shader.name);
-	memcpy(shader.lightmapIndex, lightmap_index, sizeof shader.lightmapIndex);
+	memcpy(shader.lightmapIndex, lightmapIndex, sizeof shader.lightmapIndex);
 	memcpy(shader.styles, styles, sizeof shader.styles);
 
 	shader.defaultShader = true;
 	return FinishShader();
 }
 
-qhandle_t RE_RegisterShaderFromImage(const char* name, const int* lightmap_index, const byte* styles, image_t* image) {
+qhandle_t RE_RegisterShaderFromImage(const char* name, const int* lightmapIndex, const byte* styles, image_t* image) {
 	shader_t* sh;
 
 	const int hash = generateHashValue(name, FILE_HASH_SIZE);
@@ -3486,8 +3480,8 @@ qhandle_t RE_RegisterShaderFromImage(const char* name, const int* lightmap_index
 	// only gets called from tr_font.c with lightmapIndex == LIGHTMAP_2D
 	// but better safe than sorry.
 	// Doesn't actually ever get called in JA at all
-	if (lightmap_index[0] >= tr.numLightmaps) {
-		lightmap_index = const_cast<int*>(lightmapsFullBright);
+	if (lightmapIndex[0] >= tr.numLightmaps) {
+		lightmapIndex = const_cast<int*>(lightmapsFullBright);
 	}
 
 	//
@@ -3498,7 +3492,7 @@ qhandle_t RE_RegisterShaderFromImage(const char* name, const int* lightmap_index
 		// then a default shader is created with lightmapIndex == LIGHTMAP_NONE, so we
 		// have to check all default shaders otherwise for every call to R_FindShader
 		// with that same strippedName a new default shader is created.
-		if (IsShader(sh, name, lightmap_index, styles))
+		if (IsShader(sh, name, lightmapIndex, styles))
 		{
 			return sh->index;
 		}
@@ -3508,10 +3502,11 @@ qhandle_t RE_RegisterShaderFromImage(const char* name, const int* lightmap_index
 	memset(&shader, 0, sizeof shader);
 	memset(&stages, 0, sizeof stages);
 	Q_strncpyz(shader.name, name, sizeof shader.name);
-	memcpy(shader.lightmapIndex, lightmap_index, sizeof shader.lightmapIndex);
+	memcpy(shader.lightmapIndex, lightmapIndex, sizeof shader.lightmapIndex);
 	memcpy(shader.styles, styles, sizeof shader.styles);
 
-	for (int i = 0; i < MAX_SHADER_STAGES; i++) {
+	for (int i = 0; i < MAX_SHADER_STAGES; i++)
+	{
 		stages[i].bundle[0].texMods = texMods[i];
 	}
 
@@ -3585,14 +3580,14 @@ This should really only be used for explicit shaders, because there is no
 way to ask for different implicit lighting modes (vertex, lightmap, etc)
 ====================
 */
-qhandle_t RE_RegisterShaderLightMap(const char* name, const int* lightmap_index, const byte* styles)
+qhandle_t RE_RegisterShaderLightMap(const char* name, const int* lightmapIndex, const byte* styles)
 {
 	if (strlen(name) >= MAX_QPATH) {
 		ri->Printf(PRINT_ALL, "Shader name exceeds MAX_QPATH\n");
 		return 0;
 	}
 
-	const shader_t* sh = R_FindShader(name, lightmap_index, styles, qtrue);
+	const shader_t* sh = R_FindShader(name, lightmapIndex, styles, qtrue);
 
 	// we want to return 0 if the shader failed to
 	// load for some reason, but R_FindShader should
@@ -3619,7 +3614,7 @@ way to ask for different implicit lighting modes (vertex, lightmap, etc)
 */
 qhandle_t RE_RegisterShader(const char* name)
 {
-	if (strlen(name) >= MAX_QPATH) 
+	if (strlen(name) >= MAX_QPATH)
 	{
 		ri->Printf(PRINT_ALL, "Shader name exceeds MAX_QPATH\n");
 		return 0;
@@ -3646,7 +3641,8 @@ RE_RegisterShaderNoMip
 For menu graphics that should never be picmiped
 ====================
 */
-qhandle_t RE_RegisterShaderNoMip(const char* name) {
+qhandle_t RE_RegisterShaderNoMip(const char* name) 
+{
 	if (strlen(name) >= MAX_QPATH) {
 		ri->Printf(PRINT_ALL, "Shader name exceeds MAX_QPATH\n");
 		return 0;
@@ -4054,7 +4050,9 @@ static void CreateInternalShaders(void)
 
 	memcpy(shader.lightmapIndex, lightmapsNone, sizeof shader.lightmapIndex);
 	memcpy(shader.styles, stylesDefault, sizeof shader.styles);
-	for (int i = 0; i < MAX_SHADER_STAGES; i++) {
+
+	for (int i = 0; i < MAX_SHADER_STAGES; i++)
+	{
 		stages[i].bundle[0].texMods = texMods[i];
 	}
 
@@ -4073,6 +4071,7 @@ static void CreateInternalShaders(void)
 	shader.sort = SS_BLEND0;
 	shader.defaultShader = qfalse;
 	tr.distortionShader = FinishShader();
+	tr.distortionShader->useDistortion = qtrue;
 	shader.defaultShader = qtrue;
 
 	ARB_InitGPUShaders();

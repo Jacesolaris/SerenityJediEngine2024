@@ -859,7 +859,7 @@ int G2API_InitGhoul2Model(CGhoul2Info_v** ghoul2Ptr, const char* file_name, cons
 	}
 	else
 	{
-		G2_Init_Bone_List(ghoul2[model].mBlist, ghoul2[model].aHeader->numBones);
+		G2_Init_Bone_List(ghoul2[model].mBlist, ghoul2[model].aHeader->num_bones);
 		G2_Init_Bolt_List(ghoul2[model].mBltlist);
 		ghoul2[model].mCustomShader = custom_shader;
 		ghoul2[model].mCustomSkin = custom_skin;
@@ -1182,7 +1182,7 @@ qboolean G2API_DoesBoneExist(CGhoul2Info_v& ghoul2, const int model_index, const
 
 			const auto offsets = (mdxaSkelOffsets_t*)((byte*)mdxa + sizeof(mdxaHeader_t));
 
-			for (int i = 0; i < mdxa->numBones; i++)
+			for (int i = 0; i < mdxa->num_bones; i++)
 			{
 				const auto skel = (mdxaSkel_t*)((byte*)mdxa + sizeof(mdxaHeader_t) + offsets->offsets[i]);
 				if (!Q_stricmp(skel->name, bone_name))
@@ -1813,13 +1813,11 @@ qboolean G2API_RagForceSolve(CGhoul2Info_v& ghoul2, const qboolean force)
 	return qtrue;
 }
 
-qboolean G2_SetBoneIKState(CGhoul2Info_v& ghoul2, int time, const char* bone_name, int ik_state,
-	sharedSetBoneIKStateParams_t* params);
+qboolean G2_SetBoneIKState(CGhoul2Info_v& ghoul2, const int time, const char* bone_name, const int ik_state, sharedSetBoneIKStateParams_t* params);
 
-qboolean G2API_SetBoneIKState(CGhoul2Info_v& ghoul2, const int time, const char* bone_name, const int ikState,
-	sharedSetBoneIKStateParams_t* params)
+qboolean G2API_SetBoneIKState(CGhoul2Info_v& ghoul2, const int time, const char* bone_name, const int ik_state, sharedSetBoneIKStateParams_t* params)
 {
-	return G2_SetBoneIKState(ghoul2, time, bone_name, ikState, params);
+	return G2_SetBoneIKState(ghoul2, time, bone_name, ik_state, params);
 }
 
 qboolean G2_IKMove(CGhoul2Info_v& ghoul2, int time, sharedIKMoveParams_t* params);
@@ -1862,11 +1860,10 @@ int G2API_AddBoltSurfNum(CGhoul2Info* ghl_info, const int surf_index)
 	return -1;
 }
 
-qboolean G2API_AttachG2Model(CGhoul2Info_v& ghoul2_from, const int model_from, CGhoul2Info_v& ghoul2_to, int toBoltIndex,
-	int toModel)
+qboolean G2API_AttachG2Model(CGhoul2Info_v& ghoul2_from, const int model_from, CGhoul2Info_v& ghoul2_to, int to_bolt_index, int to_model)
 {
-	assert(toBoltIndex >= 0);
-	if (toBoltIndex < 0)
+	assert(to_bolt_index >= 0);
+	if (to_bolt_index < 0)
 	{
 		return qfalse;
 	}
@@ -1874,14 +1871,14 @@ qboolean G2API_AttachG2Model(CGhoul2Info_v& ghoul2_from, const int model_from, C
 	{
 		// make sure we have a model to attach, a model to attach to, and a bolt on that model
 		if (ghoul2_from.size() > model_from &&
-			ghoul2_to.size() > toModel &&
-			(ghoul2_to[toModel].mBltlist[toBoltIndex].boneNumber != -1 || ghoul2_to[toModel].mBltlist[toBoltIndex].
+			ghoul2_to.size() > to_model &&
+			(ghoul2_to[to_model].mBltlist[to_bolt_index].boneNumber != -1 || ghoul2_to[to_model].mBltlist[to_bolt_index].
 				surface_number != -1))
 		{
 			// encode the bolt address into the model bolt link
-			toModel &= MODEL_AND;
-			toBoltIndex &= BOLT_AND;
-			ghoul2_from[model_from].mModelBoltLink = toModel << MODEL_SHIFT | toBoltIndex << BOLT_SHIFT;
+			to_model &= MODEL_AND;
+			to_bolt_index &= BOLT_AND;
+			ghoul2_from[model_from].mModelBoltLink = to_model << MODEL_SHIFT | to_bolt_index << BOLT_SHIFT;
 			return qtrue;
 		}
 	}
@@ -1906,22 +1903,21 @@ qboolean G2API_DetachG2Model(CGhoul2Info* ghl_info)
 	return qfalse;
 }
 
-qboolean G2API_AttachEnt(int* bolt_info, CGhoul2Info_v& ghoul2, const int model_index, int toBoltIndex, int ent_num,
-	int toModelNum)
+qboolean G2API_AttachEnt(int* bolt_info, CGhoul2Info_v& ghoul2, const int model_index, int to_bolt_index, int ent_num, int to_model_num)
 {
-	CGhoul2Info* ghlInfoTo = &ghoul2[model_index];
+	CGhoul2Info* ghl_info_to = &ghoul2[model_index];
 
-	if (bolt_info && G2_SetupModelPointers(ghlInfoTo))
+	if (bolt_info && G2_SetupModelPointers(ghl_info_to))
 	{
 		// make sure we have a model to attach, a model to attach to, and a bolt on that model
-		if (ghlInfoTo->mBltlist.size() && (ghlInfoTo->mBltlist[toBoltIndex].boneNumber != -1 || ghlInfoTo->mBltlist[
-			toBoltIndex].surface_number != -1))
+		if (ghl_info_to->mBltlist.size() && (ghl_info_to->mBltlist[to_bolt_index].boneNumber != -1 || ghl_info_to->mBltlist[
+			to_bolt_index].surface_number != -1))
 		{
 			// encode the bolt address into the model bolt link
-			toModelNum &= MODEL_AND;
-			toBoltIndex &= BOLT_AND;
+			to_model_num &= MODEL_AND;
+			to_bolt_index &= BOLT_AND;
 			ent_num &= ENTITY_AND;
-			*bolt_info = toBoltIndex << BOLT_SHIFT | toModelNum << MODEL_SHIFT | ent_num << ENTITY_SHIFT;
+			*bolt_info = to_bolt_index << BOLT_SHIFT | to_model_num << MODEL_SHIFT | ent_num << ENTITY_SHIFT;
 			return qtrue;
 		}
 	}
@@ -2337,20 +2333,8 @@ void G2API_CollisionDetectCache(CollisionRecord_t* collRecMap, CGhoul2Info_v& gh
 	}
 }
 
-void G2API_CollisionDetect(CollisionRecord_t* collRecMap, CGhoul2Info_v& ghoul2, const vec3_t angles,
-	const vec3_t position,
-	int frameNumber, int ent_num, vec3_t rayStart, vec3_t rayEnd, vec3_t scale,
-	IHeapAllocator* G2VertSpace, int traceFlags, int use_lod, float fRadius)
+void G2API_CollisionDetect(CollisionRecord_t* collRecMap, CGhoul2Info_v& ghoul2, const vec3_t angles, const vec3_t position, int frameNumber, int ent_num, vec3_t rayStart, vec3_t rayEnd, vec3_t scale, IHeapAllocator* G2VertSpace, int traceFlags, int use_lod, float fRadius)
 {
-	/*
-	if (1)
-	{
-		G2API_CollisionDetectCache(collRecMap, ghoul2, angles, position, frameNumber, ent_num,
-			rayStart, rayEnd, scale, G2VertSpace, traceFlags, use_lod, fRadius);
-		return;
-	}
-	*/
-
 	if (G2_SetupModelPointers(ghoul2))
 	{
 		vec3_t transRayStart, transRayEnd;

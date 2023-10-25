@@ -534,8 +534,8 @@ static void RB_BeginDrawingView() {
 
 	// clip to the plane of the portal
 	if (backEnd.viewParms.isPortal) {
-		float	plane[4]{};
-		double	plane2[4]{};
+		float	plane[4];
+		double	plane2[4];
 
 		plane[0] = backEnd.viewParms.portalPlane.normal[0];
 		plane[1] = backEnd.viewParms.portalPlane.normal[1];
@@ -559,7 +559,7 @@ static void RB_BeginDrawingView() {
 //used by RF_DISTORTION
 static bool R_WorldCoordToScreenCoordFloat(vec3_t worldCoord, float* x, float* y)
 {
-	vec3_t	local, transformed{};
+	vec3_t	local, transformed;
 	vec3_t	vfwd;
 	vec3_t	vright;
 	vec3_t	vup;
@@ -648,7 +648,7 @@ void RB_RenderDrawSurfList(drawSurf_t* drawSurfs, const int numDrawSurfs) {
 	RB_BeginDrawingView();
 
 	// draw everything
-	int oldentity_num = -1;
+	int oldEntityNum = -1;
 	backEnd.currentEntity = &tr.worldEntity;
 	shader_t* oldShader = nullptr;
 	int oldFogNum = -1;
@@ -671,7 +671,7 @@ void RB_RenderDrawSurfList(drawSurf_t* drawSurfs, const int numDrawSurfs) {
 		if (g_bRenderGlowingObjects && !shader->hasGlow)
 		{
 			shader = oldShader;
-			entity_num = oldentity_num;
+			entity_num = oldEntityNum;
 			fogNum = oldFogNum;
 			dlighted = oldDlighted;
 			continue;
@@ -721,7 +721,7 @@ void RB_RenderDrawSurfList(drawSurf_t* drawSurfs, const int numDrawSurfs) {
 
 				//assure the info is back to the last set state
 				shader = oldShader;
-				entity_num = oldentity_num;
+				entity_num = oldEntityNum;
 				fogNum = oldFogNum;
 				dlighted = oldDlighted;
 
@@ -733,7 +733,7 @@ void RB_RenderDrawSurfList(drawSurf_t* drawSurfs, const int numDrawSurfs) {
 		}
 
 		if (shader != oldShader || fogNum != oldFogNum || dlighted != oldDlighted
-			|| entity_num != oldentity_num && !shader->entityMergable)
+			|| entity_num != oldEntityNum && !shader->entityMergable)
 		{
 			if (oldShader != nullptr) {
 				RB_EndSurface();
@@ -753,7 +753,7 @@ void RB_RenderDrawSurfList(drawSurf_t* drawSurfs, const int numDrawSurfs) {
 		//
 		// change the modelview matrix if needed
 		//
-		if (entity_num != oldentity_num) {
+		if (entity_num != oldEntityNum) {
 			depthRange = qfalse;
 
 			if (entity_num != REFENTITYNUM_WORLD) {
@@ -808,7 +808,7 @@ void RB_RenderDrawSurfList(drawSurf_t* drawSurfs, const int numDrawSurfs) {
 				oldDepthRange = depthRange;
 			}
 
-			oldentity_num = entity_num;
+			oldEntityNum = entity_num;
 		}
 
 		// add the triangles for this surface
@@ -1308,12 +1308,7 @@ const void* RB_DrawSurfs(const void* data) {
 
 		// Render the glowing objects.
 		g_bRenderGlowingObjects = true;
-
-		if (r_Dynamic_AMD_Fix->integer == 0)
-		{
-			RB_RenderDrawSurfList(cmd->drawSurfs, cmd->numDrawSurfs);
-		}
-
+		RB_RenderDrawSurfList(cmd->drawSurfs, cmd->numDrawSurfs);
 		g_bRenderGlowingObjects = false;
 		qglFinish();
 
@@ -1451,10 +1446,10 @@ void RB_ShowImages() {
 	R_Images_StartIteration();
 	while ((image = R_Images_GetNextIteration()) != nullptr)
 	{
-		float w = glConfig.vidWidth / static_cast<float>(20);
-		float h = glConfig.vidHeight / static_cast<float>(15);
+		float w = glConfig.vidWidth / 20;
+		float h = glConfig.vidHeight / 15;
 		const float x = i % 20 * w;
-		const float y = i / static_cast<float>(20) * h;
+		const float y = i / 20 * h;
 
 		// show in proportional size in mode 2
 		if (r_showImages->integer == 2) {
@@ -1507,7 +1502,8 @@ const void* RB_SwapBuffers(const void* data) {
 	if (r_measureOverdraw->integer) {
 		long sum = 0;
 
-		const auto stencilReadback = static_cast<unsigned char*>(R_Malloc(glConfig.vidWidth * glConfig.vidHeight,TAG_TEMP_WORKSPACE, qfalse));
+		const auto stencilReadback = static_cast<unsigned char*>(R_Malloc(glConfig.vidWidth * glConfig.vidHeight,
+			TAG_TEMP_WORKSPACE, qfalse));
 		qglReadPixels(0, 0, glConfig.vidWidth, glConfig.vidHeight, GL_STENCIL_INDEX, GL_UNSIGNED_BYTE, stencilReadback);
 
 		for (int i = 0; i < glConfig.vidWidth * glConfig.vidHeight; i++) {

@@ -436,16 +436,16 @@ static void SV_G2API_AnimateG2Models(CGhoul2Info_v& ghoul2, const int acurrent_t
 	re.G2API_AnimateG2Models(ghoul2, acurrent_time, params);
 }
 
-static qboolean SV_G2API_AttachEnt(int* bolt_info, CGhoul2Info* ghlInfoTo, const int toBoltIndex, const int ent_num,
-	const int toModelNum)
+static qboolean SV_G2API_AttachEnt(int* bolt_info, CGhoul2Info* ghl_info_to, const int to_bolt_index, const int ent_num,
+	const int to_model_num)
 {
-	return re.G2API_AttachEnt(bolt_info, ghlInfoTo, toBoltIndex, ent_num, toModelNum);
+	return re.G2API_AttachEnt(bolt_info, ghl_info_to, to_bolt_index, ent_num, to_model_num);
 }
 
-static qboolean SV_G2API_AttachG2Model(CGhoul2Info* ghl_info, CGhoul2Info* ghlInfoTo, const int toBoltIndex,
-	const int toModel)
+static qboolean SV_G2API_AttachG2Model(CGhoul2Info* ghl_info, CGhoul2Info* ghl_info_to, const int to_bolt_index,
+	const int to_model)
 {
-	return re.G2API_AttachG2Model(ghl_info, ghlInfoTo, toBoltIndex, toModel);
+	return re.G2API_AttachG2Model(ghl_info, ghl_info_to, to_bolt_index, to_model);
 }
 
 static void SV_G2API_CleanGhoul2Models(CGhoul2Info_v& ghoul2)
@@ -739,10 +739,10 @@ static qboolean SV_G2API_SetBoneAnglesMatrixIndex(CGhoul2Info* ghl_info, const i
 	return re.G2API_SetBoneAnglesMatrixIndex(ghl_info, index, matrix, flags, model_list, blandeTime, acurrent_time);
 }
 
-static qboolean SV_G2API_SetBoneIKState(CGhoul2Info_v& ghoul2, const int time, const char* bone_name, const int ikState,
+static qboolean SV_G2API_SetBoneIKState(CGhoul2Info_v& ghoul2, const int time, const char* bone_name, const int ik_state,
 	sharedSetBoneIKStateParams_t* params)
 {
-	return re.G2API_SetBoneIKState(ghoul2, time, bone_name, ikState, params);
+	return re.G2API_SetBoneIKState(ghoul2, time, bone_name, ik_state, params);
 }
 
 static qboolean SV_G2API_SetGhoul2ModelFlags(CGhoul2Info* ghl_info, const int flags)
