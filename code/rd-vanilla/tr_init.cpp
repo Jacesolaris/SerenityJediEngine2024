@@ -189,6 +189,8 @@ cvar_t* r_environmentMapping;
 cvar_t* r_screenshotJpegQuality;
 cvar_t* g_Weather;
 
+cvar_t* r_com_rend2;
+
 #if !defined(__APPLE__)
 PFNGLSTENCILOPSEPARATEPROC qglStencilOpSeparate;
 #endif
@@ -297,6 +299,11 @@ void R_Splash()
 		qglTexCoord2f(1, 1);
 		qglVertex2f(x2, y2);
 		qglEnd();
+	}
+
+	if (r_com_rend2->integer != 0)
+	{
+		ri.Cvar_Set("com_rend2", "0");
 	}
 
 	ri.WIN_Present(&window);
@@ -758,6 +765,10 @@ static void InitOpenGL()
 	}
 	else
 	{
+		if (r_com_rend2->integer != 0)
+		{
+			ri.Cvar_Set("com_rend2", "0");
+		}
 		// set default state
 		GL_SetDefaultState();
 	}
@@ -1673,6 +1684,8 @@ void R_Register()
 	broadsword_ragtobase = ri.Cvar_Get("broadsword_ragtobase", "2", 0);
 	broadsword_dircap = ri.Cvar_Get("broadsword_dircap", "64", 0);
 
+	r_com_rend2 = ri.Cvar_Get("com_rend2", "0", CVAR_ARCHIVE | CVAR_SAVEGAME | CVAR_NORESTART);
+
 	/*
 	Ghoul2 Insert End
 	*/
@@ -1717,11 +1730,12 @@ R_Init
 ===============
 */
 extern void R_InitWorldEffects();
-void R_Init() {
+void R_Init() 
+{
 	int	err;
 	int i;
 
-	//ri.Printf( PRINT_ALL, "----- R_Init -----\n" );
+	ri.Printf(PRINT_ALL, "----- Loading Vanilla renderer-----\n");
 
 	ShaderEntryPtrs_Clear();
 
@@ -1790,10 +1804,16 @@ void R_Init() {
 		ri.Printf(PRINT_ALL, "glGetError() = 0x%x\n", err);
 
 	RestoreGhoul2InfoArray();
+
 	// print info
 	GfxInfo_f();
 
-	//ri.Printf( PRINT_ALL, "----- finished R_Init -----\n" );
+	if (r_com_rend2->integer != 0)
+	{
+		ri.Cvar_Set("com_rend2", "0");
+	}
+
+	ri.Printf(PRINT_ALL, "----- Vanilla renderer loaded-----\n");
 }
 
 /*

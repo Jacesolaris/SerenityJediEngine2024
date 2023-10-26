@@ -861,20 +861,18 @@ qboolean G2API_SetSurfaceOnOff(CGhoul2Info* ghl_info, const char* surface_name, 
 	return qfalse;
 }
 
-qboolean G2API_SetRootSurface(CGhoul2Info_v& ghoul2, const int model_index, const char* surface_name)
+qboolean G2API_SetRootSurface(CGhoul2Info_v& ghl_info, const int model_index, const char* surface_name)
 {
-	G2ERROR(ghoul2.IsValid(), "G2API_SetRootSurface: Invalid ghl_info");
-	G2ERROR(surface_name, "G2API_SetRootSurface: Invalid surface_name");
-
-	if (G2_SetupModelPointers(ghoul2))
+	G2ERROR(ghl_info.IsValid(), "Invalid ghl_info");
+	G2ERROR(surface_name, "Invalid surface_name");
+	if (G2_SetupModelPointers(ghl_info))
 	{
 		G2ERROR(model_index >= 0 && model_index < ghl_info.size(), "Bad Model Index");
-		if (model_index >= 0 && model_index < ghoul2.size())
+		if (model_index >= 0 && model_index < ghl_info.size())
 		{
-			return G2_SetRootSurface(ghoul2, model_index, surface_name);
+			return G2_SetRootSurface(ghl_info, model_index, surface_name);
 		}
 	}
-
 	return qfalse;
 }
 

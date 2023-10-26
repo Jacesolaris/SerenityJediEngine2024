@@ -597,6 +597,10 @@ static void InitOpenGL(void)
 	}
 	else
 	{
+		if (r_com_rend2->integer != 1)
+		{
+			ri->Cvar_Set("com_rend2", "1");
+		}
 		// set default state
 		GL_SetDefaultState();
 	}
@@ -2055,6 +2059,12 @@ void R_Init()
 
 	// print info
 	GfxInfo_f();
+
+	if (r_com_rend2->integer != 1)
+	{
+		ri->Cvar_Set("com_rend2", "1");
+	}
+
 	ri->Printf(PRINT_ALL, "----- Rend2 renderer loaded -----\n");
 }
 

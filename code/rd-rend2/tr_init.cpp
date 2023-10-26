@@ -302,7 +302,7 @@ qboolean* stub_get_tr_distortionPrePost(void) { return &tr_distortionPrePost; }
 qboolean* stub_get_tr_distortionNegate(void) { return &tr_distortionNegate; }
 
 extern void	RB_SetGL2D(void);
-static void R_Splash()
+void R_Splash()
 {
 	const GLfloat black[] = { 0.0f, 0.0f, 0.0f, 1.0f };
 
@@ -625,6 +625,10 @@ static void InitOpenGL(void)
 	}
 	else
 	{
+		if (r_com_rend2->integer != 1)
+		{
+			ri.Cvar_Set("com_rend2", "1");
+		}
 		// set default state
 		GL_SetDefaultState();
 	}
@@ -2099,10 +2103,14 @@ void R_Init()
 
 	RestoreGhoul2InfoArray();
 
-	ri.Cvar_Set("com_rend2", "1");
-
 	// print info
 	GfxInfo_f();
+
+	if (r_com_rend2->integer != 1)
+	{
+		ri.Cvar_Set("com_rend2", "1");
+	}
+
 	ri.Printf(PRINT_ALL, "----- Rend2 renderer loaded -----\n");
 }
 

@@ -1404,7 +1404,7 @@ LIGHTS
 ============================================================
 */
 
-void R_DlightBmodel(const bmodel_t* bmodel, qboolean no_light);
+void R_DlightBmodel(const bmodel_t* bmodel, const qboolean no_light);
 void R_SetupEntityLighting(const trRefdef_t* refdef, trRefEntity_t* ent);
 void R_TransformDlights(int count, dlight_t* dl, const orientationr_t* ori);
 

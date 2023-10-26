@@ -3105,7 +3105,7 @@ LIGHTS
 ============================================================
 */
 
-void R_DlightBmodel(bmodel_t* bmodel, trRefEntity_t* ent);
+void R_DlightBmodel(const bmodel_t* bmodel, trRefEntity_t* ent);
 void R_SetupEntityLighting(const trRefdef_t* refdef, trRefEntity_t* ent);
 void R_TransformDlights(int count, dlight_t* dl, orientationr_t* ori);
 int R_LightForPoint(vec3_t point, vec3_t ambientLight, vec3_t directedLight, vec3_t lightDir);

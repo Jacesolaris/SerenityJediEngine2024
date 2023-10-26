@@ -61,7 +61,8 @@ R_DlightBmodel
 Determine which dynamic lights may effect this bmodel
 =============
 */
-void R_DlightBmodel(const bmodel_t* bmodel, const qboolean no_light) {
+void R_DlightBmodel(const bmodel_t* bmodel, const qboolean no_light)
+{
 	int			i;
 
 	// transform all the lights

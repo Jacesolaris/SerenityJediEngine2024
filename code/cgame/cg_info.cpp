@@ -394,17 +394,19 @@ void CG_LoadBar()
 	// Draw right cap
 	CG_DrawPic(tickleft + tickwidth * cg.loadLCARSStage, ticktop, capwidth, tickheight, cgs.media.loadTickCap);
 
-	constexpr int x = (640 - LOADBAR_CLIP_WIDTH) / 2;
-
 	if (cg.loadLCARSStage >= 3)
 	{
-		constexpr int y = 340;
-		CG_DrawPic(x, y, LOADBAR_CLIP_WIDTH, LOADBAR_CLIP_HEIGHT, cgs.media.load_SerenitySaberSystems);
-
-		if (cg_com_rend2.integer == 1) //rend2 is on
+		if (cg.loadLCARSStage <= 6)
 		{
-			cgi_R_Font_DrawString(60, 416, va("Warning: When using Rend2, longer loading times can be expected."), colorTable[CT_WHITE], cgs.media.qhFontSmall, -1, 1.0f);
+			if (cg_com_rend2.integer == 1) //rend2 is on
+			{
+				cgi_R_Font_DrawString(60, 2, va("Warning: When using Rend2, longer loading times can be expected."), colorTable[CT_WHITE], cgs.media.qhFontSmall, -1, 1.0f);
+			}
 		}
+		constexpr int x = (640 - LOADBAR_CLIP_WIDTH) / 2;
+		constexpr int y = 340;
+
+		CG_DrawPic(x, y, LOADBAR_CLIP_WIDTH, LOADBAR_CLIP_HEIGHT, cgs.media.load_SerenitySaberSystems);
 	}
 }
 
@@ -910,10 +912,7 @@ void CG_DrawInformation()
 			CG_DrawLoadingScreen(levelshot, s);
 			CG_MissionCompletion();
 
-			if (cg_com_rend2.integer == 0) //rend2 is off
-			{
-				LoadTips();
-			}
+			LoadTips();
 		}
 
 		cgi_UI_MenuPaintAll();
