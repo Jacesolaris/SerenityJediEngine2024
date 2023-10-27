@@ -5290,6 +5290,7 @@ static const char* g_bindCommands[] = {
 	"hips",
 	"won",
 	"emote",
+	"g_weather",
 	"r_weather"
 };
 

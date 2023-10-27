@@ -247,6 +247,7 @@ cvar_t* r_marksOnTriangleMeshes;
 cvar_t* r_aviMotionJpegQuality;
 cvar_t* r_screenshotJpegQuality;
 cvar_t* r_surfaceSprites;
+cvar_t* r_AdvancedsurfaceSprites;
 
 // the limits apply to the sum of all scenes in a frame --
 // the main view, all the 3D icons, etc
@@ -276,6 +277,7 @@ cvar_t* sv_mapChecksum;
 cvar_t* r_modelpoolmegs;
 cvar_t* r_environmentMapping;
 cvar_t* r_ext_compressed_lightmaps;
+cvar_t* g_Weather;
 
 cvar_t* r_com_rend2;
 
@@ -301,7 +303,7 @@ float* stub_get_tr_distortionStretch(void) { return &tr_distortionStretch; }
 qboolean* stub_get_tr_distortionPrePost(void) { return &tr_distortionPrePost; }
 qboolean* stub_get_tr_distortionNegate(void) { return &tr_distortionNegate; }
 
-extern void	RB_SetGL2D(void);
+extern void	RB_SetGL2D();
 void R_Splash()
 {
 	const GLfloat black[] = { 0.0f, 0.0f, 0.0f, 1.0f };
@@ -351,9 +353,9 @@ void R_Splash()
 		ri.Cvar_Set("com_rend2", "1");
 	}
 
-	if (r_shadows->integer == 2)
+	if (r_shadows->integer != 1)
 	{
-		ri.Cvar_Set("cg_shadows", "3");
+		ri.Cvar_Set("cg_shadows", "1");
 	}
 
 	ri.WIN_Present(&window);
@@ -1467,11 +1469,11 @@ static consoleCommand_t	commands[] = {
 	{ "gfxinfo",			GfxInfo_f },
 	{ "gfxmeminfo",			GfxMemInfo_f },
 	{ "r_we",				R_WorldEffect_f },
-	//{ "imagecacheinfo",		RE_RegisterImages_Info_f },
 	{ "modellist",			R_Modellist_f },
-	//{ "modelcacheinfo",		RE_RegisterModels_Info_f },
 	{ "vbolist",			R_VBOList_f },
 	{ "capframes",			R_CaptureFrameData_f },
+	{ "r_weather",			R_WeatherEffect_f },
+	{ "weather",			R_SetWeatherEffect_f },
 };
 
 static const size_t numCommands = ARRAY_LEN(commands);
@@ -1677,6 +1679,7 @@ void R_Register(void)
 	r_aviMotionJpegQuality = ri_Cvar_Get_NoComm("r_aviMotionJpegQuality", "90", CVAR_ARCHIVE, "");
 	r_screenshotJpegQuality = ri_Cvar_Get_NoComm("r_screenshotJpegQuality", "90", CVAR_ARCHIVE, "");
 	r_surfaceSprites = ri_Cvar_Get_NoComm("r_surfaceSprites", "1", CVAR_ARCHIVE, "");
+	r_AdvancedsurfaceSprites = ri_Cvar_Get_NoComm("r_advancedlod", "1", CVAR_ARCHIVE, "");
 
 	r_aspectCorrectFonts = ri_Cvar_Get_NoComm("r_aspectCorrectFonts", "0", CVAR_ARCHIVE, "");
 	r_maxpolys = ri_Cvar_Get_NoComm("r_maxpolys", XSTRING(DEFAULT_MAX_POLYS), 0, "");
@@ -1715,6 +1718,8 @@ void R_Register(void)
 #endif
 	// added for SP
 	// @TODO add all cvars from vanilla
+
+	g_Weather = ri.Cvar_Get("r_weather", "0", CVAR_ARCHIVE);
 	com_buildScript = ri.Cvar_Get("com_buildScript", "0", 0);
 	sv_mapname = ri.Cvar_Get("mapname", "nomap", CVAR_SERVERINFO | CVAR_ROM);
 	sv_mapChecksum = ri.Cvar_Get("sv_mapChecksum", "", CVAR_ROM);

@@ -44,7 +44,7 @@ use the shader system.
 RB_CheckOverflow
 ==============
 */
-void RB_CheckOverflow(int verts, int indexes) {
+void RB_CheckOverflow(const int verts, const int indexes) {
 	if ((tess.num_vertexes + verts) < SHADER_MAX_VERTEXES &&
 		(tess.num_indexes + indexes) < SHADER_MAX_INDEXES)
 	{
@@ -93,7 +93,8 @@ void RB_CheckVBOandIBO(VBO_t* vbo, IBO_t* ibo)
 RB_AddQuadStampExt
 ==============
 */
-void RB_AddQuadStampExt(vec3_t origin, vec3_t left, vec3_t up, float color[4], float s1, float t1, float s2, float t2) {
+void RB_AddQuadStampExt(vec3_t origin, vec3_t left, vec3_t up, float color[4], const float s1, const float t1, const float s2, const float t2)
+{
 	vec3_t		normal;
 	int			ndx;
 
@@ -2737,10 +2738,8 @@ static void RB_SurfaceSprites(srfSprites_t * surf)
 		item.samplerBindings = spriteSamplerBinding;
 		item.numSamplerBindings = numBindings;
 
-		DrawItemSetVertexAttributes(
-			item, surf->attributes, surf->numAttributes, frameAllocator);
-		DrawItemSetUniformBlockBindings(
-			item, uniformBlockBindings, frameAllocator);
+		DrawItemSetVertexAttributes(item, surf->attributes, surf->numAttributes, frameAllocator);
+		DrawItemSetUniformBlockBindings(item, uniformBlockBindings, frameAllocator);
 
 		item.draw.type = DRAW_COMMAND_INDEXED;
 		item.draw.primitiveType = GL_TRIANGLES;
@@ -2757,7 +2756,15 @@ static void RB_SurfaceSprites(srfSprites_t * surf)
 		RB_AddDrawItem(backEndData->currentPass, key, item);
 
 		numDrawIndicesUndrawn -= drawIndices;
-		baseVertex += ((98298 / 6) * 4);
+
+		if (r_AdvancedsurfaceSprites->integer)
+		{
+			baseVertex += ((3931192 / 6) * 4);
+		}
+		else
+		{
+			baseVertex += ((98298 / 6) * 4);
+		}
 	}
 }
 

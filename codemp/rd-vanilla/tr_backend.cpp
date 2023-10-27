@@ -656,7 +656,8 @@ static inline bool R_AverageTessXYZ(vec3_t dest)
 }
 #endif
 
-void RB_RenderDrawSurfList(drawSurf_t* drawSurfs, const int numDrawSurfs) {
+void RB_RenderDrawSurfList(drawSurf_t* drawSurfs, const int numDrawSurfs)
+{
 	shader_t* shader;
 	int				fogNum;
 	int				entity_num;

@@ -1351,8 +1351,7 @@ static void RB_SubmitDrawSurfs(
 			oldentity_num = entity_num;
 		}
 
-		qboolean isDistortionShader = (qboolean)
-			((shader->useDistortion == qtrue) || (backEnd.currentEntity && backEnd.currentEntity->e.renderfx & RF_DISTORTION));
+		qboolean isDistortionShader = (qboolean)((shader->useDistortion == qtrue) || (backEnd.currentEntity && backEnd.currentEntity->e.renderfx & RF_DISTORTION));
 
 		if (backEnd.refractionFill != isDistortionShader)
 			continue;
@@ -1397,37 +1396,8 @@ static void RB_SubmitRenderPass(
 RB_RenderDrawSurfList
 ==================
 */
-static void RB_RenderDrawSurfList(drawSurf_t* drawSurfs, int numDrawSurfs)
+void RB_RenderDrawSurfList(drawSurf_t* drawSurfs, const int numDrawSurfs)
 {
-	/*
-	merging surfaces together that share the same shader (e.g. polys, patches)
-	upload per frame data - but this might be the same between render passes?
-
-	how about:
-		tr.refdef.entities[]
-
-		and .... entityCullInfo_t tr.refdef.entityCullInfo[]
-		struct visibleEntity_t
-		{
-			uint32_t frustumMask; // bitfield of frustums which intersect
-			EntityId entityId;
-		};
-
-		foreach ghoul2 model:
-			transform bones
-
-		foreach visibleEntity:
-			upload per frame data
-
-		for polygons:
-			merge them, create new surface and upload data
-
-		for patch meshes:
-			merge them, create new surface and upload data
-
-	each surface corresponds to something which has all of its gpu data uploaded
-	*/
-
 	int estimatedNumShaderStages = (backEnd.viewParms.flags & VPF_DEPTHSHADOW) ? 1 : 4;
 
 	// Prepare memory for the current render pass
@@ -1480,7 +1450,7 @@ RB_SetGL2D
 
 ================
 */
-void	RB_SetGL2D(void) {
+void	RB_SetGL2D() {
 	matrix_t matrix;
 	int width, height;
 

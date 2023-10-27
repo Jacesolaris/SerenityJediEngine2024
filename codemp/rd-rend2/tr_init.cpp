@@ -248,6 +248,8 @@ cvar_t* r_marksOnTriangleMeshes;
 cvar_t* r_aviMotionJpegQuality;
 cvar_t* r_screenshotJpegQuality;
 cvar_t* r_surfaceSprites;
+cvar_t* r_weather;
+cvar_t* r_AdvancedsurfaceSprites;
 
 // the limits apply to the sum of all scenes in a frame --
 // the main view, all the 3D icons, etc
@@ -273,7 +275,7 @@ cvar_t* r_com_rend2;
 
 cvar_t* r_aspectCorrectFonts;
 
-extern void	RB_SetGL2D(void);
+extern void	RB_SetGL2D();
 void R_Splash()
 {
 	const GLfloat black[] = { 0.0f, 0.0f, 0.0f, 1.0f };
@@ -323,9 +325,9 @@ void R_Splash()
 		ri->Cvar_Set("com_rend2", "1");
 	}
 
-	if (r_shadows->integer == 2)
+	if (r_shadows->integer != 1)
 	{
-		ri->Cvar_Set("cg_shadows", "3");
+		ri->Cvar_Set("cg_shadows", "1");
 	}
 
 	ri->WIN_Present(&window);
@@ -1439,11 +1441,11 @@ static consoleCommand_t	commands[] = {
 	{ "gfxinfo",			GfxInfo_f },
 	{ "gfxmeminfo",			GfxMemInfo_f },
 	{ "r_we",				R_WorldEffect_f },
-	//{ "imagecacheinfo",		RE_RegisterImages_Info_f },
 	{ "model_list",			R_model_list_f },
-	//{ "modelcacheinfo",		RE_RegisterModels_Info_f },
 	{ "vbolist",			R_VBOList_f },
 	{ "capframes",			R_CaptureFrameData_f },
+	{ "r_weather",			R_WeatherEffect_f },
+	{ "weather",			R_SetWeatherEffect_f },
 };
 
 static const size_t numCommands = ARRAY_LEN(commands);
@@ -1648,6 +1650,7 @@ void R_Register(void)
 	r_aviMotionJpegQuality = ri->Cvar_Get("r_aviMotionJpegQuality", "90", CVAR_ARCHIVE, "");
 	r_screenshotJpegQuality = ri->Cvar_Get("r_screenshotJpegQuality", "90", CVAR_ARCHIVE, "");
 	r_surfaceSprites = ri->Cvar_Get("r_surfaceSprites", "1", CVAR_ARCHIVE, "");
+	r_AdvancedsurfaceSprites = ri->Cvar_Get("r_advancedlod", "1", CVAR_ARCHIVE, "");
 
 	r_aspectCorrectFonts = ri->Cvar_Get("r_aspectCorrectFonts", "0", CVAR_ARCHIVE, "");
 	r_maxpolys = ri->Cvar_Get("r_maxpolys", XSTRING(DEFAULT_MAX_POLYS), 0, "");
@@ -1678,6 +1681,8 @@ void R_Register(void)
 	r_debugWeather = ri->Cvar_Get("r_debugWeather", "0", CVAR_ARCHIVE, "");
 
 	r_com_rend2 = ri->Cvar_Get("com_rend2", "0", CVAR_ARCHIVE | CVAR_NORESTART, "");
+
+	r_weather = ri->Cvar_Get("r_weather", "0", CVAR_ARCHIVE, "");
 	/*
 	Ghoul2 Insert End
 	*/
@@ -2174,7 +2179,7 @@ void RE_SetLightStyle(int style, int color)
 }
 
 void RE_GetBModelVerts(int bmodel_index, vec3_t* verts, vec3_t normal);
-void RE_WorldEffectCommand(const char* cmd);
+void RE_WorldEffectCommand(const char* command);
 
 void stub_RE_AddWeatherZone(vec3_t mins, vec3_t maxs) {} // Intentionally left blank. Rend2 reads the zones manually on bsp load
 static void RE_SetRefractionProperties(float distortionAlpha, float distortionStretch, qboolean distortionPrePost, qboolean distortionNegate) { }

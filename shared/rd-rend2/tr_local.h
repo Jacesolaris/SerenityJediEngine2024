@@ -265,6 +265,7 @@ extern cvar_t* r_maxpolyverts;
 extern int		max_polyverts;
 
 extern	cvar_t* r_aspectCorrectFonts;
+extern cvar_t* r_AdvancedsurfaceSprites;
 
 /*
 Ghoul2 Insert Start
@@ -2433,6 +2434,8 @@ typedef struct trGlobals_s {
 	image_t* whiteImage;			// full of 0xff
 	image_t* identityLightImage;	// full of tr.identityLightByte
 
+	image_t* screenImage; //reserve us a gl texnum to use with RF_DISTORTION
+
 	image_t* renderImage;
 	image_t* glowImage;
 	image_t* glowImageScaled[6];
@@ -2883,7 +2886,7 @@ void R_LocalNormalToWorld(const vec3_t local, vec3_t world);
 void R_LocalPointToWorld(const vec3_t local, vec3_t world);
 int R_CullBox(vec3_t bounds[2]);
 int R_CullLocalBox(vec3_t bounds[2]);
-int R_CullPointAndRadiusEx(const vec3_t origin, float radius, const cplane_t* frustum, int numPlanes);
+int R_CullPointAndRadiusEx(const vec3_t origin, float radius, const cplane_t* frustum, int num_planes);
 int R_CullPointAndRadius(const vec3_t origin, float radius);
 int R_CullLocalPointAndRadius(const vec3_t origin, float radius);
 
@@ -3093,7 +3096,7 @@ extern	color4ub_t	styleColors[MAX_LIGHT_STYLES];
 
 void RB_BeginSurface(shader_t* shader, int fogNum, int cubemapIndex);
 void RB_EndSurface(void);
-void RB_CheckOverflow(int verts, int indexes);
+void RB_CheckOverflow(const int verts, const int indexes);
 #define RB_CHECKOVERFLOW(v,i) if (tess.num_vertexes + (v) >= SHADER_MAX_VERTEXES || tess.num_indexes + (i) >= SHADER_MAX_INDEXES ) {RB_CheckOverflow(v,i);}
 
 void R_DrawElementsVBO(int num_indexes, glIndex_t firstIndex, glIndex_t minIndex, glIndex_t maxIndex);
@@ -3101,7 +3104,7 @@ void RB_StageIteratorGeneric(void);
 void RB_StageIteratorSky(void);
 
 void RB_AddQuadStamp(vec3_t origin, vec3_t left, vec3_t up, float color[4]);
-void RB_AddQuadStampExt(vec3_t origin, vec3_t left, vec3_t up, float color[4], float s1, float t1, float s2, float t2);
+void RB_AddQuadStampExt(vec3_t origin, vec3_t left, vec3_t up, float color[4], const float s1, const float t1, const float s2, const float t2);
 void RB_InstantQuad(vec4_t quadVerts[4]);
 void RB_InstantQuad2(vec4_t quadVerts[4], vec2_t texCoords[4]);
 void RB_InstantTriangle();
@@ -3265,7 +3268,7 @@ SHADOWS
 
 void RB_ShadowTessEnd(shaderCommands_t* input, const VertexArraysProperties* vertexArrays);
 void RB_ShadowFinish(void);
-void RB_ProjectionShadowDeform(void);
+void RB_ProjectionShadowDeform();
 
 /*
 ============================================================

@@ -1795,7 +1795,7 @@ qboolean ConsoleCommand()
 	if (!command)
 		return qfalse;
 
-	if (Q_stricmp(cmd, "weather") == 0)
+	if (Q_stricmp(cmd, "sv_weather") == 0)
 	{
 		Svcmd_Weather_f();
 		return qtrue;

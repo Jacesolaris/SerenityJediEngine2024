@@ -784,7 +784,7 @@ spawn_t spawns[] = {
 	{"waypoint_navgoal_8", SP_waypoint_navgoal_8},
 	{"waypoint_small", SP_waypoint_small},
 	{"emplaced_eweb", SP_emplaced_eweb},
-	{"weather", SP_CreateWeather},
+	{"fx_weather", SP_CreateWeather},
 };
 
 /*

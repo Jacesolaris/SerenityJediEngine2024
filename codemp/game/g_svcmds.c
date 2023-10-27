@@ -624,7 +624,6 @@ svcmd_t svcmds[] = {
 	{"say", Svcmd_Say_f, qtrue},
 	{"toggleallowvote", Svcmd_ToggleAllowVote_f, qfalse},
 	{"toggleuserinfovalidation", Svcmd_ToggleUserinfoValidation_f, qfalse},
-	//{ "weather",	                Svcmd_Weather_f,	                qfalse },
 };
 static const size_t numsvcmds = ARRAY_LEN(svcmds);
 
@@ -640,7 +639,7 @@ qboolean ConsoleCommand(void)
 
 	trap->Argv(0, cmd, sizeof cmd);
 
-	if (Q_stricmp(cmd, "weather") == 0)
+	if (Q_stricmp(cmd, "sv_weather") == 0)
 	{
 		Svcmd_Weather_f();
 		return qtrue;

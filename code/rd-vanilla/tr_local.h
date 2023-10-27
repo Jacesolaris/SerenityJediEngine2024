@@ -1374,14 +1374,14 @@ extern	bool		styleUpdated[MAX_LIGHT_STYLES];
 
 void RB_BeginSurface(shader_t* shader, int fogNum);
 void RB_EndSurface();
-void RB_CheckOverflow(int verts, int indexes);
+void RB_CheckOverflow(const int verts, const int indexes);
 #define RB_CHECKOVERFLOW(v,i) if (tess.num_vertexes + (v) >= SHADER_MAX_VERTEXES || tess.num_indexes + (i) >= SHADER_MAX_INDEXES ) {RB_CheckOverflow(v,i);}
 
 void RB_StageIteratorGeneric();
 void RB_StageIteratorSky();
 
 void RB_AddQuadStamp(vec3_t origin, vec3_t left, vec3_t up, byte* color);
-void RB_AddQuadStampExt(vec3_t origin, vec3_t left, vec3_t up, byte* color, float s1, float t1, float s2, float t2);
+void RB_AddQuadStampExt(vec3_t origin, vec3_t left, vec3_t up, byte* color, const float s1, const float t1, const float s2, const float t2);
 
 void RB_ShowImages();
 

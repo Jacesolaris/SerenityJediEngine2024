@@ -589,7 +589,7 @@ typedef struct cgameImport_s {
 	void			(*R_SetLightStyle)						(int style, int color);
 	void			(*R_SetRangedFog)						(float range);
 	void			(*R_SetRefractionProperties)			(float distortionAlpha, float distortionStretch, qboolean distortionPrePost, qboolean distortionNegate);
-	void			(*R_WorldEffectCommand)					(const char* cmd);
+	void			(*RE_WorldEffectCommand)					(const char* cmd);
 	void			(*RE_InitRendererTerrain)				(const char* info);
 	void			(*WE_AddWeatherZone)					(vec3_t mins, vec3_t maxs);
 

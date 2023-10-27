@@ -42,13 +42,11 @@ void R_InitWorldEffects();
 void R_ShutdownWorldEffects();
 void RB_RenderWorldEffects();
 
-void R_WorldEffectCommand(const char* command);
-void R_SetWeatherEffectCommand(const char* command);
-void R_WeatherEffectCommand(const char* command);
+void RE_WorldEffectCommand(const char* command);
 
-void R_WorldEffect_f();
-void R_SetWeatherEffect_f();
-void R_WeatherEffect_f();
+void R_WorldEffect_f(void);
+void R_SetWeatherEffect_f(void);
+void R_WeatherEffect_f(void);
 
 ////////////////////////////////////////////////////////////////////////////////////////
 // Exported Functionality

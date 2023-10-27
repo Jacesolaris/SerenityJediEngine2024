@@ -265,10 +265,7 @@ static int PowerOf2(int iArg)
 Dissolve_t Dissolve = { 0 };
 #define fDISSOLVE_SECONDS 0.75f
 
-static void RE_Blit(float fX0, float fY0, float fX1, float fY1, float fX2, float fY2, float fX3, float fY3,
-	//float fU0, float fV0, float fU1, float fV1, float fU2, float fV2, float fU3, float fV3,
-	image_t* p_image, int iGLState, bool atest
-)
+static void RE_Blit(const float f_x0, const float f_y0, const float f_x1, const float f_y1, const float f_x2, const float f_y2, const float f_x3, const float f_y3, image_t* p_image, const int i_gl_state, const bool atest)
 {
 	//
 	// some junk they had at the top of other StretchRaw code...
@@ -278,7 +275,7 @@ static void RE_Blit(float fX0, float fY0, float fX1, float fY1, float fX2, float
 	qglViewport(0, 0, glConfig.vidWidth, glConfig.vidHeight);
 	qglScissor(0, 0, glConfig.vidWidth, glConfig.vidHeight);
 
-	GL_State(iGLState);
+	GL_State(i_gl_state);
 	GL_Cull(CT_TWO_SIDED);
 	GL_BindToTMU(p_image, TB_COLORMAP);
 
@@ -295,10 +292,10 @@ static void RE_Blit(float fX0, float fY0, float fX1, float fY1, float fX2, float
 	GLSL_SetUniformInt(shaderProgram, UNIFORM_ALPHA_TEST_TYPE, ALPHA_TEST_LT128);
 
 	vec4_t quadVerts[4] = {
-		{fX0, fY0, 0.f},
-		{fX1, fY1, 0.f},
-		{fX2, fY2, 0.f},
-		{fX3, fY3, 0.f},
+		{f_x0, f_y0, 0.f},
+		{f_x1, f_y1, 0.f},
+		{f_x2, f_y2, 0.f},
+		{f_x3, f_y3, 0.f},
 	};
 	vec2_t texCoords[4] = {
 		{0.0f, 0.0f},
@@ -345,7 +342,7 @@ qboolean RE_ProcessDissolve(void)
 
 		if (iDissolvePercentage <= 100)
 		{
-			extern void	RB_SetGL2D(void);
+			extern void	RB_SetGL2D();
 			RB_SetGL2D();
 
 			//			GLdouble glD;

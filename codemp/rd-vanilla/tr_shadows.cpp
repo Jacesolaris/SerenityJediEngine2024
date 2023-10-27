@@ -470,7 +470,8 @@ RB_ProjectionShadowDeform
 
 =================
 */
-void RB_ProjectionShadowDeform() {
+void RB_ProjectionShadowDeform()
+{
 	vec3_t	ground{};
 	vec3_t	light{};
 	vec3_t	light_dir;
@@ -496,7 +497,8 @@ void RB_ProjectionShadowDeform() {
 	light[1] = light_dir[1] * d;
 	light[2] = light_dir[2] * d;
 
-	for (int i = 0; i < tess.num_vertexes; i++, xyz += 4) {
+	for (int i = 0; i < tess.num_vertexes; i++, xyz += 4)
+	{
 		const float h = DotProduct(xyz, ground) + ground_dist;
 
 		xyz[0] -= light[0] * h;

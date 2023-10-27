@@ -2052,7 +2052,7 @@ void CL_BindCGame(void)
 		cgi.R_SetLightStyle = re->SetLightStyle;
 		cgi.R_SetRangedFog = re->SetRangedFog;
 		cgi.R_SetRefractionProperties = re->SetRefractionProperties;
-		cgi.R_WorldEffectCommand = re->WorldEffectCommand;
+		cgi.RE_WorldEffectCommand = re->WorldEffectCommand;
 		cgi.RE_InitRendererTerrain = RE_InitRendererTerrain;
 		cgi.WE_AddWeatherZone = re->AddWeatherZone;
 		cgi.GetCurrentSnapshotNumber = CL_GetCurrentSnapshotNumber;

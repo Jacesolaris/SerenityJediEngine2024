@@ -32,6 +32,7 @@ enum weatherType_t
 	WEATHER_SPACEDUST,
 	WEATHER_SAND,
 	WEATHER_FOG,
+	WEATHER_LAVA,
 
 	NUM_WEATHER_TYPES
 };
@@ -75,7 +76,7 @@ struct windObject_t
 
 struct weatherBrushes_t
 {
-	uint8_t	numPlanes;
+	uint8_t	num_planes;
 	vec4_t	planes[64];
 };
 
@@ -115,7 +116,8 @@ struct srfWeather_t;
 void R_InitWeatherSystem();
 void R_InitWeatherForMap();
 void R_AddWeatherSurfaces();
-void R_AddWeatherBrush(uint8_t numPlanes, vec4_t* planes);
+void R_AddWeatherBrush(uint8_t num_planes, vec4_t* planes);
+void R_LoadWeatherImages();
 void R_ShutdownWeatherSystem();
 void RB_SurfaceWeather(srfWeather_t* surfaceType);
 bool R_IsOutside(vec3_t pos);
@@ -125,5 +127,7 @@ float R_GetChanceOfSaberFizz();
 bool R_GetWindVector(vec3_t windVector, vec3_t atPoint); // doesn't work?
 bool R_GetWindGusting(vec3_t atPoint); // doesn't work
 
-void RE_WorldEffectCommand(const char* cmd);
+void RE_WorldEffectCommand(const char* command);
 void R_WorldEffect_f(void);
+void R_WeatherEffect_f(void);
+void R_SetWeatherEffect_f(void);

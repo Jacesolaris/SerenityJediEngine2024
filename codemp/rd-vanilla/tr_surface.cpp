@@ -68,7 +68,8 @@ void RB_CheckOverflow(const int verts, const int indexes) {
 RB_AddQuadStampExt
 ==============
 */
-void RB_AddQuadStampExt(vec3_t origin, vec3_t left, vec3_t up, byte* color, const float s1, const float t1, const float s2, const float t2) {
+void RB_AddQuadStampExt(vec3_t origin, vec3_t left, vec3_t up, byte* color, const float s1, const float t1, const float s2, const float t2) 
+{
 	vec3_t		normal;
 
 	RB_CHECKOVERFLOW(4, 6);

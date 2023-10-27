@@ -27,8 +27,6 @@ void R_ShutdownWorldEffects();
 void RB_RenderWorldEffects(void);
 
 void RE_WorldEffectCommand(const char* command);
-void R_SetWeatherEffectCommand(const char* command);
-void R_WeatherEffectCommand(const char* command);
 void R_WorldEffect_f(void);
 void R_SetWeatherEffect_f(void);
 void R_WeatherEffect_f(void);

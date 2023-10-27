@@ -395,10 +395,7 @@ constexpr auto fDISSOLVE_SECONDS = 0.75f;
 
 // leave the UV stuff in for now as comments in case I ever need to do some sneaky stuff, but for now...
 //
-static void RE_Blit(const float f_x0, const float f_y0, const float f_x1, const float f_y1, const float f_x2, const float f_y2, const float f_x3, const float f_y3,
-	//float fU0, float fV0, float fU1, float fV1, float fU2, float fV2, float fU3, float fV3,
-	image_t* p_image, const int i_gl_state
-)
+static void RE_Blit(const float f_x0, const float f_y0, const float f_x1, const float f_y1, const float f_x2, const float f_y2, const float f_x3, const float f_y3,	image_t* p_image, const int i_gl_state)
 {
 	//
 	// some junk they had at the top of other StretchRaw code...

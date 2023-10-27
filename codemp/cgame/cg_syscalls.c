@@ -1386,7 +1386,7 @@ static void TranslateSyscalls(void)
 	trap->R_SetLightStyle = trap_R_SetLightStyle;
 	trap->R_SetRangedFog = trap_R_SetRangeFog;
 	trap->R_SetRefractionProperties = trap_R_SetRefractProp;
-	trap->R_WorldEffectCommand = trap_R_WorldEffectCommand;
+	trap->RE_WorldEffectCommand = trap_R_WorldEffectCommand;
 	trap->WE_AddWeatherZone = trap_WE_AddWeatherZone;
 	trap->GetCurrentSnapshotNumber = trap_GetCurrentSnapshotNumber;
 	trap->GetCurrentCmdNumber = trap_GetCurrentCmdNumber;

@@ -563,7 +563,7 @@ void CG_ParseWeatherEffect(const char* str)
 {
 	char* sptr = (char*)str;
 	sptr++; //pass the '*'
-	trap->R_WorldEffectCommand(sptr);
+	trap->RE_WorldEffectCommand(sptr);
 }
 
 extern int cgSiegeRoundBeganTime;
@@ -3106,7 +3106,7 @@ void CG_Shutdown(void)
 	trap->ROFF_Clean();
 
 	//reset weather
-	trap->R_WorldEffectCommand("die");
+	trap->RE_WorldEffectCommand("die");
 
 	UI_CleanupGhoul2();
 	//If there was any ghoul2 stuff in our side of the shared ui code, then remove it now.

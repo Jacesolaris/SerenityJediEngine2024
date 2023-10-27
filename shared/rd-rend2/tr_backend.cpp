@@ -1191,13 +1191,10 @@ static void RB_PrepareForEntity(int entity_num, float originalTime)
 	tess.shaderTime = backEnd.refdef.floatTime - tess.shader->time_offset;
 }
 
-static void RB_SubmitDrawSurfsForDepthFill(
-	drawSurf_t* drawSurfs,
-	int numDrawSurfs,
-	float originalTime)
+static void RB_SubmitDrawSurfsForDepthFill(drawSurf_t* drawSurfs, int numDrawSurfs, float originalTime)
 {
 	shader_t* oldShader = nullptr;
-	int oldEntityNum = -1;
+	int oldentity_num = -1;
 	int oldSort = -1;
 	int oldDepthRange = 0;
 	CBoneCache* oldBoneCache = nullptr;
@@ -1233,7 +1230,7 @@ static void RB_SubmitDrawSurfsForDepthFill(
 			}
 		}
 
-		if (shader == oldShader && entity_num == oldEntityNum)
+		if (shader == oldShader && entity_num == oldentity_num)
 		{
 			// fast path, same as previous sort
 			rb_surfaceTable[*drawSurf->surface](drawSurf->surface);
@@ -1245,7 +1242,7 @@ static void RB_SubmitDrawSurfsForDepthFill(
 		// seperate entities merged into a single batch, like smoke and blood
 		// puff sprites
 		if (shader != oldShader ||
-			(entity_num != oldEntityNum && !shader->entityMergable))
+			(entity_num != oldentity_num && !shader->entityMergable))
 		{
 			if (oldShader != nullptr)
 			{
@@ -1260,10 +1257,10 @@ static void RB_SubmitDrawSurfsForDepthFill(
 		oldSort = drawSurf->sort;
 
 		// change the modelview matrix if needed
-		if (entity_num != oldEntityNum)
+		if (entity_num != oldentity_num)
 		{
 			RB_PrepareForEntity(entity_num, originalTime);
-			oldEntityNum = entity_num;
+			oldentity_num = entity_num;
 		}
 
 		// add the triangles for this surface
@@ -1278,13 +1275,10 @@ static void RB_SubmitDrawSurfsForDepthFill(
 	}
 }
 
-static void RB_SubmitDrawSurfs(
-	drawSurf_t* drawSurfs,
-	int numDrawSurfs,
-	float originalTime)
+static void RB_SubmitDrawSurfs(drawSurf_t* drawSurfs, int numDrawSurfs, float originalTime)
 {
 	shader_t* oldShader = nullptr;
-	int oldEntityNum = -1;
+	int oldentity_num = -1;
 	int oldSort = -1;
 	int oldFogNum = -1;
 	int oldDepthRange = 0;
@@ -1323,7 +1317,7 @@ static void RB_SubmitDrawSurfs(
 			fogNum == oldFogNum &&
 			postRender == oldPostRender &&
 			cubemapIndex == oldCubemapIndex &&
-			entity_num == oldEntityNum &&
+			entity_num == oldentity_num &&
 			dlighted == oldDlighted &&
 			backEnd.refractionFill == shader->useDistortion)
 		{
@@ -1343,7 +1337,7 @@ static void RB_SubmitDrawSurfs(
 			dlighted != oldDlighted ||
 			postRender != oldPostRender ||
 			cubemapIndex != oldCubemapIndex ||
-			(entity_num != oldEntityNum && !shader->entityMergable)))
+			(entity_num != oldentity_num && !shader->entityMergable)))
 		{
 			if (oldShader != nullptr)
 			{
@@ -1359,14 +1353,13 @@ static void RB_SubmitDrawSurfs(
 			oldCubemapIndex = cubemapIndex;
 		}
 
-		if (entity_num != oldEntityNum)
+		if (entity_num != oldentity_num)
 		{
 			RB_PrepareForEntity(entity_num, originalTime);
-			oldEntityNum = entity_num;
+			oldentity_num = entity_num;
 		}
 
-		qboolean isDistortionShader = (qboolean)
-			((shader->useDistortion == qtrue) || (backEnd.currentEntity && backEnd.currentEntity->e.renderfx & RF_DISTORTION));
+		qboolean isDistortionShader = (qboolean)((shader->useDistortion == qtrue) || (backEnd.currentEntity && backEnd.currentEntity->e.renderfx & RF_DISTORTION));
 
 		if (backEnd.refractionFill != isDistortionShader)
 			continue;
@@ -1411,44 +1404,14 @@ static void RB_SubmitRenderPass(
 RB_RenderDrawSurfList
 ==================
 */
-static void RB_RenderDrawSurfList(drawSurf_t* drawSurfs, int numDrawSurfs)
+void RB_RenderDrawSurfList(drawSurf_t* drawSurfs, const int numDrawSurfs)
 {
-	/*
-	merging surfaces together that share the same shader (e.g. polys, patches)
-	upload per frame data - but this might be the same between render passes?
-
-	how about:
-		tr.refdef.entities[]
-
-		and .... entityCullInfo_t tr.refdef.entityCullInfo[]
-		struct visibleEntity_t
-		{
-			uint32_t frustumMask; // bitfield of frustums which intersect
-			EntityId entityId;
-		};
-
-		foreach ghoul2 model:
-			transform bones
-
-		foreach visibleEntity:
-			upload per frame data
-
-		for polygons:
-			merge them, create new surface and upload data
-
-		for patch meshes:
-			merge them, create new surface and upload data
-
-	each surface corresponds to something which has all of its gpu data uploaded
-	*/
-
 	int estimatedNumShaderStages = (backEnd.viewParms.flags & VPF_DEPTHSHADOW) ? 1 : 4;
 
 	// Prepare memory for the current render pass
 	void* allocMark = backEndData->perFrameMemory->Mark();
 	assert(backEndData->currentPass == nullptr);
-	backEndData->currentPass = RB_CreatePass(
-		*backEndData->perFrameMemory, numDrawSurfs * estimatedNumShaderStages);
+	backEndData->currentPass = RB_CreatePass(*backEndData->perFrameMemory, numDrawSurfs * estimatedNumShaderStages);
 
 	// save original time for entity shader offsets
 	float originalTime = backEnd.refdef.floatTime;
@@ -1467,9 +1430,7 @@ static void RB_RenderDrawSurfList(drawSurf_t* drawSurfs, int numDrawSurfs)
 	}
 
 	// Do the drawing and release memory
-	RB_SubmitRenderPass(
-		*backEndData->currentPass,
-		*backEndData->perFrameMemory);
+	RB_SubmitRenderPass(*backEndData->currentPass, *backEndData->perFrameMemory);
 
 	backEndData->perFrameMemory->ResetTo(allocMark);
 	backEndData->currentPass = nullptr;
@@ -1494,7 +1455,7 @@ RB_SetGL2D
 
 ================
 */
-void	RB_SetGL2D(void) {
+void	RB_SetGL2D() {
 	matrix_t matrix;
 	int width, height;
 
@@ -3006,7 +2967,7 @@ const void* RB_PostProcess(const void* data)
 	backEnd.refractionFill = qfalse;
 
 	return (const void*)(cmd + 1);
-}
+	}
 
 static const void* RB_BeginTimedBlock(const void* data)
 {

@@ -1340,7 +1340,8 @@ qhandle_t RE_RegisterModel(const char* name)
 R_LoadMD3
 =================
 */
-static qboolean R_LoadMD3(model_t* mod, int lod, void* buffer, const char* name, qboolean& bAlreadyCached) {
+static qboolean R_LoadMD3(model_t* mod, int lod, void* buffer, const char* name, qboolean& bAlreadyCached)
+{
 	int j;
 	md3Header_t* pinmodel;
 	md3Surface_t* surf;

@@ -183,38 +183,38 @@ target_link_libraries(${MPRend2} ${MPRend2Libraries})
 target_include_directories(${MPRend2} PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
 
 # GLSL shader file generator
-add_executable(compact_glsl
+add_executable(SerenityJediEngine2024_glsl_mp
 	${MPDir}/rd-rend2/glsl/compact.cpp
 	${MPDir}/rd-rend2/tr_allocator.cpp
 	${MPDir}/rd-rend2/tr_allocator.h
 	${MPDir}/rd-rend2/tr_glsl_parse.cpp)
-target_compile_definitions(compact_glsl PRIVATE "GLSL_BUILDTOOL" "NOMINMAX")
+target_compile_definitions(SerenityJediEngine2024_glsl_mp PRIVATE "GLSL_BUILDTOOL" "NOMINMAX")
 if (NOT WIN32 AND NOT APPLE)
-	target_compile_definitions(compact_glsl PRIVATE "ARCH_STRING=\"${Architecture}\"")
+	target_compile_definitions(SerenityJediEngine2024_glsl_mp PRIVATE "ARCH_STRING=\"${Architecture}\"")
 endif()
-target_include_directories(compact_glsl PRIVATE "${MPRend2IncludeDirectories}")
+target_include_directories(SerenityJediEngine2024_glsl_mp PRIVATE "${MPRend2IncludeDirectories}")
 if (WIN32 OR APPLE)
 add_custom_command(
 	OUTPUT
 		${CMAKE_CURRENT_BINARY_DIR}/glsl_shaders.cpp
 		${CMAKE_CURRENT_BINARY_DIR}/glsl_shaders.h
 	COMMAND
-		compact_glsl
+		SerenityJediEngine2024_glsl_mp
 			${CMAKE_CURRENT_BINARY_DIR}/glsl_shaders.cpp
 			${CMAKE_CURRENT_BINARY_DIR}/glsl_shaders.h
 			${MPRend2GLSLFiles}
 	DEPENDS
-		compact_glsl ${MPRend2GLSLFiles})
+		SerenityJediEngine2024_glsl_mp ${MPRend2GLSLFiles})
 else()
 add_custom_command(
 	OUTPUT
 		${CMAKE_CURRENT_BINARY_DIR}/glsl_shaders.cpp
 		${CMAKE_CURRENT_BINARY_DIR}/glsl_shaders.h
 	COMMAND
-		${CMAKE_BINARY_DIR}/compact_glsl
+		${CMAKE_BINARY_DIR}/SerenityJediEngine2024_glsl_mp
 			${CMAKE_CURRENT_BINARY_DIR}/glsl_shaders.cpp
 			${CMAKE_CURRENT_BINARY_DIR}/glsl_shaders.h
 			${MPRend2GLSLFiles}
 	DEPENDS
-		compact_glsl ${MPRend2GLSLFiles})
+		SerenityJediEngine2024_glsl_mp ${MPRend2GLSLFiles})
 endif()

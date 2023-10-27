@@ -23,6 +23,8 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #include <vector>
 #include <cmath>
 
+extern cvar_t* r_weather;
+
 namespace
 {
 	const int CHUNK_COUNT = 9;  // in 3x3 arrangement
@@ -252,7 +254,7 @@ namespace
 
 						// Find intersection point with the brush
 						float t = 0.0f;
-						for (int j = 0; j < currentWeatherBrush->numPlanes; j++)
+						for (int j = 0; j < currentWeatherBrush->num_planes; j++)
 						{
 							vec3_t plane_normal;
 							float plane_dist;
@@ -280,7 +282,7 @@ namespace
 						rayPos[2] -= t;
 
 						// Now test if the intersected point is actually on the brush
-						for (int j = 0; j < currentWeatherBrush->numPlanes; j++)
+						for (int j = 0; j < currentWeatherBrush->num_planes; j++)
 						{
 							vec4_t* plane = &currentWeatherBrush->planes[j];
 							vec3_t normal = {
@@ -534,20 +536,45 @@ qboolean WE_ParseVector(const char** text, int count, float* v) {
 	return qtrue;
 }
 
-void R_AddWeatherBrush(uint8_t numPlanes, vec4_t* planes)
+void R_AddWeatherBrush(uint8_t num_planes, vec4_t* planes)
 {
 	if (tr.weatherSystem->numWeatherBrushes >= (MAX_WEATHER_ZONES * 2))
 	{
 		ri->Printf(PRINT_WARNING, "Max weather brushes hit. Skipping new inside/outside brush\n");
 		return;
 	}
-	tr.weatherSystem->weatherBrushes[tr.weatherSystem->numWeatherBrushes].numPlanes = numPlanes;
-	memcpy(tr.weatherSystem->weatherBrushes[tr.weatherSystem->numWeatherBrushes].planes, planes, numPlanes * sizeof(vec4_t));
+	tr.weatherSystem->weatherBrushes[tr.weatherSystem->numWeatherBrushes].num_planes = num_planes;
+	memcpy(tr.weatherSystem->weatherBrushes[tr.weatherSystem->numWeatherBrushes].planes, planes, num_planes * sizeof(vec4_t));
 
 	tr.weatherSystem->numWeatherBrushes++;
 }
 
-void RE_WorldEffectCommand(const char* command)
+void R_LoadWeatherImages()
+{
+	if (!tr.weatherSystem)
+		return;
+
+	// Image flags and type
+	imgType_t type = IMGTYPE_COLORALPHA;
+	int flags = IMGFLAG_CLAMPTOEDGE;
+	if (tr.hdrLighting)
+		flags |= IMGFLAG_SRGB;
+
+	if (tr.weatherSystem->weatherSlots[WEATHER_RAIN].active)
+		tr.weatherSystem->weatherSlots[WEATHER_RAIN].drawImage = R_FindImageFile("gfx/world/rain.jpg", type, flags);
+	if (tr.weatherSystem->weatherSlots[WEATHER_SNOW].active)
+		tr.weatherSystem->weatherSlots[WEATHER_SNOW].drawImage = R_FindImageFile("gfx/effects/snowflake1", type, flags);
+	if (tr.weatherSystem->weatherSlots[WEATHER_SPACEDUST].active)
+		tr.weatherSystem->weatherSlots[WEATHER_SPACEDUST].drawImage = R_FindImageFile("gfx/effects/snowpuff1", type, flags);
+	if (tr.weatherSystem->weatherSlots[WEATHER_SAND].active)
+		tr.weatherSystem->weatherSlots[WEATHER_SAND].drawImage = R_FindImageFile("gfx/effects/alpha_smoke2b", type, flags);
+	if (tr.weatherSystem->weatherSlots[WEATHER_FOG].active)
+		tr.weatherSystem->weatherSlots[WEATHER_FOG].drawImage = R_FindImageFile("gfx/effects/alpha_smoke2b", type, flags);
+	if (tr.weatherSystem->weatherSlots[WEATHER_LAVA].active)
+		tr.weatherSystem->weatherSlots[WEATHER_LAVA].drawImage = R_FindImageFile("gfx/effects/snowflake2", type, flags);
+}
+
+void RE_WorldEffectCommand(const char* command) // rend 2 mp
 {
 	if (!command)
 	{
@@ -566,7 +593,7 @@ void RE_WorldEffectCommand(const char* command)
 	}
 
 	//Die - clean up the whole weather system -rww
-	if (Q_stricmp(token, "die") == 0)
+	if (Q_stricmp(token, "die") == 0) 
 	{
 		for (int i = 0; i < NUM_WEATHER_TYPES; i++)
 			tr.weatherSystem->weatherSlots[i].active = false;
@@ -577,7 +604,7 @@ void RE_WorldEffectCommand(const char* command)
 
 	// Clear - Removes All Particle Clouds And Wind Zones
 	//----------------------------------------------------
-	else if (Q_stricmp(token, "clear") == 0)
+	else if ((Q_stricmp(token, "clear") == 0) || r_weather->integer == 0)
 	{
 		for (int i = 0; i < NUM_WEATHER_TYPES; i++)
 			tr.weatherSystem->weatherSlots[i].active = false;
@@ -602,7 +629,7 @@ void RE_WorldEffectCommand(const char* command)
 
 	// Basic Wind
 	//------------
-	else if (Q_stricmp(token, "wind") == 0)
+	else if ((Q_stricmp(token, "wind") == 0) || r_weather->integer == 8)
 	{
 		windObject_t* currentWindObject = &tr.weatherSystem->windSlots[tr.weatherSystem->activeWindObjects];
 		currentWindObject->chanceOfDeadTime = 0.3f;
@@ -659,16 +686,6 @@ void RE_WorldEffectCommand(const char* command)
 	//---------------------
 	else if (Q_stricmp(token, "lightrain") == 0)
 	{
-		/*nCloud.Initialize(500, "gfx/world/rain.jpg", 3);
-		nCloud.mHeight = 80.0f;
-		nCloud.mWidth = 1.2f;
-		nCloud.mGravity = 2000.0f;
-		nCloud.mFilterMode = 1;
-		nCloud.mBlendMode = 1;
-		nCloud.mFade = 100.0f;
-		nCloud.mColor = 0.5f;
-		nCloud.mOrientWithVelocity = true;
-		nCloud.mWaterParticles = true;*/
 		if (!tr.weatherSystem->weatherSlots[WEATHER_RAIN].active)
 			tr.weatherSystem->activeWeatherTypes++;
 
@@ -682,10 +699,6 @@ void RE_WorldEffectCommand(const char* command)
 
 		tr.weatherSystem->weatherSlots[WEATHER_RAIN].velocityOrientationScale = 1.0f;
 
-		imgType_t type = IMGTYPE_COLORALPHA;
-		int flags = IMGFLAG_CLAMPTOEDGE;
-		tr.weatherSystem->weatherSlots[WEATHER_RAIN].drawImage = R_FindImageFile("gfx/world/rain.jpg", type, flags);
-
 		VectorSet4(tr.weatherSystem->weatherSlots[WEATHER_RAIN].color, 0.5f, 0.5f, 0.5f, 0.5f);
 		VectorScale(
 			tr.weatherSystem->weatherSlots[WEATHER_RAIN].color,
@@ -695,18 +708,8 @@ void RE_WorldEffectCommand(const char* command)
 
 	// Create A Rain Storm
 	//---------------------
-	else if (Q_stricmp(token, "rain") == 0)
+	else if ((Q_stricmp(token, "rain") == 0) || r_weather->integer == 2)
 	{
-		/*nCloud.Initialize(1000, "gfx/world/rain.jpg", 3);
-		nCloud.mHeight = 80.0f;
-		nCloud.mWidth = 1.2f;
-		nCloud.mGravity = 2000.0f;
-		nCloud.mFilterMode = 1;
-		nCloud.mBlendMode = 1;
-		nCloud.mFade = 100.0f;
-		nCloud.mColor = 0.5f;
-		nCloud.mOrientWithVelocity = true;
-		nCloud.mWaterParticles = true;*/
 		if (!tr.weatherSystem->weatherSlots[WEATHER_RAIN].active)
 			tr.weatherSystem->activeWeatherTypes++;
 
@@ -720,10 +723,6 @@ void RE_WorldEffectCommand(const char* command)
 
 		tr.weatherSystem->weatherSlots[WEATHER_RAIN].velocityOrientationScale = 1.0f;
 
-		imgType_t type = IMGTYPE_COLORALPHA;
-		int flags = IMGFLAG_CLAMPTOEDGE;
-		tr.weatherSystem->weatherSlots[WEATHER_RAIN].drawImage = R_FindImageFile("gfx/world/rain.jpg", type, flags);
-
 		VectorSet4(tr.weatherSystem->weatherSlots[WEATHER_RAIN].color, 0.5f, 0.5f, 0.5f, 0.5f);
 		VectorScale(
 			tr.weatherSystem->weatherSlots[WEATHER_RAIN].color,
@@ -733,23 +732,8 @@ void RE_WorldEffectCommand(const char* command)
 
 	// Create A Rain Storm
 	//---------------------
-	else if (Q_stricmp(token, "acidrain") == 0)
+	else if ((Q_stricmp(token, "acidrain") == 0) || r_weather->integer == 7)
 	{
-		/*nCloud.Initialize(1000, "gfx/world/rain.jpg", 3);
-		nCloud.mHeight = 80.0f;
-		nCloud.mWidth = 2.0f;
-		nCloud.mGravity = 2000.0f;
-		nCloud.mFilterMode = 1;
-		nCloud.mBlendMode = 1;
-		nCloud.mFade = 100.0f;
-
-		nCloud.mColor[0] = 0.34f;
-		nCloud.mColor[1] = 0.70f;
-		nCloud.mColor[2] = 0.34f;
-		nCloud.mColor[3] = 0.70f;
-
-		nCloud.mOrientWithVelocity = true;
-		nCloud.mWaterParticles = true;*/
 		if (!tr.weatherSystem->weatherSlots[WEATHER_RAIN].active)
 			tr.weatherSystem->activeWeatherTypes++;
 
@@ -763,9 +747,7 @@ void RE_WorldEffectCommand(const char* command)
 
 		tr.weatherSystem->weatherSlots[WEATHER_RAIN].velocityOrientationScale = 1.0f;
 
-		imgType_t type = IMGTYPE_COLORALPHA;
-		int flags = IMGFLAG_CLAMPTOEDGE;
-		tr.weatherSystem->weatherSlots[WEATHER_RAIN].drawImage = R_FindImageFile("gfx/world/rain.jpg", type, flags);
+		//tr.weatherSystem->pain = 0.1f;
 
 		VectorSet4(tr.weatherSystem->weatherSlots[WEATHER_RAIN].color, 0.34f, 0.7f, 0.34f, 0.7f);
 		VectorScale(
@@ -774,20 +756,29 @@ void RE_WorldEffectCommand(const char* command)
 			tr.weatherSystem->weatherSlots[WEATHER_RAIN].color);
 	}
 
+	else if ((Q_stricmp(token, "Lava") == 0) || r_weather->integer == 3)
+	{
+		if (!tr.weatherSystem->weatherSlots[WEATHER_LAVA].active)
+			tr.weatherSystem->activeWeatherTypes++;
+
+		tr.weatherSystem->weatherSlots[WEATHER_LAVA].particleCount = 1000;
+		tr.weatherSystem->weatherSlots[WEATHER_LAVA].active = true;
+		tr.weatherSystem->weatherSlots[WEATHER_LAVA].gravity = 0.3f;
+		tr.weatherSystem->weatherSlots[WEATHER_LAVA].fadeDistance = 6000.0f;
+
+		tr.weatherSystem->weatherSlots[WEATHER_LAVA].size[0] = 1.5f;
+		tr.weatherSystem->weatherSlots[WEATHER_LAVA].size[1] = 1.5f;
+
+		tr.weatherSystem->weatherSlots[WEATHER_LAVA].velocityOrientationScale = 0.0f;
+
+		VectorSet4(tr.weatherSystem->weatherSlots[WEATHER_LAVA].color, 0.95f, 0.95f, 0.05f, 0.05f);
+		VectorScale(tr.weatherSystem->weatherSlots[WEATHER_LAVA].color, 0.75f, tr.weatherSystem->weatherSlots[WEATHER_LAVA].color);
+	}
+
 	// Create A Rain Storm
 	//---------------------
 	else if (Q_stricmp(token, "heavyrain") == 0)
 	{
-		/*nCloud.Initialize(1000, "gfx/world/rain.jpg", 3);
-		nCloud.mHeight = 80.0f;
-		nCloud.mWidth = 1.2f;
-		nCloud.mGravity = 2800.0f;
-		nCloud.mFilterMode = 1;
-		nCloud.mBlendMode = 1;
-		nCloud.mFade = 15.0f;
-		nCloud.mColor = 0.5f;
-		nCloud.mOrientWithVelocity = true;
-		nCloud.mWaterParticles = true;*/
 		if (!tr.weatherSystem->weatherSlots[WEATHER_RAIN].active)
 			tr.weatherSystem->activeWeatherTypes++;
 
@@ -801,10 +792,6 @@ void RE_WorldEffectCommand(const char* command)
 
 		tr.weatherSystem->weatherSlots[WEATHER_RAIN].velocityOrientationScale = 1.0f;
 
-		imgType_t type = IMGTYPE_COLORALPHA;
-		int flags = IMGFLAG_CLAMPTOEDGE;
-		tr.weatherSystem->weatherSlots[WEATHER_RAIN].drawImage = R_FindImageFile("gfx/world/rain", type, flags);
-
 		VectorSet4(tr.weatherSystem->weatherSlots[WEATHER_RAIN].color, 0.5f, 0.5f, 0.5f, 0.5f);
 		VectorScale(
 			tr.weatherSystem->weatherSlots[WEATHER_RAIN].color,
@@ -814,13 +801,8 @@ void RE_WorldEffectCommand(const char* command)
 
 	// Create A Snow Storm
 	//---------------------
-	else if (Q_stricmp(token, "snow") == 0)
+	else if ((Q_stricmp(token, "snow") == 0) || r_weather->integer == 1)
 	{
-		/*nCloud.Initialize(1000, "gfx/effects/snowflake1.bmp");
-		nCloud.mBlendMode = 1;
-		nCloud.mRotationChangeNext = 0;
-		nCloud.mColor = 0.75f;
-		nCloud.mWaterParticles = true;*/
 		if (!tr.weatherSystem->weatherSlots[WEATHER_SNOW].active)
 			tr.weatherSystem->activeWeatherTypes++;
 
@@ -834,37 +816,14 @@ void RE_WorldEffectCommand(const char* command)
 
 		tr.weatherSystem->weatherSlots[WEATHER_SNOW].velocityOrientationScale = 0.0f;
 
-		imgType_t type = IMGTYPE_COLORALPHA;
-		int flags = IMGFLAG_CLAMPTOEDGE;
-		tr.weatherSystem->weatherSlots[WEATHER_SNOW].drawImage = R_FindImageFile("gfx/effects/snowflake1", type, flags);
-
 		VectorSet4(tr.weatherSystem->weatherSlots[WEATHER_SNOW].color, 0.75f, 0.75f, 0.75f, 0.75f);
-		VectorScale(
-			tr.weatherSystem->weatherSlots[WEATHER_SNOW].color,
-			0.75f,
-			tr.weatherSystem->weatherSlots[WEATHER_SNOW].color);
+		VectorScale(tr.weatherSystem->weatherSlots[WEATHER_SNOW].color,	0.75f,tr.weatherSystem->weatherSlots[WEATHER_SNOW].color);
 	}
 
 	// Create A Some stuff
 	//---------------------
-	else if (Q_stricmp(token, "spacedust") == 0)
+	else if ((Q_stricmp(token, "spacedust") == 0) || r_weather->integer == 9)
 	{
-		/*nCloud.Initialize(count, "gfx/effects/snowpuff1.tga");
-		nCloud.mHeight = 1.2f;
-		nCloud.mWidth = 1.2f;
-		nCloud.mGravity = 0.0f;
-		nCloud.mBlendMode = 1;
-		nCloud.mRotationChangeNext = 0;
-		nCloud.mColor = 0.75f;
-		nCloud.mWaterParticles = true;
-		nCloud.mMass.mMax = 30.0f;
-		nCloud.mMass.mMin = 10.0f;
-		nCloud.mSpawnRange.mMins[0] = -1500.0f;
-		nCloud.mSpawnRange.mMins[1] = -1500.0f;
-		nCloud.mSpawnRange.mMins[2] = -1500.0f;
-		nCloud.mSpawnRange.mMaxs[0] = 1500.0f;
-		nCloud.mSpawnRange.mMaxs[1] = 1500.0f;
-		nCloud.mSpawnRange.mMaxs[2] = 1500.0f;*/
 		int count;
 		token = COM_ParseExt(&command, qfalse);
 		count = atoi(token);
@@ -872,7 +831,7 @@ void RE_WorldEffectCommand(const char* command)
 		if (!tr.weatherSystem->weatherSlots[WEATHER_SPACEDUST].active)
 			tr.weatherSystem->activeWeatherTypes++;
 
-		tr.weatherSystem->weatherSlots[WEATHER_SPACEDUST].particleCount = count;
+		tr.weatherSystem->weatherSlots[WEATHER_SPACEDUST].particleCount = 1200;
 		tr.weatherSystem->weatherSlots[WEATHER_SPACEDUST].active = true;
 		tr.weatherSystem->weatherSlots[WEATHER_SPACEDUST].gravity = 0.0f;
 		tr.weatherSystem->weatherSlots[WEATHER_SPACEDUST].fadeDistance = 3000.f;
@@ -881,10 +840,6 @@ void RE_WorldEffectCommand(const char* command)
 		tr.weatherSystem->weatherSlots[WEATHER_SPACEDUST].size[1] = 2.5f;
 
 		tr.weatherSystem->weatherSlots[WEATHER_SPACEDUST].velocityOrientationScale = 0.0f;
-
-		imgType_t type = IMGTYPE_COLORALPHA;
-		int flags = IMGFLAG_CLAMPTOEDGE;
-		tr.weatherSystem->weatherSlots[WEATHER_SPACEDUST].drawImage = R_FindImageFile("gfx/effects/snowpuff1", type, flags);
 
 		VectorSet4(tr.weatherSystem->weatherSlots[WEATHER_SPACEDUST].color, 0.75f, 0.75f, 0.75f, 0.75f);
 		VectorScale(
@@ -895,28 +850,12 @@ void RE_WorldEffectCommand(const char* command)
 
 	// Create A Sand Storm
 	//---------------------
-	else if (Q_stricmp(token, "sand") == 0)
+	else if ((Q_stricmp(token, "sand") == 0) || r_weather->integer == 4)
 	{
-		/*nCloud.Initialize(400, "gfx/effects/alpha_smoke2b.tga");
-
-		nCloud.mGravity = 0;
-		nCloud.mWidth = 70;
-		nCloud.mHeight = 70;
-		nCloud.mColor[0] = 0.9f;
-		nCloud.mColor[1] = 0.6f;
-		nCloud.mColor[2] = 0.0f;
-		nCloud.mColor[3] = 0.5f;
-		nCloud.mFade = 5.0f;
-		nCloud.mMass.mMax = 30.0f;
-		nCloud.mMass.mMin = 10.0f;
-		nCloud.mSpawnRange.mMins[2] = -150;
-		nCloud.mSpawnRange.mMaxs[2] = 150;
-
-		nCloud.mRotationChangeNext = 0;*/
 		if (!tr.weatherSystem->weatherSlots[WEATHER_SAND].active)
 			tr.weatherSystem->activeWeatherTypes++;
 
-		tr.weatherSystem->weatherSlots[WEATHER_SAND].particleCount = 400;
+		tr.weatherSystem->weatherSlots[WEATHER_SAND].particleCount = 1200;
 		tr.weatherSystem->weatherSlots[WEATHER_SAND].active = true;
 		tr.weatherSystem->weatherSlots[WEATHER_SAND].gravity = 0.0f;
 		tr.weatherSystem->weatherSlots[WEATHER_SAND].fadeDistance = 2400.f;
@@ -926,34 +865,17 @@ void RE_WorldEffectCommand(const char* command)
 
 		tr.weatherSystem->weatherSlots[WEATHER_SAND].velocityOrientationScale = 0.0f;
 
-		imgType_t type = IMGTYPE_COLORALPHA;
-		int flags = IMGFLAG_CLAMPTOEDGE;
-		tr.weatherSystem->weatherSlots[WEATHER_SAND].drawImage = R_FindImageFile("gfx/effects/alpha_smoke2b", type, flags);
-
 		VectorSet4(tr.weatherSystem->weatherSlots[WEATHER_SAND].color, 0.9f, 0.6f, 0.0f, 0.5f);
 	}
 
 	// Create Blowing Clouds Of Fog
 	//------------------------------
-	else if (Q_stricmp(token, "fog") == 0)
+	else if ((Q_stricmp(token, "fog") == 0) || r_weather->integer == 6)
 	{
-		/*nCloud.Initialize(60, "gfx/effects/alpha_smoke2b.tga");
-		nCloud.mBlendMode = 1;
-		nCloud.mGravity = 0;
-		nCloud.mWidth = 70;
-		nCloud.mHeight = 70;
-		nCloud.mColor = 0.2f;
-		nCloud.mFade = 5.0f;
-		nCloud.mMass.mMax = 30.0f;
-		nCloud.mMass.mMin = 10.0f;
-		nCloud.mSpawnRange.mMins[2] = -150;
-		nCloud.mSpawnRange.mMaxs[2] = 150;
-
-		nCloud.mRotationChangeNext = 0;*/
 		if (!tr.weatherSystem->weatherSlots[WEATHER_FOG].active)
 			tr.weatherSystem->activeWeatherTypes++;
 
-		tr.weatherSystem->weatherSlots[WEATHER_FOG].particleCount = 60;
+		tr.weatherSystem->weatherSlots[WEATHER_FOG].particleCount = 1200;
 		tr.weatherSystem->weatherSlots[WEATHER_FOG].active = true;
 		tr.weatherSystem->weatherSlots[WEATHER_FOG].gravity = 0.0f;
 		tr.weatherSystem->weatherSlots[WEATHER_FOG].fadeDistance = 2400.f;
@@ -962,10 +884,6 @@ void RE_WorldEffectCommand(const char* command)
 		tr.weatherSystem->weatherSlots[WEATHER_FOG].size[1] = 300.f;
 
 		tr.weatherSystem->weatherSlots[WEATHER_FOG].velocityOrientationScale = 0.0f;
-
-		imgType_t type = IMGTYPE_COLORALPHA;
-		int flags = IMGFLAG_CLAMPTOEDGE;
-		tr.weatherSystem->weatherSlots[WEATHER_FOG].drawImage = R_FindImageFile("gfx/effects/alpha_smoke2b", type, flags);
 
 		VectorSet4(tr.weatherSystem->weatherSlots[WEATHER_FOG].color, 0.2f, 0.2f, 0.2f, 0.2f);
 		VectorScale(tr.weatherSystem->weatherSlots[WEATHER_FOG].color, 0.2f, tr.weatherSystem->weatherSlots[WEATHER_FOG].color);
@@ -973,28 +891,12 @@ void RE_WorldEffectCommand(const char* command)
 
 	// Create Heavy Rain Particle Cloud
 	//-----------------------------------
-	else if (Q_stricmp(token, "heavyrainfog") == 0)
+	else if ((Q_stricmp(token, "heavyrainfog") == 0) || r_weather->integer == 5)
 	{
-		/*nCloud.Initialize(70, "gfx/effects/alpha_smoke2b.tga");
-		nCloud.mBlendMode = 1;
-		nCloud.mGravity = 0;
-		nCloud.mWidth = 100;
-		nCloud.mHeight = 100;
-		nCloud.mColor = 0.3f;
-		nCloud.mFade = 1.0f;
-		nCloud.mMass.mMax = 10.0f;
-		nCloud.mMass.mMin = 5.0f;
-
-		nCloud.mSpawnRange.mMins = -(nCloud.mSpawnPlaneDistance*1.25f);
-		nCloud.mSpawnRange.mMaxs = (nCloud.mSpawnPlaneDistance*1.25f);
-		nCloud.mSpawnRange.mMins[2] = -150;
-		nCloud.mSpawnRange.mMaxs[2] = 150;
-
-		nCloud.mRotationChangeNext = 0;*/
 		if (!tr.weatherSystem->weatherSlots[WEATHER_FOG].active)
 			tr.weatherSystem->activeWeatherTypes++;
 
-		tr.weatherSystem->weatherSlots[WEATHER_FOG].particleCount = 70;
+		tr.weatherSystem->weatherSlots[WEATHER_FOG].particleCount = 210;
 		tr.weatherSystem->weatherSlots[WEATHER_FOG].active = true;
 		tr.weatherSystem->weatherSlots[WEATHER_FOG].gravity = 0.0f;
 		tr.weatherSystem->weatherSlots[WEATHER_FOG].fadeDistance = 2400.f;
@@ -1003,10 +905,6 @@ void RE_WorldEffectCommand(const char* command)
 		tr.weatherSystem->weatherSlots[WEATHER_FOG].size[1] = 300.f;
 
 		tr.weatherSystem->weatherSlots[WEATHER_FOG].velocityOrientationScale = 0.0f;
-
-		imgType_t type = IMGTYPE_COLORALPHA;
-		int flags = IMGFLAG_CLAMPTOEDGE;
-		tr.weatherSystem->weatherSlots[WEATHER_FOG].drawImage = R_FindImageFile("gfx/effects/alpha_smoke2b", type, flags);
 
 		VectorSet4(tr.weatherSystem->weatherSlots[WEATHER_FOG].color, 0.3f, 0.3f, 0.3f, 0.3f);
 		VectorScale(tr.weatherSystem->weatherSlots[WEATHER_FOG].color, 0.3f, tr.weatherSystem->weatherSlots[WEATHER_FOG].color);
@@ -1016,22 +914,6 @@ void RE_WorldEffectCommand(const char* command)
 	//------------------------------
 	else if (Q_stricmp(token, "light_fog") == 0)
 	{
-		/*nCloud.Initialize(40, "gfx/effects/alpha_smoke2b.tga");
-		nCloud.mBlendMode = 1;
-		nCloud.mGravity = 0;
-		nCloud.mWidth = 100;
-		nCloud.mHeight = 100;
-		nCloud.mColor[0] = 0.19f;
-		nCloud.mColor[1] = 0.6f;
-		nCloud.mColor[2] = 0.7f;
-		nCloud.mColor[3] = 0.12f;
-		nCloud.mFade = 0.10f;
-		nCloud.mMass.mMax = 30.0f;
-		nCloud.mMass.mMin = 10.0f;
-		nCloud.mSpawnRange.mMins[2] = -150;
-		nCloud.mSpawnRange.mMaxs[2] = 150;
-
-		nCloud.mRotationChangeNext = 0;*/
 		if (!tr.weatherSystem->weatherSlots[WEATHER_FOG].active)
 			tr.weatherSystem->activeWeatherTypes++;
 
@@ -1044,10 +926,6 @@ void RE_WorldEffectCommand(const char* command)
 		tr.weatherSystem->weatherSlots[WEATHER_FOG].size[1] = 300.f;
 
 		tr.weatherSystem->weatherSlots[WEATHER_FOG].velocityOrientationScale = 0.0f;
-
-		imgType_t type = IMGTYPE_COLORALPHA;
-		int flags = IMGFLAG_CLAMPTOEDGE;
-		tr.weatherSystem->weatherSlots[WEATHER_FOG].drawImage = R_FindImageFile("gfx/effects/alpha_smoke2b", type, flags);
 
 		VectorSet4(tr.weatherSystem->weatherSlots[WEATHER_FOG].color, 0.19f, 0.6f, 0.7f, 0.12f);
 		VectorScale(tr.weatherSystem->weatherSlots[WEATHER_FOG].color, 0.12f, tr.weatherSystem->weatherSlots[WEATHER_FOG].color);
@@ -1085,9 +963,25 @@ void RE_WorldEffectCommand(const char* command)
 		ri->Printf(PRINT_ALL, "	outsideshake\n"); // not available in MP
 		ri->Printf(PRINT_ALL, "	outsidepain\n"); // not available in MP
 	}
+	if (tr.world)
+		R_LoadWeatherImages();
 }
 
 void R_WorldEffect_f(void)
+{
+	char temp[2048] = { 0 };
+	ri->Cmd_ArgsBuffer(temp, sizeof(temp));
+	RE_WorldEffectCommand(temp);
+}
+
+void R_WeatherEffect_f(void)
+{
+	char temp[2048] = { 0 };
+	ri->Cmd_ArgsBuffer(temp, sizeof(temp));
+	RE_WorldEffectCommand(temp);
+}
+
+void R_SetWeatherEffect_f(void)
 {
 	char temp[2048] = { 0 };
 	ri->Cmd_ArgsBuffer(temp, sizeof(temp));

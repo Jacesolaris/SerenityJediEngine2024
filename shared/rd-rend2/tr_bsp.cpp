@@ -4265,6 +4265,8 @@ world_t* R_LoadBSP(const char* name, int* bspIndex)
 			&header->lumps[LUMP_BRUSHES],
 			&header->lumps[LUMP_BRUSHSIDES]);
 
+	R_LoadWeatherImages();
+
 	R_GenerateSurfaceSprites(worldData, worldIndex + 1);
 
 	// load cubemaps
