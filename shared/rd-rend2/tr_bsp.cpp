@@ -982,12 +982,13 @@ static void ParseFace(const world_t* worldData, dsurface_t* ds, drawVert_t* vert
 ParseMesh
 ===============
 */
-static void ParseMesh(const world_t* worldData, dsurface_t* ds, drawVert_t* verts, packedTangentSpace_t* tangentSpace, float* hdrVertColors, msurface_t* surf) {
+static void ParseMesh(const world_t* worldData, dsurface_t* ds, drawVert_t* verts, packedTangentSpace_t* tangentSpace, float* hdrVertColors, msurface_t* surf)
+{
 	srfBspSurface_t* grid;
 	int				i, j;
 	int				width, height, num_points;
 	srfVert_t points[MAX_PATCH_SIZE * MAX_PATCH_SIZE];
-	vec3_t			bounds[2];
+	vec3_t			bounds[2]{};
 	vec3_t			tmpVec;
 	static surfaceType_t	skipData = SF_SKIP;
 	int realLightmapNum[MAXLIGHTMAPS];
@@ -3538,7 +3539,7 @@ static void R_MergeLeafSurfaces(world_t* worldData)
 	{
 		msurface_t* surf1;
 
-		vec3_t bounds[2];
+		vec3_t bounds[2]{};
 
 		int numSurfsToMerge;
 		int num_indexes;

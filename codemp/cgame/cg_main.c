@@ -969,6 +969,8 @@ static void CG_RegisterSounds(void)
 	cgs.media.fallSound = trap->S_RegisterSound("sound/player/fallsplat.wav");
 
 	cgs.media.crackleSound = trap->S_RegisterSound("sound/effects/energy_crackle.wav");
+
+	cgs.media.bodyfadeSound = trap->S_RegisterSound("sound/effects/bodyfadeSound.mp3");
 	//#ifdef JK2AWARDS
 	cgs.media.impressiveSound = trap->S_RegisterSound("sound/player/impressiveSound.mp3");
 	cgs.media.excellentSound = trap->S_RegisterSound("sound/player/excellentSound.mp3");

@@ -1040,7 +1040,7 @@ intptr_t CL_CgameSystemCalls(intptr_t* args)
 		return re.GetLighting(static_cast<const float*>(VMA(1)), static_cast<float*>(VMA(2)),
 			static_cast<float*>(VMA(3)), static_cast<float*>(VMA(4)));
 	case CG_R_ADDPOLYTOSCENE:
-		re.AddPolyToScene(args[1], args[2], static_cast<const polyVert_t*>(VMA(3)));
+		re.AddPolyToScene(args[1], args[2], static_cast<const polyVert_t*>(VMA(3)), 1);
 		return 0;
 	case CG_R_ADDLIGHTTOSCENE:
 		re.AddLightToScene(static_cast<const float*>(VMA(1)), VMF(2), VMF(3), VMF(4), VMF(5));

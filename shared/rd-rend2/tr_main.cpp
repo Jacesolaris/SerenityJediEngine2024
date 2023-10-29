@@ -458,8 +458,8 @@ int R_CullLocalBox(vec3_t localBounds[2]) {
 #else
 	int             j;
 	vec3_t          transformed;
-	vec3_t          v;
-	vec3_t          worldBounds[2];
+	vec3_t          v{};
+	vec3_t          worldBounds[2]{};
 
 	if (r_nocull->integer)
 	{
@@ -2925,11 +2925,11 @@ void R_GatherFrameViews(trRefdef_t* refdef)
 		// sun shadowmaps
 		if (r_sunlightMode->integer && r_depthPrepass->value && (r_forceSun->integer || tr.sunShadows))
 		{
-			vec3_t lightViewAxis[3];
+			vec3_t lightViewAxis[3]{};
 			vec3_t lightOrigin;
 			float splitZNear, splitZFar, splitBias;
 			float viewZNear, viewZFar;
-			vec3_t lightviewBounds[2];
+			vec3_t lightviewBounds[2]{};
 
 			viewZNear = r_shadowCascadeZNear->value;
 			viewZFar = r_shadowCascadeZFar->value;

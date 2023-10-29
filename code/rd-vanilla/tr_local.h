@@ -1474,7 +1474,7 @@ void R_InitNextFrame();
 
 void RE_ClearScene();
 void RE_AddRefEntityToScene(const refEntity_t* ent);
-void RE_AddPolyToScene(qhandle_t h_shader, int num_verts, const polyVert_t* verts);
+void RE_AddPolyToScene(qhandle_t h_shader, int num_verts, const polyVert_t* verts, int numPolys);
 void RE_AddLightToScene(const vec3_t org, float intensity, float r, float g, float b);
 void RE_RenderScene(const refdef_t* fd);
 

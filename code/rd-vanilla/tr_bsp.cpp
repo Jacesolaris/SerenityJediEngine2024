@@ -422,7 +422,7 @@ static void ParseMesh(const dsurface_t* ds, mapVert_t* verts, msurface_t* surf, 
 	int				i, j, k;
 	drawVert_t points[MAX_PATCH_SIZE * MAX_PATCH_SIZE];
 	int				lightmap_num[MAXLIGHTMAPS]{};
-	vec3_t			bounds[2];
+	vec3_t			bounds[2]{};
 	vec3_t			tmp_vec;
 	static surfaceType_t	skip_data = SF_SKIP;
 

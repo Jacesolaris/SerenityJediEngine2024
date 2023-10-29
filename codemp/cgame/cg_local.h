@@ -1408,6 +1408,8 @@ typedef struct cgMedia_s {
 
 	sfxHandle_t crackleSound;
 
+	sfxHandle_t bodyfadeSound;
+
 	sfxHandle_t	grenadeBounce1;
 	sfxHandle_t	grenadeBounce2;
 

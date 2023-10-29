@@ -1629,7 +1629,7 @@ typedef struct drawSurf_s {
 typedef struct srfPoly_s {
 	surfaceType_t	surfaceType;
 	struct srfPoly_s* next;
-	qhandle_t		hShader;
+	qhandle_t		h_shader;
 	int				fogIndex;
 	int				num_verts;
 	polyVert_t* verts;
@@ -2955,7 +2955,7 @@ extern const int lightmapsFullBright[MAXLIGHTMAPS];
 extern const byte stylesDefault[MAXLIGHTMAPS];
 
 shader_t* R_FindShader(const char* name, const int* lightmapIndex, const byte* styles, const qboolean mip_raw_image);
-shader_t* R_GetShaderByHandle(qhandle_t hShader);
+shader_t* R_GetShaderByHandle(qhandle_t h_shader);
 shader_t* R_FindShaderByName(const char* name);
 void R_InitShaders(const qboolean server);
 void R_ShaderList_f(void);
@@ -3268,7 +3268,7 @@ void R_InitNextFrame(void);
 void RE_ClearScene(void);
 void RE_AddRefEntityToScene(const refEntity_t* ent);
 void RE_AddMiniRefEntityToScene(const miniRefEntity_t* miniRefEnt);
-void RE_AddPolyToScene(qhandle_t hShader, int num_verts, const polyVert_t* verts, int num);
+void RE_AddPolyToScene(qhandle_t h_shader, int num_verts, const polyVert_t* verts, int num);
 void RE_AddLightToScene(const vec3_t org, float intensity, float r, float g, float b);
 void RE_AddAdditiveLightToScene(const vec3_t org, float intensity, float r, float g, float b);
 void RE_BeginScene(const refdef_t* fd);
@@ -3674,9 +3674,9 @@ qhandle_t R_BeginTimedBlockCmd(const char* name);
 void R_EndTimedBlockCmd(qhandle_t timerHandle);
 
 void RE_SetColor(const float* rgba);
-void RE_StretchPic(float x, float y, float w, float h, float s1, float t1, float s2, float t2, qhandle_t hShader);
-void RE_RotatePic(float x, float y, float w, float h, float s1, float t1, float s2, float t2, float a, qhandle_t hShader);
-void RE_RotatePic2(float x, float y, float w, float h, float s1, float t1, float s2, float t2, float a, qhandle_t hShader);
+void RE_StretchPic(float x, float y, float w, float h, float s1, float t1, float s2, float t2, qhandle_t h_shader);
+void RE_RotatePic(float x, float y, float w, float h, float s1, float t1, float s2, float t2, float a, qhandle_t h_shader);
+void RE_RotatePic2(float x, float y, float w, float h, float s1, float t1, float s2, float t2, float a, qhandle_t h_shader);
 void RE_BeginFrame(stereoFrame_t stereoFrame);
 void R_NewFrameSync();
 void RE_EndFrame(int* frontEndMsec, int* backEndMsec);

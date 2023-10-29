@@ -37,12 +37,12 @@ R_RegisterMD3
 */
 qhandle_t R_RegisterMD3(const char* name, model_t* mod)
 {
-	unsigned* buf;
+	unsigned* buf = nullptr;
 	int			lod;
 	int			ident;
 	qboolean	loaded = qfalse;
 	int			numLoaded;
-	char filename[MAX_QPATH], namebuf[MAX_QPATH + 20];
+	char filename[MAX_QPATH + 20], namebuf[MAX_QPATH + 20];
 	char* fext, defex[] = "md3";
 
 	numLoaded = 0;
@@ -66,6 +66,7 @@ qhandle_t R_RegisterMD3(const char* name, model_t* mod)
 			Com_sprintf(namebuf, sizeof(namebuf), "%s.%s", filename, fext);
 
 		qboolean bAlreadyCached = qfalse;
+
 		if (!CModelCache->LoadFile(namebuf, (void**)&buf, &bAlreadyCached))
 			continue;
 

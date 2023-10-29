@@ -751,7 +751,7 @@ R_CullIQM
 =============
 */
 static int R_CullIQM(iqmData_t* data, trRefEntity_t* ent) {
-	vec3_t		bounds[2];
+	vec3_t		bounds[2]{};
 	float* oldBounds, * newBounds;
 	int		i;
 

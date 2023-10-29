@@ -1118,9 +1118,6 @@ static qhandle_t RE_RegisterModel_Actual(const char* name)
 	int lod;
 	qboolean loaded;
 	modelHash_t* mh;
-	/*
-	Ghoul2 Insert End
-	*/
 
 	if (!name || !name[0])
 	{

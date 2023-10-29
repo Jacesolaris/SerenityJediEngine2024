@@ -559,20 +559,18 @@ asked for again.
 static qhandle_t RE_RegisterModel_Actual(const char* name)
 {
 	model_t* mod;
-	unsigned* buf;
+	unsigned* buf = nullptr;
 	int			lod;
 	qboolean	loaded;
 	modelHash_t* mh;
-	/*
-	Ghoul2 Insert End
-	*/
 
 	if (!name || !name[0]) {
 		ri.Printf(PRINT_WARNING, "RE_RegisterModel: NULL name\n");
 		return 0;
 	}
 
-	if (strlen(name) >= MAX_SKINNAME_PATH) {
+	if (strlen(name) >= MAX_SKINNAME_PATH)
+	{
 		ri.Printf(PRINT_DEVELOPER, "Model name exceeds MAX_SKINNAME_PATH\n");
 		return 0;
 	}

@@ -75,7 +75,7 @@ R_CullModel
 =============
 */
 static int R_CullModel(mdvModel_t* model, trRefEntity_t* ent) {
-	vec3_t		bounds[2];
+	vec3_t		bounds[2]{};
 	mdvFrame_t* oldFrame, * newFrame;
 	int			i;
 

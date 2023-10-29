@@ -1743,7 +1743,7 @@ static void CG_General(centity_t* cent)
 					{
 						if (Q_flrand(0.0f, 1.0f) > 0.9f)
 						{
-							trap->S_StartSound(NULL, cent->currentState.number, CHAN_AUTO, cgs.media.crackleSound);
+							//trap->S_StartSound(NULL, cent->currentState.number, CHAN_AUTO, cgs.media.bodyfadeSound);
 						}
 					}
 				}
@@ -1764,7 +1764,7 @@ static void CG_General(centity_t* cent)
 					}
 					if (Q_flrand(0.0f, 1.0f) > 0.9f)
 					{
-						trap->S_StartSound(NULL, cent->currentState.number, CHAN_AUTO, cgs.media.crackleSound);
+						//trap->S_StartSound(NULL, cent->currentState.number, CHAN_AUTO, cgs.media.crackleSound);
 					}
 					trap->R_AddRefEntityToScene(&ent);
 				}
