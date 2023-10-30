@@ -38,7 +38,7 @@ extern void Vehicle_SetAnim(gentity_t* ent, int set_anim_parts, int anim, int se
 extern void G_Knockdown(gentity_t* self, gentity_t* attacker, const vec3_t push_dir, float strength,
 	qboolean breakSaberLock);
 extern void G_VehicleTrace(trace_t* results, const vec3_t start, const vec3_t tMins, const vec3_t tMaxs,
-	const vec3_t end, int pass_entity_num, int contentmask);
+	const vec3_t end, int pass_entityNum, int contentmask);
 
 // Update death sequence.
 static void DeathUpdate(Vehicle_t* p_veh)
@@ -129,7 +129,7 @@ static void ProcessMoveCommands(Vehicle_t* p_veh)
 		speedInc = p_veh->m_pVehicleInfo->acceleration * p_veh->m_fTimeModifier;
 	}
 
-	if (parent_ps->speed || parent_ps->groundentity_num == ENTITYNUM_NONE ||
+	if (parent_ps->speed || parent_ps->groundentityNum == ENTITYNUM_NONE ||
 		p_veh->m_ucmd.forwardmove || p_veh->m_ucmd.upmove > 0)
 	{
 		if (p_veh->m_ucmd.forwardmove > 0 && speedInc)

@@ -68,7 +68,7 @@ void CG_BubbleTrail(vec3_t start, vec3_t end, const float spacing)
 		re->reType = RT_SPRITE;
 		re->rotation = 0;
 		re->radius = 3;
-		re->custom_shader = 0; //cgs.media.waterBubbleShader;
+		re->customShader = 0; //cgs.media.waterBubbleShader;
 		re->shaderRGBA[0] = 0xff;
 		re->shaderRGBA[1] = 0xff;
 		re->shaderRGBA[2] = 0xff;
@@ -101,7 +101,7 @@ localEntity_t* CG_SmokePuff(const vec3_t p, const vec3_t vel,
 	const int start_time,
 	const int fade_in_time,
 	const int le_flags,
-	const qhandle_t h_shader)
+	const qhandle_t hShader)
 {
 	static int seed = 0x92;
 	//	int fadeInTime = startTime + duration / 2;
@@ -138,7 +138,7 @@ localEntity_t* CG_SmokePuff(const vec3_t p, const vec3_t vel,
 	VectorCopy(p, le->pos.trBase);
 
 	VectorCopy(p, re->origin);
-	re->custom_shader = h_shader;
+	re->customShader = hShader;
 
 	re->shaderRGBA[0] = le->color[0] * 0xff;
 	re->shaderRGBA[1] = le->color[1] * 0xff;
@@ -189,7 +189,7 @@ void CG_TestLine(vec3_t start, vec3_t end, const int time, unsigned int color, c
 
 	re->reType = RT_LINE;
 	re->radius = 0.5 * radius;
-	re->custom_shader = cgs.media.whiteShader;
+	re->customShader = cgs.media.whiteShader;
 
 	re->shaderTexCoord[0] = re->shaderTexCoord[1] = 1.0f;
 
@@ -226,7 +226,7 @@ void CG_BlockLine(vec3_t start, vec3_t end, const int time, unsigned int color, 
 
 	re->reType = RT_LINE;
 	re->radius = 0.1 * radius;
-	re->custom_shader = cgs.media.whiteShader;
+	re->customShader = cgs.media.whiteShader;
 
 	re->shaderTexCoord[0] = re->shaderTexCoord[1] = 1.0f;
 
@@ -256,7 +256,7 @@ void CG_StunStartpoint(vec3_t start_pos)
 	VectorCopy(start_pos, model.lightingOrigin);
 	VectorCopy(start_pos, model.origin);
 
-	model.custom_shader = cgs.media.blueSaberGlowShader;
+	model.customShader = cgs.media.blueSaberGlowShader;
 	model.shaderRGBA[0] = model.shaderRGBA[1] = model.shaderRGBA[2] = model.shaderRGBA[3] = 0xff;
 
 	trap->R_AddRefEntityToScene(&model);
@@ -270,7 +270,7 @@ void CG_GrappleStartpoint(vec3_t start_pos)
 	VectorCopy(start_pos, model.lightingOrigin);
 	VectorCopy(start_pos, model.origin);
 
-	model.custom_shader = cgs.media.rgbSaberGlowShader;
+	model.customShader = cgs.media.rgbSaberGlowShader;
 	model.shaderRGBA[0] = model.shaderRGBA[1] = model.shaderRGBA[2] = model.shaderRGBA[3] = 0xff;
 
 	trap->R_AddRefEntityToScene(&model);
@@ -291,7 +291,7 @@ void CG_GrappleLine(vec3_t start, vec3_t end, const int time, unsigned int color
 
 	re->reType = RT_LINE;
 	re->radius = 0.5 * radius;
-	re->custom_shader = cgs.media.electricBodyShader;
+	re->customShader = cgs.media.electricBodyShader;
 
 	re->shaderTexCoord[0] = re->shaderTexCoord[1] = 1.0f;
 
@@ -391,7 +391,7 @@ static void CG_DoGlassQuad(vec3_t p[4], vec2_t uv[4], const qboolean stick, cons
 		i++;
 	}
 
-	ap_args.num_verts = 4;
+	ap_args.numVerts = 4;
 	VectorCopy(vel, ap_args.vel);
 	VectorCopy(accel, ap_args.accel);
 
@@ -676,11 +676,11 @@ Break glass with fancy method
 */
 void CG_GlassShatter(const int entnum, vec3_t dmg_pt, vec3_t dmg_dir, const float dmg_radius, const int max_shards)
 {
-	if (cgs.inlineDrawModel[cg_entities[entnum].currentState.model_index])
+	if (cgs.inlineDrawModel[cg_entities[entnum].currentState.modelIndex])
 	{
 		vec3_t normal;
 		vec3_t verts[4];
-		trap->R_GetBModelVerts(cgs.inlineDrawModel[cg_entities[entnum].currentState.model_index], verts, normal);
+		trap->R_GetBModelVerts(cgs.inlineDrawModel[cg_entities[entnum].currentState.modelIndex], verts, normal);
 		CG_DoGlass(verts, dmg_pt, dmg_dir, dmg_radius, max_shards);
 	}
 	//otherwise something awful has happened.
@@ -1085,7 +1085,7 @@ CG_MakeExplosion
 ====================
 */
 localEntity_t* CG_MakeExplosion(vec3_t origin, vec3_t dir,
-	const qhandle_t h_model, const int num_frames, const qhandle_t shader,
+	const qhandle_t h_model, const int numFrames, const qhandle_t shader,
 	const int msec, const qboolean is_sprite, const float scale, const int flags)
 {
 	vec3_t new_origin;
@@ -1135,8 +1135,8 @@ localEntity_t* CG_MakeExplosion(vec3_t origin, vec3_t dir,
 	ex->refEntity.shaderTime = ex->startTime / 1000.0f;
 
 	ex->refEntity.hModel = h_model;
-	ex->refEntity.custom_shader = shader;
-	ex->lifeRate = (float)num_frames / msec;
+	ex->refEntity.customShader = shader;
+	ex->lifeRate = (float)numFrames / msec;
 	ex->leFlags = flags;
 
 	//Scale the explosion

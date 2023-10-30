@@ -59,9 +59,9 @@ Returns CULL_IN, CULL_CLIP, or CULL_OUT
 int R_CullLocalBox(const vec3_t bounds[2])
 {
 	int i;
-	vec3_t transformed[8]{};
-	float dists[8]{};
-	vec3_t v{};
+	vec3_t transformed[8];
+	float dists[8];
+	vec3_t v;
 	int back;
 
 	if (r_nocull->integer == 1)
@@ -689,13 +689,13 @@ void R_PlaneForSurface(surfaceType_t* surfType, cplane_t* plane)
 =================
 R_GetPortalOrientation
 
-entity_num is the entity that the portal surface is a part of, which may
+entityNum is the entity that the portal surface is a part of, which may
 be moving and rotating.
 
 Returns qtrue if it should be mirrored
 =================
 */
-qboolean R_GetPortalOrientations(const drawSurf_t* drawSurf, const int entity_num,
+qboolean R_GetPortalOrientations(const drawSurf_t* drawSurf, const int entityNum,
 	orientation_t* surface, orientation_t* camera,
 	vec3_t pvsOrigin, qboolean* mirror)
 {
@@ -705,10 +705,10 @@ qboolean R_GetPortalOrientations(const drawSurf_t* drawSurf, const int entity_nu
 	R_PlaneForSurface(drawSurf->surface, &originalPlane);
 
 	// rotate the plane if necessary
-	if (entity_num != REFENTITYNUM_WORLD)
+	if (entityNum != REFENTITYNUM_WORLD)
 	{
-		tr.currentEntityNum = entity_num;
-		tr.currentEntity = &tr.refdef.entities[entity_num];
+		tr.currentEntityNum = entityNum;
+		tr.currentEntity = &tr.refdef.entities[entityNum];
 
 		// get the orientation of the entity
 		R_RotateForEntity(tr.currentEntity, &tr.viewParms, &tr.ori);
@@ -813,7 +813,7 @@ qboolean R_GetPortalOrientations(const drawSurf_t* drawSurf, const int entity_nu
 	return qfalse;
 }
 
-static qboolean IsMirror(const drawSurf_t* drawSurf, const int entity_num)
+static qboolean IsMirror(const drawSurf_t* drawSurf, const int entityNum)
 {
 	cplane_t originalPlane, plane;
 
@@ -821,10 +821,10 @@ static qboolean IsMirror(const drawSurf_t* drawSurf, const int entity_num)
 	R_PlaneForSurface(drawSurf->surface, &originalPlane);
 
 	// rotate the plane if necessary
-	if (entity_num != REFENTITYNUM_WORLD)
+	if (entityNum != REFENTITYNUM_WORLD)
 	{
-		tr.currentEntityNum = entity_num;
-		tr.currentEntity = &tr.refdef.entities[entity_num];
+		tr.currentEntityNum = entityNum;
+		tr.currentEntity = &tr.refdef.entities[entityNum];
 
 		// get the orientation of the entity
 		R_RotateForEntity(tr.currentEntity, &tr.viewParms, &tr.ori);
@@ -880,7 +880,7 @@ static qboolean IsMirror(const drawSurf_t* drawSurf, const int entity_num)
 static qboolean SurfIsOffscreen(const drawSurf_t* drawSurf, vec4_t clipDest[128])
 {
 	float shortest = 1000000000;
-	int entity_num;
+	int entityNum;
 	shader_t* shader;
 	int fogNum;
 	int dlighted;
@@ -890,13 +890,13 @@ static qboolean SurfIsOffscreen(const drawSurf_t* drawSurf, vec4_t clipDest[128]
 
 	R_RotateForViewer();
 
-	R_DecomposeSort(drawSurf->sort, &entity_num, &shader, &fogNum, &dlighted);
+	R_DecomposeSort(drawSurf->sort, &entityNum, &shader, &fogNum, &dlighted);
 	RB_BeginSurface(shader, fogNum);
 	rb_surfaceTable[*drawSurf->surface](drawSurf->surface);
 
-	assert(tess.num_vertexes < 128);
+	assert(tess.numVertexes < 128);
 
-	for (i = 0; i < tess.num_vertexes; i++)
+	for (i = 0; i < tess.numVertexes; i++)
 	{
 		vec4_t eye;
 		vec4_t clip;
@@ -930,9 +930,9 @@ static qboolean SurfIsOffscreen(const drawSurf_t* drawSurf, vec4_t clipDest[128]
 	// based on vertex distance isn't 100% correct (we should be checking for
 	// range to the surface), but it's good enough for the types of portals
 	// we have in the game right now.
-	int numTriangles = tess.num_indexes / 3;
+	int numTriangles = tess.numIndexes / 3;
 
-	for (i = 0; i < tess.num_indexes; i += 3)
+	for (i = 0; i < tess.numIndexes; i += 3)
 	{
 		vec3_t normal;
 		// ReSharper disable once CppEntityAssignedButNoRead
@@ -958,7 +958,7 @@ static qboolean SurfIsOffscreen(const drawSurf_t* drawSurf, vec4_t clipDest[128]
 
 	// mirrors can early out at this point, since we don't do a fade over distance
 	// with them (although we could)
-	if (IsMirror(drawSurf, entity_num))
+	if (IsMirror(drawSurf, entityNum))
 	{
 		return qfalse;
 	}
@@ -980,7 +980,7 @@ Returns qtrue if another view has been rendered
 */
 int recursivePortalCount;
 
-qboolean R_MirrorViewBySurface(drawSurf_t* drawSurf, int entity_num)
+qboolean R_MirrorViewBySurface(drawSurf_t* drawSurf, int entityNum)
 {
 	vec4_t clipDest[128];
 	viewParms_t newParms;
@@ -1010,7 +1010,7 @@ qboolean R_MirrorViewBySurface(drawSurf_t* drawSurf, int entity_num)
 
 	newParms = tr.viewParms;
 	newParms.isPortal = qtrue;
-	if (!R_GetPortalOrientations(drawSurf, entity_num, &surface, &camera,
+	if (!R_GetPortalOrientations(drawSurf, entityNum, &surface, &camera,
 		newParms.pvsOrigin, &newParms.isMirror))
 	{
 		return qfalse; // bad portal, no portalentity
@@ -1188,12 +1188,12 @@ void R_AddDrawSurf(const surfaceType_t* surface, const shader_t* shader, int fog
 R_DecomposeSort
 =================
 */
-void R_DecomposeSort(const unsigned sort, int* entity_num, shader_t** shader,
+void R_DecomposeSort(const unsigned sort, int* entityNum, shader_t** shader,
 	int* fogNum, int* dlightMap)
 {
 	*fogNum = sort >> QSORT_FOGNUM_SHIFT & 31;
 	*shader = tr.sortedShaders[sort >> QSORT_SHADERNUM_SHIFT & MAX_SHADERS - 1];
-	*entity_num = sort >> QSORT_REFENTITYNUM_SHIFT & REFENTITYNUM_MASK;
+	*entityNum = sort >> QSORT_REFENTITYNUM_SHIFT & REFENTITYNUM_MASK;
 	*dlightMap = sort & 3;
 }
 
@@ -1206,7 +1206,7 @@ void R_SortDrawSurfs(drawSurf_t* drawSurfs, int numDrawSurfs)
 {
 	shader_t* shader;
 	int fogNum;
-	int entity_num;
+	int entityNum;
 	int dlighted;
 
 	// it is possible for some views to not have any surfaces
@@ -1224,7 +1224,7 @@ void R_SortDrawSurfs(drawSurf_t* drawSurfs, int numDrawSurfs)
 	// may cause another view to be rendered first
 	for (int i = 0; i < numDrawSurfs; i++)
 	{
-		R_DecomposeSort((drawSurfs + i)->sort, &entity_num, &shader, &fogNum, &dlighted);
+		R_DecomposeSort((drawSurfs + i)->sort, &entityNum, &shader, &fogNum, &dlighted);
 
 		if (shader->sort > SS_PORTAL)
 		{
@@ -1238,7 +1238,7 @@ void R_SortDrawSurfs(drawSurf_t* drawSurfs, int numDrawSurfs)
 		}
 
 		// if the mirror was completely clipped away, we may need to check another surface
-		if (R_MirrorViewBySurface(drawSurfs + i, entity_num))
+		if (R_MirrorViewBySurface(drawSurfs + i, entityNum))
 		{
 			// this is a debug option to see exactly what is being mirrored
 			if (r_portalOnly->integer)
@@ -1317,7 +1317,7 @@ void R_AddEntitySurfaces()
 			{
 				continue;
 			}
-			shader = R_GetShaderByHandle(ent->e.custom_shader);
+			shader = R_GetShaderByHandle(ent->e.customShader);
 			R_AddDrawSurf(&entitySurface, shader, R_SpriteFogNum(ent), 0);
 			break;
 
@@ -1325,14 +1325,14 @@ void R_AddEntitySurfaces()
 			// we must set up parts of tr.or for model culling
 			R_RotateForEntity(ent, &tr.viewParms, &tr.ori);
 
-			tr.current_model = R_GetModelByHandle(ent->e.hModel);
-			if (!tr.current_model)
+			tr.currentModel = R_GetModelByHandle(ent->e.hModel);
+			if (!tr.currentModel)
 			{
 				R_AddDrawSurf(&entitySurface, tr.defaultShader, 0, 0);
 			}
 			else
 			{
-				switch (tr.current_model->type)
+				switch (tr.currentModel->type)
 				{
 				case MOD_MESH:
 					R_AddMD3Surfaces(ent);
@@ -1405,7 +1405,7 @@ void R_GenerateDrawSurfs()
 R_DebugPolygon
 ================
 */
-void R_DebugPolygon(const int color, const int num_points, const float* points)
+void R_DebugPolygon(const int color, const int numPoints, const float* points)
 {
 	int i;
 
@@ -1415,7 +1415,7 @@ void R_DebugPolygon(const int color, const int num_points, const float* points)
 
 	qglColor3f(color & 1, color >> 1 & 1, color >> 2 & 1);
 	qglBegin(GL_POLYGON);
-	for (i = 0; i < num_points; i++)
+	for (i = 0; i < numPoints; i++)
 	{
 		qglVertex3fv(points + i * 3);
 	}
@@ -1426,7 +1426,7 @@ void R_DebugPolygon(const int color, const int num_points, const float* points)
 	qglDepthRange(0, 0);
 	qglColor3f(1, 1, 1);
 	qglBegin(GL_POLYGON);
-	for (i = 0; i < num_points; i++)
+	for (i = 0; i < numPoints; i++)
 	{
 		qglVertex3fv(points + i * 3);
 	}

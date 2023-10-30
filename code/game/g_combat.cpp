@@ -971,13 +971,13 @@ void G_StartMatrixEffect(const gentity_t* ent, const int me_flags = 0, const int
 	{
 		G_SetOrigin(matrix, ent->currentOrigin);
 		gi.linkentity(matrix);
-		matrix->s.otherentity_num = ent->s.number;
+		matrix->s.otherentityNum = ent->s.number;
 		matrix->e_clThinkFunc = clThinkF_CG_MatrixEffect;
 		matrix->s.eType = ET_THINKER;
 		matrix->svFlags |= SVF_BROADCAST; // Broadcast to all clients
 		matrix->s.time = level.time;
 		matrix->s.eventParm = length;
-		matrix->s.bolt_info = me_flags;
+		matrix->s.boltInfo = me_flags;
 		matrix->s.time2 = spin_time;
 		matrix->s.angles2[0] = time_scale;
 	}
@@ -997,13 +997,13 @@ void G_StartStasisEffect(const gentity_t* ent, const int me_flags = 0, const int
 	{
 		G_SetOrigin(stasis, ent->currentOrigin);
 		gi.linkentity(stasis);
-		stasis->s.otherentity_num = ent->s.number;
+		stasis->s.otherentityNum = ent->s.number;
 		stasis->e_clThinkFunc = clThinkF_CG_StasisEffect;
 		stasis->s.eType = ET_THINKER;
 		stasis->svFlags |= SVF_BROADCAST; // Broadcast to all clients
 		stasis->s.time = level.time;
 		stasis->s.eventParm = length;
-		stasis->s.bolt_info = me_flags;
+		stasis->s.boltInfo = me_flags;
 		stasis->s.time2 = spin_time;
 		stasis->s.angles2[0] = time_scale;
 	}
@@ -1039,13 +1039,13 @@ void G_StartNextItemEffect(gentity_t* ent, const int me_flags = 0, const int len
 	{
 		G_SetOrigin(stasis, ent->currentOrigin);
 		gi.linkentity(stasis);
-		stasis->s.otherentity_num = ent->s.number;
+		stasis->s.otherentityNum = ent->s.number;
 		stasis->e_clThinkFunc = clThinkF_CG_StasisEffect;
 		stasis->s.eType = ET_THINKER;
 		stasis->svFlags |= SVF_BROADCAST; // Broadcast to all clients
 		stasis->s.time = level.time;
 		stasis->s.eventParm = length;
-		stasis->s.bolt_info = me_flags;
+		stasis->s.boltInfo = me_flags;
 		stasis->s.time2 = spin_time;
 		stasis->s.angles2[0] = time_scale;
 		G_AddEvent(ent, EV_GENERAL_SOUND, ItemActivateSound);
@@ -1225,16 +1225,16 @@ qboolean G_GetHitLocFromSurfName(gentity_t* ent, const char* surf_name, int* hit
 		*hit_loc = HL_WAIST;
 		if (ent->client != nullptr && ent->ghoul2.size())
 		{
-			mdxaBone_t bolt_matrix;
+			mdxaBone_t boltMatrix;
 			vec3_t tag_org, angles;
 
 			VectorSet(angles, 0, ent->currentAngles[YAW], 0);
 			if (ent->kneeLBolt >= 0)
 			{
 				gi.G2API_GetBoltMatrix(ent->ghoul2, ent->playerModel, ent->kneeLBolt,
-					&bolt_matrix, angles, ent->currentOrigin,
+					&boltMatrix, angles, ent->currentOrigin,
 					actual_time, nullptr, ent->s.modelScale);
-				gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, tag_org);
+				gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, tag_org);
 				if (DistanceSquared(point, tag_org) < 100)
 				{
 					//actually hit the knee
@@ -1246,9 +1246,9 @@ qboolean G_GetHitLocFromSurfName(gentity_t* ent, const char* surf_name, int* hit
 				if (ent->kneeRBolt >= 0)
 				{
 					gi.G2API_GetBoltMatrix(ent->ghoul2, ent->playerModel, ent->kneeRBolt,
-						&bolt_matrix, angles, ent->currentOrigin,
+						&boltMatrix, angles, ent->currentOrigin,
 						actual_time, nullptr, ent->s.modelScale);
-					gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, tag_org);
+					gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, tag_org);
 					if (DistanceSquared(point, tag_org) < 100)
 					{
 						//actually hit the knee
@@ -1401,7 +1401,7 @@ qboolean G_GetHitLocFromSurfName(gentity_t* ent, const char* surf_name, int* hit
 		*hit_loc = HL_ARM_RT;
 		if (ent->client != nullptr && ent->ghoul2.size())
 		{
-			mdxaBone_t bolt_matrix;
+			mdxaBone_t boltMatrix;
 			vec3_t angles;
 
 			VectorSet(angles, 0, ent->currentAngles[YAW], 0);
@@ -1409,9 +1409,9 @@ qboolean G_GetHitLocFromSurfName(gentity_t* ent, const char* surf_name, int* hit
 			{
 				vec3_t tag_org;
 				gi.G2API_GetBoltMatrix(ent->ghoul2, ent->playerModel, ent->handRBolt,
-					&bolt_matrix, angles, ent->currentOrigin,
+					&boltMatrix, angles, ent->currentOrigin,
 					actual_time, nullptr, ent->s.modelScale);
-				gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, tag_org);
+				gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, tag_org);
 				if (DistanceSquared(point, tag_org) < 256)
 				{
 					//actually hit the hand
@@ -1425,7 +1425,7 @@ qboolean G_GetHitLocFromSurfName(gentity_t* ent, const char* surf_name, int* hit
 		*hit_loc = HL_ARM_LT;
 		if (ent->client != nullptr && ent->ghoul2.size())
 		{
-			mdxaBone_t bolt_matrix;
+			mdxaBone_t boltMatrix;
 			vec3_t angles;
 
 			VectorSet(angles, 0, ent->currentAngles[YAW], 0);
@@ -1433,9 +1433,9 @@ qboolean G_GetHitLocFromSurfName(gentity_t* ent, const char* surf_name, int* hit
 			{
 				vec3_t tag_org;
 				gi.G2API_GetBoltMatrix(ent->ghoul2, ent->playerModel, ent->handLBolt,
-					&bolt_matrix, angles, ent->currentOrigin,
+					&boltMatrix, angles, ent->currentOrigin,
 					actual_time, nullptr, ent->s.modelScale);
-				gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, tag_org);
+				gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, tag_org);
 				if (DistanceSquared(point, tag_org) < 256)
 				{
 					//actually hit the hand
@@ -1449,7 +1449,7 @@ qboolean G_GetHitLocFromSurfName(gentity_t* ent, const char* surf_name, int* hit
 		*hit_loc = HL_LEG_RT;
 		if (ent->client != nullptr && ent->ghoul2.size())
 		{
-			mdxaBone_t bolt_matrix;
+			mdxaBone_t boltMatrix;
 			vec3_t angles;
 
 			VectorSet(angles, 0, ent->currentAngles[YAW], 0);
@@ -1457,9 +1457,9 @@ qboolean G_GetHitLocFromSurfName(gentity_t* ent, const char* surf_name, int* hit
 			{
 				vec3_t tag_org;
 				gi.G2API_GetBoltMatrix(ent->ghoul2, ent->playerModel, ent->footRBolt,
-					&bolt_matrix, angles, ent->currentOrigin,
+					&boltMatrix, angles, ent->currentOrigin,
 					actual_time, nullptr, ent->s.modelScale);
-				gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, tag_org);
+				gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, tag_org);
 				if (DistanceSquared(point, tag_org) < 100)
 				{
 					//actually hit the foot
@@ -1473,7 +1473,7 @@ qboolean G_GetHitLocFromSurfName(gentity_t* ent, const char* surf_name, int* hit
 		*hit_loc = HL_LEG_LT;
 		if (ent->client != nullptr && ent->ghoul2.size())
 		{
-			mdxaBone_t bolt_matrix;
+			mdxaBone_t boltMatrix;
 			vec3_t angles;
 
 			VectorSet(angles, 0, ent->currentAngles[YAW], 0);
@@ -1481,9 +1481,9 @@ qboolean G_GetHitLocFromSurfName(gentity_t* ent, const char* surf_name, int* hit
 			{
 				vec3_t tag_org;
 				gi.G2API_GetBoltMatrix(ent->ghoul2, ent->playerModel, ent->footLBolt,
-					&bolt_matrix, angles, ent->currentOrigin,
+					&boltMatrix, angles, ent->currentOrigin,
 					actual_time, nullptr, ent->s.modelScale);
-				gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, tag_org);
+				gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, tag_org);
 				if (DistanceSquared(point, tag_org) < 100)
 				{
 					//actually hit the foot
@@ -1588,14 +1588,14 @@ qboolean G_GetHitLocFromSurfName(gentity_t* ent, const char* surf_name, int* hit
 					const int tag_bolt = gi.G2API_AddBolt(&ent->ghoul2[ent->playerModel], tag_name);
 					if (tag_bolt != -1)
 					{
-						mdxaBone_t bolt_matrix;
+						mdxaBone_t boltMatrix;
 						vec3_t tag_org, tag_dir, angles;
 						VectorSet(angles, 0, ent->currentAngles[YAW], 0);
 						gi.G2API_GetBoltMatrix(ent->ghoul2, ent->playerModel, tag_bolt,
-							&bolt_matrix, angles, ent->currentOrigin,
+							&boltMatrix, angles, ent->currentOrigin,
 							actual_time, nullptr, ent->s.modelScale);
-						gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, tag_org);
-						gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, NEGATIVE_Y, tag_dir);
+						gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, tag_org);
+						gi.G2API_GiveMeVectorFromMatrix(boltMatrix, NEGATIVE_Y, tag_dir);
 						if (DistanceSquared(point, tag_org) < 256)
 						{
 							//hit close
@@ -2206,14 +2206,14 @@ void G_RemoveWeaponsWithLimbs(gentity_t* ent, gentity_t* limb, const int limb_an
 					if (!ent->client->ps.saberInFlight)
 					{
 						//saberent isn't flying through the air, it's in-hand and attached to player
-						if (ent->client->ps.saberentity_num != ENTITYNUM_NONE && ent->client->ps.saberentity_num > 0)
+						if (ent->client->ps.saberentityNum != ENTITYNUM_NONE && ent->client->ps.saberentityNum > 0)
 						{
 							//remove the owner ent's saber model and entity
-							if (g_entities[ent->client->ps.saberentity_num].inuse)
+							if (g_entities[ent->client->ps.saberentityNum].inuse)
 							{
-								G_FreeEntity(&g_entities[ent->client->ps.saberentity_num]);
+								G_FreeEntity(&g_entities[ent->client->ps.saberentityNum]);
 							}
-							ent->client->ps.saberentity_num = ENTITYNUM_NONE;
+							ent->client->ps.saberentityNum = ENTITYNUM_NONE;
 						}
 					}
 				}
@@ -2330,7 +2330,7 @@ static qboolean G_Dismember(gentity_t* ent, vec3_t point,
 		const animation_t* animations = level.knownAnimFileSets[ent->client->clientInfo.animFileIndex].animations;
 		//play the proper dismember anim on the limb
 		gi.G2API_SetBoneAnim(&limb->ghoul2[limb->playerModel], nullptr, animations[limb_anim].firstFrame,
-			animations[limb_anim].num_frames + animations[limb_anim].firstFrame,
+			animations[limb_anim].numFrames + animations[limb_anim].firstFrame,
 			BONE_ANIM_OVERRIDE_FREEZE, 1, cg.time, -1, -1);
 	}
 	if (rotate_bone)
@@ -2342,14 +2342,14 @@ static qboolean G_Dismember(gentity_t* ent, vec3_t point,
 		if (new_bolt != -1)
 		{
 			const int actual_time = cg.time ? cg.time : level.time;
-			mdxaBone_t bolt_matrix;
+			mdxaBone_t boltMatrix;
 			vec3_t angles;
 
 			VectorSet(angles, 0, ent->currentAngles[YAW], 0);
 			gi.G2API_GetBoltMatrix(ent->ghoul2, ent->playerModel, new_bolt,
-				&bolt_matrix, angles, ent->currentOrigin,
+				&boltMatrix, angles, ent->currentOrigin,
 				actual_time, nullptr, ent->s.modelScale);
-			gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, limb->s.origin);
+			gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, limb->s.origin);
 			G_SetOrigin(limb, limb->s.origin);
 			VectorCopy(limb->s.origin, limb->s.pos.trBase);
 		}
@@ -4483,7 +4483,7 @@ int G_CheckLedgeDive(gentity_t* self, const float check_dist, const vec3_t check
 		VectorClear(self->client->ps.velocity);
 		g_throw(self, fall_forward_dir, 85);
 		self->client->ps.velocity[2] = 100;
-		self->client->ps.groundentity_num = ENTITYNUM_NONE;
+		self->client->ps.groundentityNum = ENTITYNUM_NONE;
 	}
 	else if (try_opposite)
 	{
@@ -4494,7 +4494,7 @@ int G_CheckLedgeDive(gentity_t* self, const float check_dist, const vec3_t check
 			VectorClear(self->client->ps.velocity);
 			g_throw(self, fall_forward_dir, 85);
 			self->client->ps.velocity[2] = 100;
-			self->client->ps.groundentity_num = ENTITYNUM_NONE;
+			self->client->ps.groundentityNum = ENTITYNUM_NONE;
 		}
 	}
 	if (!cliff_fall && try_perp)
@@ -4790,7 +4790,7 @@ void player_die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, cons
 
 			if (self->owner)
 			{
-				self->owner->s.frame = self->owner->start_frame = self->owner->end_frame = 0;
+				self->owner->s.frame = self->owner->startFrame = self->owner->endFrame = 0;
 				self->owner->svFlags &= ~SVF_ANIMATING;
 			}
 
@@ -4803,7 +4803,7 @@ void player_die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, cons
 			|| self->client->NPC_class == CLASS_MANDO
 			|| self->client->NPC_class == CLASS_ROCKETTROOPER)
 		{
-			if (self->client->moveType == MT_FLYSWIM || self->client->ps.groundentity_num == ENTITYNUM_NONE)
+			if (self->client->moveType == MT_FLYSWIM || self->client->ps.groundentityNum == ENTITYNUM_NONE)
 			{
 				jet_fly_stop(self);
 			}
@@ -4872,7 +4872,7 @@ void player_die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, cons
 	{
 		holding_saber = qtrue;
 	}
-	if (self->client && self->client->ps.saberentity_num != ENTITYNUM_NONE && self->client->ps.saberentity_num > 0)
+	if (self->client && self->client->ps.saberentityNum != ENTITYNUM_NONE && self->client->ps.saberentityNum > 0)
 	{
 		if (self->client->ps.saberInFlight)
 		{
@@ -4920,11 +4920,11 @@ void player_die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, cons
 			else
 			{
 				//just free it
-				if (g_entities[self->client->ps.saberentity_num].inuse)
+				if (g_entities[self->client->ps.saberentityNum].inuse)
 				{
-					G_FreeEntity(&g_entities[self->client->ps.saberentity_num]);
+					G_FreeEntity(&g_entities[self->client->ps.saberentityNum]);
 				}
-				self->client->ps.saberentity_num = ENTITYNUM_NONE;
+				self->client->ps.saberentityNum = ENTITYNUM_NONE;
 			}
 		}
 	}
@@ -4972,7 +4972,7 @@ void player_die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, cons
 			{
 				//what the hell, always do slow-mo when player dies
 				//FIXME: don't do this when crushed to death?
-				if (means_of_death == MOD_FALLING && self->client->ps.groundentity_num == ENTITYNUM_NONE)
+				if (means_of_death == MOD_FALLING && self->client->ps.groundentityNum == ENTITYNUM_NONE)
 				{
 					//falling to death, have not hit yet
 					G_StartMatrixEffect(self, MEF_NO_VERTBOB | MEF_HIT_GROUND_STOP | MEF_MULTI_SPIN, 10000, 0.25f);
@@ -5306,7 +5306,7 @@ void player_die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, cons
 		torsoAnim == BOTH_FALLDEATH1)
 	{
 		//FIXME: no good way to predict you're going to fall to your death... need falling bushes/triggers?
-		if (self->client->ps.groundentity_num == ENTITYNUM_NONE //in the air
+		if (self->client->ps.groundentityNum == ENTITYNUM_NONE //in the air
 			&& self->client->ps.velocity[2] < 0 //falling
 			&& self->client->ps.legsAnim != BOTH_FALLDEATH1INAIR //not already in falling loop
 			&& self->client->ps.torsoAnim != BOTH_FALLDEATH1INAIR) //not already in falling loop
@@ -5884,7 +5884,7 @@ void PlayerPain(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, cons
 				{
 					//strong attacks and spins cannot be interrupted by pain, no pain when in knockdown
 					int parts;
-					if (self->client->ps.groundentity_num != ENTITYNUM_NONE &&
+					if (self->client->ps.groundentityNum != ENTITYNUM_NONE &&
 						!PM_SpinningSaberAnim(self->client->ps.legsAnim) &&
 						!PM_FlippingAnim(self->client->ps.legsAnim) &&
 						!PM_InSpecialJump(self->client->ps.legsAnim) &&
@@ -6430,7 +6430,7 @@ void G_CheckKnockdown(gentity_t* targ, gentity_t* attacker, vec3_t new_dir, cons
 		return;
 	}
 
-	if (targ->client->ps.groundentity_num == ENTITYNUM_NONE)
+	if (targ->client->ps.groundentityNum == ENTITYNUM_NONE)
 	{
 		//already in air
 		return;
@@ -6508,7 +6508,7 @@ void G_CheckLightningKnockdown(gentity_t* targ, gentity_t* attacker, vec3_t new_
 		return;
 	}
 
-	if (targ->client->ps.groundentity_num == ENTITYNUM_NONE)
+	if (targ->client->ps.groundentityNum == ENTITYNUM_NONE)
 	{
 		//already in air
 		return;
@@ -7888,8 +7888,8 @@ void G_Damage(gentity_t* targ, gentity_t* inflictor, gentity_t* attacker, const 
 
 				if (!test_trace.startsolid &&
 					!test_trace.allsolid &&
-					test_trace.entity_num == targ->s.number &&
-					test_trace.G2CollisionMap[0].mentity_num != -1)
+					test_trace.entityNum == targ->s.number &&
+					test_trace.G2CollisionMap[0].mEntityNum != -1)
 				{
 					G_PlayEffect("world/acid_fizz", test_trace.G2CollisionMap[0].mCollisionPosition);
 				}
@@ -8030,7 +8030,7 @@ void G_Damage(gentity_t* targ, gentity_t* inflictor, gentity_t* attacker, const 
 					//play the proper dismember anim on the limb
 					gi.G2API_SetBoneAnim(&limb->ghoul2[limb->playerModel], nullptr,
 						animations[BOTH_A1_BL_TR].firstFrame,
-						animations[BOTH_A1_BL_TR].num_frames + animations[BOTH_A1_BL_TR].firstFrame,
+						animations[BOTH_A1_BL_TR].numFrames + animations[BOTH_A1_BL_TR].firstFrame,
 						BONE_ANIM_OVERRIDE_FREEZE, 1, level.time, -1, -1);
 
 					// Check For Start In Solid
@@ -8218,7 +8218,7 @@ void G_Damage(gentity_t* targ, gentity_t* inflictor, gentity_t* attacker, const 
 			vec3_t vec3;
 			// Send off an event to show a shield shell on the player, pointing in the right direction.
 			ev_ent = G_TempEntity(targ->currentOrigin, EV_SHIELD_HIT);
-			ev_ent->s.otherentity_num = targ->s.number;
+			ev_ent->s.otherentityNum = targ->s.number;
 			ev_ent->s.eventParm = DirToByte(vec3);
 			ev_ent->s.time2 = shield_absorbed;
 		}
@@ -8667,7 +8667,7 @@ void G_DamageFromKiller(gentity_t* p_ent, const gentity_t* p_veh_ent, gentity_t*
 					//fake up the inflictor
 					temp_inflictor = qtrue;
 					inflictor->classname = "vehicle_proj";
-					inflictor->s.otherentity_num2 = p_veh_ent->client->otherKillerVehWeapon - 1;
+					inflictor->s.otherentityNum2 = p_veh_ent->client->otherKillerVehWeapon - 1;
 					inflictor->s.weapon = p_veh_ent->client->otherKillerWeaponType;
 				}
 			}
@@ -8717,8 +8717,8 @@ qboolean CanDamage(const gentity_t* targ, const vec3_t origin)
 
 	VectorCopy(midpoint, dest);
 	gi.trace(&tr, origin, vec3_origin, vec3_origin, dest, ENTITYNUM_NONE, MASK_SOLID, static_cast<EG2_Collision>(0), 0);
-	if (tr.fraction == 1.0 && cant_hit_ent || tr.entity_num == targ->s.number)
-		// if we also test the entity_num's we can bust up bbrushes better!
+	if (tr.fraction == 1.0 && cant_hit_ent || tr.entityNum == targ->s.number)
+		// if we also test the entityNum's we can bust up bbrushes better!
 		return qtrue;
 
 	// this should probably check in the plane of projection,
@@ -8727,28 +8727,28 @@ qboolean CanDamage(const gentity_t* targ, const vec3_t origin)
 	dest[0] += 15.0;
 	dest[1] += 15.0;
 	gi.trace(&tr, origin, vec3_origin, vec3_origin, dest, ENTITYNUM_NONE, MASK_SOLID, static_cast<EG2_Collision>(0), 0);
-	if (tr.fraction == 1.0 && cant_hit_ent || tr.entity_num == targ->s.number)
+	if (tr.fraction == 1.0 && cant_hit_ent || tr.entityNum == targ->s.number)
 		return qtrue;
 
 	VectorCopy(midpoint, dest);
 	dest[0] += 15.0;
 	dest[1] -= 15.0;
 	gi.trace(&tr, origin, vec3_origin, vec3_origin, dest, ENTITYNUM_NONE, MASK_SOLID, static_cast<EG2_Collision>(0), 0);
-	if (tr.fraction == 1.0 && cant_hit_ent || tr.entity_num == targ->s.number)
+	if (tr.fraction == 1.0 && cant_hit_ent || tr.entityNum == targ->s.number)
 		return qtrue;
 
 	VectorCopy(midpoint, dest);
 	dest[0] -= 15.0;
 	dest[1] += 15.0;
 	gi.trace(&tr, origin, vec3_origin, vec3_origin, dest, ENTITYNUM_NONE, MASK_SOLID, static_cast<EG2_Collision>(0), 0);
-	if (tr.fraction == 1.0 && cant_hit_ent || tr.entity_num == targ->s.number)
+	if (tr.fraction == 1.0 && cant_hit_ent || tr.entityNum == targ->s.number)
 		return qtrue;
 
 	VectorCopy(midpoint, dest);
 	dest[0] -= 15.0;
 	dest[1] -= 15.0;
 	gi.trace(&tr, origin, vec3_origin, vec3_origin, dest, ENTITYNUM_NONE, MASK_SOLID, static_cast<EG2_Collision>(0), 0);
-	if (tr.fraction == 1.0 && cant_hit_ent || tr.entity_num == targ->s.number)
+	if (tr.fraction == 1.0 && cant_hit_ent || tr.entityNum == targ->s.number)
 		return qtrue;
 
 	return qfalse;

@@ -303,15 +303,15 @@ void CMod_LoadBrushes(const lump_t* l, clipMap_t& cm)
 		out->sides = cm.brushsides + LittleLong in->firstSide;
 		out->numsides = LittleLong in->numSides;
 
-		out->shader_num = LittleLong in->shader_num;
-		if (out->shader_num < 0 || out->shader_num >= cm.numShaders)
+		out->shaderNum = LittleLong in->shaderNum;
+		if (out->shaderNum < 0 || out->shaderNum >= cm.numShaders)
 		{
-			Com_Error(ERR_DROP, "CMod_LoadBrushes: bad shader_num: %i", out->shader_num);
+			Com_Error(ERR_DROP, "CMod_LoadBrushes: bad shaderNum: %i", out->shaderNum);
 		}
-		out->contents = cm.shaders[out->shader_num].contentFlags;
+		out->contents = cm.shaders[out->shaderNum].contentFlags;
 
 		//JK2 HACK: for water that cuts vis but is not solid!!! (used on yavin swamp)
-		if (com_outcast->integer && cm.shaders[out->shader_num].surfaceFlags & SURF_SLICK)
+		if (com_outcast->integer && cm.shaders[out->shaderNum].surfaceFlags & SURF_SLICK)
 		{
 			out->contents &= ~CONTENTS_SOLID;
 		}
@@ -375,7 +375,7 @@ void CMod_LoadPlanes(const lump_t* l, clipMap_t& cm)
 	if (count < 1)
 		Com_Error(ERR_DROP, "Map with no planes");
 	cm.planes = static_cast<cplane_s*>(Z_Malloc((BOX_PLANES + count) * sizeof * cm.planes, TAG_BSP, qfalse));
-	cm.num_planes = count;
+	cm.numPlanes = count;
 
 	cplane_t* out = cm.planes;
 
@@ -464,12 +464,12 @@ void CMod_LoadBrushSides(const lump_t* l, clipMap_t& cm)
 	{
 		const int num = in->planeNum;
 		out->plane = &cm.planes[num];
-		out->shader_num = LittleLong in->shader_num;
-		if (out->shader_num < 0 || out->shader_num >= cm.numShaders)
+		out->shaderNum = LittleLong in->shaderNum;
+		if (out->shaderNum < 0 || out->shaderNum >= cm.numShaders)
 		{
-			Com_Error(ERR_DROP, "CMod_LoadBrushSides: bad shader_num: %i", out->shader_num);
+			Com_Error(ERR_DROP, "CMod_LoadBrushSides: bad shaderNum: %i", out->shaderNum);
 		}
-		//		out->surfaceFlags = cm.shaders[out->shader_num].surfaceFlags;
+		//		out->surfaceFlags = cm.shaders[out->shaderNum].surfaceFlags;
 	}
 }
 
@@ -586,11 +586,11 @@ void CMod_LoadPatches(const lump_t* surfs, const lump_t* verts, clipMap_t& cm)
 			points[j][2] = LittleFloat dv_p->xyz[2];
 		}
 
-		const int shader_num = in->shader_num;
-		patch->contents = cm.shaders[shader_num].contentFlags;
+		const int shaderNum = in->shaderNum;
+		patch->contents = cm.shaders[shaderNum].contentFlags;
 		CM_OrOfAllContentsFlagsInMap |= patch->contents;
 
-		patch->surfaceFlags = cm.shaders[shader_num].surfaceFlags;
+		patch->surfaceFlags = cm.shaders[shaderNum].surfaceFlags;
 
 		// create the internal facet structure
 		patch->pc = CM_GeneratePatchCollide(width, height, points);
@@ -1028,7 +1028,7 @@ can just be stored out and get a proper clipping hull structure.
 */
 void CM_InitBoxHull()
 {
-	box_planes = &cmg.planes[cmg.num_planes];
+	box_planes = &cmg.planes[cmg.numPlanes];
 
 	box_brush = &cmg.brushes[cmg.numBrushes];
 	box_brush->numsides = 6;
@@ -1046,8 +1046,8 @@ void CM_InitBoxHull()
 
 		// brush sides
 		cbrushside_t* s = &cmg.brushsides[cmg.numBrushSides + i];
-		s->plane = cmg.planes + (cmg.num_planes + i * 2 + side);
-		s->shader_num = cmg.numShaders; //not storing flags directly anymore, so be sure to point @ a valid shader
+		s->plane = cmg.planes + (cmg.numPlanes + i * 2 + side);
+		s->shaderNum = cmg.numShaders; //not storing flags directly anymore, so be sure to point @ a valid shader
 
 		// planes
 		cplane_t* p = &box_planes[i * 2];
@@ -1138,10 +1138,10 @@ int CM_LoadSubBSP(const char* name, const qboolean clientload)
 	return count;
 }
 
-int CM_FindSubBSP(const int model_index)
+int CM_FindSubBSP(const int modelIndex)
 {
 	int count = cmg.numSubModels;
-	if (model_index < count)
+	if (modelIndex < count)
 	{
 		// belongs to the main bsp
 		return -1;
@@ -1150,7 +1150,7 @@ int CM_FindSubBSP(const int model_index)
 	for (int i = 0; i < NumSubBSP; i++)
 	{
 		count += SubBSP[i].numSubModels;
-		if (model_index < count)
+		if (modelIndex < count)
 		{
 			return i;
 		}

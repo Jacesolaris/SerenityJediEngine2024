@@ -70,15 +70,15 @@ bool CM_GenericBoxCollide(const vec3pair_t abounds, const vec3pair_t bbounds);
 void CM_CalcExtents(const vec3_t start, const vec3_t end, const struct traceWork_s* tw, vec3pair_t bounds);
 
 // cm_tag.c
-int CM_LerpTag(orientation_t* tag, clip_handle_t model, int start_frame, int end_frame,
+int CM_LerpTag(orientation_t* tag, clip_handle_t model, int startFrame, int endFrame,
 	float frac, const char* tagName);
 
 // cm_marks.c
-int CM_MarkFragments(int num_points, const vec3_t* points, const vec3_t projection,
+int CM_MarkFragments(int numPoints, const vec3_t* points, const vec3_t projection,
 	int maxPoints, vec3_t pointBuffer, int maxFragments, markFragment_t* fragmentBuffer);
 
 // cm_patch.c
-void CM_DrawDebugSurface(void (*drawPoly)(int color, int num_points, const float* points));
+void CM_DrawDebugSurface(void (*drawPoly)(int color, int numPoints, const float* points));
 
 // cm_trace.cpp
 bool CM_CullWorldBox(const cplane_t* frustum, const vec3pair_t bounds);

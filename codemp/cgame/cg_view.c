@@ -623,12 +623,12 @@ static void CG_UpdateThirdPersonCameraDamp(void)
 
 	if (trace.fraction < 1.0)
 	{
-		if (trace.entity_num < ENTITYNUM_WORLD &&
-			cg_entities[trace.entity_num].currentState.solid == SOLID_BMODEL &&
-			cg_entities[trace.entity_num].currentState.eType == ET_MOVER)
+		if (trace.entityNum < ENTITYNUM_WORLD &&
+			cg_entities[trace.entityNum].currentState.solid == SOLID_BMODEL &&
+			cg_entities[trace.entityNum].currentState.eType == ET_MOVER)
 		{
 			//get a different position for movers -rww
-			centity_t* mover = &cg_entities[trace.entity_num];
+			centity_t* mover = &cg_entities[trace.entityNum];
 
 			//this is absolutely hackiful, since we calc view values before we add packet ents and lerp,
 			//if we hit a mover we want to update its lerp pos and force it when we do the trace against
@@ -1489,7 +1489,7 @@ static void CG_DamageBlendBlob(void)
 	if (cg.snap->ps.damageType == 0)
 	{
 		//pure health
-		ent.custom_shader = cgs.media.viewPainShader;
+		ent.customShader = cgs.media.viewPainShader;
 		ent.shaderRGBA[0] = 180 * (1.0 - (float)t / maxTime);
 		ent.shaderRGBA[1] = 50 * (1.0 - (float)t / maxTime);
 		ent.shaderRGBA[2] = 50 * (1.0 - (float)t / maxTime);
@@ -1498,7 +1498,7 @@ static void CG_DamageBlendBlob(void)
 	else if (cg.snap->ps.damageType == 1)
 	{
 		//pure shields
-		ent.custom_shader = cgs.media.viewPainShader_Shields;
+		ent.customShader = cgs.media.viewPainShader_Shields;
 		ent.shaderRGBA[0] = 50 * (1.0 - (float)t / maxTime);
 		ent.shaderRGBA[1] = 180 * (1.0 - (float)t / maxTime);
 		ent.shaderRGBA[2] = 50 * (1.0 - (float)t / maxTime);
@@ -1507,7 +1507,7 @@ static void CG_DamageBlendBlob(void)
 	else
 	{
 		//shields and health
-		ent.custom_shader = cgs.media.viewPainShader_ShieldsAndHealth;
+		ent.customShader = cgs.media.viewPainShader_ShieldsAndHealth;
 		ent.shaderRGBA[0] = 180 * (1.0 - (float)t / maxTime);
 		ent.shaderRGBA[1] = 180 * (1.0 - (float)t / maxTime);
 		ent.shaderRGBA[2] = 50 * (1.0 - (float)t / maxTime);
@@ -2325,7 +2325,7 @@ static void CG_AddRefentForAutoMap(const centity_t* cent)
 	else
 	{
 		//then assume a standard indexed model
-		ent.hModel = cgs.game_models[cent->currentState.model_index];
+		ent.hModel = cgs.game_models[cent->currentState.modelIndex];
 	}
 
 	trap->R_AddRefEntityToScene(&ent);

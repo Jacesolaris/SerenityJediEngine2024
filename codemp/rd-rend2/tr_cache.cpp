@@ -98,7 +98,7 @@ qboolean CModelCacheManager::LoadFile(const char* pFileName, void** ppFileBuffer
 	return qtrue;
 }
 
-void* CModelCacheManager::Allocate(int i_size, void* pvDiskBuffer, const char* psModelFileName, qboolean* bAlreadyFound, memtag_t e_tag)
+void* CModelCacheManager::Allocate(int iSize, void* pvDiskBuffer, const char* psModelFileName, qboolean* bAlreadyFound, memtag_t eTag)
 {
 	int		iChecksum;
 	char	sModelName[MAX_QPATH];
@@ -119,14 +119,14 @@ void* CModelCacheManager::Allocate(int i_size, void* pvDiskBuffer, const char* p
 		/* Create this image. */
 
 		if (pvDiskBuffer)
-			Z_MorphMallocTag(pvDiskBuffer, e_tag);
+			Z_MorphMallocTag(pvDiskBuffer, eTag);
 		else
-			pvDiskBuffer = Z_Malloc(i_size, e_tag, qfalse);
+			pvDiskBuffer = Z_Malloc(iSize, eTag, qfalse);
 
 		files.emplace_back();
 		pFile = &files.back();
 		pFile->pDiskImage = pvDiskBuffer;
-		pFile->iAllocSize = i_size;
+		pFile->iAllocSize = iSize;
 		Q_strncpyz(pFile->path, sModelName, sizeof(pFile->path));
 
 		if (ri->FS_FileIsInPAK(sModelName, &iChecksum))
@@ -204,10 +204,10 @@ CModelCacheManager::AssetCache::iterator CModelCacheManager::FindAsset(const cha
 		});
 }
 
-qhandle_t CModelCacheManager::GetModelHandle(const char* file_name)
+qhandle_t CModelCacheManager::GetModelHandle(const char* fileName)
 {
 	char path[MAX_QPATH];
-	NormalizePath(path, file_name, sizeof(path));
+	NormalizePath(path, fileName, sizeof(path));
 
 	const auto it = FindAsset(path);
 	if (it == std::end(assets))
@@ -216,10 +216,10 @@ qhandle_t CModelCacheManager::GetModelHandle(const char* file_name)
 	return it->handle;
 }
 
-void CModelCacheManager::InsertModelHandle(const char* file_name, qhandle_t handle)
+void CModelCacheManager::InsertModelHandle(const char* fileName, qhandle_t handle)
 {
 	char path[MAX_QPATH];
-	NormalizePath(path, file_name, sizeof(path));
+	NormalizePath(path, fileName, sizeof(path));
 
 	Asset asset;
 	asset.handle = handle;

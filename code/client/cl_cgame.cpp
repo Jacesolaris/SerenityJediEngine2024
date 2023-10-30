@@ -138,19 +138,19 @@ CL_GetParseEntityState
 ====================
 */
 /*
-qboolean	CL_GetParseEntityState( int parseentity_number, entityState_t *state ) {
+qboolean	CL_GetParseEntityState( int parseentityNumber, entityState_t *state ) {
 	// can't return anything that hasn't been parsed yet
-	if ( parseentity_number >= cl.parseEntitiesNum ) {
+	if ( parseentityNumber >= cl.parseEntitiesNum ) {
 		Com_Error( ERR_DROP, "CL_GetParseEntityState: %i >= %i",
-			parseentity_number, cl.parseEntitiesNum );
+			parseentityNumber, cl.parseEntitiesNum );
 	}
 
 	// can't return anything that has been overwritten in the circular buffer
-	if ( parseentity_number <= cl.parseEntitiesNum - MAX_PARSE_ENTITIES ) {
+	if ( parseentityNumber <= cl.parseEntitiesNum - MAX_PARSE_ENTITIES ) {
 		return qfalse;
 	}
 
-	*state = cl.parseEntities[ parseentity_number & ( MAX_PARSE_ENTITIES - 1 ) ];
+	*state = cl.parseEntities[ parseentityNumber & ( MAX_PARSE_ENTITIES - 1 ) ];
 	return qtrue;
 }
 */
@@ -217,8 +217,8 @@ qboolean CL_GetSnapshot(const int snapshotNumber, snapshot_t* snapshot)
 	*/
 	for (int i = 0; i < count; i++)
 	{
-		const int ent_num = clSnap->parseEntitiesNum + i & MAX_PARSE_ENTITIES - 1;
-		snapshot->entities[i] = cl.parseEntities[ent_num];
+		const int entNum = clSnap->parseEntitiesNum + i & MAX_PARSE_ENTITIES - 1;
+		snapshot->entities[i] = cl.parseEntities[entNum];
 	}
 	/*
 	Ghoul2 Insert End

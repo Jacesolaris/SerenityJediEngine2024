@@ -146,22 +146,22 @@ void turret_die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int 
 }
 
 //start an animation on model_root both server side and client side
-void TurboLaser_SetBoneAnim(gentity_t* eweb, const int start_frame, const int end_frame)
+void TurboLaser_SetBoneAnim(gentity_t* eweb, const int startFrame, const int endFrame)
 {
-	if (eweb->s.torsoAnim == start_frame && eweb->s.legsAnim == end_frame)
+	if (eweb->s.torsoAnim == startFrame && eweb->s.legsAnim == endFrame)
 	{
 		//already playing this anim, let's flag it to restart
 		//eweb->s.torsoFlip = !eweb->s.torsoFlip;
 	}
 	else
 	{
-		eweb->s.torsoAnim = start_frame;
-		eweb->s.legsAnim = end_frame;
+		eweb->s.torsoAnim = startFrame;
+		eweb->s.legsAnim = endFrame;
 	}
 
 	//now set the animation on the server ghoul2 instance.
 	assert(&eweb->ghoul2[0]);
-	gi.G2API_SetBoneAnim(&eweb->ghoul2[0], "model_root", start_frame, end_frame,
+	gi.G2API_SetBoneAnim(&eweb->ghoul2[0], "model_root", startFrame, endFrame,
 		BONE_ANIM_OVERRIDE_FREEZE | BONE_ANIM_BLEND, 1.0f, level.time, -1, 100);
 }
 
@@ -251,7 +251,7 @@ void turret_head_think(gentity_t* self)
 		self->pushDebounceTime = level.time + self->wait;
 
 		vec3_t fwd, org;
-		mdxaBone_t bolt_matrix;
+		mdxaBone_t boltMatrix;
 
 		// Getting the flash bolt here
 		gi.G2API_GetBoltMatrix(self->ghoul2,
@@ -261,7 +261,7 @@ void turret_head_think(gentity_t* self)
 				? gi.G2API_AddBolt(&self->ghoul2[0], "*muzzle2")
 				: gi.G2API_AddBolt(&self->ghoul2[0], "*muzzle1"))
 			: gi.G2API_AddBolt(&self->ghoul2[0], "*flash03"),
-			&bolt_matrix,
+			&boltMatrix,
 			self->currentAngles,
 			self->currentOrigin,
 			level.time,
@@ -272,15 +272,15 @@ void turret_head_think(gentity_t* self)
 			self->alt_fire = static_cast<qboolean>(!self->alt_fire);
 		}
 
-		gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, org);
+		gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, org);
 
 		if (self->spawnflags & SPF_TURRETG2_TURBO)
 		{
-			gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, NEGATIVE_Y, fwd);
+			gi.G2API_GiveMeVectorFromMatrix(boltMatrix, NEGATIVE_Y, fwd);
 		}
 		else
 		{
-			gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, POSITIVE_Y, fwd);
+			gi.G2API_GiveMeVectorFromMatrix(boltMatrix, POSITIVE_Y, fwd);
 		}
 
 		VectorMA(org, START_DIS, fwd, org);
@@ -327,7 +327,7 @@ static void turret_aim(gentity_t* self)
 		{
 			org[2] -= 5;
 		}
-		mdxaBone_t bolt_matrix;
+		mdxaBone_t boltMatrix;
 
 		// Getting the "eye" here
 		gi.G2API_GetBoltMatrix(self->ghoul2,
@@ -337,14 +337,14 @@ static void turret_aim(gentity_t* self)
 				? gi.G2API_AddBolt(&self->ghoul2[0], "*muzzle2")
 				: gi.G2API_AddBolt(&self->ghoul2[0], "*muzzle1"))
 			: gi.G2API_AddBolt(&self->ghoul2[0], "*flash03"),
-			&bolt_matrix,
+			&boltMatrix,
 			self->currentAngles,
 			self->s.origin,
 			level.time,
 			nullptr,
 			self->modelScale);
 
-		gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, org2);
+		gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, org2);
 
 		VectorSubtract(org, org2, enemy_dir);
 		vectoangles(enemy_dir, desired_angles);
@@ -525,7 +525,7 @@ static qboolean turret_find_enemies(gentity_t* self)
 		trace_t tr;
 		gi.trace(&tr, org2, nullptr, nullptr, org, self->s.number, MASK_SHOT, static_cast<EG2_Collision>(0), 0);
 
-		if (!tr.allsolid && !tr.startsolid && (tr.fraction == 1.0 || tr.entity_num == target->s.number))
+		if (!tr.allsolid && !tr.startsolid && (tr.fraction == 1.0 || tr.entityNum == target->s.number))
 		{
 			vec3_t enemy_dir;
 			// Only acquire if have a clear shot, Is it in range and closer than our best?
@@ -635,7 +635,7 @@ void turret_base_think(gentity_t* self)
 					gi.trace(&tr, org2, nullptr, nullptr, org, self->s.number, MASK_SHOT, static_cast<EG2_Collision>(0),
 						0);
 
-					if (self->spawnflags & SPF_TURRETG2_TURBO || !tr.allsolid && !tr.startsolid && tr.entity_num == self
+					if (self->spawnflags & SPF_TURRETG2_TURBO || !tr.allsolid && !tr.startsolid && tr.entityNum == self
 						->enemy->s.number)
 					{
 						turn_off = qfalse; // Can see our enemy
@@ -1085,9 +1085,9 @@ void laser_arm_fire(gentity_t* ent)
 	// Only deal damage when in alt-fire mode
 	if (trace.fraction < 1.0 && ent->alt_fire)
 	{
-		if (trace.entity_num < ENTITYNUM_WORLD)
+		if (trace.entityNum < ENTITYNUM_WORLD)
 		{
-			gentity_t* hapless_victim = &g_entities[trace.entity_num];
+			gentity_t* hapless_victim = &g_entities[trace.entityNum];
 			if (hapless_victim && hapless_victim->takedamage && ent->damage)
 			{
 				G_Damage(hapless_victim, ent, ent->nextTrain->activator, fwd, trace.endpos, ent->damage,
@@ -1337,16 +1337,16 @@ void pas_fire(gentity_t* ent)
 //----------------------------------------------------------------
 {
 	vec3_t fwd, org;
-	mdxaBone_t bolt_matrix;
+	mdxaBone_t boltMatrix;
 
 	// Getting the flash bolt here
 	gi.G2API_GetBoltMatrix(ent->ghoul2, ent->playerModel,
 		ent->torsoBolt,
-		&bolt_matrix, ent->currentAngles, ent->s.origin, cg.time ? cg.time : level.time,
+		&boltMatrix, ent->currentAngles, ent->s.origin, cg.time ? cg.time : level.time,
 		nullptr, ent->s.modelScale);
 
-	gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, org);
-	gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, POSITIVE_Y, fwd);
+	gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, org);
+	gi.G2API_GiveMeVectorFromMatrix(boltMatrix, POSITIVE_Y, fwd);
 
 	G_PlayEffect("turret/muzzle_flash", org, fwd);
 
@@ -1395,15 +1395,15 @@ static qboolean pas_find_enemies(gentity_t* self)
 		}
 	}
 
-	mdxaBone_t bolt_matrix;
+	mdxaBone_t boltMatrix;
 
 	// Getting the "eye" here
 	gi.G2API_GetBoltMatrix(self->ghoul2, self->playerModel,
 		self->torsoBolt,
-		&bolt_matrix, self->currentAngles, self->s.origin, cg.time ? cg.time : level.time,
+		&boltMatrix, self->currentAngles, self->s.origin, cg.time ? cg.time : level.time,
 		nullptr, self->s.modelScale);
 
-	gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, org2);
+	gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, org2);
 
 	const int count = G_RadiusList(org2, self->radius, self, qtrue, entity_list);
 
@@ -1442,7 +1442,7 @@ static qboolean pas_find_enemies(gentity_t* self)
 		trace_t tr;
 		gi.trace(&tr, org2, nullptr, nullptr, org, self->s.number, MASK_SHOT, static_cast<EG2_Collision>(0), 0);
 
-		if (!tr.allsolid && !tr.startsolid && (tr.fraction == 1.0 || tr.entity_num == target->s.number))
+		if (!tr.allsolid && !tr.startsolid && (tr.fraction == 1.0 || tr.entityNum == target->s.number))
 		{
 			vec3_t enemy_dir;
 			// Only acquire if have a clear shot, Is it in range and closer than our best?
@@ -1493,16 +1493,16 @@ void pas_adjust_enemy(gentity_t* ent)
 	else // if ( Q_flrand(0.0f, 1.0f) > 0.5f )
 	{
 		// do a trace every now and then.
-		mdxaBone_t bolt_matrix;
+		mdxaBone_t boltMatrix;
 		vec3_t org, org2;
 
 		// Getting the "eye" here
 		gi.G2API_GetBoltMatrix(ent->ghoul2, ent->playerModel,
 			ent->torsoBolt,
-			&bolt_matrix, ent->currentAngles, ent->s.origin, cg.time ? cg.time : level.time,
+			&boltMatrix, ent->currentAngles, ent->s.origin, cg.time ? cg.time : level.time,
 			nullptr, ent->s.modelScale);
 
-		gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, org2);
+		gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, org2);
 
 		if (ent->enemy->client)
 		{
@@ -1517,7 +1517,7 @@ void pas_adjust_enemy(gentity_t* ent)
 		trace_t tr;
 		gi.trace(&tr, org2, nullptr, nullptr, org, ent->s.number, MASK_SHOT, static_cast<EG2_Collision>(0), 0);
 
-		if (tr.allsolid || tr.startsolid || tr.entity_num != ent->enemy->s.number)
+		if (tr.allsolid || tr.startsolid || tr.entityNum != ent->enemy->s.number)
 		{
 			// trace failed
 			keep = qfalse;
@@ -1838,7 +1838,7 @@ qboolean place_portable_assault_sentry(gentity_t* self, vec3_t origin, vec3_t an
 	gi.trace(&tr, tr.endpos, mins, maxs, pos, self->s.number, MASK_SHOT, static_cast<EG2_Collision>(0), 0);
 
 	// check for a decent surface, meaning mostly flat...should probably also check surface parms so we don't set us down on lava or something.
-	if (!tr.startsolid && !tr.allsolid && tr.fraction < 1.0f && tr.plane.normal[2] > 0.9f && tr.entity_num >=
+	if (!tr.startsolid && !tr.allsolid && tr.fraction < 1.0f && tr.plane.normal[2] > 0.9f && tr.entityNum >=
 		ENTITYNUM_WORLD)
 	{
 		// Then spawn us if it seems cool.
@@ -1896,16 +1896,16 @@ void ion_cannon_think(gentity_t* self)
 	if (self->fxID)
 	{
 		vec3_t fwd, org;
-		mdxaBone_t bolt_matrix;
+		mdxaBone_t boltMatrix;
 
 		// Getting the flash bolt here
 		gi.G2API_GetBoltMatrix(self->ghoul2, self->playerModel,
 			self->torsoBolt,
-			&bolt_matrix, self->s.angles, self->s.origin, cg.time ? cg.time : level.time,
+			&boltMatrix, self->s.angles, self->s.origin, cg.time ? cg.time : level.time,
 			nullptr, self->s.modelScale);
 
-		gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, org);
-		gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, POSITIVE_Y, fwd);
+		gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, org);
+		gi.G2API_GiveMeVectorFromMatrix(boltMatrix, POSITIVE_Y, fwd);
 
 		G_PlayEffect(self->fxID, org, fwd);
 	}

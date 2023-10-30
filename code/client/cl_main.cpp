@@ -1170,9 +1170,9 @@ int get_com_frameTime()
 	return com_frameTime;
 }
 
-void* CL_Malloc(const int i_size, const memtag_t e_tag, const qboolean b_zeroit, int iAlign)
+void* CL_Malloc(const int iSize, const memtag_t eTag, const qboolean bZeroit, int iAlign)
 {
-	return Z_Malloc(i_size, e_tag, b_zeroit);
+	return Z_Malloc(iSize, eTag, bZeroit);
 }
 
 /*
@@ -1222,9 +1222,9 @@ void CL_InitRef()
 
 	memset(&rit, 0, sizeof rit);
 
-	const auto get_ref_api = static_cast<get_ref_api_t>(Sys_LoadFunction(rendererLib, "get_ref_api"));
-	if (!get_ref_api)
-		Com_Error(ERR_FATAL, "Can't load symbol get_ref_api: '%s'", Sys_LibraryError());
+	const auto GetRefAPI = static_cast<GetRefAPI_t>(Sys_LoadFunction(rendererLib, "GetRefAPI"));
+	if (!GetRefAPI)
+		Com_Error(ERR_FATAL, "Can't load symbol GetRefAPI: '%s'", Sys_LibraryError());
 
 #define RIT(y)	rit.y = y
 	RIT(CIN_PlayCinematic);
@@ -1267,6 +1267,7 @@ void CL_InitRef()
 	RIT(SV_Trace);
 	RIT(S_RestartMusic);
 	RIT(Z_Free);
+	RIT(Z_Malloc);
 	rit.Malloc = CL_Malloc;
 	RIT(Z_MemSize);
 	RIT(Z_MorphMallocTag);
@@ -1303,7 +1304,7 @@ void CL_InitRef()
 
 	rit.saved_game = &ojk::SavedGame::get_instance();
 
-	const refexport_t* ret = get_ref_api(REF_API_VERSION, &rit);
+	const refexport_t* ret = GetRefAPI(REF_API_VERSION, &rit);
 
 	if (!ret)
 	{
@@ -1333,7 +1334,7 @@ void CL_Init()
 
 	Com_Printf("-----------------------------------------------------------------\n");
 	Com_Printf("---------- Genuine SerenityJediEngine-(Solaris Edition)----------\n");
-	Com_Printf("---------------------Build date 29/10/2023-----------------------\n");
+	Com_Printf("---------------------Build date 30/10/2023-----------------------\n");
 	Com_Printf("-----------------------------------------------------------------\n");
 	Com_Printf("------------------------LightSaber-------------------------------\n");
 	Com_Printf("-----------An elegant weapon for a more civilized age------------\n");

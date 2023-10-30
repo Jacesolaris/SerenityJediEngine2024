@@ -135,7 +135,7 @@ gentity_t* G_TestEntityPosition(const gentity_t* ent)
 	}
 
 	if (tr.startsolid)
-		return &g_entities[tr.entity_num];
+		return &g_entities[tr.entityNum];
 
 	return NULL;
 }
@@ -199,7 +199,7 @@ qboolean G_TryPushingEntity(gentity_t* check, gentity_t* pusher, vec3_t move, ve
 	// EF_MOVER_STOP will just stop when contacting another entity
 	// instead of pushing it, but entities can still ride on top of it
 	if ( ( pusher->s.eFlags & EF_MOVER_STOP ) &&
-		check->s.groundentity_num != pusher->s.number ) {
+		check->s.groundentityNum != pusher->s.number ) {
 		return qfalse;
 	}
 	*/
@@ -254,9 +254,9 @@ qboolean G_TryPushingEntity(gentity_t* check, gentity_t* pusher, vec3_t move, ve
 	}
 
 	// may have pushed them off an edge
-	if (check->s.groundentity_num != pusher->s.number)
+	if (check->s.groundentityNum != pusher->s.number)
 	{
-		check->s.groundentity_num = ENTITYNUM_NONE;
+		check->s.groundentityNum = ENTITYNUM_NONE;
 	}
 
 	const gentity_t* block = G_TestEntityPosition(check);
@@ -295,7 +295,7 @@ qboolean G_TryPushingEntity(gentity_t* check, gentity_t* pusher, vec3_t move, ve
 	block = G_TestEntityPosition(check);
 	if (!block)
 	{
-		check->s.groundentity_num = ENTITYNUM_NONE;
+		check->s.groundentityNum = ENTITYNUM_NONE;
 		pushed_p--;
 		return qtrue;
 	}
@@ -386,7 +386,7 @@ qboolean g_mover_push(gentity_t* pusher, vec3_t move, vec3_t amove, gentity_t** 
 		}
 
 		// if the entity is standing on the pusher, it will definitely be moved
-		if (check->s.groundentity_num != pusher->s.number)
+		if (check->s.groundentityNum != pusher->s.number)
 		{
 			// see if the ent needs to be tested
 			if (check->r.absmin[0] >= maxs[0]
@@ -1171,7 +1171,7 @@ static void Touch_DoorTriggerSpectator(const gentity_t* ent, gentity_t* other, t
 	if (!tr.startsolid &&
 		!tr.allsolid &&
 		tr.fraction == 1.0f &&
-		tr.entity_num == ENTITYNUM_NONE)
+		tr.entityNum == ENTITYNUM_NONE)
 	{
 		TeleportPlayer(other, origin, doorangles);
 	}
@@ -1324,14 +1324,14 @@ void Think_MatchTeam(gentity_t* ent)
 	MatchTeam(ent, ent->moverState, level.time);
 }
 
-qboolean G_EntIsDoor(const int entity_num)
+qboolean G_EntIsDoor(const int entityNum)
 {
-	if (entity_num < 0 || entity_num >= ENTITYNUM_WORLD)
+	if (entityNum < 0 || entityNum >= ENTITYNUM_WORLD)
 	{
 		return qfalse;
 	}
 
-	const gentity_t* ent = &g_entities[entity_num];
+	const gentity_t* ent = &g_entities[entityNum];
 	if (ent && !Q_stricmp("func_door", ent->classname))
 	{
 		//blocked by a door
@@ -1387,16 +1387,16 @@ gentity_t* G_FindDoorTrigger(const gentity_t* ent)
 
 qboolean G_TriggerActive(const gentity_t* self);
 
-qboolean G_EntIsUnlockedDoor(const int entity_num)
+qboolean G_EntIsUnlockedDoor(const int entityNum)
 {
-	if (entity_num < 0 || entity_num >= ENTITYNUM_WORLD)
+	if (entityNum < 0 || entityNum >= ENTITYNUM_WORLD)
 	{
 		return qfalse;
 	}
 
-	if (G_EntIsDoor(entity_num))
+	if (G_EntIsDoor(entityNum))
 	{
-		const gentity_t* ent = &g_entities[entity_num];
+		const gentity_t* ent = &g_entities[entityNum];
 		gentity_t* owner;
 		if (ent->flags & FL_TEAMSLAVE)
 		{
@@ -2554,7 +2554,7 @@ void G_Chunks(const int owner, vec3_t origin, const vec3_t normal, const vec3_t 
 	te->s.speed = speed;
 	te->s.eventParm = numChunks;
 	te->s.trickedentindex = chunkType;
-	te->s.model_index = customChunk;
+	te->s.modelIndex = customChunk;
 	te->s.apos.trBase[0] = baseScale;
 }
 
@@ -2569,7 +2569,7 @@ void funcBBrushDieGo(gentity_t* ent)
 	// if a missile is stuck to us, blow it up so we don't look dumb
 	for (int i = 0; i < MAX_GENTITIES; i++)
 	{
-		if (g_entities[i].s.groundentity_num == ent->s.number && g_entities[i].s.eFlags & EF_MISSILE_STICK)
+		if (g_entities[i].s.groundentityNum == ent->s.number && g_entities[i].s.eFlags & EF_MISSILE_STICK)
 		{
 			G_Damage(&g_entities[i], ent, ent, NULL, NULL, 99999, 0, MOD_CRUSH); //?? MOD?
 		}
@@ -3020,14 +3020,14 @@ void SP_func_breakable(gentity_t* self)
 	self->genericValue4 = 1; //so damage sys knows it's a bbrush
 }
 
-qboolean G_EntIsBreakable(const int entity_num)
+qboolean G_EntIsBreakable(const int entityNum)
 {
-	if (entity_num < 0 || entity_num >= ENTITYNUM_WORLD)
+	if (entityNum < 0 || entityNum >= ENTITYNUM_WORLD)
 	{
 		return qfalse;
 	}
 
-	const gentity_t* ent = &g_entities[entity_num];
+	const gentity_t* ent = &g_entities[entityNum];
 
 	if (!ent->takedamage)
 	{
@@ -3234,9 +3234,9 @@ void func_usable_think(gentity_t* self)
 	}
 }
 
-qboolean G_EntIsRemovableUsable(const int ent_num)
+qboolean G_EntIsRemovableUsable(const int entNum)
 {
-	const gentity_t* ent = &g_entities[ent_num];
+	const gentity_t* ent = &g_entities[entNum];
 	if (ent->classname && !Q_stricmp("func_usable", ent->classname))
 	{
 		if (!(ent->s.eFlags & EF_SHADER_ANIM) && !(ent->spawnflags & 8) && ent->targetname)
@@ -3322,7 +3322,7 @@ void func_usable_die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker,
 
 void station_pain(gentity_t* self, gentity_t* inflictor, int damagec)
 {
-	self->s.model_index = self->s.model_index2;
+	self->s.modelIndex = self->s.model_index2;
 	trap->LinkEntity((sharedEntity_t*)self);
 }
 

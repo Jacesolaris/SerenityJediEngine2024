@@ -398,8 +398,8 @@ UI_DrawNamedPic
 */
 void UI_DrawNamedPic(const float x, const float y, const float width, const float height, const char* picname)
 {
-	const qhandle_t h_shader = ui.R_RegisterShaderNoMip(picname);
-	ui.R_DrawStretchPic(x, y, width, height, 0, 0, 1, 1, h_shader);
+	const qhandle_t hShader = ui.R_RegisterShaderNoMip(picname);
+	ui.R_DrawStretchPic(x, y, width, height, 0, 0, 1, 1, hShader);
 }
 
 /*
@@ -407,7 +407,7 @@ void UI_DrawNamedPic(const float x, const float y, const float width, const floa
 UI_DrawHandlePic
 =================
 */
-void UI_DrawHandlePic(const float x, const float y, float w, float h, const qhandle_t h_shader)
+void UI_DrawHandlePic(const float x, const float y, float w, float h, const qhandle_t hShader)
 {
 	float s0;
 	float s1;
@@ -440,7 +440,7 @@ void UI_DrawHandlePic(const float x, const float y, float w, float h, const qhan
 		t1 = 1;
 	}
 
-	ui.R_DrawStretchPic(x, y, w, h, s0, t0, s1, t1, h_shader);
+	ui.R_DrawStretchPic(x, y, w, h, s0, t0, s1, t1, hShader);
 }
 
 /*

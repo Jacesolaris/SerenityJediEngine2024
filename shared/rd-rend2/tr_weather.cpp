@@ -257,7 +257,7 @@ namespace
 
 						// Find intersection point with the brush
 						float t = 0.0f;
-						for (int j = 0; j < currentWeatherBrush->num_planes; j++)
+						for (int j = 0; j < currentWeatherBrush->numPlanes; j++)
 						{
 							vec3_t plane_normal;
 							float plane_dist;
@@ -285,7 +285,7 @@ namespace
 						rayPos[2] -= t;
 
 						// Now test if the intersected point is actually on the brush
-						for (int j = 0; j < currentWeatherBrush->num_planes; j++)
+						for (int j = 0; j < currentWeatherBrush->numPlanes; j++)
 						{
 							vec4_t* plane = &currentWeatherBrush->planes[j];
 							vec3_t normal = {
@@ -301,7 +301,7 @@ namespace
 							continue;
 
 						// Just draw it when batch is full
-						if (tess.num_vertexes + 4 >= SHADER_MAX_VERTEXES || tess.num_indexes + 6 >= SHADER_MAX_INDEXES)
+						if (tess.numVertexes + 4 >= SHADER_MAX_VERTEXES || tess.numIndexes + 6 >= SHADER_MAX_INDEXES)
 						{
 							RB_UpdateVBOs(ATTR_POSITION);
 							GLSL_VertexAttribsState(ATTR_POSITION, NULL);
@@ -310,12 +310,12 @@ namespace
 								&tr.textureColorShader,
 								UNIFORM_MODELVIEWPROJECTIONMATRIX,
 								tr.weatherSystem->weatherMVP);
-							R_DrawElementsVBO(tess.num_indexes, tess.firstIndex, tess.minIndex, tess.maxIndex);
+							R_DrawElementsVBO(tess.numIndexes, tess.firstIndex, tess.minIndex, tess.maxIndex);
 
 							RB_CommitInternalBufferData();
 
-							tess.num_indexes = 0;
-							tess.num_vertexes = 0;
+							tess.numIndexes = 0;
+							tess.numVertexes = 0;
 							tess.firstIndex = 0;
 							tess.multiDrawPrimitives = 0;
 							tess.externalIBO = nullptr;
@@ -335,12 +335,12 @@ namespace
 				&tr.textureColorShader,
 				UNIFORM_MODELVIEWPROJECTIONMATRIX,
 				tr.weatherSystem->weatherMVP);
-			R_DrawElementsVBO(tess.num_indexes, tess.firstIndex, tess.minIndex, tess.maxIndex);
+			R_DrawElementsVBO(tess.numIndexes, tess.firstIndex, tess.minIndex, tess.maxIndex);
 
 			RB_CommitInternalBufferData();
 
-			tess.num_indexes = 0;
-			tess.num_vertexes = 0;
+			tess.numIndexes = 0;
+			tess.numVertexes = 0;
 			tess.firstIndex = 0;
 			tess.multiDrawPrimitives = 0;
 			tess.externalIBO = nullptr;
@@ -444,7 +444,7 @@ namespace
 
 		item.uniformData = uniformDataWriter.Finish(*backEndData->perFrameMemory);
 
-		const GLuint currentFrameUbo = backEndData->current_frame->ubo;
+		const GLuint currentFrameUbo = backEndData->currentFrame->ubo;
 		const UniformBlockBinding uniformBlockBindings[] = {
 			{ currentFrameUbo, tr.sceneUboOffset, UNIFORM_BLOCK_SCENE }
 		};
@@ -542,15 +542,15 @@ qboolean WE_ParseVector(const char** text, int count, float* v) {
 	return qtrue;
 }
 
-void R_AddWeatherBrush(uint8_t num_planes, vec4_t* planes)
+void R_AddWeatherBrush(uint8_t numPlanes, vec4_t* planes)
 {
 	if (tr.weatherSystem->numWeatherBrushes >= (MAX_WEATHER_ZONES * 2))
 	{
 		ri.Printf(PRINT_WARNING, "Max weather brushes hit. Skipping new inside/outside brush\n");
 		return;
 	}
-	tr.weatherSystem->weatherBrushes[tr.weatherSystem->numWeatherBrushes].num_planes = num_planes;
-	memcpy(tr.weatherSystem->weatherBrushes[tr.weatherSystem->numWeatherBrushes].planes, planes, num_planes * sizeof(vec4_t));
+	tr.weatherSystem->weatherBrushes[tr.weatherSystem->numWeatherBrushes].numPlanes = numPlanes;
+	memcpy(tr.weatherSystem->weatherBrushes[tr.weatherSystem->numWeatherBrushes].planes, planes, numPlanes * sizeof(vec4_t));
 
 	tr.weatherSystem->numWeatherBrushes++;
 }
@@ -576,8 +576,6 @@ void R_LoadWeatherImages()
 		tr.weatherSystem->weatherSlots[WEATHER_SAND].drawImage = R_FindImageFile("gfx/effects/alpha_smoke2b", type, flags);
 	if (tr.weatherSystem->weatherSlots[WEATHER_FOG].active)
 		tr.weatherSystem->weatherSlots[WEATHER_FOG].drawImage = R_FindImageFile("gfx/effects/alpha_smoke2b", type, flags);
-	if (tr.weatherSystem->weatherSlots[WEATHER_LAVA].active)
-		tr.weatherSystem->weatherSlots[WEATHER_LAVA].drawImage = R_FindImageFile("gfx/effects/snowflake2", type, flags);
 }
 
 void RE_WorldEffectCommand(const char* command) // rend2 sp
@@ -1137,7 +1135,7 @@ void RB_SurfaceWeather(srfWeather_t* surf)
 		{
 			for (int x = -1; x <= 1; ++x, ++currentIndex)
 			{
-				const GLuint currentFrameUbo = backEndData->current_frame->ubo;
+				const GLuint currentFrameUbo = backEndData->currentFrame->ubo;
 				const UniformBlockBinding uniformBlockBindings[] = {
 					{ currentFrameUbo, tr.cameraUboOffsets[tr.viewParms.currentViewParm], UNIFORM_BLOCK_CAMERA }
 				};

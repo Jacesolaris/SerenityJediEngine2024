@@ -34,9 +34,6 @@ static unsigned char s_gammatable[256];
 int gl_filter_min = GL_LINEAR_MIPMAP_NEAREST;
 int gl_filter_max = GL_LINEAR;
 
-//#define FILE_HASH_SIZE		1024	// actually the shader code still needs this (from another module, great),
-//static	image_t*		hashTable[FILE_HASH_SIZE];
-
 /*
 ** R_GammaCorrect
 */

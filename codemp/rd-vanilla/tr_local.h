@@ -474,7 +474,7 @@ using shader_t = struct shader_s {
 	shaderStage_t* stages;
 
 	float clampTime;                                  // time this shader is clamped to
-	float time_offset;                                 // current time offset for this shader
+	float timeOffset;                                 // current time offset for this shader
 
 	// True if this shader has a stage with glow in it (just an optimization).
 	bool hasGlow;
@@ -624,9 +624,9 @@ using drawSurf_t = struct drawSurf_s {
 // as soon as it is called
 using srfPoly_t = struct srfPoly_s {
 	surfaceType_t	surfaceType;
-	qhandle_t		h_shader;
+	qhandle_t		hShader;
 	int				fogIndex;
-	int				num_verts;
+	int				numVerts;
 	polyVert_t* verts;
 };
 
@@ -682,7 +682,7 @@ using srfSurfaceFace_t = struct srfSurfaceFace_s {
 	int			dlight_bits;
 
 	// triangle definitions (no normals at points)
-	int			num_points;
+	int			numPoints;
 	int			numIndices;
 	int			ofsIndices;
 	float		points[1][VERTEXSIZE];	// variable sized
@@ -702,10 +702,10 @@ using srfTriangles_t = struct srfTriangles_s {
 	//	float			radius;
 
 		// triangle definitions
-	int				num_indexes;
+	int				numIndexes;
 	int* indexes;
 
-	int				num_verts;
+	int				numVerts;
 	drawVert_t* verts;
 	//	vec3_t			*tangents;
 };
@@ -830,8 +830,7 @@ using world_t = struct world_s {
 void		R_ModelInit(void);
 
 model_t* R_GetModelByHandle(qhandle_t index);
-int			R_LerpTag(orientation_t* tag, qhandle_t handle, int start_frame, int end_frame,
-	float frac, const char* tagName);
+int	 R_LerpTag(orientation_t* tag, qhandle_t handle, int startFrame, int endFrame, float frac, const char* tagName);
 void		R_ModelBounds(qhandle_t handle, vec3_t mins, vec3_t maxs);
 
 void		R_model_list_f(void);
@@ -998,9 +997,9 @@ using trGlobals_t = struct trGlobals_s {
 
 	trRefEntity_t* currentEntity;
 	trRefEntity_t			worldEntity;		// point currentEntity at this when rendering world
-	int						currententity_num;
-	int						shiftedentity_num;	// currententity_num << QSORT_REFENTITYNUM_SHIFT
-	model_t* current_model;
+	int						currententityNum;
+	int						shiftedentityNum;	// currententityNum << QSORT_REFENTITYNUM_SHIFT
+	model_t* currentModel;
 
 	viewParms_t				viewParms;
 
@@ -1242,7 +1241,7 @@ void R_AddMD3Surfaces(trRefEntity_t* ent);
 
 void R_AddPolygonSurfaces(void);
 
-void R_DecomposeSort(unsigned sort, int* entity_num, shader_t** shader, int* fogNum, int* dlightMap);
+void R_DecomposeSort(unsigned sort, int* entityNum, shader_t** shader, int* fogNum, int* dlightMap);
 
 void R_AddDrawSurf(surfaceType_t* surface, const shader_t* shader, int fogIndex, int dlightMap);
 
@@ -1326,7 +1325,7 @@ void		RE_RegisterMedia_LevelLoadBegin(const char* psMapName, ForceReload_e eForc
 void		RE_RegisterMedia_LevelLoadEnd(void);
 int			RE_RegisterMedia_GetLevel(void);
 qboolean	RE_RegisterModels_LevelLoadEnd(qboolean bDeleteEverythingNotUsedThisLevel = qfalse);
-void* RE_RegisterModels_Malloc(int i_size, void* pvDiskBufferIfJustLoaded, const char* psModelFileName, qboolean* pqbAlreadyFound, memtag_t e_tag);
+void* RE_RegisterModels_Malloc(int iSize, void* pvDiskBufferIfJustLoaded, const char* psModelFileName, qboolean* pqbAlreadyFound, memtag_t eTag);
 void		RE_RegisterModels_StoreShaderRequest(const char* psModelFileName, const char* psShaderName, int* piShaderIndexPoke);
 void		RE_RegisterModels_Info_f(void);
 qboolean	RE_RegisterImages_LevelLoadEnd();
@@ -1358,7 +1357,7 @@ void	R_InitImages();
 void	R_DeleteTextures();
 float	R_SumOfUsedImages(qboolean b_use_format);
 void	R_InitSkins(void);
-skin_t* R_GetSkinByHandle(qhandle_t h_skin);
+skin_t* R_GetSkinByHandle(const qhandle_t hSkin);
 const void* RB_TakeVideoFrameCmd(const void* data);
 void RE_HunkClearCrap(void);
 
@@ -1374,15 +1373,15 @@ extern	const byte	stylesDefault[MAXLIGHTMAPS];
 qhandle_t RE_RegisterShaderLightMap(const char* name, const int* lightmapIndex, const byte* styles);
 qhandle_t		 RE_RegisterShader(const char* name);
 qhandle_t		 RE_RegisterShaderNoMip(const char* name);
-const char* RE_ShaderNameFromIndex(int index);
+const char* RE_ShaderNameFromIndex(const int index);
 qhandle_t RE_RegisterShaderFromImage(const char* name, const int* lightmapIndex, const byte* styles, image_t* image);
 
 shader_t* R_FindShader(const char* name, const int* lightmapIndex, const byte* styles, const qboolean mip_raw_image);
-shader_t* R_GetShaderByHandle(qhandle_t h_shader);
+shader_t* R_GetShaderByHandle(const qhandle_t hShader);
 shader_t* R_FindShaderByName(const char* name);
 void R_InitShaders(const qboolean server);
 void R_ShaderList_f();
-void    R_RemapShader(const char* shader_name, const char* new_shader_name, const char* time_offset);
+void    R_RemapShader(const char* shader_name, const char* new_shader_name, const char* timeOffset);
 
 //
 // tr_arb.c
@@ -1434,8 +1433,8 @@ struct shaderCommands_s
 
 	int			dlight_bits;	// or together of all vertexdlight_bits
 
-	int			num_indexes;
-	int			num_vertexes;
+	int			numIndexes;
+	int			numVertexes;
 
 	// info extracted from current shader
 	int			numPasses;
@@ -1462,7 +1461,7 @@ extern	color4ub_t	styleColors[MAX_LIGHT_STYLES];
 void RB_BeginSurface(shader_t* shader, int fogNum);
 void RB_EndSurface(void);
 void RB_CheckOverflow(const int verts, const int indexes);
-#define RB_CHECKOVERFLOW(v,i) if (tess.num_vertexes + (v) >= SHADER_MAX_VERTEXES || tess.num_indexes + (i) >= SHADER_MAX_INDEXES ) {RB_CheckOverflow(v,i);}
+#define RB_CHECKOVERFLOW(v,i) if (tess.numVertexes + (v) >= SHADER_MAX_VERTEXES || tess.numIndexes + (i) >= SHADER_MAX_INDEXES ) {RB_CheckOverflow(v,i);}
 
 void RB_StageIteratorGeneric(void);
 void RB_StageIteratorSky(void);
@@ -1507,7 +1506,7 @@ LIGHTS
 
 void R_DlightBmodel(const bmodel_t* bmodel, const bool no_light);
 void R_SetupEntityLighting(const trRefdef_t* refdef, trRefEntity_t* ent);
-void R_TransformDlights(int count, dlight_t* dl, const orientationr_t* ori);
+void R_TransformDlights(const int count, dlight_t* dl, const orientationr_t* ori);
 int R_LightForPoint(vec3_t point, vec3_t ambient_light, vec3_t directed_light, vec3_t light_dir);
 
 /*
@@ -1566,7 +1565,7 @@ MARKERS, POLYGON PROJECTION ON WORLD POLYGONS
 ============================================================
 */
 
-int R_MarkFragments(int num_points, const vec3_t* points, const vec3_t projection, int max_points, vec3_t point_buffer, int max_fragments, markFragment_t* fragment_buffer);
+int R_MarkFragments(int numPoints, const vec3_t* points, const vec3_t projection, const int maxPoints, vec3_t pointBuffer, const int maxFragments, markFragment_t* fragmentBuffer);
 
 /*
 ============================================================
@@ -1581,7 +1580,7 @@ void R_InitNextFrame(void);
 void RE_ClearScene(void);
 void RE_AddRefEntityToScene(const refEntity_t* ent);
 void RE_AddMiniRefEntityToScene(const miniRefEntity_t* ent);
-void RE_AddPolyToScene(qhandle_t h_shader, int num_verts, const polyVert_t* verts, int num_polys);
+void RE_AddPolyToScene(const qhandle_t hShader, const int numVerts, const polyVert_t* verts, const int numPolys);
 void RE_AddLightToScene(const vec3_t org, float intensity, float r, float g, float b);
 void RE_AddAdditiveLightToScene(const vec3_t org, float intensity, float r, float g, float b);
 void RE_RenderScene(const refdef_t* fd);
@@ -1819,11 +1818,11 @@ void R_AddDrawSurfCmd(drawSurf_t* drawSurfs, int numDrawSurfs);
 
 void RE_SetColor(const float* rgba);
 void RE_StretchPic(float x, float y, float w, float h,
-	float s1, float t1, float s2, float t2, qhandle_t h_shader);
+	float s1, float t1, float s2, float t2, qhandle_t hShader);
 void RE_RotatePic(float x, float y, float w, float h,
-	float s1, float t1, float s2, float t2, float a, qhandle_t h_shader);
+	float s1, float t1, float s2, float t2, float a, qhandle_t hShader);
 void RE_RotatePic2(float x, float y, float w, float h,
-	float s1, float t1, float s2, float t2, float a, qhandle_t h_shader);
+	float s1, float t1, float s2, float t2, float a, qhandle_t hShader);
 void RE_BeginFrame(stereoFrame_t stereoFrame);
 void RE_EndFrame(int* frontEndMsec, int* backEndMsec);
 void RE_TakeVideoFrame(int width, int height, byte* captureBuffer, byte* encodeBuffer, qboolean motionJpeg);
@@ -1842,7 +1841,7 @@ Ghoul2 Insert End
 
 void R_InitDecals();
 void RE_ClearDecals();
-void RE_AddDecalToScene(qhandle_t shader, const vec3_t origin, const vec3_t dir, float orientation, float r, float g, float b, float a, qboolean alpha_fade, float radius, qboolean temporary);
+void RE_AddDecalToScene(const qhandle_t decalShader, const vec3_t origin, const vec3_t dir, const float orientation, const float red, const float green, const float blue, const float alpha, qboolean alphaFade, const float radius, const qboolean temporary);
 void R_AddDecals();
 
 // tr_surfacesprites

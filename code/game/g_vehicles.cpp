@@ -81,7 +81,7 @@ extern vec3_t player_mins;
 extern vec3_t player_maxs;
 extern cvar_t* g_speederControlScheme;
 extern cvar_t* in_joystick;
-extern void PM_SetAnim(const pmove_t* pm, int set_anim_parts, int anim, int set_anim_flags, int blend_time);
+extern void PM_SetAnim(const pmove_t* pm, int set_anim_parts, int anim, int set_anim_flags, int blendTime);
 extern int PM_AnimLength(int index, animNumber_t anim);
 extern void NPC_SetAnim(gentity_t* ent, int set_anim_parts, int anim, int set_anim_flags, int i_blend);
 extern void G_Knockdown(gentity_t* self, gentity_t* attacker, const vec3_t push_dir, float strength,
@@ -117,12 +117,12 @@ void Vehicle_SetAnim(gentity_t* ent, int set_anim_parts, int anim, int set_anim_
 }
 
 void G_VehicleTrace(trace_t* results, const vec3_t start, const vec3_t tMins, const vec3_t tMaxs, const vec3_t end,
-	int pass_entity_num, int contentmask)
+	int pass_entityNum, int contentmask)
 {
 #ifdef _JK2MP
-	trap_Trace(results, start, tMins, tMaxs, end, pass_entity_num, contentmask);
+	trap_Trace(results, start, tMins, tMaxs, end, pass_entityNum, contentmask);
 #else
-	gi.trace(results, start, tMins, tMaxs, end, pass_entity_num, contentmask, static_cast<EG2_Collision>(0), 0);
+	gi.trace(results, start, tMins, tMaxs, end, pass_entityNum, contentmask, static_cast<EG2_Collision>(0), 0);
 #endif
 }
 
@@ -263,7 +263,7 @@ void G_VehicleSpawn(gentity_t* self)
 	if (vehEnt->spawnflags & 1)
 	{
 		//die without pilot
-		vehEnt->m_pVehicle->m_iPilotTime = level.time + vehEnt->end_frame;
+		vehEnt->m_pVehicle->m_iPilotTime = level.time + vehEnt->endFrame;
 	}
 #endif
 	//return vehEnt;
@@ -273,7 +273,7 @@ void G_VehicleSpawn(gentity_t* self)
 void G_AttachToVehicle(gentity_t* p_ent, usercmd_t** ucmd)
 {
 	gentity_t* vehEnt;
-	mdxaBone_t bolt_matrix;
+	mdxaBone_t boltMatrix;
 	gentity_t* ent;
 #ifdef _JK2MP
 	int				crotchBolt;
@@ -298,18 +298,18 @@ void G_AttachToVehicle(gentity_t* p_ent, usercmd_t** ucmd)
 	crotchBolt = trap_G2API_AddBolt(vehEnt->ghoul2, 0, "*driver");
 
 	// Get the driver tag.
-	trap_G2API_GetBoltMatrix(vehEnt->ghoul2, 0, crotchBolt, &bolt_matrix,
+	trap_G2API_GetBoltMatrix(vehEnt->ghoul2, 0, crotchBolt, &boltMatrix,
 		vehEnt->m_pVehicle->m_vOrientation, vehEnt->currentOrigin,
 		level.time, nullptr, vehEnt->modelScale);
-	BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, ent->client->ps.origin);
+	BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, ent->client->ps.origin);
 	G_SetOrigin(ent, ent->client->ps.origin);
 	trap_LinkEntity(ent);
 #else
 	// Get the driver tag.
-	gi.G2API_GetBoltMatrix(vehEnt->ghoul2, vehEnt->playerModel, vehEnt->crotchBolt, &bolt_matrix,
+	gi.G2API_GetBoltMatrix(vehEnt->ghoul2, vehEnt->playerModel, vehEnt->crotchBolt, &boltMatrix,
 		vehEnt->m_pVehicle->m_vOrientation, vehEnt->currentOrigin,
 		cg.time ? cg.time : level.time, nullptr, vehEnt->s.modelScale);
-	gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, ent->client->ps.origin);
+	gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, ent->client->ps.origin);
 	gi.linkentity(ent);
 #endif
 }
@@ -571,7 +571,7 @@ bool ValidateBoard(Vehicle_t* p_veh, bgEntity_t* p_ent)
 		if (p_veh->m_pVehicleInfo->type == VH_WALKER)
 		{
 			//I know, I know, this should by in the walker's validateboard()
-			if (!ent->client || ent->client->ps.groundentity_num != parent->s.number)
+			if (!ent->client || ent->client->ps.groundentityNum != parent->s.number)
 			{
 				//can only steal an occupied AT-ST if you're on top (by the hatch)
 				return false;
@@ -990,7 +990,7 @@ void G_EjectDroidUnit(Vehicle_t* p_veh, qboolean kill)
 #else
 	p_veh->m_pDroidUnit->owner = nullptr;
 #endif
-	//	p_veh->m_pDroidUnit->s.otherentity_num2 = ENTITYNUM_NONE;
+	//	p_veh->m_pDroidUnit->s.otherentityNum2 = ENTITYNUM_NONE;
 #ifdef QAGAME
 	{
 		gentity_t* droidEnt = (gentity_t*)p_veh->m_pDroidUnit;
@@ -1800,7 +1800,7 @@ static bool update(Vehicle_t* p_veh, const usercmd_t* p_umcd)
 			if (!player || G_ClearLineOfSight(p_veh->m_pParentEntity->currentOrigin, player->currentOrigin,
 				p_veh->m_pParentEntity->s.number, MASK_OPAQUE))
 			{
-				p_veh->m_iPilotTime = level.time + p_veh->m_pParentEntity->end_frame;
+				p_veh->m_iPilotTime = level.time + p_veh->m_pParentEntity->endFrame;
 			}
 		}
 		if (p_veh->m_iPilotTime && p_veh->m_iPilotTime < level.time)
@@ -2241,7 +2241,7 @@ static void AttachRiders(Vehicle_t * p_veh)
 	{
 		if (p_veh->m_ppPassengers[i])
 		{
-			mdxaBone_t bolt_matrix;
+			mdxaBone_t boltMatrix;
 			vec3_t	yawOnlyAngles;
 			gentity_t* parent = (gentity_t*)p_veh->m_pParentEntity;
 			gentity_t* pilot = (gentity_t*)p_veh->m_ppPassengers[i];
@@ -2255,10 +2255,10 @@ static void AttachRiders(Vehicle_t * p_veh)
 			VectorSet(yawOnlyAngles, 0, parent->client->ps.viewangles[YAW], 0);
 
 			// Get the driver tag.
-			trap_G2API_GetBoltMatrix(parent->ghoul2, 0, crotchBolt, &bolt_matrix,
+			trap_G2API_GetBoltMatrix(parent->ghoul2, 0, crotchBolt, &boltMatrix,
 				yawOnlyAngles, parent->client->ps.origin,
 				level.time, nullptr, parent->modelScale);
-			BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, pilot->client->ps.origin);
+			BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, pilot->client->ps.origin);
 
 			G_SetOrigin(pilot, pilot->client->ps.origin);
 			trap_LinkEntity(pilot);
@@ -2270,7 +2270,7 @@ static void AttachRiders(Vehicle_t * p_veh)
 	if (p_veh->m_pDroidUnit
 		&& p_veh->m_iDroidUnitTag != -1)
 	{
-		mdxaBone_t bolt_matrix;
+		mdxaBone_t boltMatrix;
 		vec3_t	yawOnlyAngles, fwd;
 		gentity_t* parent = (gentity_t*)p_veh->m_pParentEntity;
 		gentity_t* droid = (gentity_t*)p_veh->m_pDroidUnit;
@@ -2284,11 +2284,11 @@ static void AttachRiders(Vehicle_t * p_veh)
 			VectorSet(yawOnlyAngles, 0, parent->client->ps.viewangles[YAW], 0);
 
 			// Get the droid tag.
-			trap_G2API_GetBoltMatrix(parent->ghoul2, 0, p_veh->m_iDroidUnitTag, &bolt_matrix,
+			trap_G2API_GetBoltMatrix(parent->ghoul2, 0, p_veh->m_iDroidUnitTag, &boltMatrix,
 				yawOnlyAngles, parent->currentOrigin,
 				level.time, nullptr, parent->modelScale);
-			BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, droid->client->ps.origin);
-			BG_GiveMeVectorFromMatrix(&bolt_matrix, NEGATIVE_Y, fwd);
+			BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, droid->client->ps.origin);
+			BG_GiveMeVectorFromMatrix(&boltMatrix, NEGATIVE_Y, fwd);
 			vectoangles(fwd, droid->client->ps.viewangles);
 
 			G_SetOrigin(droid, droid->client->ps.origin);
@@ -2310,15 +2310,15 @@ static void AttachRiders(Vehicle_t * p_veh)
 	{
 		gentity_t* const parent = p_veh->m_pParentEntity;
 		gentity_t* const pilot = p_veh->m_pPilot;
-		mdxaBone_t bolt_matrix;
+		mdxaBone_t boltMatrix;
 
 		pilot->waypoint = parent->waypoint; // take the veh's waypoint as your own
 
 		// Get the driver tag.
-		gi.G2API_GetBoltMatrix(parent->ghoul2, parent->playerModel, parent->crotchBolt, &bolt_matrix,
+		gi.G2API_GetBoltMatrix(parent->ghoul2, parent->playerModel, parent->crotchBolt, &boltMatrix,
 			p_veh->m_vOrientation, parent->currentOrigin,
 			cg.time ? cg.time : level.time, nullptr, parent->s.modelScale);
-		gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, pilot->client->ps.origin);
+		gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, pilot->client->ps.origin);
 		G_SetOrigin(pilot, pilot->client->ps.origin);
 		gi.linkentity(pilot);
 	}
@@ -2327,15 +2327,15 @@ static void AttachRiders(Vehicle_t * p_veh)
 	{
 		gentity_t* const parent = p_veh->m_pParentEntity;
 		gentity_t* const pilot = p_veh->m_pOldPilot;
-		mdxaBone_t bolt_matrix;
+		mdxaBone_t boltMatrix;
 
 		pilot->waypoint = parent->waypoint; // take the veh's waypoint as your own
 
 		// Get the driver tag.
-		gi.G2API_GetBoltMatrix(parent->ghoul2, parent->playerModel, parent->crotchBolt, &bolt_matrix,
+		gi.G2API_GetBoltMatrix(parent->ghoul2, parent->playerModel, parent->crotchBolt, &boltMatrix,
 			p_veh->m_vOrientation, parent->currentOrigin,
 			cg.time ? cg.time : level.time, nullptr, parent->s.modelScale);
-		gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, pilot->client->ps.origin);
+		gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, pilot->client->ps.origin);
 		G_SetOrigin(pilot, pilot->client->ps.origin);
 		gi.linkentity(pilot);
 	}
@@ -2528,32 +2528,32 @@ int G_FlyVehicleImpactDir(gentity_t * veh, trace_t * trace)
 //try to break surfaces off the ship on impact
 #define TURN_ON				0x00000000
 #define TURN_OFF			0x00000100
-extern void NPC_SetSurfaceOnOff(gentity_t * ent, const char* surface_name, int surfaceFlags); //NPC_utils.c
-int G_ShipSurfaceForSurfName(const char* surface_name)
+extern void NPC_SetSurfaceOnOff(gentity_t * ent, const char* surfaceName, int surfaceFlags); //NPC_utils.c
+int G_ShipSurfaceForSurfName(const char* surfaceName)
 {
-	if (!surface_name)
+	if (!surfaceName)
 	{
 		return -1;
 	}
-	if (!Q_strncmp("nose", surface_name, 4)
-		|| !Q_strncmp("f_gear", surface_name, 6)
-		|| !Q_strncmp("glass", surface_name, 5))
+	if (!Q_strncmp("nose", surfaceName, 4)
+		|| !Q_strncmp("f_gear", surfaceName, 6)
+		|| !Q_strncmp("glass", surfaceName, 5))
 	{
 		return SHIPSURF_FRONT;
 	}
-	if (!Q_strncmp("body", surface_name, 4))
+	if (!Q_strncmp("body", surfaceName, 4))
 	{
 		return SHIPSURF_BACK;
 	}
-	if (!Q_strncmp("r_wing1", surface_name, 7)
-		|| !Q_strncmp("r_wing2", surface_name, 7)
-		|| !Q_strncmp("r_gear", surface_name, 6))
+	if (!Q_strncmp("r_wing1", surfaceName, 7)
+		|| !Q_strncmp("r_wing2", surfaceName, 7)
+		|| !Q_strncmp("r_gear", surfaceName, 6))
 	{
 		return SHIPSURF_RIGHT;
 	}
-	if (!Q_strncmp("l_wing1", surface_name, 7)
-		|| !Q_strncmp("l_wing2", surface_name, 7)
-		|| !Q_strncmp("l_gear", surface_name, 6))
+	if (!Q_strncmp("l_wing1", surfaceName, 7)
+		|| !Q_strncmp("l_wing2", surfaceName, 7)
+		|| !Q_strncmp("l_gear", surfaceName, 6))
 	{
 		return SHIPSURF_LEFT;
 	}

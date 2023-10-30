@@ -261,14 +261,13 @@ constexpr auto PMF_ALT_ATTACK_HELD = 1 << 16; //65536	// Holding down the alt-at
 constexpr auto PMF_BUMPED = 1 << 17; //131072	// Bumped into something;
 constexpr auto PMF_FORCE_FOCUS_HELD = 1 << 18; //262144	// Holding down the saberthrow/kick button;
 constexpr auto PMF_FIX_MINS = 1 << 19; //524288	// Mins raised for dual forward jump, fix them;
-constexpr auto PMF_PRONE = 1 << 20; //SERENITY FOR PRONE VIEWS AND MOVES?;
+constexpr auto PMF_ACCURATE_MISSILE_BLOCK_HELD = 1 << 20; //SERENITY FOR PRONE VIEWS AND MOVES?;
 constexpr auto PMF_LADDER = 1 << 21; //524288;
 constexpr auto PMF_LADDER_JUMP = 1 << 22; //0x00002000		// Jumped off a ladder;
 constexpr auto PMF_GRAPPLE_PULL = 1 << 23;
 constexpr auto PMF_DASH_HELD = 1 << 24; // Holding down the DASH button;
 constexpr auto PMF_BLOCK_HELD = 1 << 25; //32768	// Holding down the attack button;
 constexpr auto PMF_KICK_HELD = 1 << 26; //32768	// Holding down the attack button;
-constexpr auto PMF_ACCURATE_MISSILE_BLOCK_HELD = 1 << 27; //32768	// Holding down the attack button;
 
 #define	PMF_ALL_TIMES	(PMF_TIME_WATERJUMP|PMF_TIME_LAND|PMF_TIME_KNOCKBACK|PMF_TIME_NOFRICTION)
 
@@ -303,8 +302,8 @@ using pmove_t = struct
 	// callbacks to test the world
 	// these will be different functions during game and cgame
 	void (*trace)(trace_t* results, const vec3_t start, const vec3_t mins, const vec3_t maxs, const vec3_t end,
-		int pass_entity_num, int content_mask, EG2_Collision e_g2_trace_type, int use_lod);
-	int (*pointcontents)(const vec3_t point, int pass_entity_num);
+		int pass_entityNum, int content_mask, EG2_Collision eG2TraceType, int useLod);
+	int (*pointcontents)(const vec3_t point, int pass_entityNum);
 };
 
 // if a full pmove isn't done on the client, you can just update the angles
@@ -326,9 +325,9 @@ constexpr auto SETANIM_AFLAG_PACE = SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD;
 constexpr auto AFLAG_LEDGE = SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD | SETANIM_FLAG_HOLDLESS | SETANIM_FLAG_PACE;
 constexpr auto SETANIM_BLEND_DEFAULT = 100;
 
-void PM_SetAnim(const pmove_t* pm, int set_anim_parts, int anim, int set_anim_flags, int blend_time = SETANIM_BLEND_DEFAULT);
+void PM_SetAnim(const pmove_t* pm, int set_anim_parts, int anim, int set_anim_flags, int blendTime = SETANIM_BLEND_DEFAULT);
 void PM_SetAnimFinal(int* torso_anim, int* legs_anim, int set_anim_parts, int anim, int set_anim_flags, int* torso_anim_timer,
-	int* legs_anim_timer, gentity_t* gent, int blend_time = SETANIM_BLEND_DEFAULT);
+	int* legs_anim_timer, gentity_t* gent, int blendTime = SETANIM_BLEND_DEFAULT);
 
 //===================================================================================
 
@@ -734,17 +733,17 @@ class animation_t
 {
 public:
 	unsigned short firstFrame;
-	unsigned short num_frames;
+	unsigned short numFrames;
 	short frameLerp; // msec between frames
 	//initial lerp is abs(frameLerp)
-	signed char loopFrames; // 0 to num_frames, -1 = no loop
+	signed char loopFrames; // 0 to numFrames, -1 = no loop
 	unsigned char glaIndex;
 
 	void sg_export(
 		ojk::SavedGameHelper& saved_game) const
 	{
 		saved_game.write<uint16_t>(firstFrame);
-		saved_game.write<uint16_t>(num_frames);
+		saved_game.write<uint16_t>(numFrames);
 		saved_game.write<int16_t>(frameLerp);
 		saved_game.write<int8_t>(loopFrames);
 		saved_game.write<uint8_t>(glaIndex);
@@ -754,7 +753,7 @@ public:
 		ojk::SavedGameHelper& saved_game)
 	{
 		saved_game.read<uint16_t>(firstFrame);
-		saved_game.read<uint16_t>(num_frames);
+		saved_game.read<uint16_t>(numFrames);
 		saved_game.read<int16_t>(frameLerp);
 		saved_game.read<int8_t>(loopFrames);
 		saved_game.read<uint8_t>(glaIndex);

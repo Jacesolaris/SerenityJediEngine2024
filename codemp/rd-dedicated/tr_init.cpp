@@ -297,7 +297,7 @@ using consoleCommand_t = struct consoleCommand_s
 };
 
 static consoleCommand_t commands[] = {
-	{"model_list", R_model_list_f},
+	{"modelList", R_model_list_f},
 	{"modelist", R_ModeList_f},
 	{"modelcacheinfo", RE_RegisterModels_Info_f},
 };
@@ -567,11 +567,11 @@ extern qhandle_t RE_RegisterServerSkin(const char* name);
 
 /*
 @@@@@@@@@@@@@@@@@@@@@
-get_ref_api
+GetRefAPI
 
 @@@@@@@@@@@@@@@@@@@@@
 */
-refexport_t* get_ref_api(const int api_version, refimport_t* rimp)
+refexport_t* GetRefAPI(const int apiVersion, refimport_t* rimp)
 {
 	static refexport_t re;
 
@@ -580,9 +580,9 @@ refexport_t* get_ref_api(const int api_version, refimport_t* rimp)
 
 	memset(&re, 0, sizeof re);
 
-	if (api_version != REF_API_VERSION)
+	if (apiVersion != REF_API_VERSION)
 	{
-		Com_Printf("Mismatched REF_API_VERSION: expected %i, got %i\n", REF_API_VERSION, api_version);
+		Com_Printf("Mismatched REF_API_VERSION: expected %i, got %i\n", REF_API_VERSION, apiVersion);
 		return nullptr;
 	}
 

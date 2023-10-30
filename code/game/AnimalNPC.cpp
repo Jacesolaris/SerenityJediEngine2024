@@ -101,7 +101,7 @@ extern cvar_t* g_speederControlScheme;
 #ifdef _JK2MP
 #include "../namespace_begin.h"
 #endif
-extern void PM_SetAnim(const pmove_t* pm, int set_anim_parts, int anim, int set_anim_flags, int blend_time);
+extern void PM_SetAnim(const pmove_t* pm, int set_anim_parts, int anim, int set_anim_flags, int blendTime);
 extern int PM_AnimLength(int index, animNumber_t anim);
 #ifdef _JK2MP
 #include "../namespace_end.h"
@@ -115,7 +115,7 @@ extern void Vehicle_SetAnim(gentity_t* ent, int set_anim_parts, int anim, int se
 extern void G_Knockdown(gentity_t* self, gentity_t* attacker, const vec3_t push_dir, float strength,
 	qboolean break_saber_lock);
 extern void G_VehicleTrace(trace_t* results, const vec3_t start, const vec3_t tMins, const vec3_t tMaxs,
-	const vec3_t end, int pass_entity_num, int contentmask);
+	const vec3_t end, int pass_entityNum, int contentmask);
 
 // Update death sequence.
 static void DeathUpdate(Vehicle_t* p_veh)
@@ -238,7 +238,7 @@ static void ProcessMoveCommands(Vehicle_t* p_veh)
 		speedInc = p_veh->m_pVehicleInfo->acceleration * p_veh->m_fTimeModifier;
 	}
 
-	if (parent_ps->speed || parent_ps->groundentity_num == ENTITYNUM_NONE ||
+	if (parent_ps->speed || parent_ps->groundentityNum == ENTITYNUM_NONE ||
 		p_veh->m_ucmd.forwardmove || p_veh->m_ucmd.upmove > 0)
 	{
 		if (p_veh->m_ucmd.forwardmove > 0 && speedInc)
@@ -461,7 +461,7 @@ static void AnimalTailSwipe(Vehicle_t* p_veh, gentity_t *parent, gentity_t *pilo
 	vec3_t angles;
 	vec3_t vRoot, vTail;
 	vec3_t	lMins, lMaxs;
-	mdxaBone_t	bolt_matrix;
+	mdxaBone_t	boltMatrix;
 	int iRootBone;
 	int iRootTail;
 
@@ -474,41 +474,41 @@ static void AnimalTailSwipe(Vehicle_t* p_veh, gentity_t *parent, gentity_t *pilo
 
 	// Get the positions of the root of the tail and the tail end of it.
 	trap_G2API_GetBoltMatrix( parent->ghoul2, 0, iRootBone,
-				&bolt_matrix, angles, parent->currentOrigin, level.time,
+				&boltMatrix, angles, parent->currentOrigin, level.time,
 				NULL, parent->modelScale );
-	BG_GiveMeVectorFromMatrix( &bolt_matrix, ORIGIN, vRoot );
+	BG_GiveMeVectorFromMatrix( &boltMatrix, ORIGIN, vRoot );
 
 	trap_G2API_GetBoltMatrix( parent->ghoul2, 0, iRootTail,
-				&bolt_matrix, angles, parent->currentOrigin, level.time,
+				&boltMatrix, angles, parent->currentOrigin, level.time,
 				NULL, parent->modelScale );
-	BG_GiveMeVectorFromMatrix( &bolt_matrix, ORIGIN, vTail );
+	BG_GiveMeVectorFromMatrix( &boltMatrix, ORIGIN, vTail );
 #else
 	iRootBone = gi.G2API_GetBoneIndex( &parent->ghoul2[parent->playerModel], "tail_01", qtrue );
 	iRootTail = gi.G2API_GetBoneIndex( &parent->ghoul2[parent->playerModel], "tail_04", qtrue );
 
 	// Get the positions of the root of the tail and the tail end of it.
 	gi.G2API_GetBoltMatrix( parent->ghoul2, parent->playerModel, iRootBone,
-				&bolt_matrix, angles, parent->currentOrigin, (cg.time?cg.time:level.time),
+				&boltMatrix, angles, parent->currentOrigin, (cg.time?cg.time:level.time),
 				NULL, parent->s.modelScale );
-	gi.G2API_GiveMeVectorFromMatrix( bolt_matrix, ORIGIN, vRoot );
+	gi.G2API_GiveMeVectorFromMatrix( boltMatrix, ORIGIN, vRoot );
 
 	gi.G2API_GetBoltMatrix( parent->ghoul2, parent->playerModel, iRootTail,
-				&bolt_matrix, angles, parent->currentOrigin, (cg.time?cg.time:level.time),
+				&boltMatrix, angles, parent->currentOrigin, (cg.time?cg.time:level.time),
 				NULL, parent->s.modelScale );
-	gi.G2API_GiveMeVectorFromMatrix( bolt_matrix, ORIGIN, vTail );
+	gi.G2API_GiveMeVectorFromMatrix( boltMatrix, ORIGIN, vTail );
 #endif
 
 	// Trace from the root of the tail to the very end.
 	G_VehicleTrace( &trace, vRoot, lMins, lMaxs, vTail, parent->s.number, MASK_NPCSOLID );
 	if ( trace.fraction < 1.0f )
 	{
-		if ( ENTITYNUM_NONE != trace.entity_num && g_entities[trace.entity_num].client &&
+		if ( ENTITYNUM_NONE != trace.entityNum && g_entities[trace.entityNum].client &&
 #ifndef _JK2MP //no rancor in jk2mp (at least not currently)
-			g_entities[trace.entity_num].client->NPC_class != CLASS_RANCOR &&
+			g_entities[trace.entityNum].client->NPC_class != CLASS_RANCOR &&
 #else //and in mp want to check inuse
-			g_entities[trace.entity_num].inuse &&
+			g_entities[trace.entityNum].inuse &&
 #endif
-			g_entities[trace.entity_num].client->NPC_class != CLASS_VEHICLE )
+			g_entities[trace.entityNum].client->NPC_class != CLASS_VEHICLE )
 		{
 			vec3_t push_dir;
 			vec3_t angs;
@@ -524,16 +524,16 @@ static void AnimalTailSwipe(Vehicle_t* p_veh, gentity_t *parent, gentity_t *pilo
 
 			// Smack this ho down.
 #ifdef _JK2MP
-			G_Sound( &g_entities[trace.entity_num], CHAN_AUTO, G_SoundIndex( "sound/chars/rancor/swipehit.wav" ) );
+			G_Sound( &g_entities[trace.entityNum], CHAN_AUTO, G_SoundIndex( "sound/chars/rancor/swipehit.wav" ) );
 #else
-			G_Sound( &g_entities[trace.entity_num], G_SoundIndex( "sound/chars/rancor/swipehit.wav" ) );
+			G_Sound( &g_entities[trace.entityNum], G_SoundIndex( "sound/chars/rancor/swipehit.wav" ) );
 #endif
-			g_throw( &g_entities[trace.entity_num], push_dir, 50 );
+			g_throw( &g_entities[trace.entityNum], push_dir, 50 );
 
-			if ( g_entities[trace.entity_num].health > 0 )
+			if ( g_entities[trace.entityNum].health > 0 )
 			{
 				// Knock down and dish out some hurt.
-				gentity_t *hit = &g_entities[trace.entity_num];
+				gentity_t *hit = &g_entities[trace.entityNum];
 #ifdef _JK2MP
 				if (BG_KnockDownable(&hit->client->ps))
 				{

@@ -113,8 +113,8 @@ using polyVert_t = struct
 
 using poly_t = struct poly_s
 {
-	qhandle_t h_shader;
-	int num_verts;
+	qhandle_t hShader;
+	int numVerts;
 	polyVert_t* verts;
 };
 
@@ -163,8 +163,8 @@ using refEntity_t = struct
 	// texturing
 	int skinNum; // inline skin index
 
-	qhandle_t custom_skin; // NULL for default skin
-	qhandle_t custom_shader; // use one image for the entire thing
+	qhandle_t customSkin; // NULL for default skin
+	qhandle_t customShader; // use one image for the entire thing
 
 	// misc
 	byte shaderRGBA[4]; // colors used by colorSrc=vertex shaders

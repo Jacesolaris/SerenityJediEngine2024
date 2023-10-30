@@ -748,7 +748,7 @@ void BG_VehicleSetDefaults(vehicleInfo_t* vehicle)
 		}
 		strcpy(vehicle->model, "models/map_objects/ships/swoop.md3");
 
-		vehicle->model_index = 0;							//set internally, not until this vehicle is spawned into the level
+		vehicle->modelIndex = 0;							//set internally, not until this vehicle is spawned into the level
 		vehicle->skin = NULL;								//what skin to use - if make it an NPC's primary model, don't need this?
 		vehicle->riderAnim = BOTH_GUNSIT1;					//what animation the rider uses
 
@@ -1233,9 +1233,9 @@ int veh_load_vehicle(const char* vehicle_name)
 	if (vehicle->model)
 	{
 #ifdef _GAME
-		vehicle->model_index = G_model_index(va("models/players/%s/model.glm", vehicle->model));
+		vehicle->modelIndex = G_model_index(va("models/players/%s/model.glm", vehicle->model));
 #else
-		vehicle->model_index = trap->R_RegisterModel(va("models/players/%s/model.glm", vehicle->model));
+		vehicle->modelIndex = trap->R_RegisterModel(va("models/players/%s/model.glm", vehicle->model));
 #endif
 	}
 
@@ -1529,7 +1529,7 @@ void AttachRidersGeneric(const Vehicle_t* p_veh)
 	// If we have a pilot, attach him to the driver tag.
 	if (p_veh->m_pPilot)
 	{
-		mdxaBone_t bolt_matrix;
+		mdxaBone_t boltMatrix;
 		vec3_t yawOnlyAngles;
 		bgEntity_t* parent = p_veh->m_pParentEntity;
 		const bgEntity_t* pilot = p_veh->m_pPilot;
@@ -1540,9 +1540,9 @@ void AttachRidersGeneric(const Vehicle_t* p_veh)
 		VectorSet(yawOnlyAngles, 0, parent->playerState->viewangles[YAW], 0);
 
 		// Get the driver tag.
-		trap->G2API_GetBoltMatrix(parent->ghoul2, 0, crotchBolt, &bolt_matrix, yawOnlyAngles,
+		trap->G2API_GetBoltMatrix(parent->ghoul2, 0, crotchBolt, &boltMatrix, yawOnlyAngles,
 			parent->playerState->origin, BG_GetTime(), NULL, parent->modelScale);
-		BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, pilot->playerState->origin);
+		BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, pilot->playerState->origin);
 	}
 }
 #endif

@@ -883,18 +883,18 @@ void Z_LogHeap( void );
 // later on I'll re-implement __FILE__, __LINE__ etc, but for now...
 //
 #ifdef DEBUG_ZONE_ALLOCS
-void* Z_Malloc(const int i_size, const memtag_t e_tag, const qboolean b_zeroit = qfalse, const int iUnusedAlign = 4);
+void* Z_Malloc(const int iSize, const memtag_t eTag, const qboolean bZeroit = qfalse, const int iUnusedAlign = 4);
 // return memory NOT zero-filled by default
-void* S_Malloc(int i_size); // NOT 0 filled memory only for small allocations
+void* S_Malloc(int iSize); // NOT 0 filled memory only for small allocations
 #else
-void* Z_Malloc(const int i_size, const memtag_t e_tag, const qboolean b_zeroit = qfalse, const int iUnusedAlign = 4);	// return memory NOT zero-filled by default
-void* S_Malloc(int i_size);					// NOT 0 filled memory only for small allocations
+void* Z_Malloc(const int iSize, const memtag_t eTag, const qboolean bZeroit = qfalse, const int iUnusedAlign = 4);	// return memory NOT zero-filled by default
+void* S_Malloc(int iSize);					// NOT 0 filled memory only for small allocations
 #endif
 
 void Z_MorphMallocTag(void* pv_address, memtag_t eDesiredTag);
 void Z_Validate(void);
-int Z_MemSize(memtag_t e_tag);
-void Z_TagFree(memtag_t e_tag);
+int Z_MemSize(const memtag_t eTag);
+void Z_TagFree(memtag_t eTag);
 void Z_Free(void* pv_address);
 int Z_Size(void* pvAddress);
 void Com_InitZoneMemory(void);
@@ -908,7 +908,7 @@ void Hunk_ClearToMark(void);
 void Hunk_SetMark(void);
 qboolean Hunk_CheckMark(void);
 void Hunk_ClearTempMemory(void);
-void* Hunk_AllocateTempMemory(int size);
+void* Hunk_AllocateTempMemory(const int size);
 void Hunk_FreeTempMemory(void* buf);
 int Hunk_MemoryRemaining(void);
 void Hunk_Log(void);

@@ -76,7 +76,7 @@ struct SFxHelper
 	static void CloseFile(fileHandle_t fh);
 
 	// Sound
-	static void PlaySound(const vec3_t org, int entity_num, int entchannel, sfxHandle_t sfxHandle);
+	static void PlaySound(const vec3_t org, int entityNum, int entchannel, sfxHandle_t sfxHandle);
 	static void PlayLocalSound(sfxHandle_t sfxHandle, int channelNum);
 	static int RegisterSound(const gsl::cstring_view& sound);
 

@@ -242,7 +242,7 @@ void SV_CreateBaseline(void)
 {
 	for (int entnum = 1; entnum < sv.num_entities; entnum++)
 	{
-		sharedEntity_t* svent = SV_Gentity_num(entnum);
+		sharedEntity_t* svent = SV_GentityNum(entnum);
 		if (!svent->r.linked)
 		{
 			continue;
@@ -710,7 +710,7 @@ void SV_SpawnServer(char* server, const qboolean killBots, const ForceReload_e e
 				{
 					client_t* client = &svs.clients[i];
 					client->state = CS_ACTIVE;
-					sharedEntity_t* ent = SV_Gentity_num(i);
+					sharedEntity_t* ent = SV_GentityNum(i);
 					ent->s.number = i;
 					client->gentity = ent;
 
@@ -958,7 +958,7 @@ static void SV_InitRef(void)
 	ri.GetG2VertSpaceServer = GetG2VertSpaceServer;
 	G2VertSpaceServer = &IHeapAllocator_singleton;
 
-	refexport_t* ret = get_ref_api(REF_API_VERSION, &ri);
+	refexport_t* ret = GetRefAPI(REF_API_VERSION, &ri);
 
 	//	Com_Printf( "-------------------------------\n");
 

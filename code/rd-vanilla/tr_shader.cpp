@@ -47,7 +47,7 @@ constexpr auto RETAIL_ROCKET_WEDGE_SHADER_HASH = 1217042;
 constexpr auto RETAIL_ARROW_W_SHADER_HASH = 1650186;
 
 constexpr auto FILE_HASH_SIZE = 1024;
-static	shader_t* hashTable[FILE_HASH_SIZE];
+static	shader_t* sh_hashTable[FILE_HASH_SIZE];
 
 const int lightmapsNone[MAXLIGHTMAPS] =
 {
@@ -168,7 +168,7 @@ shader_t* R_FindShaderByName(const char* name) {
 	//
 	// see if the shader is already loaded
 	//
-	for (shader_t* sh = hashTable[hash]; sh; sh = sh->next) {
+	for (shader_t* sh = sh_hashTable[hash]; sh; sh = sh->next) {
 		// NOTE: if there was no shader or image available with the name strippedName
 		// then a default shader is created with lightmapIndex == LIGHTMAP_NONE, so we
 		// have to check all default shaders otherwise for every call to R_FindShader
@@ -214,7 +214,7 @@ void R_RemapShader(const char *shaderName, const char *newShaderName, const char
 	// even tho they might have different lightmaps
 	COM_StripExtension( shaderName, strippedName, sizeof(strippedName) );
 	hash = generateHashValue(strippedName);
-	for (sh = hashTable[hash]; sh; sh = sh->next) {
+	for (sh = sh_hashTable[hash]; sh; sh = sh->next) {
 		if (Q_stricmp(sh->name, strippedName) == 0) {
 			if (sh != sh2) {
 				sh->remappedShader = sh2;
@@ -2619,17 +2619,17 @@ static void FixRenderCommandList(int newShader) {
 					drawSurf_t* drawSurf;
 					shader_t* shader;
 					int			fogNum;
-					int			entity_num;
+					int			entityNum;
 					int			dlightMap;
 					int			sortedIndex;
 					const drawSurfsCommand_t* ds_cmd = (const drawSurfsCommand_t*)curCmd;
 
 					for (i = 0, drawSurf = ds_cmd->drawSurfs; i < ds_cmd->numDrawSurfs; i++, drawSurf++) {
-						R_DecomposeSort(drawSurf->sort, &entity_num, &shader, &fogNum, &dlightMap);
+						R_DecomposeSort(drawSurf->sort, &entityNum, &shader, &fogNum, &dlightMap);
 						sortedIndex = ((drawSurf->sort >> QSORT_SHADERNUM_SHIFT) & (MAX_SHADERS - 1));
 						if (sortedIndex >= newShader) {
 							sortedIndex++;
-							drawSurf->sort = (sortedIndex << QSORT_SHADERNUM_SHIFT) | (entity_num << QSORT_REFENTITYNUM_SHIFT) | (fogNum << QSORT_FOGNUM_SHIFT) | (int)dlightMap;
+							drawSurf->sort = (sortedIndex << QSORT_SHADERNUM_SHIFT) | (entityNum << QSORT_REFENTITYNUM_SHIFT) | (fogNum << QSORT_FOGNUM_SHIFT) | (int)dlightMap;
 						}
 					}
 					curCmd = (const void*)(ds_cmd + 1);
@@ -2753,8 +2753,8 @@ static shader_t* GeneratePermanentShader() {
 	SortNewShader();
 
 	const int hash = generateHashValue(new_shader->name);
-	new_shader->next = hashTable[hash];
-	hashTable[hash] = new_shader;
+	new_shader->next = sh_hashTable[hash];
+	sh_hashTable[hash] = new_shader;
 
 	return new_shader;
 }
@@ -3039,12 +3039,6 @@ static shader_t* FinishShader() {
 			const int blend_src_bits = p_stage->stateBits & GLS_SRCBLEND_BITS;
 			const int blend_dst_bits = p_stage->stateBits & GLS_DSTBLEND_BITS;
 
-			// fog color adjustment only works for blend modes that have a contribution
-			// that aproaches 0 as the modulate values aproach 0 --
-			// GL_ONE, GL_ONE
-			// GL_ZERO, GL_ONE_MINUS_SRC_COLOR
-			// GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA
-
 			// modulate, additive
 			if (blend_src_bits == GLS_SRCBLEND_ONE && blend_dst_bits == GLS_DSTBLEND_ONE ||
 				blend_src_bits == GLS_SRCBLEND_ZERO && blend_dst_bits == GLS_DSTBLEND_ONE_MINUS_SRC_COLOR) {
@@ -3270,7 +3264,7 @@ an external lightmap image and/or sets the index to a valid number
 #define EXTERNAL_LIGHTMAP     "lm_%04d.tga"     // THIS MUST BE IN SYNC WITH Q3MAP2
 static const int* R_FindLightmap(const int* lightmap_index)
 {
-	char          file_name[MAX_QPATH];
+	char          fileName[MAX_QPATH];
 
 	// don't bother with vertex lighting
 	if (*lightmap_index < 0)
@@ -3290,8 +3284,8 @@ static const int* R_FindLightmap(const int* lightmap_index)
 	R_IssuePendingRenderCommands(); //
 
 	// attempt to load an external lightmap
-	Com_sprintf(file_name, sizeof file_name, "%s/" EXTERNAL_LIGHTMAP, tr.worldDir, *lightmap_index);
-	image_t* image = R_FindImageFile(file_name, qfalse, qfalse, static_cast<qboolean>(r_ext_compressed_lightmaps->integer != 0),
+	Com_sprintf(fileName, sizeof fileName, "%s/" EXTERNAL_LIGHTMAP, tr.worldDir, *lightmap_index);
+	image_t* image = R_FindImageFile(fileName, qfalse, qfalse, static_cast<qboolean>(r_ext_compressed_lightmaps->integer != 0),
 		GL_CLAMP);
 	if (image == nullptr)
 	{
@@ -3361,7 +3355,7 @@ shader_t* R_FindShader(const char* name, const int* lightmap_index, const byte* 
 	//
 	// see if the shader is already loaded
 	//
-	for (sh = hashTable[hash]; sh; sh = sh->next) {
+	for (sh = sh_hashTable[hash]; sh; sh = sh->next) {
 		// NOTE: if there was no shader or image available with the name strippedName
 		// then a default shader is created with lightmapIndex == LIGHTMAP_NONE, so we
 		// have to check all default shaders otherwise for every call to R_FindShader
@@ -3502,8 +3496,7 @@ RE_RegisterShaderNoMip
 For menu graphics that should never be picmiped
 ====================
 */
-qhandle_t RE_RegisterShaderNoMip(const char* name) 
-{
+qhandle_t RE_RegisterShaderNoMip(const char* name) {
 	const shader_t* sh = R_FindShader(name, lightmaps2d, stylesDefault, qfalse);
 
 	// we want to return 0 if the shader failed to
@@ -3526,16 +3519,16 @@ When a handle is passed in by another module, this range checks
 it and returns a valid (possibly default) shader_t to be used internally.
 ====================
 */
-shader_t* R_GetShaderByHandle(const qhandle_t h_shader) {
-	if (h_shader < 0) {
-		ri.Printf(PRINT_WARNING, "R_GetShaderByHandle: out of range h_shader '%d'\n", h_shader);
+shader_t* R_GetShaderByHandle(const qhandle_t hShader) {
+	if (hShader < 0) {
+		ri.Printf(PRINT_WARNING, "R_GetShaderByHandle: out of range hShader '%d'\n", hShader);
 		return tr.defaultShader;
 	}
-	if (h_shader >= tr.numShaders) {
-		ri.Printf(PRINT_WARNING, "R_GetShaderByHandle: out of range h_shader '%d'\n", h_shader);
+	if (hShader >= tr.numShaders) {
+		ri.Printf(PRINT_WARNING, "R_GetShaderByHandle: out of range hShader '%d'\n", hShader);
 		return tr.defaultShader;
 	}
-	return tr.shaders[h_shader];
+	return tr.shaders[hShader];
 }
 
 /*
@@ -3649,116 +3642,16 @@ static void SetupShaderEntryPtrs()
 }
 #endif
 
-int COM_CompressShader(char* data_p)
-{
-	char* out;
-	qboolean newline = qfalse, whitespace = qfalse;
-
-	char* in = out = data_p;
-	if (in)
-	{
-		int c;
-		while ((c = *in) != 0)
-		{
-			// skip double slash comments
-			if (c == '/' && in[1] == '/')
-			{
-				while (*in && *in != '\n')
-				{
-					in++;
-				}
-			}
-			// skip number sign comments
-			else if (c == '#')
-			{
-				while (*in && *in != '\n')
-				{
-					in++;
-				}
-			}
-			// skip /* */ comments
-			else if (c == '/' && in[1] == '*')
-			{
-				while (*in && (*in != '*' || in[1] != '/'))
-					in++;
-				if (*in)
-					in += 2;
-			}
-			// record when we hit a newline
-			else if (c == '\n' || c == '\r')
-			{
-				newline = qtrue;
-				in++;
-			}
-			// record when we hit whitespace
-			else if (c == ' ' || c == '\t')
-			{
-				whitespace = qtrue;
-				in++;
-				// an actual token
-			}
-			else
-			{
-				// if we have a pending newline, emit it (and it counts as whitespace)
-				if (newline)
-				{
-					*out++ = '\n';
-					newline = qfalse;
-					whitespace = qfalse;
-				} if (whitespace)
-				{
-					*out++ = ' ';
-					whitespace = qfalse;
-				}
-
-				// copy quoted strings unmolested
-				if (c == '"')
-				{
-					*out++ = c;
-					in++;
-					while (true)
-					{
-						c = *in;
-						if (c && c != '"')
-						{
-							*out++ = c;
-							in++;
-						}
-						else
-						{
-							break;
-						}
-					}
-					if (c == '"')
-					{
-						*out++ = c;
-						in++;
-					}
-				}
-				else
-				{
-					*out = c;
-					out++;
-					in++;
-				}
-			}
-		}
-
-		*out = 0;
-	}
-	return out - data_p;
-}
-
 /*
 ====================
-Scan_And_Load_Shader_Files
+ScanAndLoadShaderFiles
 
 Finds and loads all .shader files, combining them into
 a single large text block that can be scanned for shader names
 =====================
 */
 constexpr auto MAX_SHADER_FILES = 8192;
-static void Scan_And_Load_Shader_Files()
+static void ScanAndLoadShaderFiles()
 {
 	char* buffers[MAX_SHADER_FILES];
 	int num_shader_files;
@@ -3877,13 +3770,13 @@ void R_InitShaders(const qboolean server)
 {
 	ri.Printf(PRINT_ALL, "Initializing Shaders\n");
 
-	memset(hashTable, 0, sizeof hashTable);
+	memset(sh_hashTable, 0, sizeof sh_hashTable);
 
 	if (!server)
 	{
 		CreateInternalShaders();
 
-		Scan_And_Load_Shader_Files();
+		ScanAndLoadShaderFiles();
 
 		CreateExternalShaders();
 	}

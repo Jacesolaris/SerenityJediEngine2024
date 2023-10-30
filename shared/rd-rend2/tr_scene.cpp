@@ -94,7 +94,7 @@ void R_AddPolygonSurfaces(const trRefdef_t* refdef) {
 #endif
 	int i;
 	for (i = 0, poly = refdef->polys; i < refdef->numPolys; i++, poly++) {
-		shader_t* sh = R_GetShaderByHandle(poly->h_shader);
+		shader_t* sh = R_GetShaderByHandle(poly->hShader);
 		R_AddDrawSurf(
 			(surfaceType_t*)poly,
 			REFENTITYNUM_WORLD,
@@ -116,20 +116,20 @@ RE_AddPolyToScene
 
 =====================
 */
-void RE_AddPolyToScene(qhandle_t h_shader, int num_verts, const polyVert_t* verts, int numPolys)
-{
+
+void RE_AddPolyToScene(qhandle_t hShader, int numVerts, const polyVert_t* verts, int numPolys) {
 	srfPoly_t* poly;
 	int			i, j;
 	int			fogIndex;
 	fog_t* fog;
-	vec3_t		bounds[2]{};
+	vec3_t		bounds[2];
 
 	if (!tr.registered) {
 		return;
 	}
 
 	for (j = 0; j < numPolys; j++) {
-		if ((r_numpolyverts + num_verts) > max_polyverts || r_numpolys >= max_polys) {
+		if ((r_numpolyverts + numVerts) > max_polyverts || r_numpolys >= max_polys) {
 			ri.Printf(
 				PRINT_DEVELOPER,
 				S_COLOR_YELLOW "WARNING: RE_AddPolyToScene: r_max_polys or r_max_polyverts reached\n");
@@ -138,15 +138,15 @@ void RE_AddPolyToScene(qhandle_t h_shader, int num_verts, const polyVert_t* vert
 
 		poly = &backEndData->polys[r_numpolys];
 		poly->surfaceType = SF_POLY;
-		poly->h_shader = h_shader;
-		poly->num_verts = num_verts;
+		poly->hShader = hShader;
+		poly->numVerts = numVerts;
 		poly->verts = &backEndData->polyVerts[r_numpolyverts];
 
-		Com_Memcpy(poly->verts, &verts[num_verts * j], num_verts * sizeof(*verts));
+		Com_Memcpy(poly->verts, &verts[numVerts * j], numVerts * sizeof(*verts));
 
 		// done.
 		r_numpolys++;
-		r_numpolyverts += num_verts;
+		r_numpolyverts += numVerts;
 
 		// if no world is loaded
 		if (tr.world == NULL) {
@@ -160,7 +160,7 @@ void RE_AddPolyToScene(qhandle_t h_shader, int num_verts, const polyVert_t* vert
 			// find which fog volume the poly is in
 			VectorCopy(poly->verts[0].xyz, bounds[0]);
 			VectorCopy(poly->verts[0].xyz, bounds[1]);
-			for (i = 1; i < poly->num_verts; i++) {
+			for (i = 1; i < poly->numVerts; i++) {
 				AddPointToBounds(poly->verts[i].xyz, bounds[0], bounds[1]);
 			}
 			for (fogIndex = 1; fogIndex < tr.world->numfogs; fogIndex++) {
@@ -190,7 +190,7 @@ RE_AddRefEntityToScene
 
 =====================
 */
-void RE_AddRefEntityToScene(const refEntity_t * ent) {
+void RE_AddRefEntityToScene(const refEntity_t* ent) {
 	vec3_t cross;
 
 	if (!tr.registered) {
@@ -229,7 +229,7 @@ RE_AddMiniRefEntityToScene
 1:1 with how vanilla does it --eez
 =====================
 */
-void RE_AddMiniRefEntityToScene(const miniRefEntity_t * miniRefEnt) {
+void RE_AddMiniRefEntityToScene(const miniRefEntity_t* miniRefEnt) {
 	refEntity_t entity;
 	if (!tr.registered)
 		return;
@@ -300,7 +300,7 @@ void RE_AddAdditiveLightToScene(const vec3_t org, float intensity, float r, floa
 	RE_AddDynamicLightToScene(org, intensity, r, g, b, qtrue);
 }
 
-void RE_BeginScene(const refdef_t * fd)
+void RE_BeginScene(const refdef_t* fd)
 {
 	tr.refdef.x = fd->x;
 	tr.refdef.y = fd->y;
@@ -524,7 +524,7 @@ Rendering a scene may require multiple views to be rendered
 to handle mirrors,
 @@@@@@@@@@@@@@@@@@@@@
 */
-void RE_RenderScene(const refdef_t * fd)
+void RE_RenderScene(const refdef_t* fd)
 {
 	int				startTime;
 

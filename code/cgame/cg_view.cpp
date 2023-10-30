@@ -208,11 +208,11 @@ void CG_TestModelSetAnglespost_f()
 
 void CG_TestModelAnimate_f()
 {
-	char bone_name[100];
+	char boneName[100];
 	CGhoul2Info_v& ghoul2 = *cg.testModelEntity.ghoul2;
 
-	strcpy(bone_name, CG_Argv(1));
-	gi.G2API_SetBoneAnim(&ghoul2[cg.testModel], bone_name, atoi(CG_Argv(2)), atoi(CG_Argv(3)), BONE_ANIM_OVERRIDE_LOOP,
+	strcpy(boneName, CG_Argv(1));
+	gi.G2API_SetBoneAnim(&ghoul2[cg.testModel], boneName, atoi(CG_Argv(2)), atoi(CG_Argv(3)), BONE_ANIM_OVERRIDE_LOOP,
 		atof(CG_Argv(4)), cg.time, -1, -1);
 }
 
@@ -1543,7 +1543,7 @@ static void CG_DamageBlendBlob()
 	VectorMA(ent.origin, cg.damageY * 8, cg.refdef.viewaxis[2], ent.origin);
 
 	ent.radius = cg.damageValue * 3 * (1.0 - static_cast<float>(t) / max_time);
-	ent.custom_shader = cgs.media.damageBlendBlobShader;
+	ent.customShader = cgs.media.damageBlendBlobShader;
 	ent.shaderRGBA[0] = 180 * (1.0 - static_cast<float>(t) / max_time);
 	ent.shaderRGBA[1] = 50 * (1.0 - static_cast<float>(t) / max_time);
 	ent.shaderRGBA[2] = 50 * (1.0 - static_cast<float>(t) / max_time);

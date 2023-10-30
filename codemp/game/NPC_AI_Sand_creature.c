@@ -4,7 +4,7 @@
 extern void G_Knockdown(gentity_t* self, gentity_t* attacker, const vec3_t push_dir, float strength,
 	qboolean break_saber_lock);
 extern void G_SoundOnEnt(gentity_t* ent, soundChannel_t channel, const char* sound_path);
-extern void G_GetBoltPosition(gentity_t* self, int bolt_index, vec3_t pos, int modelIndix);
+extern void G_GetBoltPosition(gentity_t* self, int boltIndex, vec3_t pos, int modelIndix);
 extern void Rancor_DropVictim(gentity_t* self); //wahoo - :p
 
 #define MIN_ATTACK_DIST_SQ	128
@@ -274,7 +274,7 @@ void SandCreature_Attack(const qboolean miss)
 			{
 				const float enemyDist = VectorNormalize(dir2Enemy);
 				//FIXME: tone this down, smaller radius
-				if (enemyDist < 200 && NPCS.NPC->enemy->client->ps.groundentity_num != ENTITYNUM_NONE)
+				if (enemyDist < 200 && NPCS.NPC->enemy->client->ps.groundentityNum != ENTITYNUM_NONE)
 				{
 					float throwStr = (200 - enemyDist) * 0.4f + 20;
 					if (throwStr > 45)
@@ -426,7 +426,7 @@ void SandCreature_CheckMovingEnts(void)
 				continue;
 			}
 
-			if (radius_ents[i]->client->ps.groundentity_num != ENTITYNUM_WORLD)
+			if (radius_ents[i]->client->ps.groundentityNum != ENTITYNUM_WORLD)
 			{
 				//not on the ground
 				continue;
@@ -544,7 +544,7 @@ void SandCreature_Chase(void)
 	}
 	//chase the enemy
 	if (NPCS.NPC->enemy->client
-		&& NPCS.NPC->enemy->client->ps.groundentity_num != ENTITYNUM_WORLD
+		&& NPCS.NPC->enemy->client->ps.groundentityNum != ENTITYNUM_WORLD
 		&& !(NPCS.NPC->NPC->aiFlags & NPCAI_LOCKEDENEMY))
 	{
 		//off the ground!

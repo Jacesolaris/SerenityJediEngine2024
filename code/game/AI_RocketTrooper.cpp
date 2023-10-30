@@ -76,7 +76,7 @@ void RT_FireDecide()
 	qboolean hit_ally = qfalse;
 	vec3_t impact_pos;
 
-	if (NPC->client->ps.groundentity_num == ENTITYNUM_NONE
+	if (NPC->client->ps.groundentityNum == ENTITYNUM_NONE
 		&& NPC->client->ps.forceJumpZStart
 		&& !PM_FlippingAnim(NPC->client->ps.legsAnim)
 		&& !Q_irand(0, 10))
@@ -529,7 +529,7 @@ void RT_Flying_MaintainHeight()
 
 			float enemyZHeight = NPC->enemy->currentOrigin[2];
 			if (NPC->enemy->client
-				&& NPC->enemy->client->ps.groundentity_num == ENTITYNUM_NONE
+				&& NPC->enemy->client->ps.groundentityNum == ENTITYNUM_NONE
 				&& NPC->enemy->client->ps.forcePowersActive & 1 << FP_LEVITATION)
 			{
 				//so we don't go up when they force jump up at us
@@ -558,7 +558,7 @@ void RT_Flying_MaintainHeight()
 			//don't get too far away from height of enemy...
 			float enemyZHeight = NPC->enemy->currentOrigin[2];
 			if (NPC->enemy->client
-				&& NPC->enemy->client->ps.groundentity_num == ENTITYNUM_NONE
+				&& NPC->enemy->client->ps.groundentityNum == ENTITYNUM_NONE
 				&& NPC->enemy->client->ps.forcePowersActive & 1 << FP_LEVITATION)
 			{
 				//so we don't go up when they force jump up at us
@@ -934,7 +934,7 @@ void NPC_BSRT_Default()
 	//attack1 is on ground, attack2 is in air
 
 	//FIXME: this doesn't belong here
-	if (NPC->client->ps.groundentity_num != ENTITYNUM_NONE)
+	if (NPC->client->ps.groundentityNum != ENTITYNUM_NONE)
 	{
 		if (NPCInfo->rank >= RANK_LT) //&& !Q_irand( 0, 50 ) )
 		{

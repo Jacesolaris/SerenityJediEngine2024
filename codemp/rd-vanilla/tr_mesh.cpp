@@ -149,15 +149,15 @@ RE_GetModelBounds
 =================
 */
 //rwwRMG - added
-void RE_GetModelBounds(const refEntity_t* ref_ent, vec3_t bounds1, vec3_t bounds2)
+void RE_GetModelBounds(const refEntity_t* refEnt, vec3_t bounds1, vec3_t bounds2)
 {
-	assert(ref_ent);
+	assert(refEnt);
 
-	const model_t* model = R_GetModelByHandle(ref_ent->hModel);
+	const model_t* model = R_GetModelByHandle(refEnt->hModel);
 	assert(model);
 	md3Header_t* header = model->md3[0];
 	assert(header);
-	const md3Frame_t* frame = (md3Frame_t*)((byte*)header + header->ofsFrames) + ref_ent->frame;
+	const md3Frame_t* frame = (md3Frame_t*)((byte*)header + header->ofsFrames) + refEnt->frame;
 	assert(frame);
 
 	VectorCopy(frame->bounds[0], bounds1);
@@ -173,7 +173,7 @@ R_ComputeLOD
 int R_ComputeLOD(trRefEntity_t* ent) {
 	int lod;
 
-	if (tr.current_model->numLods < 2)
+	if (tr.currentModel->numLods < 2)
 	{
 		// model has only 1 LOD level, skip computations and bias
 		lod = 0;
@@ -185,7 +185,7 @@ int R_ComputeLOD(trRefEntity_t* ent) {
 		// multiple LODs exist, so compute projected bounding sphere
 		// and use that as a criteria for selecting LOD
 
-		auto frame = (md3Frame_t*)((unsigned char*)tr.current_model->md3[0] + tr.current_model->md3[0]->ofsFrames);
+		auto frame = (md3Frame_t*)((unsigned char*)tr.currentModel->md3[0] + tr.currentModel->md3[0]->ofsFrames);
 
 		frame += ent->e.frame;
 
@@ -210,23 +210,23 @@ int R_ComputeLOD(trRefEntity_t* ent) {
 			flod = 0;
 		}
 
-		flod *= tr.current_model->numLods;
+		flod *= tr.currentModel->numLods;
 		lod = Q_ftol(flod);
 
 		if (lod < 0)
 		{
 			lod = 0;
 		}
-		else if (lod >= tr.current_model->numLods)
+		else if (lod >= tr.currentModel->numLods)
 		{
-			lod = tr.current_model->numLods - 1;
+			lod = tr.currentModel->numLods - 1;
 		}
 	}
 
 	lod += r_lodbias->integer;
 
-	if (lod >= tr.current_model->numLods)
-		lod = tr.current_model->numLods - 1;
+	if (lod >= tr.currentModel->numLods)
+		lod = tr.currentModel->numLods - 1;
 	if (lod < 0)
 		lod = 0;
 
@@ -281,14 +281,14 @@ void R_AddMD3Surfaces(trRefEntity_t* ent) {
 	const auto personal_model = static_cast<qboolean>(ent->e.renderfx & RF_THIRD_PERSON && !tr.viewParms.isPortal);
 
 	if (ent->e.renderfx & RF_CAP_FRAMES) {
-		if (ent->e.frame > tr.current_model->md3[0]->num_frames - 1)
-			ent->e.frame = tr.current_model->md3[0]->num_frames - 1;
-		if (ent->e.oldframe > tr.current_model->md3[0]->num_frames - 1)
-			ent->e.oldframe = tr.current_model->md3[0]->num_frames - 1;
+		if (ent->e.frame > tr.currentModel->md3[0]->numFrames - 1)
+			ent->e.frame = tr.currentModel->md3[0]->numFrames - 1;
+		if (ent->e.oldframe > tr.currentModel->md3[0]->numFrames - 1)
+			ent->e.oldframe = tr.currentModel->md3[0]->numFrames - 1;
 	}
 	else if (ent->e.renderfx & RF_WRAP_FRAMES) {
-		ent->e.frame %= tr.current_model->md3[0]->num_frames;
-		ent->e.oldframe %= tr.current_model->md3[0]->num_frames;
+		ent->e.frame %= tr.currentModel->md3[0]->numFrames;
+		ent->e.oldframe %= tr.currentModel->md3[0]->numFrames;
 	}
 
 	//
@@ -297,13 +297,13 @@ void R_AddMD3Surfaces(trRefEntity_t* ent) {
 	// when the surfaces are rendered, they don't need to be
 	// range checked again.
 	//
-	if (ent->e.frame >= tr.current_model->md3[0]->num_frames
+	if (ent->e.frame >= tr.currentModel->md3[0]->numFrames
 		|| ent->e.frame < 0
-		|| ent->e.oldframe >= tr.current_model->md3[0]->num_frames
+		|| ent->e.oldframe >= tr.currentModel->md3[0]->numFrames
 		|| ent->e.oldframe < 0) {
 		ri->Printf(PRINT_DEVELOPER, S_COLOR_RED "R_AddMD3Surfaces: no such frame %d to %d for '%s'\n",
 			ent->e.oldframe, ent->e.frame,
-			tr.current_model->name);
+			tr.currentModel->name);
 		ent->e.frame = 0;
 		ent->e.oldframe = 0;
 	}
@@ -313,7 +313,7 @@ void R_AddMD3Surfaces(trRefEntity_t* ent) {
 	//
 	const int lod = R_ComputeLOD(ent);
 
-	md3Header_t* header = tr.current_model->md3[lod];
+	md3Header_t* header = tr.currentModel->md3[lod];
 
 	//
 	// cull the entire model if merged bounding box of both frames
@@ -341,11 +341,11 @@ void R_AddMD3Surfaces(trRefEntity_t* ent) {
 	//
 	auto surface = (md3Surface_t*)((byte*)header + header->ofsSurfaces);
 	for (int i = 0; i < header->numSurfaces; i++) {
-		if (ent->e.custom_shader) {
-			shader = R_GetShaderByHandle(ent->e.custom_shader);
+		if (ent->e.customShader) {
+			shader = R_GetShaderByHandle(ent->e.customShader);
 		}
-		else if (ent->e.custom_skin > 0 && ent->e.custom_skin < tr.numSkins) {
-			skin_t* skin = R_GetSkinByHandle(ent->e.custom_skin);
+		else if (ent->e.customSkin > 0 && ent->e.customSkin < tr.numSkins) {
+			skin_t* skin = R_GetSkinByHandle(ent->e.customSkin);
 
 			// match the surface name to something in the skin file
 			shader = tr.defaultShader;

@@ -614,7 +614,7 @@ qboolean CROFFSystem::Play(const int ent_id, const int id, const qboolean do_tra
 
 	if (!isClient)
 	{
-		ent = SV_Gentity_num(ent_id);
+		ent = SV_GentityNum(ent_id);
 
 		if (ent == nullptr)
 		{
@@ -867,7 +867,7 @@ qboolean CROFFSystem::ApplyROFF(SROFFEntity* roff_ent, const CROFF* roff)
 	else
 	{
 		// Find the entity to apply the roff to
-		ent = SV_Gentity_num(roff_ent->mEntID);
+		ent = SV_GentityNum(roff_ent->mEntID);
 
 		if (ent == nullptr)
 		{
@@ -1012,7 +1012,7 @@ qboolean CROFFSystem::ClearLerp(const SROFFEntity* roff_ent)
 	else
 	{
 		// Find the entity to apply the roff to
-		sharedEntity_t* ent = SV_Gentity_num(roff_ent->mEntID);
+		sharedEntity_t* ent = SV_GentityNum(roff_ent->mEntID);
 
 		if (ent == nullptr)
 		{

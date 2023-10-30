@@ -61,10 +61,10 @@ static const byte FakeGLAFile[] =
 
 qboolean CModelCacheManager::LoadFile(const char* pFileName, void** ppFileBuffer, qboolean* pbAlreadyCached)
 {
-	char psModelFileName[MAX_QPATH];
-	NormalizePath(psModelFileName, pFileName, sizeof(psModelFileName));
+	char path[MAX_QPATH];
+	NormalizePath(path, pFileName, sizeof(path));
 
-	auto cacheEntry = FindFile(psModelFileName);
+	auto cacheEntry = FindFile(path);
 	if (cacheEntry != std::end(files))
 	{
 		*ppFileBuffer = cacheEntry->pDiskImage;
@@ -76,18 +76,18 @@ qboolean CModelCacheManager::LoadFile(const char* pFileName, void** ppFileBuffer
 	*pbAlreadyCached = qfalse;
 
 	// special case intercept first...
-	if (strcmp(sDEFAULT_GLA_NAME ".gla", psModelFileName) == 0)
+	if (!strcmp(sDEFAULT_GLA_NAME ".gla", path))
 	{
 		// return fake params as though it was found on disk...
-		//
-		void* pvFakeGLAFile = R_Malloc(sizeof FakeGLAFile, TAG_FILESYS, qfalse);
-		memcpy(pvFakeGLAFile, &FakeGLAFile[0], sizeof FakeGLAFile);
+		void* pvFakeGLAFile = R_Malloc(sizeof(FakeGLAFile), TAG_FILESYS, qfalse);
+
+		memcpy(pvFakeGLAFile, &FakeGLAFile[0], sizeof(FakeGLAFile));
 		*ppFileBuffer = pvFakeGLAFile;
-		*pbAlreadyCached = qfalse;	// faking it like this should mean that it works fine on the Mac as well
+
 		return qtrue;
 	}
 
-	int len = ri.FS_ReadFile(psModelFileName, ppFileBuffer);
+	int len = ri.FS_ReadFile(path, ppFileBuffer);
 	if (len == -1 || *ppFileBuffer == NULL)
 	{
 		return qfalse;
@@ -98,7 +98,7 @@ qboolean CModelCacheManager::LoadFile(const char* pFileName, void** ppFileBuffer
 	return qtrue;
 }
 
-void* CModelCacheManager::Allocate(int i_size, void* pvDiskBuffer, const char* psModelFileName, qboolean* bAlreadyFound, memtag_t e_tag)
+void* CModelCacheManager::Allocate(int iSize, void* pvDiskBuffer, const char* psModelFileName, qboolean* bAlreadyFound, memtag_t eTag)
 {
 	int		iChecksum = 1;
 	char	sModelName[MAX_QPATH];
@@ -119,14 +119,14 @@ void* CModelCacheManager::Allocate(int i_size, void* pvDiskBuffer, const char* p
 		/* Create this image. */
 
 		if (pvDiskBuffer)
-			Z_MorphMallocTag(pvDiskBuffer, e_tag);
+			Z_MorphMallocTag(pvDiskBuffer, eTag);
 		else
-			pvDiskBuffer = R_Malloc(i_size, e_tag, qfalse);
+			pvDiskBuffer = R_Malloc(iSize, eTag, qfalse);
 
 		files.emplace_back();
 		pFile = &files.back();
 		pFile->pDiskImage = pvDiskBuffer;
-		pFile->iAllocSize = i_size;
+		pFile->iAllocSize = iSize;
 		Q_strncpyz(pFile->path, sModelName, sizeof(pFile->path));
 #ifndef REND2_SP
 		if (ri.FS_FileIsInPAK(sModelName, &iChecksum))
@@ -177,7 +177,7 @@ void CModelCacheManager::DumpNonPure(void)
 
 	for (auto it = files.begin(); it != files.end(); /* empty */)
 	{
-		int iChecksum{};
+		int iChecksum = 0;
 #ifndef REND2_SP
 		int iInPak = ri.FS_FileIsInPAK(it->path, &iChecksum);
 #else
@@ -212,10 +212,10 @@ CModelCacheManager::AssetCache::iterator CModelCacheManager::FindAsset(const cha
 		});
 }
 
-qhandle_t CModelCacheManager::GetModelHandle(const char* file_name)
+qhandle_t CModelCacheManager::GetModelHandle(const char* fileName)
 {
 	char path[MAX_QPATH];
-	NormalizePath(path, file_name, sizeof(path));
+	NormalizePath(path, fileName, sizeof(path));
 
 	const auto it = FindAsset(path);
 	if (it == std::end(assets))
@@ -224,10 +224,10 @@ qhandle_t CModelCacheManager::GetModelHandle(const char* file_name)
 	return it->handle;
 }
 
-void CModelCacheManager::InsertModelHandle(const char* file_name, qhandle_t handle)
+void CModelCacheManager::InsertModelHandle(const char* fileName, qhandle_t handle)
 {
 	char path[MAX_QPATH];
-	NormalizePath(path, file_name, sizeof(path));
+	NormalizePath(path, fileName, sizeof(path));
 
 	Asset asset;
 	asset.handle = handle;

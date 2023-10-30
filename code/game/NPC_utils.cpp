@@ -181,7 +181,7 @@ void CalcEntitySpot(const gentity_t* ent, const spot_t spot, vec3_t point)
 
 	case SPOT_GROUND:
 		// if entity is on the ground, just use it's absmin
-		if (ent->s.groundentity_num != -1)
+		if (ent->s.groundentityNum != -1)
 		{
 			VectorCopy(ent->currentOrigin, point);
 			point[2] = ent->absmin[2];
@@ -1387,14 +1387,14 @@ void NPC_ClearLookTarget(const gentity_t* self)
 NPC_SetLookTarget
 -------------------------
 */
-void NPC_SetLookTarget(const gentity_t* self, const int ent_num, const int clear_time)
+void NPC_SetLookTarget(const gentity_t* self, const int entNum, const int clear_time)
 {
 	if (!self->client)
 	{
 		return;
 	}
 
-	self->client->renderInfo.lookTarget = ent_num;
+	self->client->renderInfo.lookTarget = entNum;
 	self->client->renderInfo.lookTargetClearTime = clear_time;
 }
 
@@ -1520,28 +1520,28 @@ void G_CheckInsanity(gentity_t* self)
 	}
 }
 
-void G_GetBoltPosition(gentity_t* self, const int bolt_index, vec3_t pos, const int model_index = 0)
+void G_GetBoltPosition(gentity_t* self, const int boltIndex, vec3_t pos, const int modelIndex = 0)
 {
 	if (!self || !self->ghoul2.size())
 	{
 		return;
 	}
-	mdxaBone_t bolt_matrix;
+	mdxaBone_t boltMatrix;
 	const vec3_t angles = { 0, self->currentAngles[YAW], 0 };
 
-	gi.G2API_GetBoltMatrix(self->ghoul2, model_index,
-		bolt_index,
-		&bolt_matrix, angles, self->currentOrigin, cg.time ? cg.time : level.time,
+	gi.G2API_GetBoltMatrix(self->ghoul2, modelIndex,
+		boltIndex,
+		&boltMatrix, angles, self->currentOrigin, cg.time ? cg.time : level.time,
 		nullptr, self->s.modelScale);
 	if (pos)
 	{
 		vec3_t result;
-		gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, result);
+		gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, result);
 		VectorCopy(result, pos);
 	}
 }
 
-float NPC_EntRangeFromBolt(const gentity_t* targ_ent, const int bolt_index)
+float NPC_EntRangeFromBolt(const gentity_t* targ_ent, const int boltIndex)
 {
 	vec3_t org = { 0.0f };
 
@@ -1550,17 +1550,17 @@ float NPC_EntRangeFromBolt(const gentity_t* targ_ent, const int bolt_index)
 		return Q3_INFINITE;
 	}
 
-	G_GetBoltPosition(NPC, bolt_index, org);
+	G_GetBoltPosition(NPC, boltIndex, org);
 
 	return Distance(targ_ent->currentOrigin, org);
 }
 
-float NPC_EnemyRangeFromBolt(const int bolt_index)
+float NPC_EnemyRangeFromBolt(const int boltIndex)
 {
-	return NPC_EntRangeFromBolt(NPC->enemy, bolt_index);
+	return NPC_EntRangeFromBolt(NPC->enemy, boltIndex);
 }
 
-int G_GetEntsNearBolt(gentity_t* self, gentity_t** radius_ents, const float radius, const int bolt_index,
+int G_GetEntsNearBolt(gentity_t* self, gentity_t** radius_ents, const float radius, const int boltIndex,
 	vec3_t bolt_org)
 {
 	vec3_t mins{}, maxs{};
@@ -1568,7 +1568,7 @@ int G_GetEntsNearBolt(gentity_t* self, gentity_t** radius_ents, const float radi
 	//get my handRBolt's position
 	vec3_t org = { 0.0f };
 
-	G_GetBoltPosition(self, bolt_index, org);
+	G_GetBoltPosition(self, boltIndex, org);
 
 	VectorCopy(org, bolt_org);
 
@@ -1583,9 +1583,9 @@ int G_GetEntsNearBolt(gentity_t* self, gentity_t** radius_ents, const float radi
 	return gi.EntitiesInBox(mins, maxs, radius_ents, 128);
 }
 
-int NPC_GetEntsNearBolt(gentity_t** radius_ents, const float radius, const int bolt_index, vec3_t bolt_org)
+int NPC_GetEntsNearBolt(gentity_t** radius_ents, const float radius, const int boltIndex, vec3_t bolt_org)
 {
-	return G_GetEntsNearBolt(NPC, radius_ents, radius, bolt_index, bolt_org);
+	return G_GetEntsNearBolt(NPC, radius_ents, radius, boltIndex, bolt_org);
 }
 
 extern qboolean RT_Flying(const gentity_t* self);

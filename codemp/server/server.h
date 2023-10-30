@@ -163,7 +163,7 @@ using client_t = struct client_s
 	int lastMessageNum; // for delta compression
 	int lastClientCommand; // reliable client message sequence
 	char lastClientCommandString[MAX_STRING_CHARS];
-	sharedEntity_t* gentity; // SV_Gentity_num(client_num)
+	sharedEntity_t* gentity; // SV_GentityNum(client_num)
 	char name[MAX_NAME_LENGTH]; // extracted from userinfo, high bits masked
 
 	// downloading
@@ -395,7 +395,7 @@ void SV_SendClientSnapshot(client_t* client);
 // sv_game.c
 //
 int SV_NumForGentity(sharedEntity_t* ent);
-sharedEntity_t* SV_Gentity_num(int num);
+sharedEntity_t* SV_GentityNum(int num);
 playerState_t* SV_Gameclient_num(int num);
 svEntity_t* SV_SvEntityForGentity(sharedEntity_t* gEnt);
 sharedEntity_t* SV_GEntityForSvEntity(svEntity_t* svEnt);
@@ -417,7 +417,7 @@ int SV_BotGetConsoleMessage(int client, char* buf, int size);
 void* Bot_GetMemoryGame(int size);
 void Bot_FreeMemoryGame(void* ptr);
 
-int BotImport_DebugPolygonCreate(int color, int num_points, const vec3_t* points);
+int BotImport_DebugPolygonCreate(int color, int numPoints, const vec3_t* points);
 void BotImport_DebugPolygonDelete(int id);
 
 //============================================================
@@ -451,11 +451,11 @@ int SV_AreaEntities(const vec3_t mins, const vec3_t maxs, int* entity_list, int 
 // returns the number of pointers filled in
 // The world entity is never returned in this list.
 
-int SV_PointContents(const vec3_t p, int pass_entity_num);
+int SV_PointContents(const vec3_t p, int pass_entityNum);
 // returns the CONTENTS_* value from the world and all entities at the given point.
 
 void SV_Trace(trace_t* results, const vec3_t start, const vec3_t mins, const vec3_t maxs, const vec3_t end,
-	int pass_entity_num, int contentmask, int capsule, int traceFlags, int use_lod);
+	int pass_entityNum, int contentmask, int capsule, int traceFlags, int useLod);
 // mins and maxs are relative
 
 // if the entire move stays in a solid volume, trace.allsolid will be set,
@@ -464,10 +464,10 @@ void SV_Trace(trace_t* results, const vec3_t start, const vec3_t mins, const vec
 // if the starting point is in a solid, it will be allowed to move out
 // to an open area
 
-// pass_entity_num is explicitly excluded from clipping checks (normally ENTITYNUM_NONE)
+// pass_entityNum is explicitly excluded from clipping checks (normally ENTITYNUM_NONE)
 
 void SV_ClipToEntity(trace_t* trace, const vec3_t start, const vec3_t mins, const vec3_t maxs, const vec3_t end,
-	int entity_num, int contentmask, int capsule);
+	int entityNum, int contentmask, int capsule);
 // clip to a specific entity
 
 //

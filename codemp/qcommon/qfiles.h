@@ -105,8 +105,8 @@ typedef struct md3Tag_s {
 ** header			sizeof( md3Surface_t )
 ** shaders			sizeof( md3Shader_t ) * numShaders
 ** triangles[0]		sizeof( md3Triangle_t ) * numTriangles
-** st				sizeof( md3St_t ) * num_verts
-** XyzNormals		sizeof( md3XyzNormal_t ) * num_verts * num_frames
+** st				sizeof( md3St_t ) * numVerts
+** XyzNormals		sizeof( md3XyzNormal_t ) * numVerts * numFrames
 */
 typedef struct md3Surface_s {
 	int		ident;				//
@@ -114,17 +114,17 @@ typedef struct md3Surface_s {
 	char	name[MAX_QPATH];	// polyset name
 
 	int		flags;
-	int		num_frames;			// all surfaces in a model should have the same
+	int		numFrames;			// all surfaces in a model should have the same
 
 	int		numShaders;			// all surfaces in a model should have the same
-	int		num_verts;
+	int		numVerts;
 
 	int		numTriangles;
 	int		ofsTriangles;
 
 	int		ofsShaders;			// offset from start of md3Surface_t
 	int		ofsSt;				// texture coords are common for all frames
-	int		ofsXyzNormals;		// num_verts * num_frames
+	int		ofsXyzNormals;		// numVerts * numFrames
 
 	int		ofsEnd;				// next surface follows
 } md3Surface_t;
@@ -155,14 +155,14 @@ typedef struct md3Header_s {
 
 	int			flags;
 
-	int			num_frames;
+	int			numFrames;
 	int			numTags;
 	int			numSurfaces;
 
 	int			numSkins;
 
 	int			ofsFrames;			// offset for first frame
-	int			ofsTags;			// num_frames * numTags
+	int			ofsTags;			// numFrames * numTags
 	int			ofsSurfaces;		// first surface, others follow
 
 	int			ofsEnd;				// end of file
@@ -196,7 +196,7 @@ MDR file format
 #define	MDR_MAX_BONES	128
 
 typedef struct {
-	int			bone_index;	// these are indexes into the boneReferences,
+	int			boneIndex;	// these are indexes into the boneReferences,
 	float		   boneWeight;		// not the global per-frame bone list
 	vec3_t		offset;
 } mdrWeight_t;
@@ -221,7 +221,7 @@ typedef struct {
 
 	int			ofsHeader;	// this will be a negative number
 
-	int			num_verts;
+	int			numVerts;
 	int			ofsVerts;
 
 	int			numTriangles;
@@ -247,7 +247,7 @@ typedef struct {
 	vec3_t		localOrigin;		// midpoint of bounds, used for sphere cull
 	float		radius;			// dist from localOrigin to corner
 	char		name[16];
-	mdrBone_t	bones[1];		// [num_bones]
+	mdrBone_t	bones[1];		// [numBones]
 } mdrFrame_t;
 
 typedef struct {
@@ -258,7 +258,7 @@ typedef struct {
 	vec3_t          bounds[2];		// bounds of all surfaces of all LOD's for this frame
 	vec3_t          localOrigin;		// midpoint of bounds, used for sphere cull
 	float           radius;			// dist from localOrigin to corner
-	mdrCompBone_t   bones[1];		// [num_bones]
+	mdrCompBone_t   bones[1];		// [numBones]
 } mdrCompFrame_t;
 
 typedef struct {
@@ -268,7 +268,7 @@ typedef struct {
 } mdrLOD_t;
 
 typedef struct {
-	int                     bone_index;
+	int                     boneIndex;
 	char            name[32];
 } mdrTag_t;
 
@@ -279,9 +279,9 @@ typedef struct {
 	char		name[MAX_QPATH];	// model name
 
 	// frames and bones are shared by all levels of detail
-	int			num_frames;
-	int			num_bones;
-	int			ofsFrames;			// mdrFrame_t[num_frames]
+	int			numFrames;
+	int			numBones;
+	int			ofsFrames;			// mdrFrame_t[numFrames]
 
 	// each level of detail has completely separate sets of surfaces
 	int			numLODs;
@@ -418,14 +418,14 @@ typedef struct dleaf_s {
 
 typedef struct dbrushside_s {
 	int			planeNum;			// positive plane side faces out of the leaf
-	int			shader_num;
+	int			shaderNum;
 	int			drawSurfNum;
 } dbrushside_t;
 
 typedef struct dbrush_s {
 	int			firstSide;
 	int			numSides;
-	int			shader_num;		// the shader that determines the contents flags
+	int			shaderNum;		// the shader that determines the contents flags
 } dbrush_t;
 
 typedef struct dfog_s {
@@ -473,18 +473,18 @@ typedef enum {
 } mapSurfaceType_t;
 
 typedef struct dsurface_s {
-	int			shader_num;
+	int			shaderNum;
 	int			fogNum;
 	int			surfaceType;
 
 	int			firstVert;
-	int			num_verts;
+	int			numVerts;
 
 	int			firstIndex;
-	int			num_indexes;
+	int			numIndexes;
 
 	byte		lightmapStyles[MAXLIGHTMAPS], vertexStyles[MAXLIGHTMAPS];
-	int			lightmap_num[MAXLIGHTMAPS];
+	int			lightmapNum[MAXLIGHTMAPS];
 	int			lightmapX[MAXLIGHTMAPS], lightmapY[MAXLIGHTMAPS];
 	int			lightmapWidth, lightmapHeight;
 

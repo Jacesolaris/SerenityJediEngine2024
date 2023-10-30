@@ -28,7 +28,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 // Bolt List handling routines - so entities can attach themselves to any part of the model in question
 
 // Given a bone number, see if that bone is already in our bone list
-int G2_Find_Bolt_Bone_Num(const boltInfo_v& bltlist, const int bone_num)
+int G2_Find_Bolt_Bone_Num(const boltInfo_v& bltlist, const int boneNum)
 {
 	// look through entire list
 	for (size_t i = 0; i < bltlist.size(); i++)
@@ -39,7 +39,7 @@ int G2_Find_Bolt_Bone_Num(const boltInfo_v& bltlist, const int bone_num)
 			continue;
 		}
 
-		if (bltlist[i].boneNumber == bone_num)
+		if (bltlist[i].boneNumber == boneNum)
 		{
 			return i;
 		}
@@ -56,12 +56,12 @@ int G2_Find_Bolt_Surface_Num(const boltInfo_v& bltlist, const int surface_num, c
 	for (size_t i = 0; i < bltlist.size(); i++)
 	{
 		// if this bone entry has no info in it, bounce over it
-		if (bltlist[i].surface_number == -1)
+		if (bltlist[i].surfaceNumber == -1)
 		{
 			continue;
 		}
 
-		if (bltlist[i].surface_number == surface_num && (bltlist[i].surfaceType & flags) == flags)
+		if (bltlist[i].surfaceNumber == surface_num && (bltlist[i].surfaceType & flags) == flags)
 		{
 			return i;
 		}
@@ -73,13 +73,13 @@ int G2_Find_Bolt_Surface_Num(const boltInfo_v& bltlist, const int surface_num, c
 
 //=========================================================================================
 //// Public Bolt Routines
-int G2_Add_Bolt_Surf_Num(const CGhoul2Info* ghl_info, boltInfo_v& bltlist, const surfaceInfo_v& slist, const int surf_num)
+int G2_Add_Bolt_Surf_Num(const CGhoul2Info* ghlInfo, boltInfo_v& bltlist, const surfaceInfo_v& slist, const int surfNum)
 {
-	assert(ghl_info && ghl_info->mValid);
+	assert(ghlInfo && ghlInfo->mValid);
 	boltInfo_t			temp_bolt;
 
 	// first up, make sure have a surface first
-	if (surf_num >= static_cast<int>(slist.size()))
+	if (surfNum >= static_cast<int>(slist.size()))
 	{
 		return -1;
 	}
@@ -88,7 +88,7 @@ int G2_Add_Bolt_Surf_Num(const CGhoul2Info* ghl_info, boltInfo_v& bltlist, const
 	for (size_t i = 0; i < bltlist.size(); i++)
 	{
 		// already there??
-		if (bltlist[i].surface_number == surf_num)
+		if (bltlist[i].surfaceNumber == surfNum)
 		{
 			// increment the usage count
 			bltlist[i].boltUsed++;
@@ -101,10 +101,10 @@ int G2_Add_Bolt_Surf_Num(const CGhoul2Info* ghl_info, boltInfo_v& bltlist, const
 	for (size_t i = 0; i < bltlist.size(); i++)
 	{
 		// if this surface entry has info in it, bounce over it
-		if (bltlist[i].boneNumber == -1 && bltlist[i].surface_number == -1)
+		if (bltlist[i].boneNumber == -1 && bltlist[i].surfaceNumber == -1)
 		{
 			// if we found an entry that had a -1 for the bone / surface number, then we hit a surface / bone slot that was empty
-			bltlist[i].surface_number = surf_num;
+			bltlist[i].surfaceNumber = surfNum;
 			bltlist[i].surfaceType = G2SURFACEFLAG_GENERATED;
 			bltlist[i].boltUsed = 1;
 			return i;
@@ -112,7 +112,7 @@ int G2_Add_Bolt_Surf_Num(const CGhoul2Info* ghl_info, boltInfo_v& bltlist, const
 	}
 
 	// ok, we didn't find an existing surface of that name, or an empty slot. Lets add an entry
-	temp_bolt.surface_number = surf_num;
+	temp_bolt.surfaceNumber = surfNum;
 	temp_bolt.surfaceType = G2SURFACEFLAG_GENERATED;
 	temp_bolt.boneNumber = -1;
 	temp_bolt.boltUsed = 1;
@@ -120,26 +120,26 @@ int G2_Add_Bolt_Surf_Num(const CGhoul2Info* ghl_info, boltInfo_v& bltlist, const
 	return bltlist.size() - 1;
 }
 
-int G2_Add_Bolt(const CGhoul2Info* ghl_info, boltInfo_v& bltlist, const surfaceInfo_v& slist, const char* bone_name)
+int G2_Add_Bolt(const CGhoul2Info* ghlInfo, boltInfo_v& bltlist, const surfaceInfo_v& slist, const char* boneName)
 {
-	assert(ghl_info && ghl_info->mValid);
-	const auto mod_m = const_cast<model_t*>(ghl_info->current_model);
-	const model_t* mod_a = const_cast<model_t*>(ghl_info->animModel);
+	assert(ghlInfo && ghlInfo->mValid);
+	const auto mod_m = const_cast<model_t*>(ghlInfo->currentModel);
+	const model_t* mod_a = const_cast<model_t*>(ghlInfo->animModel);
 	int					x;
 	boltInfo_t			temp_bolt;
 	int					flags;
 
 	// first up, we'll search for that which this bolt names in all the surfaces
-	const int surf_num = G2_IsSurfaceLegal(mod_m, bone_name, &flags);
+	const int surfNum = G2_IsSurfaceLegal(mod_m, boneName, &flags);
 
 	// did we find it as a surface?
-	if (surf_num != -1)
+	if (surfNum != -1)
 	{
 		// look through entire list - see if it's already there first
 		for (size_t i = 0; i < bltlist.size(); i++)
 		{
 			// already there??
-			if (bltlist[i].surface_number == surf_num)
+			if (bltlist[i].surfaceNumber == surfNum)
 			{
 				// increment the usage count
 				bltlist[i].boltUsed++;
@@ -151,10 +151,10 @@ int G2_Add_Bolt(const CGhoul2Info* ghl_info, boltInfo_v& bltlist, const surfaceI
 		for (size_t i = 0; i < bltlist.size(); i++)
 		{
 			// if this surface entry has info in it, bounce over it
-			if (bltlist[i].boneNumber == -1 && bltlist[i].surface_number == -1)
+			if (bltlist[i].boneNumber == -1 && bltlist[i].surfaceNumber == -1)
 			{
 				// if we found an entry that had a -1 for the bone / surface number, then we hit a surface / bone slot that was empty
-				bltlist[i].surface_number = surf_num;
+				bltlist[i].surfaceNumber = surfNum;
 				bltlist[i].boltUsed = 1;
 				bltlist[i].surfaceType = 0;
 				return i;
@@ -162,7 +162,7 @@ int G2_Add_Bolt(const CGhoul2Info* ghl_info, boltInfo_v& bltlist, const surfaceI
 		}
 
 		// ok, we didn't find an existing surface of that name, or an empty slot. Lets add an entry
-		temp_bolt.surface_number = surf_num;
+		temp_bolt.surfaceNumber = surfNum;
 		temp_bolt.boneNumber = -1;
 		temp_bolt.boltUsed = 1;
 		temp_bolt.surfaceType = 0;
@@ -175,23 +175,23 @@ int G2_Add_Bolt(const CGhoul2Info* ghl_info, boltInfo_v& bltlist, const surfaceI
 	const mdxaSkelOffsets_t* offsets = reinterpret_cast<mdxaSkelOffsets_t*>(reinterpret_cast<byte*>(mod_a->mdxa) + sizeof(mdxaHeader_t));
 
 	// walk the entire list of bones in the gla file for this model and see if any match the name of the bone we want to find
-	for (x = 0; x < mod_a->mdxa->num_bones; x++)
+	for (x = 0; x < mod_a->mdxa->numBones; x++)
 	{
 		const mdxaSkel_t* skel = reinterpret_cast<mdxaSkel_t*>(reinterpret_cast<byte*>(mod_a->mdxa) + sizeof(mdxaHeader_t) + offsets->offsets[x]);
 		// if name is the same, we found it
-		if (!Q_stricmp(skel->name, bone_name))
+		if (!Q_stricmp(skel->name, boneName))
 		{
 			break;
 		}
 	}
 
 	// check to see we did actually make a match with a bone in the model
-	if (x == mod_a->mdxa->num_bones)
+	if (x == mod_a->mdxa->numBones)
 	{
 		// didn't find it? Error
-		//assert(0&&x == mod_a->mdxa->num_bones);
+		//assert(0&&x == mod_a->mdxa->numBones);
 #ifdef _DEBUG
-//		ri->Printf( PRINT_ALL, "WARNING: %s not found on skeleton\n", bone_name);
+//		ri->Printf( PRINT_ALL, "WARNING: %s not found on skeleton\n", boneName);
 #endif
 		return -1;
 	}
@@ -212,7 +212,7 @@ int G2_Add_Bolt(const CGhoul2Info* ghl_info, boltInfo_v& bltlist, const surfaceI
 	for (size_t i = 0; i < bltlist.size(); i++)
 	{
 		// if this bone entry has info in it, bounce over it
-		if (bltlist[i].boneNumber == -1 && bltlist[i].surface_number == -1)
+		if (bltlist[i].boneNumber == -1 && bltlist[i].surfaceNumber == -1)
 		{
 			// if we found an entry that had a -1 for the bone number, then we hit a bone slot that was empty
 			bltlist[i].boneNumber = x;
@@ -224,7 +224,7 @@ int G2_Add_Bolt(const CGhoul2Info* ghl_info, boltInfo_v& bltlist, const surfaceI
 
 	// ok, we didn't find an existing bone of that name, or an empty slot. Lets add an entry
 	temp_bolt.boneNumber = x;
-	temp_bolt.surface_number = -1;
+	temp_bolt.surfaceNumber = -1;
 	temp_bolt.boltUsed = 1;
 	temp_bolt.surfaceType = 0;
 	bltlist.push_back(temp_bolt);
@@ -242,13 +242,13 @@ qboolean G2_Remove_Bolt(boltInfo_v& bltlist, const int index)
 		{
 			// set this bone to not used
 			bltlist[index].boneNumber = -1;
-			bltlist[index].surface_number = -1;
+			bltlist[index].surfaceNumber = -1;
 
 			unsigned int newSize = bltlist.size();
 			// now look through the list from the back and see if there is a block of -1's we can resize off the end of the list
 			for (int i = bltlist.size() - 1; i > -1; i--)
 			{
-				if (bltlist[i].surface_number == -1 && bltlist[i].boneNumber == -1)
+				if (bltlist[i].surfaceNumber == -1 && bltlist[i].boneNumber == -1)
 				{
 					newSize = i;
 				}
@@ -287,16 +287,16 @@ void G2_RemoveRedundantBolts(boltInfo_v& bltlist, surfaceInfo_v& slist, const in
 	for (size_t i = 0; i < bltlist.size(); i++)
 	{
 		// are we using this bolt?
-		if (bltlist[i].surface_number != -1 || bltlist[i].boneNumber != -1)
+		if (bltlist[i].surfaceNumber != -1 || bltlist[i].boneNumber != -1)
 		{
 			// is this referenceing a surface?
-			if (bltlist[i].surface_number != -1)
+			if (bltlist[i].surfaceNumber != -1)
 			{
 				// is this bolt looking at a generated surface?
 				if (bltlist[i].surfaceType)
 				{
 					// yes, so look for it in the surface list
-					if (!G2_FindOverrideSurface(bltlist[i].surface_number, slist))
+					if (!G2_FindOverrideSurface(bltlist[i].surfaceNumber, slist))
 					{
 						// no - we want to remove this bolt, regardless of how many people are using it
 						bltlist[i].boltUsed = 1;
@@ -305,7 +305,7 @@ void G2_RemoveRedundantBolts(boltInfo_v& bltlist, surfaceInfo_v& slist, const in
 				}
 				// no, it's an original, so look for it in the active surfaces list
 				{
-					if (!active_surfaces[bltlist[i].surface_number])
+					if (!active_surfaces[bltlist[i].surfaceNumber])
 					{
 						// no - we want to remove this bolt, regardless of how many people are using it
 						bltlist[i].boltUsed = 1;

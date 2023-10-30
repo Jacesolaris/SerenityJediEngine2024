@@ -1101,18 +1101,18 @@ S_AddLocalSet
 
 int S_AddLocalSet(const char* name, vec3_t listener_origin, vec3_t origin, const int ent_id, const int time)
 {
-	int current_time;
+	int currentTime;
 
 	const ambientSet_t* set = aSets->GetSet(name);
 
 	if (set == nullptr)
 		return cl.serverTime;
 
-	current_time = time;
+	currentTime = time;
 
-	AS_PlayLocalSet(listener_origin, origin, set, ent_id, &current_time);
+	AS_PlayLocalSet(listener_origin, origin, set, ent_id, &currentTime);
 
-	return current_time;
+	return currentTime;
 }
 
 /*

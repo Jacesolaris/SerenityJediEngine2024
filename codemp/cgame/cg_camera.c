@@ -95,7 +95,7 @@ void CGCam_Enable(void)
 
 	//	if (g_entities[0].client->ps.saberInFlight && g_entities[0].client->ps.saber[0].Active())
 	//	{//saber is out
-	//		gentity_t* saberent = &g_entities[g_entities[0].client->ps.saberentity_num];
+	//		gentity_t* saberent = &g_entities[g_entities[0].client->ps.saberentityNum];
 	//		if (saberent)
 	//		{
 	//			WP_SaberCatch(&g_entities[0], saberent, qfalse);
@@ -658,11 +658,11 @@ void CGCam_FollowUpdate(void)
 			const int newBolt = trap->G2API_AddBolt(&fromCent->ghoul2, 0, client_camera.cameraGroupTag);
 			if (newBolt != -1)
 			{
-				mdxaBone_t bolt_matrix;
+				mdxaBone_t boltMatrix;
 
-				trap->G2API_GetBoltMatrix(&fromCent->ghoul2, 0, newBolt, &bolt_matrix, fromCent->turAngles,
+				trap->G2API_GetBoltMatrix(&fromCent->ghoul2, 0, newBolt, &boltMatrix, fromCent->turAngles,
 					fromCent->lerpOrigin, cg.time, cgs.game_models, fromCent->modelScale);
-				BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, focus[num_subjects]);
+				BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, focus[num_subjects]);
 
 				focused = qtrue;
 			}
@@ -747,11 +747,11 @@ void CGCam_FollowUpdate(void)
 				int newBolt = gi.G2API_AddBolt( &fromCent->gent->ghoul2[from->playerModel], client_camera.cameraGroupTag );
 				if ( newBolt != -1 )
 				{
-					mdxaBone_t	bolt_matrix;
+					mdxaBone_t	boltMatrix;
 					vec3_t	fromAngles = {0,from->client->ps.legsYaw,0};
 
-					gi.G2API_GetBoltMatrix( fromCent->gent->ghoul2, from->playerModel, newBolt, &bolt_matrix, fromAngles, fromCent->lerpOrigin, cg.time, cgs.model_draw, fromCent->currentState.modelScale );
-					gi.G2API_GiveMeVectorFromMatrix( bolt_matrix, ORIGIN, focus[num_subjects] );
+					gi.G2API_GetBoltMatrix( fromCent->gent->ghoul2, from->playerModel, newBolt, &boltMatrix, fromAngles, fromCent->lerpOrigin, cg.time, cgs.model_draw, fromCent->currentState.modelScale );
+					gi.G2API_GiveMeVectorFromMatrix( boltMatrix, ORIGIN, focus[num_subjects] );
 
 					focused = qtrue;
 				}
@@ -1342,8 +1342,7 @@ void CGCam_DrawWideScreen(void)
 			modulate[3] = client_camera.bar_alpha;
 
 			CG_FillRect(cg.refdef.x, cg.refdef.y, 640, client_camera.bar_height, modulate);
-			CG_FillRect(cg.refdef.x, cg.refdef.y + 480 - client_camera.bar_height, 640, client_camera.bar_height,
-				modulate);
+			CG_FillRect(cg.refdef.x, cg.refdef.y + 480 - client_camera.bar_height, 640, client_camera.bar_height, modulate);
 		}
 	}
 

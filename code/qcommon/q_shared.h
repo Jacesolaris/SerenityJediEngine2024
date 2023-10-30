@@ -393,7 +393,7 @@ public:
 int COM_GetCurrentParseLine(void);
 char* COM_Parse(const char** data_p);
 char* COM_ParseExt(const char** data_p, qboolean allow_line_breaks);
-int COM_Compress(char* data_p);
+int COM_CompressShader(char* data_p);
 qboolean COM_ParseString(const char** data, const char** s);
 qboolean COM_ParseInt(const char** data, int* i);
 qboolean COM_ParseFloat(const char** data, float* f);
@@ -567,7 +567,7 @@ using trace_t = struct
 	cplane_t plane; // surface normal at impact, transformed to world space
 	int surfaceFlags; // surface hit
 	int contents; // contents on other side of surface hit
-	int entity_num; // entity the contacted sirface is a part of
+	int entityNum; // entity the contacted sirface is a part of
 	/*
 	Ghoul2 Insert Start
 	*/
@@ -587,7 +587,7 @@ using trace_t = struct
 		saved_game.write<>(plane);
 		saved_game.write<int8_t>(surfaceFlags);
 		saved_game.write<int8_t>(contents);
-		saved_game.write<int8_t>(entity_num);
+		saved_game.write<int8_t>(entityNum);
 		saved_game.write<>(G2CollisionMap);
 	}
 
@@ -601,19 +601,19 @@ using trace_t = struct
 		saved_game.read<>(plane);
 		saved_game.read<int8_t>(surfaceFlags);
 		saved_game.read<int8_t>(contents);
-		saved_game.read<int8_t>(entity_num);
+		saved_game.read<int8_t>(entityNum);
 		saved_game.read<>(G2CollisionMap);
 	}
 };
 
-// trace->entity_num can also be 0 to (MAX_GENTITIES-1)
+// trace->entityNum can also be 0 to (MAX_GENTITIES-1)
 // or ENTITYNUM_NONE, ENTITYNUM_WORLD
 
 // markfragments are returned by CM_MarkFragments()
 using markFragment_t = struct
 {
 	int firstPoint;
-	int num_points;
+	int numPoints;
 };
 
 using orientation_t = struct
@@ -655,7 +655,7 @@ constexpr auto GENTITYNUM_BITS = 12;
 //10		// don't need to send any more //serenity does, got this from doom 3 code and it works hey hey;
 #define	MAX_GENTITIES		(1<<GENTITYNUM_BITS)
 
-// entity_nums are communicated with GENTITY_BITS, so any reserved
+// entityNums are communicated with GENTITY_BITS, so any reserved
 // values thatare going to be communcated over the net need to
 // also be in this range
 #define	ENTITYNUM_NONE		(MAX_GENTITIES-1)
@@ -1838,7 +1838,7 @@ public:
 	int delta_angles[3]; // add to command angles to get view direction
 	// changed by spawns, rotating objects, and teleporters
 
-	int groundentity_num; // ENTITYNUM_NONE = in air
+	int groundentityNum; // ENTITYNUM_NONE = in air
 	int legsAnim; //
 	int legsAnimTimer; // don't change low priority animations on legs until this runs out
 	int torsoAnim; //
@@ -2098,7 +2098,7 @@ public:
 #ifdef JK2_MODE
 	float		saberLengthOld;
 #endif
-	int saberentity_num;
+	int saberentityNum;
 	float saberEntityDist;
 	int saberThrowTime;
 	int saberEntityState;
@@ -2143,11 +2143,11 @@ public:
 	float forceJumpZStart; //So when you land, you don't get hurt as much
 	float forceJumpCharge;
 	//you're current forceJump charge-up level, increases the longer you hold the force jump button down
-	int forceGripentity_num; //what entity I'm gripping
+	int forceGripentityNum; //what entity I'm gripping
 	vec3_t forceGripOrg; //where the gripped ent should be lifted to
 
 #ifndef JK2_MODE
-	int forceDrainentity_num; //what entity I'm draining
+	int forceDrainentityNum; //what entity I'm draining
 	vec3_t forceDrainOrg; //where the drained ent should be lifted to
 #endif // !JK2_MODE
 
@@ -2282,7 +2282,7 @@ public:
 		saved_game.write<int32_t>(friction);
 		saved_game.write<int32_t>(speed);
 		saved_game.write<int32_t>(delta_angles);
-		saved_game.write<int32_t>(groundentity_num);
+		saved_game.write<int32_t>(groundentityNum);
 		saved_game.write<int32_t>(legsAnim);
 		saved_game.write<int32_t>(legsAnimTimer);
 		saved_game.write<int32_t>(torsoAnim);
@@ -2358,7 +2358,7 @@ public:
 		saved_game.write<float>(saberLengthOld);
 #endif // JK2_MODE
 
-		saved_game.write<int32_t>(saberentity_num);
+		saved_game.write<int32_t>(saberentityNum);
 		saved_game.write<float>(saberEntityDist);
 		saved_game.write<int32_t>(saberThrowTime);
 		saved_game.write<int32_t>(saberEntityState);
@@ -2402,11 +2402,11 @@ public:
 		saved_game.write<int32_t>(forcePowerLevel);
 		saved_game.write<float>(forceJumpZStart);
 		saved_game.write<float>(forceJumpCharge);
-		saved_game.write<int32_t>(forceGripentity_num);
+		saved_game.write<int32_t>(forceGripentityNum);
 		saved_game.write<float>(forceGripOrg);
 
 #ifndef JK2_MODE
-		saved_game.write<int32_t>(forceDrainentity_num);
+		saved_game.write<int32_t>(forceDrainentityNum);
 		saved_game.write<float>(forceDrainOrg);
 #endif // !JK2_MODE
 
@@ -2538,7 +2538,7 @@ public:
 		saved_game.read<int32_t>(friction);
 		saved_game.read<int32_t>(speed);
 		saved_game.read<int32_t>(delta_angles);
-		saved_game.read<int32_t>(groundentity_num);
+		saved_game.read<int32_t>(groundentityNum);
 		saved_game.read<int32_t>(legsAnim);
 		saved_game.read<int32_t>(legsAnimTimer);
 		saved_game.read<int32_t>(torsoAnim);
@@ -2614,7 +2614,7 @@ public:
 		saved_game.read<float>(saberLengthOld);
 #endif // JK2_MODE
 
-		saved_game.read<int32_t>(saberentity_num);
+		saved_game.read<int32_t>(saberentityNum);
 		saved_game.read<float>(saberEntityDist);
 		saved_game.read<int32_t>(saberThrowTime);
 		saved_game.read<int32_t>(saberEntityState);
@@ -2658,11 +2658,11 @@ public:
 		saved_game.read<int32_t>(forcePowerLevel);
 		saved_game.read<float>(forceJumpZStart);
 		saved_game.read<float>(forceJumpCharge);
-		saved_game.read<int32_t>(forceGripentity_num);
+		saved_game.read<int32_t>(forceGripentityNum);
 		saved_game.read<float>(forceGripOrg);
 
 #ifndef JK2_MODE
-		saved_game.read<int32_t>(forceDrainentity_num);
+		saved_game.read<int32_t>(forceDrainentityNum);
 		saved_game.read<float>(forceDrainOrg);
 #endif // !JK2_MODE
 
@@ -2971,10 +2971,10 @@ using entityState_t = struct entityState_s
 	vec3_t angles;
 	vec3_t angles2;
 
-	int otherentity_num; // shotgun sources, etc
-	int otherentity_num2;
+	int otherentityNum; // shotgun sources, etc
+	int otherentityNum2;
 
-	int groundentity_num; // -1 = in air
+	int groundentityNum; // -1 = in air
 
 	int constantLight; // r + (g<<8) + (b<<16) + (intensity<<24)
 	int loopSound; // constantly loop this sound
@@ -3023,7 +3023,7 @@ using entityState_t = struct entityState_s
 	vec3_t modelScale; // used to scale models in any axis
 	int radius;
 	// used for culling all the ghoul models attached to this ent NOTE - this is automatically scaled by Ghoul2 if/when you scale the model. This is a 100% size value
-	int bolt_info;
+	int boltInfo;
 	// info used for bolting entities to Ghoul2 models - NOT used for bolting ghoul2 models to themselves, more for stuff like bolting effects to ghoul2 models
 	/*
 	Ghoul2 Insert End
@@ -3115,9 +3115,9 @@ using entityState_t = struct entityState_s
 		saved_game.write<float>(origin2);
 		saved_game.write<float>(angles);
 		saved_game.write<float>(angles2);
-		saved_game.write<int32_t>(otherentity_num);
-		saved_game.write<int32_t>(otherentity_num2);
-		saved_game.write<int32_t>(groundentity_num);
+		saved_game.write<int32_t>(otherentityNum);
+		saved_game.write<int32_t>(otherentityNum2);
+		saved_game.write<int32_t>(groundentityNum);
 		saved_game.write<int32_t>(constantLight);
 		saved_game.write<int32_t>(loopSound);
 		saved_game.write<int32_t>(modelindex);
@@ -3147,7 +3147,7 @@ using entityState_t = struct entityState_s
 
 		saved_game.write<float>(modelScale);
 		saved_game.write<int32_t>(radius);
-		saved_game.write<int32_t>(bolt_info);
+		saved_game.write<int32_t>(boltInfo);
 
 #ifndef JK2_MODE
 		saved_game.write<int32_t>(isPortalEnt);
@@ -3231,9 +3231,9 @@ using entityState_t = struct entityState_s
 		saved_game.read<float>(origin2);
 		saved_game.read<float>(angles);
 		saved_game.read<float>(angles2);
-		saved_game.read<int32_t>(otherentity_num);
-		saved_game.read<int32_t>(otherentity_num2);
-		saved_game.read<int32_t>(groundentity_num);
+		saved_game.read<int32_t>(otherentityNum);
+		saved_game.read<int32_t>(otherentityNum2);
+		saved_game.read<int32_t>(groundentityNum);
 		saved_game.read<int32_t>(constantLight);
 		saved_game.read<int32_t>(loopSound);
 		saved_game.read<int32_t>(modelindex);
@@ -3263,7 +3263,7 @@ using entityState_t = struct entityState_s
 
 		saved_game.read<float>(modelScale);
 		saved_game.read<int32_t>(radius);
-		saved_game.read<int32_t>(bolt_info);
+		saved_game.read<int32_t>(boltInfo);
 
 #ifndef JK2_MODE
 		saved_game.read<int32_t>(isPortalEnt);
@@ -3357,8 +3357,8 @@ using SSkinGoreData = struct SSkinGoreData_s
 {
 	vec3_t angles;
 	vec3_t position;
-	int current_time;
-	int ent_num;
+	int currentTime;
+	int entNum;
 	vec3_t rayDirection; // in world space
 	vec3_t hitLocation; // in world space
 	vec3_t scale;
@@ -3406,7 +3406,7 @@ using sharedRagDollUpdateParams_t = struct
 //rww - update parms for ik bone stuff
 using sharedIKMoveParams_t = struct
 {
-	char bone_name[512]; //name of bone
+	char boneName[512]; //name of bone
 	vec3_t desiredOrigin; //world coordinate that this bone should be attempting to reach
 	vec3_t origin; //world coordinate of the entity who owns the g2 instance that owns the bone
 	float movementSpeed; //how fast the bone should move toward the destination
@@ -3420,10 +3420,10 @@ using sharedSetBoneIKStateParams_t = struct
 	vec3_t angles; //angles of caller
 	vec3_t scale; //scale of caller
 	float radius; //bone rad
-	int blend_time; //bone blend time
+	int blendTime; //bone blend time
 	int pcjOverrides; //override ik bone flags
-	int start_frame; //base pose start
-	int end_frame; //base pose end
+	int startFrame; //base pose start
+	int endFrame; //base pose end
 };
 
 enum sharedEIKMoveState
@@ -3481,7 +3481,7 @@ Ghoul2 Insert End
 constexpr auto MAX_PARSEFILES = 16;
 using parseData_t = struct parseData_s
 {
-	char file_name[MAX_QPATH]; // Name of current file being read in
+	char fileName[MAX_QPATH]; // Name of current file being read in
 	int com_lines; // Number of lines read in
 	int com_tokenline;
 	const char* bufferStart; // Start address of buffer holding data that was read in

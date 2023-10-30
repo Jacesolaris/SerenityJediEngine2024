@@ -23,7 +23,7 @@ RE_RegisterSkin
 
 bool gServerSkinHack = false;
 
-shader_t* R_FindServerShader(const char* name, const int* lightmapIndex, const byte* styles);
+shader_t* R_FindServerShader(const char* name, const int* lightmapIndexes, const byte* styles, qboolean mipRawImage);
 static char* CommaParse(char** data_p);
 /*
 ===============
@@ -82,11 +82,11 @@ bool RE_SplitSkins(const char* INname, char* skinhead, char* skintorso, char* sk
 }
 
 // given a name, go get the skin we want and return
-qhandle_t RE_RegisterIndividualSkin(const char* name, qhandle_t hSkin)
+qhandle_t RE_RegisterIndividualSkin(const char* name, const qhandle_t hSkin)
 {
 	skin_t* skin;
 	skinSurface_t* surf;
-	char* text, * text_p;
+	char* text = nullptr, * text_p;
 	char* token;
 	char			surfName[MAX_QPATH];
 
@@ -147,7 +147,7 @@ qhandle_t RE_RegisterIndividualSkin(const char* name, qhandle_t hSkin)
 
 		Q_strncpyz(surf->name, surfName, sizeof(surf->name));
 
-		if (gServerSkinHack)	surf->shader = R_FindServerShader(token, lightmapsNone, stylesDefault);
+		if (gServerSkinHack)	surf->shader = R_FindServerShader(token, lightmapsNone, stylesDefault, qtrue);
 		else					surf->shader = R_FindShader(token, lightmapsNone, stylesDefault, qtrue);
 		skin->numSurfaces++;
 	}
@@ -171,7 +171,7 @@ qhandle_t RE_RegisterSkin(const char* name) {
 		return 0;
 	}
 
-	if (strlen(name) >= MAX_QPATH) {
+	if (strlen(name) >= MAX_SKINNAME_PATH) {
 		Com_Printf("Skin name exceeds MAX_QPATH\n");
 		return 0;
 	}
@@ -209,9 +209,9 @@ qhandle_t RE_RegisterSkin(const char* name) {
 		return hSkin;
 	}
 #endif
-	char skinhead[MAX_QPATH] = { 0 };
-	char skintorso[MAX_QPATH] = { 0 };
-	char skinlower[MAX_QPATH] = { 0 };
+	char skinhead[MAX_SKINNAME_PATH] = { 0 };
+	char skintorso[MAX_SKINNAME_PATH] = { 0 };
+	char skinlower[MAX_SKINNAME_PATH] = { 0 };
 	if (RE_SplitSkins(name, (char*)&skinhead, (char*)&skintorso, (char*)&skinlower))
 	{//three part
 		hSkin = RE_RegisterIndividualSkin(skinhead, hSkin);
@@ -379,7 +379,7 @@ AnimationCFGs_t AnimationCFGs;
 // Usage:  call with psDest == NULL for a size enquire (for malloc),
 //				then with NZ ptr for it to copy to your supplied buffer...
 //
-int RE_GetAnimationCFG(const char* psCFGFilename, char* psDest, int iDestSize)
+int RE_GetAnimationCFG(const char* psCFGFilename, char* psDest, const int iDestSize)
 {
 	char* psText = NULL;
 

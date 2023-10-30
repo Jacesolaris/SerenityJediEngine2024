@@ -169,7 +169,7 @@ qboolean UI_SaberModelForSaber(const char* saber_name, char* saberModel)
 
 qboolean UI_SaberSkinForSaber(const char* saber_name, char* saberSkin)
 {
-	return WP_SaberParseParm(saber_name, "custom_skin", saberSkin);
+	return WP_SaberParseParm(saber_name, "customSkin", saberSkin);
 }
 
 qboolean UI_SaberTypeForSaber(const char* saber_name, char* saberType)
@@ -592,7 +592,7 @@ void UI_DoSaber(vec3_t origin, vec3_t dir, float length, float lengthMax, float 
 	VectorCopy(origin, saber.origin);
 	VectorCopy(dir, saber.axis[0]);
 	saber.reType = RT_SABER_GLOW;
-	saber.custom_shader = glow;
+	saber.customShader = glow;
 	saber.shaderRGBA[0] = saber.shaderRGBA[1] = saber.shaderRGBA[2] = saber.shaderRGBA[3] = 0xff;
 
 	if (color != SABER_RGB)
@@ -610,7 +610,7 @@ void UI_DoSaber(vec3_t origin, vec3_t dir, float length, float lengthMax, float 
 	// Do the hot core
 	VectorMA(origin, length, dir, saber.origin);
 	VectorMA(origin, -1, dir, saber.oldorigin);
-	saber.custom_shader = blade;
+	saber.customShader = blade;
 	saber.reType = RT_LINE;
 	radiusStart = radius / 3.0f;
 	saber.radius = (radiusStart + Q_flrand(-1.0f, 1.0f) * radiusRange) * radiusmult;
@@ -620,7 +620,7 @@ void UI_DoSaber(vec3_t origin, vec3_t dir, float length, float lengthMax, float 
 	if (color != SABER_RGB)
 		return;
 
-	saber.custom_shader = blade;
+	saber.customShader = blade;
 	saber.reType = RT_LINE;
 	saber.shaderTexCoord[0] = saber.shaderTexCoord[1] = 1.0f;
 	saber.shaderRGBA[0] = saber.shaderRGBA[1] = saber.shaderRGBA[2] = saber.shaderRGBA[3] = 0xff;
@@ -755,7 +755,7 @@ void UI_DobattlefrontSaber(vec3_t origin, vec3_t dir, float length, float length
 			VectorCopy(origin, saber.origin);
 			VectorCopy(dir, saber.axis[0]);
 			saber.reType = RT_SABER_GLOW;
-			saber.custom_shader = glow;
+			saber.customShader = glow;
 
 			if (color != SABER_RGB)
 				saber.shaderRGBA[0] = saber.shaderRGBA[1] = saber.shaderRGBA[2] = saber.shaderRGBA[3] = 0xff;
@@ -773,7 +773,7 @@ void UI_DobattlefrontSaber(vec3_t origin, vec3_t dir, float length, float length
 		// Do the hot core
 		VectorMA(origin, length, dir, saber.origin);
 		VectorMA(origin, -1, dir, saber.oldorigin);
-		saber.custom_shader = blade;
+		saber.customShader = blade;
 		saber.reType = RT_LINE;
 		saber.radius = coreradius;
 		saber.shaderTexCoord[0] = saber.shaderTexCoord[1] = 1.0f;
@@ -908,7 +908,7 @@ void UI_DoSFXSaber(vec3_t origin, vec3_t dir, float length, float lengthMax, flo
 			VectorCopy(origin, saber.origin);
 			VectorCopy(dir, saber.axis[0]);
 			saber.reType = RT_SABER_GLOW;
-			saber.custom_shader = glow;
+			saber.customShader = glow;
 
 			if (color != SABER_RGB)
 				saber.shaderRGBA[0] = saber.shaderRGBA[1] = saber.shaderRGBA[2] = saber.shaderRGBA[3] = 0xff;
@@ -926,7 +926,7 @@ void UI_DoSFXSaber(vec3_t origin, vec3_t dir, float length, float lengthMax, flo
 		// Do the hot core
 		VectorMA(origin, length, dir, saber.origin);
 		VectorMA(origin, -1, dir, saber.oldorigin);
-		saber.custom_shader = blade;
+		saber.customShader = blade;
 		saber.reType = RT_LINE;
 		saber.radius = coreradius;
 		saber.shaderTexCoord[0] = saber.shaderTexCoord[1] = 1.0f;
@@ -1062,7 +1062,7 @@ void UI_DoEp1Saber(vec3_t origin, vec3_t dir, float length, float lengthMax, flo
 			VectorCopy(origin, saber.origin);
 			VectorCopy(dir, saber.axis[0]);
 			saber.reType = RT_SABER_GLOW;
-			saber.custom_shader = glow;
+			saber.customShader = glow;
 
 			if (color != SABER_RGB)
 				saber.shaderRGBA[0] = saber.shaderRGBA[1] = saber.shaderRGBA[2] = saber.shaderRGBA[3] = 0xff;
@@ -1080,7 +1080,7 @@ void UI_DoEp1Saber(vec3_t origin, vec3_t dir, float length, float lengthMax, flo
 		// Do the hot core
 		VectorMA(origin, length, dir, saber.origin);
 		VectorMA(origin, -1, dir, saber.oldorigin);
-		saber.custom_shader = blade;
+		saber.customShader = blade;
 		saber.reType = RT_LINE;
 		saber.radius = coreradius;
 		saber.shaderTexCoord[0] = saber.shaderTexCoord[1] = 1.0f;
@@ -1216,7 +1216,7 @@ void UI_DoEp2Saber(vec3_t origin, vec3_t dir, float length, float lengthMax, flo
 			VectorCopy(origin, saber.origin);
 			VectorCopy(dir, saber.axis[0]);
 			saber.reType = RT_SABER_GLOW;
-			saber.custom_shader = glow;
+			saber.customShader = glow;
 
 			if (color != SABER_RGB)
 				saber.shaderRGBA[0] = saber.shaderRGBA[1] = saber.shaderRGBA[2] = saber.shaderRGBA[3] = 0xff;
@@ -1234,7 +1234,7 @@ void UI_DoEp2Saber(vec3_t origin, vec3_t dir, float length, float lengthMax, flo
 		// Do the hot core
 		VectorMA(origin, length, dir, saber.origin);
 		VectorMA(origin, -1, dir, saber.oldorigin);
-		saber.custom_shader = blade;
+		saber.customShader = blade;
 		saber.reType = RT_LINE;
 		saber.radius = coreradius;
 		saber.shaderTexCoord[0] = saber.shaderTexCoord[1] = 1.0f;
@@ -1370,7 +1370,7 @@ void UI_DoEp3Saber(vec3_t origin, vec3_t dir, float length, float lengthMax, flo
 			VectorCopy(origin, saber.origin);
 			VectorCopy(dir, saber.axis[0]);
 			saber.reType = RT_SABER_GLOW;
-			saber.custom_shader = glow;
+			saber.customShader = glow;
 
 			if (color != SABER_RGB)
 				saber.shaderRGBA[0] = saber.shaderRGBA[1] = saber.shaderRGBA[2] = saber.shaderRGBA[3] = 0xff;
@@ -1388,7 +1388,7 @@ void UI_DoEp3Saber(vec3_t origin, vec3_t dir, float length, float lengthMax, flo
 		// Do the hot core
 		VectorMA(origin, length, dir, saber.origin);
 		VectorMA(origin, -1, dir, saber.oldorigin);
-		saber.custom_shader = blade;
+		saber.customShader = blade;
 		saber.reType = RT_LINE;
 		saber.radius = coreradius;
 		saber.shaderTexCoord[0] = saber.shaderTexCoord[1] = 1.0f;
@@ -1523,7 +1523,7 @@ void UI_DoOTSaber(vec3_t origin, vec3_t dir, float length, float lengthMax, floa
 			VectorCopy(origin, saber.origin);
 			VectorCopy(dir, saber.axis[0]);
 			saber.reType = RT_SABER_GLOW;
-			saber.custom_shader = glow;
+			saber.customShader = glow;
 
 			if (color != SABER_RGB)
 				saber.shaderRGBA[0] = saber.shaderRGBA[1] = saber.shaderRGBA[2] = saber.shaderRGBA[3] = 0xff * effectalpha;
@@ -1541,7 +1541,7 @@ void UI_DoOTSaber(vec3_t origin, vec3_t dir, float length, float lengthMax, floa
 		// Do the hot core
 		VectorMA(origin, length, dir, saber.origin);
 		VectorMA(origin, -1, dir, saber.oldorigin);
-		saber.custom_shader = blade;
+		saber.customShader = blade;
 		saber.reType = RT_LINE;
 		saber.radius = coreradius;
 		saber.shaderTexCoord[0] = saber.shaderTexCoord[1] = 1.0f;
@@ -1677,7 +1677,7 @@ void UI_DoTFASaber(vec3_t origin, vec3_t dir, float length, float lengthMax, flo
 			VectorCopy(origin, saber.origin);
 			VectorCopy(dir, saber.axis[0]);
 			saber.reType = RT_SABER_GLOW;
-			saber.custom_shader = glow;
+			saber.customShader = glow;
 
 			if (color != SABER_RGB)
 				saber.shaderRGBA[0] = saber.shaderRGBA[1] = saber.shaderRGBA[2] = saber.shaderRGBA[3] = 0xff;
@@ -1695,7 +1695,7 @@ void UI_DoTFASaber(vec3_t origin, vec3_t dir, float length, float lengthMax, flo
 		// Do the hot core
 		VectorMA(origin, length, dir, saber.origin);
 		VectorMA(origin, -1, dir, saber.oldorigin);
-		saber.custom_shader = blade;
+		saber.customShader = blade;
 		saber.reType = RT_LINE;
 		saber.radius = coreradius;
 		saber.shaderTexCoord[0] = saber.shaderTexCoord[1] = 1.0f;
@@ -1831,7 +1831,7 @@ void UI_DoSaberUnstable(vec3_t origin, vec3_t dir, float length, float lengthMax
 			VectorCopy(origin, saber.origin);
 			VectorCopy(dir, saber.axis[0]);
 			saber.reType = RT_SABER_GLOW;
-			saber.custom_shader = glow;
+			saber.customShader = glow;
 
 			if (color != SABER_RGB)
 				saber.shaderRGBA[0] = saber.shaderRGBA[1] = saber.shaderRGBA[2] = saber.shaderRGBA[3] = 0xff;
@@ -1849,7 +1849,7 @@ void UI_DoSaberUnstable(vec3_t origin, vec3_t dir, float length, float lengthMax
 		// Do the hot core
 		VectorMA(origin, length, dir, saber.origin);
 		VectorMA(origin, -1, dir, saber.oldorigin);
-		saber.custom_shader = blade;
+		saber.customShader = blade;
 		saber.reType = RT_LINE;
 		saber.radius = coreradius;
 		saber.shaderTexCoord[0] = saber.shaderTexCoord[1] = 1.0f;
@@ -1985,7 +1985,7 @@ void UI_DoCustomSaber(vec3_t origin, vec3_t dir, float length, float lengthMax, 
 			VectorCopy(origin, saber.origin);
 			VectorCopy(dir, saber.axis[0]);
 			saber.reType = RT_SABER_GLOW;
-			saber.custom_shader = glow;
+			saber.customShader = glow;
 
 			if (color != SABER_RGB)
 				saber.shaderRGBA[0] = saber.shaderRGBA[1] = saber.shaderRGBA[2] = saber.shaderRGBA[3] = 0xff;
@@ -2003,7 +2003,7 @@ void UI_DoCustomSaber(vec3_t origin, vec3_t dir, float length, float lengthMax, 
 		// Do the hot core
 		VectorMA(origin, length, dir, saber.origin);
 		VectorMA(origin, -1, dir, saber.oldorigin);
-		saber.custom_shader = blade;
+		saber.customShader = blade;
 		saber.reType = RT_LINE;
 		saber.radius = coreradius;
 		saber.shaderTexCoord[0] = saber.shaderTexCoord[1] = 1.0f;
@@ -2018,7 +2018,7 @@ void UI_SaberDrawBlade(itemDef_t* item, const char* saber_name, int saberModel, 
 	char bladeColorString[MAX_QPATH];
 	vec3_t	bladeOrigin = { 0 };
 	matrix3_t	axis;
-	mdxaBone_t	bolt_matrix;
+	mdxaBone_t	boltMatrix;
 	qboolean tagHack = qfalse;
 	int snum;
 
@@ -2059,14 +2059,14 @@ void UI_SaberDrawBlade(itemDef_t* item, const char* saber_name, int saberModel, 
 		}
 	}
 
-	trap->G2API_GetBoltMatrix(item->ghoul2, saberModel, bolt, &bolt_matrix, angles, origin, uiInfo.uiDC.realTime, NULL, vec3_origin);//NULL was cgs.model_draw
+	trap->G2API_GetBoltMatrix(item->ghoul2, saberModel, bolt, &boltMatrix, angles, origin, uiInfo.uiDC.realTime, NULL, vec3_origin);//NULL was cgs.model_draw
 
 	// work the matrix axis stuff into the original axis and origins used.
-	BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, bladeOrigin);
-	BG_GiveMeVectorFromMatrix(&bolt_matrix, NEGATIVE_Y, axis[0]);//front (was NEGATIVE_Y, but the md3->glm exporter screws up this tag somethin' awful)
+	BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, bladeOrigin);
+	BG_GiveMeVectorFromMatrix(&boltMatrix, NEGATIVE_Y, axis[0]);//front (was NEGATIVE_Y, but the md3->glm exporter screws up this tag somethin' awful)
 	//		...changed this back to NEGATIVE_Y
-	BG_GiveMeVectorFromMatrix(&bolt_matrix, NEGATIVE_X, axis[1]);//right ... and changed this to NEGATIVE_X
-	BG_GiveMeVectorFromMatrix(&bolt_matrix, POSITIVE_Z, axis[2]);//up
+	BG_GiveMeVectorFromMatrix(&boltMatrix, NEGATIVE_X, axis[1]);//right ... and changed this to NEGATIVE_X
+	BG_GiveMeVectorFromMatrix(&boltMatrix, POSITIVE_Z, axis[2]);//up
 
 	// Where do I get scale from?
 
@@ -2521,7 +2521,7 @@ void UI_SaberAttachToChar(itemDef_t* item)
 			{
 				char skin_path[MAX_QPATH];
 				int boltNum;
-				//get the custom_skin, if any
+				//get the customSkin, if any
 				if (UI_SaberSkinForSaber(saber, skin_path))
 				{
 					const int g2skin = trap->R_RegisterSkin(skin_path);

@@ -13,12 +13,12 @@ namespace Zone
 {
 	namespace detail
 	{
-		inline void* Malloc(int i_size, memtag_t e_tag, qboolean b_zeroit = qfalse)
+		inline void* Malloc(int iSize, memtag_t eTag, qboolean bZeroit = qfalse)
 		{
 #ifdef _JK2EXE
-			return Z_Malloc(i_size, e_tag, b_zeroit);
+			return Z_Malloc(iSize, eTag, bZeroit);
 #else
-			return gi.Malloc(i_size, e_tag, b_zeroit);
+			return gi.Malloc(iSize, eTag, bZeroit);
 #endif
 		}
 

@@ -157,21 +157,21 @@ void set_MiscAnim(gentity_t* ent)
 	if (ent->playerModel & 1)
 	{
 		constexpr int anim = BOTH_STAND3;
-		const float anim_speed = 50.0f / animations[anim].frameLerp;
+		const float animSpeed = 50.0f / animations[anim].frameLerp;
 
 		// yes, its the same animation, so work out where we are in the leg anim, and blend us
 		gi.G2API_SetBoneAnim(&ent->ghoul2[0], "model_root", animations[anim].firstFrame,
-			animations[anim].num_frames - 1 + animations[anim].firstFrame,
-			BONE_ANIM_OVERRIDE_FREEZE | BONE_ANIM_BLEND, anim_speed, cg.time ? cg.time : level.time, -1,
+			animations[anim].numFrames - 1 + animations[anim].firstFrame,
+			BONE_ANIM_OVERRIDE_FREEZE | BONE_ANIM_BLEND, animSpeed, cg.time ? cg.time : level.time, -1,
 			350);
 	}
 	else
 	{
 		constexpr int anim = BOTH_PAIN3;
-		const float anim_speed = 50.0f / animations[anim].frameLerp;
+		const float animSpeed = 50.0f / animations[anim].frameLerp;
 		gi.G2API_SetBoneAnim(&ent->ghoul2[0], "model_root", animations[anim].firstFrame,
-			animations[anim].num_frames - 1 + animations[anim].firstFrame,
-			BONE_ANIM_OVERRIDE_FREEZE | BONE_ANIM_BLEND, anim_speed, cg.time ? cg.time : level.time, -1,
+			animations[anim].numFrames - 1 + animations[anim].firstFrame,
+			BONE_ANIM_OVERRIDE_FREEZE | BONE_ANIM_BLEND, animSpeed, cg.time ? cg.time : level.time, -1,
 			350);
 	}
 	ent->nextthink = level.time + 900;
@@ -252,10 +252,10 @@ void SP_misc_model_ghoul(gentity_t* ent)
 
 	animation_t* animations = level.knownAnimFileSets[temp_animFileIndex].animations;
 	int anim = BOTH_STAND3;
-	float anim_speed = 50.0f / animations[anim].frameLerp;
+	float animSpeed = 50.0f / animations[anim].frameLerp;
 	gi.G2API_SetBoneAnim(&ent->ghoul2[0], "model_root", animations[anim].firstFrame,
-		(animations[anim].num_frames - 1) + animations[anim].firstFrame,
-		BONE_ANIM_OVERRIDE_FREEZE, anim_speed, cg.time);
+		(animations[anim].numFrames - 1) + animations[anim].firstFrame,
+		BONE_ANIM_OVERRIDE_FREEZE, animSpeed, cg.time);
 
 	//	int test = gi.G2API_GetSurfaceRenderStatus(&ent->ghoul2[0], "l_hand");
 	//	gi.G2API_SetSurfaceOnOff(&ent->ghoul2[0], "l_arm",0x00000100);

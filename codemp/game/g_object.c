@@ -173,7 +173,7 @@ void G_RunObject(gentity_t* ent)
 	//hit something
 
 	//Do impact damage
-	gentity_t* trace_ent = &g_entities[tr.entity_num];
+	gentity_t* trace_ent = &g_entities[tr.entityNum];
 	if (tr.fraction || trace_ent && trace_ent->takedamage)
 	{
 		if (!VectorCompare(ent->r.currentOrigin, oldOrg))
@@ -246,7 +246,7 @@ void G_RunObject(gentity_t* ent)
 	}
 
 	//call touch func
-	ent->touch(ent, &g_entities[tr.entity_num], &tr);
+	ent->touch(ent, &g_entities[tr.entityNum], &tr);
 }
 
 void G_StopObjectMoving(gentity_t* object)

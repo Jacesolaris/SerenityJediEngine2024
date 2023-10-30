@@ -2527,9 +2527,9 @@ void CL_InitRef(void)
 
 	memset(&ri, 0, sizeof ri);
 
-	const auto get_ref_api = static_cast<get_ref_api_t>(Sys_LoadFunction(rendererLib, "get_ref_api"));
-	if (!get_ref_api)
-		Com_Error(ERR_FATAL, "Can't load symbol get_ref_api: '%s'", Sys_LibraryError());
+	const auto GetRefAPI = static_cast<GetRefAPI_t>(Sys_LoadFunction(rendererLib, "GetRefAPI"));
+	if (!GetRefAPI)
+		Com_Error(ERR_FATAL, "Can't load symbol GetRefAPI: '%s'", Sys_LibraryError());
 
 	//set up the import table
 	ri.Printf = CL_RefPrintf;
@@ -2615,7 +2615,7 @@ void CL_InitRef(void)
 	ri.PD_Store = PD_Store;
 	ri.PD_Load = PD_Load;
 
-	refexport_t* ret = get_ref_api(REF_API_VERSION, &ri);
+	refexport_t* ret = GetRefAPI(REF_API_VERSION, &ri);
 
 	//	Com_Printf( "-------------------------------\n");
 

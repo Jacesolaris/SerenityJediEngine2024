@@ -296,10 +296,10 @@ public:
 		mBoltNum = -1;
 	}
 
-	void SetBoltinfo(CGhoul2Info_v* ghoul2, const int ent_num, const int modelNum = -1, const int boltNum = -1)
+	void SetBoltinfo(CGhoul2Info_v* ghoul2, const int entNum, const int modelNum = -1, const int boltNum = -1)
 	{
 		mGhoul2 = ghoul2;
-		mEntNum = ent_num;
+		mEntNum = entNum;
 		mModelNum = modelNum;
 		mBoltNum = boltNum;
 	}
@@ -367,10 +367,10 @@ protected:
 	void UpdateRotation();
 
 public:
-	void SetBoltinfo(CGhoul2Info_v* ghoul2, const int ent_num, const int modelNum = -1, const int boltNum = -1)
+	void SetBoltinfo(CGhoul2Info_v* ghoul2, const int entNum, const int modelNum = -1, const int boltNum = -1)
 	{
 		mGhoul2 = ghoul2;
-		mEntNum = ent_num;
+		mEntNum = entNum;
 		mModelNum = modelNum;
 		mBoltNum = boltNum;
 	}
@@ -389,7 +389,7 @@ public:
 	virtual bool Cull(void);
 	void Draw(void) override;
 
-	void SetShader(const qhandle_t sh) { mRefEnt.custom_shader = sh; }
+	void SetShader(const qhandle_t sh) { mRefEnt.customShader = sh; }
 
 	void SetOrgOffset(const vec3_t o)
 	{

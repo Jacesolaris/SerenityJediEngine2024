@@ -533,8 +533,8 @@ struct gentity_s
 	int IcarusSoundTime; //manual debouncer for Icarus sound scripting.
 	char* cameraGroup; //used for cameragroup targeting
 
-	int start_frame; //startframe for map entity animations
-	int end_frame; //endframe for map entity animations
+	int startFrame; //startframe for map entity animations
+	int endFrame; //endframe for map entity animations
 	qboolean loopAnim; //does this animation loop?
 
 	int roff_ctr; // current roff frame we are playing
@@ -788,7 +788,7 @@ typedef struct renderInfo_s
 
 typedef struct
 {
-	int entity_num;
+	int entityNum;
 	int Debounce;
 	int saber_num;
 	int blade_num;
@@ -936,7 +936,7 @@ struct gclient_s
 	int cloakDebReduce;
 
 	int saberStoredIndex;
-	//stores saberentity_num from playerstate for when it's set to 0 (indicating saber was knocked out of the air)
+	//stores saberentityNum from playerstate for when it's set to 0 (indicating saber was knocked out of the air)
 
 	int saberKnockedTime; //if saber gets knocked away, can't pull it back until this value is < level.time
 
@@ -1471,10 +1471,10 @@ int G_RadiusList(vec3_t origin, float radius, const gentity_t* ignore, qboolean 
 void g_throw(gentity_t* targ, const vec3_t new_dir, float push);
 
 void G_FreeFakeClient(gclient_t** cl);
-void G_CreateFakeClient(int ent_num, gclient_t** cl);
+void G_CreateFakeClient(int entNum, gclient_t** cl);
 void G_CleanAllFakeClients(void);
 
-void G_SetAnim(gentity_t* ent, usercmd_t* ucmd, int set_anim_parts, int anim, int set_anim_flags, int blend_time);
+void G_SetAnim(gentity_t* ent, usercmd_t* ucmd, int set_anim_parts, int anim, int set_anim_flags, int blendTime);
 gentity_t* G_PickTarget(char* targetname);
 void GlobalUse(gentity_t* self, gentity_t* other, gentity_t* activator);
 void G_UseTargets2(gentity_t* ent, gentity_t* activator, const char* string);
@@ -1496,7 +1496,7 @@ void G_SoundAtLoc(vec3_t loc, int channel, int soundIndex);
 void G_EntitySound(gentity_t* ent, soundChannel_t channel, int soundIndex);
 void TryUse(gentity_t* ent);
 void G_SendG2KillQueue(void);
-void G_KillG2Queue(int ent_num);
+void G_KillG2Queue(int entNum);
 void G_FreeEntity(gentity_t* ed);
 qboolean G_EntitiesFree(void);
 
@@ -1519,7 +1519,7 @@ void G_AddPredictableEvent(const gentity_t* ent, int event, int eventParm);
 void G_AddEvent(gentity_t* ent, int event, int event_parm);
 void G_SetOrigin(gentity_t* ent, vec3_t origin);
 qboolean G_CheckInSolid(gentity_t* self, qboolean fix);
-void AddRemap(const char* oldShader, const char* new_shader_name, float time_offset);
+void AddRemap(const char* oldShader, const char* new_shader_name, float timeOffset);
 const char* BuildShaderStateConfig(void);
 /*
 Ghoul2 Insert Start
@@ -1892,7 +1892,7 @@ int bot_ai_shutdown(int restart);
 int BotAILoadMap();
 int bot_ai_setup_client(int client, const struct bot_settings_s* settings);
 int BotAIShutdownClient(int client);
-int bot_ai_start_frame(int time);
+int bot_ai_startFrame(int time);
 
 #include "g_team.h" // teamplay specific stuff
 

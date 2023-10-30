@@ -865,7 +865,7 @@ const void* RB_TakeScreenshotCmd(const void* data) {
 	cmd = (const screenshotCommand_t*)data;
 
 	// finish any 2D drawing if needed
-	if (tess.num_indexes)
+	if (tess.numIndexes)
 		RB_EndSurface();
 
 	const int frameNumber = backEndData->realFrameNumber;
@@ -894,7 +894,7 @@ const void* RB_TakeScreenshotCmd(const void* data) {
 	screenshot->height = cmd->height;
 	screenshot->format = cmd->format;
 	Q_strncpyz(
-		screenshot->filename, cmd->file_name, sizeof(screenshot->filename));
+		screenshot->filename, cmd->fileName, sizeof(screenshot->filename));
 
 	return (const void*)(cmd + 1);
 }
@@ -905,7 +905,7 @@ R_TakeScreenshot
 ==================
 */
 void R_TakeScreenshot(int x, int y, int width, int height, char* name, screenshotFormat_t format) {
-	static char	file_name[MAX_OSPATH]; // bad things if two screenshots per frame?
+	static char	fileName[MAX_OSPATH]; // bad things if two screenshots per frame?
 	screenshotCommand_t* cmd;
 
 	cmd = (screenshotCommand_t*)R_GetCommandBuffer(sizeof(*cmd));
@@ -918,8 +918,8 @@ void R_TakeScreenshot(int x, int y, int width, int height, char* name, screensho
 	cmd->y = y;
 	cmd->width = width;
 	cmd->height = height;
-	Q_strncpyz(file_name, name, sizeof(file_name));
-	cmd->file_name = file_name;
+	Q_strncpyz(fileName, name, sizeof(fileName));
+	cmd->fileName = fileName;
 	cmd->format = format;
 }
 
@@ -1131,7 +1131,7 @@ const void* RB_TakeVideoFrameCmd(const void* data)
 	GLint packAlign;
 
 	// finish any 2D drawing if needed
-	if (tess.num_indexes)
+	if (tess.numIndexes)
 		RB_EndSurface();
 
 	cmd = (const videoFrameCommand_t*)data;
@@ -1441,7 +1441,7 @@ static consoleCommand_t	commands[] = {
 	{ "gfxinfo",			GfxInfo_f },
 	{ "gfxmeminfo",			GfxMemInfo_f },
 	{ "r_we",				R_WorldEffect_f },
-	{ "model_list",			R_model_list_f },
+	{ "modelList",			R_model_list_f },
 	{ "vbolist",			R_VBOList_f },
 	{ "capframes",			R_CaptureFrameData_f },
 	{ "r_weather",			R_WeatherEffect_f },
@@ -1509,13 +1509,13 @@ void R_Register(void)
 	r_hdr = ri->Cvar_Get("r_hdr", "1", CVAR_ARCHIVE | CVAR_LATCH, "Disable/enable rendering in HDR");
 	r_floatLightmap = ri->Cvar_Get("r_floatLightmap", "1", CVAR_ARCHIVE | CVAR_LATCH, "Disable/enable HDR lightmap support");
 
-	r_toneMap = ri->Cvar_Get("r_toneMap", "1", CVAR_ARCHIVE | CVAR_LATCH, "Disable/enable tonemapping");
+	r_toneMap = ri->Cvar_Get("r_tonemap", "1", CVAR_ARCHIVE | CVAR_LATCH, "Disable/enable tonemapping");
 	r_forceToneMap = ri->Cvar_Get("r_forceToneMap", "0", CVAR_CHEAT, "");
 	r_forceToneMapMin = ri->Cvar_Get("r_forceToneMapMin", "-8.0", CVAR_CHEAT, "");
 	r_forceToneMapAvg = ri->Cvar_Get("r_forceToneMapAvg", "-2.0", CVAR_CHEAT, "");
 	r_forceToneMapMax = ri->Cvar_Get("r_forceToneMapMax", "0.0", CVAR_CHEAT, "");
 
-	r_autoExposure = ri->Cvar_Get("r_autoExposure", "1", CVAR_ARCHIVE, "Disable/enable auto exposure");
+	r_autoExposure = ri->Cvar_Get("r_autoexposure", "1", CVAR_ARCHIVE, "Disable/enable auto exposure");
 	r_forceAutoExposure = ri->Cvar_Get("r_forceAutoExposure", "0", CVAR_CHEAT, "");
 	r_forceAutoExposureMin = ri->Cvar_Get("r_forceAutoExposureMin", "-2.0", CVAR_CHEAT, "");
 	r_forceAutoExposureMax = ri->Cvar_Get("r_forceAutoExposureMax", "2.0", CVAR_CHEAT, "");
@@ -1557,7 +1557,7 @@ void R_Register(void)
 	r_shadowCascadeZNear = ri->Cvar_Get("r_shadowCascadeZNear", "4", CVAR_ARCHIVE | CVAR_LATCH, "");
 	r_shadowCascadeZFar = ri->Cvar_Get("r_shadowCascadeZFar", "3072", CVAR_ARCHIVE | CVAR_LATCH, "");
 	r_shadowCascadeZBias = ri->Cvar_Get("r_shadowCascadeZBias", "-320", CVAR_ARCHIVE | CVAR_LATCH, "");
-	r_ignoreDstAlpha = ri->Cvar_Get("r_ignoreDstAlpha", "0", CVAR_ARCHIVE | CVAR_LATCH, "");
+	r_ignoreDstAlpha = ri->Cvar_Get("r_ignoreDstAlpha", "1", CVAR_ARCHIVE | CVAR_LATCH, "");
 
 	//
 	// temporary latched variables that can only change over a restart
@@ -1643,7 +1643,7 @@ void R_Register(void)
 	r_drawBuffer = ri->Cvar_Get("r_drawBuffer", "GL_BACK", CVAR_CHEAT, "");
 	r_lockpvs = ri->Cvar_Get("r_lockpvs", "0", CVAR_CHEAT, "");
 	r_noportals = ri->Cvar_Get("r_noportals", "0", CVAR_CHEAT, "");
-	r_shadows = ri->Cvar_Get("cg_shadows", "3", 0, "");
+	r_shadows = ri->Cvar_Get("cg_shadows", "1", 0, "");
 
 	r_marksOnTriangleMeshes = ri->Cvar_Get("r_marksOnTriangleMeshes", "0", CVAR_ARCHIVE, "");
 
@@ -1763,7 +1763,7 @@ static void R_InitBackEndFrameData()
 		}
 	}
 
-	backEndData->current_frame = backEndData->frames;
+	backEndData->currentFrame = backEndData->frames;
 }
 
 #ifdef _G2_GORE
@@ -1879,7 +1879,7 @@ static void R_InitStaticConstants()
 	// Setup default scene block
 	SceneBlock sceneBlock = {};
 	sceneBlock.globalFogIndex = -1;
-	sceneBlock.current_time = 0.1f;
+	sceneBlock.currentTime = 0.1f;
 	sceneBlock.frameTime = 0.1f;
 
 	tr.defaultSceneUboOffset = alignedBlockSize;
@@ -2060,8 +2060,6 @@ void R_Init()
 
 	RestoreGhoul2InfoArray();
 
-	ri->Cvar_Set("com_rend2", "1");
-
 	// print info
 	GfxInfo_f();
 
@@ -2218,12 +2216,12 @@ void C_LevelLoadEnd(void)
 
 /*
 @@@@@@@@@@@@@@@@@@@@@
-get_ref_api
+GetRefAPI
 
 @@@@@@@@@@@@@@@@@@@@@
 */
 extern "C" {
-	Q_EXPORT refexport_t* QDECL get_ref_api(int apiVersion, refimport_t* rimp) {
+	Q_EXPORT refexport_t* QDECL GetRefAPI(int apiVersion, refimport_t* rimp) {
 		static refexport_t	re;
 
 		assert(rimp);

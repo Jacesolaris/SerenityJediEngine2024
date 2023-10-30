@@ -52,7 +52,7 @@ extern void WP_ForcePowersUpdate(gentity_t* self, usercmd_t* ucmd);
 extern void WP_BlockPointsUpdate(const gentity_t* self);
 extern qboolean in_front(vec3_t spot, vec3_t from, vec3_t from_angles, float thresh_hold = 0.0f);
 extern float DotToSpot(vec3_t spot, vec3_t from, vec3_t fromAngles);
-extern void NPC_SetLookTarget(const gentity_t* self, int ent_num, int clear_time);
+extern void NPC_SetLookTarget(const gentity_t* self, int entNum, int clear_time);
 extern qboolean PM_LockAngles(gentity_t* ent, usercmd_t* ucmd);
 extern qboolean PM_AdjustAnglesToGripper(gentity_t* gent, usercmd_t* cmd);
 extern qboolean PM_AdjustAnglesToPuller(gentity_t* ent, const gentity_t* puller, usercmd_t* ucmd, qboolean face_away);
@@ -97,13 +97,13 @@ extern qboolean BG_FullBodyTauntAnim(int anim);
 extern qboolean FlyingCreature(const gentity_t* ent);
 extern Vehicle_t* G_IsRidingVehicle(const gentity_t* p_ent);
 extern void G_AttachToVehicle(gentity_t* ent, usercmd_t** ucmd);
-extern void G_GetBoltPosition(gentity_t* self, int bolt_index, vec3_t pos, int model_index = 0);
+extern void G_GetBoltPosition(gentity_t* self, int boltIndex, vec3_t pos, int modelIndex = 0);
 extern void G_UpdateEmplacedWeaponData(gentity_t* ent);
 extern void RunEmplacedWeapon(gentity_t* ent, usercmd_t** ucmd);
 extern qboolean G_PointInBounds(const vec3_t point, const vec3_t mins, const vec3_t maxs);
 extern void NPC_SetPainEvent(gentity_t* self);
 extern qboolean G_HasKnockdownAnims(const gentity_t* ent);
-extern int G_GetEntsNearBolt(gentity_t* self, gentity_t** radius_ents, float radius, int bolt_index, vec3_t bolt_org);
+extern int G_GetEntsNearBolt(gentity_t* self, gentity_t** radius_ents, float radius, int boltIndex, vec3_t bolt_org);
 extern qboolean PM_InOnGroundAnim(playerState_t* ps);
 extern qboolean PM_LockedAnim(int anim);
 extern qboolean WP_SabersCheckLock2(gentity_t* attacker, gentity_t* defender, saberslock_mode_t lock_mode);
@@ -1273,7 +1273,7 @@ void DoImpact(gentity_t* self, gentity_t* other, const qboolean damage_self, con
 						//aw, fuck it, clients no longer take impact damage from other clients, unless you're the player
 						if (other->client //he's a client
 							&& self->client //I'm a client
-							&& other->client->ps.forceGripentity_num == self->s.number) //he's force-gripping me
+							&& other->client->ps.forceGripentityNum == self->s.number) //he's force-gripping me
 						{
 							//don't damage the other guy if he's gripping me
 						}
@@ -1357,7 +1357,7 @@ void DoImpact(gentity_t* self, gentity_t* other, const qboolean damage_self, con
 					700)
 				{
 					if ((self->s.weapon == WP_SABER || self->s.number == 0) && self->client && self->client->ps.
-						groundentity_num < ENTITYNUM_NONE && magnitude < 1000)
+						groundentityNum < ENTITYNUM_NONE && magnitude < 1000)
 					{
 						//players and jedi take less impact damage
 						magnitude /= 2;
@@ -1420,7 +1420,7 @@ void DoImpact(gentity_t* self, gentity_t* other, const qboolean damage_self, con
 					if ((self->s.weapon == WP_SABER || self->s.number < MAX_CLIENTS || self->client && (self->client->
 						NPC_class == CLASS_BOBAFETT || self->client->NPC_class == CLASS_ROCKETTROOPER)) && self->
 						client
-						&& self->client->ps.groundentity_num < ENTITYNUM_NONE && magnitude < 1000)
+						&& self->client->ps.groundentityNum < ENTITYNUM_NONE && magnitude < 1000)
 					{
 						//players and jedi take less impact damage
 						magnitude /= 2;
@@ -1989,7 +1989,7 @@ void ClientTimerActions(gentity_t* ent, const int msec)
 			&& !PM_InKnockDown(&ent->client->ps)
 			&& ent->client->ps.saberLockTime < level.time
 			&& ent->client->ps.saberBlockingTime < level.time
-			&& ent->client->ps.groundentity_num != ENTITYNUM_NONE)
+			&& ent->client->ps.groundentityNum != ENTITYNUM_NONE)
 		{
 			if (!(ent->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK))
 			{
@@ -2006,7 +2006,7 @@ void ClientTimerActions(gentity_t* ent, const int msec)
 			&& !PM_InKnockDown(&ent->client->ps)
 			&& ent->client->ps.saberLockTime < level.time
 			&& ent->client->ps.saberBlockingTime < level.time
-			&& ent->client->ps.groundentity_num != ENTITYNUM_NONE)
+			&& ent->client->ps.groundentityNum != ENTITYNUM_NONE)
 		{
 			WP_SaberFatigueRegenerate(1);
 		}
@@ -2638,14 +2638,14 @@ gentity_t* G_KickTrace(gentity_t* ent, vec3_t kick_dir, const float kick_dist, v
 		static_cast<EG2_Collision>(0),
 		0); //clipmask ok?
 
-	if (trace.fraction < 1.0f || trace.startsolid && trace.entity_num < ENTITYNUM_NONE)
+	if (trace.fraction < 1.0f || trace.startsolid && trace.entityNum < ENTITYNUM_NONE)
 	{
-		hit_ent = &g_entities[trace.entity_num];
+		hit_ent = &g_entities[trace.entityNum];
 
-		if (ent->client->ps.lastKickedEntNum != trace.entity_num)
+		if (ent->client->ps.lastKickedEntNum != trace.entityNum)
 		{
 			TIMER_Remove(ent, "kickSoundDebounce");
-			ent->client->ps.lastKickedEntNum = trace.entity_num;
+			ent->client->ps.lastKickedEntNum = trace.entityNum;
 		}
 
 		if (hit_ent)
@@ -2768,7 +2768,7 @@ gentity_t* G_KickTrace(gentity_t* ent, vec3_t kick_dir, const float kick_dist, v
 						if (hit_ent->health > 0)
 						{
 							//knock down
-							if (hit_ent->client->ps.groundentity_num == ENTITYNUM_NONE)
+							if (hit_ent->client->ps.groundentityNum == ENTITYNUM_NONE)
 							{
 								//he's in the air?  Send him flying back
 								if (!(hit_ent->flags & FL_NO_KNOCKBACK))
@@ -3036,7 +3036,7 @@ qboolean G_GrabClient(gentity_t* ent, const usercmd_t* ucmd)
 			//don't interrupt
 			continue;
 		}
-		if (radius_ents[i]->client->ps.groundentity_num == ENTITYNUM_NONE)
+		if (radius_ents[i]->client->ps.groundentityNum == ENTITYNUM_NONE)
 		{
 			//must be on ground
 			continue;
@@ -3366,7 +3366,7 @@ qboolean G_CheckClampUcmd(gentity_t* ent, usercmd_t* ucmd)
 	{
 		vec3_t vFwd, fwdAng = { 0, ent->currentAngles[YAW], 0 };
 		AngleVectors(fwdAng, vFwd, nullptr, nullptr);
-		if (ent->client->ps.groundentity_num == ENTITYNUM_NONE)
+		if (ent->client->ps.groundentityNum == ENTITYNUM_NONE)
 		{
 			float savZ = ent->client->ps.velocity[2];
 			VectorScale(vFwd, 100, ent->client->ps.velocity);
@@ -3379,7 +3379,7 @@ qboolean G_CheckClampUcmd(gentity_t* ent, usercmd_t* ucmd)
 	if (ent->client->ps.saber_move == LS_A_JUMP_T__B_ || ent->client->ps.saber_move == LS_A_JUMP_PALP_)
 	{
 		//can't move during leap
-		if (ent->client->ps.groundentity_num != ENTITYNUM_NONE || !ent->s.number && (player_locked ||
+		if (ent->client->ps.groundentityNum != ENTITYNUM_NONE || !ent->s.number && (player_locked ||
 			PlayerAffectedByStasis()))
 		{
 			//hit the ground
@@ -3406,7 +3406,7 @@ qboolean G_CheckClampUcmd(gentity_t* ent, usercmd_t* ucmd)
 			400) //not in beginning
 		{
 			//middle of anim
-			if (ent->client->ps.groundentity_num != ENTITYNUM_NONE)
+			if (ent->client->ps.groundentityNum != ENTITYNUM_NONE)
 			{
 				//still on ground?
 				vec3_t yawAngles, backDir;
@@ -3467,7 +3467,7 @@ qboolean G_CheckClampUcmd(gentity_t* ent, usercmd_t* ucmd)
 			400) //not in beginning
 		{
 			//one of the two jumps
-			if (ent->client->ps.groundentity_num != ENTITYNUM_NONE)
+			if (ent->client->ps.groundentityNum != ENTITYNUM_NONE)
 			{
 				//still on ground?
 				//jump!
@@ -3562,7 +3562,7 @@ qboolean G_CheckClampUcmd(gentity_t* ent, usercmd_t* ucmd)
 			if (ent->client->ps.legsAnimTimer >= 1700 && ent->client->ps.legsAnimTimer < 1800)
 			{
 				//one of the two jumps
-				if (ent->client->ps.groundentity_num != ENTITYNUM_NONE)
+				if (ent->client->ps.groundentityNum != ENTITYNUM_NONE)
 				{
 					//still on ground?
 					//jump!
@@ -3629,7 +3629,7 @@ qboolean G_CheckClampUcmd(gentity_t* ent, usercmd_t* ucmd)
 			&& ent->client->ps.legsAnimTimer < 2850)
 		{
 			//the jump
-			if (ent->client->ps.groundentity_num != ENTITYNUM_NONE)
+			if (ent->client->ps.groundentityNum != ENTITYNUM_NONE)
 			{
 				//still on ground?
 				//jump!
@@ -5325,11 +5325,11 @@ qboolean G_CheckClampUcmd(gentity_t* ent, usercmd_t* ucmd)
 		float elapsedTime = animLength - ent->client->ps.torsoAnimTimer;
 		ucmd->upmove = ucmd->rightmove = ucmd->forwardmove = 0;
 		if (elapsedTime > 600 && elapsedTime < 800
-			&& ent->client->ps.groundentity_num != ENTITYNUM_NONE)
+			&& ent->client->ps.groundentityNum != ENTITYNUM_NONE)
 		{
 			//jump - FIXME: how do we stop double-jumps?
 			ent->client->ps.pm_flags |= PMF_JUMP_HELD;
-			ent->client->ps.groundentity_num = ENTITYNUM_NONE;
+			ent->client->ps.groundentityNum = ENTITYNUM_NONE;
 			ent->client->ps.jumpZStart = ent->currentOrigin[2];
 			ent->client->ps.velocity[2] = JUMP_VELOCITY;
 			G_AddEvent(ent, EV_JUMP, 0);
@@ -5688,7 +5688,7 @@ qboolean G_CheckClampUcmd(gentity_t* ent, usercmd_t* ucmd)
 		//can't move
 		ucmd->rightmove = 0;
 		ucmd->upmove = 0;
-		if (ent->client->ps.groundentity_num != ENTITYNUM_NONE)
+		if (ent->client->ps.groundentityNum != ENTITYNUM_NONE)
 		{
 			//hit the ground
 			ucmd->forwardmove = 0;
@@ -6025,22 +6025,22 @@ void G_HeldByMonster(gentity_t* ent, usercmd_t** ucmd)
 		ent->waypoint = monster->waypoint;
 
 		//update the actual origin of the victim
-		mdxaBone_t bolt_matrix;
+		mdxaBone_t boltMatrix;
 
 		// Getting the bolt here
-		int bolt_index = monster->gutBolt; //default to being held in his mouth
+		int boltIndex = monster->gutBolt; //default to being held in his mouth
 		if (monster->count == 1)
 		{
 			//being held in hand rather than the mouth, so use *that* bolt
-			bolt_index = monster->handRBolt;
+			boltIndex = monster->handRBolt;
 		}
 		vec3_t monAngles = { 0 };
 		monAngles[YAW] = monster->currentAngles[YAW]; //only use YAW when passing angles to G2
-		gi.G2API_GetBoltMatrix(monster->ghoul2, monster->playerModel, bolt_index,
-			&bolt_matrix, monAngles, monster->currentOrigin, cg.time ? cg.time : level.time,
+		gi.G2API_GetBoltMatrix(monster->ghoul2, monster->playerModel, boltIndex,
+			&boltMatrix, monAngles, monster->currentOrigin, cg.time ? cg.time : level.time,
 			nullptr, monster->s.modelScale);
 		// Storing ent position, bolt position, and bolt axis
-		gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, ent->client->ps.origin);
+		gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, ent->client->ps.origin);
 		gi.linkentity(ent);
 		//lock view angles
 		PM_AdjustAnglesForHeldByMonster(ent, monster, *ucmd);
@@ -6491,13 +6491,13 @@ void DoCallout(gentity_t* caller, gentity_t* ourFriend)
 		return;
 	}
 
-	if (tr.entity_num == ENTITYNUM_WORLD)
+	if (tr.entityNum == ENTITYNUM_WORLD)
 	{
 		// Didn't hit an entity
 		return;
 	}
 
-	gentity_t* tracedEnemy = &g_entities[tr.entity_num];
+	gentity_t* tracedEnemy = &g_entities[tr.entityNum];
 
 	if (tracedEnemy->s.eType != ET_PLAYER)
 	{
@@ -6935,13 +6935,13 @@ void ClientAlterSpeed(gentity_t* ent, usercmd_t* ucmd, const qboolean controlled
 
 	if (!p_veh)
 	{
-		if (ucmd->forwardmove < 0 && !(ucmd->buttons & BUTTON_WALKING) && client->ps.groundentity_num != ENTITYNUM_NONE)
+		if (ucmd->forwardmove < 0 && !(ucmd->buttons & BUTTON_WALKING) && client->ps.groundentityNum != ENTITYNUM_NONE)
 		{
 			//running backwards is slower than running forwards
 			client->ps.speed *= 0.75f;
 		}
 
-		if (ucmd->forwardmove < 0 && ucmd->buttons & BUTTON_WALKING && client->ps.groundentity_num != ENTITYNUM_NONE)
+		if (ucmd->forwardmove < 0 && ucmd->buttons & BUTTON_WALKING && client->ps.groundentityNum != ENTITYNUM_NONE)
 		{
 			//walking backwards also makes a player move a little slower
 			if (client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK)
@@ -6957,7 +6957,7 @@ void ClientAlterSpeed(gentity_t* ent, usercmd_t* ucmd, const qboolean controlled
 		if (!ucmd->forwardmove
 			&& ucmd->rightmove
 			&& !(ucmd->buttons & BUTTON_WALKING)
-			&& client->ps.groundentity_num != ENTITYNUM_NONE)
+			&& client->ps.groundentityNum != ENTITYNUM_NONE)
 		{
 			//pure strafe running is slower.
 			client->ps.speed *= 0.75f;
@@ -7694,10 +7694,10 @@ void ClientThink_real(gentity_t* ent, usercmd_t* ucmd)
 			{
 				ucmd->upmove = 0;
 			}
-			if (ent->client->ps.groundentity_num != ENTITYNUM_NONE)
+			if (ent->client->ps.groundentityNum != ENTITYNUM_NONE)
 			{
 				//ATST crushes anything underneath it
-				gentity_t* under = &g_entities[ent->client->ps.groundentity_num];
+				gentity_t* under = &g_entities[ent->client->ps.groundentityNum];
 				if (under && under->health && under->takedamage)
 				{
 					vec3_t down = { 0, 0, -1 };
@@ -7714,10 +7714,10 @@ void ClientThink_real(gentity_t* ent, usercmd_t* ucmd)
 				}
 			}
 		}
-		else if (ent->client->ps.groundentity_num < ENTITYNUM_WORLD && !ent->client->ps.forceJumpCharge)
+		else if (ent->client->ps.groundentityNum < ENTITYNUM_WORLD && !ent->client->ps.forceJumpCharge)
 		{
 			//standing on an entity and not currently force jumping
-			gentity_t* groundEnt = &g_entities[ent->client->ps.groundentity_num];
+			gentity_t* groundEnt = &g_entities[ent->client->ps.groundentityNum];
 			if (groundEnt && groundEnt->client)
 			{
 				// If you landed on a speeder or animal vehicle...
@@ -7768,7 +7768,7 @@ void ClientThink_real(gentity_t* ent, usercmd_t* ucmd)
 							SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 					}
 				}
-				else if (groundEnt->client->ps.groundentity_num != ENTITYNUM_NONE &&
+				else if (groundEnt->client->ps.groundentityNum != ENTITYNUM_NONE &&
 					groundEnt->health > 0 && !PM_InRoll(&groundEnt->client->ps)
 					&& !(groundEnt->client->ps.eFlags & EF_LOCKED_TO_WEAPON)
 					&& !(groundEnt->client->ps.eFlags & EF_HELD_BY_RANCOR)
@@ -8503,7 +8503,7 @@ void ClientThink_real(gentity_t* ent, usercmd_t* ucmd)
 	}
 
 	// Update the position of the saber, and check to see if we're throwing it
-	if (client->ps.saberentity_num != ENTITYNUM_NONE)
+	if (client->ps.saberentityNum != ENTITYNUM_NONE)
 	{
 		int updates = 1;
 		if (ent->NPC)
@@ -8799,7 +8799,7 @@ void ClientThink_real(gentity_t* ent, usercmd_t* ucmd)
 			}
 			else
 			{
-				if (ent->client->moveType == MT_FLYSWIM || ent->s.groundentity_num == ENTITYNUM_NONE || JET_Flying(ent)
+				if (ent->client->moveType == MT_FLYSWIM || ent->s.groundentityNum == ENTITYNUM_NONE || JET_Flying(ent)
 					|| PM_CrouchAnim(ent->client->ps.legsAnim))
 				{
 					Boba_FireWristMissile(ent, BOBA_MISSILE_VIBROBLADE);

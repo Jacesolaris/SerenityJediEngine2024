@@ -1374,7 +1374,7 @@ void NPC_Begin(gentity_t* ent)
 		}
 	}
 
-	ent->s.groundentity_num = ENTITYNUM_NONE;
+	ent->s.groundentityNum = ENTITYNUM_NONE;
 	ent->mass = 10;
 	ent->takedamage = qtrue;
 
@@ -1609,7 +1609,7 @@ void NPC_Begin(gentity_t* ent)
 	//_VectorCopy( client->pers.cmd_angles, ucmd.angles );
 	VectorCopyM(client->pers.cmd.angles, ucmd.angles);
 
-	ent->client->ps.groundentity_num = ENTITYNUM_NONE;
+	ent->client->ps.groundentityNum = ENTITYNUM_NONE;
 
 	if (ent->NPC->aiFlags & NPCAI_MATCHPLAYERWEAPON)
 	{
@@ -1679,7 +1679,7 @@ void NPC_Begin(gentity_t* ent)
 					{
 						droidEnt->client->ps.m_iVehicleNum =
 							droidEnt->s.m_iVehicleNum =
-							//droidEnt->s.otherentity_num2 =
+							//droidEnt->s.otherentityNum2 =
 							droidEnt->s.owner =
 							droidEnt->r.ownerNum = ent->s.number;
 						ent->m_pVehicle->m_pDroidUnit = (bgEntity_t*)droidEnt;
@@ -1715,14 +1715,14 @@ void NPC_Begin(gentity_t* ent)
 
 gNPC_t* gNPCPtrs[MAX_GENTITIES];
 
-gNPC_t* New_NPC_t(const int ent_num)
+gNPC_t* New_NPC_t(const int entNum)
 {
-	if (!gNPCPtrs[ent_num])
+	if (!gNPCPtrs[entNum])
 	{
-		gNPCPtrs[ent_num] = (gNPC_t*)BG_Alloc(sizeof(gNPC_t));
+		gNPCPtrs[entNum] = (gNPC_t*)BG_Alloc(sizeof(gNPC_t));
 	}
 
-	gNPC_t* ptr = gNPCPtrs[ent_num];
+	gNPC_t* ptr = gNPCPtrs[entNum];
 
 	if (ptr)
 	{

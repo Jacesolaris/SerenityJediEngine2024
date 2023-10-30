@@ -83,7 +83,7 @@ void R_RenderShadowEdges() {
 	c_rejected = 0;
 #endif
 
-	for (i = 0; i < tess.num_vertexes; i++) {
+	for (i = 0; i < tess.numVertexes; i++) {
 		c = numEdgeDefs[i];
 		for (int j = 0; j < c; j++) {
 			if (!edgeDefs[i][j].facing) {
@@ -135,7 +135,7 @@ void R_RenderShadowEdges() {
 #ifdef _STENCIL_REVERSE
 	//Carmack Reverse<tm> method requires that volumes
 	//be capped properly -rww
-	num_tris = tess.num_indexes / 3;
+	num_tris = tess.numIndexes / 3;
 
 	for (i = 0; i < num_tris; i++)
 	{
@@ -238,7 +238,7 @@ void RB_DoShadowTessEnd(vec3_t light_pos)
 	//shader blob.
 	VectorSet(light_dir, ent_light[0] * 0.3f, ent_light[1] * 0.3f, 1.0f);
 	// project vertexes away from light direction
-	for (i = 0; i < tess.num_vertexes; i++)
+	for (i = 0; i < tess.numVertexes; i++)
 	{
 		vec3_t worldxyz;
 		//add or.origin to vert xyz to end up with world oriented coord, then figure
@@ -251,7 +251,7 @@ void RB_DoShadowTessEnd(vec3_t light_pos)
 #else
 	if (lightPos)
 	{
-		for (i = 0; i < tess.num_vertexes; i++)
+		for (i = 0; i < tess.numVertexes; i++)
 		{
 			shadowXyz[i][0] = tess.xyz[i][0] + ((tess.xyz[i][0] - lightPos[0]) * 128.0f);
 			shadowXyz[i][1] = tess.xyz[i][1] + ((tess.xyz[i][1] - lightPos[1]) * 128.0f);
@@ -263,15 +263,15 @@ void RB_DoShadowTessEnd(vec3_t light_pos)
 		VectorCopy(backEnd.currentEntity->lightDir, lightDir);
 
 		// project vertexes away from light direction
-		for (i = 0; i < tess.num_vertexes; i++) {
+		for (i = 0; i < tess.numVertexes; i++) {
 			VectorMA(tess.xyz[i], -512, lightDir, shadowXyz[i]);
 		}
 	}
 #endif
 	// decide which triangles face the light
-	memset(numEdgeDefs, 0, 4 * tess.num_vertexes);
+	memset(numEdgeDefs, 0, 4 * tess.numVertexes);
 
-	num_tris = tess.num_indexes / 3;
+	num_tris = tess.numIndexes / 3;
 	for (i = 0; i < num_tris; i++) {
 		float	d;
 
@@ -497,7 +497,7 @@ void RB_ProjectionShadowDeform()
 	light[1] = light_dir[1] * d;
 	light[2] = light_dir[2] * d;
 
-	for (int i = 0; i < tess.num_vertexes; i++, xyz += 4)
+	for (int i = 0; i < tess.numVertexes; i++, xyz += 4)
 	{
 		const float h = DotProduct(xyz, ground) + ground_dist;
 

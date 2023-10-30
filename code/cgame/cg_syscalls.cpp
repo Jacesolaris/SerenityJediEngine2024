@@ -194,13 +194,9 @@ void cgi_CM_TransformedBoxTrace(trace_t* results, const vec3_t start, const vec3
 	Q_syscall(CG_CM_TRANSFORMEDBOXTRACE, results, start, end, mins, maxs, model, brushmask, origin, angles);
 }
 
-int cgi_CM_MarkFragments(const int num_points, const vec3_t* points,
-	const vec3_t projection,
-	const int maxPoints, vec3_t pointBuffer,
-	const int maxFragments, markFragment_t* fragmentBuffer)
+int cgi_CM_MarkFragments(const int numPoints, const vec3_t* points, const vec3_t projection, const int maxPoints, vec3_t pointBuffer, const int maxFragments, markFragment_t* fragmentBuffer)
 {
-	return Q_syscall(CG_CM_MARKFRAGMENTS, num_points, points, projection, maxPoints, pointBuffer, maxFragments,
-		fragmentBuffer);
+	return Q_syscall(CG_CM_MARKFRAGMENTS, numPoints, points, projection, maxPoints, pointBuffer, maxFragments, fragmentBuffer);
 }
 
 void cgi_CM_SnapPVS(vec3_t origin, byte* buffer)
@@ -213,9 +209,9 @@ void cgi_S_StopSounds()
 	Q_syscall(CG_S_STOPSOUNDS);
 }
 
-void cgi_S_StartSound(const vec3_t origin, const int entity_num, const int entchannel, const sfxHandle_t sfx)
+void cgi_S_StartSound(const vec3_t origin, const int entityNum, const int entchannel, const sfxHandle_t sfx)
 {
-	Q_syscall(CG_S_STARTSOUND, origin, entity_num, entchannel, sfx);
+	Q_syscall(CG_S_STARTSOUND, origin, entityNum, entchannel, sfx);
 }
 
 void cgi_AS_ParseSets()
@@ -253,20 +249,20 @@ void cgi_S_ClearLoopingSounds()
 	Q_syscall(CG_S_CLEARLOOPINGSOUNDS);
 }
 
-void cgi_S_AddLoopingSound(const int entity_num, const vec3_t origin, const vec3_t velocity, const sfxHandle_t sfx,
+void cgi_S_AddLoopingSound(const int entityNum, const vec3_t origin, const vec3_t velocity, const sfxHandle_t sfx,
 	const soundChannel_t chan)
 {
-	Q_syscall(CG_S_ADDLOOPINGSOUND, entity_num, origin, velocity, sfx, chan);
+	Q_syscall(CG_S_ADDLOOPINGSOUND, entityNum, origin, velocity, sfx, chan);
 }
 
-void cgi_S_UpdateEntityPosition(const int entity_num, const vec3_t origin)
+void cgi_S_UpdateEntityPosition(const int entityNum, const vec3_t origin)
 {
-	Q_syscall(CG_S_UPDATEENTITYPOSITION, entity_num, origin);
+	Q_syscall(CG_S_UPDATEENTITYPOSITION, entityNum, origin);
 }
 
-void cgi_S_Respatialize(const int entity_num, const vec3_t origin, vec3_t axis[3], const qboolean inwater)
+void cgi_S_Respatialize(const int entityNum, const vec3_t origin, vec3_t axis[3], const qboolean inwater)
 {
-	Q_syscall(CG_S_RESPATIALIZE, entity_num, origin, axis, inwater);
+	Q_syscall(CG_S_RESPATIALIZE, entityNum, origin, axis, inwater);
 }
 
 sfxHandle_t cgi_S_RegisterSound(const char* sample)
@@ -379,9 +375,9 @@ void cgi_R_GetLighting(const vec3_t origin, vec3_t ambientLight, vec3_t directed
 	Q_syscall(CG_R_GETLIGHTING, origin, ambientLight, directedLight, ligthDir);
 }
 
-void cgi_R_AddPolyToScene(const qhandle_t h_shader, const int num_verts, const polyVert_t* verts)
+void cgi_R_AddPolyToScene(const qhandle_t hShader, const int numVerts, const polyVert_t* verts)
 {
-	Q_syscall(CG_R_ADDPOLYTOSCENE, h_shader, num_verts, verts);
+	Q_syscall(CG_R_ADDPOLYTOSCENE, hShader, numVerts, verts);
 }
 
 void cgi_R_AddLightToScene(const vec3_t org, const float intensity, const float r, const float g, const float b)
@@ -400,10 +396,10 @@ void cgi_R_SetColor(const float* rgba)
 }
 
 void cgi_R_DrawStretchPic(const float x, const float y, const float w, const float h,
-	const float s1, const float t1, const float s2, const float t2, const qhandle_t h_shader)
+	const float s1, const float t1, const float s2, const float t2, const qhandle_t hShader)
 {
 	Q_syscall(CG_R_DRAWSTRETCHPIC, PASSFLOAT(x), PASSFLOAT(y), PASSFLOAT(w), PASSFLOAT(h), PASSFLOAT(s1), PASSFLOAT(t1),
-		PASSFLOAT(s2), PASSFLOAT(t2), h_shader);
+		PASSFLOAT(s2), PASSFLOAT(t2), hShader);
 }
 
 void cgi_R_ModelBounds(const qhandle_t model, vec3_t mins, vec3_t maxs)
@@ -411,26 +407,26 @@ void cgi_R_ModelBounds(const qhandle_t model, vec3_t mins, vec3_t maxs)
 	Q_syscall(CG_R_MODELBOUNDS, model, mins, maxs);
 }
 
-void cgi_R_LerpTag(orientation_t* tag, const qhandle_t mod, const int start_frame, const int end_frame,
+void cgi_R_LerpTag(orientation_t* tag, const qhandle_t mod, const int startFrame, const int endFrame,
 	const float frac, const char* tagName)
 {
-	Q_syscall(CG_R_LERPTAG, tag, mod, start_frame, end_frame, PASSFLOAT(frac), tagName);
+	Q_syscall(CG_R_LERPTAG, tag, mod, startFrame, endFrame, PASSFLOAT(frac), tagName);
 }
 
 void cgi_R_DrawRotatePic(const float x, const float y, const float w, const float h,
 	const float s1, const float t1, const float s2, const float t2, const float a,
-	const qhandle_t h_shader, const float aspectCorrection)
+	const qhandle_t hShader, const float aspectCorrection)
 {
 	Q_syscall(CG_R_DRAWROTATEPIC, PASSFLOAT(x), PASSFLOAT(y), PASSFLOAT(w), PASSFLOAT(h), PASSFLOAT(s1), PASSFLOAT(t1),
-		PASSFLOAT(s2), PASSFLOAT(t2), PASSFLOAT(a), h_shader, PASSFLOAT(aspectCorrection));
+		PASSFLOAT(s2), PASSFLOAT(t2), PASSFLOAT(a), hShader, PASSFLOAT(aspectCorrection));
 }
 
 void cgi_R_DrawRotatePic2(const float x, const float y, const float w, const float h,
 	const float s1, const float t1, const float s2, const float t2, const float a,
-	const qhandle_t h_shader, const float aspectCorrection)
+	const qhandle_t hShader, const float aspectCorrection)
 {
 	Q_syscall(CG_R_DRAWROTATEPIC2, PASSFLOAT(x), PASSFLOAT(y), PASSFLOAT(w), PASSFLOAT(h), PASSFLOAT(s1), PASSFLOAT(t1),
-		PASSFLOAT(s2), PASSFLOAT(t2), PASSFLOAT(a), h_shader, PASSFLOAT(aspectCorrection));
+		PASSFLOAT(s2), PASSFLOAT(t2), PASSFLOAT(a), hShader, PASSFLOAT(aspectCorrection));
 }
 
 //linear fogging, with settable range -rww
@@ -505,9 +501,9 @@ void cgi_SetUserCmdAngles(const float pitchOverride, const float yawOverride, co
 Ghoul2 Insert Start
 */
 // CG Specific API calls
-void trap_G2_SetGhoul2ModelIndexes(CGhoul2Info_v& ghoul2, qhandle_t* model_list, const qhandle_t* skin_list)
+void trap_G2_SetGhoul2ModelIndexes(CGhoul2Info_v& ghoul2, qhandle_t* modelList, const qhandle_t* skinList)
 {
-	Q_syscall(CG_G2_SETMODELS, &ghoul2, model_list, skin_list);
+	Q_syscall(CG_G2_SETMODELS, &ghoul2, modelList, skinList);
 }
 
 /*

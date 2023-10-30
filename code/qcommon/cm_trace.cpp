@@ -230,7 +230,7 @@ void CM_TraceThroughBrush(traceWork_t* tw, trace_t& trace, cbrush_t* brush, cons
 			{
 				trace.fraction = tw->enterFrac;
 				trace.plane = *tw->clipplane;
-				trace.surfaceFlags = cmg.shaders[tw->leadside->shader_num].surfaceFlags;
+				trace.surfaceFlags = cmg.shaders[tw->leadside->shaderNum].surfaceFlags;
 				//				tw->trace.sideNum = tw->leadside - cmg.brushsides;
 				trace.contents = brush->contents;
 			}
@@ -305,7 +305,7 @@ void CM_TestInLeaf(traceWork_t* tw, cLeaf_t* leaf, clipMap_t* local)
 			}
 		}
 	}
-	}
+}
 
 /*
 ==================
@@ -518,7 +518,7 @@ void CM_TraceThroughBrush(traceWork_t * tw, cbrush_t * brush)
 			}
 			tw->trace.fraction = enterFrac;
 			tw->trace.plane = *clipplane;
-			tw->trace.surfaceFlags = cmg.shaders[leadside->shader_num].surfaceFlags;
+			tw->trace.surfaceFlags = cmg.shaders[leadside->shaderNum].surfaceFlags;
 			tw->trace.contents = brush->contents;
 		}
 	}
@@ -614,7 +614,7 @@ void CM_TraceToLeaf(traceWork_t * tw, cLeaf_t * leaf, clipMap_t * local)
 			}
 		}
 	}
-	}
+}
 
 //=========================================================================================
 

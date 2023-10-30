@@ -133,7 +133,7 @@ int main(int argc, char* argv[])
 		}
 
 		std::string::size_type lastSlash = it->find_last_of("\\/");
-		std::string shader_name(it->begin() + lastSlash + 1, it->end() - 5);
+		std::string shaderName(it->begin() + lastSlash + 1, it->end() - 5);
 
 		// Write, one line at a time to the output
 		std::ifstream fs(it->c_str());
@@ -161,7 +161,7 @@ int main(int argc, char* argv[])
 			GPUShaderDesc& shaderDesc = programDesc.shaders[i];
 			const char* suffix = GetShaderSuffix(shaderDesc.type);
 
-			cppStream << "const char *fallback_" + shader_name + suffix + " = \"";
+			cppStream << "const char *fallback_" + shaderName + suffix + " = \"";
 
 			const char* lineStart = shaderDesc.source;
 			const char* lineEnd = strchr(lineStart, '\n');
@@ -179,22 +179,22 @@ int main(int argc, char* argv[])
 			cppStream << Escape(line) << "\";\n";
 		}
 
-		cppStream << "GPUShaderDesc fallback_" << shader_name << "Shaders[] = {\n";
+		cppStream << "GPUShaderDesc fallback_" << shaderName << "Shaders[] = {\n";
 		for (size_t i = 0, numShaders = programDesc.numShaders; i < numShaders; ++i)
 		{
 			GPUShaderDesc& shaderDesc = programDesc.shaders[i];
 			const char* suffix = GetShaderSuffix(shaderDesc.type);
 
 			cppStream << "  { " << ToString(shaderDesc.type) << ", "
-				"fallback_" << shader_name << suffix << ", "
+				"fallback_" << shaderName << suffix << ", "
 				<< shaderDesc.firstLineNumber << " },\n";
 		}
 		cppStream << "};\n";
 
-		cppStream << "extern const GPUProgramDesc fallback_" << shader_name << "Program = { "
-			<< programDesc.numShaders << ", fallback_" << shader_name << "Shaders };\n\n";
+		cppStream << "extern const GPUProgramDesc fallback_" << shaderName << "Program = { "
+			<< programDesc.numShaders << ", fallback_" << shaderName << "Shaders };\n\n";
 
-		headerStream << "extern const GPUProgramDesc fallback_" << shader_name << "Program;\n";
+		headerStream << "extern const GPUProgramDesc fallback_" << shaderName << "Program;\n";
 	}
 
 	std::ofstream cppFile(shadersCppFile);

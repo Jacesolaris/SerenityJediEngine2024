@@ -42,8 +42,8 @@ option(BuildMPGame "Whether to create projects for the MP server-side gamecode (
 option(BuildMPCGame "Whether to create projects for the MP clientside gamecode (SerenityJediEngine2024-cgamex86.dll)" ON)
 option(BuildMPUI "Whether to create projects for the MP UI code (SerenityJediEngine2024-uix86.dll)" ON)
 
-option(BuildMPRend2 "Whether to create projects for the EXPERIMENTAL MP rend2 renderer (SerenityJediEngine2024-rdmp-rend2_x86.dll)" ON)
-option(BuildSPRend2 "Whether to create projects for the EXPERIMENTAL SP rend2 renderer (SerenityJediEngine2024-rdsp-rend2_x86.dll)" ON)
+option(BuildMPRend2 "Whether to create projects for the MP rend2 renderer (SerenityJediEngine2024-rdmp-rend2_x86.dll)" ON)
+option(BuildSPRend2 "Whether to create projects for the SP rend2 renderer (SerenityJediEngine2024-rdsp-rend2_x86.dll)" ON)
 
 option(BuildSPEngine "Whether to create projects for the SP engine (SerenityJediEngine2024-SP.exe)" ON)
 option(BuildSPGame "Whether to create projects for the SP gamecode (SerenityJediEngine2024-gamex86.dll)" ON)

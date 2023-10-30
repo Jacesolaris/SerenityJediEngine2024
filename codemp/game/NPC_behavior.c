@@ -97,7 +97,7 @@ void NPC_BSAdvanceFight(void)
 					trace_t tr;
 					//are we gonna hit him if we shoot at his center?
 					trap->Trace(&tr, muzzle, NULL, NULL, enemy_org, NPCS.NPC->s.number, MASK_SHOT, qfalse, 0, 0);
-					const gentity_t* trace_ent = &g_entities[tr.entity_num];
+					const gentity_t* trace_ent = &g_entities[tr.entityNum];
 					if (trace_ent != NPCS.NPC->enemy &&
 						(!trace_ent || !trace_ent->client || !NPCS.NPC->client->enemyTeam || NPCS.NPC->client->enemyTeam
 							!= trace_ent->client->playerTeam))
@@ -105,7 +105,7 @@ void NPC_BSAdvanceFight(void)
 						//no, so shoot for the head
 						attack_scale *= 0.75;
 						trap->Trace(&tr, muzzle, NULL, NULL, enemy_head, NPCS.NPC->s.number, MASK_SHOT, qfalse, 0, 0);
-						trace_ent = &g_entities[tr.entity_num];
+						trace_ent = &g_entities[tr.entityNum];
 					}
 
 					VectorCopy(tr.endpos, hitspot);
@@ -818,7 +818,7 @@ void NPC_BSJump(void)
 			G_Cube(p1, p2, NPCDEBUG_BLUE, 0.5);
 		}
 
-		if (NPCS.NPC->s.groundentity_num != ENTITYNUM_NONE)
+		if (NPCS.NPC->s.groundentityNum != ENTITYNUM_NONE)
 		{
 			//Landed, start landing anim
 			VectorClear(NPCS.NPC->client->ps.velocity);
@@ -1412,7 +1412,7 @@ void NPC_Surrender(void)
 qboolean NPC_CheckSurrender(void)
 {
 	if (!trap->ICARUS_TaskIDPending((sharedEntity_t*)NPCS.NPC, TID_MOVE_NAV)
-		&& NPCS.NPC->client->ps.groundentity_num != ENTITYNUM_NONE
+		&& NPCS.NPC->client->ps.groundentityNum != ENTITYNUM_NONE
 		&& !NPCS.NPC->client->ps.weaponTime && !PM_InKnockDown(&NPCS.NPC->client->ps)
 		&& NPCS.NPC->enemy && NPCS.NPC->enemy->client && NPCS.NPC->enemy->enemy == NPCS.NPC && NPCS.NPC->enemy->s.weapon
 		!= WP_NONE && NPCS.NPC->enemy->s.weapon != WP_STUN_BATON

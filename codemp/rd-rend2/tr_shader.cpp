@@ -157,7 +157,7 @@ static long generateHashValue(const char* fname, const int size) {
 	return hash;
 }
 
-void R_RemapShader(const char* shader_name, const char* new_shader_name, const char* time_offset)
+void R_RemapShader(const char* shader_name, const char* new_shader_name, const char* timeOffset)
 {
 	char		strippedName[MAX_QPATH];
 	int			hash;
@@ -199,8 +199,8 @@ void R_RemapShader(const char* shader_name, const char* new_shader_name, const c
 			}
 		}
 	}
-	if (time_offset) {
-		sh2->time_offset = atof(time_offset);
+	if (timeOffset) {
+		sh2->timeOffset = atof(timeOffset);
 	}
 }
 
@@ -3604,15 +3604,15 @@ static void FixRenderCommandList(int new_shader_name) {
 					int         postRender;
 					int			sortedIndex;
 					int			cubemap;
-					int			entity_num;
+					int			entityNum;
 					const drawSurfsCommand_t* ds_cmd = (const drawSurfsCommand_t*)curCmd;
 
 					for (i = 0, drawSurf = ds_cmd->drawSurfs; i < ds_cmd->numDrawSurfs; i++, drawSurf++) {
-						R_DecomposeSort(drawSurf->sort, &entity_num, &shader, &cubemap, &postRender);
+						R_DecomposeSort(drawSurf->sort, &entityNum, &shader, &cubemap, &postRender);
 						sortedIndex = ((drawSurf->sort >> QSORT_SHADERNUM_SHIFT) & (MAX_SHADERS - 1));
 						if (sortedIndex >= new_shader_name) {
 							sortedIndex++;
-							drawSurf->sort = R_CreateSortKey(entity_num, sortedIndex, cubemap, postRender);
+							drawSurf->sort = R_CreateSortKey(entityNum, sortedIndex, cubemap, postRender);
 						}
 					}
 					curCmd = (const void*)(ds_cmd + 1);
@@ -4783,7 +4783,7 @@ qhandle_t RE_RegisterShaderNoMip(const char* name)
 }
 
 //added for ui -rww
-const char* RE_ShaderNameFromIndex(int index)
+const char* RE_ShaderNameFromIndex(const int index)
 {
 	assert(index >= 0 && index < tr.numShaders && tr.shaders[index]);
 	return tr.shaders[index]->name;
@@ -4797,16 +4797,16 @@ When a handle is passed in by another module, this range checks
 it and returns a valid (possibly default) shader_t to be used internally.
 ====================
 */
-shader_t* R_GetShaderByHandle(qhandle_t h_shader) {
-	if (h_shader < 0) {
-		ri->Printf(PRINT_WARNING, "R_GetShaderByHandle: out of range h_shader '%d'\n", h_shader);
+shader_t* R_GetShaderByHandle(const qhandle_t hShader) {
+	if (hShader < 0) {
+		ri->Printf(PRINT_WARNING, "R_GetShaderByHandle: out of range hShader '%d'\n", hShader);
 		return tr.defaultShader;
 	}
-	if (h_shader >= tr.numShaders) {
-		ri->Printf(PRINT_WARNING, "R_GetShaderByHandle: out of range h_shader '%d'\n", h_shader);
+	if (hShader >= tr.numShaders) {
+		ri->Printf(PRINT_WARNING, "R_GetShaderByHandle: out of range hShader '%d'\n", hShader);
 		return tr.defaultShader;
 	}
-	return tr.shaders[h_shader];
+	return tr.shaders[hShader];
 }
 
 /*
@@ -4873,14 +4873,14 @@ void	R_ShaderList_f(void) {
 
 /*
 ====================
-Scan_And_Load_Shader_Files
+ScanAndLoadShaderFiles
 
 Finds and loads all .shader files, combining them into
 a single large text block that can be scanned for shader names
 =====================
 */
 constexpr auto MAX_SHADER_FILES = 8192;
-static void Scan_And_Load_Shader_Files()
+static void ScanAndLoadShaderFiles()
 {
 	char** shader_files;
 	char* buffers[MAX_SHADER_FILES];
@@ -4999,7 +4999,7 @@ static void Scan_And_Load_Shader_Files()
 		ri->FS_FreeFile(buffers[i]);
 	}
 
-	COM_Compress(s_shaderText);
+	COM_CompressShader(s_shaderText);
 
 	// free up memory
 	ri->FS_FreeFileList(shader_files);
@@ -5165,7 +5165,7 @@ void R_InitShaders(const qboolean server)
 	{
 		CreateInternalShaders();
 
-		Scan_And_Load_Shader_Files();
+		ScanAndLoadShaderFiles();
 
 		CreateExternalShaders();
 	}

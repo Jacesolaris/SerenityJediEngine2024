@@ -94,13 +94,13 @@ qboolean CG_NoUseableForce(void)
 static int C_PointContents(void)
 {
 	const TCGPointContents* data = &cg.sharedBuffer.pointContents;
-	return CG_PointContents(data->mPoint, data->mPassentity_num);
+	return CG_PointContents(data->mPoint, data->mPassentityNum);
 }
 
 static void C_GetLerpOrigin(void)
 {
 	TCGVectorData* data = &cg.sharedBuffer.vectorData;
-	VectorCopy(cg_entities[data->mentity_num].lerpOrigin, data->mPoint);
+	VectorCopy(cg_entities[data->mEntityNum].lerpOrigin, data->mPoint);
 }
 
 // only used by FX system to pass to getboltmat
@@ -108,19 +108,19 @@ static void C_GetLerpData(void)
 {
 	TCGGetBoltData* data = &cg.sharedBuffer.getBoltData;
 
-	VectorCopy(cg_entities[data->mentity_num].lerpOrigin, data->mOrigin);
-	VectorCopy(cg_entities[data->mentity_num].modelScale, data->mScale);
-	VectorCopy(cg_entities[data->mentity_num].lerpAngles, data->mAngles);
-	if (cg_entities[data->mentity_num].currentState.eType == ET_PLAYER)
+	VectorCopy(cg_entities[data->mEntityNum].lerpOrigin, data->mOrigin);
+	VectorCopy(cg_entities[data->mEntityNum].modelScale, data->mScale);
+	VectorCopy(cg_entities[data->mEntityNum].lerpAngles, data->mAngles);
+	if (cg_entities[data->mEntityNum].currentState.eType == ET_PLAYER)
 	{
 		// normal player
 		data->mAngles[PITCH] = 0.0f;
 		data->mAngles[ROLL] = 0.0f;
 	}
-	else if (cg_entities[data->mentity_num].currentState.eType == ET_NPC)
+	else if (cg_entities[data->mEntityNum].currentState.eType == ET_NPC)
 	{
 		// an NPC
-		const Vehicle_t* p_veh = cg_entities[data->mentity_num].m_pVehicle;
+		const Vehicle_t* p_veh = cg_entities[data->mEntityNum].m_pVehicle;
 		if (!p_veh)
 		{
 			// for vehicles, we may or may not want to 0 out pitch and roll
@@ -162,14 +162,14 @@ static void C_G2Mark(void)
 	VectorMA(td->start, 64.0f, td->dir, end);
 	CG_G2Trace(&tr, td->start, NULL, NULL, end, ENTITYNUM_NONE, MASK_PLAYERSOLID);
 
-	if (tr.entity_num < ENTITYNUM_WORLD && cg_entities[tr.entity_num].ghoul2)
+	if (tr.entityNum < ENTITYNUM_WORLD && cg_entities[tr.entityNum].ghoul2)
 	{
 		// hit someone with a ghoul2 instance, let's project the decal on them then.
-		centity_t* cent = &cg_entities[tr.entity_num];
+		centity_t* cent = &cg_entities[tr.entityNum];
 
 		//	CG_TestLine( tr.endpos, end, 2000, 0x0000ff, 1 );
 
-		CG_AddGhoul2Mark(td->shader, td->size, tr.endpos, end, tr.entity_num, cent->lerpOrigin, cent->lerpAngles[YAW],
+		CG_AddGhoul2Mark(td->shader, td->size, tr.endpos, end, tr.entityNum, cent->lerpOrigin, cent->lerpAngles[YAW],
 			cent->ghoul2, cent->modelScale, Q_irand(2000, 4000));
 		// I'm making fx system decals have a very short lifetime.
 	}
@@ -256,10 +256,10 @@ static int CG_RagCallback(const int callType)
 	case RAG_CALLBACK_BONESNAP:
 	{
 		ragCallbackBoneSnap_t* callData = &cg.sharedBuffer.rcbBoneSnap;
-		centity_t* cent = &cg_entities[callData->ent_num];
+		centity_t* cent = &cg_entities[callData->entNum];
 		const int snapSound = trap->S_RegisterSound(va("sound/player/bodyfall_human%i.wav", Q_irand(1, 3)));
 
-		trap->S_StartSound(cent->lerpOrigin, callData->ent_num, CHAN_AUTO, snapSound);
+		trap->S_StartSound(cent->lerpOrigin, callData->entNum, CHAN_AUTO, snapSound);
 	}
 	case RAG_CALLBACK_BONEIMPACT:
 		break;
@@ -270,7 +270,7 @@ static int CG_RagCallback(const int callType)
 
 		if (callData->solidCount > 16)
 		{ //don't bother if we're just tapping into solidity, we'll probably recover on our own
-			centity_t* cent = &cg_entities[callData->ent_num];
+			centity_t* cent = &cg_entities[callData->entNum];
 			vec3_t slideDir;
 
 			VectorSubtract(cent->lerpOrigin, callData->bonePos, slideDir);
@@ -317,15 +317,15 @@ void CG_MiscEnt(void)
 		trap->Error(ERR_DROP, "^1MAX_STATIC_MODELS(%i) hit", MAX_STATIC_MODELS);
 	}
 
-	const int model_index = trap->R_RegisterModel(data->mModel);
-	if (model_index == 0)
+	const int modelIndex = trap->R_RegisterModel(data->mModel);
+	if (modelIndex == 0)
 	{
 		trap->Error(ERR_DROP, "client_model failed to load model '%s'", data->mModel);
 		return;
 	}
 
 	cg_staticmodel_t* staticmodel = &cgs.miscStaticModels[cgs.numMiscStaticModels++];
-	staticmodel->model = model_index;
+	staticmodel->model = modelIndex;
 	AnglesToAxis(data->mAngles, staticmodel->axes);
 	for (int i = 0; i < 3; i++)
 	{
@@ -3052,7 +3052,7 @@ const char* CG_GetLocationString(const char* loc)
 }
 
 //clean up all the ghoul2 allocations, the nice and non-hackly way -rww
-void CG_KillCEntityG2(int ent_num);
+void CG_KillCEntityG2(int entNum);
 
 void CG_DestroyAllGhoul2(void)
 {

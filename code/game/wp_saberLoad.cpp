@@ -2527,7 +2527,7 @@ static keywordHash_t saberParseKeywords[] = {
 	{"name", Saber_ParseName, nullptr},
 	{"saberType", Saber_ParseSaberType, nullptr},
 	{"saberModel", Saber_ParseSaberModel, nullptr},
-	{"custom_skin", Saber_ParseCustomSkin, nullptr},
+	{"customSkin", Saber_ParseCustomSkin, nullptr},
 	{"soundOn", Saber_ParseSoundOn, nullptr},
 	{"soundLoop", Saber_ParseSoundLoop, nullptr},
 	{"soundOff", Saber_ParseSoundOff, nullptr},
@@ -3032,7 +3032,7 @@ qboolean WP_BreakSaber(gentity_t* ent, const char* surfName, const saberType_t s
 		}
 		broken = qtrue;
 		//change my saberent's model and skin to match my new right-hand saber
-		wp_set_saber_ent_model_skin(ent, &g_entities[ent->client->ps.saberentity_num]);
+		wp_set_saber_ent_model_skin(ent, &g_entities[ent->client->ps.saberentityNum]);
 	}
 
 	if (originalNumBlades <= 1)
@@ -3098,7 +3098,7 @@ void WP_SaberLoadParms()
 				totallen++;
 				marker++;
 			}
-			len = COM_Compress(buffer);
+			len = COM_CompressShader(buffer);
 
 			if (totallen + len >= MAX_SABER_DATA_SIZE)
 			{
@@ -3151,7 +3151,7 @@ void WP_SaberLoadParms2()
 				totallen++;
 				marker++;
 			}
-			len = COM_Compress(buffer);
+			len = COM_CompressShader(buffer);
 
 			if (totallen + len >= MAX_SABER_DATA_SIZE)
 			{

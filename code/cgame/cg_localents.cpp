@@ -434,7 +434,7 @@ static void CG_AddFadeScaleModel(localEntity_t* le)
 	cgi_R_AddRefEntityToScene(ent);
 }
 
-// create a quad that doesn't use a ref_ent.  Currently only for use with the DebugNav drawing so it doesn't have to use fx
+// create a quad that doesn't use a refEnt.  Currently only for use with the DebugNav drawing so it doesn't have to use fx
 //------------------------------------------
 static void CG_AddQuad(const localEntity_t* le)
 {
@@ -472,10 +472,10 @@ static void CG_AddQuad(const localEntity_t* le)
 	verts[3].st[0] = 1;
 	verts[3].st[1] = 0;
 
-	cgi_R_AddPolyToScene(le->refEntity.custom_shader, 4, verts);
+	cgi_R_AddPolyToScene(le->refEntity.customShader, 4, verts);
 }
 
-// create a sprite that doesn't use a ref_ent.  Currently only for use with the DebugNav drawing so it doesn't have to use fx
+// create a sprite that doesn't use a refEnt.  Currently only for use with the DebugNav drawing so it doesn't have to use fx
 //------------------------------------------
 static void CG_AddSprite(const localEntity_t* le)
 {
@@ -513,7 +513,7 @@ static void CG_AddSprite(const localEntity_t* le)
 	verts[3].st[0] = 1;
 	verts[3].st[1] = 0;
 
-	cgi_R_AddPolyToScene(le->refEntity.custom_shader, 4, verts);
+	cgi_R_AddPolyToScene(le->refEntity.customShader, 4, verts);
 }
 
 /*

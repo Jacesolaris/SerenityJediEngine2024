@@ -102,7 +102,7 @@ void R_AddPolygonSurfaces() {
 	tr.shiftedEntityNum = tr.currentEntityNum << QSORT_REFENTITYNUM_SHIFT;
 
 	for (i = 0, poly = tr.refdef.polys; i < tr.refdef.numPolys; i++, poly++) {
-		const shader_t* sh = R_GetShaderByHandle(poly->h_shader);
+		const shader_t* sh = R_GetShaderByHandle(poly->hShader);
 		R_AddDrawSurf(reinterpret_cast<surfaceType_t*>(poly), sh, poly->fogIndex, qfalse);
 	}
 }
@@ -113,7 +113,7 @@ RE_AddPolyToScene
 
 =====================
 */
-void RE_AddPolyToScene(const qhandle_t h_shader, const int num_verts, const polyVert_t* verts, int numPolys)
+void RE_AddPolyToScene(const qhandle_t hShader, const int numVerts, const polyVert_t* verts, const int numPolys)
 {
 	srfPoly_t* poly;
 	int			i, j;
@@ -125,7 +125,7 @@ void RE_AddPolyToScene(const qhandle_t h_shader, const int num_verts, const poly
 		return;
 	}
 
-	if (!h_shader) {
+	if (!hShader) {
 #ifndef FINAL_BUILD
 		Com_DPrintf(S_COLOR_YELLOW"WARNING: RE_AddPolyToScene: NULL poly shader\n");
 #endif
@@ -133,7 +133,7 @@ void RE_AddPolyToScene(const qhandle_t h_shader, const int num_verts, const poly
 	}
 
 	for (j = 0; j < numPolys; j++) {
-		if (r_numpolyverts + num_verts >= MAX_POLYVERTS || r_numpolys >= MAX_POLYS) {
+		if (r_numpolyverts + numVerts >= MAX_POLYVERTS || r_numpolys >= MAX_POLYS) {
 			/*
 			NOTE TTimo this was initially a PRINT_WARNING
 			but it happens a lot with high fighting scenes and particles
@@ -146,13 +146,13 @@ void RE_AddPolyToScene(const qhandle_t h_shader, const int num_verts, const poly
 
 		poly = &backEndData->polys[r_numpolys];
 		poly->surfaceType = SF_POLY;
-		poly->h_shader = h_shader;
-		poly->num_verts = num_verts;
+		poly->hShader = hShader;
+		poly->numVerts = numVerts;
 		poly->verts = &backEndData->polyVerts[r_numpolyverts];
 
-		memcpy(poly->verts, &verts[num_verts * j], num_verts * sizeof(*verts));
+		memcpy(poly->verts, &verts[numVerts * j], numVerts * sizeof(*verts));
 		r_numpolys++;
-		r_numpolyverts += num_verts;
+		r_numpolyverts += numVerts;
 
 		// see if it is in a fog volume
 		if (!tr.world || tr.world->numfogs == 1) {
@@ -162,7 +162,7 @@ void RE_AddPolyToScene(const qhandle_t h_shader, const int num_verts, const poly
 			// find which fog volume the poly is in
 			VectorCopy(poly->verts[0].xyz, bounds[0]);
 			VectorCopy(poly->verts[0].xyz, bounds[1]);
-			for (i = 1; i < poly->num_verts; i++) {
+			for (i = 1; i < poly->numVerts; i++) {
 				AddPointToBounds(poly->verts[i].xyz, bounds[0], bounds[1]);
 			}
 			for (int fI = 1; fI < tr.world->numfogs; fI++) {

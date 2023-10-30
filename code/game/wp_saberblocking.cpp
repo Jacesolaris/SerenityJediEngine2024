@@ -77,7 +77,7 @@ extern void WP_SaberDrop(const gentity_t* self, gentity_t* saber);
 extern qboolean pm_saber_innonblockable_attack(int anim);
 extern qboolean pm_saber_in_special_attack(int anim);
 extern qboolean PM_SaberInKata(saber_moveName_t saber_move);
-extern void wp_saber_clear_damage_for_ent_num(gentity_t* attacker, int entity_num, int saber_num, int blade_num);
+extern void wp_saber_clear_damage_for_ent_num(gentity_t* attacker, int entityNum, int saber_num, int blade_num);
 extern cvar_t* d_slowmoaction;
 extern void G_StartStasisEffect(const gentity_t* ent, int me_flags = 0, int length = 1000, float time_scale = 0.0f,
 	int spin_time = 0);

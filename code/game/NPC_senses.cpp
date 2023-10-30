@@ -56,7 +56,7 @@ qboolean G_ClearLineOfSight(const vec3_t point1, const vec3_t point2, const int 
 		return qtrue;
 	}
 
-	const gentity_t* hit = &g_entities[tr.entity_num];
+	const gentity_t* hit = &g_entities[tr.entityNum];
 	if (EntIsGlass(hit))
 	{
 		vec3_t newpoint1;
@@ -970,12 +970,12 @@ qboolean G_ClearLOS(gentity_t* self, const vec3_t start, const vec3_t end)
 	while (tr.fraction < 1.0 && traceCount < 3)
 	{
 		//can see through 3 panes of glass
-		if (tr.entity_num < ENTITYNUM_WORLD)
+		if (tr.entityNum < ENTITYNUM_WORLD)
 		{
-			if (&g_entities[tr.entity_num] != nullptr && g_entities[tr.entity_num].svFlags & SVF_GLASS_BRUSH)
+			if (&g_entities[tr.entityNum] != nullptr && g_entities[tr.entityNum].svFlags & SVF_GLASS_BRUSH)
 			{
 				//can see through glass, trace again, ignoring me
-				gi.trace(&tr, tr.endpos, nullptr, nullptr, end, tr.entity_num, MASK_OPAQUE,
+				gi.trace(&tr, tr.endpos, nullptr, nullptr, end, tr.entityNum, MASK_OPAQUE,
 					static_cast<EG2_Collision>(0), 0);
 				traceCount++;
 				continue;

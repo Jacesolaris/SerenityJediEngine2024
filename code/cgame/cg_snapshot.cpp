@@ -188,7 +188,7 @@ void CG_SetEntityNextState(centity_t* cent, const entityState_t* state)
 	cent->nextState = state;
 
 	// since we can't interpolate ghoul2 stuff from one frame to another, I'm just going to copy the ghoul2 info directly into the current state now
-	//	CGhoul2Info *current_model = &state->ghoul2[1];
+	//	CGhoul2Info *currentModel = &state->ghoul2[1];
 	//	cent->gent->ghoul2 = state->ghoul2;
 	//	CGhoul2Info *newModel = &cent->gent->ghoul2[1];
 

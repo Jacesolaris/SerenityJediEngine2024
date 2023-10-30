@@ -78,22 +78,22 @@ qboolean CL_GetUserCmd(const int cmdNumber, usercmd_t* ucmd)
 CL_GetParseEntityState
 ====================
 */
-qboolean CL_GetParseEntityState(const int parseentity_number, entityState_t* state)
+qboolean CL_GetParseEntityState(const int parseentityNumber, entityState_t* state)
 {
 	// can't return anything that hasn't been parsed yet
-	if (parseentity_number >= cl.parseEntitiesNum)
+	if (parseentityNumber >= cl.parseEntitiesNum)
 	{
 		Com_Error(ERR_DROP, "CL_GetParseEntityState: %i >= %i",
-			parseentity_number, cl.parseEntitiesNum);
+			parseentityNumber, cl.parseEntitiesNum);
 	}
 
 	// can't return anything that has been overwritten in the circular buffer
-	if (parseentity_number <= cl.parseEntitiesNum - MAX_PARSE_ENTITIES)
+	if (parseentityNumber <= cl.parseEntitiesNum - MAX_PARSE_ENTITIES)
 	{
 		return qfalse;
 	}
 
-	*state = cl.parseEntities[parseentity_number & MAX_PARSE_ENTITIES - 1];
+	*state = cl.parseEntities[parseentityNumber & MAX_PARSE_ENTITIES - 1];
 	return qtrue;
 }
 
@@ -147,10 +147,10 @@ qboolean CL_GetSnapshot(const int snapshotNumber, snapshot_t* snapshot)
 
 	for (int i = 0; i < count; i++)
 	{
-		const int ent_num = clSnap->parseEntitiesNum + i & MAX_PARSE_ENTITIES - 1;
+		const int entNum = clSnap->parseEntitiesNum + i & MAX_PARSE_ENTITIES - 1;
 
 		// copy everything but the ghoul2 pointer
-		memcpy(&snapshot->entities[i], &cl.parseEntities[ent_num], sizeof(entityState_t));
+		memcpy(&snapshot->entities[i], &cl.parseEntities[entNum], sizeof(entityState_t));
 	}
 
 	// FIXME: configstring changes and server commands!!!

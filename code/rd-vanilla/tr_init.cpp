@@ -868,7 +868,7 @@ byte* RB_ReadPixels(const int x, const int y, const int width, const int height,
 R_TakeScreenshot
 ==================
 */
-void R_TakeScreenshot(const int x, const int y, const int width, const int height, const char* file_name) {
+void R_TakeScreenshot(const int x, const int y, const int width, const int height, const char* fileName) {
 	byte* destptr;
 
 	int padlen;
@@ -915,7 +915,7 @@ void R_TakeScreenshot(const int x, const int y, const int width, const int heigh
 	if (glConfig.deviceSupportsGamma)
 		R_GammaCorrect(allbuf + offset, memcount);
 
-	ri.FS_WriteFile(file_name, buffer, memcount + 18);
+	ri.FS_WriteFile(fileName, buffer, memcount + 18);
 
 	R_Free(allbuf);
 }
@@ -925,12 +925,12 @@ void R_TakeScreenshot(const int x, const int y, const int width, const int heigh
 R_TakeScreenshotPNG
 ==================
 */
-void R_TakeScreenshotPNG(const int x, const int y, const int width, const int height, const char* file_name) {
+void R_TakeScreenshotPNG(const int x, const int y, const int width, const int height, const char* fileName) {
 	size_t offset = 0;
 	int padlen = 0;
 
 	byte* buffer = RB_ReadPixels(x, y, width, height, &offset, &padlen);
-	RE_SavePNG(file_name, buffer, width, height, 3);
+	RE_SavePNG(fileName, buffer, width, height, 3);
 	R_Free(buffer);
 }
 
@@ -939,7 +939,7 @@ void R_TakeScreenshotPNG(const int x, const int y, const int width, const int he
 R_TakeScreenshotJPEG
 ==================
 */
-void R_TakeScreenshotJPEG(const int x, const int y, const int width, const int height, const char* file_name) {
+void R_TakeScreenshotJPEG(const int x, const int y, const int width, const int height, const char* fileName) {
 	size_t offset = 0;
 	int padlen;
 
@@ -950,7 +950,7 @@ void R_TakeScreenshotJPEG(const int x, const int y, const int width, const int h
 	if (glConfig.deviceSupportsGamma)
 		R_GammaCorrect(buffer + offset, memcount);
 
-	RE_SaveJPG(file_name, r_screenshotJpegQuality->integer, width, height, buffer + offset, padlen);
+	RE_SaveJPG(fileName, r_screenshotJpegQuality->integer, width, height, buffer + offset, padlen);
 	R_Free(buffer);
 }
 
@@ -1656,7 +1656,7 @@ void R_Register()
 	r_offsetUnits = ri.Cvar_Get("r_offsetunits", "-2", CVAR_CHEAT);
 	r_lockpvs = ri.Cvar_Get("r_lockpvs", "0", CVAR_CHEAT);
 	r_noportals = ri.Cvar_Get("r_noportals", "0", CVAR_CHEAT);
-	r_shadows = ri.Cvar_Get("cg_shadows", "2", 0);
+	r_shadows = ri.Cvar_Get("cg_shadows", "3", 0);
 	r_shadowRange = ri.Cvar_Get("r_shadowRange", "1000", CVAR_ARCHIVE_ND);
 
 	/*
@@ -1804,7 +1804,6 @@ void R_Init()
 		ri.Printf(PRINT_ALL, "glGetError() = 0x%x\n", err);
 
 	RestoreGhoul2InfoArray();
-
 	// print info
 	GfxInfo_f();
 
@@ -1984,23 +1983,23 @@ void RE_SVModelInit()
 
 /*
 @@@@@@@@@@@@@@@@@@@@@
-get_ref_api
+GetRefAPI
 
 @@@@@@@@@@@@@@@@@@@@@
 */
 extern void R_LoadImage(const char* shortname, byte** pic, int* width, int* height);
 extern void RE_WorldEffectCommand(const char* command);
 extern qboolean R_inPVS(vec3_t p1, vec3_t p2);
-extern void RE_GetModelBounds(const refEntity_t* ref_ent, vec3_t bounds1, vec3_t bounds2);
-extern void G2API_AnimateG2Models(CGhoul2Info_v& ghoul2, const int acurrent_time, CRagDollUpdateParams* params);
-extern qboolean G2API_GetRagBonePos(CGhoul2Info_v& ghoul2, const char* bone_name, vec3_t pos, vec3_t ent_angles, vec3_t entPos, vec3_t ent_scale);
-extern qboolean G2API_RagEffectorKick(CGhoul2Info_v& ghoul2, const char* bone_name, vec3_t velocity);
+extern void RE_GetModelBounds(const refEntity_t* refEnt, vec3_t bounds1, vec3_t bounds2);
+extern void G2API_AnimateG2Models(CGhoul2Info_v& ghoul2, const int acurrentTime, CRagDollUpdateParams* params);
+extern qboolean G2API_GetRagBonePos(CGhoul2Info_v& ghoul2, const char* boneName, vec3_t pos, vec3_t ent_angles, vec3_t entPos, vec3_t ent_scale);
+extern qboolean G2API_RagEffectorKick(CGhoul2Info_v& ghoul2, const char* boneName, vec3_t velocity);
 extern qboolean G2API_RagForceSolve(CGhoul2Info_v& ghoul2, const qboolean force);
-extern qboolean G2API_SetBoneIKState(CGhoul2Info_v& ghoul2, int time, const char* bone_name, int ik_state, sharedSetBoneIKStateParams_t* params);
-extern qboolean G2API_IKMove(CGhoul2Info_v& ghoul2, int time, sharedIKMoveParams_t* params);
-extern qboolean G2API_RagEffectorGoal(CGhoul2Info_v& ghoul2, const char* bone_name, vec3_t pos);
-extern qboolean G2API_RagPCJGradientSpeed(CGhoul2Info_v& ghoul2, const char* bone_name, const float speed);
-extern qboolean G2API_RagPCJConstraint(CGhoul2Info_v& ghoul2, const char* bone_name, vec3_t min, vec3_t max);
+extern qboolean G2API_SetBoneIKState(CGhoul2Info_v& ghoul2, const int time, const char* boneName, const int ikState, sharedSetBoneIKStateParams_t* params);
+extern qboolean G2API_IKMove(CGhoul2Info_v& ghoul2, const int time, sharedIKMoveParams_t* params);
+extern qboolean G2API_RagEffectorGoal(CGhoul2Info_v& ghoul2, const char* boneName, vec3_t pos);
+extern qboolean G2API_RagPCJGradientSpeed(CGhoul2Info_v& ghoul2, const char* boneName, const float speed);
+extern qboolean G2API_RagPCJConstraint(CGhoul2Info_v& ghoul2, const char* boneName, vec3_t min, vec3_t max);
 extern void G2API_SetRagDoll(CGhoul2Info_v& ghoul2, CRagDollParams* parms);
 #ifdef G2_PERFORMANCE_ANALYSIS
 extern void G2Time_ResetTimers(void);
@@ -2014,16 +2013,16 @@ unsigned int AnyLanguage_ReadCharFromString_JK2(char** text, qboolean* pbIsTrail
 }
 #endif
 
-extern "C" Q_EXPORT refexport_t * QDECL get_ref_api(const int api_version, const refimport_t * refimp) {
+extern "C" Q_EXPORT refexport_t * QDECL GetRefAPI(const int apiVersion, const refimport_t * refimp) {
 	static refexport_t	re;
 
 	ri = *refimp;
 
 	memset(&re, 0, sizeof re);
 
-	if (api_version != REF_API_VERSION) {
+	if (apiVersion != REF_API_VERSION) {
 		ri.Printf(PRINT_ALL, "Mismatched REF_API_VERSION: expected %i, got %i\n",
-			REF_API_VERSION, api_version);
+			REF_API_VERSION, apiVersion);
 		return nullptr;
 	}
 

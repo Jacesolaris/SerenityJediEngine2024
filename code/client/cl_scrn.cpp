@@ -56,8 +56,8 @@ void SCR_DrawNamedPic(const float x, const float y, const float width, const flo
 {
 	assert(width != 0);
 
-	const qhandle_t h_shader = re.RegisterShader(picname);
-	re.DrawStretchPic(x, y, width, height, 0, 0, 1, 1, h_shader);
+	const qhandle_t hShader = re.RegisterShader(picname);
+	re.DrawStretchPic(x, y, width, height, 0, 0, 1, 1, hShader);
 }
 
 /*
@@ -84,9 +84,9 @@ Coordinates are 640*480 virtual values
 A width of 0 will draw with the original image width
 =================
 */
-void SCR_DrawPic(const float x, const float y, const float width, const float height, const qhandle_t h_shader)
+void SCR_DrawPic(const float x, const float y, const float width, const float height, const qhandle_t hShader)
 {
-	re.DrawStretchPic(x, y, width, height, 0, 0, 1, 1, h_shader);
+	re.DrawStretchPic(x, y, width, height, 0, 0, 1, 1, hShader);
 }
 
 /*

@@ -374,7 +374,7 @@ typedef struct clientInfo_s {
 #define MAX_CG_LOOPSOUNDS 8
 
 typedef struct cgLoopSound_s {
-	int entity_num;
+	int entityNum;
 	vec3_t origin;
 	vec3_t velocity;
 	sfxHandle_t sfx;
@@ -448,7 +448,7 @@ typedef struct centity_s {
 	void* ghoul2weapon2;//[DualPistols]
 
 	float			radius;
-	int				bolt_info;
+	int				boltInfo;
 
 	//sometimes used as a bolt index, but these values are also used as generic values for clientside entities
 	//at times
@@ -1980,9 +1980,9 @@ Ghoul2 Insert End
 // cg_drawtools.c
 //
 void CG_FillRect(float x, float y, float width, float height, const float* color);
-void CG_DrawPic(float x, float y, float width, float height, qhandle_t h_shader);
-void CG_DrawRotatePic(float x, float y, float width, float height, float angle, qhandle_t h_shader);
-void CG_DrawRotatePic2(float x, float y, float width, float height, float angle, qhandle_t h_shader);
+void CG_DrawPic(float x, float y, float width, float height, qhandle_t hShader);
+void CG_DrawRotatePic(float x, float y, float width, float height, float angle, qhandle_t hShader);
+void CG_DrawRotatePic2(float x, float y, float width, float height, float angle, qhandle_t hShader);
 void CG_DrawNumField(int x, int y, int width, int value, int charWidth, int charHeight, int style, qboolean zeroFill);
 
 void CG_DrawStringExt(int x, int y, const char* string, const float* setColor, qboolean forceColor, qboolean shadow, int charWidth, int charHeight, int maxChars);
@@ -2053,13 +2053,13 @@ void CG_ResetPlayerEntity(centity_t* cent);
 void CG_AddRefEntityWithPowerups(const refEntity_t* ent, const entityState_t* state);
 void CG_NewClientInfo(int client_num, qboolean entities_initialized);
 sfxHandle_t	CG_CustomSound(int client_num, const char* sound_name);
-void CG_PlayerShieldHit(int entity_num, vec3_t dir, int amount);
+void CG_PlayerShieldHit(int entityNum, vec3_t dir, int amount);
 
 //
 // cg_predict.c
 //
 void CG_BuildSolidList(void);
-int	CG_PointContents(const vec3_t point, int pass_entity_num);
+int	CG_PointContents(const vec3_t point, int pass_entityNum);
 void CG_Trace(trace_t* result, const vec3_t start, const vec3_t mins, const vec3_t maxs, const vec3_t end,
 	int skip_number, int mask);
 void CG_G2Trace(trace_t* result, const vec3_t start, const vec3_t mins, const vec3_t maxs, const vec3_t end,
@@ -2080,10 +2080,10 @@ void CG_ReattachLimb(centity_t* source);
 // cg_ents.c
 //
 
-void CG_S_AddLoopingSound(int entity_num, const vec3_t origin, const vec3_t velocity, sfxHandle_t sfx);
-void CG_S_AddRealLoopingSound(int entity_num, const vec3_t origin, const vec3_t velocity, sfxHandle_t sfx);
-void CG_S_StopLoopingSound(int entity_num, sfxHandle_t sfx);
-void CG_S_UpdateLoopingSounds(int entity_num);
+void CG_S_AddLoopingSound(int entityNum, const vec3_t origin, const vec3_t velocity, sfxHandle_t sfx);
+void CG_S_AddRealLoopingSound(int entityNum, const vec3_t origin, const vec3_t velocity, sfxHandle_t sfx);
+void CG_S_StopLoopingSound(int entityNum, sfxHandle_t sfx);
+void CG_S_UpdateLoopingSounds(int entityNum);
 
 void CG_SetEntitySoundPosition(const centity_t* cent);
 void CG_AddPacketEntities(qboolean is_portal);
@@ -2144,7 +2144,7 @@ void	CG_ImpactMark(qhandle_t mark_shader,
 	const vec3_t origin, const vec3_t dir,
 	float orientation,
 	float red, float green, float blue, float alpha,
-	qboolean alpha_fade,
+	qboolean alphaFade,
 	float radius, qboolean temporary);
 
 //
@@ -2165,7 +2165,7 @@ localEntity_t* CG_SmokePuff(const vec3_t p,
 	int start_time,
 	int fade_in_time,
 	int le_flags,
-	qhandle_t h_shader);
+	qhandle_t hShader);
 void CG_BubbleTrail(vec3_t start, vec3_t end, float spacing);
 void CG_GlassShatter(int entnum, vec3_t dmg_pt, vec3_t dmg_dir, float dmg_radius, int max_shards);
 void CG_ScorePlum(int client, vec3_t org, int score);
@@ -2178,7 +2178,7 @@ void CG_Chunks(int owner, vec3_t origin, const vec3_t mins, const vec3_t maxs,
 void CG_MiscModelExplosion(vec3_t mins, vec3_t maxs, int size, material_t chunk_type);
 
 localEntity_t* CG_MakeExplosion(vec3_t origin, vec3_t dir,
-	qhandle_t h_model, int num_frames, qhandle_t shader, int msec,
+	qhandle_t h_model, int numFrames, qhandle_t shader, int msec,
 	qboolean is_sprite, float scale, int flags);// Overloaded in single player
 
 void CG_TestLine(vec3_t start, vec3_t end, int time, unsigned int color, int radius);

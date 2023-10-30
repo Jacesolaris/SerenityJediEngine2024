@@ -458,12 +458,12 @@ int WeaponAltAttackAnim[WP_NUM_WEAPONS] =
 	BOTH_ATTACK1 //WP_TURRET,
 };
 
-qboolean BG_FileExists(const char* file_name)
+qboolean BG_FileExists(const char* fileName)
 {
-	if (file_name && file_name[0])
+	if (fileName && fileName[0])
 	{
 		fileHandle_t f = NULL_FILE;
-		trap->FS_Open(file_name, &f, FS_READ);
+		trap->FS_Open(fileName, &f, FS_READ);
 
 		if (f > 0)
 		{
@@ -475,44 +475,44 @@ qboolean BG_FileExists(const char* file_name)
 }
 
 // given a boltmatrix, return in vec a normalised vector for the axis requested in flags
-void BG_GiveMeVectorFromMatrix(const mdxaBone_t* bolt_matrix, const int flags, vec3_t vec)
+void BG_GiveMeVectorFromMatrix(const mdxaBone_t* boltMatrix, const int flags, vec3_t vec)
 {
 	switch (flags)
 	{
 	case ORIGIN:
-		vec[0] = bolt_matrix->matrix[0][3];
-		vec[1] = bolt_matrix->matrix[1][3];
-		vec[2] = bolt_matrix->matrix[2][3];
+		vec[0] = boltMatrix->matrix[0][3];
+		vec[1] = boltMatrix->matrix[1][3];
+		vec[2] = boltMatrix->matrix[2][3];
 		break;
 	case POSITIVE_Y:
-		vec[0] = bolt_matrix->matrix[0][1];
-		vec[1] = bolt_matrix->matrix[1][1];
-		vec[2] = bolt_matrix->matrix[2][1];
+		vec[0] = boltMatrix->matrix[0][1];
+		vec[1] = boltMatrix->matrix[1][1];
+		vec[2] = boltMatrix->matrix[2][1];
 		break;
 	case POSITIVE_X:
-		vec[0] = bolt_matrix->matrix[0][0];
-		vec[1] = bolt_matrix->matrix[1][0];
-		vec[2] = bolt_matrix->matrix[2][0];
+		vec[0] = boltMatrix->matrix[0][0];
+		vec[1] = boltMatrix->matrix[1][0];
+		vec[2] = boltMatrix->matrix[2][0];
 		break;
 	case POSITIVE_Z:
-		vec[0] = bolt_matrix->matrix[0][2];
-		vec[1] = bolt_matrix->matrix[1][2];
-		vec[2] = bolt_matrix->matrix[2][2];
+		vec[0] = boltMatrix->matrix[0][2];
+		vec[1] = boltMatrix->matrix[1][2];
+		vec[2] = boltMatrix->matrix[2][2];
 		break;
 	case NEGATIVE_Y:
-		vec[0] = -bolt_matrix->matrix[0][1];
-		vec[1] = -bolt_matrix->matrix[1][1];
-		vec[2] = -bolt_matrix->matrix[2][1];
+		vec[0] = -boltMatrix->matrix[0][1];
+		vec[1] = -boltMatrix->matrix[1][1];
+		vec[2] = -boltMatrix->matrix[2][1];
 		break;
 	case NEGATIVE_X:
-		vec[0] = -bolt_matrix->matrix[0][0];
-		vec[1] = -bolt_matrix->matrix[1][0];
-		vec[2] = -bolt_matrix->matrix[2][0];
+		vec[0] = -boltMatrix->matrix[0][0];
+		vec[1] = -boltMatrix->matrix[1][0];
+		vec[2] = -boltMatrix->matrix[2][0];
 		break;
 	case NEGATIVE_Z:
-		vec[0] = -bolt_matrix->matrix[0][2];
-		vec[1] = -bolt_matrix->matrix[1][2];
-		vec[2] = -bolt_matrix->matrix[2][2];
+		vec[0] = -boltMatrix->matrix[0][2];
+		vec[1] = -boltMatrix->matrix[1][2];
+		vec[2] = -boltMatrix->matrix[2][2];
 		break;
 	default:;
 	}
@@ -2424,12 +2424,12 @@ bgEntity_t* pm_entBot = NULL;
 
 qboolean BG_CanItemBeGrabbed(const int gametype, const entityState_t* ent, const playerState_t* ps)
 {
-	if (ent->model_index < 1 || ent->model_index >= bg_numItems)
+	if (ent->modelIndex < 1 || ent->modelIndex >= bg_numItems)
 	{
 		Com_Error(ERR_DROP, "BG_CanItemBeGrabbed: index out of range");
 	}
 
-	const gitem_t* item = &bg_itemlist[ent->model_index];
+	const gitem_t* item = &bg_itemlist[ent->modelIndex];
 
 	if (item->giType == IT_WEAPON && item->giTag == WP_BRYAR_OLD)
 	{
@@ -3306,7 +3306,7 @@ void BG_PlayerStateToEntityState(playerState_t* ps, entityState_t* s, const qboo
 	s->eFlags2 = ps->eFlags2;
 
 	s->saberInFlight = ps->saberInFlight;
-	s->saberentity_num = ps->saberentity_num;
+	s->saberentityNum = ps->saberentityNum;
 	s->saber_move = ps->saber_move;
 	s->forcePowersActive = ps->fd.forcePowersActive;
 
@@ -3319,7 +3319,7 @@ void BG_PlayerStateToEntityState(playerState_t* ps, entityState_t* s, const qboo
 		s->bolt1 = 0;
 	}
 
-	s->otherentity_num2 = ps->emplacedIndex;
+	s->otherentityNum2 = ps->emplacedIndex;
 
 	s->saber_holstered = ps->saber_holstered;
 
@@ -3355,7 +3355,7 @@ void BG_PlayerStateToEntityState(playerState_t* ps, entityState_t* s, const qboo
 	}
 
 	s->weapon = ps->weapon;
-	s->groundentity_num = ps->groundentity_num;
+	s->groundentityNum = ps->groundentityNum;
 	s->ManualBlockingFlags = ps->ManualBlockingFlags; //Blockingflag on OK
 	s->ManualBlockingTime = ps->ManualBlockingTime; //Blocking time 1 on
 	s->ManualblockStartTime = ps->ManualblockStartTime; //Blocking 2
@@ -3515,7 +3515,7 @@ void BG_PlayerStateToEntityStateExtraPolate(playerState_t* ps, entityState_t* s,
 	s->eFlags2 = ps->eFlags2;
 
 	s->saberInFlight = ps->saberInFlight;
-	s->saberentity_num = ps->saberentity_num;
+	s->saberentityNum = ps->saberentityNum;
 	s->saber_move = ps->saber_move;
 	s->forcePowersActive = ps->fd.forcePowersActive;
 
@@ -3528,7 +3528,7 @@ void BG_PlayerStateToEntityStateExtraPolate(playerState_t* ps, entityState_t* s,
 		s->bolt1 = 0;
 	}
 
-	s->otherentity_num2 = ps->emplacedIndex;
+	s->otherentityNum2 = ps->emplacedIndex;
 
 	s->saber_holstered = ps->saber_holstered;
 
@@ -3563,7 +3563,7 @@ void BG_PlayerStateToEntityStateExtraPolate(playerState_t* ps, entityState_t* s,
 		ps->entityEventSequence++;
 	}
 	s->weapon = ps->weapon;
-	s->groundentity_num = ps->groundentity_num;
+	s->groundentityNum = ps->groundentityNum;
 	s->ManualBlockingFlags = ps->ManualBlockingFlags; //Blockingflag on OK
 	s->ManualBlockingTime = ps->ManualBlockingTime; //Blocking time 1 on
 	s->ManualblockStartTime = ps->ManualblockStartTime; //Blocking 2

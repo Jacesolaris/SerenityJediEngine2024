@@ -955,7 +955,7 @@ byte* RB_ReadPixels(const int x, const int y, const int width, const int height,
 R_TakeScreenshot
 ==================
 */
-void R_TakeScreenshot(const int x, const int y, const int width, const int height, const char* file_name) {
+void R_TakeScreenshot(const int x, const int y, const int width, const int height, const char* fileName) {
 	byte* destptr;
 
 	int padlen;
@@ -1002,7 +1002,7 @@ void R_TakeScreenshot(const int x, const int y, const int width, const int heigh
 	if (glConfig.deviceSupportsGamma && !glConfigExt.doGammaCorrectionWithShaders)
 		R_GammaCorrect(allbuf + offset, memcount);
 
-	ri->FS_WriteFile(file_name, buffer, memcount + 18);
+	ri->FS_WriteFile(fileName, buffer, memcount + 18);
 
 	ri->Hunk_FreeTempMemory(allbuf);
 }
@@ -1012,12 +1012,12 @@ void R_TakeScreenshot(const int x, const int y, const int width, const int heigh
 R_TakeScreenshotPNG
 ==================
 */
-void R_TakeScreenshotPNG(const int x, const int y, const int width, const int height, const char* file_name) {
+void R_TakeScreenshotPNG(const int x, const int y, const int width, const int height, const char* fileName) {
 	size_t offset = 0;
 	int padlen = 0;
 
 	byte* buffer = RB_ReadPixels(x, y, width, height, &offset, &padlen);
-	RE_SavePNG(file_name, buffer, width, height, 3);
+	RE_SavePNG(fileName, buffer, width, height, 3);
 	ri->Hunk_FreeTempMemory(buffer);
 }
 
@@ -1026,7 +1026,7 @@ void R_TakeScreenshotPNG(const int x, const int y, const int width, const int he
 R_TakeScreenshotJPEG
 ==================
 */
-void R_TakeScreenshotJPEG(const int x, const int y, const int width, const int height, const char* file_name) {
+void R_TakeScreenshotJPEG(const int x, const int y, const int width, const int height, const char* fileName) {
 	size_t offset = 0;
 	int padlen;
 
@@ -1037,7 +1037,7 @@ void R_TakeScreenshotJPEG(const int x, const int y, const int width, const int h
 	if (glConfig.deviceSupportsGamma && !glConfigExt.doGammaCorrectionWithShaders)
 		R_GammaCorrect(buffer + offset, memcount);
 
-	RE_SaveJPG(file_name, r_screenshotJpegQuality->integer, width, height, buffer + offset, padlen);
+	RE_SaveJPG(fileName, r_screenshotJpegQuality->integer, width, height, buffer + offset, padlen);
 	ri->Hunk_FreeTempMemory(buffer);
 }
 
@@ -1548,7 +1548,7 @@ static consoleCommand_t	commands[] = {
 	{ "r_atihack",			R_AtiHackToggle_f },
 	{ "r_we",				R_WorldEffect_f },
 	{ "imagecacheinfo",		RE_RegisterImages_Info_f },
-	{ "model_list",			R_model_list_f },
+	{ "modelList",			R_model_list_f },
 	{ "modelcacheinfo",		RE_RegisterModels_Info_f },
 	{ "weather",			R_SetWeatherEffect_f },
 	{ "r_weather",			R_WeatherEffect_f },
@@ -1821,8 +1821,6 @@ void R_Init()
 
 	RestoreGhoul2InfoArray();
 
-	ri->Cvar_Set("com_rend2", "0");
-
 	// print info
 	GfxInfo_f();
 
@@ -1988,12 +1986,12 @@ extern qhandle_t RE_RegisterServerSkin(const char* name);
 
 /*
 @@@@@@@@@@@@@@@@@@@@@
-get_ref_api
+GetRefAPI
 
 @@@@@@@@@@@@@@@@@@@@@
 */
 extern "C" {
-	Q_EXPORT refexport_t* QDECL get_ref_api(const int api_version, refimport_t* rimp) {
+	Q_EXPORT refexport_t* QDECL GetRefAPI(const int apiVersion, refimport_t* rimp) {
 		static refexport_t re;
 
 		assert(rimp);
@@ -2001,8 +1999,8 @@ extern "C" {
 
 		memset(&re, 0, sizeof re);
 
-		if (api_version != REF_API_VERSION) {
-			ri->Printf(PRINT_ALL, "Mismatched REF_API_VERSION: expected %i, got %i\n", REF_API_VERSION, api_version);
+		if (apiVersion != REF_API_VERSION) {
+			ri->Printf(PRINT_ALL, "Mismatched REF_API_VERSION: expected %i, got %i\n", REF_API_VERSION, apiVersion);
 			return nullptr;
 		}
 

@@ -1120,7 +1120,7 @@ COrientedParticle* FX_AddOrientedParticle(const int client_id, vec3_t org, vec3_
 //-------------------------
 //  FX_AddPoly
 //-------------------------
-CPoly* FX_AddPoly(const vec3_t* verts, const vec2_t* st, const int num_verts,
+CPoly* FX_AddPoly(const vec3_t* verts, const vec2_t* st, const int numVerts,
 	vec3_t vel, vec3_t accel,
 	const float alpha1, const float alpha2, const float alpha_parm,
 	vec3_t rgb1, vec3_t rgb2, const float rgb_parm,
@@ -1138,7 +1138,7 @@ CPoly* FX_AddPoly(const vec3_t* verts, const vec2_t* st, const int num_verts,
 	if (fx)
 	{
 		// Do a cheesy copy of the verts and texture coords into our own structure
-		for (int i = 0; i < num_verts; i++)
+		for (int i = 0; i < numVerts; i++)
 		{
 			VectorCopy(verts[i], fx->mOrg[i]);
 			VectorCopy2(st[i], fx->mST[i]);
@@ -1179,7 +1179,7 @@ CPoly* FX_AddPoly(const vec3_t* verts, const vec2_t* st, const int num_verts,
 		fx->SetRot(rotation_delta);
 		fx->SetElasticity(bounce);
 		fx->SetMotionTimeStamp(motion_delay);
-		fx->SetNumVerts(num_verts);
+		fx->SetNumVerts(numVerts);
 
 		// Now that we've set our data up, let's process it into a useful format
 		fx->PolyInit();

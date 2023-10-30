@@ -193,7 +193,7 @@ qboolean WP_LobFire(const gentity_t* self, vec3_t start, vec3_t target, vec3_t m
 				if (trace.fraction < 1.0f)
 				{
 					//hit something
-					if (trace.entity_num == enemy_num)
+					if (trace.entityNum == enemy_num)
 					{
 						//hit the enemy, that's perfect!
 						break;
@@ -213,10 +213,10 @@ qboolean WP_LobFire(const gentity_t* self, vec3_t start, vec3_t target, vec3_t m
 					}
 					blocked = qtrue;
 					//see if we should store this as the failCase
-					if (trace.entity_num < ENTITYNUM_WORLD)
+					if (trace.entityNum < ENTITYNUM_WORLD)
 					{
 						//hit an ent
-						const gentity_t* trace_ent = &g_entities[trace.entity_num];
+						const gentity_t* trace_ent = &g_entities[trace.entityNum];
 						if (trace_ent && trace_ent->takedamage && !OnSameTeam(self, trace_ent))
 						{
 							//hit something breakable, so that's okay

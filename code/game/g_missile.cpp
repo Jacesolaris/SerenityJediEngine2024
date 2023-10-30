@@ -169,7 +169,7 @@ static void g_missile_stick(gentity_t* missile, gentity_t* other, trace_t* tr)
 		missile->s.pos.trTime = level.time - 10; // move a bit on the first frame
 
 		// check for stop
-		if (tr->entity_num >= 0 && tr->entity_num < ENTITYNUM_WORLD &&
+		if (tr->entityNum >= 0 && tr->entityNum < ENTITYNUM_WORLD &&
 			tr->plane.normal[2] > 0.7 && missile->s.pos.trDelta[2] < 40)
 			//this can happen even on very slightly sloped walls, so changed it from > 0 to > 0.7
 		{
@@ -194,7 +194,7 @@ static void g_missile_stick(gentity_t* missile, gentity_t* other, trace_t* tr)
 	if (other->s.eType == ET_MOVER || other->e_DieFunc == dieF_funcBBrushDie || other->e_DieFunc == dieF_funcGlassDie)
 	{
 		// movers and breakable brushes need extra info...so sticky missiles can ride lifts and blow up when the thing they are attached to goes away.
-		missile->s.groundentity_num = tr->entity_num;
+		missile->s.groundentityNum = tr->entityNum;
 	}
 }
 
@@ -357,9 +357,7 @@ void g_reflect_missile_auto(gentity_t* ent, gentity_t* missile, vec3_t forward)
 	VectorNormalize(bounce_dir);
 	VectorScale(bounce_dir, speed, missile->s.pos.trDelta);
 #ifdef _DEBUG
-	assert(
-		!Q_isnan(missile->s.pos.trDelta[0]) && !Q_isnan(missile->s.pos.trDelta[1]) && !Q_isnan(missile->s.pos.trDelta[2]
-		));
+	assert(!Q_isnan(missile->s.pos.trDelta[0]) && !Q_isnan(missile->s.pos.trDelta[1]) && !Q_isnan(missile->s.pos.trDelta[2]));
 #endif// _DEBUG
 	missile->s.pos.trTime = level.time - 10; // move a bit on the very first frame
 	VectorCopy(missile->currentOrigin, missile->s.pos.trBase);
@@ -531,9 +529,7 @@ void g_reflect_missile_npc(gentity_t* ent, gentity_t* missile, vec3_t forward)
 	VectorNormalize(bounce_dir);
 	VectorScale(bounce_dir, speed, missile->s.pos.trDelta);
 #ifdef _DEBUG
-	assert(
-		!Q_isnan(missile->s.pos.trDelta[0]) && !Q_isnan(missile->s.pos.trDelta[1]) && !Q_isnan(missile->s.pos.trDelta[2]
-		));
+	assert(!Q_isnan(missile->s.pos.trDelta[0]) && !Q_isnan(missile->s.pos.trDelta[1]) && !Q_isnan(missile->s.pos.trDelta[2]));
 #endif// _DEBUG
 	missile->s.pos.trTime = level.time - 10; // move a bit on the very first frame
 	VectorCopy(missile->currentOrigin, missile->s.pos.trBase);
@@ -704,9 +700,7 @@ void g_missile_bouncedoff_saber(gentity_t* ent, gentity_t* missile, vec3_t forwa
 	VectorNormalize(bounce_dir);
 	VectorScale(bounce_dir, speed, missile->s.pos.trDelta);
 #ifdef _DEBUG
-	assert(
-		!Q_isnan(missile->s.pos.trDelta[0]) && !Q_isnan(missile->s.pos.trDelta[1]) && !Q_isnan(missile->s.pos.trDelta[2]
-		));
+	assert(!Q_isnan(missile->s.pos.trDelta[0]) && !Q_isnan(missile->s.pos.trDelta[1]) && !Q_isnan(missile->s.pos.trDelta[2]));
 #endif// _DEBUG
 	missile->s.pos.trTime = level.time - 10; // move a bit on the very first frame
 	VectorCopy(missile->currentOrigin, missile->s.pos.trBase);
@@ -1075,9 +1069,7 @@ void wp_handle_bolt_block(gentity_t* ent, gentity_t* missile, vec3_t forward)
 	VectorNormalize(bounce_dir);
 	VectorScale(bounce_dir, speed, missile->s.pos.trDelta);
 #ifdef _DEBUG
-	assert(
-		!Q_isnan(missile->s.pos.trDelta[0]) && !Q_isnan(missile->s.pos.trDelta[1]) && !Q_isnan(missile->s.pos.trDelta[2]
-		));
+	assert(!Q_isnan(missile->s.pos.trDelta[0]) && !Q_isnan(missile->s.pos.trDelta[1]) && !Q_isnan(missile->s.pos.trDelta[2]));
 #endif// _DEBUG
 	missile->s.pos.trTime = level.time - 10; // move a bit on the very first frame
 	VectorCopy(missile->currentOrigin, missile->s.pos.trBase);
@@ -1408,12 +1400,12 @@ void g_missile_impacted(gentity_t* ent, gentity_t* other, vec3_t impact_pos, vec
 	if (other && other->takedamage && other->client)
 	{
 		G_AddEvent(ent, EV_MISSILE_HIT, DirToByte(normal));
-		ent->s.otherentity_num = other->s.number;
+		ent->s.otherentityNum = other->s.number;
 	}
 	else
 	{
 		G_AddEvent(ent, EV_MISSILE_MISS, DirToByte(normal));
-		ent->s.otherentity_num = other->s.number;
+		ent->s.otherentityNum = other->s.number;
 	}
 
 	VectorCopy(normal, ent->pos1);
@@ -1481,7 +1473,7 @@ void g_missile_impact(gentity_t* ent, trace_t* trace, const int hit_loc = HL_NON
 {
 	vec3_t diff;
 
-	gentity_t* other = &g_entities[trace->entity_num];
+	gentity_t* other = &g_entities[trace->entityNum];
 
 	if (other == ent)
 	{
@@ -1656,7 +1648,7 @@ void g_missile_impact(gentity_t* ent, trace_t* trace, const int hit_loc = HL_NON
 			g_missile_add_alerts(ent);
 		}
 		g_missile_bounce_effect(ent, trace->endpos, trace->plane.normal,
-			static_cast<qboolean>(trace->entity_num == ENTITYNUM_WORLD));
+			static_cast<qboolean>(trace->entityNum == ENTITYNUM_WORLD));
 
 		return;
 	}
@@ -1676,7 +1668,7 @@ void g_missile_impact(gentity_t* ent, trace_t* trace, const int hit_loc = HL_NON
 					ent->s.eFlags &= ~EF_BOUNCE_SHRAPNEL;
 				}
 				g_missile_bounce_effect(ent, trace->endpos, trace->plane.normal,
-					static_cast<qboolean>(trace->entity_num == ENTITYNUM_WORLD));
+					static_cast<qboolean>(trace->entityNum == ENTITYNUM_WORLD));
 				return;
 			}
 		}
@@ -1700,7 +1692,7 @@ void g_missile_impact(gentity_t* ent, trace_t* trace, const int hit_loc = HL_NON
 					ent->s.eFlags &= ~EF_BOUNCE_SHRAPNEL;
 				}
 				g_missile_bounce_effect(ent, trace->endpos, trace->plane.normal,
-					static_cast<qboolean>(trace->entity_num == ENTITYNUM_WORLD));
+					static_cast<qboolean>(trace->entityNum == ENTITYNUM_WORLD));
 				return;
 			}
 		}
@@ -1755,7 +1747,7 @@ void g_missile_impact(gentity_t* ent, trace_t* trace, const int hit_loc = HL_NON
 
 				GEntity_PainFunc(other, ent, ent, other->currentOrigin, 0, MOD_IMPACT);
 			}
-			nent->s.otherentity_num2 = other->s.number;
+			nent->s.otherentityNum2 = other->s.number;
 			ent->enemy = other;
 			v[0] = other->currentOrigin[0] + (other->mins[0] + other->maxs[0]) * 0.5f;
 			v[1] = other->currentOrigin[1] + (other->mins[1] + other->maxs[1]) * 0.5f;
@@ -1801,7 +1793,7 @@ void g_missile_impact(gentity_t* ent, trace_t* trace, const int hit_loc = HL_NON
 		if (other->client || other->s.eType == ET_MOVER)
 		{
 			G_PlayEffect("stunBaton/flesh_impact", ent->currentOrigin);
-			nent->s.otherentity_num2 = other->s.number;
+			nent->s.otherentityNum2 = other->s.number;
 			ent->enemy = other;
 
 			if (other->takedamage && other->client)
@@ -2010,9 +2002,9 @@ void g_run_stuck_missile(gentity_t* ent)
 {
 	if (ent->takedamage)
 	{
-		if (ent->s.groundentity_num >= 0 && ent->s.groundentity_num < ENTITYNUM_WORLD)
+		if (ent->s.groundentityNum >= 0 && ent->s.groundentityNum < ENTITYNUM_WORLD)
 		{
-			gentity_t* other = &g_entities[ent->s.groundentity_num];
+			gentity_t* other = &g_entities[ent->s.groundentityNum];
 
 			if (!VectorCompare(vec3_origin, other->s.pos.trDelta) && other->s.pos.trType != TR_STATIONARY ||
 				!VectorCompare(vec3_origin, other->s.apos.trDelta) && other->s.apos.trType != TR_STATIONARY)
@@ -2082,7 +2074,7 @@ int g_ground_trace(const gentity_t* ent, pml_t* p_pml)
 	p_pml->groundPlane = qtrue;
 	p_pml->walking = qtrue;
 
-	return trace.entity_num;
+	return trace.entityNum;
 }
 
 void g_clip_velocity(vec3_t in, vec3_t normal, vec3_t out, const float overbounce)
@@ -2180,10 +2172,10 @@ void g_roll_missile(gentity_t* ent)
 
 		//had to move this up above the trace.allsolid check now that for some reason ghoul2 impacts tell me I'm allsolid?!
 		//this needs to be fixed, really
-		if (trace.entity_num < ENTITYNUM_WORLD)
+		if (trace.entityNum < ENTITYNUM_WORLD)
 		{
 			//hit another ent
-			const gentity_t* hit_ent = &g_entities[trace.entity_num];
+			const gentity_t* hit_ent = &g_entities[trace.entityNum];
 			if (hit_ent && (hit_ent->takedamage || hit_ent->contents & CONTENTS_LIGHTSABER))
 			{
 				g_missile_impact(ent, &trace);
@@ -2244,7 +2236,7 @@ void g_roll_missile(gentity_t* ent)
 		//
 		// modify velocity so it parallels all of the clip planes
 		//
-		if (&g_entities[trace.entity_num] != nullptr && g_entities[trace.entity_num].client)
+		if (&g_entities[trace.entityNum] != nullptr && g_entities[trace.entityNum].client)
 		{
 			//hit a person, bounce off much less
 			bounce_amt = OVERCLIP;
@@ -2359,17 +2351,17 @@ void g_run_missile(gentity_t* ent)
 		//in a sand creature's mouth
 		if (ent->activator)
 		{
-			mdxaBone_t bolt_matrix;
+			mdxaBone_t boltMatrix;
 			// Getting the bolt here
 			//in hand
 			vec3_t scAngles = { 0 };
 			scAngles[YAW] = ent->activator->currentAngles[YAW];
 			gi.G2API_GetBoltMatrix(ent->activator->ghoul2, ent->activator->playerModel, ent->activator->gutBolt,
-				&bolt_matrix, scAngles, ent->activator->currentOrigin,
+				&boltMatrix, scAngles, ent->activator->currentOrigin,
 				cg.time ? cg.time : level.time,
 				nullptr, ent->activator->s.modelScale);
 			// Storing ent position, bolt position, and bolt axis
-			gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, ent->currentOrigin);
+			gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, ent->currentOrigin);
 			G_SetOrigin(ent, ent->currentOrigin);
 		}
 		// check think function
@@ -2426,9 +2418,9 @@ void g_run_missile(gentity_t* ent)
 		gi.trace(&tr, ent->currentOrigin, ent->mins, ent->maxs, origin,
 			ent->owner ? ent->owner->s.number : ent->s.number, ent->clipmask, G2_COLLIDE, 10);
 
-		if (tr.entity_num != ENTITYNUM_NONE)
+		if (tr.entityNum != ENTITYNUM_NONE)
 		{
-			const gentity_t* other = &g_entities[tr.entity_num];
+			const gentity_t* other = &g_entities[tr.entityNum];
 			// check for hitting a lightsaber
 			if (other->contents & CONTENTS_LIGHTSABER)
 			{
@@ -2443,7 +2435,7 @@ void g_run_missile(gentity_t* ent)
 							other->owner->client->ps.viewangles, SABER_REFLECT_MISSILE_CONE)))
 				{
 					//Jedi cannot block shots from behind!	//re-trace from here, ignoring the lightsaber
-					gi.trace(&tr, tr.endpos, ent->mins, ent->maxs, origin, tr.entity_num, ent->clipmask, G2_RETURNONHIT,
+					gi.trace(&tr, tr.endpos, ent->mins, ent->maxs, origin, tr.entityNum, ent->clipmask, G2_RETURNONHIT,
 						10);
 				}
 			}
@@ -2462,13 +2454,13 @@ void g_run_missile(gentity_t* ent)
 		// did we hit or go near a Ghoul2 model?
 		for (auto& i : tr.G2CollisionMap)
 		{
-			if (i.mentity_num == -1)
+			if (i.mEntityNum == -1)
 			{
 				break;
 			}
 
 			CCollisionRecord& coll = i;
-			const gentity_t* hit_ent = &g_entities[coll.mentity_num];
+			const gentity_t* hit_ent = &g_entities[coll.mEntityNum];
 
 			// process collision records here...
 			// make sure we only do this once, not for all the entrance wounds we might generate
@@ -2476,9 +2468,9 @@ void g_run_missile(gentity_t* ent)
 			{
 				if (tr_hit_loc == HL_NONE)
 				{
-					G_GetHitLocFromSurfName(&g_entities[coll.mentity_num],
+					G_GetHitLocFromSurfName(&g_entities[coll.mEntityNum],
 						gi.G2API_GetSurfaceName(
-							&g_entities[coll.mentity_num].ghoul2[coll.mModelIndex],
+							&g_entities[coll.mEntityNum].ghoul2[coll.mModelIndex],
 							coll.mSurfaceIndex), &tr_hit_loc, coll.mCollisionPosition, nullptr,
 						nullptr, ent->methodOfDeath);
 				}
@@ -2613,7 +2605,7 @@ gentity_t* fire_grapple(gentity_t* self, vec3_t start, vec3_t dir)
 	hook->target_ent = nullptr;
 	hook->s.pos.trType = TR_LINEAR;
 	hook->s.pos.trTime = level.time - MISSILE_PRESTEP_TIME;
-	hook->s.otherentity_num = self->s.number;
+	hook->s.otherentityNum = self->s.number;
 	VectorCopy(start, hook->s.pos.trBase);
 	VectorScale(dir, 900, hook->s.pos.trDelta);
 	SnapVector(hook->s.pos.trDelta);
@@ -2641,7 +2633,7 @@ gentity_t* fire_stun(gentity_t* self, vec3_t start, vec3_t dir)
 	stun->target_ent = nullptr;
 	stun->s.pos.trType = TR_LINEAR;
 	stun->s.pos.trTime = level.time - MISSILE_PRESTEP_TIME;
-	stun->s.otherentity_num = self->s.number;
+	stun->s.otherentityNum = self->s.number;
 	VectorCopy(start, stun->s.pos.trBase);
 	VectorScale(dir, 2000, stun->s.pos.trDelta);
 	SnapVector(stun->s.pos.trDelta);

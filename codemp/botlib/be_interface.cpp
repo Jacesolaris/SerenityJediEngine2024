@@ -106,7 +106,7 @@ qboolean Validclient_number(const int num, char* str)
 // Returns:					-
 // Changes Globals:		-
 //===========================================================================
-qboolean Validentity_number(const int num, char* str)
+qboolean ValidentityNumber(const int num, char* str)
 {
 	if (num < 0 || num > botlibglobals.maxentities)
 	{
@@ -308,7 +308,7 @@ int Export_BotLibLoadMap(const char* mapname)
 int Export_BotLibUpdateEntity(const int ent, bot_entitystate_t* state)
 {
 	if (!BotLibSetup("BotUpdateEntity")) return BLERR_LIBRARYNOTSETUP;
-	if (!Validentity_number(ent, "BotUpdateEntity")) return BLERR_INVALIDentity_numBER;
+	if (!ValidentityNumber(ent, "BotUpdateEntity")) return BLERR_INVALIDentityNumBER;
 
 	return AAS_UpdateEntity(ent, state);
 } //end of the function Export_BotLibUpdateEntity

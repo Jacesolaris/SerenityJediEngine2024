@@ -70,15 +70,9 @@ void Com_DPrintf(const char* format, ...)
 	ri.Printf(PRINT_DEVELOPER, "%s", text);
 }
 
-// HUNK
-
-//int Hunk_MemoryRemaining( void ) {
-//	return ri.Hunk_MemoryRemaining();
-//}
-
 // ZONE
-
-void* R_Malloc(const int iSize, const memtag_t eTag, const qboolean bZeroit) {
+void* R_Malloc(const int iSize, const memtag_t eTag, const qboolean bZeroit)
+{
 	return ri.Malloc(iSize, eTag, bZeroit, 4);
 }
 

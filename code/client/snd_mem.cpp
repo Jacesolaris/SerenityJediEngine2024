@@ -321,7 +321,7 @@ void R_CheckMP3s(const char* psDir)
 		// read it in...
 		//
 		byte* pbData = nullptr;
-		const int i_size = FS_ReadFile(sFilename, reinterpret_cast<void**>(&pbData));
+		const int iSize = FS_ReadFile(sFilename, reinterpret_cast<void**>(&pbData));
 
 		if (pbData)
 		{
@@ -329,7 +329,7 @@ void R_CheckMP3s(const char* psDir)
 
 			// do NOT check 'qbForceRescan' here as an opt, because we need to actually fill in 'pTAG' if there is one...
 			//
-			const qboolean qbTagNeedsUpdating = /* qbForceRescan || */ !MP3_ReadSpecialTagInfo(pbData, i_size, &pTAG)
+			const qboolean qbTagNeedsUpdating = /* qbForceRescan || */ !MP3_ReadSpecialTagInfo(pbData, iSize, &pTAG)
 				? qtrue
 				: qfalse;
 
@@ -354,11 +354,11 @@ void R_CheckMP3s(const char* psDir)
 					pSFX = S_FindName(sReservedSFXEntrynameForMP3); // always returns, else ERR_FATAL
 				}
 
-				if (MP3_IsValid(sFilename, pbData, i_size, qbForceStereo))
+				if (MP3_IsValid(sFilename, pbData, iSize, qbForceStereo))
 				{
 					wavinfo_t info{};
 
-					const int iRawp_CmdataSize = MP3_GetUnpackedSize(sFilename, pbData, i_size, qtrue, qbForceStereo);
+					const int iRawp_CmdataSize = MP3_GetUnpackedSize(sFilename, pbData, iSize, qtrue, qbForceStereo);
 
 					if (iRawp_CmdataSize)
 						// should always be true, unless file is fucked, in which case, stop this conversion process
@@ -370,7 +370,7 @@ void R_CheckMP3s(const char* psDir)
 						{
 							const auto pbUnpackBuffer = static_cast<byte*>(Z_Malloc(iRawp_CmdataSize + 10, TAG_TEMP_WORKSPACE, qfalse)); // won't return if fails
 
-							iActualUnpackedSize = MP3_UnpackRawPCM(sFilename, pbData, i_size, pbUnpackBuffer);
+							iActualUnpackedSize = MP3_UnpackRawPCM(sFilename, pbData, iSize, pbUnpackBuffer);
 							if (iActualUnpackedSize != iRawp_CmdataSize)
 							{
 								Com_Error(ERR_DROP,
@@ -380,7 +380,7 @@ void R_CheckMP3s(const char* psDir)
 
 							// fake up a WAV structure so I can use the other post-load sound code such as volume calc for lip-synching
 							//
-							MP3_FakeUpWAVInfo(sFilename, pbData, i_size, iActualUnpackedSize,
+							MP3_FakeUpWAVInfo(sFilename, pbData, iSize, iActualUnpackedSize,
 								// these params are all references...
 								info.format, info.rate, info.width, info.channels, info.samples,
 								info.dataofs
@@ -422,7 +422,7 @@ void R_CheckMP3s(const char* psDir)
 						{
 							// write the file back out, but omitting the tag if there was one...
 							//
-							const int iWritten = FS_Write(pbData, i_size - (pTAG ? sizeof * pTAG : 0), f);
+							const int iWritten = FS_Write(pbData, iSize - (pTAG ? sizeof * pTAG : 0), f);
 
 							if (iWritten)
 							{

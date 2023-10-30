@@ -127,7 +127,7 @@ void GL_SelectTexture(const int unit)
 /*
 ** GL_Cull
 */
-void GL_Cull(const int cullType) {
+void GL_Cull(int cullType) {
 	if (glState.faceCulling == cullType) {
 		return;
 	}
@@ -605,11 +605,11 @@ RB_RenderDrawSurfList
 //number of possible surfs we can postrender.
 //note that postrenders lack much of the optimization that the standard sort-render crap does,
 //so it's slower.
-#define MAX_POST_RENDERS	128
+constexpr auto MAX_POST_RENDERS = 128;
 
 using postRender_t = struct postRender_s {
 	int			fogNum;
-	int			ent_num;
+	int			entNum;
 	int			dlighted;
 	int			depthRange;
 	drawSurf_t* drawSurf;
@@ -631,7 +631,7 @@ static inline bool R_AverageTessXYZ(vec3_t dest)
 	int b = -1;
 	vec3_t v;
 
-	while (i < tess.num_vertexes)
+	while (i < tess.numVertexes)
 	{
 		VectorSubtract(tess.xyz[i], tess.xyz[i], v);
 		d = VectorLength(v);
@@ -660,7 +660,7 @@ void RB_RenderDrawSurfList(drawSurf_t* drawSurfs, const int numDrawSurfs)
 {
 	shader_t* shader;
 	int				fogNum;
-	int				entity_num;
+	int				entityNum;
 	int				dlighted;
 	int				i;
 	drawSurf_t* drawSurf;
@@ -679,7 +679,7 @@ void RB_RenderDrawSurfList(drawSurf_t* drawSurfs, const int numDrawSurfs)
 	RB_BeginDrawingView();
 
 	// draw everything
-	int oldentity_num = -1;
+	int oldentityNum = -1;
 	backEnd.currentEntity = &tr.worldEntity;
 	shader_t* oldShader = nullptr;
 	int oldFogNum = -1;
@@ -698,13 +698,13 @@ void RB_RenderDrawSurfList(drawSurf_t* drawSurfs, const int numDrawSurfs)
 			rb_surfaceTable[*drawSurf->surface](drawSurf->surface);
 			continue;
 		}
-		R_DecomposeSort(drawSurf->sort, &entity_num, &shader, &fogNum, &dlighted);
+		R_DecomposeSort(drawSurf->sort, &entityNum, &shader, &fogNum, &dlighted);
 
 		// If we're rendering glowing objects, but this shader has no stages with glow, skip it!
 		if (g_bRenderGlowingObjects && !shader->hasGlow)
 		{
 			shader = oldShader;
-			entity_num = oldentity_num;
+			entityNum = oldentityNum;
 			fogNum = oldFogNum;
 			dlighted = oldDlighted;
 			continue;
@@ -716,14 +716,14 @@ void RB_RenderDrawSurfList(drawSurf_t* drawSurfs, const int numDrawSurfs)
 		// change the tess parameters if needed
 		// a "entityMergable" shader is a shader that can have surfaces from seperate
 		// entities merged into a single batch, like smoke and blood puff sprites
-		if (entity_num != REFENTITYNUM_WORLD &&
+		if (entityNum != REFENTITYNUM_WORLD &&
 			g_numPostRenders < MAX_POST_RENDERS)
 		{
-			if (backEnd.refdef.entities[entity_num].e.renderfx & RF_DISTORTION ||
-				backEnd.refdef.entities[entity_num].e.renderfx & RF_FORCEPOST ||
-				backEnd.refdef.entities[entity_num].e.renderfx & RF_FORCE_ENT_ALPHA)
+			if (backEnd.refdef.entities[entityNum].e.renderfx & RF_DISTORTION ||
+				backEnd.refdef.entities[entityNum].e.renderfx & RF_FORCEPOST ||
+				backEnd.refdef.entities[entityNum].e.renderfx & RF_FORCE_ENT_ALPHA)
 			{ //must render last
-				const trRefEntity_t* curEnt = &backEnd.refdef.entities[entity_num];
+				const trRefEntity_t* curEnt = &backEnd.refdef.entities[entityNum];
 				pRender = &g_postRenders[g_numPostRenders];
 
 				g_numPostRenders++;
@@ -745,7 +745,7 @@ void RB_RenderDrawSurfList(drawSurf_t* drawSurfs, const int numDrawSurfs)
 				depthRange = oldDepthRange;
 
 				//store off the ent num
-				pRender->ent_num = entity_num;
+				pRender->entNum = entityNum;
 
 				//remember the other values necessary for rendering this surf
 				pRender->drawSurf = drawSurf;
@@ -766,7 +766,7 @@ void RB_RenderDrawSurfList(drawSurf_t* drawSurfs, const int numDrawSurfs)
 
 				//assure the info is back to the last set state
 				shader = oldShader;
-				entity_num = oldentity_num;
+				entityNum = oldentityNum;
 				fogNum = oldFogNum;
 				dlighted = oldDlighted;
 
@@ -776,47 +776,9 @@ void RB_RenderDrawSurfList(drawSurf_t* drawSurfs, const int numDrawSurfs)
 				continue;
 			}
 		}
-		/*
-		else if (shader == tr.distortionShader &&
-			g_numPostRenders < MAX_POST_RENDERS)
-		{ //not an ent, just a surface that needs this effect
-			pRender = &g_postRenders[g_numPostRenders];
-
-			g_numPostRenders++;
-
-			depthRange = 0;
-			pRender->depthRange = depthRange;
-
-			//It is not necessary to update the old* values because
-			//we are not updating now with the current values.
-			depthRange = oldDepthRange;
-
-			//store off the ent num
-			pRender->ent_num = entity_num;
-
-			//remember the other values necessary for rendering this surf
-			pRender->drawSurf = drawSurf;
-			pRender->dlighted = dlighted;
-			pRender->fogNum = fogNum;
-			pRender->shader = shader;
-
-			pRender->eValid = qfalse;
-
-			//assure the info is back to the last set state
-			shader = oldShader;
-			entity_num = oldentity_num;
-			fogNum = oldFogNum;
-			dlighted = oldDlighted;
-
-			oldSort = -20; //invalidate this thing, cause we may want to postrender more surfs of the same sort
-
-			//continue without bothering to begin a draw surf
-			continue;
-		}
-		*/
 
 		if (shader != oldShader || fogNum != oldFogNum || dlighted != oldDlighted
-			|| entity_num != oldentity_num && !shader->entityMergable)
+			|| entityNum != oldentityNum && !shader->entityMergable)
 		{
 			if (oldShader != nullptr) {
 				RB_EndSurface();
@@ -836,16 +798,16 @@ void RB_RenderDrawSurfList(drawSurf_t* drawSurfs, const int numDrawSurfs)
 		//
 		// change the modelview matrix if needed
 		//
-		if (entity_num != oldentity_num) {
+		if (entityNum != oldentityNum) {
 			depthRange = 0;
 
-			if (entity_num != REFENTITYNUM_WORLD) {
-				backEnd.currentEntity = &backEnd.refdef.entities[entity_num];
+			if (entityNum != REFENTITYNUM_WORLD) {
+				backEnd.currentEntity = &backEnd.refdef.entities[entityNum];
 
 				backEnd.refdef.floatTime = originalTime - backEnd.currentEntity->e.shaderTime;
 				// we have to reset the shaderTime as well otherwise image animations start
 				// from the wrong frame
-				tess.shaderTime = backEnd.refdef.floatTime - tess.shader->time_offset;
+				tess.shaderTime = backEnd.refdef.floatTime - tess.shader->timeOffset;
 
 				// set up the transformation matrix
 				R_RotateForEntity(backEnd.currentEntity, &backEnd.viewParms, &backEnd.ori);
@@ -870,7 +832,7 @@ void RB_RenderDrawSurfList(drawSurf_t* drawSurfs, const int numDrawSurfs)
 				backEnd.ori = backEnd.viewParms.world;
 				// we have to reset the shaderTime as well otherwise image animations on
 				// the world (like water) continue with the wrong frame
-				tess.shaderTime = backEnd.refdef.floatTime - tess.shader->time_offset;
+				tess.shaderTime = backEnd.refdef.floatTime - tess.shader->timeOffset;
 				R_TransformDlights(backEnd.refdef.num_dlights, backEnd.refdef.dlights, &backEnd.ori);
 			}
 
@@ -898,7 +860,7 @@ void RB_RenderDrawSurfList(drawSurf_t* drawSurfs, const int numDrawSurfs)
 				oldDepthRange = depthRange;
 			}
 
-			oldentity_num = entity_num;
+			oldentityNum = entityNum;
 		}
 
 		// add the triangles for this surface
@@ -908,7 +870,7 @@ void RB_RenderDrawSurfList(drawSurf_t* drawSurfs, const int numDrawSurfs)
 	backEnd.refdef.floatTime = originalTime;
 
 	// draw the contents of the last shader batch
-	//assert(entity_num < MAX_GENTITIES);
+	//assert(entityNum < MAX_GENTITIES);
 
 	if (oldShader != nullptr) {
 		RB_EndSurface();
@@ -937,12 +899,12 @@ void RB_RenderDrawSurfList(drawSurf_t* drawSurfs, const int numDrawSurfs)
 
 			RB_BeginSurface(pRender->shader, pRender->fogNum);
 			{ //ent
-				backEnd.currentEntity = &backEnd.refdef.entities[pRender->ent_num];
+				backEnd.currentEntity = &backEnd.refdef.entities[pRender->entNum];
 
 				backEnd.refdef.floatTime = originalTime - backEnd.currentEntity->e.shaderTime;
 				// we have to reset the shaderTime as well otherwise image animations start
 				// from the wrong frame
-				tess.shaderTime = backEnd.refdef.floatTime - tess.shader->time_offset;
+				tess.shaderTime = backEnd.refdef.floatTime - tess.shader->timeOffset;
 
 				// set up the transformation matrix
 				R_RotateForEntity(backEnd.currentEntity, &backEnd.viewParms, &backEnd.ori);
@@ -1044,8 +1006,8 @@ void RB_RenderDrawSurfList(drawSurf_t* drawSurfs, const int numDrawSurfs)
 			if (!pRender->eValid)
 			{
 			}
-			else if (backEnd.refdef.entities[pRender->ent_num].e.renderfx & RF_DISTORTION &&
-				lastPostEnt != pRender->ent_num)
+			else if (backEnd.refdef.entities[pRender->entNum].e.renderfx & RF_DISTORTION &&
+				lastPostEnt != pRender->entNum)
 			{ //do the capture now, we only need to do it once per ent
 				int x, y;
 				int rad;
@@ -1102,7 +1064,7 @@ void RB_RenderDrawSurfList(drawSurf_t* drawSurfs, const int numDrawSurfs)
 					//now copy a portion of the screen to this texture
 					qglCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16, cX, cY, rad, rad, 0);
 
-					lastPostEnt = pRender->ent_num;
+					lastPostEnt = pRender->entNum;
 				}
 			}
 
@@ -1188,7 +1150,7 @@ void RE_StretchRaw(const int x, const int y, const int w, const int h, const int
 	}
 	R_IssuePendingRenderCommands();
 
-	if (tess.num_indexes) {
+	if (tess.numIndexes) {
 		RB_EndSurface();
 	}
 
@@ -1301,7 +1263,7 @@ const void* RB_StretchPic(const void* data) {
 
 	shader_t* shader = cmd->shader;
 	if (shader != tess.shader) {
-		if (tess.num_indexes) {
+		if (tess.numIndexes) {
 			RB_EndSurface();
 		}
 		backEnd.currentEntity = &backEnd.entity2D;
@@ -1309,52 +1271,52 @@ const void* RB_StretchPic(const void* data) {
 	}
 
 	RB_CHECKOVERFLOW(4, 6);
-	const int num_verts = tess.num_vertexes;
-	const int num_indexes = tess.num_indexes;
+	const int numVerts = tess.numVertexes;
+	const int numIndexes = tess.numIndexes;
 
-	tess.num_vertexes += 4;
-	tess.num_indexes += 6;
+	tess.numVertexes += 4;
+	tess.numIndexes += 6;
 
-	tess.indexes[num_indexes] = num_verts + 3;
-	tess.indexes[num_indexes + 1] = num_verts + 0;
-	tess.indexes[num_indexes + 2] = num_verts + 2;
-	tess.indexes[num_indexes + 3] = num_verts + 2;
-	tess.indexes[num_indexes + 4] = num_verts + 0;
-	tess.indexes[num_indexes + 5] = num_verts + 1;
+	tess.indexes[numIndexes] = numVerts + 3;
+	tess.indexes[numIndexes + 1] = numVerts + 0;
+	tess.indexes[numIndexes + 2] = numVerts + 2;
+	tess.indexes[numIndexes + 3] = numVerts + 2;
+	tess.indexes[numIndexes + 4] = numVerts + 0;
+	tess.indexes[numIndexes + 5] = numVerts + 1;
 
 	const byteAlias_t* baSource = (byteAlias_t*)&backEnd.color2D;
-	auto baDest = (byteAlias_t*)&tess.vertexColors[num_verts + 0]; baDest->ui = baSource->ui;
-	baDest = (byteAlias_t*)&tess.vertexColors[num_verts + 1]; baDest->ui = baSource->ui;
-	baDest = (byteAlias_t*)&tess.vertexColors[num_verts + 2]; baDest->ui = baSource->ui;
-	baDest = (byteAlias_t*)&tess.vertexColors[num_verts + 3]; baDest->ui = baSource->ui;
+	auto baDest = (byteAlias_t*)&tess.vertexColors[numVerts + 0]; baDest->ui = baSource->ui;
+	baDest = (byteAlias_t*)&tess.vertexColors[numVerts + 1]; baDest->ui = baSource->ui;
+	baDest = (byteAlias_t*)&tess.vertexColors[numVerts + 2]; baDest->ui = baSource->ui;
+	baDest = (byteAlias_t*)&tess.vertexColors[numVerts + 3]; baDest->ui = baSource->ui;
 
-	tess.xyz[num_verts][0] = cmd->x;
-	tess.xyz[num_verts][1] = cmd->y;
-	tess.xyz[num_verts][2] = 0;
+	tess.xyz[numVerts][0] = cmd->x;
+	tess.xyz[numVerts][1] = cmd->y;
+	tess.xyz[numVerts][2] = 0;
 
-	tess.texCoords[num_verts][0][0] = cmd->s1;
-	tess.texCoords[num_verts][0][1] = cmd->t1;
+	tess.texCoords[numVerts][0][0] = cmd->s1;
+	tess.texCoords[numVerts][0][1] = cmd->t1;
 
-	tess.xyz[num_verts + 1][0] = cmd->x + cmd->w;
-	tess.xyz[num_verts + 1][1] = cmd->y;
-	tess.xyz[num_verts + 1][2] = 0;
+	tess.xyz[numVerts + 1][0] = cmd->x + cmd->w;
+	tess.xyz[numVerts + 1][1] = cmd->y;
+	tess.xyz[numVerts + 1][2] = 0;
 
-	tess.texCoords[num_verts + 1][0][0] = cmd->s2;
-	tess.texCoords[num_verts + 1][0][1] = cmd->t1;
+	tess.texCoords[numVerts + 1][0][0] = cmd->s2;
+	tess.texCoords[numVerts + 1][0][1] = cmd->t1;
 
-	tess.xyz[num_verts + 2][0] = cmd->x + cmd->w;
-	tess.xyz[num_verts + 2][1] = cmd->y + cmd->h;
-	tess.xyz[num_verts + 2][2] = 0;
+	tess.xyz[numVerts + 2][0] = cmd->x + cmd->w;
+	tess.xyz[numVerts + 2][1] = cmd->y + cmd->h;
+	tess.xyz[numVerts + 2][2] = 0;
 
-	tess.texCoords[num_verts + 2][0][0] = cmd->s2;
-	tess.texCoords[num_verts + 2][0][1] = cmd->t2;
+	tess.texCoords[numVerts + 2][0][0] = cmd->s2;
+	tess.texCoords[numVerts + 2][0][1] = cmd->t2;
 
-	tess.xyz[num_verts + 3][0] = cmd->x;
-	tess.xyz[num_verts + 3][1] = cmd->y + cmd->h;
-	tess.xyz[num_verts + 3][2] = 0;
+	tess.xyz[numVerts + 3][0] = cmd->x;
+	tess.xyz[numVerts + 3][1] = cmd->y + cmd->h;
+	tess.xyz[numVerts + 3][2] = 0;
 
-	tess.texCoords[num_verts + 3][0][0] = cmd->s1;
-	tess.texCoords[num_verts + 3][0][1] = cmd->t2;
+	tess.texCoords[numVerts + 3][0][0] = cmd->s1;
+	tess.texCoords[numVerts + 3][0][1] = cmd->t2;
 
 	return cmd + 1;
 }
@@ -1378,7 +1340,7 @@ const void* RB_RotatePic(const void* data)
 
 		shader = cmd->shader;
 		if (shader != tess.shader) {
-			if (tess.num_indexes) {
+			if (tess.numIndexes) {
 				RB_EndSurface();
 			}
 			backEnd.currentEntity = &backEnd.entity2D;
@@ -1386,8 +1348,8 @@ const void* RB_RotatePic(const void* data)
 		}
 
 		RB_CHECKOVERFLOW(4, 6);
-		const int num_verts = tess.num_vertexes;
-		const int num_indexes = tess.num_indexes;
+		const int numVerts = tess.numVertexes;
+		const int numIndexes = tess.numIndexes;
 
 		const float angle = DEG2RAD(cmd->a);
 		const float s = sinf(angle);
@@ -1399,49 +1361,49 @@ const void* RB_RotatePic(const void* data)
 			{ cmd->x + cmd->w, cmd->y, 1.0f }
 		};
 
-		tess.num_vertexes += 4;
-		tess.num_indexes += 6;
+		tess.numVertexes += 4;
+		tess.numIndexes += 6;
 
-		tess.indexes[num_indexes] = num_verts + 3;
-		tess.indexes[num_indexes + 1] = num_verts + 0;
-		tess.indexes[num_indexes + 2] = num_verts + 2;
-		tess.indexes[num_indexes + 3] = num_verts + 2;
-		tess.indexes[num_indexes + 4] = num_verts + 0;
-		tess.indexes[num_indexes + 5] = num_verts + 1;
+		tess.indexes[numIndexes] = numVerts + 3;
+		tess.indexes[numIndexes + 1] = numVerts + 0;
+		tess.indexes[numIndexes + 2] = numVerts + 2;
+		tess.indexes[numIndexes + 3] = numVerts + 2;
+		tess.indexes[numIndexes + 4] = numVerts + 0;
+		tess.indexes[numIndexes + 5] = numVerts + 1;
 
 		const byteAlias_t* baSource = (byteAlias_t*)&backEnd.color2D;
-		auto baDest = (byteAlias_t*)&tess.vertexColors[num_verts + 0]; baDest->ui = baSource->ui;
-		baDest = (byteAlias_t*)&tess.vertexColors[num_verts + 1]; baDest->ui = baSource->ui;
-		baDest = (byteAlias_t*)&tess.vertexColors[num_verts + 2]; baDest->ui = baSource->ui;
-		baDest = (byteAlias_t*)&tess.vertexColors[num_verts + 3]; baDest->ui = baSource->ui;
+		auto baDest = (byteAlias_t*)&tess.vertexColors[numVerts + 0]; baDest->ui = baSource->ui;
+		baDest = (byteAlias_t*)&tess.vertexColors[numVerts + 1]; baDest->ui = baSource->ui;
+		baDest = (byteAlias_t*)&tess.vertexColors[numVerts + 2]; baDest->ui = baSource->ui;
+		baDest = (byteAlias_t*)&tess.vertexColors[numVerts + 3]; baDest->ui = baSource->ui;
 
-		tess.xyz[num_verts][0] = m[0][0] * -cmd->w + m[2][0];
-		tess.xyz[num_verts][1] = m[0][1] * -cmd->w + m[2][1];
-		tess.xyz[num_verts][2] = 0;
+		tess.xyz[numVerts][0] = m[0][0] * -cmd->w + m[2][0];
+		tess.xyz[numVerts][1] = m[0][1] * -cmd->w + m[2][1];
+		tess.xyz[numVerts][2] = 0;
 
-		tess.texCoords[num_verts][0][0] = cmd->s1;
-		tess.texCoords[num_verts][0][1] = cmd->t1;
+		tess.texCoords[numVerts][0][0] = cmd->s1;
+		tess.texCoords[numVerts][0][1] = cmd->t1;
 
-		tess.xyz[num_verts + 1][0] = m[2][0];
-		tess.xyz[num_verts + 1][1] = m[2][1];
-		tess.xyz[num_verts + 1][2] = 0;
+		tess.xyz[numVerts + 1][0] = m[2][0];
+		tess.xyz[numVerts + 1][1] = m[2][1];
+		tess.xyz[numVerts + 1][2] = 0;
 
-		tess.texCoords[num_verts + 1][0][0] = cmd->s2;
-		tess.texCoords[num_verts + 1][0][1] = cmd->t1;
+		tess.texCoords[numVerts + 1][0][0] = cmd->s2;
+		tess.texCoords[numVerts + 1][0][1] = cmd->t1;
 
-		tess.xyz[num_verts + 2][0] = m[1][0] * cmd->h + m[2][0];
-		tess.xyz[num_verts + 2][1] = m[1][1] * cmd->h + m[2][1];
-		tess.xyz[num_verts + 2][2] = 0;
+		tess.xyz[numVerts + 2][0] = m[1][0] * cmd->h + m[2][0];
+		tess.xyz[numVerts + 2][1] = m[1][1] * cmd->h + m[2][1];
+		tess.xyz[numVerts + 2][2] = 0;
 
-		tess.texCoords[num_verts + 2][0][0] = cmd->s2;
-		tess.texCoords[num_verts + 2][0][1] = cmd->t2;
+		tess.texCoords[numVerts + 2][0][0] = cmd->s2;
+		tess.texCoords[numVerts + 2][0][1] = cmd->t2;
 
-		tess.xyz[num_verts + 3][0] = m[0][0] * -cmd->w + m[1][0] * cmd->h + m[2][0];
-		tess.xyz[num_verts + 3][1] = m[0][1] * -cmd->w + m[1][1] * cmd->h + m[2][1];
-		tess.xyz[num_verts + 3][2] = 0;
+		tess.xyz[numVerts + 3][0] = m[0][0] * -cmd->w + m[1][0] * cmd->h + m[2][0];
+		tess.xyz[numVerts + 3][1] = m[0][1] * -cmd->w + m[1][1] * cmd->h + m[2][1];
+		tess.xyz[numVerts + 3][2] = 0;
 
-		tess.texCoords[num_verts + 3][0][0] = cmd->s1;
-		tess.texCoords[num_verts + 3][0][1] = cmd->t2;
+		tess.texCoords[numVerts + 3][0][0] = cmd->s1;
+		tess.texCoords[numVerts + 3][0][1] = cmd->t2;
 
 		return cmd + 1;
 	}
@@ -1472,7 +1434,7 @@ const void* RB_RotatePic2(const void* data)
 
 			shader = cmd->shader;
 			if (shader != tess.shader) {
-				if (tess.num_indexes) {
+				if (tess.numIndexes) {
 					RB_EndSurface();
 				}
 				backEnd.currentEntity = &backEnd.entity2D;
@@ -1480,8 +1442,8 @@ const void* RB_RotatePic2(const void* data)
 			}
 
 			RB_CHECKOVERFLOW(4, 6);
-			const int num_verts = tess.num_vertexes;
-			const int num_indexes = tess.num_indexes;
+			const int numVerts = tess.numVertexes;
+			const int numIndexes = tess.numIndexes;
 
 			const float angle = DEG2RAD(cmd->a);
 			const float s = sinf(angle);
@@ -1493,49 +1455,49 @@ const void* RB_RotatePic2(const void* data)
 				{ cmd->x, cmd->y, 1.0f }
 			};
 
-			tess.num_vertexes += 4;
-			tess.num_indexes += 6;
+			tess.numVertexes += 4;
+			tess.numIndexes += 6;
 
-			tess.indexes[num_indexes] = num_verts + 3;
-			tess.indexes[num_indexes + 1] = num_verts + 0;
-			tess.indexes[num_indexes + 2] = num_verts + 2;
-			tess.indexes[num_indexes + 3] = num_verts + 2;
-			tess.indexes[num_indexes + 4] = num_verts + 0;
-			tess.indexes[num_indexes + 5] = num_verts + 1;
+			tess.indexes[numIndexes] = numVerts + 3;
+			tess.indexes[numIndexes + 1] = numVerts + 0;
+			tess.indexes[numIndexes + 2] = numVerts + 2;
+			tess.indexes[numIndexes + 3] = numVerts + 2;
+			tess.indexes[numIndexes + 4] = numVerts + 0;
+			tess.indexes[numIndexes + 5] = numVerts + 1;
 
 			const byteAlias_t* baSource = (byteAlias_t*)&backEnd.color2D;
-			auto baDest = (byteAlias_t*)&tess.vertexColors[num_verts + 0]; baDest->ui = baSource->ui;
-			baDest = (byteAlias_t*)&tess.vertexColors[num_verts + 1]; baDest->ui = baSource->ui;
-			baDest = (byteAlias_t*)&tess.vertexColors[num_verts + 2]; baDest->ui = baSource->ui;
-			baDest = (byteAlias_t*)&tess.vertexColors[num_verts + 3]; baDest->ui = baSource->ui;
+			auto baDest = (byteAlias_t*)&tess.vertexColors[numVerts + 0]; baDest->ui = baSource->ui;
+			baDest = (byteAlias_t*)&tess.vertexColors[numVerts + 1]; baDest->ui = baSource->ui;
+			baDest = (byteAlias_t*)&tess.vertexColors[numVerts + 2]; baDest->ui = baSource->ui;
+			baDest = (byteAlias_t*)&tess.vertexColors[numVerts + 3]; baDest->ui = baSource->ui;
 
-			tess.xyz[num_verts][0] = m[0][0] * (-cmd->w * 0.5f) + m[1][0] * (-cmd->h * 0.5f) + m[2][0];
-			tess.xyz[num_verts][1] = m[0][1] * (-cmd->w * 0.5f) + m[1][1] * (-cmd->h * 0.5f) + m[2][1];
-			tess.xyz[num_verts][2] = 0;
+			tess.xyz[numVerts][0] = m[0][0] * (-cmd->w * 0.5f) + m[1][0] * (-cmd->h * 0.5f) + m[2][0];
+			tess.xyz[numVerts][1] = m[0][1] * (-cmd->w * 0.5f) + m[1][1] * (-cmd->h * 0.5f) + m[2][1];
+			tess.xyz[numVerts][2] = 0;
 
-			tess.texCoords[num_verts][0][0] = cmd->s1;
-			tess.texCoords[num_verts][0][1] = cmd->t1;
+			tess.texCoords[numVerts][0][0] = cmd->s1;
+			tess.texCoords[numVerts][0][1] = cmd->t1;
 
-			tess.xyz[num_verts + 1][0] = m[0][0] * (cmd->w * 0.5f) + m[1][0] * (-cmd->h * 0.5f) + m[2][0];
-			tess.xyz[num_verts + 1][1] = m[0][1] * (cmd->w * 0.5f) + m[1][1] * (-cmd->h * 0.5f) + m[2][1];
-			tess.xyz[num_verts + 1][2] = 0;
+			tess.xyz[numVerts + 1][0] = m[0][0] * (cmd->w * 0.5f) + m[1][0] * (-cmd->h * 0.5f) + m[2][0];
+			tess.xyz[numVerts + 1][1] = m[0][1] * (cmd->w * 0.5f) + m[1][1] * (-cmd->h * 0.5f) + m[2][1];
+			tess.xyz[numVerts + 1][2] = 0;
 
-			tess.texCoords[num_verts + 1][0][0] = cmd->s2;
-			tess.texCoords[num_verts + 1][0][1] = cmd->t1;
+			tess.texCoords[numVerts + 1][0][0] = cmd->s2;
+			tess.texCoords[numVerts + 1][0][1] = cmd->t1;
 
-			tess.xyz[num_verts + 2][0] = m[0][0] * (cmd->w * 0.5f) + m[1][0] * (cmd->h * 0.5f) + m[2][0];
-			tess.xyz[num_verts + 2][1] = m[0][1] * (cmd->w * 0.5f) + m[1][1] * (cmd->h * 0.5f) + m[2][1];
-			tess.xyz[num_verts + 2][2] = 0;
+			tess.xyz[numVerts + 2][0] = m[0][0] * (cmd->w * 0.5f) + m[1][0] * (cmd->h * 0.5f) + m[2][0];
+			tess.xyz[numVerts + 2][1] = m[0][1] * (cmd->w * 0.5f) + m[1][1] * (cmd->h * 0.5f) + m[2][1];
+			tess.xyz[numVerts + 2][2] = 0;
 
-			tess.texCoords[num_verts + 2][0][0] = cmd->s2;
-			tess.texCoords[num_verts + 2][0][1] = cmd->t2;
+			tess.texCoords[numVerts + 2][0][0] = cmd->s2;
+			tess.texCoords[numVerts + 2][0][1] = cmd->t2;
 
-			tess.xyz[num_verts + 3][0] = m[0][0] * (-cmd->w * 0.5f) + m[1][0] * (cmd->h * 0.5f) + m[2][0];
-			tess.xyz[num_verts + 3][1] = m[0][1] * (-cmd->w * 0.5f) + m[1][1] * (cmd->h * 0.5f) + m[2][1];
-			tess.xyz[num_verts + 3][2] = 0;
+			tess.xyz[numVerts + 3][0] = m[0][0] * (-cmd->w * 0.5f) + m[1][0] * (cmd->h * 0.5f) + m[2][0];
+			tess.xyz[numVerts + 3][1] = m[0][1] * (-cmd->w * 0.5f) + m[1][1] * (cmd->h * 0.5f) + m[2][1];
+			tess.xyz[numVerts + 3][2] = 0;
 
-			tess.texCoords[num_verts + 3][0][0] = cmd->s1;
-			tess.texCoords[num_verts + 3][0][1] = cmd->t2;
+			tess.texCoords[numVerts + 3][0][0] = cmd->s1;
+			tess.texCoords[numVerts + 3][0][1] = cmd->t2;
 
 			return cmd + 1;
 
@@ -1559,7 +1521,7 @@ RB_DrawSurfs
 */
 const void* RB_DrawSurfs(const void* data) {
 	// finish any 2D drawing if needed
-	if (tess.num_indexes) {
+	if (tess.numIndexes) {
 		RB_EndSurface();
 	}
 
@@ -1813,7 +1775,7 @@ RB_SwapBuffers
 */
 const void* RB_SwapBuffers(const void* data) {
 	// finish any 2D drawing if needed
-	if (tess.num_indexes) {
+	if (tess.numIndexes) {
 		RB_EndSurface();
 	}
 
@@ -1863,7 +1825,7 @@ const void* RB_WorldEffects(const void* data)
 	const auto cmd = static_cast<const drawBufferCommand_t*>(data);
 
 	// Always flush the tess buffer
-	if (tess.shader && tess.num_indexes)
+	if (tess.shader && tess.numIndexes)
 	{
 		RB_EndSurface();
 	}

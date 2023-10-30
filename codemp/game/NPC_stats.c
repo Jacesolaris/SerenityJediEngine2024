@@ -509,7 +509,7 @@ void NPC_Precache(gentity_t* spawner)
 	char* patch;
 	qboolean md3Model = qfalse;
 	char playerModel[MAX_QPATH];
-	char custom_skin[MAX_QPATH];
+	char customSkin[MAX_QPATH];
 	char sessionName[MAX_QPATH + 15];
 
 	if (!Q_stricmp("random", spawner->NPC_type))
@@ -517,7 +517,7 @@ void NPC_Precache(gentity_t* spawner)
 		//sorry, can't precache a random just yet
 		return;
 	}
-	strcpy(custom_skin, "default");
+	strcpy(customSkin, "default");
 
 	p = NPCParms;
 	Com_sprintf(sessionName, sizeof sessionName, "NPC_Precache(%s)", spawner->NPC_type);
@@ -626,14 +626,14 @@ void NPC_Precache(gentity_t* spawner)
 			continue;
 		}
 
-		// custom_skin
-		if (!Q_stricmp(token, "custom_skin"))
+		// customSkin
+		if (!Q_stricmp(token, "customSkin"))
 		{
 			if (COM_ParseString(&p, &value))
 			{
 				continue;
 			}
-			Q_strncpyz(custom_skin, value, sizeof custom_skin);
+			Q_strncpyz(customSkin, value, sizeof customSkin);
 			continue;
 		}
 
@@ -786,10 +786,10 @@ void NPC_Precache(gentity_t* spawner)
 			//if we have a model/skin then index them so they'll be registered immediately
 			//when the client gets a configstring update.
 			Com_sprintf(modelName, sizeof modelName, "models/players/%s/model.glm", playerModel);
-			if (custom_skin[0])
+			if (customSkin[0])
 			{
 				//append it after a *
-				strcat(modelName, va("*%s", custom_skin));
+				strcat(modelName, va("*%s", customSkin));
 			}
 			G_model_index(modelName);
 		}
@@ -817,7 +817,7 @@ qboolean NPC_ParseParms(const char* npc_name, gentity_t* npc)
 	int n;
 	float f;
 	char playerModel[MAX_QPATH];
-	char custom_skin[MAX_QPATH];
+	char customSkin[MAX_QPATH];
 	renderInfo_t* ri = &npc->client->renderInfo;
 	gNPCstats_t* stats = NULL;
 	qboolean md3Model = qtrue;
@@ -832,7 +832,7 @@ qboolean NPC_ParseParms(const char* npc_name, gentity_t* npc)
 	VectorSet(player_mins, -15, -15, DEFAULT_MINS_2);
 	VectorSet(player_maxs, 15, 15, DEFAULT_MAXS_2);
 
-	strcpy(custom_skin, "default");
+	strcpy(customSkin, "default");
 	if (!npc_name || !npc_name[0])
 	{
 		npc_name = "Player";
@@ -1384,14 +1384,14 @@ qboolean NPC_ParseParms(const char* npc_name, gentity_t* npc)
 				continue;
 			}
 
-			// custom_skin
-			if (!Q_stricmp(token, "custom_skin"))
+			// customSkin
+			if (!Q_stricmp(token, "customSkin"))
 			{
 				if (COM_ParseString(&p, &value))
 				{
 					continue;
 				}
-				Q_strncpyz(custom_skin, value, sizeof custom_skin);
+				Q_strncpyz(customSkin, value, sizeof customSkin);
 				continue;
 			}
 
@@ -3446,7 +3446,7 @@ qboolean NPC_ParseParms(const char* npc_name, gentity_t* npc)
 			{
 				//model has custom skin
 				s++;
-				strcpy(custom_skin, s);
+				strcpy(customSkin, s);
 				s--;
 				*s = '\0';
 			}
@@ -3462,9 +3462,9 @@ qboolean NPC_ParseParms(const char* npc_name, gentity_t* npc)
 		npc->s.npcSaber1 = npcSaber1;
 		npc->s.npcSaber2 = npcSaber2;
 
-		if (!custom_skin[0])
+		if (!customSkin[0])
 		{
-			strcpy(custom_skin, "default");
+			strcpy(customSkin, "default");
 		}
 
 		if (npc->client && npc->client->NPC_class == CLASS_VEHICLE)
@@ -3473,7 +3473,7 @@ qboolean NPC_ParseParms(const char* npc_name, gentity_t* npc)
 			//we put the $ in front to indicate a name and not a model
 			strcpy(playerModel, va("$%s", npc_name));
 		}
-		SetupGameGhoul2Model(npc, playerModel, custom_skin);
+		SetupGameGhoul2Model(npc, playerModel, customSkin);
 
 		if (!npc->NPC_type)
 		{
@@ -3492,7 +3492,7 @@ qboolean NPC_ParseParms(const char* npc_name, gentity_t* npc)
 	}
 	else
 	{
-		npc->s.model_index = G_model_index(va("models/players/%s/lower.md3", playerModel));
+		npc->s.modelIndex = G_model_index(va("models/players/%s/lower.md3", playerModel));
 	}
 
 	return qtrue;
@@ -3539,7 +3539,7 @@ void NPC_LoadParms(void)
 			trap->FS_Read(npcParseBuffer, len, f);
 			npcParseBuffer[len] = 0;
 
-			len = COM_Compress(npcParseBuffer);
+			len = COM_CompressShader(npcParseBuffer);
 
 			strcat(marker, npcParseBuffer);
 			strcat(marker, "\n");

@@ -162,7 +162,7 @@ void G_RunObject(gentity_t* ent)
 	//hit something
 
 	//Do impact damage
-	gentity_t* trace_ent = &g_entities[tr.entity_num];
+	gentity_t* trace_ent = &g_entities[tr.entityNum];
 	if (tr.fraction || trace_ent && trace_ent->takedamage)
 	{
 		if (!VectorCompare(ent->currentOrigin, old_org))
@@ -250,7 +250,7 @@ void G_RunObject(gentity_t* ent)
 	}
 
 	//call touch func
-	GEntity_TouchFunc(ent, &g_entities[tr.entity_num], &tr);
+	GEntity_TouchFunc(ent, &g_entities[tr.entityNum], &tr);
 }
 
 void G_StopObjectMoving(gentity_t* object)
@@ -283,7 +283,7 @@ void G_StartObjectMoving(gentity_t* object, vec3_t dir, const float speed, const
 	}
 }
 
-gentity_t* G_CreateObject(gentity_t* owner, vec3_t origin, vec3_t angles, const int model_index, const int frame,
+gentity_t* G_CreateObject(gentity_t* owner, vec3_t origin, vec3_t angles, const int modelIndex, const int frame,
 	const trType_t tr_type,
 	const int effect_id = 0)
 {
@@ -299,9 +299,9 @@ gentity_t* G_CreateObject(gentity_t* owner, vec3_t origin, vec3_t angles, const 
 	object->e_ThinkFunc = thinkF_G_RunObject;
 	object->s.eType = ET_GENERAL;
 	object->s.eFlags |= EF_AUTO_SIZE; //CG_Ents will create the mins & max itself based on model bounds
-	object->s.modelindex = model_index;
+	object->s.modelindex = modelIndex;
 	//FIXME: allow to set a targetname/script_targetname and animation info?
-	object->s.frame = object->start_frame = object->end_frame = frame;
+	object->s.frame = object->startFrame = object->endFrame = frame;
 	object->owner = owner;
 	object->clipmask = MASK_SOLID; //?
 	//object->e_TouchFunc = touchF_charge_stick;

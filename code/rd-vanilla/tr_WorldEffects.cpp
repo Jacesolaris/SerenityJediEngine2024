@@ -35,6 +35,8 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 ////////////////////////////////////////////////////////////////////////////////////////
 extern void			SetViewportAndScissor();
 
+extern	cvar_t* g_Weather;
+
 ////////////////////////////////////////////////////////////////////////////////////////
 // Includes
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -53,8 +55,6 @@ constexpr auto MAX_WEATHER_ZONES = 50;	// so we can more zones that are smaller;
 constexpr auto MAX_PUFF_SYSTEMS = 2;
 constexpr auto MAX_PARTICLE_CLOUDS = 5;
 constexpr auto POINTCACHE_CELL_SIZE = 32.0f;
-
-extern	cvar_t* g_Weather;
 
 ////////////////////////////////////////////////////////////////////////////////////////
 // Globals
@@ -1584,21 +1584,21 @@ void RB_RenderWorldEffects()
 	}
 }
 
-void R_WorldEffect_f(void)
+void R_WorldEffect_f()
 {
 	char	temp[2048];
 	ri.Cmd_ArgsBuffer(temp, sizeof temp);
 	RE_WorldEffectCommand(temp);
 }
 
-void R_WeatherEffect_f(void)
+void R_WeatherEffect_f()
 {
 	char	temp[2048];
 	ri.Cmd_ArgsBuffer(temp, sizeof temp);
 	RE_WorldEffectCommand(temp);
 }
 
-void R_SetWeatherEffect_f(void)
+void R_SetWeatherEffect_f()
 {
 	char	temp[2048];
 	ri.Cmd_ArgsBuffer(temp, sizeof temp);
@@ -2126,7 +2126,6 @@ void RE_WorldEffectCommand(const char* command) // vanilla sp
 	}
 	COM_EndParseSession();
 }
-
 
 float R_GetChanceOfSaberFizz()
 {

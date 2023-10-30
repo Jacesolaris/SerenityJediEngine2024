@@ -578,24 +578,24 @@ Update the default VBO to replace the client side vertex arrays
 */
 void RB_UpdateVBOs(unsigned int attribBits)
 {
-	gpuFrame_t* current_frame = backEndData->current_frame;
+	gpuFrame_t* currentFrame = backEndData->currentFrame;
 
 	GLimp_LogComment("--- RB_UpdateVBOs ---\n");
 
 	backEnd.pc.c_dynamicVboDraws++;
 
 	// update the default VBO
-	if (tess.num_vertexes > 0 && tess.num_vertexes <= SHADER_MAX_VERTEXES)
+	if (tess.numVertexes > 0 && tess.numVertexes <= SHADER_MAX_VERTEXES)
 	{
-		VBO_t* frameVbo = current_frame->dynamicVbo;
+		VBO_t* frameVbo = currentFrame->dynamicVbo;
 		GLbitfield mapFlags = GL_MAP_WRITE_BIT | GL_MAP_UNSYNCHRONIZED_BIT;
 		VertexArraysProperties vertexArrays = {};
 		CalculateVertexArraysProperties(attribBits, &vertexArrays);
 
-		int totalVertexDataSize = tess.num_vertexes * vertexArrays.vertexDataSize;
+		int totalVertexDataSize = tess.numVertexes * vertexArrays.vertexDataSize;
 		backEnd.pc.c_dynamicVboTotalSize += totalVertexDataSize;
 
-		if ((current_frame->dynamicVboWriteOffset + totalVertexDataSize) > frameVbo->vertexesSize)
+		if ((currentFrame->dynamicVboWriteOffset + totalVertexDataSize) > frameVbo->vertexesSize)
 		{
 			// TODO: Eh...resize?
 			assert(!"This shouldn't happen");
@@ -607,17 +607,17 @@ void RB_UpdateVBOs(unsigned int attribBits)
 		void* dstPtr;
 		if (glRefConfig.immutableBuffers)
 		{
-			dstPtr = (byte*)current_frame->dynamicVboMemory + current_frame->dynamicVboWriteOffset;
+			dstPtr = (byte*)currentFrame->dynamicVboMemory + currentFrame->dynamicVboWriteOffset;
 		}
 		else
 		{
-			dstPtr = qglMapBufferRange(GL_ARRAY_BUFFER, current_frame->dynamicVboWriteOffset,
+			dstPtr = qglMapBufferRange(GL_ARRAY_BUFFER, currentFrame->dynamicVboWriteOffset,
 				totalVertexDataSize, mapFlags);
 		}
 
 		// Interleave the data
 		void* writePtr = dstPtr;
-		for (int i = 0; i < tess.num_vertexes; i++)
+		for (int i = 0; i < tess.numVertexes; i++)
 		{
 			for (int j = 0; j < vertexArrays.numVertexArrays; j++)
 			{
@@ -636,19 +636,19 @@ void RB_UpdateVBOs(unsigned int attribBits)
 			qglUnmapBuffer(GL_ARRAY_BUFFER);
 		}
 
-		current_frame->dynamicVboWriteOffset += totalVertexDataSize;
+		currentFrame->dynamicVboWriteOffset += totalVertexDataSize;
 	}
 
 	// update the default IBO
-	if (tess.num_indexes > 0 && tess.num_indexes <= SHADER_MAX_INDEXES)
+	if (tess.numIndexes > 0 && tess.numIndexes <= SHADER_MAX_INDEXES)
 	{
-		IBO_t* frameIbo = current_frame->dynamicIbo;
+		IBO_t* frameIbo = currentFrame->dynamicIbo;
 		GLbitfield mapFlags = GL_MAP_WRITE_BIT | GL_MAP_UNSYNCHRONIZED_BIT;
-		int totalIndexDataSize = tess.num_indexes * sizeof(tess.indexes[0]);
+		int totalIndexDataSize = tess.numIndexes * sizeof(tess.indexes[0]);
 
 		R_BindIBO(frameIbo);
 
-		if ((current_frame->dynamicIboWriteOffset + totalIndexDataSize) > frameIbo->indexesSize)
+		if ((currentFrame->dynamicIboWriteOffset + totalIndexDataSize) > frameIbo->indexesSize)
 		{
 			// TODO: Resize the buffer?
 			assert(!"This shouldn't happen");
@@ -658,11 +658,11 @@ void RB_UpdateVBOs(unsigned int attribBits)
 		void* dst;
 		if (glRefConfig.immutableBuffers)
 		{
-			dst = (byte*)current_frame->dynamicIboMemory + current_frame->dynamicIboWriteOffset;
+			dst = (byte*)currentFrame->dynamicIboMemory + currentFrame->dynamicIboWriteOffset;
 		}
 		else
 		{
-			dst = qglMapBufferRange(GL_ELEMENT_ARRAY_BUFFER, current_frame->dynamicIboWriteOffset,
+			dst = qglMapBufferRange(GL_ELEMENT_ARRAY_BUFFER, currentFrame->dynamicIboWriteOffset,
 				totalIndexDataSize, mapFlags);
 		}
 
@@ -673,7 +673,7 @@ void RB_UpdateVBOs(unsigned int attribBits)
 			qglUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
 		}
 
-		current_frame->dynamicIboWriteOffset += totalIndexDataSize;
+		currentFrame->dynamicIboWriteOffset += totalIndexDataSize;
 	}
 }
 
@@ -683,38 +683,38 @@ void RB_UpdateGoreVBO(srfG2GoreSurface_t* goreSurface)
 	goreSurface->firstVert = tr.goreVBOCurrentIndex;
 	goreSurface->firstIndex = tr.goreIBOCurrentIndex;
 
-	if (tr.goreVBOCurrentIndex + goreSurface->num_verts >= (MAX_LODS * MAX_GORE_RECORDS * MAX_GORE_VERTS * MAX_FRAMES))
+	if (tr.goreVBOCurrentIndex + goreSurface->numVerts >= (MAX_LODS * MAX_GORE_RECORDS * MAX_GORE_VERTS * MAX_FRAMES))
 		tr.goreVBOCurrentIndex = 0;
 
 	R_BindVBO(tr.goreVBO);
 	qglBufferSubData(
 		GL_ARRAY_BUFFER,
 		sizeof(g2GoreVert_t) * tr.goreVBOCurrentIndex,
-		sizeof(g2GoreVert_t) * goreSurface->num_verts,
+		sizeof(g2GoreVert_t) * goreSurface->numVerts,
 		goreSurface->verts
 	);
-	tr.goreVBOCurrentIndex += goreSurface->num_verts;
+	tr.goreVBOCurrentIndex += goreSurface->numVerts;
 
-	if (tr.goreIBOCurrentIndex + goreSurface->num_verts >= (MAX_LODS * MAX_GORE_RECORDS * MAX_GORE_INDECIES * MAX_FRAMES))
+	if (tr.goreIBOCurrentIndex + goreSurface->numVerts >= (MAX_LODS * MAX_GORE_RECORDS * MAX_GORE_INDECIES * MAX_FRAMES))
 		tr.goreIBOCurrentIndex = 0;
 
 	R_BindIBO(tr.goreIBO);
 	qglBufferSubData(
 		GL_ELEMENT_ARRAY_BUFFER,
 		sizeof(glIndex_t) * tr.goreIBOCurrentIndex,
-		sizeof(glIndex_t) * goreSurface->num_indexes,
+		sizeof(glIndex_t) * goreSurface->numIndexes,
 		goreSurface->indexes
 	);
-	tr.goreIBOCurrentIndex += goreSurface->num_indexes;
+	tr.goreIBOCurrentIndex += goreSurface->numIndexes;
 }
 #endif
 
 void RB_CommitInternalBufferData()
 {
-	gpuFrame_t* current_frame = backEndData->current_frame;
+	gpuFrame_t* currentFrame = backEndData->currentFrame;
 
-	current_frame->dynamicIboCommitOffset = current_frame->dynamicIboWriteOffset;
-	current_frame->dynamicVboCommitOffset = current_frame->dynamicVboWriteOffset;
+	currentFrame->dynamicIboCommitOffset = currentFrame->dynamicIboWriteOffset;
+	currentFrame->dynamicVboCommitOffset = currentFrame->dynamicVboWriteOffset;
 }
 
 void RB_BindUniformBlock(GLuint ubo, uniformBlock_t block, int offset)
@@ -741,7 +741,7 @@ void RB_BindUniformBlock(GLuint ubo, uniformBlock_t block, int offset)
 int RB_BindAndUpdateFrameUniformBlock(uniformBlock_t block, void* data)
 {
 	const uniformBlockInfo_t* blockInfo = uniformBlocksInfo + block;
-	gpuFrame_t* thisFrame = backEndData->current_frame;
+	gpuFrame_t* thisFrame = backEndData->currentFrame;
 	const int offset = thisFrame->uboWriteOffset;
 
 	RB_BindUniformBlock(thisFrame->ubo, block, offset);

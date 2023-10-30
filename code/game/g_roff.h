@@ -75,7 +75,7 @@ using move_rotate2_t = struct move_rotate2_s
 using roff_list_t = struct roff_list_s
 {
 	int type; // roff type number, 1-old, 2-new
-	char* file_name; // roff filename
+	char* fileName; // roff filename
 	int frames; // number of roff entries
 	void* data; // delta move and rotate vector list
 	int mFrameTime; // frame rate
@@ -89,7 +89,7 @@ extern int num_roffs;
 
 // Function prototypes
 //-------------------------
-int G_LoadRoff(const char* file_name);
+int G_LoadRoff(const char* fileName);
 void G_Roff(gentity_t* ent);
 void G_SaveCachedRoffs();
 void G_LoadCachedRoffs();

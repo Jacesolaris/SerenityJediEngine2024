@@ -50,7 +50,7 @@ using bot_goal_t = struct bot_goal_s
 	vec3_t origin; //origin of the goal
 	int areanum; //area number of the goal
 	vec3_t mins, maxs; //mins and maxs of the goal
-	int entity_num; //number of the goal entity
+	int entityNum; //number of the goal entity
 	int number; //goal number
 	int flags; //goal flags
 	int iteminfo; //item information

@@ -129,7 +129,7 @@ static long generateHashValue(const char* fname, const int size)
 	return hash;
 }
 
-void R_RemapShader(const char* shader_name, const char* new_shader_name, const char* time_offset)
+void R_RemapShader(const char* shader_name, const char* new_shader_name, const char* timeOffset)
 {
 	char stripped_name[MAX_QPATH];
 	qhandle_t h;
@@ -177,9 +177,9 @@ void R_RemapShader(const char* shader_name, const char* new_shader_name, const c
 			}
 		}
 	}
-	if (time_offset)
+	if (timeOffset)
 	{
-		sh2->time_offset = atof(time_offset);
+		sh2->timeOffset = atof(timeOffset);
 	}
 }
 
@@ -3152,7 +3152,7 @@ most world construction surfaces.
 shader_t* R_FindShader(const char* name, const int* lightmapIndex, const byte* styles, const qboolean mip_raw_image)
 {
 	char stripped_name[MAX_QPATH];
-	char file_name[MAX_QPATH];
+	char fileName[MAX_QPATH];
 	const char* shader_text;
 	shader_t* sh;
 
@@ -3218,7 +3218,7 @@ shader_t* R_FindShader(const char* name, const int* lightmapIndex, const byte* s
 	// if not defined in the in-memory shader descriptions,
 	// look for a single TGA, BMP, or PCX
 	//
-	COM_StripExtension(name, file_name, sizeof file_name);
+	COM_StripExtension(name, fileName, sizeof fileName);
 	shader.defaultShader = qtrue;
 	return FinishShader();
 }
@@ -3478,19 +3478,19 @@ When a handle is passed in by another module, this range checks
 it and returns a valid (possibly default) shader_t to be used internally.
 ====================
 */
-shader_t* R_GetShaderByHandle(const qhandle_t h_shader)
+shader_t* R_GetShaderByHandle(const qhandle_t hShader)
 {
-	if (h_shader < 0)
+	if (hShader < 0)
 	{
-		Com_Printf(S_COLOR_YELLOW "R_GetShaderByHandle: out of range h_shader '%d'\n", h_shader);
+		Com_Printf(S_COLOR_YELLOW "R_GetShaderByHandle: out of range hShader '%d'\n", hShader);
 		return tr.defaultShader;
 	}
-	if (h_shader >= tr.numShaders)
+	if (hShader >= tr.numShaders)
 	{
-		Com_Printf(S_COLOR_YELLOW "R_GetShaderByHandle: out of range h_shader '%d'\n", h_shader);
+		Com_Printf(S_COLOR_YELLOW "R_GetShaderByHandle: out of range hShader '%d'\n", hShader);
 		return tr.defaultShader;
 	}
-	return tr.shaders[h_shader];
+	return tr.shaders[hShader];
 }
 
 /*

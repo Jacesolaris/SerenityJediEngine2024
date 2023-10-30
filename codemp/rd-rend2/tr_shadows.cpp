@@ -107,7 +107,7 @@ void RB_ProjectionShadowDeform()
 	light[1] = light_dir[1] * d;
 	light[2] = light_dir[2] * d;
 
-	for (int i = 0; i < tess.num_vertexes; i++, xyz += 4)
+	for (int i = 0; i < tess.numVertexes; i++, xyz += 4)
 	{
 		const float h = DotProduct(xyz, ground) + ground_dist;
 

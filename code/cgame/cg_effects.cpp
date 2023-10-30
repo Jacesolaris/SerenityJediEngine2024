@@ -441,7 +441,7 @@ void CG_TestLine(vec3_t start, vec3_t end, const int time, unsigned int color, c
 
 	re->reType = RT_LINE;
 	re->radius = 0.5 * radius;
-	re->custom_shader = cgs.media.whiteShader;
+	re->customShader = cgs.media.whiteShader;
 
 	re->shaderTexCoord[0] = re->shaderTexCoord[1] = 1.0f;
 
@@ -477,7 +477,7 @@ void CG_BlockLine(vec3_t start, vec3_t end, const int time, unsigned int color, 
 
 	re->reType = RT_LINE;
 	re->radius = 0.1 * radius;
-	re->custom_shader = cgs.media.whiteShader;
+	re->customShader = cgs.media.whiteShader;
 
 	re->shaderTexCoord[0] = re->shaderTexCoord[1] = 1.0f;
 
@@ -506,7 +506,7 @@ void CG_StunStartpoint(vec3_t start_pos)
 	VectorCopy(start_pos, model.lightingOrigin);
 	VectorCopy(start_pos, model.origin);
 
-	model.custom_shader = cgs.media.blueSaberGlowShader;
+	model.customShader = cgs.media.blueSaberGlowShader;
 	model.shaderRGBA[0] = model.shaderRGBA[1] = model.shaderRGBA[2] = model.shaderRGBA[3] = 0xff;
 
 	cgi_R_AddRefEntityToScene(&model);
@@ -520,7 +520,7 @@ void CG_GrappleStartpoint(vec3_t start_pos)
 	VectorCopy(start_pos, model.lightingOrigin);
 	VectorCopy(start_pos, model.origin);
 
-	model.custom_shader = cgs.media.rgbSaberGlowShader;
+	model.customShader = cgs.media.rgbSaberGlowShader;
 	model.shaderRGBA[0] = model.shaderRGBA[1] = model.shaderRGBA[2] = model.shaderRGBA[3] = 0xff;
 
 	cgi_R_AddRefEntityToScene(&model);
@@ -541,7 +541,7 @@ void CG_GrappleLine(vec3_t start, vec3_t end, const int time, unsigned int color
 
 	re->reType = RT_LINE;
 	re->radius = 0.5 * radius;
-	re->custom_shader = cgs.media.electricBodyShader;
+	re->customShader = cgs.media.electricBodyShader;
 
 	re->shaderTexCoord[0] = re->shaderTexCoord[1] = 1.0f;
 
@@ -903,37 +903,37 @@ void CG_DrawTargetBeam(vec3_t start, vec3_t end, vec3_t norm, const char* beam_f
 	}
 }
 
-void CG_PlayEffectBolted(const char* fx_name, const int model_index, const int bolt_index, const int ent_num,
+void CG_PlayEffectBolted(const char* fx_name, const int modelIndex, const int boltIndex, const int entNum,
 	vec3_t origin,
 	const int i_loop_time, const bool is_relative)
 {
 	vec3_t axis[3];
 	//FIXME: shouldn't this be initialized to something?  It isn't in the EV_PLAY_EFFECT call... irrelevant?
-	int bolt_info;
+	int boltInfo;
 
-	//pack the data into bolt_info as if we were going to send it over the network
-	gi.G2API_AttachEnt(&bolt_info,
-		&g_entities[ent_num].ghoul2[model_index],
-		bolt_index,
-		ent_num,
-		model_index);
+	//pack the data into boltInfo as if we were going to send it over the network
+	gi.G2API_AttachEnt(&boltInfo,
+		&g_entities[entNum].ghoul2[modelIndex],
+		boltIndex,
+		entNum,
+		modelIndex);
 	//send direcly to FX scheduler
 	theFxScheduler.PlayEffect(fx_name,
 		origin,
 		axis,
-		bolt_info,
+		boltInfo,
 		-1,
 		false,
 		i_loop_time,
 		is_relative); //iLoopTime 0 = not looping, 1 for infinite, else duration
 }
 
-void CG_PlayEffectIDBolted(const int fx_id, const int model_index, const int bolt_index, const int ent_num,
+void CG_PlayEffectIDBolted(const int fx_id, const int modelIndex, const int boltIndex, const int entNum,
 	vec3_t origin,
 	const int i_loop_time, const bool is_relative)
 {
 	const char* fx_name = CG_ConfigString(CS_EFFECTS + fx_id);
-	CG_PlayEffectBolted(fx_name, model_index, bolt_index, ent_num, origin, i_loop_time, is_relative);
+	CG_PlayEffectBolted(fx_name, modelIndex, boltIndex, entNum, origin, i_loop_time, is_relative);
 }
 
 void CG_PlayEffectOnEnt(const char* fx_name, const int client_num, vec3_t origin, const vec3_t fwd)

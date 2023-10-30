@@ -614,8 +614,8 @@ const netField_t	entityStateFields[] =
 { NETF(angles2[1]), 0 },
 { NETF(angles2[2]), 0 },
 
-{ NETF(otherentity_num), GENTITYNUM_BITS },
-{ NETF(groundentity_num), GENTITYNUM_BITS },
+{ NETF(otherentityNum), GENTITYNUM_BITS },
+{ NETF(groundentityNum), GENTITYNUM_BITS },
 
 { NETF(constantLight), 32 },
 { NETF(loopSound), 16 },
@@ -653,7 +653,7 @@ Ghoul2 Insert Start
 { NETF(modelScale[1]), 0 },
 { NETF(modelScale[2]), 0 },
 { NETF(radius), 16 },
-{ NETF(bolt_info), 32 },
+{ NETF(boltInfo), 32 },
 
 { NETF(isPortalEnt), 1 },
 
@@ -1121,7 +1121,7 @@ static const netField_t playerStateFields[] =
 	{PSF(delta_angles[0]), 16},
 	{PSF(delta_angles[1]), 16},
 	{PSF(delta_angles[2]), 16},
-	{PSF(groundentity_num), GENTITYNUM_BITS},
+	{PSF(groundentityNum), GENTITYNUM_BITS},
 	//{ PSF(animationTimer), 16 },
 	{PSF(legsAnim), 16},
 	{PSF(torsoAnim), 16},

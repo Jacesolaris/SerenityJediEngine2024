@@ -678,7 +678,7 @@ private:
 	//
 	SLoopedEffect mLoopedEffectArray[MAX_LOOPED_FX];
 
-	int ScheduleLoopedEffect(int id, int bolt_info, bool isPortal, int iLoopTime, bool isRelative);
+	int ScheduleLoopedEffect(int id, int boltInfo, bool isPortal, int iLoopTime, bool isRelative);
 	void AddLoopedEffects();
 
 	// this makes looking up the index based on the string name much easier
@@ -718,18 +718,18 @@ public:
 	void PlayEffect(int id, vec3_t origin, bool isPortal = false); // uses a default up axis
 	void PlayEffect(int id, vec3_t origin, vec3_t forward, bool isPortal = false);
 	// builds arbitrary perp. right vector, does a cross product to define up
-	void PlayEffect(int id, vec3_t origin, vec3_t axis[3], int bolt_info = -1, int ent_num = -1, bool isPortal = false,
+	void PlayEffect(int id, vec3_t origin, vec3_t axis[3], int boltInfo = -1, int entNum = -1, bool isPortal = false,
 		int iLoopTime = false, bool isRelative = false);
 	void PlayEffect(const char* file, vec3_t origin, bool isPortal = false); // uses a default up axis
 	void PlayEffect(const char* file, vec3_t origin, vec3_t forward, bool isPortal = false);
 	// builds arbitrary perp. right vector, does a cross product to define up
-	void PlayEffect(const char* file, vec3_t origin, vec3_t axis[3], int bolt_info, int ent_num, bool isPortal = false,
+	void PlayEffect(const char* file, vec3_t origin, vec3_t axis[3], int boltInfo, int entNum, bool isPortal = false,
 		int iLoopTime = false, bool isRelative = false);
 
 	//for muzzle
 	void PlayEffect(const char* file, int client_id, bool isPortal = false);
 
-	void StopEffect(const char* file, int bolt_info, bool isPortal = false);
+	void StopEffect(const char* file, int boltInfo, bool isPortal = false);
 	//find a scheduled Looping effect with these parms and kill it
 
 	void AddScheduledEffects(bool portal);

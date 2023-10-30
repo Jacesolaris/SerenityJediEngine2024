@@ -562,7 +562,7 @@ void DoImpact(gentity_t* self, gentity_t* other, const qboolean damageSelf)
 						//aw, fuck it, clients no longer take impact damage from other clients, unless you're the player
 						if (other->client //he's a client
 							&& self->client //I'm a client
-							&& other->client->ps.fd.forceGripentity_num == self->s.number) //he's force-gripping me
+							&& other->client->ps.fd.forceGripentityNum == self->s.number) //he's force-gripping me
 						{
 							//don't damage the other guy if he's gripping me
 						}
@@ -629,7 +629,7 @@ void DoImpact(gentity_t* self, gentity_t* other, const qboolean damageSelf)
 			{//health here is used to simulate structural integrity
 				if ((self->s.weapon == WP_SABER)
 					&& self->client
-					&& self->client->ps.groundentity_num < ENTITYNUM_NONE
+					&& self->client->ps.groundentityNum < ENTITYNUM_NONE
 					&& magnitude < 1000)
 				{//players and jedi take less impact damage
 					//allow for some lenience on high falls
@@ -789,7 +789,7 @@ void DoImpactPlayer(gentity_t* self, gentity_t* other, const qboolean damageSelf
 			if (magnitude >= 100 + self->health && self->s.number >= MAX_CLIENTS && self->s.weapon != WP_SABER ||
 				magnitude >= 700)
 			{
-				if (self->s.weapon == WP_SABER && self->client && self->client->ps.groundentity_num < ENTITYNUM_NONE &&
+				if (self->s.weapon == WP_SABER && self->client && self->client->ps.groundentityNum < ENTITYNUM_NONE &&
 					magnitude < 1000)
 				{
 					//players and jedi take less impact damage
@@ -1095,9 +1095,9 @@ void g_mover_touch_push_triggers(gentity_t* ent, vec3_t old_org)
 }
 
 static void SV_PMTrace(trace_t* results, const vec3_t start, const vec3_t mins, const vec3_t maxs, const vec3_t end,
-	const int pass_entity_num, const int content_mask)
+	const int pass_entityNum, const int content_mask)
 {
-	trap->Trace(results, start, mins, maxs, end, pass_entity_num, content_mask, qfalse, 0, 10);
+	trap->Trace(results, start, mins, maxs, end, pass_entityNum, content_mask, qfalse, 0, 10);
 }
 
 /*
@@ -1316,7 +1316,7 @@ void ClientTimerActions(gentity_t* ent, const int msec)
 			&& !PM_InKnockDown(&ent->client->ps)
 			&& ent->client->ps.saberLockTime < level.time
 			&& ent->client->ps.saberBlockingTime < level.time
-			&& ent->client->ps.groundentity_num != ENTITYNUM_NONE)
+			&& ent->client->ps.groundentityNum != ENTITYNUM_NONE)
 		{
 			if (!(ent->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK))
 			{
@@ -1333,7 +1333,7 @@ void ClientTimerActions(gentity_t* ent, const int msec)
 			&& !PM_InKnockDown(&ent->client->ps)
 			&& ent->client->ps.saberLockTime < level.time
 			&& ent->client->ps.saberBlockingTime < level.time
-			&& ent->client->ps.groundentity_num != ENTITYNUM_NONE)
+			&& ent->client->ps.groundentityNum != ENTITYNUM_NONE)
 		{
 			WP_SaberFatigueRegenerate(1);
 		}
@@ -1389,14 +1389,14 @@ void G_VehicleAttachDroidUnit(gentity_t* vehEnt)
 	if (vehEnt && vehEnt->m_pVehicle && vehEnt->m_pVehicle->m_pDroidUnit != NULL)
 	{
 		gentity_t* droidEnt = (gentity_t*)vehEnt->m_pVehicle->m_pDroidUnit;
-		mdxaBone_t bolt_matrix;
+		mdxaBone_t boltMatrix;
 		vec3_t fwd;
 
-		trap->G2API_GetBoltMatrix(vehEnt->ghoul2, 0, vehEnt->m_pVehicle->m_iDroidUnitTag, &bolt_matrix,
+		trap->G2API_GetBoltMatrix(vehEnt->ghoul2, 0, vehEnt->m_pVehicle->m_iDroidUnitTag, &boltMatrix,
 			vehEnt->r.currentAngles, vehEnt->r.currentOrigin, level.time,
 			NULL, vehEnt->modelScale);
-		BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, droidEnt->r.currentOrigin);
-		BG_GiveMeVectorFromMatrix(&bolt_matrix, NEGATIVE_Y, fwd);
+		BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, droidEnt->r.currentOrigin);
+		BG_GiveMeVectorFromMatrix(&boltMatrix, NEGATIVE_Y, fwd);
 		vectoangles(fwd, droidEnt->r.currentAngles);
 
 		if (droidEnt->client)
@@ -1419,9 +1419,9 @@ void G_VehicleAttachDroidUnit(gentity_t* vehEnt)
 extern qboolean BG_SabersOff(const playerState_t* ps);
 extern qboolean PM_ReloadAnim(int anim);
 
-void G_CheapWeaponFire(const int ent_num, const int ev)
+void G_CheapWeaponFire(const int entNum, const int ev)
 {
-	gentity_t* ent = &g_entities[ent_num];
+	gentity_t* ent = &g_entities[entNum];
 
 	if (!ent->inuse || !ent->client)
 	{
@@ -1844,7 +1844,7 @@ void SendPendingPredictableEvents(playerState_t* ps)
 		t->s.number = number;
 		t->s.eType = ET_EVENTS + event;
 		t->s.eFlags |= EF_PLAYER_EVENT;
-		t->s.otherentity_num = ps->client_num;
+		t->s.otherentityNum = ps->client_num;
 		// send to everyone except the client who generated the event
 		t->r.svFlags |= SVF_NOTSINGLECLIENT;
 		t->r.singleClient = ps->client_num;
@@ -3671,7 +3671,7 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 
 		if (anim != -1)
 		{
-			if (ent->client->ps.groundentity_num != ENTITYNUM_NONE)
+			if (ent->client->ps.groundentityNum != ENTITYNUM_NONE)
 			{
 				int parts = SETANIM_TORSO;
 
@@ -5614,12 +5614,12 @@ void ClientThink_real(gentity_t* ent)
 
 				//Get the direction between the pelvis and position of the hand
 #if 0
-				mdxaBone_t bolt_matrix, pBoltMatrix;
+				mdxaBone_t boltMatrix, pBoltMatrix;
 
-				trap->G2API_GetBoltMatrix(thrower->ghoul2, 0, lHandBolt, &bolt_matrix, tAngles, thrower->client->ps.origin, level.time, 0, thrower->modelScale);
-				bolt_org[0] = bolt_matrix.matrix[0][3];
-				bolt_org[1] = bolt_matrix.matrix[1][3];
-				bolt_org[2] = bolt_matrix.matrix[2][3];
+				trap->G2API_GetBoltMatrix(thrower->ghoul2, 0, lHandBolt, &boltMatrix, tAngles, thrower->client->ps.origin, level.time, 0, thrower->modelScale);
+				bolt_org[0] = boltMatrix.matrix[0][3];
+				bolt_org[1] = boltMatrix.matrix[1][3];
+				bolt_org[2] = boltMatrix.matrix[2][3];
 
 				trap->G2API_GetBoltMatrix(thrower->ghoul2, 0, pelBolt, &pBoltMatrix, tAngles, thrower->client->ps.origin, level.time, 0, thrower->modelScale);
 				pBoltOrg[0] = pBoltMatrix.matrix[0][3];
@@ -5791,14 +5791,14 @@ void ClientThink_real(gentity_t* ent)
 	}
 
 	if (ent->client->ps.otherKillerTime > level.time &&
-		ent->client->ps.groundentity_num != ENTITYNUM_NONE &&
+		ent->client->ps.groundentityNum != ENTITYNUM_NONE &&
 		ent->client->ps.otherKillerDebounceTime < level.time)
 	{
 		ent->client->ps.otherKillerTime = 0;
 		ent->client->ps.otherKiller = ENTITYNUM_NONE;
 	}
 	else if (ent->client->ps.otherKillerTime > level.time &&
-		ent->client->ps.groundentity_num == ENTITYNUM_NONE)
+		ent->client->ps.groundentityNum == ENTITYNUM_NONE)
 	{
 		if (ent->client->ps.otherKillerDebounceTime < level.time + 100)
 		{
@@ -6084,10 +6084,10 @@ void ClientThink_real(gentity_t* ent)
 			}
 			if (ent->m_pVehicle->m_pVehicleInfo->type == VH_WALKER)
 			{
-				if (ent->client->ps.groundentity_num != ENTITYNUM_NONE)
+				if (ent->client->ps.groundentityNum != ENTITYNUM_NONE)
 				{
 					//ATST crushes anything underneath it
-					gentity_t* under = &g_entities[ent->client->ps.groundentity_num];
+					gentity_t* under = &g_entities[ent->client->ps.groundentityNum];
 					if (under && under->health && under->takedamage)
 					{
 						vec3_t down = { 0, 0, -1 };
@@ -6129,17 +6129,17 @@ void ClientThink_real(gentity_t* ent)
 
 			if (clientLost && clientLost->inuse && clientLost->client)
 			{
-				saberKnockOutOfHand(&g_entities[clientLost->client->ps.saberentity_num], clientLost, vec3_origin);
+				saberKnockOutOfHand(&g_entities[clientLost->client->ps.saberentityNum], clientLost, vec3_origin);
 			}
 		}
 
 		pmove.checkDuelLoss = 0;
 	}
 
-	if (ent->client->ps.groundentity_num < ENTITYNUM_WORLD)
+	if (ent->client->ps.groundentityNum < ENTITYNUM_WORLD)
 	{
 		//standing on an ent
-		gentity_t* groundEnt = &g_entities[ent->client->ps.groundentity_num];
+		gentity_t* groundEnt = &g_entities[ent->client->ps.groundentityNum];
 		if (groundEnt
 			&& groundEnt->s.eType == ET_NPC
 			&& groundEnt->s.NPC_class == CLASS_VEHICLE
@@ -6430,7 +6430,7 @@ void ClientThink_real(gentity_t* ent)
 			}
 			else
 			{
-				if (ent->client->ps.eFlags2 & EF2_FLYING || ent->s.groundentity_num == ENTITYNUM_NONE || PM_CrouchAnim(
+				if (ent->client->ps.eFlags2 & EF2_FLYING || ent->s.groundentityNum == ENTITYNUM_NONE || PM_CrouchAnim(
 					ent->client->ps.legsAnim))
 				{
 					//Boba_FireWristMissile(ent, BOBA_MISSILE_VIBROBLADE);
@@ -6472,7 +6472,7 @@ void ClientThink_real(gentity_t* ent)
 			}
 			else
 			{
-				if (ent->client->ps.eFlags2 & EF2_FLYING || ent->s.groundentity_num == ENTITYNUM_NONE || PM_CrouchAnim(
+				if (ent->client->ps.eFlags2 & EF2_FLYING || ent->s.groundentityNum == ENTITYNUM_NONE || PM_CrouchAnim(
 					ent->client->ps.legsAnim))
 				{
 					//Boba_FireWristMissile(ent, BOBA_MISSILE_VIBROBLADE);

@@ -124,7 +124,7 @@ void CG_SetEntitySoundPosition(const centity_t* cent)
 	{
 		vec3_t origin;
 
-		const float* v = cgs.inlineModelMidpoints[cent->currentState.model_index];
+		const float* v = cgs.inlineModelMidpoints[cent->currentState.modelIndex];
 		VectorAdd(cent->lerpOrigin, v, origin);
 		trap->S_UpdateEntityPosition(cent->currentState.number, origin);
 	}
@@ -141,9 +141,9 @@ CG_S_AddLoopingSound
 Set the current looping sounds on the entity.
 ==================
 */
-void CG_S_AddLoopingSound(const int entity_num, const vec3_t origin, const vec3_t velocity, const sfxHandle_t sfx)
+void CG_S_AddLoopingSound(const int entityNum, const vec3_t origin, const vec3_t velocity, const sfxHandle_t sfx)
 {
-	centity_t* cent = &cg_entities[entity_num];
+	centity_t* cent = &cg_entities[entityNum];
 	cgLoopSound_t* cSound = NULL;
 	int i = 0;
 	qboolean alreadyPlaying = qfalse;
@@ -177,7 +177,7 @@ void CG_S_AddLoopingSound(const int entity_num, const vec3_t origin, const vec3_
 	//Add a new looping sound.
 	cSound = &cent->loopingSound[cent->numLoopingSounds];
 
-	cSound->entity_num = entity_num;
+	cSound->entityNum = entityNum;
 	VectorCopy(origin, cSound->origin);
 	VectorCopy(velocity, cSound->velocity);
 	cSound->sfx = sfx;
@@ -192,9 +192,9 @@ CG_S_AddLoopingSound
 For now just redirect, might eventually do something different.
 ==================
 */
-void CG_S_AddRealLoopingSound(const int entity_num, const vec3_t origin, const vec3_t velocity, const sfxHandle_t sfx)
+void CG_S_AddRealLoopingSound(const int entityNum, const vec3_t origin, const vec3_t velocity, const sfxHandle_t sfx)
 {
-	CG_S_AddLoopingSound(entity_num, origin, velocity, sfx);
+	CG_S_AddLoopingSound(entityNum, origin, velocity, sfx);
 }
 
 /*
@@ -204,9 +204,9 @@ CG_S_AddLoopingSound
 Clear looping sounds.
 ==================
 */
-void CG_S_StopLoopingSound(const int entity_num, const sfxHandle_t sfx)
+void CG_S_StopLoopingSound(const int entityNum, const sfxHandle_t sfx)
 {
-	centity_t* cent = &cg_entities[entity_num];
+	centity_t* cent = &cg_entities[entityNum];
 
 	if (sfx == -1)
 	{
@@ -238,7 +238,7 @@ void CG_S_StopLoopingSound(const int entity_num, const sfxHandle_t sfx)
 			i++;
 		}
 	}
-	//trap->S_StopLoopingSound(entity_num);
+	//trap->S_StopLoopingSound(entityNum);
 }
 
 /*
@@ -248,9 +248,9 @@ CG_S_UpdateLoopingSounds
 Update any existing looping sounds on the entity.
 ==================
 */
-void CG_S_UpdateLoopingSounds(const int entity_num)
+void CG_S_UpdateLoopingSounds(const int entityNum)
 {
-	const centity_t* cent = &cg_entities[entity_num];
+	const centity_t* cent = &cg_entities[entityNum];
 	vec3_t lerp_org;
 	int i = 0;
 
@@ -261,7 +261,7 @@ void CG_S_UpdateLoopingSounds(const int entity_num)
 
 	if (cent->currentState.eType == ET_MOVER)
 	{
-		const float* v = cgs.inlineModelMidpoints[cent->currentState.model_index];
+		const float* v = cgs.inlineModelMidpoints[cent->currentState.modelIndex];
 		VectorAdd(cent->lerpOrigin, v, lerp_org);
 	}
 	else
@@ -284,9 +284,9 @@ void CG_S_UpdateLoopingSounds(const int entity_num)
 	{
 		const cgLoopSound_t* cSound = &cent->loopingSound[i];
 
-		//trap->S_AddLoopingSound(entity_num, cSound->origin, cSound->velocity, cSound->sfx);
+		//trap->S_AddLoopingSound(entityNum, cSound->origin, cSound->velocity, cSound->sfx);
 		//I guess just keep using lerpOrigin for now,
-		trap->S_AddLoopingSound(entity_num, lerp_org, cSound->velocity, cSound->sfx);
+		trap->S_AddLoopingSound(entityNum, lerp_org, cSound->velocity, cSound->sfx);
 		i++;
 	}
 }
@@ -337,7 +337,7 @@ static void CG_EntityEffects(const centity_t* cent)
 			{
 				vec3_t origin;
 
-				const float* v = cgs.inlineModelMidpoints[cent->currentState.model_index];
+				const float* v = cgs.inlineModelMidpoints[cent->currentState.modelIndex];
 				VectorAdd(cent->lerpOrigin, v, origin);
 				trap->S_AddLoopingSound(cent->currentState.number, origin, vec3_origin,
 					realSoundIndex);
@@ -408,7 +408,7 @@ localEntity_t* FX_AddOrientedLine(vec3_t start, vec3_t end, vec3_t normal, const
 	le->refEntity.data.line.stscale = st_scale;
 	le->refEntity.data.line.width = scale;
 
-	le->refEntity.custom_shader = shader;
+	le->refEntity.customShader = shader;
 
 	// set origin
 	VectorCopy(start, le->refEntity.origin);
@@ -457,7 +457,7 @@ void FX_DrawPortableShield(const centity_t* cent)
 	const int pos_width = cent->currentState.time2 >> 8 & 255;
 	const int neg_width = cent->currentState.time2 & 255;
 
-	const int team = cent->currentState.otherentity_num2;
+	const int team = cent->currentState.otherentityNum2;
 
 	VectorClear(normal);
 
@@ -522,17 +522,17 @@ void CG_Special(const centity_t* cent)
 	}
 
 	// if set to invisible, skip
-	if (!s1->model_index)
+	if (!s1->modelIndex)
 	{
 		return;
 	}
 
-	if (s1->model_index == HI_SHIELD)
+	if (s1->modelIndex == HI_SHIELD)
 	{
 		// The portable shield should go through a different rendering function.
 		if (!cg.snap->ps.duelInProgress ||
-			s1->otherentity_num == cg.snap->ps.client_num ||
-			s1->otherentity_num == cg.snap->ps.duelIndex)
+			s1->otherentityNum == cg.snap->ps.client_num ||
+			s1->otherentityNum == cg.snap->ps.duelIndex)
 		{
 			FX_DrawPortableShield(cent);
 		}
@@ -567,7 +567,7 @@ void CG_CreateBBRefEnts(entityState_t* s1, vec3_t origin)
 			memset (&point[i], 0, sizeof(refEntity_t));
 			point[i].reType = RT_SPRITE;
 			point[i].radius = 1;
-			point[i].custom_shader = trap->R_RegisterShader("textures/tests/circle");
+			point[i].customShader = trap->R_RegisterShader("textures/tests/circle");
 			point[i].shaderRGBA[0] = 255;
 			point[i].shaderRGBA[1] = 255;
 			point[i].shaderRGBA[2] = 255;
@@ -625,38 +625,38 @@ void CG_CreateBBRefEnts(entityState_t* s1, vec3_t origin)
 void G2_BoltToGhoul2Model(centity_t* cent, refEntity_t* ent)
 {
 	// extract the wraith ID from the bolt info
-	int model_num = cent->bolt_info >> MODEL_SHIFT;
-	int bolt_num = cent->bolt_info >> BOLT_SHIFT;
-	int ent_num = cent->bolt_info >> ENTITY_SHIFT;
-	mdxaBone_t bolt_matrix;
+	int model_num = cent->boltInfo >> MODEL_SHIFT;
+	int bolt_num = cent->boltInfo >> BOLT_SHIFT;
+	int entNum = cent->boltInfo >> ENTITY_SHIFT;
+	mdxaBone_t boltMatrix;
 
 	model_num &= MODEL_AND;
 	bolt_num &= BOLT_AND;
-	ent_num &= ENTITY_AND;
+	entNum &= ENTITY_AND;
 
 	//NOTENOTE I put this here because the cgs.game_models array no longer gets initialized.
 	assert(0);
 
 	// go away and get me the bolt position for this frame please
-	trap->G2API_GetBoltMatrix(cent->ghoul2, model_num, bolt_num, &bolt_matrix, cg_entities[ent_num].currentState.angles,
-		cg_entities[ent_num].currentState.origin, cg.time, cgs.game_models, cent->modelScale);
+	trap->G2API_GetBoltMatrix(cent->ghoul2, model_num, bolt_num, &boltMatrix, cg_entities[entNum].currentState.angles,
+		cg_entities[entNum].currentState.origin, cg.time, cgs.game_models, cent->modelScale);
 
 	// set up the axis and origin we need for the actual effect spawning
-	ent->origin[0] = bolt_matrix.matrix[0][3];
-	ent->origin[1] = bolt_matrix.matrix[1][3];
-	ent->origin[2] = bolt_matrix.matrix[2][3];
+	ent->origin[0] = boltMatrix.matrix[0][3];
+	ent->origin[1] = boltMatrix.matrix[1][3];
+	ent->origin[2] = boltMatrix.matrix[2][3];
 
-	ent->axis[0][0] = bolt_matrix.matrix[0][0];
-	ent->axis[0][1] = bolt_matrix.matrix[1][0];
-	ent->axis[0][2] = bolt_matrix.matrix[2][0];
+	ent->axis[0][0] = boltMatrix.matrix[0][0];
+	ent->axis[0][1] = boltMatrix.matrix[1][0];
+	ent->axis[0][2] = boltMatrix.matrix[2][0];
 
-	ent->axis[1][0] = bolt_matrix.matrix[0][1];
-	ent->axis[1][1] = bolt_matrix.matrix[1][1];
-	ent->axis[1][2] = bolt_matrix.matrix[2][1];
+	ent->axis[1][0] = boltMatrix.matrix[0][1];
+	ent->axis[1][1] = boltMatrix.matrix[1][1];
+	ent->axis[1][2] = boltMatrix.matrix[2][1];
 
-	ent->axis[2][0] = bolt_matrix.matrix[0][2];
-	ent->axis[2][1] = bolt_matrix.matrix[1][2];
-	ent->axis[2][2] = bolt_matrix.matrix[2][2];
+	ent->axis[2][0] = boltMatrix.matrix[0][2];
+	ent->axis[2][1] = boltMatrix.matrix[1][2];
+	ent->axis[2][2] = boltMatrix.matrix[2][2];
 }
 
 void ScaleModelAxis(refEntity_t* ent)
@@ -722,25 +722,25 @@ void CG_Disintegration(centity_t* cent, refEntity_t* ent)
 	ent->endTime = cent->dustTrailTime;
 
 	ent->renderfx |= RF_DISINTEGRATE2;
-	ent->custom_shader = cgs.media.disruptorShader;
+	ent->customShader = cgs.media.disruptorShader;
 	trap->R_AddRefEntityToScene(ent);
 
 	ent->renderfx &= ~RF_DISINTEGRATE2;
 	ent->renderfx |= RF_DISINTEGRATE1;
-	ent->custom_shader = 0;
+	ent->customShader = 0;
 	trap->R_AddRefEntityToScene(ent);
 
 	if (cg.time - ent->endTime < 1000 && timescale.value * timescale.value * Q_flrand(0.0f, 1.0f) > 0.05f)
 	{
 		vec3_t fx_org, fx_dir;
-		mdxaBone_t bolt_matrix;
+		mdxaBone_t boltMatrix;
 		const int torso_bolt = trap->G2API_AddBolt(cent->ghoul2, 0, "lower_lumbar");
 
 		VectorSet(fx_dir, 0, 1, 0);
 
-		trap->G2API_GetBoltMatrix(cent->ghoul2, 0, torso_bolt, &bolt_matrix, cent->lerpAngles, cent->lerpOrigin, cg.time,
+		trap->G2API_GetBoltMatrix(cent->ghoul2, 0, torso_bolt, &boltMatrix, cent->lerpAngles, cent->lerpOrigin, cg.time,
 			cgs.game_models, cent->modelScale);
-		BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, fx_org);
+		BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, fx_org);
 
 		VectorMA(fx_org, -18, cg.refdef.viewaxis[0], fx_org);
 		fx_org[2] += Q_flrand(-1.0f, 1.0f) * 20;
@@ -832,7 +832,7 @@ static void CG_SiegeEntRenderAboveHead(centity_t *cent)
 	else
 	{
 		ent.ghoul2 = NULL;
-		ent.hModel = cgs.game_models[cent->currentState.model_index];
+		ent.hModel = cgs.game_models[cent->currentState.modelIndex];
 	}
 
 	//Scale it up
@@ -948,7 +948,7 @@ static void CG_General(centity_t* cent)
 			VectorMA(end, lerped.origin[i], cent->currentState.angles, end);
 		}
 
-		parent = &cg_entities[cent->currentState.otherentity_num];
+		parent = &cg_entities[cent->currentState.otherentityNum];
 		trap->G2API_GetBoltMatrix(parent->ghoul2, 0, 0, &mat, parent->turAngles, parent->lerpOrigin, cg.time,
 			cgs.game_models, parent->modelScale);
 
@@ -984,7 +984,7 @@ static void CG_General(centity_t* cent)
 			VectorMA(end, lerped.origin[i], cent->currentState.angles, end);
 		}
 
-		parent = &cg_entities[cent->currentState.otherentity_num];
+		parent = &cg_entities[cent->currentState.otherentityNum];
 		trap->G2API_GetBoltMatrix(parent->ghoul2, 0, 0, &mat, parent->turAngles, parent->lerpOrigin, cg.time,
 			cgs.game_models, parent->modelScale);
 		BG_GiveMeVectorFromMatrix(&mat, ORIGIN, start);
@@ -999,8 +999,8 @@ static void CG_General(centity_t* cent)
 
 	if (cg.snap->ps.duelInProgress &&
 		((cent->currentState.weapon == WP_SABER &&
-			cent->currentState.otherentity_num != cg.snap->ps.client_num &&
-			cent->currentState.otherentity_num != cg.snap->ps.duelIndex) ||
+			cent->currentState.otherentityNum != cg.snap->ps.client_num &&
+			cent->currentState.otherentityNum != cg.snap->ps.duelIndex) ||
 			cent->currentState.eType & ET_BODY ||
 			cent->currentState.weapon == G2_MODEL_PART))
 	{ // don't render flying sabers owned by others, bodies or body parts
@@ -1045,7 +1045,7 @@ static void CG_General(centity_t* cent)
 	}
 	else if (cent->currentState.eFlags & EF_CLIENTSMOOTH)
 	{
-		if (cent->currentState.groundentity_num >= ENTITYNUM_WORLD)
+		if (cent->currentState.groundentityNum >= ENTITYNUM_WORLD)
 		{
 			float smooth_factor = 0.5f * timescale.value;
 			int k = 0;
@@ -1134,7 +1134,7 @@ static void CG_General(centity_t* cent)
 
 	if (cent->currentState.modelGhoul2 >= G2_MODELPART_HEAD &&
 		cent->currentState.modelGhoul2 <= G2_MODELPART_RLEG &&
-		/*cent->currentState.model_index < MAX_CLIENTS &&*/
+		/*cent->currentState.modelIndex < MAX_CLIENTS &&*/
 		cent->currentState.weapon == G2_MODEL_PART)
 	{
 		//special case for client limbs
@@ -1146,13 +1146,13 @@ static void CG_General(centity_t* cent)
 
 		do_not_set_model = qtrue;
 
-		if (cent->currentState.model_index >= 0)
+		if (cent->currentState.modelIndex >= 0)
 		{
-			cl_ent = &cg_entities[cent->currentState.model_index];
+			cl_ent = &cg_entities[cent->currentState.modelIndex];
 		}
 		else
 		{
-			cl_ent = &cg_entities[cent->currentState.otherentity_num2];
+			cl_ent = &cg_entities[cent->currentState.otherentityNum2];
 		}
 
 		if (!dismember_settings)
@@ -1472,7 +1472,7 @@ static void CG_General(centity_t* cent)
 	s1 = &cent->currentState;
 
 	// if set to invisible, skip
-	if (!s1->model_index && !trap->G2_HaveWeGhoul2Models(cent->ghoul2))
+	if (!s1->modelIndex && !trap->G2_HaveWeGhoul2Models(cent->ghoul2))
 	{
 		return;
 	}
@@ -1522,7 +1522,7 @@ static void CG_General(centity_t* cent)
 		//If the game says this guy uses a ghoul2 model and the g2 instance handle is null, then initialize it
 		if (!cent->ghoul2 && !cent->currentState.bolt1)
 		{
-			const char* model_name = CG_ConfigString(CS_MODELS + cent->currentState.model_index);
+			const char* model_name = CG_ConfigString(CS_MODELS + cent->currentState.modelIndex);
 
 			trap->G2API_InitGhoul2Model(&cent->ghoul2, model_name, 0, 0, 0, 0, 0);
 			if (cent->ghoul2 && trap->G2API_SkinlessModel(cent->ghoul2, 0))
@@ -1585,11 +1585,11 @@ static void CG_General(centity_t* cent)
 		}
 	}
 
-	if (s1->eType == ET_HOLOCRON && s1->model_index < -100)
+	if (s1->eType == ET_HOLOCRON && s1->modelIndex < -100)
 	{
 		//special render, it's a holocron
 		//Using actual models now:
-		ent.hModel = trap->R_RegisterModel(forceHolocronModels[s1->model_index + 128]);
+		ent.hModel = trap->R_RegisterModel(forceHolocronModels[s1->modelIndex + 128]);
 
 		//Rotate them
 		VectorCopy(cg.autoAngles, cent->lerpAngles);
@@ -1597,7 +1597,7 @@ static void CG_General(centity_t* cent)
 	}
 	else if (!do_not_set_model)
 	{
-		ent.hModel = cgs.game_models[s1->model_index];
+		ent.hModel = cgs.game_models[s1->modelIndex];
 	}
 
 	// player model
@@ -1627,17 +1627,17 @@ static void CG_General(centity_t* cent)
 		// make the gun pulse red to warn about it exploding
 		val = (1.0f - (float)(cent->currentState.time - cg.time) / 3200.0f) * 0.3f;
 
-		ent.custom_shader = trap->R_RegisterShader("gfx/effects/turretflashdie");
+		ent.customShader = trap->R_RegisterShader("gfx/effects/turretflashdie");
 		ent.shaderRGBA[0] = (sin(cg.time * 0.04f) * val * 0.4f + val) * 255;
 		ent.shaderRGBA[1] = ent.shaderRGBA[2] = 0;
 
 		ent.shaderRGBA[3] = 100;
 		trap->R_AddRefEntityToScene(&ent);
-		ent.custom_shader = 0;
+		ent.customShader = 0;
 	}
 	else if (cent->currentState.time == -1 && cent->currentState.weapon == WP_EMPLACED_GUN)
 	{
-		ent.custom_shader = trap->R_RegisterShader("models/map_objects/imp_mine/turret_chair_dmg.tga");
+		ent.customShader = trap->R_RegisterShader("models/map_objects/imp_mine/turret_chair_dmg.tga");
 		//trap->R_AddRefEntityToScene( &ent );
 	}
 
@@ -1724,16 +1724,16 @@ static void CG_General(centity_t* cent)
 			if (light_side)
 			{
 				//might be temporary, dunno.
-				ent.custom_shader = cgs.media.playerShieldDamage;
+				ent.customShader = cgs.media.playerShieldDamage;
 			}
 			else
 			{
-				ent.custom_shader = cgs.media.redSaberGlowShader;
+				ent.customShader = cgs.media.redSaberGlowShader;
 			}
 
 			trap->R_AddRefEntityToScene(&ent);
 			ent.renderfx &= ~RF_DISINTEGRATE2;
-			ent.custom_shader = 0;
+			ent.customShader = 0;
 
 			if (cur_time_dif < 2400)
 			{
@@ -1756,11 +1756,11 @@ static void CG_General(centity_t* cent)
 					ent.shaderRGBA[3] = 255;
 					if (rand() & 1)
 					{
-						ent.custom_shader = cgs.media.electricBodyShader;
+						ent.customShader = cgs.media.electricBodyShader;
 					}
 					else
 					{
-						ent.custom_shader = cgs.media.electricBody2Shader;
+						ent.customShader = cgs.media.electricBody2Shader;
 					}
 					if (Q_flrand(0.0f, 1.0f) > 0.9f)
 					{
@@ -1801,8 +1801,8 @@ static void CG_General(centity_t* cent)
 		cent->currentState.bolt1)  // lmo using same bolt1 hack to recognise sentry! (see above and SP_PAS in g_items.c)
 	{ // if entity is a trip mine, detpack, sentry gun consider duel NoX
 		if (!cg.snap->ps.duelInProgress ||
-			cent->currentState.otherentity_num == cg.snap->ps.client_num ||
-			cent->currentState.otherentity_num == cg.snap->ps.duelIndex)
+			cent->currentState.otherentityNum == cg.snap->ps.client_num ||
+			cent->currentState.otherentityNum == cg.snap->ps.duelIndex)
 		{
 			trap->R_AddRefEntityToScene(&ent);
 		}
@@ -1818,7 +1818,7 @@ static void CG_General(centity_t* cent)
 		float wv;
 		addspriteArgStruct_t fx_s_args;
 
-		ent.custom_shader = cgs.media.solidWhite;
+		ent.customShader = cgs.media.solidWhite;
 		ent.renderfx = RF_RGB_TINT;
 		wv = sin(cg.time * 0.003f) * 0.08f + 0.1f;
 		ent.shaderRGBA[0] = wv * 255;
@@ -1854,7 +1854,7 @@ static void CG_General(centity_t* cent)
 		float wv;
 		addspriteArgStruct_t fx_s_args;
 
-		ent.custom_shader = cgs.media.solidWhite;
+		ent.customShader = cgs.media.solidWhite;
 		ent.renderfx = RF_RGB_TINT;
 		wv = sin(cg.time * 0.005f) * 0.08f + 0.1f; //* 0.08f + 0.1f;
 
@@ -1875,9 +1875,9 @@ static void CG_General(centity_t* cent)
 		else
 		{
 			//neutral
-			if (s1->model_index + 128 == FP_SABER_OFFENSE ||
-				s1->model_index + 128 == FP_SABER_DEFENSE ||
-				s1->model_index + 128 == FP_SABERTHROW)
+			if (s1->modelIndex + 128 == FP_SABER_OFFENSE ||
+				s1->modelIndex + 128 == FP_SABER_DEFENSE ||
+				s1->modelIndex + 128 == FP_SABERTHROW)
 			{
 				//saber power
 				ent.shaderRGBA[0] = 0;
@@ -1943,9 +1943,9 @@ static void CG_General(centity_t* cent)
 		else
 		{
 			//neutral
-			if (s1->model_index + 128 == FP_SABER_OFFENSE ||
-				s1->model_index + 128 == FP_SABER_DEFENSE ||
-				s1->model_index + 128 == FP_SABERTHROW)
+			if (s1->modelIndex + 128 == FP_SABER_OFFENSE ||
+				s1->modelIndex + 128 == FP_SABER_DEFENSE ||
+				s1->modelIndex + 128 == FP_SABERTHROW)
 			{
 				//saber power
 				fx_s_args.sAlpha *= 1.5;
@@ -1971,8 +1971,8 @@ static void CG_General(centity_t* cent)
 		int beam_id;
 		//if force sight is active, render the laser multiple times up to the force sight level to increase visibility
 		if (!cg.snap->ps.duelInProgress ||
-			cent->currentState.otherentity_num == cg.snap->ps.client_num ||
-			cent->currentState.otherentity_num == cg.snap->ps.duelIndex)
+			cent->currentState.otherentityNum == cg.snap->ps.client_num ||
+			cent->currentState.otherentityNum == cg.snap->ps.duelIndex)
 		{ // dont render if neither you nor opponent are owner
 			if (cent->currentState.bolt2 == 1)
 			{
@@ -2207,7 +2207,7 @@ static void CG_General(centity_t* cent)
 		}
 		ent.renderfx &= ~RF_RGB_TINT;
 		ent.renderfx &= ~RF_FORCE_ENT_ALPHA;
-		ent.custom_shader = cgs.media.sightShell;
+		ent.customShader = cgs.media.sightShell;
 
 		trap->R_AddRefEntityToScene(&ent);
 	}
@@ -2289,9 +2289,9 @@ static void CG_Item(centity_t* cent)
 	weaponInfo_t* wi;
 
 	es = &cent->currentState;
-	if (es->model_index >= bg_numItems)
+	if (es->modelIndex >= bg_numItems)
 	{
-		trap->Error(ERR_DROP, "Bad item index %i on entity", es->model_index);
+		trap->Error(ERR_DROP, "Bad item index %i on entity", es->modelIndex);
 	}
 
 	/*
@@ -2303,12 +2303,12 @@ static void CG_Item(centity_t* cent)
 		es->eFlags &= ~EF_NODRAW;
 	}
 
-	if (!es->model_index)
+	if (!es->modelIndex)
 	{
 		return;
 	}
 
-	item = &bg_itemlist[es->model_index];
+	item = &bg_itemlist[es->modelIndex];
 
 	if ((item->giType == IT_WEAPON || item->giType == IT_POWERUP) &&
 		!(cent->currentState.eFlags & EF_DROPPEDWEAPON) &&
@@ -2323,7 +2323,7 @@ static void CG_Item(centity_t* cent)
 
 		memset(&ent, 0, sizeof ent);
 
-		ent.custom_shader = 0;
+		ent.customShader = 0;
 		VectorCopy(cent->lerpOrigin, ent.origin);
 		VectorCopy(cent->currentState.angles, cent->lerpAngles);
 		AnglesToAxis(cent->lerpAngles, ent.axis);
@@ -2363,7 +2363,7 @@ static void CG_Item(centity_t* cent)
 		ent.reType = RT_SPRITE;
 		VectorCopy(cent->lerpOrigin, ent.origin);
 		ent.radius = 14;
-		ent.custom_shader = cg_items[es->model_index].icon;
+		ent.customShader = cg_items[es->modelIndex].icon;
 		ent.shaderRGBA[0] = 255;
 		ent.shaderRGBA[1] = 255;
 		ent.shaderRGBA[2] = 255;
@@ -2401,11 +2401,11 @@ static void CG_Item(centity_t* cent)
 
 			if (item->giTag == PW_FORCE_ENLIGHTENED_LIGHT)
 			{
-				ent.custom_shader = trap->R_RegisterShader("gfx/misc/mp_light_enlight_disable");
+				ent.customShader = trap->R_RegisterShader("gfx/misc/mp_light_enlight_disable");
 			}
 			else
 			{
-				ent.custom_shader = trap->R_RegisterShader("gfx/misc/mp_dark_enlight_disable");
+				ent.customShader = trap->R_RegisterShader("gfx/misc/mp_dark_enlight_disable");
 			}
 		}
 		trap->R_AddRefEntityToScene(&ent);
@@ -2539,12 +2539,12 @@ static void CG_Item(centity_t* cent)
 		}
 	}
 
-	ent.hModel = cg_items[es->model_index].models[0];
+	ent.hModel = cg_items[es->modelIndex].models[0];
 	/*
 	Ghoul2 Insert Start
 	*/
-	ent.ghoul2 = cg_items[es->model_index].g2Models[0];
-	ent.radius = cg_items[es->model_index].radius[0];
+	ent.ghoul2 = cg_items[es->modelIndex].g2Models[0];
+	ent.radius = cg_items[es->modelIndex].radius[0];
 	VectorCopy(cent->lerpAngles, ent.angles);
 	/*
 	Ghoul2 Insert End
@@ -2572,11 +2572,11 @@ static void CG_Item(centity_t* cent)
 
 		if (item->giTag == PW_FORCE_ENLIGHTENED_LIGHT)
 		{
-			ent.custom_shader = trap->R_RegisterShader("gfx/misc/mp_light_enlight_disable");
+			ent.customShader = trap->R_RegisterShader("gfx/misc/mp_light_enlight_disable");
 		}
 		else
 		{
-			ent.custom_shader = trap->R_RegisterShader("gfx/misc/mp_dark_enlight_disable");
+			ent.customShader = trap->R_RegisterShader("gfx/misc/mp_dark_enlight_disable");
 		}
 
 		trap->R_AddRefEntityToScene(&ent);
@@ -2592,7 +2592,7 @@ static void CG_Item(centity_t* cent)
 		ent.shaderRGBA[0] = 0;
 		ent.shaderRGBA[1] = 200;
 		ent.shaderRGBA[2] = 85;
-		ent.custom_shader = cgs.media.itemRespawningPlaceholder;
+		ent.customShader = cgs.media.itemRespawningPlaceholder;
 	}
 
 	// increase the size of the weapons when they are presented as items
@@ -2646,7 +2646,7 @@ static void CG_Item(centity_t* cent)
 		if (a > 255)
 			a = 255;
 
-		ent.custom_shader = cgs.media.itemRespawningRezOut;
+		ent.customShader = cgs.media.itemRespawningRezOut;
 
 		/*
 		ent.shaderRGBA[0] = 0;
@@ -2699,7 +2699,7 @@ static void CG_Item(centity_t* cent)
 		barrel.shadowPlane = ent.shadowPlane;
 		barrel.renderfx = ent.renderfx;
 
-		barrel.custom_shader = ent.custom_shader;
+		barrel.customShader = ent.customShader;
 
 		CG_PositionRotatedEntityOnTag( &barrel, &ent, wi->weaponModel, "tag_barrel" );
 
@@ -2719,7 +2719,7 @@ static void CG_Item(centity_t* cent)
 
 		if (item->giType == IT_HEALTH || item->giType == IT_POWERUP)
 		{
-			if ((ent.hModel = cg_items[es->model_index].models[1]) != 0)
+			if ((ent.hModel = cg_items[es->modelIndex].models[1]) != 0)
 			{
 				if (item->giType == IT_POWERUP)
 				{
@@ -2800,7 +2800,7 @@ void CG_CreateDistortionTrailPart(const centity_t* cent, const float scale, vec3
 	ScaleModelAxis(&ent);
 
 	ent.hModel = trap->R_RegisterModel("models/weapons2/merr_sonn/trailmodel.md3");
-	ent.custom_shader = cgs.media.itemRespawningRezOut;
+	ent.customShader = cgs.media.itemRespawningRezOut;
 
 #if 1
 	ent.renderfx = RF_DISTORTION | RF_FORCE_ENT_ALPHA;
@@ -2833,8 +2833,8 @@ static void CG_Missile(centity_t* cent)
 
 	if (cg.snap->ps.duelInProgress &&
 		cent->currentState.eType == ET_MISSILE &&
-		cent->currentState.otherentity_num != cg.snap->ps.client_num &&
-		cent->currentState.otherentity_num != cg.snap->ps.duelIndex)
+		cent->currentState.otherentityNum != cg.snap->ps.client_num &&
+		cent->currentState.otherentityNum != cg.snap->ps.duelIndex)
 	{ //dont render missiles (includes dead sabers) if duel nox
 		return;
 	}
@@ -2862,12 +2862,12 @@ static void CG_Missile(centity_t* cent)
 
 	if (s1->weapon == WP_SABER)
 	{
-		if ((cent->currentState.model_index != cent->serverSaberHitIndex || !cent->ghoul2) && !(s1->eFlags & EF_NODRAW))
+		if ((cent->currentState.modelIndex != cent->serverSaberHitIndex || !cent->ghoul2) && !(s1->eFlags & EF_NODRAW))
 		{
 			//no g2, or server changed the model we are using
-			const char* saber_model = CG_ConfigString(CS_MODELS + cent->currentState.model_index);
+			const char* saber_model = CG_ConfigString(CS_MODELS + cent->currentState.modelIndex);
 
-			cent->serverSaberHitIndex = cent->currentState.model_index;
+			cent->serverSaberHitIndex = cent->currentState.modelIndex;
 
 			if (cent->ghoul2)
 			{
@@ -2960,7 +2960,7 @@ static void CG_Missile(centity_t* cent)
 			VectorMA(end, lerped.origin[i], s1->angles, end);
 		}
 
-		parent = &cg_entities[s1->otherentity_num];
+		parent = &cg_entities[s1->otherentityNum];
 		trap->G2API_GetBoltMatrix(parent->ghoul2, 1, 0, &mat, parent->turAngles, parent->lerpOrigin, cg.time,
 			cgs.game_models, parent->modelScale);
 
@@ -2999,7 +2999,7 @@ static void CG_Missile(centity_t* cent)
 			VectorMA(end, lerped.origin[i], s1->angles, end);
 		}
 
-		parent = &cg_entities[s1->otherentity_num];
+		parent = &cg_entities[s1->otherentityNum];
 		trap->G2API_GetBoltMatrix(parent->ghoul2, 1, 0, &mat, parent->turAngles, parent->lerpOrigin, cg.time,
 			cgs.game_models, parent->modelScale);
 		BG_GiveMeVectorFromMatrix(&mat, ORIGIN, start);
@@ -3015,7 +3015,7 @@ static void CG_Missile(centity_t* cent)
 	// calculate the axis
 	//VectorCopy(s1->angles, cent->lerpAngles);
 
-	if (s1->otherentity_num2 && s1->weapon != WP_SABER)
+	if (s1->otherentityNum2 && s1->weapon != WP_SABER)
 	{
 		//using an over-ridden trail effect!
 		vec3_t forward;
@@ -3025,21 +3025,21 @@ static void CG_Missile(centity_t* cent)
 			forward[2] = 1.0f;
 		}
 		if (s1->eFlags & EF_JETPACK_ACTIVE //hack so we know we're a vehicle Weapon shot
-			&& (g_vehWeaponInfo[s1->otherentity_num2].iShotFX
-				|| g_vehWeaponInfo[s1->otherentity_num2].iModel != NULL_HANDLE))
+			&& (g_vehWeaponInfo[s1->otherentityNum2].iShotFX
+				|| g_vehWeaponInfo[s1->otherentityNum2].iModel != NULL_HANDLE))
 		{
 			//a vehicle with an override for the weapon trail fx or model
-			trap->FX_PlayEffectID(g_vehWeaponInfo[s1->otherentity_num2].iShotFX, cent->lerpOrigin, forward, -1, -1,
+			trap->FX_PlayEffectID(g_vehWeaponInfo[s1->otherentityNum2].iShotFX, cent->lerpOrigin, forward, -1, -1,
 				qfalse);
-			if (g_vehWeaponInfo[s1->otherentity_num2].iLoopSound)
+			if (g_vehWeaponInfo[s1->otherentityNum2].iLoopSound)
 			{
 				vec3_t velocity;
 				BG_EvaluateTrajectoryDelta(&cent->currentState.pos, cg.time, velocity);
 				trap->S_AddLoopingSound(cent->currentState.number, cent->lerpOrigin, velocity,
-					g_vehWeaponInfo[s1->otherentity_num2].iLoopSound);
+					g_vehWeaponInfo[s1->otherentityNum2].iLoopSound);
 			}
 			//add custom model
-			if (g_vehWeaponInfo[s1->otherentity_num2].iModel == NULL_HANDLE)
+			if (g_vehWeaponInfo[s1->otherentityNum2].iModel == NULL_HANDLE)
 			{
 				return;
 			}
@@ -3047,7 +3047,7 @@ static void CG_Missile(centity_t* cent)
 		else
 		{
 			//a regular missile
-			trap->FX_PlayEffectID(cgs.gameEffects[s1->otherentity_num2], cent->lerpOrigin, forward, -1, -1, qfalse);
+			trap->FX_PlayEffectID(cgs.gameEffects[s1->otherentityNum2], cent->lerpOrigin, forward, -1, -1, qfalse);
 			if (s1->loopSound)
 			{
 				vec3_t velocity;
@@ -3171,9 +3171,9 @@ static void CG_Missile(centity_t* cent)
 	//add custom model
 	else
 	{
-		if (g_vehWeaponInfo[s1->otherentity_num2].iModel != NULL_HANDLE)
+		if (g_vehWeaponInfo[s1->otherentityNum2].iModel != NULL_HANDLE)
 		{
-			ent.hModel = g_vehWeaponInfo[s1->otherentity_num2].iModel;
+			ent.hModel = g_vehWeaponInfo[s1->otherentityNum2].iModel;
 		}
 		else
 		{
@@ -3282,7 +3282,7 @@ static void CG_Missile(centity_t* cent)
 		int i;
 		addspriteArgStruct_t fx_s_args;
 
-		ent.custom_shader = cgs.media.solidWhite;
+		ent.customShader = cgs.media.solidWhite;
 		ent.renderfx = RF_RGB_TINT;
 		wv = sin(cg.time * 0.003f) * 0.08f + 0.1f;
 		ent.shaderRGBA[0] = wv * 255;
@@ -3318,7 +3318,7 @@ static void CG_Missile(centity_t* cent)
 			ent.shaderRGBA[2] = 0;
 
 			ent.renderfx |= RF_DEPTHHACK;
-			ent.custom_shader = cgs.media.forceSightBubble;
+			ent.customShader = cgs.media.forceSightBubble;
 
 			trap->R_AddRefEntityToScene(&ent);
 		}
@@ -3369,7 +3369,7 @@ void CG_PlayDoorLoopSound(const centity_t* cent)
 
 	if (cent->currentState.eType == ET_MOVER) //shouldn't be in here otherwise, but just in case.
 	{
-		const float* v = cgs.inlineModelMidpoints[cent->currentState.model_index];
+		const float* v = cgs.inlineModelMidpoints[cent->currentState.modelIndex];
 		VectorAdd(cent->lerpOrigin, v, origin);
 	}
 	else
@@ -3486,14 +3486,14 @@ static void CG_Mover(centity_t* cent)
 	// flicker between two skins (FIXME?)
 	ent.skinNum = cg.time >> 6 & 1;
 
-	// get the model, either as a bmodel or a model_index
+	// get the model, either as a bmodel or a modelIndex
 	if (s1->solid == SOLID_BMODEL)
 	{
-		ent.hModel = cgs.inlineDrawModel[s1->model_index];
+		ent.hModel = cgs.inlineDrawModel[s1->modelIndex];
 	}
 	else
 	{
-		ent.hModel = cgs.game_models[s1->model_index];
+		ent.hModel = cgs.game_models[s1->modelIndex];
 	}
 
 	// If there isn't an hModel for this mover, an RGB axis model will get drawn.
@@ -3882,7 +3882,7 @@ void CG_CalcEntityLerpPositions(centity_t* cent)
 	// player state
 	if (cent->currentState.number != cg.client_num)
 	{
-		CG_AdjustPositionForMover(cent->lerpOrigin, cent->currentState.groundentity_num,
+		CG_AdjustPositionForMover(cent->lerpOrigin, cent->currentState.groundentityNum,
 			cg.snap->serverTime, cg.time, cent->lerpOrigin);
 	}
 }
@@ -3938,17 +3938,17 @@ static void CG_FX(centity_t* cent)
 		fx_dir[1] = 1;
 	}
 
-	if (cgs.gameEffects[s1->model_index])
+	if (cgs.gameEffects[s1->modelIndex])
 	{
-		efx_index = cgs.gameEffects[s1->model_index];
+		efx_index = cgs.gameEffects[s1->modelIndex];
 	}
 	else
 	{
-		const char* s = CG_ConfigString(CS_EFFECTS + s1->model_index);
+		const char* s = CG_ConfigString(CS_EFFECTS + s1->modelIndex);
 		if (s && s[0])
 		{
 			efx_index = trap->FX_RegisterEffect(s);
-			cgs.gameEffects[s1->model_index] = efx_index;
+			cgs.gameEffects[s1->modelIndex] = efx_index;
 		}
 	}
 
@@ -4476,7 +4476,7 @@ void CG_Cube(vec3_t mins, vec3_t maxs, vec3_t color, const float alpha)
 		//- face
 		apArgs.p[0][vec[0]] = apArgs.p[1][vec[0]] = apArgs.p[2][vec[0]] = apArgs.p[3][vec[0]] = mins[vec[0]];
 
-		apArgs.num_verts = 4;
+		apArgs.numVerts = 4;
 		apArgs.alpha1 = apArgs.alpha2 = alpha;
 		VectorCopy(color, apArgs.rgb1);
 		VectorCopy(color, apArgs.rgb2);

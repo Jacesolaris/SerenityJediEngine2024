@@ -98,7 +98,7 @@ struct mdxmWeight_t
 typedef struct
 #endif
 {
-	int			bone_index;		// these are indexes into the surface boneReferences, not the global bone index
+	int			boneIndex;		// these are indexes into the surface boneReferences, not the global bone index
 	float		boneWeight;		// not the global per-frame bone list
 
 	// I'm defining this '<' operator so this struct can be used with an STL <set>...
@@ -172,7 +172,7 @@ typedef struct mdxmHeader_s {
 	char		animName[MAX_QPATH];// name of animation file this mesh requires	// note: extension missing
 	int			animIndex;			// filled in by game (carcass defaults it to 0)
 
-	int			num_bones;			// (for ingame version-checks only, ensure we don't ref more bones than skel file has)
+	int			numBones;			// (for ingame version-checks only, ensure we don't ref more bones than skel file has)
 
 	int			numLODs;
 	int			ofsLODs;
@@ -231,7 +231,7 @@ typedef struct mdxmSurface_s {
 
 	int			ofsHeader;			// this will be a negative number, pointing back to main header
 
-	int			num_verts;
+	int			numVerts;
 	int			ofsVerts;
 
 	int			numTriangles;
@@ -258,7 +258,7 @@ typedef struct mdxmTriangle_s {
 } mdxmTriangle_t;
 // }
 
-// for each vert... (mdxmSurface_t->num_verts)
+// for each vert... (mdxmSurface_t->numVerts)
 // {
 		// mdxVertex_t - this is an array with number of verts from the surface definition as its bounds. It contains normal info, texture coors and number of weightings for this bone
 		// (this is now kept at 32 bytes for cache-aligning)
@@ -318,7 +318,7 @@ static float G2_GetVertBoneWeight(const mdxmVertex_t* pVert, const int iWeightNu
 	return fBoneWeight;
 }
 #endif
-// for each vert... (mdxmSurface_t->num_verts)  (seperated from mdxmVertex_t struct for cache reasons)
+// for each vert... (mdxmSurface_t->numVerts)  (seperated from mdxmVertex_t struct for cache reasons)
 // {
 		// mdxVertex_t - this is an array with number of verts from the surface definition as its bounds. It contains normal info, texture coors and number of weightings for this bone
 
@@ -349,9 +349,9 @@ typedef struct mdxaHeader_s {
 
 	// frames and bones are shared by all levels of detail
 	//
-	int			num_frames;
+	int			numFrames;
 	int			ofsFrames;			// points at mdxaFrame_t array
-	int			num_bones;			// (no offset to these since they're inside the frames array)
+	int			numBones;			// (no offset to these since they're inside the frames array)
 	int			ofsCompBonePool;	// offset to global compressed-bone pool that all frames use
 	int			ofsSkel;			// offset to mdxaSkel_t info
 
@@ -362,11 +362,11 @@ typedef struct mdxaHeader_s {
 // {
 typedef struct
 {
-	int offsets[1];		// variable sized (mdxaHeader_t->num_bones), each offset points to an mdxaSkel_t below
+	int offsets[1];		// variable sized (mdxaHeader_t->numBones), each offset points to an mdxaSkel_t below
 } mdxaSkelOffsets_t;
 // }
 
-// for each bone...	 (mdxaHeader_t->num_bones)
+// for each bone...	 (mdxaHeader_t->numBones)
 // {
 		// mdxaSkel_t - contains hierarchical info only...
 
@@ -388,7 +388,7 @@ typedef struct mdxaSkel_s {
 	//
 	// access as follows to get the index for a given <iFrameNum, iBoneNum>
 	//
-	// (iFrameNum * mdxaHeader_t->num_bones * 3) + (iBoneNum * 3)
+	// (iFrameNum * mdxaHeader_t->numBones * 3) + (iBoneNum * 3)
 	//
 	//  then read the int at that location and AND it with 0x00FFFFFF. I use the struct below simply for easy searches
 typedef struct

@@ -75,9 +75,9 @@ void func_usable_think(gentity_t* self)
 	}
 }
 
-qboolean G_EntIsRemovableUsable(const int ent_num)
+qboolean G_EntIsRemovableUsable(const int entNum)
 {
-	const gentity_t* ent = &g_entities[ent_num];
+	const gentity_t* ent = &g_entities[entNum];
 	if (ent->classname && !Q_stricmp("func_usable", ent->classname))
 	{
 		if (!(ent->s.eFlags & EF_SHADER_ANIM) && !(ent->spawnflags & 8) && ent->targetname)
@@ -111,7 +111,7 @@ void func_usable_use(gentity_t* self, const gentity_t* other, gentity_t* activat
 	{
 		//animate shader when used
 		self->s.frame++; //inc frame
-		if (self->s.frame > self->end_frame)
+		if (self->s.frame > self->endFrame)
 		{
 			//wrap around
 			self->s.frame = 0;
@@ -255,9 +255,9 @@ void SP_func_usable(gentity_t* self)
 		self->e_PainFunc = painF_func_usable_pain;
 	}
 
-	if (self->end_frame > 0)
+	if (self->endFrame > 0)
 	{
-		self->s.frame = self->start_frame = 0;
+		self->s.frame = self->startFrame = 0;
 		self->s.eFlags |= EF_SHADER_ANIM;
 	}
 

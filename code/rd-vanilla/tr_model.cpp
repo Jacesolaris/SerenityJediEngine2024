@@ -445,7 +445,7 @@ model_t* R_GetModelByHandle(const qhandle_t index) {
 /*
 ** R_GetAnimModelByHandle
 */
-model_t* R_GetAnimModelByHandle(const CGhoul2Info* ghl_info, qhandle_t index)
+model_t* R_GetAnimModelByHandle(const CGhoul2Info* ghlInfo, qhandle_t index)
 {
 	// out of range gets the defualt model
 	if (index < 1 || index > tr.numModels) {
@@ -454,10 +454,10 @@ model_t* R_GetAnimModelByHandle(const CGhoul2Info* ghl_info, qhandle_t index)
 
 	model_t* mod;
 
-	if (ghl_info->animModelIndexOffset)
+	if (ghlInfo->animModelIndexOffset)
 	{
 		// Have to recalculate offset to get map animations for JKA Campaign
-		index -= ghl_info->animModelIndexOffset;
+		index -= ghlInfo->animModelIndexOffset;
 		int mapIndex{};
 		constexpr int len = std::size(tr.models);
 		for (int i = 0; i < len; i++)
@@ -477,7 +477,7 @@ model_t* R_GetAnimModelByHandle(const CGhoul2Info* ghl_info, qhandle_t index)
 		}
 		else
 		{
-			mod = tr.models[index + ghl_info->animModelIndexOffset];
+			mod = tr.models[index + ghlInfo->animModelIndexOffset];
 		}
 	}
 	else
@@ -559,19 +559,21 @@ asked for again.
 static qhandle_t RE_RegisterModel_Actual(const char* name)
 {
 	model_t* mod;
-	unsigned* buf = nullptr;
+	unsigned* buf;
 	int			lod;
 	qboolean	loaded;
 	modelHash_t* mh;
+	/*
+	Ghoul2 Insert End
+	*/
 
 	if (!name || !name[0]) {
 		ri.Printf(PRINT_WARNING, "RE_RegisterModel: NULL name\n");
 		return 0;
 	}
 
-	if (strlen(name) >= MAX_SKINNAME_PATH)
-	{
-		ri.Printf(PRINT_DEVELOPER, "Model name exceeds MAX_SKINNAME_PATH\n");
+	if (strlen(name) >= MAX_SKINNAME_PATH) {
+		ri.Printf(PRINT_DEVELOPER, "Model name exceeds MAX_QPATH\n");
 		return 0;
 	}
 
@@ -771,8 +773,7 @@ qhandle_t RE_RegisterModel(const char* name)
 R_LoadMD3
 =================
 */
-static qboolean R_LoadMD3(model_t* mod, int lod, void* buffer, const char* name, qboolean& bAlreadyCached)
-{
+static qboolean R_LoadMD3(model_t* mod, int lod, void* buffer, const char* name, qboolean& bAlreadyCached) {
 	int j;
 	md3Header_t* pinmodel;
 	md3Surface_t* surf;
@@ -829,7 +830,7 @@ static qboolean R_LoadMD3(model_t* mod, int lod, void* buffer, const char* name,
 
 		LL(mod->md3[lod]->ident);
 		LL(mod->md3[lod]->version);
-		LL(mod->md3[lod]->num_frames);
+		LL(mod->md3[lod]->numFrames);
 		LL(mod->md3[lod]->numTags);
 		LL(mod->md3[lod]->numSurfaces);
 		LL(mod->md3[lod]->ofsFrames);
@@ -838,7 +839,7 @@ static qboolean R_LoadMD3(model_t* mod, int lod, void* buffer, const char* name,
 		LL(mod->md3[lod]->ofsEnd);
 	}
 
-	if (mod->md3[lod]->num_frames < 1) {
+	if (mod->md3[lod]->numFrames < 1) {
 		ri.Printf(PRINT_WARNING, "R_LoadMD3: %s has no frames\n", name);
 		return qfalse;
 	}
@@ -851,7 +852,7 @@ static qboolean R_LoadMD3(model_t* mod, int lod, void* buffer, const char* name,
 #ifdef Q3_BIG_ENDIAN
 	// swap all the frames
 	frame = (md3Frame_t*)((byte*)mod->md3[lod] + mod->md3[lod]->ofsFrames);
-	for (i = 0; i < mod->md3[lod]->num_frames; i++, frame++) {
+	for (i = 0; i < mod->md3[lod]->numFrames; i++, frame++) {
 		LF(frame->radius);
 		for (j = 0; j < 3; j++) {
 			LF(frame->bounds[0][j]);
@@ -862,7 +863,7 @@ static qboolean R_LoadMD3(model_t* mod, int lod, void* buffer, const char* name,
 
 	// swap all the tags
 	tag = (md3Tag_t*)((byte*)mod->md3[lod] + mod->md3[lod]->ofsTags);
-	for (i = 0; i < mod->md3[lod]->numTags * mod->md3[lod]->num_frames; i++, tag++) {
+	for (i = 0; i < mod->md3[lod]->numTags * mod->md3[lod]->numFrames; i++, tag++) {
 		for (j = 0; j < 3; j++) {
 			LF(tag->origin[j]);
 			LF(tag->axis[0][j]);
@@ -876,19 +877,19 @@ static qboolean R_LoadMD3(model_t* mod, int lod, void* buffer, const char* name,
 	surf = reinterpret_cast<md3Surface_t*>(reinterpret_cast<byte*>(mod->md3[lod]) + mod->md3[lod]->ofsSurfaces);
 	for (int i = 0; i < mod->md3[lod]->numSurfaces; i++) {
 		LL(surf->flags);
-		LL(surf->num_frames);
+		LL(surf->numFrames);
 		LL(surf->numShaders);
 		LL(surf->numTriangles);
 		LL(surf->ofsTriangles);
-		LL(surf->num_verts);
+		LL(surf->numVerts);
 		LL(surf->ofsShaders);
 		LL(surf->ofsSt);
 		LL(surf->ofsXyzNormals);
 		LL(surf->ofsEnd);
 
-		if (surf->num_verts > SHADER_MAX_VERTEXES) {
+		if (surf->numVerts > SHADER_MAX_VERTEXES) {
 			Com_Error(ERR_DROP, "R_LoadMD3: %s has more than %i verts on a surface (%i)",
-				name, SHADER_MAX_VERTEXES, surf->num_verts);
+				name, SHADER_MAX_VERTEXES, surf->numVerts);
 		}
 		if (surf->numTriangles * 3 > SHADER_MAX_INDEXES) {
 			Com_Error(ERR_DROP, "R_LoadMD3: %s has more than %i triangles on a surface (%i)",
@@ -932,14 +933,14 @@ static qboolean R_LoadMD3(model_t* mod, int lod, void* buffer, const char* name,
 
 		// swap all the ST
 		st = (md3St_t*)((byte*)surf + surf->ofsSt);
-		for (j = 0; j < surf->num_verts; j++, st++) {
+		for (j = 0; j < surf->numVerts; j++, st++) {
 			LF(st->st[0]);
 			LF(st->st[1]);
 		}
 
 		// swap all the XyzNormals
 		xyz = (md3XyzNormal_t*)((byte*)surf + surf->ofsXyzNormals);
-		for (j = 0; j < surf->num_verts * surf->num_frames; j++, xyz++)
+		for (j = 0; j < surf->numVerts * surf->numFrames; j++, xyz++)
 		{
 			LS(xyz->xyz[0]);
 			LS(xyz->xyz[1]);
@@ -1073,9 +1074,9 @@ R_GetTag for MD3s
 ================
 */
 static md3Tag_t* R_GetTag(md3Header_t* mod, int frame, const char* tagName) {
-	if (frame >= mod->num_frames) {
+	if (frame >= mod->numFrames) {
 		// it is possible to have a bad frame while changing models, so don't error
-		frame = mod->num_frames - 1;
+		frame = mod->numFrames - 1;
 	}
 
 	md3Tag_t* tag = reinterpret_cast<md3Tag_t*>(reinterpret_cast<byte*>(mod) + mod->ofsTags) + frame * mod->numTags;
@@ -1093,40 +1094,31 @@ static md3Tag_t* R_GetTag(md3Header_t* mod, int frame, const char* tagName) {
 R_LerpTag
 ================
 */
-int	R_LerpTag(orientation_t* tag, qhandle_t handle, int startFrame, int endFrame,
-	float frac, const char* tagName) {
-	md3Tag_t* start, * finish;
-	int		i;
-	float		frontLerp, backLerp;
-	model_t* model;
-
-	model = R_GetModelByHandle(handle);
-	if (model->md3[0])
-	{
-		start = R_GetTag(model->md3[0], startFrame, tagName);
-		finish = R_GetTag(model->md3[0], endFrame, tagName);
-	}
-	else
-	{
+int R_LerpTag(orientation_t* tag, const qhandle_t handle, const int startFrame, const int endFrame,
+	const float frac, const char* tagName) {
+	const model_t* model = R_GetModelByHandle(handle);
+	if (!model->md3[0]) {
 		AxisClear(tag->axis);
 		VectorClear(tag->origin);
 		return qfalse;
 	}
 
-	if (!start || !finish) {
+	const md3Tag_t* start = R_GetTag(model->md3[0], startFrame, tagName);
+	const md3Tag_t* end = R_GetTag(model->md3[0], endFrame, tagName);
+	if (!start || !end) {
 		AxisClear(tag->axis);
 		VectorClear(tag->origin);
 		return qfalse;
 	}
 
-	frontLerp = frac;
-	backLerp = 1.0 - frac;
+	const float frontLerp = frac;
+	const float backLerp = 1.0f - frac;
 
-	for (i = 0; i < 3; i++) {
-		tag->origin[i] = start->origin[i] * backLerp + finish->origin[i] * frontLerp;
-		tag->axis[0][i] = start->axis[0][i] * backLerp + finish->axis[0][i] * frontLerp;
-		tag->axis[1][i] = start->axis[1][i] * backLerp + finish->axis[1][i] * frontLerp;
-		tag->axis[2][i] = start->axis[2][i] * backLerp + finish->axis[2][i] * frontLerp;
+	for (int i = 0; i < 3; i++) {
+		tag->origin[i] = start->origin[i] * backLerp + end->origin[i] * frontLerp;
+		tag->axis[0][i] = start->axis[0][i] * backLerp + end->axis[0][i] * frontLerp;
+		tag->axis[1][i] = start->axis[1][i] * backLerp + end->axis[1][i] * frontLerp;
+		tag->axis[2][i] = start->axis[2][i] * backLerp + end->axis[2][i] * frontLerp;
 	}
 	VectorNormalize(tag->axis[0]);
 	VectorNormalize(tag->axis[1]);

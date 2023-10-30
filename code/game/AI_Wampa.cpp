@@ -184,9 +184,9 @@ extern void G_Knockdown(gentity_t* self, gentity_t* attacker, const vec3_t push_
 	qboolean break_saber_lock);
 extern qboolean G_DoDismemberment(gentity_t* self, vec3_t point, int mod, int hit_loc,
 	qboolean force = qfalse);
-extern int NPC_GetEntsNearBolt(gentity_t** radius_ents, float radius, int bolt_index, vec3_t bolt_org);
+extern int NPC_GetEntsNearBolt(gentity_t** radius_ents, float radius, int boltIndex, vec3_t bolt_org);
 
-void Wampa_Slash(const int bolt_index, const qboolean backhand)
+void Wampa_Slash(const int boltIndex, const qboolean backhand)
 {
 	gentity_t* radius_ents[128];
 	constexpr float radius = 88;
@@ -194,7 +194,7 @@ void Wampa_Slash(const int bolt_index, const qboolean backhand)
 	vec3_t bolt_org;
 	const int damage = backhand ? Q_irand(10, 15) : Q_irand(20, 30);
 
-	const int num_ents = NPC_GetEntsNearBolt(radius_ents, radius, bolt_index, bolt_org);
+	const int num_ents = NPC_GetEntsNearBolt(radius_ents, radius, boltIndex, bolt_org);
 
 	for (int i = 0; i < num_ents; i++)
 	{
@@ -309,7 +309,7 @@ void Wampa_Attack(const float distance, const qboolean do_charge)
 			AngleVectors(yaw_ang, fwd, nullptr, nullptr);
 			VectorScale(fwd, distance * 1.5f, NPC->client->ps.velocity);
 			NPC->client->ps.velocity[2] = 150;
-			NPC->client->ps.groundentity_num = ENTITYNUM_NONE;
+			NPC->client->ps.groundentityNum = ENTITYNUM_NONE;
 		}
 		else if (distance < 100) //&& !Q_irand( 0, 4 ) )
 		{
@@ -635,7 +635,7 @@ qboolean Wampa_CheckDropVictim(gentity_t* self, const qboolean exclude_me)
 	return qfalse;
 }
 
-extern float NPC_EnemyRangeFromBolt(int bolt_index);
+extern float NPC_EnemyRangeFromBolt(int boltIndex);
 
 qboolean Wampa_TryGrab()
 {

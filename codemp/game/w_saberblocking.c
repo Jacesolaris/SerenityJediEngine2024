@@ -73,7 +73,7 @@ extern void wp_block_points_regenerate_over_ride(const gentity_t* self, int over
 void sab_beh_animate_heavy_slow_bounce_attacker(gentity_t* attacker);
 extern void G_StaggerAttacker(gentity_t* atk);
 extern void G_BounceAttacker(gentity_t* atk);
-extern void wp_saber_clear_damage_for_ent_num(gentity_t* attacker, int entity_num, int saber_num, int blade_num);
+extern void wp_saber_clear_damage_for_ent_num(gentity_t* attacker, int entityNum, int saber_num, int blade_num);
 extern void g_do_m_block_response(const gentity_t* speaker_npc_self);
 //////////Defines////////////////
 
@@ -85,7 +85,7 @@ void sab_beh_saber_should_be_disarmed_attacker(gentity_t* attacker, const gentit
 	{
 		G_Stagger(attacker);
 
-		ButterFingers(&g_entities[attacker->client->ps.saberentity_num], attacker, blocker, &tr);
+		ButterFingers(&g_entities[attacker->client->ps.saberentityNum], attacker, blocker, &tr);
 	}
 }
 
@@ -97,7 +97,7 @@ void sab_beh_saber_should_be_disarmed_blocker(gentity_t* blocker, const gentity_
 	{
 		G_Stagger(blocker);
 
-		ButterFingers(&g_entities[blocker->client->ps.saberentity_num], blocker, attacker, &tr);
+		ButterFingers(&g_entities[blocker->client->ps.saberentityNum], blocker, attacker, &tr);
 	}
 }
 

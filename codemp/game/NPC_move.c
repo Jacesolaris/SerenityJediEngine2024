@@ -146,7 +146,7 @@ static qboolean NPC_Jump(vec3_t dest, const int goal_ent_num)
 					{
 						G_DrawEdge(last_pos, trace.endpos, EDGE_RED_TWOSECOND); // TryJump
 					}
-					if (trace.entity_num == goal_ent_num)
+					if (trace.entityNum == goal_ent_num)
 					{
 						//hit the enemy, that's bad!
 						blocked = qtrue;
@@ -265,7 +265,7 @@ qboolean NPC_CanTryJump()
 		NPCS.NPCInfo->jumpTime || // Don't Jump If Already Going
 		PM_InKnockDown(&NPCS.NPC->client->ps) || // Don't Jump If In Knockdown
 		BG_InRoll(&NPCS.NPC->client->ps, NPCS.NPC->client->ps.legsAnim) || // ... Or Roll
-		NPCS.NPC->client->ps.groundentity_num == ENTITYNUM_NONE)
+		NPCS.NPC->client->ps.groundentityNum == ENTITYNUM_NONE)
 	{
 		return qfalse;
 	}
@@ -321,7 +321,7 @@ qboolean NPC_TryJump2(gentity_t* goal, const float max_xy_dist, const float max_
 
 		// Can't Jump At Targets In The Air
 		//---------------------------------
-		if (goal->client && goal->client->ps.groundentity_num == ENTITYNUM_NONE)
+		if (goal->client && goal->client->ps.groundentityNum == ENTITYNUM_NONE)
 		{
 			return qfalse;
 		}
@@ -557,7 +557,7 @@ qboolean NPC_TryJump_Gent(gentity_t* goal, const float max_xy_dist, const float 
 
 		// Can't Jump At Targets In The Air
 		//---------------------------------
-		if (goal->client && goal->client->ps.groundentity_num == ENTITYNUM_NONE)
+		if (goal->client && goal->client->ps.groundentityNum == ENTITYNUM_NONE)
 		{
 			return qfalse;
 		}
@@ -634,7 +634,7 @@ qboolean NPC_Jumping()
 	//checks to see if we're jumping
 	if (NPCS.NPCInfo->jumpTime)
 	{
-		if (NPCS.NPC->client->ps.groundentity_num != ENTITYNUM_NONE)
+		if (NPCS.NPC->client->ps.groundentityNum != ENTITYNUM_NONE)
 		{
 			//landed
 			NPCS.NPCInfo->jumpTime = 0;
@@ -934,7 +934,7 @@ NPC_LadderMove
 
 static void NPC_LadderMove(vec3_t dir)
 {
-	if (dir[2] > 0 || dir[2] < 0 && NPCS.NPC->client->ps.groundentity_num == ENTITYNUM_NONE)
+	if (dir[2] > 0 || dir[2] < 0 && NPCS.NPC->client->ps.groundentityNum == ENTITYNUM_NONE)
 	{
 		//Set our movement direction
 		NPCS.ucmd.upmove = dir[2] > 0 ? 127 : -127;
@@ -1171,7 +1171,7 @@ qboolean NPC_GetMoveDirectionAltRoute(vec3_t out, float* distance, const qboolea
 }
 
 extern qboolean NPC_MoveDirClear(int forwardmove, int rightmove, qboolean reset);
-extern qboolean G_EntIsBreakable(int entity_num);
+extern qboolean G_EntIsBreakable(int entityNum);
 
 qboolean NPC_EntityIsBreakable(const gentity_t* ent)
 {
@@ -1302,7 +1302,7 @@ qboolean SJE_UcmdMoveForDir(const gentity_t* self, usercmd_t* cmd, vec3_t dir, q
 		cmd->upmove = 127.0;
 	}
 
-	if (self->client->ps.groundentity_num != ENTITYNUM_NONE
+	if (self->client->ps.groundentityNum != ENTITYNUM_NONE
 		&& !NPC_MoveDirClear(cmd->forwardmove, cmd->rightmove, qfalse))
 	{
 		// Dir not clear, or we would fall!
@@ -1553,14 +1553,14 @@ qboolean NPC_CheckFallPositionOK(const gentity_t* NPC, vec3_t position)
 
 	downPos[2] -= 96.0;
 
-	if (NPC->s.groundentity_num < ENTITYNUM_MAX_NORMAL)
+	if (NPC->s.groundentityNum < ENTITYNUM_MAX_NORMAL)
 		downPos[2] -= 192.0;
 
 	testPos[2] += 48.0;
 
 	trap->Trace(&tr, testPos, mins, maxs, downPos, NPC->s.number, MASK_PLAYERSOLID, 0, 0, 0);
 
-	if (tr.entity_num != ENTITYNUM_NONE)
+	if (tr.entityNum != ENTITYNUM_NONE)
 	{
 		return qtrue;
 	}

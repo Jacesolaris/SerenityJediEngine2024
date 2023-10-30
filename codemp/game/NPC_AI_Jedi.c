@@ -32,7 +32,7 @@ extern void G_AddVoiceEvent(const gentity_t* self, int event, int speak_debounce
 extern void ForceJump(gentity_t* self, const usercmd_t* ucmd);
 extern qboolean PM_InRoll(const playerState_t* ps);
 extern void WP_ResistForcePush(gentity_t* self, const gentity_t* pusher, qboolean no_penalty);
-extern qboolean G_EntIsBreakable(int entity_num);
+extern qboolean G_EntIsBreakable(int entityNum);
 
 #define	MAX_VIEW_DIST		2048
 #define MAX_VIEW_SPEED		100
@@ -51,7 +51,7 @@ extern qboolean G_EntIsBreakable(int entity_num);
 #define	MAX_CHECK_THRESHOLD	1
 
 extern void NPC_ClearLookTarget(const gentity_t* self);
-extern void NPC_SetLookTarget(const gentity_t* self, int ent_num, int clear_time);
+extern void NPC_SetLookTarget(const gentity_t* self, int entNum, int clear_time);
 extern void NPC_TempLookTarget(const gentity_t* self, int lookEntNum, int minLookTime, int maxLookTime);
 extern qboolean G_ExpandPointToBBox(vec3_t point, const vec3_t mins, const vec3_t maxs, int ignore, int clipmask);
 extern void G_SoundOnEnt(gentity_t* ent, soundChannel_t channel, const char* sound_path);
@@ -429,7 +429,7 @@ void Tavion_ScepterDamage(void)
 
 		for (int time = cur_time - 25; time <= cur_time + 25 && !hit; time += 25)
 		{
-			mdxaBone_t bolt_matrix;
+			mdxaBone_t boltMatrix;
 			vec3_t tip, dir, base, angles;
 			trace_t trace;
 
@@ -437,16 +437,16 @@ void Tavion_ScepterDamage(void)
 
 			trap->G2API_GetBoltMatrix(NPCS.NPC->client->weaponGhoul2[1], 0,
 				NPCS.NPC->NPC->genericBolt1,
-				&bolt_matrix, angles, NPCS.NPC->r.currentOrigin, time,
+				&boltMatrix, angles, NPCS.NPC->r.currentOrigin, time,
 				NULL, NPCS.NPC->modelScale);
-			BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, base);
-			BG_GiveMeVectorFromMatrix(&bolt_matrix, NEGATIVE_X, dir);
+			BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, base);
+			BG_GiveMeVectorFromMatrix(&boltMatrix, NEGATIVE_X, dir);
 			VectorMA(base, 512, dir, tip);
 			trap->Trace(&trace, base, vec3_origin, vec3_origin, tip, NPCS.NPC->s.number, MASK_SHOT, qfalse, 0, 0);
 			if (trace.fraction < 1.0f)
 			{
 				//hit something
-				gentity_t* trace_ent = &g_entities[trace.entity_num];
+				gentity_t* trace_ent = &g_entities[trace.entityNum];
 
 				//FIXME: too expensive!
 				//if ( time == cur_time )
@@ -456,7 +456,7 @@ void Tavion_ScepterDamage(void)
 				}
 
 				if (trace_ent->takedamage
-					&& trace.entity_num != lastHit
+					&& trace.entityNum != lastHit
 					&& (!trace_ent->client || trace_ent == NPCS.NPC->enemy || trace_ent->client->NPC_class != NPCS.NPC->
 						client->NPC_class))
 				{
@@ -482,7 +482,7 @@ void Tavion_ScepterDamage(void)
 						}
 					}
 					hit = qtrue;
-					lastHit = trace.entity_num;
+					lastHit = trace.entityNum;
 				}
 			}
 		}
@@ -496,10 +496,10 @@ void Tavion_ScepterSlam(void)
 		return;
 	}
 
-	const int bolt_index = trap->G2API_AddBolt(NPCS.NPC->client->weaponGhoul2[1], 0, "*weapon");
-	if (bolt_index != -1)
+	const int boltIndex = trap->G2API_AddBolt(NPCS.NPC->client->weaponGhoul2[1], 0, "*weapon");
+	if (boltIndex != -1)
 	{
-		mdxaBone_t bolt_matrix;
+		mdxaBone_t boltMatrix;
 		vec3_t handle, bottom, angles;
 		trace_t trace;
 		const float radius = 300.0f;
@@ -511,10 +511,10 @@ void Tavion_ScepterSlam(void)
 		VectorSet(angles, 0, NPCS.NPC->r.currentAngles[YAW], 0);
 
 		trap->G2API_GetBoltMatrix(NPCS.NPC->ghoul2, 2,
-			bolt_index,
-			&bolt_matrix, angles, NPCS.NPC->r.currentOrigin, level.time,
+			boltIndex,
+			&boltMatrix, angles, NPCS.NPC->r.currentOrigin, level.time,
 			NULL, NPCS.NPC->modelScale);
-		BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, handle);
+		BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, handle);
 		VectorCopy(handle, bottom);
 		bottom[2] -= 128.0f;
 
@@ -607,7 +607,7 @@ void Tavion_ScepterSlam(void)
 					if (radius_ent->health > 0)
 					{
 						if (dist < halfRad
-							|| radius_ent->client->ps.groundentity_num != ENTITYNUM_NONE)
+							|| radius_ent->client->ps.groundentityNum != ENTITYNUM_NONE)
 						{
 							//within range of my fist or within ground-shaking range and not in the air
 							G_Knockdown(radius_ent, NPCS.NPC, vec3_origin, 500, qtrue);
@@ -623,15 +623,15 @@ void Tavion_StartScepterBeam(void)
 {
 	//Activate the scepter beam for the current NPC.
 	//RAFIXME:  This probably needs to be moved to client side.
-	mdxaBone_t bolt_matrix;
+	mdxaBone_t boltMatrix;
 	vec3_t dir, base, angles;
 
 	VectorSet(angles, 0, NPCS.NPC->r.currentAngles[YAW], 0);
 
-	trap->G2API_GetBoltMatrix(NPCS.NPC->client->weaponGhoul2[1], 0, NPCS.NPC->NPC->genericBolt1, &bolt_matrix, angles,
+	trap->G2API_GetBoltMatrix(NPCS.NPC->client->weaponGhoul2[1], 0, NPCS.NPC->NPC->genericBolt1, &boltMatrix, angles,
 		NPCS.NPC->r.currentOrigin, level.time, NULL, NPCS.NPC->modelScale);
-	BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, base);
-	BG_GiveMeVectorFromMatrix(&bolt_matrix, NEGATIVE_X, dir);
+	BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, base);
+	BG_GiveMeVectorFromMatrix(&boltMatrix, NEGATIVE_X, dir);
 
 	G_PlayEffect(G_EffectIndex("scepter/beam_warmup.efx"), base, dir);
 	G_SoundOnEnt(NPCS.NPC, CHAN_ITEM, "sound/weapons/scepter/beam_warmup.wav");
@@ -647,17 +647,17 @@ void Tavion_StartScepterBeam(void)
 
 void Tavion_StartScepterSlam(void)
 {
-	mdxaBone_t bolt_matrix;
+	mdxaBone_t boltMatrix;
 	vec3_t dir, base, angles;
 
 	VectorSet(angles, 0, NPCS.NPC->r.currentAngles[YAW], 0);
 
 	trap->G2API_GetBoltMatrix(NPCS.NPC->client->weaponGhoul2[1], 0,
 		NPCS.NPC->NPC->genericBolt1,
-		&bolt_matrix, angles, NPCS.NPC->r.currentOrigin, level.time,
+		&boltMatrix, angles, NPCS.NPC->r.currentOrigin, level.time,
 		NULL, NPCS.NPC->modelScale);
-	BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, base);
-	BG_GiveMeVectorFromMatrix(&bolt_matrix, NEGATIVE_X, dir);
+	BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, base);
+	BG_GiveMeVectorFromMatrix(&boltMatrix, NEGATIVE_X, dir);
 	G_PlayEffect(G_EffectIndex("scepter/slam_warmup.efx"), base, dir);
 	G_SoundOnEnt(NPCS.NPC, CHAN_ITEM, "sound/weapons/scepter/slam_warmup.wav");
 	NPCS.NPC->client->ps.legsTimer = NPCS.NPC->client->ps.torsoTimer = 0;
@@ -677,23 +677,23 @@ void Tavion_SithSwordRecharge(void)
 		&& TIMER_Done(NPCS.NPC, "rechargeDebounce")
 		&& NPCS.NPC->client->weaponGhoul2[0])
 	{
-		mdxaBone_t bolt_matrix;
+		mdxaBone_t boltMatrix;
 		vec3_t dir, base, angles;
 
 		VectorSet(angles, 0, NPCS.NPC->r.currentAngles[YAW], 0);
 
 		NPCS.NPC->s.loopSound = G_SoundIndex("sound/weapons/scepter/recharge.wav");
-		const int bolt_index = trap->G2API_AddBolt(NPCS.NPC->client->weaponGhoul2[0], 0, "*weapon");
+		const int boltIndex = trap->G2API_AddBolt(NPCS.NPC->client->weaponGhoul2[0], 0, "*weapon");
 		NPCS.NPC->client->ps.legsTimer = NPCS.NPC->client->ps.torsoTimer = 0;
 		NPC_SetAnim(NPCS.NPC, SETANIM_BOTH, BOTH_TAVION_SWORDPOWER, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 
 		//RAFIXME:  This probably needs to be moved to client side.
 		trap->G2API_GetBoltMatrix(NPCS.NPC->client->weaponGhoul2[0], 0,
-			bolt_index,
-			&bolt_matrix, angles, NPCS.NPC->r.currentOrigin, level.time,
+			boltIndex,
+			&boltMatrix, angles, NPCS.NPC->r.currentOrigin, level.time,
 			NULL, NPCS.NPC->modelScale);
-		BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, base);
-		BG_GiveMeVectorFromMatrix(&bolt_matrix, NEGATIVE_X, dir);
+		BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, base);
+		BG_GiveMeVectorFromMatrix(&boltMatrix, NEGATIVE_X, dir);
 		G_PlayEffect(G_EffectIndex("scepter/recharge.efx"), base, dir);
 		NPCS.NPC->painDebounceTime = level.time + NPCS.NPC->client->ps.torsoTimer;
 		NPCS.NPC->client->ps.pm_time = NPCS.NPC->client->ps.torsoTimer;
@@ -1053,7 +1053,7 @@ void Boba_JetpackDecideDefault(void)
 	}
 	else
 	{
-		if (NPCS.NPC->client->ps.groundentity_num == ENTITYNUM_NONE
+		if (NPCS.NPC->client->ps.groundentityNum == ENTITYNUM_NONE
 			&& NPCS.NPC->client->ps.fd.forceJumpZStart
 			&& !PM_FlippingAnim(NPCS.NPC->client->ps.legsAnim)
 			&& !Q_irand(0, 3)
@@ -1074,7 +1074,7 @@ void Boba_JetpackDecideCombat(void)
 {
 	const float gDist = G_GroundDistance(NPCS.NPC);
 
-	if (NPCS.NPC->client->ps.groundentity_num == ENTITYNUM_NONE
+	if (NPCS.NPC->client->ps.groundentityNum == ENTITYNUM_NONE
 		&& NPCS.NPC->client->ps.fd.forceJumpZStart
 		&& !PM_FlippingAnim(NPCS.NPC->client->ps.legsAnim)
 		&& !Boba_Flying(NPCS.NPC))
@@ -1126,24 +1126,24 @@ void Boba_FireFlameThrower(gentity_t* self)
 {
 	const int damage = Q_irand(8, 12);
 	trace_t tr;
-	mdxaBone_t bolt_matrix;
+	mdxaBone_t boltMatrix;
 	vec3_t start, end, dir;
 	const vec3_t trace_maxs = { 4, 4, 4 };
 	const vec3_t trace_mins = { -4, -4, -4 };
 
 	trap->G2API_GetBoltMatrix(self->ghoul2, 0, self->client->renderInfo.handLBolt,
-		&bolt_matrix, self->r.currentAngles, self->r.currentOrigin, level.time,
+		&boltMatrix, self->r.currentAngles, self->r.currentOrigin, level.time,
 		NULL, self->modelScale);
 
-	BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, start);
-	BG_GiveMeVectorFromMatrix(&bolt_matrix, NEGATIVE_Y, dir);
+	BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, start);
+	BG_GiveMeVectorFromMatrix(&boltMatrix, NEGATIVE_Y, dir);
 	VectorMA(start, 128, dir, end);
 
 	trap->Trace(&tr, start, trace_mins, trace_maxs, end, self->s.number, MASK_SHOT, qfalse, 0, 0);
 
-	gentity_t* trace_ent = &g_entities[tr.entity_num];
+	gentity_t* trace_ent = &g_entities[tr.entityNum];
 
-	if (tr.entity_num < ENTITYNUM_WORLD && trace_ent->takedamage)
+	if (tr.entityNum < ENTITYNUM_WORLD && trace_ent->takedamage)
 	{
 		G_Damage(trace_ent, self, self, dir, tr.endpos, damage,
 			DAMAGE_NO_ARMOR | DAMAGE_NO_KNOCKBACK | DAMAGE_IGNORE_TEAM, MOD_BURNING);
@@ -1176,7 +1176,7 @@ void Boba_FireFlameThrower(gentity_t* self)
 void Boba_StartFlameThrower(gentity_t* self)
 {
 	const int flameTime = 4000; //Q_irand( 1000, 3000 );
-	mdxaBone_t bolt_matrix;
+	mdxaBone_t boltMatrix;
 	vec3_t org, dir;
 
 	self->client->ps.torsoTimer = flameTime; //+1000;
@@ -1188,12 +1188,12 @@ void Boba_StartFlameThrower(gentity_t* self)
 	TIMER_Set(self, "flameTime", flameTime);
 	G_SoundOnEnt(self, CHAN_WEAPON, "sound/effects/combustfire.mp3");
 
-	trap->G2API_GetBoltMatrix(NPCS.NPC->ghoul2, 0, NPCS.NPC->client->renderInfo.handLBolt, &bolt_matrix,
+	trap->G2API_GetBoltMatrix(NPCS.NPC->ghoul2, 0, NPCS.NPC->client->renderInfo.handLBolt, &boltMatrix,
 		NPCS.NPC->r.currentAngles,
 		NPCS.NPC->r.currentOrigin, level.time, NULL, NPCS.NPC->modelScale);
 
-	BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, org);
-	BG_GiveMeVectorFromMatrix(&bolt_matrix, NEGATIVE_Y, dir);
+	BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, org);
+	BG_GiveMeVectorFromMatrix(&boltMatrix, NEGATIVE_Y, dir);
 
 	G_PlayEffectID(G_EffectIndex("flamethrower/flamethrower_mp"), org, dir);
 }
@@ -1344,19 +1344,19 @@ void Boba_FireWristMissile(gentity_t* self, const int whichMissile)
 	self->client->ps.weaponTime += addTime;
 	self->client->ps.lastShotTime = level.time;
 
-	mdxaBone_t bolt_matrix;
+	mdxaBone_t boltMatrix;
 	vec3_t muzzle_point;
 	vec3_t muzzleDir;
 
-	//trap->G2API_GetBoltMatrix(self->ghoul2, 0, self->client->renderInfo.handLBolt, &bolt_matrix, self->r.currentAngles, self->r.currentOrigin, level.time, NULL, self->modelScale);
+	//trap->G2API_GetBoltMatrix(self->ghoul2, 0, self->client->renderInfo.handLBolt, &boltMatrix, self->r.currentAngles, self->r.currentOrigin, level.time, NULL, self->modelScale);
 	trap->G2API_GetBoltMatrix(self->ghoul2, 0,
 		missileStates[whichMissile].leftBolt
 		? self->genericBolt3
-		: self->client->renderInfo.handLBolt, &bolt_matrix, self->r.currentAngles,
+		: self->client->renderInfo.handLBolt, &boltMatrix, self->r.currentAngles,
 		self->r.currentOrigin, level.time, NULL, self->modelScale);
 
-	BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, muzzle_point);
-	BG_GiveMeVectorFromMatrix(&bolt_matrix, NEGATIVE_Y, muzzleDir);
+	BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, muzzle_point);
+	BG_GiveMeVectorFromMatrix(&boltMatrix, NEGATIVE_Y, muzzleDir);
 	// work the matrix axis stuff into the original axis and origins used.
 
 	VectorCopy(muzzle_point, self->client->renderInfo.muzzle_point);
@@ -1595,7 +1595,7 @@ void Boba_FireDecide(void)
 	qboolean shoot = qfalse, hitAlly = qfalse;
 	vec3_t impactPos, enemyDir, shootDir;
 
-	if (NPCS.NPC->client->ps.groundentity_num == ENTITYNUM_NONE
+	if (NPCS.NPC->client->ps.groundentityNum == ENTITYNUM_NONE
 		&& NPCS.NPC->client->ps.fd.forceJumpZStart
 		&& !PM_FlippingAnim(NPCS.NPC->client->ps.legsAnim)
 		&& !Q_irand(0, 10))
@@ -2247,7 +2247,7 @@ static qboolean Jedi_ClearPathToSpot(vec3_t dest, const int impactEntNum)
 	if (trace.fraction < 1.0f)
 	{
 		//hit something
-		if (impactEntNum != ENTITYNUM_NONE && trace.entity_num == impactEntNum)
+		if (impactEntNum != ENTITYNUM_NONE && trace.entityNum == impactEntNum)
 		{
 			//hit what we're going after
 			return qtrue;
@@ -2308,7 +2308,7 @@ qboolean NPC_MoveDirClear(const int forwardmove, const int rightmove, const qboo
 		return qtrue;
 	}
 
-	if (NPCS.NPC->client->ps.groundentity_num == ENTITYNUM_NONE)
+	if (NPCS.NPC->client->ps.groundentityNum == ENTITYNUM_NONE)
 	{
 		//in the air
 		return qtrue;
@@ -2341,8 +2341,8 @@ qboolean NPC_MoveDirClear(const int forwardmove, const int rightmove, const qboo
 	if (trace.fraction < 0.6)
 	{
 		//Going to bump into something very close, don't move, just turn
-		if (NPCS.NPC->enemy && trace.entity_num == NPCS.NPC->enemy->s.number || NPCS.NPCInfo->goalEntity && trace.
-			entity_num == NPCS.NPCInfo->goalEntity->s.number)
+		if (NPCS.NPC->enemy && trace.entityNum == NPCS.NPC->enemy->s.number || NPCS.NPCInfo->goalEntity && trace.
+			entityNum == NPCS.NPCInfo->goalEntity->s.number)
 		{
 			//okay to bump into enemy or goal
 			return qtrue;
@@ -2350,7 +2350,7 @@ qboolean NPC_MoveDirClear(const int forwardmove, const int rightmove, const qboo
 		if (reset)
 		{
 			//actually want to screw with the ucmd
-			//Com_Printf( "%d avoiding walk into wall (entnum %d)\n", level.time, trace.entity_num );
+			//Com_Printf( "%d avoiding walk into wall (entnum %d)\n", level.time, trace.entityNum );
 			NPCS.ucmd.forwardmove = 0;
 			NPCS.ucmd.rightmove = 0;
 			VectorClear(NPCS.NPC->client->ps.moveDir);
@@ -2364,7 +2364,7 @@ qboolean NPC_MoveDirClear(const int forwardmove, const int rightmove, const qboo
 
 		if (NPCS.NPC->NPC->goalEntity->client)
 		{
-			if (NPCS.NPC->NPC->goalEntity->client->ps.groundentity_num == ENTITYNUM_NONE)
+			if (NPCS.NPC->NPC->goalEntity->client->ps.groundentityNum == ENTITYNUM_NONE)
 			{
 				enemy_in_air = qtrue;
 			}
@@ -3055,8 +3055,8 @@ qboolean Kyle_CanDoGrab(void)
 			if (TIMER_Done(NPCS.NPC, "grabEnemyDebounce"))
 			{
 				//okay to grab again
-				if (NPCS.NPC->client->ps.groundentity_num != ENTITYNUM_NONE
-					&& NPCS.NPC->enemy->client->ps.groundentity_num != ENTITYNUM_NONE)
+				if (NPCS.NPC->client->ps.groundentityNum != ENTITYNUM_NONE
+					&& NPCS.NPC->enemy->client->ps.groundentityNum != ENTITYNUM_NONE)
 				{
 					//me and enemy are on ground
 					if (!PM_InOnGroundAnim(NPCS.NPC->enemy->client->ps.legsAnim))
@@ -3089,7 +3089,7 @@ saber_moveName_t G_PickAutoMultiKick(gentity_t* self, qboolean allowSingles, qbo
 
 extern qboolean G_CanKickEntity(const gentity_t* self, const gentity_t* target);
 extern saber_moveName_t G_PickAutoKick(gentity_t* self, const gentity_t* enemy);
-extern float NPC_EnemyRangeFromBolt(int bolt_index);
+extern float NPC_EnemyRangeFromBolt(int boltIndex);
 extern qboolean PM_SaberInTransition(int move);
 extern void ForceDrain(gentity_t* self);
 extern qboolean PM_CrouchAnim(int anim);
@@ -3920,7 +3920,7 @@ static void Jedi_CombatDistance(const int enemy_dist)
 			time)
 		{
 			//They're being gripped, rush them!
-			if (NPCS.NPC->enemy->client->ps.groundentity_num != ENTITYNUM_NONE)
+			if (NPCS.NPC->enemy->client->ps.groundentityNum != ENTITYNUM_NONE)
 			{
 				//they're on the ground, so advance
 				if (TIMER_Done(NPCS.NPC, "parryTime") || NPCS.NPCInfo->rank > RANK_LT)
@@ -3947,7 +3947,7 @@ static void Jedi_CombatDistance(const int enemy_dist)
 			TIMER_Set(NPCS.NPC, "attackDelay", 3000);
 		}
 		else if (NPCS.NPC->enemy && NPCS.NPC->enemy->client && //valid enemy
-			NPCS.NPC->enemy->client->ps.saberInFlight && NPCS.NPC->enemy->client->ps.saberentity_num &&
+			NPCS.NPC->enemy->client->ps.saberInFlight && NPCS.NPC->enemy->client->ps.saberentityNum &&
 			//enemy throwing saber
 			NPCS.NPC->client->ps.weaponTime <= 0 && //I'm not busy
 			WP_ForcePowerAvailable(NPCS.NPC, FP_GRIP, 0) && //I can use the power
@@ -3992,7 +3992,7 @@ static void Jedi_CombatDistance(const int enemy_dist)
 				FP_GRIP)
 			{
 				//They're choking someone, probably an ally, run at them and do some sort of attack
-				if (NPCS.NPC->enemy->client->ps.groundentity_num != ENTITYNUM_NONE)
+				if (NPCS.NPC->enemy->client->ps.groundentityNum != ENTITYNUM_NONE)
 				{
 					//they're on the ground, so advance
 					if (TIMER_Done(NPCS.NPC, "parryTime") || NPCS.NPCInfo->rank > RANK_LT)
@@ -4149,7 +4149,7 @@ static void Jedi_CombatDistance(const int enemy_dist)
 					if (TIMER_Done(NPCS.NPC, "parryTime") || NPCS.NPCInfo->rank > RANK_LT)
 					{
 						//not parrying
-						if (!NPCS.NPC->enemy->client || NPCS.NPC->enemy->client->ps.groundentity_num != ENTITYNUM_NONE)
+						if (!NPCS.NPC->enemy->client || NPCS.NPC->enemy->client->ps.groundentityNum != ENTITYNUM_NONE)
 						{
 							//they're on the ground, so advance
 							if (enemy_dist > 200 || !(NPCS.NPCInfo->scriptFlags & SCF_DONT_FIRE))
@@ -4204,7 +4204,7 @@ static void Jedi_CombatDistance(const int enemy_dist)
 				if (TIMER_Done(NPCS.NPC, "parryTime") || NPCS.NPCInfo->rank > RANK_LT)
 				{
 					//not parrying
-					if (!NPCS.NPC->enemy->client || NPCS.NPC->enemy->client->ps.groundentity_num != ENTITYNUM_NONE)
+					if (!NPCS.NPC->enemy->client || NPCS.NPC->enemy->client->ps.groundentityNum != ENTITYNUM_NONE)
 					{
 						//they're on the ground, so advance
 						Jedi_Advance();
@@ -4509,8 +4509,8 @@ evasionType_t Jedi_CheckFlipEvasions(gentity_t* self, const float rightdot, floa
 
 			VectorSubtract(self->r.currentOrigin, traceto, idealNormal);
 			VectorNormalize(idealNormal);
-			const gentity_t* trace_ent = &g_entities[trace.entity_num];
-			if (trace.entity_num < ENTITYNUM_WORLD && trace_ent && trace_ent->s.solid != SOLID_BMODEL || DotProduct(
+			const gentity_t* trace_ent = &g_entities[trace.entityNum];
+			if (trace.entityNum < ENTITYNUM_WORLD && trace_ent && trace_ent->s.solid != SOLID_BMODEL || DotProduct(
 				trace.plane.normal, idealNormal) > 0.7f)
 			{
 				//it's a ent of some sort or it's a wall roughly facing us
@@ -4886,7 +4886,7 @@ void Jedi_CheckJumpEvasionSafety(const gentity_t* self, usercmd_t* cmd, const ev
 {
 	//checks to make sure that the non-flip evasion are safe to do.
 	if (evasion_type != EVASION_OTHER //not a FlipEvasion, which does it's own safety checks
-		&& self->client->ps.groundentity_num != ENTITYNUM_NONE)
+		&& self->client->ps.groundentityNum != ENTITYNUM_NONE)
 	{
 		//on terra firma right now
 		if (self->client->ps.velocity[2] > 0
@@ -5030,7 +5030,7 @@ evasionType_t jedi_saber_block_go(gentity_t* self, usercmd_t* cmd, vec3_t p_hitl
 		if (self->NPC && (self->NPC->rank == RANK_CREWMAN || self->NPC->rank >= RANK_LT_JG))
 		{
 			//acrobat or fencer or above
-			if (self->client->ps.groundentity_num != ENTITYNUM_NONE && //on the ground
+			if (self->client->ps.groundentityNum != ENTITYNUM_NONE && //on the ground
 				!(self->client->ps.pm_flags & PMF_DUCKED) && cmd->upmove >= 0 && TIMER_Done(self, "duck") //not ducking
 				&& !BG_InRoll(&self->client->ps, self->client->ps.legsAnim) //not rolling
 				&& !PM_InKnockDown(&self->client->ps) //not knocked down
@@ -5097,7 +5097,7 @@ evasionType_t jedi_saber_block_go(gentity_t* self, usercmd_t* cmd, vec3_t p_hitl
 				{
 					self->client->ps.saberBlocked = BLOCKED_UPPER_RIGHT;
 					evasionType = EVASION_PARRY;
-					if (self->client->ps.groundentity_num != ENTITYNUM_NONE)
+					if (self->client->ps.groundentityNum != ENTITYNUM_NONE)
 					{
 						if (zdiff > 5)
 						{
@@ -5150,7 +5150,7 @@ evasionType_t jedi_saber_block_go(gentity_t* self, usercmd_t* cmd, vec3_t p_hitl
 				{
 					self->client->ps.saberBlocked = BLOCKED_UPPER_LEFT;
 					evasionType = EVASION_PARRY;
-					if (self->client->ps.groundentity_num != ENTITYNUM_NONE)
+					if (self->client->ps.groundentityNum != ENTITYNUM_NONE)
 					{
 						if (zdiff > 5)
 						{
@@ -5177,7 +5177,7 @@ evasionType_t jedi_saber_block_go(gentity_t* self, usercmd_t* cmd, vec3_t p_hitl
 			{
 				self->client->ps.saberBlocked = BLOCKED_TOP;
 				evasionType = EVASION_PARRY;
-				if (self->client->ps.groundentity_num != ENTITYNUM_NONE)
+				if (self->client->ps.groundentityNum != ENTITYNUM_NONE)
 				{
 					duckChance = 4;
 				}
@@ -5190,7 +5190,7 @@ evasionType_t jedi_saber_block_go(gentity_t* self, usercmd_t* cmd, vec3_t p_hitl
 		}
 		else
 		{
-			if (self->client->ps.groundentity_num != ENTITYNUM_NONE)
+			if (self->client->ps.groundentityNum != ENTITYNUM_NONE)
 			{
 				TIMER_Start(self, "duck", Q_irand(500, 1500));
 				evasionType = EVASION_DUCK;
@@ -5207,7 +5207,7 @@ evasionType_t jedi_saber_block_go(gentity_t* self, usercmd_t* cmd, vec3_t p_hitl
 		if (1)
 		{
 			//hmm, pretty low, but not low enough to use the low block, so we need to duck
-			if (self->client->ps.groundentity_num != ENTITYNUM_NONE)
+			if (self->client->ps.groundentityNum != ENTITYNUM_NONE)
 			{
 				TIMER_Start(self, "duck", Q_irand(500, 1500));
 				evasionType = EVASION_DUCK;
@@ -5350,7 +5350,7 @@ evasionType_t jedi_saber_block_go(gentity_t* self, usercmd_t* cmd, vec3_t p_hitl
 		if (saberBusy || zdiff < -36 && (zdiff < -44 || !Q_irand(0, 2)))
 		{
 			//jump!
-			if (self->client->ps.groundentity_num == ENTITYNUM_NONE)
+			if (self->client->ps.groundentityNum == ENTITYNUM_NONE)
 			{
 				//already in air, duck to pull up legs
 				TIMER_Start(self, "duck", Q_irand(500, 1500));
@@ -5448,7 +5448,7 @@ evasionType_t jedi_saber_block_go(gentity_t* self, usercmd_t* cmd, vec3_t p_hitl
 						|| self->client->NPC_class == CLASS_TAVION)
 					{
 						if (!incoming
-							&& self->client->ps.groundentity_num < ENTITYNUM_NONE
+							&& self->client->ps.groundentityNum < ENTITYNUM_NONE
 							&& !Q_irand(0, 2))
 						{
 							if (!PM_SaberInAttack(self->client->ps.saber_move)
@@ -5791,7 +5791,7 @@ static evasionType_t Jedi_CheckEvadeSpecialAttacks(void)
 									{
 										Com_Printf("%s rolling left from roll-stab!\n", NPCS.NPC->NPC_type);
 									}
-									if (NPCS.NPC->client->ps.groundentity_num != ENTITYNUM_NONE)
+									if (NPCS.NPC->client->ps.groundentityNum != ENTITYNUM_NONE)
 									{
 										//fuck it, just force it
 										NPC_SetAnim(NPCS.NPC, SETANIM_BOTH, BOTH_ROLL_L,
@@ -5819,7 +5819,7 @@ static evasionType_t Jedi_CheckEvadeSpecialAttacks(void)
 									{
 										Com_Printf("%s rolling right from roll-stab!\n", NPCS.NPC->NPC_type);
 									}
-									if (NPCS.NPC->client->ps.groundentity_num != ENTITYNUM_NONE)
+									if (NPCS.NPC->client->ps.groundentityNum != ENTITYNUM_NONE)
 									{
 										//fuck it, just force it
 										NPC_SetAnim(NPCS.NPC, SETANIM_BOTH, BOTH_ROLL_R,
@@ -6365,7 +6365,7 @@ static void Jedi_EvasionSaber(vec3_t enemy_movedir, const float enemy_dist, vec3
 	}
 
 	if (NPCS.NPC->enemy->client->ps.saberInFlight
-		&& NPCS.NPC->enemy->client->ps.saberentity_num != ENTITYNUM_NONE
+		&& NPCS.NPC->enemy->client->ps.saberentityNum != ENTITYNUM_NONE
 		&& NPCS.NPC->enemy->client->ps.saberEntityState != SES_RETURNING)
 	{
 		//enemy is shooting lightning
@@ -6429,7 +6429,7 @@ static void Jedi_EvasionSaber(vec3_t enemy_movedir, const float enemy_dist, vec3
 				{
 					vec3_t saberDir2Me;
 					vec3_t saberMoveDir;
-					const gentity_t* saber = &g_entities[NPCS.NPC->enemy->client->ps.saberentity_num];
+					const gentity_t* saber = &g_entities[NPCS.NPC->enemy->client->ps.saberentityNum];
 					VectorSubtract(NPCS.NPC->r.currentOrigin, saber->r.currentOrigin, saberDir2Me);
 					const float saberDist = VectorNormalize(saberDir2Me);
 					VectorCopy(saber->s.pos.trDelta, saberMoveDir);
@@ -6751,7 +6751,7 @@ gentity_t* Jedi_FindEnemyInCone(const gentity_t* self, gentity_t* fallback, cons
 		//really should have a clear LOS to this thing...
 		trap->Trace(&tr, self->r.currentOrigin, vec3_origin, vec3_origin, check->r.currentOrigin, self->s.number,
 			MASK_SHOT, qfalse, 0, 0);
-		if (tr.fraction < 1.0f && tr.entity_num != check->s.number)
+		if (tr.fraction < 1.0f && tr.entityNum != check->s.number)
 		{
 			//must have clear shot
 			continue;
@@ -7824,7 +7824,7 @@ static qboolean Jedi_Jump(vec3_t dest, const int goal_ent_num)
 					if (trace.fraction < 1.0f)
 					{
 						//hit something
-						if (trace.entity_num == goal_ent_num)
+						if (trace.entityNum == goal_ent_num)
 						{
 							//hit the enemy, that's perfect!
 							//Hmm, don't want to land on him, though...
@@ -7912,7 +7912,7 @@ static qboolean Jedi_TryJump(const gentity_t* goal)
 	}
 	if (TIMER_Done(NPCS.NPC, "jumpChaseDebounce"))
 	{
-		if (!goal->client || goal->client->ps.groundentity_num != ENTITYNUM_NONE)
+		if (!goal->client || goal->client->ps.groundentityNum != ENTITYNUM_NONE)
 		{
 			if (!PM_InKnockDown(&NPCS.NPC->client->ps) && !BG_InRoll(&NPCS.NPC->client->ps,
 				NPCS.NPC->client->ps.legsAnim))
@@ -8065,7 +8065,7 @@ static qboolean Jedi_Jumping(const gentity_t* goal)
 	if (!TIMER_Done(NPCS.NPC, "forceJumpChasing") && goal)
 	{
 		//force-jumping at the enemy
-		if (NPCS.NPC->client->ps.groundentity_num != ENTITYNUM_NONE)
+		if (NPCS.NPC->client->ps.groundentityNum != ENTITYNUM_NONE)
 		{
 			//landed
 			TIMER_Set(NPCS.NPC, "forceJumpChasing", 0);
@@ -8091,7 +8091,7 @@ static void Jedi_CheckEnemyMovement(const float enemy_dist)
 	if (!(NPCS.NPCInfo->aiFlags & NPCAI_BOSS_CHARACTER))
 	{
 		if (PM_KickingAnim(NPCS.NPC->enemy->client->ps.legsAnim)
-			&& NPCS.NPC->client->ps.groundentity_num != ENTITYNUM_NONE
+			&& NPCS.NPC->client->ps.groundentityNum != ENTITYNUM_NONE
 			//FIXME: I'm relatively close to him
 			&& (NPCS.NPC->enemy->client->ps.legsAnim == BOTH_A7_KICK_RL
 				|| NPCS.NPC->enemy->client->ps.legsAnim == BOTH_A7_KICK_BF
@@ -8106,7 +8106,7 @@ static void Jedi_CheckEnemyMovement(const float enemy_dist)
 		else if (NPCS.NPC->enemy->client->ps.torsoAnim == BOTH_A7_HILT
 			|| NPCS.NPC->enemy->client->ps.torsoAnim == BOTH_SMACK_R
 			|| NPCS.NPC->enemy->client->ps.torsoAnim == BOTH_SMACK_L
-			&& NPCS.NPC->client->ps.groundentity_num != ENTITYNUM_NONE)
+			&& NPCS.NPC->client->ps.groundentityNum != ENTITYNUM_NONE)
 		{
 			//run into the hilt bash
 			NPCS.ucmd.forwardmove = NPCS.ucmd.rightmove = NPCS.ucmd.upmove = 0;
@@ -8115,7 +8115,7 @@ static void Jedi_CheckEnemyMovement(const float enemy_dist)
 		}
 		else if ((NPCS.NPC->enemy->client->ps.torsoAnim == BOTH_A6_FB
 			|| NPCS.NPC->enemy->client->ps.torsoAnim == BOTH_A6_LR)
-			&& NPCS.NPC->client->ps.groundentity_num != ENTITYNUM_NONE)
+			&& NPCS.NPC->client->ps.groundentityNum != ENTITYNUM_NONE)
 		{
 			//run into the attack
 			//FIXME : only if on R/L or F/B?
@@ -8151,7 +8151,7 @@ static void Jedi_CheckEnemyMovement(const float enemy_dist)
 				|| NPCS.NPC->enemy->client->ps.legsAnim == BOTH_WALL_RUN_RIGHT_FLIP)
 			{
 				//he's flipping off a wall
-				if (NPCS.NPC->enemy->client->ps.groundentity_num == ENTITYNUM_NONE)
+				if (NPCS.NPC->enemy->client->ps.groundentityNum == ENTITYNUM_NONE)
 				{
 					//still in air
 					if (enemy_dist < 256)
@@ -8335,10 +8335,10 @@ static void Jedi_CheckJumps(void)
 	if (trace.allsolid || trace.startsolid || trace.fraction < 1.0f)
 	{
 		//hit ground!
-		if (trace.entity_num < ENTITYNUM_WORLD)
+		if (trace.entityNum < ENTITYNUM_WORLD)
 		{
 			//landed on an ent
-			const gentity_t* groundEnt = &g_entities[trace.entity_num];
+			const gentity_t* groundEnt = &g_entities[trace.entityNum];
 			if (groundEnt->r.svFlags & SVF_GLASS_BRUSH)
 			{
 				//don't land on breakable glass!
@@ -8578,8 +8578,8 @@ static void Jedi_Combat(void)
 	if (NPCS.NPC->client->NPC_class != CLASS_BOBAFETT && NPCS.NPC->client->NPC_class != CLASS_MANDO)
 	{
 		//Update our seen enemy position
-		if (!NPCS.NPC->enemy->client || NPCS.NPC->enemy->client->ps.groundentity_num != ENTITYNUM_NONE && NPCS.NPC->
-			client->ps.groundentity_num != ENTITYNUM_NONE)
+		if (!NPCS.NPC->enemy->client || NPCS.NPC->enemy->client->ps.groundentityNum != ENTITYNUM_NONE && NPCS.NPC->
+			client->ps.groundentityNum != ENTITYNUM_NONE)
 		{
 			VectorCopy(NPCS.NPC->enemy->r.currentOrigin, NPCS.NPCInfo->enemyLastSeenLocation);
 		}
@@ -9037,7 +9037,7 @@ static void Jedi_Patrol(void)
 						{
 							vec3_t saberDir2Me;
 							vec3_t saberMoveDir;
-							const gentity_t* saber = &g_entities[enemy->client->ps.saberentity_num];
+							const gentity_t* saber = &g_entities[enemy->client->ps.saberentityNum];
 							VectorSubtract(NPCS.NPC->r.currentOrigin, saber->r.currentOrigin, saberDir2Me);
 							const float saberDist = VectorNormalize(saberDir2Me);
 							VectorCopy(saber->s.pos.trDelta, saberMoveDir);
@@ -9216,11 +9216,11 @@ void NPC_BSJedi_FollowLeader(void)
 	if (NPCS.NPC->client->ps.saberInFlight)
 	{
 		//saber is not in hand
-		if (NPCS.NPC->client->ps.saberentity_num < ENTITYNUM_NONE && NPCS.NPC->client->ps.saberentity_num > 0)
+		if (NPCS.NPC->client->ps.saberentityNum < ENTITYNUM_NONE && NPCS.NPC->client->ps.saberentityNum > 0)
 			//player is 0
 		{
 			//
-			if (g_entities[NPCS.NPC->client->ps.saberentity_num].s.pos.trType == TR_STATIONARY)
+			if (g_entities[NPCS.NPC->client->ps.saberentityNum].s.pos.trType == TR_STATIONARY)
 			{
 				//fell to the ground, try to pick it up...
 				if (Jedi_CanPullBackSaber(NPCS.NPC))
@@ -9230,7 +9230,7 @@ void NPC_BSJedi_FollowLeader(void)
 					//		otherwise we could end up running away from it while it's on its
 					//		way back to us and we could lose it again.
 					NPCS.NPC->client->ps.saberBlocked = BLOCKED_NONE;
-					NPCS.NPCInfo->goalEntity = &g_entities[NPCS.NPC->client->ps.saberentity_num];
+					NPCS.NPCInfo->goalEntity = &g_entities[NPCS.NPC->client->ps.saberentityNum];
 					NPCS.ucmd.buttons &= ~BUTTON_ALT_ATTACK;
 					NPCS.ucmd.buttons |= BUTTON_ATTACK;
 					if (NPCS.NPC->enemy && NPCS.NPC->enemy->health > 0)
@@ -9337,7 +9337,7 @@ qboolean Jedi_CheckKataAttack(void)
 			if (!(NPCS.ucmd.buttons & BUTTON_ALT_ATTACK))
 			{
 				//not already going to do a kata move somehow
-				if (NPCS.NPC->client->ps.groundentity_num != ENTITYNUM_NONE)
+				if (NPCS.NPC->client->ps.groundentityNum != ENTITYNUM_NONE)
 				{
 					//on the ground
 					if (NPCS.ucmd.upmove <= 0 && NPCS.NPC->client->ps.fd.forceJumpCharge <= 0)
@@ -9473,10 +9473,10 @@ static void Jedi_Attack(void)
 	if (NPCS.NPC->client->ps.saberInFlight)
 	{
 		//saber is not in hand
-		if (!NPCS.NPC->client->ps.saberentity_num && NPCS.NPC->client->saberStoredIndex)
+		if (!NPCS.NPC->client->ps.saberentityNum && NPCS.NPC->client->saberStoredIndex)
 		{
 			//
-			if (g_entities[NPCS.NPC->client->ps.saberentity_num].s.pos.trType == TR_STATIONARY)
+			if (g_entities[NPCS.NPC->client->ps.saberentityNum].s.pos.trType == TR_STATIONARY)
 			{
 				//fell to the ground, try to pick it up
 				if (Jedi_CanPullBackSaber(NPCS.NPC))
@@ -9727,7 +9727,7 @@ static void Jedi_Attack(void)
 	}
 
 	//NOTE: for now, we clear ucmd.forwardmove & ucmd.rightmove while in air to avoid jumps going awry...
-	if (NPCS.NPC->client->ps.groundentity_num == ENTITYNUM_NONE)
+	if (NPCS.NPC->client->ps.groundentityNum == ENTITYNUM_NONE)
 	{
 		//don't push while in air, throws off jumps!
 		//FIXME: if we are in the air over a drop near a ledge, should we try to push back towards the ledge?
@@ -9964,16 +9964,16 @@ qboolean Kothos_HealRosh(void)
 
 			if (NPCS.NPC->ghoul2)
 			{
-				mdxaBone_t bolt_matrix;
+				mdxaBone_t boltMatrix;
 				vec3_t fxOrg, fx_dir, angles;
 
 				VectorSet(angles, 0, NPCS.NPC->r.currentAngles[YAW], 0);
 
 				trap->G2API_GetBoltMatrix(NPCS.NPC->ghoul2, 0,
 					Q_irand(0, 1),
-					&bolt_matrix, angles, NPCS.NPC->r.currentOrigin, level.time,
+					&boltMatrix, angles, NPCS.NPC->r.currentOrigin, level.time,
 					NULL, NPCS.NPC->modelScale);
-				BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, fxOrg);
+				BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, fxOrg);
 				VectorSubtract(NPCS.NPC->client->leader->r.currentOrigin, fxOrg, fx_dir);
 				VectorNormalize(fx_dir);
 				G_PlayEffect(G_EffectIndex("force/kothos_beam.efx"), fxOrg, fx_dir);
@@ -10454,7 +10454,7 @@ qboolean Jedi_InSpecialMove(void)
 	{
 		//striking down our saberlock victim.
 		NPC_FaceEnemy(qtrue);
-		if (NPCS.NPC->client->ps.groundentity_num != ENTITYNUM_NONE)
+		if (NPCS.NPC->client->ps.groundentityNum != ENTITYNUM_NONE)
 		{
 			//on the ground, don't move
 			VectorClear(NPCS.NPC->client->ps.velocity);

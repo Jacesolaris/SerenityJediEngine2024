@@ -33,12 +33,12 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #include "cgame/cg_local.h"
 #endif
 
-void BG_AttachToRancor(void* ghoul2, const float ranc_yaw, vec3_t ranc_origin, int time, qhandle_t* model_list,
+void BG_AttachToRancor(void* ghoul2, const float ranc_yaw, vec3_t ranc_origin, int time, qhandle_t* modelList,
 	vec3_t model_scale, const qboolean in_mouth, vec3_t out_origin, vec3_t out_angles,
 	matrix3_t out_axis)
 {
-	mdxaBone_t bolt_matrix;
-	int bolt_index;
+	mdxaBone_t boltMatrix;
+	int boltIndex;
 	vec3_t ranc_angles;
 	vec3_t temp_angles;
 	// Getting the bolt here
@@ -46,46 +46,46 @@ void BG_AttachToRancor(void* ghoul2, const float ranc_yaw, vec3_t ranc_origin, i
 	{
 		//in mouth
 #if defined(_GAME)
-		bolt_index = trap->G2API_AddBolt(ghoul2, 0, "jaw_bone");
+		boltIndex = trap->G2API_AddBolt(ghoul2, 0, "jaw_bone");
 #elif defined(_CGAME)
-		bolt_index = trap->G2API_AddBolt(ghoul2, 0, "jaw_bone");
+		boltIndex = trap->G2API_AddBolt(ghoul2, 0, "jaw_bone");
 #endif
 	}
 	else
 	{
 		//in right hand
 #if defined(_GAME)
-		bolt_index = trap->G2API_AddBolt(ghoul2, 0, "*r_hand");
+		boltIndex = trap->G2API_AddBolt(ghoul2, 0, "*r_hand");
 #elif defined(_CGAME)
-		bolt_index = trap->G2API_AddBolt(ghoul2, 0, "*r_hand");
+		boltIndex = trap->G2API_AddBolt(ghoul2, 0, "*r_hand");
 #endif
 	}
 	VectorSet(ranc_angles, 0, ranc_yaw, 0);
 #if defined(_GAME)
-	trap->G2API_GetBoltMatrix(ghoul2, 0, bolt_index, &bolt_matrix, ranc_angles, ranc_origin, time, model_list, model_scale);
+	trap->G2API_GetBoltMatrix(ghoul2, 0, boltIndex, &boltMatrix, ranc_angles, ranc_origin, time, modelList, model_scale);
 #elif defined(_CGAME)
-	trap->G2API_GetBoltMatrix(ghoul2, 0, bolt_index, &bolt_matrix, ranc_angles, ranc_origin, time, model_list, model_scale);
+	trap->G2API_GetBoltMatrix(ghoul2, 0, boltIndex, &boltMatrix, ranc_angles, ranc_origin, time, modelList, model_scale);
 #endif
 	// Storing ent position, bolt position, and bolt axis
 	if (out_origin)
 	{
-		BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, out_origin);
+		BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, out_origin);
 	}
 	if (out_axis)
 	{
 		if (in_mouth)
 		{
 			//in mouth
-			BG_GiveMeVectorFromMatrix(&bolt_matrix, POSITIVE_Z, out_axis[0]);
-			BG_GiveMeVectorFromMatrix(&bolt_matrix, NEGATIVE_Y, out_axis[1]);
-			BG_GiveMeVectorFromMatrix(&bolt_matrix, NEGATIVE_X, out_axis[2]);
+			BG_GiveMeVectorFromMatrix(&boltMatrix, POSITIVE_Z, out_axis[0]);
+			BG_GiveMeVectorFromMatrix(&boltMatrix, NEGATIVE_Y, out_axis[1]);
+			BG_GiveMeVectorFromMatrix(&boltMatrix, NEGATIVE_X, out_axis[2]);
 		}
 		else
 		{
 			//in hand
-			BG_GiveMeVectorFromMatrix(&bolt_matrix, NEGATIVE_Y, out_axis[0]);
-			BG_GiveMeVectorFromMatrix(&bolt_matrix, POSITIVE_X, out_axis[1]);
-			BG_GiveMeVectorFromMatrix(&bolt_matrix, POSITIVE_Z, out_axis[2]);
+			BG_GiveMeVectorFromMatrix(&boltMatrix, NEGATIVE_Y, out_axis[0]);
+			BG_GiveMeVectorFromMatrix(&boltMatrix, POSITIVE_X, out_axis[1]);
+			BG_GiveMeVectorFromMatrix(&boltMatrix, POSITIVE_Z, out_axis[2]);
 		}
 		//FIXME: this is messing up our axis and turning us inside-out?
 		if (out_angles)
@@ -101,14 +101,14 @@ void BG_AttachToRancor(void* ghoul2, const float ranc_yaw, vec3_t ranc_origin, i
 		if (in_mouth)
 		{
 			//in mouth
-			BG_GiveMeVectorFromMatrix(&bolt_matrix, POSITIVE_Z, temp_axis[0]);
-			BG_GiveMeVectorFromMatrix(&bolt_matrix, NEGATIVE_X, temp_axis[2]);
+			BG_GiveMeVectorFromMatrix(&boltMatrix, POSITIVE_Z, temp_axis[0]);
+			BG_GiveMeVectorFromMatrix(&boltMatrix, NEGATIVE_X, temp_axis[2]);
 		}
 		else
 		{
 			//in hand
-			BG_GiveMeVectorFromMatrix(&bolt_matrix, NEGATIVE_Y, temp_axis[0]);
-			BG_GiveMeVectorFromMatrix(&bolt_matrix, POSITIVE_Z, temp_axis[2]);
+			BG_GiveMeVectorFromMatrix(&boltMatrix, NEGATIVE_Y, temp_axis[0]);
+			BG_GiveMeVectorFromMatrix(&boltMatrix, POSITIVE_Z, temp_axis[2]);
 		}
 		//FIXME: this is messing up our axis and turning us inside-out?
 		vectoangles(temp_axis[0], out_angles);
@@ -121,32 +121,32 @@ void BG_AttachToSandCreature(void* ghoul2,
 	const float ranc_yaw,
 	vec3_t ranc_origin,
 	const int time,
-	qhandle_t* model_list,
+	qhandle_t* modelList,
 	vec3_t model_scale,
 	vec3_t out_origin,
 	vec3_t out_angles,
 	vec3_t out_axis[3])
 {
-	mdxaBone_t bolt_matrix;
+	mdxaBone_t boltMatrix;
 	vec3_t ranc_angles;
 	vec3_t temp_angles;
 	// Getting the bolt here
-	const int bolt_index = trap->G2API_AddBolt(ghoul2, 0, "*mouth");
+	const int boltIndex = trap->G2API_AddBolt(ghoul2, 0, "*mouth");
 
 	VectorSet(ranc_angles, 0, ranc_yaw, 0);
-	trap->G2API_GetBoltMatrix(ghoul2, 0, bolt_index,
-		&bolt_matrix, ranc_angles, ranc_origin, time,
-		model_list, model_scale);
+	trap->G2API_GetBoltMatrix(ghoul2, 0, boltIndex,
+		&boltMatrix, ranc_angles, ranc_origin, time,
+		modelList, model_scale);
 	// Storing ent position, bolt position, and bolt axis
 	if (out_origin)
 	{
-		BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, out_origin);
+		BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, out_origin);
 	}
 	if (out_axis)
 	{
-		BG_GiveMeVectorFromMatrix(&bolt_matrix, NEGATIVE_Y, out_axis[0]);
-		BG_GiveMeVectorFromMatrix(&bolt_matrix, POSITIVE_X, out_axis[1]);
-		BG_GiveMeVectorFromMatrix(&bolt_matrix, POSITIVE_Z, out_axis[2]);
+		BG_GiveMeVectorFromMatrix(&boltMatrix, NEGATIVE_Y, out_axis[0]);
+		BG_GiveMeVectorFromMatrix(&boltMatrix, POSITIVE_X, out_axis[1]);
+		BG_GiveMeVectorFromMatrix(&boltMatrix, POSITIVE_Z, out_axis[2]);
 
 		//FIXME: this is messing up our axis and turning us inside-out?
 		if (out_angles)
@@ -160,8 +160,8 @@ void BG_AttachToSandCreature(void* ghoul2,
 	{
 		vec3_t temp_axis[3];
 
-		BG_GiveMeVectorFromMatrix(&bolt_matrix, NEGATIVE_Y, temp_axis[0]);
-		BG_GiveMeVectorFromMatrix(&bolt_matrix, POSITIVE_Z, temp_axis[2]);
+		BG_GiveMeVectorFromMatrix(&boltMatrix, NEGATIVE_Y, temp_axis[0]);
+		BG_GiveMeVectorFromMatrix(&boltMatrix, POSITIVE_Z, temp_axis[2]);
 
 		//FIXME: this is messing up our axis and turning us inside-out?
 		vectoangles(temp_axis[0], out_angles);

@@ -3068,7 +3068,7 @@ qboolean ItemParse_asset_model_go(itemDef_t* item, const char* name)
 	if (!Q_stricmp(&name[strlen(name) - 4], ".glm"))
 	{
 		//it's a ghoul2 model then
-		if (item->ghoul2.size() && item->ghoul2[0].mmodel_index >= 0)
+		if (item->ghoul2.size() && item->ghoul2[0].mModelindex >= 0)
 		{
 			DC->g2_RemoveGhoul2Model(item->ghoul2, 0);
 			item->flags &= ~ITF_G2VALID;
@@ -5566,7 +5566,7 @@ static void Menu_FreeGhoulItems(menuDef_t* menu)
 	{
 		for (int j = 0; j < menu->items[i]->ghoul2.size(); j++)
 		{
-			if (menu->items[i]->ghoul2[j].mmodel_index >= 0)
+			if (menu->items[i]->ghoul2[j].mModelindex >= 0)
 			{
 				DC->g2_RemoveGhoul2Model(menu->items[i]->ghoul2, j);
 			}
@@ -5762,17 +5762,17 @@ PC_StartParseSession
 ===============
 */
 
-int PC_StartParseSession(const char* file_name, char** buffer)
+int PC_StartParseSession(const char* fileName, char** buffer)
 {
 	// Try to open file and read it in.
-	const int len = ui.FS_ReadFile(file_name, (void**)buffer);
+	const int len = ui.FS_ReadFile(fileName, (void**)buffer);
 
 	// Not there?
 	if (len > 0)
 	{
 		COM_BeginParseSession();
 
-		Q_strncpyz(parseData[parseDataCount].file_name, file_name, sizeof parseData[0].file_name);
+		Q_strncpyz(parseData[parseDataCount].fileName, fileName, sizeof parseData[0].fileName);
 		parseData[parseDataCount].bufferStart = *buffer;
 		parseData[parseDataCount].bufferCurrent = *buffer;
 	}
@@ -5799,7 +5799,7 @@ PC_ParseWarning
 void PC_ParseWarning(const char* message)
 {
 	ui.Printf(S_COLOR_YELLOW "WARNING: %s Line #%d of File '%s'\n", message, parseData[parseDataCount].com_lines,
-		parseData[parseDataCount].file_name);
+		parseData[parseDataCount].fileName);
 }
 
 char* PC_ParseExt()
@@ -7223,7 +7223,7 @@ void Item_Model_Paint(itemDef_t* item)
 	{
 		ent.ghoul2 = &item->ghoul2;
 		ent.radius = 1000;
-		ent.custom_skin = modelPtr->g2skin;
+		ent.customSkin = modelPtr->g2skin;
 
 		if (item->flags & ITF_ISCHARACTER)
 		{

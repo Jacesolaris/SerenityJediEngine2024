@@ -531,7 +531,7 @@ int SCR_GetBigStringWidth(const char* str); // returns in virtual 640x480 coordi
 
 void SCR_FillRect(float x, float y, float width, float height,
 	const float* color);
-void SCR_DrawPic(float x, float y, float width, float height, qhandle_t h_shader);
+void SCR_DrawPic(float x, float y, float width, float height, qhandle_t hShader);
 void SCR_DrawNamedPic(float x, float y, float width, float height, const char* picname);
 
 void SCR_DrawBigString(int x, int y, const char* s, float alpha, qboolean noColorEscape);
@@ -590,7 +590,7 @@ qboolean CL_Netchan_Process(netchan_t* chan, msg_t* msg);
 //
 // cl_avi.c
 //
-qboolean CL_OpenAVIForWriting(const char* file_name);
+qboolean CL_OpenAVIForWriting(const char* fileName);
 void CL_TakeVideoFrame(void);
 void CL_WriteAVIVideoFrame(const byte* imageBuffer, int size);
 void CL_WriteAVIAudioFrame(const byte* pcmBuffer, int size);

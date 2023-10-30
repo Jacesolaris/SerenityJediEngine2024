@@ -108,11 +108,11 @@ void auto_turret_die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker,
 	if (self->s.model_index2)
 	{
 		// switch to damage model if we should
-		self->s.model_index = self->s.model_index2;
+		self->s.modelIndex = self->s.model_index2;
 
 		if (self->target_ent && self->target_ent->s.model_index2)
 		{
-			self->target_ent->s.model_index = self->target_ent->s.model_index2;
+			self->target_ent->s.modelIndex = self->target_ent->s.model_index2;
 		}
 
 		VectorCopy(self->r.currentAngles, self->s.apos.trBase);
@@ -164,7 +164,7 @@ static void turret_fire(gentity_t* ent, vec3_t start, vec3_t dir)
 	gentity_t* bolt = G_Spawn();
 
 	//use a custom shot effect
-	bolt->s.otherentity_num2 = ent->genericValue14;
+	bolt->s.otherentityNum2 = ent->genericValue14;
 	//use a custom impact effect
 	bolt->s.emplacedOwner = ent->genericValue15;
 
@@ -225,16 +225,16 @@ void turret_head_think(gentity_t* self)
 		self->setTime = level.time + self->wait;
 
 		/*
-		mdxaBone_t	bolt_matrix;
+		mdxaBone_t	boltMatrix;
 
 		// Getting the flash bolt here
 		trap->G2API_GetBoltMatrix( self->ghoul2, self->playerModel,
 					self->torsoBolt,
-					&bolt_matrix, self->r.currentAngles, self->r.currentOrigin, (cg.time?cg.time:level.time),
+					&boltMatrix, self->r.currentAngles, self->r.currentOrigin, (cg.time?cg.time:level.time),
 					NULL, self->s.modelScale );
 
-		trap->G2API_GiveMeVectorFromMatrix( bolt_matrix, ORIGIN, org );
-		trap->G2API_GiveMeVectorFromMatrix( bolt_matrix, POSITIVE_Y, fwd );
+		trap->G2API_GiveMeVectorFromMatrix( boltMatrix, ORIGIN, org );
+		trap->G2API_GiveMeVectorFromMatrix( boltMatrix, POSITIVE_Y, fwd );
 		*/
 		VectorCopy(top->r.currentOrigin, org);
 		org[2] += top->r.maxs[2] - 8;
@@ -302,15 +302,15 @@ static void turret_aim(const gentity_t* self)
 			org[2] += 32.0f;
 		}
 		/*
-		mdxaBone_t	bolt_matrix;
+		mdxaBone_t	boltMatrix;
 
 		// Getting the "eye" here
 		trap->G2API_GetBoltMatrix( self->ghoul2, self->playerModel,
 					self->torsoBolt,
-					&bolt_matrix, self->r.currentAngles, self->s.origin, (cg.time?cg.time:level.time),
+					&boltMatrix, self->r.currentAngles, self->s.origin, (cg.time?cg.time:level.time),
 					NULL, self->s.modelScale );
 
-		trap->G2API_GiveMeVectorFromMatrix( bolt_matrix, ORIGIN, org2 );
+		trap->G2API_GiveMeVectorFromMatrix( boltMatrix, ORIGIN, org2 );
 		*/
 		VectorCopy(top->r.currentOrigin, org2);
 
@@ -494,7 +494,7 @@ static qboolean turret_find_enemies(gentity_t* self)
 
 		trap->Trace(&tr, org2, NULL, NULL, org, self->s.number, MASK_SHOT, qfalse, 0, 0);
 
-		if (!tr.allsolid && !tr.startsolid && (tr.fraction == 1.0 || tr.entity_num == target->s.number))
+		if (!tr.allsolid && !tr.startsolid && (tr.fraction == 1.0 || tr.entityNum == target->s.number))
 		{
 			vec3_t enemyDir;
 			// Only acquire if have a clear shot, Is it in range and closer than our best?
@@ -611,7 +611,7 @@ void turret_base_think(gentity_t* self)
 					}
 					trap->Trace(&tr, org2, NULL, NULL, org, self->s.number, MASK_SHOT, qfalse, 0, 0);
 
-					if (!tr.allsolid && !tr.startsolid && tr.entity_num == self->enemy->s.number)
+					if (!tr.allsolid && !tr.startsolid && tr.entityNum == self->enemy->s.number)
 					{
 						turnOff = qfalse; // Can see our enemy
 					}
@@ -721,7 +721,7 @@ void SP_misc_turret(gentity_t* base)
 	}
 
 	base->s.model_index2 = G_model_index("models/map_objects/hoth/turret_bottom.md3");
-	base->s.model_index = G_model_index("models/map_objects/hoth/turret_base.md3");
+	base->s.modelIndex = G_model_index("models/map_objects/hoth/turret_base.md3");
 
 	G_SpawnString("icon", "", &s);
 	if (s && s[0])
@@ -774,7 +774,7 @@ void SP_misc_panel_turret(gentity_t* self)
 		G_SoundIndex("sound/movers/objects/ladygun_on");
 	}
 
-	self->s.model_index = G_model_index("models/map_objects/imp_mine/ladyluck_gun.md3");
+	self->s.modelIndex = G_model_index("models/map_objects/imp_mine/ladyluck_gun.md3");
 
 	self->soundPos1 = G_SoundIndex("sound/movers/camera_on.mp3");
 	self->soundPos2 = G_SoundIndex("sound/movers/camera_off.mp3");
@@ -810,7 +810,7 @@ qboolean turret_base_spawn_top(gentity_t* base)
 		return qfalse;
 	}
 
-	top->s.model_index = G_model_index("models/map_objects/hoth/turret_top_new.md3");
+	top->s.modelIndex = G_model_index("models/map_objects/hoth/turret_top_new.md3");
 	top->s.model_index2 = G_model_index("models/map_objects/hoth/turret_top.md3");
 	G_SetAngles(top, base->s.angles);
 	VectorCopy(base->s.origin, org);

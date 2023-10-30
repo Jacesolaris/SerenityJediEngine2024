@@ -134,7 +134,7 @@ void RB_CalcDeformVertexes(const deformStage_t* ds)
 	{
 		scale = EvalWaveForm(&ds->deformationWave);
 
-		for (i = 0; i < tess.num_vertexes; i++, xyz += 4, normal += 4)
+		for (i = 0; i < tess.numVertexes; i++, xyz += 4, normal += 4)
 		{
 			VectorScale(normal, scale, offset);
 
@@ -147,7 +147,7 @@ void RB_CalcDeformVertexes(const deformStage_t* ds)
 	{
 		const float* table = table_for_func(ds->deformationWave.func);
 
-		for (i = 0; i < tess.num_vertexes; i++, xyz += 4, normal += 4)
+		for (i = 0; i < tess.numVertexes; i++, xyz += 4, normal += 4)
 		{
 			const float off = (xyz[0] + xyz[1] + xyz[2]) * ds->deformationSpread;
 
@@ -177,7 +177,7 @@ void RB_CalcDeformNormals(const deformStage_t* ds)
 	float* xyz = (float*)tess.xyz;
 	float* normal = (float*)tess.normal;
 
-	for (int i = 0; i < tess.num_vertexes; i++, xyz += 4, normal += 4) {
+	for (int i = 0; i < tess.numVertexes; i++, xyz += 4, normal += 4) {
 		float scale = 0.98f;
 		scale = R_NoiseGet4f(xyz[0] * scale, xyz[1] * scale, xyz[2] * scale,
 			tess.shaderTime * ds->deformationWave.frequency);
@@ -215,7 +215,7 @@ void RB_CalcBulgeVertexes(const deformStage_t* ds)
 
 	now = backEnd.refdef.time * ds->bulgeSpeed * 0.001f;
 
-	for ( i = 0; i < tess.num_vertexes; i++, xyz += 4, st += 2 * NUM_TEX_COORDS, normal += 4 ) {
+	for ( i = 0; i < tess.numVertexes; i++, xyz += 4, st += 2 * NUM_TEX_COORDS, normal += 4 ) {
 		int		off;
 		float scale;
 
@@ -236,7 +236,7 @@ void RB_CalcBulgeVertexes(const deformStage_t* ds)
 	if (ds->bulgeSpeed == 0.0f && ds->bulgeWidth == 0.0f)
 	{
 		// We don't have a speed and width, so just use height to expand uniformly
-		for (i = 0; i < tess.num_vertexes; i++, xyz += 4, normal += 4)
+		for (i = 0; i < tess.numVertexes; i++, xyz += 4, normal += 4)
 		{
 			xyz[0] += normal[0] * ds->bulgeHeight;
 			xyz[1] += normal[1] * ds->bulgeHeight;
@@ -251,7 +251,7 @@ void RB_CalcBulgeVertexes(const deformStage_t* ds)
 
 		const float now = backEnd.refdef.time * ds->bulgeSpeed * 0.001f;
 
-		for (i = 0; i < tess.num_vertexes; i++, xyz += 4, st += 2 * NUM_TEX_COORDS, normal += 4)
+		for (i = 0; i < tess.numVertexes; i++, xyz += 4, st += 2 * NUM_TEX_COORDS, normal += 4)
 		{
 			const int off = FUNCTABLE_SIZE / (M_PI * 2) * (st[0] * ds->bulgeWidth + now);
 
@@ -286,7 +286,7 @@ void RB_CalcMoveVertexes(const deformStage_t* ds)
 	VectorScale(ds->moveVector, scale, offset);
 
 	xyz = (float*)tess.xyz;
-	for (int i = 0; i < tess.num_vertexes; i++, xyz += 4) {
+	for (int i = 0; i < tess.numVertexes; i++, xyz += 4) {
 		VectorAdd(xyz, offset, xyz);
 	}
 }
@@ -336,8 +336,8 @@ void DeformText(const char* text) {
 	VectorMA(origin, len - 1, width, origin);
 
 	// clear the shader indexes
-	tess.num_indexes = 0;
-	tess.num_vertexes = 0;
+	tess.numIndexes = 0;
+	tess.numVertexes = 0;
 
 	color[0] = color[1] = color[2] = color[3] = 255;
 
@@ -384,16 +384,16 @@ static void AutospriteDeform()
 	vec3_t	mid{};
 	vec3_t	left_dir, up_dir;
 
-	if (tess.num_vertexes & 3) {
+	if (tess.numVertexes & 3) {
 		ri->Printf(PRINT_ALL, S_COLOR_YELLOW  "Autosprite shader %s had odd vertex count", tess.shader->name);
 	}
-	if (tess.num_indexes != (tess.num_vertexes >> 2) * 6) {
+	if (tess.numIndexes != (tess.numVertexes >> 2) * 6) {
 		ri->Printf(PRINT_ALL, S_COLOR_YELLOW  "Autosprite shader %s had odd index count", tess.shader->name);
 	}
 
-	const int old_verts = tess.num_vertexes;
-	tess.num_vertexes = 0;
-	tess.num_indexes = 0;
+	const int old_verts = tess.numVertexes;
+	tess.numVertexes = 0;
+	tess.numIndexes = 0;
 
 	if (backEnd.currentEntity != &tr.worldEntity) {
 		GlobalVectorToLocal(backEnd.viewParms.ori.axis[1], left_dir);
@@ -464,10 +464,10 @@ static void Autosprite2Deform()
 	int		indexes;
 	vec3_t	forward;
 
-	if (tess.num_vertexes & 3) {
+	if (tess.numVertexes & 3) {
 		ri->Printf(PRINT_ALL, S_COLOR_YELLOW  "Autosprite2 shader %s had odd vertex count", tess.shader->name);
 	}
-	if (tess.num_indexes != (tess.num_vertexes >> 2) * 6) {
+	if (tess.numIndexes != (tess.numVertexes >> 2) * 6) {
 		ri->Printf(PRINT_ALL, S_COLOR_YELLOW  "Autosprite2 shader %s had odd index count", tess.shader->name);
 	}
 
@@ -481,7 +481,7 @@ static void Autosprite2Deform()
 	// this is a lot of work for two triangles...
 	// we could precalculate a lot of it is an issue, but it would mess up
 	// the shader abstraction
-	for (i = 0, indexes = 0; i < tess.num_vertexes; i += 4, indexes += 6) {
+	for (i = 0, indexes = 0; i < tess.numVertexes; i += 4, indexes += 6) {
 		float	lengths[2]{};
 		int		nums[2]{};
 		vec3_t	mid[2]{};
@@ -630,7 +630,7 @@ void RB_calc_colorFromEntity(unsigned char* dst_colors)
 
 	const byteAlias_t* ba = reinterpret_cast<byteAlias_t*>(&backEnd.currentEntity->e.shaderRGBA);
 
-	for (int i = 0; i < tess.num_vertexes; i++) {
+	for (int i = 0; i < tess.numVertexes; i++) {
 		*p_colors++ = ba->i;
 	}
 }
@@ -653,7 +653,7 @@ void RB_calc_colorFromOneMinusEntity(unsigned char* dst_colors)
 
 	const byteAlias_t* ba = reinterpret_cast<byteAlias_t*>(&inv_modulate);
 
-	for (int i = 0; i < tess.num_vertexes; i++) {
+	for (int i = 0; i < tess.numVertexes; i++) {
 		*p_colors++ = ba->i;
 	}
 }
@@ -668,7 +668,7 @@ void RB_CalcAlphaFromEntity(unsigned char* dst_colors)
 
 	dst_colors += 3;
 
-	for (int i = 0; i < tess.num_vertexes; i++, dst_colors += 4)
+	for (int i = 0; i < tess.numVertexes; i++, dst_colors += 4)
 	{
 		*dst_colors = backEnd.currentEntity->e.shaderRGBA[3];
 	}
@@ -684,7 +684,7 @@ void RB_CalcAlphaFromOneMinusEntity(unsigned char* dst_colors)
 
 	dst_colors += 3;
 
-	for (int i = 0; i < tess.num_vertexes; i++, dst_colors += 4)
+	for (int i = 0; i < tess.numVertexes; i++, dst_colors += 4)
 	{
 		*dst_colors = 0xff - backEnd.currentEntity->e.shaderRGBA[3];
 	}
@@ -718,7 +718,7 @@ void RB_CalcWaveColor(const waveForm_t* wf, unsigned char* dst_colors)
 	color[3] = 255;
 	const byteAlias_t* ba = reinterpret_cast<byteAlias_t*>(&color);
 
-	for (int i = 0; i < tess.num_vertexes; i++) {
+	for (int i = 0; i < tess.numVertexes; i++) {
 		*colors++ = ba->i;
 	}
 }
@@ -732,7 +732,7 @@ void RB_CalcWaveAlpha(const waveForm_t* wf, unsigned char* dst_colors)
 
 	const int v = 255 * glow;
 
-	for (int i = 0; i < tess.num_vertexes; i++, dst_colors += 4)
+	for (int i = 0; i < tess.numVertexes; i++, dst_colors += 4)
 	{
 		dst_colors[3] = v;
 	}
@@ -750,7 +750,7 @@ void RB_CalcModulateColorsByFog(unsigned char* dst_colors)
 	// been previously called if the surface was opaque
 	RB_CalcFogTexCoords(tex_coords[0]);
 
-	for (int i = 0; i < tess.num_vertexes; i++, dst_colors += 4) {
+	for (int i = 0; i < tess.numVertexes; i++, dst_colors += 4) {
 		const float f = 1.0 - R_FogFactor(tex_coords[i][0], tex_coords[i][1]);
 		dst_colors[0] *= f;
 		dst_colors[1] *= f;
@@ -770,7 +770,7 @@ void RB_CalcModulateAlphasByFog(unsigned char* dst_colors)
 	// been previously called if the surface was opaque
 	RB_CalcFogTexCoords(tex_coords[0]);
 
-	for (int i = 0; i < tess.num_vertexes; i++, dst_colors += 4) {
+	for (int i = 0; i < tess.numVertexes; i++, dst_colors += 4) {
 		const float f = 1.0 - R_FogFactor(tex_coords[i][0], tex_coords[i][1]);
 		dst_colors[3] *= f;
 	}
@@ -788,7 +788,7 @@ void RB_CalcModulateRGBAsByFog(unsigned char* dst_colors)
 	// been previously called if the surface was opaque
 	RB_CalcFogTexCoords(tex_coords[0]);
 
-	for (int i = 0; i < tess.num_vertexes; i++, dst_colors += 4) {
+	for (int i = 0; i < tess.numVertexes; i++, dst_colors += 4) {
 		const float f = 1.0 - R_FogFactor(tex_coords[i][0], tex_coords[i][1]);
 		dst_colors[0] *= f;
 		dst_colors[1] *= f;
@@ -869,7 +869,7 @@ void RB_CalcFogTexCoords(float* dst_tex_coords) {
 	fog_distance_vector[3] += 1.0 / 512;
 
 	// calculate density for each point
-	for (i = 0, v = tess.xyz[0]; i < tess.num_vertexes; i++, v += 4) {
+	for (i = 0, v = tess.xyz[0]; i < tess.numVertexes; i++, v += 4) {
 		// calculate the length in fog
 		const float s = DotProduct(v, fog_distance_vector) + fog_distance_vector[3];
 		float t = DotProduct(v, fog_depth_vector) + fog_depth_vector[3];
@@ -908,7 +908,7 @@ void RB_CalcEnvironmentTexCoords(float* dst_tex_coords)
 	float* v = tess.xyz[0];
 	float* normal = tess.normal[0];
 
-	for (int i = 0; i < tess.num_vertexes; i++, v += 4, normal += 4, dst_tex_coords += 2)
+	for (int i = 0; i < tess.numVertexes; i++, v += 4, normal += 4, dst_tex_coords += 2)
 	{
 		vec3_t viewer;
 		VectorSubtract(backEnd.ori.viewOrigin, v, viewer);
@@ -932,7 +932,7 @@ void RB_CalcTurbulentTexCoords(const waveForm_t* wf, float* dst_tex_coords)
 {
 	const float now = wf->phase + tess.shaderTime * wf->frequency;
 
-	for (int i = 0; i < tess.num_vertexes; i++, dst_tex_coords += 2)
+	for (int i = 0; i < tess.numVertexes; i++, dst_tex_coords += 2)
 	{
 		const float s = dst_tex_coords[0];
 		const float t = dst_tex_coords[1];
@@ -947,7 +947,7 @@ void RB_CalcTurbulentTexCoords(const waveForm_t* wf, float* dst_tex_coords)
 */
 void RB_CalcScaleTexCoords(const float scale[2], float* dst_tex_coords)
 {
-	for (int i = 0; i < tess.num_vertexes; i++, dst_tex_coords += 2)
+	for (int i = 0; i < tess.numVertexes; i++, dst_tex_coords += 2)
 	{
 		dst_tex_coords[0] *= scale[0];
 		dst_tex_coords[1] *= scale[1];
@@ -969,7 +969,7 @@ void RB_CalcScrollTexCoords(const float scroll_speed[2], float* dst_tex_coords)
 	adjusted_scroll_s = adjusted_scroll_s - floor(adjusted_scroll_s);
 	adjusted_scroll_t = adjusted_scroll_t - floor(adjusted_scroll_t);
 
-	for (int i = 0; i < tess.num_vertexes; i++, dst_tex_coords += 2)
+	for (int i = 0; i < tess.numVertexes; i++, dst_tex_coords += 2)
 	{
 		dst_tex_coords[0] += adjusted_scroll_s;
 		dst_tex_coords[1] += adjusted_scroll_t;
@@ -981,7 +981,7 @@ void RB_CalcScrollTexCoords(const float scroll_speed[2], float* dst_tex_coords)
 */
 void RB_CalcTransformTexCoords(const texModInfo_t* tmi, float* dst_tex_coords)
 {
-	for (int i = 0; i < tess.num_vertexes; i++, dst_tex_coords += 2)
+	for (int i = 0; i < tess.numVertexes; i++, dst_tex_coords += 2)
 	{
 		const float s = dst_tex_coords[0];
 		const float t = dst_tex_coords[1];
@@ -1033,8 +1033,8 @@ void RB_CalcSpecularAlpha(unsigned char* alphas)
 
 	alphas += 3;
 
-	const int num_vertexes = tess.num_vertexes;
-	for (int i = 0; i < num_vertexes; i++, v += 4, normal += 4, alphas += 4) {
+	const int numVertexes = tess.numVertexes;
+	for (int i = 0; i < numVertexes; i++, v += 4, normal += 4, alphas += 4) {
 		vec3_t light_dir;
 		vec3_t viewer;
 		if (backEnd.currentEntity &&
@@ -1096,8 +1096,8 @@ void RB_CalcDiffuseColor(unsigned char* colors)
 	float* v = tess.xyz[0];
 	float* normal = tess.normal[0];
 
-	const int num_vertexes = tess.num_vertexes;
-	for (int i = 0; i < num_vertexes; i++, v += 4, normal += 4) {
+	const int numVertexes = tess.numVertexes;
+	for (int i = 0; i < numVertexes; i++, v += 4, normal += 4) {
 		const float incoming = DotProduct(normal, light_dir);
 		if (incoming <= 0) {
 			*reinterpret_cast<int*>(&colors[i * 4]) = ambient_light_int;
@@ -1159,9 +1159,9 @@ void RB_CalcDiffuseEntityColor(unsigned char* colors)
 	float* v = tess.xyz[0];
 	float* normal = tess.normal[0];
 
-	const int num_vertexes = tess.num_vertexes;
+	const int numVertexes = tess.numVertexes;
 
-	for (int i = 0; i < num_vertexes; i++, v += 4, normal += 4)
+	for (int i = 0; i < numVertexes; i++, v += 4, normal += 4)
 	{
 		const float incoming = DotProduct(normal, light_dir);
 		if (incoming <= 0) {
@@ -1203,12 +1203,12 @@ void RB_CalcDisintegrateColors(unsigned char* colors)
 	// calculate the burn threshold at the given time, anything that passes the threshold will get burnt
 	const float threshold = (backEnd.refdef.time - ent->endTime) * 0.045f; // endTime is really the start time, maybe I should just use a completely meaningless substitute?
 
-	const int num_vertexes = tess.num_vertexes;
+	const int numVertexes = tess.numVertexes;
 
 	if (ent->renderfx & RF_DISINTEGRATE1)
 	{
 		// this handles the blacken and fading out of the regular player model
-		for (i = 0; i < num_vertexes; i++, v += 4)
+		for (i = 0; i < numVertexes; i++, v += 4)
 		{
 			VectorSubtract(backEnd.currentEntity->e.oldorigin, v, temp);
 
@@ -1256,7 +1256,7 @@ void RB_CalcDisintegrateColors(unsigned char* colors)
 	else if (ent->renderfx & RF_DISINTEGRATE2)
 	{
 		// this handles the glowing, burning bit that scales away from the model
-		for (i = 0; i < num_vertexes; i++, v += 4)
+		for (i = 0; i < numVertexes; i++, v += 4)
 		{
 			VectorSubtract(backEnd.currentEntity->e.oldorigin, v, temp);
 
@@ -1292,7 +1292,7 @@ void RB_CalcDisintegrateVertDeform()
 	{
 		const float	threshold = (backEnd.refdef.time - backEnd.currentEntity->e.endTime) * 0.045f;
 
-		for (int i = 0; i < tess.num_vertexes; i++, xyz += 4, normal += 4)
+		for (int i = 0; i < tess.numVertexes; i++, xyz += 4, normal += 4)
 		{
 			vec3_t temp;
 			VectorSubtract(backEnd.currentEntity->e.oldorigin, xyz, temp);

@@ -2665,7 +2665,7 @@ static keywordHash_t saberParseKeywords[] = {
 	{"name", Saber_ParseName, NULL},
 	{"saberType", Saber_ParseSaberType, NULL},
 	{"saberModel", Saber_ParseSaberModel, NULL},
-	{"custom_skin", Saber_ParseCustomSkin, NULL},
+	{"customSkin", Saber_ParseCustomSkin, NULL},
 	{"soundOn", Saber_ParseSoundOn, NULL},
 	{"soundLoop", Saber_ParseSoundLoop, NULL},
 	{"soundOff", Saber_ParseSoundOff, NULL},
@@ -3035,7 +3035,7 @@ void WP_RemoveSaber(saberInfo_t* sabers, const int saber_num)
 	//	}
 }
 
-void WP_SetSaber(const int ent_num, saberInfo_t* sabers, const int saber_num, const char* saber_name)
+void WP_SetSaber(const int entNum, saberInfo_t* sabers, const int saber_num, const char* saber_name)
 {
 	if (!sabers)
 	{
@@ -3051,7 +3051,7 @@ void WP_SetSaber(const int ent_num, saberInfo_t* sabers, const int saber_num, co
 		return;
 	}
 
-	if (ent_num < MAX_CLIENTS &&
+	if (entNum < MAX_CLIENTS &&
 		!WP_SaberValidForPlayerInMP(saber_name))
 	{
 		WP_SaberParseParms(DEFAULT_SABER, &sabers[saber_num]); //get saber info
@@ -3132,7 +3132,7 @@ void WP_SaberLoadParms()
 		trap->FS_Read(bgSaberParseTBuffer, len, f);
 		bgSaberParseTBuffer[len] = 0;
 
-		len = COM_Compress(bgSaberParseTBuffer);
+		len = COM_CompressShader(bgSaberParseTBuffer);
 
 		Q_strcat(marker, MAX_SABER_DATA_SIZE - totallen, bgSaberParseTBuffer);
 		trap->FS_Close(f);

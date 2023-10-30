@@ -2305,7 +2305,7 @@ void G_SetTauntAnim(gentity_t* ent, const int taunt)
 
 		if (anim != -1)
 		{
-			if (ent->client->ps.groundentity_num != ENTITYNUM_NONE || NPC_IsMando(ent))
+			if (ent->client->ps.groundentityNum != ENTITYNUM_NONE || NPC_IsMando(ent))
 			{
 				int parts = SETANIM_TORSO;
 

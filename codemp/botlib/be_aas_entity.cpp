@@ -97,7 +97,7 @@ int AAS_UpdateEntity(const int entnum, const bot_entitystate_t* state)
 	VectorCopy(state->old_origin, ent->i.old_origin);
 	ent->i.solid = state->solid;
 	ent->i.groundent = state->groundent;
-	ent->i.model_index = state->model_index;
+	ent->i.modelIndex = state->modelIndex;
 	ent->i.model_index2 = state->model_index2;
 	ent->i.frame = state->frame;
 	ent->i.event = state->event;
@@ -124,7 +124,7 @@ int AAS_UpdateEntity(const int entnum, const bot_entitystate_t* state)
 		} //end if
 		//get the mins and maxs of the model
 		//FIXME: rotate mins and maxs
-		AAS_BSPModelMinsMaxsOrigin(ent->i.model_index, ent->i.angles, ent->i.mins, ent->i.maxs, nullptr);
+		AAS_BSPModelMinsMaxsOrigin(ent->i.modelIndex, ent->i.angles, ent->i.mins, ent->i.maxs, nullptr);
 	} //end if
 	else if (ent->i.solid == SOLID_BBOX)
 	{
@@ -221,7 +221,7 @@ int AAS_Entitymodel_index(const int entnum)
 		botimport.Print(PRT_FATAL, "AAS_Entitymodel_index: entnum %d out of range\n", entnum);
 		return 0;
 	} //end if
-	return aasworld.entities[entnum].i.model_index;
+	return aasworld.entities[entnum].i.modelIndex;
 } //end of the function AAS_Entitymodel_index
 //===========================================================================
 //
@@ -255,7 +255,7 @@ int AAS_EntityModelNum(const int entnum)
 		botimport.Print(PRT_FATAL, "AAS_EntityModelNum: entnum %d out of range\n", entnum);
 		return 0;
 	} //end if
-	return aasworld.entities[entnum].i.model_index;
+	return aasworld.entities[entnum].i.modelIndex;
 } //end of the function AAS_EntityModelNum
 //===========================================================================
 //
@@ -270,7 +270,7 @@ int AAS_OriginOfMoverWithModelNum(const int modelnum, vec3_t origin)
 		const aas_entity_t* ent = &aasworld.entities[i];
 		if (ent->i.type == ET_MOVER)
 		{
-			if (ent->i.model_index == modelnum)
+			if (ent->i.modelIndex == modelnum)
 			{
 				VectorCopy(ent->i.origin, origin);
 				return qtrue;
@@ -313,7 +313,7 @@ void AAS_EntityBSPData(const int entnum, bsp_entdata_t* entdata)
 	VectorAdd(ent->i.origin, ent->i.mins, entdata->absmins);
 	VectorAdd(ent->i.origin, ent->i.maxs, entdata->absmaxs);
 	entdata->solid = ent->i.solid;
-	entdata->modelnum = ent->i.model_index - 1;
+	entdata->modelnum = ent->i.modelIndex - 1;
 } //end of the function AAS_EntityBSPData
 //===========================================================================
 //
@@ -369,7 +369,7 @@ void AAS_UnlinkInvalidEntities()
 // Returns:					-
 // Changes Globals:		-
 //===========================================================================
-int AAS_NearestEntity(vec3_t origin, const int model_index)
+int AAS_NearestEntity(vec3_t origin, const int modelIndex)
 {
 	int bestentnum = 0;
 	float bestdist = 99999;
@@ -377,7 +377,7 @@ int AAS_NearestEntity(vec3_t origin, const int model_index)
 	{
 		vec3_t dir;
 		const aas_entity_t* ent = &aasworld.entities[i];
-		if (ent->i.model_index != model_index) continue;
+		if (ent->i.modelIndex != modelIndex) continue;
 		VectorSubtract(ent->i.origin, origin, dir);
 		if (fabs(dir[0]) < 40)
 		{

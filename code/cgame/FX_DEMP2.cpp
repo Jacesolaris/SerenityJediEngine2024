@@ -111,7 +111,7 @@ void FX_DEMP2_AltDetonate(vec3_t org, const float size)
 	ex->endTime = ex->startTime + 1300;
 
 	ex->radius = size;
-	ex->refEntity.custom_shader = cgi_R_RegisterShader("gfx/effects/demp2shell");
+	ex->refEntity.customShader = cgi_R_RegisterShader("gfx/effects/demp2shell");
 
 	ex->refEntity.hModel = cgi_R_RegisterModel("models/items/sphere.md3");
 	VectorCopy(org, ex->refEntity.origin);

@@ -55,7 +55,7 @@ typedef struct camera_s
 	float pan_duration;
 
 	//Following information
-	//an array of entity_nums
+	//an array of entityNums
 	int cameraGroup[MAX_CAMERA_GROUP_SUBJECTS];
 	float cameraGroupZOfs;
 	char cameraGroupTag[MAX_QPATH];

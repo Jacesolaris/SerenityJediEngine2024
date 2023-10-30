@@ -111,7 +111,7 @@ void FX_DEMP2_AltDetonate(vec3_t org, const float size)
 	ex->endTime = ex->startTime + 800; //1600;
 
 	ex->radius = size;
-	ex->refEntity.custom_shader = cgs.media.demp2ShellShader;
+	ex->refEntity.customShader = cgs.media.demp2ShellShader;
 	ex->refEntity.hModel = cgs.media.demp2Shell;
 	VectorCopy(org, ex->refEntity.origin);
 

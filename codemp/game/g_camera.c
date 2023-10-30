@@ -161,14 +161,14 @@ void GCam_FollowUpdate(void)
 			const int newBolt = trap->G2API_AddBolt(&from->ghoul2, 0, client_camera.cameraGroupTag);
 			if (newBolt != -1)
 			{
-				mdxaBone_t bolt_matrix;
+				mdxaBone_t boltMatrix;
 				vec3_t angle;
 
 				VectorSet(angle, 0, from->client->ps.viewangles[YAW], 0);
 
-				trap->G2API_GetBoltMatrix(&from->ghoul2, 0, newBolt, &bolt_matrix, angle, from->client->ps.origin,
+				trap->G2API_GetBoltMatrix(&from->ghoul2, 0, newBolt, &boltMatrix, angle, from->client->ps.origin,
 					level.time, NULL, from->modelScale);
-				BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, focus[num_subjects]);
+				BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, focus[num_subjects]);
 
 				focused = qtrue;
 			}
@@ -537,10 +537,10 @@ void EnablePlayerCameraPos(gentity_t* player)
 	//holster sabers
 	player->client->ps.saber_holstered = 2;
 
-	if (player->client->ps.saberInFlight && player->client->ps.saberentity_num)
+	if (player->client->ps.saberInFlight && player->client->ps.saberentityNum)
 	{
 		//saber is out
-		gentity_t* saberent = &g_entities[player->client->ps.saberentity_num];
+		gentity_t* saberent = &g_entities[player->client->ps.saberentityNum];
 		if (saberent)
 		{
 			//force the weapon back to our hand.

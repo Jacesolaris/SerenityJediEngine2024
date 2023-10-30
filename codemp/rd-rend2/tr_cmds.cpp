@@ -28,14 +28,14 @@ R_PerformanceCounters
 =====================
 */
 void R_PerformanceCounters(void) {
-	gpuFrame_t* current_frame = backEndData->frames + (backEndData->realFrameNumber % MAX_FRAMES);
+	gpuFrame_t* currentFrame = backEndData->frames + (backEndData->realFrameNumber % MAX_FRAMES);
 
 	if (!r_speeds->integer) {
 		// clear the counters even if we aren't printing
 		Com_Memset(&tr.pc, 0, sizeof(tr.pc));
 		Com_Memset(&backEnd.pc, 0, sizeof(backEnd.pc));
-		current_frame->numTimedBlocks = 0;
-		current_frame->numTimers = 0;
+		currentFrame->numTimedBlocks = 0;
+		currentFrame->numTimers = 0;
 		return;
 	}
 
@@ -130,8 +130,8 @@ void R_PerformanceCounters(void) {
 
 	Com_Memset(&tr.pc, 0, sizeof(tr.pc));
 	Com_Memset(&backEnd.pc, 0, sizeof(backEnd.pc));
-	current_frame->numTimedBlocks = 0;
-	current_frame->numTimers = 0;
+	currentFrame->numTimedBlocks = 0;
+	currentFrame->numTimers = 0;
 }
 
 /*
@@ -364,7 +364,7 @@ RE_RotatePic
 =============
 */
 void RE_RotatePic(float x, float y, float w, float h,
-	float s1, float t1, float s2, float t2, float a, qhandle_t h_shader) {
+	float s1, float t1, float s2, float t2, float a, qhandle_t hShader) {
 	rotatePicCommand_t* cmd;
 
 	if (!tr.registered) {
@@ -375,7 +375,7 @@ void RE_RotatePic(float x, float y, float w, float h,
 		return;
 	}
 	cmd->commandId = RC_ROTATE_PIC;
-	cmd->shader = R_GetShaderByHandle(h_shader);
+	cmd->shader = R_GetShaderByHandle(hShader);
 	cmd->x = x;
 	cmd->y = y;
 	cmd->w = w;
@@ -393,7 +393,7 @@ RE_RotatePic2
 =============
 */
 void RE_RotatePic2(float x, float y, float w, float h,
-	float s1, float t1, float s2, float t2, float a, qhandle_t h_shader) {
+	float s1, float t1, float s2, float t2, float a, qhandle_t hShader) {
 	rotatePicCommand_t* cmd;
 
 	if (!tr.registered) {
@@ -404,7 +404,7 @@ void RE_RotatePic2(float x, float y, float w, float h,
 		return;
 	}
 	cmd->commandId = RC_ROTATE_PIC2;
-	cmd->shader = R_GetShaderByHandle(h_shader);
+	cmd->shader = R_GetShaderByHandle(hShader);
 	cmd->x = x;
 	cmd->y = y;
 	cmd->w = w;
@@ -422,7 +422,7 @@ RE_StretchPic
 =============
 */
 void RE_StretchPic(float x, float y, float w, float h,
-	float s1, float t1, float s2, float t2, qhandle_t h_shader) {
+	float s1, float t1, float s2, float t2, qhandle_t hShader) {
 	stretchPicCommand_t* cmd;
 
 	if (!tr.registered) {
@@ -433,7 +433,7 @@ void RE_StretchPic(float x, float y, float w, float h,
 		return;
 	}
 	cmd->commandId = RC_STRETCH_PIC;
-	cmd->shader = R_GetShaderByHandle(h_shader);
+	cmd->shader = R_GetShaderByHandle(hShader);
 	cmd->x = x;
 	cmd->y = y;
 	cmd->w = w;
@@ -505,7 +505,7 @@ void RE_BeginFrame(stereoFrame_t stereoFrame) {
 
 	int frameNumber = backEndData->realFrameNumber;
 	gpuFrame_t* thisFrame = &backEndData->frames[frameNumber % MAX_FRAMES];
-	backEndData->current_frame = thisFrame;
+	backEndData->currentFrame = thisFrame;
 	if (thisFrame->sync)
 	{
 		GLsync sync = thisFrame->sync;
@@ -749,10 +749,10 @@ void RE_BeginFrame(stereoFrame_t stereoFrame) {
 
 void R_NewFrameSync()
 {
-	gpuFrame_t* current_frame = backEndData->current_frame;
+	gpuFrame_t* currentFrame = backEndData->currentFrame;
 
-	assert(!current_frame->sync);
-	current_frame->sync = qglFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
+	assert(!currentFrame->sync);
+	currentFrame->sync = qglFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
 
 	backEndData->realFrameNumber++;
 	backEnd.framePostProcessed = qfalse;

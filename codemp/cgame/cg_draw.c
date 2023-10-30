@@ -44,7 +44,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 extern float CG_RadiusForCent(const centity_t* cent);
 qboolean CG_WorldCoordToScreenCoordFloat(vec3_t world_coord, float* x, float* y);
-qboolean CG_Calcmuzzle_point(int entity_num, vec3_t muzzle);
+qboolean CG_Calcmuzzle_point(int entityNum, vec3_t muzzle);
 static void CG_DrawSiegeTimer(int timeRemaining, qboolean isMyTeam);
 static void CG_DrawSiegeDeathTimer(int timeRemaining);
 void CG_DrawDuelistHealth(float x, float y, float w, float h, int duelist);
@@ -504,7 +504,7 @@ void CG_Draw3DModel(const float x, const float y, const float w, const float h, 
 	ent.hModel = model;
 	ent.ghoul2 = ghoul2;
 	ent.radius = g2_radius;
-	ent.custom_skin = skin;
+	ent.customSkin = skin;
 	ent.renderfx = RF_NOSHADOW; // no stencil shadows
 
 	refdef.rdflags = RDF_NOWORLDMODEL;
@@ -5822,8 +5822,8 @@ float cg_draw_radar(float y)
 				{
 					//I'm in a vehicle
 					//if it's targetting me, then play an alarm sound if I'm in a vehicle
-					if (cent->currentState.otherentity_num == cg.predicted_player_state.client_num || cent->currentState.
-						otherentity_num == cg.predicted_player_state.m_iVehicleNum)
+					if (cent->currentState.otherentityNum == cg.predicted_player_state.client_num || cent->currentState.
+						otherentityNum == cg.predicted_player_state.m_iVehicleNum)
 					{
 						if (radarLockSoundDebounceTime < cg.time)
 						{
@@ -7190,7 +7190,7 @@ extern qboolean in_camera;
 static void CG_DrawCrosshair(vec3_t world_point, const int ch_ent_valid)
 {
 	float w, h;
-	qhandle_t h_shader = 0;
+	qhandle_t hShader = 0;
 	float x, y;
 	qboolean corona = qfalse;
 	vec4_t ecolor = { 0, 0, 0, 0 };
@@ -7523,7 +7523,7 @@ static void CG_DrawCrosshair(vec3_t world_point, const int ch_ent_valid)
 			&& veh_cent->m_pVehicle->m_pVehicleInfo
 			&& veh_cent->m_pVehicle->m_pVehicleInfo->crosshairShaderHandle)
 		{
-			h_shader = veh_cent->m_pVehicle->m_pVehicleInfo->crosshairShaderHandle;
+			hShader = veh_cent->m_pVehicle->m_pVehicleInfo->crosshairShaderHandle;
 		}
 		//bigger by default
 		w = cg_crosshairSize.value * 2.0f;
@@ -7566,61 +7566,61 @@ static void CG_DrawCrosshair(vec3_t world_point, const int ch_ent_valid)
 		y = cg_crosshairY.integer;
 	}
 
-	if (!h_shader)
+	if (!hShader)
 	{
 		if (cg_weaponcrosshairs.integer)
 		{
 			if (cg.snap->ps.weapon == WP_SABER ||
 				cg.snap->ps.weapon == WP_MELEE)
 			{
-				h_shader = cgs.media.crosshairShader[1];
+				hShader = cgs.media.crosshairShader[1];
 			}
 			else if (cg.snap->ps.weapon == WP_REPEATER ||
 				cg.snap->ps.weapon == WP_BLASTER)
 			{
-				h_shader = cgs.media.crosshairShader[2];
+				hShader = cgs.media.crosshairShader[2];
 			}
 			else if (cg.snap->ps.weapon == WP_FLECHETTE ||
 				cg.snap->ps.weapon == WP_CONCUSSION ||
 				cg.snap->ps.weapon == WP_BOWCASTER ||
 				cg.snap->ps.weapon == WP_DEMP2)
 			{
-				h_shader = cgs.media.crosshairShader[3];
+				hShader = cgs.media.crosshairShader[3];
 			}
 			else if (cg.snap->ps.weapon == WP_THERMAL ||
 				cg.snap->ps.weapon == WP_DET_PACK ||
 				cg.snap->ps.weapon == WP_TRIP_MINE)
 			{
-				h_shader = cgs.media.crosshairShader[5];
+				hShader = cgs.media.crosshairShader[5];
 			}
 			else if (cg.snap->ps.weapon == WP_DISRUPTOR)
 			{
-				h_shader = cgs.media.crosshairShader[6];
+				hShader = cgs.media.crosshairShader[6];
 			}
 			else if (cg.snap->ps.weapon == WP_BRYAR_OLD ||
 				cg.snap->ps.weapon == WP_BRYAR_PISTOL ||
 				cg.snap->ps.weapon == WP_STUN_BATON)
 			{
-				h_shader = cgs.media.crosshairShader[7];
+				hShader = cgs.media.crosshairShader[7];
 			}
 			else if (cg.snap->ps.weapon == WP_ROCKET_LAUNCHER)
 			{
-				h_shader = cgs.media.crosshairShader[8];
+				hShader = cgs.media.crosshairShader[8];
 			}
 			else
 			{
-				h_shader = cgs.media.crosshairShader[Com_Clampi(1, NUM_CROSSHAIRS, cg_drawCrosshair.integer) - 1];
+				hShader = cgs.media.crosshairShader[Com_Clampi(1, NUM_CROSSHAIRS, cg_drawCrosshair.integer) - 1];
 			}
 		}
 		else
 		{
-			h_shader = cgs.media.crosshairShader[Com_Clampi(1, NUM_CROSSHAIRS, cg_drawCrosshair.integer) - 1];
+			hShader = cgs.media.crosshairShader[Com_Clampi(1, NUM_CROSSHAIRS, cg_drawCrosshair.integer) - 1];
 		}
 	}
 
 	const float ch_x = x + cg.refdef.x + 0.5f * (640 - w);
 	float ch_y = y + cg.refdef.y + 0.5f * (480 - h);
-	trap->R_DrawStretchPic(ch_x, ch_y, w, h, 0, 0, 1, 1, h_shader);
+	trap->R_DrawStretchPic(ch_x, ch_y, w, h, 0, 0, 1, 1, hShader);
 
 	//draw a health bar directly under the crosshair if we're looking at something
 	//that takes damage
@@ -8448,9 +8448,9 @@ static void CG_DrawRocketLocking(const int lock_ent_num)
 
 extern void CG_CalcVehMuzzle(Vehicle_t* p_veh, centity_t* ent, int muzzle_num);
 
-qboolean CG_CalcVehiclemuzzle_point(const int entity_num, vec3_t start, vec3_t d_f, vec3_t d_rt, vec3_t d_up)
+qboolean CG_CalcVehiclemuzzle_point(const int entityNum, vec3_t start, vec3_t d_f, vec3_t d_rt, vec3_t d_up)
 {
-	centity_t* veh_cent = &cg_entities[entity_num];
+	centity_t* veh_cent = &cg_entities[entityNum];
 	if (veh_cent->m_pVehicle && veh_cent->m_pVehicle->m_pVehicleInfo->type == VH_WALKER)
 	{
 		//draw from barrels
@@ -8524,12 +8524,12 @@ void CG_CalcEWebmuzzle_point(centity_t* cent, vec3_t start, vec3_t d_f, vec3_t d
 
 	if (bolt != -1)
 	{
-		mdxaBone_t bolt_matrix;
+		mdxaBone_t boltMatrix;
 
-		trap->G2API_GetBoltMatrix_NoRecNoRot(cent->ghoul2, 0, bolt, &bolt_matrix, cent->lerpAngles, cent->lerpOrigin,
+		trap->G2API_GetBoltMatrix_NoRecNoRot(cent->ghoul2, 0, bolt, &boltMatrix, cent->lerpAngles, cent->lerpOrigin,
 			cg.time, NULL, cent->modelScale);
-		BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, start);
-		BG_GiveMeVectorFromMatrix(&bolt_matrix, NEGATIVE_X, d_f);
+		BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, start);
+		BG_GiveMeVectorFromMatrix(&boltMatrix, NEGATIVE_X, d_f);
 
 		//these things start the shot a little inside the bbox to assure not starting in something solid
 		VectorMA(start, -16.0f, d_f, start);
@@ -8689,15 +8689,15 @@ static void CG_ScanForCrosshairEntity(void)
 		CG_Trace(&trace, start, vec3_origin, vec3_origin, end, ignore, CONTENTS_SOLID | CONTENTS_BODY);
 	}
 
-	if (trace.entity_num < MAX_CLIENTS)
+	if (trace.entityNum < MAX_CLIENTS)
 	{
-		if (CG_IsMindTricked(cg_entities[trace.entity_num].currentState.trickedentindex,
-			cg_entities[trace.entity_num].currentState.trickedentindex2,
-			cg_entities[trace.entity_num].currentState.trickedentindex3,
-			cg_entities[trace.entity_num].currentState.trickedentindex4,
+		if (CG_IsMindTricked(cg_entities[trace.entityNum].currentState.trickedentindex,
+			cg_entities[trace.entityNum].currentState.trickedentindex2,
+			cg_entities[trace.entityNum].currentState.trickedentindex3,
+			cg_entities[trace.entityNum].currentState.trickedentindex4,
 			cg.snap->ps.client_num))
 		{
-			if (cg.crosshairclient_num == trace.entity_num)
+			if (cg.crosshairclient_num == trace.entityNum)
 			{
 				cg.crosshairclient_num = ENTITYNUM_NONE;
 				cg.crosshairClientTime = 0;
@@ -8711,10 +8711,10 @@ static void CG_ScanForCrosshairEntity(void)
 
 	if (cg.snap->ps.persistant[PERS_TEAM] != TEAM_SPECTATOR)
 	{
-		if (trace.entity_num < /*MAX_CLIENTS*/ENTITYNUM_WORLD)
+		if (trace.entityNum < /*MAX_CLIENTS*/ENTITYNUM_WORLD)
 		{
-			const centity_t* veh = &cg_entities[trace.entity_num];
-			cg.crosshairclient_num = trace.entity_num;
+			const centity_t* veh = &cg_entities[trace.entityNum];
+			cg.crosshairclient_num = trace.entityNum;
 			cg.crosshairClientTime = cg.time;
 
 			if (veh->currentState.eType == ET_NPC &&
@@ -8735,7 +8735,7 @@ static void CG_ScanForCrosshairEntity(void)
 		}
 	}
 
-	if (trace.entity_num >= MAX_CLIENTS)
+	if (trace.entityNum >= MAX_CLIENTS)
 	{
 		return;
 	}
@@ -8748,7 +8748,7 @@ static void CG_ScanForCrosshairEntity(void)
 	}
 
 	// update the fade timer
-	cg.crosshairclient_num = trace.entity_num;
+	cg.crosshairclient_num = trace.entityNum;
 	cg.crosshairClientTime = cg.time;
 }
 
@@ -8815,7 +8815,7 @@ qboolean CG_CheckClientVisibility(const centity_t* cent)
 
 	CG_Trace(&trace, start, NULL, NULL, end, cg.client_num, MASK_PLAYERSOLID);
 
-	const centity_t* trace_ent = &cg_entities[trace.entity_num];
+	const centity_t* trace_ent = &cg_entities[trace.entityNum];
 
 	if (trace_ent == cent || trace.fraction == 1.0f)
 	{
@@ -10205,7 +10205,7 @@ static void CG_DrawSiegeHUDItem(void)
 	}
 	else
 	{
-		handle = cgs.game_models[cent->currentState.model_index];
+		handle = cgs.game_models[cent->currentState.modelIndex];
 		g2 = NULL;
 	}
 

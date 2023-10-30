@@ -42,12 +42,12 @@ R_DrawElements
 ==================
 */
 
-void R_DrawElementsVBO(int num_indexes, glIndex_t firstIndex, glIndex_t minIndex, glIndex_t maxIndex)
+void R_DrawElementsVBO(int numIndexes, glIndex_t firstIndex, glIndex_t minIndex, glIndex_t maxIndex)
 {
 	int offset = firstIndex * sizeof(glIndex_t) +
-		(tess.useInternalVBO ? backEndData->current_frame->dynamicIboCommitOffset : 0);
+		(tess.useInternalVBO ? backEndData->currentFrame->dynamicIboCommitOffset : 0);
 
-	GL_DrawIndexed(GL_TRIANGLES, num_indexes, GL_INDEX_TYPE, offset, 1, 0);
+	GL_DrawIndexed(GL_TRIANGLES, numIndexes, GL_INDEX_TYPE, offset, 1, 0);
 }
 
 static void R_DrawMultiElementsVBO(int multiDrawPrimitives, glIndex_t* multiDrawMinIndex, glIndex_t* multiDrawMaxIndex,
@@ -138,9 +138,9 @@ to overflow.
 void RB_BeginSurface(shader_t* shader, int fogNum, int cubemapIndex) {
 	shader_t* state = (shader->remappedShader) ? shader->remappedShader : shader;
 
-	tess.num_indexes = 0;
+	tess.numIndexes = 0;
 	tess.firstIndex = 0;
-	tess.num_vertexes = 0;
+	tess.numVertexes = 0;
 	tess.multiDrawPrimitives = 0;
 	tess.shader = state;
 	tess.fogNum = fogNum;
@@ -153,7 +153,7 @@ void RB_BeginSurface(shader_t* shader, int fogNum, int cubemapIndex) {
 	tess.externalIBO = nullptr;
 	tess.useInternalVBO = qtrue;
 
-	tess.shaderTime = backEnd.refdef.floatTime - tess.shader->time_offset;
+	tess.shaderTime = backEnd.refdef.floatTime - tess.shader->timeOffset;
 	if (tess.shader->clampTime && tess.shaderTime >= tess.shader->clampTime) {
 		tess.shaderTime = tess.shader->clampTime;
 	}
@@ -476,7 +476,7 @@ static void ComputeShaderColors(shaderStage_t* pStage, vec4_t baseColor, vec4_t 
 	{
 		int scale;
 
-		for (i = 0; i < tess.num_vertexes; i++)
+		for (i = 0; i < tess.numVertexes; i++)
 		{
 			scale = (tess.svars.colors[i][0] + tess.svars.colors[i][1] + tess.svars.colors[i][2]) / 3;
 			tess.svars.colors[i][0] = tess.svars.colors[i][1] = tess.svars.colors[i][2] = scale;
@@ -523,9 +523,9 @@ static void CaptureDrawData(const shaderCommands_t* input, shaderStage_t* stage,
 
 	if (input->multiDrawPrimitives)
 	{
-		int num_indexes = 0;
+		int numIndexes = 0;
 		for (int i = 0; i < input->multiDrawPrimitives; i++)
-			num_indexes += input->multiDrawNumIndexes[i];
+			numIndexes += input->multiDrawNumIndexes[i];
 
 		const char* data = va("%d,%d,%s,%d,%s,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,Y\n",
 			tr.frameCount,
@@ -538,7 +538,7 @@ static void CaptureDrawData(const shaderCommands_t* input, shaderStage_t* stage,
 			glState.glStateBits,
 			glState.currentVBO->vertexesVBO,
 			glState.currentIBO->indexesVBO,
-			num_indexes / 3);
+			numIndexes / 3);
 		ri->FS_Write(data, strlen(data), tr.debugFile);
 	}
 	else
@@ -554,7 +554,7 @@ static void CaptureDrawData(const shaderCommands_t* input, shaderStage_t* stage,
 			glState.glStateBits,
 			glState.currentVBO->vertexesVBO,
 			glState.currentIBO->indexesVBO,
-			input->num_indexes / 3);
+			input->numIndexes / 3);
 		ri->FS_Write(data, strlen(data), tr.debugFile);
 	}
 }
@@ -670,12 +670,12 @@ void RB_FillDrawCommand(
 	else
 	{
 		int offset = input->firstIndex * sizeof(glIndex_t) +
-			(input->useInternalVBO ? backEndData->current_frame->dynamicIboCommitOffset : 0);
+			(input->useInternalVBO ? backEndData->currentFrame->dynamicIboCommitOffset : 0);
 
 		drawCmd.type = DRAW_COMMAND_INDEXED;
 		drawCmd.params.indexed.indexType = GL_INDEX_TYPE;
 		drawCmd.params.indexed.firstIndex = offset;
-		drawCmd.params.indexed.numIndices = input->num_indexes;
+		drawCmd.params.indexed.numIndices = input->numIndexes;
 		drawCmd.params.indexed.baseVertex = 0;
 	}
 }
@@ -683,7 +683,7 @@ void RB_FillDrawCommand(
 static UniformBlockBinding GetCameraBlockUniformBinding(
 	const trRefEntity_t* refEntity)
 {
-	const GLuint currentFrameUbo = backEndData->current_frame->ubo;
+	const GLuint currentFrameUbo = backEndData->currentFrame->ubo;
 	UniformBlockBinding binding = {};
 	binding.block = UNIFORM_BLOCK_CAMERA;
 
@@ -707,7 +707,7 @@ static UniformBlockBinding GetCameraBlockUniformBinding(
 
 static UniformBlockBinding GetLightsBlockUniformBinding()
 {
-	const GLuint currentFrameUbo = backEndData->current_frame->ubo;
+	const GLuint currentFrameUbo = backEndData->currentFrame->ubo;
 	UniformBlockBinding binding = {};
 	binding.block = UNIFORM_BLOCK_LIGHTS;
 
@@ -726,7 +726,7 @@ static UniformBlockBinding GetLightsBlockUniformBinding()
 
 static UniformBlockBinding GetSceneBlockUniformBinding()
 {
-	const GLuint currentFrameUbo = backEndData->current_frame->ubo;
+	const GLuint currentFrameUbo = backEndData->currentFrame->ubo;
 	UniformBlockBinding binding = {};
 	binding.block = UNIFORM_BLOCK_SCENE;
 
@@ -745,7 +745,7 @@ static UniformBlockBinding GetSceneBlockUniformBinding()
 
 static UniformBlockBinding GetFogsBlockUniformBinding()
 {
-	const GLuint currentFrameUbo = backEndData->current_frame->ubo;
+	const GLuint currentFrameUbo = backEndData->currentFrame->ubo;
 	UniformBlockBinding binding = {};
 	binding.block = UNIFORM_BLOCK_FOGS;
 
@@ -765,7 +765,7 @@ static UniformBlockBinding GetFogsBlockUniformBinding()
 static UniformBlockBinding GetEntityBlockUniformBinding(
 	const trRefEntity_t* refEntity)
 {
-	const GLuint currentFrameUbo = backEndData->current_frame->ubo;
+	const GLuint currentFrameUbo = backEndData->currentFrame->ubo;
 	UniformBlockBinding binding = {};
 	binding.block = UNIFORM_BLOCK_ENTITY;
 
@@ -788,8 +788,8 @@ static UniformBlockBinding GetEntityBlockUniformBinding(
 		}
 		else
 		{
-			const int refentity_num = refEntity - backEnd.refdef.entities;
-			binding.offset = tr.entityUboOffsets[refentity_num];
+			const int refentityNum = refEntity - backEnd.refdef.entities;
+			binding.offset = tr.entityUboOffsets[refentityNum];
 		}
 	}
 
@@ -799,7 +799,7 @@ static UniformBlockBinding GetEntityBlockUniformBinding(
 static UniformBlockBinding GetBonesBlockUniformBinding(
 	const trRefEntity_t* refEntity)
 {
-	const GLuint currentFrameUbo = backEndData->current_frame->ubo;
+	const GLuint currentFrameUbo = backEndData->currentFrame->ubo;
 	UniformBlockBinding binding = {};
 	binding.ubo = currentFrameUbo;
 	binding.block = UNIFORM_BLOCK_BONES;
@@ -819,7 +819,7 @@ static UniformBlockBinding GetBonesBlockUniformBinding(
 static UniformBlockBinding GetShaderInstanceBlockUniformBinding(
 	const trRefEntity_t* refEntity, const shader_t* shader)
 {
-	const GLuint currentFrameUbo = backEndData->current_frame->ubo;
+	const GLuint currentFrameUbo = backEndData->currentFrame->ubo;
 	UniformBlockBinding binding = {};
 	binding.ubo = tr.shaderInstanceUbo;
 	binding.block = UNIFORM_BLOCK_SHADER_INSTANCE;
@@ -843,7 +843,7 @@ DrawTris
 Draws triangle outlines for debugging
 ================
 */
-static void DrawTris(shaderCommands_t* input, const VertexArraysProperties* vertexArrays) {
+static void DrawTris(const shaderCommands_t* input, const VertexArraysProperties* vertexArrays) {
 	Allocator& frameAllocator = *backEndData->perFrameMemory;
 	vertexAttribute_t attribs[ATTR_INDEX_MAX] = {};
 	GL_VertexArraysToAttribs(attribs, ARRAY_LEN(attribs), vertexArrays);
@@ -891,7 +891,7 @@ static void DrawTris(shaderCommands_t* input, const VertexArraysProperties* vert
 		item.renderState.cullType = RB_GetCullType(&backEnd.viewParms, backEnd.currentEntity, input->shader->cullType);
 		item.renderState.depthRange = RB_GetDepthRange(backEnd.currentEntity, input->shader);
 		item.program = sp;
-		item.ibo = input->externalIBO ? input->externalIBO : backEndData->current_frame->dynamicIbo;
+		item.ibo = input->externalIBO ? input->externalIBO : backEndData->currentFrame->dynamicIbo;
 		item.uniformData = uniformDataWriter.Finish(frameAllocator);
 		item.samplerBindings = samplerBindingsWriter.Finish(
 			frameAllocator, &item.numSamplerBindings);
@@ -916,8 +916,23 @@ DrawNormals
 Draws vertex normals for debugging
 ================
 */
-static void DrawNormals(shaderCommands_t* input) {
-	//FIXME: implement this
+static void DrawNormals(const shaderCommands_t* input) 
+{
+	//GL_Bind(tr.whiteImage);
+	//qglColor3f(1, 1, 1);
+	//qglDepthRange(0, 0);	// never occluded
+	//GL_State(GLS_POLYMODE_LINE | GLS_DEPTHMASK_TRUE);
+
+	//qglBegin(GL_LINES);
+	//for (int i = 0; i < input->numVertexes; i++) {
+	//	vec3_t temp;
+	//	qglVertex3fv(input->xyz[i]);
+	//	VectorMA(input->xyz[i], 2, input->normal[i], temp);
+	//	qglVertex3fv(temp);
+	//}
+	//qglEnd();
+
+	//qglDepthRange(0, 1);
 }
 
 static void ProjectPshadowVBOGLSL(const shaderCommands_t* input, const VertexArraysProperties* vertexArrays) {
@@ -986,7 +1001,7 @@ static void ProjectPshadowVBOGLSL(const shaderCommands_t* input, const VertexArr
 		item.renderState.cullType = cullType;
 		item.program = sp;
 		item.renderState.depthRange = RB_GetDepthRange(backEnd.currentEntity, input->shader);
-		item.ibo = input->externalIBO ? input->externalIBO : backEndData->current_frame->dynamicIbo;
+		item.ibo = input->externalIBO ? input->externalIBO : backEndData->currentFrame->dynamicIbo;
 
 		item.numAttributes = vertexArrays->numVertexArrays;
 		item.attributes = ojkAllocArray<vertexAttribute_t>(
@@ -1003,7 +1018,7 @@ static void ProjectPshadowVBOGLSL(const shaderCommands_t* input, const VertexArr
 		uint32_t key = RB_CreateSortKey(item, 13, input->shader->sort);
 		RB_AddDrawItem(backEndData->currentPass, key, item);
 
-		backEnd.pc.c_totalIndexes += tess.num_indexes;
+		backEnd.pc.c_totalIndexes += tess.numIndexes;
 
 		RB_BinTriangleCounts();
 	}
@@ -1081,7 +1096,7 @@ static void RB_FogPass(shaderCommands_t* input, const VertexArraysProperties* ve
 	item.renderState.depthRange = RB_GetDepthRange(backEnd.currentEntity, input->shader);
 	item.program = sp;
 	item.uniformData = uniformDataWriter.Finish(frameAllocator);
-	item.ibo = input->externalIBO ? input->externalIBO : backEndData->current_frame->dynamicIbo;
+	item.ibo = input->externalIBO ? input->externalIBO : backEndData->currentFrame->dynamicIbo;
 	item.samplerBindings = samplerBindingsWriter.Finish(
 		frameAllocator, &item.numSamplerBindings);
 
@@ -1338,7 +1353,7 @@ void RB_ShadowTessEnd(shaderCommands_t* input, const VertexArraysProperties* ver
 		return;
 	}
 
-	if (!input->num_vertexes || !input->num_indexes || input->useInternalVBO)
+	if (!input->numVertexes || !input->numIndexes || input->useInternalVBO)
 	{
 		return;
 	}
@@ -1365,7 +1380,7 @@ void RB_ShadowTessEnd(shaderCommands_t* input, const VertexArraysProperties* ver
 	DepthRange range = { 0.0f, 1.0f };
 	item.renderState.depthRange = range;
 	item.program = &tr.volumeShadowShader;
-	item.ibo = input->externalIBO ? input->externalIBO : backEndData->current_frame->dynamicIbo;
+	item.ibo = input->externalIBO ? input->externalIBO : backEndData->currentFrame->dynamicIbo;
 
 	DrawItemSetVertexAttributes(
 		item, attribs, vertexArrays->numVertexArrays, frameAllocator);
@@ -1802,7 +1817,7 @@ static void RB_IterateStagesGeneric(shaderCommands_t* input, const VertexArraysP
 		item.renderState.cullType = forceRefraction ? CT_TWO_SIDED : cullType;
 		item.renderState.depthRange = RB_GetDepthRange(backEnd.currentEntity, input->shader);
 		item.program = sp;
-		item.ibo = input->externalIBO ? input->externalIBO : backEndData->current_frame->dynamicIbo;
+		item.ibo = input->externalIBO ? input->externalIBO : backEndData->currentFrame->dynamicIbo;
 		item.uniformData = uniformDataWriter.Finish(frameAllocator);
 		item.samplerBindings = samplerBindingsWriter.Finish(
 			frameAllocator, &item.numSamplerBindings);
@@ -1835,7 +1850,7 @@ static void RB_IterateStagesGeneric(shaderCommands_t* input, const VertexArraysP
 void RB_StageIteratorGeneric(void)
 {
 	shaderCommands_t* input = &tess;
-	if (!input->num_vertexes || !input->num_indexes)
+	if (!input->numVertexes || !input->numIndexes)
 	{
 		return;
 	}
@@ -1874,7 +1889,7 @@ void RB_StageIteratorGeneric(void)
 		for (int i = 0; i < vertexArrays.numVertexArrays; i++)
 		{
 			int attributeIndex = vertexArrays.enabledAttributes[i];
-			vertexArrays.offsets[attributeIndex] += backEndData->current_frame->dynamicVboCommitOffset;
+			vertexArrays.offsets[attributeIndex] += backEndData->currentFrame->dynamicVboCommitOffset;
 		}
 	}
 	else
@@ -1936,7 +1951,7 @@ void RB_StageIteratorGeneric(void)
 
 void RB_BinTriangleCounts(void)
 {
-	int numTriangles = tess.num_indexes / 3;
+	int numTriangles = tess.numIndexes / 3;
 	if (numTriangles < 20)
 		backEnd.pc.c_triangleCountBins[TRI_BIN_0_19]++;
 	else if (numTriangles < 50)
@@ -1965,7 +1980,7 @@ void RB_EndSurface(void) {
 
 	input = &tess;
 
-	if (input->num_indexes == 0 || input->num_vertexes == 0) {
+	if (input->numIndexes == 0 || input->numVertexes == 0) {
 		return;
 	}
 
@@ -2001,9 +2016,9 @@ void RB_EndSurface(void) {
 	// update performance counters
 	//
 	backEnd.pc.c_shaders++;
-	backEnd.pc.c_vertexes += tess.num_vertexes;
-	backEnd.pc.c_indexes += tess.num_indexes;
-	backEnd.pc.c_totalIndexes += tess.num_indexes * tess.numPasses;
+	backEnd.pc.c_vertexes += tess.numVertexes;
+	backEnd.pc.c_indexes += tess.numIndexes;
+	backEnd.pc.c_totalIndexes += tess.numIndexes * tess.numPasses;
 
 	RB_BinTriangleCounts();
 
@@ -2013,8 +2028,8 @@ void RB_EndSurface(void) {
 	tess.currentStageIteratorFunc();
 
 	// clear shader so we can tell we don't have any unclosed surfaces
-	tess.num_indexes = 0;
-	tess.num_vertexes = 0;
+	tess.numIndexes = 0;
+	tess.numVertexes = 0;
 	tess.firstIndex = 0;
 	tess.multiDrawPrimitives = 0;
 	tess.externalIBO = nullptr;

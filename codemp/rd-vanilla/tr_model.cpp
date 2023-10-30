@@ -182,7 +182,7 @@ qboolean RE_RegisterModels_GetDiskFile(const char* psModelFileName, void** ppvBu
 //
 // don't use ri->xxx functions in case running on dedicated
 //
-void* RE_RegisterModels_Malloc(const int i_size, void* pvDiskBufferIfJustLoaded, const char* psModelFileName, qboolean* pqbAlreadyFound, const memtag_t e_tag)
+void* RE_RegisterModels_Malloc(const int iSize, void* pvDiskBufferIfJustLoaded, const char* psModelFileName, qboolean* pqbAlreadyFound, const memtag_t eTag)
 {
 	char sModelName[MAX_QPATH];
 
@@ -204,15 +204,15 @@ void* RE_RegisterModels_Malloc(const int i_size, void* pvDiskBufferIfJustLoaded,
 		//
 		if (pvDiskBufferIfJustLoaded)
 		{
-			Z_MorphMallocTag(pvDiskBufferIfJustLoaded, e_tag);
+			Z_MorphMallocTag(pvDiskBufferIfJustLoaded, eTag);
 		}
 		else
 		{
-			pvDiskBufferIfJustLoaded = Z_Malloc(i_size, e_tag, qfalse);
+			pvDiskBufferIfJustLoaded = Z_Malloc(iSize, eTag, qfalse);
 		}
 
 		ModelBin.pModelDiskImage = pvDiskBufferIfJustLoaded;
-		ModelBin.iAllocSize = i_size;
+		ModelBin.iAllocSize = iSize;
 
 		int iCheckSum;
 		if (ri->FS_FileIsInPAK(sModelName, &iCheckSum) == 1)
@@ -255,7 +255,7 @@ void* RE_RegisterModels_Malloc(const int i_size, void* pvDiskBufferIfJustLoaded,
 
 // Unfortunately the dedicated server also hates shader loading. So we need an alternate of this func.
 //
-void* RE_RegisterServerModels_Malloc(const int i_size, void* pvDiskBufferIfJustLoaded, const char* psModelFileName, qboolean* pqbAlreadyFound, const memtag_t e_tag)
+void* RE_RegisterServerModels_Malloc(const int iSize, void* pvDiskBufferIfJustLoaded, const char* psModelFileName, qboolean* pqbAlreadyFound, const memtag_t eTag)
 {
 	char sModelName[MAX_QPATH];
 
@@ -275,15 +275,15 @@ void* RE_RegisterServerModels_Malloc(const int i_size, void* pvDiskBufferIfJustL
 		//
 		if (pvDiskBufferIfJustLoaded)
 		{
-			Z_MorphMallocTag(pvDiskBufferIfJustLoaded, e_tag);
+			Z_MorphMallocTag(pvDiskBufferIfJustLoaded, eTag);
 		}
 		else
 		{
-			pvDiskBufferIfJustLoaded = Z_Malloc(i_size, e_tag, qfalse);
+			pvDiskBufferIfJustLoaded = Z_Malloc(iSize, eTag, qfalse);
 		}
 
 		ModelBin.pModelDiskImage = pvDiskBufferIfJustLoaded;
-		ModelBin.iAllocSize = i_size;
+		ModelBin.iAllocSize = iSize;
 
 		int iCheckSum;
 		if (ri->FS_FileIsInPAK(sModelName, &iCheckSum) == 1)
@@ -694,15 +694,15 @@ qboolean ServerLoadMDXA(model_t* mod, void* buffer, const char* mod_name, qboole
 
 		LL(mdxa->ident);
 		LL(mdxa->version);
-		LL(mdxa->num_frames);
+		LL(mdxa->numFrames);
 		LL(mdxa->ofsFrames);
-		LL(mdxa->num_bones);
+		LL(mdxa->numBones);
 		LL(mdxa->ofsCompBonePool);
 		LL(mdxa->ofsSkel);
 		LL(mdxa->ofsEnd);
 	}
 
-	if (mdxa->num_frames < 1)
+	if (mdxa->numFrames < 1)
 	{
 		return qfalse;
 	}
@@ -715,7 +715,7 @@ qboolean ServerLoadMDXA(model_t* mod, void* buffer, const char* mod_name, qboole
 #ifdef Q3_BIG_ENDIAN
 	// swap the bone info
 	offsets = (mdxaSkelOffsets_t*)((byte*)mdxa + sizeof(mdxaHeader_t));
-	for (i = 0; i < mdxa->num_bones; i++)
+	for (i = 0; i < mdxa->numBones; i++)
 	{
 		LL(offsets->offsets[i]);
 		boneInfo = (mdxaSkel_t*)((byte*)mdxa + sizeof(mdxaHeader_t) + offsets->offsets[i]);
@@ -742,11 +742,11 @@ qboolean ServerLoadMDXA(model_t* mod, void* buffer, const char* mod_name, qboole
 	// Find the largest index by iterating through all frames.
 	// It is not guaranteed that the compressed bone pool resides
 	// at the end of the file.
-	for (i = 0; i < mdxa->num_frames; i++)
+	for (i = 0; i < mdxa->numFrames; i++)
 	{
-		for (j = 0; j < mdxa->num_bones; j++)
+		for (j = 0; j < mdxa->numBones; j++)
 		{
-			k = (i * mdxa->num_bones * 3) + (j * 3);	// iOffsetToIndex
+			k = (i * mdxa->numBones * 3) + (j * 3);	// iOffsetToIndex
 			pIndex = (mdxaIndex_t*)((byte*)mdxa + mdxa->ofsFrames + k);
 			tmp = (pIndex->iIndex[2] << 16) + (pIndex->iIndex[1] << 8) + (pIndex->iIndex[0]);
 
@@ -792,7 +792,7 @@ qboolean ServerLoadMDXM(model_t* mod, void* buffer, const char* mod_name, qboole
 	int* boneRef;
 	mdxmLODSurfOffset_t* indexes;
 	mdxmVertexTexCoord_t* pTexCoords;
-	mdxmHierarchyOffsets_t* surf_indexes;
+	mdxmHierarchyOffsets_t* surfIndexes;
 #endif
 
 	pinmodel = static_cast<mdxmHeader_t*>(buffer);
@@ -827,7 +827,7 @@ qboolean ServerLoadMDXM(model_t* mod, void* buffer, const char* mod_name, qboole
 
 		LL(mdxm->ident);
 		LL(mdxm->version);
-		LL(mdxm->num_bones);
+		LL(mdxm->numBones);
 		LL(mdxm->numLODs);
 		LL(mdxm->ofsLODs);
 		LL(mdxm->numSurfaces);
@@ -851,7 +851,7 @@ qboolean ServerLoadMDXM(model_t* mod, void* buffer, const char* mod_name, qboole
 
 	surfInfo = (mdxmSurfHierarchy_t*)((byte*)mdxm + mdxm->ofsSurfHierarchy);
 #ifdef Q3_BIG_ENDIAN
-	surf_indexes = (mdxmHierarchyOffsets_t*)((byte*)mdxm + sizeof(mdxmHeader_t));
+	surfIndexes = (mdxmHierarchyOffsets_t*)((byte*)mdxm + sizeof(mdxmHeader_t));
 #endif
 	for (i = 0; i < mdxm->numSurfaces; i++)
 	{
@@ -874,8 +874,8 @@ qboolean ServerLoadMDXM(model_t* mod, void* buffer, const char* mod_name, qboole
 
 #ifdef Q3_BIG_ENDIAN
 		// swap the surface offset
-		LL(surf_indexes->offsets[i]);
-		assert(surfInfo == (mdxmSurfHierarchy_t*)((byte*)surf_indexes + surf_indexes->offsets[i]));
+		LL(surfIndexes->offsets[i]);
+		assert(surfInfo == (mdxmSurfHierarchy_t*)((byte*)surfIndexes + surfIndexes->offsets[i]));
 #endif
 
 		// find the next surface
@@ -895,7 +895,7 @@ qboolean ServerLoadMDXM(model_t* mod, void* buffer, const char* mod_name, qboole
 		{
 			LL(surf->thisSurfaceIndex);
 			LL(surf->ofsHeader);
-			LL(surf->num_verts);
+			LL(surf->numVerts);
 			LL(surf->ofsVerts);
 			LL(surf->numTriangles);
 			LL(surf->ofsTriangles);
@@ -905,7 +905,7 @@ qboolean ServerLoadMDXM(model_t* mod, void* buffer, const char* mod_name, qboole
 
 			triCount += surf->numTriangles;
 
-			if (surf->num_verts > SHADER_MAX_VERTEXES) {
+			if (surf->numVerts > SHADER_MAX_VERTEXES) {
 				return qfalse;
 			}
 			if (surf->numTriangles * 3 > SHADER_MAX_INDEXES) {
@@ -939,9 +939,9 @@ qboolean ServerLoadMDXM(model_t* mod, void* buffer, const char* mod_name, qboole
 
 			// swap all the vertexes
 			v = (mdxmVertex_t*)((byte*)surf + surf->ofsVerts);
-			pTexCoords = (mdxmVertexTexCoord_t*)&v[surf->num_verts];
+			pTexCoords = (mdxmVertexTexCoord_t*)&v[surf->numVerts];
 
-			for (j = 0; j < surf->num_verts; j++)
+			for (j = 0; j < surf->numVerts; j++)
 			{
 				LF(v->normal[0]);
 				LF(v->normal[1]);
@@ -1130,7 +1130,7 @@ optimization to prevent disk rescanning if they are
 asked for again.
 ====================
 */
-static qhandle_t RE_RegisterModel_Actual(const char* name) 
+static qhandle_t RE_RegisterModel_Actual(const char* name)
 {
 	model_t* mod;
 	unsigned* buf = nullptr;
@@ -1138,13 +1138,12 @@ static qhandle_t RE_RegisterModel_Actual(const char* name)
 	qboolean	loaded;
 	modelHash_t* mh;
 
-
 	if (!name || !name[0]) {
 		ri->Printf(PRINT_ALL, "RE_RegisterModel: NULL name\n");
 		return 0;
 	}
 
-	if (strlen(name) >= MAX_SKINNAME_PATH) 
+	if (strlen(name) >= MAX_SKINNAME_PATH)
 	{
 		ri->Printf(PRINT_DEVELOPER, S_COLOR_RED "Model name exceeds MAX_SKINNAME_PATH\n");
 		return 0;
@@ -1397,7 +1396,7 @@ static qboolean R_LoadMD3(model_t* mod, int lod, void* buffer, const char* name,
 
 		LL(mod->md3[lod]->ident);
 		LL(mod->md3[lod]->version);
-		LL(mod->md3[lod]->num_frames);
+		LL(mod->md3[lod]->numFrames);
 		LL(mod->md3[lod]->numTags);
 		LL(mod->md3[lod]->numSurfaces);
 		LL(mod->md3[lod]->ofsFrames);
@@ -1406,7 +1405,7 @@ static qboolean R_LoadMD3(model_t* mod, int lod, void* buffer, const char* name,
 		LL(mod->md3[lod]->ofsEnd);
 	}
 
-	if (mod->md3[lod]->num_frames < 1) {
+	if (mod->md3[lod]->numFrames < 1) {
 		ri->Printf(PRINT_ALL, S_COLOR_YELLOW  "R_LoadMD3: %s has no frames\n", name);
 		return qfalse;
 	}
@@ -1419,7 +1418,7 @@ static qboolean R_LoadMD3(model_t* mod, int lod, void* buffer, const char* name,
 #ifdef Q3_BIG_ENDIAN
 	// swap all the frames
 	frame = (md3Frame_t*)((byte*)mod->md3[lod] + mod->md3[lod]->ofsFrames);
-	for (i = 0; i < mod->md3[lod]->num_frames; i++, frame++) {
+	for (i = 0; i < mod->md3[lod]->numFrames; i++, frame++) {
 		LF(frame->radius);
 		for (j = 0; j < 3; j++) {
 			LF(frame->bounds[0][j]);
@@ -1430,7 +1429,7 @@ static qboolean R_LoadMD3(model_t* mod, int lod, void* buffer, const char* name,
 
 	// swap all the tags
 	tag = (md3Tag_t*)((byte*)mod->md3[lod] + mod->md3[lod]->ofsTags);
-	for (i = 0; i < mod->md3[lod]->numTags * mod->md3[lod]->num_frames; i++, tag++) {
+	for (i = 0; i < mod->md3[lod]->numTags * mod->md3[lod]->numFrames; i++, tag++) {
 		for (j = 0; j < 3; j++) {
 			LF(tag->origin[j]);
 			LF(tag->axis[0][j]);
@@ -1444,19 +1443,19 @@ static qboolean R_LoadMD3(model_t* mod, int lod, void* buffer, const char* name,
 	surf = (md3Surface_t*)((byte*)mod->md3[lod] + mod->md3[lod]->ofsSurfaces);
 	for (int i = 0; i < mod->md3[lod]->numSurfaces; i++) {
 		LL(surf->flags);
-		LL(surf->num_frames);
+		LL(surf->numFrames);
 		LL(surf->numShaders);
 		LL(surf->numTriangles);
 		LL(surf->ofsTriangles);
-		LL(surf->num_verts);
+		LL(surf->numVerts);
 		LL(surf->ofsShaders);
 		LL(surf->ofsSt);
 		LL(surf->ofsXyzNormals);
 		LL(surf->ofsEnd);
 
-		if (surf->num_verts >= SHADER_MAX_VERTEXES) {
+		if (surf->numVerts >= SHADER_MAX_VERTEXES) {
 			Com_Error(ERR_DROP, "R_LoadMD3: %s has more than %i verts on %s (%i)",
-				name, SHADER_MAX_VERTEXES - 1, surf->name[0] ? surf->name : "a surface", surf->num_verts);
+				name, SHADER_MAX_VERTEXES - 1, surf->name[0] ? surf->name : "a surface", surf->numVerts);
 		}
 		if (surf->numTriangles * 3 >= SHADER_MAX_INDEXES) {
 			Com_Error(ERR_DROP, "R_LoadMD3: %s has more than %i triangles on %s (%i)",
@@ -1498,14 +1497,14 @@ static qboolean R_LoadMD3(model_t* mod, int lod, void* buffer, const char* name,
 
 		// swap all the ST
 		st = (md3St_t*)((byte*)surf + surf->ofsSt);
-		for (j = 0; j < surf->num_verts; j++, st++) {
+		for (j = 0; j < surf->numVerts; j++, st++) {
 			LF(st->st[0]);
 			LF(st->st[1]);
 		}
 
 		// swap all the XyzNormals
 		xyz = (md3XyzNormal_t*)((byte*)surf + surf->ofsXyzNormals);
-		for (j = 0; j < surf->num_verts * surf->num_frames; j++, xyz++)
+		for (j = 0; j < surf->numVerts * surf->numFrames; j++, xyz++)
 		{
 			LS(xyz->xyz[0]);
 			LS(xyz->xyz[1]);
@@ -1629,9 +1628,9 @@ R_GetTag
 ================
 */
 static md3Tag_t* R_GetTag(md3Header_t* mod, int frame, const char* tagName) {
-	if (frame >= mod->num_frames) {
+	if (frame >= mod->numFrames) {
 		// it is possible to have a bad frame while changing models, so don't error
-		frame = mod->num_frames - 1;
+		frame = mod->numFrames - 1;
 	}
 
 	md3Tag_t* tag = (md3Tag_t*)((byte*)mod + mod->ofsTags) + frame * mod->numTags;
@@ -1649,7 +1648,7 @@ static md3Tag_t* R_GetTag(md3Header_t* mod, int frame, const char* tagName) {
 R_LerpTag
 ================
 */
-int R_LerpTag(orientation_t* tag, const qhandle_t handle, const int start_frame, const int end_frame,
+int R_LerpTag(orientation_t* tag, const qhandle_t handle, const int startFrame, const int endFrame,
 	const float frac, const char* tagName) {
 	const model_t* model = R_GetModelByHandle(handle);
 	if (!model->md3[0]) {
@@ -1658,8 +1657,8 @@ int R_LerpTag(orientation_t* tag, const qhandle_t handle, const int start_frame,
 		return qfalse;
 	}
 
-	const md3Tag_t* start = R_GetTag(model->md3[0], start_frame, tagName);
-	const md3Tag_t* end = R_GetTag(model->md3[0], end_frame, tagName);
+	const md3Tag_t* start = R_GetTag(model->md3[0], startFrame, tagName);
+	const md3Tag_t* end = R_GetTag(model->md3[0], endFrame, tagName);
 	if (!start || !end) {
 		AxisClear(tag->axis);
 		VectorClear(tag->origin);

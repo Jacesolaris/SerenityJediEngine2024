@@ -131,7 +131,7 @@ void RB_CalcDeformVertexes(deformStage_t* ds)
 	{
 		scale = EvalWaveForm(&ds->deformationWave);
 
-		for (i = 0; i < tess.num_vertexes; i++, xyz += 4, normal++)
+		for (i = 0; i < tess.numVertexes; i++, xyz += 4, normal++)
 		{
 			R_VboUnpackNormal(offset, *normal);
 
@@ -144,7 +144,7 @@ void RB_CalcDeformVertexes(deformStage_t* ds)
 	{
 		table = TableForFunc(ds->deformationWave.func);
 
-		for (i = 0; i < tess.num_vertexes; i++, xyz += 4, normal++)
+		for (i = 0; i < tess.numVertexes; i++, xyz += 4, normal++)
 		{
 			float off = (xyz[0] + xyz[1] + xyz[2]) * ds->deformationSpread;
 
@@ -175,7 +175,7 @@ void RB_CalcDeformNormals(deformStage_t* ds) {
 	float* xyz = (float*)tess.xyz;
 	uint32_t* normal = (uint32_t*)tess.normal;
 
-	for (i = 0; i < tess.num_vertexes; i++, xyz += 4, normal++) {
+	for (i = 0; i < tess.numVertexes; i++, xyz += 4, normal++) {
 		vec3_t fNormal;
 
 		R_VboUnpackNormal(fNormal, *normal);
@@ -216,7 +216,7 @@ void RB_CalcBulgeVertexes(deformStage_t* ds) {
 
 	now = backEnd.refdef.time * ds->bulgeSpeed * 0.001f;
 
-	for (i = 0; i < tess.num_vertexes; i++, xyz += 4, st += NUM_TESS_TEXCOORDS * 2, normal++) {
+	for (i = 0; i < tess.numVertexes; i++, xyz += 4, st += NUM_TESS_TEXCOORDS * 2, normal++) {
 		int		off;
 		float scale;
 		vec3_t fNormal;
@@ -257,7 +257,7 @@ void RB_CalcMoveVertexes(deformStage_t* ds) {
 	VectorScale(ds->moveVector, scale, offset);
 
 	xyz = (float*)tess.xyz;
-	for (i = 0; i < tess.num_vertexes; i++, xyz += 4) {
+	for (i = 0; i < tess.numVertexes; i++, xyz += 4) {
 		VectorAdd(xyz, offset, xyz);
 	}
 }
@@ -313,8 +313,8 @@ void DeformText(const char* text) {
 	VectorMA(origin, (len - 1), width, origin);
 
 	// clear the shader indexes
-	tess.num_indexes = 0;
-	tess.num_vertexes = 0;
+	tess.numIndexes = 0;
+	tess.numVertexes = 0;
 	tess.firstIndex = 0;
 
 	color[0] = color[1] = color[2] = color[3] = 1.0f;
@@ -369,16 +369,16 @@ static void AutospriteDeform(void) {
 	vec3_t	left, up;
 	vec3_t	leftDir, upDir;
 
-	if (tess.num_vertexes & 3) {
+	if (tess.numVertexes & 3) {
 		ri->Printf(PRINT_WARNING, "Autosprite shader %s had odd vertex count\n", tess.shader->name);
 	}
-	if (tess.num_indexes != (tess.num_vertexes >> 2) * 6) {
+	if (tess.numIndexes != (tess.numVertexes >> 2) * 6) {
 		ri->Printf(PRINT_WARNING, "Autosprite shader %s had odd index count\n", tess.shader->name);
 	}
 
-	oldVerts = tess.num_vertexes;
-	tess.num_vertexes = 0;
-	tess.num_indexes = 0;
+	oldVerts = tess.numVertexes;
+	tess.numVertexes = 0;
+	tess.numIndexes = 0;
 	tess.firstIndex = 0;
 
 	if (backEnd.currentEntity != &tr.worldEntity) {
@@ -448,10 +448,10 @@ static void Autosprite2Deform(void) {
 	float* xyz;
 	vec3_t	forward;
 
-	if (tess.num_vertexes & 3) {
+	if (tess.numVertexes & 3) {
 		ri->Printf(PRINT_WARNING, "Autosprite2 shader %s had odd vertex count\n", tess.shader->name);
 	}
-	if (tess.num_indexes != (tess.num_vertexes >> 2) * 6) {
+	if (tess.numIndexes != (tess.numVertexes >> 2) * 6) {
 		ri->Printf(PRINT_WARNING, "Autosprite2 shader %s had odd index count\n", tess.shader->name);
 	}
 
@@ -465,7 +465,7 @@ static void Autosprite2Deform(void) {
 	// this is a lot of work for two triangles...
 	// we could precalculate a lot of it is an issue, but it would mess up
 	// the shader abstraction
-	for (i = 0, indexes = 0; i < tess.num_vertexes; i += 4, indexes += 6) {
+	for (i = 0, indexes = 0; i < tess.numVertexes; i += 4, indexes += 6) {
 		float	lengths[2];
 		int		nums[2];
 		vec3_t	mid[2];
@@ -656,7 +656,7 @@ void RB_CalcModulateColorsByFog(unsigned char* colors) {
 	// been previously called if the surface was opaque
 	RB_CalcFogTexCoords(texCoords[0]);
 
-	for (i = 0; i < tess.num_vertexes; i++, colors += 4) {
+	for (i = 0; i < tess.numVertexes; i++, colors += 4) {
 		float f = 1.0 - R_FogFactor(texCoords[i][0], texCoords[i][1]);
 		colors[0] *= f;
 		colors[1] *= f;
@@ -735,7 +735,7 @@ void RB_CalcFogTexCoords(float* st) {
 	fogDistanceVector[3] += 1.0 / 512;
 
 	// calculate density for each point
-	for (i = 0, v = tess.xyz[0]; i < tess.num_vertexes; i++, v += 4) {
+	for (i = 0, v = tess.xyz[0]; i < tess.numVertexes; i++, v += 4) {
 		// calculate the length in fog
 		s = DotProduct(v, fogDistanceVector) + fogDistanceVector[3];
 		t = DotProduct(v, fogDepthVector) + fogDepthVector[3];

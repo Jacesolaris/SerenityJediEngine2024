@@ -149,7 +149,7 @@ static long generateHashValue(const char* fname, const int size) {
 	return hash;
 }
 
-void R_RemapShader(const char* shader_name, const char* new_shader_name, const char* time_offset)
+void R_RemapShader(const char* shader_name, const char* new_shader_name, const char* timeOffset)
 {
 	char		stripped_name[MAX_QPATH];
 	qhandle_t	h;
@@ -189,8 +189,8 @@ void R_RemapShader(const char* shader_name, const char* new_shader_name, const c
 			}
 		}
 	}
-	if (time_offset) {
-		sh2->time_offset = atof(time_offset);
+	if (timeOffset) {
+		sh2->timeOffset = atof(timeOffset);
 	}
 }
 
@@ -2533,16 +2533,16 @@ static void FixRenderCommandList(const int new_shader) {
 					drawSurf_t* draw_surf;
 					shader_t* shader;
 					int			fog_num;
-					int			entity_num;
+					int			entityNum;
 					int			dlight_map;
 					const auto ds_cmd = static_cast<const drawSurfsCommand_t*>(cur_cmd);
 
 					for (i = 0, draw_surf = ds_cmd->drawSurfs; i < ds_cmd->numDrawSurfs; i++, draw_surf++) {
-						R_DecomposeSort(draw_surf->sort, &entity_num, &shader, &fog_num, &dlight_map);
+						R_DecomposeSort(draw_surf->sort, &entityNum, &shader, &fog_num, &dlight_map);
 						int sorted_index = draw_surf->sort >> QSORT_SHADERNUM_SHIFT & MAX_SHADERS - 1;
 						if (sorted_index >= new_shader) {
 							sorted_index++;
-							draw_surf->sort = sorted_index << QSORT_SHADERNUM_SHIFT | entity_num << QSORT_REFENTITYNUM_SHIFT | fog_num << QSORT_FOGNUM_SHIFT | dlight_map;
+							draw_surf->sort = sorted_index << QSORT_SHADERNUM_SHIFT | entityNum << QSORT_REFENTITYNUM_SHIFT | fog_num << QSORT_FOGNUM_SHIFT | dlight_map;
 						}
 					}
 					cur_cmd = static_cast<const void*>(ds_cmd + 1);
@@ -3246,7 +3246,7 @@ inline qboolean IsShader(const shader_t* sh, const char* name, const int* lightm
 #define EXTERNAL_LIGHTMAP     "lm_%04d.tga"     // THIS MUST BE IN SYNC WITH Q3MAP2
 static const int* R_FindLightmap(const int* lightmapIndex)
 {
-	char          file_name[MAX_QPATH];
+	char          fileName[MAX_QPATH];
 
 	// don't bother with vertex lighting
 	if (*lightmapIndex < 0)
@@ -3266,8 +3266,8 @@ static const int* R_FindLightmap(const int* lightmapIndex)
 	//R_SyncRenderThread();
 
 	// attempt to load an external lightmap
-	Com_sprintf(file_name, sizeof file_name, "%s/" EXTERNAL_LIGHTMAP, tr.worldDir, *lightmapIndex);
-	image_t* image = R_FindImageFile(file_name, qfalse, qfalse, static_cast<qboolean>(r_ext_compressed_lightmaps->integer), GL_CLAMP);
+	Com_sprintf(fileName, sizeof fileName, "%s/" EXTERNAL_LIGHTMAP, tr.worldDir, *lightmapIndex);
+	image_t* image = R_FindImageFile(fileName, qfalse, qfalse, static_cast<qboolean>(r_ext_compressed_lightmaps->integer), GL_CLAMP);
 	if (image == nullptr)
 	{
 		return lightmapsVertex;
@@ -3311,7 +3311,7 @@ most world construction surfaces.
 shader_t* R_FindShader(const char* name, const int* lightmapIndex, const byte* styles, const qboolean mip_raw_image)
 {
 	char		stripped_name[MAX_QPATH];
-	char		file_name[MAX_QPATH];
+	char		fileName[MAX_QPATH];
 	const char* shader_text;
 	shader_t* sh;
 
@@ -3369,8 +3369,8 @@ shader_t* R_FindShader(const char* name, const int* lightmapIndex, const byte* s
 	// if not defined in the in-memory shader descriptions,
 	// look for a single TGA, BMP, or PCX
 	//
-	COM_StripExtension(name, file_name, sizeof file_name);
-	image_t* image = R_FindImageFile(file_name, mip_raw_image, mip_raw_image, qtrue, mip_raw_image ? GL_REPEAT : GL_CLAMP);
+	COM_StripExtension(name, fileName, sizeof fileName);
+	image_t* image = R_FindImageFile(fileName, mip_raw_image, mip_raw_image, qtrue, mip_raw_image ? GL_REPEAT : GL_CLAMP);
 	if (!image)
 	{
 		//ri->Printf( PRINT_DEVELOPER, S_COLOR_RED "Couldn't find image for shader %s\n", name );
@@ -3641,7 +3641,7 @@ RE_RegisterShaderNoMip
 For menu graphics that should never be picmiped
 ====================
 */
-qhandle_t RE_RegisterShaderNoMip(const char* name) 
+qhandle_t RE_RegisterShaderNoMip(const char* name)
 {
 	if (strlen(name) >= MAX_QPATH) {
 		ri->Printf(PRINT_ALL, "Shader name exceeds MAX_QPATH\n");
@@ -3677,16 +3677,16 @@ When a handle is passed in by another module, this range checks
 it and returns a valid (possibly default) shader_t to be used internally.
 ====================
 */
-shader_t* R_GetShaderByHandle(const qhandle_t h_shader) {
-	if (h_shader < 0) {
-		ri->Printf(PRINT_ALL, S_COLOR_YELLOW  "R_GetShaderByHandle: out of range h_shader '%d'\n", h_shader);
+shader_t* R_GetShaderByHandle(const qhandle_t hShader) {
+	if (hShader < 0) {
+		ri->Printf(PRINT_ALL, S_COLOR_YELLOW  "R_GetShaderByHandle: out of range hShader '%d'\n", hShader);
 		return tr.defaultShader;
 	}
-	if (h_shader >= tr.numShaders) {
-		ri->Printf(PRINT_ALL, S_COLOR_YELLOW  "R_GetShaderByHandle: out of range h_shader '%d'\n", h_shader);
+	if (hShader >= tr.numShaders) {
+		ri->Printf(PRINT_ALL, S_COLOR_YELLOW  "R_GetShaderByHandle: out of range hShader '%d'\n", hShader);
 		return tr.defaultShader;
 	}
-	return tr.shaders[h_shader];
+	return tr.shaders[hShader];
 }
 
 /*
@@ -3758,116 +3758,16 @@ void	R_ShaderList_f()
 	ri->Printf(PRINT_ALL, "------------------\n");
 }
 
-int COM_CompressShader(char* data_p)
-{
-	char* out;
-	qboolean newline = qfalse, whitespace = qfalse;
-
-	char* in = out = data_p;
-	if (in)
-	{
-		int c;
-		while ((c = *in) != 0)
-		{
-			// skip double slash comments
-			if (c == '/' && in[1] == '/')
-			{
-				while (*in && *in != '\n')
-				{
-					in++;
-				}
-			}
-			// skip number sign comments
-			else if (c == '#')
-			{
-				while (*in && *in != '\n')
-				{
-					in++;
-				}
-			}
-			// skip /* */ comments
-			else if (c == '/' && in[1] == '*')
-			{
-				while (*in && (*in != '*' || in[1] != '/'))
-					in++;
-				if (*in)
-					in += 2;
-			}
-			// record when we hit a newline
-			else if (c == '\n' || c == '\r')
-			{
-				newline = qtrue;
-				in++;
-			}
-			// record when we hit whitespace
-			else if (c == ' ' || c == '\t')
-			{
-				whitespace = qtrue;
-				in++;
-				// an actual token
-			}
-			else
-			{
-				// if we have a pending newline, emit it (and it counts as whitespace)
-				if (newline)
-				{
-					*out++ = '\n';
-					newline = qfalse;
-					whitespace = qfalse;
-				} if (whitespace)
-				{
-					*out++ = ' ';
-					whitespace = qfalse;
-				}
-
-				// copy quoted strings unmolested
-				if (c == '"')
-				{
-					*out++ = c;
-					in++;
-					while (true)
-					{
-						c = *in;
-						if (c && c != '"')
-						{
-							*out++ = c;
-							in++;
-						}
-						else
-						{
-							break;
-						}
-					}
-					if (c == '"')
-					{
-						*out++ = c;
-						in++;
-					}
-				}
-				else
-				{
-					*out = c;
-					out++;
-					in++;
-				}
-			}
-		}
-
-		*out = 0;
-	}
-	return out - data_p;
-}
-
 /*
 ====================
-Scan_And_Load_Shader_Files
+ScanAndLoadShaderFiles
 
 Finds and loads all .shader files, combining them into
 a single large text block that can be scanned for shader names
 =====================
 */
 constexpr auto MAX_SHADER_FILES = 8192;
-static void Scan_And_Load_Shader_Files()
+static void ScanAndLoadShaderFiles()
 {
 	char* buffers[MAX_SHADER_FILES]{};
 	const char* p;
@@ -4099,7 +3999,7 @@ void R_InitShaders(const qboolean server)
 	{
 		CreateInternalShaders();
 
-		Scan_And_Load_Shader_Files();
+		ScanAndLoadShaderFiles();
 
 		CreateExternalShaders();
 	}

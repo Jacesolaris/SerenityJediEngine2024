@@ -1895,7 +1895,7 @@ void CPoly::Draw() const
 	}
 
 	// Add this poly
-	theFxHelper.AddPolyToScene(mRefEnt.custom_shader, mCount, verts);
+	theFxHelper.AddPolyToScene(mRefEnt.customShader, mCount, verts);
 
 	drawnFx++;
 }
@@ -2162,7 +2162,7 @@ void CBezier::DrawSegment(vec3_t start, vec3_t end, const float texcoord1, const
 	verts[3].modulate[2] = mRefEnt.shaderRGBA[2] * (1.0f - texcoord2);
 	verts[3].modulate[3] = mRefEnt.shaderRGBA[3];
 
-	cgi_R_AddPolyToScene(mRefEnt.custom_shader, 4, verts);
+	cgi_R_AddPolyToScene(mRefEnt.customShader, 4, verts);
 
 	VectorCopy(verts[2].xyz, lastEnd[1]);
 	VectorCopy(verts[3].xyz, lastEnd[0]);

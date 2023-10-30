@@ -96,7 +96,7 @@ COrientedParticle* FX_AddOrientedParticle(int client_id, vec3_t org, vec3_t norm
 	int kill_time, qhandle_t shader, int flags, int model_num = -1,
 	int bolt_num = -1);
 
-CPoly* FX_AddPoly(const vec3_t* verts, const vec2_t* st, int num_verts,
+CPoly* FX_AddPoly(const vec3_t* verts, const vec2_t* st, int numVerts,
 	vec3_t vel, vec3_t accel,
 	float alpha1, float alpha2, float alpha_parm,
 	vec3_t rgb1, vec3_t rgb2, float rgb_parm,

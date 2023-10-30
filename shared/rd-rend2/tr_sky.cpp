@@ -264,7 +264,7 @@ void RB_ClipSkyPolygons(shaderCommands_t* input)
 
 	ClearSkyBox();
 
-	for (i = 0; i < input->num_indexes; i += 3)
+	for (i = 0; i < input->numIndexes; i += 3)
 	{
 		for (j = 0; j < 3; j++)
 		{
@@ -363,11 +363,11 @@ static void DrawSkySide(struct image_s* image, const int mins[2], const int maxs
 {
 	const uint32_t SKY_BOX_VERTEX_ATTRIBUTES = ATTR_POSITION | ATTR_TEXCOORD0 | ATTR_COLOR | ATTR_NORMAL;
 	int s, t;
-	int firstVertex = tess.num_vertexes;
+	int firstVertex = tess.numVertexes;
 	int minIndex = tess.minIndex;
 	int maxIndex = tess.maxIndex;
 
-	tess.firstIndex = tess.num_indexes;
+	tess.firstIndex = tess.numIndexes;
 
 	for (t = mins[1] + HALF_SKY_SUBDIVISIONS;
 		t <= maxs[1] + HALF_SKY_SUBDIVISIONS; t++)
@@ -375,20 +375,20 @@ static void DrawSkySide(struct image_s* image, const int mins[2], const int maxs
 		for (s = mins[0] + HALF_SKY_SUBDIVISIONS;
 			s <= maxs[0] + HALF_SKY_SUBDIVISIONS; s++)
 		{
-			tess.xyz[tess.num_vertexes][0] = s_skyPoints[t][s][0];
-			tess.xyz[tess.num_vertexes][1] = s_skyPoints[t][s][1];
-			tess.xyz[tess.num_vertexes][2] = s_skyPoints[t][s][2];
-			tess.xyz[tess.num_vertexes][3] = 1.0;
+			tess.xyz[tess.numVertexes][0] = s_skyPoints[t][s][0];
+			tess.xyz[tess.numVertexes][1] = s_skyPoints[t][s][1];
+			tess.xyz[tess.numVertexes][2] = s_skyPoints[t][s][2];
+			tess.xyz[tess.numVertexes][3] = 1.0;
 
-			tess.texCoords[tess.num_vertexes][0][0] = s_skyTexCoords[t][s][0];
-			tess.texCoords[tess.num_vertexes][0][1] = s_skyTexCoords[t][s][1];
+			tess.texCoords[tess.numVertexes][0][0] = s_skyTexCoords[t][s][0];
+			tess.texCoords[tess.numVertexes][0][1] = s_skyTexCoords[t][s][1];
 
-			VectorSet4(tess.vertexColors[tess.num_vertexes], 1.0f, 1.0f, 1.0f, 1.0f);
-			tess.normal[tess.num_vertexes] = 0;
+			VectorSet4(tess.vertexColors[tess.numVertexes], 1.0f, 1.0f, 1.0f, 1.0f);
+			tess.normal[tess.numVertexes] = 0;
 
-			tess.num_vertexes++;
+			tess.numVertexes++;
 
-			if (tess.num_vertexes >= SHADER_MAX_VERTEXES)
+			if (tess.numVertexes >= SHADER_MAX_VERTEXES)
 			{
 				ri.Error(ERR_DROP, "SHADER_MAX_VERTEXES hit in DrawSkySideVBO()");
 			}
@@ -402,23 +402,23 @@ static void DrawSkySide(struct image_s* image, const int mins[2], const int maxs
 	{
 		for (s = 0; s < ssize; s++)
 		{
-			if ((tess.num_indexes + 6) >= SHADER_MAX_INDEXES)
+			if ((tess.numIndexes + 6) >= SHADER_MAX_INDEXES)
 			{
 				ri.Error(ERR_DROP, "SHADER_MAX_INDEXES hit in DrawSkySideVBO()");
 			}
 
-			tess.indexes[tess.num_indexes++] = s + t * ssizePlusOne + firstVertex;
-			tess.indexes[tess.num_indexes++] = s + (t + 1) * ssizePlusOne + firstVertex;
-			tess.indexes[tess.num_indexes++] = (s + 1) + t * ssizePlusOne + firstVertex;
+			tess.indexes[tess.numIndexes++] = s + t * ssizePlusOne + firstVertex;
+			tess.indexes[tess.numIndexes++] = s + (t + 1) * ssizePlusOne + firstVertex;
+			tess.indexes[tess.numIndexes++] = (s + 1) + t * ssizePlusOne + firstVertex;
 
-			tess.indexes[tess.num_indexes++] = (s + 1) + t * ssizePlusOne + firstVertex;
-			tess.indexes[tess.num_indexes++] = s + (t + 1) * ssizePlusOne + firstVertex;
-			tess.indexes[tess.num_indexes++] = (s + 1) + (t + 1) * ssizePlusOne + firstVertex;
+			tess.indexes[tess.numIndexes++] = (s + 1) + t * ssizePlusOne + firstVertex;
+			tess.indexes[tess.numIndexes++] = s + (t + 1) * ssizePlusOne + firstVertex;
+			tess.indexes[tess.numIndexes++] = (s + 1) + (t + 1) * ssizePlusOne + firstVertex;
 		}
 	}
 
 	tess.minIndex = firstVertex;
-	tess.maxIndex = tess.num_vertexes;
+	tess.maxIndex = tess.numVertexes;
 	tess.useInternalVBO = qtrue;
 
 	RB_UpdateVBOs(SKY_BOX_VERTEX_ATTRIBUTES);
@@ -429,7 +429,7 @@ static void DrawSkySide(struct image_s* image, const int mins[2], const int maxs
 	{
 		int attributeIndex = vertexArrays.enabledAttributes[i];
 		vertexArrays.offsets[attributeIndex] +=
-			backEndData->current_frame->dynamicVboCommitOffset;
+			backEndData->currentFrame->dynamicVboCommitOffset;
 	}
 
 	vertexAttribute_t attribs[ATTR_INDEX_MAX] = {};
@@ -453,7 +453,7 @@ static void DrawSkySide(struct image_s* image, const int mins[2], const int maxs
 
 	samplerBindingsWriter.AddStaticImage(image, TB_DIFFUSEMAP);
 
-	const GLuint currentFrameUbo = backEndData->current_frame->ubo;
+	const GLuint currentFrameUbo = backEndData->currentFrame->ubo;
 	const UniformBlockBinding uniformBlockBindings[] = {
 		{ currentFrameUbo, tr.skyEntityUboOffset, UNIFORM_BLOCK_ENTITY },
 		{ currentFrameUbo, tr.cameraUboOffsets[tr.viewParms.currentViewParm], UNIFORM_BLOCK_CAMERA }
@@ -463,7 +463,7 @@ static void DrawSkySide(struct image_s* image, const int mins[2], const int maxs
 	item.renderState.cullType = CT_TWO_SIDED;
 	item.renderState.depthRange = RB_GetDepthRange(backEnd.currentEntity, tess.shader);
 	item.program = sp;
-	item.ibo = backEndData->current_frame->dynamicIbo;
+	item.ibo = backEndData->currentFrame->dynamicIbo;
 	item.uniformData = uniformDataWriter.Finish(frameAllocator);
 
 	item.samplerBindings = samplerBindingsWriter.Finish(
@@ -483,8 +483,8 @@ static void DrawSkySide(struct image_s* image, const int mins[2], const int maxs
 	RB_CommitInternalBufferData();
 
 	tess.useInternalVBO = qfalse;
-	tess.num_indexes = tess.firstIndex;
-	tess.num_vertexes = firstVertex;
+	tess.numIndexes = tess.firstIndex;
+	tess.numVertexes = firstVertex;
 	tess.firstIndex = 0;
 	tess.minIndex = minIndex;
 	tess.maxIndex = maxIndex;
@@ -564,7 +564,7 @@ static void DrawSkyBox(shader_t* shader)
 static void FillCloudySkySide(const int mins[2], const int maxs[2], qboolean addIndexes)
 {
 	int s, t;
-	int vertexStart = tess.num_vertexes;
+	int vertexStart = tess.numVertexes;
 	int tHeight, sWidth;
 
 	tHeight = maxs[1] - mins[1] + 1;
@@ -575,13 +575,13 @@ static void FillCloudySkySide(const int mins[2], const int maxs[2], qboolean add
 		for (s = mins[0] + HALF_SKY_SUBDIVISIONS; s <= maxs[0] + HALF_SKY_SUBDIVISIONS; s++)
 		{
 			VectorAdd(s_skyPoints[t][s], backEnd.viewParms.ori.origin,
-				tess.xyz[tess.num_vertexes]);
-			tess.texCoords[tess.num_vertexes][0][0] = s_skyTexCoords[t][s][0];
-			tess.texCoords[tess.num_vertexes][0][1] = s_skyTexCoords[t][s][1];
+				tess.xyz[tess.numVertexes]);
+			tess.texCoords[tess.numVertexes][0][0] = s_skyTexCoords[t][s][0];
+			tess.texCoords[tess.numVertexes][0][1] = s_skyTexCoords[t][s][1];
 
-			tess.num_vertexes++;
+			tess.numVertexes++;
 
-			if (tess.num_vertexes >= SHADER_MAX_VERTEXES)
+			if (tess.numVertexes >= SHADER_MAX_VERTEXES)
 			{
 				ri.Error(ERR_DROP, "SHADER_MAX_VERTEXES hit in FillCloudySkySide()");
 			}
@@ -594,19 +594,19 @@ static void FillCloudySkySide(const int mins[2], const int maxs[2], qboolean add
 		{
 			for (s = 0; s < sWidth - 1; s++)
 			{
-				tess.indexes[tess.num_indexes] = vertexStart + s + t * (sWidth);
-				tess.num_indexes++;
-				tess.indexes[tess.num_indexes] = vertexStart + s + (t + 1) * (sWidth);
-				tess.num_indexes++;
-				tess.indexes[tess.num_indexes] = vertexStart + s + 1 + t * (sWidth);
-				tess.num_indexes++;
+				tess.indexes[tess.numIndexes] = vertexStart + s + t * (sWidth);
+				tess.numIndexes++;
+				tess.indexes[tess.numIndexes] = vertexStart + s + (t + 1) * (sWidth);
+				tess.numIndexes++;
+				tess.indexes[tess.numIndexes] = vertexStart + s + 1 + t * (sWidth);
+				tess.numIndexes++;
 
-				tess.indexes[tess.num_indexes] = vertexStart + s + (t + 1) * (sWidth);
-				tess.num_indexes++;
-				tess.indexes[tess.num_indexes] = vertexStart + s + 1 + (t + 1) * (sWidth);
-				tess.num_indexes++;
-				tess.indexes[tess.num_indexes] = vertexStart + s + 1 + t * (sWidth);
-				tess.num_indexes++;
+				tess.indexes[tess.numIndexes] = vertexStart + s + (t + 1) * (sWidth);
+				tess.numIndexes++;
+				tess.indexes[tess.numIndexes] = vertexStart + s + 1 + (t + 1) * (sWidth);
+				tess.numIndexes++;
+				tess.indexes[tess.numIndexes] = vertexStart + s + 1 + t * (sWidth);
+				tess.numIndexes++;
 			}
 		}
 	}
@@ -698,8 +698,8 @@ void R_BuildCloudData(shaderCommands_t* input)
 	sky_max = 255.0 / 256.0f;
 
 	// set up for drawing
-	tess.num_indexes = 0;
-	tess.num_vertexes = 0;
+	tess.numIndexes = 0;
+	tess.numVertexes = 0;
 	tess.firstIndex = 0;
 	tess.useInternalVBO = qtrue;
 	tess.externalIBO = nullptr;

@@ -59,10 +59,10 @@ qboolean NAV_ClearPathToPoint(gentity_t* self, vec3_t pmins, vec3_t pmaxs, vec3_
 qboolean NPC_ClearLOS2(gentity_t* ent, const vec3_t end);
 int NAVNEW_ClearPathBetweenPoints(vec3_t start, vec3_t end, vec3_t mins, vec3_t maxs, int ignore, int clipmask);
 qboolean NAV_CheckNodeFailedForEnt(const gentity_t* ent, int nodeNum);
-qboolean G_EntIsUnlockedDoor(int entity_num);
-qboolean G_EntIsDoor(int entity_num);
-qboolean G_EntIsBreakable(int entity_num);
-qboolean G_EntIsRemovableUsable(int ent_num);
+qboolean G_EntIsUnlockedDoor(int entityNum);
+qboolean G_EntIsDoor(int entityNum);
+qboolean G_EntIsBreakable(int entityNum);
+qboolean G_EntIsRemovableUsable(int entNum);
 void CP_FindCombatPointWaypoints(void);
 extern void G_CheckSpecialPersistentEvents(gentity_t* ent);
 extern qboolean PM_RestAnim(int anim);
@@ -2462,7 +2462,7 @@ void MoveClientToIntermission(gentity_t* ent)
 	ent->client->ps.eFlags2 = 0;
 	ent->s.eFlags2 = 0;
 	ent->s.eType = ET_GENERAL;
-	ent->s.model_index = 0;
+	ent->s.modelIndex = 0;
 	ent->s.loopSound = 0;
 	ent->s.loopIsSoundset = qfalse;
 	ent->s.event = 0;
@@ -3654,9 +3654,9 @@ void CheckTournament(void)
 				gentity_t* te = G_TempEntity(vec3_origin, EV_GLOBAL_DUEL);
 				te->r.svFlags |= SVF_BROADCAST;
 				//this is really pretty nasty, but..
-				te->s.otherentity_num = level.sortedClients[0];
-				te->s.otherentity_num2 = level.sortedClients[1];
-				te->s.groundentity_num = level.sortedClients[2];
+				te->s.otherentityNum = level.sortedClients[0];
+				te->s.otherentityNum2 = level.sortedClients[1];
+				te->s.groundentityNum = level.sortedClients[2];
 
 				trap->SetConfigstring(CS_CLIENT_DUELISTS, va("%i|%i|%i", level.sortedClients[0], level.sortedClients[1],
 					level.sortedClients[2]));
@@ -3695,9 +3695,9 @@ void CheckTournament(void)
 					gentity_t* te = G_TempEntity(vec3_origin, EV_GLOBAL_DUEL);
 					te->r.svFlags |= SVF_BROADCAST;
 					//this is really pretty nasty, but..
-					te->s.otherentity_num = level.sortedClients[0];
-					te->s.otherentity_num2 = level.sortedClients[1];
-					te->s.groundentity_num = level.sortedClients[2];
+					te->s.otherentityNum = level.sortedClients[0];
+					te->s.otherentityNum2 = level.sortedClients[1];
+					te->s.groundentityNum = level.sortedClients[2];
 
 					trap->SetConfigstring(CS_CLIENT_DUELISTS, va("%i|%i|%i", level.sortedClients[0],
 						level.sortedClients[1], level.sortedClients[2]));
@@ -4217,14 +4217,14 @@ static void G_Animate(gentity_t* self)
 	{
 		return;
 	}
-	if (self->s.frame == self->end_frame)
+	if (self->s.frame == self->endFrame)
 	{
 		if (self->r.svFlags & SVF_ANIMATING)
 		{
 			{
 				if (self->loopAnim)
 				{
-					self->s.frame = self->start_frame;
+					self->s.frame = self->startFrame;
 				}
 				else
 				{
@@ -4239,22 +4239,22 @@ static void G_Animate(gentity_t* self)
 
 	self->r.svFlags |= SVF_ANIMATING;
 
-	if (self->start_frame < self->end_frame)
+	if (self->startFrame < self->endFrame)
 	{
-		if (self->s.frame < self->start_frame || self->s.frame > self->end_frame)
+		if (self->s.frame < self->startFrame || self->s.frame > self->endFrame)
 		{
-			self->s.frame = self->start_frame;
+			self->s.frame = self->startFrame;
 		}
 		else
 		{
 			self->s.frame++;
 		}
 	}
-	else if (self->start_frame > self->end_frame)
+	else if (self->startFrame > self->endFrame)
 	{
-		if (self->s.frame > self->start_frame || self->s.frame < self->end_frame)
+		if (self->s.frame > self->startFrame || self->s.frame < self->endFrame)
 		{
-			self->s.frame = self->start_frame;
+			self->s.frame = self->startFrame;
 		}
 		else
 		{
@@ -4263,7 +4263,7 @@ static void G_Animate(gentity_t* self)
 	}
 	else
 	{
-		self->s.frame = self->end_frame;
+		self->s.frame = self->endFrame;
 	}
 }
 
@@ -4770,7 +4770,7 @@ void G_RunFrame(const int levelTime)
 					{
 						if (!(ent->r.svFlags & SVF_BOT))
 						{
-							if (ent->client->ps.groundentity_num == ENTITYNUM_NONE)
+							if (ent->client->ps.groundentityNum == ENTITYNUM_NONE)
 							{
 								//in midair
 								ent->client->ps.jetpackFuel--;
@@ -4794,7 +4794,7 @@ void G_RunFrame(const int levelTime)
 					ent->client->jetPackDebReduce = level.time + JETPACK_DEFUEL_RATE;
 				}
 			}
-			else if (ent->client->ps.jetpackFuel < 100 && ent->client->ps.groundentity_num != ENTITYNUM_NONE)
+			else if (ent->client->ps.jetpackFuel < 100 && ent->client->ps.groundentityNum != ENTITYNUM_NONE)
 			{
 				//recharge jetpack
 				if (ent->client->jetPackDebRecharge < level.time && !ent->client->flamethrowerOn)
@@ -5224,7 +5224,7 @@ Q_EXPORT gameExport_t * QDECL GetModuleAPI(const int apiVersion, gameImport_t * 
 	ge.ClientThink = ClientThink;
 	ge.RunFrame = G_RunFrame;
 	ge.ConsoleCommand = ConsoleCommand;
-	ge.BotAIStartFrame = bot_ai_start_frame;
+	ge.BotAIStartFrame = bot_ai_startFrame;
 	ge.ROFF_NotetrackCallback = _G_ROFF_NotetrackCallback;
 	ge.SpawnRMGEntity = G_SpawnRMGEntity;
 	ge.ICARUS_PlaySound = G_ICARUS_PlaySound;
@@ -5312,8 +5312,8 @@ Q_EXPORT intptr_t vmMain(const int command, const intptr_t arg0, const intptr_t 
 	case GAME_CONSOLE_COMMAND:
 		return ConsoleCommand();
 
-	case BOTAI_START_FRAME:
-		return bot_ai_start_frame(arg0);
+	case BOTAI_startFrame:
+		return bot_ai_startFrame(arg0);
 
 	case GAME_ROFF_NOTETRACK_CALLBACK:
 		_G_ROFF_NotetrackCallback(arg0, (const char*)arg1);

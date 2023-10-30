@@ -164,7 +164,7 @@ void CG_ClipMoveToEntities(const vec3_t start, const vec3_t mins, const vec3_t m
 
 		if (trace.allsolid || trace.fraction < tr->fraction)
 		{
-			trace.entity_num = ent->number;
+			trace.entityNum = ent->number;
 			*tr = trace;
 		}
 		else if (trace.startsolid)
@@ -190,7 +190,7 @@ void CG_Trace(trace_t* result, const vec3_t start, const vec3_t mins, const vec3
 	trace_t t;
 
 	cgi_CM_BoxTrace(&t, start, end, mins, maxs, 0, mask);
-	t.entity_num = t.fraction != 1.0 ? ENTITYNUM_WORLD : ENTITYNUM_NONE;
+	t.entityNum = t.fraction != 1.0 ? ENTITYNUM_WORLD : ENTITYNUM_NONE;
 	// check all other solid models
 	CG_ClipMoveToEntities(start, mins, maxs, end, skip_number, mask, &t);
 
@@ -206,12 +206,12 @@ CG_PointContents
 #define USE_SV_PNT_CONTENTS (1)
 
 #if USE_SV_PNT_CONTENTS
-int CG_PointContents(const vec3_t point, const int pass_entity_num)
+int CG_PointContents(const vec3_t point, const int pass_entityNum)
 {
-	return gi.pointcontents(point, pass_entity_num);
+	return gi.pointcontents(point, pass_entityNum);
 }
 #else
-int		CG_PointContents(const vec3_t point, int pass_entity_num) {
+int		CG_PointContents(const vec3_t point, int pass_entityNum) {
 	int			i;
 	entityState_t* ent;
 	centity_t* cent;
@@ -225,7 +225,7 @@ int		CG_PointContents(const vec3_t point, int pass_entity_num) {
 
 		ent = &cent->currentState;
 
-		if (ent->number == pass_entity_num) {
+		if (ent->number == pass_entityNum) {
 			continue;
 		}
 
@@ -321,9 +321,9 @@ qboolean CG_CheckModifyUCmd(usercmd_t* cmd, vec3_t viewangles)
 
 qboolean CG_OnMovingPlat(const playerState_t* ps)
 {
-	if (ps->groundentity_num != ENTITYNUM_NONE)
+	if (ps->groundentityNum != ENTITYNUM_NONE)
 	{
-		const entityState_t* es = &cg_entities[ps->groundentity_num].currentState;
+		const entityState_t* es = &cg_entities[ps->groundentityNum].currentState;
 		if (es->eType == ET_MOVER)
 		{
 			//on a mover
@@ -422,9 +422,9 @@ void CG_InterpolatePlayerState(const qboolean grab_angles)
 
 	bool on_plat = false;
 	const centity_t* pent = nullptr;
-	if (out->groundentity_num > 0)
+	if (out->groundentityNum > 0)
 	{
-		pent = &cg_entities[out->groundentity_num];
+		pent = &cg_entities[out->groundentityNum];
 		if (pent->currentState.eType == ET_MOVER)
 
 		{

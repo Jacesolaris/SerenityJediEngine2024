@@ -40,7 +40,7 @@ int CM_NumInlineModels();
 char* CM_EntityString();
 char* CM_SubBSPEntityString(int index);
 int CM_LoadSubBSP(const char* name, qboolean clientload);
-int CM_FindSubBSP(int model_index);
+int CM_FindSubBSP(int modelIndex);
 
 // returns an ORed contents mask
 int CM_PointContents(const vec3_t p, clip_handle_t model);
@@ -76,10 +76,10 @@ void CM_WritePortalState();
 void CM_ReadPortalState();
 
 // cm_marks.c
-int CM_MarkFragments(int num_points, const vec3_t* points, const vec3_t projection,
+int CM_MarkFragments(int numPoints, const vec3_t* points, const vec3_t projection,
 	int maxPoints, vec3_t pointBuffer, int maxFragments, markFragment_t* fragmentBuffer);
 
 // cm_patch.c
-void CM_DrawDebugSurface(void (*drawPoly)(int color, int num_points, const float* points));
+void CM_DrawDebugSurface(void (*drawPoly)(int color, int numPoints, const float* points));
 
 #endif //__CM_PUBLIC_H__

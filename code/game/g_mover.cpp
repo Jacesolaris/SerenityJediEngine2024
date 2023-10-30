@@ -145,7 +145,7 @@ gentity_t* G_TestEntityPosition(const gentity_t* ent)
 	}
 
 	if (tr.startsolid)
-		return &g_entities[tr.entity_num];
+		return &g_entities[tr.entityNum];
 
 	return nullptr;
 }
@@ -172,7 +172,7 @@ qboolean G_TryPushingEntity(gentity_t* check, gentity_t* pusher, vec3_t move, ve
 	// EF_MOVER_STOP will just stop when contacting another entity
 	// instead of pushing it, but entities can still ride on top of it
 	if ( ( pusher->s.eFlags & EF_MOVER_STOP ) &&
-		check->s.groundentity_num != pusher->s.number ) {
+		check->s.groundentityNum != pusher->s.number ) {
 		return qfalse;
 	}
 	*/
@@ -218,9 +218,9 @@ qboolean G_TryPushingEntity(gentity_t* check, gentity_t* pusher, vec3_t move, ve
 	}
 
 	// may have pushed them off an edge
-	if (check->s.groundentity_num != pusher->s.number)
+	if (check->s.groundentityNum != pusher->s.number)
 	{
-		check->s.groundentity_num = ENTITYNUM_NONE;
+		check->s.groundentityNum = ENTITYNUM_NONE;
 	}
 
 	/*
@@ -257,7 +257,7 @@ qboolean G_TryPushingEntity(gentity_t* check, gentity_t* pusher, vec3_t move, ve
 	block = G_TestEntityPosition(check);
 	if (!block)
 	{
-		check->s.groundentity_num = ENTITYNUM_NONE;
+		check->s.groundentityNum = ENTITYNUM_NONE;
 		pushed_p--;
 		return qtrue;
 	}
@@ -364,8 +364,8 @@ qboolean g_mover_push(gentity_t* pusher, vec3_t move, vec3_t amove, gentity_t** 
 	{
 		gentity_t* check = entity_list[e];
 
-		if (check->s.eFlags & EF_MISSILE_STICK && (not_moving || check->s.groundentity_num < 0 || check->s.
-			groundentity_num >= ENTITYNUM_NONE))
+		if (check->s.eFlags & EF_MISSILE_STICK && (not_moving || check->s.groundentityNum < 0 || check->s.
+			groundentityNum >= ENTITYNUM_NONE))
 		{
 			// special case hack for sticky things, destroy it if we aren't attached to the thing that is moving, but the moving thing is pushing us
 			G_Damage(check, pusher, pusher, nullptr, nullptr, 99999, 0, MOD_CRUSH);
@@ -409,7 +409,7 @@ qboolean g_mover_push(gentity_t* pusher, vec3_t move, vec3_t amove, gentity_t** 
 		}
 
 		// if the entity is standing on the pusher, it will definitely be moved
-		if (check->s.groundentity_num != pusher->s.number)
+		if (check->s.groundentityNum != pusher->s.number)
 		{
 			// see if the ent needs to be tested
 			if (check->absmin[0] >= maxs[0]
@@ -1310,14 +1310,14 @@ void Think_MatchTeam(gentity_t* ent)
 	MatchTeam(ent, ent->moverState, level.time);
 }
 
-qboolean G_EntIsDoor(const int entity_num)
+qboolean G_EntIsDoor(const int entityNum)
 {
-	if (entity_num < 0 || entity_num >= ENTITYNUM_WORLD)
+	if (entityNum < 0 || entityNum >= ENTITYNUM_WORLD)
 	{
 		return qfalse;
 	}
 
-	const gentity_t* ent = &g_entities[entity_num];
+	const gentity_t* ent = &g_entities[entityNum];
 	if (ent && !Q_stricmp("func_door", ent->classname))
 	{
 		//blocked by a door
@@ -1373,16 +1373,16 @@ gentity_t* G_FindDoorTrigger(const gentity_t* ent)
 
 qboolean G_TriggerActive(const gentity_t* self);
 
-qboolean G_EntIsUnlockedDoor(const int entity_num)
+qboolean G_EntIsUnlockedDoor(const int entityNum)
 {
-	if (entity_num < 0 || entity_num >= ENTITYNUM_WORLD)
+	if (entityNum < 0 || entityNum >= ENTITYNUM_WORLD)
 	{
 		return qfalse;
 	}
 
-	if (G_EntIsDoor(entity_num))
+	if (G_EntIsDoor(entityNum))
 	{
-		const gentity_t* ent = &g_entities[entity_num];
+		const gentity_t* ent = &g_entities[entityNum];
 		gentity_t* owner;
 		if (ent->flags & FL_TEAMSLAVE)
 		{
@@ -2162,8 +2162,8 @@ void SP_func_train(gentity_t* self)
 
 	char* noise;
 
-	G_SpawnInt("startframe", "0", &self->start_frame);
-	G_SpawnInt("endframe", "0", &self->end_frame);
+	G_SpawnInt("startframe", "0", &self->startFrame);
+	G_SpawnInt("endframe", "0", &self->endFrame);
 
 	if (G_SpawnString("noise", "", &noise))
 	{
@@ -2208,9 +2208,9 @@ void SP_func_train(gentity_t* self)
 	{
 		self->spawnflags &= ~32; // once only
 
-		gi.G2API_SetBoneAnim(&self->ghoul2[self->playerModel], "model_root", self->start_frame, self->end_frame,
+		gi.G2API_SetBoneAnim(&self->ghoul2[self->playerModel], "model_root", self->startFrame, self->endFrame,
 			BONE_ANIM_OVERRIDE_LOOP, 1.0f + Q_flrand(-1.0f, 1.0f) * 0.1f, 0, -1, -1);
-		self->end_frame = 0; // don't allow it to do anything with the animation function in G_main
+		self->endFrame = 0; // don't allow it to do anything with the animation function in G_main
 	}
 }
 

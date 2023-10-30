@@ -35,7 +35,7 @@ uint32_t cvar_modifiedFlags;
 cvar_t cvar_indexes[MAX_CVARS];
 int cvar_numIndexes;
 
-#define FILE_HASH_SIZE		512
+#define FILE_HASH_SIZE		1024
 static cvar_t* hashTable[FILE_HASH_SIZE];
 static qboolean cvar_sort = qfalse;
 

@@ -135,7 +135,7 @@ static qboolean NPC_Jump(vec3_t dest, const int goal_ent_num)
 					{
 						CG_DrawEdge(lastPos, trace.endpos, EDGE_RED_TWOSECOND); // TryJump
 					}
-					if (trace.entity_num == goal_ent_num)
+					if (trace.entityNum == goal_ent_num)
 					{
 						//hit the enemy, that's bad!
 						blocked = qtrue;
@@ -254,7 +254,7 @@ qboolean NPC_CanTryJump()
 		NPCInfo->jumpTime || // Don't Jump If Already Going
 		PM_InKnockDown(&NPC->client->ps) || // Don't Jump If In Knockdown
 		PM_InRoll(&NPC->client->ps) || // ... Or Roll
-		NPC->client->ps.groundentity_num == ENTITYNUM_NONE // ... Or In The Air
+		NPC->client->ps.groundentityNum == ENTITYNUM_NONE // ... Or In The Air
 		)
 	{
 		return qfalse;
@@ -301,7 +301,7 @@ qboolean NPC_TryJump(gentity_t* goal, const float max_xy_dist, const float max_z
 
 		// Can't Jump At Targets In The Air
 		//---------------------------------
-		if (goal->client && goal->client->ps.groundentity_num == ENTITYNUM_NONE)
+		if (goal->client && goal->client->ps.groundentityNum == ENTITYNUM_NONE)
 		{
 			return qfalse;
 		}
@@ -577,7 +577,7 @@ NPC_LadderMove
 
 static void NPC_LadderMove(vec3_t dir)
 {
-	if (dir[2] > 0 || dir[2] < 0 && NPC->client->ps.groundentity_num == ENTITYNUM_NONE)
+	if (dir[2] > 0 || dir[2] < 0 && NPC->client->ps.groundentityNum == ENTITYNUM_NONE)
 	{
 		//Set our movement direction
 		ucmd.upmove = dir[2] > 0 ? 127 : -127;
@@ -803,14 +803,14 @@ qboolean NPC_CheckFallPositionOK(const gentity_t* NPC, vec3_t position)
 
 	downPos[2] -= 96.0;
 
-	if (NPC->s.groundentity_num < ENTITYNUM_MAX_NORMAL)
+	if (NPC->s.groundentityNum < ENTITYNUM_MAX_NORMAL)
 		downPos[2] -= 192.0;
 
 	testPos[2] += 48.0;
 
 	gi.trace(&tr, testPos, mins, maxs, downPos, NPC->s.number, MASK_PLAYERSOLID, static_cast<EG2_Collision>(0), 0);
 
-	if (tr.entity_num != ENTITYNUM_NONE)
+	if (tr.entityNum != ENTITYNUM_NONE)
 	{
 		return qtrue;
 	}

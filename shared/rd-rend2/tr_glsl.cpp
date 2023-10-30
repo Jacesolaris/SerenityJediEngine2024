@@ -430,7 +430,7 @@ static GLuint GLSL_CompileGPUShader(
 	return shader;
 }
 
-static const char* GLSL_Getshader_filesuffix(GLenum shaderType)
+static const char* GLSL_GetShaderFileSuffix(GLenum shaderType)
 {
 	static struct
 	{
@@ -460,7 +460,7 @@ static size_t GLSL_LoadGPUShaderSource(
 	char* dest,
 	int destSize)
 {
-	const char* shaderSuffix = GLSL_Getshader_filesuffix(shaderType);
+	const char* shaderSuffix = GLSL_GetShaderFileSuffix(shaderType);
 	assert(shaderSuffix != nullptr);
 
 	char filename[MAX_QPATH];
@@ -2497,7 +2497,7 @@ void GLSL_VertexAttribsState(uint32_t stateBits, VertexArraysProperties* vertexA
 		for (int i = 0; i < vertexArrays->numVertexArrays; i++)
 		{
 			int attributeIndex = vertexArrays->enabledAttributes[i];
-			vertexArrays->offsets[attributeIndex] += backEndData->current_frame->dynamicVboCommitOffset;
+			vertexArrays->offsets[attributeIndex] += backEndData->currentFrame->dynamicVboCommitOffset;
 		}
 	}
 	else

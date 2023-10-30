@@ -93,7 +93,7 @@ int NAVNEW_ClearPathBetweenPoints(vec3_t start, vec3_t end, vec3_t mins, vec3_t 
 	//if( ( ( trace.startsolid == false ) && ( trace.allsolid == false ) ) && ( trace.fraction < 1.0f ) )
 	//{//FIXME: check for drops?
 	//FIXME: if startsolid or allsolid, then the path isn't clear... but returning ENTITYNUM_NONE indicates to CheckFailedEdge that is is clear...?
-	return trace.entity_num;
+	return trace.entityNum;
 	//}
 
 	//return ENTITYNUM_NONE;
@@ -510,7 +510,7 @@ qboolean NAVNEW_AvoidCollision(gentity_t* self, gentity_t* goal, navInfo_t* info
 	if (NAV_CheckAhead(self, movepos, &info->trace, CONTENTS_BODY) == qfalse)
 	{
 		//Get the blocker
-		info->blocker = &g_entities[info->trace.entity_num];
+		info->blocker = &g_entities[info->trace.entityNum];
 		info->flags |= NIF_COLLISION;
 
 		//Ok to hit our goal entity
@@ -617,7 +617,7 @@ qboolean NAVNEW_TestNodeConnectionBlocked(const int wp1, const int wp2, const ge
 	}
 
 	trap->Trace(&trace, pos1, mins, maxs, pos2, ignoreEntNum, clipmask, qfalse, 0, 0);
-	if (trace.fraction >= 1.0f || trace.entity_num == goalEntNum)
+	if (trace.fraction >= 1.0f || trace.entityNum == goalEntNum)
 	{
 		//clear or hit goal
 		return qfalse;

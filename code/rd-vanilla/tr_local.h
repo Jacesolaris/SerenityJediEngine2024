@@ -544,9 +544,9 @@ constexpr auto MAX_GRID_SIZE = 65;			// max dimensions of a grid mesh in memory;
 // as soon as it is called
 using srfPoly_t = struct srfPoly_s {
 	surfaceType_t	surfaceType;
-	qhandle_t		h_shader;
+	qhandle_t		hShader;
 	int				fogIndex;
-	int				num_verts;
+	int				numVerts;
 	polyVert_t* verts;
 };
 
@@ -600,7 +600,7 @@ using srfSurfaceFace_t = struct {
 	int			dlightBits;
 
 	// triangle definitions (no normals at points)
-	int			num_points;
+	int			numPoints;
 	int			numIndices;
 	int			ofsIndices;
 	float		points[1][VERTEXSIZE];	// variable sized
@@ -620,10 +620,10 @@ using srfTriangles_t = struct {
 	//	float			radius;
 
 		// triangle definitions
-	int				num_indexes;
+	int				numIndexes;
 	int* indexes;
 
-	int				num_verts;
+	int				numVerts;
 	drawVert_t* verts;
 };
 
@@ -945,7 +945,7 @@ using trGlobals_t = struct {
 	trRefEntity_t			worldEntity;		// point currentEntity at this when rendering world
 	int						currentEntityNum;
 	unsigned				shiftedEntityNum;	// currentEntityNum << QSORT_REFENTITYNUM_SHIFT (possible with high bit set for RF_ALPHA_FADE)
-	model_t* current_model;
+	model_t* currentModel;
 
 	viewParms_t				viewParms;
 
@@ -1165,7 +1165,7 @@ void R_AddMD3Surfaces(trRefEntity_t* ent);
 
 void R_AddPolygonSurfaces();
 
-void R_DecomposeSort(unsigned sort, int* entity_num, shader_t** shader,
+void R_DecomposeSort(unsigned sort, int* entityNum, shader_t** shader,
 	int* fogNum, int* dlightMap);
 
 void R_AddDrawSurf(const surfaceType_t* surface, const shader_t* shader, int fogIndex, int dlightMap);
@@ -1278,7 +1278,7 @@ void	R_InitImages();
 void	R_DeleteTextures();
 float	R_SumOfUsedImages(qboolean b_use_format);
 void	R_InitSkins();
-skin_t* R_GetSkinByHandle(qhandle_t hSkin);
+skin_t* R_GetSkinByHandle(const qhandle_t hSkin);
 
 //
 // tr_shader.c
@@ -1293,7 +1293,7 @@ qhandle_t		 RE_RegisterShader(const char* name);
 qhandle_t		 RE_RegisterShaderNoMip(const char* name);
 
 shader_t* R_FindShader(const char* name, const int* lightmap_index, const byte* styles, qboolean mip_raw_image);
-shader_t* R_GetShaderByHandle(qhandle_t h_shader);
+shader_t* R_GetShaderByHandle(const qhandle_t hShader);
 void R_InitShaders(const qboolean server);
 void		R_ShaderList_f();
 
@@ -1345,8 +1345,8 @@ struct shaderCommands_s
 
 	int			dlightBits;	// or together of all vertexDlightBits
 
-	int			num_indexes;
-	int			num_vertexes;
+	int			numIndexes;
+	int			numVertexes;
 
 	// info extracted from current shader
 	int			numPasses;
@@ -1375,7 +1375,7 @@ extern	bool		styleUpdated[MAX_LIGHT_STYLES];
 void RB_BeginSurface(shader_t* shader, int fogNum);
 void RB_EndSurface();
 void RB_CheckOverflow(const int verts, const int indexes);
-#define RB_CHECKOVERFLOW(v,i) if (tess.num_vertexes + (v) >= SHADER_MAX_VERTEXES || tess.num_indexes + (i) >= SHADER_MAX_INDEXES ) {RB_CheckOverflow(v,i);}
+#define RB_CHECKOVERFLOW(v,i) if (tess.numVertexes + (v) >= SHADER_MAX_VERTEXES || tess.numIndexes + (i) >= SHADER_MAX_INDEXES ) {RB_CheckOverflow(v,i);}
 
 void RB_StageIteratorGeneric();
 void RB_StageIteratorSky();
@@ -1383,7 +1383,7 @@ void RB_StageIteratorSky();
 void RB_AddQuadStamp(vec3_t origin, vec3_t left, vec3_t up, byte* color);
 void RB_AddQuadStampExt(vec3_t origin, vec3_t left, vec3_t up, byte* color, const float s1, const float t1, const float s2, const float t2);
 
-void RB_ShowImages();
+void RB_ShowImages(void);
 
 /*
 ============================================================
@@ -1406,7 +1406,7 @@ LIGHTS
 
 void R_DlightBmodel(const bmodel_t* bmodel, const qboolean no_light);
 void R_SetupEntityLighting(const trRefdef_t* refdef, trRefEntity_t* ent);
-void R_TransformDlights(int count, dlight_t* dl, const orientationr_t* ori);
+void R_TransformDlights(const int count, dlight_t* dl, const orientationr_t* ori);
 
 /*
 ============================================================
@@ -1459,8 +1459,7 @@ MARKERS, POLYGON PROJECTION ON WORLD POLYGONS
 ============================================================
 */
 
-int R_MarkFragments(int num_points, const vec3_t* points, const vec3_t projection,
-	int max_points, vec3_t point_buffer, int max_fragments, markFragment_t* fragment_buffer);
+int R_MarkFragments(int numPoints, const vec3_t* points, const vec3_t projection, const int maxPoints, vec3_t pointBuffer, const int maxFragments, markFragment_t* fragmentBuffer);
 
 /*
 ============================================================
@@ -1474,7 +1473,7 @@ void R_InitNextFrame();
 
 void RE_ClearScene();
 void RE_AddRefEntityToScene(const refEntity_t* ent);
-void RE_AddPolyToScene(qhandle_t h_shader, int num_verts, const polyVert_t* verts, int numPolys);
+void RE_AddPolyToScene(const qhandle_t hShader, const int numVerts, const polyVert_t* verts, const int numPolys);
 void RE_AddLightToScene(const vec3_t org, float intensity, float r, float g, float b);
 void RE_RenderScene(const refdef_t* fd);
 
@@ -1724,11 +1723,11 @@ void R_AddDrawSurfCmd(drawSurf_t* drawSurfs, int numDrawSurfs);
 
 void RE_SetColor(const float* rgba);
 void RE_StretchPic(float x, float y, float w, float h,
-	float s1, float t1, float s2, float t2, qhandle_t h_shader);
+	float s1, float t1, float s2, float t2, qhandle_t hShader);
 void RE_RotatePic(float x, float y, float w, float h,
-	float s1, float t1, float s2, float t2, float a, qhandle_t h_shader);
+	float s1, float t1, float s2, float t2, float a, qhandle_t hShader);
 void RE_RotatePic2(float x, float y, float w, float h,
-	float s1, float t1, float s2, float t2, float a, qhandle_t h_shader);
+	float s1, float t1, float s2, float t2, float a, qhandle_t hShader);
 void RE_RenderWorldEffects();
 void RE_LAGoggles();
 void RE_Scissor(float x, float y, float w, float h);

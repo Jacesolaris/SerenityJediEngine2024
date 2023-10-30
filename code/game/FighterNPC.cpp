@@ -92,10 +92,10 @@ extern vec3_t player_mins;
 extern vec3_t player_maxs;
 extern cvar_t* g_speederControlScheme;
 extern void ChangeWeapon(const gentity_t* ent, int new_weapon);
-extern void PM_SetAnim(const pmove_t* pm, int set_anim_parts, int anim, int set_anim_flags, int blend_time);
+extern void PM_SetAnim(const pmove_t* pm, int set_anim_parts, int anim, int set_anim_flags, int blendTime);
 extern int PM_AnimLength(int index, animNumber_t anim);
 extern void G_VehicleTrace(trace_t* results, const vec3_t start, const vec3_t tMins, const vec3_t tMaxs,
-	const vec3_t end, int pass_entity_num, int contentmask);
+	const vec3_t end, int pass_entityNum, int contentmask);
 #endif
 
 extern qboolean BG_UnrestrainedPitchRoll();
@@ -114,7 +114,7 @@ extern void G_DamageFromKiller(gentity_t* p_ent, gentity_t* pVehEnt, gentity_t* 
 //this stuff has got to be predicted, so..
 bool BG_FighterUpdate(Vehicle_t* p_veh, vec3_t tr_mins, vec3_t tr_maxs,
 	void (*trace_func)(trace_t* results, const vec3_t start, const vec3_t lmins, const vec3_t lmaxs,
-		const vec3_t end, int pass_entity_num, int content_mask))
+		const vec3_t end, int pass_entityNum, int content_mask))
 {
 	vec3_t bottom;
 	playerState_t* parent_ps;
@@ -584,13 +584,13 @@ static void ProcessMoveCommands(Vehicle_t* p_veh)
 						p_veh->m_pParentEntity->playerState)
 					{ //fine, I'll use a temp ent for this, but only because it's played only once at the start of a turbo.
 						vec3_t bolt_org, boltDir;
-						mdxaBone_t bolt_matrix;
+						mdxaBone_t boltMatrix;
 
 						VectorSet(boltDir, 0.0f, p_veh->m_pParentEntity->playerState->viewangles[YAW], 0.0f);
 
-						trap_G2API_GetBoltMatrix(p_veh->m_pParentEntity->ghoul2, 0, p_veh->m_iExhaustTag[i], &bolt_matrix, boltDir, p_veh->m_pParentEntity->playerState->origin, level.time, nullptr, p_veh->m_pParentEntity->modelScale);
-						BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, bolt_org);
-						BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, boltDir);
+						trap_G2API_GetBoltMatrix(p_veh->m_pParentEntity->ghoul2, 0, p_veh->m_iExhaustTag[i], &boltMatrix, boltDir, p_veh->m_pParentEntity->playerState->origin, level.time, nullptr, p_veh->m_pParentEntity->modelScale);
+						BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, bolt_org);
+						BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, boltDir);
 						G_PlayEffectID(p_veh->m_pVehicleInfo->iTurboStartFX, bolt_org, boltDir);
 					}
 #endif
@@ -665,7 +665,7 @@ static void ProcessMoveCommands(Vehicle_t* p_veh)
 		p_veh->m_ucmd.forwardmove = 127;
 	}
 #endif
-	else if ((parent_ps->speed || parent_ps->groundentity_num == ENTITYNUM_NONE ||
+	else if ((parent_ps->speed || parent_ps->groundentityNum == ENTITYNUM_NONE ||
 		p_veh->m_ucmd.forwardmove || p_veh->m_ucmd.upmove > 0) && p_veh->m_LandTrace.fraction >= 0.05f)
 	{
 		if (p_veh->m_ucmd.forwardmove > 0 && speed_inc)
@@ -1627,7 +1627,7 @@ static void ProcessOrientCommands(Vehicle_t* p_veh)
 
 #ifdef QAGAME //ONLY in SP or on server, not cgame
 
-extern void PM_SetAnim(const pmove_t* pm, int set_anim_parts, int anim, int set_anim_flags, int blend_time);
+extern void PM_SetAnim(const pmove_t* pm, int set_anim_parts, int anim, int set_anim_flags, int blendTime);
 
 // This function makes sure that the vehicle is properly animated.
 static void AnimateVehicle(Vehicle_t* p_veh)

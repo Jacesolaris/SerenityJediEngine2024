@@ -41,7 +41,7 @@ Tries to cull surfaces before they are lighted or
 added to the sorting list.
 ================
 */
-static qboolean	R_CullSurface(msurface_t* surf, int entity_num) {
+static qboolean	R_CullSurface(msurface_t* surf, int entityNum) {
 	if (r_nocull->integer || surf->cullinfo.type == CULLINFO_NONE) {
 		return qfalse;
 	}
@@ -116,7 +116,7 @@ static qboolean	R_CullSurface(msurface_t* surf, int entity_num) {
 	{
 		int 	sphereCull;
 
-		if (entity_num != REFENTITYNUM_WORLD) {
+		if (entityNum != REFENTITYNUM_WORLD) {
 			sphereCull = R_CullLocalPointAndRadius(surf->cullinfo.localOrigin, surf->cullinfo.radius);
 		}
 		else {
@@ -133,7 +133,7 @@ static qboolean	R_CullSurface(msurface_t* surf, int entity_num) {
 	{
 		int boxCull;
 
-		if (entity_num != REFENTITYNUM_WORLD) {
+		if (entityNum != REFENTITYNUM_WORLD) {
 			boxCull = R_CullLocalBox(surf->cullinfo.bounds);
 		}
 		else {
@@ -328,21 +328,21 @@ R_AddWorldSurface
 static void R_AddWorldSurface(
 	msurface_t* surf,
 	const trRefEntity_t* entity,
-	int entity_num,
+	int entityNum,
 	int dlightBits,
 	int pshadowBits)
 {
 	// FIXME: bmodel fog?
 
 	// try to cull before dlighting or adding
-	if (R_CullSurface(surf, entity_num)) {
+	if (R_CullSurface(surf, entityNum)) {
 		return;
 	}
 
 	// check for dlighting
 	// TODO: implement dlight culling for non worldspawn surfaces
 	if (dlightBits) {
-		if (entity_num != REFENTITYNUM_WORLD)
+		if (entityNum != REFENTITYNUM_WORLD)
 			dlightBits = (1 << tr.refdef.num_dlights) - 1;
 		else
 			dlightBits = R_DlightSurface(surf, dlightBits);
@@ -354,20 +354,20 @@ static void R_AddWorldSurface(
 	}
 
 	bool isPostRenderEntity = false;
-	if (entity_num != REFENTITYNUM_WORLD)
+	if (entityNum != REFENTITYNUM_WORLD)
 	{
 		assert(entity);
 		isPostRenderEntity = R_IsPostRenderEntity(entity);
 	}
 
-	R_AddDrawSurf(surf->data, entity_num, surf->shader, surf->fogIndex,
+	R_AddDrawSurf(surf->data, entityNum, surf->shader, surf->fogIndex,
 		dlightBits, isPostRenderEntity, surf->cubemapIndex);
 
 	for (int i = 0, numSprites = surf->numSurfaceSprites;
 		i < numSprites; ++i)
 	{
 		srfSprites_t* sprites = surf->surfaceSprites + i;
-		R_AddDrawSurf((surfaceType_t*)sprites, entity_num, sprites->shader,
+		R_AddDrawSurf((surfaceType_t*)sprites, entityNum, sprites->shader,
 			surf->fogIndex, dlightBits, isPostRenderEntity, 0);
 	}
 }
@@ -385,7 +385,7 @@ static void R_AddWorldSurface(
 R_AddBrushModelSurfaces
 =================
 */
-void R_AddBrushModelSurfaces(trRefEntity_t* ent, int entity_num) {
+void R_AddBrushModelSurfaces(trRefEntity_t* ent, int entityNum) {
 	model_t* pModel = R_GetModelByHandle(ent->e.hModel);
 	bmodel_t* bmodel = pModel->data.bmodel;
 	int clip = R_CullLocalBox(bmodel->bounds);
@@ -403,7 +403,7 @@ void R_AddBrushModelSurfaces(trRefEntity_t* ent, int entity_num) {
 		if (world->surfacesViewCount[surf] != tr.viewCount)
 		{
 			world->surfacesViewCount[surf] = tr.viewCount;
-			R_AddWorldSurface(world->surfaces + surf, ent, entity_num, ent->needDlights, 0);
+			R_AddWorldSurface(world->surfaces + surf, ent, entityNum, ent->needDlights, 0);
 		}
 	}
 }

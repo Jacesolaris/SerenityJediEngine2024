@@ -357,7 +357,7 @@ void Pilot_Update_Enemy()
 
 			if (mPilotViewTrace.allsolid == qfalse &&
 				mPilotViewTrace.startsolid == qfalse &&
-				(mPilotViewTrace.entity_num == NPC->enemy->s.number || mPilotViewTrace.entity_num == NPC->enemy->s.
+				(mPilotViewTrace.entityNum == NPC->enemy->s.number || mPilotViewTrace.entityNum == NPC->enemy->s.
 					m_iVehicleNum))
 			{
 				TIMER_Set(NPC, "PilotRemoveTime", MIN_STAY_VIEWABLE_TIME);

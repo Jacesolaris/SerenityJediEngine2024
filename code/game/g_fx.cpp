@@ -1068,9 +1068,9 @@ void fx_target_beam_fire(gentity_t* ent)
 
 	if (trace.fraction < 1.0)
 	{
-		if (trace.entity_num < ENTITYNUM_WORLD)
+		if (trace.entityNum < ENTITYNUM_WORLD)
 		{
-			gentity_t* victim = &g_entities[trace.entity_num];
+			gentity_t* victim = &g_entities[trace.entityNum];
 			if (victim && victim->takedamage)
 			{
 				if (ent->spawnflags & 4) // NO_KNOCKBACK

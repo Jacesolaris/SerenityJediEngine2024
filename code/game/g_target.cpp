@@ -310,10 +310,10 @@ void target_laser_think(gentity_t* ent)
 	gi.trace(&tr, ent->s.origin, nullptr, nullptr, end, ent->s.number,
 		CONTENTS_SOLID | CONTENTS_BODY | CONTENTS_CORPSE, static_cast<EG2_Collision>(0), 0);
 
-	if (tr.entity_num)
+	if (tr.entityNum)
 	{
 		// hurt it if we can
-		G_Damage(&g_entities[tr.entity_num], ent, ent->activator, ent->movedir,
+		G_Damage(&g_entities[tr.entityNum], ent, ent->activator, ent->movedir,
 			tr.endpos, ent->damage, DAMAGE_NO_KNOCKBACK, MOD_ENERGY);
 	}
 

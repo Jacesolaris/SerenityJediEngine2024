@@ -26,7 +26,7 @@ void misc_model_breakable_die(gentity_t* self, const gentity_t* inflictor, genti
 	}
 	//Stop any scripts that are currently running (FLUSH)... ?
 	//Turn off animation
-	self->s.frame = self->start_frame = self->end_frame = 0;
+	self->s.frame = self->startFrame = self->endFrame = 0;
 	self->r.svFlags &= ~SVF_ANIMATING;
 
 	self->health = 0;
@@ -149,9 +149,9 @@ void misc_model_breakable_die(gentity_t* self, const gentity_t* inflictor, genti
 
 	if (self->s.model_index2 != -1 && !(self->spawnflags & 8))
 	{
-		//FIXME: model_index doesn't get set to -1 if the damage model doesn't exist
+		//FIXME: modelIndex doesn't get set to -1 if the damage model doesn't exist
 		self->r.svFlags |= SVF_BROKEN;
-		self->s.model_index = self->s.model_index2;
+		self->s.modelIndex = self->s.model_index2;
 		G_ActivateBehavior(self, BSET_DEATH);
 	}
 	else
@@ -257,13 +257,13 @@ void misc_model_use(gentity_t* self, const gentity_t* other, gentity_t* activato
 		//Usemodels toggling
 		if (self->spawnflags & 32)
 		{
-			if (self->s.model_index == self->sound1to2)
+			if (self->s.modelIndex == self->sound1to2)
 			{
-				self->s.model_index = self->sound2to1;
+				self->s.modelIndex = self->sound2to1;
 			}
 			else
 			{
-				self->s.model_index = self->sound1to2;
+				self->s.modelIndex = self->sound1to2;
 			}
 		}
 
@@ -299,19 +299,19 @@ void health_shutdown(gentity_t* self)
 		// Switch to and animate its used up model.
 		if (!Q_stricmp(self->model, "models/mapobjects/stasis/plugin2.md3"))
 		{
-			self->s.model_index = self->s.model_index2;
+			self->s.modelIndex = self->s.model_index2;
 		}
 		else if (!Q_stricmp(self->model, "models/mapobjects/borg/plugin2.md3"))
 		{
-			self->s.model_index = self->s.model_index2;
+			self->s.modelIndex = self->s.model_index2;
 		}
 		else if (!Q_stricmp(self->model, "models/mapobjects/stasis/plugin2_floor.md3"))
 		{
-			self->s.model_index = self->s.model_index2;
+			self->s.modelIndex = self->s.model_index2;
 		}
 		else if (!Q_stricmp(self->model, "models/mapobjects/forge/panels.md3"))
 		{
-			self->s.model_index = self->s.model_index2;
+			self->s.modelIndex = self->s.model_index2;
 		}
 
 		trap->LinkEntity((sharedEntity_t*)self);
@@ -629,7 +629,7 @@ void misc_model_breakable_init(gentity_t* ent)
 			ent->s.origin[1], ent->s.origin[2]);
 	}
 	//Main model
-	ent->s.model_index = ent->sound2to1 = G_model_index(ent->model);
+	ent->s.modelIndex = ent->sound2to1 = G_model_index(ent->model);
 
 	if (ent->spawnflags & 1)
 	{

@@ -26,7 +26,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #define	LL(x) x=LittleLong(x)
 
 // 3x4 identity matrix
-static float identity_matrix[12] = {
+static float identityMatrix[12] = {
 	1, 0, 0, 0,
 	0, 1, 0, 0,
 	0, 0, 1, 0
@@ -751,7 +751,7 @@ R_CullIQM
 =============
 */
 static int R_CullIQM(iqmData_t* data, trRefEntity_t* ent) {
-	vec3_t		bounds[2]{};
+	vec3_t		bounds[2];
 	float* oldBounds, * newBounds;
 	int		i;
 
@@ -841,7 +841,7 @@ R_AddIQMSurfaces
 Add all surfaces of this model
 =================
 */
-void R_AddIQMSurfaces(trRefEntity_t* ent, int entity_num) {
+void R_AddIQMSurfaces(trRefEntity_t* ent, int entityNum) {
 	iqmData_t* data;
 	srfIQModel_t* surface;
 	int			i, j;
@@ -852,7 +852,7 @@ void R_AddIQMSurfaces(trRefEntity_t* ent, int entity_num) {
 	shader_t* shader;
 	skin_t* skin;
 
-	data = tr.current_model->data.iqm;
+	data = tr.currentModel->data.iqm;
 	surface = data->surfaces;
 
 	// don't add third_person objects if not in a portal
@@ -875,7 +875,7 @@ void R_AddIQMSurfaces(trRefEntity_t* ent, int entity_num) {
 		|| (ent->e.oldframe < 0)) {
 		ri.Printf(PRINT_DEVELOPER, "R_AddIQMSurfaces: no such frame %d to %d for '%s'\n",
 			ent->e.oldframe, ent->e.frame,
-			tr.current_model->name);
+			tr.currentModel->name);
 		ent->e.frame = 0;
 		ent->e.oldframe = 0;
 	}
@@ -897,11 +897,11 @@ void R_AddIQMSurfaces(trRefEntity_t* ent, int entity_num) {
 	cubemapIndex = R_CubemapForPoint(ent->e.origin);
 
 	for (i = 0; i < data->num_surfaces; i++) {
-		if (ent->e.custom_shader)
-			shader = R_GetShaderByHandle(ent->e.custom_shader);
-		else if (ent->e.custom_skin > 0 && ent->e.custom_skin < tr.numSkins)
+		if (ent->e.customShader)
+			shader = R_GetShaderByHandle(ent->e.customShader);
+		else if (ent->e.customSkin > 0 && ent->e.customSkin < tr.numSkins)
 		{
-			skin = R_GetSkinByHandle(ent->e.custom_skin);
+			skin = R_GetSkinByHandle(ent->e.customSkin);
 			shader = tr.defaultShader;
 
 			for (j = 0; j < skin->numSurfaces; j++)
@@ -925,7 +925,7 @@ void R_AddIQMSurfaces(trRefEntity_t* ent, int entity_num) {
 			&& fogNum == 0
 			&& !(ent->e.renderfx & (RF_NOSHADOW | RF_DEPTHHACK))
 			&& shader->sort == SS_OPAQUE) {
-			R_AddDrawSurf((surfaceType_t*)surface, entity_num, tr.shadowShader, 0, 0, R_IsPostRenderEntity(ent), 0);
+			R_AddDrawSurf((surfaceType_t*)surface, entityNum, tr.shadowShader, 0, 0, R_IsPostRenderEntity(ent), 0);
 		}
 
 		// projection shadows work fine with personal models
@@ -933,11 +933,11 @@ void R_AddIQMSurfaces(trRefEntity_t* ent, int entity_num) {
 			&& fogNum == 0
 			&& (ent->e.renderfx & RF_SHADOW_PLANE)
 			&& shader->sort == SS_OPAQUE) {
-			R_AddDrawSurf((surfaceType_t*)surface, entity_num, tr.projectionShadowShader, 0, 0, R_IsPostRenderEntity(ent), 0);
+			R_AddDrawSurf((surfaceType_t*)surface, entityNum, tr.projectionShadowShader, 0, 0, R_IsPostRenderEntity(ent), 0);
 		}
 
 		if (!personalModel) {
-			R_AddDrawSurf((surfaceType_t*)surface, entity_num, shader, fogNum, 0, R_IsPostRenderEntity(ent), cubemapIndex);
+			R_AddDrawSurf((surfaceType_t*)surface, entityNum, shader, fogNum, 0, R_IsPostRenderEntity(ent), cubemapIndex);
 		}
 
 		surface++;
@@ -954,10 +954,10 @@ static void ComputePoseMats(iqmData_t* data, int frame, int oldframe,
 		for (i = 0; i < data->num_joints; i++, joint++) {
 			if (*joint >= 0) {
 				Matrix34Multiply(mat + 12 * *joint,
-					identity_matrix, mat + 12 * i);
+					identityMatrix, mat + 12 * i);
 			}
 			else {
-				Com_Memcpy(mat + 12 * i, identity_matrix, 12 * sizeof(float));
+				Com_Memcpy(mat + 12 * i, identityMatrix, 12 * sizeof(float));
 			}
 		}
 		return;
@@ -1041,11 +1041,11 @@ void RB_IQMSurfaceAnim(surfaceType_t* surface) {
 
 	RB_CHECKOVERFLOW(surf->num_vertexes, surf->num_triangles * 3);
 
-	outXYZ = &tess.xyz[tess.num_vertexes];
-	outNormal = &tess.normal[tess.num_vertexes];
-	outTangent = &tess.tangent[tess.num_vertexes];
-	outTexCoord = &tess.texCoords[tess.num_vertexes];
-	outColor = &tess.vertexColors[tess.num_vertexes];
+	outXYZ = &tess.xyz[tess.numVertexes];
+	outNormal = &tess.normal[tess.numVertexes];
+	outTangent = &tess.tangent[tess.numVertexes];
+	outTexCoord = &tess.texCoords[tess.numVertexes];
+	outColor = &tess.vertexColors[tess.numVertexes];
 
 	// compute interpolated joint matrices
 	if (data->num_poses > 0) {
@@ -1074,7 +1074,7 @@ void RB_IQMSurfaceAnim(surfaceType_t* surface) {
 
 		if (data->num_poses == 0 || numWeights == 0) {
 			// no blend joint, use identity matrix.
-			Com_Memcpy(vtxMat, identity_matrix, 12 * sizeof(float));
+			Com_Memcpy(vtxMat, identityMatrix, 12 * sizeof(float));
 		}
 		else {
 			// compute the vertex matrix by blending the up to
@@ -1146,8 +1146,8 @@ void RB_IQMSurfaceAnim(surfaceType_t* surface) {
 	}
 
 	tri = data->triangles + 3 * surf->first_triangle;
-	ptr = &tess.indexes[tess.num_indexes];
-	base = tess.num_vertexes;
+	ptr = &tess.indexes[tess.numIndexes];
+	base = tess.numVertexes;
 
 	for (i = 0; i < surf->num_triangles; i++) {
 		*ptr++ = base + (*tri++ - surf->first_vertex);
@@ -1155,12 +1155,12 @@ void RB_IQMSurfaceAnim(surfaceType_t* surface) {
 		*ptr++ = base + (*tri++ - surf->first_vertex);
 	}
 
-	tess.num_indexes += 3 * surf->num_triangles;
-	tess.num_vertexes += surf->num_vertexes;
+	tess.numIndexes += 3 * surf->num_triangles;
+	tess.numVertexes += surf->num_vertexes;
 }
 
 int R_IQMLerpTag(orientation_t* tag, iqmData_t* data,
-	int start_frame, int end_frame,
+	int startFrame, int endFrame,
 	float frac, const char* tagName) {
 	float	jointMats[IQM_MAX_JOINTS * 12];
 	int	joint;
@@ -1178,7 +1178,7 @@ int R_IQMLerpTag(orientation_t* tag, iqmData_t* data,
 		return qfalse;
 	}
 
-	ComputeJointMats(data, start_frame, end_frame, frac, jointMats);
+	ComputeJointMats(data, startFrame, endFrame, frac, jointMats);
 
 	tag->axis[0][0] = jointMats[12 * joint + 0];
 	tag->axis[1][0] = jointMats[12 * joint + 1];
