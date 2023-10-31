@@ -306,9 +306,6 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #define qglStencilFunc glStencilFunc
 #define qglStencilMask glStencilMask
 #define qglStencilOp glStencilOp
-#if defined(__APPLE__)
-#define qglStencilOpSeparate glStencilOpSeparate
-#endif
 #define qglTexCoord1d glTexCoord1d
 #define qglTexCoord1dv glTexCoord1dv
 #define qglTexCoord1f glTexCoord1f
@@ -388,10 +385,6 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #define qglVertex4sv glVertex4sv
 #define qglVertexPointer glVertexPointer
 #define qglViewport glViewport
-
-#if !defined(__APPLE__)
-extern PFNGLSTENCILOPSEPARATEPROC qglStencilOpSeparate;
-#endif
 
 extern PFNGLACTIVETEXTUREARBPROC qglActiveTextureARB;
 extern PFNGLCLIENTACTIVETEXTUREARBPROC qglClientActiveTextureARB;

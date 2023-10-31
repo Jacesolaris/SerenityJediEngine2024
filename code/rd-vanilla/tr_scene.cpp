@@ -48,7 +48,7 @@ R_InitNextFrame
 
 ====================
 */
-void R_InitNextFrame() {
+void R_InitNextFrame(void) {
 	backEndData->commands.used = 0;
 
 	r_firstSceneDrawSurf = 0;
@@ -71,7 +71,7 @@ RE_ClearScene
 
 ====================
 */
-void RE_ClearScene() {
+void RE_ClearScene(void) {
 	r_firstSceneDlight = r_numdlights;
 	r_firstSceneEntity = r_numentities;
 	r_firstScenePoly = r_numpolys;
@@ -94,16 +94,17 @@ R_AddPolygonSurfaces
 Adds all the scene's polys into this view's drawsurf list
 =====================
 */
-void R_AddPolygonSurfaces() {
+void R_AddPolygonSurfaces(void) {
 	int			i;
+	shader_t* sh;
 	srfPoly_t* poly;
 
 	tr.currentEntityNum = REFENTITYNUM_WORLD;
 	tr.shiftedEntityNum = tr.currentEntityNum << QSORT_REFENTITYNUM_SHIFT;
 
 	for (i = 0, poly = tr.refdef.polys; i < tr.refdef.numPolys; i++, poly++) {
-		const shader_t* sh = R_GetShaderByHandle(poly->hShader);
-		R_AddDrawSurf(reinterpret_cast<surfaceType_t*>(poly), sh, poly->fogIndex, qfalse);
+		sh = R_GetShaderByHandle(poly->hShader);
+		R_AddDrawSurf((surfaceType_t*)poly, sh, poly->fogIndex, qfalse);
 	}
 }
 
@@ -113,7 +114,7 @@ RE_AddPolyToScene
 
 =====================
 */
-void RE_AddPolyToScene(const qhandle_t hShader, const int numVerts, const polyVert_t* verts, const int numPolys)
+void RE_AddPolyToScene(qhandle_t hShader, int numVerts, const polyVert_t* verts, int numPolys)
 {
 	srfPoly_t* poly;
 	int			i, j;
@@ -232,7 +233,9 @@ RE_AddLightToScene
 
 =====================
 */
-void RE_AddLightToScene(const vec3_t org, const float intensity, const float r, const float g, const float b) {
+void RE_AddLightToScene(const vec3_t org, float intensity, float r, float g, float b) {
+	dlight_t* dl;
+
 	if (!tr.registered) {
 		return;
 	}
@@ -242,7 +245,7 @@ void RE_AddLightToScene(const vec3_t org, const float intensity, const float r, 
 	if (intensity <= 0) {
 		return;
 	}
-	dlight_t* dl = &backEndData->dlights[r_numdlights++];
+	dl = &backEndData->dlights[r_numdlights++];
 	VectorCopy(org, dl->origin);
 	dl->radius = intensity;
 	dl->color[0] = r;
@@ -264,6 +267,7 @@ to handle mirrors,
 extern int	recursivePortalCount;
 void RE_RenderScene(const refdef_t* fd) {
 	viewParms_t		parms;
+	int				startTime;
 	static int		lastTime = 0;
 
 	if (!tr.registered) {
@@ -275,7 +279,7 @@ void RE_RenderScene(const refdef_t* fd) {
 		return;
 	}
 
-	const int startTime = ri.Milliseconds();
+	startTime = ri.Milliseconds();
 
 	if (!tr.world && !(fd->rdflags & RDF_NOWORLDMODEL)) {
 		Com_Error(ERR_DROP, "R_RenderScene: NULL worldmodel");
@@ -325,11 +329,14 @@ void RE_RenderScene(const refdef_t* fd) {
 	// will force a reset of the visible leafs even if the view hasn't moved
 	tr.refdef.areamaskModified = qfalse;
 	if (!(tr.refdef.rdflags & RDF_NOWORLDMODEL)) {
+		int		areaDiff;
+		int		i;
+
 		// compare the area bits
-		int areaDiff = 0;
-		for (int i = 0; i < MAX_MAP_AREA_BYTES / 4; i++) {
-			areaDiff |= reinterpret_cast<int*>(tr.refdef.areamask)[i] ^ ((int*)fd->areamask)[i];
-			reinterpret_cast<int*>(tr.refdef.areamask)[i] = ((int*)fd->areamask)[i];
+		areaDiff = 0;
+		for (i = 0; i < MAX_MAP_AREA_BYTES / 4; i++) {
+			areaDiff |= ((int*)tr.refdef.areamask)[i] ^ ((int*)fd->areamask)[i];
+			((int*)tr.refdef.areamask)[i] = ((int*)fd->areamask)[i];
 		}
 
 		if (areaDiff) {
@@ -374,7 +381,7 @@ void RE_RenderScene(const refdef_t* fd) {
 	// The refdef takes 0-at-the-top y coordinates, so
 	// convert to GL's 0-at-the-bottom space
 	//
-	memset(&parms, 0, sizeof parms);
+	memset(&parms, 0, sizeof(parms));
 	parms.viewportX = tr.refdef.x;
 	parms.viewportY = glConfig.vidHeight - (tr.refdef.y + tr.refdef.height);
 	parms.viewportWidth = tr.refdef.width;

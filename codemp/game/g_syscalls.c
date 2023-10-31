@@ -1412,26 +1412,26 @@ void trap_G2_SetGhoul2model_indexes(void* ghoul2, qhandle_t* modelList, qhandle_
 }
 
 qboolean trap_G2API_GetBoltMatrix(void* ghoul2, const int modelIndex, const int boltIndex, mdxaBone_t* matrix,
-	const vec3_t angles, const vec3_t position, const int frame_num, qhandle_t* modelList,
+	const vec3_t angles, const vec3_t position, const int frameNum, qhandle_t* modelList,
 	vec3_t scale)
 {
-	return Q_syscall(G_G2_GETBOLT, ghoul2, modelIndex, boltIndex, matrix, angles, position, frame_num, modelList,
+	return Q_syscall(G_G2_GETBOLT, ghoul2, modelIndex, boltIndex, matrix, angles, position, frameNum, modelList,
 		scale);
 }
 
 qboolean trap_G2API_GetBoltMatrix_NoReconstruct(void* ghoul2, const int modelIndex, const int boltIndex,
 	mdxaBone_t* matrix, const vec3_t angles, const vec3_t position,
-	const int frame_num, qhandle_t* modelList, vec3_t scale)
+	const int frameNum, qhandle_t* modelList, vec3_t scale)
 {
-	return Q_syscall(G_G2_GETBOLT_NOREC, ghoul2, modelIndex, boltIndex, matrix, angles, position, frame_num, modelList,
+	return Q_syscall(G_G2_GETBOLT_NOREC, ghoul2, modelIndex, boltIndex, matrix, angles, position, frameNum, modelList,
 		scale);
 }
 
 qboolean trap_G2API_GetBoltMatrix_NoRecNoRot(void* ghoul2, const int modelIndex, const int boltIndex,
 	mdxaBone_t* matrix, const vec3_t angles, const vec3_t position,
-	const int frame_num, qhandle_t* modelList, vec3_t scale)
+	const int frameNum, qhandle_t* modelList, vec3_t scale)
 {
-	return Q_syscall(G_G2_GETBOLT_NOREC_NOROT, ghoul2, modelIndex, boltIndex, matrix, angles, position, frame_num,
+	return Q_syscall(G_G2_GETBOLT_NOREC_NOROT, ghoul2, modelIndex, boltIndex, matrix, angles, position, frameNum,
 		modelList, scale);
 }
 

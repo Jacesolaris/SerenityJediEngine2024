@@ -854,7 +854,7 @@ void G_InitCvars()
 
 	g_noIgniteTwirl = gi.cvar("g_noIgniteTwirl", "0", CVAR_ARCHIVE); //if 1, don't do ignite twirl
 
-	in_joystick = gi.cvar("in_joystick", "0", CVAR_ARCHIVE_ND | CVAR_LATCH);
+	in_joystick = gi.cvar("in_joystick", "1", CVAR_ARCHIVE_ND | CVAR_LATCH);
 
 	g_Weather = gi.cvar("r_weather", "0", CVAR_ARCHIVE);
 

@@ -38,19 +38,19 @@ typedef std::map<sstring_t, const char*>	ShaderEntryPtrs_t;
 typedef ShaderEntryPtrs_t::size_type	ShaderEntryPtr_size;
 ShaderEntryPtrs_t ShaderEntryPtrs;
 
-void ShaderEntryPtrs_Clear()
+void ShaderEntryPtrs_Clear(void)
 {
 	ShaderEntryPtrs.clear();
 }
 
-int ShaderEntryPtrs_Size()
+int ShaderEntryPtrs_Size(void)
 {
 	return ShaderEntryPtrs.size();
 }
 
 void ShaderEntryPtrs_Insert(const char* token, const char* p)
 {
-	const auto it = ShaderEntryPtrs.find(token);
+	ShaderEntryPtrs_t::iterator it = ShaderEntryPtrs.find(token);
 
 	if (it == ShaderEntryPtrs.end())
 	{
@@ -66,12 +66,12 @@ void ShaderEntryPtrs_Insert(const char* token, const char* p)
 //
 const char* ShaderEntryPtrs_Lookup(const char* psShaderName)
 {
-	const auto it = ShaderEntryPtrs.find(psShaderName);
+	ShaderEntryPtrs_t::iterator it = ShaderEntryPtrs.find(psShaderName);
 	if (it != ShaderEntryPtrs.end())
 	{
 		const char* p = (*it).second;
 		return p;
 	}
 
-	return nullptr;
+	return NULL;
 }

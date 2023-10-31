@@ -40,7 +40,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 // Bolt List handling routines - so entities can attach themselves to any part of the model in question
 
 // Given a bone number, see if that bone is already in our bone list
-int G2_Find_Bolt_Bone_Num(const boltInfo_v& bltlist, const int boneNum)
+int G2_Find_Bolt_Bone_Num(boltInfo_v& bltlist, const int boneNum)
 {
 	// look through entire list
 	for (size_t i = 0; i < bltlist.size(); i++)
@@ -56,12 +56,12 @@ int G2_Find_Bolt_Bone_Num(const boltInfo_v& bltlist, const int boneNum)
 }
 
 // Given a bone number, see if that surface is already in our surfacelist list
-int G2_Find_Bolt_Surface_Num(const boltInfo_v& bltlist, const int surface_num, const int flags)
+int G2_Find_Bolt_Surface_Num(boltInfo_v& bltlist, const int surfaceNum, const int flags)
 {
 	// look through entire list
 	for (size_t i = 0; i < bltlist.size(); i++)
 	{
-		if (bltlist[i].surfaceNumber == surface_num && (bltlist[i].surfaceType & flags) == flags)
+		if ((bltlist[i].surfaceNumber == surfaceNum) && ((bltlist[i].surfaceType & flags) == flags))
 		{
 			return i;
 		}
@@ -76,11 +76,11 @@ int G2_Find_Bolt_Surface_Num(const boltInfo_v& bltlist, const int surface_num, c
 int G2_Add_Bolt_Surf_Num(const CGhoul2Info* ghlInfo, boltInfo_v& bltlist, const surfaceInfo_v& slist, const int surfNum)
 {
 	assert(ghlInfo && ghlInfo->mValid);
-	boltInfo_t			temp_bolt;
+	boltInfo_t			tempBolt;
 
-	assert(surfNum >= 0 && surfNum < static_cast<int>(slist.size()));
+	assert(surfNum >= 0 && surfNum < (int)slist.size());
 	// ensure surface num is valid
-	if (surfNum >= static_cast<int>(slist.size()))
+	if (surfNum >= (int)slist.size())
 	{
 		return -1;
 	}
@@ -113,25 +113,28 @@ int G2_Add_Bolt_Surf_Num(const CGhoul2Info* ghlInfo, boltInfo_v& bltlist, const 
 	}
 
 	// ok, we didn't find an existing surface of that name, or an empty slot. Lets add an entry
-	temp_bolt.surfaceNumber = surfNum;
-	temp_bolt.surfaceType = G2SURFACEFLAG_GENERATED;
-	temp_bolt.boneNumber = -1;
-	temp_bolt.boltUsed = 1;
-	bltlist.push_back(temp_bolt);
+	tempBolt.surfaceNumber = surfNum;
+	tempBolt.surfaceType = G2SURFACEFLAG_GENERATED;
+	tempBolt.boneNumber = -1;
+	tempBolt.boltUsed = 1;
+	bltlist.push_back(tempBolt);
 	return bltlist.size() - 1;
 }
 
-void G2_Bolt_Not_Found(const char* boneName);
+void G2_Bolt_Not_Found(const char* boneName, const char* modName);
 int G2_Add_Bolt(const CGhoul2Info* ghlInfo, boltInfo_v& bltlist, const char* boneName)
 {
 	assert(ghlInfo && ghlInfo->mValid);
-	boltInfo_t			temp_bolt;
+	int					surfNum = -1;
+	mdxaSkel_t* skel;
+	mdxaSkelOffsets_t* offsets;
+	boltInfo_t			tempBolt;
 	uint32_t			flags;
 
 	assert(G2_MODEL_OK(ghlInfo));
 
 	// first up, we'll search for that which this bolt names in all the surfaces
-	const int surfNum = G2_IsSurfaceLegal(ghlInfo->currentModel, boneName, &flags);
+	surfNum = G2_IsSurfaceLegal(ghlInfo->currentModel, boneName, &flags);
 
 	// did we find it as a surface?
 	if (surfNum != -1)
@@ -163,23 +166,23 @@ int G2_Add_Bolt(const CGhoul2Info* ghlInfo, boltInfo_v& bltlist, const char* bon
 		}
 
 		// ok, we didn't find an existing surface of that name, or an empty slot. Lets add an entry
-		temp_bolt.surfaceNumber = surfNum;
-		temp_bolt.boneNumber = -1;
-		temp_bolt.boltUsed = 1;
-		temp_bolt.surfaceType = 0;
-		bltlist.push_back(temp_bolt);
+		tempBolt.surfaceNumber = surfNum;
+		tempBolt.boneNumber = -1;
+		tempBolt.boltUsed = 1;
+		tempBolt.surfaceType = 0;
+		bltlist.push_back(tempBolt);
 		return bltlist.size() - 1;
 	}
 
 	// no, check to see if it's a bone then
 
-	const mdxaSkelOffsets_t* offsets = reinterpret_cast<mdxaSkelOffsets_t*>((byte*)ghlInfo->aHeader + sizeof(mdxaHeader_t));
+	offsets = (mdxaSkelOffsets_t*)((byte*)ghlInfo->aHeader + sizeof(mdxaHeader_t));
 
 	int x;
 	// walk the entire list of bones in the gla file for this model and see if any match the name of the bone we want to find
 	for (x = 0; x < ghlInfo->aHeader->numBones; x++)
 	{
-		const mdxaSkel_t* skel = reinterpret_cast<mdxaSkel_t*>((byte*)ghlInfo->aHeader + sizeof(mdxaHeader_t) + offsets->offsets[x]);
+		skel = (mdxaSkel_t*)((byte*)ghlInfo->aHeader + sizeof(mdxaHeader_t) + offsets->offsets[x]);
 		// if name is the same, we found it
 		if (!Q_stricmp(skel->name, boneName))
 		{
@@ -193,7 +196,7 @@ int G2_Add_Bolt(const CGhoul2Info* ghlInfo, boltInfo_v& bltlist, const char* bon
 		// didn't find it? Error
 		//assert(0&&x == mod_a->mdxa->numBones);
 #if _DEBUG
-		G2_Bolt_Not_Found(boneName);
+		G2_Bolt_Not_Found(boneName, ghlInfo->mFileName);
 #endif
 		return -1;
 	}
@@ -216,7 +219,7 @@ int G2_Add_Bolt(const CGhoul2Info* ghlInfo, boltInfo_v& bltlist, const char* bon
 		// if this bone entry has info in it, bounce over it
 		if (bltlist[i].boneNumber == -1 && bltlist[i].surfaceNumber == -1)
 		{
-			// if we found an entry that had a -1 for the bone number, then we hit a bone slot that was empty
+			// if we found an entry that had a -1 for the bonenumber, then we hit a bone slot that was empty
 			bltlist[i].boneNumber = x;
 			bltlist[i].boltUsed = 1;
 			bltlist[i].surfaceType = 0;
@@ -225,18 +228,18 @@ int G2_Add_Bolt(const CGhoul2Info* ghlInfo, boltInfo_v& bltlist, const char* bon
 	}
 
 	// ok, we didn't find an existing bone of that name, or an empty slot. Lets add an entry
-	temp_bolt.boneNumber = x;
-	temp_bolt.surfaceNumber = -1;
-	temp_bolt.boltUsed = 1;
-	temp_bolt.surfaceType = 0;
-	bltlist.push_back(temp_bolt);
+	tempBolt.boneNumber = x;
+	tempBolt.surfaceNumber = -1;
+	tempBolt.boltUsed = 1;
+	tempBolt.surfaceType = 0;
+	bltlist.push_back(tempBolt);
 	return bltlist.size() - 1;
 }
 
 // Given a model handle, and a bone name, we want to remove this bone from the bone override list
-qboolean G2_Remove_Bolt(boltInfo_v& bltlist, const int index)
+qboolean G2_Remove_Bolt(boltInfo_v& bltlist, int index)
 {
-	assert(index >= 0 && index < static_cast<int>(bltlist.size()));
+	assert(index >= 0 && index < (int)bltlist.size());
 	// did we find it?
 	if (index != -1)
 	{

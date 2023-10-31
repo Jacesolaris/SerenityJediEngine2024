@@ -842,7 +842,7 @@ qboolean G2_Get_Bone_Anim_Range_Index(const boneInfo_v& blist, const int boneInd
 
 qboolean G2_Get_Bone_Anim_Range(const CGhoul2Info* ghlInfo, const boneInfo_v& blist, const char* boneName, int* startFrame, int* endFrame)
 {
-	const int			index = G2_Find_Bone(ghlInfo, blist, boneName);
+	const int index = G2_Find_Bone(ghlInfo, blist, boneName);
 	if (index == -1)
 	{
 		return qfalse;

@@ -651,7 +651,7 @@ static void IN_InitJoystick()
 
 	in_joystickUseAnalog = Cvar_Get("in_joystickUseAnalog", "0", CVAR_ARCHIVE_ND);
 
-	in_joystickThreshold = Cvar_Get("joy_threshold", "0.15", CVAR_ARCHIVE_ND);
+	in_joystickThreshold = Cvar_Get("joy_threshold", "0.635156", CVAR_ARCHIVE_ND);
 
 	stick = SDL_JoystickOpen(in_joystickNo->integer);
 
@@ -687,7 +687,7 @@ void IN_Init(void* windowData)
 	// joystick variables
 	in_keyboardDebug = Cvar_Get("in_keyboardDebug", "0", CVAR_ARCHIVE_ND);
 
-	in_joystick = Cvar_Get("in_joystick", "0", CVAR_ARCHIVE_ND | CVAR_LATCH);
+	in_joystick = Cvar_Get("in_joystick", "1", CVAR_ARCHIVE_ND | CVAR_LATCH);
 
 	// mouse variables
 	in_mouse = Cvar_Get("in_mouse", "1", CVAR_ARCHIVE);

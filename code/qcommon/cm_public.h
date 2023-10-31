@@ -31,10 +31,10 @@ void CM_LoadMap(const char* name, qboolean clientload, int* checksum, qboolean s
 void CM_ClearMap();
 int CM_TotalMapContents();
 
-clip_handle_t CM_InlineModel(int index); // 0 = world, 1 + are bmodels
-clip_handle_t CM_TempBoxModel(const vec3_t mins, const vec3_t maxs); //, const int contents );
+clipHandle_t CM_InlineModel(int index); // 0 = world, 1 + are bmodels
+clipHandle_t CM_TempBoxModel(const vec3_t mins, const vec3_t maxs); //, const int contents );
 
-int CM_ModelContents(clip_handle_t model, int sub_bsp_index);
+int CM_ModelContents(clipHandle_t model, int sub_bsp_index);
 
 int CM_NumInlineModels();
 char* CM_EntityString();
@@ -43,15 +43,15 @@ int CM_LoadSubBSP(const char* name, qboolean clientload);
 int CM_FindSubBSP(int modelIndex);
 
 // returns an ORed contents mask
-int CM_PointContents(const vec3_t p, clip_handle_t model);
-int CM_TransformedPointContents(const vec3_t p, clip_handle_t model, const vec3_t origin, const vec3_t angles);
+int CM_PointContents(const vec3_t p, clipHandle_t model);
+int CM_TransformedPointContents(const vec3_t p, clipHandle_t model, const vec3_t origin, const vec3_t angles);
 
 void CM_BoxTrace(trace_t* results, const vec3_t start, const vec3_t end,
 	const vec3_t mins, const vec3_t maxs,
-	clip_handle_t model, int brushmask);
+	clipHandle_t model, int brushmask);
 void CM_TransformedBoxTrace(trace_t* results, const vec3_t start, const vec3_t end,
 	const vec3_t mins, const vec3_t maxs,
-	clip_handle_t model, int brushmask,
+	clipHandle_t model, int brushmask,
 	const vec3_t origin, const vec3_t angles);
 
 byte* CM_ClusterPVS(int cluster);

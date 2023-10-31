@@ -141,7 +141,7 @@ sets mins and maxs for inline bmodels
 */
 void SV_SetBrushModel(gentity_t* ent, const char* name)
 {
-	clip_handle_t h;
+	clipHandle_t h;
 	vec3_t mins, maxs;
 
 	if (!name)
@@ -335,7 +335,7 @@ qboolean SV_EntityContact(const vec3_t mins, const vec3_t maxs, const gentity_t*
 	const float* origin = gEnt->currentOrigin;
 	const float* angles = gEnt->currentAngles;
 
-	const clip_handle_t ch = SV_clip_handleForEntity(gEnt);
+	const clipHandle_t ch = SV_clip_handleForEntity(gEnt);
 	CM_TransformedBoxTrace(&trace, vec3_origin, vec3_origin, mins, maxs,
 		ch, -1, origin, angles);
 
@@ -492,7 +492,7 @@ static char* SV_G2API_GetAnimFileInternalNameIndex(const qhandle_t modelIndex)
 	return re.G2API_GetAnimFileInternalNameIndex(modelIndex);
 }
 
-static int SV_G2API_GetAnimIndex(const CGhoul2Info* ghlInfo)
+static int SV_G2API_GetAnimIndex(CGhoul2Info* ghlInfo)
 {
 	return re.G2API_GetAnimIndex(ghlInfo);
 }
@@ -577,7 +577,7 @@ static void SV_G2API_GiveMeVectorFromMatrix(mdxaBone_t& boltMatrix, const Eorien
 	re.G2API_GiveMeVectorFromMatrix(boltMatrix, flags, vec);
 }
 
-static qboolean SV_G2API_HaveWeGhoul2Models(const CGhoul2Info_v& ghoul2)
+static qboolean SV_G2API_HaveWeGhoul2Models(CGhoul2Info_v& ghoul2)
 {
 	return re.G2API_HaveWeGhoul2Models(ghoul2);
 }
@@ -609,7 +609,7 @@ static void SV_G2API_ListSurfaces(CGhoul2Info* ghlInfo)
 	return re.G2API_ListSurfaces(ghlInfo);
 }
 
-static void SV_G2API_LoadGhoul2Models(CGhoul2Info_v& ghoul2, const char* buffer)
+static void SV_G2API_LoadGhoul2Models(CGhoul2Info_v& ghoul2, char* buffer)
 {
 	return re.G2API_LoadGhoul2Models(ghoul2, buffer);
 }

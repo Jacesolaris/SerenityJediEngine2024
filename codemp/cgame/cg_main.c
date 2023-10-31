@@ -1638,10 +1638,10 @@ static void CG_RegisterGraphics(void)
 	cgs.media.fshrMarkShader = trap->R_RegisterShader("footstep_heavy_r");
 	cgs.media.fshlMarkShader = trap->R_RegisterShader("footstep_heavy_l");
 
-	cgs.media.fsrMarkShader = trap->R_RegisterShader("footstep_sbd_r");
+	/*cgs.media.fsrMarkShader = trap->R_RegisterShader("footstep_sbd_r");
 	cgs.media.fslMarkShader = trap->R_RegisterShader("footstep_sbd_l");
 	cgs.media.fshrMarkShader = trap->R_RegisterShader("footstep_heavy_sbd_r");
-	cgs.media.fshlMarkShader = trap->R_RegisterShader("footstep_heavy_sbd_l");
+	cgs.media.fshlMarkShader = trap->R_RegisterShader("footstep_heavy_sbd_l");*/
 
 	cgs.media.refractionShader = trap->R_RegisterShader("effects/refraction");
 

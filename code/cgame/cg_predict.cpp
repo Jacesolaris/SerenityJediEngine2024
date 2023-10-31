@@ -107,7 +107,7 @@ void CG_ClipMoveToEntities(const vec3_t start, const vec3_t mins, const vec3_t m
 	const int skipNumber, const int mask, trace_t* tr)
 {
 	trace_t trace;
-	clip_handle_t cmodel;
+	clipHandle_t cmodel;
 	vec3_t bmins{}, bmaxs{};
 
 	for (int i = 0; i < cg_numSolidEntities; i++)
@@ -215,7 +215,7 @@ int		CG_PointContents(const vec3_t point, int pass_entityNum) {
 	int			i;
 	entityState_t* ent;
 	centity_t* cent;
-	clip_handle_t cmodel;
+	clipHandle_t cmodel;
 	int			contents;
 
 	contents = cgi_CM_PointContents(point, 0);
@@ -586,7 +586,7 @@ void CG_TouchTriggerPrediction()
 			continue;
 		}
 
-		const clip_handle_t cmodel = cgi_CM_InlineModel(ent->modelindex);
+		const clipHandle_t cmodel = cgi_CM_InlineModel(ent->modelindex);
 		if (!cmodel)
 		{
 			continue;

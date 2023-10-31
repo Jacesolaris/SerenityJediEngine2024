@@ -924,7 +924,7 @@ int CM_TotalMapContents()
 CM_clip_handleToModel
 ==================
 */
-cmodel_t* CM_clip_handleToModel(const clip_handle_t handle, clipMap_t** clip_map)
+cmodel_t* CM_clip_handleToModel(const clipHandle_t handle, clipMap_t** clip_map)
 {
 	if (handle < 0)
 	{
@@ -974,7 +974,7 @@ cmodel_t* CM_clip_handleToModel(const clip_handle_t handle, clipMap_t** clip_map
 CM_InlineModel
 ==================
 */
-clip_handle_t CM_InlineModel(const int index)
+clipHandle_t CM_InlineModel(const int index)
 {
 	if (index < 0 || index >= TotalSubModels)
 	{
@@ -1074,7 +1074,7 @@ To keep everything totally uniform, bounding boxes are turned into small
 BSP trees instead of being compared directly.
 ===================
 */
-clip_handle_t CM_TempBoxModel(const vec3_t mins, const vec3_t maxs)
+clipHandle_t CM_TempBoxModel(const vec3_t mins, const vec3_t maxs)
 {
 	//, const int contents ) {
 	box_planes[0].dist = maxs[0];
@@ -1104,7 +1104,7 @@ clip_handle_t CM_TempBoxModel(const vec3_t mins, const vec3_t maxs)
 CM_ModelBounds
 ===================
 */
-void CM_ModelBounds(clipMap_t& cm, const clip_handle_t model, vec3_t mins, vec3_t maxs)
+void CM_ModelBounds(clipMap_t& cm, const clipHandle_t model, vec3_t mins, vec3_t maxs)
 {
 	const cmodel_t* cmod = CM_clip_handleToModel(model);
 	VectorCopy(cmod->mins, mins);
@@ -1164,7 +1164,7 @@ void CM_GetWorldBounds(vec3_t mins, vec3_t maxs)
 	VectorCopy(cmg.cmodels[0].maxs, maxs);
 }
 
-int CM_ModelContents_Actual(const clip_handle_t model, clipMap_t* cm)
+int CM_ModelContents_Actual(const clipHandle_t model, clipMap_t* cm)
 {
 	if (!cm)
 	{
@@ -1181,18 +1181,18 @@ int CM_ModelContents_Actual(const clip_handle_t model, clipMap_t* cm)
 
 	for (int i = 0; i < cmod->leaf.numLeafSurfaces; i++)
 	{
-		const int surface_num = cm->leafsurfaces[cmod->leaf.firstLeafSurface + i];
-		if (cm->surfaces[surface_num])
+		const int surfaceNum = cm->leafsurfaces[cmod->leaf.firstLeafSurface + i];
+		if (cm->surfaces[surfaceNum])
 		{
 			// HERNH?  How could we have a null surf within our cmod->leaf.numLeafSurfaces?
-			contents |= cm->surfaces[surface_num]->contents;
+			contents |= cm->surfaces[surfaceNum]->contents;
 		}
 	}
 
 	return contents;
 }
 
-int CM_ModelContents(const clip_handle_t model, const int sub_bsp_index)
+int CM_ModelContents(const clipHandle_t model, const int sub_bsp_index)
 {
 	if (sub_bsp_index < 0)
 	{

@@ -2864,7 +2864,7 @@ void CL_Init(void)
 	cl_packetdup = Cvar_Get("cl_packetdup", "1", CVAR_ARCHIVE_ND);
 
 	cl_run = Cvar_Get("cl_run", "1", CVAR_ARCHIVE_ND, "Always run");
-	cl_sensitivity = Cvar_Get("sensitivity", "5", CVAR_ARCHIVE, "Mouse sensitivity value");
+	cl_sensitivity = Cvar_Get("sensitivity", "6.593750", CVAR_ARCHIVE, "Mouse sensitivity value");
 	cl_mouseAccel = Cvar_Get("cl_mouseAccel", "0", CVAR_ARCHIVE_ND, "Mouse acceleration value");
 	cl_freelook = Cvar_Get("cl_freelook", "1", CVAR_ARCHIVE_ND, "Mouse look");
 
@@ -2903,7 +2903,7 @@ void CL_Init(void)
 	// Input is jittery on OS X w/o this
 	m_filter = Cvar_Get("m_filter", "1", CVAR_ARCHIVE);
 #else
-	m_filter = Cvar_Get("m_filter", "0", CVAR_ARCHIVE_ND);
+	m_filter = Cvar_Get("m_filter", "1", CVAR_ARCHIVE_ND);
 #endif
 
 	cl_motdString = Cvar_Get("cl_motdString", "", CVAR_ROM);

@@ -361,9 +361,9 @@ void GL_State(const uint32_t stateBits)
 	//
 	// alpha test
 	//
-	if (diff & GLS_ATEST_BITS)
+	if (diff & GLS_atestBits)
 	{
-		switch (stateBits & GLS_ATEST_BITS)
+		switch (stateBits & GLS_atestBits)
 		{
 		case 0:
 			qglDisable(GL_ALPHA_TEST);

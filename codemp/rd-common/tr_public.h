@@ -189,7 +189,7 @@ using refexport_t = struct refexport_s
 	char* (*G2API_GetAnimFileNameIndex)(qhandle_t modelIndex);
 	qboolean(*G2API_GetAnimRange)(CGhoul2Info* ghlInfo, const char* boneName, int* startFrame, int* endFrame);
 	qboolean(*G2API_GetBoltMatrix)(CGhoul2Info_v& ghoul2, int modelIndex, int boltIndex, mdxaBone_t* matrix,
-		const vec3_t angles, const vec3_t position, int frame_num, qhandle_t* modelList,
+		const vec3_t angles, const vec3_t position, int frameNum, qhandle_t* modelList,
 		vec3_t scale);
 	qboolean(*G2API_GetBoneAnim)(CGhoul2Info_v& ghoul2, int modelIndex, const char* boneName, int currentTime,
 		float* currentFrame, int* startFrame, int* endFrame, int* flags, float* animSpeed,
@@ -217,7 +217,7 @@ using refexport_t = struct refexport_s
 	qboolean(*G2API_IsPaused)(CGhoul2Info* ghlInfo, const char* boneName);
 	void (*G2API_ListBones)(CGhoul2Info* ghlInfo, int frame);
 	void (*G2API_ListSurfaces)(CGhoul2Info* ghlInfo);
-	void (*G2API_LoadGhoul2Models)(CGhoul2Info_v& ghoul2, const char* buffer);
+	void (*G2API_LoadGhoul2Models)(CGhoul2Info_v& ghoul2, char* buffer);
 	void (*G2API_LoadSaveCodeDestructGhoul2Info)(CGhoul2Info_v& ghoul2);
 	qboolean(*G2API_OverrideServerWithClientData)(CGhoul2Info_v& serverInstance, int modelIndex);
 
@@ -336,14 +336,14 @@ using refimport_t = struct refimport_s
 	int (*FS_Write)(const void* buffer, int len, fileHandle_t f);
 	void (*FS_WriteFile)(const char* qpath, const void* buffer, int size);
 	void (*CM_BoxTrace)(trace_t* results, const vec3_t start, const vec3_t end, const vec3_t mins, const vec3_t maxs,
-		clip_handle_t model, int brushmask, int capsule);
+		clipHandle_t model, int brushmask, int capsule);
 	void (*CM_DrawDebugSurface)(void (*drawPoly)(int color, int numPoints, const float* points));
 	bool (*CM_CullWorldBox)(const cplane_t* frustum, const vec3pair_t bounds);
 	byte* (*CM_ClusterPVS)(int cluster);
 	int (*CM_LeafArea)(int leafnum);
 	int (*CM_LeafCluster)(int leafnum);
 	int (*CM_PointLeafnum)(const vec3_t p);
-	int (*CM_PointContents)(const vec3_t p, clip_handle_t model);
+	int (*CM_PointContents)(const vec3_t p, clipHandle_t model);
 	qboolean(*Com_TheHunkMarkHasBeenMade)(void);
 	void (*S_RestartMusic)(void);
 	qboolean(*SND_RegisterAudio_LevelLoadEnd)(qboolean bDeleteEverythingNotUsedThisLevel);
@@ -384,7 +384,7 @@ using refimport_t = struct refimport_s
 	bool (*PD_Store)(const char* name, const void* data, size_t size);
 	const void* (*PD_Load)(const char* name, size_t* size);
 
-	int (*SV_PointContents)(const vec3_t p, clip_handle_t model);
+	int (*SV_PointContents)(const vec3_t p, clipHandle_t model);
 };
 
 // this is the only function actually exported at the linker level

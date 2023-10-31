@@ -2074,14 +2074,16 @@ static void CG_RegisterGraphics()
 
 	cgs.media.shadowMarkShader = cgi_R_RegisterShader("markShadow");
 	cgs.media.wakeMarkShader = cgi_R_RegisterShader("wake");
+
 	cgs.media.fsrMarkShader = cgi_R_RegisterShader("footstep_r");
 	cgs.media.fslMarkShader = cgi_R_RegisterShader("footstep_l");
 	cgs.media.fshrMarkShader = cgi_R_RegisterShader("footstep_heavy_r");
 	cgs.media.fshlMarkShader = cgi_R_RegisterShader("footstep_heavy_l");
-	cgs.media.fsrMarkShader = cgi_R_RegisterShader("footstep_sbd_r");
+
+	/*cgs.media.fsrMarkShader = cgi_R_RegisterShader("footstep_sbd_r");
 	cgs.media.fslMarkShader = cgi_R_RegisterShader("footstep_sbd_l");
 	cgs.media.fshrMarkShader = cgi_R_RegisterShader("footstep_heavy_sbd_r");
-	cgs.media.fshlMarkShader = cgi_R_RegisterShader("footstep_heavy_sbd_l");
+	cgs.media.fshlMarkShader = cgi_R_RegisterShader("footstep_heavy_sbd_l");*/
 
 	cgi_S_RegisterSound("sound/effects/energy_crackle.wav");
 

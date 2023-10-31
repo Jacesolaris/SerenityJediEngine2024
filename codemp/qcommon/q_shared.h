@@ -170,14 +170,14 @@ typedef union fileBuffer_u {
 	byte* b;
 } fileBuffer_t;
 
-typedef int32_t qhandle_t, thandle_t, fxHandle_t, sfxHandle_t, fileHandle_t, clip_handle_t;
+typedef int32_t qhandle_t, thandle_t, fxHandle_t, sfxHandle_t, fileHandle_t, clipHandle_t;
 
 #define NULL_HANDLE ((qhandle_t)0)
 #define NULL_SOUND ((sfxHandle_t)0)
 #define NULL_FX ((fxHandle_t)0)
 #define NULL_SFX ((sfxHandle_t)0)
 #define NULL_FILE ((fileHandle_t)0)
-#define NULL_CLIP ((clip_handle_t)0)
+#define NULL_CLIP ((clipHandle_t)0)
 
 #define PAD(base, alignment)	(((base)+(alignment)-1) & ~((alignment)-1))
 #define PADLEN(base, alignment)	(PAD((base), (alignment)) - (base))

@@ -2222,7 +2222,7 @@ void G2API_SaveGhoul2Models(CGhoul2Info_v& ghoul2)
 	G2ANIM(ghoul2, "G2API_SaveGhoul2Models");
 }
 
-void G2API_LoadGhoul2Models(CGhoul2Info_v& ghoul2, const char* buffer)
+void G2API_LoadGhoul2Models(CGhoul2Info_v& ghoul2, char* buffer)
 {
 	G2_LoadGhoul2Model(ghoul2, buffer);
 	G2ANIM(ghoul2, "G2API_LoadGhoul2Models");
@@ -2312,7 +2312,7 @@ void G2API_ClearSkinGore(CGhoul2Info_v& ghoul2)
 	}
 }
 
-extern int		G2_DecideTraceLod(CGhoul2Info& ghoul2, int useLod);
+extern int G2_DecideTraceLod(CGhoul2Info& ghoul2, int useLod);
 void G2API_AddSkinGore(CGhoul2Info_v& ghoul2, SSkinGoreData& gore)
 {
 	if (VectorLength(gore.rayDirection) < .1f)
@@ -2356,7 +2356,7 @@ void G2API_AddSkinGore(CGhoul2Info_v& ghoul2, SSkinGoreData& gore)
 }
 #else
 
-void G2API_ClearSkinGore(CGhoul2Info_v& ghoul2) 
+void G2API_ClearSkinGore(CGhoul2Info_v& ghoul2)
 {
 }
 void G2API_AddSkinGore(CGhoul2Info_v& ghoul2, SSkinGoreData& gore)

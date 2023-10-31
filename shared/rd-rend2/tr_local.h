@@ -2875,10 +2875,10 @@ qboolean R_CalcTangentVectors(srfVert_t* dv[3]);
 #define	CULL_OUT	2		// completely outside the clipping planes
 void R_LocalNormalToWorld(const vec3_t local, vec3_t world);
 void R_LocalPointToWorld(const vec3_t local, vec3_t world);
-int R_CullBox(vec3_t bounds[2]);
-int R_CullLocalBox(vec3_t bounds[2]);
+int R_CullBox(vec3_t worldBounds[2]);
+int R_CullLocalBox(const vec3_t bounds[2]);
 int R_CullPointAndRadiusEx(const vec3_t origin, float radius, const cplane_t* frustum, int numPlanes);
-int R_CullPointAndRadius(const vec3_t origin, float radius);
+int R_CullPointAndRadius(const vec3_t pt, const float radius);
 int R_CullLocalPointAndRadius(const vec3_t origin, float radius);
 
 void R_SetupProjection(viewParms_t* dest, float zProj, float zFar, qboolean computeFrustum);
@@ -2984,7 +2984,7 @@ extern const int lightmapsVertex[MAXLIGHTMAPS];
 extern const int lightmapsFullBright[MAXLIGHTMAPS];
 extern const byte stylesDefault[MAXLIGHTMAPS];
 
-shader_t* R_FindShader(const char* name, const int* lightmapIndexes, const byte* styles, qboolean mipRawImage);
+shader_t* R_FindShader(const char* name, const int* lightmapIndex, const byte* styles, const qboolean mipRawImage);
 shader_t* R_GetShaderByHandle(const qhandle_t hShader);
 shader_t* R_FindShaderByName(const char* name);
 void R_InitShaders(const qboolean server);
@@ -3161,10 +3161,10 @@ SKIES
 ============================================================
 */
 
-void R_BuildCloudData(shaderCommands_t* shader);
-void R_InitSkyTexCoords(float cloudLayerHeight);
+void R_BuildCloudData(const shaderCommands_t* input);
+void R_InitSkyTexCoords(const float heightCloud);
 void RB_DrawSun(float scale, shader_t* shader);
-void RB_ClipSkyPolygons(shaderCommands_t* shader);
+void RB_ClipSkyPolygons(const shaderCommands_t* input);
 
 /*
 ============================================================

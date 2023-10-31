@@ -175,13 +175,13 @@ void trap_R_SetColor(const float* rgba) {
 void trap_R_DrawStretchPic(float x, float y, float w, float h, float s1, float t1, float s2, float t2, qhandle_t hShader) {
 	Q_syscall(UI_R_DRAWSTRETCHPIC, PASSFLOAT(x), PASSFLOAT(y), PASSFLOAT(w), PASSFLOAT(h), PASSFLOAT(s1), PASSFLOAT(t1), PASSFLOAT(s2), PASSFLOAT(t2), hShader);
 }
-void	trap_R_ModelBounds(clip_handle_t model, vec3_t mins, vec3_t maxs) {
+void	trap_R_ModelBounds(clipHandle_t model, vec3_t mins, vec3_t maxs) {
 	Q_syscall(UI_R_MODELBOUNDS, model, mins, maxs);
 }
 void trap_UpdateScreen(void) {
 	Q_syscall(UI_UPDATESCREEN);
 }
-int trap_CM_LerpTag(orientation_t* tag, clip_handle_t mod, int startFrame, int endFrame, float frac, const char* tagName) {
+int trap_CM_LerpTag(orientation_t* tag, clipHandle_t mod, int startFrame, int endFrame, float frac, const char* tagName) {
 	return Q_syscall(UI_CM_LERPTAG, tag, mod, startFrame, endFrame, PASSFLOAT(frac), tagName);
 }
 void trap_S_StartLocalSound(sfxHandle_t sfx, int channelNum) {
@@ -358,14 +358,14 @@ void trap_G2_SetGhoul2model_indexes(void* ghoul2, qhandle_t* modelList, qhandle_
 qboolean trap_G2_HaveWeGhoul2Models(void* ghoul2) {
 	return Q_syscall(UI_G2_HAVEWEGHOULMODELS, ghoul2);
 }
-qboolean trap_G2API_GetBoltMatrix(void* ghoul2, const int modelIndex, const int boltIndex, mdxaBone_t* matrix, const vec3_t angles, const vec3_t position, const int frame_num, qhandle_t* modelList, vec3_t scale) {
-	return Q_syscall(UI_G2_GETBOLT, ghoul2, modelIndex, boltIndex, matrix, angles, position, frame_num, modelList, scale);
+qboolean trap_G2API_GetBoltMatrix(void* ghoul2, const int modelIndex, const int boltIndex, mdxaBone_t* matrix, const vec3_t angles, const vec3_t position, const int frameNum, qhandle_t* modelList, vec3_t scale) {
+	return Q_syscall(UI_G2_GETBOLT, ghoul2, modelIndex, boltIndex, matrix, angles, position, frameNum, modelList, scale);
 }
-qboolean trap_G2API_GetBoltMatrix_NoReconstruct(void* ghoul2, const int modelIndex, const int boltIndex, mdxaBone_t* matrix, const vec3_t angles, const vec3_t position, const int frame_num, qhandle_t* modelList, vec3_t scale) {
-	return Q_syscall(UI_G2_GETBOLT_NOREC, ghoul2, modelIndex, boltIndex, matrix, angles, position, frame_num, modelList, scale);
+qboolean trap_G2API_GetBoltMatrix_NoReconstruct(void* ghoul2, const int modelIndex, const int boltIndex, mdxaBone_t* matrix, const vec3_t angles, const vec3_t position, const int frameNum, qhandle_t* modelList, vec3_t scale) {
+	return Q_syscall(UI_G2_GETBOLT_NOREC, ghoul2, modelIndex, boltIndex, matrix, angles, position, frameNum, modelList, scale);
 }
-qboolean trap_G2API_GetBoltMatrix_NoRecNoRot(void* ghoul2, const int modelIndex, const int boltIndex, mdxaBone_t* matrix, const vec3_t angles, const vec3_t position, const int frame_num, qhandle_t* modelList, vec3_t scale) {
-	return Q_syscall(UI_G2_GETBOLT_NOREC_NOROT, ghoul2, modelIndex, boltIndex, matrix, angles, position, frame_num, modelList, scale);
+qboolean trap_G2API_GetBoltMatrix_NoRecNoRot(void* ghoul2, const int modelIndex, const int boltIndex, mdxaBone_t* matrix, const vec3_t angles, const vec3_t position, const int frameNum, qhandle_t* modelList, vec3_t scale) {
+	return Q_syscall(UI_G2_GETBOLT_NOREC_NOROT, ghoul2, modelIndex, boltIndex, matrix, angles, position, frameNum, modelList, scale);
 }
 int trap_G2API_InitGhoul2Model(void** ghoul2Ptr, const char* fileName, int modelIndex, qhandle_t customSkin, qhandle_t customShader, int modelFlags, int lodBias) {
 	return Q_syscall(UI_G2_INITGHOUL2MODEL, ghoul2Ptr, fileName, modelIndex, customSkin, customShader, modelFlags, lodBias);

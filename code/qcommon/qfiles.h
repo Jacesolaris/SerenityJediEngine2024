@@ -35,7 +35,6 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 // the maximum size of game relative pathnames
 #define	MAX_QPATH		64
-#define	MAX_SKINNAME_PATH 128
 
 /*
 ========================================================================

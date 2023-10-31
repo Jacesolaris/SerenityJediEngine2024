@@ -1252,8 +1252,8 @@ void R_LocalNormalToWorld(const vec3_t local, vec3_t world);
 void R_LocalPointToWorld(const vec3_t local, vec3_t world);
 void R_WorldNormalToEntity(const vec3_t worldvec, vec3_t entvec);
 int R_CullLocalBox(const vec3_t bounds[2]);
-int R_CullPointAndRadius(const vec3_t pt, float radius);
-int R_CullLocalPointAndRadius(const vec3_t pt, float radius);
+int R_CullPointAndRadius(const vec3_t pt, const float radius);
+int R_CullLocalPointAndRadius(const vec3_t pt, const float radius);
 
 void R_RotateForEntity(const trRefEntity_t* ent, const viewParms_t* viewParms, orientationr_t* ori);
 
@@ -1301,7 +1301,7 @@ void	GL_Cull(int cullType);
 #define GLS_ATEST_LT_80							0x20000000
 #define GLS_ATEST_GE_80							0x40000000
 #define GLS_ATEST_GE_C0							0x80000000
-#define		GLS_ATEST_BITS						0xF0000000
+#define		GLS_atestBits						0xF0000000
 
 #define GLS_DEFAULT			GLS_DEPTHMASK_TRUE
 #define GLS_ALPHA			(GLS_SRCBLEND_SRC_ALPHA | GLS_DSTBLEND_ONE_MINUS_SRC_ALPHA)
@@ -1376,11 +1376,11 @@ qhandle_t		 RE_RegisterShaderNoMip(const char* name);
 const char* RE_ShaderNameFromIndex(const int index);
 qhandle_t RE_RegisterShaderFromImage(const char* name, const int* lightmapIndex, const byte* styles, image_t* image);
 
-shader_t* R_FindShader(const char* name, const int* lightmapIndex, const byte* styles, const qboolean mip_raw_image);
+shader_t* R_FindShader(const char* name, const int* lightmapIndex, const byte* styles, const qboolean mipRawImage);
 shader_t* R_GetShaderByHandle(const qhandle_t hShader);
 shader_t* R_FindShaderByName(const char* name);
 void R_InitShaders(const qboolean server);
-void R_ShaderList_f();
+void R_ShaderList_f(void);
 void    R_RemapShader(const char* shader_name, const char* new_shader_name, const char* timeOffset);
 
 //
@@ -1507,7 +1507,7 @@ LIGHTS
 void R_DlightBmodel(const bmodel_t* bmodel, const bool no_light);
 void R_SetupEntityLighting(const trRefdef_t* refdef, trRefEntity_t* ent);
 void R_TransformDlights(const int count, dlight_t* dl, const orientationr_t* ori);
-int R_LightForPoint(vec3_t point, vec3_t ambient_light, vec3_t directed_light, vec3_t light_dir);
+int R_LightForPoint(vec3_t point, vec3_t ambientLight, vec3_t directedLight, vec3_t lightDir);
 
 /*
 ============================================================
@@ -1519,7 +1519,7 @@ SHADOWS
 
 void RB_ShadowTessEnd(void);
 void RB_ShadowFinish(void);
-void RB_ProjectionShadowDeform();
+void RB_ProjectionShadowDeform(void);
 
 /*
 ============================================================
@@ -1529,8 +1529,7 @@ SKIES
 ============================================================
 */
 void R_BuildCloudData(const shaderCommands_t* input);
-void R_InitSkyTexCoords(float height_cloud);
-void R_DrawSkyBox(shaderCommands_t* shader);
+void R_InitSkyTexCoords(const float heightCloud);
 void RB_DrawSun(void);
 void RB_ClipSkyPolygons(const shaderCommands_t* input);
 /*
@@ -1604,7 +1603,7 @@ public:
 #else
 	const int		ident;			// ident of this surface - required so the materials renderer knows what sort of surface this refers to
 #endif
-	CBoneCache* bone_cache;
+	CBoneCache* boneCache;
 	mdxmSurface_t* surfaceData;	// pointer to surface data loaded into file - only used by client renderer DO NOT USE IN GAME SIDE - if there is a vid restart this will be out of wack on the game
 #ifdef _G2_GORE
 	float* alternateTex;		// alternate texture coordinates.
@@ -1619,7 +1618,7 @@ public:
 	CRenderableSurface& operator= (const CRenderableSurface& src)
 	{
 		ident = src.ident;
-		bone_cache = src.bone_cache;
+		boneCache = src.boneCache;
 		surfaceData = src.surfaceData;
 		alternateTex = src.alternateTex;
 		goreChain = src.goreChain;
@@ -1630,7 +1629,7 @@ public:
 
 	CRenderableSurface() :
 		ident(SF_MDX),
-		bone_cache(nullptr),
+		boneCache(nullptr),
 #ifdef _G2_GORE
 		surfaceData(nullptr),
 		alternateTex(nullptr),
@@ -1644,7 +1643,7 @@ public:
 	void Init()
 	{
 		ident = SF_MDX;
-		bone_cache = nullptr;
+		boneCache = nullptr;
 		surfaceData = nullptr;
 		alternateTex = nullptr;
 		goreChain = nullptr;

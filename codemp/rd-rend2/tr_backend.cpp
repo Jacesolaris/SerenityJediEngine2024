@@ -1210,11 +1210,11 @@ static void RB_SubmitDrawSurfsForDepthFill(
 
 		if (*drawSurf->surface == SF_MDX)
 		{
-			if (((CRenderableSurface*)drawSurf->surface)->bone_cache != oldBoneCache)
+			if (((CRenderableSurface*)drawSurf->surface)->boneCache != oldBoneCache)
 			{
 				RB_EndSurface();
 				RB_BeginSurface(shader, 0, 0);
-				oldBoneCache = ((CRenderableSurface*)drawSurf->surface)->bone_cache;
+				oldBoneCache = ((CRenderableSurface*)drawSurf->surface)->boneCache;
 				tr.animationBoneUboOffset = RB_GetBoneUboOffset((CRenderableSurface*)drawSurf->surface);
 			}
 		}
@@ -1296,11 +1296,11 @@ static void RB_SubmitDrawSurfs(
 
 		if (*drawSurf->surface == SF_MDX)
 		{
-			if (((CRenderableSurface*)drawSurf->surface)->bone_cache != oldBoneCache)
+			if (((CRenderableSurface*)drawSurf->surface)->boneCache != oldBoneCache)
 			{
 				RB_EndSurface();
 				RB_BeginSurface(shader, fogNum, cubemapIndex);
-				oldBoneCache = ((CRenderableSurface*)drawSurf->surface)->bone_cache;
+				oldBoneCache = ((CRenderableSurface*)drawSurf->surface)->boneCache;
 				tr.animationBoneUboOffset = RB_GetBoneUboOffset((CRenderableSurface*)drawSurf->surface);
 			}
 		}

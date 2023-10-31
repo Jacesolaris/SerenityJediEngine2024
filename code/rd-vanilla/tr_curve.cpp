@@ -46,7 +46,8 @@ srfGridMesh_t *R_SubdividePatchToGrid( int width, int height,
 LerpDrawVert
 ============
 */
-static void LerpDrawVert(const drawVert_t* a, const drawVert_t* b, drawVert_t* out) {
+static void LerpDrawVert(drawVert_t* a, drawVert_t* b, drawVert_t* out) {
+	int	k;
 	out->xyz[0] = 0.5 * (a->xyz[0] + b->xyz[0]);
 	out->xyz[1] = 0.5 * (a->xyz[1] + b->xyz[1]);
 	out->xyz[2] = 0.5 * (a->xyz[2] + b->xyz[2]);
@@ -58,7 +59,7 @@ static void LerpDrawVert(const drawVert_t* a, const drawVert_t* b, drawVert_t* o
 	out->normal[1] = 0.5 * (a->normal[1] + b->normal[1]);
 	out->normal[2] = 0.5 * (a->normal[2] + b->normal[2]);
 
-	for (int k = 0; k < MAXLIGHTMAPS; k++)
+	for (k = 0; k < MAXLIGHTMAPS; k++)
 	{
 		out->lightmap[k][0] = 0.5 * (a->lightmap[k][0] + b->lightmap[k][0]);
 		out->lightmap[k][1] = 0.5 * (a->lightmap[k][1] + b->lightmap[k][1]);
@@ -75,7 +76,7 @@ static void LerpDrawVert(const drawVert_t* a, const drawVert_t* b, drawVert_t* o
 Transpose
 ============
 */
-static void Transpose(const int width, const int height, drawVert_t ctrl[MAX_GRID_SIZE][MAX_GRID_SIZE]) {
+static void Transpose(int width, int height, drawVert_t ctrl[MAX_GRID_SIZE][MAX_GRID_SIZE]) {
 	int		i, j;
 	drawVert_t	temp;
 
@@ -120,16 +121,24 @@ MakeMeshNormals
 Handles all the complicated wrapping and degenerate cases
 =================
 */
-static void MakeMeshNormals(const int width, const int height, drawVert_t ctrl[MAX_GRID_SIZE][MAX_GRID_SIZE]) {
-	int		i, k;
+static void MakeMeshNormals(int width, int height, drawVert_t ctrl[MAX_GRID_SIZE][MAX_GRID_SIZE]) {
+	int		i, j, k, dist;
+	vec3_t	normal;
+	vec3_t	sum;
+	int		count;
+	vec3_t	base;
 	vec3_t	delta;
+	int		x, y;
+	drawVert_t* dv;
+	vec3_t		around[8], temp;
 	qboolean	good[8];
+	qboolean	wrapWidth, wrapHeight;
 	float		len;
 	static	int	neighbors[8][2] = {
 		{0,1}, {1,1}, {1,0}, {1,-1}, {0,-1}, {-1,-1}, {-1,0}, {-1,1}
 	};
 
-	qboolean wrapWidth = qfalse;
+	wrapWidth = qfalse;
 	for (i = 0; i < height; i++) {
 		VectorSubtract(ctrl[i][0].xyz, ctrl[i][width - 1].xyz, delta);
 		len = VectorLength(delta);
@@ -141,7 +150,7 @@ static void MakeMeshNormals(const int width, const int height, drawVert_t ctrl[M
 		wrapWidth = qtrue;
 	}
 
-	qboolean wrapHeight = qfalse;
+	wrapHeight = qfalse;
 	for (i = 0; i < width; i++) {
 		VectorSubtract(ctrl[0][i].xyz, ctrl[height - 1][i].xyz, delta);
 		len = VectorLength(delta);
@@ -154,21 +163,17 @@ static void MakeMeshNormals(const int width, const int height, drawVert_t ctrl[M
 	}
 
 	for (i = 0; i < width; i++) {
-		for (int j = 0; j < height; j++) {
-			vec3_t around[8];
-			vec3_t base;
-			vec3_t sum;
-			int count = 0;
-			drawVert_t* dv = &ctrl[j][i];
+		for (j = 0; j < height; j++) {
+			count = 0;
+			dv = &ctrl[j][i];
 			VectorCopy(dv->xyz, base);
 			for (k = 0; k < 8; k++) {
 				VectorClear(around[k]);
 				good[k] = qfalse;
 
-				for (int dist = 1; dist <= 3; dist++) {
-					vec3_t temp;
-					int x = i + neighbors[k][0] * dist;
-					int y = j + neighbors[k][1] * dist;
+				for (dist = 1; dist <= 3; dist++) {
+					x = i + neighbors[k][0] * dist;
+					y = j + neighbors[k][1] * dist;
 					if (wrapWidth) {
 						if (x < 0) {
 							x = width - 1 + x;
@@ -193,19 +198,20 @@ static void MakeMeshNormals(const int width, const int height, drawVert_t ctrl[M
 					if (VectorNormalize2(temp, temp) == 0) {
 						continue;				// degenerate edge, get more dist
 					}
-					good[k] = qtrue;
-					VectorCopy(temp, around[k]);
-					break;					// good edge
+					else {
+						good[k] = qtrue;
+						VectorCopy(temp, around[k]);
+						break;					// good edge
+					}
 				}
 			}
 
 			VectorClear(sum);
 			for (k = 0; k < 8; k++) {
-				vec3_t normal;
-				if (!good[k] || !good[k + 1 & 7]) {
+				if (!good[k] || !good[(k + 1) & 7]) {
 					continue;	// didn't get two points
 				}
-				CrossProduct(around[k + 1 & 7], around[k], normal);
+				CrossProduct(around[(k + 1) & 7], around[k], normal);
 				if (VectorNormalize2(normal, normal) == 0) {
 					continue;
 				}
@@ -226,10 +232,13 @@ static void MakeMeshNormals(const int width, const int height, drawVert_t ctrl[M
 InvertCtrl
 ============
 */
-static void InvertCtrl(const int width, const int height, drawVert_t ctrl[MAX_GRID_SIZE][MAX_GRID_SIZE]) {
-	for (int i = 0; i < height; i++) {
-		for (int j = 0; j < width / 2; j++) {
-			const drawVert_t temp = ctrl[i][j];
+static void InvertCtrl(int width, int height, drawVert_t ctrl[MAX_GRID_SIZE][MAX_GRID_SIZE]) {
+	int		i, j;
+	drawVert_t	temp;
+
+	for (i = 0; i < height; i++) {
+		for (j = 0; j < width / 2; j++) {
+			temp = ctrl[i][j];
 			ctrl[i][j] = ctrl[i][width - 1 - j];
 			ctrl[i][width - 1 - j] = temp;
 		}
@@ -241,11 +250,11 @@ static void InvertCtrl(const int width, const int height, drawVert_t ctrl[MAX_GR
 InvertErrorTable
 =================
 */
-static void InvertErrorTable(float errorTable[2][MAX_GRID_SIZE], const int width, const int height) {
+static void InvertErrorTable(float errorTable[2][MAX_GRID_SIZE], int width, int height) {
 	int		i;
 	float	copy[2][MAX_GRID_SIZE];
 
-	memcpy(copy, errorTable, sizeof copy);
+	memcpy(copy, errorTable, sizeof(copy));
 
 	for (i = 0; i < width; i++) {
 		errorTable[1][i] = copy[0][i];	//[width-1-i];
@@ -262,7 +271,7 @@ PutPointsOnCurve
 ==================
 */
 static void PutPointsOnCurve(drawVert_t	ctrl[MAX_GRID_SIZE][MAX_GRID_SIZE],
-	const int width, const int height) {
+	int width, int height) {
 	int			i, j;
 	drawVert_t	prev, next;
 
@@ -291,8 +300,10 @@ R_SubdividePatchToGrid
 */
 srfGridMesh_t* R_SubdividePatchToGrid(int width, int height,
 	drawVert_t points[MAX_PATCH_SIZE * MAX_PATCH_SIZE]) {
-	int			i, j, k;
+	int			i, j, k, l;
 	drawVert_t	prev, next, mid;
+	float		len, maxLen;
+	int			dir;
 	int			t;
 	drawVert_t	ctrl[MAX_GRID_SIZE][MAX_GRID_SIZE];
 	float		errorTable[2][MAX_GRID_SIZE];
@@ -306,7 +317,7 @@ srfGridMesh_t* R_SubdividePatchToGrid(int width, int height,
 		}
 	}
 
-	for (int dir = 0; dir < 2; dir++) {
+	for (dir = 0; dir < 2; dir++) {
 		for (j = 0; j < MAX_GRID_SIZE; j++) {
 			errorTable[dir][j] = 0;
 		}
@@ -314,14 +325,15 @@ srfGridMesh_t* R_SubdividePatchToGrid(int width, int height,
 		// horizontal subdivisions
 		for (j = 0; j + 2 < width; j += 2) {
 			// check subdivided midpoints against control points
-			float maxLen = 0;
+			maxLen = 0;
 			for (i = 0; i < height; i++) {
 				vec3_t		midxyz;
-				vec3_t		vec_out;
+				vec3_t		dir;
 				vec3_t		projected;
+				float		d;
 
 				// calculate the point on the curve
-				for (int l = 0; l < 3; l++) {
+				for (l = 0; l < 3; l++) {
 					midxyz[l] = (ctrl[i][j].xyz[l] + ctrl[i][j + 1].xyz[l] * 2
 						+ ctrl[i][j + 2].xyz[l]) * 0.25;
 				}
@@ -331,13 +343,13 @@ srfGridMesh_t* R_SubdividePatchToGrid(int width, int height,
 				// texture warping, but it gives a lot less polygons than
 				// dist-from-midpoint
 				VectorSubtract(midxyz, ctrl[i][j].xyz, midxyz);
-				VectorSubtract(ctrl[i][j + 2].xyz, ctrl[i][j].xyz, vec_out);
-				VectorNormalize(vec_out);
+				VectorSubtract(ctrl[i][j + 2].xyz, ctrl[i][j].xyz, dir);
+				VectorNormalize(dir);
 
-				const float d = DotProduct(midxyz, vec_out);
-				VectorScale(vec_out, d, projected);
+				d = DotProduct(midxyz, dir);
+				VectorScale(dir, d, projected);
 				VectorSubtract(midxyz, projected, midxyz);
-				const float len = VectorLength(midxyz);
+				len = VectorLength(midxyz);
 
 				if (len > maxLen) {
 					maxLen = len;
@@ -436,12 +448,12 @@ srfGridMesh_t* R_SubdividePatchToGrid(int width, int height,
 	MakeMeshNormals(width, height, ctrl);
 
 	// copy the results out to a grid
-	grid = static_cast<srfGridMesh_s*>(R_Hunk_Alloc((width * height - 1) * sizeof(drawVert_t) + sizeof * grid, qtrue));
+	grid = (struct srfGridMesh_s*)R_Hunk_Alloc((width * height - 1) * sizeof(drawVert_t) + sizeof(*grid), qtrue);
 
-	grid->widthLodError = static_cast<float*>(R_Hunk_Alloc(width * 4, qfalse));
+	grid->widthLodError = (float*)R_Hunk_Alloc(width * 4, qfalse);
 	memcpy(grid->widthLodError, errorTable[0], width * 4);
 
-	grid->heightLodError = static_cast<float*>(R_Hunk_Alloc(height * 4, qfalse));
+	grid->heightLodError = (float*)R_Hunk_Alloc(height * 4, qfalse);
 	memcpy(grid->heightLodError, errorTable[1], height * 4);
 
 	grid->width = width;

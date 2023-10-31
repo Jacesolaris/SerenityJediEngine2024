@@ -256,9 +256,9 @@ qboolean G2API_OverrideServerWithClientData(CGhoul2Info_v& ghoul2, int modelInde
 	CGhoul2Info_v& g2Ref = *g2ClientAttachments[serverInstance->entityNum];
 	clientInstance = &g2Ref[0];
 
-	int frame_num = G2API_GetTime(0);
+	int frameNum = G2API_GetTime(0);
 
-	if (clientInstance->mSkelFrameNum != frame_num)
+	if (clientInstance->mSkelFrameNum != frameNum)
 	{ //it has to be constructed already
 		return qfalse;
 	}
@@ -1709,7 +1709,7 @@ qboolean gG2_GBMUseSPMethod;
 
 qboolean G2API_GetBoltMatrix_SPMethod(CGhoul2Info_v& ghoul2, const int modelIndex, const int boltIndex,
 	mdxaBone_t* matrix, const vec3_t angles,
-	const vec3_t position, const int frame_num, qhandle_t* modelList,
+	const vec3_t position, const int frameNum, qhandle_t* modelList,
 	const vec3_t scale)
 {
 	assert(ghoul2.size() > modelIndex);
@@ -1723,7 +1723,7 @@ qboolean G2API_GetBoltMatrix_SPMethod(CGhoul2Info_v& ghoul2, const int modelInde
 			// make sure we have transformed the skeleton
 			if (!gG2_GBMNoReconstruct)
 			{
-				G2_ConstructGhoulSkeleton(ghoul2, frame_num, true, scale);
+				G2_ConstructGhoulSkeleton(ghoul2, frameNum, true, scale);
 			}
 
 			gG2_GBMNoReconstruct = qfalse;
@@ -1768,12 +1768,12 @@ qboolean G2API_GetBoltMatrix_SPMethod(CGhoul2Info_v& ghoul2, const int modelInde
 #define G2WARNING(exp,m)     ((void)0)
 #define G2NOTE(exp,m)     ((void)0)
 #define G2ANIM(ghlInfo,m) ((void)0)
-bool G2_NeedsRecalc(CGhoul2Info* ghlInfo, int frame_num);
+bool G2_NeedsRecalc(CGhoul2Info* ghlInfo, int frameNum);
 void G2_GetBoltMatrixLow(CGhoul2Info& ghoul2, int boltNum, const vec3_t scale, mdxaBone_t& retMatrix);
 void G2_GetBoneMatrixLow(const CGhoul2Info& ghoul2, int boneNum, const vec3_t scale, mdxaBone_t& retMatrix,
 	mdxaBone_t*& ret_basepose, mdxaBone_t*& ret_basepose_inv);
 
-qboolean G2API_GetBoltMatrix(CGhoul2Info_v& ghoul2, const int modelIndex, const int boltIndex, mdxaBone_t* matrix, const vec3_t angles, const vec3_t position, const int frame_num, qhandle_t* modelList, vec3_t scale)
+qboolean G2API_GetBoltMatrix(CGhoul2Info_v& ghoul2, const int modelIndex, const int boltIndex, mdxaBone_t* matrix, const vec3_t angles, const vec3_t position, const int frameNum, qhandle_t* modelList, vec3_t scale)
 {
 	G2ERROR(matrix, "NULL matrix");
 	G2ERROR(modelIndex >= 0 && modelIndex < ghoul2.size(), "Invalid modelIndex");
@@ -1790,7 +1790,7 @@ qboolean G2API_GetBoltMatrix(CGhoul2Info_v& ghoul2, const int modelIndex, const 
 	{
 		if (matrix && modelIndex >= 0 && modelIndex < ghoul2.size())
 		{
-			int tframeNum = G2API_GetTime(frame_num);
+			int tframeNum = G2API_GetTime(frameNum);
 			CGhoul2Info* ghlInfo = &ghoul2[modelIndex];
 			G2ERROR(boltIndex >= 0 && (boltIndex < ghlInfo->mBltlist.size()),
 				va("Invalid Bolt Index (%d:%s)", boltIndex, ghlInfo->mFileName));
@@ -1958,7 +1958,7 @@ static int QDECL QsortDistance(const void* a, const void* b)
 	return 1;
 }
 
-static bool G2_NeedRetransform(CGhoul2Info* g2, const int frame_num)
+static bool G2_NeedRetransform(CGhoul2Info* g2, const int frameNum)
 {
 	//see if we need to do another transform
 	size_t i = 0;
@@ -1974,7 +1974,7 @@ static bool G2_NeedRetransform(CGhoul2Info* g2, const int frame_num)
 		}
 		else
 		{
-			time = (frame_num - bone.startTime) / 50.0f;
+			time = (frameNum - bone.startTime) / 50.0f;
 		}
 		const int newFrame = bone.startFrame + time * bone.animSpeed;
 
@@ -2426,7 +2426,7 @@ qboolean G2API_SaveGhoul2Models(CGhoul2Info_v& ghoul2, char** buffer, int* size)
 	return G2_SaveGhoul2Models(ghoul2, buffer, size);
 }
 
-void G2API_LoadGhoul2Models(CGhoul2Info_v& ghoul2, const char* buffer)
+void G2API_LoadGhoul2Models(CGhoul2Info_v& ghoul2, char* buffer)
 {
 	G2_LoadGhoul2Model(ghoul2, buffer);
 }
@@ -2517,7 +2517,7 @@ void G2API_ClearSkinGore(CGhoul2Info_v& ghoul2)
 	}
 }
 
-extern int G2_DecideTraceLod(const CGhoul2Info& ghoul2, int useLod);
+extern int G2_DecideTraceLod(CGhoul2Info& ghoul2, int useLod);
 
 void G2API_AddSkinGore(CGhoul2Info_v& ghoul2, SSkinGoreData& gore)
 {

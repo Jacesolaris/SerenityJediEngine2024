@@ -460,18 +460,18 @@ class CRenderableSurface
 {
 public:
 	int				ident;			// ident of this surface - required so the materials renderer knows what sort of surface this refers to
-	CBoneCache* bone_cache;		// pointer to transformed bone list for this surf
+	CBoneCache* boneCache;		// pointer to transformed bone list for this surf
 	mdxmSurface_t* surfaceData;	// pointer to surface data loaded into file - only used by client renderer DO NOT USE IN GAME SIDE - if there is a vid restart this will be out of wack on the game
 
 	CRenderableSurface() :
 		ident(8), //SF_MDX
-		bone_cache(0),
+		boneCache(0),
 		surfaceData(0)
 	{}
 
 	CRenderableSurface(const CRenderableSurface& rs) :
 		ident(rs.ident),
-		bone_cache(rs.bone_cache),
+		boneCache(rs.boneCache),
 		surfaceData(rs.surfaceData)
 	{}
 };

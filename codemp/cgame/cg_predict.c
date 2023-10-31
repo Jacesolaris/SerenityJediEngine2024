@@ -251,7 +251,7 @@ static void CG_ClipMoveToEntities(const vec3_t start, const vec3_t mins, const v
 	int i, x, zd, zu;
 	trace_t trace, old_trace;
 	entityState_t* ent;
-	clip_handle_t cmodel;
+	clipHandle_t cmodel;
 	vec3_t bmins, bmaxs;
 	centity_t* cent;
 	centity_t* ignored = NULL;
@@ -432,7 +432,7 @@ void CG_TraceItem(trace_t* result, const vec3_t start, const vec3_t mins, const 
 
 		VectorAdd(local_mins, ent->origin, item_mins);
 		VectorAdd(local_maxs, ent->origin, item_maxs);
-		const clip_handle_t cmodel = trap->CM_TempModel(item_mins, item_maxs, 0);
+		const clipHandle_t cmodel = trap->CM_TempModel(item_mins, item_maxs, 0);
 		trap->CM_Trace(&tr, start, end, mins, maxs, cmodel, -1, 0);
 
 		if (tr.fraction < 1.0f)
@@ -507,7 +507,7 @@ int CG_PointContents(const vec3_t point, const int pass_entityNum)
 			continue;
 		}
 
-		const clip_handle_t cmodel = trap->CM_InlineModel(ent->modelIndex);
+		const clipHandle_t cmodel = trap->CM_InlineModel(ent->modelIndex);
 		if (!cmodel)
 		{
 			continue;
@@ -802,7 +802,7 @@ static void CG_TouchTriggerPrediction(void)
 			continue;
 		}
 
-		const clip_handle_t cmodel = trap->CM_InlineModel(ent->modelIndex);
+		const clipHandle_t cmodel = trap->CM_InlineModel(ent->modelIndex);
 		if (!cmodel)
 		{
 			continue;

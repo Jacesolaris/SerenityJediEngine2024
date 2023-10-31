@@ -6119,38 +6119,38 @@ CG_LightVerts
 */
 int CG_LightVerts(vec3_t normal, const int numVerts, polyVert_t* verts)
 {
-	vec3_t ambient_light;
-	vec3_t light_dir;
-	vec3_t directed_light;
+	vec3_t ambientLight;
+	vec3_t lightDir;
+	vec3_t directedLight;
 
-	trap->R_LightForPoint(verts[0].xyz, ambient_light, directed_light, light_dir);
+	trap->R_LightForPoint(verts[0].xyz, ambientLight, directedLight, lightDir);
 
 	for (int i = 0; i < numVerts; i++)
 	{
-		const float incoming = DotProduct(normal, light_dir);
+		const float incoming = DotProduct(normal, lightDir);
 		if (incoming <= 0)
 		{
-			verts[i].modulate[0] = ambient_light[0];
-			verts[i].modulate[1] = ambient_light[1];
-			verts[i].modulate[2] = ambient_light[2];
+			verts[i].modulate[0] = ambientLight[0];
+			verts[i].modulate[1] = ambientLight[1];
+			verts[i].modulate[2] = ambientLight[2];
 			verts[i].modulate[3] = 255;
 			continue;
 		}
-		int j = ambient_light[0] + incoming * directed_light[0];
+		int j = ambientLight[0] + incoming * directedLight[0];
 		if (j > 255)
 		{
 			j = 255;
 		}
 		verts[i].modulate[0] = j;
 
-		j = ambient_light[1] + incoming * directed_light[1];
+		j = ambientLight[1] + incoming * directedLight[1];
 		if (j > 255)
 		{
 			j = 255;
 		}
 		verts[i].modulate[1] = j;
 
-		j = ambient_light[2] + incoming * directed_light[2];
+		j = ambientLight[2] + incoming * directedLight[2];
 		if (j > 255)
 		{
 			j = 255;

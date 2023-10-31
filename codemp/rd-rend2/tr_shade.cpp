@@ -916,7 +916,7 @@ DrawNormals
 Draws vertex normals for debugging
 ================
 */
-static void DrawNormals(const shaderCommands_t* input) 
+static void DrawNormals(const shaderCommands_t* input)
 {
 	//GL_Bind(tr.whiteImage);
 	//qglColor3f(1, 1, 1);

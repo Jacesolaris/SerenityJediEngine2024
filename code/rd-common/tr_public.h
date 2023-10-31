@@ -82,7 +82,7 @@ using refimport_t = struct
 	void (*CM_DrawDebugSurface)(void (*drawPoly)(int color, int numPoints, const float* points));
 	bool (*CM_CullWorldBox)(const cplane_t* frustrum, const vec3pair_t bounds);
 	byte* (*CM_ClusterPVS)(int cluster);
-	int (*CM_PointContents)(const vec3_t p, clip_handle_t model);
+	int (*CM_PointContents)(const vec3_t p, clipHandle_t model);
 	void (*S_RestartMusic)();
 	qboolean(*SND_RegisterAudio_LevelLoadEnd)(qboolean bDeleteEverythingNotUsedThisLevel);
 
@@ -114,7 +114,7 @@ using refimport_t = struct
 
 	ojk::ISavedGame* saved_game;
 
-	int (*SV_PointContents)(const vec3_t p, clip_handle_t model);
+	int (*SV_PointContents)(const vec3_t p, clipHandle_t model);
 
 	qboolean(*CM_DeleteCachedMap)(qboolean bGuaranteedOkToDelete); // NOT IN MP
 
@@ -326,7 +326,7 @@ using refexport_t = struct
 	qboolean(*G2API_IsPaused)(CGhoul2Info* ghlInfo, const char* boneName);
 	void (*G2API_ListBones)(CGhoul2Info* ghlInfo, int frame);
 	void (*G2API_ListSurfaces)(CGhoul2Info* ghlInfo);
-	void (*G2API_LoadGhoul2Models)(CGhoul2Info_v& ghoul2, const char* buffer);
+	void (*G2API_LoadGhoul2Models)(CGhoul2Info_v& ghoul2, char* buffer);
 	void (*G2API_LoadSaveCodeDestructGhoul2Info)(CGhoul2Info_v& ghoul2);
 	qboolean(*G2API_PauseBoneAnim)(CGhoul2Info* ghlInfo, const char* boneName, int AcurrentTime);
 	qboolean(*G2API_PauseBoneAnimIndex)(CGhoul2Info* ghlInfo, int boneIndex, int AcurrentTime);

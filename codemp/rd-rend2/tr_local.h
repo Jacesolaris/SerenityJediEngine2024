@@ -2853,11 +2853,11 @@ qboolean R_CalcTangentVectors(srfVert_t* dv[3]);
 #define	CULL_OUT	2		// completely outside the clipping planes
 void R_LocalNormalToWorld(const vec3_t local, vec3_t world);
 void R_LocalPointToWorld(const vec3_t local, vec3_t world);
-int R_CullBox(vec3_t bounds[2]);
-int R_CullLocalBox(vec3_t bounds[2]);
+int R_CullBox(vec3_t worldBounds[2]);
+int R_CullLocalBox(const vec3_t bounds[2]);
 int R_CullPointAndRadiusEx(const vec3_t origin, float radius, const cplane_t* frustum, int numPlanes);
-int R_CullPointAndRadius(const vec3_t origin, float radius);
-int R_CullLocalPointAndRadius(const vec3_t origin, float radius);
+int R_CullPointAndRadius(const vec3_t pt, const float radius);
+int R_CullLocalPointAndRadius(const vec3_t pt, const float radius);
 
 void R_SetupProjection(viewParms_t* dest, float zProj, float zFar, qboolean computeFrustum);
 void R_RotateForEntity(const trRefEntity_t* ent, const viewParms_t* viewParms, orientationr_t* ori);
@@ -2954,7 +2954,7 @@ extern const int lightmapsVertex[MAXLIGHTMAPS];
 extern const int lightmapsFullBright[MAXLIGHTMAPS];
 extern const byte stylesDefault[MAXLIGHTMAPS];
 
-shader_t* R_FindShader(const char* name, const int* lightmapIndex, const byte* styles, const qboolean mip_raw_image);
+shader_t* R_FindShader(const char* name, const int* lightmapIndex, const byte* styles, const qboolean mipRawImage);
 shader_t* R_GetShaderByHandle(const qhandle_t hShader);
 shader_t* R_FindShaderByName(const char* name);
 void R_InitShaders(const qboolean server);
@@ -3124,10 +3124,10 @@ SKIES
 ============================================================
 */
 
-void R_BuildCloudData(shaderCommands_t* shader);
-void R_InitSkyTexCoords(float cloudLayerHeight);
+void R_BuildCloudData(const shaderCommands_t* input);
+void R_InitSkyTexCoords(const float heightCloud);
 void RB_DrawSun(float scale, shader_t* shader);
-void RB_ClipSkyPolygons(shaderCommands_t* shader);
+void RB_ClipSkyPolygons(const shaderCommands_t* input);
 
 /*
 ============================================================
@@ -3221,7 +3221,7 @@ SHADOWS
 
 void RB_ShadowTessEnd(shaderCommands_t* input, const VertexArraysProperties* vertexArrays);
 void RB_ShadowFinish(void);
-void RB_ProjectionShadowDeform();
+void RB_ProjectionShadowDeform(void);
 
 /*
 ============================================================
@@ -3323,7 +3323,7 @@ public:
 	// sort of surface this refers to
 	int ident;
 
-	CBoneCache* bone_cache;
+	CBoneCache* boneCache;
 	mdxmVBOMesh_t* vboMesh;
 
 	// tell the renderer to render shadows for this surface
@@ -3352,7 +3352,7 @@ public:
 	CRenderableSurface& operator =(const CRenderableSurface& src)
 	{
 		ident = src.ident;
-		bone_cache = src.bone_cache;
+		boneCache = src.boneCache;
 		surfaceData = src.surfaceData;
 #ifdef _G2_GORE
 		alternateTex = src.alternateTex;
@@ -3365,7 +3365,7 @@ public:
 
 	CRenderableSurface()
 		: ident(SF_MDX)
-		, bone_cache(nullptr)
+		, boneCache(nullptr)
 		, vboMesh(nullptr)
 		, surfaceData(nullptr)
 #ifdef _G2_GORE
@@ -3381,7 +3381,7 @@ public:
 	void Init()
 	{
 		ident = SF_MDX;
-		bone_cache = nullptr;
+		boneCache = nullptr;
 		surfaceData = nullptr;
 #ifdef _G2_GORE
 		alternateTex = nullptr;

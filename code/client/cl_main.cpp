@@ -1334,7 +1334,7 @@ void CL_Init()
 
 	Com_Printf("-----------------------------------------------------------------\n");
 	Com_Printf("---------- Genuine SerenityJediEngine-(Solaris Edition)----------\n");
-	Com_Printf("---------------------Build date 30/10/2023-----------------------\n");
+	Com_Printf("---------------------Build date 31/10/2023-----------------------\n");
 	Com_Printf("-----------------------------------------------------------------\n");
 	Com_Printf("------------------------LightSaber-------------------------------\n");
 	Com_Printf("-----------An elegant weapon for a more civilized age------------\n");
@@ -1398,7 +1398,7 @@ void CL_Init()
 	cl_packetdup = Cvar_Get("cl_packetdup", "1", CVAR_ARCHIVE_ND);
 
 	cl_run = Cvar_Get("cl_run", "1", CVAR_ARCHIVE_ND);
-	cl_sensitivity = Cvar_Get("sensitivity", "5", CVAR_ARCHIVE);
+	cl_sensitivity = Cvar_Get("sensitivity", "6.593750", CVAR_ARCHIVE);
 	cl_mouseAccel = Cvar_Get("cl_mouseAccel", "0", CVAR_ARCHIVE_ND);
 	cl_freelook = Cvar_Get("cl_freelook", "1", CVAR_ARCHIVE_ND);
 
@@ -1416,7 +1416,7 @@ void CL_Init()
 	m_yaw = Cvar_Get("m_yaw", "0.022", CVAR_ARCHIVE_ND);
 	m_forward = Cvar_Get("m_forward", "0.25", CVAR_ARCHIVE_ND);
 	m_side = Cvar_Get("m_side", "0.25", CVAR_ARCHIVE_ND);
-	m_filter = Cvar_Get("m_filter", "0", CVAR_ARCHIVE_ND);
+	m_filter = Cvar_Get("m_filter", "1", CVAR_ARCHIVE_ND);
 
 	// ~ and `, as keys and characters
 	cl_consoleKeys = Cvar_Get("cl_consoleKeys", "~ ` 0x7e 0x60 0xb2", CVAR_ARCHIVE);

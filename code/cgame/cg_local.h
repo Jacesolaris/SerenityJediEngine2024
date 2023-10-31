@@ -1024,16 +1024,16 @@ void cgi_RE_InitRendererTerrain(const char* terrainInfo);
 // model collision
 void cgi_CM_LoadMap(const char* mapname, qboolean subBSP);
 int cgi_CM_NumInlineModels();
-clip_handle_t cgi_CM_InlineModel(int index); // 0 = world, 1+ = bmodels
-clip_handle_t cgi_CM_TempBoxModel(const vec3_t mins, const vec3_t maxs); //, const int contents );
-int cgi_CM_PointContents(const vec3_t p, clip_handle_t model);
-int cgi_CM_TransformedPointContents(const vec3_t p, clip_handle_t model, const vec3_t origin, const vec3_t angles);
+clipHandle_t cgi_CM_InlineModel(int index); // 0 = world, 1+ = bmodels
+clipHandle_t cgi_CM_TempBoxModel(const vec3_t mins, const vec3_t maxs); //, const int contents );
+int cgi_CM_PointContents(const vec3_t p, clipHandle_t model);
+int cgi_CM_TransformedPointContents(const vec3_t p, clipHandle_t model, const vec3_t origin, const vec3_t angles);
 void cgi_CM_BoxTrace(trace_t* results, const vec3_t start, const vec3_t end,
 	const vec3_t mins, const vec3_t maxs,
-	clip_handle_t model, int brushmask);
+	clipHandle_t model, int brushmask);
 void cgi_CM_TransformedBoxTrace(trace_t* results, const vec3_t start, const vec3_t end,
 	const vec3_t mins, const vec3_t maxs,
-	clip_handle_t model, int brushmask,
+	clipHandle_t model, int brushmask,
 	const vec3_t origin, const vec3_t angles);
 
 // Returns the projection of a polygon onto the solid brushes in the world
@@ -1098,8 +1098,7 @@ void cgi_R_DrawStretchPic(float x, float y, float w, float h,
 	float s1, float t1, float s2, float t2, qhandle_t hShader);
 
 void cgi_R_ModelBounds(qhandle_t model, vec3_t mins, vec3_t maxs);
-void cgi_R_LerpTag(orientation_t* tag, qhandle_t mod, int startFrame, int endFrame,
-	float frac, const char* tagName);
+void cgi_R_LerpTag(orientation_t* tag, qhandle_t mod, int startFrame, int endFrame, float frac, const char* tagName);
 // Does weird, barely controllable rotation behaviour
 void cgi_R_DrawRotatePic(float x, float y, float w, float h,
 	float s1, float t1, float s2, float t2, float a, qhandle_t hShader, float aspectCorrection);

@@ -39,17 +39,19 @@ CQuickSpriteSystem SQuickSprite;
 //////////////////////////////////////////////////////////////////////
 
 CQuickSpriteSystem::CQuickSpriteSystem() :
-	mTexBundle(nullptr),
+	mTexBundle(NULL),
 	mGLStateBits(0),
 	mFogIndex(-1),
 	mUseFog(qfalse),
-	mNextVert(0), mTurnCullBackOn()
+	mNextVert(0)
 {
-	memset(mVerts, 0, sizeof mVerts);
-	memset(mFogTextureCoords, 0, sizeof mFogTextureCoords);
-	memset(mColors, 0, sizeof mColors);
+	int i;
 
-	for (int i = 0; i < SHADER_MAX_VERTEXES; i += 4)
+	memset(mVerts, 0, sizeof(mVerts));
+	memset(mFogTextureCoords, 0, sizeof(mFogTextureCoords));
+	memset(mColors, 0, sizeof(mColors));
+
+	for (i = 0; i < SHADER_MAX_VERTEXES; i += 4)
 	{
 		// Bottom right
 		mTextureCoords[i + 0][0] = 1.0;
@@ -66,11 +68,11 @@ CQuickSpriteSystem::CQuickSpriteSystem() :
 	}
 }
 
-CQuickSpriteSystem::~CQuickSpriteSystem()
+CQuickSpriteSystem::~CQuickSpriteSystem(void)
 {
 }
 
-void CQuickSpriteSystem::Flush()
+void CQuickSpriteSystem::Flush(void)
 {
 	if (mNextVert == 0)
 	{
@@ -142,7 +144,7 @@ void CQuickSpriteSystem::Flush()
 		//		qglEnableClientState( GL_TEXTURE_COORD_ARRAY);	// Done above
 
 		qglDisableClientState(GL_COLOR_ARRAY);
-		qglColor4ubv(reinterpret_cast<GLubyte*>(&fog->colorInt));
+		qglColor4ubv((GLubyte*)&fog->colorInt);
 
 		//		qglVertexPointer (3, GL_FLOAT, 16, mVerts);	// Done above
 
@@ -164,16 +166,16 @@ void CQuickSpriteSystem::Flush()
 	mNextVert = 0;
 }
 
-void CQuickSpriteSystem::StartGroup(textureBundle_t* bundle, const uint32_t glbits, const int fog_index)
+void CQuickSpriteSystem::StartGroup(textureBundle_t* bundle, uint32_t glbits, int fogIndex)
 {
 	mNextVert = 0;
 
 	mTexBundle = bundle;
 	mGLStateBits = glbits;
-	if (fog_index != -1)
+	if (fogIndex != -1)
 	{
 		mUseFog = qtrue;
-		mFogIndex = fog_index;
+		mFogIndex = fogIndex;
 	}
 	else
 	{
@@ -194,7 +196,7 @@ void CQuickSpriteSystem::StartGroup(textureBundle_t* bundle, const uint32_t glbi
 	qglDisable(GL_CULL_FACE);
 }
 
-void CQuickSpriteSystem::EndGroup()
+void CQuickSpriteSystem::EndGroup(void)
 {
 	Flush();
 
@@ -205,27 +207,31 @@ void CQuickSpriteSystem::EndGroup()
 	}
 }
 
-void CQuickSpriteSystem::Add(const float* pointdata, color4ub_t color, vec2_t fog)
+void CQuickSpriteSystem::Add(float* pointdata, color4ub_t color, vec2_t fog)
 {
+	float* curcoord;
+	float* curfogtexcoord;
+	uint32_t* curcolor;
+
 	if (mNextVert > SHADER_MAX_VERTEXES - 4)
 	{
 		Flush();
 	}
 
-	float* curcoord = mVerts[mNextVert];
+	curcoord = mVerts[mNextVert];
 	// This is 16*sizeof(float) because, pointdata comes from a float[16]
 	memcpy(curcoord, pointdata, 16 * sizeof(float));
 
 	// Set up color
-	uint32_t* curcolor = &mColors[mNextVert];
-	*curcolor++ = *reinterpret_cast<uint32_t*>(color);
-	*curcolor++ = *reinterpret_cast<uint32_t*>(color);
-	*curcolor++ = *reinterpret_cast<uint32_t*>(color);
-	*curcolor++ = *reinterpret_cast<uint32_t*>(color);
+	curcolor = &mColors[mNextVert];
+	*curcolor++ = *(uint32_t*)color;
+	*curcolor++ = *(uint32_t*)color;
+	*curcolor++ = *(uint32_t*)color;
+	*curcolor++ = *(uint32_t*)color;
 
 	if (fog)
 	{
-		float* curfogtexcoord = &mFogTextureCoords[mNextVert][0];
+		curfogtexcoord = &mFogTextureCoords[mNextVert][0];
 		*curfogtexcoord++ = fog[0];
 		*curfogtexcoord++ = fog[1];
 

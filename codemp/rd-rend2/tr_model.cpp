@@ -297,17 +297,17 @@ qhandle_t RE_RegisterModel(const char* name)
 	qboolean	orgNameFailed = qfalse;
 	int			orgLoader = -1;
 	int			i;
-	char		localName[MAX_SKINNAME_PATH];
+	char		localName[MAX_QPATH];
 	const char* ext;
-	char		altName[MAX_SKINNAME_PATH];
+	char		altName[MAX_QPATH];
 
 	if (!name || !name[0]) {
 		ri->Printf(PRINT_ALL, "RE_RegisterModel: NULL name\n");
 		return 0;
 	}
 
-	if (strlen(name) >= MAX_SKINNAME_PATH) {
-		ri->Printf(PRINT_ALL, "Model name exceeds MAX_SKINNAME_PATH\n");
+	if (strlen(name) >= MAX_QPATH) {
+		ri->Printf(PRINT_ALL, "Model name exceeds MAX_QPATH\n");
 		return 0;
 	}
 
@@ -345,7 +345,7 @@ qhandle_t RE_RegisterModel(const char* name)
 	//
 	// load the files
 	//
-	Q_strncpyz(localName, name, MAX_SKINNAME_PATH);
+	Q_strncpyz(localName, name, MAX_QPATH);
 
 	ext = COM_GetExtension(localName);
 
@@ -371,7 +371,7 @@ qhandle_t RE_RegisterModel(const char* name)
 				// try again without the extension
 				orgNameFailed = qtrue;
 				orgLoader = i;
-				COM_StripExtension(name, localName, MAX_SKINNAME_PATH);
+				COM_StripExtension(name, localName, MAX_QPATH);
 			}
 			else
 			{

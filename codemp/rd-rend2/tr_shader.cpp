@@ -4382,7 +4382,7 @@ most world construction surfaces.
 
 ===============
 */
-shader_t* R_FindShader(const char* name, const int* lightmapIndex, const byte* styles, const qboolean mip_raw_image)
+shader_t* R_FindShader(const char* name, const int* lightmapIndex, const byte* styles, const qboolean mipRawImage)
 {
 	char		strippedName[MAX_QPATH];
 	int			hash, flags;
@@ -4473,7 +4473,7 @@ shader_t* R_FindShader(const char* name, const int* lightmapIndex, const byte* s
 	if (shader.isHDRLit == qtrue)
 		flags |= IMGFLAG_SRGB;
 
-	if (mip_raw_image)
+	if (mipRawImage)
 	{
 		flags |= IMGFLAG_MIPMAP | IMGFLAG_PICMIP;
 
@@ -4589,7 +4589,7 @@ shader_t* R_FindServerShader(const char* name, const int* lightmapIndex, const b
 	return FinishShader();
 }
 
-qhandle_t RE_RegisterShaderFromImage(const char* name, const int* lightmapIndex, const byte* styles, image_t* image, qboolean mip_raw_image) {
+qhandle_t RE_RegisterShaderFromImage(const char* name, const int* lightmapIndex, const byte* styles, image_t* image, qboolean mipRawImage) {
 	int			hash;
 	shader_t* sh;
 
@@ -4817,7 +4817,7 @@ Dump information on all valid shaders to the console
 A second parameter will cause it to print in sorted order
 ===============
 */
-void	R_ShaderList_f(void) {
+void R_ShaderList_f(void) {
 	int			i;
 	int			count;
 	shader_t* shader;
@@ -4880,7 +4880,7 @@ a single large text block that can be scanned for shader names
 =====================
 */
 constexpr auto MAX_SHADER_FILES = 8192;
-static void ScanAndLoadShaderFiles()
+static void ScanAndLoadShaderFiles(void)
 {
 	char** shader_files;
 	char* buffers[MAX_SHADER_FILES];

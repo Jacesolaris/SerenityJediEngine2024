@@ -1494,7 +1494,7 @@ void R_Register(void)
 	// latched and archived variables
 	//
 	r_allowExtensions = ri_Cvar_Get_NoComm("r_allowExtensions", "1", CVAR_ARCHIVE | CVAR_LATCH, "Allow GL extensions");
-	r_ext_compressed_textures = ri_Cvar_Get_NoComm("r_ext_compress_textures", "0", CVAR_ARCHIVE | CVAR_LATCH, "Disable/enable texture compression");
+	r_ext_compressed_textures = ri_Cvar_Get_NoComm("r_ext_compress_textures", "1", CVAR_ARCHIVE | CVAR_LATCH, "Disable/enable texture compression");
 	r_ext_compressed_lightmaps = ri.Cvar_Get("r_ext_compress_lightmaps", "0", CVAR_ARCHIVE_ND | CVAR_LATCH);
 	r_ext_multitexture = ri_Cvar_Get_NoComm("r_ext_multitexture", "1", CVAR_ARCHIVE | CVAR_LATCH, "Unused");
 	r_ext_compiled_vertex_array = ri_Cvar_Get_NoComm("r_ext_compiled_vertex_array", "1", CVAR_ARCHIVE | CVAR_LATCH, "Unused");

@@ -1143,9 +1143,9 @@ static qhandle_t RE_RegisterModel_Actual(const char* name)
 		return 0;
 	}
 
-	if (strlen(name) >= MAX_SKINNAME_PATH)
+	if (strlen(name) >= MAX_QPATH)
 	{
-		ri->Printf(PRINT_DEVELOPER, S_COLOR_RED "Model name exceeds MAX_SKINNAME_PATH\n");
+		ri->Printf(PRINT_DEVELOPER, S_COLOR_RED "Model name exceeds MAX_QPATH\n");
 		return 0;
 	}
 
@@ -1164,11 +1164,11 @@ static qhandle_t RE_RegisterModel_Actual(const char* name)
 
 	if (name[0] == '#')
 	{
-		char		temp[MAX_SKINNAME_PATH];
+		char		temp[MAX_QPATH];
 
 		tr.numBSPModels++;
 		RE_LoadWorldMap_Actual(va("maps/%s.bsp", name + 1), tr.bspModels[tr.numBSPModels - 1], tr.numBSPModels);
-		Com_sprintf(temp, MAX_SKINNAME_PATH, "*%d-0", tr.numBSPModels);
+		Com_sprintf(temp, MAX_QPATH, "*%d-0", tr.numBSPModels);
 		hash = generateHashValue(temp, FILE_HASH_SIZE);
 		for (mh = mhHashTable[hash]; mh; mh = mh->next)
 		{

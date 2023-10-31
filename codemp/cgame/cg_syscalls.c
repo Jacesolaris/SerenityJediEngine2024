@@ -169,52 +169,52 @@ int trap_CM_NumInlineModels(void)
 	return Q_syscall(CG_CM_NUMINLINEMODELS);
 }
 
-clip_handle_t trap_CM_InlineModel(const int index)
+clipHandle_t trap_CM_InlineModel(const int index)
 {
 	return Q_syscall(CG_CM_INLINEMODEL, index);
 }
 
-clip_handle_t trap_CM_TempBoxModel(const vec3_t mins, const vec3_t maxs)
+clipHandle_t trap_CM_TempBoxModel(const vec3_t mins, const vec3_t maxs)
 {
 	return Q_syscall(CG_CM_TEMPBOXMODEL, mins, maxs);
 }
 
-clip_handle_t trap_CM_TempCapsuleModel(const vec3_t mins, const vec3_t maxs)
+clipHandle_t trap_CM_TempCapsuleModel(const vec3_t mins, const vec3_t maxs)
 {
 	return Q_syscall(CG_CM_TEMPCAPSULEMODEL, mins, maxs);
 }
 
-int trap_CM_PointContents(const vec3_t p, const clip_handle_t model)
+int trap_CM_PointContents(const vec3_t p, const clipHandle_t model)
 {
 	return Q_syscall(CG_CM_POINTCONTENTS, p, model);
 }
 
-int trap_CM_TransformedPointContents(const vec3_t p, const clip_handle_t model, const vec3_t origin, const vec3_t angles)
+int trap_CM_TransformedPointContents(const vec3_t p, const clipHandle_t model, const vec3_t origin, const vec3_t angles)
 {
 	return Q_syscall(CG_CM_TRANSFORMEDPOINTCONTENTS, p, model, origin, angles);
 }
 
 void trap_CM_BoxTrace(trace_t* results, const vec3_t start, const vec3_t end, const vec3_t mins, const vec3_t maxs,
-	const clip_handle_t model, const int brushmask)
+	const clipHandle_t model, const int brushmask)
 {
 	Q_syscall(CG_CM_BOXTRACE, results, start, end, mins, maxs, model, brushmask);
 }
 
 void trap_CM_CapsuleTrace(trace_t* results, const vec3_t start, const vec3_t end, const vec3_t mins, const vec3_t maxs,
-	const clip_handle_t model, const int brushmask)
+	const clipHandle_t model, const int brushmask)
 {
 	Q_syscall(CG_CM_CAPSULETRACE, results, start, end, mins, maxs, model, brushmask);
 }
 
 void trap_CM_TransformedBoxTrace(trace_t* results, const vec3_t start, const vec3_t end, const vec3_t mins,
-	const vec3_t maxs, const clip_handle_t model, const int brushmask, const vec3_t origin,
+	const vec3_t maxs, const clipHandle_t model, const int brushmask, const vec3_t origin,
 	const vec3_t angles)
 {
 	Q_syscall(CG_CM_TRANSFORMEDBOXTRACE, results, start, end, mins, maxs, model, brushmask, origin, angles);
 }
 
 void trap_CM_TransformedCapsuleTrace(trace_t* results, const vec3_t start, const vec3_t end, const vec3_t mins,
-	const vec3_t maxs, const clip_handle_t model, const int brushmask,
+	const vec3_t maxs, const clipHandle_t model, const int brushmask,
 	const vec3_t origin, const vec3_t angles)
 {
 	Q_syscall(CG_CM_TRANSFORMEDCAPSULETRACE, results, start, end, mins, maxs, model, brushmask, origin, angles);
@@ -460,12 +460,12 @@ void trap_R_DrawStretchPic(const float x, const float y, const float w, const fl
 		PASSFLOAT(s2), PASSFLOAT(t2), hShader);
 }
 
-void trap_R_ModelBounds(const clip_handle_t model, vec3_t mins, vec3_t maxs)
+void trap_R_ModelBounds(const clipHandle_t model, vec3_t mins, vec3_t maxs)
 {
 	Q_syscall(CG_R_MODELBOUNDS, model, mins, maxs);
 }
 
-int trap_R_LerpTag(orientation_t* tag, const clip_handle_t mod, const int startFrame, const int endFrame,
+int trap_R_LerpTag(orientation_t* tag, const clipHandle_t mod, const int startFrame, const int endFrame,
 	const float frac, const char* tagName)
 {
 	return Q_syscall(CG_R_LERPTAG, tag, mod, startFrame, endFrame, PASSFLOAT(frac), tagName);
@@ -891,26 +891,26 @@ qboolean trap_G2_HaveWeGhoul2Models(void* ghoul2)
 }
 
 qboolean trap_G2API_GetBoltMatrix(void* ghoul2, const int modelIndex, const int boltIndex, mdxaBone_t* matrix,
-	const vec3_t angles, const vec3_t position, const int frame_num, qhandle_t* modelList,
+	const vec3_t angles, const vec3_t position, const int frameNum, qhandle_t* modelList,
 	vec3_t scale)
 {
-	return Q_syscall(CG_G2_GETBOLT, ghoul2, modelIndex, boltIndex, matrix, angles, position, frame_num, modelList,
+	return Q_syscall(CG_G2_GETBOLT, ghoul2, modelIndex, boltIndex, matrix, angles, position, frameNum, modelList,
 		scale);
 }
 
 qboolean trap_G2API_GetBoltMatrix_NoReconstruct(void* ghoul2, const int modelIndex, const int boltIndex,
 	mdxaBone_t* matrix, const vec3_t angles, const vec3_t position,
-	const int frame_num, qhandle_t* modelList, vec3_t scale)
+	const int frameNum, qhandle_t* modelList, vec3_t scale)
 {
-	return Q_syscall(CG_G2_GETBOLT_NOREC, ghoul2, modelIndex, boltIndex, matrix, angles, position, frame_num,
+	return Q_syscall(CG_G2_GETBOLT_NOREC, ghoul2, modelIndex, boltIndex, matrix, angles, position, frameNum,
 		modelList, scale);
 }
 
 qboolean trap_G2API_GetBoltMatrix_NoRecNoRot(void* ghoul2, const int modelIndex, const int boltIndex,
 	mdxaBone_t* matrix, const vec3_t angles, const vec3_t position,
-	const int frame_num, qhandle_t* modelList, vec3_t scale)
+	const int frameNum, qhandle_t* modelList, vec3_t scale)
 {
-	return Q_syscall(CG_G2_GETBOLT_NOREC_NOROT, ghoul2, modelIndex, boltIndex, matrix, angles, position, frame_num,
+	return Q_syscall(CG_G2_GETBOLT_NOREC_NOROT, ghoul2, modelIndex, boltIndex, matrix, angles, position, frameNum,
 		modelList, scale);
 }
 
@@ -1206,21 +1206,21 @@ int CGSyscall_FS_Write(const void* buffer, const int len, const fileHandle_t f)
 	return 0;
 }
 
-clip_handle_t CGSyscall_CM_TempModel(const vec3_t mins, const vec3_t maxs, const int capsule)
+clipHandle_t CGSyscall_CM_TempModel(const vec3_t mins, const vec3_t maxs, const int capsule)
 {
 	if (capsule) return trap_CM_TempCapsuleModel(mins, maxs);
 	return trap_CM_TempBoxModel(mins, maxs);
 }
 
 void CGSyscall_CM_Trace(trace_t* results, const vec3_t start, const vec3_t end, const vec3_t mins, const vec3_t maxs,
-	const clip_handle_t model, const int brushmask, const int capsule)
+	const clipHandle_t model, const int brushmask, const int capsule)
 {
 	if (capsule) trap_CM_CapsuleTrace(results, start, end, mins, maxs, model, brushmask);
 	else trap_CM_BoxTrace(results, start, end, mins, maxs, model, brushmask);
 }
 
 void CGSyscall_CM_TransformedTrace(trace_t* results, const vec3_t start, const vec3_t end, const vec3_t mins,
-	const vec3_t maxs, const clip_handle_t model, const int brushmask,
+	const vec3_t maxs, const clipHandle_t model, const int brushmask,
 	const vec3_t origin, const vec3_t angles, const int capsule)
 {
 	if (capsule) trap_CM_TransformedCapsuleTrace(results, start, end, mins, maxs, model, brushmask, origin, angles);

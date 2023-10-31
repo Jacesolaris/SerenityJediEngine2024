@@ -37,22 +37,24 @@ static unsigned char s_gammatable[256];
 int		gl_filter_min = GL_LINEAR_MIPMAP_NEAREST;
 int		gl_filter_max = GL_LINEAR;
 
-constexpr auto FILE_HASH_SIZE = 1024;	// actually, the shader code needs this (from another module, great).;
+#define FILE_HASH_SIZE		1024	// actually, the shader code needs this (from another module, great).
 //static	image_t*		hashTable[FILE_HASH_SIZE];
 
 /*
 ** R_GammaCorrect
 */
-void R_GammaCorrect(byte* buffer, const int buf_size) {
-	for (int i = 0; i < buf_size; i++) {
+void R_GammaCorrect(byte* buffer, int bufSize) {
+	int i;
+
+	for (i = 0; i < bufSize; i++) {
 		buffer[i] = s_gammatable[buffer[i]];
 	}
 }
 
-using textureMode_t = struct {
+typedef struct {
 	const char* name;
 	int	minimize, maximize;
-};
+} textureMode_t;
 
 textureMode_t modes[] = {
 	{"GL_NEAREST", GL_NEAREST, GL_NEAREST},
@@ -63,7 +65,7 @@ textureMode_t modes[] = {
 	{"GL_LINEAR_MIPMAP_LINEAR", GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR}
 };
 
-static constexpr size_t numTextureModes = std::size(modes);
+static const size_t numTextureModes = ARRAY_LEN(modes);
 
 /*
 ================
@@ -71,16 +73,20 @@ return a hash value for the filename
 ================
 */
 long generateHashValue(const char* fname) {
-	long hash = 0;
-	int i = 0;
+	int		i;
+	long	hash;
+	char	letter;
+
+	hash = 0;
+	i = 0;
 	while (fname[i] != '\0') {
-		char letter = tolower(fname[i]);
+		letter = tolower(fname[i]);
 		if (letter == '.') break;				// don't include extension
 		if (letter == '\\') letter = '/';		// damn path names
-		hash += static_cast<long>(letter) * (i + 119);
+		hash += (long)(letter) * (i + 119);
 		i++;
 	}
-	hash &= FILE_HASH_SIZE - 1;
+	hash &= (FILE_HASH_SIZE - 1);
 	return hash;
 }
 
@@ -88,19 +94,20 @@ long generateHashValue(const char* fname) {
 //
 char* GenerateImageMappingName(const char* name)
 {
-	static char s_name[MAX_QPATH];
+	static char sName[MAX_QPATH];
 	int		i = 0;
+	char	letter;
 
 	while (name[i] != '\0' && i < MAX_QPATH - 1)
 	{
-		char letter = tolower(name[i]);
+		letter = tolower(name[i]);
 		if (letter == '.') break;				// don't include extension
 		if (letter == '\\') letter = '/';		// damn path names
-		s_name[i++] = letter;
+		sName[i++] = letter;
 	}
-	s_name[i] = 0;
+	sName[i] = 0;
 
-	return &s_name[0];
+	return &sName[0];
 }
 
 /*
@@ -138,7 +145,7 @@ void GL_TextureMode(const char* string) {
 	// change all the existing mipmap texture objects
 //	int iNumImages =
 	R_Images_StartIteration();
-	while ((glt = R_Images_GetNextIteration()) != nullptr)
+	while ((glt = R_Images_GetNextIteration()) != NULL)
 	{
 		if (glt->mipmap) {
 			GL_Bind(glt);
@@ -157,45 +164,56 @@ void GL_TextureMode(const char* string) {
 	}
 }
 
-static float R_BytesPerTex(const int format)
+static float R_BytesPerTex(int format)
 {
 	switch (format) {
 	case 1:
 		//"I    "
 		return 1;
+		break;
 	case 2:
 		//"IA   "
 		return 2;
+		break;
 	case 3:
 		//"RGB  "
 		return glConfig.colorBits / 8.0f;
+		break;
 	case 4:
 		//"RGBA "
 		return glConfig.colorBits / 8.0f;
+		break;
 
 	case GL_RGBA4:
 		//"RGBA4"
 		return 2;
+		break;
 	case GL_RGB5:
 		//"RGB5 "
 		return 2;
+		break;
 
 	case GL_RGBA8:
 		//"RGBA8"
 		return 4;
+		break;
 	case GL_RGB8:
 		//"RGB8"
 		return 4;
+		break;
 
 	case GL_RGB4_S3TC:
 		//"S3TC "
 		return 0.33333f;
+		break;
 	case GL_COMPRESSED_RGB_S3TC_DXT1_EXT:
 		//"DXT1 "
 		return 0.33333f;
+		break;
 	case GL_COMPRESSED_RGBA_S3TC_DXT5_EXT:
 		//"DXT5 "
 		return 1;
+		break;
 	default:
 		//"???? "
 		return 4;
@@ -207,23 +225,23 @@ static float R_BytesPerTex(const int format)
 R_SumOfUsedImages
 ===============
 */
-float R_SumOfUsedImages(const qboolean b_use_format)
+float R_SumOfUsedImages(qboolean bUseFormat)
 {
 	int	total = 0;
-	image_t* p_image;
+	image_t* pImage;
 
 	R_Images_StartIteration();
-	while ((p_image = R_Images_GetNextIteration()) != nullptr)
+	while ((pImage = R_Images_GetNextIteration()) != NULL)
 	{
-		if (p_image->frameUsed == tr.frameCount - 1) {//it has already been advanced for the next frame, so...
-			if (b_use_format)
+		if (pImage->frameUsed == tr.frameCount - 1) {//it has already been advanced for the next frame, so...
+			if (bUseFormat)
 			{
-				const float  bytePerTex = R_BytesPerTex(p_image->internalFormat);
-				total += bytePerTex * (p_image->width * p_image->height);
+				float  bytePerTex = R_BytesPerTex(pImage->internalFormat);
+				total += bytePerTex * (pImage->width * pImage->height);
 			}
 			else
 			{
-				total += p_image->width * p_image->height;
+				total += pImage->width * pImage->height;
 			}
 		}
 	}
@@ -236,21 +254,21 @@ float R_SumOfUsedImages(const qboolean b_use_format)
 R_ImageList_f
 ===============
 */
-void R_ImageList_f() {
+void R_ImageList_f(void) {
 	int		i = 0;
 	image_t* image;
 	int		texels = 0;
 	//	int		totalFileSizeK = 0;
-	float	tex_bytes = 0.0f;
+	float	texBytes = 0.0f;
 	const char* yesno[] = { "no ", "yes" };
 
 	ri.Printf(PRINT_ALL, "\n      -w-- -h-- -fsK- -mm- -if- wrap --name-------\n");
 
-	const int i_num_images = R_Images_StartIteration();
-	while ((image = R_Images_GetNextIteration()) != nullptr)
+	int iNumImages = R_Images_StartIteration();
+	while ((image = R_Images_GetNextIteration()) != NULL)
 	{
 		texels += image->width * image->height;
-		tex_bytes += image->width * image->height * R_BytesPerTex(image->internalFormat);
+		texBytes += image->width * image->height * R_BytesPerTex(image->internalFormat);
 		//		totalFileSizeK += (image->imgfileSize+1023)/1024;
 				//ri.Printf (PRINT_ALL,  "%4i: %4i %4i %5i  %s ",
 				//	i, image->width, image->height,(image->fileSize+1023)/1024, yesno[image->mipmap] );
@@ -317,8 +335,8 @@ void R_ImageList_f() {
 	ri.Printf(PRINT_ALL, "      -w-- -h-- -mm- -if- wrap --name-------\n");
 	ri.Printf(PRINT_ALL, " %i total texels (not including mipmaps)\n", texels);
 	//	ri.Printf (PRINT_ALL, " %iMB total filesize\n", (totalFileSizeK+1023)/1024 );
-	ri.Printf(PRINT_ALL, " %.2fMB total texture mem (not including mipmaps)\n", tex_bytes / 1048576.0f);
-	ri.Printf(PRINT_ALL, " %i total images\n\n", i_num_images);
+	ri.Printf(PRINT_ALL, " %.2fMB total texture mem (not including mipmaps)\n", texBytes / 1048576.0f);
+	ri.Printf(PRINT_ALL, " %i total images\n\n", iNumImages);
 }
 
 //=======================================================================
@@ -331,16 +349,19 @@ Scale up the pixel values in a texture to increase the
 lighting range
 ================
 */
-static void R_LightScaleTexture(unsigned* in, const int inwidth, const int inheight, const qboolean only_gamma)
+static void R_LightScaleTexture(unsigned* in, int inwidth, int inheight, qboolean only_gamma)
 {
 	if (only_gamma)
 	{
 		if (!glConfig.deviceSupportsGamma)
 		{
-			auto p = reinterpret_cast<byte*>(in);
+			int		i, c;
+			byte* p;
 
-			const int c = inwidth * inheight;
-			for (int i = 0; i < c; i++, p += 4)
+			p = (byte*)in;
+
+			c = inwidth * inheight;
+			for (i = 0; i < c; i++, p += 4)
 			{
 				p[0] = s_gammatable[p[0]];
 				p[1] = s_gammatable[p[1]];
@@ -350,11 +371,12 @@ static void R_LightScaleTexture(unsigned* in, const int inwidth, const int inhei
 	}
 	else
 	{
-		int		i;
+		int		i, c;
+		byte* p;
 
-		auto p = reinterpret_cast<byte*>(in);
+		p = (byte*)in;
 
-		const int c = inwidth * inheight;
+		c = inwidth * inheight;
 
 		if (glConfig.deviceSupportsGamma)
 		{
@@ -385,43 +407,51 @@ Uses temp mem, but then copies back to input, quartering the size of the texture
 Proper linear filter
 ================
 */
-static void R_MipMap2(unsigned* in, const int in_width, const int in_height) {
-	const int out_width = in_width >> 1;
-	const int out_height = in_height >> 1;
-	const auto temp = static_cast<unsigned*>(R_Malloc(out_width * out_height * 4, TAG_TEMP_WORKSPACE, qfalse));
+static void R_MipMap2(unsigned* in, int inWidth, int inHeight) {
+	int			i, j, k;
+	byte* outpix;
+	int			inWidthMask, inHeightMask;
+	int			total;
+	int			outWidth, outHeight;
+	unsigned* temp;
 
-	const int in_width_mask = in_width - 1;
-	const int in_height_mask = in_height - 1;
+	outWidth = inWidth >> 1;
+	outHeight = inHeight >> 1;
+	temp = (unsigned int*)R_Malloc(outWidth * outHeight * 4, TAG_TEMP_WORKSPACE, qfalse);
 
-	for (int i = 0; i < out_height; i++) {
-		for (int j = 0; j < out_width; j++) {
-			const auto outpix = reinterpret_cast<byte*>(temp + i * out_width + j);
-			for (int k = 0; k < 4; k++) {
-				const int total = 1 * reinterpret_cast<byte*>(&in[(i * 2 - 1 & in_height_mask) * in_width + (j * 2 - 1 & in_width_mask)])[k] +
-					2 * reinterpret_cast<byte*>(&in[(i * 2 - 1 & in_height_mask) * in_width + (j * 2 & in_width_mask)])[k] +
-					2 * reinterpret_cast<byte*>(&in[(i * 2 - 1 & in_height_mask) * in_width + (j * 2 + 1 & in_width_mask)])[k] +
-					1 * reinterpret_cast<byte*>(&in[(i * 2 - 1 & in_height_mask) * in_width + (j * 2 + 2 & in_width_mask)])[k] +
+	inWidthMask = inWidth - 1;
+	inHeightMask = inHeight - 1;
 
-					2 * reinterpret_cast<byte*>(&in[(i * 2 & in_height_mask) * in_width + (j * 2 - 1 & in_width_mask)])[k] +
-					4 * reinterpret_cast<byte*>(&in[(i * 2 & in_height_mask) * in_width + (j * 2 & in_width_mask)])[k] +
-					4 * reinterpret_cast<byte*>(&in[(i * 2 & in_height_mask) * in_width + (j * 2 + 1 & in_width_mask)])[k] +
-					2 * reinterpret_cast<byte*>(&in[(i * 2 & in_height_mask) * in_width + (j * 2 + 2 & in_width_mask)])[k] +
+	for (i = 0; i < outHeight; i++) {
+		for (j = 0; j < outWidth; j++) {
+			outpix = (byte*)(temp + i * outWidth + j);
+			for (k = 0; k < 4; k++) {
+				total =
+					1 * ((byte*)&in[((i * 2 - 1) & inHeightMask) * inWidth + ((j * 2 - 1) & inWidthMask)])[k] +
+					2 * ((byte*)&in[((i * 2 - 1) & inHeightMask) * inWidth + ((j * 2) & inWidthMask)])[k] +
+					2 * ((byte*)&in[((i * 2 - 1) & inHeightMask) * inWidth + ((j * 2 + 1) & inWidthMask)])[k] +
+					1 * ((byte*)&in[((i * 2 - 1) & inHeightMask) * inWidth + ((j * 2 + 2) & inWidthMask)])[k] +
 
-					2 * reinterpret_cast<byte*>(&in[(i * 2 + 1 & in_height_mask) * in_width + (j * 2 - 1 & in_width_mask)])[k] +
-					4 * reinterpret_cast<byte*>(&in[(i * 2 + 1 & in_height_mask) * in_width + (j * 2 & in_width_mask)])[k] +
-					4 * reinterpret_cast<byte*>(&in[(i * 2 + 1 & in_height_mask) * in_width + (j * 2 + 1 & in_width_mask)])[k] +
-					2 * reinterpret_cast<byte*>(&in[(i * 2 + 1 & in_height_mask) * in_width + (j * 2 + 2 & in_width_mask)])[k] +
+					2 * ((byte*)&in[((i * 2) & inHeightMask) * inWidth + ((j * 2 - 1) & inWidthMask)])[k] +
+					4 * ((byte*)&in[((i * 2) & inHeightMask) * inWidth + ((j * 2) & inWidthMask)])[k] +
+					4 * ((byte*)&in[((i * 2) & inHeightMask) * inWidth + ((j * 2 + 1) & inWidthMask)])[k] +
+					2 * ((byte*)&in[((i * 2) & inHeightMask) * inWidth + ((j * 2 + 2) & inWidthMask)])[k] +
 
-					1 * reinterpret_cast<byte*>(&in[(i * 2 + 2 & in_height_mask) * in_width + (j * 2 - 1 & in_width_mask)])[k] +
-					2 * reinterpret_cast<byte*>(&in[(i * 2 + 2 & in_height_mask) * in_width + (j * 2 & in_width_mask)])[k] +
-					2 * reinterpret_cast<byte*>(&in[(i * 2 + 2 & in_height_mask) * in_width + (j * 2 + 1 & in_width_mask)])[k] +
-					1 * reinterpret_cast<byte*>(&in[(i * 2 + 2 & in_height_mask) * in_width + (j * 2 + 2 & in_width_mask)])[k];
+					2 * ((byte*)&in[((i * 2 + 1) & inHeightMask) * inWidth + ((j * 2 - 1) & inWidthMask)])[k] +
+					4 * ((byte*)&in[((i * 2 + 1) & inHeightMask) * inWidth + ((j * 2) & inWidthMask)])[k] +
+					4 * ((byte*)&in[((i * 2 + 1) & inHeightMask) * inWidth + ((j * 2 + 1) & inWidthMask)])[k] +
+					2 * ((byte*)&in[((i * 2 + 1) & inHeightMask) * inWidth + ((j * 2 + 2) & inWidthMask)])[k] +
+
+					1 * ((byte*)&in[((i * 2 + 2) & inHeightMask) * inWidth + ((j * 2 - 1) & inWidthMask)])[k] +
+					2 * ((byte*)&in[((i * 2 + 2) & inHeightMask) * inWidth + ((j * 2) & inWidthMask)])[k] +
+					2 * ((byte*)&in[((i * 2 + 2) & inHeightMask) * inWidth + ((j * 2 + 1) & inWidthMask)])[k] +
+					1 * ((byte*)&in[((i * 2 + 2) & inHeightMask) * inWidth + ((j * 2 + 2) & inWidthMask)])[k];
 				outpix[k] = total / 36;
 			}
 		}
 	}
 
-	memcpy(in, temp, out_width * out_height * 4);
+	memcpy(in, temp, outWidth * outHeight * 4);
 	R_Free(temp);
 }
 
@@ -433,19 +463,21 @@ Operates in place, quartering the size of the texture
 ================
 */
 static void R_MipMap(byte* in, int width, int height) {
-	int		i;
+	int		i, j;
+	byte* out;
+	int		row;
 
 	if (width == 1 && height == 1) {
 		return;
 	}
 
 	if (!r_simpleMipMaps->integer) {
-		R_MipMap2(reinterpret_cast<unsigned*>(in), width, height);
+		R_MipMap2((unsigned*)in, width, height);
 		return;
 	}
 
-	const int row = width * 4;
-	byte* out = in;
+	row = width * 4;
+	out = in;
 	width >>= 1;
 	height >>= 1;
 
@@ -461,7 +493,7 @@ static void R_MipMap(byte* in, int width, int height) {
 	}
 
 	for (i = 0; i < height; i++, in += row) {
-		for (int j = 0; j < width; j++, out += 4, in += 8) {
+		for (j = 0; j < width; j++, out += 4, in += 8) {
 			out[0] = (in[0] + in[4] + in[row + 0] + in[row + 4]) >> 2;
 			out[1] = (in[1] + in[5] + in[row + 1] + in[row + 5]) >> 2;
 			out[2] = (in[2] + in[6] + in[row + 2] + in[row + 6]) >> 2;
@@ -477,18 +509,20 @@ R_BlendOverTexture
 Apply a color blend over a set of pixels
 ==================
 */
-static void R_BlendOverTexture(byte* data, const int pixel_count, byte blend[4]) {
+static void R_BlendOverTexture(byte* data, int pixelCount, byte blend[4]) {
+	int		i;
+	int		inverseAlpha;
 	int		premult[3];
 
-	const int inverse_alpha = 255 - blend[3];
+	inverseAlpha = 255 - blend[3];
 	premult[0] = blend[0] * blend[3];
 	premult[1] = blend[1] * blend[3];
 	premult[2] = blend[2] * blend[3];
 
-	for (int i = 0; i < pixel_count; i++, data += 4) {
-		data[0] = (data[0] * inverse_alpha + premult[0]) >> 9;
-		data[1] = (data[1] * inverse_alpha + premult[1]) >> 9;
-		data[2] = (data[2] * inverse_alpha + premult[2]) >> 9;
+	for (i = 0; i < pixelCount; i++, data += 4) {
+		data[0] = (data[0] * inverseAlpha + premult[0]) >> 9;
+		data[1] = (data[1] * inverseAlpha + premult[1]) >> 9;
+		data[2] = (data[2] * inverseAlpha + premult[2]) >> 9;
 	}
 }
 
@@ -518,27 +552,29 @@ Upload32
 ===============
 */
 static void Upload32(unsigned* data,
-	const GLenum format,
-	const qboolean mipmap,
-	const qboolean picmip,
-	const qboolean is_lightmap,
-	const qboolean allow_tc,
+	GLenum format,
+	qboolean mipmap,
+	qboolean picmip,
+	qboolean isLightmap,
+	qboolean allowTC,
 	int* pformat,
-	word* p_upload_width, word* p_upload_height)
+	word* pUploadWidth, word* pUploadHeight)
 {
 	if (format == GL_RGBA)
 	{
-		int			i;
-		float		r_max = 0, g_max = 0, bMax = 0;
-		int			width = *p_upload_width;
-		int			height = *p_upload_height;
+		int			samples;
+		int			i, c;
+		byte* scan;
+		float		rMax = 0, gMax = 0, bMax = 0;
+		int			width = *pUploadWidth;
+		int			height = *pUploadHeight;
 
 		//
 		// perform optional picmip operation
 		//
 		if (picmip) {
 			for (i = 0; i < r_picmip->integer; i++) {
-				R_MipMap(reinterpret_cast<byte*>(data), width, height);
+				R_MipMap((byte*)data, width, height);
 				width >>= 1;
 				height >>= 1;
 				if (width < 1) {
@@ -556,7 +592,7 @@ static void Upload32(unsigned* data,
 		// deal with a half mip resampling
 		//
 		while (width > glConfig.maxTextureSize || height > glConfig.maxTextureSize) {
-			R_MipMap(reinterpret_cast<byte*>(data), width, height);
+			R_MipMap((byte*)data, width, height);
 			width >>= 1;
 			height >>= 1;
 		}
@@ -565,18 +601,18 @@ static void Upload32(unsigned* data,
 		// scan the texture for each channel's max values
 		// and verify if the alpha channel is being used or not
 		//
-		const int c = width * height;
-		const byte* scan = reinterpret_cast<byte*>(data);
-		int samples = 3;
+		c = width * height;
+		scan = ((byte*)data);
+		samples = 3;
 		for (i = 0; i < c; i++)
 		{
-			if (scan[i * 4 + 0] > r_max)
+			if (scan[i * 4 + 0] > rMax)
 			{
-				r_max = scan[i * 4 + 0];
+				rMax = scan[i * 4 + 0];
 			}
-			if (scan[i * 4 + 1] > g_max)
+			if (scan[i * 4 + 1] > gMax)
 			{
-				g_max = scan[i * 4 + 1];
+				gMax = scan[i * 4 + 1];
 			}
 			if (scan[i * 4 + 2] > bMax)
 			{
@@ -592,11 +628,11 @@ static void Upload32(unsigned* data,
 		// select proper internal format
 		if (samples == 3)
 		{
-			if (glConfig.textureCompression == TC_S3TC && allow_tc)
+			if (glConfig.textureCompression == TC_S3TC && allowTC)
 			{
 				*pformat = GL_RGB4_S3TC;
 			}
-			else if (glConfig.textureCompression == TC_S3TC_DXT && allow_tc)
+			else if (glConfig.textureCompression == TC_S3TC_DXT && allowTC)
 			{	// Compress purely color - no alpha
 				if (r_texturebits->integer == 16) {
 					*pformat = GL_COMPRESSED_RGB_S3TC_DXT1_EXT;	//this format cuts to 16 bit
@@ -605,7 +641,7 @@ static void Upload32(unsigned* data,
 					*pformat = GL_COMPRESSED_RGBA_S3TC_DXT5_EXT;
 				}
 			}
-			else if (is_lightmap && r_texturebitslm->integer > 0)
+			else if (isLightmap && r_texturebitslm->integer > 0)
 			{
 				// Allow different bit depth when we are a lightmap
 				if (r_texturebitslm->integer == 16)
@@ -632,7 +668,7 @@ static void Upload32(unsigned* data,
 		}
 		else if (samples == 4)
 		{
-			if (glConfig.textureCompression == TC_S3TC_DXT && allow_tc)
+			if (glConfig.textureCompression == TC_S3TC_DXT && allowTC)
 			{	// Compress both alpha and color
 				*pformat = GL_COMPRESSED_RGBA_S3TC_DXT5_EXT;
 			}
@@ -650,8 +686,8 @@ static void Upload32(unsigned* data,
 			}
 		}
 
-		*p_upload_width = width;
-		*p_upload_height = height;
+		*pUploadWidth = width;
+		*pUploadHeight = height;
 
 		// copy or resample data as appropriate for first MIP level
 		if (!mipmap)
@@ -660,16 +696,18 @@ static void Upload32(unsigned* data,
 			goto done;
 		}
 
-		R_LightScaleTexture(data, width, height, static_cast<qboolean>(!mipmap));
+		R_LightScaleTexture(data, width, height, (qboolean)!mipmap);
 
 		qglTexImage2D(GL_TEXTURE_2D, 0, *pformat, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
 
 		if (mipmap)
 		{
-			int miplevel = 0;
+			int		miplevel;
+
+			miplevel = 0;
 			while (width > 1 || height > 1)
 			{
-				R_MipMap(reinterpret_cast<byte*>(data), width, height);
+				R_MipMap((byte*)data, width, height);
 				width >>= 1;
 				height >>= 1;
 				if (width < 1)
@@ -680,7 +718,7 @@ static void Upload32(unsigned* data,
 
 				if (r_colorMipLevels->integer)
 				{
-					R_BlendOverTexture(reinterpret_cast<byte*>(data), width * height, mipBlendColors[miplevel]);
+					R_BlendOverTexture((byte*)data, width * height, mipBlendColors[miplevel]);
 				}
 
 				qglTexImage2D(GL_TEXTURE_2D, miplevel, *pformat, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
@@ -714,46 +752,46 @@ done:
 class CStringComparator
 {
 public:
-	bool operator()(const char* s1, const char* s2) const { return Q_stricmp(s1, s2) < 0; }
+	bool operator()(const char* s1, const char* s2) const { return(Q_stricmp(s1, s2) < 0); }
 };
 
-using AllocatedImages_t = std::map <const char*, image_t*, CStringComparator>;
+typedef std::map <const char*, image_t*, CStringComparator>	AllocatedImages_t;
 AllocatedImages_t AllocatedImages;
 AllocatedImages_t::iterator itAllocatedImages;
 
 int giTextureBindNum = 1024;	// will be set to this anyway at runtime, but wtf?
 
-int R_Images_StartIteration()
+int R_Images_StartIteration(void)
 {
 	itAllocatedImages = AllocatedImages.begin();
 	return AllocatedImages.size();
 }
 
-image_t* R_Images_GetNextIteration()
+image_t* R_Images_GetNextIteration(void)
 {
 	if (itAllocatedImages == AllocatedImages.end())
-		return nullptr;
+		return NULL;
 
-	image_t* p_image = (*itAllocatedImages).second;
+	image_t* pImage = (*itAllocatedImages).second;
 	++itAllocatedImages;
-	return p_image;
+	return pImage;
 }
 
 // clean up anything to do with an image_t struct, but caller will have to clear the internal to an image_t struct ready for either struct free() or overwrite...
 //
-static void R_Images_DeleteImageContents(image_t* p_image)
+static void R_Images_DeleteImageContents(image_t* pImage)
 {
-	assert(p_image);	// should never be called with NULL
-	if (p_image)
+	assert(pImage);	// should never be called with NULL
+	if (pImage)
 	{
-		qglDeleteTextures(1, &p_image->texnum);
-		R_Free(p_image);
+		qglDeleteTextures(1, &pImage->texnum);
+		R_Free(pImage);
 	}
 }
 
-static void GL_ResetBinds()
+static void GL_ResetBinds(void)
 {
-	memset(glState.currenttextures, 0, sizeof glState.currenttextures);
+	memset(glState.currenttextures, 0, sizeof(glState.currenttextures));
 	if (qglActiveTextureARB) {
 		GL_SelectTexture(1);
 		qglBindTexture(GL_TEXTURE_2D, 0);
@@ -767,21 +805,21 @@ static void GL_ResetBinds()
 
 // special function used in conjunction with "devmapbsp"...
 //
-void R_Images_DeleteLightMaps()
+void R_Images_DeleteLightMaps(void)
 {
-	for (auto it_image = AllocatedImages.begin(); it_image != AllocatedImages.end(); /* empty */)
+	for (AllocatedImages_t::iterator itImage = AllocatedImages.begin(); itImage != AllocatedImages.end(); /* empty */)
 	{
-		image_t* p_image = (*it_image).second;
+		image_t* pImage = (*itImage).second;
 
-		if (p_image->imgName[0] == '$' /*&& strstr(p_image->imgName,"lightmap")*/)	// loose check, but should be ok
+		if (pImage->imgName[0] == '$' /*&& strstr(pImage->imgName,"lightmap")*/)	// loose check, but should be ok
 		{
-			R_Images_DeleteImageContents(p_image);
+			R_Images_DeleteImageContents(pImage);
 
-			AllocatedImages.erase(it_image++);
+			AllocatedImages.erase(itImage++);
 		}
 		else
 		{
-			++it_image;
+			++itImage;
 		}
 	}
 
@@ -790,15 +828,15 @@ void R_Images_DeleteLightMaps()
 
 // special function currently only called by Dissolve code...
 //
-void R_Images_DeleteImage(image_t* p_image)
+void R_Images_DeleteImage(image_t* pImage)
 {
 	// Even though we supply the image handle, we need to get the corresponding iterator entry...
 	//
-	const auto it_image = AllocatedImages.find(p_image->imgName);
-	if (it_image != AllocatedImages.end())
+	AllocatedImages_t::iterator itImage = AllocatedImages.find(pImage->imgName);
+	if (itImage != AllocatedImages.end())
 	{
-		R_Images_DeleteImageContents(p_image);
-		AllocatedImages.erase(it_image);
+		R_Images_DeleteImageContents(pImage);
+		AllocatedImages.erase(itImage);
 	}
 	else
 	{
@@ -808,70 +846,72 @@ void R_Images_DeleteImage(image_t* p_image)
 
 // called only at app startup, vid_restart, app-exit
 //
-void R_Images_Clear()
+void R_Images_Clear(void)
 {
-	image_t* p_image;
+	image_t* pImage;
 	//	int iNumImages =
 	R_Images_StartIteration();
-	while ((p_image = R_Images_GetNextIteration()) != nullptr)
+	while ((pImage = R_Images_GetNextIteration()) != NULL)
 	{
-		R_Images_DeleteImageContents(p_image);
+		R_Images_DeleteImageContents(pImage);
 	}
 
 	AllocatedImages.clear();
 	giTextureBindNum = 1024;
 }
 
-void RE_RegisterImages_Info_f()
+void RE_RegisterImages_Info_f(void)
 {
-	image_t* p_image;
-	int i_image = 0;
-	int i_texels = 0;
+	image_t* pImage = NULL;
+	int iImage = 0;
+	int iTexels = 0;
 
-	const int i_num_images = R_Images_StartIteration();
-	while ((p_image = R_Images_GetNextIteration()) != nullptr)
+	int iNumImages = R_Images_StartIteration();
+	while ((pImage = R_Images_GetNextIteration()) != NULL)
 	{
-		ri.Printf(PRINT_ALL, "%d: (%4dx%4dy) \"%s\"", i_image, p_image->width, p_image->height, p_image->imgName);
-		ri.Printf(PRINT_ALL, ", levused %d", p_image->iLastLevelUsedOn);
+		ri.Printf(PRINT_ALL, "%d: (%4dx%4dy) \"%s\"", iImage, pImage->width, pImage->height, pImage->imgName);
+		ri.Printf(PRINT_ALL, ", levused %d", pImage->iLastLevelUsedOn);
 		ri.Printf(PRINT_ALL, "\n");
 
-		i_texels += p_image->width * p_image->height;
-		i_image++;
+		iTexels += pImage->width * pImage->height;
+		iImage++;
 	}
-	ri.Printf(PRINT_ALL, "%d Images. %d (%.2fMB) texels total, (not including mipmaps)\n", i_num_images, i_texels, static_cast<float>(i_texels) / 1024.0f / 1024.0f);
+	ri.Printf(PRINT_ALL, "%d Images. %d (%.2fMB) texels total, (not including mipmaps)\n", iNumImages, iTexels, (float)iTexels / 1024.0f / 1024.0f);
 	ri.Printf(PRINT_DEVELOPER, "RE_RegisterMedia_GetLevel(): %d", RE_RegisterMedia_GetLevel());
 }
 
 // currently, this just goes through all the images and dumps any not referenced on this level...
 //
-qboolean RE_RegisterImages_LevelLoadEnd()
+qboolean RE_RegisterImages_LevelLoadEnd(void)
 {
-	qboolean image_deleted = qtrue;
-	for (auto it_image = AllocatedImages.begin(); it_image != AllocatedImages.end(); /* blank */)
-	{
-		qboolean b_erase_occured = qfalse;
+	//ri.Printf( PRINT_DEVELOPER, "RE_RegisterImages_LevelLoadEnd():\n");
 
-		image_t* p_image = (*it_image).second;
+	qboolean imageDeleted = qtrue;
+	for (AllocatedImages_t::iterator itImage = AllocatedImages.begin(); itImage != AllocatedImages.end(); /* blank */)
+	{
+		qboolean bEraseOccured = qfalse;
+
+		image_t* pImage = (*itImage).second;
 
 		// don't un-register system shaders (*fog, *dlight, *white, *default), but DO de-register lightmaps ("$<mapname>/lightmap%d")
-		if (p_image->imgName[0] != '*')
+		if (pImage->imgName[0] != '*')
 		{
 			// image used on this level?
 			//
-			if (p_image->iLastLevelUsedOn != RE_RegisterMedia_GetLevel())
+			if (pImage->iLastLevelUsedOn != RE_RegisterMedia_GetLevel())
 			{	// nope, so dump it...
-				//ri.Printf( PRINT_DEVELOPER, "Dumping image \"%s\"\n",p_image->imgName);
-				R_Images_DeleteImageContents(p_image);
+				//ri.Printf( PRINT_DEVELOPER, "Dumping image \"%s\"\n",pImage->imgName);
+				R_Images_DeleteImageContents(pImage);
 
-				AllocatedImages.erase(it_image++);
-				b_erase_occured = qtrue;
-				image_deleted = qtrue;
+				AllocatedImages.erase(itImage++);
+				bEraseOccured = qtrue;
+				imageDeleted = qtrue;
 			}
 		}
 
-		if (!b_erase_occured)
+		if (!bEraseOccured)
 		{
-			++it_image;
+			++itImage;
 		}
 	}
 
@@ -879,7 +919,7 @@ qboolean RE_RegisterImages_LevelLoadEnd()
 
 	GL_ResetBinds();
 
-	return image_deleted;
+	return imageDeleted;
 }
 
 // returns image_t struct if we already have this, else NULL. No disk-open performed
@@ -887,46 +927,42 @@ qboolean RE_RegisterImages_LevelLoadEnd()
 //
 // This is called by both R_FindImageFile and anything that creates default images...
 //
-static image_t* R_FindImageFile_NoLoad(const char* name, const qboolean mipmap, const qboolean allow_picmip, const int gl_wrap_clamp_mode)
+static image_t* R_FindImageFile_NoLoad(const char* name, qboolean mipmap, qboolean allowPicmip, qboolean allowTC, int glWrapClampMode)
 {
 	if (!name) {
-		return nullptr;
+		return NULL;
 	}
 
-	const char* p_name = GenerateImageMappingName(name);
+	char* pName = GenerateImageMappingName(name);
 
 	//
 	// see if the image is already loaded
 	//
-	const auto itAllocatedImage = AllocatedImages.find(p_name);
+	AllocatedImages_t::iterator itAllocatedImage = AllocatedImages.find(pName);
 	if (itAllocatedImage != AllocatedImages.end())
 	{
-		image_t* p_image = (*itAllocatedImage).second;
+		image_t* pImage = (*itAllocatedImage).second;
 
 		// the white image can be used with any set of parms, but other mismatches are errors...
 		//
-		if (strcmp(p_name, "*white") != 0)
-		{
-			if (p_image->mipmap != !!mipmap)
-			{
-				//ri.Printf( PRINT_WARNING, "WARNING: reused image %s with mixed mipmap parm\n", pName );
+		if (strcmp(pName, "*white")) {
+			if (pImage->mipmap != !!mipmap) {
+				ri.Printf(PRINT_WARNING, "WARNING: reused image %s with mixed mipmap parm\n", pName);
 			}
-			if (p_image->allowPicmip != !!allow_picmip)
-			{
-				//ri.Printf( PRINT_WARNING, "WARNING: reused image %s with mixed allowPicmip parm\n", pName );
+			if (pImage->allowPicmip != !!allowPicmip) {
+				ri.Printf(PRINT_WARNING, "WARNING: reused image %s with mixed allowPicmip parm\n", pName);
 			}
-			if (p_image->wrapClampMode != gl_wrap_clamp_mode)
-			{
-				//ri.Printf( PRINT_WARNING, "WARNING: reused image %s with mixed glWrapClampMode parm\n", pName );
+			if (pImage->wrapClampMode != glWrapClampMode) {
+				ri.Printf(PRINT_WARNING, "WARNING: reused image %s with mixed glWrapClampMode parm\n", pName);
 			}
 		}
 
-		p_image->iLastLevelUsedOn = RE_RegisterMedia_GetLevel();
+		pImage->iLastLevelUsedOn = RE_RegisterMedia_GetLevel();
 
-		return p_image;
+		return pImage;
 	}
 
-	return nullptr;
+	return NULL;
 }
 
 /*
@@ -936,35 +972,36 @@ R_CreateImage
 This is the only way any image_t are created
 ================
 */
-image_t* R_CreateImage(const char* name, const byte* pic, const int width, const int height,
-	const GLenum format, const qboolean mipmap, const qboolean allow_picmip, const qboolean allow_tc, int gl_wrap_clamp_mode)
+image_t* R_CreateImage(const char* name, const byte* pic, int width, int height,
+	GLenum format, qboolean mipmap, qboolean allowPicmip, qboolean allowTC, int glWrapClampMode)
 {
-	qboolean	is_lightmap = qfalse;
+	image_t* image;
+	qboolean	isLightmap = qfalse;
 
 	if (strlen(name) >= MAX_QPATH) {
 		Com_Error(ERR_DROP, "R_CreateImage: \"%s\" is too long\n", name);
 	}
 
-	if (glConfig.clampToEdgeAvailable && gl_wrap_clamp_mode == GL_CLAMP) {
-		gl_wrap_clamp_mode = GL_CLAMP_TO_EDGE;
+	if (glConfig.clampToEdgeAvailable && glWrapClampMode == GL_CLAMP) {
+		glWrapClampMode = GL_CLAMP_TO_EDGE;
 	}
 
 	if (name[0] == '$')
 	{
-		is_lightmap = qtrue;
+		isLightmap = qtrue;
 	}
 
-	if (width & width - 1 || height & height - 1)
+	if ((width & (width - 1)) || (height & (height - 1)))
 	{
 		Com_Error(ERR_FATAL, "R_CreateImage: %s dimensions (%i x %i) not power of 2!\n", name, width, height);
 	}
 
-	image_t* image = R_FindImageFile_NoLoad(name, mipmap, allow_picmip, gl_wrap_clamp_mode);
+	image = R_FindImageFile_NoLoad(name, mipmap, allowPicmip, allowTC, glWrapClampMode);
 	if (image) {
 		return image;
 	}
 
-	image = static_cast<image_t*>(R_Malloc(sizeof(image_t), TAG_IMAGE_T, qtrue));
+	image = (image_t*)R_Malloc(sizeof(image_t), TAG_IMAGE_T, qtrue);
 
 	//image->imgfileSize=fileSize;
 
@@ -975,13 +1012,13 @@ image_t* R_CreateImage(const char* name, const byte* pic, const int width, const
 	image->iLastLevelUsedOn = RE_RegisterMedia_GetLevel();
 
 	image->mipmap = !!mipmap;
-	image->allowPicmip = !!allow_picmip;
+	image->allowPicmip = !!allowPicmip;
 
-	Q_strncpyz(image->imgName, name, sizeof image->imgName);
+	Q_strncpyz(image->imgName, name, sizeof(image->imgName));
 
 	image->width = width;
 	image->height = height;
-	image->wrapClampMode = gl_wrap_clamp_mode;
+	image->wrapClampMode = glWrapClampMode;
 
 	if (qglActiveTextureARB) {
 		GL_SelectTexture(0);
@@ -990,22 +1027,22 @@ image_t* R_CreateImage(const char* name, const byte* pic, const int width, const
 	GL_Bind(image);
 
 	Upload32((unsigned*)pic, format,
-		static_cast<qboolean>(image->mipmap),
-		allow_picmip,
-		is_lightmap,
-		allow_tc,
+		(qboolean)image->mipmap,
+		allowPicmip,
+		isLightmap,
+		allowTC,
 		&image->internalFormat,
 		&image->width,
 		&image->height);
 
-	qglTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, gl_wrap_clamp_mode);
-	qglTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, gl_wrap_clamp_mode);
+	qglTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, glWrapClampMode);
+	qglTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, glWrapClampMode);
 
 	qglBindTexture(GL_TEXTURE_2D, 0);	//jfm: i don't know why this is here, but it breaks lightmaps when there's only 1
 	glState.currenttextures[glState.currenttmu] = 0;	//mark it not bound
 
-	const char* ps_new_name = GenerateImageMappingName(name);
-	Q_strncpyz(image->imgName, ps_new_name, sizeof image->imgName);
+	const char* psNewName = GenerateImageMappingName(name);
+	Q_strncpyz(image->imgName, psNewName, sizeof(image->imgName));
 	AllocatedImages[image->imgName] = image;
 
 	return image;
@@ -1019,22 +1056,23 @@ Finds or loads the given image.
 Returns NULL if it fails, not a default image.
 ==============
 */
-image_t* R_FindImageFile(const char* name, const qboolean mipmap, const qboolean allow_picmip, const qboolean allow_tc, int gl_wrap_clamp_mode) {
+image_t* R_FindImageFile(const char* name, qboolean mipmap, qboolean allowPicmip, qboolean allowTC, int glWrapClampMode) {
+	image_t* image;
 	int		width, height;
 	byte* pic;
 
 	if (!name) {
-		return nullptr;
+		return NULL;
 	}
 
 	// need to do this here as well as in R_CreateImage, or R_FindImageFile_NoLoad() may complain about
 	//	different clamp parms used...
 	//
-	if (glConfig.clampToEdgeAvailable && gl_wrap_clamp_mode == GL_CLAMP) {
-		gl_wrap_clamp_mode = GL_CLAMP_TO_EDGE;
+	if (glConfig.clampToEdgeAvailable && glWrapClampMode == GL_CLAMP) {
+		glWrapClampMode = GL_CLAMP_TO_EDGE;
 	}
 
-	image_t* image = R_FindImageFile_NoLoad(name, mipmap, allow_picmip, gl_wrap_clamp_mode);
+	image = R_FindImageFile_NoLoad(name, mipmap, allowPicmip, allowTC, glWrapClampMode);
 	if (image) {
 		return image;
 	}
@@ -1044,10 +1082,10 @@ image_t* R_FindImageFile(const char* name, const qboolean mipmap, const qboolean
 	//
 	R_LoadImage(name, &pic, &width, &height);
 	if (!pic) {
-		return nullptr;
+		return NULL;
 	}
 
-	image = R_CreateImage(name, pic, width, height, GL_RGBA, mipmap, allow_picmip, allow_tc, gl_wrap_clamp_mode);
+	image = R_CreateImage((char*)name, pic, width, height, GL_RGBA, mipmap, allowPicmip, allowTC, glWrapClampMode);
 	R_Free(pic);
 	return image;
 }
@@ -1057,8 +1095,8 @@ image_t* R_FindImageFile(const char* name, const qboolean mipmap, const qboolean
 R_CreateDlightImage
 ================
 */
-constexpr auto DLIGHT_SIZE = 64;
-static void R_CreateDlightImage()
+#define	DLIGHT_SIZE	64
+static void R_CreateDlightImage(void)
 {
 	int		width, height;
 	byte* pic;
@@ -1071,14 +1109,18 @@ static void R_CreateDlightImage()
 	}
 	else
 	{	// if we dont get a successful load
+		int		x, y;
 		byte	data[DLIGHT_SIZE][DLIGHT_SIZE][4];
+		int		b;
 
 		// make a centered inverse-square falloff blob for dynamic lighting
-		for (int x = 0; x < DLIGHT_SIZE; x++) {
-			for (int y = 0; y < DLIGHT_SIZE; y++) {
-				const float d = (DLIGHT_SIZE / 2 - 0.5f - x) * (DLIGHT_SIZE / 2 - 0.5f - x) +
+		for (x = 0; x < DLIGHT_SIZE; x++) {
+			for (y = 0; y < DLIGHT_SIZE; y++) {
+				float	d;
+
+				d = (DLIGHT_SIZE / 2 - 0.5f - x) * (DLIGHT_SIZE / 2 - 0.5f - x) +
 					(DLIGHT_SIZE / 2 - 0.5f - y) * (DLIGHT_SIZE / 2 - 0.5f - y);
-				int b = 4000 / d;
+				b = 4000 / d;
 				if (b > 255) {
 					b = 255;
 				}
@@ -1091,7 +1133,7 @@ static void R_CreateDlightImage()
 				data[y][x][3] = 255;
 			}
 		}
-		tr.dlightImage = R_CreateImage("*dlight", reinterpret_cast<byte*>(data), DLIGHT_SIZE, DLIGHT_SIZE, GL_RGBA, qfalse, qfalse, qfalse, GL_CLAMP);
+		tr.dlightImage = R_CreateImage("*dlight", (byte*)data, DLIGHT_SIZE, DLIGHT_SIZE, GL_RGBA, qfalse, qfalse, qfalse, GL_CLAMP);
 	}
 }
 
@@ -1100,10 +1142,15 @@ static void R_CreateDlightImage()
 R_InitFogTable
 =================
 */
-void R_InitFogTable() {
-	for (int i = 0; i < FOG_TABLE_SIZE; i++) {
-		constexpr float exp = 0.5;
-		const float d = pow(static_cast<float>(i) / (FOG_TABLE_SIZE - 1), exp);
+void R_InitFogTable(void) {
+	int		i;
+	float	d;
+	float	exp;
+
+	exp = 0.5;
+
+	for (i = 0; i < FOG_TABLE_SIZE; i++) {
+		d = pow((float)i / (FOG_TABLE_SIZE - 1), exp);
 
 		tr.fogTable[i] = d;
 	}
@@ -1118,7 +1165,9 @@ This is called for each texel of the fog texture on startup
 and for each vertex of transparent shaders in fog dynamically
 ================
 */
-float	R_FogFactor(float s, const float t) {
+float	R_FogFactor(float s, float t) {
+	float	d;
+
 	s -= 1.0 / 512;
 	if (s < 0) {
 		return 0;
@@ -1137,7 +1186,7 @@ float	R_FogFactor(float s, const float t) {
 		s = 1.0;
 	}
 
-	const float d = tr.fogTable[static_cast<int>(s * (FOG_TABLE_SIZE - 1))];
+	d = tr.fogTable[(int)(s * (FOG_TABLE_SIZE - 1))];
 
 	return d;
 }
@@ -1147,17 +1196,20 @@ float	R_FogFactor(float s, const float t) {
 R_CreateFogImage
 ================
 */
-constexpr auto FOG_S = 256;
-constexpr auto FOG_T = 32;
-static void R_CreateFogImage() {
-	float	border_color[4];
+#define	FOG_S	256
+#define	FOG_T	32
+static void R_CreateFogImage(void) {
+	int		x, y;
+	byte* data;
+	float	d;
+	float	borderColor[4];
 
-	const auto data = static_cast<byte*>(R_Malloc(FOG_S * FOG_T * 4, TAG_TEMP_WORKSPACE, qfalse));
+	data = (byte*)R_Malloc(FOG_S * FOG_T * 4, TAG_TEMP_WORKSPACE, qfalse);
 
 	// S is distance, T is depth
-	for (int x = 0; x < FOG_S; x++) {
-		for (int y = 0; y < FOG_T; y++) {
-			const float d = R_FogFactor((x + 0.5f) / FOG_S, (y + 0.5f) / FOG_T);
+	for (x = 0; x < FOG_S; x++) {
+		for (y = 0; y < FOG_T; y++) {
+			d = R_FogFactor((x + 0.5f) / FOG_S, (y + 0.5f) / FOG_T);
 
 			data[(y * FOG_S + x) * 4 + 0] =
 				data[(y * FOG_S + x) * 4 + 1] =
@@ -1168,15 +1220,15 @@ static void R_CreateFogImage() {
 	// standard openGL clamping doesn't really do what we want -- it includes
 	// the border color at the edges.  OpenGL 1.2 has clamp-to-edge, which does
 	// what we want.
-	tr.fogImage = R_CreateImage("*fog", data, FOG_S, FOG_T, GL_RGBA, qfalse, qfalse, qfalse, GL_CLAMP);
+	tr.fogImage = R_CreateImage("*fog", (byte*)data, FOG_S, FOG_T, GL_RGBA, qfalse, qfalse, qfalse, GL_CLAMP);
 	R_Free(data);
 
-	border_color[0] = 1.0;
-	border_color[1] = 1.0;
-	border_color[2] = 1.0;
-	border_color[3] = 1;
+	borderColor[0] = 1.0;
+	borderColor[1] = 1.0;
+	borderColor[2] = 1.0;
+	borderColor[3] = 1;
 
-	qglTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, border_color);
+	qglTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
 }
 
 /*
@@ -1184,13 +1236,14 @@ static void R_CreateFogImage() {
 R_CreateDefaultImage
 ==================
 */
-constexpr auto DEFAULT_SIZE = 16;
-static void R_CreateDefaultImage() {
+#define	DEFAULT_SIZE	16
+static void R_CreateDefaultImage(void) {
+	int		x;
 	byte	data[DEFAULT_SIZE][DEFAULT_SIZE][4];
 
 	// the default image will be a box, to allow you to see the mapping coordinates
-	memset(data, 32, sizeof data);
-	for (int x = 0; x < DEFAULT_SIZE; x++) {
+	memset(data, 32, sizeof(data));
+	for (x = 0; x < DEFAULT_SIZE; x++) {
 		data[0][x][0] =
 			data[0][x][1] =
 			data[0][x][2] =
@@ -1211,7 +1264,7 @@ static void R_CreateDefaultImage() {
 			data[x][DEFAULT_SIZE - 1][2] =
 			data[x][DEFAULT_SIZE - 1][3] = 255;
 	}
-	tr.defaultImage = R_CreateImage("*default", reinterpret_cast<byte*>(data), DEFAULT_SIZE, DEFAULT_SIZE, GL_RGBA, qtrue, qfalse, qtrue, GL_REPEAT);
+	tr.defaultImage = R_CreateImage("*default", (byte*)data, DEFAULT_SIZE, DEFAULT_SIZE, GL_RGBA, qtrue, qfalse, qtrue, GL_REPEAT);
 }
 
 /*
@@ -1221,25 +1274,25 @@ R_CreateBuiltinImages
 */
 void R_UpdateSaveGameImage(const char* filename);
 
-void R_CreateBuiltinImages() {
-	int		x;
+void R_CreateBuiltinImages(void) {
+	int		x, y;
 	byte	data[DEFAULT_SIZE][DEFAULT_SIZE][4];
 
 	R_CreateDefaultImage();
 
 	// we use a solid white image instead of disabling texturing
-	memset(data, 255, sizeof data);
+	memset(data, 255, sizeof(data));
 
-	tr.whiteImage = R_CreateImage("*white", reinterpret_cast<byte*>(data), 8, 8, GL_RGBA, qfalse, qfalse, qtrue, GL_REPEAT);
+	tr.whiteImage = R_CreateImage("*white", (byte*)data, 8, 8, GL_RGBA, qfalse, qfalse, qtrue, GL_REPEAT);
 
-	tr.screenImage = R_CreateImage("*screen", reinterpret_cast<byte*>(data), 8, 8, GL_RGBA, qfalse, qfalse, qfalse, GL_REPEAT);
+	tr.screenImage = R_CreateImage("*screen", (byte*)data, 8, 8, GL_RGBA, qfalse, qfalse, qfalse, GL_REPEAT);
 
 	// Create the scene glow image. - AReis
 	tr.screenGlow = 1024 + giTextureBindNum++;
 	qglDisable(GL_TEXTURE_2D);
 	qglEnable(GL_TEXTURE_RECTANGLE_ARB);
 	qglBindTexture(GL_TEXTURE_RECTANGLE_ARB, tr.screenGlow);
-	qglTexImage2D(GL_TEXTURE_RECTANGLE_ARB, 0, GL_RGBA16, glConfig.vidWidth, glConfig.vidHeight, 0, GL_RGB, GL_FLOAT, nullptr);
+	qglTexImage2D(GL_TEXTURE_RECTANGLE_ARB, 0, GL_RGBA16, glConfig.vidWidth, glConfig.vidHeight, 0, GL_RGB, GL_FLOAT, 0);
 	qglTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	qglTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	qglTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -1248,7 +1301,7 @@ void R_CreateBuiltinImages() {
 	// Create the scene image. - AReis
 	tr.sceneImage = 1024 + giTextureBindNum++;
 	qglBindTexture(GL_TEXTURE_RECTANGLE_ARB, tr.sceneImage);
-	qglTexImage2D(GL_TEXTURE_RECTANGLE_ARB, 0, GL_RGBA16, glConfig.vidWidth, glConfig.vidHeight, 0, GL_RGB, GL_FLOAT, nullptr);
+	qglTexImage2D(GL_TEXTURE_RECTANGLE_ARB, 0, GL_RGBA16, glConfig.vidWidth, glConfig.vidHeight, 0, GL_RGB, GL_FLOAT, 0);
 	qglTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	qglTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	qglTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -1265,7 +1318,7 @@ void R_CreateBuiltinImages() {
 	}
 	tr.blurImage = 1024 + giTextureBindNum++;
 	qglBindTexture(GL_TEXTURE_RECTANGLE_ARB, tr.blurImage);
-	qglTexImage2D(GL_TEXTURE_RECTANGLE_ARB, 0, GL_RGBA16, r_DynamicGlowWidth->integer, r_DynamicGlowHeight->integer, 0, GL_RGB, GL_FLOAT, nullptr);
+	qglTexImage2D(GL_TEXTURE_RECTANGLE_ARB, 0, GL_RGBA16, r_DynamicGlowWidth->integer, r_DynamicGlowHeight->integer, 0, GL_RGB, GL_FLOAT, 0);
 	qglTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	qglTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	qglTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -1276,20 +1329,20 @@ void R_CreateBuiltinImages() {
 	// with overbright bits active, we need an image which is some fraction of full color,
 	// for default lightmaps, etc
 	for (x = 0; x < DEFAULT_SIZE; x++) {
-		for (auto& y : data) {
-			y[x][0] =
-				y[x][1] =
-				y[x][2] = tr.identityLightByte;
-			y[x][3] = 255;
+		for (y = 0; y < DEFAULT_SIZE; y++) {
+			data[y][x][0] =
+				data[y][x][1] =
+				data[y][x][2] = tr.identityLightByte;
+			data[y][x][3] = 255;
 		}
 	}
 
-	tr.identityLightImage = R_CreateImage("*identityLight", reinterpret_cast<byte*>(data), 8, 8, GL_RGBA, qfalse, qfalse, qtrue, GL_REPEAT);
+	tr.identityLightImage = R_CreateImage("*identityLight", (byte*)data, 8, 8, GL_RGBA, qfalse, qfalse, qtrue, GL_REPEAT);
 
 	// scratchimage is usually used for cinematic drawing
 	for (x = 0; x < NUM_SCRATCH_IMAGES; x++) {
 		// scratchimage is usually used for cinematic drawing
-		tr.scratchImage[x] = R_CreateImage(va("*scratch%d", x), reinterpret_cast<byte*>(data), DEFAULT_SIZE, DEFAULT_SIZE, GL_RGBA, qfalse, qfalse, qfalse, GL_CLAMP);
+		tr.scratchImage[x] = R_CreateImage(va("*scratch%d", x), (byte*)data, DEFAULT_SIZE, DEFAULT_SIZE, GL_RGBA, qfalse, qfalse, qfalse, GL_CLAMP);
 	}
 
 	R_CreateDlightImage();
@@ -1301,9 +1354,11 @@ void R_CreateBuiltinImages() {
 R_SetColorMappings
 ===============
 */
-void R_SetColorMappings() {
-	int		i;
+void R_SetColorMappings(void) {
+	int		i, j;
+	float	g;
 	int		inf;
+	int		shift;
 
 	// setup the overbright lighting
 	tr.overbrightBits = r_overBrightBits->integer;
@@ -1338,9 +1393,9 @@ void R_SetColorMappings() {
 		ri.Cvar_Set("r_gamma", "3.0");
 	}
 
-	const float g = r_gamma->value;
+	g = r_gamma->value;
 
-	const int shift = tr.overbrightBits;
+	shift = tr.overbrightBits;
 
 	for (i = 0; i < 256; i++) {
 		if (g == 1) {
@@ -1360,7 +1415,7 @@ void R_SetColorMappings() {
 	}
 
 	for (i = 0; i < 256; i++) {
-		int j = i * r_intensity->value;
+		j = i * r_intensity->value;
 		if (j > 255) {
 			j = 255;
 		}
@@ -1378,7 +1433,7 @@ void R_SetColorMappings() {
 R_InitImages
 ===============
 */
-void	R_InitImages() {
+void	R_InitImages(void) {
 	//memset(hashTable, 0, sizeof(hashTable));	// DO NOT DO THIS NOW (because of image cacheing)	-ste.
 
 	// build brightness translation tables
@@ -1395,7 +1450,7 @@ R_DeleteTextures
 */
 // (only gets called during vid_restart now (and app exit), not during map load)
 //
-void R_DeleteTextures() {
+void R_DeleteTextures(void) {
 	R_Images_Clear();
 	GL_ResetBinds();
 }

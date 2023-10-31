@@ -345,7 +345,7 @@ static void RB_SurfaceOrientedQuad(void)
 RB_SurfacePolychain
 =============
 */
-static void RB_SurfacePolychain(srfPoly_t* p) {
+static void RB_SurfacePolychain(const srfPoly_t* p) {
 	int		i;
 	int		numv;
 
@@ -471,9 +471,7 @@ static void RB_SurfaceVertsAndIndexes(int numVerts, srfVert_t* verts, int numInd
 	tess.numVertexes += numVerts;
 }
 
-static qboolean RB_SurfaceVbo(
-	VBO_t* vbo, IBO_t* ibo, int numVerts, int numIndexes, int firstIndex,
-	int minIndex, int maxIndex, int dlightBits, int pshadowBits, qboolean shaderCheck)
+static qboolean RB_SurfaceVbo(VBO_t* vbo, IBO_t* ibo, int numVerts, int numIndexes, int firstIndex, int minIndex, int maxIndex, int dlightBits, int pshadowBits, qboolean shaderCheck)
 {
 	int i, mergeForward, mergeBack;
 	GLvoid* firstIndexOffset, * lastIndexOffset;
@@ -607,9 +605,9 @@ static void RB_SurfaceBeam(void)
 	shaderProgram_t* sp = &tr.textureColorShader;
 	int	i;
 	vec3_t perpvec;
-	vec3_t direction, normalized_direction;
-	vec3_t	start_points[NUM_BEAM_SEGS], end_points[NUM_BEAM_SEGS];
-	vec3_t oldorigin, origin;
+	vec3_t direction{}, normalized_direction{};
+	vec3_t	start_points[NUM_BEAM_SEGS]{}, end_points[NUM_BEAM_SEGS]{};
+	vec3_t oldorigin{}, origin{};
 
 	e = &backEnd.currentEntity->e;
 
@@ -694,7 +692,7 @@ static void RB_SurfaceBeam(void)
 //------------------
 // DoSprite
 //------------------
-static void DoSprite(vec3_t origin, float radius, float rotation)
+static void DoSprite(vec3_t origin, const float radius, const float rotation)
 {
 	float	s, c;
 	float	ang;
@@ -763,7 +761,7 @@ RB_SurfaceLine
 //		startRGB, endRGB
 //
 
-static void DoLine(const vec3_t start, const vec3_t end, const vec3_t up, float spanWidth)
+static void DoLine(const vec3_t start, const vec3_t end, const vec3_t up, const float spanWidth)
 {
 	float		spanWidth2;
 	int			vbase;
@@ -808,7 +806,7 @@ static void DoLine(const vec3_t start, const vec3_t end, const vec3_t up, float 
 	tess.indexes[tess.numIndexes++] = vbase + 3;
 }
 
-static void DoLine2(const vec3_t start, const vec3_t end, const vec3_t up, float spanWidth, float spanWidth2)
+static void DoLine2(const vec3_t start, const vec3_t end, const vec3_t up, const float spanWidth, const float spanWidth2)
 {
 	int			vbase;
 
@@ -1113,7 +1111,7 @@ static void CreateShape()
 }
 
 //----------------------------------------------------------------------------
-static void ApplyShape(vec3_t start, vec3_t end, vec3_t right, float sradius, float eradius, int count)
+static void ApplyShape(vec3_t start, vec3_t end, vec3_t right, const float sradius, const float eradius, const int count)
 //----------------------------------------------------------------------------
 {
 	vec3_t	point1, point2, fwd;
@@ -1162,7 +1160,7 @@ static void ApplyShape(vec3_t start, vec3_t end, vec3_t right, float sradius, fl
 }
 
 //----------------------------------------------------------------------------
-static void DoBoltSeg(vec3_t start, vec3_t end, vec3_t right, float radius)
+static void DoBoltSeg(vec3_t start, vec3_t end, vec3_t right, const float radius)
 //----------------------------------------------------------------------------
 {
 	refEntity_t* e;
@@ -1249,16 +1247,16 @@ static void DoBoltSeg(vec3_t start, vec3_t end, vec3_t right, float radius)
 	}
 }
 
-static void DoRailCore(const vec3_t start, const vec3_t end, const vec3_t up, const float len, const float span_width)
+static void DoRailCore(const vec3_t start, const vec3_t end, const vec3_t up, const float len, const float spanWidth)
 {
 	const float		t = len / 256.0f;
 
 	const int vbase = tess.numVertexes;
 
-	const float spanWidth2 = -span_width;
+	const float spanWidth2 = -spanWidth;
 
 	// FIXME: use quad stamp?
-	VectorMA(start, span_width, up, tess.xyz[tess.numVertexes]);
+	VectorMA(start, spanWidth, up, tess.xyz[tess.numVertexes]);
 	tess.texCoords[tess.numVertexes][0][0] = 0;
 	tess.texCoords[tess.numVertexes][0][1] = 0;
 	tess.vertexColors[tess.numVertexes][0] = backEnd.currentEntity->e.shaderRGBA[0] * 0.25;
@@ -1274,7 +1272,7 @@ static void DoRailCore(const vec3_t start, const vec3_t end, const vec3_t up, co
 	tess.vertexColors[tess.numVertexes][2] = backEnd.currentEntity->e.shaderRGBA[2];
 	tess.numVertexes++;
 
-	VectorMA(end, span_width, up, tess.xyz[tess.numVertexes]);
+	VectorMA(end, spanWidth, up, tess.xyz[tess.numVertexes]);
 
 	tess.texCoords[tess.numVertexes][0][0] = t;
 	tess.texCoords[tess.numVertexes][0][1] = 0;

@@ -795,7 +795,7 @@ CM_BoxTrace
 */
 void CM_BoxTrace(trace_t * results, const vec3_t start, const vec3_t end,
 	const vec3_t mins, const vec3_t maxs,
-	const clip_handle_t model, const int brushmask)
+	const clipHandle_t model, const int brushmask)
 {
 	int i;
 	traceWork_t tw;
@@ -966,7 +966,7 @@ rotating entities
 */
 void CM_TransformedBoxTrace(trace_t * results, const vec3_t start, const vec3_t end,
 	const vec3_t mins, const vec3_t maxs,
-	const clip_handle_t model, const int brushmask,
+	const clipHandle_t model, const int brushmask,
 	const vec3_t origin, const vec3_t angles)
 {
 	trace_t trace;

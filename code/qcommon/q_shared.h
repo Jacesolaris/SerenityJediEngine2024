@@ -171,14 +171,14 @@ using thandle_t = int32_t;
 using fxHandle_t = int32_t;
 using sfxHandle_t = int32_t;
 using fileHandle_t = int32_t;
-using clip_handle_t = int32_t;
+using clipHandle_t = int32_t;
 
 #define NULL_HANDLE ((qhandle_t)0)
 #define NULL_SOUND ((sfxHandle_t)0)
 #define NULL_FX ((fxHandle_t)0)
 #define NULL_SFX ((sfxHandle_t)0)
 #define NULL_FILE ((fileHandle_t)0)
-#define NULL_CLIP ((clip_handle_t)0)
+#define NULL_CLIP ((clipHandle_t)0)
 
 #define PAD(base, alignment)	(((base)+(alignment)-1) & ~((alignment)-1))
 #define PADLEN(base, alignment)	(PAD((base), (alignment)) - (base))

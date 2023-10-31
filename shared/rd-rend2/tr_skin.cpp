@@ -23,7 +23,7 @@ RE_RegisterSkin
 
 bool gServerSkinHack = false;
 
-shader_t* R_FindServerShader(const char* name, const int* lightmapIndexes, const byte* styles, qboolean mipRawImage);
+shader_t* R_FindServerShader(const char* name, const int* lightmapIndex, const byte* styles, qboolean mipRawImage);
 static char* CommaParse(char** data_p);
 /*
 ===============
@@ -171,7 +171,7 @@ qhandle_t RE_RegisterSkin(const char* name) {
 		return 0;
 	}
 
-	if (strlen(name) >= MAX_SKINNAME_PATH) {
+	if (strlen(name) >= MAX_QPATH) {
 		Com_Printf("Skin name exceeds MAX_QPATH\n");
 		return 0;
 	}
@@ -209,9 +209,9 @@ qhandle_t RE_RegisterSkin(const char* name) {
 		return hSkin;
 	}
 #endif
-	char skinhead[MAX_SKINNAME_PATH] = { 0 };
-	char skintorso[MAX_SKINNAME_PATH] = { 0 };
-	char skinlower[MAX_SKINNAME_PATH] = { 0 };
+	char skinhead[MAX_QPATH] = { 0 };
+	char skintorso[MAX_QPATH] = { 0 };
+	char skinlower[MAX_QPATH] = { 0 };
 	if (RE_SplitSkins(name, (char*)&skinhead, (char*)&skintorso, (char*)&skinlower))
 	{//three part
 		hSkin = RE_RegisterIndividualSkin(skinhead, hSkin);

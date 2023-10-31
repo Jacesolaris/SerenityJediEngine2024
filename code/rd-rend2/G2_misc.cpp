@@ -563,7 +563,7 @@ void G2_TransformSurfaces(int surfaceNum, surfaceInfo_v& rootSList,
 
 // main calling point for the model transform for collision detection. At this point all of the skeleton has been transformed.
 #ifdef _G2_GORE
-void G2_TransformModel(CGhoul2Info_v& ghoul2, const int frameNum, vec3_t scale, CMiniHeap* G2VertSpace, int useLod, const bool ApplyGore, const SSkinGoreData* gore)
+void G2_TransformModel(CGhoul2Info_v& ghoul2, const int frameNum, vec3_t scale, CMiniHeap* G2VertSpace, int useLod, bool ApplyGore, SSkinGoreData* gore)
 #else
 void G2_TransformModel(CGhoul2Info_v& ghoul2, const int frameNum, vec3_t scale, CMiniHeap* G2VertSpace, int useLod)
 #endif
@@ -1667,14 +1667,14 @@ void G2_TraceModels(CGhoul2Info_v& ghoul2, vec3_t rayStart, vec3_t rayEnd, CColl
 	}
 }
 
-void TransformPoint(const vec3_t in, vec3_t out, const mdxaBone_t* mat) {
+void TransformPoint(const vec3_t in, vec3_t out, mdxaBone_t* mat) {
 	for (int i = 0; i < 3; i++)
 	{
 		out[i] = in[0] * mat->matrix[i][0] + in[1] * mat->matrix[i][1] + in[2] * mat->matrix[i][2];
 	}
 }
 
-void TransformAndTranslatePoint(const vec3_t in, vec3_t out, const mdxaBone_t* mat) {
+void TransformAndTranslatePoint(const vec3_t in, vec3_t out, mdxaBone_t* mat) {
 	for (int i = 0; i < 3; i++)
 	{
 		out[i] = in[0] * mat->matrix[i][0] + in[1] * mat->matrix[i][1] + in[2] * mat->matrix[i][2] + mat->matrix[i][3];
@@ -1706,7 +1706,7 @@ void Create_Matrix(const float* angle, mdxaBone_t* matrix)
 }
 
 // given a matrix, generate the inverse of that matrix
-void Inverse_Matrix(const mdxaBone_t* src, mdxaBone_t* dest)
+void Inverse_Matrix(mdxaBone_t* src, mdxaBone_t* dest)
 {
 	int i, j;
 
@@ -1851,7 +1851,7 @@ void G2_FreeSaveBuffer(char* buffer)
 	Z_Free(buffer);
 }
 
-void G2_LoadGhoul2Model(CGhoul2Info_v& ghoul2, const char* buffer)
+void G2_LoadGhoul2Model(CGhoul2Info_v& ghoul2, char* buffer)
 {
 	static_cast<void>(buffer);
 

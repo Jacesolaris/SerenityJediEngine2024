@@ -399,7 +399,7 @@ R_CullLocalBox
 Returns CULL_IN, CULL_CLIP, or CULL_OUT
 =================
 */
-int R_CullLocalBox(vec3_t localBounds[2]) {
+int R_CullLocalBox(const vec3_t bounds[2]) {
 #if 0
 	int		i, j;
 	vec3_t	transformed[8];
@@ -458,8 +458,8 @@ int R_CullLocalBox(vec3_t localBounds[2]) {
 #else
 	int             j;
 	vec3_t          transformed;
-	vec3_t          v;
-	vec3_t          worldBounds[2];
+	vec3_t          v{};
+	vec3_t          worldBounds[2]{};
 
 	if (r_nocull->integer)
 	{
@@ -471,9 +471,9 @@ int R_CullLocalBox(vec3_t localBounds[2]) {
 
 	for (j = 0; j < 8; j++)
 	{
-		v[0] = localBounds[j & 1][0];
-		v[1] = localBounds[(j >> 1) & 1][1];
-		v[2] = localBounds[(j >> 2) & 1][2];
+		v[0] = bounds[j & 1][0];
+		v[1] = bounds[(j >> 1) & 1][1];
+		v[2] = bounds[(j >> 2) & 1][2];
 
 		R_LocalPointToWorld(v, transformed);
 
@@ -531,7 +531,7 @@ int R_CullBox(vec3_t worldBounds[2]) {
 /*
 ** R_CullLocalPointAndRadius
 */
-int R_CullLocalPointAndRadius(const vec3_t pt, float radius)
+int R_CullLocalPointAndRadius(const vec3_t pt, const float radius)
 {
 	vec3_t transformed;
 
@@ -581,7 +581,7 @@ int R_CullPointAndRadiusEx(const vec3_t pt, float radius, const cplane_t* frustu
 /*
 ** R_CullPointAndRadius
 */
-int R_CullPointAndRadius(const vec3_t pt, float radius)
+int R_CullPointAndRadius(const vec3_t pt, const float radius)
 {
 	return R_CullPointAndRadiusEx(pt, radius, tr.viewParms.frustum, (tr.viewParms.flags & VPF_FARPLANEFRUSTUM) ? 5 : 4);
 }

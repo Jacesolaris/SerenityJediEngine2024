@@ -251,7 +251,7 @@ void SV_LinkEntity(gentity_t* g_ent);
 // sets ent->leafnums[] for pvs determination even if the entity
 // is not solid
 
-clip_handle_t SV_clip_handleForEntity(const gentity_t* ent);
+clipHandle_t SV_clip_handleForEntity(const gentity_t* ent);
 
 void SV_SectorList_f();
 

@@ -1035,25 +1035,25 @@ void RB_CalcSpecularAlpha(unsigned char* alphas)
 
 	const int numVertexes = tess.numVertexes;
 	for (int i = 0; i < numVertexes; i++, v += 4, normal += 4, alphas += 4) {
-		vec3_t light_dir;
+		vec3_t lightDir;
 		vec3_t viewer;
 		if (backEnd.currentEntity &&
 			(backEnd.currentEntity->e.hModel || backEnd.currentEntity->e.ghoul2))	//this is a model so we can use world lights instead fake light
 		{
-			VectorCopy(backEnd.currentEntity->lightDir, light_dir);
+			VectorCopy(backEnd.currentEntity->lightDir, lightDir);
 		}
 		else {
-			VectorSubtract(lightOrigin, v, light_dir);
-			VectorNormalizeFast(light_dir);
+			VectorSubtract(lightOrigin, v, lightDir);
+			VectorNormalizeFast(lightDir);
 		}
 		// calculate the specular color
-		const float d = 2 * DotProduct(normal, light_dir);
+		const float d = 2 * DotProduct(normal, lightDir);
 
 		// we don't optimize for the d < 0 case since this tends to
 		// cause visual artifacts such as faceted "snapping"
-		reflected[0] = normal[0] * d - light_dir[0];
-		reflected[1] = normal[1] * d - light_dir[1];
-		reflected[2] = normal[2] * d - light_dir[2];
+		reflected[0] = normal[0] * d - lightDir[0];
+		reflected[1] = normal[1] * d - lightDir[1];
+		reflected[2] = normal[2] * d - lightDir[2];
 
 		VectorSubtract(backEnd.ori.viewOrigin, v, viewer);
 		const float ilength = Q_rsqrt(DotProduct(viewer, viewer));
@@ -1083,39 +1083,39 @@ void RB_CalcSpecularAlpha(unsigned char* alphas)
 */
 void RB_CalcDiffuseColor(unsigned char* colors)
 {
-	vec3_t			ambient_light;
-	vec3_t			light_dir;
-	vec3_t			directed_light;
+	vec3_t			ambientLight;
+	vec3_t			lightDir;
+	vec3_t			directedLight;
 
 	const trRefEntity_t* ent = backEnd.currentEntity;
 	const int ambient_light_int = ent->ambientLightInt;
-	VectorCopy(ent->ambientLight, ambient_light);
-	VectorCopy(ent->directedLight, directed_light);
-	VectorCopy(ent->lightDir, light_dir);
+	VectorCopy(ent->ambientLight, ambientLight);
+	VectorCopy(ent->directedLight, directedLight);
+	VectorCopy(ent->lightDir, lightDir);
 
 	float* v = tess.xyz[0];
 	float* normal = tess.normal[0];
 
 	const int numVertexes = tess.numVertexes;
 	for (int i = 0; i < numVertexes; i++, v += 4, normal += 4) {
-		const float incoming = DotProduct(normal, light_dir);
+		const float incoming = DotProduct(normal, lightDir);
 		if (incoming <= 0) {
 			*reinterpret_cast<int*>(&colors[i * 4]) = ambient_light_int;
 			continue;
 		}
-		int j = Q_ftol(ambient_light[0] + incoming * directed_light[0]);
+		int j = Q_ftol(ambientLight[0] + incoming * directedLight[0]);
 		if (j > 255) {
 			j = 255;
 		}
 		colors[i * 4 + 0] = j;
 
-		j = Q_ftol(ambient_light[1] + incoming * directed_light[1]);
+		j = Q_ftol(ambientLight[1] + incoming * directedLight[1]);
 		if (j > 255) {
 			j = 255;
 		}
 		colors[i * 4 + 1] = j;
 
-		j = Q_ftol(ambient_light[2] + incoming * directed_light[2]);
+		j = Q_ftol(ambientLight[2] + incoming * directedLight[2]);
 		if (j > 255) {
 			j = 255;
 		}
@@ -1133,9 +1133,9 @@ void RB_CalcDiffuseColor(unsigned char* colors)
 void RB_CalcDiffuseEntityColor(unsigned char* colors)
 {
 	int				ambient_light_int = 0;
-	vec3_t			ambient_light;
-	vec3_t			light_dir;
-	vec3_t			directed_light;
+	vec3_t			ambientLight;
+	vec3_t			lightDir;
+	vec3_t			directedLight;
 
 	if (!backEnd.currentEntity)
 	{//error, use the normal lighting
@@ -1143,9 +1143,9 @@ void RB_CalcDiffuseEntityColor(unsigned char* colors)
 	}
 
 	const trRefEntity_t* ent = backEnd.currentEntity;
-	VectorCopy(ent->ambientLight, ambient_light);
-	VectorCopy(ent->directedLight, directed_light);
-	VectorCopy(ent->lightDir, light_dir);
+	VectorCopy(ent->ambientLight, ambientLight);
+	VectorCopy(ent->directedLight, directedLight);
+	VectorCopy(ent->lightDir, lightDir);
 
 	const float r = backEnd.currentEntity->e.shaderRGBA[0] / 255.0f;
 	const float g = backEnd.currentEntity->e.shaderRGBA[1] / 255.0f;
@@ -1163,24 +1163,24 @@ void RB_CalcDiffuseEntityColor(unsigned char* colors)
 
 	for (int i = 0; i < numVertexes; i++, v += 4, normal += 4)
 	{
-		const float incoming = DotProduct(normal, light_dir);
+		const float incoming = DotProduct(normal, lightDir);
 		if (incoming <= 0) {
 			*reinterpret_cast<int*>(&colors[i * 4]) = ambient_light_int;
 			continue;
 		}
-		float j = ambient_light[0] + incoming * directed_light[0];
+		float j = ambientLight[0] + incoming * directedLight[0];
 		if (j > 255) {
 			j = 255;
 		}
 		colors[i * 4 + 0] = Q_ftol(j * r);
 
-		j = ambient_light[1] + incoming * directed_light[1];
+		j = ambientLight[1] + incoming * directedLight[1];
 		if (j > 255) {
 			j = 255;
 		}
 		colors[i * 4 + 1] = Q_ftol(j * g);
 
-		j = ambient_light[2] + incoming * directed_light[2];
+		j = ambientLight[2] + incoming * directedLight[2];
 		if (j > 255) {
 			j = 255;
 		}

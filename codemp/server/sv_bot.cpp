@@ -415,7 +415,7 @@ void BotImport_BSPModelMinsMaxsOrigin(const int modelnum, vec3_t angles, vec3_t 
 {
 	vec3_t mins, maxs;
 
-	const clip_handle_t h = CM_InlineModel(modelnum);
+	const clipHandle_t h = CM_InlineModel(modelnum);
 	CM_ModelBounds(h, mins, maxs);
 	//if the model is rotated
 	if (angles[0] || angles[1] || angles[2])

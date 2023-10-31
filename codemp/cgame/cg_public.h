@@ -514,15 +514,15 @@ typedef struct cgameImport_s {
 	void			(*UpdateScreen)							(void);
 
 	// clip model
-	clip_handle_t(*CM_InlineModel)						(int index);
+	clipHandle_t(*CM_InlineModel)						(int index);
 	void			(*CM_LoadMap)							(const char* mapname, qboolean subBSP);
 	int				(*CM_NumInlineModels)					(void);
-	int				(*CM_PointContents)						(const vec3_t p, clip_handle_t model);
+	int				(*CM_PointContents)						(const vec3_t p, clipHandle_t model);
 	int				(*CM_RegisterTerrain)					(const char* config);
-	clip_handle_t(*CM_TempModel)							(const vec3_t mins, const vec3_t maxs, int capsule);
-	void			(*CM_Trace)								(trace_t* results, const vec3_t start, const vec3_t end, const vec3_t mins, const vec3_t maxs, clip_handle_t model, int brushmask, int capsule);
-	int				(*CM_TransformedPointContents)			(const vec3_t p, clip_handle_t model, const vec3_t origin, const vec3_t angles);
-	void			(*CM_TransformedTrace)					(trace_t* results, const vec3_t start, const vec3_t end, const vec3_t mins, const vec3_t maxs, clip_handle_t model, int brushmask, const vec3_t origin, const vec3_t angles, int capsule);
+	clipHandle_t(*CM_TempModel)							(const vec3_t mins, const vec3_t maxs, int capsule);
+	void			(*CM_Trace)								(trace_t* results, const vec3_t start, const vec3_t end, const vec3_t mins, const vec3_t maxs, clipHandle_t model, int brushmask, int capsule);
+	int				(*CM_TransformedPointContents)			(const vec3_t p, clipHandle_t model, const vec3_t origin, const vec3_t angles);
+	void			(*CM_TransformedTrace)					(trace_t* results, const vec3_t start, const vec3_t end, const vec3_t mins, const vec3_t maxs, clipHandle_t model, int brushmask, const vec3_t origin, const vec3_t angles, int capsule);
 	void			(*RMG_Init)								(int terrainID, const char* terrainInfo);
 
 	// sound
@@ -663,9 +663,9 @@ typedef struct cgameImport_s {
 	void			(*G2_ListModelBones)					(void* ghlInfo, int frame);
 	void			(*G2_SetGhoul2model_indexes)				(void* ghoul2, qhandle_t* modelList, qhandle_t* skinList);
 	qboolean(*G2_HaveWeGhoul2Models)				(void* ghoul2);
-	qboolean(*G2API_GetBoltMatrix)					(void* ghoul2, int modelIndex, int boltIndex, mdxaBone_t* matrix, const vec3_t angles, const vec3_t position, int frame_num, qhandle_t* modelList, vec3_t scale);
-	qboolean(*G2API_GetBoltMatrix_NoReconstruct)	(void* ghoul2, int modelIndex, int boltIndex, mdxaBone_t* matrix, const vec3_t angles, const vec3_t position, int frame_num, qhandle_t* modelList, vec3_t scale);
-	qboolean(*G2API_GetBoltMatrix_NoRecNoRot)		(void* ghoul2, int modelIndex, int boltIndex, mdxaBone_t* matrix, const vec3_t angles, const vec3_t position, int frame_num, qhandle_t* modelList, vec3_t scale);
+	qboolean(*G2API_GetBoltMatrix)					(void* ghoul2, int modelIndex, int boltIndex, mdxaBone_t* matrix, const vec3_t angles, const vec3_t position, int frameNum, qhandle_t* modelList, vec3_t scale);
+	qboolean(*G2API_GetBoltMatrix_NoReconstruct)	(void* ghoul2, int modelIndex, int boltIndex, mdxaBone_t* matrix, const vec3_t angles, const vec3_t position, int frameNum, qhandle_t* modelList, vec3_t scale);
+	qboolean(*G2API_GetBoltMatrix_NoRecNoRot)		(void* ghoul2, int modelIndex, int boltIndex, mdxaBone_t* matrix, const vec3_t angles, const vec3_t position, int frameNum, qhandle_t* modelList, vec3_t scale);
 	int				(*G2API_InitGhoul2Model)				(void** ghoul2Ptr, const char* fileName, int modelIndex, qhandle_t customSkin, qhandle_t customShader, int modelFlags, int lodBias);
 	qboolean(*G2API_SetSkin)						(void* ghoul2, int modelIndex, qhandle_t customSkin, qhandle_t renderSkin);
 	void			(*G2API_CollisionDetect)				(CollisionRecord_t* collRecMap, void* ghoul2, const vec3_t angles, const vec3_t position, int frameNumber, int entNum, vec3_t rayStart, vec3_t rayEnd, vec3_t scale, int traceFlags, int useLod, float fRadius);

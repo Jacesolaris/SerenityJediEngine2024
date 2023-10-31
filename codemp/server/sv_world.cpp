@@ -36,7 +36,7 @@ given entity.  If the entity is a bsp model, the headnode will
 be returned, otherwise a custom box tree will be constructed.
 ================
 */
-clip_handle_t SV_clip_handleForEntity(const sharedEntity_t* ent)
+clipHandle_t SV_clip_handleForEntity(const sharedEntity_t* ent)
 {
 	if (ent->r.bmodel)
 	{
@@ -160,7 +160,7 @@ void SV_ClearWorld(void)
 	sv_numworldSectors = 0;
 
 	// get world map bounds
-	const clip_handle_t h = CM_InlineModel(0);
+	const clipHandle_t h = CM_InlineModel(0);
 	CM_ModelBounds(h, mins, maxs);
 	SV_CreateworldSector(0, mins, maxs);
 }
@@ -519,7 +519,7 @@ void SV_ClipToEntity(trace_t* trace, const vec3_t start, const vec3_t mins, cons
 	}
 
 	// might intersect, so do an exact clip
-	const clip_handle_t clip_handle = SV_clip_handleForEntity(touch);
+	const clipHandle_t clip_handle = SV_clip_handleForEntity(touch);
 
 	const float* origin = touch->r.currentOrigin;
 	const float* angles = touch->r.currentAngles;
@@ -643,7 +643,7 @@ static void SV_ClipMoveToEntities(moveclip_t* clip)
 		}
 
 		// might intersect, so do an exact clip
-		const clip_handle_t clip_handle = SV_clip_handleForEntity(touch);
+		const clipHandle_t clip_handle = SV_clip_handleForEntity(touch);
 
 		float* origin = touch->r.currentOrigin;
 		float* angles = touch->r.currentAngles;
@@ -954,7 +954,7 @@ int SV_PointContents(const vec3_t p, const int pass_entityNum)
 		}
 		const sharedEntity_t* hit = SV_GentityNum(touch[i]);
 		// might intersect, so do an exact clip
-		const clip_handle_t clip_handle = SV_clip_handleForEntity(hit);
+		const clipHandle_t clip_handle = SV_clip_handleForEntity(hit);
 
 		const int c2 = CM_TransformedPointContents(p, clip_handle, hit->r.currentOrigin, hit->r.currentAngles);
 

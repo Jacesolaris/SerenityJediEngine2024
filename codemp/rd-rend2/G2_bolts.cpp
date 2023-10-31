@@ -28,7 +28,7 @@ int G2_Find_Bolt_Bone_Num(const boltInfo_v& bltlist, const int boneNum)
 }
 
 // Given a bone number, see if that surface is already in our surfacelist list
-int G2_Find_Bolt_Surface_Num(const boltInfo_v& bltlist, const int surface_num, const int flags)
+int G2_Find_Bolt_Surface_Num(const boltInfo_v& bltlist, const int surfaceNum, const int flags)
 {
 	// look through entire list
 	for (size_t i = 0; i < bltlist.size(); i++)
@@ -39,7 +39,7 @@ int G2_Find_Bolt_Surface_Num(const boltInfo_v& bltlist, const int surface_num, c
 			continue;
 		}
 
-		if ((bltlist[i].surfaceNumber == surface_num) && ((bltlist[i].surfaceType & flags) == flags))
+		if ((bltlist[i].surfaceNumber == surfaceNum) && ((bltlist[i].surfaceType & flags) == flags))
 		{
 			return i;
 		}

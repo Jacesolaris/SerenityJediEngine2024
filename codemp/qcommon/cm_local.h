@@ -226,7 +226,7 @@ void CM_StoreBrushes(leafList_t* ll, int nodenum);
 
 void CM_BoxLeafnums_r(leafList_t* ll, int nodenum);
 
-cmodel_t* CM_clip_handleToModel(clip_handle_t handle, clipMap_t** clip_map = nullptr);
+cmodel_t* CM_clip_handleToModel(clipHandle_t handle, clipMap_t** clip_map = nullptr);
 
 // cm_patch.c
 

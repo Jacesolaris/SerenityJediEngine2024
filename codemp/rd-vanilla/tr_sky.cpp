@@ -66,7 +66,7 @@ static void AddSkyPolygon(const int nump, vec3_t vecs)
 	int		axis;
 	float* vp;
 	// s = [0]/[2], t = [1]/[2]
-	static int	floato_st[6][3] =
+	static int	vec_to_st[6][3] =
 	{
 		{-2,3,1},
 		{2,3,-1},
@@ -115,19 +115,19 @@ static void AddSkyPolygon(const int nump, vec3_t vecs)
 	// project new texture coords
 	for (i = 0; i < nump; i++, vecs += 3)
 	{
-		int j = floato_st[axis][2];
+		int j = vec_to_st[axis][2];
 		if (j > 0)
 			dv = vecs[j - 1];
 		else
 			dv = -vecs[-j - 1];
 		if (dv < 0.001)
 			continue;	// don't divide by zero
-		j = floato_st[axis][0];
+		j = vec_to_st[axis][0];
 		if (j < 0)
 			s = -vecs[-j - 1] / dv;
 		else
 			s = vecs[j - 1] / dv;
-		j = floato_st[axis][1];
+		j = vec_to_st[axis][1];
 		if (j < 0)
 			t = -vecs[-j - 1] / dv;
 		else
@@ -259,7 +259,7 @@ static void ClearSkyBox() {
 RB_ClipSkyPolygons
 ================
 */
-void RB_ClipSkyPolygons(shaderCommands_t* input)
+void RB_ClipSkyPolygons(const shaderCommands_t* input)
 {
 	ClearSkyBox();
 
@@ -289,7 +289,7 @@ CLOUD VERTEX GENERATION
 **
 ** Parms: s, t range from -1 to 1
 */
-static void MakeSkyVec(float s, float t, const int axis, float out_st[2], vec3_t out_xyz)
+static void MakeSkyVec(float s, float t, const int axis, float outSt[2], vec3_t outXYZ)
 {
 	// 1 = s, 2 = t, 3 = 2048
 	static int	st_to_vec[6][3] =
@@ -316,11 +316,11 @@ static void MakeSkyVec(float s, float t, const int axis, float out_st[2], vec3_t
 		const int k = st_to_vec[axis][j];
 		if (k < 0)
 		{
-			out_xyz[j] = -b[-k - 1];
+			outXYZ[j] = -b[-k - 1];
 		}
 		else
 		{
-			out_xyz[j] = b[k - 1];
+			outXYZ[j] = b[k - 1];
 		}
 	}
 
@@ -347,17 +347,17 @@ static void MakeSkyVec(float s, float t, const int axis, float out_st[2], vec3_t
 
 	t = 1.0 - t;
 
-	if (out_st)
+	if (outSt)
 	{
-		out_st[0] = s;
-		out_st[1] = t;
+		outSt[0] = s;
+		outSt[1] = t;
 	}
 }
 
 static vec3_t	s_sky_points[SKY_SUBDIVISIONS + 1][SKY_SUBDIVISIONS + 1];
 static float	s_sky_tex_coords[SKY_SUBDIVISIONS + 1][SKY_SUBDIVISIONS + 1][2];
 
-static void DrawSkySide(image_s* image, const int mins[2], const int maxs[2])
+static void DrawSkySide(struct image_s* image, const int mins[2], const int maxs[2])
 {
 	GL_Bind(image);
 
@@ -444,7 +444,7 @@ static void DrawSkyBox(const shader_t* shader)
 	}
 }
 
-static void FillCloudySkySide(const int mins[2], const int maxs[2], const qboolean add_indexes)
+static void FillCloudySkySide(const int mins[2], const int maxs[2], const qboolean addIndexes)
 {
 	int s, t;
 	const int vertex_start = tess.numVertexes;
@@ -470,7 +470,7 @@ static void FillCloudySkySide(const int mins[2], const int maxs[2], const qboole
 	}
 
 	// only add indexes for one pass, otherwise it would draw multiple times for each pass
-	if (add_indexes) {
+	if (addIndexes) {
 		for (t = 0; t < t_height - 1; t++)
 		{
 			for (s = 0; s < s_width - 1; s++)
@@ -591,7 +591,7 @@ void R_BuildCloudData(const shaderCommands_t* input)
 ** Called when a sky shader is parsed
 */
 #define SQR( a ) ((a)*(a))
-void R_InitSkyTexCoords(const float height_cloud)
+void R_InitSkyTexCoords(const float heightCloud)
 {
 	vec3_t v;
 
@@ -618,12 +618,12 @@ void R_InitSkyTexCoords(const float height_cloud)
 				const float p = 1.0f / (2 * DotProduct(sky_vec, sky_vec)) *
 					(-2 * sky_vec[2] * radius_world +
 						2 * sqrt(SQR(sky_vec[2]) * SQR(radius_world) +
-							2 * SQR(sky_vec[0]) * radius_world * height_cloud +
-							SQR(sky_vec[0]) * SQR(height_cloud) +
-							2 * SQR(sky_vec[1]) * radius_world * height_cloud +
-							SQR(sky_vec[1]) * SQR(height_cloud) +
-							2 * SQR(sky_vec[2]) * radius_world * height_cloud +
-							SQR(sky_vec[2]) * SQR(height_cloud)));
+							2 * SQR(sky_vec[0]) * radius_world * heightCloud +
+							SQR(sky_vec[0]) * SQR(heightCloud) +
+							2 * SQR(sky_vec[1]) * radius_world * heightCloud +
+							SQR(sky_vec[1]) * SQR(heightCloud) +
+							2 * SQR(sky_vec[2]) * radius_world * heightCloud +
+							SQR(sky_vec[2]) * SQR(heightCloud)));
 
 				s_cloudTexP[i][t][s] = p;
 
@@ -649,7 +649,8 @@ void R_InitSkyTexCoords(const float height_cloud)
 /*
 ** RB_DrawSun
 */
-void RB_DrawSun() {
+void RB_DrawSun(void)
+{
 	vec3_t		origin, vec1, vec2;
 	vec3_t		temp;
 

@@ -6931,7 +6931,7 @@ CG_GetPlayerLightLevel
 
 static void CG_GetPlayerLightLevel(const centity_t* cent)
 {
-	vec3_t ambient = { 0 }, directed, light_dir;
+	vec3_t ambient = { 0 }, directed, lightDir;
 
 	//Poll the renderer for the light level
 	if (cent->currentState.client_num == cg.snap->ps.client_num)
@@ -6939,7 +6939,7 @@ static void CG_GetPlayerLightLevel(const centity_t* cent)
 		//hAX0R
 		ambient[0] = 666;
 	}
-	cgi_R_GetLighting(cent->lerpOrigin, ambient, directed, light_dir);
+	cgi_R_GetLighting(cent->lerpOrigin, ambient, directed, lightDir);
 
 	//Get the maximum value for the player
 	cent->gent->lightLevel = directed[0];

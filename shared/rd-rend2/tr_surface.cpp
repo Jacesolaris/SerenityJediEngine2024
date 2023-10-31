@@ -345,7 +345,7 @@ static void RB_SurfaceOrientedQuad(void)
 RB_SurfacePolychain
 =============
 */
-static void RB_SurfacePolychain(srfPoly_t* p) {
+static void RB_SurfacePolychain(const srfPoly_t* p) {
 	int		i;
 	int		numv;
 
@@ -471,9 +471,7 @@ static void RB_SurfaceVertsAndIndexes(int numVerts, srfVert_t* verts, int numInd
 	tess.numVertexes += numVerts;
 }
 
-static qboolean RB_SurfaceVbo(
-	VBO_t* vbo, IBO_t* ibo, int numVerts, int numIndexes, int firstIndex,
-	int minIndex, int maxIndex, int dlightBits, int pshadowBits, qboolean shaderCheck)
+static qboolean RB_SurfaceVbo(VBO_t* vbo, IBO_t* ibo, int numVerts, int numIndexes, int firstIndex, int minIndex, int maxIndex, int dlightBits, int pshadowBits, qboolean shaderCheck)
 {
 	int i, mergeForward, mergeBack;
 	GLvoid* firstIndexOffset, * lastIndexOffset;
@@ -607,9 +605,9 @@ static void RB_SurfaceBeam(void)
 	shaderProgram_t* sp = &tr.textureColorShader;
 	int	i;
 	vec3_t perpvec;
-	vec3_t direction, normalized_direction;
-	vec3_t	start_points[NUM_BEAM_SEGS], end_points[NUM_BEAM_SEGS];
-	vec3_t oldorigin, origin;
+	vec3_t direction{}, normalized_direction{};
+	vec3_t	start_points[NUM_BEAM_SEGS]{}, end_points[NUM_BEAM_SEGS]{};
+	vec3_t oldorigin{}, origin{};
 
 	e = &backEnd.currentEntity->e;
 
@@ -694,7 +692,7 @@ static void RB_SurfaceBeam(void)
 //------------------
 // DoSprite
 //------------------
-static void DoSprite(vec3_t origin, float radius, float rotation)
+static void DoSprite(vec3_t origin, const float radius, const float rotation)
 {
 	float	s, c;
 	float	ang;
@@ -765,7 +763,7 @@ RB_SurfaceLine
 //		startRGB, endRGB
 //
 
-static void DoLine(const vec3_t start, const vec3_t end, const vec3_t up, float spanWidth)
+static void DoLine(const vec3_t start, const vec3_t end, const vec3_t up, const float spanWidth)
 {
 	float		spanWidth2;
 	int			vbase;
@@ -1186,7 +1184,7 @@ static void ApplyShape(vec3_t start, vec3_t end, vec3_t right, float sradius, fl
 }
 
 //----------------------------------------------------------------------------
-static void DoBoltSeg(vec3_t start, vec3_t end, vec3_t right, float radius)
+static void DoBoltSeg(vec3_t start, vec3_t end, vec3_t right, const float radius)
 //----------------------------------------------------------------------------
 {
 	refEntity_t* e;
@@ -1295,7 +1293,7 @@ static void DoBoltSeg(vec3_t start, vec3_t end, vec3_t right, float radius)
 		VectorCopy(cur, old);
 		oldPerc = perc;
 	}
-	}
+}
 
 //------------------------------------------
 static void RB_SurfaceElectricity()

@@ -151,7 +151,7 @@ void RB_AddQuadStamp(vec3_t origin, vec3_t left, vec3_t up, byte* color) {
 RB_SurfaceSprite
 ==============
 */
-static void RB_SurfaceSprite() {
+static void RB_SurfaceSprite(void) {
 	vec3_t		left, up;
 
 	// calculate the xyz locations for the four corners
@@ -183,7 +183,7 @@ static void RB_SurfaceSprite() {
 RB_SurfaceOrientedQuad
 =======================
 */
-static void RB_SurfaceOrientedQuad()
+static void RB_SurfaceOrientedQuad(void)
 {
 	vec3_t	left, up;
 
@@ -366,7 +366,7 @@ void RB_SurfaceTriangles(const srfTriangles_t* srf) {
 RB_SurfaceBeam
 ==============
 */
-static void RB_SurfaceBeam()
+static void RB_SurfaceBeam(void)
 {
 #define NUM_BEAM_SEGS 6
 	int	i;
@@ -484,15 +484,15 @@ RB_SurfaceLine
 //		startRGB, endRGB
 //
 
-static void DoLine(const vec3_t start, const vec3_t end, const vec3_t up, const float span_width)
+static void DoLine(const vec3_t start, const vec3_t end, const vec3_t up, const float spanWidth)
 {
 	RB_CHECKOVERFLOW(4, 6);
 
 	const int vbase = tess.numVertexes;
 
-	const float spanWidth2 = -span_width;
+	const float spanWidth2 = -spanWidth;
 
-	VectorMA(start, span_width, up, tess.xyz[tess.numVertexes]);
+	VectorMA(start, spanWidth, up, tess.xyz[tess.numVertexes]);
 	tess.texCoords[tess.numVertexes][0][0] = 0;
 	tess.texCoords[tess.numVertexes][0][1] = 0;
 	tess.vertexColors[tess.numVertexes][0] = backEnd.currentEntity->e.shaderRGBA[0];// * 0.25;//wtf??not sure why the code would be doing this
@@ -510,7 +510,7 @@ static void DoLine(const vec3_t start, const vec3_t end, const vec3_t up, const 
 	tess.vertexColors[tess.numVertexes][3] = backEnd.currentEntity->e.shaderRGBA[3];
 	tess.numVertexes++;
 
-	VectorMA(end, span_width, up, tess.xyz[tess.numVertexes]);
+	VectorMA(end, spanWidth, up, tess.xyz[tess.numVertexes]);
 
 	tess.texCoords[tess.numVertexes][0][0] = 0;
 	tess.texCoords[tess.numVertexes][0][1] = 1;//backEnd.currentEntity->e.shaderTexCoord[1];
@@ -538,13 +538,13 @@ static void DoLine(const vec3_t start, const vec3_t end, const vec3_t up, const 
 	tess.indexes[tess.numIndexes++] = vbase + 3;
 }
 
-static void DoLine2(const vec3_t start, const vec3_t end, const vec3_t up, const float span_width, const float span_width2)
+static void DoLine2(const vec3_t start, const vec3_t end, const vec3_t up, const float spanWidth, const float spanWidth2)
 {
 	RB_CHECKOVERFLOW(4, 6);
 
 	const int vbase = tess.numVertexes;
 
-	VectorMA(start, span_width, up, tess.xyz[tess.numVertexes]);
+	VectorMA(start, spanWidth, up, tess.xyz[tess.numVertexes]);
 	tess.texCoords[tess.numVertexes][0][0] = 0;
 	tess.texCoords[tess.numVertexes][0][1] = 0;
 	tess.vertexColors[tess.numVertexes][0] = backEnd.currentEntity->e.shaderRGBA[0];// * 0.25;//wtf??not sure why the code would be doing this
@@ -553,7 +553,7 @@ static void DoLine2(const vec3_t start, const vec3_t end, const vec3_t up, const
 	tess.vertexColors[tess.numVertexes][3] = backEnd.currentEntity->e.shaderRGBA[3];// * 0.25;
 	tess.numVertexes++;
 
-	VectorMA(start, -span_width, up, tess.xyz[tess.numVertexes]);
+	VectorMA(start, -spanWidth, up, tess.xyz[tess.numVertexes]);
 	tess.texCoords[tess.numVertexes][0][0] = 1;//backEnd.currentEntity->e.shaderTexCoord[0];
 	tess.texCoords[tess.numVertexes][0][1] = 0;
 	tess.vertexColors[tess.numVertexes][0] = backEnd.currentEntity->e.shaderRGBA[0];
@@ -562,7 +562,7 @@ static void DoLine2(const vec3_t start, const vec3_t end, const vec3_t up, const
 	tess.vertexColors[tess.numVertexes][3] = backEnd.currentEntity->e.shaderRGBA[3];
 	tess.numVertexes++;
 
-	VectorMA(end, span_width2, up, tess.xyz[tess.numVertexes]);
+	VectorMA(end, spanWidth2, up, tess.xyz[tess.numVertexes]);
 
 	tess.texCoords[tess.numVertexes][0][0] = 0;
 	tess.texCoords[tess.numVertexes][0][1] = 1;//backEnd.currentEntity->e.shaderTexCoord[1];
@@ -572,7 +572,7 @@ static void DoLine2(const vec3_t start, const vec3_t end, const vec3_t up, const
 	tess.vertexColors[tess.numVertexes][3] = backEnd.currentEntity->e.shaderRGBA[3];
 	tess.numVertexes++;
 
-	VectorMA(end, -span_width2, up, tess.xyz[tess.numVertexes]);
+	VectorMA(end, -spanWidth2, up, tess.xyz[tess.numVertexes]);
 	tess.texCoords[tess.numVertexes][0][0] = 1;//backEnd.currentEntity->e.shaderTexCoord[0];
 	tess.texCoords[tess.numVertexes][0][1] = 1;//backEnd.currentEntity->e.shaderTexCoord[1];
 	tess.vertexColors[tess.numVertexes][0] = backEnd.currentEntity->e.shaderRGBA[0];
@@ -590,14 +590,14 @@ static void DoLine2(const vec3_t start, const vec3_t end, const vec3_t up, const
 	tess.indexes[tess.numIndexes++] = vbase + 3;
 }
 
-static void DoLine_Oriented(const vec3_t start, const vec3_t end, const vec3_t up, const float span_width)
+static void DoLine_Oriented(const vec3_t start, const vec3_t end, const vec3_t up, const float spanWidth)
 {
 	const int vbase = tess.numVertexes;
 
-	const float spanWidth2 = -span_width;
+	const float spanWidth2 = -spanWidth;
 
 	// FIXME: use quad stamp?
-	VectorMA(start, span_width, up, tess.xyz[tess.numVertexes]);
+	VectorMA(start, spanWidth, up, tess.xyz[tess.numVertexes]);
 	tess.texCoords[tess.numVertexes][0][0] = 0;
 	tess.texCoords[tess.numVertexes][0][1] = 0;
 	tess.vertexColors[tess.numVertexes][0] = backEnd.currentEntity->e.shaderRGBA[0];// * 0.25;
@@ -615,7 +615,7 @@ static void DoLine_Oriented(const vec3_t start, const vec3_t end, const vec3_t u
 	tess.vertexColors[tess.numVertexes][3] = backEnd.currentEntity->e.shaderRGBA[3];// * 0.25;
 	tess.numVertexes++;
 
-	VectorMA(end, span_width, up, tess.xyz[tess.numVertexes]);
+	VectorMA(end, spanWidth, up, tess.xyz[tess.numVertexes]);
 
 	tess.texCoords[tess.numVertexes][0][0] = 0;
 	tess.texCoords[tess.numVertexes][0][1] = backEnd.currentEntity->e.data.line.stscale;
@@ -646,7 +646,7 @@ static void DoLine_Oriented(const vec3_t start, const vec3_t end, const vec3_t u
 //-----------------
 // RB_SurfaceLine
 //-----------------
-static void RB_SurfaceLine()
+static void RB_SurfaceLine(void)
 {
 	vec3_t		right;
 	vec3_t		start, end;
@@ -723,7 +723,7 @@ static void DoCylinderPart(polyVert_t* verts)
 // e->oldorigin holds the top point
 // e->radius holds the radius
 
-static void RB_SurfaceCylinder()
+static void RB_SurfaceCylinder(void)
 {
 	static polyVert_t	lower_points[NUM_CYLINDER_SEGMENTS], upper_points[NUM_CYLINDER_SEGMENTS];
 	vec3_t		vr, vu, midpoint, v1;
@@ -1143,16 +1143,16 @@ static void DoBoltSeg(vec3_t start, vec3_t end, vec3_t right, const float radius
 
 //================================================================================
 
-static void DoRailCore(const vec3_t start, const vec3_t end, const vec3_t up, const float len, const float span_width)
+static void DoRailCore(const vec3_t start, const vec3_t end, const vec3_t up, const float len, const float spanWidth)
 {
 	const float		t = len / 256.0f;
 
 	const int vbase = tess.numVertexes;
 
-	const float spanWidth2 = -span_width;
+	const float spanWidth2 = -spanWidth;
 
 	// FIXME: use quad stamp?
-	VectorMA(start, span_width, up, tess.xyz[tess.numVertexes]);
+	VectorMA(start, spanWidth, up, tess.xyz[tess.numVertexes]);
 	tess.texCoords[tess.numVertexes][0][0] = 0;
 	tess.texCoords[tess.numVertexes][0][1] = 0;
 	tess.vertexColors[tess.numVertexes][0] = backEnd.currentEntity->e.shaderRGBA[0] * 0.25;
@@ -1168,7 +1168,7 @@ static void DoRailCore(const vec3_t start, const vec3_t end, const vec3_t up, co
 	tess.vertexColors[tess.numVertexes][2] = backEnd.currentEntity->e.shaderRGBA[2];
 	tess.numVertexes++;
 
-	VectorMA(end, span_width, up, tess.xyz[tess.numVertexes]);
+	VectorMA(end, spanWidth, up, tess.xyz[tess.numVertexes]);
 
 	tess.texCoords[tess.numVertexes][0][0] = t;
 	tess.texCoords[tess.numVertexes][0][1] = 0;
@@ -1331,12 +1331,12 @@ static void VectorArrayNormalize(vec4_t* normals, unsigned int count)
 /*
 ** LerpMeshVertexes
 */
-static void LerpMeshVertexes(md3Surface_t* surf, const float backlerp)
+static void LerpMeshVertexes(md3Surface_t* surf, float backlerp)
 {
 	int		vert_num;
 	unsigned lat, lng;
 
-	float* out_xyz = tess.xyz[tess.numVertexes];
+	float* outXYZ = tess.xyz[tess.numVertexes];
 	float* out_normal = tess.normal[tess.numVertexes];
 
 	short* new_xyz = reinterpret_cast<short*>(reinterpret_cast<byte*>(surf) + surf->ofsXyzNormals)
@@ -1354,11 +1354,11 @@ static void LerpMeshVertexes(md3Surface_t* surf, const float backlerp)
 		//
 		for (vert_num = 0; vert_num < numVerts; vert_num++,
 			new_xyz += 4, new_normals += 4,
-			out_xyz += 4, out_normal += 4)
+			outXYZ += 4, out_normal += 4)
 		{
-			out_xyz[0] = new_xyz[0] * new_xyz_scale;
-			out_xyz[1] = new_xyz[1] * new_xyz_scale;
-			out_xyz[2] = new_xyz[2] * new_xyz_scale;
+			outXYZ[0] = new_xyz[0] * new_xyz_scale;
+			outXYZ[1] = new_xyz[1] * new_xyz_scale;
+			outXYZ[2] = new_xyz[2] * new_xyz_scale;
 
 			lat = new_normals[0] >> 8 & 0xff;
 			lng = new_normals[0] & 0xff;
@@ -1386,14 +1386,14 @@ static void LerpMeshVertexes(md3Surface_t* surf, const float backlerp)
 
 		for (vert_num = 0; vert_num < numVerts; vert_num++,
 			old_xyz += 4, new_xyz += 4, old_normals += 4, new_normals += 4,
-			out_xyz += 4, out_normal += 4)
+			outXYZ += 4, out_normal += 4)
 		{
 			vec3_t uncompressed_old_normal{}, uncompressed_new_normal{};
 
 			// interpolate the xyz
-			out_xyz[0] = old_xyz[0] * old_xyz_scale + new_xyz[0] * new_xyz_scale;
-			out_xyz[1] = old_xyz[1] * old_xyz_scale + new_xyz[1] * new_xyz_scale;
-			out_xyz[2] = old_xyz[2] * old_xyz_scale + new_xyz[2] * new_xyz_scale;
+			outXYZ[0] = old_xyz[0] * old_xyz_scale + new_xyz[0] * new_xyz_scale;
+			outXYZ[1] = old_xyz[1] * old_xyz_scale + new_xyz[1] * new_xyz_scale;
+			outXYZ[2] = old_xyz[2] * old_xyz_scale + new_xyz[2] * new_xyz_scale;
 
 			// FIXME: interpolate lat/long instead?
 			lat = new_normals[0] >> 8 & 0xff;

@@ -184,9 +184,9 @@ qhandle_t RE_RegisterSkin(const char* name)
 		return 0;
 	}
 
-	if (strlen(name) >= MAX_SKINNAME_PATH)
+	if (strlen(name) >= MAX_QPATH)
 	{
-		ri->Printf(PRINT_ALL, "Skin name exceeds MAX_SKINNAME_PATH\n");
+		ri->Printf(PRINT_ALL, "Skin name exceeds MAX_QPATH\n");
 		return 0;
 	}
 
@@ -224,9 +224,9 @@ qhandle_t RE_RegisterSkin(const char* name)
 	{
 	}
 
-	char skinhead[MAX_SKINNAME_PATH] = { 0 };
-	char skintorso[MAX_SKINNAME_PATH] = { 0 };
-	char skinlower[MAX_SKINNAME_PATH] = { 0 };
+	char skinhead[MAX_QPATH] = { 0 };
+	char skintorso[MAX_QPATH] = { 0 };
+	char skinlower[MAX_QPATH] = { 0 };
 	if (RE_SplitSkins(name, (char*)&skinhead, (char*)&skintorso, (char*)&skinlower))
 	{//three part
 		hSkin = RE_RegisterIndividualSkin(skinhead, hSkin);

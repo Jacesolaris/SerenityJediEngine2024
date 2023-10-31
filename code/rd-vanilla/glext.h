@@ -1,5 +1,5 @@
-#ifndef __gl_glext_h_
-#define __gl_glext_h_ 1
+#ifndef __glext_h_
+#define __glext_h_ 1
 
 #ifdef __cplusplus
 extern "C" {
@@ -2639,7 +2639,7 @@ extern "C" {
 	typedef void (APIENTRYP PFNGLCLEARNAMEDFRAMEBUFFERIVPROC) (GLuint framebuffer, GLenum buffer, GLint drawbuffer, const GLint* value);
 	typedef void (APIENTRYP PFNGLCLEARNAMEDFRAMEBUFFERUIVPROC) (GLuint framebuffer, GLenum buffer, GLint drawbuffer, const GLuint* value);
 	typedef void (APIENTRYP PFNGLCLEARNAMEDFRAMEBUFFERFVPROC) (GLuint framebuffer, GLenum buffer, GLint drawbuffer, const GLfloat* value);
-	typedef void (APIENTRYP PFNGLCLEARNAMEDFRAMEBUFFERFIPROC) (GLuint framebuffer, GLenum buffer, GLfloat depth, GLint stencil);
+	typedef void (APIENTRYP PFNGLCLEARNAMEDFRAMEBUFFERFIPROC) (GLuint framebuffer, GLenum buffer, const GLfloat depth, GLint stencil);
 	typedef void (APIENTRYP PFNGLBLITNAMEDFRAMEBUFFERPROC) (GLuint readFramebuffer, GLuint drawFramebuffer, GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1, GLint dstX0, GLint dstY0, GLint dstX1, GLint dstY1, GLbitfield mask, GLenum filter);
 	typedef GLenum(APIENTRYP PFNGLCHECKNAMEDFRAMEBUFFERSTATUSPROC) (GLuint framebuffer, GLenum target);
 	typedef void (APIENTRYP PFNGLGETNAMEDFRAMEBUFFERPARAMETERIVPROC) (GLuint framebuffer, GLenum pname, GLint* param);
@@ -2926,7 +2926,7 @@ extern "C" {
 	struct _cl_event;
 #define GL_SYNC_CL_EVENT_ARB              0x8240
 #define GL_SYNC_CL_EVENT_COMPLETE_ARB     0x8241
-	typedef GLsync(APIENTRYP PFNGLCREATESYNCFROMCLEVENTARBPROC) (_cl_context* context, _cl_event* event, GLbitfield flags);
+	typedef GLsync(APIENTRYP PFNGLCREATESYNCFROMCLEVENTARBPROC) (struct _cl_context* context, struct _cl_event* event, GLbitfield flags);
 #ifdef GL_GLEXT_PROTOTYPES
 	GLAPI GLsync APIENTRY glCreateSyncFromCLeventARB(struct _cl_context* context, struct _cl_event* event, GLbitfield flags);
 #endif
@@ -9838,7 +9838,7 @@ extern "C" {
 #define GL_NV_present_video 1
 #define GL_FRAME_NV                       0x8E26
 #define GL_FIELDS_NV                      0x8E27
-#define GL_currentTime_NV                0x8E28
+#define GL_CURRENT_TIME_NV                0x8E28
 #define GL_NUM_FILL_STREAMS_NV            0x8E29
 #define GL_PRESENT_TIME_NV                0x8E2A
 #define GL_PRESENT_DURATION_NV            0x8E2B
