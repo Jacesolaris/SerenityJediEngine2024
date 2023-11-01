@@ -170,14 +170,14 @@ typedef union fileBuffer_u {
 	byte* b;
 } fileBuffer_t;
 
-typedef int32_t qhandle_t, thandle_t, fxHandle_t, sfxHandle_t, fileHandle_t, clipHandle_t;
+typedef int32_t qhandle_t, thandle_t, fxHandle_t, sfxHandle_t, fileHandle_t, clip_handle_t;
 
 #define NULL_HANDLE ((qhandle_t)0)
 #define NULL_SOUND ((sfxHandle_t)0)
 #define NULL_FX ((fxHandle_t)0)
 #define NULL_SFX ((sfxHandle_t)0)
 #define NULL_FILE ((fileHandle_t)0)
-#define NULL_CLIP ((clipHandle_t)0)
+#define NULL_CLIP ((clip_handle_t)0)
 
 #define PAD(base, alignment)	(((base)+(alignment)-1) & ~((alignment)-1))
 #define PADLEN(base, alignment)	(PAD((base), (alignment)) - (base))
@@ -486,8 +486,8 @@ typedef struct sharedRagDollParams_s {
 	int me; //index of entity giving this update
 
 	//rww - we have convenient animation/frame access in the game, so just send this info over from there.
-	int startFrame;
-	int endFrame;
+	int start_frame;
+	int end_frame;
 
 	int collisionType; // 1 = from a fall, 0 from effectors, this will be going away soon, hence no enum
 
@@ -512,7 +512,7 @@ typedef struct sharedRagDollUpdateParams_s {
 
 //rww - update parms for ik bone stuff
 typedef struct sharedIKMoveParams_s {
-	char boneName[512]; //name of bone
+	char bone_name[512]; //name of bone
 	vec3_t desiredOrigin; //world coordinate that this bone should be attempting to reach
 	vec3_t origin; //world coordinate of the entity who owns the g2 instance that owns the bone
 	float movementSpeed; //how fast the bone should move toward the destination
@@ -525,10 +525,10 @@ typedef struct sharedSetBoneIKStateParams_s {
 	vec3_t angles; //angles of caller
 	vec3_t scale; //scale of caller
 	float radius; //bone rad
-	int blendTime; //bone blend time
+	int blend_time; //bone blend time
 	int pcjOverrides; //override ik bone flags
-	int startFrame; //base pose start
-	int endFrame; //base pose end
+	int start_frame; //base pose start
+	int end_frame; //base pose end
 	qboolean forceAnimOnBone; //normally if the bone has specified start/end frames already it will leave it alone.. if this is true, then the animation will be restarted on the bone with the specified frames anyway.
 } sharedSetBoneIKStateParams_t;
 
@@ -637,7 +637,7 @@ int		COM_GetCurrentParseLine();
 const char* SkipWhitespace(const char* data, qboolean* hasNewLines);
 char* COM_Parse(const char** data_p);
 char* COM_ParseExt(const char** data_p, qboolean allow_line_breaks);
-int		COM_CompressShader(char* data_p);
+int		COM_Compress(char* data_p);
 void	COM_ParseError(char* format, ...);
 void	COM_ParseWarning(char* format, ...);
 qboolean COM_ParseString(const char** data, const char** s);
@@ -835,8 +835,8 @@ Ghoul2 Insert Start
 typedef struct CollisionRecord_s
 {
 	float		mDistance;
-	int			mEntityNum;
-	int			mModelindex;
+	int			mentity_num;
+	int			mmodel_index;
 	int			mPolyIndex;
 	int			mSurfaceIndex;
 	vec3_t		mCollisionPosition;
@@ -859,7 +859,7 @@ Ghoul2 Insert End
 typedef struct trace_s {
 	byte		allsolid;	// if true, plane is not valid
 	byte		startsolid;	// if true, the initial point was in a solid area
-	short		entityNum;	// entity the contacted sirface is a part of
+	short		entity_num;	// entity the contacted sirface is a part of
 
 	float		fraction;	// time completed, 1.0 = didn't hit anything
 	vec3_t		endpos;		// final position
@@ -871,13 +871,13 @@ typedef struct trace_s {
 	CollisionRecord_t G2CollisionMap[MAX_G2_COLLISIONS];	// map that describes all of the parts of ghoul2 models that got hit
 } trace_t;
 
-// trace->entityNum can also be 0 to (MAX_GENTITIES-1)
+// trace->entity_num can also be 0 to (MAX_GENTITIES-1)
 // or ENTITYNUM_NONE, ENTITYNUM_WORLD
 
 // markfragments are returned by CM_MarkFragments()
 typedef struct markFragment_s {
 	int		firstPoint;
-	int		numPoints;
+	int		num_points;
 } markFragment_t;
 
 typedef struct orientation_s {
@@ -940,7 +940,7 @@ typedef enum {
 #define	GENTITYNUM_BITS		12 //10		// don't need to send any more //serenity does, got this from doom 3 code and it works hey hey
 #define	MAX_GENTITIES		(1<<GENTITYNUM_BITS)
 
-// entityNums are communicated with GENTITY_BITS, so any reserved
+// entity_nums are communicated with GENTITY_BITS, so any reserved
 // values thatare going to be communcated over the net need to
 // also be in this range
 #define	ENTITYNUM_NONE		(MAX_GENTITIES-1)
@@ -1013,7 +1013,7 @@ typedef struct forcedata_s {
 	float		forceJumpCharge;					//you're current forceJump charge-up level, increases the longer you hold the force jump button down
 	int			forceJumpSound;
 	int			forceJumpAddTime;
-	int			forceGripentityNum;					//what entity I'm gripping
+	int			forceGripentity_num;					//what entity I'm gripping
 	int			forceGripDamageDebounceTime;		//debounce for grip damage
 	float		forceGripBeingGripped;				//if > level.time then client is in someone's grip
 	int			forceGripCripple;					//if != 0 then make it so this client can't move quickly (he's being gripped)
@@ -1137,7 +1137,7 @@ typedef struct playerState_s {
 
 	int			useTime;
 
-	int			groundentityNum;// ENTITYNUM_NONE = in air
+	int			groundentity_num;// ENTITYNUM_NONE = in air
 
 	int			legsTimer;		// don't change low priority animations until this runs out
 	int			legsAnim;
@@ -1223,7 +1223,7 @@ typedef struct playerState_s {
 	int			saberLockHitIncrementTime; //so we don't add a hit per attack button press more than once per server frame
 	qboolean	saberLockAdvance; //do an advance (sent across net as 1 bit)
 
-	int			saberentityNum;
+	int			saberentity_num;
 	float		saberEntityDist;
 	int			saberEntityState;
 	int			saberThrowDelay;
@@ -1781,7 +1781,7 @@ typedef struct addElectricityArgStruct_s {
 	int flags;
 } addElectricityArgStruct_t;
 
-// if entityState->solid == SOLID_BMODEL, modelIndex is an inline model number
+// if entityState->solid == SOLID_BMODEL, model_index is an inline model number
 #define	SOLID_BMODEL	0xffffff
 
 typedef enum {
@@ -1847,10 +1847,10 @@ typedef struct entityState_s {
 
 	int		emplacedOwner;
 
-	int		otherentityNum;	// shotgun sources, etc
-	int		otherentityNum2;
+	int		otherentity_num;	// shotgun sources, etc
+	int		otherentity_num2;
 
-	int		groundentityNum;	// ENTITYNUM_NONE = in air
+	int		groundentity_num;	// ENTITYNUM_NONE = in air
 
 	int		constantLight;	// r + (g<<8) + (b<<16) + (intensity<<24)
 	int		loopSound;		// constantly loop this sound
@@ -1860,13 +1860,13 @@ typedef struct entityState_s {
 
 	int		modelGhoul2;
 	int		g2radius;
-	int		modelIndex;
+	int		model_index;
 	int		model_index2;
 	int		client_num;		// 0 to (MAX_CLIENTS - 1), for players and corpses
 	int		frame;
 
 	qboolean	saberInFlight;
-	int			saberentityNum;
+	int			saberentity_num;
 	int			saber_move;
 	int			forcePowersActive;
 	int			saber_holstered;//sent in only only 2 bits - should be 0, 1 or 2
@@ -2114,8 +2114,8 @@ typedef struct SSkinGoreData_s
 {
 	vec3_t			angles;
 	vec3_t			position;
-	int				currentTime;
-	int				entNum;
+	int				current_time;
+	int				ent_num;
 	vec3_t			rayDirection;	// in world space
 	vec3_t			hitLocation;	// in world space
 	vec3_t			scale;

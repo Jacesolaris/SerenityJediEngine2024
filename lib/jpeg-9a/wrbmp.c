@@ -190,13 +190,13 @@ write_bmp_header(const j_decompress_ptr cinfo, const bmp_dest_ptr dest)
 	PUT_4B(bmpfileheader, 10, headersize); /* bfOffBits */
 
 	/* Fill the info header (Microsoft calls this a BITMAPINFOHEADER) */
-	PUT_2B(bmpinfoheader, 0, 40);	/* bi_size */
+	PUT_2B(bmpinfoheader, 0, 40);	/* biSize */
 	PUT_4B(bmpinfoheader, 4, cinfo->output_width); /* biWidth */
 	PUT_4B(bmpinfoheader, 8, cinfo->output_height); /* biHeight */
 	PUT_2B(bmpinfoheader, 12, 1);	/* biPlanes - must be 1 */
 	PUT_2B(bmpinfoheader, 14, bits_per_pixel); /* biBitCount */
 	/* we leave biCompression = 0, for none */
-	/* we leave bi_sizeImage = 0; this is correct for uncompressed data */
+	/* we leave biSizeImage = 0; this is correct for uncompressed data */
 	if (cinfo->density_unit == 2) { /* if have density in dots/cm, then */
 		PUT_4B(bmpinfoheader, 24, (INT32)(cinfo->X_density * 100)); /* XPels/M */
 		PUT_4B(bmpinfoheader, 28, (INT32)(cinfo->Y_density * 100)); /* XPels/M */

@@ -2759,15 +2759,15 @@ void FS_Startup(const char* gameName) {
 
 	fs_dirbeforepak = Cvar_Get("fs_dirbeforepak", "0", CVAR_INIT | CVAR_PROTECTED);
 
-	Cvar_Get("com_outcast", "0", CVAR_ARCHIVE | CVAR_SAVEGAME | CVAR_NORESTART);
-
-	Cvar_Get("com_rend2", "0", CVAR_ARCHIVE | CVAR_SAVEGAME | CVAR_NORESTART);
+	Cvar_Get("com_outcast", "0", CVAR_ARCHIVE | CVAR_SAVEGAME);
 
 	Cvar_Get("g_newgameplusJKA", "0", CVAR_ARCHIVE | CVAR_SAVEGAME | CVAR_NORESTART);
 
 	Cvar_Get("g_newgameplusJKO", "0", CVAR_ARCHIVE | CVAR_SAVEGAME | CVAR_NORESTART);
 
 	Cvar_Get("r_weather", "0", CVAR_ARCHIVE);
+
+	Cvar_Get("com_rend2", "0", CVAR_ARCHIVE | CVAR_SAVEGAME);
 
 	// add search path elements in reverse priority order
 	if (fs_cdpath->string[0]) {

@@ -70,11 +70,11 @@ extern qboolean player_locked;
 extern pmove_t* pm;
 extern pml_t pml;
 
-void BG_IK_MoveLimb(CGhoul2Info_v& ghoul2, const int boltIndex, const char* anim_bone, const char* first_bone,
+void BG_IK_MoveLimb(CGhoul2Info_v& ghoul2, const int bolt_index, const char* anim_bone, const char* first_bone,
 	const char* second_bone,
 	const int time, const entityState_t* ent, const int anim_file_index, const int basePose,
 	vec3_t desired_pos, qboolean* ik_in_progress, vec3_t origin,
-	vec3_t angles, vec3_t scale, const int blendTime, const qboolean force_halt)
+	vec3_t angles, vec3_t scale, const int blend_time, const qboolean force_halt)
 {
 	mdxaBone_t hold_point_matrix;
 	const animation_t* anim = &level.knownAnimFileSets[anim_file_index].animations[basePose];
@@ -98,7 +98,7 @@ void BG_IK_MoveLimb(CGhoul2Info_v& ghoul2, const int boltIndex, const char* anim
 		VectorSet(ik_p.pcjMaxs, 0, 0, 0);
 
 		//give the info on our entity.
-		ik_p.blendTime = blendTime;
+		ik_p.blend_time = blend_time;
 		VectorCopy(origin, ik_p.origin);
 		VectorCopy(angles, ik_p.angles);
 		ik_p.angles[PITCH] = 0;
@@ -107,8 +107,8 @@ void BG_IK_MoveLimb(CGhoul2Info_v& ghoul2, const int boltIndex, const char* anim
 		VectorCopy(scale, ik_p.scale);
 
 		//base pose frames for the limb
-		ik_p.startFrame = anim->firstFrame + anim->numFrames;
-		ik_p.endFrame = anim->firstFrame + anim->numFrames;
+		ik_p.start_frame = anim->firstFrame + anim->num_frames;
+		ik_p.end_frame = anim->firstFrame + anim->num_frames;
 
 		//ikP.forceAnimOnBone = qfalse; //let it use existing anim if it's the same as this one.
 
@@ -168,7 +168,7 @@ void BG_IK_MoveLimb(CGhoul2Info_v& ghoul2, const int boltIndex, const char* anim
 		VectorCopy(angles, t_angles);
 		t_angles[PITCH] = t_angles[ROLL] = 0;
 
-		gi.G2API_GetBoltMatrix(ghoul2, 0, boltIndex, &hold_point_matrix, t_angles, origin, time, nullptr, scale);
+		gi.G2API_GetBoltMatrix(ghoul2, 0, bolt_index, &hold_point_matrix, t_angles, origin, time, nullptr, scale);
 		//Get the point position from the matrix.
 		hold_point[0] = hold_point_matrix.matrix[0][3];
 		hold_point[1] = hold_point_matrix.matrix[1][3];
@@ -202,7 +202,7 @@ void BG_IK_MoveLimb(CGhoul2Info_v& ghoul2, const int boltIndex, const char* anim
 		}
 		VectorCopy(origin, ik_m.origin); //our position in the world.
 
-		ik_m.boneName[0] = 0;
+		ik_m.bone_name[0] = 0;
 		if (gi.G2API_IKMove(ghoul2, time, &ik_m))
 		{
 			//now do the standard model animate stuff with ragdoll update params.
@@ -225,7 +225,7 @@ void BG_IK_MoveLimb(CGhoul2Info_v& ghoul2, const int boltIndex, const char* anim
 	else if (*ik_in_progress)
 	{
 		//kill it
-		float c_frame, animSpeed;
+		float c_frame, anim_speed;
 		int s_frame, e_frame, flags;
 
 		gi.G2API_SetBoneIKState(ghoul2, time, "lower_lumbar", IKS_NONE, nullptr);
@@ -248,12 +248,12 @@ void BG_IK_MoveLimb(CGhoul2Info_v& ghoul2, const int boltIndex, const char* anim
 
 		//Get the anim/frames that the pelvis is on exactly, and match the left arm back up with them again.
 		gi.G2API_GetBoneAnim(&ghoul2[0], anim_bone, time, &c_frame, &s_frame, &e_frame, &flags,
-			&animSpeed, nullptr);
-		gi.G2API_SetBoneAnim(&ghoul2[0], "lower_lumbar", s_frame, e_frame, flags, animSpeed, time, s_frame, 300);
-		gi.G2API_SetBoneAnim(&ghoul2[0], "upper_lumbar", s_frame, e_frame, flags, animSpeed, time, s_frame, 300);
-		gi.G2API_SetBoneAnim(&ghoul2[0], "thoracic", s_frame, e_frame, flags, animSpeed, time, s_frame, 300);
-		gi.G2API_SetBoneAnim(&ghoul2[0], second_bone, s_frame, e_frame, flags, animSpeed, time, s_frame, 300);
-		gi.G2API_SetBoneAnim(&ghoul2[0], first_bone, s_frame, e_frame, flags, animSpeed, time, s_frame, 300);
+			&anim_speed, nullptr);
+		gi.G2API_SetBoneAnim(&ghoul2[0], "lower_lumbar", s_frame, e_frame, flags, anim_speed, time, s_frame, 300);
+		gi.G2API_SetBoneAnim(&ghoul2[0], "upper_lumbar", s_frame, e_frame, flags, anim_speed, time, s_frame, 300);
+		gi.G2API_SetBoneAnim(&ghoul2[0], "thoracic", s_frame, e_frame, flags, anim_speed, time, s_frame, 300);
+		gi.G2API_SetBoneAnim(&ghoul2[0], second_bone, s_frame, e_frame, flags, anim_speed, time, s_frame, 300);
+		gi.G2API_SetBoneAnim(&ghoul2[0], first_bone, s_frame, e_frame, flags, anim_speed, time, s_frame, 300);
 
 		//And finally, get rid of all the ik state effector data by calling with null bone name (similar to how we init it).
 		gi.G2API_SetBoneIKState(ghoul2, time, nullptr, IKS_NONE, nullptr);
@@ -296,16 +296,16 @@ void PM_IKUpdate(gentity_t* ent)
 
 		if (ent->client->ps.heldByBolt)
 		{
-			mdxaBone_t boltMatrix;
+			mdxaBone_t bolt_matrix;
 			vec3_t bolt_org;
 			vec3_t t_angles;
 
 			VectorCopy(holder->client->ps.viewangles, t_angles);
 			t_angles[PITCH] = t_angles[ROLL] = 0;
 
-			gi.G2API_GetBoltMatrix(holder->ghoul2, 0, ent->client->ps.heldByBolt, &boltMatrix, t_angles,
+			gi.G2API_GetBoltMatrix(holder->ghoul2, 0, ent->client->ps.heldByBolt, &bolt_matrix, t_angles,
 				holder->client->ps.origin, level.time, nullptr, holder->s.modelScale);
-			gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, bolt_org);
+			gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, bolt_org);
 
 			const int grabbedByBolt = gi.G2API_AddBolt(&ent->ghoul2[0], first_bone);
 			if (grabbedByBolt)
@@ -323,9 +323,9 @@ void PM_IKUpdate(gentity_t* ent)
 				VectorCopy(ent->client->ps.viewangles, t_angles);
 				t_angles[PITCH] = t_angles[ROLL] = 0;
 
-				gi.G2API_GetBoltMatrix(ent->ghoul2, 0, grabbedByBolt, &boltMatrix, t_angles, ent->client->ps.origin,
+				gi.G2API_GetBoltMatrix(ent->ghoul2, 0, grabbedByBolt, &bolt_matrix, t_angles, ent->client->ps.origin,
 					level.time, nullptr, ent->s.modelScale);
-				gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, grabbed_by_org);
+				gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, grabbed_by_org);
 
 				//check for turn
 				vec3_t org2_targ, org2_bolt;
@@ -398,14 +398,14 @@ void PM_IKUpdate(gentity_t* ent)
 	}
 }
 
-void BG_G2SetBoneAngles(const centity_t* cent, const int boneIndex, const vec3_t angles,
+void BG_G2SetBoneAngles(const centity_t* cent, const int bone_index, const vec3_t angles,
 	const int flags,
 	const Eorientations up, const Eorientations right, const Eorientations forward,
-	qhandle_t* modelList)
+	qhandle_t* model_list)
 {
-	if (boneIndex != -1)
+	if (bone_index != -1)
 	{
-		gi.G2API_SetBoneAnglesIndex(&cent->gent->ghoul2[0], boneIndex, angles, flags, up, right, forward, modelList, 0,
+		gi.G2API_SetBoneAnglesIndex(&cent->gent->ghoul2[0], bone_index, angles, flags, up, right, forward, model_list, 0,
 			0);
 	}
 }
@@ -1529,7 +1529,7 @@ qboolean PM_AdjustAnglesForHeldByMonster(gentity_t* ent, const gentity_t* monste
 qboolean G_OkayToLean(const playerState_t* ps, const usercmd_t* cmd, const qboolean interrupt_okay)
 {
 	if ((ps->client_num < MAX_CLIENTS || G_ControlledByPlayer(&g_entities[ps->client_num])) //player
-		&& ps->groundentityNum != ENTITYNUM_NONE //on ground
+		&& ps->groundentity_num != ENTITYNUM_NONE //on ground
 		&& (interrupt_okay //okay to interrupt a lean
 			&& !PM_CrouchAnim(ps->legsAnim)
 			&& PM_DodgeAnim(ps->torsoAnim)
@@ -1552,7 +1552,7 @@ qboolean G_OkayToLean(const playerState_t* ps, const usercmd_t* cmd, const qbool
 qboolean G_OkayToDoStandingBlock(const playerState_t* ps, const usercmd_t* cmd, const qboolean interrupt_okay)
 {
 	if ((ps->client_num < MAX_CLIENTS || G_ControlledByPlayer(&g_entities[ps->client_num])) //player
-		&& ps->groundentityNum != ENTITYNUM_NONE //on ground
+		&& ps->groundentity_num != ENTITYNUM_NONE //on ground
 		&& (interrupt_okay //okay to interrupt a lean
 			&& PM_DodgeAnim(ps->torsoAnim)
 			|| PM_BlockAnim(ps->torsoAnim) || PM_BlockDualAnim(ps->torsoAnim) || PM_BlockStaffAnim(ps->torsoAnim)
@@ -1960,7 +1960,7 @@ void PM_UpdateViewAngles(int saber_anim_level, playerState_t* ps, usercmd_t* cmd
 				{
 					ps->torsoAnimTimer += extra_hold_time;
 				}
-				if (ps->groundentityNum != ENTITYNUM_NONE && !cmd->upmove)
+				if (ps->groundentity_num != ENTITYNUM_NONE && !cmd->upmove)
 				{
 					NPC_SetAnim(gent, SETANIM_LEGS, anim, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 					ps->legsAnimTimer = ps->torsoAnimTimer;
@@ -2255,7 +2255,7 @@ void PM_UpdateViewAngles(int saber_anim_level, playerState_t* ps, usercmd_t* cmd
 					{
 						ps->torsoAnimTimer += extra_hold_time;
 					}
-					if (ps->groundentityNum != ENTITYNUM_NONE && !cmd->upmove)
+					if (ps->groundentity_num != ENTITYNUM_NONE && !cmd->upmove)
 					{
 						NPC_SetAnim(gent, SETANIM_LEGS, anim, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 						ps->legsAnimTimer = ps->torsoAnimTimer;
@@ -2514,7 +2514,7 @@ void PM_UpdateViewAngles(int saber_anim_level, playerState_t* ps, usercmd_t* cmd
 				{
 					ps->torsoAnimTimer += extra_hold_time;
 				}
-				if (ps->groundentityNum != ENTITYNUM_NONE && !cmd->upmove)
+				if (ps->groundentity_num != ENTITYNUM_NONE && !cmd->upmove)
 				{
 					NPC_SetAnim(gent, SETANIM_LEGS, anim, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 					ps->legsAnimTimer = ps->torsoAnimTimer;

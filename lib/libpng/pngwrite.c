@@ -2356,16 +2356,16 @@ png_image_write_to_stdio(const png_imagep image, FILE* file, const int convert_t
 }
 
 int PNGAPI
-png_image_write_to_file(const png_imagep image, const char* fileName,
+png_image_write_to_file(const png_imagep image, const char* file_name,
 	const int convert_to_8bit, const void* buffer, const png_int_32 row_stride,
 	const void* colormap)
 {
 	/* Write the image to the named file. */
 	if (image != NULL && image->version == PNG_IMAGE_VERSION)
 	{
-		if (fileName != NULL)
+		if (file_name != NULL)
 		{
-			FILE* fp = fopen(fileName, "wb");
+			FILE* fp = fopen(file_name, "wb");
 
 			if (fp != NULL)
 			{
@@ -2389,7 +2389,7 @@ png_image_write_to_file(const png_imagep image, const char* fileName,
 						(void)fclose(fp);
 					}
 
-					(void)remove(fileName);
+					(void)remove(file_name);
 					/* The image has already been cleaned up; this is just used to
 					 * set the error (because the original write succeeded).
 					 */
@@ -2397,7 +2397,7 @@ png_image_write_to_file(const png_imagep image, const char* fileName,
 				}
 				/* Clean up: just the opened file. */
 				(void)fclose(fp);
-				(void)remove(fileName);
+				(void)remove(file_name);
 				return 0;
 			}
 			return png_image_error(image, strerror(errno));

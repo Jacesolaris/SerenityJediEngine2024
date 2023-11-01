@@ -242,7 +242,7 @@ void SV_CreateBaseline(void)
 {
 	for (int entnum = 1; entnum < sv.num_entities; entnum++)
 	{
-		sharedEntity_t* svent = SV_GentityNum(entnum);
+		sharedEntity_t* svent = SV_Gentity_num(entnum);
 		if (!svent->r.linked)
 		{
 			continue;
@@ -559,6 +559,24 @@ void SV_SpawnServer(char* server, const qboolean killBots, const ForceReload_e e
 
 	SV_SendMapChange();
 
+	/*
+	Ghoul2 Insert Start
+	*/
+	// clear out those shaders, images and Models as long as this
+	// isnt a dedicated server.
+	/*
+	if ( !com_dedicated->integer )
+	{
+#ifndef DEDICATED
+		R_InitImages();
+
+		R_InitShaders();
+
+		R_ModelInit();
+#endif
+	}
+	else
+	*/
 	if (com_dedicated->integer)
 	{
 		re->SVModelInit();
@@ -710,7 +728,7 @@ void SV_SpawnServer(char* server, const qboolean killBots, const ForceReload_e e
 				{
 					client_t* client = &svs.clients[i];
 					client->state = CS_ACTIVE;
-					sharedEntity_t* ent = SV_GentityNum(i);
+					sharedEntity_t* ent = SV_Gentity_num(i);
 					ent->s.number = i;
 					client->gentity = ent;
 
@@ -1066,10 +1084,6 @@ void SV_Init(void)
 
 	sv_banFile = Cvar_Get("sv_banFile", "serverbans.dat", CVAR_ARCHIVE, "File to use to store bans and exceptions");
 
-	sv_maxOOBRate = Cvar_Get("sv_maxOOBRate", "1000", CVAR_ARCHIVE, "Maximum rate of handling incoming server commands");
-	sv_maxOOBRateIP = Cvar_Get("sv_maxOOBRateIP", "1", CVAR_ARCHIVE, "Maximum rate of handling incoming server commands per IP address");
-	sv_autoWhitelist = Cvar_Get("sv_autoWhitelist", "1", CVAR_ARCHIVE, "Save player IPs to allow them using server during DOS attack");
-
 	// initialize bot cvars so they are listed and can be set before loading the botlib
 	SV_BotInitCvars();
 
@@ -1078,9 +1092,6 @@ void SV_Init(void)
 
 	// Load saved bans
 	Cbuf_AddText("sv_rehashbans\n");
-
-	// Load IP whitelist
-	SVC_LoadWhitelist();
 
 	// Only allocated once, no point in moving it around and fragmenting
 	// create a heap for Ghoul2 to use for game side model vertex transforms used in collision detection

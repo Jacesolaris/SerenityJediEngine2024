@@ -94,13 +94,13 @@ extern vmCvar_t cg_thirdPersonAlpha;
 extern vec3_t player_mins;
 extern vec3_t player_maxs;
 extern cvar_t* g_speederControlScheme;
-extern void PM_SetAnim(const pmove_t* pm, int set_anim_parts, int anim, int set_anim_flags, int blendTime);
+extern void PM_SetAnim(const pmove_t* pm, int set_anim_parts, int anim, int set_anim_flags, int blend_time);
 extern int PM_AnimLength(int index, animNumber_t anim);
 extern void Vehicle_SetAnim(gentity_t* ent, int set_anim_parts, int anim, int set_anim_flags, int i_blend);
 extern void G_Knockdown(gentity_t* self, gentity_t* attacker, const vec3_t push_dir, float strength,
 	qboolean break_saber_lock);
 extern void G_VehicleTrace(trace_t* results, const vec3_t start, const vec3_t tMins, const vec3_t tMaxs,
-	const vec3_t end, int pass_entityNum, int contentmask);
+	const vec3_t end, int pass_entity_num, int contentmask);
 
 static void RegisterAssets(Vehicle_t* p_veh)
 {
@@ -187,7 +187,7 @@ static void ProcessMoveCommands(Vehicle_t* p_veh)
 		speedInc = p_veh->m_pVehicleInfo->acceleration * p_veh->m_fTimeModifier;
 	}
 
-	if (parent_ps->speed || parent_ps->groundentityNum == ENTITYNUM_NONE ||
+	if (parent_ps->speed || parent_ps->groundentity_num == ENTITYNUM_NONE ||
 		p_veh->m_ucmd.forwardmove || p_veh->m_ucmd.upmove > 0)
 	{
 		if (p_veh->m_ucmd.forwardmove > 0 && speedInc)

@@ -827,12 +827,12 @@ void CG_Player(centity_t* cent);
 void CG_ResetPlayerEntity(centity_t* cent);
 void CG_AddRefEntityWithPowerups(refEntity_t* ent, int powerups, centity_t* cent);
 void CG_GetTagWorldPosition(refEntity_t* model, const char* tag, vec3_t pos, vec3_t axis[3]);
-void CG_PlayerShieldHit(int entityNum, vec3_t dir, int amount);
+void CG_PlayerShieldHit(int entity_num, vec3_t dir, int amount);
 
 //
 // cg_predict.c
 //
-int CG_PointContents(const vec3_t point, int pass_entityNum);
+int CG_PointContents(const vec3_t point, int pass_entity_num);
 void CG_Trace(trace_t* result, const vec3_t start, const vec3_t mins, const vec3_t maxs, const vec3_t end,
 	int skip_number, int mask);
 void CG_PredictPlayerState();
@@ -895,7 +895,12 @@ void CG_OutOfAmmoChange(); // should this be in pmove?
 //
 void CG_InitMarkPolys();
 void CG_AddMarks();
-void CG_ImpactMark(const qhandle_t mark_shader, const vec3_t origin, const vec3_t dir, const float orientation, const float red, const float green, const float blue, const float alpha, const qboolean alphaFade, const float radius, const qboolean temporary);
+void CG_ImpactMark(qhandle_t mark_shader,
+	const vec3_t origin, const vec3_t dir,
+	float orientation,
+	float red, float green, float blue, float alpha,
+	qboolean alpha_fade,
+	float radius, qboolean temporary);
 
 //
 // cg_localents.c
@@ -1024,36 +1029,39 @@ void cgi_RE_InitRendererTerrain(const char* terrainInfo);
 // model collision
 void cgi_CM_LoadMap(const char* mapname, qboolean subBSP);
 int cgi_CM_NumInlineModels();
-clipHandle_t cgi_CM_InlineModel(int index); // 0 = world, 1+ = bmodels
-clipHandle_t cgi_CM_TempBoxModel(const vec3_t mins, const vec3_t maxs); //, const int contents );
-int cgi_CM_PointContents(const vec3_t p, clipHandle_t model);
-int cgi_CM_TransformedPointContents(const vec3_t p, clipHandle_t model, const vec3_t origin, const vec3_t angles);
+clip_handle_t cgi_CM_InlineModel(int index); // 0 = world, 1+ = bmodels
+clip_handle_t cgi_CM_TempBoxModel(const vec3_t mins, const vec3_t maxs); //, const int contents );
+int cgi_CM_PointContents(const vec3_t p, clip_handle_t model);
+int cgi_CM_TransformedPointContents(const vec3_t p, clip_handle_t model, const vec3_t origin, const vec3_t angles);
 void cgi_CM_BoxTrace(trace_t* results, const vec3_t start, const vec3_t end,
 	const vec3_t mins, const vec3_t maxs,
-	clipHandle_t model, int brushmask);
+	clip_handle_t model, int brushmask);
 void cgi_CM_TransformedBoxTrace(trace_t* results, const vec3_t start, const vec3_t end,
 	const vec3_t mins, const vec3_t maxs,
-	clipHandle_t model, int brushmask,
+	clip_handle_t model, int brushmask,
 	const vec3_t origin, const vec3_t angles);
 
 // Returns the projection of a polygon onto the solid brushes in the world
-int cgi_CM_MarkFragments(const int numPoints, const vec3_t* points, const vec3_t projection, const int maxPoints, vec3_t pointBuffer, const int maxFragments, markFragment_t* fragmentBuffer);
+int cgi_CM_MarkFragments(int num_points, const vec3_t* points,
+	const vec3_t projection,
+	int maxPoints, vec3_t pointBuffer,
+	int maxFragments, markFragment_t* fragmentBuffer);
 
 // normal sounds will have their volume dynamically changed as their entity
 // moves and the listener moves
-void cgi_S_StartSound(const vec3_t origin, int entityNum, int entchannel, sfxHandle_t sfx);
+void cgi_S_StartSound(const vec3_t origin, int entity_num, int entchannel, sfxHandle_t sfx);
 void cgi_S_StopSounds();
 
 // a local sound is always played full volume
 void cgi_S_StartLocalSound(sfxHandle_t sfx, int channelNum);
 void cgi_S_ClearLoopingSounds();
-void cgi_S_AddLoopingSound(int entityNum, const vec3_t origin, const vec3_t velocity, sfxHandle_t sfx,
+void cgi_S_AddLoopingSound(int entity_num, const vec3_t origin, const vec3_t velocity, sfxHandle_t sfx,
 	soundChannel_t chan = CHAN_AUTO);
-void cgi_S_UpdateEntityPosition(int entityNum, const vec3_t origin);
+void cgi_S_UpdateEntityPosition(int entity_num, const vec3_t origin);
 
 // repatialize recalculates the volumes of sound as they should be heard by the
-// given entityNum and position
-void cgi_S_Respatialize(int entityNum, const vec3_t origin, vec3_t axis[3], qboolean inwater);
+// given entity_num and position
+void cgi_S_Respatialize(int entity_num, const vec3_t origin, vec3_t axis[3], qboolean inwater);
 sfxHandle_t cgi_S_RegisterSound(const char* sample); // returns buzz if not found
 void cgi_S_StartBackgroundTrack(const char* intro, const char* loop, qboolean bForceStart); // empty name stops music
 float cgi_S_GetSampleLength(sfxHandle_t sfx);
@@ -1098,7 +1106,8 @@ void cgi_R_DrawStretchPic(float x, float y, float w, float h,
 	float s1, float t1, float s2, float t2, qhandle_t hShader);
 
 void cgi_R_ModelBounds(qhandle_t model, vec3_t mins, vec3_t maxs);
-void cgi_R_LerpTag(orientation_t* tag, qhandle_t mod, int startFrame, int endFrame, float frac, const char* tagName);
+void cgi_R_LerpTag(orientation_t* tag, qhandle_t mod, int start_frame, int end_frame,
+	float frac, const char* tagName);
 // Does weird, barely controllable rotation behaviour
 void cgi_R_DrawRotatePic(float x, float y, float w, float h,
 	float s1, float t1, float s2, float t2, float a, qhandle_t hShader, float aspectCorrection);
@@ -1248,7 +1257,7 @@ qboolean CG_VehicleWeaponImpact(centity_t* cent);
 Ghoul2 Insert Start
 */
 // CG specific API access
-void trap_G2_SetGhoul2ModelIndexes(CGhoul2Info_v& ghoul2, qhandle_t* modelList, const qhandle_t* skinList);
+void trap_G2_SetGhoul2ModelIndexes(CGhoul2Info_v& ghoul2, qhandle_t* model_list, const qhandle_t* skin_list);
 void CG_Init_CG();
 
 void CG_SetGhoul2Info(refEntity_t* ent, const centity_t* cent);
@@ -1266,7 +1275,7 @@ e_status trap_CIN_StopCinematic(int handle);
 e_status trap_CIN_RunCinematic(int handle);
 void trap_CIN_DrawCinematic(int handle);
 void trap_CIN_SetExtents(int handle, int x, int y, int w, int h);
-void* cgi_Z_Malloc(const int size, const int tag);
+void* cgi_Z_Malloc(int size, int tag);
 void cgi_Z_Free(void* ptr);
 
 int cgi_SP_GetStringTextString(const char* text, char* buffer, int buffer_length);
@@ -1291,9 +1300,9 @@ void* cgi_UI_GetMenuByName(const char* menu);
 
 void SetWeaponSelectTime();
 
-void CG_PlayEffectBolted(const char* fx_name, int modelIndex, int boltIndex, int entNum, vec3_t origin,
+void CG_PlayEffectBolted(const char* fx_name, int model_index, int bolt_index, int ent_num, vec3_t origin,
 	int i_loop_time = 0, bool is_relative = false);
-void CG_PlayEffectIDBolted(int fx_id, int modelIndex, int boltIndex, int entNum, vec3_t origin, int i_loop_time = 0,
+void CG_PlayEffectIDBolted(int fx_id, int model_index, int bolt_index, int ent_num, vec3_t origin, int i_loop_time = 0,
 	bool is_relative = false);
 void CG_PlayEffectOnEnt(const char* fx_name, int client_num, vec3_t origin, const vec3_t fwd);
 void CG_PlayEffectIDOnEnt(int fx_id, int client_num, vec3_t origin, const vec3_t fwd);

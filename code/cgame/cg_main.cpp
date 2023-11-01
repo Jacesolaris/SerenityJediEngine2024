@@ -539,7 +539,7 @@ static cvarTable_t cvarTable[] = {
 	{&cg_thirdPersonAlpha, "cg_thirdPersonAlpha", "1.0", CVAR_ARCHIVE},
 	{&cg_thirdPersonAutoAlpha, "cg_thirdPersonAutoAlpha", "0", 0},
 	// NOTE: also declare this in UI_Init
-	{&cg_gunAutoFirst, "cg_gunAutoFirst", "1", CVAR_ARCHIVE},
+	{&cg_gunAutoFirst, "cg_gunAutoFirst", "0", CVAR_ARCHIVE},
 
 	{&cg_pano, "pano", "0", 0},
 	{&cg_panoNumShots, "panoNumShots", "10", 0},
@@ -610,14 +610,14 @@ static cvarTable_t cvarTable[] = {
 	{&cg_truemoveroll, "cg_truemoveroll", "0", CVAR_ARCHIVE},
 	{&cg_truesaberonly, "cg_truesaberonly", "0", CVAR_ARCHIVE},
 	{&cg_trueeyeposition, "cg_trueeyeposition", "0.0", 0},
-	{&cg_trueinvertsaber, "cg_trueinvertsaber", "1", CVAR_ARCHIVE},
+	{&cg_trueinvertsaber, "cg_trueinvertsaber", "0", CVAR_ARCHIVE},
 	{&cg_truefov, "cg_truefov", "90", CVAR_ARCHIVE},
 	{&cg_truebobbing, "cg_truebobbing", "1", CVAR_ARCHIVE},
 
 	{&cg_weaponBob, "cg_weaponBob", "1", CVAR_ARCHIVE},
 	{&cg_fallingBob, "cg_fallingBob", "1", CVAR_ARCHIVE},
 
-	{&cg_awardsounds, "cg_awardsounds", "1", CVAR_ARCHIVE},
+	{&cg_awardsounds, "cg_awardsounds", "0", CVAR_ARCHIVE},
 
 	{&cg_gunMomentumDamp, "cg_gunMomentumDamp", "0.001", CVAR_ARCHIVE},
 	{&cg_gunMomentumFall, "cg_gunMomentumFall", "0.5", CVAR_ARCHIVE},
@@ -629,7 +629,7 @@ static cvarTable_t cvarTable[] = {
 
 	{&cg_missionstatusscreen, "cg_missionstatusscreen", "1", CVAR_ARCHIVE},
 
-	{&cg_com_outcast, "com_outcast", "0", CVAR_ARCHIVE | CVAR_SAVEGAME | CVAR_NORESTART},
+	{&cg_com_outcast, "com_outcast", "0", CVAR_ARCHIVE | CVAR_SAVEGAME},
 
 	{&cg_drawwidescreenmodesp, "cg_drawwidescreenmodesp", "1", CVAR_ARCHIVE},
 
@@ -640,7 +640,10 @@ static cvarTable_t cvarTable[] = {
 	{&r_ratiofix, "r_ratiofix", "0", CVAR_ARCHIVE},
 	{&cg_hudRatio, "cg_hudRatio", "1", CVAR_ARCHIVE},
 
-	{&cg_SaberInnonblockableAttackWarning, "g_SaberInnonblockableAttackWarning", "0",CVAR_ARCHIVE | CVAR_SAVEGAME | CVAR_NORESTART},
+	{
+		&cg_SaberInnonblockableAttackWarning, "g_SaberInnonblockableAttackWarning", "0",
+		CVAR_ARCHIVE | CVAR_SAVEGAME | CVAR_NORESTART
+	},
 	{&cg_IsSaberDoingAttackDamage, "g_IsSaberDoingAttackDamage", "0", CVAR_ARCHIVE},
 	{&cg_DebugSaberCombat, "g_DebugSaberCombat", "0", CVAR_ARCHIVE},
 
@@ -650,7 +653,7 @@ static cvarTable_t cvarTable[] = {
 
 	{&cg_saberLockCinematicCamera, "g_saberLockCinematicCamera", "1", CVAR_ARCHIVE },
 
-	{&cg_com_rend2, "com_rend2", "0", CVAR_ARCHIVE | CVAR_SAVEGAME | CVAR_NORESTART },
+	{ &cg_com_rend2, "com_rend2", "0", CVAR_ARCHIVE | CVAR_SAVEGAME },
 };
 
 static constexpr size_t cvarTableSize = std::size(cvarTable);
@@ -1352,7 +1355,7 @@ void CG_RegisterClientRenderInfo(clientInfo_t* ci, const renderInfo_t* ri)
 //	files an effect may use.
 //-------------------------------------
 extern void CG_InitGlass();
-extern void cgi_R_WorldEffectCommand(const char* command);
+extern void cgi_RE_WorldEffectCommand(const char* command);
 
 extern cvar_t* g_delayedShutdown;
 
@@ -1388,7 +1391,7 @@ static void CG_RegisterEffects()
 			break;
 		}
 
-		cgi_R_WorldEffectCommand(effectName);
+		cgi_RE_WorldEffectCommand(effectName);
 	}
 
 	// Set up the glass effects mini-system.
@@ -1432,20 +1435,20 @@ static void CG_RegisterEffects()
 }
 
 /*
-void CG_RegisterClientModels (int entityNum)
+void CG_RegisterClientModels (int entity_num)
 
 Only call if clientInfo->infoValid is not true
 
 For players and NPCs to register their models
 */
-void CG_RegisterClientModels(const int entityNum)
+void CG_RegisterClientModels(const int entity_num)
 {
-	if (entityNum < 0 || entityNum > ENTITYNUM_WORLD)
+	if (entity_num < 0 || entity_num > ENTITYNUM_WORLD)
 	{
 		return;
 	}
 
-	const gentity_t* ent = &g_entities[entityNum];
+	const gentity_t* ent = &g_entities[entity_num];
 
 	if (!ent->client)
 	{
@@ -1461,9 +1464,9 @@ void CG_RegisterClientModels(const int entityNum)
 
 	CG_RegisterClientRenderInfo(&ent->client->clientInfo, &ent->client->renderInfo);
 
-	if (entityNum < MAX_CLIENTS)
+	if (entity_num < MAX_CLIENTS)
 	{
-		memcpy(&cgs.clientinfo[entityNum], &ent->client->clientInfo, sizeof(clientInfo_t));
+		memcpy(&cgs.clientinfo[entity_num], &ent->client->clientInfo, sizeof(clientInfo_t));
 	}
 }
 
@@ -2074,16 +2077,10 @@ static void CG_RegisterGraphics()
 
 	cgs.media.shadowMarkShader = cgi_R_RegisterShader("markShadow");
 	cgs.media.wakeMarkShader = cgi_R_RegisterShader("wake");
-
 	cgs.media.fsrMarkShader = cgi_R_RegisterShader("footstep_r");
 	cgs.media.fslMarkShader = cgi_R_RegisterShader("footstep_l");
 	cgs.media.fshrMarkShader = cgi_R_RegisterShader("footstep_heavy_r");
 	cgs.media.fshlMarkShader = cgi_R_RegisterShader("footstep_heavy_l");
-
-	/*cgs.media.fsrMarkShader = cgi_R_RegisterShader("footstep_sbd_r");
-	cgs.media.fslMarkShader = cgi_R_RegisterShader("footstep_sbd_l");
-	cgs.media.fshrMarkShader = cgi_R_RegisterShader("footstep_heavy_sbd_r");
-	cgs.media.fshlMarkShader = cgi_R_RegisterShader("footstep_heavy_sbd_l");*/
 
 	cgi_S_RegisterSound("sound/effects/energy_crackle.wav");
 
@@ -2571,13 +2568,13 @@ void CG_CreateMiscEnts()
 void CG_DrawMiscEnts()
 {
 	cgMiscEntData_t* MiscEnt = MiscEnts;
-	refEntity_t refEnt;
+	refEntity_t ref_ent;
 	vec3_t cullOrigin;
 
-	memset(&refEnt, 0, sizeof refEnt);
-	refEnt.reType = RT_MODEL;
-	refEnt.frame = 0;
-	refEnt.renderfx = RF_LIGHTING_ORIGIN;
+	memset(&ref_ent, 0, sizeof ref_ent);
+	ref_ent.reType = RT_MODEL;
+	ref_ent.frame = 0;
+	ref_ent.renderfx = RF_LIGHTING_ORIGIN;
 	for (int i = 0; i < NumMiscEnts; i++)
 	{
 		VectorCopy(MiscEnt->origin, cullOrigin);
@@ -2590,13 +2587,13 @@ void CG_DrawMiscEnts()
 			if (VectorLengthSquared(difference) - MiscEnt->radius <= 8192 * 8192/*RMG_distancecull.value*/)
 			{
 				//fixme: need access to the real cull dist here
-				refEnt.hModel = MiscEnt->hModel;
-				AnglesToAxis(MiscEnt->angles, refEnt.axis);
-				VectorCopy(MiscEnt->scale, refEnt.modelScale);
-				VectorCopy(MiscEnt->origin, refEnt.origin);
-				VectorCopy(cullOrigin, refEnt.lightingOrigin);
-				ScaleModelAxis(&refEnt);
-				cgi_R_AddRefEntityToScene(&refEnt);
+				ref_ent.hModel = MiscEnt->hModel;
+				AnglesToAxis(MiscEnt->angles, ref_ent.axis);
+				VectorCopy(MiscEnt->scale, ref_ent.modelScale);
+				VectorCopy(MiscEnt->origin, ref_ent.origin);
+				VectorCopy(cullOrigin, ref_ent.lightingOrigin);
+				ScaleModelAxis(&ref_ent);
+				cgi_R_AddRefEntityToScene(&ref_ent);
 			}
 		}
 		MiscEnt++;

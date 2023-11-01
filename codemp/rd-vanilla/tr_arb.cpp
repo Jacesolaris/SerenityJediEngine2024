@@ -125,8 +125,7 @@ END";
 #define GL_PROGRAM_ERROR_STRING_ARB						0x8874
 #define GL_PROGRAM_ERROR_POSITION_ARB					0x864B
 
-void ARB_InitGPUShaders()
-{
+void ARB_InitGPUShaders() {
 	if (!qglGenProgramsARB)
 	{
 		return;
@@ -137,13 +136,38 @@ void ARB_InitGPUShaders()
 	qglBindProgramARB(GL_VERTEX_PROGRAM_ARB, tr.glowVShader);
 	qglProgramStringARB(GL_VERTEX_PROGRAM_ARB, GL_PROGRAM_FORMAT_ASCII_ARB, static_cast<GLsizei>(strlen((char*)g_strGlowVShaderARB)), g_strGlowVShaderARB);
 
+	//	const GLubyte *strErr = qglGetString( GL_PROGRAM_ERROR_STRING_ARB );
 	int i_err_pos = 0;
 	qglGetIntegerv(GL_PROGRAM_ERROR_POSITION_ARB, &i_err_pos);
 	assert(i_err_pos == -1);
 
+	// NOTE: I make an assumption here. If you have (current) nvidia hardware, you obviously support register combiners instead of fragment
+	// programs, so use those. The problem with this is that nv30 WILL support fragment shaders, breaking this logic. The good thing is that
+	// if you always ask for regcoms before fragment shaders, you'll always just use regcoms (problem solved... for now). - AReis
+
 	// Load Pixel Shaders (either regcoms or fragprogs).
 	if (qglCombinerParameteriNV)
 	{
+		// The purpose of this regcom is to blend all the pixels together from the 4 texture units, but with their
+		// texture coordinates offset by 1 (or more) texels, effectively letting us blend adjoining pixels. The weight is
+		// used to either strengthen or weaken the pixel intensity. The more it diffuses (the higher the radius of the glow),
+		// the higher the intensity should be for a noticable effect.
+		// Regcom result is: ( tex1 * fBlurWeight ) + ( tex2 * fBlurWeight ) + ( tex2 * fBlurWeight ) + ( tex2 * fBlurWeight )
+
+		// VV guys, this is the pixel shader you would use instead :-)
+		/*
+		// c0 is the blur weight.
+		ps 1.1
+		tex		t0
+		tex		t1
+		tex		t2
+		tex		t3
+
+		mul		r0, c0, t0;
+		madd	r0, c0, t1, r0;
+		madd	r0, c0, t2, r0;
+		madd	r0, c0, t3, r0;
+		*/
 		tr.glowPShader = qglGenLists(1);
 		qglNewList(tr.glowPShader, GL_COMPILE);
 		qglCombinerParameteriNV(GL_NUM_GENERAL_COMBINERS_NV, 2);

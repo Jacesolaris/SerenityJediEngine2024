@@ -96,7 +96,7 @@ extern vec3_t player_mins;
 extern vec3_t player_maxs;
 extern cvar_t* g_speederControlScheme;
 extern void ChangeWeapon(const gentity_t* ent, int new_weapon);
-extern void PM_SetAnim(const pmove_t* pm, int set_anim_parts, int anim, int set_anim_flags, int blendTime);
+extern void PM_SetAnim(const pmove_t* pm, int set_anim_parts, int anim, int set_anim_flags, int blend_time);
 extern int PM_AnimLength(int index, animNumber_t anim);
 #endif
 
@@ -508,13 +508,13 @@ static void ProcessMoveCommands(Vehicle_t* p_veh)
 							p_veh->m_pParentEntity->playerState)
 						{ //fine, I'll use a tempent for this, but only because it's played only once at the start of a turbo.
 							vec3_t bolt_org, boltDir;
-							mdxaBone_t boltMatrix;
+							mdxaBone_t bolt_matrix;
 
 							VectorSet(boltDir, 0.0f, p_veh->m_pParentEntity->playerState->viewangles[YAW], 0.0f);
 
-							trap_G2API_GetBoltMatrix(p_veh->m_pParentEntity->ghoul2, 0, p_veh->m_iExhaustTag[i], &boltMatrix, boltDir, p_veh->m_pParentEntity->playerState->origin, level.time, nullptr, p_veh->m_pParentEntity->modelScale);
-							BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, bolt_org);
-							BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, boltDir);
+							trap_G2API_GetBoltMatrix(p_veh->m_pParentEntity->ghoul2, 0, p_veh->m_iExhaustTag[i], &bolt_matrix, boltDir, p_veh->m_pParentEntity->playerState->origin, level.time, nullptr, p_veh->m_pParentEntity->modelScale);
+							BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, bolt_org);
+							BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, boltDir);
 							G_PlayEffectID(p_veh->m_pVehicleInfo->iTurboStartFX, bolt_org, boltDir);
 						}
 #endif
@@ -577,7 +577,7 @@ static void ProcessMoveCommands(Vehicle_t* p_veh)
 	//speedIdleAccel = p_veh->m_pVehicleInfo->accelIdle * p_veh->m_fTimeModifier;
 	speedMin = p_veh->m_pVehicleInfo->speedMin;
 
-	if (parent_ps->speed || parent_ps->groundentityNum == ENTITYNUM_NONE ||
+	if (parent_ps->speed || parent_ps->groundentity_num == ENTITYNUM_NONE ||
 		p_veh->m_ucmd.forwardmove || p_veh->m_ucmd.upmove > 0)
 	{
 		if (p_veh->m_ucmd.forwardmove > 0 && speedInc)
@@ -767,7 +767,7 @@ void ProcessOrientCommands(Vehicle_t* p_veh)
 
 #ifdef QAGAME
 
-extern void PM_SetAnim(const pmove_t* pm, int set_anim_parts, int anim, int set_anim_flags, int blendTime);
+extern void PM_SetAnim(const pmove_t* pm, int set_anim_parts, int anim, int set_anim_flags, int blend_time);
 extern int PM_AnimLength(int index, animNumber_t anim);
 
 // This function makes sure that the vehicle is properly animated.

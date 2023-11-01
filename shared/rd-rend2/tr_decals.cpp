@@ -190,10 +190,10 @@ void RE_AddDecalToScene(qhandle_t decalShader, const vec3_t origin, const vec3_t
 
 		// we have an upper limit on the complexity of polygons
 		// that we store persistantly
-		if (mf->numPoints > MAX_VERTS_ON_DECAL_POLY)
-			mf->numPoints = MAX_VERTS_ON_DECAL_POLY;
+		if (mf->num_points > MAX_VERTS_ON_DECAL_POLY)
+			mf->num_points = MAX_VERTS_ON_DECAL_POLY;
 
-		for (j = 0, v = verts; j < mf->numPoints; j++, v++)
+		for (j = 0, v = verts; j < mf->num_points; j++, v++)
 		{
 			vec3_t		delta;
 
@@ -209,7 +209,7 @@ void RE_AddDecalToScene(qhandle_t decalShader, const vec3_t origin, const vec3_t
 		// if it is a temporary (shadow) mark, add it immediately and forget about it
 		if (temporary)
 		{
-			RE_AddPolyToScene(decalShader, mf->numPoints, verts);
+			RE_AddPolyToScene(decalShader, mf->num_points, verts);
 			continue;
 		}
 
@@ -217,12 +217,12 @@ void RE_AddDecalToScene(qhandle_t decalShader, const vec3_t origin, const vec3_t
 		decal = RE_AllocDecal(DECALPOLY_TYPE_NORMAL);
 		decal->time = tr.refdef.time;
 		decal->shader = decalShader;
-		decal->poly.numVerts = mf->numPoints;
+		decal->poly.numVerts = mf->num_points;
 		decal->color[0] = red;
 		decal->color[1] = green;
 		decal->color[2] = blue;
 		decal->color[3] = alpha;
-		memcpy(decal->verts, verts, mf->numPoints * sizeof(verts[0]));
+		memcpy(decal->verts, verts, mf->num_points * sizeof(verts[0]));
 	}
 }
 

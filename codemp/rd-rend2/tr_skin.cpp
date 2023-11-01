@@ -20,7 +20,7 @@ RE_RegisterSkin
 
 bool gServerSkinHack = false;
 
-shader_t* R_FindServerShader(const char* name, const int* lightmapIndex, const byte* styles);
+shader_t* R_FindServerShader(const char* name, const int* lightmapIndexes, const byte* styles, qboolean mipRawImage);
 static char* CommaParse(char** data_p);
 /*
 ===============
@@ -79,11 +79,11 @@ bool RE_SplitSkins(const char* INname, char* skinhead, char* skintorso, char* sk
 }
 
 // given a name, go get the skin we want and return
-qhandle_t RE_RegisterIndividualSkin(const char* name, const qhandle_t hSkin)
+qhandle_t RE_RegisterIndividualSkin(const char* name, qhandle_t hSkin)
 {
 	skin_t* skin;
 	skinSurface_t* surf;
-	char* text = nullptr, * text_p;
+	char* text, * text_p;
 	char* token;
 	char			surfName[MAX_QPATH];
 
@@ -142,7 +142,7 @@ qhandle_t RE_RegisterIndividualSkin(const char* name, const qhandle_t hSkin)
 
 		Q_strncpyz(surf->name, surfName, sizeof(surf->name));
 
-		if (gServerSkinHack)	surf->shader = R_FindServerShader(token, lightmapsNone, stylesDefault);
+		if (gServerSkinHack)	surf->shader = R_FindServerShader(token, lightmapsNone, stylesDefault, qtrue);
 		else					surf->shader = R_FindShader(token, lightmapsNone, stylesDefault, qtrue);
 		skin->numSurfaces++;
 	}
@@ -157,8 +157,7 @@ qhandle_t RE_RegisterIndividualSkin(const char* name, const qhandle_t hSkin)
 	return hSkin;
 }
 
-qhandle_t RE_RegisterSkin(const char* name)
-{
+qhandle_t RE_RegisterSkin(const char* name) {
 	qhandle_t	hSkin;
 	skin_t* skin;
 
@@ -167,8 +166,7 @@ qhandle_t RE_RegisterSkin(const char* name)
 		return 0;
 	}
 
-	if (strlen(name) >= MAX_QPATH)
-	{
+	if (strlen(name) >= MAX_QPATH) {
 		Com_Printf("Skin name exceeds MAX_QPATH\n");
 		return 0;
 	}
@@ -199,8 +197,7 @@ qhandle_t RE_RegisterSkin(const char* name)
 	R_IssuePendingRenderCommands();
 
 	// If not a .skin file, load as a single shader
-	if (strcmp(name + strlen(name) - 5, ".skin"))
-	{
+	if (strcmp(name + strlen(name) - 5, ".skin")) {
 		/*		skin->numSurfaces = 1;
 				skin->surfaces[0] = (skinSurface_t *)Hunk_Alloc( sizeof(skin->surfaces[0]), h_low );
 				skin->surfaces[0]->shader = R_FindShader( name, lightmapsNone, stylesDefault, qtrue );
@@ -383,7 +380,7 @@ void	R_InitSkins(void) {
 R_GetSkinByHandle
 ===============
 */
-skin_t* R_GetSkinByHandle(const qhandle_t hSkin) {
+skin_t* R_GetSkinByHandle(qhandle_t hSkin) {
 	if (hSkin < 1 || hSkin >= tr.numSkins) {
 		return tr.skins[0];
 	}

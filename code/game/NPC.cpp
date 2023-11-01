@@ -39,7 +39,7 @@ extern void G_AddVoiceEvent(const gentity_t* self, int event, int speak_debounce
 extern void NPC_ApplyRoff();
 extern void NPC_TempLookTarget(const gentity_t* self, int lookEntNum, int minLookTime, int maxLookTime);
 extern qboolean NPC_CheckLookTarget(const gentity_t* self);
-extern void NPC_SetLookTarget(const gentity_t* self, int entNum, int clear_time);
+extern void NPC_SetLookTarget(const gentity_t* self, int ent_num, int clear_time);
 extern void Mark1_dying(gentity_t* self);
 extern void NPC_BSCinematic();
 extern int GetTime(int lastTime);
@@ -91,7 +91,7 @@ extern int eventClearTime;
 extern void GM_Dying(gentity_t* self);
 extern void droideka_dying(gentity_t* self);
 
-extern qboolean G_EntIsBreakable(int entityNum, const gentity_t* breaker);
+extern qboolean G_EntIsBreakable(int entity_num, const gentity_t* breaker);
 
 qboolean NPC_EntityIsBreakable(const gentity_t* ent)
 {
@@ -159,7 +159,7 @@ void CorpsePhysics(gentity_t* self)
 	}
 
 	//FIXME: match my pitch and roll for the slope of my groundPlane
-	if (self->client->ps.groundentityNum != ENTITYNUM_NONE && !(self->flags & FL_DISINTEGRATED))
+	if (self->client->ps.groundentity_num != ENTITYNUM_NONE && !(self->flags & FL_DISINTEGRATED))
 	{
 		//on the ground
 		//FIXME: check 4 corners
@@ -361,10 +361,10 @@ void NPC_RemoveBody(gentity_t* ent)
 			}
 			if (ent->enemy)
 			{
-				if (ent->client && ent->client->ps.saberentityNum > 0 && ent->client->ps.saberentityNum <
+				if (ent->client && ent->client->ps.saberentity_num > 0 && ent->client->ps.saberentity_num <
 					ENTITYNUM_WORLD)
 				{
-					gentity_t* saberent = &g_entities[ent->client->ps.saberentityNum];
+					gentity_t* saberent = &g_entities[ent->client->ps.saberentity_num];
 					if (saberent)
 					{
 						G_FreeEntity(saberent);
@@ -581,9 +581,9 @@ void NPC_PostDeathThink( void )
 	qboolean	frontbackbothclear = false;
 	qboolean	rightleftbothclear = false;
 
-	if( NPC->client->ps.groundentityNum == ENTITYNUM_NONE || !VectorCompare( vec3_origin, NPC->client->ps.velocity ) )
+	if( NPC->client->ps.groundentity_num == ENTITYNUM_NONE || !VectorCompare( vec3_origin, NPC->client->ps.velocity ) )
 	{
-		if ( NPC->client->ps.groundentityNum != ENTITYNUM_NONE && NPC->client->ps.friction == 1.0 )//check avelocity?
+		if ( NPC->client->ps.groundentity_num != ENTITYNUM_NONE && NPC->client->ps.friction == 1.0 )//check avelocity?
 		{
 			pitch_roll_for_slope( NPC );
 		}
@@ -878,7 +878,7 @@ static void DeadThink()
 	}
 
 	// If the player is on the ground and the resting position contents haven't been set yet...(BounceCount tracks the contents)
-	if (NPC->bounceCount < 0 && NPC->s.groundentityNum >= 0)
+	if (NPC->bounceCount < 0 && NPC->s.groundentity_num >= 0)
 	{
 		// if client is in a nodrop area, make him/her nodraw
 		const int contents = NPC->bounceCount = gi.pointcontents(NPC->currentOrigin, -1);
@@ -1061,7 +1061,7 @@ void NPC_HandleAIFlags()
 	{
 		bool should_fly = !!(NPCInfo->aiFlags & NPCAI_FLY);
 		const bool is_flying = !!JET_Flying(NPC);
-		bool is_in_the_air = NPC->client->ps.groundentityNum == ENTITYNUM_NONE;
+		bool is_in_the_air = NPC->client->ps.groundentity_num == ENTITYNUM_NONE;
 
 		if (is_flying)
 		{
@@ -1164,7 +1164,7 @@ void NPC_AvoidWallsAndCliffs()
 			return;
 		}
 
-		if ( ucmd.upmove > 0 || NPC->client->ps.groundentityNum == ENTITYNUM_NONE )
+		if ( ucmd.upmove > 0 || NPC->client->ps.groundentity_num == ENTITYNUM_NONE )
 		{//Going to jump or in the air
 			return;
 		}
@@ -2635,7 +2635,7 @@ void NPC_Think(gentity_t* self)
 			&& NPC->client->NPC_class == CLASS_ROCKETTROOPER
 			&& (NPC->client->ps.eFlags & EF_FORCE_GRIPPED || NPC->client->ps.eFlags & EF_FORCE_GRABBED)
 			&& NPC->client->moveType == MT_FLYSWIM
-			&& NPC->client->ps.groundentityNum == ENTITYNUM_NONE)
+			&& NPC->client->ps.groundentity_num == ENTITYNUM_NONE)
 		{
 			//reduce velocity
 			VectorScale(NPC->client->ps.velocity, 0.75f, NPC->client->ps.velocity);
@@ -2681,11 +2681,11 @@ void NPC_InitAI()
 	//5 = kyle and any enemy
 	//6 = also when kyle takes pain or enemy jedi dodges player saber swing or does an acrobatic evasion
 	// NOTE : I also create this in UI_Init()
-	d_slowmodeath = gi.cvar("d_slowmodeath", "3", CVAR_ARCHIVE); //save this setting
+	d_slowmodeath = gi.cvar("d_slowmodeath", "0", CVAR_ARCHIVE); //save this setting
 
 	d_saberCombat = gi.cvar("d_saberCombat", "0", CVAR_CHEAT);
 
-	d_slowmoaction = gi.cvar("d_slowmoaction", "0", CVAR_ARCHIVE | CVAR_SAVEGAME | CVAR_NORESTART);
+	d_slowmoaction = gi.cvar("d_slowmoaction", "1", CVAR_ARCHIVE | CVAR_SAVEGAME | CVAR_NORESTART);
 	//save this setting
 
 	d_saberInfo = gi.cvar("d_saberInfo", "0", CVAR_ARCHIVE);
@@ -2703,7 +2703,7 @@ void NPC_InitAnimTable( void )
   before table is filled in with
   values, causes tasks that wait for
   anim completion to never finish.
-  (frameLerp of 0 * numFrames of 0 = 0)
+  (frameLerp of 0 * num_frames of 0 = 0)
 ==================================
 */
 void NPC_InitAnimTable()
@@ -2715,7 +2715,7 @@ void NPC_InitAnimTable()
 			animation.firstFrame = 0;
 			animation.frameLerp = 100;
 			//			level.knownAnimFileSets[i].animations[j].initialLerp = 100;
-			animation.numFrames = 0;
+			animation.num_frames = 0;
 		}
 	}
 }

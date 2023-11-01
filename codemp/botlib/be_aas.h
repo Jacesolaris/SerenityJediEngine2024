@@ -146,7 +146,7 @@ typedef struct aas_entityinfo_s
 	vec3_t maxs; // bounding box maximums
 	int groundent; // ground entity
 	int solid; // solid type
-	int modelIndex; // model used
+	int model_index; // model used
 	int model_index2; // weapons, CTF flags, etc
 	int frame; // model frame number
 	int event; // impulse events -- muzzle flashes, footsteps, etc

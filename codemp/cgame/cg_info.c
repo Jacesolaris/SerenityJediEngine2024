@@ -232,7 +232,6 @@ void CG_DrawInformation(void)
 	}
 
 	CG_LoadBar();
-
 	LoadTips();
 
 	int y = 180 - 32;
@@ -482,6 +481,8 @@ void CG_LoadBar(void)
 	// Draw right cap
 	CG_DrawPic(tickleft + tickwidth * cg.loadLCARSStage, ticktop, capwidth, tickheight, cgs.media.loadBarLEDCap);
 
+	const int x = (640 - LOADBAR_CLIP_WIDTH) / 2;
+
 	if (cg.loadLCARSStage >= 3)
 	{
 		if (cg.loadLCARSStage <= 6)
@@ -506,10 +507,7 @@ void LoadTips(void)
 	const int time = trap->Milliseconds();
 	const int index = rand() % 15;
 
-	if (cg.loadLCARSStage >= 5)
-	{
-	}
-	if ((SCREENTIP_NEXT_UPDATE_TIME < time || SCREENTIP_NEXT_UPDATE_TIME == 0) && cg.loadLCARSStage <= 9)
+	if ((SCREENTIP_NEXT_UPDATE_TIME < time || SCREENTIP_NEXT_UPDATE_TIME == 0) && cg.loadLCARSStage <= 6)
 	{
 		switch (index)
 		{
@@ -578,6 +576,6 @@ void LoadTips(void)
 				UI_CENTER | UI_SMALLFONT | UI_DROPSHADOW, colorWhite);
 			break;
 		}
-		SCREENTIP_NEXT_UPDATE_TIME = time + 2500;
+		SCREENTIP_NEXT_UPDATE_TIME = time + 3500;
 	}
 }

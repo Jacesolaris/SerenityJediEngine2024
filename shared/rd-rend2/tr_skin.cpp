@@ -23,7 +23,7 @@ RE_RegisterSkin
 
 bool gServerSkinHack = false;
 
-shader_t* R_FindServerShader(const char* name, const int* lightmapIndex, const byte* styles, qboolean mipRawImage);
+shader_t* R_FindServerShader(const char* name, const int* lightmapIndexes, const byte* styles, qboolean mipRawImage);
 static char* CommaParse(char** data_p);
 /*
 ===============
@@ -82,11 +82,11 @@ bool RE_SplitSkins(const char* INname, char* skinhead, char* skintorso, char* sk
 }
 
 // given a name, go get the skin we want and return
-qhandle_t RE_RegisterIndividualSkin(const char* name, const qhandle_t hSkin)
+qhandle_t RE_RegisterIndividualSkin(const char* name, qhandle_t hSkin)
 {
 	skin_t* skin;
 	skinSurface_t* surf;
-	char* text = nullptr, * text_p;
+	char* text, * text_p;
 	char* token;
 	char			surfName[MAX_QPATH];
 
@@ -379,7 +379,7 @@ AnimationCFGs_t AnimationCFGs;
 // Usage:  call with psDest == NULL for a size enquire (for malloc),
 //				then with NZ ptr for it to copy to your supplied buffer...
 //
-int RE_GetAnimationCFG(const char* psCFGFilename, char* psDest, const int iDestSize)
+int RE_GetAnimationCFG(const char* psCFGFilename, char* psDest, int iDestSize)
 {
 	char* psText = NULL;
 

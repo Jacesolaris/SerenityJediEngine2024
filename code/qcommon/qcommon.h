@@ -611,6 +611,7 @@ int Com_Filter(const char* filter, const char* name, int casesensitive);
 int Com_FilterPath(const char* filter, const char* name, int casesensitive);
 qboolean Com_SafeMode();
 void Com_RunAndTimeServerPacket(netadr_t* evFrom, msg_t* buf);
+extern cvar_t* com_rend2;
 
 void Com_StartupVariable(const char* match);
 // checks for and removes command line "+set var arg" constructs
@@ -628,7 +629,6 @@ extern cvar_t* com_homepath;
 extern cvar_t* g_newgameplusJKA;
 extern cvar_t* g_newgameplusJKO;
 extern cvar_t* g_spskill;
-extern cvar_t* com_rend2;
 #ifndef _WIN32
 extern	cvar_t* com_ansiColor;
 #endif
@@ -676,11 +676,11 @@ temp file loading
 
 */
 int Z_Validate(); // also used to insure all of these are paged in
-int Z_MemSize(const memtag_t eTag);
+int Z_MemSize(memtag_t eTag);
 void Z_TagFree(memtag_t eTag);
 int Z_Free(void* pv_address); //returns bytes freed
 int Z_Size(void* pvAddress);
-void Z_MorphMallocTag(void* pv_address, memtag_t eDesiredTag);
+void Z_MorphMallocTag(void* pv_address, const memtag_t eDesiredTag);
 qboolean Z_IsFromZone(const void* pvAddress, memtag_t eTag); //returns size if true
 
 #ifdef DEBUG_ZONE_ALLOCS
@@ -697,7 +697,7 @@ void  Z_Label(const void* pvAddress, const char* pslabel);
 void* Z_Malloc(const int iSize, const memtag_t eTag, const qboolean bZeroit = qfalse, const int iUnusedAlign = 4);
 
 // return memory NOT zero-filled by default
-void* S_Malloc(int iSize); // NOT 0 filled memory only for small allocations
+void* S_Malloc(const int iSize); // NOT 0 filled memory only for small allocations
 #define Z_Label(_ptr, _label)
 
 #endif

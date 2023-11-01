@@ -117,12 +117,13 @@ RE_AddPolyToScene
 =====================
 */
 
-void RE_AddPolyToScene(qhandle_t hShader, int numVerts, const polyVert_t* verts, int numPolys) {
+void RE_AddPolyToScene(const qhandle_t hShader, const int numVerts, const polyVert_t* verts, const int numPolys)
+{
 	srfPoly_t* poly;
 	int			i, j;
 	int			fogIndex;
 	fog_t* fog;
-	vec3_t		bounds[2];
+	vec3_t		bounds[2]{};
 
 	if (!tr.registered) {
 		return;

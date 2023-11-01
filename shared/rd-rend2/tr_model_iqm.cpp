@@ -841,7 +841,7 @@ R_AddIQMSurfaces
 Add all surfaces of this model
 =================
 */
-void R_AddIQMSurfaces(trRefEntity_t* ent, int entityNum) {
+void R_AddIQMSurfaces(trRefEntity_t* ent, int entity_num) {
 	iqmData_t* data;
 	srfIQModel_t* surface;
 	int			i, j;
@@ -852,7 +852,7 @@ void R_AddIQMSurfaces(trRefEntity_t* ent, int entityNum) {
 	shader_t* shader;
 	skin_t* skin;
 
-	data = tr.currentModel->data.iqm;
+	data = tr.current_model->data.iqm;
 	surface = data->surfaces;
 
 	// don't add third_person objects if not in a portal
@@ -875,7 +875,7 @@ void R_AddIQMSurfaces(trRefEntity_t* ent, int entityNum) {
 		|| (ent->e.oldframe < 0)) {
 		ri.Printf(PRINT_DEVELOPER, "R_AddIQMSurfaces: no such frame %d to %d for '%s'\n",
 			ent->e.oldframe, ent->e.frame,
-			tr.currentModel->name);
+			tr.current_model->name);
 		ent->e.frame = 0;
 		ent->e.oldframe = 0;
 	}
@@ -925,7 +925,7 @@ void R_AddIQMSurfaces(trRefEntity_t* ent, int entityNum) {
 			&& fogNum == 0
 			&& !(ent->e.renderfx & (RF_NOSHADOW | RF_DEPTHHACK))
 			&& shader->sort == SS_OPAQUE) {
-			R_AddDrawSurf((surfaceType_t*)surface, entityNum, tr.shadowShader, 0, 0, R_IsPostRenderEntity(ent), 0);
+			R_AddDrawSurf((surfaceType_t*)surface, entity_num, tr.shadowShader, 0, 0, R_IsPostRenderEntity(ent), 0);
 		}
 
 		// projection shadows work fine with personal models
@@ -933,11 +933,11 @@ void R_AddIQMSurfaces(trRefEntity_t* ent, int entityNum) {
 			&& fogNum == 0
 			&& (ent->e.renderfx & RF_SHADOW_PLANE)
 			&& shader->sort == SS_OPAQUE) {
-			R_AddDrawSurf((surfaceType_t*)surface, entityNum, tr.projectionShadowShader, 0, 0, R_IsPostRenderEntity(ent), 0);
+			R_AddDrawSurf((surfaceType_t*)surface, entity_num, tr.projectionShadowShader, 0, 0, R_IsPostRenderEntity(ent), 0);
 		}
 
 		if (!personalModel) {
-			R_AddDrawSurf((surfaceType_t*)surface, entityNum, shader, fogNum, 0, R_IsPostRenderEntity(ent), cubemapIndex);
+			R_AddDrawSurf((surfaceType_t*)surface, entity_num, shader, fogNum, 0, R_IsPostRenderEntity(ent), cubemapIndex);
 		}
 
 		surface++;
@@ -1146,7 +1146,7 @@ void RB_IQMSurfaceAnim(surfaceType_t* surface) {
 	}
 
 	tri = data->triangles + 3 * surf->first_triangle;
-	ptr = &tess.indexes[tess.numIndexes];
+	ptr = &tess.indexes[tess.num_indexes];
 	base = tess.numVertexes;
 
 	for (i = 0; i < surf->num_triangles; i++) {
@@ -1155,12 +1155,12 @@ void RB_IQMSurfaceAnim(surfaceType_t* surface) {
 		*ptr++ = base + (*tri++ - surf->first_vertex);
 	}
 
-	tess.numIndexes += 3 * surf->num_triangles;
+	tess.num_indexes += 3 * surf->num_triangles;
 	tess.numVertexes += surf->num_vertexes;
 }
 
 int R_IQMLerpTag(orientation_t* tag, iqmData_t* data,
-	int startFrame, int endFrame,
+	int start_frame, int end_frame,
 	float frac, const char* tagName) {
 	float	jointMats[IQM_MAX_JOINTS * 12];
 	int	joint;
@@ -1178,7 +1178,7 @@ int R_IQMLerpTag(orientation_t* tag, iqmData_t* data,
 		return qfalse;
 	}
 
-	ComputeJointMats(data, startFrame, endFrame, frac, jointMats);
+	ComputeJointMats(data, start_frame, end_frame, frac, jointMats);
 
 	tag->axis[0][0] = jointMats[12 * joint + 0];
 	tag->axis[1][0] = jointMats[12 * joint + 1];

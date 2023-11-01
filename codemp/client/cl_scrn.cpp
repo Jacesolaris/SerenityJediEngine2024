@@ -35,6 +35,9 @@ cvar_t* cl_debuggraph;
 cvar_t* cl_graphheight;
 cvar_t* cl_graphscale;
 cvar_t* cl_graphshift;
+extern cvar_t* cl_com_outcast;
+
+extern cvar_t* cl_com_rend2;
 
 /*
 ================

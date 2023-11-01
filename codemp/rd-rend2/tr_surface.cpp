@@ -44,9 +44,9 @@ use the shader system.
 RB_CheckOverflow
 ==============
 */
-void RB_CheckOverflow(const int verts, const int indexes) {
+void RB_CheckOverflow(int verts, int indexes) {
 	if ((tess.numVertexes + verts) < SHADER_MAX_VERTEXES &&
-		(tess.numIndexes + indexes) < SHADER_MAX_INDEXES)
+		(tess.num_indexes + indexes) < SHADER_MAX_INDEXES)
 	{
 		return;
 	}
@@ -76,13 +76,13 @@ void RB_CheckVBOandIBO(VBO_t* vbo, IBO_t* ibo)
 		R_BindIBO(ibo);
 	}
 
-	if (vbo != backEndData->currentFrame->dynamicVbo &&
-		ibo != backEndData->currentFrame->dynamicIbo)
+	if (vbo != backEndData->current_frame->dynamicVbo &&
+		ibo != backEndData->current_frame->dynamicIbo)
 	{
 		tess.useInternalVBO = qfalse;
 	}
 
-	if (ibo != backEndData->currentFrame->dynamicIbo)
+	if (ibo != backEndData->current_frame->dynamicIbo)
 	{
 		tess.externalIBO = ibo;
 	}
@@ -93,8 +93,7 @@ void RB_CheckVBOandIBO(VBO_t* vbo, IBO_t* ibo)
 RB_AddQuadStampExt
 ==============
 */
-void RB_AddQuadStampExt(vec3_t origin, vec3_t left, vec3_t up, float color[4], const float s1, const float t1, const float s2, const float t2)
-{
+void RB_AddQuadStampExt(vec3_t origin, vec3_t left, vec3_t up, float color[4], float s1, float t1, float s2, float t2) {
 	vec3_t		normal;
 	int			ndx;
 
@@ -103,13 +102,13 @@ void RB_AddQuadStampExt(vec3_t origin, vec3_t left, vec3_t up, float color[4], c
 	ndx = tess.numVertexes;
 
 	// triangle indexes for a simple quad
-	tess.indexes[tess.numIndexes] = ndx;
-	tess.indexes[tess.numIndexes + 1] = ndx + 1;
-	tess.indexes[tess.numIndexes + 2] = ndx + 3;
+	tess.indexes[tess.num_indexes] = ndx;
+	tess.indexes[tess.num_indexes + 1] = ndx + 1;
+	tess.indexes[tess.num_indexes + 2] = ndx + 3;
 
-	tess.indexes[tess.numIndexes + 3] = ndx + 3;
-	tess.indexes[tess.numIndexes + 4] = ndx + 1;
-	tess.indexes[tess.numIndexes + 5] = ndx + 2;
+	tess.indexes[tess.num_indexes + 3] = ndx + 3;
+	tess.indexes[tess.num_indexes + 4] = ndx + 1;
+	tess.indexes[tess.num_indexes + 5] = ndx + 2;
 
 	tess.xyz[ndx][0] = origin[0] + left[0] + up[0];
 	tess.xyz[ndx][1] = origin[1] + left[1] + up[1];
@@ -156,7 +155,7 @@ void RB_AddQuadStampExt(vec3_t origin, vec3_t left, vec3_t up, float color[4], c
 	VectorCopy4(color, tess.vertexColors[ndx + 3]);
 
 	tess.numVertexes += 4;
-	tess.numIndexes += 6;
+	tess.num_indexes += 6;
 }
 
 /*
@@ -180,7 +179,7 @@ void RB_InstantQuad2(vec4_t quadVerts[4], vec2_t texCoords[4])
 	//	GLimp_LogComment("--- RB_InstantQuad2 ---\n");					// FIXME: REIMPLEMENT (wasn't implemented in ioq3 to begin with) --eez
 
 	tess.numVertexes = 0;
-	tess.numIndexes = 0;
+	tess.num_indexes = 0;
 	tess.firstIndex = 0;
 
 	VectorCopy4(quadVerts[0], tess.xyz[tess.numVertexes]);
@@ -199,12 +198,12 @@ void RB_InstantQuad2(vec4_t quadVerts[4], vec2_t texCoords[4])
 	VectorCopy2(texCoords[3], tess.texCoords[tess.numVertexes][0]);
 	tess.numVertexes++;
 
-	tess.indexes[tess.numIndexes++] = 0;
-	tess.indexes[tess.numIndexes++] = 1;
-	tess.indexes[tess.numIndexes++] = 2;
-	tess.indexes[tess.numIndexes++] = 0;
-	tess.indexes[tess.numIndexes++] = 2;
-	tess.indexes[tess.numIndexes++] = 3;
+	tess.indexes[tess.num_indexes++] = 0;
+	tess.indexes[tess.num_indexes++] = 1;
+	tess.indexes[tess.num_indexes++] = 2;
+	tess.indexes[tess.num_indexes++] = 0;
+	tess.indexes[tess.num_indexes++] = 2;
+	tess.indexes[tess.num_indexes++] = 3;
 	tess.minIndex = 0;
 	tess.maxIndex = 3;
 	tess.useInternalVBO = qtrue;
@@ -213,11 +212,11 @@ void RB_InstantQuad2(vec4_t quadVerts[4], vec2_t texCoords[4])
 
 	GLSL_VertexAttribsState(ATTR_POSITION | ATTR_TEXCOORD0, NULL);
 
-	R_DrawElementsVBO(tess.numIndexes, tess.firstIndex, tess.minIndex, tess.maxIndex);
+	R_DrawElementsVBO(tess.num_indexes, tess.firstIndex, tess.minIndex, tess.maxIndex);
 
 	RB_CommitInternalBufferData();
 
-	tess.numIndexes = 0;
+	tess.num_indexes = 0;
 	tess.numVertexes = 0;
 	tess.firstIndex = 0;
 	tess.minIndex = 0;
@@ -345,7 +344,7 @@ static void RB_SurfaceOrientedQuad(void)
 RB_SurfacePolychain
 =============
 */
-static void RB_SurfacePolychain(const srfPoly_t* p) {
+static void RB_SurfacePolychain(srfPoly_t* p) {
 	int		i;
 	int		numv;
 
@@ -367,16 +366,16 @@ static void RB_SurfacePolychain(const srfPoly_t* p) {
 
 	// generate fan indexes into the tess array
 	for (i = 0; i < p->numVerts - 2; i++) {
-		tess.indexes[tess.numIndexes + 0] = tess.numVertexes;
-		tess.indexes[tess.numIndexes + 1] = tess.numVertexes + i + 1;
-		tess.indexes[tess.numIndexes + 2] = tess.numVertexes + i + 2;
-		tess.numIndexes += 3;
+		tess.indexes[tess.num_indexes + 0] = tess.numVertexes;
+		tess.indexes[tess.num_indexes + 1] = tess.numVertexes + i + 1;
+		tess.indexes[tess.num_indexes + 2] = tess.numVertexes + i + 2;
+		tess.num_indexes += 3;
 	}
 
 	tess.numVertexes = numv;
 }
 
-static void RB_SurfaceVertsAndIndexes(int numVerts, srfVert_t* verts, int numIndexes, glIndex_t* indexes, int dlightBits, int pshadowBits)
+static void RB_SurfaceVertsAndIndexes(int numVerts, srfVert_t* verts, int num_indexes, glIndex_t* indexes, int dlightBits, int pshadowBits)
 {
 	int             i;
 	glIndex_t* inIndex;
@@ -387,18 +386,18 @@ static void RB_SurfaceVertsAndIndexes(int numVerts, srfVert_t* verts, int numInd
 	uint32_t* tangent;
 	glIndex_t* outIndex;
 	float* color;
-	gpuFrame_t* currentFrame = backEndData->currentFrame;
+	gpuFrame_t* current_frame = backEndData->current_frame;
 
-	RB_CheckVBOandIBO(currentFrame->dynamicVbo, currentFrame->dynamicIbo);
+	RB_CheckVBOandIBO(current_frame->dynamicVbo, current_frame->dynamicIbo);
 
-	RB_CHECKOVERFLOW(numVerts, numIndexes);
+	RB_CHECKOVERFLOW(numVerts, num_indexes);
 
 	inIndex = indexes;
-	outIndex = &tess.indexes[tess.numIndexes];
-	for (i = 0; i < numIndexes; i++) {
+	outIndex = &tess.indexes[tess.num_indexes];
+	for (i = 0; i < num_indexes; i++) {
 		*outIndex++ = tess.numVertexes + *inIndex++;
 	}
-	tess.numIndexes += numIndexes;
+	tess.num_indexes += num_indexes;
 
 	if (tess.shader->vertexAttribs & ATTR_POSITION)
 	{
@@ -471,7 +470,9 @@ static void RB_SurfaceVertsAndIndexes(int numVerts, srfVert_t* verts, int numInd
 	tess.numVertexes += numVerts;
 }
 
-static qboolean RB_SurfaceVbo(VBO_t* vbo, IBO_t* ibo, int numVerts, int numIndexes, int firstIndex, int minIndex, int maxIndex, int dlightBits, int pshadowBits, qboolean shaderCheck)
+static qboolean RB_SurfaceVbo(
+	VBO_t* vbo, IBO_t* ibo, int numVerts, int num_indexes, int firstIndex,
+	int minIndex, int maxIndex, int dlightBits, int pshadowBits, qboolean shaderCheck)
 {
 	int i, mergeForward, mergeBack;
 	GLvoid* firstIndexOffset, * lastIndexOffset;
@@ -498,7 +499,7 @@ static qboolean RB_SurfaceVbo(VBO_t* vbo, IBO_t* ibo, int numVerts, int numIndex
 	mergeForward = -1;
 	mergeBack = -1;
 	firstIndexOffset = BUFFER_OFFSET(firstIndex * sizeof(glIndex_t));
-	lastIndexOffset = BUFFER_OFFSET((firstIndex + numIndexes) * sizeof(glIndex_t));
+	lastIndexOffset = BUFFER_OFFSET((firstIndex + num_indexes) * sizeof(glIndex_t));
 
 	if (r_mergeMultidraws->integer)
 	{
@@ -529,7 +530,7 @@ static qboolean RB_SurfaceVbo(VBO_t* vbo, IBO_t* ibo, int numVerts, int numIndex
 
 	if (mergeBack != -1 && mergeForward == -1)
 	{
-		tess.multiDrawNumIndexes[mergeBack] += numIndexes;
+		tess.multiDrawNumIndexes[mergeBack] += num_indexes;
 		tess.multiDrawLastIndex[mergeBack] = tess.multiDrawFirstIndex[mergeBack] + tess.multiDrawNumIndexes[mergeBack];
 		tess.multiDrawMinIndex[mergeBack] = MIN(tess.multiDrawMinIndex[mergeBack], minIndex);
 		tess.multiDrawMaxIndex[mergeBack] = MAX(tess.multiDrawMaxIndex[mergeBack], maxIndex);
@@ -537,7 +538,7 @@ static qboolean RB_SurfaceVbo(VBO_t* vbo, IBO_t* ibo, int numVerts, int numIndex
 	}
 	else if (mergeBack == -1 && mergeForward != -1)
 	{
-		tess.multiDrawNumIndexes[mergeForward] += numIndexes;
+		tess.multiDrawNumIndexes[mergeForward] += num_indexes;
 		tess.multiDrawFirstIndex[mergeForward] = (glIndex_t*)firstIndexOffset;
 		tess.multiDrawLastIndex[mergeForward] = tess.multiDrawFirstIndex[mergeForward] + tess.multiDrawNumIndexes[mergeForward];
 		tess.multiDrawMinIndex[mergeForward] = MIN(tess.multiDrawMinIndex[mergeForward], minIndex);
@@ -546,7 +547,7 @@ static qboolean RB_SurfaceVbo(VBO_t* vbo, IBO_t* ibo, int numVerts, int numIndex
 	}
 	else if (mergeBack != -1 && mergeForward != -1)
 	{
-		tess.multiDrawNumIndexes[mergeBack] += numIndexes + tess.multiDrawNumIndexes[mergeForward];
+		tess.multiDrawNumIndexes[mergeBack] += num_indexes + tess.multiDrawNumIndexes[mergeForward];
 		tess.multiDrawLastIndex[mergeBack] = tess.multiDrawFirstIndex[mergeBack] + tess.multiDrawNumIndexes[mergeBack];
 		tess.multiDrawMinIndex[mergeBack] = MIN(tess.multiDrawMinIndex[mergeBack], MIN(tess.multiDrawMinIndex[mergeForward], minIndex));
 		tess.multiDrawMaxIndex[mergeBack] = MAX(tess.multiDrawMaxIndex[mergeBack], MAX(tess.multiDrawMaxIndex[mergeForward], maxIndex));
@@ -561,7 +562,7 @@ static qboolean RB_SurfaceVbo(VBO_t* vbo, IBO_t* ibo, int numVerts, int numIndex
 	}
 	else if (mergeBack == -1 && mergeForward == -1)
 	{
-		tess.multiDrawNumIndexes[tess.multiDrawPrimitives] = numIndexes;
+		tess.multiDrawNumIndexes[tess.multiDrawPrimitives] = num_indexes;
 		tess.multiDrawFirstIndex[tess.multiDrawPrimitives] = (glIndex_t*)firstIndexOffset;
 		tess.multiDrawLastIndex[tess.multiDrawPrimitives] = (glIndex_t*)lastIndexOffset;
 		tess.multiDrawMinIndex[tess.multiDrawPrimitives] = minIndex;
@@ -571,7 +572,7 @@ static qboolean RB_SurfaceVbo(VBO_t* vbo, IBO_t* ibo, int numVerts, int numIndex
 
 	backEnd.pc.c_multidraws++;
 
-	tess.numIndexes += numIndexes;
+	tess.num_indexes += num_indexes;
 	tess.numVertexes += numVerts;
 
 	return qtrue;
@@ -583,13 +584,13 @@ RB_SurfaceBSPTriangles
 =============
 */
 static void RB_SurfaceBSPTriangles(srfBspSurface_t* srf) {
-	if (RB_SurfaceVbo(srf->vbo, srf->ibo, srf->numVerts, srf->numIndexes,
+	if (RB_SurfaceVbo(srf->vbo, srf->ibo, srf->numVerts, srf->num_indexes,
 		srf->firstIndex, srf->minIndex, srf->maxIndex, srf->dlightBits, srf->pshadowBits, qtrue))
 	{
 		return;
 	}
 
-	RB_SurfaceVertsAndIndexes(srf->numVerts, srf->verts, srf->numIndexes,
+	RB_SurfaceVertsAndIndexes(srf->numVerts, srf->verts, srf->num_indexes,
 		srf->indexes, srf->dlightBits, srf->pshadowBits);
 }
 
@@ -605,9 +606,9 @@ static void RB_SurfaceBeam(void)
 	shaderProgram_t* sp = &tr.textureColorShader;
 	int	i;
 	vec3_t perpvec;
-	vec3_t direction{}, normalized_direction{};
-	vec3_t	start_points[NUM_BEAM_SEGS]{}, end_points[NUM_BEAM_SEGS]{};
-	vec3_t oldorigin{}, origin{};
+	vec3_t direction, normalized_direction;
+	vec3_t	start_points[NUM_BEAM_SEGS], end_points[NUM_BEAM_SEGS];
+	vec3_t oldorigin, origin;
 
 	e = &backEnd.currentEntity->e;
 
@@ -643,7 +644,7 @@ static void RB_SurfaceBeam(void)
 
 	// FIXME: Quake3 doesn't use this, so I never tested it
 	tess.numVertexes = 0;
-	tess.numIndexes = 0;
+	tess.num_indexes = 0;
 	tess.firstIndex = 0;
 	tess.minIndex = 0;
 	tess.maxIndex = 0;
@@ -654,13 +655,13 @@ static void RB_SurfaceBeam(void)
 	}
 
 	for (i = 0; i < NUM_BEAM_SEGS; i++) {
-		tess.indexes[tess.numIndexes++] = i * 2;
-		tess.indexes[tess.numIndexes++] = (i + 1) * 2;
-		tess.indexes[tess.numIndexes++] = 1 + i * 2;
+		tess.indexes[tess.num_indexes++] = i * 2;
+		tess.indexes[tess.num_indexes++] = (i + 1) * 2;
+		tess.indexes[tess.num_indexes++] = 1 + i * 2;
 
-		tess.indexes[tess.numIndexes++] = 1 + i * 2;
-		tess.indexes[tess.numIndexes++] = (i + 1) * 2;
-		tess.indexes[tess.numIndexes++] = 1 + (i + 1) * 2;
+		tess.indexes[tess.num_indexes++] = 1 + i * 2;
+		tess.indexes[tess.num_indexes++] = (i + 1) * 2;
+		tess.indexes[tess.num_indexes++] = 1 + (i + 1) * 2;
 	}
 
 	tess.minIndex = 0;
@@ -677,11 +678,11 @@ static void RB_SurfaceBeam(void)
 
 	GLSL_SetUniformVec4(sp, UNIFORM_COLOR, colorRed);
 
-	R_DrawElementsVBO(tess.numIndexes, tess.firstIndex, tess.minIndex, tess.maxIndex);
+	R_DrawElementsVBO(tess.num_indexes, tess.firstIndex, tess.minIndex, tess.maxIndex);
 
 	RB_CommitInternalBufferData();
 
-	tess.numIndexes = 0;
+	tess.num_indexes = 0;
 	tess.numVertexes = 0;
 	tess.firstIndex = 0;
 	tess.minIndex = 0;
@@ -692,7 +693,7 @@ static void RB_SurfaceBeam(void)
 //------------------
 // DoSprite
 //------------------
-static void DoSprite(vec3_t origin, const float radius, const float rotation)
+static void DoSprite(vec3_t origin, float radius, float rotation)
 {
 	float	s, c;
 	float	ang;
@@ -724,22 +725,24 @@ static void DoSprite(vec3_t origin, const float radius, const float rotation)
 //------------------
 static void RB_SurfaceSaberGlow()
 {
-	refEntity_t* e = &backEnd.currentEntity->e;
+	vec3_t		end;
+	refEntity_t* e;
+
+	e = &backEnd.currentEntity->e;
 
 	// Render the glow part of the blade
 	for (float i = e->saberLength; i > 0; i -= e->radius * 0.65f)
 	{
-		vec3_t end;
 		VectorMA(e->origin, i, e->axis[0], end);
 
-		DoSprite(end, e->radius, 0.0f);//Q_flrand(0.0f, 1.0f) * 360.0f );
+		DoSprite(end, e->radius, 0.0f);//random() * 360.0f );
 		e->radius += 0.017f;
 	}
 
 	// Big hilt sprite
 	// Please don't kill me Pat...I liked the hilt glow blob, but wanted a subtle pulse.:)  Feel free to ditch it if you don't like it.  --Jeff
 	// Please don't kill me Jeff...  The pulse is good, but now I want the halo bigger if the saber is shorter...  --Pat
-	DoSprite(e->origin, 2.5f + Q_flrand(0.0f, 1.0f) * 0.15f, 0.0f);//Q_flrand(0.0f, 1.0f) * 360.0f );
+	DoSprite(e->origin, 5.5f + Q_flrand(0.0f, 1.0f) * 0.25f, 0.0f);//random() * 360.0f );
 }
 
 /*
@@ -761,7 +764,7 @@ RB_SurfaceLine
 //		startRGB, endRGB
 //
 
-static void DoLine(const vec3_t start, const vec3_t end, const vec3_t up, const float spanWidth)
+static void DoLine(const vec3_t start, const vec3_t end, const vec3_t up, float spanWidth)
 {
 	float		spanWidth2;
 	int			vbase;
@@ -797,16 +800,16 @@ static void DoLine(const vec3_t start, const vec3_t end, const vec3_t up, const 
 	VectorScale4(backEnd.currentEntity->e.shaderRGBA, 1.0f / 255.0f, tess.vertexColors[tess.numVertexes]);
 	tess.numVertexes++;
 
-	tess.indexes[tess.numIndexes++] = vbase;
-	tess.indexes[tess.numIndexes++] = vbase + 1;
-	tess.indexes[tess.numIndexes++] = vbase + 2;
+	tess.indexes[tess.num_indexes++] = vbase;
+	tess.indexes[tess.num_indexes++] = vbase + 1;
+	tess.indexes[tess.num_indexes++] = vbase + 2;
 
-	tess.indexes[tess.numIndexes++] = vbase + 2;
-	tess.indexes[tess.numIndexes++] = vbase + 1;
-	tess.indexes[tess.numIndexes++] = vbase + 3;
+	tess.indexes[tess.num_indexes++] = vbase + 2;
+	tess.indexes[tess.num_indexes++] = vbase + 1;
+	tess.indexes[tess.num_indexes++] = vbase + 3;
 }
 
-static void DoLine2(const vec3_t start, const vec3_t end, const vec3_t up, const float spanWidth, const float spanWidth2)
+static void DoLine2(const vec3_t start, const vec3_t end, const vec3_t up, float spanWidth, float spanWidth2)
 {
 	int			vbase;
 
@@ -839,13 +842,13 @@ static void DoLine2(const vec3_t start, const vec3_t end, const vec3_t up, const
 	VectorScale4(backEnd.currentEntity->e.shaderRGBA, 1.0f / 255.0f, tess.vertexColors[tess.numVertexes]);
 	tess.numVertexes++;
 
-	tess.indexes[tess.numIndexes++] = vbase;
-	tess.indexes[tess.numIndexes++] = vbase + 1;
-	tess.indexes[tess.numIndexes++] = vbase + 2;
+	tess.indexes[tess.num_indexes++] = vbase;
+	tess.indexes[tess.num_indexes++] = vbase + 1;
+	tess.indexes[tess.num_indexes++] = vbase + 2;
 
-	tess.indexes[tess.numIndexes++] = vbase + 2;
-	tess.indexes[tess.numIndexes++] = vbase + 1;
-	tess.indexes[tess.numIndexes++] = vbase + 3;
+	tess.indexes[tess.num_indexes++] = vbase + 2;
+	tess.indexes[tess.num_indexes++] = vbase + 1;
+	tess.indexes[tess.num_indexes++] = vbase + 3;
 }
 
 static void DoLine_Oriented(const vec3_t start, const vec3_t end, const vec3_t up, float spanWidth)
@@ -883,13 +886,13 @@ static void DoLine_Oriented(const vec3_t start, const vec3_t end, const vec3_t u
 	VectorScale4(backEnd.currentEntity->e.shaderRGBA, 1.0f / 255.0f, tess.vertexColors[tess.numVertexes]);
 	tess.numVertexes++;
 
-	tess.indexes[tess.numIndexes++] = vbase;
-	tess.indexes[tess.numIndexes++] = vbase + 1;
-	tess.indexes[tess.numIndexes++] = vbase + 2;
+	tess.indexes[tess.num_indexes++] = vbase;
+	tess.indexes[tess.num_indexes++] = vbase + 1;
+	tess.indexes[tess.num_indexes++] = vbase + 2;
 
-	tess.indexes[tess.numIndexes++] = vbase + 2;
-	tess.indexes[tess.numIndexes++] = vbase + 1;
-	tess.indexes[tess.numIndexes++] = vbase + 3;
+	tess.indexes[tess.num_indexes++] = vbase + 2;
+	tess.indexes[tess.num_indexes++] = vbase + 1;
+	tess.indexes[tess.num_indexes++] = vbase + 3;
 }
 
 //-----------------
@@ -961,13 +964,13 @@ static void DoCylinderPart(polyVert_t* verts)
 		verts++;
 	}
 
-	tess.indexes[tess.numIndexes++] = vbase;
-	tess.indexes[tess.numIndexes++] = vbase + 1;
-	tess.indexes[tess.numIndexes++] = vbase + 2;
+	tess.indexes[tess.num_indexes++] = vbase;
+	tess.indexes[tess.num_indexes++] = vbase + 1;
+	tess.indexes[tess.num_indexes++] = vbase + 2;
 
-	tess.indexes[tess.numIndexes++] = vbase + 2;
-	tess.indexes[tess.numIndexes++] = vbase + 3;
-	tess.indexes[tess.numIndexes++] = vbase;
+	tess.indexes[tess.num_indexes++] = vbase + 2;
+	tess.indexes[tess.num_indexes++] = vbase + 3;
+	tess.indexes[tess.num_indexes++] = vbase;
 }
 
 // e->origin holds the bottom point
@@ -1111,7 +1114,7 @@ static void CreateShape()
 }
 
 //----------------------------------------------------------------------------
-static void ApplyShape(vec3_t start, vec3_t end, vec3_t right, const float sradius, const float eradius, const int count)
+static void ApplyShape(vec3_t start, vec3_t end, vec3_t right, float sradius, float eradius, int count)
 //----------------------------------------------------------------------------
 {
 	vec3_t	point1, point2, fwd;
@@ -1160,7 +1163,7 @@ static void ApplyShape(vec3_t start, vec3_t end, vec3_t right, const float sradi
 }
 
 //----------------------------------------------------------------------------
-static void DoBoltSeg(vec3_t start, vec3_t end, vec3_t right, const float radius)
+static void DoBoltSeg(vec3_t start, vec3_t end, vec3_t right, float radius)
 //----------------------------------------------------------------------------
 {
 	refEntity_t* e;
@@ -1247,57 +1250,6 @@ static void DoBoltSeg(vec3_t start, vec3_t end, vec3_t right, const float radius
 	}
 }
 
-static void DoRailCore(const vec3_t start, const vec3_t end, const vec3_t up, const float len, const float spanWidth)
-{
-	const float		t = len / 256.0f;
-
-	const int vbase = tess.numVertexes;
-
-	const float spanWidth2 = -spanWidth;
-
-	// FIXME: use quad stamp?
-	VectorMA(start, spanWidth, up, tess.xyz[tess.numVertexes]);
-	tess.texCoords[tess.numVertexes][0][0] = 0;
-	tess.texCoords[tess.numVertexes][0][1] = 0;
-	tess.vertexColors[tess.numVertexes][0] = backEnd.currentEntity->e.shaderRGBA[0] * 0.25;
-	tess.vertexColors[tess.numVertexes][1] = backEnd.currentEntity->e.shaderRGBA[1] * 0.25;
-	tess.vertexColors[tess.numVertexes][2] = backEnd.currentEntity->e.shaderRGBA[2] * 0.25;
-	tess.numVertexes++;
-
-	VectorMA(start, spanWidth2, up, tess.xyz[tess.numVertexes]);
-	tess.texCoords[tess.numVertexes][0][0] = 0;
-	tess.texCoords[tess.numVertexes][0][1] = 1;
-	tess.vertexColors[tess.numVertexes][0] = backEnd.currentEntity->e.shaderRGBA[0];
-	tess.vertexColors[tess.numVertexes][1] = backEnd.currentEntity->e.shaderRGBA[1];
-	tess.vertexColors[tess.numVertexes][2] = backEnd.currentEntity->e.shaderRGBA[2];
-	tess.numVertexes++;
-
-	VectorMA(end, spanWidth, up, tess.xyz[tess.numVertexes]);
-
-	tess.texCoords[tess.numVertexes][0][0] = t;
-	tess.texCoords[tess.numVertexes][0][1] = 0;
-	tess.vertexColors[tess.numVertexes][0] = backEnd.currentEntity->e.shaderRGBA[0];
-	tess.vertexColors[tess.numVertexes][1] = backEnd.currentEntity->e.shaderRGBA[1];
-	tess.vertexColors[tess.numVertexes][2] = backEnd.currentEntity->e.shaderRGBA[2];
-	tess.numVertexes++;
-
-	VectorMA(end, spanWidth2, up, tess.xyz[tess.numVertexes]);
-	tess.texCoords[tess.numVertexes][0][0] = t;
-	tess.texCoords[tess.numVertexes][0][1] = 1;
-	tess.vertexColors[tess.numVertexes][0] = backEnd.currentEntity->e.shaderRGBA[0];
-	tess.vertexColors[tess.numVertexes][1] = backEnd.currentEntity->e.shaderRGBA[1];
-	tess.vertexColors[tess.numVertexes][2] = backEnd.currentEntity->e.shaderRGBA[2];
-	tess.numVertexes++;
-
-	tess.indexes[tess.numIndexes++] = vbase;
-	tess.indexes[tess.numIndexes++] = vbase + 1;
-	tess.indexes[tess.numIndexes++] = vbase + 2;
-
-	tess.indexes[tess.numIndexes++] = vbase + 2;
-	tess.indexes[tess.numIndexes++] = vbase + 1;
-	tess.indexes[tess.numIndexes++] = vbase + 3;
-}
-
 //------------------------------------------
 static void RB_SurfaceElectricity()
 //------------------------------------------
@@ -1341,39 +1293,6 @@ static void RB_SurfaceElectricity()
 	VectorNormalize(right);
 
 	DoBoltSeg(start, end, right, radius);
-}
-
-void RB_SurfaceLightningBolt()
-{
-	vec3_t		right;
-	vec3_t		vec;
-	vec3_t		start, end;
-	vec3_t		v1, v2;
-
-	const refEntity_t* e = &backEnd.currentEntity->e;
-
-	VectorCopy(e->oldorigin, end);
-	VectorCopy(e->origin, start);
-
-	// compute variables
-	VectorSubtract(end, start, vec);
-	const int len = VectorNormalize(vec);
-
-	// compute side vector
-	VectorSubtract(start, backEnd.viewParms.ori.origin, v1);
-	VectorNormalize(v1);
-	VectorSubtract(end, backEnd.viewParms.ori.origin, v2);
-	VectorNormalize(v2);
-	CrossProduct(v1, v2, right);
-	VectorNormalize(right);
-
-	for (int i = 0; i < 4; i++) {
-		vec3_t	temp;
-
-		DoRailCore(start, end, right, len, 8);
-		RotatePointAroundVector(temp, vec, right, 45);
-		VectorCopy(temp, right);
-	}
 }
 
 //================================================================================
@@ -1760,16 +1679,16 @@ static void RB_SurfaceMesh(mdvSurface_t* surface) {
 		backlerp = backEnd.currentEntity->e.backlerp;
 	}
 
-	RB_CHECKOVERFLOW(surface->numVerts, surface->numIndexes);
+	RB_CHECKOVERFLOW(surface->numVerts, surface->num_indexes);
 
 	LerpMeshVertexes(surface, backlerp);
 
-	Bob = tess.numIndexes;
+	Bob = tess.num_indexes;
 	Doug = tess.numVertexes;
-	for (j = 0; j < surface->numIndexes; j++) {
+	for (j = 0; j < surface->num_indexes; j++) {
 		tess.indexes[Bob + j] = Doug + surface->indexes[j];
 	}
-	tess.numIndexes += surface->numIndexes;
+	tess.num_indexes += surface->num_indexes;
 
 	texCoords = surface->st;
 
@@ -1789,13 +1708,13 @@ RB_SurfaceFace
 ==============
 */
 static void RB_SurfaceBSPFace(srfBspSurface_t* srf) {
-	if (RB_SurfaceVbo(srf->vbo, srf->ibo, srf->numVerts, srf->numIndexes,
+	if (RB_SurfaceVbo(srf->vbo, srf->ibo, srf->numVerts, srf->num_indexes,
 		srf->firstIndex, srf->minIndex, srf->maxIndex, srf->dlightBits, srf->pshadowBits, qtrue))
 	{
 		return;
 	}
 
-	RB_SurfaceVertsAndIndexes(srf->numVerts, srf->verts, srf->numIndexes,
+	RB_SurfaceVertsAndIndexes(srf->numVerts, srf->verts, srf->num_indexes,
 		srf->indexes, srf->dlightBits, srf->pshadowBits);
 }
 
@@ -1856,7 +1775,7 @@ static void RB_SurfaceBSPGrid(srfBspSurface_t* srf) {
 	int     pshadowBits;
 	//int		*vDlightBits;
 
-	if (RB_SurfaceVbo(srf->vbo, srf->ibo, srf->numVerts, srf->numIndexes,
+	if (RB_SurfaceVbo(srf->vbo, srf->ibo, srf->numVerts, srf->num_indexes,
 		srf->firstIndex, srf->minIndex, srf->maxIndex, srf->dlightBits, srf->pshadowBits, qtrue))
 	{
 		return;
@@ -1903,7 +1822,7 @@ static void RB_SurfaceBSPGrid(srfBspSurface_t* srf) {
 		// see how many rows of both verts and indexes we can add without overflowing
 		do {
 			vrows = (SHADER_MAX_VERTEXES - tess.numVertexes) / lodWidth;
-			irows = (SHADER_MAX_INDEXES - tess.numIndexes) / (lodWidth * 6);
+			irows = (SHADER_MAX_INDEXES - tess.num_indexes) / (lodWidth * 6);
 
 			// if we don't have enough space for at least one strip, flush the buffer
 			if (vrows < 2 || irows < 1) {
@@ -1988,12 +1907,12 @@ static void RB_SurfaceBSPGrid(srfBspSurface_t* srf) {
 
 		// add the indexes
 		{
-			int		numIndexes;
+			int		num_indexes;
 			int		w, h;
 
 			h = rows - 1;
 			w = lodWidth - 1;
-			numIndexes = tess.numIndexes;
+			num_indexes = tess.num_indexes;
 			for (i = 0; i < h; i++) {
 				for (j = 0; j < w; j++) {
 					int		v1, v2, v3, v4;
@@ -2004,18 +1923,18 @@ static void RB_SurfaceBSPGrid(srfBspSurface_t* srf) {
 					v3 = v2 + lodWidth;
 					v4 = v3 + 1;
 
-					tess.indexes[numIndexes] = v2;
-					tess.indexes[numIndexes + 1] = v3;
-					tess.indexes[numIndexes + 2] = v1;
+					tess.indexes[num_indexes] = v2;
+					tess.indexes[num_indexes + 1] = v3;
+					tess.indexes[num_indexes + 2] = v1;
 
-					tess.indexes[numIndexes + 3] = v1;
-					tess.indexes[numIndexes + 4] = v3;
-					tess.indexes[numIndexes + 5] = v4;
-					numIndexes += 6;
+					tess.indexes[num_indexes + 3] = v1;
+					tess.indexes[num_indexes + 4] = v3;
+					tess.indexes[num_indexes + 5] = v4;
+					num_indexes += 6;
 				}
 			}
 
-			tess.numIndexes = numIndexes;
+			tess.num_indexes = num_indexes;
 		}
 
 		tess.numVertexes += rows * lodWidth;
@@ -2092,9 +2011,6 @@ static void RB_SurfaceEntity(surfaceType_t* surfType) {
 	case RT_SABER_GLOW:
 		RB_SurfaceSaberGlow();
 		break;
-	case RT_LIGHTNING:
-		RB_SurfaceLightningBolt();
-		break;
 	case RT_CYLINDER:
 		RB_SurfaceCylinder();
 		break;
@@ -2142,7 +2058,7 @@ static void RB_SurfaceFlare(srfFlare_t* surf)
 
 static void RB_SurfaceVBOMesh(srfBspSurface_t* srf)
 {
-	RB_SurfaceVbo(srf->vbo, srf->ibo, srf->numVerts, srf->numIndexes, srf->firstIndex,
+	RB_SurfaceVbo(srf->vbo, srf->ibo, srf->numVerts, srf->num_indexes, srf->firstIndex,
 		srf->minIndex, srf->maxIndex, srf->dlightBits, srf->pshadowBits, qfalse);
 }
 
@@ -2175,7 +2091,7 @@ void RB_SurfaceVBOMDVMesh(srfVBOMDVMesh_t* surface)
 	mergeForward = -1;
 	mergeBack = -1;
 	firstIndexOffset = BUFFER_OFFSET(surface->indexOffset * sizeof(glIndex_t));
-	lastIndexOffset = BUFFER_OFFSET(surface->numIndexes * sizeof(glIndex_t));
+	lastIndexOffset = BUFFER_OFFSET(surface->num_indexes * sizeof(glIndex_t));
 
 	if (r_mergeMultidraws->integer)
 	{
@@ -2206,7 +2122,7 @@ void RB_SurfaceVBOMDVMesh(srfVBOMDVMesh_t* surface)
 
 	if (mergeBack != -1 && mergeForward == -1)
 	{
-		tess.multiDrawNumIndexes[mergeBack] += surface->numIndexes;
+		tess.multiDrawNumIndexes[mergeBack] += surface->num_indexes;
 		tess.multiDrawLastIndex[mergeBack] = tess.multiDrawFirstIndex[mergeBack] + tess.multiDrawNumIndexes[mergeBack];
 		tess.multiDrawMinIndex[mergeBack] = MIN(tess.multiDrawMinIndex[mergeBack], surface->minIndex);
 		tess.multiDrawMaxIndex[mergeBack] = MAX(tess.multiDrawMaxIndex[mergeBack], surface->maxIndex);
@@ -2214,7 +2130,7 @@ void RB_SurfaceVBOMDVMesh(srfVBOMDVMesh_t* surface)
 	}
 	else if (mergeBack == -1 && mergeForward != -1)
 	{
-		tess.multiDrawNumIndexes[mergeForward] += surface->numIndexes;
+		tess.multiDrawNumIndexes[mergeForward] += surface->num_indexes;
 		tess.multiDrawFirstIndex[mergeForward] = (glIndex_t*)firstIndexOffset;
 		tess.multiDrawLastIndex[mergeForward] = tess.multiDrawFirstIndex[mergeForward] + tess.multiDrawNumIndexes[mergeForward];
 		tess.multiDrawMinIndex[mergeForward] = MIN(tess.multiDrawMinIndex[mergeForward], surface->minIndex);
@@ -2223,7 +2139,7 @@ void RB_SurfaceVBOMDVMesh(srfVBOMDVMesh_t* surface)
 	}
 	else if (mergeBack != -1 && mergeForward != -1)
 	{
-		tess.multiDrawNumIndexes[mergeBack] += surface->numIndexes + tess.multiDrawNumIndexes[mergeForward];
+		tess.multiDrawNumIndexes[mergeBack] += surface->num_indexes + tess.multiDrawNumIndexes[mergeForward];
 		tess.multiDrawLastIndex[mergeBack] = tess.multiDrawFirstIndex[mergeBack] + tess.multiDrawNumIndexes[mergeBack];
 		tess.multiDrawMinIndex[mergeBack] = MIN(tess.multiDrawMinIndex[mergeBack], MIN(tess.multiDrawMinIndex[mergeForward], surface->minIndex));
 		tess.multiDrawMaxIndex[mergeBack] = MAX(tess.multiDrawMaxIndex[mergeBack], MAX(tess.multiDrawMaxIndex[mergeForward], surface->maxIndex));
@@ -2238,7 +2154,7 @@ void RB_SurfaceVBOMDVMesh(srfVBOMDVMesh_t* surface)
 	}
 	else if (mergeBack == -1 && mergeForward == -1)
 	{
-		tess.multiDrawNumIndexes[tess.multiDrawPrimitives] = surface->numIndexes;
+		tess.multiDrawNumIndexes[tess.multiDrawPrimitives] = surface->num_indexes;
 		tess.multiDrawFirstIndex[tess.multiDrawPrimitives] = (glIndex_t*)firstIndexOffset;
 		tess.multiDrawLastIndex[tess.multiDrawPrimitives] = (glIndex_t*)lastIndexOffset;
 		tess.multiDrawMinIndex[tess.multiDrawPrimitives] = surface->minIndex;
@@ -2248,7 +2164,7 @@ void RB_SurfaceVBOMDVMesh(srfVBOMDVMesh_t* surface)
 
 	backEnd.pc.c_multidraws++;
 
-	tess.numIndexes += surface->numIndexes;
+	tess.num_indexes += surface->num_indexes;
 	tess.numVertexes += surface->numVerts;
 }
 
@@ -2314,7 +2230,7 @@ static void RB_SurfaceSprites(srfSprites_t* surf)
 	SamplerBindingsWriter samplerBindingsWriter;
 	samplerBindingsWriter.AddAnimatedImage(&firstStage->bundle[0], TB_COLORMAP);
 
-	const GLuint currentFrameUbo = backEndData->currentFrame->ubo;
+	const GLuint currentFrameUbo = backEndData->current_frame->ubo;
 	const GLuint currentSpriteUbo = shader->spriteUbo;
 	const UniformBlockBinding uniformBlockBindings[] = {
 		{ currentSpriteUbo, ss->spriteUboOffset, UNIFORM_BLOCK_SURFACESPRITE },
@@ -2366,15 +2282,7 @@ static void RB_SurfaceSprites(srfSprites_t* surf)
 		RB_AddDrawItem(backEndData->currentPass, key, item);
 
 		numDrawIndicesUndrawn -= drawIndices;
-
-		if (r_AdvancedsurfaceSprites->integer)
-		{
-			baseVertex += ((3931192 / 6) * 4);
-		}
-		else
-		{
-			baseVertex += ((98298 / 6) * 4);
-		}
+		baseVertex += ((98298 / 6) * 4);
 	}
 }
 

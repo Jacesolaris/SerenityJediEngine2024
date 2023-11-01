@@ -791,7 +791,7 @@ void WP_SpawnInitForcePowers(gentity_t* ent)
 	ent->client->ps.fd.forcePower = ent->client->ps.fd.forcePowerMax = FORCE_POWER_MAX;
 	ent->client->ps.fd.forcePowerRegenDebounceTime = level.time;
 	ent->client->ps.fd.BlockPointsRegenDebounceTime = level.time;
-	ent->client->ps.fd.forceGripentityNum = ENTITYNUM_NONE;
+	ent->client->ps.fd.forceGripentity_num = ENTITYNUM_NONE;
 	ent->client->ps.fd.forceMindtrickTargetIndex = 0;
 	ent->client->ps.fd.forceMindtrickTargetIndex2 = 0;
 	ent->client->ps.fd.forceMindtrickTargetIndex3 = 0;
@@ -970,7 +970,7 @@ extern qboolean BG_InKnockDown(int anim); //bg_pmove.c
 
 int ForcePowerUsableOn(const gentity_t* attacker, const gentity_t* other, const forcePowers_t forcePower)
 {
-	if (other->client && (other->client->ps.inAirAnim || other->client->ps.groundentityNum == ENTITYNUM_NONE))
+	if (other->client && (other->client->ps.inAirAnim || other->client->ps.groundentity_num == ENTITYNUM_NONE))
 	{
 		return 1;
 	}
@@ -1037,7 +1037,7 @@ int ForcePowerUsableOn(const gentity_t* attacker, const gentity_t* other, const 
 				return 1;
 			break;
 		case FORCE_LEVEL_2: //Can block if walking or running
-			if (other->client->ps.inAirAnim || other->client->ps.groundentityNum == ENTITYNUM_NONE)
+			if (other->client->ps.inAirAnim || other->client->ps.groundentity_num == ENTITYNUM_NONE)
 				return 1;
 			break;
 
@@ -1742,28 +1742,28 @@ void ForceHeal(gentity_t* self)
 	G_PlayBoltedEffect(G_EffectIndex("force/heal2.efx"), self, "thoracic");
 }
 
-void wp_add_to_client_bitflags(gentity_t* ent, const int entNum)
+void wp_add_to_client_bitflags(gentity_t* ent, const int ent_num)
 {
 	if (!ent)
 	{
 		return;
 	}
 
-	if (entNum > 47)
+	if (ent_num > 47)
 	{
-		ent->s.trickedentindex4 |= (1 << (entNum - 48));
+		ent->s.trickedentindex4 |= (1 << (ent_num - 48));
 	}
-	else if (entNum > 31)
+	else if (ent_num > 31)
 	{
-		ent->s.trickedentindex3 |= (1 << (entNum - 32));
+		ent->s.trickedentindex3 |= (1 << (ent_num - 32));
 	}
-	else if (entNum > 15)
+	else if (ent_num > 15)
 	{
-		ent->s.trickedentindex2 |= (1 << (entNum - 16));
+		ent->s.trickedentindex2 |= (1 << (ent_num - 16));
 	}
 	else
 	{
-		ent->s.trickedentindex |= (1 << entNum);
+		ent->s.trickedentindex |= (1 << ent_num);
 	}
 }
 
@@ -2152,7 +2152,7 @@ qboolean WP_CounterForce(const gentity_t* attacker, const gentity_t* defender, c
 	if (abilityDef >= 2)
 	{
 		//defender is largely weaker than the attacker (2 levels)
-		if (!walk_check(defender) || defender->client->ps.groundentityNum == ENTITYNUM_NONE)
+		if (!walk_check(defender) || defender->client->ps.groundentity_num == ENTITYNUM_NONE)
 		{
 			//can't block much stronger Force power while running or in mid-air
 			return qfalse;
@@ -2161,7 +2161,7 @@ qboolean WP_CounterForce(const gentity_t* attacker, const gentity_t* defender, c
 	else if (abilityDef >= 1)
 	{
 		//defender is slightly weaker than their attacker
-		if (defender->client->ps.groundentityNum == ENTITYNUM_NONE)
+		if (defender->client->ps.groundentity_num == ENTITYNUM_NONE)
 		{
 			return qfalse;
 		}
@@ -2278,19 +2278,19 @@ void ForceGrip(const gentity_t* self)
 	trap->Trace(&tr, tfrom, NULL, NULL, tto, self->s.number, MASK_PLAYERSOLID, qfalse, 0, 0);
 
 	if (tr.fraction != 1.0 &&
-		tr.entityNum != ENTITYNUM_NONE &&
-		g_entities[tr.entityNum].client &&
-		!g_entities[tr.entityNum].client->ps.fd.forceGripCripple &&
-		g_entities[tr.entityNum].client->ps.fd.forceGripBeingGripped < level.time &&
-		ForcePowerUsableOn(self, &g_entities[tr.entityNum], FP_GRIP) &&
-		!WP_CounterForce(self, &g_entities[tr.entityNum], FP_GRIP) &&
-		(g_friendlyFire.integer || !OnSameTeam(self, &g_entities[tr.entityNum])))
+		tr.entity_num != ENTITYNUM_NONE &&
+		g_entities[tr.entity_num].client &&
+		!g_entities[tr.entity_num].client->ps.fd.forceGripCripple &&
+		g_entities[tr.entity_num].client->ps.fd.forceGripBeingGripped < level.time &&
+		ForcePowerUsableOn(self, &g_entities[tr.entity_num], FP_GRIP) &&
+		!WP_CounterForce(self, &g_entities[tr.entity_num], FP_GRIP) &&
+		(g_friendlyFire.integer || !OnSameTeam(self, &g_entities[tr.entity_num])))
 		//don't grip someone who's still crippled
 	{
-		if (g_entities[tr.entityNum].s.number < MAX_CLIENTS && g_entities[tr.entityNum].client->ps.m_iVehicleNum)
+		if (g_entities[tr.entity_num].s.number < MAX_CLIENTS && g_entities[tr.entity_num].client->ps.m_iVehicleNum)
 		{
 			//a player on a vehicle
-			const gentity_t* vehEnt = &g_entities[g_entities[tr.entityNum].client->ps.m_iVehicleNum];
+			const gentity_t* vehEnt = &g_entities[g_entities[tr.entity_num].client->ps.m_iVehicleNum];
 			if (vehEnt->inuse && vehEnt->client && vehEnt->m_pVehicle)
 			{
 				if (vehEnt->m_pVehicle->m_pVehicleInfo->type == VH_SPEEDER ||
@@ -2298,12 +2298,12 @@ void ForceGrip(const gentity_t* self)
 				{
 					//push the guy off
 					vehEnt->m_pVehicle->m_pVehicleInfo->Eject(vehEnt->m_pVehicle,
-						(bgEntity_t*)&g_entities[tr.entityNum], qfalse);
+						(bgEntity_t*)&g_entities[tr.entity_num], qfalse);
 				}
 			}
 		}
-		self->client->ps.fd.forceGripentityNum = tr.entityNum;
-		g_entities[tr.entityNum].client->ps.fd.forceGripStarted = level.time;
+		self->client->ps.fd.forceGripentity_num = tr.entity_num;
+		g_entities[tr.entity_num].client->ps.fd.forceGripStarted = level.time;
 		self->client->ps.fd.forceGripDamageDebounceTime = 0;
 
 		self->client->ps.forceHandExtend = HANDEXTEND_FORCE_HOLD;
@@ -2311,7 +2311,7 @@ void ForceGrip(const gentity_t* self)
 	}
 	else
 	{
-		self->client->ps.fd.forceGripentityNum = ENTITYNUM_NONE;
+		self->client->ps.fd.forceGripentity_num = ENTITYNUM_NONE;
 	}
 }
 
@@ -2481,7 +2481,7 @@ void ForceSpeedDash(gentity_t* self)
 		return;
 	}
 
-	if (self->client->ps.groundentityNum == ENTITYNUM_NONE)
+	if (self->client->ps.groundentity_num == ENTITYNUM_NONE)
 	{
 		//can't dash in mid-air
 		return;
@@ -2577,7 +2577,7 @@ void ForceSpeedDash(gentity_t* self)
 		return;
 	}
 
-	if (self->client->ps.groundentityNum != ENTITYNUM_NONE)
+	if (self->client->ps.groundentity_num != ENTITYNUM_NONE)
 	{
 		vec3_t dir;
 
@@ -2587,7 +2587,7 @@ void ForceSpeedDash(gentity_t* self)
 
 		ForceDashAnimDash(self);
 	}
-	else if (self->client->ps.groundentityNum == ENTITYNUM_NONE)
+	else if (self->client->ps.groundentity_num == ENTITYNUM_NONE)
 	{
 		G_SetAnim(self, &self->client->pers.cmd, SETANIM_BOTH, BOTH_FORCEINAIR1, SETANIM_AFLAG_PACE, 0);
 	}
@@ -2946,7 +2946,7 @@ qboolean melee_block_lightning_counter_force(gentity_t* attacker, const gentity_
 		return qfalse;
 	}
 
-	if (!walk_check(defender) || defender->client->ps.groundentityNum == ENTITYNUM_NONE)
+	if (!walk_check(defender) || defender->client->ps.groundentity_num == ENTITYNUM_NONE)
 	{
 		//can't block  Force power while running or in mid-air
 		return qfalse;
@@ -3175,7 +3175,7 @@ void force_lightning_damage(gentity_t* self, gentity_t* trace_ent, vec3_t dir, c
 						{
 							G_KnockOver(trace_ent, self, dir, 25, qtrue);
 						}
-						else if (trace_ent->client->ps.groundentityNum == ENTITYNUM_NONE && trace_ent->client->ps.stats[STAT_HEALTH] > 1)
+						else if (trace_ent->client->ps.groundentity_num == ENTITYNUM_NONE && trace_ent->client->ps.stats[STAT_HEALTH] > 1)
 						{
 							g_throw(trace_ent, dir, 2);
 							G_SetAnim(trace_ent, &trace_ent->client->pers.cmd, SETANIM_BOTH, Q_irand(BOTH_SLAPDOWNRIGHT, BOTH_SLAPDOWNLEFT), SETANIM_AFLAG_PACE, 0);
@@ -3528,7 +3528,7 @@ void force_shoot_lightning(gentity_t* self)
 			//Now check and see if we can actually hit it
 			trap->Trace(&tr, self->client->ps.origin, vec3_origin, vec3_origin, ent_org, self->s.number, MASK_SHOT,
 				qfalse, 0, 0);
-			if (tr.fraction < 1.0f && tr.entityNum != trace_ent->s.number)
+			if (tr.fraction < 1.0f && tr.entity_num != trace_ent->s.number)
 			{
 				//must have clear LOS
 				continue;
@@ -3545,12 +3545,12 @@ void force_shoot_lightning(gentity_t* self)
 
 		trap->Trace(&tr, self->client->ps.origin, vec3_origin, vec3_origin, end, self->s.number, MASK_SHOT, qfalse, 0,
 			0);
-		if (tr.entityNum == ENTITYNUM_NONE || tr.fraction == 1.0 || tr.allsolid || tr.startsolid)
+		if (tr.entity_num == ENTITYNUM_NONE || tr.fraction == 1.0 || tr.allsolid || tr.startsolid)
 		{
 			return;
 		}
 
-		trace_ent = &g_entities[tr.entityNum];
+		trace_ent = &g_entities[tr.entity_num];
 		force_lightning_damage(self, trace_ent, forward, 0, 0, tr.endpos);
 	}
 }
@@ -3912,7 +3912,7 @@ int ForceShootDrain(gentity_t* self)
 				trap->Trace(&tr, self->client->ps.origin, vec3_origin, vec3_origin, ent_org, self->s.number, MASK_SHOT,
 					qfalse, 0, 0);
 
-				if (tr.fraction < 1.0f && tr.entityNum != trace_ent->s.number)
+				if (tr.fraction < 1.0f && tr.entity_num != trace_ent->s.number)
 				{
 					//must have clear LOS
 					continue;
@@ -3931,13 +3931,13 @@ int ForceShootDrain(gentity_t* self)
 
 			trap->Trace(&tr, self->client->ps.origin, vec3_origin, vec3_origin, end, self->s.number, MASK_SHOT, qfalse,
 				0, 0);
-			if (tr.entityNum == ENTITYNUM_NONE || tr.fraction == 1.0 || tr.allsolid || tr.startsolid || !g_entities[tr.
-				entityNum].client || !g_entities[tr.entityNum].inuse)
+			if (tr.entity_num == ENTITYNUM_NONE || tr.fraction == 1.0 || tr.allsolid || tr.startsolid || !g_entities[tr.
+				entity_num].client || !g_entities[tr.entity_num].inuse)
 			{
 				return 0;
 			}
 
-			trace_ent = &g_entities[tr.entityNum];
+			trace_ent = &g_entities[tr.entity_num];
 
 			ForceDrainDamage(self, trace_ent, forward, tr.endpos);
 			numDrained = 1;
@@ -4069,7 +4069,7 @@ int ForceShootDestruction(gentity_t* self)
 			//Now check and see if we can actually hit it
 			trap->Trace(&tr, self->client->ps.origin, vec3_origin, vec3_origin, ent_org, self->s.number, MASK_SHOT,
 				qfalse, 0, 0);
-			if (tr.fraction < 1.0f && tr.entityNum != trace_ent->s.number)
+			if (tr.fraction < 1.0f && tr.entity_num != trace_ent->s.number)
 			{
 				//must have clear LOS
 				continue;
@@ -4108,7 +4108,7 @@ void ForceJumpCharge(gentity_t* self, usercmd_t* ucmd)
 		return;
 	}
 
-	if (!self->client->ps.fd.forceJumpCharge && self->client->ps.groundentityNum == ENTITYNUM_NONE)
+	if (!self->client->ps.fd.forceJumpCharge && self->client->ps.groundentity_num == ENTITYNUM_NONE)
 	{
 		return;
 	}
@@ -4282,7 +4282,7 @@ void ForceJump(gentity_t* self, const usercmd_t* ucmd)
 		return;
 	}
 
-	if (self->s.groundentityNum == ENTITYNUM_NONE)
+	if (self->s.groundentity_num == ENTITYNUM_NONE)
 	{
 		return;
 	}
@@ -4319,31 +4319,31 @@ void ForceJump(gentity_t* self, const usercmd_t* ucmd)
 
 	// We've just jumped, we're not gonna be on the ground in the following frames.
 	// This makes sure npc's wont trigger the ForceJump function multiple times before detecting that they have left the ground.
-	self->client->ps.groundentityNum = ENTITYNUM_NONE;
+	self->client->ps.groundentity_num = ENTITYNUM_NONE;
 }
 
-void WP_AddAsMindtricked(forcedata_t* fd, const int entNum)
+void WP_AddAsMindtricked(forcedata_t* fd, const int ent_num)
 {
 	if (!fd)
 	{
 		return;
 	}
 
-	if (entNum > 47)
+	if (ent_num > 47)
 	{
-		fd->forceMindtrickTargetIndex4 |= (1 << (entNum - 48));
+		fd->forceMindtrickTargetIndex4 |= (1 << (ent_num - 48));
 	}
-	else if (entNum > 31)
+	else if (ent_num > 31)
 	{
-		fd->forceMindtrickTargetIndex3 |= (1 << (entNum - 32));
+		fd->forceMindtrickTargetIndex3 |= (1 << (ent_num - 32));
 	}
-	else if (entNum > 15)
+	else if (ent_num > 15)
 	{
-		fd->forceMindtrickTargetIndex2 |= (1 << (entNum - 16));
+		fd->forceMindtrickTargetIndex2 |= (1 << (ent_num - 16));
 	}
 	else
 	{
-		fd->forceMindtrickTargetIndex |= (1 << entNum);
+		fd->forceMindtrickTargetIndex |= (1 << ent_num);
 	}
 }
 
@@ -4363,7 +4363,7 @@ qboolean ForceTelepathyCheckDirectNPCTarget(gentity_t* self, trace_t* tr, qboole
 
 	trap->Trace(tr, tfrom, NULL, NULL, tto, self->s.number, MASK_PLAYERSOLID, qfalse, 0, 0);
 
-	if (tr->entityNum == ENTITYNUM_NONE
+	if (tr->entity_num == ENTITYNUM_NONE
 		|| tr->fraction == 1.0f
 		|| tr->allsolid
 		|| tr->startsolid)
@@ -4371,7 +4371,7 @@ qboolean ForceTelepathyCheckDirectNPCTarget(gentity_t* self, trace_t* tr, qboole
 		return qfalse;
 	}
 
-	gentity_t* trace_ent = &g_entities[tr->entityNum];
+	gentity_t* trace_ent = &g_entities[tr->entity_num];
 
 	if (trace_ent->NPC && trace_ent->NPC->scriptFlags & SCF_NO_FORCE)
 	{
@@ -4635,13 +4635,13 @@ void ForceTelepathy(gentity_t* self)
 	if (self->client->ps.fd.forcePowerLevel[FP_TELEPATHY] == FORCE_LEVEL_1)
 	{
 		if (tr.fraction != 1.0 &&
-			tr.entityNum != ENTITYNUM_NONE &&
-			g_entities[tr.entityNum].inuse &&
-			g_entities[tr.entityNum].client &&
-			g_entities[tr.entityNum].client->pers.connected &&
-			g_entities[tr.entityNum].client->sess.sessionTeam != TEAM_SPECTATOR)
+			tr.entity_num != ENTITYNUM_NONE &&
+			g_entities[tr.entity_num].inuse &&
+			g_entities[tr.entity_num].client &&
+			g_entities[tr.entity_num].client->pers.connected &&
+			g_entities[tr.entity_num].client->sess.sessionTeam != TEAM_SPECTATOR)
 		{
-			WP_AddAsMindtricked(&self->client->ps.fd, tr.entityNum);
+			WP_AddAsMindtricked(&self->client->ps.fd, tr.entity_num);
 			if (!took_power)
 			{
 				WP_ForcePowerStart(self, FP_TELEPATHY, 0);
@@ -4830,7 +4830,7 @@ static qboolean playeris_resisting_force_throw(const gentity_t* player, gentity_
 	}
 
 	//on the ground
-	if (player->client->ps.groundentityNum == ENTITYNUM_NONE)
+	if (player->client->ps.groundentity_num == ENTITYNUM_NONE)
 	{
 		return qfalse;
 	}
@@ -4976,7 +4976,7 @@ qboolean ShouldPlayerResistForceThrow(const gentity_t* self, const gentity_t* th
 		return 0;
 	}
 
-	if (self->client->ps.groundentityNum == ENTITYNUM_NONE)
+	if (self->client->ps.groundentity_num == ENTITYNUM_NONE)
 	{
 		//you cannot counter a push/pull if you're in the air
 		return 0;
@@ -5113,7 +5113,7 @@ void WP_ResistForcePush(gentity_t* self, const gentity_t* pusher, const qboolean
 	}
 
 	if (!runningResist
-		&& self->client->ps.groundentityNum != ENTITYNUM_NONE
+		&& self->client->ps.groundentity_num != ENTITYNUM_NONE
 		&& !PM_SpinningSaberAnim(self->client->ps.legsAnim)
 		&& !PM_FlippingAnim(self->client->ps.legsAnim)
 		&& !PM_RollingAnim(self->client->ps.legsAnim)
@@ -5340,7 +5340,7 @@ void ForceThrow(gentity_t* self, qboolean pull)
 		i_grip = qtrue;
 	}
 
-	if (self->client->ps.groundentityNum == ENTITYNUM_NONE && self->client->ps.fd.forcePowerLevel[FP_PUSH] >
+	if (self->client->ps.groundentity_num == ENTITYNUM_NONE && self->client->ps.fd.forcePowerLevel[FP_PUSH] >
 		FORCE_LEVEL_2
 		&& (self->s.weapon == WP_MELEE ||
 			self->s.weapon == WP_NONE ||
@@ -5348,7 +5348,7 @@ void ForceThrow(gentity_t* self, qboolean pull)
 	{
 		damage_level = FORCE_LEVEL_3;
 	}
-	else if (self->client->ps.groundentityNum == ENTITYNUM_NONE && self->client->ps.fd.forcePowerLevel[FP_PUSH] <
+	else if (self->client->ps.groundentity_num == ENTITYNUM_NONE && self->client->ps.fd.forcePowerLevel[FP_PUSH] <
 		FORCE_LEVEL_3
 		&& (self->s.weapon == WP_MELEE ||
 			self->s.weapon == WP_NONE ||
@@ -5431,7 +5431,7 @@ void ForceThrow(gentity_t* self, qboolean pull)
 			self->client->ps.weapon == WP_SABER && self->client->ps.saber_holstered)
 		{
 			//2-handed PUSH
-			if (self->client->ps.groundentityNum == ENTITYNUM_NONE)
+			if (self->client->ps.groundentity_num == ENTITYNUM_NONE)
 			{
 				G_Sound(self, CHAN_BODY, G_SoundIndex("sound/weapons/force/repulsepush.wav"));
 			}
@@ -5539,36 +5539,36 @@ void ForceThrow(gentity_t* self, qboolean pull)
 		trap->Trace(&tr, tfrom, NULL, NULL, tto, self->s.number, MASK_PLAYERSOLID | CONTENTS_TRIGGER, qfalse, 0, 0);
 
 		if (tr.fraction != 1.0 &&
-			tr.entityNum != ENTITYNUM_NONE)
+			tr.entity_num != ENTITYNUM_NONE)
 		{
-			if (!g_entities[tr.entityNum].client && g_entities[tr.entityNum].s.eType == ET_NPC)
+			if (!g_entities[tr.entity_num].client && g_entities[tr.entity_num].s.eType == ET_NPC)
 			{
 				//g2animent
-				if (g_entities[tr.entityNum].s.genericenemyindex < level.time)
+				if (g_entities[tr.entity_num].s.genericenemyindex < level.time)
 				{
-					g_entities[tr.entityNum].s.genericenemyindex = level.time + 2000;
+					g_entities[tr.entity_num].s.genericenemyindex = level.time + 2000;
 				}
 			}
 			num_listed_entities = 0;
-			entity_list[num_listed_entities] = tr.entityNum;
+			entity_list[num_listed_entities] = tr.entity_num;
 
 			if (pull)
 			{
-				if (!ForcePowerUsableOn(self, &g_entities[tr.entityNum], FP_PULL))
+				if (!ForcePowerUsableOn(self, &g_entities[tr.entity_num], FP_PULL))
 				{
 					return;
 				}
 			}
 			else
 			{
-				if (!ForcePowerUsableOn(self, &g_entities[tr.entityNum], FP_PUSH))
+				if (!ForcePowerUsableOn(self, &g_entities[tr.entity_num], FP_PUSH))
 				{
 					return;
 				}
 			}
 
 			// if a CONTENTS_TRIGGER was traced, must be an item
-			if (g_entities[tr.entityNum].r.contents == CONTENTS_TRIGGER && g_entities[tr.entityNum].s.eType != ET_ITEM)
+			if (g_entities[tr.entity_num].r.contents == CONTENTS_TRIGGER && g_entities[tr.entity_num].s.eType != ET_ITEM)
 				return;
 
 			num_listed_entities++;
@@ -5594,7 +5594,7 @@ void ForceThrow(gentity_t* self, qboolean pull)
 			for (i1 = 0; i1 < func_num; i1++)
 			{
 				funcEnt = &g_entities[func_list[i1]];
-				if (!funcEnt->client && funcEnt->s.number != tr.entityNum)
+				if (!funcEnt->client && funcEnt->s.number != tr.entity_num)
 				{
 					//we have one, add it to the actual push list.
 					entity_list[num_listed_entities] = funcEnt->s.number;
@@ -5634,17 +5634,17 @@ void ForceThrow(gentity_t* self, qboolean pull)
 				trap->Trace(&tr, tfrom, NULL, NULL, tto, self->s.number, MASK_PLAYERSOLID, qfalse, 0, 0);
 
 				if (tr.fraction != 1.0 &&
-					tr.entityNum != ENTITYNUM_NONE)
+					tr.entity_num != ENTITYNUM_NONE)
 				{
-					if (!g_entities[tr.entityNum].client && g_entities[tr.entityNum].s.eType == ET_NPC)
+					if (!g_entities[tr.entity_num].client && g_entities[tr.entity_num].s.eType == ET_NPC)
 					{
 						//g2animent
-						if (g_entities[tr.entityNum].s.genericenemyindex < level.time)
+						if (g_entities[tr.entity_num].s.genericenemyindex < level.time)
 						{
-							g_entities[tr.entityNum].s.genericenemyindex = level.time + 2000;
+							g_entities[tr.entity_num].s.genericenemyindex = level.time + 2000;
 						}
 					}
-					aiming_at = &g_entities[tr.entityNum];
+					aiming_at = &g_entities[tr.entity_num];
 					if (ent == aiming_at) //Looking at the sentry...so deactivate for 10 seconds
 						ent->nextthink = level.time + 5000;
 				}
@@ -5700,7 +5700,7 @@ void ForceThrow(gentity_t* self, qboolean pull)
 	}
 
 	//REPULSE ########################################################################## IN THE AIR PUSH
-	if (self->client->ps.groundentityNum == ENTITYNUM_NONE
+	if (self->client->ps.groundentity_num == ENTITYNUM_NONE
 		&& (self->s.weapon == WP_MELEE || self->s.weapon == WP_NONE || self->s.weapon == WP_SABER && BG_SabersOff(
 			&self->client->ps)))
 	{
@@ -5844,7 +5844,7 @@ void ForceThrow(gentity_t* self, qboolean pull)
 				//really should have a clear LOS to this thing...
 				trap->Trace(&tr, self->client->ps.origin, vec3_origin, vec3_origin, ent_org, self->s.number, MASK_SHOT,
 					qfalse, 0, 0);
-				if (tr.fraction < 1.0f && tr.entityNum != ent->s.number)
+				if (tr.fraction < 1.0f && tr.entity_num != ent->s.number)
 				{
 					//must have clear LOS
 					//try from eyes too before you give up
@@ -5854,7 +5854,7 @@ void ForceThrow(gentity_t* self, qboolean pull)
 					trap->Trace(&tr, eye_point, vec3_origin, vec3_origin, ent_org, self->s.number, MASK_SHOT, qfalse, 0,
 						0);
 
-					if (tr.fraction < 1.0f && tr.entityNum != ent->s.number)
+					if (tr.fraction < 1.0f && tr.entity_num != ent->s.number)
 					{
 						continue;
 					}
@@ -5990,13 +5990,13 @@ void ForceThrow(gentity_t* self, qboolean pull)
 				VectorSubtract(ent_org, center, dir);
 				VectorNormalize(dir);
 
-				if (self->client->ps.groundentityNum != ENTITYNUM_NONE)
+				if (self->client->ps.groundentity_num != ENTITYNUM_NONE)
 				{
 					if (cone < 1.0f)
 					{
 						//must be within the forward cone
 						if (ent->client && !pull
-							&& ent->client->ps.fd.forceGripentityNum == self->s.number)
+							&& ent->client->ps.fd.forceGripentity_num == self->s.number)
 						{
 							//this is the guy that's force-gripping me, use a wider cone regardless of force power level
 							if ((dot1 = DotProduct(dir, forward)) < cone - 0.3f)
@@ -6025,7 +6025,7 @@ void ForceThrow(gentity_t* self, qboolean pull)
 
 				dist = VectorLength(v);
 
-				if (self->client->ps.groundentityNum != ENTITYNUM_NONE)
+				if (self->client->ps.groundentity_num != ENTITYNUM_NONE)
 				{
 					//if within a certain range, deflect it
 					if (ent->s.eType == ET_MISSILE && cone >= 1.0f)
@@ -6055,7 +6055,7 @@ void ForceThrow(gentity_t* self, qboolean pull)
 				//really should have a clear LOS to this thing...
 				trap->Trace(&tr, self->client->ps.origin, vec3_origin, vec3_origin, ent_org, self->s.number, MASK_SHOT,
 					qfalse, 0, 0);
-				if (tr.fraction < 1.0f && tr.entityNum != ent->s.number)
+				if (tr.fraction < 1.0f && tr.entity_num != ent->s.number)
 				{
 					//must have clear LOS
 					//try from eyes too before you give up
@@ -6065,7 +6065,7 @@ void ForceThrow(gentity_t* self, qboolean pull)
 					trap->Trace(&tr, eye_point, vec3_origin, vec3_origin, ent_org, self->s.number, MASK_SHOT, qfalse, 0,
 						0);
 
-					if (tr.fraction < 1.0f && tr.entityNum != ent->s.number)
+					if (tr.fraction < 1.0f && tr.entity_num != ent->s.number)
 					{
 						continue;
 					}
@@ -6217,7 +6217,7 @@ void ForceThrow(gentity_t* self, qboolean pull)
 			//really should have a clear LOS to this thing...
 			trap->Trace(&tr, self->client->ps.origin, vec3_origin, vec3_origin, ent_org, self->s.number, MASK_SHOT,
 				qfalse, 0, 0);
-			if (tr.fraction < 1.0f && tr.entityNum != ent->s.number)
+			if (tr.fraction < 1.0f && tr.entity_num != ent->s.number)
 			{
 				//must have clear LOS
 				//try from eyes too before you give up
@@ -6226,7 +6226,7 @@ void ForceThrow(gentity_t* self, qboolean pull)
 				eye_point[2] += self->client->ps.viewheight;
 				trap->Trace(&tr, eye_point, vec3_origin, vec3_origin, ent_org, self->s.number, MASK_SHOT, qfalse, 0, 0);
 
-				if (tr.fraction < 1.0f && tr.entityNum != ent->s.number)
+				if (tr.fraction < 1.0f && tr.entity_num != ent->s.number)
 				{
 					continue;
 				}
@@ -6300,7 +6300,7 @@ void ForceThrow(gentity_t* self, qboolean pull)
 							self->client->ps.weapon == WP_SABER && self->client->ps.saber_holstered)
 						{
 							//2-handed PUSH
-							if (self->client->ps.groundentityNum == ENTITYNUM_NONE)
+							if (self->client->ps.groundentity_num == ENTITYNUM_NONE)
 							{
 								G_Sound(push_target[x], CHAN_BODY, G_SoundIndex("sound/weapons/force/repulsepush.wav"));
 							}
@@ -6379,7 +6379,7 @@ void ForceThrow(gentity_t* self, qboolean pull)
 							trap->Trace(&tr, tfrom, NULL, NULL, tto, self->s.number, MASK_PLAYERSOLID, qfalse, 0, 0);
 
 							if (tr.fraction != 1.0
-								&& tr.entityNum == push_target[x]->s.number)
+								&& tr.entity_num == push_target[x]->s.number)
 							{
 								vec3_t vecnorm;
 								vec3_t uorg;
@@ -6412,7 +6412,7 @@ void ForceThrow(gentity_t* self, qboolean pull)
 					if (self->client->ps.fd.forceGripBeingGripped > level.time)
 					{
 						//force the enemy to stop gripping me if I managed to push him
-						if (push_target[x]->client->ps.fd.forceGripentityNum == self->s.number)
+						if (push_target[x]->client->ps.fd.forceGripentity_num == self->s.number)
 						{
 							WP_ForcePowerStop(push_target[x], FP_GRIP);
 							self->client->ps.fd.forceGripBeingGripped = 0;
@@ -6445,9 +6445,9 @@ void ForceThrow(gentity_t* self, qboolean pull)
 							G_Sound(push_target[x], CHAN_BODY, G_SoundIndex("sound/weapons/force/pushed.mp3"));
 
 							if (self->client->ps.weapon == WP_MELEE || self->client->ps.weapon == WP_NONE && self->
-								client->ps.groundentityNum == ENTITYNUM_NONE
+								client->ps.groundentity_num == ENTITYNUM_NONE
 								|| self->client->ps.weapon == WP_SABER && self->client->ps.saber_holstered && self->
-								client->ps.groundentityNum == ENTITYNUM_NONE)
+								client->ps.groundentity_num == ENTITYNUM_NONE)
 							{
 								RepulseDamage(self, push_target[x], tr.endpos, damage_level);
 							}
@@ -6506,9 +6506,9 @@ void ForceThrow(gentity_t* self, qboolean pull)
 							push_power_mod = 200;
 
 							if (self->client->ps.weapon == WP_MELEE || self->client->ps.weapon == WP_NONE && self->
-								client->ps.groundentityNum == ENTITYNUM_NONE
+								client->ps.groundentity_num == ENTITYNUM_NONE
 								|| self->client->ps.weapon == WP_SABER && self->client->ps.saber_holstered && self->
-								client->ps.groundentityNum == ENTITYNUM_NONE)
+								client->ps.groundentity_num == ENTITYNUM_NONE)
 							{
 								RepulseDamage(self, push_target[x], tr.endpos, damage_level);
 							}
@@ -6533,9 +6533,9 @@ void ForceThrow(gentity_t* self, qboolean pull)
 							push_power_mod = 250;
 
 							if (self->client->ps.weapon == WP_MELEE || self->client->ps.weapon == WP_NONE && self->
-								client->ps.groundentityNum == ENTITYNUM_NONE
+								client->ps.groundentity_num == ENTITYNUM_NONE
 								|| self->client->ps.weapon == WP_SABER && self->client->ps.saber_holstered && self->
-								client->ps.groundentityNum == ENTITYNUM_NONE)
+								client->ps.groundentity_num == ENTITYNUM_NONE)
 							{
 								RepulseDamage(self, push_target[x], tr.endpos, damage_level);
 							}
@@ -6559,9 +6559,9 @@ void ForceThrow(gentity_t* self, qboolean pull)
 							push_power_mod = 200;
 
 							if (self->client->ps.weapon == WP_MELEE || self->client->ps.weapon == WP_NONE && self->
-								client->ps.groundentityNum == ENTITYNUM_NONE
+								client->ps.groundentity_num == ENTITYNUM_NONE
 								|| self->client->ps.weapon == WP_SABER && self->client->ps.saber_holstered && self->
-								client->ps.groundentityNum == ENTITYNUM_NONE)
+								client->ps.groundentity_num == ENTITYNUM_NONE)
 							{
 								RepulseDamage(self, push_target[x], tr.endpos, damage_level);
 							}
@@ -6584,9 +6584,9 @@ void ForceThrow(gentity_t* self, qboolean pull)
 							G_Sound(push_target[x], CHAN_BODY, G_SoundIndex("sound/weapons/force/pushed.mp3"));
 
 							if (self->client->ps.weapon == WP_MELEE || self->client->ps.weapon == WP_NONE && self->
-								client->ps.groundentityNum == ENTITYNUM_NONE
+								client->ps.groundentity_num == ENTITYNUM_NONE
 								|| self->client->ps.weapon == WP_SABER && self->client->ps.saber_holstered && self->
-								client->ps.groundentityNum == ENTITYNUM_NONE)
+								client->ps.groundentity_num == ENTITYNUM_NONE)
 							{
 								RepulseDamage(self, push_target[x], tr.endpos, damage_level);
 							}
@@ -6626,9 +6626,9 @@ void ForceThrow(gentity_t* self, qboolean pull)
 							G_Sound(push_target[x], CHAN_BODY, G_SoundIndex("sound/weapons/force/pushed.mp3"));
 
 							if (self->client->ps.weapon == WP_MELEE || self->client->ps.weapon == WP_NONE && self->
-								client->ps.groundentityNum == ENTITYNUM_NONE
+								client->ps.groundentity_num == ENTITYNUM_NONE
 								|| self->client->ps.weapon == WP_SABER && self->client->ps.saber_holstered && self->
-								client->ps.groundentityNum == ENTITYNUM_NONE)
+								client->ps.groundentity_num == ENTITYNUM_NONE)
 							{
 								RepulseDamage(self, push_target[x], tr.endpos, damage_level);
 							}
@@ -6653,9 +6653,9 @@ void ForceThrow(gentity_t* self, qboolean pull)
 							G_Sound(push_target[x], CHAN_BODY, G_SoundIndex("sound/weapons/force/pushed.mp3"));
 
 							if (self->client->ps.weapon == WP_MELEE || self->client->ps.weapon == WP_NONE && self->
-								client->ps.groundentityNum == ENTITYNUM_NONE
+								client->ps.groundentity_num == ENTITYNUM_NONE
 								|| self->client->ps.weapon == WP_SABER && self->client->ps.saber_holstered && self->
-								client->ps.groundentityNum == ENTITYNUM_NONE)
+								client->ps.groundentity_num == ENTITYNUM_NONE)
 							{
 								RepulseDamage(self, push_target[x], tr.endpos, damage_level);
 							}
@@ -6679,9 +6679,9 @@ void ForceThrow(gentity_t* self, qboolean pull)
 							G_Sound(push_target[x], CHAN_BODY, G_SoundIndex("sound/weapons/force/pushed.mp3"));
 
 							if (self->client->ps.weapon == WP_MELEE || self->client->ps.weapon == WP_NONE && self->
-								client->ps.groundentityNum == ENTITYNUM_NONE
+								client->ps.groundentity_num == ENTITYNUM_NONE
 								|| self->client->ps.weapon == WP_SABER && self->client->ps.saber_holstered && self->
-								client->ps.groundentityNum == ENTITYNUM_NONE)
+								client->ps.groundentity_num == ENTITYNUM_NONE)
 							{
 								RepulseDamage(self, push_target[x], tr.endpos, damage_level);
 							}
@@ -6704,9 +6704,9 @@ void ForceThrow(gentity_t* self, qboolean pull)
 							G_Sound(push_target[x], CHAN_BODY, G_SoundIndex("sound/weapons/force/pushed.mp3"));
 
 							if (self->client->ps.weapon == WP_MELEE || self->client->ps.weapon == WP_NONE && self->
-								client->ps.groundentityNum == ENTITYNUM_NONE
+								client->ps.groundentity_num == ENTITYNUM_NONE
 								|| self->client->ps.weapon == WP_SABER && self->client->ps.saber_holstered && self->
-								client->ps.groundentityNum == ENTITYNUM_NONE)
+								client->ps.groundentity_num == ENTITYNUM_NONE)
 							{
 								RepulseDamage(self, push_target[x], tr.endpos, damage_level);
 							}
@@ -6833,7 +6833,7 @@ void ForceThrow(gentity_t* self, qboolean pull)
 				VectorNormalize(forward);
 				VectorMA(trFrom, radius, forward, end);
 				trap->Trace(&tr, trFrom, vec3_origin, vec3_origin, end, self->s.number, MASK_SHOT, qfalse, 0, 0);
-				if (tr.entityNum != push_target[x]->s.number || tr.fraction == 1.0 || tr.allsolid || tr.startsolid)
+				if (tr.entity_num != push_target[x]->s.number || tr.fraction == 1.0 || tr.allsolid || tr.startsolid)
 				{
 					//must be pointing right at it
 					continue;
@@ -6982,23 +6982,23 @@ void WP_ForcePowerStop(gentity_t* self, const forcePowers_t forcePower)
 	case FP_GRIP:
 		self->client->ps.fd.forceGripUseTime = level.time + 3000;
 		if (self->client->ps.fd.forcePowerLevel[forcePower] > FORCE_LEVEL_1 &&
-			g_entities[self->client->ps.fd.forceGripentityNum].client &&
-			g_entities[self->client->ps.fd.forceGripentityNum].health > 0 &&
-			g_entities[self->client->ps.fd.forceGripentityNum].inuse &&
-			level.time - g_entities[self->client->ps.fd.forceGripentityNum].client->ps.fd.forceGripStarted > 500)
+			g_entities[self->client->ps.fd.forceGripentity_num].client &&
+			g_entities[self->client->ps.fd.forceGripentity_num].health > 0 &&
+			g_entities[self->client->ps.fd.forceGripentity_num].inuse &&
+			level.time - g_entities[self->client->ps.fd.forceGripentity_num].client->ps.fd.forceGripStarted > 500)
 		{
 			//if we had our throat crushed in for more than half a second, gasp for air when we're let go
 			if (was_active & 1 << forcePower)
 			{
-				G_EntitySound(&g_entities[self->client->ps.fd.forceGripentityNum], CHAN_VOICE,
+				G_EntitySound(&g_entities[self->client->ps.fd.forceGripentity_num], CHAN_VOICE,
 					G_SoundIndex("*gasp.wav"));
 			}
 		}
 
-		if (g_entities[self->client->ps.fd.forceGripentityNum].client &&
-			g_entities[self->client->ps.fd.forceGripentityNum].inuse)
+		if (g_entities[self->client->ps.fd.forceGripentity_num].client &&
+			g_entities[self->client->ps.fd.forceGripentity_num].inuse)
 		{
-			g_entities[self->client->ps.fd.forceGripentityNum].client->ps.forceGripChangeMovetype = PM_NORMAL;
+			g_entities[self->client->ps.fd.forceGripentity_num].client->ps.forceGripChangeMovetype = PM_NORMAL;
 		}
 
 		if (self->client->ps.forceHandExtend == HANDEXTEND_FORCE_HOLD)
@@ -7006,7 +7006,7 @@ void WP_ForcePowerStop(gentity_t* self, const forcePowers_t forcePower)
 			self->client->ps.forceHandExtendTime = 0;
 		}
 
-		self->client->ps.fd.forceGripentityNum = ENTITYNUM_NONE;
+		self->client->ps.fd.forceGripentity_num = ENTITYNUM_NONE;
 
 		self->client->ps.powerups[PW_DISINT_4] = 0;
 		break;
@@ -7088,13 +7088,13 @@ void DoGripAction(gentity_t* self, const forcePowers_t forcePower)
 	self->client->ps.eFlags &= ~EF_INVULNERABLE;
 	self->client->invulnerableTimer = 0;
 
-	gentity_t* gripEnt = &g_entities[self->client->ps.fd.forceGripentityNum];
+	gentity_t* gripEnt = &g_entities[self->client->ps.fd.forceGripentity_num];
 
 	if (!gripEnt || !gripEnt->client || !gripEnt->inuse || gripEnt->health < 1 || !ForcePowerUsableOn(
 		self, gripEnt, FP_GRIP))
 	{
 		WP_ForcePowerStop(self, forcePower);
-		self->client->ps.fd.forceGripentityNum = ENTITYNUM_NONE;
+		self->client->ps.fd.forceGripentity_num = ENTITYNUM_NONE;
 
 		if (gripEnt && gripEnt->client && gripEnt->inuse)
 		{
@@ -7137,7 +7137,7 @@ void DoGripAction(gentity_t* self, const forcePowers_t forcePower)
 	}
 
 	if (tr.fraction != 1.0f &&
-		tr.entityNum != gripEnt->s.number /*&&
+		tr.entity_num != gripEnt->s.number /*&&
 		gripLevel < FORCE_LEVEL_3*/)
 	{
 		WP_ForcePowerStop(self, forcePower);
@@ -7522,7 +7522,7 @@ static void wp_force_power_run(gentity_t* self, const forcePowers_t forcePower, 
 		DoGripAction(self, forcePower);
 		break;
 	case FP_LEVITATION:
-		if (self->client->ps.groundentityNum != ENTITYNUM_NONE && !self->client->ps.fd.forceJumpZStart ||
+		if (self->client->ps.groundentity_num != ENTITYNUM_NONE && !self->client->ps.fd.forceJumpZStart ||
 			PM_InLedgeMove(self->client->ps.legsAnim) || PM_InWallHoldMove(self->client->ps.legsAnim))
 		{
 			//done with jump
@@ -7717,11 +7717,11 @@ int WP_DoSpecificPower(gentity_t* self, const usercmd_t* ucmd, const forcePowers
 	case FP_LEVITATION:
 		//if leave the ground by some other means, cancel the force jump so we don't suddenly jump when we land.
 
-		if (self->client->ps.groundentityNum == ENTITYNUM_NONE)
+		if (self->client->ps.groundentity_num == ENTITYNUM_NONE)
 		{
 			self->client->ps.fd.forceJumpCharge = 0;
 			G_MuteSound(self->client->ps.fd.killSoundEntIndex[TRACK_CHANNEL_1 - 50], CHAN_VOICE);
-			//This only happens if the groundentityNum == ENTITYNUM_NONE when the button is actually released
+			//This only happens if the groundentity_num == ENTITYNUM_NONE when the button is actually released
 		}
 		else
 		{
@@ -7740,12 +7740,12 @@ int WP_DoSpecificPower(gentity_t* self, const usercmd_t* ucmd, const forcePowers
 		self->client->ps.fd.forceButtonNeedRelease = 1;
 		break;
 	case FP_GRIP:
-		if (self->client->ps.fd.forceGripentityNum == ENTITYNUM_NONE)
+		if (self->client->ps.fd.forceGripentity_num == ENTITYNUM_NONE)
 		{
 			ForceGrip(self);
 		}
 
-		if (self->client->ps.fd.forceGripentityNum != ENTITYNUM_NONE)
+		if (self->client->ps.fd.forceGripentity_num != ENTITYNUM_NONE)
 		{
 			if (!(self->client->ps.fd.forcePowersActive & 1 << FP_GRIP))
 			{
@@ -8468,7 +8468,7 @@ void WP_ForcePowersUpdate(gentity_t* self, usercmd_t* ucmd)
 			{
 				self->client->ps.forceHandExtend = HANDEXTEND_NONE;
 			}
-			else if (self->client->ps.groundentityNum != ENTITYNUM_NONE && !self->client->ps.forceDodgeAnim)
+			else if (self->client->ps.groundentity_num != ENTITYNUM_NONE && !self->client->ps.forceDodgeAnim)
 			{
 				self->client->ps.forceDodgeAnim = 1;
 				self->client->ps.forceHandExtendTime = level.time + 1000;
@@ -8682,12 +8682,12 @@ void WP_ForcePowersUpdate(gentity_t* self, usercmd_t* ucmd)
 		goto powersetcheck;
 	}
 
-	if (self->client->ps.groundentityNum != ENTITYNUM_NONE)
+	if (self->client->ps.groundentity_num != ENTITYNUM_NONE)
 	{
 		self->client->fjDidJump = qfalse;
 	}
 
-	if (self->client->ps.fd.forceJumpCharge && self->client->ps.groundentityNum == ENTITYNUM_NONE && self->client->
+	if (self->client->ps.fd.forceJumpCharge && self->client->ps.groundentity_num == ENTITYNUM_NONE && self->client->
 		fjDidJump)
 	{
 		//this was for the "charge" jump method... I guess
@@ -8704,7 +8704,7 @@ void WP_ForcePowersUpdate(gentity_t* self, usercmd_t* ucmd)
 	{//just charging up
 		ForceJumpCharge(self, ucmd);
 	}
-	else if (ucmd->upmove < 10 && self->client->ps.groundentityNum == ENTITYNUM_NONE && self->client->ps.fd.forceJumpCharge)
+	else if (ucmd->upmove < 10 && self->client->ps.groundentity_num == ENTITYNUM_NONE && self->client->ps.fd.forceJumpCharge)
 	{
 		self->client->ps.pm_flags &= ~(PMF_JUMP_HELD);
 	}
@@ -8874,10 +8874,10 @@ void WP_ForcePowersUpdate(gentity_t* self, usercmd_t* ucmd)
 	if (self->client->ps.saberInFlight)
 	{
 		//don't regen force power while throwing saber
-		if (self->client->ps.saberentityNum < ENTITYNUM_NONE && self->client->ps.saberentityNum > 0) //player is 0
+		if (self->client->ps.saberentity_num < ENTITYNUM_NONE && self->client->ps.saberentity_num > 0) //player is 0
 		{
 			//
-			if (&g_entities[self->client->ps.saberentityNum] != NULL && g_entities[self->client->ps.saberentityNum].s.
+			if (&g_entities[self->client->ps.saberentity_num] != NULL && g_entities[self->client->ps.saberentity_num].s.
 				pos.trType == TR_LINEAR)
 			{
 				//fell to the ground and we're trying to pull it back
@@ -8898,7 +8898,7 @@ void WP_ForcePowersUpdate(gentity_t* self, usercmd_t* ucmd)
 		&& !PM_InKnockDown(&self->client->ps)
 		&& walk_check(self)
 		&& self->client->ps.weaponTime <= 0
-		&& self->client->ps.groundentityNum != ENTITYNUM_NONE)
+		&& self->client->ps.groundentity_num != ENTITYNUM_NONE)
 	{
 		//when not using the force, regenerate at 1 point per half second
 		while (self->client->ps.fd.forcePowerRegenDebounceTime < level.time)
@@ -9008,7 +9008,7 @@ void WP_ForcePowersUpdate(gentity_t* self, usercmd_t* ucmd)
 		&& !BG_InSlowBounce(&self->client->ps) && !PM_SaberInBrokenParry(self->client->ps.saber_move)
 		&& !PM_InKnockDown(&self->client->ps) && self->client->ps.forceHandExtend != HANDEXTEND_DODGE
 		&& self->client->ps.saberLockTime < level.time //not in a saber lock.
-		&& self->client->ps.groundentityNum != ENTITYNUM_NONE //can't regen while in the air.
+		&& self->client->ps.groundentity_num != ENTITYNUM_NONE //can't regen while in the air.
 		&& walk_check(self))
 	{
 		if (self->client->ps.fd.forcePower > self->client->ps.fd.forcePowerMax * FATIGUEDTHRESHHOLD + 1
@@ -9033,7 +9033,7 @@ void WP_ForcePowersUpdate(gentity_t* self, usercmd_t* ucmd)
 		&& !BG_InSlowBounce(&self->client->ps) && !PM_SaberInBrokenParry(self->client->ps.saber_move)
 		&& !PM_InKnockDown(&self->client->ps) && self->client->ps.forceHandExtend != HANDEXTEND_DODGE
 		&& self->client->ps.saberLockTime < level.time //not in a saber lock.
-		&& self->client->ps.groundentityNum != ENTITYNUM_NONE) //can't regen while in the air.
+		&& self->client->ps.groundentity_num != ENTITYNUM_NONE) //can't regen while in the air.
 	{
 		if (self->client->ps.saberFatigueChainCount > MISHAPLEVEL_NONE)
 		{
@@ -9082,7 +9082,7 @@ void WP_BlockPointsUpdate(const gentity_t* self)
 	if (!(self->r.svFlags & SVF_BOT))
 	{
 		if (!PM_InKnockDown(&self->client->ps)
-			&& self->client->ps.groundentityNum != ENTITYNUM_NONE
+			&& self->client->ps.groundentity_num != ENTITYNUM_NONE
 			&& walk_check(self)
 			&& !PM_SaberInAttack(self->client->ps.saber_move)
 			&& !pm_saber_in_special_attack(self->client->ps.torsoAnim)
@@ -9139,7 +9139,7 @@ void WP_BlockPointsUpdate(const gentity_t* self)
 	{
 		//when not using the block, regenerate at 10 points per second
 		if (!PM_InKnockDown(&self->client->ps)
-			&& self->client->ps.groundentityNum != ENTITYNUM_NONE
+			&& self->client->ps.groundentity_num != ENTITYNUM_NONE
 			//&& WalkCheck(self)
 			&& !(PM_SaberInAttack(self->client->ps.saber_move)
 				//|| PM_SaberInSpecialAttack(self->client->ps.torsoAnim)
@@ -9291,7 +9291,7 @@ qboolean jedi_dodge_evasion(gentity_t* self, const gentity_t* shooter, trace_t* 
 		return qfalse;
 	}
 
-	if (self->client->ps.groundentityNum == ENTITYNUM_NONE)
+	if (self->client->ps.groundentity_num == ENTITYNUM_NONE)
 	{
 		//can't dodge in mid-air
 		return qfalse;
@@ -9322,7 +9322,7 @@ qboolean jedi_dodge_evasion(gentity_t* self, const gentity_t* shooter, trace_t* 
 		return qfalse;
 	}
 
-	if (self->client->ps.groundentityNum == ENTITYNUM_NONE)
+	if (self->client->ps.groundentity_num == ENTITYNUM_NONE)
 	{
 		//can't dodge in mid-air
 		return qfalse;

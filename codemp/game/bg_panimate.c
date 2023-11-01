@@ -4687,7 +4687,7 @@ int BG_AnimLength(const int index, const animNumber_t anim)
 	{
 		return 0;
 	}
-	return bgAllAnims[index].anims[anim].numFrames * fabs(bgAllAnims[index].anims[anim].frameLerp);
+	return bgAllAnims[index].anims[anim].num_frames * fabs(bgAllAnims[index].anims[anim].frameLerp);
 }
 
 //just use whatever pm->animations is
@@ -4697,7 +4697,7 @@ int PM_AnimLength(const animNumber_t anim)
 	{
 		return 0;
 	}
-	return pm->animations[anim].numFrames * fabs(pm->animations[anim].frameLerp);
+	return pm->animations[anim].num_frames * fabs(pm->animations[anim].frameLerp);
 }
 
 void PM_DebugLegsAnim(const int anim)
@@ -5069,7 +5069,7 @@ void ParseAnimationEvtBlock(const char* aeb_filename, animevent_t* anim_events, 
 			continue;
 		}
 
-		if (animations[anim_num].numFrames == 0)
+		if (animations[anim_num].num_frames == 0)
 		{
 			//we don't use this anim
 			Com_Printf(S_COLOR_YELLOW"WARNING: %s mpanimevents.cfg: anim %s not used by this model\n", aeb_filename,
@@ -5686,7 +5686,7 @@ int bg_parse_animation_file(const char* filename, animation_t* anim_set, const q
 	for (i = 0; i < MAX_ANIMATIONS; i++)
 	{
 		anim_set[i].firstFrame = 0;
-		anim_set[i].numFrames = 0;
+		anim_set[i].num_frames = 0;
 		anim_set[i].loopFrames = -1;
 		anim_set[i].frameLerp = 100;
 	}
@@ -5729,7 +5729,7 @@ int bg_parse_animation_file(const char* filename, animation_t* anim_set, const q
 		{
 			break;
 		}
-		anim_set[anim_num].numFrames = atoi(token);
+		anim_set[anim_num].num_frames = atoi(token);
 
 		token = COM_Parse(&text_p);
 		if (!token)
@@ -6025,7 +6025,7 @@ void PM_SetTorsoAnimTimer(const int time)
 }
 
 void pm_saber_start_trans_anim(const int client_num, const int saber_anim_level, const int weapon, const int anim,
-	float* animSpeed, const int fatigued)
+	float* anim_speed, const int fatigued)
 {
 	char buf[128];
 
@@ -6045,13 +6045,13 @@ void pm_saber_start_trans_anim(const int client_num, const int saber_anim_level,
 		{
 			if (saber && saber->animSpeedScale != 1.0f)
 			{
-				*animSpeed *= saber->animSpeedScale;
+				*anim_speed *= saber->animSpeedScale;
 			}
 			saber = BG_MySaber(client_num, 1);
 
 			if (saber && saber->animSpeedScale != 1.0f)
 			{
-				*animSpeed *= saber->animSpeedScale;
+				*anim_speed *= saber->animSpeedScale;
 			}
 		}
 	}
@@ -6079,18 +6079,18 @@ void pm_saber_start_trans_anim(const int client_num, const int saber_anim_level,
 			&& anim != BOTH_LUNGE2_B__T_)
 		{
 			const float fatiguedanimscale = 0.75f;
-			*animSpeed *= fatiguedanimscale;
+			*anim_speed *= fatiguedanimscale;
 		}
 		else if (fatigued & 1 << FLAG_SLOWBOUNCE)
 		{
 			//slow animation for slow bounces
 			if (PM_BounceAnim(anim))
 			{
-				*animSpeed *= 0.6f;
+				*anim_speed *= 0.6f;
 			}
 			else if (PM_SaberReturnAnim(anim))
 			{
-				*animSpeed *= 0.8f;
+				*anim_speed *= 0.8f;
 			}
 		}
 		else if (fatigued & 1 << FLAG_OLDSLOWBOUNCE)
@@ -6099,7 +6099,7 @@ void pm_saber_start_trans_anim(const int client_num, const int saber_anim_level,
 			if (PM_BounceAnim(anim) || PM_SaberReturnAnim(anim))
 			{
 				//only apply to bounce and returns since this flag is technically turned off immediately after the animation is set.
-				*animSpeed *= 0.6f;
+				*anim_speed *= 0.6f;
 			}
 		}
 		else if (fatigued & 1 << FLAG_PARRIED)
@@ -6107,14 +6107,14 @@ void pm_saber_start_trans_anim(const int client_num, const int saber_anim_level,
 			//getting parried slows down your reaction
 			if (PM_BounceAnim(anim) || PM_SaberReturnAnim(anim))
 			{
-				*animSpeed *= 0.90f;
+				*anim_speed *= 0.90f;
 			}
 		}
 		else if (fatigued & 1 << FLAG_BLOCKED)
 		{
 			if (PM_BounceAnim(anim) || PM_SaberReturnAnim(anim))
 			{
-				*animSpeed *= 0.85f;
+				*anim_speed *= 0.85f;
 			}
 		}
 		else if (fatigued & 1 << FLAG_MBLOCKBOUNCE)
@@ -6122,7 +6122,7 @@ void pm_saber_start_trans_anim(const int client_num, const int saber_anim_level,
 			//slow animation for all bounces
 			if (PM_SaberInMassiveBounce(anim))
 			{
-				*animSpeed *= 0.5f;
+				*anim_speed *= 0.5f;
 			}
 		}
 		else
@@ -6133,12 +6133,12 @@ void pm_saber_start_trans_anim(const int client_num, const int saber_anim_level,
 				if (anim >= BOTH_H6_S6_T_ && anim <= BOTH_H6_S6_BR)
 				{
 					//dual broken parries are 1/3 the frames of the single broken parries
-					*animSpeed *= 0.6f;
+					*anim_speed *= 0.6f;
 				}
 				else
 				{
 					const float dualanimscale = 0.90f;
-					*animSpeed *= dualanimscale;
+					*anim_speed *= dualanimscale;
 				}
 			}
 			else if (saber_anim_level == SS_STAFF)
@@ -6146,50 +6146,50 @@ void pm_saber_start_trans_anim(const int client_num, const int saber_anim_level,
 				if (anim >= BOTH_H7_S7_T_ && anim <= BOTH_H7_S7_BR)
 				{
 					//doubles are 1/2 the frames of single broken parries
-					*animSpeed *= 0.8f;
+					*anim_speed *= 0.8f;
 				}
 				else
 				{
 					const float staffanimscale = 0.90f;
-					*animSpeed *= staffanimscale;
+					*anim_speed *= staffanimscale;
 				}
 			}
 			else if (saber_anim_level == SS_FAST)
 			{
 				const float blueanimscale = 1.0f;
-				*animSpeed *= blueanimscale;
+				*anim_speed *= blueanimscale;
 			}
 			else if (saber_anim_level == SS_MEDIUM)
 			{
 				if (fatigued & 1 << FLAG_SLIGHTFATIGUE)
 				{//Slow down saber moves...
 					const float fatiguedanimscale = 0.97f;
-					*animSpeed *= fatiguedanimscale;
+					*anim_speed *= fatiguedanimscale;
 				}
 				else
 				{
 					const float realisticanimscale = 1.0f;
-					*animSpeed *= realisticanimscale;
+					*anim_speed *= realisticanimscale;
 				}
 			}
 			else if (saber_anim_level == SS_STRONG)
 			{
 				const float redanimscale = 1.0f;
-				*animSpeed *= redanimscale;
+				*anim_speed *= redanimscale;
 			}
 			else if (saber_anim_level == SS_DESANN)
 			{
 				const float heavyanimscale = 1.0f;
-				*animSpeed *= heavyanimscale;
+				*anim_speed *= heavyanimscale;
 			}
 			else if (saber_anim_level == SS_TAVION)
 			{
 				const float tavionanimscale = 0.9f;
-				*animSpeed *= tavionanimscale;
+				*anim_speed *= tavionanimscale;
 			}
 			else
 			{
-				*animSpeed *= saberanimscale;
+				*anim_speed *= saberanimscale;
 			}
 		}
 	}
@@ -6206,7 +6206,7 @@ qboolean PM_WalkingAnim(int anim);
 void BG_SetAnimFinal(playerState_t* ps, const animation_t* animations, const int set_anim_parts, const int anim,
 	const int set_anim_flags)
 {
-	float edit_animSpeed = 1;
+	float edit_anim_speed = 1;
 
 	if (!animations)
 	{
@@ -6214,9 +6214,9 @@ void BG_SetAnimFinal(playerState_t* ps, const animation_t* animations, const int
 	}
 
 	assert(anim > -1);
-	assert(animations[anim].firstFrame > 0 || animations[anim].numFrames > 0);
+	assert(animations[anim].firstFrame > 0 || animations[anim].num_frames > 0);
 
-	pm_saber_start_trans_anim(ps->client_num, ps->fd.saber_anim_level, ps->weapon, anim, &edit_animSpeed, ps->userInt3);
+	pm_saber_start_trans_anim(ps->client_num, ps->fd.saber_anim_level, ps->weapon, anim, &edit_anim_speed, ps->userInt3);
 
 	// Set torso anim
 	if (set_anim_parts & SETANIM_TORSO)
@@ -6241,17 +6241,17 @@ void BG_SetAnimFinal(playerState_t* ps, const animation_t* animations, const int
 			if (set_anim_flags & SETANIM_FLAG_HOLDLESS)
 			{
 				// Make sure to only wait in full 1/20 sec server frame intervals.
-				if (edit_animSpeed > 0)
+				if (edit_anim_speed > 0)
 				{
-					if (animations[anim].numFrames < 2)
+					if (animations[anim].num_frames < 2)
 					{
 						//single frame animations should just run with one frame worth of animation.
-						ps->torsoTimer = fabs(animations[anim].frameLerp) * (1 / edit_animSpeed);
+						ps->torsoTimer = fabs(animations[anim].frameLerp) * (1 / edit_anim_speed);
 					}
 					else
 					{
-						ps->torsoTimer = (animations[anim].numFrames - 1) * fabs(animations[anim].frameLerp) * (1 /
-							edit_animSpeed);
+						ps->torsoTimer = (animations[anim].num_frames - 1) * fabs(animations[anim].frameLerp) * (1 /
+							edit_anim_speed);
 					}
 
 					if (ps->torsoTimer > 1)
@@ -6263,7 +6263,7 @@ void BG_SetAnimFinal(playerState_t* ps, const animation_t* animations, const int
 			}
 			else
 			{
-				ps->torsoTimer = animations[anim].numFrames * fabs(animations[anim].frameLerp);
+				ps->torsoTimer = animations[anim].num_frames * fabs(animations[anim].frameLerp);
 			}
 		}
 	}
@@ -6291,8 +6291,8 @@ setAnimLegs:
 		{
 			if (set_anim_flags & SETANIM_FLAG_HOLDLESS)
 			{
-				int dur = (animations[anim].numFrames - 1) * fabs(animations[anim].frameLerp);
-				const int speedDif = dur - dur * edit_animSpeed;
+				int dur = (animations[anim].num_frames - 1) * fabs(animations[anim].frameLerp);
+				const int speedDif = dur - dur * edit_anim_speed;
 				dur += speedDif;
 				if (dur > 1)
 				{
@@ -6305,7 +6305,7 @@ setAnimLegs:
 			}
 			else
 			{
-				ps->legsTimer = animations[anim].numFrames * fabs(animations[anim].frameLerp);
+				ps->legsTimer = animations[anim].num_frames * fabs(animations[anim].frameLerp);
 			}
 
 			if (PM_RunningAnim(anim) ||
@@ -6342,7 +6342,7 @@ qboolean BG_HasAnimation(const int anim_index, const int animation)
 	const animation_t* animations = bgAllAnims[anim_index].anims;
 
 	//No frames, no anim
-	if (animations[animation].numFrames == 0)
+	if (animations[animation].num_frames == 0)
 		return qfalse;
 
 	//Has the sequence
@@ -6381,7 +6381,7 @@ void BG_SetAnim(playerState_t* ps, const animation_t* animations, int set_anim_p
 		animations = bgAllAnims[0].anims;
 	}
 
-	if (animations[anim].firstFrame == 0 && animations[anim].numFrames == 0)
+	if (animations[anim].firstFrame == 0 && animations[anim].num_frames == 0)
 	{
 		if (anim == BOTH_RUNBACK1 ||
 			anim == BOTH_WALKBACK1 ||
@@ -6391,7 +6391,7 @@ void BG_SetAnim(playerState_t* ps, const animation_t* animations, int set_anim_p
 			anim = BOTH_WALK2;
 		}
 
-		if (animations[anim].firstFrame == 0 && animations[anim].numFrames == 0)
+		if (animations[anim].firstFrame == 0 && animations[anim].num_frames == 0)
 		{
 			//still? Just return then I guess.
 			return;
@@ -6447,23 +6447,23 @@ void PM_SetAnim(const int set_anim_parts, const int anim, const int set_anim_fla
 float bg_get_torso_anim_point(const playerState_t* ps, const int anim_index)
 {
 	float attack_anim_length = 0;
-	float animSpeed_factor = 1.0f;
+	float anim_speed_factor = 1.0f;
 
 	//Be sure to scale by the proper anim speed just as if we were going to play the animation
-	pm_saber_start_trans_anim(ps->client_num, ps->fd.saber_anim_level, ps->weapon, ps->torsoAnim, &animSpeed_factor,
+	pm_saber_start_trans_anim(ps->client_num, ps->fd.saber_anim_level, ps->weapon, ps->torsoAnim, &anim_speed_factor,
 		ps->userInt3);
 
-	if (animSpeed_factor > 0)
+	if (anim_speed_factor > 0)
 	{
-		if (bgAllAnims[anim_index].anims[ps->torsoAnim].numFrames < 2)
+		if (bgAllAnims[anim_index].anims[ps->torsoAnim].num_frames < 2)
 		{
 			//single frame animations should just run with one frame worth of animation.
-			attack_anim_length = fabs(bgAllAnims[anim_index].anims[ps->torsoAnim].frameLerp) * (1 / animSpeed_factor);
+			attack_anim_length = fabs(bgAllAnims[anim_index].anims[ps->torsoAnim].frameLerp) * (1 / anim_speed_factor);
 		}
 		else
 		{
-			attack_anim_length = (bgAllAnims[anim_index].anims[ps->torsoAnim].numFrames - 1) * fabs(
-				bgAllAnims[anim_index].anims[ps->torsoAnim].frameLerp) * (1 / animSpeed_factor);
+			attack_anim_length = (bgAllAnims[anim_index].anims[ps->torsoAnim].num_frames - 1) * fabs(
+				bgAllAnims[anim_index].anims[ps->torsoAnim].frameLerp) * (1 / anim_speed_factor);
 		}
 
 		if (attack_anim_length > 1)
@@ -6483,23 +6483,23 @@ float bg_get_torso_anim_point(const playerState_t* ps, const int anim_index)
 float BG_GetLegsAnimPoint(const playerState_t* ps, const int anim_index)
 {
 	float attack_anim_length = 0;
-	float animSpeed_factor = 1.0f;
+	float anim_speed_factor = 1.0f;
 
 	//Be sure to scale by the proper anim speed just as if we were going to play the animation
-	pm_saber_start_trans_anim(ps->client_num, ps->fd.saber_anim_level, ps->weapon, ps->legsAnim, &animSpeed_factor,
+	pm_saber_start_trans_anim(ps->client_num, ps->fd.saber_anim_level, ps->weapon, ps->legsAnim, &anim_speed_factor,
 		ps->userInt3);
 
-	if (animSpeed_factor > 0)
+	if (anim_speed_factor > 0)
 	{
-		if (bgAllAnims[anim_index].anims[ps->legsAnim].numFrames < 2)
+		if (bgAllAnims[anim_index].anims[ps->legsAnim].num_frames < 2)
 		{
 			//single frame animations should just run with one frame worth of animation.
-			attack_anim_length = fabs(bgAllAnims[anim_index].anims[ps->legsAnim].frameLerp) * (1 / animSpeed_factor);
+			attack_anim_length = fabs(bgAllAnims[anim_index].anims[ps->legsAnim].frameLerp) * (1 / anim_speed_factor);
 		}
 		else
 		{
-			attack_anim_length = (bgAllAnims[anim_index].anims[ps->legsAnim].numFrames - 1) * fabs(
-				bgAllAnims[anim_index].anims[ps->legsAnim].frameLerp) * (1 / animSpeed_factor);
+			attack_anim_length = (bgAllAnims[anim_index].anims[ps->legsAnim].num_frames - 1) * fabs(
+				bgAllAnims[anim_index].anims[ps->legsAnim].frameLerp) * (1 / anim_speed_factor);
 		}
 
 		if (attack_anim_length > 1)

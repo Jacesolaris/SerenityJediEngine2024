@@ -1884,14 +1884,14 @@ static int SV_FindLeafFolders(const char* baseFolder, char* result, const int ma
 	int resultCount = 0;
 	const int numFiles = FS_GetFileList(baseFolder, "/", fileList, MAX_OSPATH * maxResults);
 
-	char* fileName = fileList;
+	char* file_name = fileList;
 	for (int i = 0; i < numFiles; i++)
 	{
-		if (Q_stricmp(fileName, ".") && Q_stricmp(fileName, ".."))
+		if (Q_stricmp(file_name, ".") && Q_stricmp(file_name, ".."))
 		{
 			char fullFolder[MAX_OSPATH];
 			char* nextResult = nullptr;
-			Com_sprintf(fullFolder, sizeof fullFolder, "%s/%s", baseFolder, fileName);
+			Com_sprintf(fullFolder, sizeof fullFolder, "%s/%s", baseFolder, file_name);
 			if (result != nullptr)
 			{
 				nextResult = &result[maxFolderLength * resultCount];
@@ -1916,7 +1916,7 @@ static int SV_FindLeafFolders(const char* baseFolder, char* result, const int ma
 				}
 			}
 		}
-		fileName += strlen(fileName) + 1;
+		file_name += strlen(file_name) + 1;
 	}
 
 	Z_Free(fileList);
@@ -2074,30 +2074,6 @@ static void SV_Record_f(void)
 	}
 
 	SV_RecordDemo(cl, demoName);
-}
-
-/*
-=================
-SV_WhitelistIP_f
-=================
-*/
-static void SV_WhitelistIP_f(void) {
-	if (Cmd_Argc() < 2) {
-		Com_Printf("Usage: whitelistip <ip>...\n");
-		return;
-	}
-
-	for (int i = 1; i < Cmd_Argc(); i++) {
-		netadr_t	adr;
-
-		if (NET_StringToAdr(Cmd_Argv(i), &adr)) {
-			SVC_WhitelistAdr(adr);
-			Com_Printf("Added %s to the IP whitelist\n", NET_AdrToString(adr));
-		}
-		else {
-			Com_Printf("Incorrect IP address: %s\n", Cmd_Argv(i));
-		}
-	}
 }
 
 //===========================================================

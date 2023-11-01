@@ -39,7 +39,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 static void Howler_Attack(float enemy_dist, qboolean howl);
 extern qboolean NPC_TryJump_Gent(gentity_t* goal, float max_xy_dist, float max_z_diff);
-extern void G_GetBoltPosition(gentity_t* self, int boltIndex, vec3_t pos, int modelIndex); //NPC_utils.c
+extern void G_GetBoltPosition(gentity_t* self, int bolt_index, vec3_t pos, int model_index); //NPC_utils.c
 extern qboolean NAV_DirSafe(const gentity_t* self, vec3_t dir, float dist);
 
 /*
@@ -84,7 +84,7 @@ static qboolean NPC_Howler_Move(const int random_jump_chance)
 		//standing around
 		return qfalse;
 	}
-	if (NPCS.NPC->client->ps.groundentityNum == ENTITYNUM_NONE)
+	if (NPCS.NPC->client->ps.groundentity_num == ENTITYNUM_NONE)
 	{
 		//in air, don't do anything
 		return qfalse;
@@ -247,10 +247,10 @@ static void Howler_TryDamage(const int damage, const qboolean tongue, const qboo
 	// Should probably trace from the mouth, but, ah well.
 	trap->Trace(&tr, start, vec3_origin, vec3_origin, end, NPCS.NPC->s.number, MASK_SHOT, qfalse, 0, 0);
 
-	if (tr.entityNum < ENTITYNUM_WORLD)
+	if (tr.entity_num < ENTITYNUM_WORLD)
 	{
 		//hit *something*
-		gentity_t* victim = &g_entities[tr.entityNum];
+		gentity_t* victim = &g_entities[tr.entity_num];
 		if (!victim->client
 			|| victim->client->NPC_class != CLASS_HOWLER)
 		{
@@ -283,8 +283,8 @@ static void Howler_TryDamage(const int damage, const qboolean tongue, const qboo
 }
 
 //Moved in from SP
-extern int NPC_GetEntsNearBolt(int* radius_ents, float radius, int boltIndex, vec3_t bolt_org);
-extern float NPC_EntRangeFromBolt(const gentity_t* targ_ent, int boltIndex);
+extern int NPC_GetEntsNearBolt(int* radius_ents, float radius, int bolt_index, vec3_t bolt_org);
+extern float NPC_EntRangeFromBolt(const gentity_t* targ_ent, int bolt_index);
 
 static void Howler_Howl(void)
 {
@@ -418,7 +418,7 @@ static void Howler_Attack(const float enemy_dist, const qboolean howl)
 			AngleVectors(yawAng, fwd, NULL, NULL);
 			VectorScale(fwd, enemy_dist * 3.0f, NPCS.NPC->client->ps.velocity);
 			NPCS.NPC->client->ps.velocity[2] = 200;
-			NPCS.NPC->client->ps.groundentityNum = ENTITYNUM_NONE;
+			NPCS.NPC->client->ps.groundentity_num = ENTITYNUM_NONE;
 
 			attackAnim = BOTH_ATTACK1;
 		}
@@ -501,7 +501,7 @@ static void Howler_Attack(const float enemy_dist, const qboolean howl)
 static void Howler_Combat(void)
 {
 	qboolean faced = qfalse;
-	if (NPCS.NPC->client->ps.groundentityNum == ENTITYNUM_NONE)
+	if (NPCS.NPC->client->ps.groundentity_num == ENTITYNUM_NONE)
 	{
 		//not on the ground
 		if (NPCS.NPC->client->ps.legsAnim == BOTH_JUMP1

@@ -136,7 +136,7 @@ rgb_ycc_start(const j_compress_ptr cinfo)
 
 METHODDEF(void)
 rgb_ycc_convert(const j_compress_ptr cinfo,
-	JSAMPARRAY input_buf, const JSAMp_image output_buf,
+	JSAMPARRAY input_buf, const JSAMPIMAGE output_buf,
 	JDIMENSION output_row, int num_rows)
 {
 	const my_cconvert_ptr cconvert = (my_cconvert_ptr)cinfo->cconvert;
@@ -186,7 +186,7 @@ rgb_ycc_convert(const j_compress_ptr cinfo,
 
 METHODDEF(void)
 rgb_gray_convert(const j_compress_ptr cinfo,
-	JSAMPARRAY input_buf, const JSAMp_image output_buf,
+	JSAMPARRAY input_buf, const JSAMPIMAGE output_buf,
 	JDIMENSION output_row, int num_rows)
 {
 	const my_cconvert_ptr cconvert = (my_cconvert_ptr)cinfo->cconvert;
@@ -219,7 +219,7 @@ rgb_gray_convert(const j_compress_ptr cinfo,
 
 METHODDEF(void)
 cmyk_ycck_convert(const j_compress_ptr cinfo,
-	JSAMPARRAY input_buf, const JSAMp_image output_buf,
+	JSAMPARRAY input_buf, const JSAMPIMAGE output_buf,
 	JDIMENSION output_row, int num_rows)
 {
 	const my_cconvert_ptr cconvert = (my_cconvert_ptr)cinfo->cconvert;
@@ -272,7 +272,7 @@ cmyk_ycck_convert(const j_compress_ptr cinfo,
 
 METHODDEF(void)
 rgb_rgb1_convert(const j_compress_ptr cinfo,
-	JSAMPARRAY input_buf, const JSAMp_image output_buf,
+	JSAMPARRAY input_buf, const JSAMPIMAGE output_buf,
 	JDIMENSION output_row, int num_rows)
 {
 	const JDIMENSION num_cols = cinfo->image_width;
@@ -306,7 +306,7 @@ rgb_rgb1_convert(const j_compress_ptr cinfo,
 
 METHODDEF(void)
 grayscale_convert(const j_compress_ptr cinfo,
-	JSAMPARRAY input_buf, const JSAMp_image output_buf,
+	JSAMPARRAY input_buf, const JSAMPIMAGE output_buf,
 	JDIMENSION output_row, int num_rows)
 {
 	const int instride = cinfo->input_components;
@@ -330,7 +330,7 @@ grayscale_convert(const j_compress_ptr cinfo,
 
 METHODDEF(void)
 rgb_convert(const j_compress_ptr cinfo,
-	JSAMPARRAY input_buf, const JSAMp_image output_buf,
+	JSAMPARRAY input_buf, const JSAMPIMAGE output_buf,
 	JDIMENSION output_row, int num_rows)
 {
 	const JDIMENSION num_cols = cinfo->image_width;
@@ -359,7 +359,7 @@ rgb_convert(const j_compress_ptr cinfo,
 
 METHODDEF(void)
 null_convert(const j_compress_ptr cinfo,
-	JSAMPARRAY input_buf, const JSAMp_image output_buf,
+	JSAMPARRAY input_buf, const JSAMPIMAGE output_buf,
 	JDIMENSION output_row, int num_rows)
 {
 	const register int nc = cinfo->num_components;

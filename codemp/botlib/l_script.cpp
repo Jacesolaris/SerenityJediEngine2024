@@ -1371,7 +1371,7 @@ script_t* LoadScriptFile(const char* filename)
 	fclose(fp);
 #endif
 	//
-	script->length = COM_CompressShader(script->buffer);
+	script->length = COM_Compress(script->buffer);
 
 	return script;
 } //end of the function LoadScriptFile

@@ -220,7 +220,7 @@ build_bg_ycc_rgb_table(const j_decompress_ptr cinfo)
 
 METHODDEF(void)
 ycc_rgb_convert(const j_decompress_ptr cinfo,
-	const JSAMp_image input_buf, JDIMENSION input_row,
+	const JSAMPIMAGE input_buf, JDIMENSION input_row,
 	JSAMPARRAY output_buf, int num_rows)
 {
 	const my_cconvert_ptr cconvert = (my_cconvert_ptr)cinfo->cconvert;
@@ -286,7 +286,7 @@ build_rgb_y_table(const j_decompress_ptr cinfo)
 
 METHODDEF(void)
 rgb_gray_convert(const j_decompress_ptr cinfo,
-	const JSAMp_image input_buf, JDIMENSION input_row,
+	const JSAMPIMAGE input_buf, JDIMENSION input_row,
 	JSAMPARRAY output_buf, int num_rows)
 {
 	const my_cconvert_ptr cconvert = (my_cconvert_ptr)cinfo->cconvert;
@@ -321,7 +321,7 @@ rgb_gray_convert(const j_decompress_ptr cinfo,
 
 METHODDEF(void)
 rgb1_rgb_convert(const j_decompress_ptr cinfo,
-	const JSAMp_image input_buf, JDIMENSION input_row,
+	const JSAMPIMAGE input_buf, JDIMENSION input_row,
 	JSAMPARRAY output_buf, int num_rows)
 {
 	const JDIMENSION num_cols = cinfo->output_width;
@@ -354,7 +354,7 @@ rgb1_rgb_convert(const j_decompress_ptr cinfo,
 
 METHODDEF(void)
 rgb1_gray_convert(const j_decompress_ptr cinfo,
-	const JSAMp_image input_buf, JDIMENSION input_row,
+	const JSAMPIMAGE input_buf, JDIMENSION input_row,
 	JSAMPARRAY output_buf, int num_rows)
 {
 	const my_cconvert_ptr cconvert = (my_cconvert_ptr)cinfo->cconvert;
@@ -391,7 +391,7 @@ rgb1_gray_convert(const j_decompress_ptr cinfo,
 
 METHODDEF(void)
 rgb_convert(const j_decompress_ptr cinfo,
-	const JSAMp_image input_buf, JDIMENSION input_row,
+	const JSAMPIMAGE input_buf, JDIMENSION input_row,
 	JSAMPARRAY output_buf, int num_rows)
 {
 	const JDIMENSION num_cols = cinfo->output_width;
@@ -419,7 +419,7 @@ rgb_convert(const j_decompress_ptr cinfo,
 
 METHODDEF(void)
 null_convert(const j_decompress_ptr cinfo,
-	const JSAMp_image input_buf, JDIMENSION input_row,
+	const JSAMPIMAGE input_buf, JDIMENSION input_row,
 	JSAMPARRAY output_buf, int num_rows)
 {
 	const register int nc = cinfo->num_components;
@@ -447,7 +447,7 @@ null_convert(const j_decompress_ptr cinfo,
 
 METHODDEF(void)
 grayscale_convert(const j_decompress_ptr cinfo,
-	const JSAMp_image input_buf, const JDIMENSION input_row,
+	const JSAMPIMAGE input_buf, const JDIMENSION input_row,
 	const JSAMPARRAY output_buf, const int num_rows)
 {
 	jcopy_sample_rows(input_buf[0], input_row, output_buf, 0,
@@ -462,7 +462,7 @@ grayscale_convert(const j_decompress_ptr cinfo,
 
 METHODDEF(void)
 gray_rgb_convert(const j_decompress_ptr cinfo,
-	const JSAMp_image input_buf, JDIMENSION input_row,
+	const JSAMPIMAGE input_buf, JDIMENSION input_row,
 	JSAMPARRAY output_buf, int num_rows)
 {
 	const JDIMENSION num_cols = cinfo->output_width;
@@ -487,7 +487,7 @@ gray_rgb_convert(const j_decompress_ptr cinfo,
 
 METHODDEF(void)
 ycck_cmyk_convert(const j_decompress_ptr cinfo,
-	const JSAMp_image input_buf, JDIMENSION input_row,
+	const JSAMPIMAGE input_buf, JDIMENSION input_row,
 	JSAMPARRAY output_buf, int num_rows)
 {
 	const my_cconvert_ptr cconvert = (my_cconvert_ptr)cinfo->cconvert;

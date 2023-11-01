@@ -38,12 +38,12 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 #define _STENCIL_REVERSE
 
-typedef struct {
+using edgeDef_t = struct {
 	int		i2;
 	int		facing;
-} edgeDef_t;
+};
 
-#define	MAX_EDGE_DEFS	32
+constexpr auto MAX_EDGE_DEFS = 32;
 
 static	edgeDef_t	edgeDefs[SHADER_MAX_VERTEXES][MAX_EDGE_DEFS];
 static	int			numEdgeDefs[SHADER_MAX_VERTEXES];
@@ -51,9 +51,7 @@ static	int			facing[SHADER_MAX_INDEXES / 3];
 static	vec3_t		shadowXyz[SHADER_MAX_VERTEXES];
 
 void R_AddEdgeDef(const int i1, const int i2, const int facing) {
-	int		c;
-
-	c = numEdgeDefs[i1];
+	const int c = numEdgeDefs[i1];
 	if (c == MAX_EDGE_DEFS) {
 		return;		// overflow
 	}
@@ -63,10 +61,9 @@ void R_AddEdgeDef(const int i1, const int i2, const int facing) {
 	numEdgeDefs[i1]++;
 }
 
-void R_RenderShadowEdges(void) {
+void R_RenderShadowEdges() {
 	int		i;
 	int		c;
-	int		j;
 	int		i2;
 	//int		c_edges, c_rejected;
 #if 0
@@ -87,9 +84,9 @@ void R_RenderShadowEdges(void) {
 	c_rejected = 0;
 #endif
 
-	for (i = 0; i < tess.numVertexes; i++) {
+	for (i = 0; i < tess.num_vertexes; i++) {
 		c = numEdgeDefs[i];
-		for (j = 0; j < c; j++) {
+		for (int j = 0; j < c; j++) {
 			if (!edgeDefs[i][j].facing) {
 				continue;
 			}
@@ -138,7 +135,7 @@ void R_RenderShadowEdges(void) {
 #ifdef _STENCIL_REVERSE
 	//Carmack Reverse<tm> method requires that volumes
 	//be capped properly -rww
-	numTris = tess.numIndexes / 3;
+	numTris = tess.num_indexes / 3;
 
 	for (i = 0; i < numTris; i++)
 	{
@@ -178,8 +175,8 @@ triangleFromEdge[ v1 ][ v2 ]
   }
 =================
 */
-void RB_DoShadowTessEnd(vec3_t lightPos);
-void RB_ShadowTessEnd(void)
+void RB_DoShadowTessEnd(vec3_t light_pos);
+void RB_ShadowTessEnd()
 {
 #if 0
 	if (backEnd.currentEntity &&
@@ -191,7 +188,7 @@ void RB_ShadowTessEnd(void)
 		return;
 	}
 
-	//	if (!tess.dlightBits)
+	//	if (!tess.dlight_bits)
 	//	{
 	//		return;
 	//	}
@@ -202,7 +199,7 @@ void RB_ShadowTessEnd(void)
 	R_TransformDlights(backEnd.refdef.num_dlights, backEnd.refdef.dlights, &backEnd.ori);
 	/*	while (i < tr.refdef.num_dlights)
 		{
-			if (tess.dlightBits & (1 << i))
+			if (tess.dlight_bits & (1 << i))
 			{
 				dl = &tr.refdef.dlights[i];
 
@@ -217,46 +214,46 @@ void RB_ShadowTessEnd(void)
 	RB_DoShadowTessEnd(dl->transformed);
 
 #else //old ents-only way
-	RB_DoShadowTessEnd(NULL);
+	RB_DoShadowTessEnd(nullptr);
 #endif
 }
 
-void RB_DoShadowTessEnd(vec3_t lightPos)
+void RB_DoShadowTessEnd(vec3_t light_pos)
 {
 	int		i;
-	int		numTris;
-	vec3_t	lightDir;
+	int		num_tris;
+	vec3_t	light_dir;
 
 	if (glConfig.stencilBits < 4) {
 		return;
 	}
 
 #if 1 //controlled method - try to keep shadows in range so they don't show through so much -rww
-	vec3_t	worldxyz;
-	vec3_t	entLight;
-	float	groundDist;
+	vec3_t	ent_light;
 
-	VectorCopy(backEnd.currentEntity->lightDir, entLight);
-	entLight[2] = 0.0f;
-	VectorNormalize(entLight);
+	VectorCopy(backEnd.currentEntity->lightDir, ent_light);
+	ent_light[2] = 0.0f;
+	VectorNormalize(ent_light);
 
 	//Oh well, just cast them straight down no matter what onto the ground plane.
 	//This presets no chance of screwups and still looks better than a stupid
 	//shader blob.
-	VectorSet(lightDir, entLight[0] * 0.3f, entLight[1] * 0.3f, 1.0f);
+	VectorSet(light_dir, ent_light[0] * 0.3f, ent_light[1] * 0.3f, 1.0f);
 	// project vertexes away from light direction
-	for (i = 0; i < tess.numVertexes; i++) {
+	for (i = 0; i < tess.num_vertexes; i++)
+	{
+		vec3_t worldxyz;
 		//add or.origin to vert xyz to end up with world oriented coord, then figure
 		//out the ground pos for the vert to project the shadow volume to
 		VectorAdd(tess.xyz[i], backEnd.ori.origin, worldxyz);
-		groundDist = worldxyz[2] - backEnd.currentEntity->e.shadowPlane;
-		groundDist += 16.0f; //fudge factor
-		VectorMA(tess.xyz[i], -groundDist, lightDir, shadowXyz[i]);
+		float ground_dist = worldxyz[2] - backEnd.currentEntity->e.shadowPlane;
+		ground_dist += 100.0f; //fudge factor
+		VectorMA(tess.xyz[i], -ground_dist, light_dir, shadowXyz[i]);
 	}
 #else
 	if (lightPos)
 	{
-		for (i = 0; i < tess.numVertexes; i++)
+		for (i = 0; i < tess.num_vertexes; i++)
 		{
 			shadowXyz[i][0] = tess.xyz[i][0] + ((tess.xyz[i][0] - lightPos[0]) * 128.0f);
 			shadowXyz[i][1] = tess.xyz[i][1] + ((tess.xyz[i][1] - lightPos[1]) * 128.0f);
@@ -268,51 +265,51 @@ void RB_DoShadowTessEnd(vec3_t lightPos)
 		VectorCopy(backEnd.currentEntity->lightDir, lightDir);
 
 		// project vertexes away from light direction
-		for (i = 0; i < tess.numVertexes; i++) {
+		for (i = 0; i < tess.num_vertexes; i++) {
 			VectorMA(tess.xyz[i], -512, lightDir, shadowXyz[i]);
 		}
 	}
 #endif
 	// decide which triangles face the light
-	memset(numEdgeDefs, 0, 4 * tess.numVertexes);
+	memset(numEdgeDefs, 0, 4 * tess.num_vertexes);
 
-	numTris = tess.numIndexes / 3;
-	for (i = 0; i < numTris; i++) {
-		int		i1, i2, i3;
-		vec3_t	d1, d2, normal;
-		float* v1, * v2, * v3;
+	num_tris = tess.num_indexes / 3;
+	for (i = 0; i < num_tris; i++) {
 		float	d;
 
-		i1 = tess.indexes[i * 3 + 0];
-		i2 = tess.indexes[i * 3 + 1];
-		i3 = tess.indexes[i * 3 + 2];
+		const int i1 = tess.indexes[i * 3 + 0];
+		const int i2 = tess.indexes[i * 3 + 1];
+		const int i3 = tess.indexes[i * 3 + 2];
 
-		v1 = tess.xyz[i1];
-		v2 = tess.xyz[i2];
-		v3 = tess.xyz[i3];
+		const float* v1 = tess.xyz[i1];
+		const float* v2 = tess.xyz[i2];
+		const float* v3 = tess.xyz[i3];
 
-		if (!lightPos)
+		if (!light_pos)
 		{
+			vec3_t normal;
+			vec3_t d2;
+			vec3_t d1;
 			VectorSubtract(v2, v1, d1);
 			VectorSubtract(v3, v1, d2);
 			CrossProduct(d1, d2, normal);
 
-			d = DotProduct(normal, lightDir);
+			d = DotProduct(normal, light_dir);
 		}
 		else
 		{
-			float planeEq[4];
-			planeEq[0] = v1[1] * (v2[2] - v3[2]) + v2[1] * (v3[2] - v1[2]) + v3[1] * (v1[2] - v2[2]);
-			planeEq[1] = v1[2] * (v2[0] - v3[0]) + v2[2] * (v3[0] - v1[0]) + v3[2] * (v1[0] - v2[0]);
-			planeEq[2] = v1[0] * (v2[1] - v3[1]) + v2[0] * (v3[1] - v1[1]) + v3[0] * (v1[1] - v2[1]);
-			planeEq[3] = -(v1[0] * (v2[1] * v3[2] - v3[1] * v2[2]) +
+			float plane_eq[4]{};
+			plane_eq[0] = v1[1] * (v2[2] - v3[2]) + v2[1] * (v3[2] - v1[2]) + v3[1] * (v1[2] - v2[2]);
+			plane_eq[1] = v1[2] * (v2[0] - v3[0]) + v2[2] * (v3[0] - v1[0]) + v3[2] * (v1[0] - v2[0]);
+			plane_eq[2] = v1[0] * (v2[1] - v3[1]) + v2[0] * (v3[1] - v1[1]) + v3[0] * (v1[1] - v2[1]);
+			plane_eq[3] = -(v1[0] * (v2[1] * v3[2] - v3[1] * v2[2]) +
 				v2[0] * (v3[1] * v1[2] - v1[1] * v3[2]) +
 				v3[0] * (v1[1] * v2[2] - v2[1] * v1[2]));
 
-			d = planeEq[0] * lightPos[0] +
-				planeEq[1] * lightPos[1] +
-				planeEq[2] * lightPos[2] +
-				planeEq[3];
+			d = plane_eq[0] * light_pos[0] +
+				plane_eq[1] * light_pos[1] +
+				plane_eq[2] * light_pos[2] +
+				plane_eq[3];
 		}
 
 		if (d > 0) {
@@ -350,21 +347,17 @@ void RB_DoShadowTessEnd(vec3_t lightPos)
 	qglDepthFunc(GL_LESS);
 
 	//now using the Carmack Reverse<tm> -rww
-	if (backEnd.viewParms.isMirror) {
-		//qglCullFace( GL_BACK );
-		GL_Cull(CT_BACK_SIDED);
-		qglStencilOp(GL_KEEP, GL_INCR, GL_KEEP);
+	if (glConfig.doStencilShadowsInOneDrawcall)
+	{
+		GL_Cull(CT_TWO_SIDED);
+		qglStencilOpSeparate(GL_FRONT, GL_KEEP, GL_INCR_WRAP, GL_KEEP);
+		qglStencilOpSeparate(GL_BACK, GL_KEEP, GL_DECR_WRAP, GL_KEEP);
 
 		R_RenderShadowEdges();
-
-		//qglCullFace( GL_FRONT );
-		GL_Cull(CT_FRONT_SIDED);
-		qglStencilOp(GL_KEEP, GL_DECR, GL_KEEP);
-
-		R_RenderShadowEdges();
+		qglDisable(GL_STENCIL_TEST);
 	}
-	else {
-		//qglCullFace( GL_FRONT );
+	else
+	{
 		GL_Cull(CT_FRONT_SIDED);
 		qglStencilOp(GL_KEEP, GL_INCR, GL_KEEP);
 
@@ -422,7 +415,7 @@ because otherwise shadows from different body parts would
 overlap and double darken.
 =================
 */
-void RB_ShadowFinish(void) {
+void RB_ShadowFinish() {
 	if (r_shadows->integer != 2) {
 		return;
 	}
@@ -439,10 +432,10 @@ void RB_ShadowFinish(void) {
 
 	qglStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
 
-	bool planeZeroBack = false;
+	bool plane_zero_back = false;
 	if (qglIsEnabled(GL_CLIP_PLANE0))
 	{
-		planeZeroBack = true;
+		plane_zero_back = true;
 		qglDisable(GL_CLIP_PLANE0);
 	}
 	GL_Cull(CT_TWO_SIDED);
@@ -472,7 +465,7 @@ void RB_ShadowFinish(void) {
 
 	qglColor4f(1, 1, 1, 1);
 	qglDisable(GL_STENCIL_TEST);
-	if (planeZeroBack)
+	if (plane_zero_back)
 	{
 		qglEnable(GL_CLIP_PLANE0);
 	}
@@ -485,39 +478,34 @@ RB_ProjectionShadowDeform
 
 =================
 */
-void RB_ProjectionShadowDeform(void) {
-	float* xyz;
-	int		i;
-	float	h;
-	vec3_t	ground;
-	vec3_t	light;
-	float	groundDist;
-	float	d;
-	vec3_t	lightDir;
+void RB_ProjectionShadowDeform() {
+	vec3_t	ground{};
+	vec3_t	light{};
+	vec3_t	light_dir;
 
-	xyz = (float*)tess.xyz;
+	auto xyz = reinterpret_cast<float*>(tess.xyz);
 
 	ground[0] = backEnd.ori.axis[0][2];
 	ground[1] = backEnd.ori.axis[1][2];
 	ground[2] = backEnd.ori.axis[2][2];
 
-	groundDist = backEnd.ori.origin[2] - backEnd.currentEntity->e.shadowPlane;
+	const float ground_dist = backEnd.ori.origin[2] - backEnd.currentEntity->e.shadowPlane;
 
-	VectorCopy(backEnd.currentEntity->lightDir, lightDir);
-	d = DotProduct(lightDir, ground);
+	VectorCopy(backEnd.currentEntity->lightDir, light_dir);
+	float d = DotProduct(light_dir, ground);
 	// don't let the shadows get too long or go negative
 	if (d < 0.5) {
-		VectorMA(lightDir, (0.5 - d), ground, lightDir);
-		d = DotProduct(lightDir, ground);
+		VectorMA(light_dir, 0.5 - d, ground, light_dir);
+		d = DotProduct(light_dir, ground);
 	}
 	d = 1.0 / d;
 
-	light[0] = lightDir[0] * d;
-	light[1] = lightDir[1] * d;
-	light[2] = lightDir[2] * d;
+	light[0] = light_dir[0] * d;
+	light[1] = light_dir[1] * d;
+	light[2] = light_dir[2] * d;
 
-	for (i = 0; i < tess.numVertexes; i++, xyz += 4) {
-		h = DotProduct(xyz, ground) + groundDist;
+	for (int i = 0; i < tess.num_vertexes; i++, xyz += 4) {
+		const float h = DotProduct(xyz, ground) + ground_dist;
 
 		xyz[0] -= light[0] * h;
 		xyz[1] -= light[1] * h;
@@ -526,13 +514,12 @@ void RB_ProjectionShadowDeform(void) {
 }
 
 //update tr.screenImage
-void RB_CaptureScreenImage(void)
+void RB_CaptureScreenImage()
 {
-	int radX = 2048;
-	int radY = 2048;
-	int x = glConfig.vidWidth / 2;
-	int y = glConfig.vidHeight / 2;
-	int cX, cY;
+	int rad_x = 2048;
+	int rad_y = 2048;
+	const int x = glConfig.vidWidth / 2;
+	const int y = glConfig.vidHeight / 2;
 
 	GL_Bind(tr.screenImage);
 	//using this method, we could pixel-filter the texture and all sorts of crazy stuff.
@@ -547,46 +534,46 @@ void RB_CaptureScreenImage(void)
 	qglTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 512, 512, 0, GL_RGBA, GL_UNSIGNED_BYTE, tmp);
 	*/
 
-	if (radX > glConfig.maxTextureSize)
+	if (rad_x > glConfig.maxTextureSize)
 	{
-		radX = glConfig.maxTextureSize;
+		rad_x = glConfig.maxTextureSize;
 	}
-	if (radY > glConfig.maxTextureSize)
+	if (rad_y > glConfig.maxTextureSize)
 	{
-		radY = glConfig.maxTextureSize;
-	}
-
-	while (glConfig.vidWidth < radX)
-	{
-		radX /= 2;
-	}
-	while (glConfig.vidHeight < radY)
-	{
-		radY /= 2;
+		rad_y = glConfig.maxTextureSize;
 	}
 
-	cX = x - (radX / 2);
-	cY = y - (radY / 2);
+	while (glConfig.vidWidth < rad_x)
+	{
+		rad_x /= 2;
+	}
+	while (glConfig.vidHeight < rad_y)
+	{
+		rad_y /= 2;
+	}
 
-	if (cX + radX > glConfig.vidWidth)
+	int c_x = x - rad_x / 2;
+	int c_y = y - rad_y / 2;
+
+	if (c_x + rad_x > glConfig.vidWidth)
 	{ //would it go off screen?
-		cX = glConfig.vidWidth - radX;
+		c_x = glConfig.vidWidth - rad_x;
 	}
-	else if (cX < 0)
+	else if (c_x < 0)
 	{ //cap it off at 0
-		cX = 0;
+		c_x = 0;
 	}
 
-	if (cY + radY > glConfig.vidHeight)
+	if (c_y + rad_y > glConfig.vidHeight)
 	{ //would it go off screen?
-		cY = glConfig.vidHeight - radY;
+		c_y = glConfig.vidHeight - rad_y;
 	}
-	else if (cY < 0)
+	else if (c_y < 0)
 	{ //cap it off at 0
-		cY = 0;
+		c_y = 0;
 	}
 
-	qglCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16, cX, cY, radX, radY, 0);
+	qglCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16, c_x, c_y, rad_x, rad_y, 0);
 }
 
 //yeah.. not really shadow-related.. but it's stencil-related. -rww
@@ -594,11 +581,11 @@ float tr_distortionAlpha = 1.0f; //opaque
 float tr_distortionStretch = 0.0f; //no stretch override
 qboolean tr_distortionPrePost = qfalse; //capture before postrender phase?
 qboolean tr_distortionNegate = qfalse; //negative blend mode
-void RB_DistortionFill(void)
+void RB_DistortionFill()
 {
 	float alpha = tr_distortionAlpha;
-	float spost = 0.0f;
-	float spost2 = 0.0f;
+	float spost;
+	float spost2;
 
 	if (glConfig.stencilBits < 4)
 	{

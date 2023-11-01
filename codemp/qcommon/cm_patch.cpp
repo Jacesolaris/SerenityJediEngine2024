@@ -33,7 +33,7 @@ void CM_ClearLevelPatches( void );
 struct patchCollide_s	*CM_GeneratePatchCollide( int width, int height, const vec3_t *points );
 void CM_TraceThroughPatchCollide( traceWork_t *tw, const struct patchCollide_s *pc );
 qboolean CM_PositionTestInPatchCollide( traceWork_t *tw, const struct patchCollide_s *pc );
-void CM_DrawDebugSurface( void (*drawPoly)(int color, int numPoints, flaot *points) );
+void CM_DrawDebugSurface( void (*drawPoly)(int color, int num_points, flaot *points) );
 
 Issues for collision against curved surfaces:
 
@@ -395,7 +395,7 @@ PATCH COLLIDE GENERATION
 ================================================================================
 */
 
-static	int				numPlanes;
+static	int				num_planes;
 static	patchPlane_t	planes[MAX_PATCH_PLANES];
 
 //static	int				numFacets;
@@ -454,23 +454,23 @@ static void CM_SnapVector(vec3_t normal) {
 
 static int CM_FindPlane2(float plane[4], int* flipped) {
 	// see if the points are close enough to an existing plane
-	for (int i = 0; i < numPlanes; i++) {
+	for (int i = 0; i < num_planes; i++) {
 		if (CM_PlaneEqual(&planes[i], plane, flipped)) return i;
 	}
 
 	// add a new plane
-	if (numPlanes == MAX_PATCH_PLANES) {
+	if (num_planes == MAX_PATCH_PLANES) {
 		Com_Error(ERR_DROP, "CM_FindPlane2: MAX_PATCH_PLANES (%d)", MAX_PATCH_PLANES);
 	}
 
-	VectorCopy4(plane, planes[numPlanes].plane);
-	planes[numPlanes].signbits = CM_SignbitsForNormal(plane);
+	VectorCopy4(plane, planes[num_planes].plane);
+	planes[num_planes].signbits = CM_SignbitsForNormal(plane);
 
-	numPlanes++;
+	num_planes++;
 
 	*flipped = qfalse;
 
-	return numPlanes - 1;
+	return num_planes - 1;
 }
 
 /*
@@ -486,7 +486,7 @@ static int CM_FindPlane(float* p1, float* p2, float* p3) {
 	}
 
 	// see if the points are close enough to an existing plane
-	for (int i = 0; i < numPlanes; i++) {
+	for (int i = 0; i < num_planes; i++) {
 		if (DotProduct(plane, planes[i].plane) < 0) {
 			continue;	// allow backwards planes?
 		}
@@ -511,16 +511,16 @@ static int CM_FindPlane(float* p1, float* p2, float* p3) {
 	}
 
 	// add a new plane
-	if (numPlanes == MAX_PATCH_PLANES) {
+	if (num_planes == MAX_PATCH_PLANES) {
 		Com_Error(ERR_DROP, "CM_FindPlane: MAX_PATCH_PLANES (%d)", MAX_PATCH_PLANES);
 	}
 
-	VectorCopy4(plane, planes[numPlanes].plane);
-	planes[numPlanes].signbits = CM_SignbitsForNormal(plane);
+	VectorCopy4(plane, planes[num_planes].plane);
+	planes[num_planes].signbits = CM_SignbitsForNormal(plane);
 
-	numPlanes++;
+	num_planes++;
 
-	return numPlanes - 1;
+	return num_planes - 1;
 }
 
 /*
@@ -647,7 +647,7 @@ CM_SetBorderInward
 static void CM_SetBorderInward(facet_t* facet, cGrid_t* grid, int gridPlanes[MAX_GRID_SIZE][MAX_GRID_SIZE][2],
 	int i, int j, int which) {
 	float* points[4]{};
-	int		numPoints;
+	int		num_points;
 
 	switch (which) {
 	case -1:
@@ -655,19 +655,19 @@ static void CM_SetBorderInward(facet_t* facet, cGrid_t* grid, int gridPlanes[MAX
 		points[1] = grid->points[i + 1][j];
 		points[2] = grid->points[i + 1][j + 1];
 		points[3] = grid->points[i][j + 1];
-		numPoints = 4;
+		num_points = 4;
 		break;
 	case 0:
 		points[0] = grid->points[i][j];
 		points[1] = grid->points[i + 1][j];
 		points[2] = grid->points[i + 1][j + 1];
-		numPoints = 3;
+		num_points = 3;
 		break;
 	case 1:
 		points[0] = grid->points[i + 1][j + 1];
 		points[1] = grid->points[i][j + 1];
 		points[2] = grid->points[i][j];
-		numPoints = 3;
+		num_points = 3;
 		break;
 	default:
 		Com_Error(ERR_FATAL, "CM_SetBorderInward: bad parameter");
@@ -677,7 +677,7 @@ static void CM_SetBorderInward(facet_t* facet, cGrid_t* grid, int gridPlanes[MAX
 		int front = 0;
 		int back = 0;
 
-		for (int l = 0; l < numPoints; l++) {
+		for (int l = 0; l < num_points; l++) {
 			const int side = CM_PointOnPlaneSide(points[l], facet->borderPlanes[k]);
 			if (side == SIDE_FRONT) {
 				front++;
@@ -952,7 +952,7 @@ static void CM_PatchCollideFromGrid(cGrid_t* grid, patchCollide_t* pf) {
 
 	facets = static_cast<facet_t*>(Z_Malloc(MAX_FACETS * sizeof(facet_t), TAG_TEMP_WORKSPACE, qfalse, 4));
 
-	numPlanes = 0;
+	num_planes = 0;
 	int numFacets = 0;
 
 	// find the planes for each triangle of the grid
@@ -1097,7 +1097,7 @@ static void CM_PatchCollideFromGrid(cGrid_t* grid, patchCollide_t* pf) {
 	}
 
 	// copy the results out
-	pf->numPlanes = numPlanes;
+	pf->num_planes = num_planes;
 	pf->numFacets = numFacets;
 	if (numFacets)
 	{
@@ -1108,8 +1108,8 @@ static void CM_PatchCollideFromGrid(cGrid_t* grid, patchCollide_t* pf) {
 	{
 		pf->facets = nullptr;
 	}
-	pf->planes = static_cast<patchPlane_t*>(Hunk_Alloc(numPlanes * sizeof * pf->planes, h_high));
-	Com_Memcpy(pf->planes, planes, numPlanes * sizeof * pf->planes);
+	pf->planes = static_cast<patchPlane_t*>(Hunk_Alloc(num_planes * sizeof * pf->planes, h_high));
+	Com_Memcpy(pf->planes, planes, num_planes * sizeof * pf->planes);
 
 	Z_Free(facets);
 }
@@ -1228,7 +1228,7 @@ static void CM_TracePointThroughPatchCollide(traceWork_t* tw, trace_t& trace, co
 
 	// determine the trace's relationship to all planes
 	planes = pc->planes;
-	for (i = 0; i < pc->numPlanes; i++, planes++) {
+	for (i = 0; i < pc->num_planes; i++, planes++) {
 		offset = DotProduct(tw->offsets[planes->signbits], planes->plane);
 		d1 = DotProduct(tw->start, planes->plane) - planes->plane[3] + offset;
 		d2 = DotProduct(tw->end, planes->plane) - planes->plane[3] + offset;
@@ -1607,10 +1607,10 @@ Called from the renderer
 ==================
 */
 #ifndef BSPC
-void BotDrawDebugPolygons(void (*drawPoly)(int color, int numPoints, const float* points), int value);
+void BotDrawDebugPolygons(void (*drawPoly)(int color, int num_points, const float* points), int value);
 #endif
 
-void CM_DrawDebugSurface(void (*drawPoly)(int color, int numPoints, const float* points)) {
+void CM_DrawDebugSurface(void (*drawPoly)(int color, int num_points, const float* points)) {
 	static cvar_t* cv;
 #ifndef BSPC
 	static cvar_t* cv2;

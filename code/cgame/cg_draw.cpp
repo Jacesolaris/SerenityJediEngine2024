@@ -4605,17 +4605,17 @@ void CG_DrawBlockPointBars()
 	}
 }
 
-void CG_AddBlockPointBarEnt(const int entNum)
+void CG_AddBlockPointBarEnt(const int ent_num)
 {
 	if (cg_numBlockPointBarEnts >= MAX_BLOCKPOINT_BAR_ENTS)
 	{
 		return;
 	}
 
-	if (DistanceSquared(cg_entities[entNum].lerpOrigin, g_entities[0].client->renderInfo.eyePoint) <
+	if (DistanceSquared(cg_entities[ent_num].lerpOrigin, g_entities[0].client->renderInfo.eyePoint) <
 		BLOCKPOINT_BAR_RANGE * BLOCKPOINT_BAR_RANGE)
 	{
-		cg_BlockPointBarEnts[cg_numBlockPointBarEnts++] = entNum;
+		cg_BlockPointBarEnts[cg_numBlockPointBarEnts++] = ent_num;
 	}
 }
 
@@ -4656,17 +4656,17 @@ void CG_DrawHealthBars()
 
 constexpr auto HEALTHBARRANGE = 200;
 
-void CG_AddHealthBarEnt(const int entNum)
+void CG_AddHealthBarEnt(const int ent_num)
 {
 	if (cg_numHealthBarEnts >= MAX_HEALTH_BAR_ENTS)
 	{
 		return;
 	}
 
-	if (DistanceSquared(cg_entities[entNum].lerpOrigin, g_entities[0].client->renderInfo.eyePoint) < HEALTHBARRANGE *
+	if (DistanceSquared(cg_entities[ent_num].lerpOrigin, g_entities[0].client->renderInfo.eyePoint) < HEALTHBARRANGE *
 		HEALTHBARRANGE)
 	{
-		cg_healthBarEnts[cg_numHealthBarEnts++] = entNum;
+		cg_healthBarEnts[cg_numHealthBarEnts++] = ent_num;
 	}
 }
 
@@ -5220,10 +5220,10 @@ static void CG_ScanForCrosshairEntity(const qboolean scanAll)
 			G2_NOCOLLIDE, 10);
 		// ); took out CONTENTS_SOLID| so you can target people through glass.... took out CONTENTS_CORPSE so disintegrated guys aren't shown, could just remove their body earlier too...
 
-		if (trace.entityNum < ENTITYNUM_WORLD)
+		if (trace.entity_num < ENTITYNUM_WORLD)
 		{
 			//hit something
-			trace_ent = &g_entities[trace.entityNum];
+			trace_ent = &g_entities[trace.entity_num];
 			if (trace_ent)
 			{
 				// Check for mind trickable-guys
@@ -5389,15 +5389,15 @@ static void CG_ScanForCrosshairEntity(const qboolean scanAll)
 			// trace should not be allowed to pick up anything if it started solid.  I tried actually moving the trace start back, which also worked,
 			//	but the dynamic cursor drawing caused it to render around the clip of the gun when I pushed the blaster all the way into a wall.
 			//	It looked quite horrible...but, if this is bad for some reason that I don't know
-			trace.entityNum = ENTITYNUM_NONE;
+			trace.entity_num = ENTITYNUM_NONE;
 		}
 
-		trace_ent = &g_entities[trace.entityNum];
+		trace_ent = &g_entities[trace.entity_num];
 	}
 	//draw crosshair at endpoint
 	CG_DrawCrosshair(trace.endpos);
 
-	g_crosshairEntNum = trace.entityNum;
+	g_crosshairEntNum = trace.entity_num;
 	g_crosshairEntDist = 4096 * trace.fraction;
 
 	if (!trace_ent)
@@ -5410,7 +5410,7 @@ static void CG_ScanForCrosshairEntity(const qboolean scanAll)
 	{
 		//looking at a valid ent
 		//store the distance
-		if (trace.entityNum != g_crosshairEntNum)
+		if (trace.entity_num != g_crosshairEntNum)
 		{
 			//new crosshair ent
 			g_crosshairSameEntTime = 0;
@@ -5443,18 +5443,18 @@ static void CG_ScanForCrosshairEntity(const qboolean scanAll)
 	}
 
 	// if the player is cloaked, don't show it
-	if (cg_entities[trace.entityNum].currentState.powerups & 1 << PW_CLOAKED)
+	if (cg_entities[trace.entity_num].currentState.powerups & 1 << PW_CLOAKED)
 	{
 		return;
 	}
 
 	// update the fade timer
-	if (cg.crosshairclient_num != trace.entityNum)
+	if (cg.crosshairclient_num != trace.entity_num)
 	{
 		infoStringCount = 0;
 	}
 
-	cg.crosshairclient_num = trace.entityNum;
+	cg.crosshairclient_num = trace.entity_num;
 	cg.crosshairClientTime = cg.time;
 }
 
@@ -6689,8 +6689,8 @@ float cg_draw_radar(const float y)
 				{
 					//I'm in a vehicle
 					//if it's targeting me, then play an alarm sound if I'm in a vehicle
-					if (cent->currentState.otherentityNum == cg.predicted_player_state.client_num || cent->
-						currentState.otherentityNum == cg.predicted_player_state.m_iVehicleNum)
+					if (cent->currentState.otherentity_num == cg.predicted_player_state.client_num || cent->
+						currentState.otherentity_num == cg.predicted_player_state.m_iVehicleNum)
 					{
 						if (radarLockSoundDebounceTime < cg.time)
 						{

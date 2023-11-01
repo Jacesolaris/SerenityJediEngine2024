@@ -31,27 +31,27 @@ void CM_LoadMap(const char* name, qboolean clientload, int* checksum, qboolean s
 void CM_ClearMap();
 int CM_TotalMapContents();
 
-clipHandle_t CM_InlineModel(int index); // 0 = world, 1 + are bmodels
-clipHandle_t CM_TempBoxModel(const vec3_t mins, const vec3_t maxs); //, const int contents );
+clip_handle_t CM_InlineModel(int index); // 0 = world, 1 + are bmodels
+clip_handle_t CM_TempBoxModel(const vec3_t mins, const vec3_t maxs); //, const int contents );
 
-int CM_ModelContents(clipHandle_t model, int sub_bsp_index);
+int CM_ModelContents(clip_handle_t model, int sub_bsp_index);
 
 int CM_NumInlineModels();
 char* CM_EntityString();
 char* CM_SubBSPEntityString(int index);
 int CM_LoadSubBSP(const char* name, qboolean clientload);
-int CM_FindSubBSP(int modelIndex);
+int CM_FindSubBSP(int model_index);
 
 // returns an ORed contents mask
-int CM_PointContents(const vec3_t p, clipHandle_t model);
-int CM_TransformedPointContents(const vec3_t p, clipHandle_t model, const vec3_t origin, const vec3_t angles);
+int CM_PointContents(const vec3_t p, clip_handle_t model);
+int CM_TransformedPointContents(const vec3_t p, clip_handle_t model, const vec3_t origin, const vec3_t angles);
 
 void CM_BoxTrace(trace_t* results, const vec3_t start, const vec3_t end,
 	const vec3_t mins, const vec3_t maxs,
-	clipHandle_t model, int brushmask);
+	clip_handle_t model, int brushmask);
 void CM_TransformedBoxTrace(trace_t* results, const vec3_t start, const vec3_t end,
 	const vec3_t mins, const vec3_t maxs,
-	clipHandle_t model, int brushmask,
+	clip_handle_t model, int brushmask,
 	const vec3_t origin, const vec3_t angles);
 
 byte* CM_ClusterPVS(int cluster);
@@ -76,10 +76,10 @@ void CM_WritePortalState();
 void CM_ReadPortalState();
 
 // cm_marks.c
-int CM_MarkFragments(int numPoints, const vec3_t* points, const vec3_t projection,
+int CM_MarkFragments(int num_points, const vec3_t* points, const vec3_t projection,
 	int maxPoints, vec3_t pointBuffer, int maxFragments, markFragment_t* fragmentBuffer);
 
 // cm_patch.c
-void CM_DrawDebugSurface(void (*drawPoly)(int color, int numPoints, const float* points));
+void CM_DrawDebugSurface(void (*drawPoly)(int color, int num_points, const float* points));
 
 #endif //__CM_PUBLIC_H__

@@ -248,8 +248,6 @@ cvar_t* r_marksOnTriangleMeshes;
 cvar_t* r_aviMotionJpegQuality;
 cvar_t* r_screenshotJpegQuality;
 cvar_t* r_surfaceSprites;
-cvar_t* r_weather;
-cvar_t* r_AdvancedsurfaceSprites;
 
 // the limits apply to the sum of all scenes in a frame --
 // the main view, all the 3D icons, etc
@@ -272,11 +270,12 @@ cvar_t* r_debugContext;
 cvar_t* r_debugWeather;
 
 cvar_t* r_com_rend2;
+cvar_t* r_weather;
 
 cvar_t* r_aspectCorrectFonts;
 
-extern void	RB_SetGL2D();
-void R_Splash()
+extern void	RB_SetGL2D(void);
+static void R_Splash()
 {
 	const GLfloat black[] = { 0.0f, 0.0f, 0.0f, 1.0f };
 
@@ -599,10 +598,6 @@ static void InitOpenGL(void)
 	}
 	else
 	{
-		if (r_com_rend2->integer != 1)
-		{
-			ri->Cvar_Set("com_rend2", "1");
-		}
 		// set default state
 		GL_SetDefaultState();
 	}
@@ -865,7 +860,7 @@ const void* RB_TakeScreenshotCmd(const void* data) {
 	cmd = (const screenshotCommand_t*)data;
 
 	// finish any 2D drawing if needed
-	if (tess.numIndexes)
+	if (tess.num_indexes)
 		RB_EndSurface();
 
 	const int frameNumber = backEndData->realFrameNumber;
@@ -894,7 +889,7 @@ const void* RB_TakeScreenshotCmd(const void* data) {
 	screenshot->height = cmd->height;
 	screenshot->format = cmd->format;
 	Q_strncpyz(
-		screenshot->filename, cmd->fileName, sizeof(screenshot->filename));
+		screenshot->filename, cmd->file_name, sizeof(screenshot->filename));
 
 	return (const void*)(cmd + 1);
 }
@@ -905,7 +900,7 @@ R_TakeScreenshot
 ==================
 */
 void R_TakeScreenshot(int x, int y, int width, int height, char* name, screenshotFormat_t format) {
-	static char	fileName[MAX_OSPATH]; // bad things if two screenshots per frame?
+	static char	file_name[MAX_OSPATH]; // bad things if two screenshots per frame?
 	screenshotCommand_t* cmd;
 
 	cmd = (screenshotCommand_t*)R_GetCommandBuffer(sizeof(*cmd));
@@ -918,8 +913,8 @@ void R_TakeScreenshot(int x, int y, int width, int height, char* name, screensho
 	cmd->y = y;
 	cmd->width = width;
 	cmd->height = height;
-	Q_strncpyz(fileName, name, sizeof(fileName));
-	cmd->fileName = fileName;
+	Q_strncpyz(file_name, name, sizeof(file_name));
+	cmd->file_name = file_name;
 	cmd->format = format;
 }
 
@@ -1131,7 +1126,7 @@ const void* RB_TakeVideoFrameCmd(const void* data)
 	GLint packAlign;
 
 	// finish any 2D drawing if needed
-	if (tess.numIndexes)
+	if (tess.num_indexes)
 		RB_EndSurface();
 
 	cmd = (const videoFrameCommand_t*)data;
@@ -1441,7 +1436,7 @@ static consoleCommand_t	commands[] = {
 	{ "gfxinfo",			GfxInfo_f },
 	{ "gfxmeminfo",			GfxMemInfo_f },
 	{ "r_we",				R_WorldEffect_f },
-	{ "modelList",			R_model_list_f },
+	{ "model_list",			R_model_list_f },
 	{ "vbolist",			R_VBOList_f },
 	{ "capframes",			R_CaptureFrameData_f },
 	{ "r_weather",			R_WeatherEffect_f },
@@ -1509,13 +1504,13 @@ void R_Register(void)
 	r_hdr = ri->Cvar_Get("r_hdr", "1", CVAR_ARCHIVE | CVAR_LATCH, "Disable/enable rendering in HDR");
 	r_floatLightmap = ri->Cvar_Get("r_floatLightmap", "1", CVAR_ARCHIVE | CVAR_LATCH, "Disable/enable HDR lightmap support");
 
-	r_toneMap = ri->Cvar_Get("r_tonemap", "1", CVAR_ARCHIVE | CVAR_LATCH, "Disable/enable tonemapping");
+	r_toneMap = ri->Cvar_Get("r_toneMap", "1", CVAR_ARCHIVE | CVAR_LATCH, "Disable/enable tonemapping");
 	r_forceToneMap = ri->Cvar_Get("r_forceToneMap", "0", CVAR_CHEAT, "");
 	r_forceToneMapMin = ri->Cvar_Get("r_forceToneMapMin", "-8.0", CVAR_CHEAT, "");
 	r_forceToneMapAvg = ri->Cvar_Get("r_forceToneMapAvg", "-2.0", CVAR_CHEAT, "");
 	r_forceToneMapMax = ri->Cvar_Get("r_forceToneMapMax", "0.0", CVAR_CHEAT, "");
 
-	r_autoExposure = ri->Cvar_Get("r_autoexposure", "1", CVAR_ARCHIVE, "Disable/enable auto exposure");
+	r_autoExposure = ri->Cvar_Get("r_autoExposure", "1", CVAR_ARCHIVE, "Disable/enable auto exposure");
 	r_forceAutoExposure = ri->Cvar_Get("r_forceAutoExposure", "0", CVAR_CHEAT, "");
 	r_forceAutoExposureMin = ri->Cvar_Get("r_forceAutoExposureMin", "-2.0", CVAR_CHEAT, "");
 	r_forceAutoExposureMax = ri->Cvar_Get("r_forceAutoExposureMax", "2.0", CVAR_CHEAT, "");
@@ -1650,7 +1645,6 @@ void R_Register(void)
 	r_aviMotionJpegQuality = ri->Cvar_Get("r_aviMotionJpegQuality", "90", CVAR_ARCHIVE, "");
 	r_screenshotJpegQuality = ri->Cvar_Get("r_screenshotJpegQuality", "90", CVAR_ARCHIVE, "");
 	r_surfaceSprites = ri->Cvar_Get("r_surfaceSprites", "1", CVAR_ARCHIVE, "");
-	r_AdvancedsurfaceSprites = ri->Cvar_Get("r_advancedlod", "1", CVAR_ARCHIVE, "");
 
 	r_aspectCorrectFonts = ri->Cvar_Get("r_aspectCorrectFonts", "0", CVAR_ARCHIVE, "");
 	r_maxpolys = ri->Cvar_Get("r_maxpolys", XSTRING(DEFAULT_MAX_POLYS), 0, "");
@@ -1678,9 +1672,7 @@ void R_Register(void)
 	broadsword_ragtobase = ri->Cvar_Get("broadsword_ragtobase", "2", CVAR_NONE, "");
 	broadsword_dircap = ri->Cvar_Get("broadsword_dircap", "64", CVAR_NONE, "");
 
-	r_debugWeather = ri->Cvar_Get("r_debugWeather", "0", CVAR_ARCHIVE, "");
-
-	r_com_rend2 = ri->Cvar_Get("com_rend2", "0", CVAR_ARCHIVE | CVAR_NORESTART, "");
+	r_com_rend2 = ri->Cvar_Get("com_rend2", "0", CVAR_ARCHIVE, "");
 
 	r_weather = ri->Cvar_Get("r_weather", "0", CVAR_ARCHIVE, "");
 	/*
@@ -1763,7 +1755,7 @@ static void R_InitBackEndFrameData()
 		}
 	}
 
-	backEndData->currentFrame = backEndData->frames;
+	backEndData->current_frame = backEndData->frames;
 }
 
 #ifdef _G2_GORE
@@ -1879,7 +1871,7 @@ static void R_InitStaticConstants()
 	// Setup default scene block
 	SceneBlock sceneBlock = {};
 	sceneBlock.globalFogIndex = -1;
-	sceneBlock.currentTime = 0.1f;
+	sceneBlock.current_time = 0.1f;
 	sceneBlock.frameTime = 0.1f;
 
 	tr.defaultSceneUboOffset = alignedBlockSize;
@@ -1946,7 +1938,7 @@ static void R_ShutdownBackEndFrameData()
 R_Init
 ===============
 */
-void R_Init()
+void R_Init(void)
 {
 	byte* ptr;
 	int i;
@@ -2177,7 +2169,7 @@ void RE_SetLightStyle(int style, int color)
 }
 
 void RE_GetBModelVerts(int bmodel_index, vec3_t* verts, vec3_t normal);
-void RE_WorldEffectCommand(const char* command);
+void RE_WorldEffectCommand(const char* cmd);
 
 void stub_RE_AddWeatherZone(vec3_t mins, vec3_t maxs) {} // Intentionally left blank. Rend2 reads the zones manually on bsp load
 static void RE_SetRefractionProperties(float distortionAlpha, float distortionStretch, qboolean distortionPrePost, qboolean distortionNegate) { }

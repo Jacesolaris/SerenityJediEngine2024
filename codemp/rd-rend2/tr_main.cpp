@@ -399,7 +399,7 @@ R_CullLocalBox
 Returns CULL_IN, CULL_CLIP, or CULL_OUT
 =================
 */
-int R_CullLocalBox(const vec3_t bounds[2]) {
+int R_CullLocalBox(vec3_t localBounds[2]) {
 #if 0
 	int		i, j;
 	vec3_t	transformed[8];
@@ -458,8 +458,8 @@ int R_CullLocalBox(const vec3_t bounds[2]) {
 #else
 	int             j;
 	vec3_t          transformed;
-	vec3_t          v{};
-	vec3_t          worldBounds[2]{};
+	vec3_t          v;
+	vec3_t          worldBounds[2];
 
 	if (r_nocull->integer)
 	{
@@ -471,9 +471,9 @@ int R_CullLocalBox(const vec3_t bounds[2]) {
 
 	for (j = 0; j < 8; j++)
 	{
-		v[0] = bounds[j & 1][0];
-		v[1] = bounds[(j >> 1) & 1][1];
-		v[2] = bounds[(j >> 2) & 1][2];
+		v[0] = localBounds[j & 1][0];
+		v[1] = localBounds[(j >> 1) & 1][1];
+		v[2] = localBounds[(j >> 2) & 1][2];
 
 		R_LocalPointToWorld(v, transformed);
 
@@ -531,7 +531,7 @@ int R_CullBox(vec3_t worldBounds[2]) {
 /*
 ** R_CullLocalPointAndRadius
 */
-int R_CullLocalPointAndRadius(const vec3_t pt, const float radius)
+int R_CullLocalPointAndRadius(const vec3_t pt, float radius)
 {
 	vec3_t transformed;
 
@@ -581,7 +581,7 @@ int R_CullPointAndRadiusEx(const vec3_t pt, float radius, const cplane_t* frustu
 /*
 ** R_CullPointAndRadius
 */
-int R_CullPointAndRadius(const vec3_t pt, const float radius)
+int R_CullPointAndRadius(const vec3_t pt, float radius)
 {
 	return R_CullPointAndRadiusEx(pt, radius, tr.viewParms.frustum, (tr.viewParms.flags & VPF_FARPLANEFRUSTUM) ? 5 : 4);
 }
@@ -1213,13 +1213,13 @@ void R_PlaneForSurface(surfaceType_t* surfType, cplane_t* plane) {
 =================
 R_GetPortalOrientation
 
-entityNum is the entity that the portal surface is a part of, which may
+entity_num is the entity that the portal surface is a part of, which may
 be moving and rotating.
 
 Returns qtrue if it should be mirrored
 =================
 */
-qboolean R_GetPortalOrientations(const msurface_t* surf, int entityNum,
+qboolean R_GetPortalOrientations(const msurface_t* surf, int entity_num,
 	orientation_t* surface, orientation_t* camera,
 	vec3_t pvsOrigin, qboolean* mirror) {
 	int			i;
@@ -1232,8 +1232,8 @@ qboolean R_GetPortalOrientations(const msurface_t* surf, int entityNum,
 	R_PlaneForSurface(surf->data, &originalPlane);
 
 	// rotate the plane if necessary
-	if (entityNum != REFENTITYNUM_WORLD) {
-		const trRefEntity_t* currentEntity = &tr.refdef.entities[entityNum];
+	if (entity_num != REFENTITYNUM_WORLD) {
+		const trRefEntity_t* currentEntity = &tr.refdef.entities[entity_num];
 
 		// get the orientation of the entity
 		R_RotateForEntity(currentEntity, &tr.viewParms, &tr.ori);
@@ -1339,7 +1339,7 @@ qboolean R_GetPortalOrientations(const msurface_t* surf, int entityNum,
 	return qfalse;
 }
 
-static qboolean IsMirror(const msurface_t* surface, int entityNum)
+static qboolean IsMirror(const msurface_t* surface, int entity_num)
 {
 	int			i;
 	cplane_t	originalPlane, plane;
@@ -1350,9 +1350,9 @@ static qboolean IsMirror(const msurface_t* surface, int entityNum)
 	R_PlaneForSurface(surface->data, &originalPlane);
 
 	// rotate the plane if necessary
-	if (entityNum != REFENTITYNUM_WORLD)
+	if (entity_num != REFENTITYNUM_WORLD)
 	{
-		const trRefEntity_t* currentEntity = &tr.refdef.entities[entityNum];
+		const trRefEntity_t* currentEntity = &tr.refdef.entities[entity_num];
 
 		// get the orientation of the entity
 		R_RotateForEntity(currentEntity, &tr.viewParms, &tr.ori);
@@ -1399,7 +1399,7 @@ static qboolean IsMirror(const msurface_t* surface, int entityNum)
 **
 ** Determines if a surface is completely offscreen.
 */
-static qboolean SurfIsOffscreen(const msurface_t* surface, int entityNum, vec4_t clipDest[128], int* numVertices) {
+static qboolean SurfIsOffscreen(const msurface_t* surface, int entity_num, vec4_t clipDest[128], int* numVertices) {
 	float shortest = 100000000;
 	int numTriangles;
 	vec4_t clip, eye;
@@ -1456,9 +1456,9 @@ static qboolean SurfIsOffscreen(const msurface_t* surface, int entityNum, vec4_t
 	// based on vertex distance isn't 100% correct (we should be checking for
 	// range to the surface), but it's good enough for the types of portals
 	// we have in the game right now.
-	numTriangles = tess.numIndexes / 3;
+	numTriangles = tess.num_indexes / 3;
 
-	for (i = 0; i < tess.numIndexes; i += 3)
+	for (i = 0; i < tess.num_indexes; i += 3)
 	{
 		vec3_t normal, tNormal;
 
@@ -1486,7 +1486,7 @@ static qboolean SurfIsOffscreen(const msurface_t* surface, int entityNum, vec4_t
 
 	// mirrors can early out at this point, since we don't do a fade over distance
 	// with them (although we could)
-	if (IsMirror(surface, entityNum))
+	if (IsMirror(surface, entity_num))
 	{
 		return qfalse;
 	}
@@ -1506,7 +1506,7 @@ R_MirrorViewBySurface
 Returns qtrue if another view has been rendered
 ========================
 */
-qboolean R_MirrorViewBySurface(msurface_t* surface, int entityNum) {
+qboolean R_MirrorViewBySurface(msurface_t* surface, int entity_num) {
 	vec4_t			clipDest[128];
 	int				numVertices;
 	viewParms_t		newParms;
@@ -1525,7 +1525,7 @@ qboolean R_MirrorViewBySurface(msurface_t* surface, int entityNum) {
 	}
 
 	// trivially reject portal/mirror
-	if (SurfIsOffscreen(surface, entityNum, clipDest, &numVertices)) {
+	if (SurfIsOffscreen(surface, entity_num, clipDest, &numVertices)) {
 		return qfalse;
 	}
 
@@ -1537,7 +1537,7 @@ qboolean R_MirrorViewBySurface(msurface_t* surface, int entityNum) {
 	newParms.zFar = 0.0f;
 	newParms.zNear = r_znear->value;
 	newParms.flags &= ~VPF_FARPLANEFRUSTUM;
-	if (!R_GetPortalOrientations(surface, entityNum, &surfaceOri, &camera,
+	if (!R_GetPortalOrientations(surface, entity_num, &surfaceOri, &camera,
 		newParms.pvsOrigin, &newParms.isMirror)) {
 		return qfalse;		// bad portal, no portalentity
 	}
@@ -1749,22 +1749,22 @@ bool R_IsPostRenderEntity(const trRefEntity_t* refEntity)
 R_DecomposeSort
 =================
 */
-void R_DecomposeSort(uint32_t sort, int* entityNum, shader_t** shader, int* cubemap, int* postRender)
+void R_DecomposeSort(uint32_t sort, int* entity_num, shader_t** shader, int* cubemap, int* postRender)
 {
 	*shader = tr.sortedShaders[(sort >> QSORT_SHADERNUM_SHIFT) & QSORT_SHADERNUM_MASK];
 	*postRender = (sort >> QSORT_POSTRENDER_SHIFT) & QSORT_POSTRENDER_MASK;
-	*entityNum = (sort >> QSORT_ENTITYNUM_SHIFT) & QSORT_entityNum_MASK;
+	*entity_num = (sort >> QSORT_ENTITYNUM_SHIFT) & QSORT_entity_num_MASK;
 	*cubemap = (sort >> QSORT_CUBEMAP_SHIFT) & QSORT_CUBEMAP_MASK;
 }
 
-uint32_t R_CreateSortKey(int entityNum, int sortedShaderIndex, int cubemapIndex, int postRender)
+uint32_t R_CreateSortKey(int entity_num, int sortedShaderIndex, int cubemapIndex, int postRender)
 {
 	uint32_t key = 0;
 
 	key |= (sortedShaderIndex & QSORT_SHADERNUM_MASK) << QSORT_SHADERNUM_SHIFT;
 	key |= (cubemapIndex & QSORT_CUBEMAP_MASK) << QSORT_CUBEMAP_SHIFT;
 	key |= (postRender & QSORT_POSTRENDER_MASK) << QSORT_POSTRENDER_SHIFT;
-	key |= (entityNum & QSORT_entityNum_MASK) << QSORT_ENTITYNUM_SHIFT;
+	key |= (entity_num & QSORT_entity_num_MASK) << QSORT_ENTITYNUM_SHIFT;
 
 	return key;
 }
@@ -1776,7 +1776,7 @@ R_AddDrawSurf
 */
 void R_AddDrawSurf(
 	surfaceType_t* surface,
-	int entityNum,
+	int entity_num,
 	shader_t* shader,
 	int fogIndex,
 	int dlightMap,
@@ -1811,13 +1811,13 @@ void R_AddDrawSurf(
 	if (tr.viewParms.flags & VPF_DEPTHSHADOW &&
 		shader->useSimpleDepthShader == qtrue)
 	{
-		surf->sort = R_CreateSortKey(entityNum, tr.defaultShader->sortedIndex, 0, 0);
+		surf->sort = R_CreateSortKey(entity_num, tr.defaultShader->sortedIndex, 0, 0);
 		surf->dlightBits = 0;
 		surf->fogIndex = 0;
 	}
 	else
 	{
-		surf->sort = R_CreateSortKey(entityNum, shader->sortedIndex, cubemap, postRender);
+		surf->sort = R_CreateSortKey(entity_num, shader->sortedIndex, cubemap, postRender);
 		surf->dlightBits = dlightMap;
 		surf->fogIndex = fogIndex;
 	}
@@ -1846,7 +1846,7 @@ void R_SortAndSubmitDrawSurfs(drawSurf_t* drawSurfs, int numDrawSurfs) {
 	R_AddDrawSurfCmd(drawSurfs, numDrawSurfs);
 }
 
-static void R_AddEntitySurface(const trRefdef_t* refdef, trRefEntity_t* ent, int entityNum)
+static void R_AddEntitySurface(const trRefdef_t* refdef, trRefEntity_t* ent, int entity_num)
 {
 	shader_t* shader;
 
@@ -1872,7 +1872,6 @@ static void R_AddEntitySurface(const trRefdef_t* refdef, trRefEntity_t* ent, int
 	case RT_LINE:
 	case RT_ORIENTEDLINE:
 	case RT_CYLINDER:
-	case RT_LIGHTNING:
 	case RT_SABER_GLOW:
 		// self blood sprites, talk balloons, etc should not be drawn in the primary
 		// view.  We can't just do this check for all entities, because md3
@@ -1883,7 +1882,7 @@ static void R_AddEntitySurface(const trRefdef_t* refdef, trRefEntity_t* ent, int
 		shader = R_GetShaderByHandle(ent->e.customShader);
 		R_AddDrawSurf(
 			&entitySurface,
-			entityNum,
+			entity_num,
 			shader,
 			R_SpriteFogNum(ent),
 			0,
@@ -1895,11 +1894,11 @@ static void R_AddEntitySurface(const trRefdef_t* refdef, trRefEntity_t* ent, int
 		// we must set up parts of tr.ori for model culling
 		R_RotateForEntity(ent, &tr.viewParms, &tr.ori);
 
-		tr.currentModel = R_GetModelByHandle(ent->e.hModel);
-		if (!tr.currentModel) {
+		tr.current_model = R_GetModelByHandle(ent->e.hModel);
+		if (!tr.current_model) {
 			R_AddDrawSurf(
 				&entitySurface,
-				entityNum,
+				entity_num,
 				tr.defaultShader,
 				0,
 				0,
@@ -1907,22 +1906,22 @@ static void R_AddEntitySurface(const trRefdef_t* refdef, trRefEntity_t* ent, int
 				0/* cubeMap */);
 		}
 		else {
-			switch (tr.currentModel->type) {
+			switch (tr.current_model->type) {
 			case MOD_MESH:
-				R_AddMD3Surfaces(ent, entityNum);
+				R_AddMD3Surfaces(ent, entity_num);
 				break;
 			case MOD_MDR:
-				R_MDRAddAnimSurfaces(ent, entityNum);
+				R_MDRAddAnimSurfaces(ent, entity_num);
 				break;
 			case MOD_IQM:
-				R_AddIQMSurfaces(ent, entityNum);
+				R_AddIQMSurfaces(ent, entity_num);
 				break;
 			case MOD_BRUSH:
-				R_AddBrushModelSurfaces(ent, entityNum);
+				R_AddBrushModelSurfaces(ent, entity_num);
 				break;
 			case MOD_MDXM:
 				if (ent->e.ghoul2)
-					R_AddGhoulSurfaces(ent, entityNum);
+					R_AddGhoulSurfaces(ent, entity_num);
 				break;
 			case MOD_BAD:		// null model axis
 				if ((ent->e.renderfx & RF_THIRD_PERSON) && !tr.viewParms.isPortal) {
@@ -1932,15 +1931,15 @@ static void R_AddEntitySurface(const trRefdef_t* refdef, trRefEntity_t* ent, int
 				if (ent->e.ghoul2 &&
 					G2API_HaveWeGhoul2Models(*((CGhoul2Info_v*)ent->e.ghoul2)))
 				{
-					R_AddGhoulSurfaces(ent, entityNum);
+					R_AddGhoulSurfaces(ent, entity_num);
 					break;
 				}
 
 				// FIX ME: always draw null axis model instead of rejecting the drawcall
-				if (tr.currentModel->dataSize > 0)
+				if (tr.current_model->dataSize > 0)
 					R_AddDrawSurf(
 						&entitySurface,
-						entityNum,
+						entity_num,
 						tr.defaultShader,
 						0,
 						0,
@@ -1957,7 +1956,7 @@ static void R_AddEntitySurface(const trRefdef_t* refdef, trRefEntity_t* ent, int
 		shader = R_GetShaderByHandle(ent->e.customShader);
 		R_AddDrawSurf(
 			&entitySurface,
-			entityNum,
+			entity_num,
 			shader,
 			R_SpriteFogNum(ent),
 			false,
@@ -2013,9 +2012,9 @@ void R_GenerateDrawSurfs(viewParms_t* viewParms, trRefdef_t* refdef) {
 	// TODO: Get rid of this
 	if (viewParms->viewParmType == VPT_PLAYER_SHADOWS)
 	{
-		int entityNum = viewParms->targetFboLayer;
-		trRefEntity_t* ent = refdef->entities + entityNum;
-		R_AddEntitySurface(refdef, ent, entityNum);
+		int entity_num = viewParms->targetFboLayer;
+		trRefEntity_t* ent = refdef->entities + entity_num;
+		R_AddEntitySurface(refdef, ent, entity_num);
 		return;
 	}
 
@@ -2036,7 +2035,7 @@ void R_GenerateDrawSurfs(viewParms_t* viewParms, trRefdef_t* refdef) {
 R_DebugPolygon
 ================
 */
-void R_DebugPolygon(const int color, const int numPoints, const float* points)
+void R_DebugPolygon(const int color, const int num_points, const float* points)
 {
 	// FIXME: implement this
 #if 0
@@ -2048,7 +2047,7 @@ void R_DebugPolygon(const int color, const int numPoints, const float* points)
 
 	qglColor3f(color & 1, (color >> 1) & 1, (color >> 2) & 1);
 	qglBegin(GL_POLYGON);
-	for (i = 0; i < numPoints; i++) {
+	for (i = 0; i < num_points; i++) {
 		qglVertex3fv(points + i * 3);
 	}
 	qglEnd();
@@ -2058,7 +2057,7 @@ void R_DebugPolygon(const int color, const int numPoints, const float* points)
 	qglDepthRange(0, 0);
 	qglColor3f(1, 1, 1);
 	qglBegin(GL_POLYGON);
-	for (i = 0; i < numPoints; i++) {
+	for (i = 0; i < num_points; i++) {
 		qglVertex3fv(points + i * 3);
 	}
 	qglEnd();
@@ -2318,7 +2317,7 @@ void R_SetupPshadowMaps(trRefdef_t* refdef)
 			memset(&shadow, 0, sizeof(shadow));
 
 			shadow.numEntities = 1;
-			shadow.entityNums[0] = i;
+			shadow.entity_nums[0] = i;
 			shadow.viewRadius = radius;
 			shadow.lightRadius = r_pshadowDist->value;
 			VectorCopy(ent->e.lightingOrigin, shadow.viewOrigin);
@@ -2583,16 +2582,16 @@ qboolean R_AddPortalView(const trRefdef_t* refdef)
 			// we must set up parts of tr.ori for model culling
 			R_RotateForEntity(ent, &tr.viewParms, &tr.ori);
 
-			tr.currentModel = R_GetModelByHandle(ent->e.hModel);
-			if (!tr.currentModel) {
+			tr.current_model = R_GetModelByHandle(ent->e.hModel);
+			if (!tr.current_model) {
 				continue;
 			}
 			else {
-				switch (tr.currentModel->type) {
+				switch (tr.current_model->type) {
 				case MOD_BRUSH:
 				{
 					//R_AddBrushModelSurfaces(ent, i);
-					bmodel_t* bmodel = tr.currentModel->data.bmodel;
+					bmodel_t* bmodel = tr.current_model->data.bmodel;
 					world_t* world = R_GetWorld(bmodel->worldIndex);
 					for (int j = 0; j < bmodel->numSurfaces; j++) {
 						int surf = bmodel->firstSurface + j;
@@ -2773,7 +2772,7 @@ void R_GatherFrameViews(trRefdef_t* refdef)
 				tr.viewParms.fovY = 90;
 
 				tr.viewParms.targetFbo = tr.pshadowFbos[i];
-				tr.viewParms.targetFboLayer = shadow->entityNums[0];
+				tr.viewParms.targetFboLayer = shadow->entity_nums[0];
 
 				tr.viewParms.flags = (viewParmFlags_t)(VPF_DEPTHSHADOW | VPF_NOVIEWMODEL);
 				tr.viewParms.viewParmType = VPT_PLAYER_SHADOWS;
@@ -2862,11 +2861,11 @@ void R_GatherFrameViews(trRefdef_t* refdef)
 		// sun shadowmaps
 		if (r_sunlightMode->integer && r_depthPrepass->value && (r_forceSun->integer || tr.sunShadows))
 		{
-			vec3_t lightViewAxis[3]{};
+			vec3_t lightViewAxis[3];
 			vec3_t lightOrigin;
 			float splitZNear, splitZFar, splitBias;
 			float viewZNear, viewZFar;
-			vec3_t lightviewBounds[2]{};
+			vec3_t lightviewBounds[2];
 
 			viewZNear = r_shadowCascadeZNear->value;
 			viewZFar = r_shadowCascadeZFar->value;

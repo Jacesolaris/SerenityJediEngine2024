@@ -61,13 +61,11 @@ void QDECL Com_Error(const int level, const char* error, ...)
 }
 
 // HUNK
-void* Hunk_AllocateTempMemory(const int size)
-{
+void* Hunk_AllocateTempMemory(const int size) {
 	return ri->Hunk_AllocateTempMemory(size);
 }
 
-void Hunk_FreeTempMemory(void* buf)
-{
+void Hunk_FreeTempMemory(void* buf) {
 	ri->Hunk_FreeTempMemory(buf);
 }
 
@@ -95,6 +93,7 @@ int Z_MemSize(const memtag_t eTag) {
 	return ri->Z_MemSize(eTag);
 }
 
-void Z_MorphMallocTag(void* pv_address, const memtag_t eDesiredTag) {
+void Z_MorphMallocTag(void* pv_address, const memtag_t eDesiredTag)
+{
 	ri->Z_MorphMallocTag(pv_address, eDesiredTag);
 }

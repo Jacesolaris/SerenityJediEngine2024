@@ -421,7 +421,7 @@ int G_IconIndex(const char* name);
 Ghoul2 Insert Start
 */
 int G_SkinIndex(const char* name);
-void G_SetBoltSurfaceRemoval(int entNum, int modelIndex, int boltIndex, int surfaceIndex = -1, float duration = 5000);
+void G_SetBoltSurfaceRemoval(int ent_num, int model_index, int bolt_index, int surfaceIndex = -1, float duration = 5000);
 /*
 Ghoul2 Insert End
 */
@@ -434,12 +434,12 @@ void G_PlayEffect(const char* name, const vec3_t origin, const vec3_t axis[3]);
 void G_PlayEffect(int fx_id, const vec3_t origin);
 void G_PlayEffect(int fx_id, const vec3_t origin, const vec3_t fwd);
 void G_PlayEffect(int fx_id, const vec3_t origin, const vec3_t axis[3]);
-void G_PlayEffect(int fx_id, int modelIndex, int boltIndex, int entNum, const vec3_t origin,
+void G_PlayEffect(int fx_id, int model_index, int bolt_index, int ent_num, const vec3_t origin,
 	int i_loop_time = qfalse,
 	qboolean is_relative = qfalse); //iLoopTime 0 = not looping, 1 for infinite, else duration
-void G_PlayEffect(int fx_id, int entNum, const vec3_t fwd);
-void G_StopEffect(int fx_id, int modelIndex, int boltIndex, int entNum);
-void G_StopEffect(const char* name, int modelIndex, int boltIndex, int entNum);
+void G_PlayEffect(int fx_id, int ent_num, const vec3_t fwd);
+void G_StopEffect(int fx_id, int model_index, int bolt_index, int ent_num);
+void G_StopEffect(const char* name, int model_index, int bolt_index, int ent_num);
 
 int G_BSPIndex(const char* name);
 
@@ -588,7 +588,7 @@ void G_RunThink(gentity_t* ent);
 void NORETURN QDECL G_Error(const char* fmt, ...);
 void SetInUse(const gentity_t* ent);
 void ClearInUse(const gentity_t* ent);
-qboolean PInUse(unsigned int entNum);
+qboolean PInUse(unsigned int ent_num);
 qboolean PInUse2(gentity_t* ent);
 void WriteInUseBits();
 void ReadInUseBits();

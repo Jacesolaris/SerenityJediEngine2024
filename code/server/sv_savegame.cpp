@@ -57,17 +57,17 @@ class CChid
 {
 private:
 	int		m_iCount;
-	int		m_i_size;
+	int		m_iSize;
 public:
 	CChid()
 	{
 		m_iCount = 0;
-		m_i_size = 0;
+		m_iSize = 0;
 	}
 	void Add(int iLength)
 	{
 		m_iCount++;
-		m_i_size += iLength;
+		m_iSize += iLength;
 	}
 	int GetCount()
 	{
@@ -75,7 +75,7 @@ public:
 	}
 	int GetSize()
 	{
-		return m_i_size;
+		return m_iSize;
 	}
 };
 
@@ -307,7 +307,7 @@ void SV_SaveGame_f()
 		return;
 	}
 
-	const gentity_t* svent = SV_GentityNum(0);
+	const gentity_t* svent = SV_Gentity_num(0);
 	if (svent->client->stats[STAT_HEALTH] <= 0)
 	{
 #ifdef JK2_MODE

@@ -37,7 +37,7 @@ extern vec3_t player_maxs;
 extern void ChangeWeapon(const gentity_t* ent, int newWeapon);
 extern int PM_AnimLength(animNumber_t anim);
 extern void G_VehicleTrace(trace_t* results, const vec3_t start, const vec3_t tMins, const vec3_t tMaxs,
-	const vec3_t end, int pass_entityNum, int contentmask);
+	const vec3_t end, int pass_entity_num, int contentmask);
 extern void G_DamageFromKiller(gentity_t* p_ent, gentity_t* pVehEnt, gentity_t* attacker, vec3_t org, int damage,
 	int dflags, int mod);
 #endif
@@ -50,7 +50,7 @@ extern int BG_GetTime(void);
 //this stuff has got to be predicted, so..
 qboolean BG_FighterUpdate(Vehicle_t* p_veh, const usercmd_t* pUcmd, vec3_t trMins, vec3_t trMaxs, const float gravity,
 	void (*traceFunc)(trace_t* results, const vec3_t start, const vec3_t lmins,
-		const vec3_t lmaxs, const vec3_t end, int pass_entityNum, int content_mask))
+		const vec3_t lmaxs, const vec3_t end, int pass_entity_num, int content_mask))
 {
 	vec3_t bottom;
 	playerState_t* parent_ps;
@@ -479,7 +479,7 @@ static void ProcessMoveCommands(Vehicle_t* p_veh)
 		p_veh->m_ucmd.forwardmove = 127;
 	}
 #endif
-	else if ((parent_ps->speed || parent_ps->groundentityNum == ENTITYNUM_NONE ||
+	else if ((parent_ps->speed || parent_ps->groundentity_num == ENTITYNUM_NONE ||
 		p_veh->m_ucmd.forwardmove || p_veh->m_ucmd.upmove > 0) && p_veh->m_LandTrace.fraction >= 0.05f)
 	{
 		if (p_veh->m_ucmd.forwardmove > 0 && speedInc)

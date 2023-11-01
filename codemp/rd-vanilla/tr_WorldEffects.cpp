@@ -1402,7 +1402,7 @@ qboolean WE_ParseVector(const char** text, const int count, float* v)
 	return qtrue;
 }
 
-void RE_WorldEffectCommand(const char* command) // vanilla mp
+void RE_WorldEffectCommand(const char* command)
 {
 	if (!command)
 	{
@@ -1429,7 +1429,7 @@ void RE_WorldEffectCommand(const char* command) // vanilla mp
 
 	// Clear - Removes All Particle Clouds And Wind Zones
 	//----------------------------------------------------
-	if ((Q_stricmp(token, "clear") == 0) || r_weather->integer == 0)
+	if (Q_stricmp(token, "clear") == 0)
 	{
 		for (int p = 0; p < mParticleClouds.size(); p++)
 		{
@@ -1437,7 +1437,6 @@ void RE_WorldEffectCommand(const char* command) // vanilla mp
 		}
 		mParticleClouds.clear();
 		mWindZones.clear();
-		mOutside.mOutsidePain = 0.0f;
 	}
 
 	// Freeze / UnFreeze - Stops All Particle Motion Updates
@@ -1461,7 +1460,7 @@ void RE_WorldEffectCommand(const char* command) // vanilla mp
 
 	// Basic Wind
 	//------------
-	else if ((Q_stricmp(token, "wind") == 0) || r_weather->integer == 8)
+	else if (Q_stricmp(token, "wind") == 0)
 	{
 		if (mWindZones.full())
 		{
@@ -1537,7 +1536,7 @@ void RE_WorldEffectCommand(const char* command) // vanilla mp
 
 	// Create A Rain Storm
 	//---------------------
-	else if ((Q_stricmp(token, "rain") == 0) || r_weather->integer == 2)
+	else if (Q_stricmp(token, "rain") == 0)
 	{
 		if (mParticleClouds.full())
 		{
@@ -1558,7 +1557,7 @@ void RE_WorldEffectCommand(const char* command) // vanilla mp
 
 	// Create A Rain Storm
 	//---------------------
-	else if ((Q_stricmp(token, "acidrain") == 0) || r_weather->integer == 7)
+	else if (Q_stricmp(token, "acidrain") == 0)
 	{
 		if (mParticleClouds.full())
 		{
@@ -1607,27 +1606,27 @@ void RE_WorldEffectCommand(const char* command) // vanilla mp
 
 	// Create A Snow Storm
 	//---------------------
-	else if ((Q_stricmp(token, "snow") == 0) || r_weather->integer == 1)
+	else if (Q_stricmp(token, "snow") == 0)
 	{
 		if (mParticleClouds.full())
 		{
 			return;
 		}
 		CWeatherParticleCloud& nCloud = mParticleClouds.push_back();
-		nCloud.Initialize(1000, "gfx/effects/snowflake1");
+		nCloud.Initialize(1000, "gfx/effects/snowflake1.bmp");
 		nCloud.mBlendMode = 1;
 		nCloud.mRotationChangeNext = 0;
 		nCloud.mColor = 0.75f;
 		nCloud.mWaterParticles = true;
 	}
-	else if ((Q_stricmp(token, "lava") == 0) || r_weather->integer == 3)
+	else if (Q_stricmp(token, "lava") == 0)
 	{
 		if (mParticleClouds.full())
 		{
 			return;
 		}
 		CWeatherParticleCloud& nCloud = mParticleClouds.push_back();
-		nCloud.Initialize(1000, "gfx/effects/snowflake2");
+		nCloud.Initialize(1000, "gfx/effects/snowflake2.bmp");
 		nCloud.mBlendMode = 1;
 		nCloud.mRotationChangeNext = 0;
 		nCloud.mColor = 0.75f;
@@ -1636,7 +1635,7 @@ void RE_WorldEffectCommand(const char* command) // vanilla mp
 
 	// Create A Some stuff
 	//---------------------
-	else if ((Q_stricmp(token, "spacedust") == 0) || r_weather->integer == 9)
+	else if (Q_stricmp(token, "spacedust") == 0)
 	{
 		int count;
 		if (mParticleClouds.full())
@@ -1694,7 +1693,7 @@ void RE_WorldEffectCommand(const char* command) // vanilla mp
 
 	// Create A Sand Storm
 	//---------------------
-	else if ((Q_stricmp(token, "sand") == 0) || r_weather->integer == 4)
+	else if (Q_stricmp(token, "sand") == 0)
 	{
 		if (mParticleClouds.full())
 		{
@@ -1721,14 +1720,14 @@ void RE_WorldEffectCommand(const char* command) // vanilla mp
 
 	// Create Blowing Clouds Of Fog
 	//------------------------------
-	else if ((Q_stricmp(token, "fog") == 0) || r_weather->integer == 6)
+	else if (Q_stricmp(token, "fog") == 0)
 	{
 		if (mParticleClouds.full())
 		{
 			return;
 		}
 		CWeatherParticleCloud& nCloud = mParticleClouds.push_back();
-		nCloud.Initialize(240, "gfx/effects/alpha_smoke2b.tga");
+		nCloud.Initialize(60, "gfx/effects/alpha_smoke2b.tga");
 		nCloud.mBlendMode = 1;
 		nCloud.mGravity = 0;
 		nCloud.mWidth = 70;
@@ -1745,7 +1744,7 @@ void RE_WorldEffectCommand(const char* command) // vanilla mp
 
 	// Create Heavy Rain Particle Cloud
 	//-----------------------------------
-	else if ((Q_stricmp(token, "heavyrainfog") == 0) || r_weather->integer == 5)
+	else if (Q_stricmp(token, "heavyrainfog") == 0)
 	{
 		if (mParticleClouds.full())
 		{

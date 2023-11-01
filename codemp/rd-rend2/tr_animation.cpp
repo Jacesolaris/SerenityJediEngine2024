@@ -42,7 +42,7 @@ R_MDRCullModel
 */
 
 static int R_MDRCullModel(mdrHeader_t* header, trRefEntity_t* ent) {
-	vec3_t		bounds[2]{};
+	vec3_t		bounds[2];
 	mdrFrame_t* oldFrame, * newFrame;
 	int			i, frameSize;
 
@@ -177,7 +177,7 @@ R_MDRAddAnimSurfaces
 
 // much stuff in there is just copied from R_AddMd3Surfaces in tr_mesh.c
 
-void R_MDRAddAnimSurfaces(trRefEntity_t* ent, int entityNum) {
+void R_MDRAddAnimSurfaces(trRefEntity_t* ent, int entity_num) {
 	mdrHeader_t* header;
 	mdrSurface_t* surface;
 	mdrLOD_t* lod;
@@ -190,7 +190,7 @@ void R_MDRAddAnimSurfaces(trRefEntity_t* ent, int entityNum) {
 	int             cubemapIndex;
 	qboolean	personalModel;
 
-	header = (mdrHeader_t*)tr.currentModel->data.mdr;
+	header = (mdrHeader_t*)tr.current_model->data.mdr;
 
 	personalModel = (qboolean)(
 		(ent->e.renderfx & RF_THIRD_PERSON) &&
@@ -199,8 +199,8 @@ void R_MDRAddAnimSurfaces(trRefEntity_t* ent, int entityNum) {
 
 	if (ent->e.renderfx & RF_WRAP_FRAMES)
 	{
-		ent->e.frame %= header->numFrames;
-		ent->e.oldframe %= header->numFrames;
+		ent->e.frame %= header->num_frames;
+		ent->e.oldframe %= header->num_frames;
 	}
 
 	//
@@ -209,13 +209,13 @@ void R_MDRAddAnimSurfaces(trRefEntity_t* ent, int entityNum) {
 	// when the surfaces are rendered, they don't need to be
 	// range checked again.
 	//
-	if ((ent->e.frame >= header->numFrames)
+	if ((ent->e.frame >= header->num_frames)
 		|| (ent->e.frame < 0)
-		|| (ent->e.oldframe >= header->numFrames)
+		|| (ent->e.oldframe >= header->num_frames)
 		|| (ent->e.oldframe < 0))
 	{
 		ri->Printf(PRINT_DEVELOPER, "R_MDRAddAnimSurfaces: no such frame %d to %d for '%s'\n",
-			ent->e.oldframe, ent->e.frame, tr.currentModel->name);
+			ent->e.oldframe, ent->e.frame, tr.current_model->name);
 		ent->e.frame = 0;
 		ent->e.oldframe = 0;
 	}
@@ -282,7 +282,7 @@ void R_MDRAddAnimSurfaces(trRefEntity_t* ent, int entityNum) {
 			&& !(ent->e.renderfx & (RF_NOSHADOW | RF_DEPTHHACK))
 			&& shader->sort == SS_OPAQUE)
 		{
-			R_AddDrawSurf((surfaceType_t*)surface, entityNum, tr.shadowShader, 0, qfalse, R_IsPostRenderEntity(ent), 0);
+			R_AddDrawSurf((surfaceType_t*)surface, entity_num, tr.shadowShader, 0, qfalse, R_IsPostRenderEntity(ent), 0);
 		}
 
 		// projection shadows work fine with personal models
@@ -291,11 +291,11 @@ void R_MDRAddAnimSurfaces(trRefEntity_t* ent, int entityNum) {
 			&& (ent->e.renderfx & RF_SHADOW_PLANE)
 			&& shader->sort == SS_OPAQUE)
 		{
-			R_AddDrawSurf((surfaceType_t*)surface, entityNum, tr.projectionShadowShader, 0, qfalse, R_IsPostRenderEntity(ent), 0);
+			R_AddDrawSurf((surfaceType_t*)surface, entity_num, tr.projectionShadowShader, 0, qfalse, R_IsPostRenderEntity(ent), 0);
 		}
 
 		if (!personalModel)
-			R_AddDrawSurf((surfaceType_t*)surface, entityNum, shader, fogNum, qfalse, R_IsPostRenderEntity(ent), cubemapIndex);
+			R_AddDrawSurf((surfaceType_t*)surface, entity_num, shader, fogNum, qfalse, R_IsPostRenderEntity(ent), cubemapIndex);
 
 		surface = (mdrSurface_t*)((byte*)surface + surface->ofsEnd);
 	}
@@ -348,7 +348,7 @@ void RB_MDRSurfaceAnim(mdrSurface_t* surface)
 
 	triangles = (int*)((byte*)surface + surface->ofsTriangles);
 	indexes = surface->numTriangles * 3;
-	baseIndex = tess.numIndexes;
+	baseIndex = tess.num_indexes;
 	baseVertex = tess.numVertexes;
 
 	// Set up all triangles.
@@ -356,7 +356,7 @@ void RB_MDRSurfaceAnim(mdrSurface_t* surface)
 	{
 		tess.indexes[baseIndex + j] = baseVertex + triangles[j];
 	}
-	tess.numIndexes += indexes;
+	tess.num_indexes += indexes;
 
 	//
 	// lerp all the needed bones
@@ -391,7 +391,7 @@ void RB_MDRSurfaceAnim(mdrSurface_t* surface)
 		w = v->weights;
 		for (k = 0; k < v->numWeights; k++, w++)
 		{
-			bone = bonePtr + w->boneIndex;
+			bone = bonePtr + w->bone_index;
 
 			tempVert[0] += w->boneWeight * (DotProduct(bone->matrix[0], w->offset) + bone->matrix[0][3]);
 			tempVert[1] += w->boneWeight * (DotProduct(bone->matrix[1], w->offset) + bone->matrix[1][3]);

@@ -9838,7 +9838,7 @@ extern "C" {
 #define GL_NV_present_video 1
 #define GL_FRAME_NV                       0x8E26
 #define GL_FIELDS_NV                      0x8E27
-#define GL_currentTime_NV                0x8E28
+#define GL_CURRENT_TIME_NV                0x8E28
 #define GL_NUM_FILL_STREAMS_NV            0x8E29
 #define GL_PRESENT_TIME_NV                0x8E2A
 #define GL_PRESENT_DURATION_NV            0x8E2B

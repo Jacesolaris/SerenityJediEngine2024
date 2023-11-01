@@ -57,12 +57,12 @@ typedef my_coef_controller* my_coef_ptr;
 
 /* Forward declarations */
 METHODDEF(boolean) compress_data
-JPP((j_compress_ptr cinfo, JSAMp_image input_buf));
+JPP((j_compress_ptr cinfo, JSAMPIMAGE input_buf));
 #ifdef FULL_COEF_BUFFER_SUPPORTED
 METHODDEF(boolean) compress_first_pass
-JPP((j_compress_ptr cinfo, JSAMp_image input_buf));
+JPP((j_compress_ptr cinfo, JSAMPIMAGE input_buf));
 METHODDEF(boolean) compress_output
-JPP((j_compress_ptr cinfo, JSAMp_image input_buf));
+JPP((j_compress_ptr cinfo, JSAMPIMAGE input_buf));
 #endif
 
 LOCAL(void)
@@ -136,7 +136,7 @@ start_pass_coef(const j_compress_ptr cinfo, const J_BUF_MODE pass_mode)
  */
 
 METHODDEF(boolean)
-compress_data(const j_compress_ptr cinfo, const JSAMp_image input_buf)
+compress_data(const j_compress_ptr cinfo, const JSAMPIMAGE input_buf)
 {
 	const my_coef_ptr coef = (my_coef_ptr)cinfo->coef;
 	const JDIMENSION last_MCU_col = cinfo->MCUs_per_row - 1;
@@ -238,7 +238,7 @@ compress_data(const j_compress_ptr cinfo, const JSAMp_image input_buf)
  */
 
 METHODDEF(boolean)
-compress_first_pass(const j_compress_ptr cinfo, const JSAMp_image input_buf)
+compress_first_pass(const j_compress_ptr cinfo, const JSAMPIMAGE input_buf)
 {
 	const my_coef_ptr coef = (my_coef_ptr)cinfo->coef;
 	const JDIMENSION last_iMCU_row = cinfo->total_iMCU_rows - 1;
@@ -331,7 +331,7 @@ compress_first_pass(const j_compress_ptr cinfo, const JSAMp_image input_buf)
  */
 
 METHODDEF(boolean)
-compress_output(const j_compress_ptr cinfo, JSAMp_image input_buf)
+compress_output(const j_compress_ptr cinfo, JSAMPIMAGE input_buf)
 {
 	const my_coef_ptr coef = (my_coef_ptr)cinfo->coef;
 	int ci;

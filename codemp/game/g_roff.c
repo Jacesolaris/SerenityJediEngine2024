@@ -305,7 +305,7 @@ static qboolean G_InitRoff(char* file, unsigned char* data)
 	}
 
 	//set filename
-	roffs[num_roffs].fileName = G_NewString(file);
+	roffs[num_roffs].file_name = G_NewString(file);
 
 	if (header->mVersion == ROFF_VERSIONNEW)
 	{
@@ -394,7 +394,7 @@ static qboolean G_InitRoff(char* file, unsigned char* data)
 //	ID to the cached file.
 //-------------------------------------------------------
 
-int G_LoadRoffs(const char* fileName)
+int G_LoadRoffs(const char* file_name)
 {
 	char file[MAX_QPATH];
 	char data[ROFF_INFO_SIZENEW];
@@ -405,17 +405,17 @@ int G_LoadRoffs(const char* fileName)
 	// Before even bothering with all of this, make sure we have a place to store it.
 	if (num_roffs >= MAX_ROFFSNEW)
 	{
-		Com_Printf(S_COLOR_RED"MAX_ROFFS count exceeded.  Skipping load of .ROF '%s'\n", fileName);
+		Com_Printf(S_COLOR_RED"MAX_ROFFS count exceeded.  Skipping load of .ROF '%s'\n", file_name);
 		return roff_id;
 	}
 
 	// The actual path
-	sprintf(file, "%s/%s.rof", Q3_SCRIPT_DIR, fileName);
+	sprintf(file, "%s/%s.rof", Q3_SCRIPT_DIR, file_name);
 
 	// See if I'm already precached
 	for (int i = 0; i < num_roffs; i++)
 	{
-		if (stricmp(file, roffs[i].fileName) == 0)
+		if (stricmp(file, roffs[i].file_name) == 0)
 		{
 			// Good, just return me...avoid zero index
 			return i + 1;
@@ -431,13 +431,13 @@ int G_LoadRoffs(const char* fileName)
 
 	if (len <= 0)
 	{
-		Com_Printf(S_COLOR_RED"Could not open .ROF file '%s'\n", fileName);
+		Com_Printf(S_COLOR_RED"Could not open .ROF file '%s'\n", file_name);
 		return roff_id;
 	}
 
 	if (len >= ROFF_INFO_SIZENEW)
 	{
-		Com_Printf(S_COLOR_RED".ROF file '%s': Too large for file buffer.\n", fileName);
+		Com_Printf(S_COLOR_RED".ROF file '%s': Too large for file buffer.\n", file_name);
 		return roff_id;
 	}
 
@@ -451,7 +451,7 @@ int G_LoadRoffs(const char* fileName)
 	// ..and make sure it's reasonably valid
 	if (!G_ValidRoff(header))
 	{
-		Com_Printf(S_COLOR_RED"Invalid roff format '%s'\n", fileName);
+		Com_Printf(S_COLOR_RED"Invalid roff format '%s'\n", file_name);
 	}
 	else
 	{

@@ -44,7 +44,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 extern float CG_RadiusForCent(const centity_t* cent);
 qboolean CG_WorldCoordToScreenCoordFloat(vec3_t world_coord, float* x, float* y);
-qboolean CG_Calcmuzzle_point(int entityNum, vec3_t muzzle);
+qboolean CG_Calcmuzzle_point(int entity_num, vec3_t muzzle);
 static void CG_DrawSiegeTimer(int timeRemaining, qboolean isMyTeam);
 static void CG_DrawSiegeDeathTimer(int timeRemaining);
 void CG_DrawDuelistHealth(float x, float y, float w, float h, int duelist);
@@ -5822,8 +5822,8 @@ float cg_draw_radar(float y)
 				{
 					//I'm in a vehicle
 					//if it's targetting me, then play an alarm sound if I'm in a vehicle
-					if (cent->currentState.otherentityNum == cg.predicted_player_state.client_num || cent->currentState.
-						otherentityNum == cg.predicted_player_state.m_iVehicleNum)
+					if (cent->currentState.otherentity_num == cg.predicted_player_state.client_num || cent->currentState.
+						otherentity_num == cg.predicted_player_state.m_iVehicleNum)
 					{
 						if (radarLockSoundDebounceTime < cg.time)
 						{
@@ -8448,9 +8448,9 @@ static void CG_DrawRocketLocking(const int lock_ent_num)
 
 extern void CG_CalcVehMuzzle(Vehicle_t* p_veh, centity_t* ent, int muzzle_num);
 
-qboolean CG_CalcVehiclemuzzle_point(const int entityNum, vec3_t start, vec3_t d_f, vec3_t d_rt, vec3_t d_up)
+qboolean CG_CalcVehiclemuzzle_point(const int entity_num, vec3_t start, vec3_t d_f, vec3_t d_rt, vec3_t d_up)
 {
-	centity_t* veh_cent = &cg_entities[entityNum];
+	centity_t* veh_cent = &cg_entities[entity_num];
 	if (veh_cent->m_pVehicle && veh_cent->m_pVehicle->m_pVehicleInfo->type == VH_WALKER)
 	{
 		//draw from barrels
@@ -8524,12 +8524,12 @@ void CG_CalcEWebmuzzle_point(centity_t* cent, vec3_t start, vec3_t d_f, vec3_t d
 
 	if (bolt != -1)
 	{
-		mdxaBone_t boltMatrix;
+		mdxaBone_t bolt_matrix;
 
-		trap->G2API_GetBoltMatrix_NoRecNoRot(cent->ghoul2, 0, bolt, &boltMatrix, cent->lerpAngles, cent->lerpOrigin,
+		trap->G2API_GetBoltMatrix_NoRecNoRot(cent->ghoul2, 0, bolt, &bolt_matrix, cent->lerpAngles, cent->lerpOrigin,
 			cg.time, NULL, cent->modelScale);
-		BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, start);
-		BG_GiveMeVectorFromMatrix(&boltMatrix, NEGATIVE_X, d_f);
+		BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, start);
+		BG_GiveMeVectorFromMatrix(&bolt_matrix, NEGATIVE_X, d_f);
 
 		//these things start the shot a little inside the bbox to assure not starting in something solid
 		VectorMA(start, -16.0f, d_f, start);
@@ -8689,15 +8689,15 @@ static void CG_ScanForCrosshairEntity(void)
 		CG_Trace(&trace, start, vec3_origin, vec3_origin, end, ignore, CONTENTS_SOLID | CONTENTS_BODY);
 	}
 
-	if (trace.entityNum < MAX_CLIENTS)
+	if (trace.entity_num < MAX_CLIENTS)
 	{
-		if (CG_IsMindTricked(cg_entities[trace.entityNum].currentState.trickedentindex,
-			cg_entities[trace.entityNum].currentState.trickedentindex2,
-			cg_entities[trace.entityNum].currentState.trickedentindex3,
-			cg_entities[trace.entityNum].currentState.trickedentindex4,
+		if (CG_IsMindTricked(cg_entities[trace.entity_num].currentState.trickedentindex,
+			cg_entities[trace.entity_num].currentState.trickedentindex2,
+			cg_entities[trace.entity_num].currentState.trickedentindex3,
+			cg_entities[trace.entity_num].currentState.trickedentindex4,
 			cg.snap->ps.client_num))
 		{
-			if (cg.crosshairclient_num == trace.entityNum)
+			if (cg.crosshairclient_num == trace.entity_num)
 			{
 				cg.crosshairclient_num = ENTITYNUM_NONE;
 				cg.crosshairClientTime = 0;
@@ -8711,10 +8711,10 @@ static void CG_ScanForCrosshairEntity(void)
 
 	if (cg.snap->ps.persistant[PERS_TEAM] != TEAM_SPECTATOR)
 	{
-		if (trace.entityNum < /*MAX_CLIENTS*/ENTITYNUM_WORLD)
+		if (trace.entity_num < /*MAX_CLIENTS*/ENTITYNUM_WORLD)
 		{
-			const centity_t* veh = &cg_entities[trace.entityNum];
-			cg.crosshairclient_num = trace.entityNum;
+			const centity_t* veh = &cg_entities[trace.entity_num];
+			cg.crosshairclient_num = trace.entity_num;
 			cg.crosshairClientTime = cg.time;
 
 			if (veh->currentState.eType == ET_NPC &&
@@ -8735,7 +8735,7 @@ static void CG_ScanForCrosshairEntity(void)
 		}
 	}
 
-	if (trace.entityNum >= MAX_CLIENTS)
+	if (trace.entity_num >= MAX_CLIENTS)
 	{
 		return;
 	}
@@ -8748,7 +8748,7 @@ static void CG_ScanForCrosshairEntity(void)
 	}
 
 	// update the fade timer
-	cg.crosshairclient_num = trace.entityNum;
+	cg.crosshairclient_num = trace.entity_num;
 	cg.crosshairClientTime = cg.time;
 }
 
@@ -8815,7 +8815,7 @@ qboolean CG_CheckClientVisibility(const centity_t* cent)
 
 	CG_Trace(&trace, start, NULL, NULL, end, cg.client_num, MASK_PLAYERSOLID);
 
-	const centity_t* trace_ent = &cg_entities[trace.entityNum];
+	const centity_t* trace_ent = &cg_entities[trace.entity_num];
 
 	if (trace_ent == cent || trace.fraction == 1.0f)
 	{
@@ -10205,7 +10205,7 @@ static void CG_DrawSiegeHUDItem(void)
 	}
 	else
 	{
-		handle = cgs.game_models[cent->currentState.modelIndex];
+		handle = cgs.game_models[cent->currentState.model_index];
 		g2 = NULL;
 	}
 

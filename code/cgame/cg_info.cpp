@@ -372,7 +372,7 @@ void CG_DrawDataPadObjectives(const centity_t* cent)
 constexpr auto LOADBAR_CLIP_WIDTH = 256;
 constexpr auto LOADBAR_CLIP_HEIGHT = 64;
 
-void CG_LoadBar()
+void CG_LoadBar(void)
 {
 	constexpr int numticks = 9, tickwidth = 40, tickheight = 8;
 	constexpr int tickpadx = 20, tickpady = 12;
@@ -394,13 +394,15 @@ void CG_LoadBar()
 	// Draw right cap
 	CG_DrawPic(tickleft + tickwidth * cg.loadLCARSStage, ticktop, capwidth, tickheight, cgs.media.loadTickCap);
 
+	constexpr int x = (640 - LOADBAR_CLIP_WIDTH) / 2;
+
 	if (cg.loadLCARSStage >= 3)
 	{
 		if (cg.loadLCARSStage <= 6)
 		{
 			if (cg_com_rend2.integer == 1) //rend2 is on
 			{
-				cgi_R_Font_DrawString(60, 2, va("Warning: When using Rend2, longer loading times can be expected."), colorTable[CT_WHITE], cgs.media.qhFontSmall, -1, 1.0f);
+				cgi_R_Font_DrawString(60, 2, va("Warning: When using Quality mode, longer loading times can be expected."), colorTable[CT_WHITE], cgs.media.qhFontSmall, -1, 1.0f);
 			}
 		}
 		constexpr int x = (640 - LOADBAR_CLIP_WIDTH) / 2;
@@ -459,10 +461,10 @@ static int CG_DrawLoadWeaponsPrintRow(const char* item_name, const int weapons_b
 		{
 			constexpr int y_offset = 0;
 			CG_RegisterWeapon(i);
-			const weaponInfo_t* weaponInfo = &cg_weapons[i];
+			const weaponInfo_t* weapon_info = &cg_weapons[i];
 			end_index = i;
 
-			CG_DrawPic(hold_x, y + y_offset, icon_size, icon_size, weaponInfo->weaponIcon);
+			CG_DrawPic(hold_x, y + y_offset, icon_size, icon_size, weapon_info->weaponIcon);
 
 			printed_icon_cnt++;
 			if (printed_icon_cnt == MAXLOADICONSPERROW)
@@ -851,10 +853,10 @@ void LoadTips()
 	const int index = rand() % 15;
 	const int time = cgi_Milliseconds();
 
-	if ((SCREENTIP_NEXT_UPDATE_TIME < time || SCREENTIP_NEXT_UPDATE_TIME == 0) && cg.loadLCARSStage <= 9)
+	if ((SCREENTIP_NEXT_UPDATE_TIME < time || SCREENTIP_NEXT_UPDATE_TIME == 0) && cg.loadLCARSStage <= 6)
 	{
 		cgi_Cvar_Set("ui_tipsbriefing", va("@LOADTIPS_TIP%d", index));
-		SCREENTIP_NEXT_UPDATE_TIME = time + 2500;
+		SCREENTIP_NEXT_UPDATE_TIME = time + 3500;
 	}
 }
 
@@ -911,12 +913,9 @@ void CG_DrawInformation()
 		{
 			CG_DrawLoadingScreen(levelshot, s);
 			CG_MissionCompletion();
-
 			LoadTips();
 		}
-
 		cgi_UI_MenuPaintAll();
-
 		CG_LoadBar();
 	}
 

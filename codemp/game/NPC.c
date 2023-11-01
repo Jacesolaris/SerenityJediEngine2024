@@ -38,7 +38,7 @@ extern void G_AddVoiceEvent(const gentity_t* self, int event, int speak_debounce
 extern void NPC_ApplyRoff(void);
 extern void NPC_TempLookTarget(const gentity_t* self, int lookEntNum, int minLookTime, int maxLookTime);
 extern qboolean NPC_CheckLookTarget(const gentity_t* self);
-extern void NPC_SetLookTarget(const gentity_t* self, int entNum, int clear_time);
+extern void NPC_SetLookTarget(const gentity_t* self, int ent_num, int clear_time);
 extern void Mark1_dying(gentity_t* self);
 extern void NPC_BSCinematic(void);
 extern int GetTime(int lastTime);
@@ -85,7 +85,7 @@ void CorpsePhysics(gentity_t* self)
 		GM_Dying(self);
 	}*/
 	//FIXME: match my pitch and roll for the slope of my groundPlane
-	if (self->client->ps.groundentityNum != ENTITYNUM_NONE && !(self->s.eFlags & EF_DISINTEGRATION))
+	if (self->client->ps.groundentity_num != ENTITYNUM_NONE && !(self->s.eFlags & EF_DISINTEGRATION))
 	{
 		//on the ground
 		//FIXME: check 4 corners
@@ -282,10 +282,10 @@ void NPC_RemoveBody(gentity_t* ent)
 			}
 			//if ( self->enemy )
 			{
-				if (ent->client && ent->client->ps.saberentityNum > 0 && ent->client->ps.saberentityNum <
+				if (ent->client && ent->client->ps.saberentity_num > 0 && ent->client->ps.saberentity_num <
 					ENTITYNUM_WORLD)
 				{
-					gentity_t* saberent = &g_entities[ent->client->ps.saberentityNum];
+					gentity_t* saberent = &g_entities[ent->client->ps.saberentity_num];
 					if (saberent)
 					{
 						G_FreeEntity(saberent);
@@ -530,7 +530,7 @@ static void DeadThink(void)
 	}
 
 	// If the player is on the ground and the resting position contents haven't been set yet...(BounceCount tracks the contents)
-	if (NPCS.NPC->bounceCount < 0 && NPCS.NPC->s.groundentityNum >= 0)
+	if (NPCS.NPC->bounceCount < 0 && NPCS.NPC->s.groundentity_num >= 0)
 	{
 		// if client is in a nodrop area, make him/her nodraw
 		const int contents = NPCS.NPC->bounceCount = trap->PointContents(NPCS.NPC->r.currentOrigin, -1);
@@ -2168,7 +2168,7 @@ void NPC_Think(gentity_t* self)
 			&& NPCS.NPC->client->NPC_class == CLASS_ROCKETTROOPER
 			&& NPCS.NPC->client->ps.fd.forceGripBeingGripped > level.time
 			&& NPCS.NPC->client->ps.eFlags2 & EF2_FLYING
-			&& NPCS.NPC->client->ps.groundentityNum == ENTITYNUM_NONE)
+			&& NPCS.NPC->client->ps.groundentity_num == ENTITYNUM_NONE)
 		{
 			//reduce velocity
 			VectorScale(NPCS.NPC->client->ps.velocity, 0.75f, NPCS.NPC->client->ps.velocity);

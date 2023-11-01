@@ -1170,11 +1170,6 @@ int get_com_frameTime()
 	return com_frameTime;
 }
 
-void* CL_Malloc(const int iSize, const memtag_t eTag, const qboolean bZeroit, int iAlign)
-{
-	return Z_Malloc(iSize, eTag, bZeroit);
-}
-
 /*
 ============
 CL_InitRef
@@ -1268,7 +1263,6 @@ void CL_InitRef()
 	RIT(S_RestartMusic);
 	RIT(Z_Free);
 	RIT(Z_Malloc);
-	rit.Malloc = CL_Malloc;
 	RIT(Z_MemSize);
 	RIT(Z_MorphMallocTag);
 
@@ -1334,7 +1328,7 @@ void CL_Init()
 
 	Com_Printf("-----------------------------------------------------------------\n");
 	Com_Printf("---------- Genuine SerenityJediEngine-(Solaris Edition)----------\n");
-	Com_Printf("---------------------Build date 31/10/2023-----------------------\n");
+	Com_Printf("---------------------Build date 01/11/2023-----------------------\n");
 	Com_Printf("-----------------------------------------------------------------\n");
 	Com_Printf("------------------------LightSaber-------------------------------\n");
 	Com_Printf("-----------An elegant weapon for a more civilized age------------\n");
@@ -1551,9 +1545,9 @@ void CL_Init()
 
 	cl_newgameplusJKO = Cvar_Get("g_newgameplusJKO", "0", CVAR_ARCHIVE | CVAR_SAVEGAME | CVAR_NORESTART);
 
-	cl_com_outcast = Cvar_Get("com_outcast", "0", CVAR_ARCHIVE | CVAR_SAVEGAME | CVAR_NORESTART);
+	cl_com_outcast = Cvar_Get("com_outcast", "0", CVAR_ARCHIVE | CVAR_SAVEGAME);
 
-	cl_com_rend2 = Cvar_Get("com_rend2", "0", CVAR_ARCHIVE | CVAR_SAVEGAME | CVAR_NORESTART);
+	cl_com_rend2 = Cvar_Get("com_rend2", "0", CVAR_ARCHIVE | CVAR_SAVEGAME);
 
 	//
 	// register our commands

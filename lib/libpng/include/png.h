@@ -3103,7 +3103,7 @@ extern "C" {
 			*/
 #ifdef PNG_STDIO_SUPPORTED
 	PNG_EXPORT(234, int, png_image_begin_read_from_file, (png_imagep image,
-		const char* fileName));
+		const char* file_name));
 	/* The named file is opened for read and the image header is filled in
 	 * from the PNG header in the file.
 	 */
@@ -3177,7 +3177,7 @@ extern "C" {
 	  * colormap_entries: set to the number of entries in the color-map (0 to 256)
 	  */
 	PNG_EXPORT(239, int, png_image_write_to_file, (png_imagep image,
-		const char* fileName, int convert_to_8bit, const void* buffer,
+		const char* file_name, int convert_to_8bit, const void* buffer,
 		png_int_32 row_stride, const void* colormap));
 	/* Write the image to the named file. */
 

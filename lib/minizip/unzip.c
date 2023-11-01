@@ -1304,10 +1304,10 @@ extern int ZEXPORT unzGoToFilePos(
   Read the local header of the current zipfile
   Check the coherency of the local header and info in the end of central
 		directory about this file
-  store in *pi_sizeVar the size of extra info in local header
+  store in *piSizeVar the size of extra info in local header
 		(filename and size of extra field data)
 */
-local int unz64local_CheckCurrentFileCoherencyHeader(const unz64_s* s, uInt* pi_sizeVar,
+local int unz64local_CheckCurrentFileCoherencyHeader(const unz64_s* s, uInt* piSizeVar,
 	ZPOS64_T* poffset_local_extrafield,
 	uInt* psize_local_extrafield)
 {
@@ -1316,7 +1316,7 @@ local int unz64local_CheckCurrentFileCoherencyHeader(const unz64_s* s, uInt* pi_
 	uLong size_extra_field;
 	int err = UNZ_OK;
 
-	*pi_sizeVar = 0;
+	*piSizeVar = 0;
 	*poffset_local_extrafield = 0;
 	*psize_local_extrafield = 0;
 
@@ -1378,7 +1378,7 @@ local int unz64local_CheckCurrentFileCoherencyHeader(const unz64_s* s, uInt* pi_
 	else if (err == UNZ_OK && size_filename != s->cur_file_info.size_filename)
 		err = UNZ_BADZIPFILE;
 
-	*pi_sizeVar += (uInt)size_filename;
+	*piSizeVar += (uInt)size_filename;
 
 	if (unz64local_getShort(&s->z_filefunc, s->filestream, &size_extra_field) != UNZ_OK)
 		err = UNZ_ERRNO;
@@ -1386,7 +1386,7 @@ local int unz64local_CheckCurrentFileCoherencyHeader(const unz64_s* s, uInt* pi_
 		SIZEZIPLOCALHEADER + size_filename;
 	*psize_local_extrafield = (uInt)size_extra_field;
 
-	*pi_sizeVar += (uInt)size_extra_field;
+	*piSizeVar += (uInt)size_extra_field;
 
 	return err;
 }
@@ -1399,7 +1399,7 @@ extern int ZEXPORT unzOpenCurrentFile3(const unzFile file, int* method,
 	int* level, const int raw, const char* password)
 {
 	int err;
-	uInt i_sizeVar;
+	uInt iSizeVar;
 	unz64_s* s;
 	file_in_zip64_read_info_s* pfile_in_zip_read_info;
 	ZPOS64_T offset_local_extrafield; /* offset of the local extra field */
@@ -1420,7 +1420,7 @@ extern int ZEXPORT unzOpenCurrentFile3(const unzFile file, int* method,
 	if (s->pfile_in_zip_read != NULL)
 		unzCloseCurrentFile(file);
 
-	if (unz64local_CheckCurrentFileCoherencyHeader(s, &i_sizeVar, &offset_local_extrafield, &size_local_extrafield) !=
+	if (unz64local_CheckCurrentFileCoherencyHeader(s, &iSizeVar, &offset_local_extrafield, &size_local_extrafield) !=
 		UNZ_OK)
 		return UNZ_BADZIPFILE;
 
@@ -1535,7 +1535,7 @@ extern int ZEXPORT unzOpenCurrentFile3(const unzFile file, int* method,
 
 	pfile_in_zip_read_info->pos_in_zipfile =
 		s->cur_file_info_internal.offset_curfile + SIZEZIPLOCALHEADER +
-		i_sizeVar;
+		iSizeVar;
 
 	pfile_in_zip_read_info->stream.avail_in = (uInt)0;
 

@@ -518,7 +518,7 @@ static qboolean G_InitRoff(char* file, unsigned char* data)
 	int count;
 	int i;
 
-	roffs[num_roffs].fileName = G_NewString(file);
+	roffs[num_roffs].file_name = G_NewString(file);
 
 	if (LittleLong header->mVersion == ROFF_VERSION)
 	{
@@ -651,7 +651,7 @@ static qboolean G_InitRoff(char* file, unsigned char* data)
 
 extern cvar_t* com_outcast;
 
-int G_LoadRoff(const char* fileName)
+int G_LoadRoff(const char* file_name)
 {
 	char file[MAX_QPATH];
 	byte* data = nullptr;
@@ -660,35 +660,35 @@ int G_LoadRoff(const char* fileName)
 	// Before even bothering with all of this, make sure we have a place to store it.
 	if (num_roffs >= MAX_ROFFS)
 	{
-		Com_Printf(S_COLOR_RED"MAX_ROFFS count exceeded.  Skipping load of .ROF '%s'\n", fileName);
+		Com_Printf(S_COLOR_RED"MAX_ROFFS count exceeded.  Skipping load of .ROF '%s'\n", file_name);
 		return roff_id;
 	}
 
 	if (com_outcast->integer == 0) //playing academy
 	{
 		// The actual path
-		sprintf(file, "%s/%s.rof", Q3_SCRIPT_DIR, fileName);
+		sprintf(file, "%s/%s.rof", Q3_SCRIPT_DIR, file_name);
 	}
 	else if (com_outcast->integer == 1) //playing outcast
 	{
 		// The actual path
-		sprintf(file, "%s/%s.rof", Q3_SCRIPT_DIR_JK2, fileName);
+		sprintf(file, "%s/%s.rof", Q3_SCRIPT_DIR_JK2, file_name);
 	}
 	else if (com_outcast->integer == 2) //playing creative
 	{
 		// The actual path
-		sprintf(file, "%s/%s.rof", Q3_SCRIPT_DIR_CR, fileName);
+		sprintf(file, "%s/%s.rof", Q3_SCRIPT_DIR_CR, file_name);
 	}
 	else
 	{
 		// The actual path
-		sprintf(file, "%s/%s.rof", Q3_SCRIPT_DIR, fileName);
+		sprintf(file, "%s/%s.rof", Q3_SCRIPT_DIR, file_name);
 	}
 
 	// See if I'm already precached
 	for (int i = 0; i < num_roffs; i++)
 	{
-		if (Q_stricmp(file, roffs[i].fileName) == 0)
+		if (Q_stricmp(file, roffs[i].file_name) == 0)
 		{
 			// Good, just return me...avoid zero index
 			return i + 1;
@@ -704,7 +704,7 @@ int G_LoadRoff(const char* fileName)
 
 	if (len <= 0)
 	{
-		Com_Printf(S_COLOR_RED"Could not open .ROF file '%s'\n", fileName);
+		Com_Printf(S_COLOR_RED"Could not open .ROF file '%s'\n", file_name);
 		return roff_id;
 	}
 
@@ -714,7 +714,7 @@ int G_LoadRoff(const char* fileName)
 	// ..and make sure it's reasonably valid
 	if (!G_ValidRoff(header))
 	{
-		Com_Printf(S_COLOR_RED"Invalid .ROF format '%s'\n", fileName);
+		Com_Printf(S_COLOR_RED"Invalid .ROF format '%s'\n", file_name);
 	}
 	else
 	{
@@ -907,11 +907,11 @@ void G_SaveCachedRoffs()
 	for (int i = 0; i < num_roffs; i++)
 	{
 		// Dump out the string length to make things a bit easier on the other end...heh heh.
-		len = strlen(roffs[i].fileName) + 1;
+		len = strlen(roffs[i].file_name) + 1;
 
 		saved_game.write_chunk<int32_t>(INT_ID('S', 'L', 'E', 'N'), len);
 
-		saved_game.write_chunk(INT_ID('R', 'S', 'T', 'R'), roffs[i].fileName, len);
+		saved_game.write_chunk(INT_ID('R', 'S', 'T', 'R'), roffs[i].file_name, len);
 	}
 }
 

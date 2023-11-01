@@ -255,15 +255,15 @@ void ImperialProbe_FireBlaster()
 {
 	vec3_t muzzle1;
 	static vec3_t forward, vright, up;
-	mdxaBone_t boltMatrix;
+	mdxaBone_t bolt_matrix;
 
 	//FIXME: use {0, NPC->client->ps.legsYaw, 0}
 	gi.G2API_GetBoltMatrix(NPC->ghoul2, NPC->playerModel,
 		NPC->genericBolt1,
-		&boltMatrix, NPC->currentAngles, NPC->currentOrigin, cg.time ? cg.time : level.time,
+		&bolt_matrix, NPC->currentAngles, NPC->currentOrigin, cg.time ? cg.time : level.time,
 		nullptr, NPC->s.modelScale);
 
-	gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, muzzle1);
+	gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, muzzle1);
 
 	G_PlayEffect("bryar_old/muzzle_flash", muzzle1);
 

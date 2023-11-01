@@ -241,7 +241,7 @@ void trap_Key_SetCatcher(int catcher);
 void trap_Key_SetOverstrikeMode(qboolean state);
 void trap_R_DrawStretchPic(float x, float y, float w, float h, float s1, float t1, float s2, float t2,
 	qhandle_t hShader);
-void trap_R_ModelBounds(clipHandle_t model, vec3_t mins, vec3_t maxs);
+void trap_R_ModelBounds(clip_handle_t model, vec3_t mins, vec3_t maxs);
 void trap_R_SetColor(const float* rgba);
 void trap_R_ClearScene();
 void trap_R_AddRefEntityToScene(const refEntity_t* re);

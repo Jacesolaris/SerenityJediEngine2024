@@ -32,9 +32,9 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #include "../game/wp_saber.h"
 #include "../game/g_vehicles.h"
 
-extern void CG_AddSaberBlade(const centity_t* cent, centity_t* scent, int renderfx, int modelIndex,
+extern void CG_AddSaberBlade(const centity_t* cent, centity_t* scent, int renderfx, int model_index,
 	vec3_t origin, vec3_t angles);
-extern void CG_CheckSaberInWater(const centity_t* cent, const centity_t* scent, int saber_num, int modelIndex,
+extern void CG_CheckSaberInWater(const centity_t* cent, const centity_t* scent, int saber_num, int model_index,
 	vec3_t origin,
 	vec3_t angles);
 extern void CG_ForcePushBlur(const vec3_t org, qboolean dark_side = qfalse);
@@ -269,36 +269,36 @@ void CG_SetGhoul2Info(refEntity_t* ent, const centity_t* cent)
 void G2_BoltToGhoul2Model(const centity_t* cent, refEntity_t* ent)
 {
 	// extract the wraith ID from the bolt info
-	int model_num = cent->currentState.boltInfo >> MODEL_SHIFT;
+	int model_num = cent->currentState.bolt_info >> MODEL_SHIFT;
 	model_num &= MODEL_AND;
-	int bolt_num = cent->currentState.boltInfo >> BOLT_SHIFT;
+	int bolt_num = cent->currentState.bolt_info >> BOLT_SHIFT;
 	bolt_num &= BOLT_AND;
-	int entNum = cent->currentState.boltInfo >> ENTITY_SHIFT;
-	entNum &= ENTITY_AND;
+	int ent_num = cent->currentState.bolt_info >> ENTITY_SHIFT;
+	ent_num &= ENTITY_AND;
 
-	mdxaBone_t boltMatrix;
+	mdxaBone_t bolt_matrix;
 
 	// go away and get me the bolt position for this frame please
-	gi.G2API_GetBoltMatrix(cent->gent->ghoul2, model_num, bolt_num, &boltMatrix, cg_entities[entNum].currentState.angles,
-		cg_entities[entNum].currentState.origin, cg.time, cgs.model_draw,
+	gi.G2API_GetBoltMatrix(cent->gent->ghoul2, model_num, bolt_num, &bolt_matrix, cg_entities[ent_num].currentState.angles,
+		cg_entities[ent_num].currentState.origin, cg.time, cgs.model_draw,
 		cent->currentState.modelScale);
 
 	// set up the axis and origin we need for the actual effect spawning
-	ent->origin[0] = boltMatrix.matrix[0][3];
-	ent->origin[1] = boltMatrix.matrix[1][3];
-	ent->origin[2] = boltMatrix.matrix[2][3];
+	ent->origin[0] = bolt_matrix.matrix[0][3];
+	ent->origin[1] = bolt_matrix.matrix[1][3];
+	ent->origin[2] = bolt_matrix.matrix[2][3];
 
-	ent->axis[0][0] = boltMatrix.matrix[0][0];
-	ent->axis[0][1] = boltMatrix.matrix[1][0];
-	ent->axis[0][2] = boltMatrix.matrix[2][0];
+	ent->axis[0][0] = bolt_matrix.matrix[0][0];
+	ent->axis[0][1] = bolt_matrix.matrix[1][0];
+	ent->axis[0][2] = bolt_matrix.matrix[2][0];
 
-	ent->axis[1][0] = boltMatrix.matrix[0][1];
-	ent->axis[1][1] = boltMatrix.matrix[1][1];
-	ent->axis[1][2] = boltMatrix.matrix[2][1];
+	ent->axis[1][0] = bolt_matrix.matrix[0][1];
+	ent->axis[1][1] = bolt_matrix.matrix[1][1];
+	ent->axis[1][2] = bolt_matrix.matrix[2][1];
 
-	ent->axis[2][0] = boltMatrix.matrix[0][2];
-	ent->axis[2][1] = boltMatrix.matrix[1][2];
-	ent->axis[2][2] = boltMatrix.matrix[2][2];
+	ent->axis[2][0] = bolt_matrix.matrix[0][2];
+	ent->axis[2][1] = bolt_matrix.matrix[1][2];
+	ent->axis[2][2] = bolt_matrix.matrix[2][2];
 }
 
 void ScaleModelAxis(refEntity_t* ent)
@@ -452,7 +452,7 @@ static void CG_General(centity_t* cent)
 			VectorMA(end, lerped.origin[i], cent->currentState.angles, end);
 		}
 
-		parent = &cg_entities[cent->currentState.otherentityNum];
+		parent = &cg_entities[cent->currentState.otherentity_num];
 		gi.G2API_GetBoltMatrix(parent->gent->ghoul2, 0, 0, &mat, parent->lerpAngles, parent->lerpOrigin, cg.time,
 			cgs.model_draw, cent->currentState.modelScale);
 
@@ -487,7 +487,7 @@ static void CG_General(centity_t* cent)
 			VectorMA(end, lerped.origin[i], cent->currentState.angles, end);
 		}
 
-		parent = &cg_entities[cent->currentState.otherentityNum];
+		parent = &cg_entities[cent->currentState.otherentity_num];
 		gi.G2API_GetBoltMatrix(parent->gent->ghoul2, 0, 0, &mat, parent->lerpAngles, parent->lerpOrigin, cg.time,
 			cgs.model_draw, cent->currentState.modelScale);
 		gi.G2API_GiveMeVectorFromMatrix(mat, ORIGIN, start);
@@ -509,7 +509,7 @@ static void CG_General(centity_t* cent)
 	Ghoul2 Insert Start
 	*/
 	// are we bolted to a Ghoul2 model?
-	if (s1->boltInfo)
+	if (s1->bolt_info)
 	{
 		G2_BoltToGhoul2Model(cent, &ent);
 	}
@@ -580,7 +580,7 @@ static void CG_General(centity_t* cent)
 
 			// get alternating muzzle end bolts
 			int bolt = cent->gent->handRBolt;
-			mdxaBone_t boltMatrix;
+			mdxaBone_t bolt_matrix;
 
 			if (!cc->gent->fxID || bolt == -1)
 			{
@@ -592,20 +592,20 @@ static void CG_General(centity_t* cent)
 				bolt = 0;
 			}
 			gi.G2API_GetBoltMatrix(cent->gent->ghoul2, 0, bolt,
-				&boltMatrix, cent->lerpAngles, cent->lerpOrigin, cg.time,
+				&bolt_matrix, cent->lerpAngles, cent->lerpOrigin, cg.time,
 				cgs.model_draw, cent->currentState.modelScale);
 
 			// store the muzzle point and direction so that we can fire in the right direction
-			gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, cc->gent->client->renderInfo.muzzle_point);
+			gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, cc->gent->client->renderInfo.muzzle_point);
 			if (cent->gent->bounceCount)
 			{
 				//EWeb - *sigh* the muzzle tag on this is not aligned like th eone on the emplaced gun... consistency anyone...?
-				gi.G2API_GiveMeVectorFromMatrix(boltMatrix, NEGATIVE_X, cc->gent->client->renderInfo.muzzleDir);
+				gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, NEGATIVE_X, cc->gent->client->renderInfo.muzzleDir);
 			}
 			else
 			{
 				//Emplaced gun
-				gi.G2API_GiveMeVectorFromMatrix(boltMatrix, POSITIVE_Y, cc->gent->client->renderInfo.muzzleDir);
+				gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, POSITIVE_Y, cc->gent->client->renderInfo.muzzleDir);
 			}
 			cc->gent->client->renderInfo.mPCalcTime = cg.time;
 
@@ -728,8 +728,8 @@ static void CG_General(centity_t* cent)
 			{
 				//thrown saber
 				//light?  sound?
-				if (cent->gent->owner->client && g_entities[cent->currentState.otherentityNum].client && g_entities[cent
-					->currentState.otherentityNum].client->ps.saber[0].Active())
+				if (cent->gent->owner->client && g_entities[cent->currentState.otherentity_num].client && g_entities[cent
+					->currentState.otherentity_num].client->ps.saber[0].Active())
 				{
 					//saber is in-flight and active, play a sound on it
 					if (cent->gent->owner->client->ps.saberEntityState == SES_RETURNING
@@ -1237,7 +1237,7 @@ static void CG_Missile(centity_t* cent)
 		VectorCopy(s1->angles, cent->lerpAngles);
 	}
 
-	if (s1->otherentityNum2 && (g_vehWeaponInfo[s1->otherentityNum2].iShotFX || g_vehWeaponInfo[s1->otherentityNum2].
+	if (s1->otherentity_num2 && (g_vehWeaponInfo[s1->otherentity_num2].iShotFX || g_vehWeaponInfo[s1->otherentity_num2].
 		iModel))
 	{
 		vec3_t forward;
@@ -1272,19 +1272,19 @@ static void CG_Missile(centity_t* cent)
 			VectorScale(forward, scale, forward);
 		}
 
-		CG_PlayEffectID(g_vehWeaponInfo[s1->otherentityNum2].iShotFX, cent->lerpOrigin, forward);
-		if (g_vehWeaponInfo[s1->otherentityNum2].iLoopSound)
+		CG_PlayEffectID(g_vehWeaponInfo[s1->otherentity_num2].iShotFX, cent->lerpOrigin, forward);
+		if (g_vehWeaponInfo[s1->otherentity_num2].iLoopSound)
 		{
 			vec3_t velocity;
 			EvaluateTrajectoryDelta(&cent->currentState.pos, cg.time, velocity);
-			if (cgs.sound_precache[g_vehWeaponInfo[s1->otherentityNum2].iLoopSound] != NULL_SFX)
+			if (cgs.sound_precache[g_vehWeaponInfo[s1->otherentity_num2].iLoopSound] != NULL_SFX)
 			{
 				cgi_S_AddLoopingSound(cent->currentState.number, cent->lerpOrigin, velocity,
-					cgs.sound_precache[g_vehWeaponInfo[s1->otherentityNum2].iLoopSound]);
+					cgs.sound_precache[g_vehWeaponInfo[s1->otherentity_num2].iLoopSound]);
 			}
 		}
 		//add custom model
-		if (!g_vehWeaponInfo[s1->otherentityNum2].iModel)
+		if (!g_vehWeaponInfo[s1->otherentity_num2].iModel)
 		{
 			return;
 		}
@@ -1380,7 +1380,7 @@ static void CG_Missile(centity_t* cent)
 			VectorMA(end, i, s1->angles, end);
 		}
 
-		const centity_t* parent = &cg_entities[s1->otherentityNum];
+		const centity_t* parent = &cg_entities[s1->otherentity_num];
 		gi.G2API_GetBoltMatrix(parent->gent->ghoul2, 1, 0, &mat, parent->lerpAngles, parent->lerpOrigin, cg.time,
 			cgs.model_draw, cent->currentState.modelScale);
 
@@ -1413,7 +1413,7 @@ static void CG_Missile(centity_t* cent)
 			VectorMA(end, i, s1->angles, end);
 		}
 
-		const centity_t* parent = &cg_entities[s1->otherentityNum];
+		const centity_t* parent = &cg_entities[s1->otherentity_num];
 		gi.G2API_GetBoltMatrix(parent->gent->ghoul2, 1, 0, &mat, parent->lerpAngles, parent->lerpOrigin, cg.time,
 			cgs.model_draw, cent->currentState.modelScale);
 		gi.G2API_GiveMeVectorFromMatrix(mat, ORIGIN, start);
@@ -1429,9 +1429,9 @@ static void CG_Missile(centity_t* cent)
 	ent.skinNum = cg.clientFrame & 1;
 	ent.renderfx = RF_NOSHADOW;
 
-	if (s1->otherentityNum2 && g_vehWeaponInfo[s1->otherentityNum2].iModel && cgs.model_draw[g_vehWeaponInfo[s1->
-		otherentityNum2].iModel] != NULL_HANDLE)
-		ent.hModel = cgs.model_draw[g_vehWeaponInfo[s1->otherentityNum2].iModel];
+	if (s1->otherentity_num2 && g_vehWeaponInfo[s1->otherentity_num2].iModel && cgs.model_draw[g_vehWeaponInfo[s1->
+		otherentity_num2].iModel] != NULL_HANDLE)
+		ent.hModel = cgs.model_draw[g_vehWeaponInfo[s1->otherentity_num2].iModel];
 	else if (cent->gent->alt_fire)
 		ent.hModel = weapon->alt_missileModel;
 	else
@@ -2102,7 +2102,7 @@ void CG_CalcEntityLerpPositions(centity_t* cent)
 	EvaluateTrajectory(&cent->currentState.apos, cg.time, cent->lerpAngles);
 
 	// adjust for riding a mover
-	CG_AdjustPositionForMover(cent->lerpOrigin, cent->currentState.groundentityNum, cg.time, cent->lerpOrigin);
+	CG_AdjustPositionForMover(cent->lerpOrigin, cent->currentState.groundentity_num, cg.time, cent->lerpOrigin);
 	/*
 	Ghoul2 Insert Start
 	*/
@@ -2215,7 +2215,7 @@ void CG_CalcEntityLerpPositions(centity_t* cent)
 	EvaluateTrajectory(&cent->currentState.apos, cg.time, cent->lerpAngles);
 
 	// adjust for riding a mover
-	CG_AdjustPositionForMover(cent->lerpOrigin, cent->currentState.groundentityNum, cg.time, cent->lerpOrigin);
+	CG_AdjustPositionForMover(cent->lerpOrigin, cent->currentState.groundentity_num, cg.time, cent->lerpOrigin);
 }
 #endif
 /*
@@ -2465,7 +2465,7 @@ void CG_MatrixEffect(const centity_t* cent)
 {
 	float MATRIX_EFFECT_TIME = 1000.0f;
 
-	if (cent->currentState.boltInfo & MEF_MULTI_SPIN)
+	if (cent->currentState.bolt_info & MEF_MULTI_SPIN)
 	{
 		//multiple spins
 		if (cent->currentState.time2 > 0)
@@ -2487,26 +2487,26 @@ void CG_MatrixEffect(const centity_t* cent)
 	float elapsed_time = total_elapsed_time;
 	bool stop_effect = total_elapsed_time > cent->currentState.eventParm || cg.missionStatusShow || in_camera;
 
-	if (!stop_effect && cent->currentState.boltInfo & MEF_HIT_GROUND_STOP && g_entities[cent->currentState.
-		otherentityNum].client)
+	if (!stop_effect && cent->currentState.bolt_info & MEF_HIT_GROUND_STOP && g_entities[cent->currentState.
+		otherentity_num].client)
 	{
-		if (g_entities[cent->currentState.otherentityNum].client->ps.groundentityNum != ENTITYNUM_NONE)
+		if (g_entities[cent->currentState.otherentity_num].client->ps.groundentity_num != ENTITYNUM_NONE)
 		{
 			stop_effect = true;
 		}
-		else if (g_entities[cent->currentState.otherentityNum].client->NPC_class == CLASS_VEHICLE)
+		else if (g_entities[cent->currentState.otherentity_num].client->NPC_class == CLASS_VEHICLE)
 		{
-			const Vehicle_t* p_veh = g_entities[cent->currentState.otherentityNum].m_pVehicle;
+			const Vehicle_t* p_veh = g_entities[cent->currentState.otherentity_num].m_pVehicle;
 			if (p_veh && !(p_veh->m_ulFlags & VEH_FLYING))
 			{
 				stop_effect = true;
 			}
 		}
 	}
-	if (!stop_effect && cent->currentState.boltInfo & MEF_LOOK_AT_ENEMY)
+	if (!stop_effect && cent->currentState.bolt_info & MEF_LOOK_AT_ENEMY)
 	{
-		if (!g_entities[cent->currentState.otherentityNum].lastEnemy ||
-			!g_entities[cent->currentState.otherentityNum].lastEnemy->inuse)
+		if (!g_entities[cent->currentState.otherentity_num].lastEnemy ||
+			!g_entities[cent->currentState.otherentity_num].lastEnemy->inuse)
 		{
 			stop_effect = true;
 		}
@@ -2543,19 +2543,19 @@ void CG_MatrixEffect(const centity_t* cent)
 
 	MatrixMode = qtrue;
 
-	if (cent->currentState.boltInfo & MEF_LOOK_AT_ENEMY)
+	if (cent->currentState.bolt_info & MEF_LOOK_AT_ENEMY)
 	{
 		vec3_t to_enemy;
 		vec3_t to_enemy_angles;
 
-		VectorCopy(cg_entities[g_entities[cent->currentState.otherentityNum].lastEnemy->s.number].lerpOrigin, to_enemy);
-		VectorSubtract(cg_entities[cent->currentState.otherentityNum].lerpOrigin, to_enemy, to_enemy);
+		VectorCopy(cg_entities[g_entities[cent->currentState.otherentity_num].lastEnemy->s.number].lerpOrigin, to_enemy);
+		VectorSubtract(cg_entities[cent->currentState.otherentity_num].lerpOrigin, to_enemy, to_enemy);
 		vectoangles(to_enemy, to_enemy_angles);
 
 		cg.overrides.active |= CG_OVERRIDE_3RD_PERSON_ANG;
 		cg.overrides.thirdPersonAngle =
 			to_enemy_angles[1] -
-			cg_entities[cent->currentState.otherentityNum].lerpAngles[1] +
+			cg_entities[cent->currentState.otherentity_num].lerpAngles[1] +
 			145.0f;
 		cg.overrides.thirdPersonAngle = AngleNormalize180(cg.overrides.thirdPersonAngle);
 
@@ -2570,14 +2570,14 @@ void CG_MatrixEffect(const centity_t* cent)
 		cg.overrides.thirdPersonRange = cg_thirdPersonRange.value * 3.0f;
 	}
 
-	if (!(cent->currentState.boltInfo & MEF_NO_SPIN))
+	if (!(cent->currentState.bolt_info & MEF_NO_SPIN))
 	{
 		//rotate around them
 		//rotate
 		cg.overrides.active |= CG_OVERRIDE_3RD_PERSON_ANG;
 		cg.overrides.thirdPersonAngle = 360.0f * elapsed_time / MATRIX_EFFECT_TIME;
 
-		if (cent->currentState.boltInfo & MEF_REVERSE_SPIN)
+		if (cent->currentState.bolt_info & MEF_REVERSE_SPIN)
 		{
 			cg.overrides.thirdPersonAngle *= -1;
 		}
@@ -2588,7 +2588,7 @@ void CG_MatrixEffect(const centity_t* cent)
 	{
 		cgi_Cvar_Set("timescale", va("%4.2f", cent->currentState.angles2[0]));
 	}
-	else if (!(cent->currentState.boltInfo & MEF_NO_TIMESCALE))
+	else if (!(cent->currentState.bolt_info & MEF_NO_TIMESCALE))
 	{
 		//ramp the timescale
 		//slowdown
@@ -2604,7 +2604,7 @@ void CG_MatrixEffect(const centity_t* cent)
 		//FIXME: MEF_HIT_GROUND_STOP: if they're on the ground, stop spinning and stop timescale
 	}
 
-	if (!(cent->currentState.boltInfo & MEF_NO_VERTBOB))
+	if (!(cent->currentState.bolt_info & MEF_NO_VERTBOB))
 	{
 		//bob the pitch
 		//pitch
@@ -2626,7 +2626,7 @@ void CG_MatrixEffect(const centity_t* cent)
 		}
 	}
 
-	if (!(cent->currentState.boltInfo & MEF_NO_RANGEVAR))
+	if (!(cent->currentState.bolt_info & MEF_NO_RANGEVAR))
 	{
 		//vary the camera range
 		//pull back
@@ -2651,7 +2651,7 @@ void CG_StasisEffect(const centity_t* cent)
 {
 	float STASIS_EFFECT_TIME = 75.0f;
 
-	if (cent->currentState.boltInfo & MEF_MULTI_SPIN)
+	if (cent->currentState.bolt_info & MEF_MULTI_SPIN)
 	{
 		//multiple spins
 		if (cent->currentState.time2 > 0)
@@ -2673,26 +2673,26 @@ void CG_StasisEffect(const centity_t* cent)
 	float elapsed_time = total_elapsed_time;
 	bool stop_effect = total_elapsed_time > cent->currentState.eventParm || cg.missionStatusShow || in_camera;
 
-	if (!stop_effect && cent->currentState.boltInfo & MEF_HIT_GROUND_STOP && g_entities[cent->currentState.
-		otherentityNum].client)
+	if (!stop_effect && cent->currentState.bolt_info & MEF_HIT_GROUND_STOP && g_entities[cent->currentState.
+		otherentity_num].client)
 	{
-		if (g_entities[cent->currentState.otherentityNum].client->ps.groundentityNum != ENTITYNUM_NONE)
+		if (g_entities[cent->currentState.otherentity_num].client->ps.groundentity_num != ENTITYNUM_NONE)
 		{
 			stop_effect = true;
 		}
-		else if (g_entities[cent->currentState.otherentityNum].client->NPC_class == CLASS_VEHICLE)
+		else if (g_entities[cent->currentState.otherentity_num].client->NPC_class == CLASS_VEHICLE)
 		{
-			const Vehicle_t* p_veh = g_entities[cent->currentState.otherentityNum].m_pVehicle;
+			const Vehicle_t* p_veh = g_entities[cent->currentState.otherentity_num].m_pVehicle;
 			if (p_veh && !(p_veh->m_ulFlags & VEH_FLYING))
 			{
 				stop_effect = true;
 			}
 		}
 	}
-	if (!stop_effect && cent->currentState.boltInfo & MEF_LOOK_AT_ENEMY)
+	if (!stop_effect && cent->currentState.bolt_info & MEF_LOOK_AT_ENEMY)
 	{
-		if (!g_entities[cent->currentState.otherentityNum].lastEnemy ||
-			!g_entities[cent->currentState.otherentityNum].lastEnemy->inuse)
+		if (!g_entities[cent->currentState.otherentity_num].lastEnemy ||
+			!g_entities[cent->currentState.otherentity_num].lastEnemy->inuse)
 		{
 			stop_effect = true;
 		}
@@ -2729,19 +2729,19 @@ void CG_StasisEffect(const centity_t* cent)
 
 	MatrixMode = qtrue;
 
-	if (cent->currentState.boltInfo & MEF_LOOK_AT_ENEMY)
+	if (cent->currentState.bolt_info & MEF_LOOK_AT_ENEMY)
 	{
 		vec3_t to_enemy;
 		vec3_t to_enemy_angles;
 
-		VectorCopy(cg_entities[g_entities[cent->currentState.otherentityNum].lastEnemy->s.number].lerpOrigin, to_enemy);
-		VectorSubtract(cg_entities[cent->currentState.otherentityNum].lerpOrigin, to_enemy, to_enemy);
+		VectorCopy(cg_entities[g_entities[cent->currentState.otherentity_num].lastEnemy->s.number].lerpOrigin, to_enemy);
+		VectorSubtract(cg_entities[cent->currentState.otherentity_num].lerpOrigin, to_enemy, to_enemy);
 		vectoangles(to_enemy, to_enemy_angles);
 
 		cg.overrides.active |= CG_OVERRIDE_3RD_PERSON_ANG;
 		cg.overrides.thirdPersonAngle =
 			to_enemy_angles[1] -
-			cg_entities[cent->currentState.otherentityNum].lerpAngles[1] +
+			cg_entities[cent->currentState.otherentity_num].lerpAngles[1] +
 			145.0f;
 		cg.overrides.thirdPersonAngle = AngleNormalize180(cg.overrides.thirdPersonAngle);
 
@@ -2761,7 +2761,7 @@ void CG_StasisEffect(const centity_t* cent)
 	{
 		cgi_Cvar_Set("timescale", va("%4.2f", cent->currentState.angles2[0]));
 	}
-	else if (!(cent->currentState.boltInfo & MEF_NO_TIMESCALE))
+	else if (!(cent->currentState.bolt_info & MEF_NO_TIMESCALE))
 	{
 		//ramp the timescale
 		//slowdown

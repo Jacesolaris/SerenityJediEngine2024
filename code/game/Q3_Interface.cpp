@@ -63,7 +63,7 @@ extern void CG_ChangeWeapon(int num);
 extern int TAG_GetOrigin2(const char* owner, const char* name, vec3_t origin);
 extern void G_PlayDoorLoopSound(gentity_t* ent);
 extern void G_PlayDoorSound(gentity_t* ent, int type);
-extern void NPC_SetLookTarget(const gentity_t* self, int entNum, int clear_time);
+extern void NPC_SetLookTarget(const gentity_t* self, int ent_num, int clear_time);
 extern void NPC_ClearLookTarget(const gentity_t* self);
 extern void WP_SaberSetColor(const gentity_t* ent, int saber_num, int blade_num, const char* colorName);
 extern void WP_SetSaber(gentity_t* ent, int saber_num, const char* saber_name);
@@ -74,7 +74,7 @@ extern void JET_FlyStart(gentity_t* self);
 extern void jet_fly_stop(gentity_t* self);
 extern void Rail_LockCenterOfTrack(const char* trackName);
 extern void Rail_UnLockCenterOfTrack(const char* trackName);
-extern void G_GetBoltPosition(gentity_t* self, int boltIndex, vec3_t pos, int modelIndex = 0);
+extern void G_GetBoltPosition(gentity_t* self, int bolt_index, vec3_t pos, int model_index = 0);
 extern qboolean G_DoDismembermentcin(gentity_t* self, vec3_t point, int mod, int hit_loc,
 	qboolean force = qfalse);
 
@@ -6265,10 +6265,10 @@ Q3_SetStartFrame
   Description	:
   Return type	: static void
   Argument		:  int ent_id
-  Argument		: int startFrame
+  Argument		: int start_frame
 ============
 */
-static void Q3_SetStartFrame(const int ent_id, const int startFrame)
+static void Q3_SetStartFrame(const int ent_id, const int start_frame)
 {
 	gentity_t* ent = &g_entities[ent_id];
 
@@ -6284,10 +6284,10 @@ static void Q3_SetStartFrame(const int ent_id, const int startFrame)
 		return;
 	}
 
-	if (startFrame >= 0)
+	if (start_frame >= 0)
 	{
-		ent->s.frame = startFrame;
-		ent->startFrame = startFrame;
+		ent->s.frame = start_frame;
+		ent->start_frame = start_frame;
 	}
 }
 
@@ -6297,10 +6297,10 @@ Q3_SetEndFrame
   Description	:
   Return type	: static void
   Argument		:  int ent_id
-  Argument		: int endFrame
+  Argument		: int end_frame
 ============
 */
-static void Q3_SetEndFrame(const int ent_id, const int endFrame)
+static void Q3_SetEndFrame(const int ent_id, const int end_frame)
 {
 	gentity_t* ent = &g_entities[ent_id];
 
@@ -6316,9 +6316,9 @@ static void Q3_SetEndFrame(const int ent_id, const int endFrame)
 		return;
 	}
 
-	if (endFrame >= 0)
+	if (end_frame >= 0)
 	{
-		ent->endFrame = endFrame;
+		ent->end_frame = end_frame;
 	}
 }
 
@@ -6328,7 +6328,7 @@ Q3_SetAnimFrame
   Description	:
   Return type	: static void
   Argument		:  int ent_id
-  Argument		: int startFrame
+  Argument		: int start_frame
 ============
 */
 static void Q3_SetAnimFrame(const int ent_id, const int animFrame)
@@ -6347,11 +6347,11 @@ static void Q3_SetAnimFrame(const int ent_id, const int animFrame)
 		return;
 	}
 
-	if (animFrame >= ent->endFrame)
+	if (animFrame >= ent->end_frame)
 	{
-		ent->s.frame = ent->endFrame;
+		ent->s.frame = ent->end_frame;
 	}
-	else if (animFrame >= ent->startFrame)
+	else if (animFrame >= ent->start_frame)
 	{
 		ent->s.frame = animFrame;
 	}
@@ -6853,13 +6853,13 @@ static void Q3_RemoveEnt(gentity_t* victim)
 			G_FreeEntity(victim->NPC->tempGoal);
 			victim->NPC->tempGoal = nullptr;
 		}
-		if (victim->client->ps.saberentityNum != ENTITYNUM_NONE && victim->client->ps.saberentityNum > 0)
+		if (victim->client->ps.saberentity_num != ENTITYNUM_NONE && victim->client->ps.saberentity_num > 0)
 		{
-			if (g_entities[victim->client->ps.saberentityNum].inuse)
+			if (g_entities[victim->client->ps.saberentity_num].inuse)
 			{
-				G_FreeEntity(&g_entities[victim->client->ps.saberentityNum]);
+				G_FreeEntity(&g_entities[victim->client->ps.saberentity_num]);
 			}
-			victim->client->ps.saberentityNum = ENTITYNUM_NONE;
+			victim->client->ps.saberentity_num = ENTITYNUM_NONE;
 		}
 		//Disappear in half a second
 		victim->e_ThinkFunc = thinkF_G_FreeEntity;
@@ -8013,20 +8013,20 @@ void CQuake3GameInterface::DebugPrint(const e_DebugPrintLevel level, const char*
 
 	case WL_DEBUG:
 	{
-		int entNum;
+		int ent_num;
 
-		sscanf(text, "%d", &entNum);
+		sscanf(text, "%d", &ent_num);
 
-		if (m_entFilter >= 0 && m_entFilter != entNum)
+		if (m_entFilter >= 0 && m_entFilter != ent_num)
 			return;
 
 		auto buffer = text;
 		buffer += 5;
 
-		if (entNum < 0 || entNum >= MAX_GENTITIES)
-			entNum = 0;
+		if (ent_num < 0 || ent_num >= MAX_GENTITIES)
+			ent_num = 0;
 
-		Com_Printf(S_COLOR_BLUE"DEBUG: %s(%d): %s\n", g_entities[entNum].script_targetname, entNum, buffer);
+		Com_Printf(S_COLOR_BLUE"DEBUG: %s(%d): %s\n", g_entities[ent_num].script_targetname, ent_num, buffer);
 		break;
 	}
 	default:
@@ -10323,10 +10323,10 @@ int CQuake3GameInterface::GetFloat(const int ent_id, const char* name, float* va
 		*value = ent->client->forced_rightmove;
 		break;
 	case SET_STARTFRAME: //## %d="0" # frame to start animation sequence on
-		*value = ent->startFrame;
+		*value = ent->start_frame;
 		break;
 	case SET_ENDFRAME: //## %d="0" # frame to end animation sequence on
-		*value = ent->endFrame;
+		*value = ent->end_frame;
 		break;
 	case SET_ANIMFRAME: //## %d="0" # of current frame
 		*value = ent->s.frame;

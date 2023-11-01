@@ -43,7 +43,7 @@ extern qboolean in_camera;
 int AcceptBotCommand(const char* cmd, const gentity_t* pl);
 //end rww
 
-void WP_SetSaber(int entNum, saberInfo_t* sabers, int saber_num, const char* saber_name);
+void WP_SetSaber(int ent_num, saberInfo_t* sabers, int saber_num, const char* saber_name);
 
 void Cmd_NPC_f(gentity_t* ent);
 void Cmd_AdminNPC_f(gentity_t* ent);
@@ -2104,7 +2104,7 @@ static void Cmd_VoiceCommand_f(gentity_t* ent)
 	if (level.gametype >= GT_TEAM)
 	{
 		gentity_t* te = G_TempEntity(vec3_origin, EV_VOICECMD_SOUND);
-		te->s.groundentityNum = ent->s.number;
+		te->s.groundentity_num = ent->s.number;
 		te->s.eventParm = G_SoundIndex((char*)bg_customSiegeSoundNames[i]);
 		te->r.svFlags |= SVF_BROADCAST;
 	}
@@ -3312,7 +3312,7 @@ int G_ItemUsable(const playerState_t* ps, int forced_use)
 
 		trap->Trace(&tr, ps->origin, mins, maxs, trtest, ps->client_num, MASK_PLAYERSOLID, qfalse, 0, 0);
 
-		if (tr.fraction != 1 && tr.entityNum != ps->client_num || tr.startsolid || tr.allsolid)
+		if (tr.fraction != 1 && tr.entity_num != ps->client_num || tr.startsolid || tr.allsolid)
 		{
 			G_AddEvent(&g_entities[ps->client_num], EV_ITEMUSEFAIL, SENTRY_NOROOM);
 			return 0;
@@ -3414,7 +3414,7 @@ void Cmd_ToggleSaber_f(gentity_t* ent)
 
 	if (ent->client->ps.saberInFlight)
 	{
-		if (ent->client->ps.saberentityNum)
+		if (ent->client->ps.saberentity_num)
 		{
 			//our saber is dead, Try pulling it back.
 			ent->client->ps.forceHandExtend = HANDEXTEND_SABERPULL;
@@ -3845,9 +3845,9 @@ void Cmd_EngageDuel_f(gentity_t* ent)
 
 	trap->Trace(&tr, ent->client->ps.origin, NULL, NULL, fwd_org, ent->s.number, MASK_PLAYERSOLID, qfalse, 0, 0);
 
-	if (tr.fraction != 1 && tr.entityNum < MAX_CLIENTS)
+	if (tr.fraction != 1 && tr.entity_num < MAX_CLIENTS)
 	{
-		gentity_t* challenged = &g_entities[tr.entityNum];
+		gentity_t* challenged = &g_entities[tr.entity_num];
 
 		if (!challenged || !challenged->client || !challenged->inuse ||
 			challenged->health < 1 || challenged->client->ps.stats[STAT_HEALTH] < 1 ||
@@ -4410,9 +4410,9 @@ void ClientCommand(const int client_num)
 	}
 
 	const command_t* command = (command_t*)Q_LinearSearch(cmd, commands, num_commands, sizeof commands[0], cmdcmp);
-
 	if (!command)
 	{
+		//trap->SendServerCommand(client_num, va("print \"Unknown command %s\n\"", cmd));
 		return;
 	}
 	if (command->flags & CMD_NOINTERMISSION

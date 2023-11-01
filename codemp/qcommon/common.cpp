@@ -76,6 +76,7 @@ cvar_t* r_weather;
 int time_game;
 int time_frontend; // renderer frontend time
 int time_backend; // renderer backend time
+cvar_t* com_rend2;
 
 int com_frameTime;
 int com_frameNumber;
@@ -281,8 +282,8 @@ void NORETURN QDECL Com_Error(int level, const char* fmt, ...)
 	}
 
 	// if we are getting a solid stream of ERR_DROP, do an ERR_FATAL
-	const int currentTime = Sys_Milliseconds();
-	if (currentTime - lastErrorTime < 100)
+	const int current_time = Sys_Milliseconds();
+	if (current_time - lastErrorTime < 100)
 	{
 		if (++errorCount > 3)
 		{
@@ -293,7 +294,7 @@ void NORETURN QDECL Com_Error(int level, const char* fmt, ...)
 	{
 		errorCount = 0;
 	}
-	lastErrorTime = currentTime;
+	lastErrorTime = current_time;
 
 	va_start(argptr, fmt);
 	Q_vsnprintf(com_errorMessage, sizeof com_errorMessage, fmt, argptr);
@@ -1283,6 +1284,8 @@ void Com_Init(char* commandLine)
 		Com_ExecuteCfg();
 
 		r_weather = Cvar_Get("r_weather", "0", CVAR_ARCHIVE);
+
+		com_rend2 = Cvar_Get("com_rend2", "0", CVAR_ARCHIVE);
 
 		// override anything from the config files with command line args
 		Com_StartupVariable(nullptr);

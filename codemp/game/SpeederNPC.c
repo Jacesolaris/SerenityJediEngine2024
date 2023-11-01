@@ -147,15 +147,15 @@ static void ProcessMoveCommands(Vehicle_t* p_veh)
 						{
 							//fine, I'll use a tempent for this, but only because it's played only once at the start of a turbo.
 							vec3_t bolt_org, boltDir;
-							mdxaBone_t boltMatrix;
+							mdxaBone_t bolt_matrix;
 
 							VectorSet(boltDir, 0.0f, p_veh->m_pParentEntity->playerState->viewangles[YAW], 0.0f);
 
 							trap->G2API_GetBoltMatrix(p_veh->m_pParentEntity->ghoul2, 0, p_veh->m_iExhaustTag[i],
-								&boltMatrix, boltDir, p_veh->m_pParentEntity->playerState->origin,
+								&bolt_matrix, boltDir, p_veh->m_pParentEntity->playerState->origin,
 								level.time, NULL, p_veh->m_pParentEntity->modelScale);
-							BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, bolt_org);
-							BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, boltDir);
+							BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, bolt_org);
+							BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, boltDir);
 							G_PlayEffectID(p_veh->m_pVehicleInfo->iTurboStartFX, bolt_org, boltDir);
 						}
 #endif
@@ -204,7 +204,7 @@ static void ProcessMoveCommands(Vehicle_t* p_veh)
 	speedIdle = p_veh->m_pVehicleInfo->speedIdle;
 	speedMin = p_veh->m_pVehicleInfo->speedMin;
 
-	if (parent_ps->speed || parent_ps->groundentityNum == ENTITYNUM_NONE ||
+	if (parent_ps->speed || parent_ps->groundentity_num == ENTITYNUM_NONE ||
 		p_veh->m_ucmd.forwardmove || p_veh->m_ucmd.upmove > 0)
 	{
 		if (p_veh->m_ucmd.forwardmove > 0 && speedInc)

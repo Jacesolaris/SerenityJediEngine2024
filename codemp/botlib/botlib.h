@@ -73,7 +73,7 @@ struct weaponinfo_s;
 //botlib error codes
 #define BLERR_NOERROR					0	//no error
 #define BLERR_LIBRARYNOTSETUP			1	//library not setup
-#define BLERR_INVALIDentityNumBER		2	//invalid entity number
+#define BLERR_INVALIDentity_numBER		2	//invalid entity number
 #define BLERR_NOAASFILE					3	//no AAS file available
 #define BLERR_CANNOTOPENAASFILE			4	//cannot open AAS file
 #define BLERR_WRONGAASFILEID			5	//incorrect AAS file id
@@ -162,7 +162,7 @@ typedef struct bot_entitystate_s
 	vec3_t	maxs;			// bounding box maximums
 	int		groundent;		// ground entity
 	int		solid;			// solid type
-	int		modelIndex;		// model used
+	int		model_index;		// model used
 	int		model_index2;	// weapons, CTF flags, etc
 	int		frame;			// model frame number
 	int		event;			// impulse events -- muzzle flashes, footsteps, etc
@@ -208,7 +208,7 @@ typedef struct botlib_import_s
 	void		(*DebugLineDelete)(int line);
 	void		(*DebugLineShow)(int line, vec3_t start, vec3_t end, int color);
 	//
-	int			(*DebugPolygonCreate)(int color, int numPoints, const vec3_t* points);
+	int			(*DebugPolygonCreate)(int color, int num_points, const vec3_t* points);
 	void		(*DebugPolygonDelete)(int id);
 } botlib_import_t;
 

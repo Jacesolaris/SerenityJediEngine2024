@@ -61,10 +61,10 @@ static const byte FakeGLAFile[] =
 
 qboolean CModelCacheManager::LoadFile(const char* pFileName, void** ppFileBuffer, qboolean* pbAlreadyCached)
 {
-	char psModelFileName[MAX_QPATH];
-	NormalizePath(psModelFileName, pFileName, sizeof(psModelFileName));
+	char path[MAX_QPATH];
+	NormalizePath(path, pFileName, sizeof(path));
 
-	auto cacheEntry = FindFile(psModelFileName);
+	auto cacheEntry = FindFile(path);
 	if (cacheEntry != std::end(files))
 	{
 		*ppFileBuffer = cacheEntry->pDiskImage;
@@ -76,18 +76,18 @@ qboolean CModelCacheManager::LoadFile(const char* pFileName, void** ppFileBuffer
 	*pbAlreadyCached = qfalse;
 
 	// special case intercept first...
-	if (strcmp(sDEFAULT_GLA_NAME ".gla", psModelFileName) == 0)
+	if (!strcmp(sDEFAULT_GLA_NAME ".gla", path))
 	{
 		// return fake params as though it was found on disk...
-		//
-		void* pvFakeGLAFile = Z_Malloc(sizeof FakeGLAFile, TAG_FILESYS, qfalse);
-		memcpy(pvFakeGLAFile, &FakeGLAFile[0], sizeof FakeGLAFile);
+		void* pvFakeGLAFile = Z_Malloc(sizeof(FakeGLAFile), TAG_FILESYS, qfalse);
+
+		memcpy(pvFakeGLAFile, &FakeGLAFile[0], sizeof(FakeGLAFile));
 		*ppFileBuffer = pvFakeGLAFile;
-		*pbAlreadyCached = qfalse;	// faking it like this should mean that it works fine on the Mac as well
+
 		return qtrue;
 	}
 
-	int len = ri->FS_ReadFile(psModelFileName, ppFileBuffer);
+	int len = ri->FS_ReadFile(path, ppFileBuffer);
 	if (len == -1 || *ppFileBuffer == NULL)
 	{
 		return qfalse;
@@ -204,10 +204,10 @@ CModelCacheManager::AssetCache::iterator CModelCacheManager::FindAsset(const cha
 		});
 }
 
-qhandle_t CModelCacheManager::GetModelHandle(const char* fileName)
+qhandle_t CModelCacheManager::GetModelHandle(const char* file_name)
 {
 	char path[MAX_QPATH];
-	NormalizePath(path, fileName, sizeof(path));
+	NormalizePath(path, file_name, sizeof(path));
 
 	const auto it = FindAsset(path);
 	if (it == std::end(assets))
@@ -216,10 +216,10 @@ qhandle_t CModelCacheManager::GetModelHandle(const char* fileName)
 	return it->handle;
 }
 
-void CModelCacheManager::InsertModelHandle(const char* fileName, qhandle_t handle)
+void CModelCacheManager::InsertModelHandle(const char* file_name, qhandle_t handle)
 {
 	char path[MAX_QPATH];
-	NormalizePath(path, fileName, sizeof(path));
+	NormalizePath(path, file_name, sizeof(path));
 
 	Asset asset;
 	asset.handle = handle;

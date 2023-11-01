@@ -74,14 +74,14 @@ void RE_GetScreenShot(byte* buffer, int w, int h)
 //	from the screen dissolve code as well...
 //
 static byte* RE_ReSample(byte* pbLoadedPic, int iLoadedWidth, int iLoadedHeight,
-	byte* pbReSampleBuffer, int* piWidth, int* piHeight
+	byte* pb_re_sample_buffer, int* piWidth, int* piHeight
 )
 {
 	byte* pbReturn = NULL;
 
 	// if not resampling, just return some values and return...
 	//
-	if (pbReSampleBuffer == NULL || (iLoadedWidth == *piWidth && iLoadedHeight == *piHeight))
+	if (pb_re_sample_buffer == NULL || (iLoadedWidth == *piWidth && iLoadedHeight == *piHeight))
 	{
 		// if not resampling, we're done, just return the loaded size...
 		//
@@ -99,7 +99,7 @@ static byte* RE_ReSample(byte* pbLoadedPic, int iLoadedWidth, int iLoadedHeight,
 
 		int 	r, g, b;
 
-		byte* pbDst = pbReSampleBuffer;
+		byte* pbDst = pb_re_sample_buffer;
 
 		for (int y = 0; y < *piHeight; y++)
 		{
@@ -121,7 +121,7 @@ static byte* RE_ReSample(byte* pbLoadedPic, int iLoadedWidth, int iLoadedHeight,
 					}
 				}
 
-				assert(pbDst < pbReSampleBuffer + (*piWidth * *piHeight * 4));
+				assert(pbDst < pb_re_sample_buffer + (*piWidth * *piHeight * 4));
 
 				pbDst[0] = r / iTotPixelsPerDownSample;
 				pbDst[1] = g / iTotPixelsPerDownSample;
@@ -133,7 +133,7 @@ static byte* RE_ReSample(byte* pbLoadedPic, int iLoadedWidth, int iLoadedHeight,
 
 		// set return value...
 		//
-		pbReturn = pbReSampleBuffer;
+		pbReturn = pb_re_sample_buffer;
 	}
 
 	return pbReturn;
@@ -143,11 +143,11 @@ static byte* RE_ReSample(byte* pbLoadedPic, int iLoadedWidth, int iLoadedHeight,
 //	currently it's only used by the server so that savegames can embed a graphic in the auto-save files
 //	(which can't do a screenshot since they're saved out before the level is drawn).
 //
-// by default, the pic will be returned as the original dims, but if pbReSampleBuffer != NULL then it's assumed to
+// by default, the pic will be returned as the original dims, but if pb_re_sample_buffer != NULL then it's assumed to
 //	be a big enough buffer to hold the resampled image, which also means that the width and height params are read as
 //	inputs (as well as still being inherently outputs) and the pic is scaled to that size, and to that buffer.
 //
-// the return value is either NULL, or a pointer to the pixels to use (which may be either the pbReSampleBuffer param,
+// the return value is either NULL, or a pointer to the pixels to use (which may be either the pb_re_sample_buffer param,
 //	or the local ptr below).
 //
 // In either case, you MUST call the free-up function afterwards ( RE_TempRawImage_CleanUp() ) to get rid of any temp
@@ -163,7 +163,7 @@ static byte* RE_ReSample(byte* pbLoadedPic, int iLoadedWidth, int iLoadedHeight,
 //
 byte* pbLoadedPic = NULL;
 
-byte* RE_TempRawImage_ReadFromFile(const char* psLocalFilename, int* piWidth, int* piHeight, byte* pbReSampleBuffer, qboolean qbVertFlip)
+byte* RE_TempRawImage_ReadFromFile(const char* psLocalFilename, int* piWidth, int* piHeight, byte* pb_re_sample_buffer, qboolean qbVertFlip)
 {
 	RE_TempRawImage_CleanUp();	// jic
 
@@ -177,7 +177,7 @@ byte* RE_TempRawImage_ReadFromFile(const char* psLocalFilename, int* piWidth, in
 		if (pbLoadedPic)
 		{
 			pbReturn = RE_ReSample(pbLoadedPic, iLoadedWidth, iLoadedHeight,
-				pbReSampleBuffer, piWidth, piHeight);
+				pb_re_sample_buffer, piWidth, piHeight);
 		}
 	}
 
@@ -621,11 +621,11 @@ qboolean RE_InitDissolve(qboolean bForceCircularExtroWipe)
 	{
 		RE_KillDissolve();	// kill any that are already running
 
-		int iPow2VidWidth = PowerOf2(glConfig.vidWidth);
-		int iPow2VidHeight = PowerOf2(glConfig.vidHeight);
+		const int iPow2VidWidth = PowerOf2(glConfig.vidWidth);
+		const int iPow2VidHeight = PowerOf2(glConfig.vidHeight);
 
-		int iBufferBytes = iPow2VidWidth * iPow2VidHeight * 4;
-		byte* pBuffer = (byte*)R_Malloc(iBufferBytes, TAG_TEMP_WORKSPACE, qfalse);
+		const int iBufferBytes = iPow2VidWidth * iPow2VidHeight * 4;
+		const auto pBuffer = static_cast<byte*>(R_Malloc(iBufferBytes, TAG_TEMP_WORKSPACE, qfalse));
 		if (pBuffer)
 		{
 			// read current screen image...  (GL_RGBA should work even on 3DFX in that the RGB parts will be valid at least)
@@ -663,7 +663,7 @@ qboolean RE_InitDissolve(qboolean bForceCircularExtroWipe)
 			//	but of course the damn thing's upside down (thanks, GL), so invert it, but only within
 			//	the picture pixels, NOT the upload texture as a whole...
 			//
-			byte* pbSwapLineBuffer = (byte*)R_Malloc(iCopyBytes, TAG_TEMP_WORKSPACE, qfalse);
+			const auto pbSwapLineBuffer = static_cast<byte*>(R_Malloc(iCopyBytes, TAG_TEMP_WORKSPACE, qfalse));
 			pbSrc = &pBuffer[0];
 			pbDst = &pBuffer[(glConfig.vidHeight - 1) * iPow2VidWidth * 4];
 			for (int y = 0; y < glConfig.vidHeight / 2; y++)
@@ -708,11 +708,10 @@ qboolean RE_InitDissolve(qboolean bForceCircularExtroWipe)
 
 			// alloc resample buffer...  (note slight optimisation to avoid spurious alloc)
 			//
-			byte* pbReSampleBuffer = (iPow2VidWidth == Dissolve.iUploadWidth &&
-				iPow2VidHeight == Dissolve.iUploadHeight
-				) ?
-				NULL :
-				(byte*)R_Malloc(iPow2VidWidth * iPow2VidHeight * 4, TAG_TEMP_WORKSPACE, qfalse);
+			byte* pb_re_sample_buffer = iPow2VidWidth == Dissolve.iUploadWidth &&
+				iPow2VidHeight == Dissolve.iUploadHeight ?
+				nullptr :
+				static_cast<byte*>(R_Malloc(iPow2VidWidth * iPow2VidHeight * 4, TAG_TEMP_WORKSPACE, qfalse));
 
 			// re-sample screen...
 			//
@@ -720,7 +719,7 @@ qboolean RE_InitDissolve(qboolean bForceCircularExtroWipe)
 				iPow2VidWidth,			// int iLoadedWidth
 				iPow2VidHeight,			// int iLoadedHeight
 				//
-				pbReSampleBuffer,		// byte *pbReSampleBuffer
+				pb_re_sample_buffer,		// byte *pb_re_sample_buffer
 				&Dissolve.iUploadWidth,	// int *piWidth
 				&Dissolve.iUploadHeight	// int *piHeight
 			);
@@ -745,9 +744,9 @@ qboolean RE_InitDissolve(qboolean bForceCircularExtroWipe)
 				IMGFLAG_CLAMPTOEDGE,
 				GL_RGBA8);
 
-			if (pbReSampleBuffer)
+			if (pb_re_sample_buffer)
 			{
-				R_Free(pbReSampleBuffer);
+				R_Free(pb_re_sample_buffer);
 			}
 			R_Free(pBuffer);
 

@@ -297,7 +297,7 @@ using consoleCommand_t = struct consoleCommand_s
 };
 
 static consoleCommand_t commands[] = {
-	{"modelList", R_model_list_f},
+	{"model_list", R_model_list_f},
 	{"modelist", R_ModeList_f},
 	{"modelcacheinfo", RE_RegisterModels_Info_f},
 };
@@ -334,7 +334,7 @@ void R_Register()
 	r_ext_compiled_vertex_array = ri->Cvar_Get("r_ext_compiled_vertex_array", "1", CVAR_ARCHIVE_ND | CVAR_LATCH, "");
 	r_ext_texture_env_add = ri->Cvar_Get("r_ext_texture_env_add", "1", CVAR_ARCHIVE_ND | CVAR_LATCH, "");
 	r_ext_texture_filter_anisotropic = ri->Cvar_Get("r_ext_texture_filter_anisotropic", "16", CVAR_ARCHIVE_ND, "");
-	r_DynamicGlow = ri->Cvar_Get("r_DynamicGlow", "1", CVAR_ARCHIVE_ND, "");
+	r_DynamicGlow = ri->Cvar_Get("r_dynamicglow", "1", CVAR_ARCHIVE_ND, "");
 	r_DynamicGlowPasses = ri->Cvar_Get("r_DynamicGlowPasses", "5", CVAR_ARCHIVE_ND, "");
 	r_DynamicGlowDelta = ri->Cvar_Get("r_DynamicGlowDelta", "0.8f", CVAR_ARCHIVE_ND, "");
 	r_DynamicGlowIntensity = ri->Cvar_Get("r_DynamicGlowIntensity", "1.13f", CVAR_ARCHIVE_ND, "");
@@ -488,8 +488,7 @@ R_Init
 extern void R_InitWorldEffects(); //tr_WorldEffects.cpp
 void R_Init()
 {
-	Com_Printf("----- R_Init -----\n");
-
+	//	Com_Printf ("----- R_Init -----\n" );
 	// clear all our internal state
 	memset(&tr, 0, sizeof tr);
 	memset(&backEnd, 0, sizeof backEnd);
@@ -535,7 +534,7 @@ void R_Init()
 
 	R_ModelInit();
 
-	Com_Printf("----- finished R_Init -----\n");
+	//	Com_Printf ("----- finished R_Init -----\n" );
 }
 
 /*
@@ -571,7 +570,7 @@ GetRefAPI
 
 @@@@@@@@@@@@@@@@@@@@@
 */
-refexport_t* GetRefAPI(const int apiVersion, refimport_t* rimp)
+refexport_t* GetRefAPI(const int api_version, refimport_t* rimp)
 {
 	static refexport_t re;
 
@@ -580,9 +579,9 @@ refexport_t* GetRefAPI(const int apiVersion, refimport_t* rimp)
 
 	memset(&re, 0, sizeof re);
 
-	if (apiVersion != REF_API_VERSION)
+	if (api_version != REF_API_VERSION)
 	{
-		Com_Printf("Mismatched REF_API_VERSION: expected %i, got %i\n", REF_API_VERSION, apiVersion);
+		Com_Printf("Mismatched REF_API_VERSION: expected %i, got %i\n", REF_API_VERSION, api_version);
 		return nullptr;
 	}
 

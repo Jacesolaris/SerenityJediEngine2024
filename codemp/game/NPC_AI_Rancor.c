@@ -22,7 +22,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 #include "b_local.h"
 
-extern void G_GetBoltPosition(gentity_t* self, int boltIndex, vec3_t pos, int modelIndex);
+extern void G_GetBoltPosition(gentity_t* self, int bolt_index, vec3_t pos, int model_index);
 
 // These define the working combat range for these suckers
 #define MIN_DISTANCE		128
@@ -37,10 +37,10 @@ extern void G_GetBoltPosition(gentity_t* self, int boltIndex, vec3_t pos, int mo
 extern void TossClientItems(gentity_t* self);
 extern void G_Knockdown(gentity_t* self, gentity_t* attacker, const vec3_t push_dir, float strength, qboolean break_saber_lock);
 extern void G_Dismember(const gentity_t* ent, const gentity_t* enemy, vec3_t point, int limb_type);
-extern float NPC_EntRangeFromBolt(const gentity_t* targ_ent, int boltIndex);
-extern int NPC_GetEntsNearBolt(int* radius_ents, float radius, int boltIndex, vec3_t bolt_org);
+extern float NPC_EntRangeFromBolt(const gentity_t* targ_ent, int bolt_index);
+extern int NPC_GetEntsNearBolt(int* radius_ents, float radius, int bolt_index, vec3_t bolt_org);
 void Rancor_Attack(float distance, qboolean do_charge, qboolean aim_at_blocked_entity);
-extern qboolean G_EntIsBreakable(int entityNum);
+extern qboolean G_EntIsBreakable(int entity_num);
 void Rancor_Move();
 
 void Rancor_SetBolts(const gentity_t* self)
@@ -267,14 +267,14 @@ void Rancor_DropVictim(gentity_t* self)
 	self->count = 0; //drop him
 }
 
-void Rancor_Swing(const int boltIndex, const qboolean try_grab)
+void Rancor_Swing(const int bolt_index, const qboolean try_grab)
 {
 	int radius_ent_nums[128];
 	const float radius = 88;
 	const float radius_squared = radius * radius;
 	vec3_t bolt_org;
 
-	const int num_ents = NPC_GetEntsNearBolt(radius_ent_nums, radius, boltIndex, bolt_org);
+	const int num_ents = NPC_GetEntsNearBolt(radius_ent_nums, radius, bolt_index, bolt_org);
 
 	for (int i = 0; i < num_ents; i++)
 	{
@@ -437,7 +437,7 @@ void Rancor_Smash(void)
 				&& radius_ent->client->NPC_class != CLASS_ATST)
 			{
 				if (dist_sq < half_rad_squared
-					|| radius_ent->client->ps.groundentityNum != ENTITYNUM_NONE)
+					|| radius_ent->client->ps.groundentity_num != ENTITYNUM_NONE)
 				{
 					//within range of my fist or withing ground-shaking range and not in the air
 					G_Knockdown(radius_ent, NPCS.NPC, vec3_origin, 100, qtrue);
@@ -572,7 +572,7 @@ void Rancor_Attack(const float distance, const qboolean do_charge, const qboolea
 				AngleVectors(yaw_ang, fwd, NULL, NULL);
 				VectorScale(fwd, distance * 1.5f, NPCS.NPC->client->ps.velocity);
 				NPCS.NPC->client->ps.velocity[2] = 150;
-				NPCS.NPC->client->ps.groundentityNum = ENTITYNUM_NONE;
+				NPCS.NPC->client->ps.groundentity_num = ENTITYNUM_NONE;
 
 				NPC_SetAnim(NPCS.NPC, SETANIM_BOTH, BOTH_MELEE2, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 				TIMER_Set(NPCS.NPC, "attack_dmg", 1250);
@@ -987,13 +987,13 @@ void Rancor_Crush(void)
 {
 	if (!NPCS.NPC ||
 		!NPCS.NPC->client ||
-		NPCS.NPC->client->ps.groundentityNum >= ENTITYNUM_WORLD)
+		NPCS.NPC->client->ps.groundentity_num >= ENTITYNUM_WORLD)
 	{
 		//nothing to crush
 		return;
 	}
 
-	gentity_t* crush = &g_entities[NPCS.NPC->client->ps.groundentityNum];
+	gentity_t* crush = &g_entities[NPCS.NPC->client->ps.groundentity_num];
 	if (crush->inuse && crush->client && !crush->localAnimIndex)
 	{
 		//a humanoid, smash them good.
@@ -1040,22 +1040,22 @@ void Rancor_CheckAnimDamage()
 //{
 //	const int damage = Q_irand(10, 15);
 //	trace_t tr;
-//	mdxaBone_t boltMatrix;
+//	mdxaBone_t bolt_matrix;
 //	vec3_t start, end, dir;
 //	constexpr vec3_t trace_maxs = { 4, 4, 4 };
 //	constexpr vec3_t trace_mins = { -4, -4, -4 };
 //	const vec3_t ranc_angles = { 0, NPC->client->ps.viewangles[YAW], 0 };
 //
-//	gi.G2API_GetBoltMatrix(NPC->ghoul2, NPC->playerModel, NPC->gutBolt,	&boltMatrix, ranc_angles, NPC->currentOrigin, cg.time ? cg.time : level.time,	nullptr, NPC->s.modelScale);
+//	gi.G2API_GetBoltMatrix(NPC->ghoul2, NPC->playerModel, NPC->gutBolt,	&bolt_matrix, ranc_angles, NPC->currentOrigin, cg.time ? cg.time : level.time,	nullptr, NPC->s.modelScale);
 //
-//	gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, start);
-//	gi.G2API_GiveMeVectorFromMatrix(boltMatrix, NEGATIVE_Z, dir);
+//	gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, start);
+//	gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, NEGATIVE_Z, dir);
 //	VectorMA(start, 512, dir, end);
 //
 //	gi.trace(&tr, start, trace_mins, trace_maxs, end, NPC->s.number, MASK_SHOT, static_cast<EG2_Collision>(0), 0);
 //
-//	gentity_t* trace_ent = &g_entities[tr.entityNum];
-//	if (tr.entityNum < ENTITYNUM_WORLD
+//	gentity_t* trace_ent = &g_entities[tr.entity_num];
+//	if (tr.entity_num < ENTITYNUM_WORLD
 //		&& trace_ent->takedamage
 //		&& trace_ent->client)
 //	{

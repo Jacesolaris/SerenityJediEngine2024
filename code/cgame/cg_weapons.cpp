@@ -39,8 +39,8 @@ extern vmCvar_t cg_gunMomentumFall;
 extern vmCvar_t cg_gunMomentumEnable;
 extern vmCvar_t cg_gunMomentumInterval;
 extern vmCvar_t cg_SpinningBarrels;
-extern void G_StartNextItemEffect(gentity_t* ent, int me_flags = 0, int length = 1000, float time_scale = 0.0f, int spin_time = 0);
-extern vmCvar_t cg_com_rend2;
+extern void G_StartNextItemEffect(gentity_t* ent, int me_flags = 0, int length = 1000, float time_scale = 0.0f,
+	int spin_time = 0);
 
 extern qboolean PM_ReloadAnim(int anim);
 extern void FX_DEMP2_ProjectileThink(centity_t* cent, const weaponInfo_s* weapon);
@@ -49,6 +49,7 @@ const char* CG_DisplayBoxedText(int iBoxX, int iBoxY, int iBoxWidth, int iBoxHei
 	const char* psText, int iFontHandle, float fScale,
 	const vec4_t v4Color);
 extern int fire_deley_time();
+extern vmCvar_t cg_com_rend2;
 
 /*
 ==========================
@@ -69,10 +70,10 @@ void CG_GrappleTrail(centity_t* ent, const weaponInfo_t* wi)
 	memset(&beam, 0, sizeof beam);
 
 	//FIXME adjust for muzzle position
-	VectorCopy(cg_entities[ent->currentState.otherentityNum].lerpOrigin, beam.origin);
+	VectorCopy(cg_entities[ent->currentState.otherentity_num].lerpOrigin, beam.origin);
 	beam.origin[2] += 26;
 
-	AngleVectors(cg_entities[ent->currentState.otherentityNum].lerpAngles, forward, nullptr, up);
+	AngleVectors(cg_entities[ent->currentState.otherentity_num].lerpAngles, forward, nullptr, up);
 	VectorMA(beam.origin, -6, up, beam.origin);
 	VectorCopy(origin, beam.oldorigin);
 
@@ -104,10 +105,10 @@ void CG_StunTrail(centity_t* ent, const weaponInfo_t* wi)
 	memset(&beam, 0, sizeof beam);
 
 	//FIXME adjust for muzzle position
-	VectorCopy(cg_entities[ent->currentState.otherentityNum].lerpOrigin, beam.origin);
+	VectorCopy(cg_entities[ent->currentState.otherentity_num].lerpOrigin, beam.origin);
 	beam.origin[2] += 26;
 
-	AngleVectors(cg_entities[ent->currentState.otherentityNum].lerpAngles, forward, nullptr, up);
+	AngleVectors(cg_entities[ent->currentState.otherentity_num].lerpAngles, forward, nullptr, up);
 	VectorMA(beam.origin, -6, up, beam.origin);
 	VectorCopy(origin, beam.oldorigin);
 
@@ -1726,18 +1727,18 @@ void CG_AddViewWeapon(playerState_t* ps)
 		const clientInfo_t* ci = &cent->gent->client->clientInfo;
 
 		int torso_anim = cent->gent->client->ps.torsoAnim; //pe.torso.animationNumber;
-		float currentFrame;
-		int startFrame, endFrame, flags;
-		float animSpeed;
+		float current_frame;
+		int start_frame, end_frame, flags;
+		float anim_speed;
 		if (cent->gent->lowerLumbarBone >= 0 && gi.G2API_GetBoneAnimIndex(
-			&cent->gent->ghoul2[cent->gent->playerModel], cent->gent->lowerLumbarBone, cg.time, &currentFrame,
-			&startFrame, &endFrame, &flags, &animSpeed, nullptr))
+			&cent->gent->ghoul2[cent->gent->playerModel], cent->gent->lowerLumbarBone, cg.time, &current_frame,
+			&start_frame, &end_frame, &flags, &anim_speed, nullptr))
 		{
-			hand.oldframe = CG_MapTorsoToWeaponFrame(ci, floor(currentFrame), torso_anim, cent->currentState.weapon,
+			hand.oldframe = CG_MapTorsoToWeaponFrame(ci, floor(current_frame), torso_anim, cent->currentState.weapon,
 				cent->currentState.eFlags & EF_FIRING);
-			hand.frame = CG_MapTorsoToWeaponFrame(ci, ceil(currentFrame), torso_anim, cent->currentState.weapon,
+			hand.frame = CG_MapTorsoToWeaponFrame(ci, ceil(current_frame), torso_anim, cent->currentState.weapon,
 				cent->currentState.eFlags & EF_FIRING);
-			hand.backlerp = 1.0f - (currentFrame - floor(currentFrame));
+			hand.backlerp = 1.0f - (current_frame - floor(current_frame));
 			if (cg_debugAnim.integer == 1 && cent->currentState.client_num == 0)
 			{
 				Com_Printf("Torso frame %d to %d makes Weapon frame %d to %d\n", cent->pe.torso.oldFrame,
@@ -2261,18 +2262,18 @@ void CG_AddViewWeaponDuals(playerState_t* ps)
 		const clientInfo_t* ci = &cent->gent->client->clientInfo;
 
 		int torsoAnim = cent->gent->client->ps.torsoAnim; //pe.torso.animationNumber;
-		float currentFrame;
-		int startFrame, endFrame, flags;
-		float animSpeed;
+		float current_frame;
+		int start_frame, end_frame, flags;
+		float anim_speed;
 		if (cent->gent->lowerLumbarBone >= 0 && gi.G2API_GetBoneAnimIndex(
-			&cent->gent->ghoul2[cent->gent->playerModel], cent->gent->lowerLumbarBone, cg.time, &currentFrame,
-			&startFrame, &endFrame, &flags, &animSpeed, nullptr))
+			&cent->gent->ghoul2[cent->gent->playerModel], cent->gent->lowerLumbarBone, cg.time, &current_frame,
+			&start_frame, &end_frame, &flags, &anim_speed, nullptr))
 		{
-			hand.oldframe = CG_MapTorsoToWeaponFrame(ci, floor(currentFrame), torsoAnim, cent->currentState.weapon,
+			hand.oldframe = CG_MapTorsoToWeaponFrame(ci, floor(current_frame), torsoAnim, cent->currentState.weapon,
 				cent->currentState.eFlags & EF_FIRING);
-			hand.frame = CG_MapTorsoToWeaponFrame(ci, ceil(currentFrame), torsoAnim, cent->currentState.weapon,
+			hand.frame = CG_MapTorsoToWeaponFrame(ci, ceil(current_frame), torsoAnim, cent->currentState.weapon,
 				cent->currentState.eFlags & EF_FIRING);
-			hand.backlerp = 1.0f - (currentFrame - floor(currentFrame));
+			hand.backlerp = 1.0f - (current_frame - floor(current_frame));
 			if (cg_debugAnim.integer == 1 && cent->currentState.client_num == 0)
 			{
 				Com_Printf("Torso frame %d to %d makes Weapon frame %d to %d\n", cent->pe.torso.oldFrame,
@@ -3957,8 +3958,8 @@ void CG_Weapon_f()
 				//can't toggle it if not holding it and not controlling it or dead
 				if (cg.predicted_player_state.stats[STAT_HEALTH] > 0
 					&& (!cg_entities[0].gent->client->ps.saberInFlight ||
-						&g_entities[cg_entities[0].gent->client->ps.saberentityNum] != nullptr &&
-						g_entities[cg_entities[0].gent->client->ps.saberentityNum].s.pos.trType == TR_LINEAR))
+						&g_entities[cg_entities[0].gent->client->ps.saberentity_num] != nullptr &&
+						g_entities[cg_entities[0].gent->client->ps.saberentity_num].s.pos.trType == TR_LINEAR))
 				{
 					//it's either in-hand or it's under telekinetic control
 					if (cg_entities[0].gent->client->ps.SaberActive())
@@ -3996,10 +3997,10 @@ void CG_Weapon_f()
 						if (cg_entities[0].gent->client->ps.saberInFlight)
 						{
 							//play it on the saber
-							cgi_S_UpdateEntityPosition(cg_entities[0].gent->client->ps.saberentityNum,
-								g_entities[cg_entities[0].gent->client->ps.saberentityNum].
+							cgi_S_UpdateEntityPosition(cg_entities[0].gent->client->ps.saberentity_num,
+								g_entities[cg_entities[0].gent->client->ps.saberentity_num].
 								currentOrigin);
-							cgi_S_StartSound(nullptr, cg_entities[0].gent->client->ps.saberentityNum, CHAN_AUTO,
+							cgi_S_StartSound(nullptr, cg_entities[0].gent->client->ps.saberentity_num, CHAN_AUTO,
 								cgs.sound_precache[cg_entities[0].gent->client->ps.saber[0].soundOff]);
 						}
 						else
@@ -4326,11 +4327,11 @@ void CG_MissileStick(const centity_t* cent, const int weapon)
 qboolean CG_VehicleWeaponImpact(centity_t* cent)
 {
 	//see if this is a missile entity that's owned by a vehicle and should do a special, overridden impact effect
-	if (cent->currentState.otherentityNum2
-		&& g_vehWeaponInfo[cent->currentState.otherentityNum2].iImpactFX)
+	if (cent->currentState.otherentity_num2
+		&& g_vehWeaponInfo[cent->currentState.otherentity_num2].iImpactFX)
 	{
 		//missile is from a special vehWeapon
-		CG_PlayEffectID(g_vehWeaponInfo[cent->currentState.otherentityNum2].iImpactFX, cent->lerpOrigin,
+		CG_PlayEffectID(g_vehWeaponInfo[cent->currentState.otherentity_num2].iImpactFX, cent->lerpOrigin,
 			cent->gent->pos1);
 		return qtrue;
 	}
@@ -4519,7 +4520,7 @@ void cg_missile_hit_player(const centity_t* cent, const int weapon, vec3_t origi
 
 	if (cent->gent)
 	{
-		other = &g_entities[cent->gent->s.otherentityNum];
+		other = &g_entities[cent->gent->s.otherentity_num];
 
 		if (other->client)
 		{

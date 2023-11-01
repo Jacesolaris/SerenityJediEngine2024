@@ -403,7 +403,7 @@ void SP_misc_exploding_crate(gentity_t* ent)
 	G_SpawnInt("splashRadius", "128", &ent->splashRadius);
 	G_SpawnInt("splashDamage", "50", &ent->splashDamage);
 
-	ent->s.modelIndex = G_model_index("models/map_objects/nar_shaddar/crate_xplode.md3");
+	ent->s.model_index = G_model_index("models/map_objects/nar_shaddar/crate_xplode.md3");
 	G_SoundIndex("sound/weapons/explosions/cargoexplode.wav");
 	G_EffectIndex("chunks/metalexplode");
 
@@ -464,7 +464,7 @@ void SP_misc_gas_tank(gentity_t* ent)
 	G_SpawnInt("splashRadius", "48", &ent->splashRadius);
 	G_SpawnInt("splashDamage", "32", &ent->splashDamage);
 
-	ent->s.modelIndex = G_model_index("models/map_objects/imp_mine/tank.md3");
+	ent->s.model_index = G_model_index("models/map_objects/imp_mine/tank.md3");
 	G_SoundIndex("sound/weapons/explosions/cargoexplode.wav");
 	G_EffectIndex("chunks/metalexplode");
 	G_EffectIndex("env/mini_flamejet");
@@ -518,7 +518,7 @@ void SP_misc_crystal_crate(gentity_t* ent)
 	G_SpawnInt("splashRadius", "80", &ent->splashRadius);
 	G_SpawnInt("splashDamage", "40", &ent->splashDamage);
 
-	ent->s.modelIndex = G_model_index("models/map_objects/imp_mine/crate_open.md3");
+	ent->s.model_index = G_model_index("models/map_objects/imp_mine/crate_open.md3");
 	G_EffectIndex("thermal/explosion"); // FIXME: temp
 	G_EffectIndex("env/crystal_crate");
 	G_SoundIndex("sound/weapons/explosions/cargoexplode.wav");
@@ -729,7 +729,7 @@ void SP_misc_bsp(gentity_t* ent)
 
 	trap->LinkEntity((sharedEntity_t*)ent);
 
-	trap->SetActiveSubBSP(ent->s.modelIndex);
+	trap->SetActiveSubBSP(ent->s.model_index);
 	G_SpawnEntitiesFromString(qtrue);
 	trap->SetActiveSubBSP(-1);
 
@@ -796,7 +796,7 @@ void G_PortalifyEntities(gentity_t* ent)
 			trap->Trace(&tr, ent->s.origin, vec3_origin, vec3_origin, scan->r.currentOrigin, ent->s.number,
 				CONTENTS_SOLID, qfalse, 0, 0);
 
-			if (tr.fraction == 1.0 || tr.entityNum == scan->s.number && tr.entityNum != ENTITYNUM_NONE && tr.entityNum
+			if (tr.fraction == 1.0 || tr.entity_num == scan->s.number && tr.entity_num != ENTITYNUM_NONE && tr.entity_num
 				!= ENTITYNUM_WORLD)
 			{
 				if (!scan->client || scan->s.eType == ET_NPC)
@@ -864,7 +864,7 @@ void SP_misc_skyportal(gentity_t* ent)
 
 void HolocronRespawn(gentity_t* self)
 {
-	self->s.modelIndex = self->count - 128;
+	self->s.model_index = self->count - 128;
 }
 
 void HolocronPopOut(gentity_t* self)
@@ -898,7 +898,7 @@ void HolocronTouch(gentity_t* self, gentity_t* other, const trace_t* trace)
 
 	if (trace)
 	{
-		self->s.groundentityNum = trace->entityNum;
+		self->s.groundentity_num = trace->entity_num;
 	}
 
 	if (!other || !other->client || other->health < 1)
@@ -906,7 +906,7 @@ void HolocronTouch(gentity_t* self, gentity_t* other, const trace_t* trace)
 		return;
 	}
 
-	if (!self->s.modelIndex)
+	if (!self->s.model_index)
 	{
 		return;
 	}
@@ -985,7 +985,7 @@ void HolocronTouch(gentity_t* self, gentity_t* other, const trace_t* trace)
 	G_AddEvent(other, EV_ITEM_PICKUP, self->s.number);
 
 	other->client->ps.holocronsCarried[self->count] = level.time;
-	self->s.modelIndex = 0;
+	self->s.model_index = 0;
 	self->enemy = other;
 
 	self->pos2[0] = 1;
@@ -1138,7 +1138,7 @@ void SP_misc_holocron(gentity_t* ent)
 	ent->r.maxs[2] += 0.1f;
 
 	// allow to ride movers
-	//	ent->s.groundentityNum = tr.entityNum;
+	//	ent->s.groundentity_num = tr.entity_num;
 
 	G_SetOrigin(ent, tr.endpos);
 
@@ -1166,7 +1166,7 @@ void SP_misc_holocron(gentity_t* ent)
 
 	ent->flags = FL_BOUNCE_HALF;
 
-	ent->s.modelIndex = ent->count - 128; //G_model_index(holocronTypeModels[ent->count]);
+	ent->s.model_index = ent->count - 128; //G_model_index(holocronTypeModels[ent->count]);
 	ent->s.eType = ET_HOLOCRON;
 	ent->s.pos.trType = TR_GRAVITY;
 	ent->s.pos.trTime = level.time;
@@ -1729,7 +1729,7 @@ void SP_misc_ammo_floor_unit(gentity_t* ent)
 	ent->r.maxs[2] += 0.1f;
 
 	// allow to ride movers
-	ent->s.groundentityNum = tr.entityNum;
+	ent->s.groundentity_num = tr.entity_num;
 
 	G_SetOrigin(ent, tr.endpos);
 
@@ -1743,7 +1743,7 @@ void SP_misc_ammo_floor_unit(gentity_t* ent)
 		ent->model = "/models/items/a_pwr_converter.md3";
 	}
 
-	ent->s.modelIndex = G_model_index(ent->model);
+	ent->s.model_index = G_model_index(ent->model);
 
 	ent->s.eFlags = 0;
 	ent->r.svFlags |= SVF_PLAYER_USABLE;
@@ -1823,7 +1823,7 @@ void SP_misc_shield_floor_unit(gentity_t* ent)
 	ent->r.maxs[2] += 0.1f;
 
 	// allow to ride movers
-	ent->s.groundentityNum = tr.entityNum;
+	ent->s.groundentity_num = tr.entity_num;
 
 	G_SetOrigin(ent, tr.endpos);
 
@@ -1837,7 +1837,7 @@ void SP_misc_shield_floor_unit(gentity_t* ent)
 		ent->model = "/models/items/a_shield_converter.md3";
 	}
 
-	ent->s.modelIndex = G_model_index(ent->model);
+	ent->s.model_index = G_model_index(ent->model);
 
 	ent->s.eFlags = 0;
 	ent->r.svFlags |= SVF_PLAYER_USABLE;
@@ -1896,7 +1896,7 @@ void SP_misc_model_shield_power_converter(gentity_t* ent)
 	if (!ent->model)
 		ent->model = "models/items/psd_sm.md3";
 
-	ent->s.modelIndex = G_model_index(ent->model);
+	ent->s.model_index = G_model_index(ent->model);
 
 	ent->s.eFlags = 0;
 	ent->r.svFlags |= SVF_PLAYER_USABLE;
@@ -2083,7 +2083,7 @@ void SP_misc_model_ammo_power_converter(gentity_t* ent)
 	VectorSet(ent->r.mins, -16, -16, -16);
 	VectorSet(ent->r.maxs, 16, 16, 16);
 
-	ent->s.modelIndex = G_model_index(ent->model);
+	ent->s.model_index = G_model_index(ent->model);
 
 	ent->s.eFlags = 0;
 	ent->r.svFlags |= SVF_PLAYER_USABLE;
@@ -2203,7 +2203,7 @@ void SP_misc_model_health_power_converter(gentity_t* ent)
 	if (!ent->model)
 		ent->model = "models/items/power_converter.md3";
 
-	ent->s.modelIndex = G_model_index(ent->model);
+	ent->s.model_index = G_model_index(ent->model);
 
 	ent->s.eFlags = 0;
 	ent->r.svFlags |= SVF_PLAYER_USABLE;
@@ -2690,7 +2690,7 @@ void SP_fx_runner(gentity_t* ent)
 
 	// Try and associate an effect file, unfortunately we won't know if this worked or not
 	//	until the cgame trys to register it...
-	ent->s.modelIndex = G_EffectIndex(fxFile);
+	ent->s.model_index = G_EffectIndex(fxFile);
 
 	// important info transmitted
 	ent->s.eType = ET_FX;
@@ -2979,7 +2979,7 @@ void SP_misc_maglock(gentity_t* self)
 	//NOTE: May have to make these only work on doors that are either untargeted
 	//		or are targeted by a trigger, not doors fired off by scripts, counters
 	//		or other such things?
-	self->s.modelIndex = G_model_index("models/map_objects/imp_detention/door_lock.md3");
+	self->s.model_index = G_model_index("models/map_objects/imp_detention/door_lock.md3");
 	self->genericValue1 = G_EffectIndex("maglock/explosion");
 
 	G_SetOrigin(self, self->s.origin);
@@ -3018,8 +3018,8 @@ void maglock_link(gentity_t* self)
 		*/
 		return;
 	}
-	gentity_t* trace_ent = &g_entities[trace.entityNum];
-	if (trace.entityNum >= ENTITYNUM_WORLD || !trace_ent || Q_stricmp("func_door", trace_ent->classname))
+	gentity_t* trace_ent = &g_entities[trace.entity_num];
+	if (trace.entity_num >= ENTITYNUM_WORLD || !trace_ent || Q_stricmp("func_door", trace_ent->classname))
 	{
 		self->think = maglock_link;
 		self->nextthink = level.time + 100;
@@ -3045,7 +3045,7 @@ void maglock_link(gentity_t* self)
 
 	//make it hittable
 	//FIXME: if rotated/inclined this bbox may be off... but okay if we're a ghoul model?
-	//self->s.modelIndex = G_model_index( "models/map_objects/imp_detention/door_lock.md3" );
+	//self->s.model_index = G_model_index( "models/map_objects/imp_detention/door_lock.md3" );
 	VectorSet(self->r.mins, -8, -8, -8);
 	VectorSet(self->r.maxs, 8, 8, 8);
 	self->r.contents = CONTENTS_CORPSE;
@@ -3140,7 +3140,7 @@ void misc_faller_create(gentity_t* ent, gentity_t* other, gentity_t* activator)
 	G_SetOrigin(faller, ent->s.origin);
 
 	faller->s.modelGhoul2 = 1;
-	faller->s.modelIndex = G_model_index("models/players/stormtrooper/model.glm");
+	faller->s.model_index = G_model_index("models/players/stormtrooper/model.glm");
 	faller->s.g2radius = 100;
 
 	faller->s.customRGBA[0] = Q_irand(1, 255);
@@ -4058,7 +4058,7 @@ void SP_misc_model_gun_rack(gentity_t* ent)
 		}
 	}
 
-	ent->s.modelIndex = G_model_index("models/map_objects/kejim/weaponsrack.md3");
+	ent->s.model_index = G_model_index("models/map_objects/kejim/weaponsrack.md3");
 
 	G_SetOrigin(ent, ent->s.origin);
 	G_SetAngles(ent, ent->s.angles);
@@ -4223,7 +4223,7 @@ void spawn_rack_goods(gentity_t* ent)
 		GunRackAddItem(health, ent->s.origin, ent->s.angles, randoms() * 0.5f, (randoms() * 4 + 4) * pos, 24);
 	}
 
-	ent->s.modelIndex = G_model_index("models/map_objects/kejim/weaponsrung.md3");
+	ent->s.model_index = G_model_index("models/map_objects/kejim/weaponsrung.md3");
 
 	G_SetOrigin(ent, ent->s.origin);
 	G_SetAngles(ent, ent->s.angles);
@@ -4331,7 +4331,7 @@ void camera_die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int 
 	self->takedamage = qfalse;
 	self->r.contents = 0;
 	self->s.eFlags |= EF_NODRAW;
-	self->s.modelIndex = 0;
+	self->s.model_index = 0;
 }
 
 //ported from SP
@@ -4381,7 +4381,7 @@ void camera_use(gentity_t* self, gentity_t* other, gentity_t* activator)
 		//set me as view entity
 		G_UseTargets2(self, activator, self->target3);
 		self->s.eFlags |= EF_NODRAW;
-		self->s.modelIndex = 0;
+		self->s.model_index = 0;
 		//G_SetViewEntity( activator, self );
 		ICam_Enable();
 		ICam_Move(self->s.origin, 0);
@@ -4436,7 +4436,7 @@ void camera_aim(gentity_t* self)
 		{
 			//don't draw me when being looked through
 			self->s.eFlags |= EF_NODRAW;
-			self->s.modelIndex = 0;
+			self->s.model_index = 0;
 		}
 	}
 	else if (self->health > 0)
@@ -4444,7 +4444,7 @@ void camera_aim(gentity_t* self)
 		//still alive, can draw me again
 		self->s.eFlags &= ~EF_NODRAW;
 		//RAFIXME - model_index3?
-		//self->s.modelIndex = self->s.model_index3;
+		//self->s.model_index = self->s.model_index3;
 	}
 	//update my aim
 	if (self->target)
@@ -4524,14 +4524,14 @@ void SP_misc_camera(gentity_t* self)
 	{
 		//set things up so that the classname for the camera base has a classname
 		base->classname = "misc_camera_base";
-		base->s.modelIndex = G_model_index("models/map_objects/kejim/impcam_base.md3");
+		base->s.model_index = G_model_index("models/map_objects/kejim/impcam_base.md3");
 		VectorCopy(self->s.origin, base->s.origin);
 		base->s.origin[2] += 16;
 		G_SetOrigin(base, base->s.origin);
 		G_SetAngles(base, self->s.angles);
 		trap->LinkEntity((sharedEntity_t*)base);
 	}
-	self->s.modelIndex = G_model_index("models/map_objects/kejim/impcam.md3");
+	self->s.model_index = G_model_index("models/map_objects/kejim/impcam.md3");
 	self->soundPos1 = G_SoundIndex("sound/movers/camera_on.mp3");
 	self->soundPos2 = G_SoundIndex("sound/movers/camera_off.mp3");
 	G_SoundIndex("sound/movers/objects/cameramove_lp2");
@@ -4564,7 +4564,7 @@ void SP_misc_spotlight(gentity_t* self)
 	//racc - acts a lot like a misc_camera.
 	G_SpawnFloat("wait", "0.5", &self->wait);
 
-	self->s.modelIndex = G_model_index("models/map_objects/imp_mine/spotlight.md3");
+	self->s.model_index = G_model_index("models/map_objects/imp_mine/spotlight.md3");
 	G_SoundIndex("sound/movers/objects/cameramove_lp2");
 
 	G_SetOrigin(self, self->s.origin);
@@ -4627,7 +4627,7 @@ void SP_misc_security_panel(gentity_t* self)
 	G_SoundIndex("sound/movers/sec_panel_fail.mp3");
 
 	G_SetAngles(self, self->s.angles);
-	self->s.modelIndex = G_model_index("models/map_objects/kejim/sec_panel.md3");
+	self->s.model_index = G_model_index("models/map_objects/kejim/sec_panel.md3");
 	self->r.svFlags |= SVF_PLAYER_USABLE;
 	self->r.contents |= CONTENTS_TRIGGER;
 	VectorSet(self->r.mins, -16, -16, -16);
@@ -4681,7 +4681,7 @@ void SP_item_security_key(gentity_t* self)
 	Precashe_Key();
 
 	G_SetAngles(self, self->s.angles);
-	self->s.modelIndex = G_model_index("models/items/key.md3");
+	self->s.model_index = G_model_index("models/items/key.md3");
 	self->r.svFlags |= SVF_PLAYER_USABLE;
 	self->r.contents |= CONTENTS_TRIGGER;
 	self->s.pos.trType = TR_LINEAR;
@@ -4736,7 +4736,7 @@ void SP_misc_model_bomb_planted(gentity_t* ent)
 	VectorSet(ent->r.mins, -16, -16, 0);
 	VectorSet(ent->r.maxs, 16, 16, 70);
 
-	ent->s.modelIndex = G_model_index("models/map_objects/factory/bomb_new_deact.md3"); // Precache model
+	ent->s.model_index = G_model_index("models/map_objects/factory/bomb_new_deact.md3"); // Precache model
 	ent->s.model_index2 = G_model_index("models/map_objects/factory/bomb_new_deact.md3"); // Precache model
 	ent->noise_index = G_SoundIndex("sound/interface/ammocon_run");
 
@@ -4791,8 +4791,8 @@ void beacon_deploy(gentity_t* ent)
 	ent->nextthink = level.time + FRAMETIME * 0.5f;
 
 	ent->s.frame = 0;
-	ent->startFrame = 0;
-	ent->endFrame = 30;
+	ent->start_frame = 0;
+	ent->end_frame = 30;
 	ent->loopAnim = qfalse;
 }
 
@@ -4806,8 +4806,8 @@ void beacon_think(gentity_t* ent)
 		ent->think = NULL;
 		ent->nextthink = -1;
 
-		ent->startFrame = 31;
-		ent->endFrame = 60;
+		ent->start_frame = 31;
+		ent->end_frame = 60;
 		ent->loopAnim = qtrue;
 
 		ent->s.loopSound = ent->noise_index;
@@ -4850,7 +4850,7 @@ void SP_misc_model_beacon(gentity_t* ent)
 	VectorSet(ent->r.mins, -16, -16, 0);
 	VectorSet(ent->r.maxs, 16, 16, 24);
 
-	ent->s.modelIndex = G_model_index("models/map_objects/wedge/beacon.md3"); // Precache model
+	ent->s.model_index = G_model_index("models/map_objects/wedge/beacon.md3"); // Precache model
 	ent->s.model_index2 = G_model_index("models/map_objects/wedge/beacon.md3"); // Precache model
 	ent->noise_index = G_SoundIndex("sound/interface/ammocon_run");
 

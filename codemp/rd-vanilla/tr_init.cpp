@@ -284,7 +284,7 @@ bool g_bTextureRectangleHack = false;
 void RE_SetLightStyle(int style, int color);
 void RE_GetBModelVerts(int bmodel_index, vec3_t* verts, vec3_t normal);
 
-void R_Splash()
+static void R_Splash()
 {
 	image_t* p_image;
 	const int splash_pick = rand() % 5;
@@ -471,7 +471,7 @@ static void GLimp_InitExtensions()
 	{
 		Com_Printf("*** IGNORING OPENGL EXTENSIONS ***\n");
 		g_bDynamicGlowSupported = false;
-		ri->Cvar_Set("r_DynamicGlow", "0");
+		ri->Cvar_Set("r_dynamicglow", "0");
 		return;
 	}
 
@@ -755,7 +755,7 @@ static void GLimp_InitExtensions()
 	else
 	{
 		g_bDynamicGlowSupported = false;
-		ri->Cvar_Set("r_DynamicGlow", "0");
+		ri->Cvar_Set("r_dynamicglow", "0");
 	}
 
 #if !defined(__APPLE__)
@@ -851,10 +851,6 @@ static void InitOpenGL()
 	}
 	else
 	{
-		if (r_com_rend2->integer != 0)
-		{
-			ri->Cvar_Set("com_rend2", "0");
-		}
 		// set default state
 		GL_SetDefaultState();
 	}
@@ -955,7 +951,7 @@ byte* RB_ReadPixels(const int x, const int y, const int width, const int height,
 R_TakeScreenshot
 ==================
 */
-void R_TakeScreenshot(const int x, const int y, const int width, const int height, const char* fileName) {
+void R_TakeScreenshot(const int x, const int y, const int width, const int height, const char* file_name) {
 	byte* destptr;
 
 	int padlen;
@@ -1002,7 +998,7 @@ void R_TakeScreenshot(const int x, const int y, const int width, const int heigh
 	if (glConfig.deviceSupportsGamma && !glConfigExt.doGammaCorrectionWithShaders)
 		R_GammaCorrect(allbuf + offset, memcount);
 
-	ri->FS_WriteFile(fileName, buffer, memcount + 18);
+	ri->FS_WriteFile(file_name, buffer, memcount + 18);
 
 	ri->Hunk_FreeTempMemory(allbuf);
 }
@@ -1012,12 +1008,12 @@ void R_TakeScreenshot(const int x, const int y, const int width, const int heigh
 R_TakeScreenshotPNG
 ==================
 */
-void R_TakeScreenshotPNG(const int x, const int y, const int width, const int height, const char* fileName) {
+void R_TakeScreenshotPNG(const int x, const int y, const int width, const int height, const char* file_name) {
 	size_t offset = 0;
 	int padlen = 0;
 
 	byte* buffer = RB_ReadPixels(x, y, width, height, &offset, &padlen);
-	RE_SavePNG(fileName, buffer, width, height, 3);
+	RE_SavePNG(file_name, buffer, width, height, 3);
 	ri->Hunk_FreeTempMemory(buffer);
 }
 
@@ -1026,7 +1022,7 @@ void R_TakeScreenshotPNG(const int x, const int y, const int width, const int he
 R_TakeScreenshotJPEG
 ==================
 */
-void R_TakeScreenshotJPEG(const int x, const int y, const int width, const int height, const char* fileName) {
+void R_TakeScreenshotJPEG(const int x, const int y, const int width, const int height, const char* file_name) {
 	size_t offset = 0;
 	int padlen;
 
@@ -1037,7 +1033,7 @@ void R_TakeScreenshotJPEG(const int x, const int y, const int width, const int h
 	if (glConfig.deviceSupportsGamma && !glConfigExt.doGammaCorrectionWithShaders)
 		R_GammaCorrect(buffer + offset, memcount);
 
-	RE_SaveJPG(fileName, r_screenshotJpegQuality->integer, width, height, buffer + offset, padlen);
+	RE_SaveJPG(file_name, r_screenshotJpegQuality->integer, width, height, buffer + offset, padlen);
 	ri->Hunk_FreeTempMemory(buffer);
 }
 
@@ -1313,7 +1309,7 @@ const void* RB_TakeVideoFrameCmd(const void* data)
 /*
 ** GL_SetDefaultState
 */
-void GL_SetDefaultState(void)
+void GL_SetDefaultState()
 {
 	qglClearDepth(1.0f);
 
@@ -1548,7 +1544,7 @@ static consoleCommand_t	commands[] = {
 	{ "r_atihack",			R_AtiHackToggle_f },
 	{ "r_we",				R_WorldEffect_f },
 	{ "imagecacheinfo",		RE_RegisterImages_Info_f },
-	{ "modelList",			R_model_list_f },
+	{ "model_list",			R_model_list_f },
 	{ "modelcacheinfo",		RE_RegisterModels_Info_f },
 	{ "weather",			R_SetWeatherEffect_f },
 	{ "r_weather",			R_WeatherEffect_f },
@@ -1585,7 +1581,7 @@ void R_Register()
 	r_ext_texture_filter_anisotropic = ri->Cvar_Get("r_ext_texture_filter_anisotropic", "16", CVAR_ARCHIVE_ND, "");
 	r_gammaShaders = ri->Cvar_Get("r_gammaShaders", "0", CVAR_ARCHIVE_ND | CVAR_LATCH, "");
 	r_environmentMapping = ri->Cvar_Get("r_environmentMapping", "1", CVAR_ARCHIVE_ND, "");
-	r_DynamicGlow = ri->Cvar_Get("r_DynamicGlow", "1", CVAR_ARCHIVE_ND, "");
+	r_DynamicGlow = ri->Cvar_Get("r_dynamicglow", "1", CVAR_ARCHIVE_ND, "");
 	r_DynamicGlowPasses = ri->Cvar_Get("r_DynamicGlowPasses", "5", CVAR_ARCHIVE_ND, "");
 	r_DynamicGlowDelta = ri->Cvar_Get("r_DynamicGlowDelta", "0.8f", CVAR_ARCHIVE_ND, "");
 	r_DynamicGlowIntensity = ri->Cvar_Get("r_DynamicGlowIntensity", "1.13f", CVAR_ARCHIVE_ND, "");
@@ -1710,7 +1706,7 @@ void R_Register()
 
 	r_weather = ri->Cvar_Get("r_weather", "0", CVAR_ARCHIVE, "");
 
-	r_com_rend2 = ri->Cvar_Get("com_rend2", "0", CVAR_ARCHIVE | CVAR_NORESTART, "");
+	r_com_rend2 = ri->Cvar_Get("com_rend2", "0", CVAR_ARCHIVE, "");
 	/*
 	Ghoul2 Insert End
 	*/
@@ -1809,6 +1805,7 @@ void R_Init()
 	R_InitFonts();
 
 	R_ModelInit();
+	//	re.G2VertSpaceServer = &IHeapAllocator_singleton;
 	R_InitDecals();
 
 	R_InitWorldEffects();
@@ -1820,7 +1817,6 @@ void R_Init()
 #endif
 
 	RestoreGhoul2InfoArray();
-
 	// print info
 	GfxInfo_f();
 
@@ -1828,7 +1824,6 @@ void R_Init()
 	{
 		ri->Cvar_Set("com_rend2", "0");
 	}
-
 	ri->Printf(PRINT_ALL, "----- Vanilla renderer loaded-----\n");
 }
 
@@ -1991,7 +1986,7 @@ GetRefAPI
 @@@@@@@@@@@@@@@@@@@@@
 */
 extern "C" {
-	Q_EXPORT refexport_t* QDECL GetRefAPI(const int apiVersion, refimport_t* rimp) {
+	Q_EXPORT refexport_t* QDECL GetRefAPI(const int api_version, refimport_t* rimp) {
 		static refexport_t re;
 
 		assert(rimp);
@@ -1999,8 +1994,8 @@ extern "C" {
 
 		memset(&re, 0, sizeof re);
 
-		if (apiVersion != REF_API_VERSION) {
-			ri->Printf(PRINT_ALL, "Mismatched REF_API_VERSION: expected %i, got %i\n", REF_API_VERSION, apiVersion);
+		if (api_version != REF_API_VERSION) {
+			ri->Printf(PRINT_ALL, "Mismatched REF_API_VERSION: expected %i, got %i\n", REF_API_VERSION, api_version);
 			return nullptr;
 		}
 

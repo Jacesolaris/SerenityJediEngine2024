@@ -62,7 +62,7 @@ bool HFILEclose(const int& handle)
 // Externs
 ////////////////////////////////////////////////////////////////////////////////////////
 extern gentity_t* G_FindDoorTrigger(const gentity_t* ent);
-extern qboolean G_EntIsBreakable(int entityNum, const gentity_t* breaker);
+extern qboolean G_EntIsBreakable(int entity_num, const gentity_t* breaker);
 extern qboolean G_CheckInSolidTeleport(const vec3_t& teleport_pos, const gentity_t* self);
 
 extern cvar_t* g_nav1;
@@ -237,7 +237,7 @@ public:
 	float mDistance; // DO NOT REMOVE THIS: It's a serious runtime optimization for A*
 
 	unsigned short mOwnerNum; // Converted to short.  Largest entity number is 1024
-	unsigned short mEntityNum; // Converted to short.  Largest entity number is 1024
+	unsigned short mentity_num; // Converted to short.  Largest entity number is 1024
 	enum EWayEdgeFlags
 	{
 		WE_NONE = 0,
@@ -561,9 +561,9 @@ public:
 			return false;
 		}
 
-		if (Edge.mEntityNum != ENTITYNUM_NONE)
+		if (Edge.mentity_num != ENTITYNUM_NONE)
 		{
-			const gentity_t* ent = &g_entities[Edge.mEntityNum];
+			const gentity_t* ent = &g_entities[Edge.mentity_num];
 			if (ent)
 			{
 				// Can The Actor Navigate Through The Breakable Entity?
@@ -572,7 +572,7 @@ public:
 					mActor->NPC &&
 					mActor->NPC->aiFlags & NPCAI_NAV_THROUGH_BREAKABLES &&
 					Edge.BlockingBreakable() &&
-					G_EntIsBreakable(Edge.mEntityNum, mActor)
+					G_EntIsBreakable(Edge.mentity_num, mActor)
 					)
 				{
 					return true;
@@ -713,7 +713,7 @@ public:
 		Edge.mNodeA = A;
 		Edge.mNodeB = B;
 		Edge.mDistance = NodeA.mPoint.Dist(NodeB.mPoint);
-		Edge.mEntityNum = ENTITYNUM_NONE;
+		Edge.mentity_num = ENTITYNUM_NONE;
 		Edge.mOwnerNum = ENTITYNUM_NONE;
 		Edge.mFlags.clear();
 		Edge.mFlags.set_bit(CWayEdge::WE_VALID);
@@ -1224,7 +1224,7 @@ bool NAV::TestEdge(const TNodeHandle NodeA, const TNodeHandle NodeB, const qbool
 	// Try It
 	//--------
 	CanGo = MoveTrace(a.mPoint, b.mPoint, mins, Maxs, 0, true, false);
-	int EntHit = mMoveTrace.entityNum;
+	int EntHit = mMoveTrace.entity_num;
 
 	// Check For A Flying Edge
 	//-------------------------
@@ -1366,7 +1366,7 @@ bool NAV::TestEdge(const TNodeHandle NodeA, const TNodeHandle NodeB, const qbool
 		if (CanGo && !hit_character)
 		{
 			ent->wayedge = at_handle;
-			at.mEntityNum = EntHit;
+			at.mentity_num = EntHit;
 			at.mFlags.set_bit(CWayEdge::WE_CANBEINVAL);
 
 			// Add It To The Edge Map
@@ -1874,9 +1874,9 @@ bool NAV::LoadFromEntitiesAndSaveToFile(const char* filename, int checksum)
 				gi.Printf("Nav(%s)<->(%s): The last trace hit:\n", aName, bName);
 				gi.Printf("Nav(%s)<->(%s):     at %s,\n", aName, bName, cpointstr);
 				gi.Printf("Nav(%s)<->(%s):     normal %s\n", aName, bName, cnormstr);
-				if (mMoveTrace.entityNum != ENTITYNUM_WORLD)
+				if (mMoveTrace.entity_num != ENTITYNUM_WORLD)
 				{
-					gentity_t* ent = &g_entities[mMoveTrace.entityNum];
+					gentity_t* ent = &g_entities[mMoveTrace.entity_num];
 					gi.Printf("Nav(%s)<->(%s):     on entity Type (%s), TargetName (%s)\n", aName, bName,
 						ent->classname, ent->targetname);
 				}
@@ -2188,7 +2188,7 @@ void NAV::WayEdgesNowClear(gentity_t* ent)
 				{
 					CWayEdge& edge = mGraph.get_edge(EdgeHandle);
 					edge.mFlags.set_bit(CWayEdge::WE_VALID);
-					edge.mEntityNum = ENTITYNUM_NONE;
+					edge.mentity_num = ENTITYNUM_NONE;
 					edge.mOwnerNum = ENTITYNUM_NONE;
 				}
 			}
@@ -4330,7 +4330,7 @@ bool STEER::GoTo(gentity_t* actor, gentity_t* target, const float reachedRadius,
 	// Check To See If It Is Safe To Attempt Steering Toward The Target Position
 	//---------------------------------------------------------------------------
 	if (
-		//(target->client && target->client->ps.groundentityNum==ENTITYNUM_NONE) ||
+		//(target->client && target->client->ps.groundentity_num==ENTITYNUM_NONE) ||
 		!SafeToGoTo(actor, target->currentOrigin, NAV::GetNearestNode(target))
 		)
 	{
@@ -4938,19 +4938,19 @@ bool TestCollision(gentity_t* actor, SSteerUser& suser, const CVec3& ProjectVelo
 	// Test To See If The Projected Position Is Safe
 	//-----------------------------------------------
 	bool Safe = Side == Side_None ? MoveTrace(actor, suser.mProjectFwd) : MoveTrace(actor, suser.mProjectSide);
-	if (mMoveTrace.entityNum != ENTITYNUM_NONE && mMoveTrace.entityNum != ENTITYNUM_WORLD)
+	if (mMoveTrace.entity_num != ENTITYNUM_NONE && mMoveTrace.entity_num != ENTITYNUM_WORLD)
 	{
 		// The Ignore Entity Is Safe
 		//---------------------------
-		if (mMoveTrace.entityNum == suser.mIgnoreEntity)
+		if (mMoveTrace.entity_num == suser.mIgnoreEntity)
 		{
 			Safe = true;
 		}
 
 		// Doors Are Always Safe
 		//-----------------------
-		if (g_entities[mMoveTrace.entityNum].classname &&
-			Q_stricmp(g_entities[mMoveTrace.entityNum].classname, "func_door") == 0)
+		if (g_entities[mMoveTrace.entity_num].classname &&
+			Q_stricmp(g_entities[mMoveTrace.entity_num].classname, "func_door") == 0)
 		{
 			Safe = true;
 		}
@@ -4958,7 +4958,7 @@ bool TestCollision(gentity_t* actor, SSteerUser& suser, const CVec3& ProjectVelo
 		// If It's Breakable And We Can Go Through It, Then That's Safe Too
 		//------------------------------------------------------------------
 		if (actor->NPC->aiFlags & NPCAI_NAV_THROUGH_BREAKABLES &&
-			G_EntIsBreakable(mMoveTrace.entityNum, actor))
+			G_EntIsBreakable(mMoveTrace.entity_num, actor))
 		{
 			Safe = true;
 		}
@@ -4971,7 +4971,7 @@ bool TestCollision(gentity_t* actor, SSteerUser& suser, const CVec3& ProjectVelo
 	//--------------------------------------------
 	CVec3 ContactNormal(mMoveTrace.plane.normal);
 	CVec3 ContactPoint(mMoveTrace.endpos);
-	const int ContactNum = mMoveTrace.entityNum;
+	const int ContactNum = mMoveTrace.entity_num;
 
 	if (!Safe && Side == Side_None)
 	{
@@ -5272,7 +5272,7 @@ bool STEER::Reached(gentity_t* actor, const vec3_t& target, const float targetRa
 		return true;
 	}
 
-	//	if (target->client && target->client->ps.groundentityNum == ENTITYNUM_NONE)
+	//	if (target->client && target->client->ps.groundentity_num == ENTITYNUM_NONE)
 	//	{
 	//		TargetPos -= ActorPos;
 	//		if (fabsf(TargetPos[2]<(targetRadius*8)))

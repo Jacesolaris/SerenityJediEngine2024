@@ -55,7 +55,7 @@ struct GoreTextureCoordinates
 
 int AllocGoreRecord();
 GoreTextureCoordinates* FindGoreRecord(int tag);
-void DeleteGoreRecord(const int tag);
+void DeleteGoreRecord(int tag);
 
 struct SGoreSurface
 {
@@ -85,9 +85,9 @@ public:
 	~CGoreSet();
 };
 
-CGoreSet* FindGoreSet(const int goreSetTag);
+CGoreSet* FindGoreSet(int goreSetTag);
 CGoreSet* NewGoreSet();
-void DeleteGoreSet(const int goreSetTag);
+void DeleteGoreSet(int goreSetTag);
 
 #endif // _G2_GORE
 
@@ -121,22 +121,22 @@ public:
 
 	virtual void EffectorCollision(const SRagDollEffectorCollision& data)
 	{
-		//assert(0); // you probably meant to override this
+		assert(0); // you probably meant to override this
 	}
 
 	virtual void RagDollBegin()
 	{
-		//assert(0); // you probably meant to override this
+		assert(0); // you probably meant to override this
 	}
 
 	virtual void RagDollSettled()
 	{
-		//assert(0); // you probably meant to override this
+		assert(0); // you probably meant to override this
 	}
 
 	virtual void Collision()
 	{
-		//assert(0); // you probably meant to override this
+		assert(0); // you probably meant to override this
 		// we had a collision, uhh I guess call SetRagDoll RP_DEATH_COLLISION
 	}
 
@@ -178,8 +178,8 @@ public:
 	int groundEnt;
 
 	//rww - we have convenient animation/frame access in the game, so just send this info over from there.
-	int startFrame;
-	int endFrame;
+	int start_frame;
+	int end_frame;
 
 	int collisionType; // 1 = from a fall, 0 from effectors, this will be going away soon, hence no enum
 

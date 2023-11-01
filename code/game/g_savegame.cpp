@@ -199,7 +199,7 @@ static char* get_string_ptr(const int i_strlen, char* psOriginal)
 /////////// gentity_t * ////////
 //
 //
-static intptr_t get_g_entityNum(const gentity_t* ent)
+static intptr_t get_g_entity_num(const gentity_t* ent)
 {
 	assert(ent != reinterpret_cast<gentity_t*>(0xcdcdcdcd));
 
@@ -384,7 +384,7 @@ static void enumerate_field(const save_field_t* p_field, const byte* pb_base)
 		break;
 
 	case F_GENTITY:
-		*static_cast<intptr_t*>(pv) = get_g_entityNum(*static_cast<gentity_t**>(pv));
+		*static_cast<intptr_t*>(pv) = get_g_entity_num(*static_cast<gentity_t**>(pv));
 		break;
 
 	case F_GROUP:
@@ -421,7 +421,7 @@ static void enumerate_field(const save_field_t* p_field, const byte* pb_base)
 
 		for (int i = 0; i < MAX_ALERT_EVENTS; i++)
 		{
-			p[i].owner = reinterpret_cast<gentity_t*>(get_g_entityNum(p[i].owner));
+			p[i].owner = reinterpret_cast<gentity_t*>(get_g_entity_num(p[i].owner));
 		}
 	}
 	break;
@@ -432,8 +432,8 @@ static void enumerate_field(const save_field_t* p_field, const byte* pb_base)
 
 		for (int i = 0; i < MAX_FRAME_GROUPS; i++)
 		{
-			p[i].enemy = reinterpret_cast<gentity_t*>(get_g_entityNum(p[i].enemy));
-			p[i].commander = reinterpret_cast<gentity_t*>(get_g_entityNum(p[i].commander));
+			p[i].enemy = reinterpret_cast<gentity_t*>(get_g_entity_num(p[i].enemy));
+			p[i].commander = reinterpret_cast<gentity_t*>(get_g_entity_num(p[i].commander));
 		}
 	}
 	break;

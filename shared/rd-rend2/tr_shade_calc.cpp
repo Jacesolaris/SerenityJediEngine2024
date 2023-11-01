@@ -313,7 +313,7 @@ void DeformText(const char* text) {
 	VectorMA(origin, (len - 1), width, origin);
 
 	// clear the shader indexes
-	tess.numIndexes = 0;
+	tess.num_indexes = 0;
 	tess.numVertexes = 0;
 	tess.firstIndex = 0;
 
@@ -372,13 +372,13 @@ static void AutospriteDeform(void) {
 	if (tess.numVertexes & 3) {
 		ri.Printf(PRINT_WARNING, "Autosprite shader %s had odd vertex count\n", tess.shader->name);
 	}
-	if (tess.numIndexes != (tess.numVertexes >> 2) * 6) {
+	if (tess.num_indexes != (tess.numVertexes >> 2) * 6) {
 		ri.Printf(PRINT_WARNING, "Autosprite shader %s had odd index count\n", tess.shader->name);
 	}
 
 	oldVerts = tess.numVertexes;
 	tess.numVertexes = 0;
-	tess.numIndexes = 0;
+	tess.num_indexes = 0;
 	tess.firstIndex = 0;
 
 	if (backEnd.currentEntity != &tr.worldEntity) {
@@ -451,7 +451,7 @@ static void Autosprite2Deform(void) {
 	if (tess.numVertexes & 3) {
 		ri.Printf(PRINT_WARNING, "Autosprite2 shader %s had odd vertex count\n", tess.shader->name);
 	}
-	if (tess.numIndexes != (tess.numVertexes >> 2) * 6) {
+	if (tess.num_indexes != (tess.numVertexes >> 2) * 6) {
 		ri.Printf(PRINT_WARNING, "Autosprite2 shader %s had odd index count\n", tess.shader->name);
 	}
 

@@ -156,7 +156,7 @@ gentity_t* create_missile(vec3_t org, vec3_t dir, const float vel, const int lif
 	missile->s.eType = ET_MISSILE;
 	missile->owner = owner;
 	//lmo tag owner info into state for duel Nox
-	missile->s.otherentityNum = owner->s.number;
+	missile->s.otherentity_num = owner->s.number;
 
 	const Vehicle_t* p_veh = G_IsRidingVehicle(owner);
 
@@ -281,7 +281,7 @@ int G_GetHitLocFromTrace(trace_t* trace, const int mod)
 	int hit_loc = HL_NONE;
 	for (auto& i : trace->G2CollisionMap)
 	{
-		if (i.mEntityNum == -1)
+		if (i.mentity_num == -1)
 		{
 			break;
 		}
@@ -289,8 +289,8 @@ int G_GetHitLocFromTrace(trace_t* trace, const int mod)
 		CCollisionRecord& coll = i;
 		if (coll.mFlags & G2_FRONTFACE)
 		{
-			G_GetHitLocFromSurfName(&g_entities[coll.mEntityNum],
-				gi.G2API_GetSurfaceName(&g_entities[coll.mEntityNum].ghoul2[coll.mModelIndex],
+			G_GetHitLocFromSurfName(&g_entities[coll.mentity_num],
+				gi.G2API_GetSurfaceName(&g_entities[coll.mentity_num].ghoul2[coll.mModelIndex],
 					coll.mSurfaceIndex), &hit_loc, coll.mCollisionPosition,
 				nullptr, nullptr, mod);
 			//we only want the first "entrance wound", so break
@@ -501,7 +501,7 @@ void calcmuzzle_point(gentity_t* const ent, vec3_t forward_vec, vec3_t muzzle_po
 //---------------------------------------------------------
 {
 	vec3_t org;
-	mdxaBone_t boltMatrix;
+	mdxaBone_t bolt_matrix;
 
 	if (!lead_in)
 	{
@@ -606,7 +606,7 @@ void calcmuzzle_point(gentity_t* const ent, vec3_t forward_vec, vec3_t muzzle_po
 			ent->count = 0;
 			gi.G2API_GetBoltMatrix(ent->ghoul2, ent->playerModel,
 				ent->handLBolt,
-				&boltMatrix, ent->s.angles, ent->s.origin, cg.time ? cg.time : level.time,
+				&bolt_matrix, ent->s.angles, ent->s.origin, cg.time ? cg.time : level.time,
 				nullptr, ent->s.modelScale);
 		}
 		else
@@ -614,11 +614,11 @@ void calcmuzzle_point(gentity_t* const ent, vec3_t forward_vec, vec3_t muzzle_po
 			ent->count = 1;
 			gi.G2API_GetBoltMatrix(ent->ghoul2, ent->playerModel,
 				ent->handRBolt,
-				&boltMatrix, ent->s.angles, ent->s.origin, cg.time ? cg.time : level.time,
+				&bolt_matrix, ent->s.angles, ent->s.origin, cg.time ? cg.time : level.time,
 				nullptr, ent->s.modelScale);
 		}
 
-		gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, org);
+		gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, org);
 
 		VectorCopy(org, muzzle_point);
 
@@ -684,9 +684,9 @@ void WP_RocketLock(const gentity_t* ent, const float lockDist)
 	gi.trace(&tr, muzzle_point, nullptr, nullptr, ang, ent->client->ps.client_num, MASK_PLAYERSOLID,
 		static_cast<EG2_Collision>(0), 0);
 
-	if (tr.fraction != 1 && tr.entityNum < ENTITYNUM_NONE && tr.entityNum != ent->client->ps.client_num)
+	if (tr.fraction != 1 && tr.entity_num < ENTITYNUM_NONE && tr.entity_num != ent->client->ps.client_num)
 	{
-		const gentity_t* bgEnt = &g_entities[tr.entityNum];
+		const gentity_t* bgEnt = &g_entities[tr.entity_num];
 		if (bgEnt && bgEnt->s.powerups & PW_CLOAKED)
 		{
 			ent->client->rocketLockIndex = ENTITYNUM_NONE;
@@ -696,15 +696,15 @@ void WP_RocketLock(const gentity_t* ent, const float lockDist)
 		{
 			if (ent->client->rocketLockIndex == ENTITYNUM_NONE)
 			{
-				ent->client->rocketLockIndex = tr.entityNum;
+				ent->client->rocketLockIndex = tr.entity_num;
 				ent->client->rocketLockTime = level.time;
 			}
-			else if (ent->client->rocketLockIndex != tr.entityNum && ent->client->rocketTargetTime < level.time)
+			else if (ent->client->rocketLockIndex != tr.entity_num && ent->client->rocketTargetTime < level.time)
 			{
-				ent->client->rocketLockIndex = tr.entityNum;
+				ent->client->rocketLockIndex = tr.entity_num;
 				ent->client->rocketLockTime = level.time;
 			}
-			else if (ent->client->rocketLockIndex == tr.entityNum)
+			else if (ent->client->rocketLockIndex == tr.entity_num)
 			{
 				if (ent->client->rocketLockTime == -1)
 				{
@@ -712,7 +712,7 @@ void WP_RocketLock(const gentity_t* ent, const float lockDist)
 				}
 			}
 
-			if (ent->client->rocketLockIndex == tr.entityNum)
+			if (ent->client->rocketLockIndex == tr.entity_num)
 			{
 				ent->client->rocketTargetTime = level.time + 500;
 			}
@@ -829,8 +829,8 @@ void WP_FireVehicleWeapon(gentity_t* ent, vec3_t start, vec3_t dir, const vehWea
 		{
 			missile->owner = ent;
 		}
-		missile->s.otherentityNum = ent->s.number;
-		missile->s.otherentityNum2 = vehWeapon - &g_vehWeaponInfo[0];
+		missile->s.otherentity_num = ent->s.number;
+		missile->s.otherentity_num2 = vehWeapon - &g_vehWeaponInfo[0];
 
 		if (vehWeapon->iLifeTime)
 		{
@@ -1228,7 +1228,7 @@ void FireVehicleWeapon(gentity_t* ent, const qboolean alt_fire)
 						{
 							vec3_t newEnd;
 							VectorCopy(trace.endpos, newEnd);
-							WP_VehLeadCrosshairVeh(&g_entities[trace.entityNum], newEnd, fixedDir, start, dir);
+							WP_VehLeadCrosshairVeh(&g_entities[trace.entity_num], newEnd, fixedDir, start, dir);
 						}
 					}
 
@@ -1331,7 +1331,7 @@ void WP_FireScepter(gentity_t* ent, qboolean alt_fire)
 	VectorMA(start, shot_range, forward_vec, end);
 
 	gi.trace(&tr, start, nullptr, nullptr, end, ent->s.number, MASK_SHOT, G2_RETURNONHIT, 10);
-	gentity_t* trace_ent = &g_entities[tr.entityNum];
+	gentity_t* trace_ent = &g_entities[tr.entity_num];
 
 	if (tr.surfaceFlags & SURF_NOIMPACT)
 	{
@@ -1345,7 +1345,7 @@ void WP_FireScepter(gentity_t* ent, qboolean alt_fire)
 
 	if (render_impact)
 	{
-		if (tr.entityNum < ENTITYNUM_WORLD && trace_ent->takedamage)
+		if (tr.entity_num < ENTITYNUM_WORLD && trace_ent->takedamage)
 		{
 			constexpr int damage = 1;
 			// Create a simple impact type mark that doesn't last long in the world
@@ -1485,7 +1485,7 @@ void FireWeapon(gentity_t* ent, const qboolean alt_fire)
 		{
 			//player driving an AT-ST
 			//SIGH... because we can't anticipate alt-fire, must calc muzzle here and now
-			mdxaBone_t boltMatrix;
+			mdxaBone_t bolt_matrix;
 			int bolt;
 
 			if (ent->client->ps.weapon == WP_ATST_MAIN)
@@ -1528,12 +1528,12 @@ void FireWeapon(gentity_t* ent, const qboolean alt_fire)
 			{
 				yaw_only_angles[YAW] = ent->client->ps.legsYaw;
 			}
-			gi.G2API_GetBoltMatrix(ent->ghoul2, ent->playerModel, bolt, &boltMatrix, yaw_only_angles, ent->currentOrigin,
+			gi.G2API_GetBoltMatrix(ent->ghoul2, ent->playerModel, bolt, &bolt_matrix, yaw_only_angles, ent->currentOrigin,
 				cg.time ? cg.time : level.time, nullptr, ent->s.modelScale);
 
 			// work the matrix axis stuff into the original axis and origins used.
-			gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, ent->client->renderInfo.muzzle_point);
-			gi.G2API_GiveMeVectorFromMatrix(boltMatrix, NEGATIVE_Y, ent->client->renderInfo.muzzleDir);
+			gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, ent->client->renderInfo.muzzle_point);
+			gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, NEGATIVE_Y, ent->client->renderInfo.muzzleDir);
 			ent->client->renderInfo.mPCalcTime = level.time;
 
 			AngleVectors(ent->client->ps.viewangles, forward_vec, vright_vec, up);
@@ -1912,7 +1912,7 @@ void FireWeapon(gentity_t* ent, const qboolean alt_fire)
 	// We should probably just use this as a default behavior, in special cases, just set alert to false.
 	if (ent->s.number == 0 && alert > 0)
 	{
-		if (ent->client->ps.groundentityNum == ENTITYNUM_WORLD //FIXME: check for sand contents type?
+		if (ent->client->ps.groundentity_num == ENTITYNUM_WORLD //FIXME: check for sand contents type?
 			&& ent->s.weapon != WP_STUN_BATON
 			&& ent->s.weapon != WP_MELEE
 			&& ent->s.weapon != WP_TUSKEN_STAFF

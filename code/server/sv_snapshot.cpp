@@ -239,7 +239,7 @@ Build a client snapshot structure
 */
 
 constexpr auto MAX_SNAPSHOT_ENTITIES = 1024;
-using snapshotentityNumbers_t = struct
+using snapshotentity_numbers_t = struct
 {
 	int numSnapshotEntities;
 	int snapshotEntities[MAX_SNAPSHOT_ENTITIES];
@@ -247,10 +247,10 @@ using snapshotentityNumbers_t = struct
 
 /*
 =======================
-SV_QsortentityNumbers
+SV_Qsortentity_numbers
 =======================
 */
-static int SV_QsortentityNumbers(const void* a, const void* b)
+static int SV_Qsortentity_numbers(const void* a, const void* b)
 {
 	const int* ea = (int*)a;
 	const int* eb = (int*)b;
@@ -273,7 +273,7 @@ static int SV_QsortentityNumbers(const void* a, const void* b)
 SV_AddEntToSnapshot
 ===============
 */
-static void SV_AddEntToSnapshot(svEntity_t* sv_ent, const gentity_t* g_ent, snapshotentityNumbers_t* e_nums)
+static void SV_AddEntToSnapshot(svEntity_t* sv_ent, const gentity_t* g_ent, snapshotentity_numbers_t* e_nums)
 {
 	// if we have already added this entity to this snapshot, don't add again
 	if (sv_ent->snapshotCounter == sv.snapshotCounter)
@@ -371,7 +371,7 @@ SV_AddEntitiesVisibleFromPoint
 ===============
 */
 static void SV_AddEntitiesVisibleFromPoint(vec3_t origin, clientSnapshot_t* frame,
-	snapshotentityNumbers_t* e_nums, const qboolean portal)
+	snapshotentity_numbers_t* e_nums, const qboolean portal)
 {
 	int i;
 	gentity_t* ent;
@@ -415,7 +415,7 @@ static void SV_AddEntitiesVisibleFromPoint(vec3_t origin, clientSnapshot_t* fram
 
 	for (int e = 0; e < ge->num_entities; e++)
 	{
-		ent = SV_GentityNum(e);
+		ent = SV_Gentity_num(e);
 
 		if (!ent->inuse)
 		{
@@ -564,7 +564,7 @@ For viewing through other player's eyes, clent can be something other than clien
 static clientSnapshot_t* SV_BuildClientSnapshot(client_t* client)
 {
 	vec3_t org;
-	snapshotentityNumbers_t entityNumbers;
+	snapshotentity_numbers_t entity_numbers;
 	int i;
 
 	// bump the counter used to prevent double adding
@@ -574,7 +574,7 @@ static clientSnapshot_t* SV_BuildClientSnapshot(client_t* client)
 	clientSnapshot_t* frame = &client->frames[client->netchan.outgoingSequence & PACKET_MASK];
 
 	// clear everything in this snapshot
-	entityNumbers.numSnapshotEntities = 0;
+	entity_numbers.numSnapshotEntities = 0;
 	memset(frame->areabits, 0, sizeof frame->areabits);
 
 	const gentity_t* clent = client->gentity;
@@ -632,14 +632,14 @@ static clientSnapshot_t* SV_BuildClientSnapshot(client_t* client)
 
 	// add all the entities directly visible to the eye, which
 	// may include portal entities that merge other viewpoints
-	SV_AddEntitiesVisibleFromPoint(org, frame, &entityNumbers, qfalse);
+	SV_AddEntitiesVisibleFromPoint(org, frame, &entity_numbers, qfalse);
 
 	// if there were portals visible, there may be out of order entities
 	// in the list which will need to be resorted for the delta compression
 	// to work correctly.  This also catches the error condition
 	// of an entity being included twice.
-	qsort(entityNumbers.snapshotEntities, entityNumbers.numSnapshotEntities,
-		sizeof entityNumbers.snapshotEntities[0], SV_QsortentityNumbers);
+	qsort(entity_numbers.snapshotEntities, entity_numbers.numSnapshotEntities,
+		sizeof entity_numbers.snapshotEntities[0], SV_Qsortentity_numbers);
 
 	// now that all viewpoint's areabits have been OR'd together, invert
 	// all of them to make it a mask vector, which is what the renderer wants
@@ -651,9 +651,9 @@ static clientSnapshot_t* SV_BuildClientSnapshot(client_t* client)
 	// copy the entity states out
 	frame->num_entities = 0;
 	frame->first_entity = svs.nextSnapshotEntities;
-	for (i = 0; i < entityNumbers.numSnapshotEntities; i++)
+	for (i = 0; i < entity_numbers.numSnapshotEntities; i++)
 	{
-		const gentity_t* ent = SV_GentityNum(entityNumbers.snapshotEntities[i]);
+		const gentity_t* ent = SV_Gentity_num(entity_numbers.snapshotEntities[i]);
 		entityState_t* state = &svs.snapshotEntities[svs.nextSnapshotEntities % svs.numSnapshotEntities];
 		*state = ent->s;
 		svs.nextSnapshotEntities++;

@@ -527,10 +527,10 @@ qboolean PlaceShield(gentity_t* playerent)
 			shield->parent = playerent;
 
 			// Set team number.
-			shield->s.otherentityNum2 = playerent->client->sess.sessionTeam;
+			shield->s.otherentity_num2 = playerent->client->sess.sessionTeam;
 
 			shield->s.eType = ET_SPECIAL;
-			shield->s.modelIndex = HI_SHIELD; // this'll be used in CG_Useable() for rendering.
+			shield->s.model_index = HI_SHIELD; // this'll be used in CG_Useable() for rendering.
 			shield->classname = shieldItem->classname;
 
 			shield->r.contents = CONTENTS_TRIGGER;
@@ -540,13 +540,13 @@ qboolean PlaceShield(gentity_t* playerent)
 			shield->use = 0; //Use_Item;
 
 			// allow to ride movers
-			shield->s.groundentityNum = tr.entityNum;
+			shield->s.groundentity_num = tr.entity_num;
 
 			G_SetOrigin(shield, tr.endpos);
 
 			shield->s.eFlags &= ~EF_NODRAW;
 			shield->r.svFlags &= ~SVF_NOCLIENT;
-			shield->s.otherentityNum = playerent->s.number; //mark owner info for duel
+			shield->s.otherentity_num = playerent->s.number; //mark owner info for duel
 
 			trap->LinkEntity((sharedEntity_t*)shield);
 
@@ -746,7 +746,7 @@ static qboolean pas_find_enemies(gentity_t* self)
 
 		trap->Trace(&tr, org2, NULL, NULL, org, self->s.number, MASK_SHOT, qfalse, 0, 0);
 
-		if (!tr.allsolid && !tr.startsolid && (tr.fraction == 1.0 || tr.entityNum == target->s.number))
+		if (!tr.allsolid && !tr.startsolid && (tr.fraction == 1.0 || tr.entity_num == target->s.number))
 		{
 			vec3_t enemyDir;
 			// Only acquire if have a clear shot, Is it in range and closer than our best?
@@ -803,9 +803,9 @@ void pas_adjust_enemy(gentity_t* ent)
 
 		trap->Trace(&tr, org2, NULL, NULL, org, ent->s.number, MASK_SHOT, qfalse, 0, 0);
 
-		if (tr.allsolid || tr.startsolid || tr.fraction < 0.9f || tr.entityNum == ent->s.number)
+		if (tr.allsolid || tr.startsolid || tr.fraction < 0.9f || tr.entity_num == ent->s.number)
 		{
-			if (tr.entityNum != ent->enemy->s.number)
+			if (tr.entity_num != ent->enemy->s.number)
 			{
 				// trace failed
 				keep = qfalse;
@@ -1186,7 +1186,7 @@ void ItemUse_Sentry(gentity_t* ent)
 	gentity_t* sentry = G_Spawn();
 
 	sentry->classname = "sentryGun";
-	sentry->s.modelIndex = G_model_index("models/items/psgun.glm"); //replace ASAP
+	sentry->s.model_index = G_model_index("models/items/psgun.glm"); //replace ASAP
 
 	sentry->s.g2radius = 30.0f;
 	sentry->s.modelGhoul2 = 1;
@@ -1225,7 +1225,7 @@ void ItemUse_Sentry(gentity_t* ent)
 	trap->LinkEntity((sharedEntity_t*)sentry);
 
 	sentry->s.owner = ent->s.number;
-	sentry->s.otherentityNum = ent->s.number; // mark owner info for duel
+	sentry->s.otherentity_num = ent->s.number; // mark owner info for duel
 	sentry->s.weapon = WP_TURRET; //so I can identify the entity as sentry gun client side
 	sentry->s.shouldtarget = qtrue;
 	if (level.gametype >= GT_TEAM)
@@ -1270,7 +1270,7 @@ void ItemUse_Sentry2(gentity_t* ent)
 	gentity_t* sentry = G_Spawn();
 
 	sentry->classname = "sentryGun";
-	sentry->s.modelIndex = G_model_index("models/items/psgun.glm"); //replace ASAP
+	sentry->s.model_index = G_model_index("models/items/psgun.glm"); //replace ASAP
 
 	sentry->s.g2radius = 30.0f;
 	sentry->s.modelGhoul2 = 1;
@@ -1563,13 +1563,13 @@ void Flamethrower_Fire(gentity_t* self)
 		//Now check and see if we can actually hit it
 		trap->Trace(&tr, self->client->ps.origin, vec3_origin, vec3_origin, ent_org, self->s.number, MASK_SHOT, qfalse, 0, 0);
 
-		if (tr.fraction < 1.0f && tr.entityNum != trace_ent->s.number)
+		if (tr.fraction < 1.0f && tr.entity_num != trace_ent->s.number)
 		{
 			//must have clear LOS
 			continue;
 		}
 
-		if (tr.entityNum < ENTITYNUM_WORLD && trace_ent->takedamage)
+		if (tr.entity_num < ENTITYNUM_WORLD && trace_ent->takedamage)
 		{
 			const int damage = FLAMETHROWER_DAMAGE;
 
@@ -1755,7 +1755,7 @@ void G_SpecialSpawnItem(gentity_t* ent, gitem_t* item)
 	VectorSet(ent->r.maxs, 8, 8, 16);
 
 	ent->s.eType = ET_ITEM;
-	ent->s.modelIndex = ent->item - bg_itemlist; // store item number in modelIndex
+	ent->s.model_index = ent->item - bg_itemlist; // store item number in model_index
 
 	ent->r.contents = CONTENTS_TRIGGER;
 	ent->touch = Touch_Item;
@@ -1944,7 +1944,7 @@ void EWeb_SetBoneAngles(gentity_t* ent, const char* bone, vec3_t angles)
 	int* thebone = &ent->s.boneIndex1;
 	int* firstFree = NULL;
 	int i = 0;
-	const int boneIndex = G_BoneIndex(bone);
+	const int bone_index = G_BoneIndex(bone);
 	vec3_t* boneVector = &ent->s.boneAngles1;
 	vec3_t* freeBoneVec = NULL;
 
@@ -1958,7 +1958,7 @@ void EWeb_SetBoneAngles(gentity_t* ent, const char* bone, vec3_t angles)
 		}
 		else if (*thebone)
 		{
-			if (*thebone == boneIndex)
+			if (*thebone == bone_index)
 			{
 				//this is it
 				break;
@@ -2000,7 +2000,7 @@ void EWeb_SetBoneAngles(gentity_t* ent, const char* bone, vec3_t angles)
 
 		thebone = firstFree;
 
-		*thebone = boneIndex;
+		*thebone = bone_index;
 		boneVector = freeBoneVec;
 	}
 
@@ -2039,25 +2039,25 @@ void EWeb_SetBoneAngles(gentity_t* ent, const char* bone, vec3_t angles)
 }
 
 //start an animation on model_root both server side and client side
-void EWeb_SetBoneAnim(gentity_t* eweb, const int startFrame, const int endFrame)
+void EWeb_SetBoneAnim(gentity_t* eweb, const int start_frame, const int end_frame)
 {
 	//set info on the entity so it knows to start the anim on the client next snapshot.
 	eweb->s.eFlags |= EF_G2ANIMATING;
 
-	if (eweb->s.torsoAnim == startFrame && eweb->s.legsAnim == endFrame)
+	if (eweb->s.torsoAnim == start_frame && eweb->s.legsAnim == end_frame)
 	{
 		//already playing this anim, let's flag it to restart
 		eweb->s.torsoFlip = !eweb->s.torsoFlip;
 	}
 	else
 	{
-		eweb->s.torsoAnim = startFrame;
-		eweb->s.legsAnim = endFrame;
+		eweb->s.torsoAnim = start_frame;
+		eweb->s.legsAnim = end_frame;
 	}
 
 	//now set the animation on the server ghoul2 instance.
 	assert(eweb->ghoul2);
-	trap->G2API_SetBoneAnim(eweb->ghoul2, 0, "model_root", startFrame, endFrame,
+	trap->G2API_SetBoneAnim(eweb->ghoul2, 0, "model_root", start_frame, end_frame,
 		BONE_ANIM_OVERRIDE_FREEZE | BONE_ANIM_BLEND, 1.0f, level.time, -1, 100);
 }
 
@@ -2066,7 +2066,7 @@ void EWeb_SetBoneAnim(gentity_t* eweb, const int startFrame, const int endFrame)
 
 void EWebFire(gentity_t* owner, gentity_t* eweb)
 {
-	mdxaBone_t boltMatrix;
+	mdxaBone_t bolt_matrix;
 	vec3_t p, d, bPoint;
 
 	if (eweb->genericValue10 == -1)
@@ -2077,10 +2077,10 @@ void EWebFire(gentity_t* owner, gentity_t* eweb)
 	}
 
 	//get the muzzle point
-	trap->G2API_GetBoltMatrix(eweb->ghoul2, 0, eweb->genericValue10, &boltMatrix, eweb->s.apos.trBase,
+	trap->G2API_GetBoltMatrix(eweb->ghoul2, 0, eweb->genericValue10, &bolt_matrix, eweb->s.apos.trBase,
 		eweb->r.currentOrigin, level.time, NULL, eweb->modelScale);
-	BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, p);
-	BG_GiveMeVectorFromMatrix(&boltMatrix, NEGATIVE_Y, d);
+	BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, p);
+	BG_GiveMeVectorFromMatrix(&bolt_matrix, NEGATIVE_Y, d);
 
 	//Start the thing backwards into the bounding box so it can't start inside other solid things
 	VectorMA(p, -16.0f, d, bPoint);
@@ -2110,14 +2110,14 @@ void EWebFire(gentity_t* owner, gentity_t* eweb)
 //lock the owner into place relative to the cannon pos
 void EWebPositionUser(gentity_t* owner, gentity_t* eweb)
 {
-	mdxaBone_t boltMatrix;
+	mdxaBone_t bolt_matrix;
 	vec3_t p, d;
 	trace_t tr;
 
-	trap->G2API_GetBoltMatrix(eweb->ghoul2, 0, eweb->genericValue9, &boltMatrix, eweb->s.apos.trBase,
+	trap->G2API_GetBoltMatrix(eweb->ghoul2, 0, eweb->genericValue9, &bolt_matrix, eweb->s.apos.trBase,
 		eweb->r.currentOrigin, level.time, NULL, eweb->modelScale);
-	BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, p);
-	BG_GiveMeVectorFromMatrix(&boltMatrix, NEGATIVE_X, d);
+	BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, p);
+	BG_GiveMeVectorFromMatrix(&bolt_matrix, NEGATIVE_X, d);
 
 	VectorMA(p, 32.0f, d, p);
 	p[2] = eweb->r.currentOrigin[2];
@@ -2355,7 +2355,7 @@ gentity_t* EWeb_Create(gentity_t* spawner)
 	downPos[2] -= 18.0f;
 	trap->Trace(&tr, pos, mins, maxs, downPos, spawner->s.number, MASK_PLAYERSOLID, qfalse, 0, 0);
 
-	if (tr.startsolid || tr.allsolid || tr.fraction == 1.0f || tr.entityNum < ENTITYNUM_WORLD)
+	if (tr.startsolid || tr.allsolid || tr.fraction == 1.0f || tr.entity_num < ENTITYNUM_WORLD)
 	{
 		//didn't hit ground.
 		G_FreeEntity(ent);
@@ -2395,7 +2395,7 @@ gentity_t* EWeb_Create(gentity_t* spawner)
 	//set up the g2 model info
 	ent->s.modelGhoul2 = 1;
 	ent->s.g2radius = 128;
-	ent->s.modelIndex = G_model_index((char*)modelName);
+	ent->s.model_index = G_model_index((char*)modelName);
 
 	trap->G2API_InitGhoul2Model(&ent->ghoul2, modelName, 0, 0, 0, 0, 0);
 
@@ -3234,13 +3234,13 @@ void Touch_Item(gentity_t* ent, gentity_t* other, trace_t* trace)
 		if (!ent->speed)
 		{
 			gentity_t* te = G_TempEntity(ent->s.pos.trBase, EV_GLOBAL_ITEM_PICKUP);
-			te->s.eventParm = ent->s.modelIndex;
+			te->s.eventParm = ent->s.model_index;
 			te->r.svFlags |= SVF_BROADCAST;
 		}
 		else
 		{
 			gentity_t* te = G_TempEntity(ent->s.pos.trBase, EV_GLOBAL_ITEM_PICKUP);
-			te->s.eventParm = ent->s.modelIndex;
+			te->s.eventParm = ent->s.model_index;
 			// only send this temp entity to a single client
 			te->r.svFlags |= SVF_SINGLECLIENT;
 			te->r.singleClient = other->s.number;
@@ -3336,10 +3336,10 @@ gentity_t* LaunchItem(gitem_t* item, vec3_t origin, vec3_t velocity)
 	gentity_t* dropped = G_Spawn();
 
 	dropped->s.eType = ET_ITEM;
-	dropped->s.modelIndex = item - bg_itemlist; // store item number in modelIndex
-	if (dropped->s.modelIndex < 0)
+	dropped->s.model_index = item - bg_itemlist; // store item number in model_index
+	if (dropped->s.model_index < 0)
 	{
-		dropped->s.modelIndex = 0;
+		dropped->s.model_index = 0;
 	}
 	dropped->s.model_index2 = 1; // This is non-zero is it's a dropped item
 
@@ -3578,7 +3578,7 @@ void FinishSpawningItem(gentity_t* ent)
 	VectorSet(ent->r.maxs, 8, 8, 16);
 
 	ent->s.eType = ET_ITEM;
-	ent->s.modelIndex = ent->item - bg_itemlist; // store item number in modelIndex
+	ent->s.model_index = ent->item - bg_itemlist; // store item number in model_index
 	ent->s.model_index2 = 0; // zero indicates this isn't a dropped item
 
 	ent->r.contents = CONTENTS_TRIGGER;
@@ -3587,7 +3587,7 @@ void FinishSpawningItem(gentity_t* ent)
 	ent->use = Use_Item;
 
 	// create a Ghoul2 model if the world model is a glm
-	/*	item = &bg_itemlist[ ent->s.modelIndex ];
+	/*	item = &bg_itemlist[ ent->s.model_index ];
 		if (!Q_stricmp(&item->world_model[0][strlen(item->world_model[0]) - 4], ".glm"))
 		{
 			trap->G2API_InitGhoul2Model(&ent->s, item->world_model[0], G_model_index(item->world_model[0] ), 0, 0, 0, 0);
@@ -3622,7 +3622,7 @@ void FinishSpawningItem(gentity_t* ent)
 		ent->r.maxs[2] += 0.1f;
 
 		// allow to ride movers
-		ent->s.groundentityNum = tr.entityNum;
+		ent->s.groundentity_num = tr.entity_num;
 
 		G_SetOrigin(ent, tr.endpos);
 	}
@@ -3944,7 +3944,7 @@ void G_BounceItem(gentity_t* ent, trace_t* trace)
 		//detpacks only
 		if (ent->touch)
 		{
-			ent->touch(ent, &g_entities[trace->entityNum], trace);
+			ent->touch(ent, &g_entities[trace->entity_num], trace);
 			return;
 		}
 	}
@@ -3955,7 +3955,7 @@ void G_BounceItem(gentity_t* ent, trace_t* trace)
 		trace->endpos[2] += 1.0; // make sure it is off ground
 		SnapVector(trace->endpos);
 		G_SetOrigin(ent, trace->endpos);
-		ent->s.groundentityNum = trace->entityNum;
+		ent->s.groundentity_num = trace->entity_num;
 		return;
 	}
 
@@ -3969,7 +3969,7 @@ void G_BounceItem(gentity_t* ent, trace_t* trace)
 		//holocrons and sentry guns
 		if (ent->touch)
 		{
-			ent->touch(ent, &g_entities[trace->entityNum], trace);
+			ent->touch(ent, &g_entities[trace->entity_num], trace);
 		}
 	}
 }
@@ -4007,7 +4007,7 @@ void G_RunItem(gentity_t* ent)
 	int mask;
 
 	// if groundentity has been set to ENTITYNUM_NONE, it may have been pushed off an edge
-	if (ent->s.groundentityNum == ENTITYNUM_NONE)
+	if (ent->s.groundentity_num == ENTITYNUM_NONE)
 	{
 		if (ent->s.pos.trType != TR_GRAVITY)
 		{

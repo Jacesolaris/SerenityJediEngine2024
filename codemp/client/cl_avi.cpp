@@ -42,10 +42,10 @@ using aviFileData_t = struct aviFileData_s
 {
 	qboolean fileOpen;
 	fileHandle_t f;
-	char fileName[MAX_QPATH];
+	char file_name[MAX_QPATH];
 	int fileSize;
 	int moviOffset;
-	int movi_size;
+	int moviSize;
 
 	fileHandle_t idxF;
 	int numIndices;
@@ -233,7 +233,7 @@ void CL_WriteAVIHeader(void)
 
 					WRITE_STRING("strf");
 					WRITE_4BYTES(40); //"strf" "chunk" size
-					WRITE_4BYTES(40); //bi_size
+					WRITE_4BYTES(40); //biSize
 					WRITE_4BYTES(afd.width); //biWidth
 					WRITE_4BYTES(afd.height); //biHeight
 					WRITE_2BYTES(1); //biPlanes
@@ -243,13 +243,13 @@ void CL_WriteAVIHeader(void)
 					{
 						WRITE_STRING("MJPG");
 						WRITE_4BYTES(afd.width *
-							afd.height); //bi_sizeImage
+							afd.height); //biSizeImage
 					}
 					else
 					{
 						WRITE_4BYTES(0); // BI_RGB
 						WRITE_4BYTES(afd.width *
-							afd.height * 3); //bi_sizeImage
+							afd.height * 3); //biSizeImage
 					}
 
 					WRITE_4BYTES(0); //biXPelsPetMeter
@@ -321,7 +321,7 @@ Creates an AVI file and gets it into a state where
 writing the actual data can begin
 ===============
 */
-qboolean CL_OpenAVIForWriting(const char* fileName)
+qboolean CL_OpenAVIForWriting(const char* file_name)
 {
 	if (afd.fileOpen)
 		return qfalse;
@@ -335,17 +335,17 @@ qboolean CL_OpenAVIForWriting(const char* fileName)
 		return qfalse;
 	}
 
-	if ((afd.f = FS_FOpenFileWrite(fileName)) <= 0)
+	if ((afd.f = FS_FOpenFileWrite(file_name)) <= 0)
 		return qfalse;
 
 	if ((afd.idxF = FS_FOpenFileWrite(
-		va("%s" INDEX_FILE_EXTENSION, fileName))) <= 0)
+		va("%s" INDEX_FILE_EXTENSION, file_name))) <= 0)
 	{
 		FS_FCloseFile(afd.f);
 		return qfalse;
 	}
 
-	Q_strncpyz(afd.fileName, fileName, MAX_QPATH);
+	Q_strncpyz(afd.file_name, file_name, MAX_QPATH);
 
 	afd.frameRate = cl_aviFrameRate->integer;
 	afd.framePeriod = static_cast<int>(1000000.0f / afd.frameRate);
@@ -417,7 +417,7 @@ qboolean CL_OpenAVIForWriting(const char* fileName)
 	START_CHUNK("idx1");
 	SafeFS_Write(buffer, bufIndex, afd.idxF);
 
-	afd.movi_size = 4; // For the "movi"
+	afd.moviSize = 4; // For the "movi"
 	afd.fileOpen = qtrue;
 
 	return qtrue;
@@ -445,7 +445,7 @@ static qboolean CL_CheckFileSize(const int bytesToAdd)
 			CL_CloseAVI();
 
 			// ...And open a new one
-			CL_OpenAVIForWriting(va("%s_", afd.fileName));
+			CL_OpenAVIForWriting(va("%s_", afd.file_name));
 
 			return qtrue;
 		}
@@ -483,7 +483,7 @@ void CL_WriteAVIVideoFrame(const byte* imageBuffer, const int size)
 	afd.fileSize += chunkSize + paddingSize;
 
 	afd.numVideoFrames++;
-	afd.movi_size += chunkSize + paddingSize;
+	afd.moviSize += chunkSize + paddingSize;
 
 	if (size > afd.maxRecordSize)
 		afd.maxRecordSize = size;
@@ -550,7 +550,7 @@ void CL_WriteAVIAudioFrame(const byte* pcmBuffer, int size)
 		afd.fileSize += chunkSize + paddingSize;
 
 		afd.numAudioFrames++;
-		afd.movi_size += chunkSize + paddingSize;
+		afd.moviSize += chunkSize + paddingSize;
 		afd.a.totalBytes += bytesInBuffer;
 
 		// Index
@@ -592,7 +592,7 @@ Closes the AVI file and writes an index chunk
 qboolean CL_CloseAVI(void)
 {
 	int indexSize = afd.numIndices * 16;
-	const char* idxFileName = va("%s" INDEX_FILE_EXTENSION, afd.fileName);
+	const char* idxFileName = va("%s" INDEX_FILE_EXTENSION, afd.file_name);
 
 	// AVI file isn't open
 	if (!afd.fileOpen)
@@ -642,7 +642,7 @@ qboolean CL_CloseAVI(void)
 	WRITE_4BYTES(afd.fileSize - 8); // "RIFF" size
 
 	bufIndex = afd.moviOffset + 4; // Skip "LIST"
-	WRITE_4BYTES(afd.movi_size);
+	WRITE_4BYTES(afd.moviSize);
 
 	SafeFS_Write(buffer, bufIndex, afd.f);
 
@@ -650,7 +650,7 @@ qboolean CL_CloseAVI(void)
 	Z_Free(afd.eBuffer);
 	FS_FCloseFile(afd.f);
 
-	Com_Printf("Wrote %d:%d frames to %s\n", afd.numVideoFrames, afd.numAudioFrames, afd.fileName);
+	Com_Printf("Wrote %d:%d frames to %s\n", afd.numVideoFrames, afd.numAudioFrames, afd.file_name);
 
 	return qtrue;
 }

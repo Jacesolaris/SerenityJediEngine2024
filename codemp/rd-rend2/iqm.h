@@ -34,12 +34,12 @@ typedef struct iqmheader
 	unsigned int flags;
 	unsigned int num_text, ofs_text;
 	unsigned int num_meshes, ofs_meshes;
-	unsigned int num_vertexarrays, numVertexes, ofs_vertexarrays;
+	unsigned int num_vertexarrays, num_vertexes, ofs_vertexarrays;
 	unsigned int num_triangles, ofs_triangles, ofs_adjacency;
 	unsigned int num_joints, ofs_joints;
 	unsigned int num_poses, ofs_poses;
 	unsigned int num_anims, ofs_anims;
-	unsigned int numFrames, num_framechannels, ofs_frames, ofs_bounds;
+	unsigned int num_frames, num_framechannels, ofs_frames, ofs_bounds;
 	unsigned int num_comment, ofs_comment;
 	unsigned int num_extensions, ofs_extensions;
 } iqmHeader_t;
@@ -48,7 +48,7 @@ typedef struct iqmmesh
 {
 	unsigned int name;
 	unsigned int material;
-	unsigned int first_vertex, numVertexes;
+	unsigned int first_vertex, num_vertexes;
 	unsigned int first_triangle, num_triangles;
 } iqmMesh_t;
 
@@ -100,7 +100,7 @@ typedef struct iqmpose
 typedef struct iqmanim
 {
 	unsigned int name;
-	unsigned int first_frame, numFrames;
+	unsigned int first_frame, num_frames;
 	float framerate;
 	unsigned int flags;
 } iqmAnim_t;

@@ -145,7 +145,7 @@ void TurretClientRun(centity_t* ent)
 {
 	if (!ent->ghoul2)
 	{
-		trap->G2API_InitGhoul2Model(&ent->ghoul2, CG_ConfigString(CS_MODELS + ent->currentState.modelIndex), 0, 0, 0, 0,
+		trap->G2API_InitGhoul2Model(&ent->ghoul2, CG_ConfigString(CS_MODELS + ent->currentState.model_index), 0, 0, 0, 0,
 			0);
 
 		if (!ent->ghoul2)
@@ -169,9 +169,9 @@ void TurretClientRun(centity_t* ent)
 		ent->turAngles[PITCH] = 90;
 		ent->turAngles[YAW] = 0;
 
-		const weaponInfo_t* weaponInfo = &cg_weapons[WP_TURRET];
+		const weaponInfo_t* weapon_info = &cg_weapons[WP_TURRET];
 
-		if (!weaponInfo->registered)
+		if (!weapon_info->registered)
 		{
 			CG_RegisterWeapon(WP_TURRET);
 		}
@@ -187,12 +187,12 @@ void TurretClientRun(centity_t* ent)
 	if (ent->currentState.fireflag && ent->bolt4 != ent->currentState.fireflag)
 	{
 		vec3_t muzzle_org, muzzle_dir;
-		mdxaBone_t boltMatrix;
+		mdxaBone_t bolt_matrix;
 
-		trap->G2API_GetBoltMatrix(ent->ghoul2, 0, ent->torsoBolt, &boltMatrix, /*ent->lerpAngles*/vec3_origin,
+		trap->G2API_GetBoltMatrix(ent->ghoul2, 0, ent->torsoBolt, &bolt_matrix, /*ent->lerpAngles*/vec3_origin,
 			ent->lerpOrigin, cg.time, cgs.game_models, ent->modelScale);
-		BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, muzzle_org);
-		BG_GiveMeVectorFromMatrix(&boltMatrix, NEGATIVE_X, muzzle_dir);
+		BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, muzzle_org);
+		BG_GiveMeVectorFromMatrix(&bolt_matrix, NEGATIVE_X, muzzle_dir);
 
 		trap->FX_PlayEffectID(cgs.effects.mTurretMuzzleFlash, muzzle_org, muzzle_dir, -1, -1, qfalse);
 

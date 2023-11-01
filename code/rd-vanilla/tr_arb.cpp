@@ -30,7 +30,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 // This vertex shader basically passes through most values and calculates no lighting. The only
 // unusual thing it does is add the inputed texel offsets to all four texture units (this allows
 // nearest neighbor pixel peeking).
-const unsigned char g_strGlowVShaderARB[] =
+constexpr unsigned char g_strGlowVShaderARB[] =
 {
 	"!!ARBvp1.0\
 	\
@@ -74,7 +74,7 @@ const unsigned char g_strGlowVShaderARB[] =
 
 // This Pixel Shader loads four texture units and adds them all together (with a modifier
 // multiplied to each in the process). The final output is r0 = t0 + t1 + t2 + t3.
-const unsigned char g_strGlowPShaderARB[] =
+constexpr unsigned char g_strGlowPShaderARB[] =
 {
 	"!!ARBfp1.0\
 	\
@@ -112,18 +112,18 @@ const unsigned char g_strGlowPShaderARB[] =
 #define GL_PROGRAM_ERROR_STRING_ARB						0x8874
 #define GL_PROGRAM_ERROR_POSITION_ARB					0x864B
 
-void ARB_InitGlowShaders(void) {
+void ARB_InitGlowShaders() {
 	// Allocate and Load the global 'Glow' Vertex Program. - AReis
 	if (qglGenProgramsARB)
 	{
 		qglGenProgramsARB(1, &tr.glowVShader);
 		qglBindProgramARB(GL_VERTEX_PROGRAM_ARB, tr.glowVShader);
-		qglProgramStringARB(GL_VERTEX_PROGRAM_ARB, GL_PROGRAM_FORMAT_ASCII_ARB, (GLsizei)strlen((char*)g_strGlowVShaderARB), g_strGlowVShaderARB);
+		qglProgramStringARB(GL_VERTEX_PROGRAM_ARB, GL_PROGRAM_FORMAT_ASCII_ARB, static_cast<GLsizei>(strlen((char*)g_strGlowVShaderARB)), g_strGlowVShaderARB);
 
 		//		const GLubyte *strErr = qglGetString( GL_PROGRAM_ERROR_STRING_ARB );
-		int iErrPos = 0;
-		qglGetIntegerv(GL_PROGRAM_ERROR_POSITION_ARB, &iErrPos);
-		assert(iErrPos == -1);
+		int i_err_pos = 0;
+		qglGetIntegerv(GL_PROGRAM_ERROR_POSITION_ARB, &i_err_pos);
+		assert(i_err_pos == -1);
 	}
 
 	// NOTE: I make an assumption here. If you have (current) nvidia hardware, you obviously support register combiners instead of fragment
@@ -182,11 +182,11 @@ void ARB_InitGlowShaders(void) {
 	{
 		qglGenProgramsARB(1, &tr.glowPShader);
 		qglBindProgramARB(GL_FRAGMENT_PROGRAM_ARB, tr.glowPShader);
-		qglProgramStringARB(GL_FRAGMENT_PROGRAM_ARB, GL_PROGRAM_FORMAT_ASCII_ARB, (GLsizei)strlen((char*)g_strGlowPShaderARB), g_strGlowPShaderARB);
+		qglProgramStringARB(GL_FRAGMENT_PROGRAM_ARB, GL_PROGRAM_FORMAT_ASCII_ARB, static_cast<GLsizei>(strlen((char*)g_strGlowPShaderARB)), g_strGlowPShaderARB);
 
 		//		const GLubyte *strErr = qglGetString( GL_PROGRAM_ERROR_STRING_ARB );
-		int iErrPos = 0;
-		qglGetIntegerv(GL_PROGRAM_ERROR_POSITION_ARB, &iErrPos);
-		assert(iErrPos == -1);
+		int i_err_pos = 0;
+		qglGetIntegerv(GL_PROGRAM_ERROR_POSITION_ARB, &i_err_pos);
+		assert(i_err_pos == -1);
 	}
 }

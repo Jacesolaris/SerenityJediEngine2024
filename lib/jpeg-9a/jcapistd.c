@@ -115,7 +115,7 @@ jpeg_write_scanlines(const j_compress_ptr cinfo, const JSAMPARRAY scanlines,
  */
 
 GLOBAL(JDIMENSION)
-jpeg_write_raw_data(const j_compress_ptr cinfo, const JSAMp_image data,
+jpeg_write_raw_data(const j_compress_ptr cinfo, const JSAMPIMAGE data,
 	const JDIMENSION num_lines)
 {
 	if (cinfo->global_state != CSTATE_RAW_OK)

@@ -60,7 +60,7 @@ void R_AddEdgeDef(const int i1, const int i2, const int facing) {
 	numEdgeDefs[i1]++;
 }
 
-void R_RenderShadowEdges(void) {
+void R_RenderShadowEdges() {
 	int		i;
 	int		c;
 	int		i2;
@@ -83,7 +83,7 @@ void R_RenderShadowEdges(void) {
 	c_rejected = 0;
 #endif
 
-	for (i = 0; i < tess.numVertexes; i++) {
+	for (i = 0; i < tess.num_vertexes; i++) {
 		c = numEdgeDefs[i];
 		for (int j = 0; j < c; j++) {
 			if (!edgeDefs[i][j].facing) {
@@ -135,7 +135,7 @@ void R_RenderShadowEdges(void) {
 #ifdef _STENCIL_REVERSE
 	//Carmack Reverse<tm> method requires that volumes
 	//be capped properly -rww
-	num_tris = tess.numIndexes / 3;
+	num_tris = tess.num_indexes / 3;
 
 	for (i = 0; i < num_tris; i++)
 	{
@@ -220,7 +220,7 @@ void RB_DoShadowTessEnd(vec3_t light_pos)
 {
 	int		i;
 	int		num_tris;
-	vec3_t	lightDir;
+	vec3_t	light_dir;
 
 	if (glConfig.stencilBits < 4) {
 		return;
@@ -236,9 +236,9 @@ void RB_DoShadowTessEnd(vec3_t light_pos)
 	//Oh well, just cast them straight down no matter what onto the ground plane.
 	//This presets no chance of screwups and still looks better than a stupid
 	//shader blob.
-	VectorSet(lightDir, ent_light[0] * 0.3f, ent_light[1] * 0.3f, 1.0f);
+	VectorSet(light_dir, ent_light[0] * 0.3f, ent_light[1] * 0.3f, 1.0f);
 	// project vertexes away from light direction
-	for (i = 0; i < tess.numVertexes; i++)
+	for (i = 0; i < tess.num_vertexes; i++)
 	{
 		vec3_t worldxyz;
 		//add or.origin to vert xyz to end up with world oriented coord, then figure
@@ -246,12 +246,12 @@ void RB_DoShadowTessEnd(vec3_t light_pos)
 		VectorAdd(tess.xyz[i], backEnd.ori.origin, worldxyz);
 		float ground_dist = worldxyz[2] - backEnd.currentEntity->e.shadowPlane;
 		ground_dist += 100.0f; //fudge factor
-		VectorMA(tess.xyz[i], -ground_dist, lightDir, shadowXyz[i]);
+		VectorMA(tess.xyz[i], -ground_dist, light_dir, shadowXyz[i]);
 	}
 #else
 	if (lightPos)
 	{
-		for (i = 0; i < tess.numVertexes; i++)
+		for (i = 0; i < tess.num_vertexes; i++)
 		{
 			shadowXyz[i][0] = tess.xyz[i][0] + ((tess.xyz[i][0] - lightPos[0]) * 128.0f);
 			shadowXyz[i][1] = tess.xyz[i][1] + ((tess.xyz[i][1] - lightPos[1]) * 128.0f);
@@ -263,15 +263,15 @@ void RB_DoShadowTessEnd(vec3_t light_pos)
 		VectorCopy(backEnd.currentEntity->lightDir, lightDir);
 
 		// project vertexes away from light direction
-		for (i = 0; i < tess.numVertexes; i++) {
+		for (i = 0; i < tess.num_vertexes; i++) {
 			VectorMA(tess.xyz[i], -512, lightDir, shadowXyz[i]);
 		}
 	}
 #endif
 	// decide which triangles face the light
-	memset(numEdgeDefs, 0, 4 * tess.numVertexes);
+	memset(numEdgeDefs, 0, 4 * tess.num_vertexes);
 
-	num_tris = tess.numIndexes / 3;
+	num_tris = tess.num_indexes / 3;
 	for (i = 0; i < num_tris; i++) {
 		float	d;
 
@@ -292,7 +292,7 @@ void RB_DoShadowTessEnd(vec3_t light_pos)
 			VectorSubtract(v3, v1, d2);
 			CrossProduct(d1, d2, normal);
 
-			d = DotProduct(normal, lightDir);
+			d = DotProduct(normal, light_dir);
 		}
 		else
 		{
@@ -414,8 +414,7 @@ because otherwise shadows from different body parts would
 overlap and double darken.
 =================
 */
-void RB_ShadowFinish()
-{
+void RB_ShadowFinish() {
 	if (r_shadows->integer != 2) {
 		return;
 	}
@@ -439,13 +438,21 @@ void RB_ShadowFinish()
 		qglDisable(GL_CLIP_PLANE0);
 	}
 	GL_Cull(CT_TWO_SIDED);
+	//qglDisable (GL_CULL_FACE);
 
 	GL_Bind(tr.whiteImage);
 
 	qglPushMatrix();
 	qglLoadIdentity();
 
+	//	qglColor3f( 0.6f, 0.6f, 0.6f );
+	//	GL_State( GLS_DEPTHMASK_TRUE | GLS_SRCBLEND_DST_COLOR | GLS_DSTBLEND_ZERO );
+
+	//	qglColor3f( 1, 0, 0 );
+	//	GL_State( GLS_DEPTHMASK_TRUE | GLS_SRCBLEND_ONE | GLS_DSTBLEND_ZERO );
+
 	qglColor4f(0.0f, 0.0f, 0.0f, 0.5f);
+	//GL_State( GLS_DEPTHMASK_TRUE | GLS_SRCBLEND_SRC_ALPHA | GLS_DSTBLEND_ONE_MINUS_SRC_ALPHA );
 	GL_State(GLS_SRCBLEND_SRC_ALPHA | GLS_DSTBLEND_ONE_MINUS_SRC_ALPHA);
 
 	qglBegin(GL_QUADS);
@@ -470,11 +477,10 @@ RB_ProjectionShadowDeform
 
 =================
 */
-void RB_ProjectionShadowDeform(void)
-{
+void RB_ProjectionShadowDeform() {
 	vec3_t	ground{};
 	vec3_t	light{};
-	vec3_t	lightDir;
+	vec3_t	light_dir;
 
 	auto xyz = reinterpret_cast<float*>(tess.xyz);
 
@@ -484,21 +490,20 @@ void RB_ProjectionShadowDeform(void)
 
 	const float ground_dist = backEnd.ori.origin[2] - backEnd.currentEntity->e.shadowPlane;
 
-	VectorCopy(backEnd.currentEntity->lightDir, lightDir);
-	float d = DotProduct(lightDir, ground);
+	VectorCopy(backEnd.currentEntity->lightDir, light_dir);
+	float d = DotProduct(light_dir, ground);
 	// don't let the shadows get too long or go negative
 	if (d < 0.5) {
-		VectorMA(lightDir, 0.5 - d, ground, lightDir);
-		d = DotProduct(lightDir, ground);
+		VectorMA(light_dir, 0.5 - d, ground, light_dir);
+		d = DotProduct(light_dir, ground);
 	}
 	d = 1.0 / d;
 
-	light[0] = lightDir[0] * d;
-	light[1] = lightDir[1] * d;
-	light[2] = lightDir[2] * d;
+	light[0] = light_dir[0] * d;
+	light[1] = light_dir[1] * d;
+	light[2] = light_dir[2] * d;
 
-	for (int i = 0; i < tess.numVertexes; i++, xyz += 4)
-	{
+	for (int i = 0; i < tess.num_vertexes; i++, xyz += 4) {
 		const float h = DotProduct(xyz, ground) + ground_dist;
 
 		xyz[0] -= light[0] * h;
@@ -516,6 +521,17 @@ void RB_CaptureScreenImage()
 	const int y = glConfig.vidHeight / 2;
 
 	GL_Bind(tr.screenImage);
+	//using this method, we could pixel-filter the texture and all sorts of crazy stuff.
+	//but, it is slow as hell.
+	/*
+	static byte *tmp = NULL;
+	if (!tmp)
+	{
+		tmp = (byte *)Z_Malloc((sizeof(byte)*4)*(glConfig.vidWidth*glConfig.vidHeight), TAG_ICARUS, qtrue);
+	}
+	qglReadPixels(0, 0, glConfig.vidWidth, glConfig.vidHeight, GL_RGBA, GL_UNSIGNED_BYTE, tmp);
+	qglTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 512, 512, 0, GL_RGBA, GL_UNSIGNED_BYTE, tmp);
+	*/
 
 	if (rad_x > glConfig.maxTextureSize)
 	{
@@ -564,7 +580,7 @@ float tr_distortionAlpha = 1.0f; //opaque
 float tr_distortionStretch = 0.0f; //no stretch override
 qboolean tr_distortionPrePost = qfalse; //capture before postrender phase?
 qboolean tr_distortionNegate = qfalse; //negative blend mode
-void RB_DistortionFill(void)
+void RB_DistortionFill()
 {
 	float alpha = tr_distortionAlpha;
 	float spost;

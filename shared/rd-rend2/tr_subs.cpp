@@ -56,7 +56,7 @@ void QDECL Com_Error(const int level, const char* error, ...)
 	char            text[1024];
 
 	va_start(argptr, error);
-	Q_vsnprintf(text, sizeof(text), error, argptr);
+	Q_vsnprintf(text, sizeof text, error, argptr);
 	va_end(argptr);
 
 	ri.Error(level, "%s", text);
@@ -79,9 +79,9 @@ void* R_Malloc(const int iSize, const memtag_t eTag, const qboolean bZeroit)
 }
 
 #ifdef REND2_SP
-void* R_Malloc(const int iSize, const memtag_t eTag, const qboolean bZeroit, int iAlign)
+void* R_Malloc(const int iSize, const memtag_t eTag, const qboolean bZeroit, const int iUnusedAlign)
 {
-	return ri.Z_Malloc(iSize, eTag, bZeroit, iAlign);
+	return ri.Z_Malloc(iSize, eTag, bZeroit, iUnusedAlign);
 }
 
 int Z_Free(void* ptr) {
@@ -93,7 +93,8 @@ void R_Free(void* ptr)
 	ri.Z_Free(ptr);
 }
 #else
-void Z_Free(void* ptr) {
+void Z_Free(void* ptr)
+{
 	ri.Z_Free(ptr);
 }
 #endif
@@ -103,9 +104,9 @@ int Z_MemSize(const memtag_t eTag)
 	return ri.Z_MemSize(eTag);
 }
 
-void Z_MorphMallocTag(void* pvBuffer, memtag_t eDesiredTag)
+void Z_MorphMallocTag(void* pv_address, const memtag_t eDesiredTag)
 {
-	ri.Z_MorphMallocTag(pvBuffer, eDesiredTag);
+	ri.Z_MorphMallocTag(pv_address, eDesiredTag);
 }
 
 // HUNK
@@ -142,7 +143,8 @@ void* Hunk_Alloc(const int size, const ha_pref preference)
 	return ri.Hunk_Alloc(size, preference);
 }
 
-int Hunk_MemoryRemaining(void) {
+int Hunk_MemoryRemaining(void)
+{
 	return ri.Hunk_MemoryRemaining();
 }
 #endif

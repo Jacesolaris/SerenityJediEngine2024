@@ -865,9 +865,9 @@ void SiegeRespawn(gentity_t* ent)
 	}
 }
 
-void SiegeBeginRound(const int entNum)
+void SiegeBeginRound(const int ent_num)
 {
-	//entNum is just used as something to fire targets from.
+	//ent_num is just used as something to fire targets from.
 	char targname[1024];
 
 	if (!g_preroundState)
@@ -913,7 +913,7 @@ void SiegeBeginRound(const int entNum)
 	{
 		if (targname[0])
 		{
-			G_UseTargets2(&g_entities[entNum], &g_entities[entNum], targname);
+			G_UseTargets2(&g_entities[ent_num], &g_entities[ent_num], targname);
 		}
 	}
 
@@ -1913,7 +1913,7 @@ void SP_misc_siege_item(gentity_t* ent)
 		ent->s.genericenemyindex = G_IconIndex(s);
 	}
 
-	ent->s.modelIndex = G_model_index(ent->model);
+	ent->s.model_index = G_model_index(ent->model);
 
 	//Is the model a ghoul2 model?
 	if (ent->model && !Q_stricmp(&ent->model[strlen(ent->model) - 4], ".glm"))

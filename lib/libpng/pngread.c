@@ -1464,13 +1464,13 @@ png_image_begin_read_from_stdio(const png_imagep image, FILE* file)
 }
 
 int PNGAPI
-png_image_begin_read_from_file(const png_imagep image, const char* fileName)
+png_image_begin_read_from_file(const png_imagep image, const char* file_name)
 {
 	if (image != NULL && image->version == PNG_IMAGE_VERSION)
 	{
-		if (fileName != NULL)
+		if (file_name != NULL)
 		{
-			FILE* fp = fopen(fileName, "rb");
+			FILE* fp = fopen(file_name, "rb");
 
 			if (fp != NULL)
 			{

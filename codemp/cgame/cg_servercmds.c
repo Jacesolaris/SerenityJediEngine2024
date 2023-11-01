@@ -315,7 +315,7 @@ CG_ShaderStateChanged
 void CG_ShaderStateChanged(void)
 {
 	char originalShader[MAX_QPATH];
-	char new_shader_name[MAX_QPATH];
+	char newShader[MAX_QPATH];
 	char timeOffset[16];
 
 	const char* o = CG_ConfigString(CS_SHADERSTATE);
@@ -330,8 +330,8 @@ void CG_ShaderStateChanged(void)
 			char* t = strstr(n, ":");
 			if (t && *t)
 			{
-				strncpy(new_shader_name, n, t - n);
-				new_shader_name[t - n] = 0;
+				strncpy(newShader, n, t - n);
+				newShader[t - n] = 0;
 			}
 			else
 			{
@@ -344,7 +344,7 @@ void CG_ShaderStateChanged(void)
 				strncpy(timeOffset, t, o - t);
 				timeOffset[o - t] = 0;
 				o++;
-				trap->R_RemapShader(originalShader, new_shader_name, timeOffset);
+				trap->R_RemapShader(originalShader, newShader, timeOffset);
 			}
 		}
 		else
@@ -1002,14 +1002,14 @@ static void CG_ConfigStringModified(void)
 }
 
 //frees all ghoul2 stuff and npc stuff from a centity -rww
-void CG_KillCEntityG2(const int entNum)
+void CG_KillCEntityG2(const int ent_num)
 {
 	clientInfo_t* ci;
-	centity_t* cent = &cg_entities[entNum];
+	centity_t* cent = &cg_entities[ent_num];
 
-	if (entNum < MAX_CLIENTS)
+	if (ent_num < MAX_CLIENTS)
 	{
-		ci = &cgs.clientinfo[entNum];
+		ci = &cgs.clientinfo[ent_num];
 	}
 	else
 	{
@@ -1103,7 +1103,7 @@ void CG_KillCEntityInstances(void)
 		cent->bodyHeight = 0; //SABER_LENGTH_MAX;
 		//cent->saberExtendTime = 0;
 
-		cent->boltInfo = 0;
+		cent->bolt_info = 0;
 
 		cent->frame_minus1_refreshed = 0;
 		cent->frame_minus2_refreshed = 0;
@@ -1353,14 +1353,14 @@ static void CG_BodyQueueCopy(centity_t* cent, const int client_num, const int kn
 		{
 			anim = &bgAllAnims[source->localAnimIndex].anims[source->currentState.torsoAnim];
 		}
-		const float animSpeed = 50.0f / anim->frameLerp;
+		const float anim_speed = 50.0f / anim->frameLerp;
 
 		if (!fallBack)
 		{
 			//this will just set us to the last frame of the animation, in theory
 			aNum = cgs.clientinfo[source->currentState.number].frame + 1;
 
-			while (aNum >= anim->firstFrame + anim->numFrames)
+			while (aNum >= anim->firstFrame + anim->num_frames)
 			{
 				aNum--;
 			}
@@ -1368,7 +1368,7 @@ static void CG_BodyQueueCopy(centity_t* cent, const int client_num, const int kn
 			if (aNum < anim->firstFrame - 1)
 			{
 				//wrong animation...?
-				aNum = anim->firstFrame + anim->numFrames - 1;
+				aNum = anim->firstFrame + anim->num_frames - 1;
 			}
 		}
 		else
@@ -1376,11 +1376,11 @@ static void CG_BodyQueueCopy(centity_t* cent, const int client_num, const int kn
 			aNum = anim->firstFrame;
 		}
 
-		const int eFrame = anim->firstFrame + anim->numFrames;
+		const int eFrame = anim->firstFrame + anim->num_frames;
 
-		trap->G2API_SetBoneAnim(cent->ghoul2, 0, "upper_lumbar", aNum, eFrame, flags, animSpeed, cg.time, -1, 150);
-		trap->G2API_SetBoneAnim(cent->ghoul2, 0, "model_root", aNum, eFrame, flags, animSpeed, cg.time, -1, 150);
-		trap->G2API_SetBoneAnim(cent->ghoul2, 0, "Motion", aNum, eFrame, flags, animSpeed, cg.time, -1, 150);
+		trap->G2API_SetBoneAnim(cent->ghoul2, 0, "upper_lumbar", aNum, eFrame, flags, anim_speed, cg.time, -1, 150);
+		trap->G2API_SetBoneAnim(cent->ghoul2, 0, "model_root", aNum, eFrame, flags, anim_speed, cg.time, -1, 150);
+		trap->G2API_SetBoneAnim(cent->ghoul2, 0, "Motion", aNum, eFrame, flags, anim_speed, cg.time, -1, 150);
 	}
 
 	//After we create the bodyqueue, regenerate any limbs on the real instance

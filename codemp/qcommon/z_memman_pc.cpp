@@ -78,7 +78,7 @@ using zoneStats_t = struct zoneStats_s
 	// I'm keeping these updated on the fly, since it's quicker for cache-pool
 	//	purposes rather than recalculating each time...
 	//
-	int i_sizesPerTag[TAG_COUNT];
+	int iSizesPerTag[TAG_COUNT];
 	int iCountsPerTag[TAG_COUNT];
 };
 
@@ -298,7 +298,7 @@ void* Z_Malloc(const int iSize, const memtag_t eTag, const qboolean bZeroit, con
 	//
 	TheZone.Stats.iCurrent += iSize;
 	TheZone.Stats.iCount++;
-	TheZone.Stats.i_sizesPerTag[eTag] += iSize;
+	TheZone.Stats.iSizesPerTag[eTag] += iSize;
 	TheZone.Stats.iCountsPerTag[eTag]++;
 
 	if (TheZone.Stats.iCurrent > TheZone.Stats.iPeak)
@@ -348,7 +348,7 @@ void Z_MorphMallocTag(void* pv_address, const memtag_t eDesiredTag)
 	//
 	//	TheZone.Stats.iCurrent	- unchanged
 	//	TheZone.Stats.iCount	- unchanged
-	TheZone.Stats.i_sizesPerTag[pMemory->eTag] -= pMemory->iSize;
+	TheZone.Stats.iSizesPerTag[pMemory->eTag] -= pMemory->iSize;
 	TheZone.Stats.iCountsPerTag[pMemory->eTag]--;
 
 	// morph...
@@ -359,7 +359,7 @@ void Z_MorphMallocTag(void* pv_address, const memtag_t eDesiredTag)
 	//
 	//	TheZone.Stats.iCurrent	- unchanged
 	//	TheZone.Stats.iCount	- unchanged
-	TheZone.Stats.i_sizesPerTag[pMemory->eTag] += pMemory->iSize;
+	TheZone.Stats.iSizesPerTag[pMemory->eTag] += pMemory->iSize;
 	TheZone.Stats.iCountsPerTag[pMemory->eTag]++;
 }
 
@@ -371,7 +371,7 @@ static void Zone_FreeBlock(zoneHeader_t* pMemory)
 		//
 		TheZone.Stats.iCount--;
 		TheZone.Stats.iCurrent -= pMemory->iSize;
-		TheZone.Stats.i_sizesPerTag[pMemory->eTag] -= pMemory->iSize;
+		TheZone.Stats.iSizesPerTag[pMemory->eTag] -= pMemory->iSize;
 		TheZone.Stats.iCountsPerTag[pMemory->eTag]--;
 
 		// Sanity checks...
@@ -463,7 +463,7 @@ void Z_Free(void* pv_address)
 
 int Z_MemSize(const memtag_t eTag)
 {
-	return TheZone.Stats.i_sizesPerTag[eTag];
+	return TheZone.Stats.iSizesPerTag[eTag];
 }
 
 // Frees all blocks with the specified tag...
@@ -484,14 +484,6 @@ void Z_TagFree(const memtag_t eTag)
 		}
 		pMemory = pNext;
 	}
-
-	// these stupid pragmas don't work here???!?!?!
-	//
-	//#ifdef _DEBUG
-	//#pragma warning( disable : 4189)
-	//	int iBlocksFreed = iZoneBlocks - TheZone.Stats.iCount;
-	//#pragma warning( default : 4189)
-	//#endif
 }
 
 void* S_Malloc(const int iSize)
@@ -546,7 +538,7 @@ static void Z_Details_f(void)
 	for (int i = 0; i < TAG_COUNT; i++)
 	{
 		const int iThisCount = TheZone.Stats.iCountsPerTag[i];
-		const int iThisSize = TheZone.Stats.i_sizesPerTag[i];
+		const int iThisSize = TheZone.Stats.iSizesPerTag[i];
 
 		if (iThisCount)
 		{

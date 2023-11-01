@@ -35,7 +35,7 @@ uint32_t cvar_modifiedFlags;
 cvar_t cvar_indexes[MAX_CVARS];
 int cvar_numIndexes;
 
-#define FILE_HASH_SIZE		1024
+#define FILE_HASH_SIZE		512
 static cvar_t* hashTable[FILE_HASH_SIZE];
 static qboolean cvar_sort = qfalse;
 
@@ -1651,7 +1651,7 @@ Cvar_Init
 Reads in all archived cvars
 ============
 */
-void Cvar_Init(void)
+void Cvar_Init()
 {
 	memset(cvar_indexes, 0, sizeof cvar_indexes);
 	memset(hashTable, 0, sizeof hashTable);
@@ -1659,6 +1659,8 @@ void Cvar_Init(void)
 	cvar_cheats = Cvar_Get("sv_cheats", "1", CVAR_ROM | CVAR_SYSTEMINFO, "Allow cheats on server if set to 1");
 
 	r_weather = Cvar_Get("r_weather", "0", CVAR_ARCHIVE, "");
+
+	com_rend2 = Cvar_Get("com_rend2", "0", CVAR_ARCHIVE, "");
 
 	Cmd_AddCommand("print", Cvar_Print_f, "Print cvar help");
 	Cmd_SetCommandCompletionFunc("print", Cvar_CompleteCvarName);

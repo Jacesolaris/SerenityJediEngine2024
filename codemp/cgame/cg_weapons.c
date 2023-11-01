@@ -622,7 +622,7 @@ void cg_add_player_weaponduals(refEntity_t* parent, playerState_t* ps, centity_t
 		}
 		else
 		{
-			mdxaBone_t boltMatrix;
+			mdxaBone_t bolt_matrix;
 
 			if (!trap->G2API_HasGhoul2ModelOnIndex(&cent->ghoul2, 1))
 			{
@@ -631,15 +631,15 @@ void cg_add_player_weaponduals(refEntity_t* parent, playerState_t* ps, centity_t
 			}
 
 			// go away and get me the bolt position for this frame please
-			if (!trap->G2API_GetBoltMatrix(cent->ghoul2, 1, 0, &boltMatrix, new_angles, cent->lerpOrigin, cg.time,
+			if (!trap->G2API_GetBoltMatrix(cent->ghoul2, 1, 0, &bolt_matrix, new_angles, cent->lerpOrigin, cg.time,
 				cgs.game_models, cent->modelScale))
 			{
 				// Couldn't find bolt point.
 				return;
 			}
 
-			BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, flashorigin);
-			BG_GiveMeVectorFromMatrix(&boltMatrix, POSITIVE_X, flashdir);
+			BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, flashorigin);
+			BG_GiveMeVectorFromMatrix(&bolt_matrix, POSITIVE_X, flashdir);
 		}
 
 		if (cent->currentState.weapon == WP_BRYAR_PISTOL ||
@@ -752,7 +752,7 @@ void cg_add_player_weaponduals(refEntity_t* parent, playerState_t* ps, centity_t
 		}
 		else
 		{
-			mdxaBone_t boltMatrix;
+			mdxaBone_t bolt_matrix;
 
 			if (!trap->G2API_HasGhoul2ModelOnIndex(&cent->ghoul2, 1))
 			{
@@ -761,15 +761,15 @@ void cg_add_player_weaponduals(refEntity_t* parent, playerState_t* ps, centity_t
 			}
 
 			// go away and get me the bolt position for this frame please
-			if (!trap->G2API_GetBoltMatrix(cent->ghoul2, 1, 0, &boltMatrix, new_angles, cent->lerpOrigin, cg.time,
+			if (!trap->G2API_GetBoltMatrix(cent->ghoul2, 1, 0, &bolt_matrix, new_angles, cent->lerpOrigin, cg.time,
 				cgs.game_models, cent->modelScale))
 			{
 				// Couldn't find bolt point.
 				return;
 			}
 
-			BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, flashorigin);
-			BG_GiveMeVectorFromMatrix(&boltMatrix, POSITIVE_X, flashdir);
+			BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, flashorigin);
+			BG_GiveMeVectorFromMatrix(&bolt_matrix, POSITIVE_X, flashdir);
 		}
 
 		if (cg.time - cent->muzzleFlashTime <= MUZZLE_FLASH_TIME + 10 && cent->currentState.weapon != WP_DISRUPTOR)
@@ -1055,7 +1055,7 @@ void CG_AddPlayerWeapon(refEntity_t* parent, playerState_t* ps, centity_t* cent,
 		}
 		else
 		{
-			mdxaBone_t boltMatrix;
+			mdxaBone_t bolt_matrix;
 
 			if (!trap->G2API_HasGhoul2ModelOnIndex(&cent->ghoul2, 1))
 			{
@@ -1064,15 +1064,15 @@ void CG_AddPlayerWeapon(refEntity_t* parent, playerState_t* ps, centity_t* cent,
 			}
 
 			// go away and get me the bolt position for this frame please
-			if (!trap->G2API_GetBoltMatrix(cent->ghoul2, 1, 0, &boltMatrix, new_angles, cent->lerpOrigin, cg.time,
+			if (!trap->G2API_GetBoltMatrix(cent->ghoul2, 1, 0, &bolt_matrix, new_angles, cent->lerpOrigin, cg.time,
 				cgs.game_models, cent->modelScale))
 			{
 				// Couldn't find bolt point.
 				return;
 			}
 
-			BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, flashorigin);
-			BG_GiveMeVectorFromMatrix(&boltMatrix, POSITIVE_X, flashdir);
+			BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, flashorigin);
+			BG_GiveMeVectorFromMatrix(&bolt_matrix, POSITIVE_X, flashdir);
 		}
 
 		if (cent->currentState.weapon == WP_BRYAR_PISTOL ||
@@ -1179,7 +1179,7 @@ void CG_AddPlayerWeapon(refEntity_t* parent, playerState_t* ps, centity_t* cent,
 		}
 		else
 		{
-			mdxaBone_t boltMatrix;
+			mdxaBone_t bolt_matrix;
 
 			if (!trap->G2API_HasGhoul2ModelOnIndex(&cent->ghoul2, 1))
 			{
@@ -1188,15 +1188,15 @@ void CG_AddPlayerWeapon(refEntity_t* parent, playerState_t* ps, centity_t* cent,
 			}
 
 			// go away and get me the bolt position for this frame please
-			if (!trap->G2API_GetBoltMatrix(cent->ghoul2, 1, 0, &boltMatrix, new_angles, cent->lerpOrigin, cg.time,
+			if (!trap->G2API_GetBoltMatrix(cent->ghoul2, 1, 0, &bolt_matrix, new_angles, cent->lerpOrigin, cg.time,
 				cgs.game_models, cent->modelScale))
 			{
 				// Couldn't find bolt point.
 				return;
 			}
 
-			BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, flashorigin);
-			BG_GiveMeVectorFromMatrix(&boltMatrix, POSITIVE_X, flashdir);
+			BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, flashorigin);
+			BG_GiveMeVectorFromMatrix(&bolt_matrix, POSITIVE_X, flashdir);
 		}
 
 		if (cg.time - cent->muzzleFlashTime <= MUZZLE_FLASH_TIME + 10 && cent->currentState.weapon != WP_DISRUPTOR)
@@ -1414,7 +1414,7 @@ void CG_AddViewWeapon(playerState_t* ps)
 	}
 	else
 	{
-		float currentFrame;
+		float current_frame;
 		// get clientinfo for animation map
 		if (cent->currentState.eType == ET_NPC)
 		{
@@ -1430,10 +1430,10 @@ void CG_AddViewWeapon(playerState_t* ps)
 			ci = &cgs.clientinfo[cent->currentState.client_num];
 		}
 
-		trap->G2API_GetBoneFrame(cent->ghoul2, "lower_lumbar", cg.time, &currentFrame, cgs.game_models, 0);
-		hand.frame = CG_MapTorsoToWeaponFrame(ceil(currentFrame), ps->torsoAnim);
-		hand.oldframe = CG_MapTorsoToWeaponFrame(floor(currentFrame), ps->torsoAnim);
-		hand.backlerp = 1.0f - (currentFrame - floor(currentFrame));
+		trap->G2API_GetBoneFrame(cent->ghoul2, "lower_lumbar", cg.time, &current_frame, cgs.game_models, 0);
+		hand.frame = CG_MapTorsoToWeaponFrame(ceil(current_frame), ps->torsoAnim);
+		hand.oldframe = CG_MapTorsoToWeaponFrame(floor(current_frame), ps->torsoAnim);
+		hand.backlerp = 1.0f - (current_frame - floor(current_frame));
 
 		// Handle the fringe situation where oldframe is invalid
 		if (hand.frame == -1)
@@ -1484,7 +1484,7 @@ void CG_AddViewWeapon(playerState_t* ps)
 		}
 		else
 		{
-			float currentFrame;
+			float current_frame;
 			// get clientinfo for animation map
 			if (cent->currentState.eType == ET_NPC)
 			{
@@ -1498,10 +1498,10 @@ void CG_AddViewWeapon(playerState_t* ps)
 			{
 				ci = &cgs.clientinfo[cent->currentState.client_num];
 			}
-			trap->G2API_GetBoneFrame(cent->ghoul2, "lower_lumbar", cg.time, &currentFrame, cgs.game_models, 0);
-			hand.frame = CG_MapTorsoToWeaponFrame(ceil(currentFrame), ps->torsoAnim);
-			hand.oldframe = CG_MapTorsoToWeaponFrame(floor(currentFrame), ps->torsoAnim);
-			hand.backlerp = 1.0f - (currentFrame - floor(currentFrame));
+			trap->G2API_GetBoneFrame(cent->ghoul2, "lower_lumbar", cg.time, &current_frame, cgs.game_models, 0);
+			hand.frame = CG_MapTorsoToWeaponFrame(ceil(current_frame), ps->torsoAnim);
+			hand.oldframe = CG_MapTorsoToWeaponFrame(floor(current_frame), ps->torsoAnim);
+			hand.backlerp = 1.0f - (current_frame - floor(current_frame));
 
 			// Handle the fringe situation where oldframe is invalid
 			if (hand.frame == -1)
@@ -2530,7 +2530,7 @@ WEAPON EVENTS
 
 void CG_GetClientWeaponMuzzleBoltPoint(const int cl_index, vec3_t to)
 {
-	mdxaBone_t boltMatrix;
+	mdxaBone_t bolt_matrix;
 
 	if (cl_index < 0 || cl_index >= MAX_CLIENTS)
 	{
@@ -2545,14 +2545,14 @@ void CG_GetClientWeaponMuzzleBoltPoint(const int cl_index, vec3_t to)
 		return;
 	}
 
-	trap->G2API_GetBoltMatrix(cent->ghoul2, 1, 0, &boltMatrix, cent->turAngles, cent->lerpOrigin, cg.time,
+	trap->G2API_GetBoltMatrix(cent->ghoul2, 1, 0, &bolt_matrix, cent->turAngles, cent->lerpOrigin, cg.time,
 		cgs.game_models, cent->modelScale);
-	BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, to);
+	BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, to);
 }
 
 void CG_GetClientWeaponMuzzleBoltPointduals(const int cl_index, vec3_t to, const qboolean leftweap)
 {
-	mdxaBone_t boltMatrix;
+	mdxaBone_t bolt_matrix;
 	const int midx = leftweap ? 2 : 1;
 
 	if (cl_index < 0 || cl_index >= MAX_CLIENTS)
@@ -2568,9 +2568,9 @@ void CG_GetClientWeaponMuzzleBoltPointduals(const int cl_index, vec3_t to, const
 		return;
 	}
 
-	trap->G2API_GetBoltMatrix(cent->ghoul2, midx, 0, &boltMatrix, cent->turAngles, cent->lerpOrigin, cg.time,
+	trap->G2API_GetBoltMatrix(cent->ghoul2, midx, 0, &bolt_matrix, cent->turAngles, cent->lerpOrigin, cg.time,
 		cgs.game_models, cent->modelScale);
-	BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, to);
+	BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, to);
 }
 
 /*
@@ -2779,14 +2779,14 @@ qboolean CG_VehicleWeaponImpact(centity_t* cent)
 {
 	//see if this is a missile entity that's owned by a vehicle and should do a special, overridden impact effect
 	if (cent->currentState.eFlags & EF_JETPACK_ACTIVE //hack so we know we're a vehicle Weapon shot
-		&& cent->currentState.otherentityNum2
-		&& g_vehWeaponInfo[cent->currentState.otherentityNum2].iImpactFX)
+		&& cent->currentState.otherentity_num2
+		&& g_vehWeaponInfo[cent->currentState.otherentity_num2].iImpactFX)
 	{
 		//missile is from a special vehWeapon
 		vec3_t normal;
 		ByteToDir(cent->currentState.eventParm, normal);
 
-		trap->FX_PlayEffectID(g_vehWeaponInfo[cent->currentState.otherentityNum2].iImpactFX, cent->lerpOrigin, normal,
+		trap->FX_PlayEffectID(g_vehWeaponInfo[cent->currentState.otherentity_num2].iImpactFX, cent->lerpOrigin, normal,
 			-1, -1, qfalse);
 		return qtrue;
 	}
@@ -3028,11 +3028,11 @@ BULLETS
 CG_Calcmuzzle_point
 ======================
 */
-qboolean CG_Calcmuzzle_point(const int entityNum, vec3_t muzzle)
+qboolean CG_Calcmuzzle_point(const int entity_num, vec3_t muzzle)
 {
 	vec3_t forward;
 
-	if (entityNum == cg.snap->ps.client_num)
+	if (entity_num == cg.snap->ps.client_num)
 	{
 		vec3_t gunpoint;
 		vec3_t right;
@@ -3109,7 +3109,7 @@ qboolean CG_Calcmuzzle_point(const int entityNum, vec3_t muzzle)
 		return qtrue;
 	}
 
-	const centity_t* cent = &cg_entities[entityNum];
+	const centity_t* cent = &cg_entities[entity_num];
 	if (!cent->currentValid)
 	{
 		return qfalse;

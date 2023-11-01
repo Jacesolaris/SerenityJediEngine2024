@@ -574,7 +574,7 @@ static void RB_DrawVerticalSurfaceSprites(shaderStage_t* stage, shaderCommands_t
 	}
 
 	// Quickly calc all the alphas and windstuff for each vertex
-	for (curvert = 0; curvert < input->numVertexes; curvert++)
+	for (curvert = 0; curvert < input->num_vertexes; curvert++)
 	{
 		VectorSubtract(ss_view_origin, input->xyz[curvert], dist);
 		ss_vert_alpha[curvert] = 1.0 - (VectorLengthSquared(dist) - fadedist2) * inv_fadediff;
@@ -583,7 +583,7 @@ static void RB_DrawVerticalSurfaceSprites(shaderStage_t* stage, shaderCommands_t
 	// Wind only needs initialization once per tess.
 	if (usewindpoint && !tess.SSInitializedWind)
 	{
-		for (curvert = 0; curvert < input->numVertexes; curvert++)
+		for (curvert = 0; curvert < input->num_vertexes; curvert++)
 		{	// Calc wind at each point
 			dist[0] = input->xyz[curvert][0] - cur_wind_point[0];
 			dist[1] = input->xyz[curvert][1] - cur_wind_point[1];
@@ -616,7 +616,7 @@ static void RB_DrawVerticalSurfaceSprites(shaderStage_t* stage, shaderCommands_t
 		tess.SSInitializedWind = qtrue;
 	}
 
-	for (curindex = 0; curindex < input->numIndexes - 2; curindex += 3)
+	for (curindex = 0; curindex < input->num_indexes - 2; curindex += 3)
 	{
 		vec3_t v3;
 		vec3_t v2;
@@ -950,7 +950,7 @@ static void RB_DrawOrientedSurfaceSprites(const shaderStage_t* stage, const shad
 	}
 
 	// Quickly calc all the alphas for each vertex
-	for (curvert = 0; curvert < input->numVertexes; curvert++)
+	for (curvert = 0; curvert < input->num_vertexes; curvert++)
 	{
 		vec3_t dist;
 		// Calc alpha at each point
@@ -958,7 +958,7 @@ static void RB_DrawOrientedSurfaceSprites(const shaderStage_t* stage, const shad
 		ss_vert_alpha[curvert] = 1.0 - (VectorLengthSquared(dist) - fadedist2) * inv_fadediff;
 	}
 
-	for (int curindex = 0; curindex < input->numIndexes - 2; curindex += 3)
+	for (int curindex = 0; curindex < input->num_indexes - 2; curindex += 3)
 	{
 		vec3_t v3;
 		vec3_t v2;
@@ -1248,7 +1248,7 @@ static void RB_DrawEffectSurfaceSprites(shaderStage_t* stage, shaderCommands_t* 
 	}
 
 	// Quickly calc all the alphas for each vertex
-	for (curvert = 0; curvert < input->numVertexes; curvert++)
+	for (curvert = 0; curvert < input->num_vertexes; curvert++)
 	{
 		vec3_t dist;
 		// Calc alpha at each point
@@ -1262,7 +1262,7 @@ static void RB_DrawEffectSurfaceSprites(shaderStage_t* stage, shaderCommands_t* 
 		//	SSVertAlpha[curvert] = fadebase - (VectorLength(dist) * fademult);
 	}
 
-	for (curindex = 0; curindex < input->numIndexes - 2; curindex += 3)
+	for (curindex = 0; curindex < input->num_indexes - 2; curindex += 3)
 	{
 		vec3_t v3;
 		vec3_t v2;

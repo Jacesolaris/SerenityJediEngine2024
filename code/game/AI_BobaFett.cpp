@@ -557,9 +557,9 @@ void Boba_FireFlameThrower(gentity_t* self)
 	}
 	gi.trace(&tr, start, self->mins, self->maxs, end, self->s.number, MASK_SHOT, static_cast<EG2_Collision>(0), 0);
 
-	gentity_t* trace_ent = &g_entities[tr.entityNum];
+	gentity_t* trace_ent = &g_entities[tr.entity_num];
 
-	if (tr.entityNum < ENTITYNUM_WORLD && trace_ent->takedamage)
+	if (tr.entity_num < ENTITYNUM_WORLD && trace_ent->takedamage)
 	{
 		G_Damage(trace_ent, self, self, dir, tr.endpos, damage,
 			DAMAGE_NO_ARMOR | DAMAGE_NO_KNOCKBACK | DAMAGE_NO_HIT_LOC | DAMAGE_IGNORE_TEAM, MOD_BURNING, HL_NONE);
@@ -765,15 +765,15 @@ void Boba_VibrobladePunch(gentity_t* self)
 		return;
 	}
 
-	mdxaBone_t boltMatrix;
+	mdxaBone_t bolt_matrix;
 	vec3_t muzzle_point;
 	vec3_t muzzle_dir;
-	gi.G2API_GetBoltMatrix(self->ghoul2, self->playerModel, self->handRBolt, &boltMatrix, self->currentAngles,
+	gi.G2API_GetBoltMatrix(self->ghoul2, self->playerModel, self->handRBolt, &bolt_matrix, self->currentAngles,
 		self->currentOrigin, cg.time ? cg.time : level.time,
 		nullptr, self->s.modelScale);
 	// work the matrix axis stuff into the original axis and origins used.
-	gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, muzzle_point);
-	gi.G2API_GiveMeVectorFromMatrix(boltMatrix, NEGATIVE_Y, muzzle_dir);
+	gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, muzzle_point);
+	gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, NEGATIVE_Y, muzzle_dir);
 
 	VectorCopy(muzzle_point, self->client->renderInfo.muzzle_point);
 	VectorCopy(muzzle_dir, self->client->renderInfo.muzzleDir);
@@ -906,16 +906,16 @@ void Boba_FireWristMissile(gentity_t* self, const int whichMissile)
 
 	if (effect)
 	{
-		mdxaBone_t boltMatrix;
+		mdxaBone_t bolt_matrix;
 		vec3_t muzzle_point;
 		vec3_t muzzle_dir;
 		gi.G2API_GetBoltMatrix(self->ghoul2, self->playerModel,
-			missileStates[whichMissile].leftBolt ? self->genericBolt3 : self->handRBolt, &boltMatrix,
+			missileStates[whichMissile].leftBolt ? self->genericBolt3 : self->handRBolt, &bolt_matrix,
 			self->currentAngles, self->currentOrigin, cg.time ? cg.time : level.time,
 			nullptr, self->s.modelScale);
 		// work the matrix axis stuff into the original axis and origins used.
-		gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, muzzle_point);
-		gi.G2API_GiveMeVectorFromMatrix(boltMatrix, NEGATIVE_Y, muzzle_dir);
+		gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, muzzle_point);
+		gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, NEGATIVE_Y, muzzle_dir);
 
 		VectorCopy(muzzle_point, self->client->renderInfo.muzzle_point);
 		VectorCopy(muzzle_dir, self->client->renderInfo.muzzleDir);
@@ -1396,7 +1396,7 @@ void Boba_Update()
 
 			if (!test_trace.startsolid &&
 				!test_trace.allsolid &&
-				test_trace.entityNum == NPC->enemy->s.number)
+				test_trace.entity_num == NPC->enemy->s.number)
 			{
 				NPCInfo->enemyLastSeenTime = level.time;
 				NPCInfo->enemyLastHeardTime = level.time;
@@ -1463,7 +1463,7 @@ void Boba_Update()
 
 	// Occasionally A Jump Turns Into A Rocket Fly
 	//---------------------------------------------
-	if (NPC->client->ps.groundentityNum == ENTITYNUM_NONE
+	if (NPC->client->ps.groundentity_num == ENTITYNUM_NONE
 		&& NPC->client->ps.forceJumpZStart
 		&& !Q_irand(0, 10))
 	{

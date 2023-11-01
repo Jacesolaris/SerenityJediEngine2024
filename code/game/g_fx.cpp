@@ -719,7 +719,6 @@ void SP_CreatePuffSystem(gentity_t* ent)
 		if (i_puff_system < 0 || i_puff_system > 1)
 		{
 			i_puff_system = 0;
-			//ri.Error( ERR_DROP, "Weather Effect: Invalid value for whichsystem key" );
 			Com_Printf("Weather Effect: Invalid value for whichsystem key\n");
 		}
 	}
@@ -1068,9 +1067,9 @@ void fx_target_beam_fire(gentity_t* ent)
 
 	if (trace.fraction < 1.0)
 	{
-		if (trace.entityNum < ENTITYNUM_WORLD)
+		if (trace.entity_num < ENTITYNUM_WORLD)
 		{
-			gentity_t* victim = &g_entities[trace.entityNum];
+			gentity_t* victim = &g_entities[trace.entity_num];
 			if (victim && victim->takedamage)
 			{
 				if (ent->spawnflags & 4) // NO_KNOCKBACK

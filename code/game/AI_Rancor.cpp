@@ -39,15 +39,15 @@ constexpr auto LSTATE_WAITING = 1;
 constexpr auto SPF_RANCOR_MUTANT = 1;
 constexpr auto SPF_RANCOR_FASTKILL = 2;
 
-extern qboolean G_EntIsBreakable(int entityNum, const gentity_t* breaker);
+extern qboolean G_EntIsBreakable(int entity_num, const gentity_t* breaker);
 extern cvar_t* g_dismemberment;
 extern cvar_t* g_bobaDebug;
 
 void Rancor_Attack(float distance, qboolean do_charge, qboolean aim_at_blocked_entity);
 extern void G_Knockdown(gentity_t* self, gentity_t* attacker, const vec3_t push_dir, float strength, qboolean break_saber_lock);
 extern qboolean G_DoDismemberment(gentity_t* self, vec3_t point, int mod, int hit_loc, qboolean force = qfalse);
-extern float NPC_EntRangeFromBolt(const gentity_t* targ_ent, int boltIndex);
-extern int NPC_GetEntsNearBolt(gentity_t** radius_ents, float radius, int boltIndex, vec3_t bolt_org);
+extern float NPC_EntRangeFromBolt(const gentity_t* targ_ent, int bolt_index);
+extern int NPC_GetEntsNearBolt(gentity_t** radius_ents, float radius, int bolt_index, vec3_t bolt_org);
 /*
 -------------------------
 NPC_Rancor_Precache
@@ -99,11 +99,11 @@ qboolean Rancor_CheckAhead(vec3_t end)
 	if (trace.allsolid == qfalse && trace.startsolid == qfalse && trace.fraction == 1.0f)
 		return qtrue;
 
-	if (trace.entityNum < ENTITYNUM_WORLD
-		&& G_EntIsBreakable(trace.entityNum, NPC))
+	if (trace.entity_num < ENTITYNUM_WORLD
+		&& G_EntIsBreakable(trace.entity_num, NPC))
 	{
 		//breakable brush in our way, break it
-		//	NPCInfo->blockedEntity = &g_entities[trace.entityNum];
+		//	NPCInfo->blockedEntity = &g_entities[trace.entity_num];
 		return qtrue;
 	}
 
@@ -324,7 +324,7 @@ void Rancor_DropVictim(gentity_t* self)
 	self->count = 0; //drop him
 }
 
-void Rancor_Swing(const int boltIndex, const qboolean try_grab)
+void Rancor_Swing(const int bolt_index, const qboolean try_grab)
 {
 	gentity_t* radius_ents[128];
 	const float radius = NPC->spawnflags & SPF_RANCOR_MUTANT ? 200 : 88;
@@ -335,7 +335,7 @@ void Rancor_Swing(const int boltIndex, const qboolean try_grab)
 	VectorCopy(NPC->currentOrigin, origin_up);
 	origin_up[2] += NPC->maxs[2] * 0.75f;
 
-	const int num_ents = NPC_GetEntsNearBolt(radius_ents, radius, boltIndex, bolt_org);
+	const int num_ents = NPC_GetEntsNearBolt(radius_ents, radius, bolt_index, bolt_org);
 
 	//attacking a breakable brush
 	trace_t trace;
@@ -350,9 +350,9 @@ void Rancor_Swing(const int boltIndex, const qboolean try_grab)
 	//remember pos3 for the trace from last hand pos to current hand pos next time
 	VectorCopy(bolt_org, NPC->pos3);
 	//FIXME: also do a trace TO the bolt from where we are...?
-	if (G_EntIsBreakable(trace.entityNum, NPC))
+	if (G_EntIsBreakable(trace.entity_num, NPC))
 	{
-		G_Damage(&g_entities[trace.entityNum], NPC, NPC, vec3_origin, bolt_org, 100, 0, MOD_MELEE);
+		G_Damage(&g_entities[trace.entity_num], NPC, NPC, vec3_origin, bolt_org, 100, 0, MOD_MELEE);
 	}
 	else
 	{
@@ -364,9 +364,9 @@ void Rancor_Swing(const int boltIndex, const qboolean try_grab)
 			G_DebugLine(originUp, bolt_org, 1000, 0x000000ff);
 		}
 #endif
-		if (G_EntIsBreakable(trace.entityNum, NPC))
+		if (G_EntIsBreakable(trace.entity_num, NPC))
 		{
-			G_Damage(&g_entities[trace.entityNum], NPC, NPC, vec3_origin, bolt_org, 200, 0, MOD_MELEE);
+			G_Damage(&g_entities[trace.entity_num], NPC, NPC, vec3_origin, bolt_org, 200, 0, MOD_MELEE);
 		}
 	}
 
@@ -513,9 +513,9 @@ void Rancor_Smash()
 	//remember pos3 for the trace from last hand pos to current hand pos next time
 	VectorCopy(bolt_org, NPC->pos3);
 	//FIXME: also do a trace TO the bolt from where we are...?
-	if (G_EntIsBreakable(trace.entityNum, NPC))
+	if (G_EntIsBreakable(trace.entity_num, NPC))
 	{
-		G_Damage(&g_entities[trace.entityNum], NPC, NPC, vec3_origin, bolt_org, 200, 0, MOD_MELEE);
+		G_Damage(&g_entities[trace.entity_num], NPC, NPC, vec3_origin, bolt_org, 200, 0, MOD_MELEE);
 	}
 	else
 	{
@@ -528,9 +528,9 @@ void Rancor_Smash()
 			G_DebugLine(NPC->currentOrigin, bolt_org, 1000, 0x000000ff);
 		}
 #endif
-		if (G_EntIsBreakable(trace.entityNum, NPC))
+		if (G_EntIsBreakable(trace.entity_num, NPC))
 		{
-			G_Damage(&g_entities[trace.entityNum], NPC, NPC, vec3_origin, bolt_org, 200, 0, MOD_MELEE);
+			G_Damage(&g_entities[trace.entity_num], NPC, NPC, vec3_origin, bolt_org, 200, 0, MOD_MELEE);
 		}
 	}
 
@@ -601,7 +601,7 @@ void Rancor_Smash()
 				&& radius_ents[i]->client->NPC_class != CLASS_ATST)
 			{
 				if (dist_sq < half_rad_squared
-					|| radius_ents[i]->client->ps.groundentityNum != ENTITYNUM_NONE)
+					|| radius_ents[i]->client->ps.groundentity_num != ENTITYNUM_NONE)
 				{
 					//within range of my fist or withing ground-shaking range and not in the air
 					if (NPC->spawnflags & SPF_RANCOR_MUTANT)
@@ -820,7 +820,7 @@ void Rancor_Attack(const float distance, const qboolean do_charge, const qboolea
 				AngleVectors(yaw_ang, fwd, nullptr, nullptr);
 				VectorScale(fwd, distance * 1.5f, NPC->client->ps.velocity);
 				NPC->client->ps.velocity[2] = 150;
-				NPC->client->ps.groundentityNum = ENTITYNUM_NONE;
+				NPC->client->ps.groundentity_num = ENTITYNUM_NONE;
 				if (NPC->enemy && NPC->enemy->s.number == 0)
 				{
 					//don't attack the player again for a bit
@@ -1318,7 +1318,7 @@ qboolean Rancor_AttackBBrush()
 	{
 		//close enough to just hit it
 		trace.fraction = 0.0f;
-		trace.entityNum = NPCInfo->blockedEntity->s.number;
+		trace.entity_num = NPCInfo->blockedEntity->s.number;
 	}
 	else
 	{
@@ -1334,7 +1334,7 @@ qboolean Rancor_AttackBBrush()
 		}
 	}
 	if (trace.fraction >= 1.0f //too far away
-		|| trace.entityNum != NPCInfo->blockedEntity->s.number) //OR blocked by something else
+		|| trace.entity_num != NPCInfo->blockedEntity->s.number) //OR blocked by something else
 	{
 		//keep moving towards it
 		ucmd.buttons &= ~BUTTON_WALKING; // Unset from MoveToGoal()
@@ -1343,7 +1343,7 @@ qboolean Rancor_AttackBBrush()
 		STEER::AvoidCollisions(NPC);
 		STEER::DeActivate(NPC, &ucmd);
 	}
-	else if (trace.entityNum == NPCInfo->blockedEntity->s.number)
+	else if (trace.entity_num == NPCInfo->blockedEntity->s.number)
 	{
 		//close enough, smash it!
 		Rancor_Attack(trace.fraction * check_dist, qfalse, qtrue); //FIXME: maybe charge at it, smash through?
@@ -1352,13 +1352,13 @@ qboolean Rancor_AttackBBrush()
 	}
 	else
 	{
-		//Com_Printf( S_COLOR_RED"RANCOR cannot reach intended breakable %s, blocked by %s\n", NPC->blockedEntity->targetname, g_entities[trace.entityNum].classname );
-		if (G_EntIsBreakable(trace.entityNum, NPC))
+		//Com_Printf( S_COLOR_RED"RANCOR cannot reach intended breakable %s, blocked by %s\n", NPC->blockedEntity->targetname, g_entities[trace.entity_num].classname );
+		if (G_EntIsBreakable(trace.entity_num, NPC))
 		{
 			//oh, well, smash that, then
-			//G_SetEnemy( NPC, &g_entities[trace.entityNum] );
+			//G_SetEnemy( NPC, &g_entities[trace.entity_num] );
 			gentity_t* prevblockedEnt = NPCInfo->blockedEntity;
-			NPCInfo->blockedEntity = &g_entities[trace.entityNum];
+			NPCInfo->blockedEntity = &g_entities[trace.entity_num];
 			Rancor_Attack(trace.fraction * check_dist, qfalse, qtrue); //FIXME: maybe charge at it, smash through?
 			TIMER_Remove(NPC, "attackDebounce"); //don't wait on these
 			NPCInfo->enemyLastSeenTime = level.time;
@@ -1377,24 +1377,24 @@ void Rancor_FireBreathAttack()
 {
 	const int damage = Q_irand(10, 15);
 	trace_t tr;
-	mdxaBone_t boltMatrix;
+	mdxaBone_t bolt_matrix;
 	vec3_t start, end, dir;
 	constexpr vec3_t trace_maxs = { 4, 4, 4 };
 	constexpr vec3_t trace_mins = { -4, -4, -4 };
 	const vec3_t ranc_angles = { 0, NPC->client->ps.viewangles[YAW], 0 };
 
 	gi.G2API_GetBoltMatrix(NPC->ghoul2, NPC->playerModel, NPC->gutBolt,
-		&boltMatrix, ranc_angles, NPC->currentOrigin, cg.time ? cg.time : level.time,
+		&bolt_matrix, ranc_angles, NPC->currentOrigin, cg.time ? cg.time : level.time,
 		nullptr, NPC->s.modelScale);
 
-	gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, start);
-	gi.G2API_GiveMeVectorFromMatrix(boltMatrix, NEGATIVE_Z, dir);
+	gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, start);
+	gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, NEGATIVE_Z, dir);
 	VectorMA(start, 512, dir, end);
 
 	gi.trace(&tr, start, trace_mins, trace_maxs, end, NPC->s.number, MASK_SHOT, static_cast<EG2_Collision>(0), 0);
 
-	gentity_t* trace_ent = &g_entities[tr.entityNum];
-	if (tr.entityNum < ENTITYNUM_WORLD
+	gentity_t* trace_ent = &g_entities[tr.entity_num];
+	if (tr.entity_num < ENTITYNUM_WORLD
 		&& trace_ent->takedamage
 		&& trace_ent->client)
 	{

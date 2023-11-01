@@ -445,7 +445,7 @@ using fogParms_t = struct fogParms_s
 using shader_t = struct shader_s
 {
 	char name[MAX_QPATH]; // game path, including extension
-	int lightmapIndex[MAXLIGHTMAPS]; // for a shader to match, both name and lightmapIndex must match // ded mp
+	int lightmapIndex[MAXLIGHTMAPS]; // for a shader to match, both name and lightmapIndex must match
 	byte styles[MAXLIGHTMAPS];
 
 	int index; // this shader == tr.shaders[index]
@@ -706,7 +706,7 @@ using srfSurfaceFace_t = struct srfSurfaceFace_s
 	int dlight_bits;
 
 	// triangle definitions (no normals at points)
-	int numPoints;
+	int num_points;
 	int numIndices;
 	int ofsIndices;
 	float points[1][VERTEXSIZE]; // variable sized
@@ -727,7 +727,7 @@ using srfTriangles_t = struct srfTriangles_s
 	//	float			radius;
 
 	// triangle definitions
-	int numIndexes;
+	int num_indexes;
 	int* indexes;
 
 	int numVerts;
@@ -906,7 +906,7 @@ void R_ModelInit();
 void R_InitDecals();
 
 model_t* R_GetModelByHandle(qhandle_t index);
-int R_LerpTag(orientation_t* tag, qhandle_t handle, int startFrame, int endFrame,
+int R_LerpTag(orientation_t* tag, qhandle_t handle, int start_frame, int end_frame,
 	float frac, const char* tagName);
 void R_ModelBounds(qhandle_t handle, vec3_t mins, vec3_t maxs);
 
@@ -1072,9 +1072,9 @@ using trGlobals_t = struct trGlobals_s
 
 	trRefEntity_t* currentEntity;
 	trRefEntity_t worldEntity; // point currentEntity at this when rendering world
-	int currententityNum;
-	int shiftedentityNum; // currententityNum << QSORT_ENTITYNUM_SHIFT
-	model_t* currentModel;
+	int currententity_num;
+	int shiftedentity_num; // currententity_num << QSORT_ENTITYNUM_SHIFT
+	model_t* current_model;
 
 	viewParms_t viewParms;
 
@@ -1300,7 +1300,7 @@ void R_AddMD3Surfaces(trRefEntity_t* ent);
 
 void R_AddPolygonSurfaces(void);
 
-void R_DecomposeSort(unsigned sort, int* entityNum, shader_t** shader, int* fogNum, int* dlightMap);
+void R_DecomposeSort(unsigned sort, int* entity_num, shader_t** shader, int* fogNum, int* dlightMap);
 
 void R_AddDrawSurf(surfaceType_t* surface, shader_t* shader, int fogIndex, int dlightMap);
 
@@ -1311,8 +1311,8 @@ void R_LocalNormalToWorld(const vec3_t local, vec3_t world);
 void R_LocalPointToWorld(const vec3_t local, vec3_t world);
 void R_WorldNormalToEntity(const vec3_t worldvec, vec3_t entvec);
 int R_CullLocalBox(const vec3_t bounds[2]);
-int R_CullPointAndRadius(const vec3_t pt, const float radius);
-int R_CullLocalPointAndRadius(const vec3_t pt, const float radius);
+int R_CullPointAndRadius(const vec3_t pt, float radius);
+int R_CullLocalPointAndRadius(const vec3_t pt, float radius);
 
 void R_RotateForEntity(const trRefEntity_t* ent, const viewParms_t* viewParms, orientationr_t* ori);
 
@@ -1321,11 +1321,11 @@ void R_RotateForEntity(const trRefEntity_t* ent, const viewParms_t* viewParms, o
 */
 void GL_Bind(image_t* image);
 void GL_SetDefaultState(void);
-void GL_SelectTexture(const int unit);
+void GL_SelectTexture(int unit);
 void GL_TextureMode(const char* string);
 void GL_CheckErrors(void);
-void GL_State(const uint32_t stateBits);
-void GL_TexEnv(const int env);
+void GL_State(uint32_t stateBits);
+void GL_TexEnv(int env);
 void GL_Cull(int cullType);
 
 #define GLS_SRCBLEND_ZERO						0x00000001
@@ -1360,7 +1360,7 @@ void GL_Cull(int cullType);
 #define GLS_ATEST_LT_80							0x20000000
 #define GLS_ATEST_GE_80							0x40000000
 #define GLS_ATEST_GE_C0							0x80000000
-#define		GLS_atestBits						0xF0000000
+#define		GLS_ATEST_BITS						0xF0000000
 
 #define GLS_DEFAULT			GLS_DEPTHMASK_TRUE
 #define GLS_ALPHA			(GLS_SRCBLEND_SRC_ALPHA | GLS_DSTBLEND_ONE_MINUS_SRC_ALPHA)
@@ -1416,7 +1416,7 @@ void R_InitImages();
 void R_DeleteTextures();
 float R_SumOfUsedImages(qboolean b_use_format);
 void R_InitSkins(void);
-skin_t* R_GetSkinByHandle(const qhandle_t hSkin);
+skin_t* R_GetSkinByHandle(qhandle_t h_skin);
 const void* RB_TakeVideoFrameCmd(const void* data);
 void RE_HunkClearCrap(void);
 
@@ -1429,18 +1429,18 @@ extern const int lightmapsVertex[MAXLIGHTMAPS];
 extern const int lightmapsFullBright[MAXLIGHTMAPS];
 extern const byte stylesDefault[MAXLIGHTMAPS];
 
-qhandle_t RE_RegisterShaderLightMap(const char* name, const int* lightmapIndex, const byte* styles);
+qhandle_t RE_RegisterShaderLightMap(const char* name, const int* lightmap_index, const byte* styles);
 qhandle_t RE_RegisterShader(const char* name);
 qhandle_t RE_RegisterShaderNoMip(const char* name);
-const char* RE_ShaderNameFromIndex(const int index);
-qhandle_t RE_RegisterShaderFromImage(const char* name, const int* lightmapIndex, const byte* styles, image_t* image);
+const char* RE_ShaderNameFromIndex(int index);
+qhandle_t RE_RegisterShaderFromImage(const char* name, const int* lightmap_index, const byte* styles, image_t* image);
 
-shader_t* R_FindShader(const char* name, const int* lightmapIndex, const byte* styles, const qboolean mipRawImage);
-shader_t* R_GetShaderByHandle(const qhandle_t hShader);
+shader_t* R_FindShader(const char* name, const int* lightmap_index, const byte* styles, qboolean mip_raw_image);
+shader_t* R_GetShaderByHandle(qhandle_t hShader);
 shader_t* R_FindShaderByName(const char* name);
-void R_InitShaders(const qboolean server);
-void R_ShaderList_f(void);
-void R_RemapShader(const char* shader_name, const char* new_shader_name, const char* timeOffset);
+void R_InitShaders(qboolean server);
+void R_ShaderList_f();
+void R_RemapShader(const char* shader_name, const char* new_shader_name, const char* time_offset);
 
 /*
 ====================================================================
@@ -1490,8 +1490,8 @@ struct shaderCommands_s
 
 	int dlight_bits; // or together of all vertexdlight_bits
 
-	int numIndexes;
-	int numVertexes;
+	int num_indexes;
+	int num_vertexes;
 
 	// info extracted from current shader
 	int numPasses;
@@ -1510,14 +1510,14 @@ extern color4ub_t styleColors[MAX_LIGHT_STYLES];
 
 void RB_BeginSurface(shader_t* shader, int fogNum);
 void RB_EndSurface(void);
-void RB_CheckOverflow(const int verts, const int indexes);
-#define RB_CHECKOVERFLOW(v,i) if (tess.numVertexes + (v) >= SHADER_MAX_VERTEXES || tess.numIndexes + (i) >= SHADER_MAX_INDEXES ) {RB_CheckOverflow(v,i);}
+void RB_CheckOverflow(int verts, int indexes);
+#define RB_CHECKOVERFLOW(v,i) if (tess.num_vertexes + (v) >= SHADER_MAX_VERTEXES || tess.num_indexes + (i) >= SHADER_MAX_INDEXES ) {RB_CheckOverflow(v,i);}
 
 void RB_StageIteratorGeneric(void);
 void RB_StageIteratorSky(void);
 
 void RB_AddQuadStamp(vec3_t origin, vec3_t left, vec3_t up, byte* color);
-void RB_AddQuadStampExt(vec3_t origin, vec3_t left, vec3_t up, byte* color, const float s1, const float t1, const float s2, const float t2);
+void RB_AddQuadStampExt(vec3_t origin, vec3_t left, vec3_t up, byte* color, float s1, float t1, float s2, float t2);
 
 void RB_ShowImages(void);
 
@@ -1541,10 +1541,10 @@ LIGHTS
 ============================================================
 */
 
-void R_DlightBmodel(const bmodel_t* bmodel, const bool no_light);
+void R_DlightBmodel(const bmodel_t* bmodel, bool no_light);
 void R_SetupEntityLighting(const trRefdef_t* refdef, trRefEntity_t* ent);
-void R_TransformDlights(const int count, dlight_t* dl, const orientationr_t* ori);
-int R_LightForPoint(vec3_t point, vec3_t ambientLight, vec3_t directedLight, vec3_t lightDir);
+void R_TransformDlights(int count, dlight_t* dl, const orientationr_t* ori);
+int R_LightForPoint(vec3_t point, vec3_t ambient_light, vec3_t directed_light, vec3_t light_dir);
 
 /*
 ============================================================
@@ -1556,7 +1556,7 @@ SHADOWS
 
 void RB_ShadowTessEnd(void);
 void RB_ShadowFinish(void);
-void RB_ProjectionShadowDeform();
+void RB_ProjectionShadowDeform(void);
 
 /*
 ============================================================
@@ -1590,7 +1590,8 @@ MARKERS, POLYGON PROJECTION ON WORLD POLYGONS
 ============================================================
 */
 
-int R_MarkFragments(int numPoints, const vec3_t* points, const vec3_t projection, const int maxPoints, vec3_t pointBuffer, const int maxFragments, markFragment_t* fragmentBuffer);
+int R_MarkFragments(int num_points, const vec3_t* points, const vec3_t projection, int max_points, vec3_t point_buffer,
+	int max_fragments, markFragment_t* fragment_buffer);
 
 /*
 ============================================================
@@ -1607,7 +1608,8 @@ void RE_ClearDecals();
 void RE_AddRefEntityToScene(const refEntity_t* ent);
 void RE_AddMiniRefEntityToScene(const miniRefEntity_t* ent);
 void RE_AddPolyToScene(const qhandle_t hShader, const int numVerts, const polyVert_t* verts, const int numPolys);
-void RE_AddDecalToScene(const qhandle_t decalShader, const vec3_t origin, const vec3_t dir, const float orientation, const float red, const float green, const float blue, const float alpha, qboolean alphaFade, const float radius, const qboolean temporary);
+void RE_AddDecalToScene(qhandle_t shader, const vec3_t origin, const vec3_t dir, float orientation, float r, float g,
+	float b, float a, qboolean alpha_fade, float radius, qboolean temporary);
 void RE_AddLightToScene(const vec3_t org, float intensity, float r, float g, float b);
 void RE_AddAdditiveLightToScene(const vec3_t org, float intensity, float r, float g, float b);
 void RE_RenderScene(const refdef_t* fd);
@@ -1631,7 +1633,7 @@ public:
 #else
 	const int		ident;			// ident of this surface - required so the materials renderer knows what sort of surface this refers to
 #endif
-	CBoneCache* boneCache;
+	CBoneCache* bone_cache;
 	mdxmSurface_t* surfaceData;
 	// pointer to surface data loaded into file - only used by client renderer DO NOT USE IN GAME SIDE - if there is a vid restart this will be out of wack on the game
 #ifdef _G2_GORE
@@ -1647,7 +1649,7 @@ public:
 	CRenderableSurface& operator=(const CRenderableSurface& src)
 	{
 		ident = src.ident;
-		boneCache = src.boneCache;
+		bone_cache = src.bone_cache;
 		surfaceData = src.surfaceData;
 		alternateTex = src.alternateTex;
 		goreChain = src.goreChain;
@@ -1658,7 +1660,7 @@ public:
 
 	CRenderableSurface() :
 		ident(SF_MDX),
-		boneCache(nullptr),
+		bone_cache(nullptr),
 #ifdef _G2_GORE
 		surfaceData(nullptr),
 		alternateTex(nullptr),
@@ -1673,7 +1675,7 @@ public:
 	void Init()
 	{
 		ident = SF_MDX;
-		boneCache = nullptr;
+		bone_cache = nullptr;
 		surfaceData = nullptr;
 		alternateTex = nullptr;
 		goreChain = nullptr;

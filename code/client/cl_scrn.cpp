@@ -400,6 +400,11 @@ void SCR_Init()
 void UI_SetActiveMenu(const char* menuname, const char* menuID);
 void _UI_Refresh(int realtime);
 void UI_DrawConnect(const char* servername, const char* updateInfoString);
+
+extern cvar_t* cl_newgameplusJKA;
+extern cvar_t* cl_newgameplusJKO;
+extern cvar_t* cl_com_outcast;
+
 /*
 ==================
 SCR_DrawScreenField

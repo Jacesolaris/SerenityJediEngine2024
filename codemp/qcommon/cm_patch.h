@@ -33,7 +33,7 @@ void CM_ClearLevelPatches( void );
 struct patchCollide_s	*CM_GeneratePatchCollide( int width, int height, const vec3_t *points );
 void CM_TraceThroughPatchCollide( traceWork_t *tw, const struct patchCollide_s *pc );
 qboolean CM_PositionTestInPatchCollide( traceWork_t *tw, const struct patchCollide_s *pc );
-void CM_DrawDebugSurface( void (*drawPoly)(int color, int numPoints, flaot *points) );
+void CM_DrawDebugSurface( void (*drawPoly)(int color, int num_points, flaot *points) );
 
 Issues for collision against curved surfaces:
 
@@ -81,7 +81,7 @@ using facet_t = struct facet_s
 using patchCollide_t = struct patchCollide_s
 {
 	vec3_t bounds[2];
-	int numPlanes; // surface planes plus edge planes
+	int num_planes; // surface planes plus edge planes
 	patchPlane_t* planes;
 	int numFacets;
 	facet_t* facets;

@@ -68,7 +68,7 @@ struct jpeg_c_prep_controller {
 		JSAMPARRAY input_buf,
 		JDIMENSION* in_row_ctr,
 		JDIMENSION in_rows_avail,
-		JSAMp_image output_buf,
+		JSAMPIMAGE output_buf,
 		JDIMENSION* out_row_group_ctr,
 		JDIMENSION out_row_groups_avail));
 };
@@ -77,14 +77,14 @@ struct jpeg_c_prep_controller {
 struct jpeg_c_coef_controller {
 	JMETHOD(void, start_pass, (j_compress_ptr cinfo, J_BUF_MODE pass_mode));
 	JMETHOD(boolean, compress_data, (j_compress_ptr cinfo,
-		JSAMp_image input_buf));
+		JSAMPIMAGE input_buf));
 };
 
 /* Colorspace conversion */
 struct jpeg_color_converter {
 	JMETHOD(void, start_pass, (j_compress_ptr cinfo));
 	JMETHOD(void, color_convert, (j_compress_ptr cinfo,
-		JSAMPARRAY input_buf, JSAMp_image output_buf,
+		JSAMPARRAY input_buf, JSAMPIMAGE output_buf,
 		JDIMENSION output_row, int num_rows));
 };
 
@@ -92,8 +92,8 @@ struct jpeg_color_converter {
 struct jpeg_downsampler {
 	JMETHOD(void, start_pass, (j_compress_ptr cinfo));
 	JMETHOD(void, downsample, (j_compress_ptr cinfo,
-		JSAMp_image input_buf, JDIMENSION in_row_index,
-		JSAMp_image output_buf,
+		JSAMPIMAGE input_buf, JDIMENSION in_row_index,
+		JSAMPIMAGE output_buf,
 		JDIMENSION out_row_group_index));
 
 	boolean need_context_rows;	/* TRUE if need rows above & below */
@@ -170,7 +170,7 @@ struct jpeg_d_coef_controller {
 	JMETHOD(int, consume_data, (j_decompress_ptr cinfo));
 	JMETHOD(void, start_output_pass, (j_decompress_ptr cinfo));
 	JMETHOD(int, decompress_data, (j_decompress_ptr cinfo,
-		JSAMp_image output_buf));
+		JSAMPIMAGE output_buf));
 	/* Pointer to array of coefficient virtual arrays, or NULL if none */
 	jvirt_barray_ptr* coef_arrays;
 };
@@ -179,7 +179,7 @@ struct jpeg_d_coef_controller {
 struct jpeg_d_post_controller {
 	JMETHOD(void, start_pass, (j_decompress_ptr cinfo, J_BUF_MODE pass_mode));
 	JMETHOD(void, post_process_data, (j_decompress_ptr cinfo,
-		JSAMp_image input_buf,
+		JSAMPIMAGE input_buf,
 		JDIMENSION* in_row_group_ctr,
 		JDIMENSION in_row_groups_avail,
 		JSAMPARRAY output_buf,
@@ -230,7 +230,7 @@ struct jpeg_inverse_dct {
 struct jpeg_upsampler {
 	JMETHOD(void, start_pass, (j_decompress_ptr cinfo));
 	JMETHOD(void, upsample, (j_decompress_ptr cinfo,
-		JSAMp_image input_buf,
+		JSAMPIMAGE input_buf,
 		JDIMENSION* in_row_group_ctr,
 		JDIMENSION in_row_groups_avail,
 		JSAMPARRAY output_buf,
@@ -244,7 +244,7 @@ struct jpeg_upsampler {
 struct jpeg_color_deconverter {
 	JMETHOD(void, start_pass, (j_decompress_ptr cinfo));
 	JMETHOD(void, color_convert, (j_decompress_ptr cinfo,
-		JSAMp_image input_buf, JDIMENSION input_row,
+		JSAMPIMAGE input_buf, JDIMENSION input_row,
 		JSAMPARRAY output_buf, int num_rows));
 };
 

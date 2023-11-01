@@ -3035,7 +3035,7 @@ void WP_RemoveSaber(saberInfo_t* sabers, const int saber_num)
 	//	}
 }
 
-void WP_SetSaber(const int entNum, saberInfo_t* sabers, const int saber_num, const char* saber_name)
+void WP_SetSaber(const int ent_num, saberInfo_t* sabers, const int saber_num, const char* saber_name)
 {
 	if (!sabers)
 	{
@@ -3051,7 +3051,7 @@ void WP_SetSaber(const int entNum, saberInfo_t* sabers, const int saber_num, con
 		return;
 	}
 
-	if (entNum < MAX_CLIENTS &&
+	if (ent_num < MAX_CLIENTS &&
 		!WP_SaberValidForPlayerInMP(saber_name))
 	{
 		WP_SaberParseParms(DEFAULT_SABER, &sabers[saber_num]); //get saber info
@@ -3132,7 +3132,7 @@ void WP_SaberLoadParms()
 		trap->FS_Read(bgSaberParseTBuffer, len, f);
 		bgSaberParseTBuffer[len] = 0;
 
-		len = COM_CompressShader(bgSaberParseTBuffer);
+		len = COM_Compress(bgSaberParseTBuffer);
 
 		Q_strcat(marker, MAX_SABER_DATA_SIZE - totallen, bgSaberParseTBuffer);
 		trap->FS_Close(f);

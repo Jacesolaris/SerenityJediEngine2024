@@ -60,7 +60,7 @@ static qboolean	R_CullGrid(const srfGridMesh_t* cv) {
 		return qtrue;
 	}
 
-	if (tr.currententityNum != REFENTITYNUM_WORLD) {
+	if (tr.currententity_num != REFENTITYNUM_WORLD) {
 		sphereCull = R_CullLocalPointAndRadius(cv->localOrigin, cv->meshRadius);
 	}
 	else {
@@ -143,7 +143,7 @@ static qboolean	R_CullSurface(surfaceType_t* surface, const shader_t* shader) {
 	if (r_cullRoofFaces->integer)
 	{ //Very slow, but this is only intended for taking shots for automap images.
 		if (sface->plane.normal[2] > 0.0f &&
-			sface->numPoints > 0)
+			sface->num_points > 0)
 		{ //it's facing up I guess
 			static trace_t tr;
 			static vec3_t basePoint;
@@ -152,9 +152,9 @@ static qboolean	R_CullSurface(surfaceType_t* surface, const shader_t* shader) {
 
 			//The fact that this point is in the middle of the array has no relation to the
 			//orientation in the surface outline.
-			basePoint[0] = sface->points[sface->numPoints / 2][0];
-			basePoint[1] = sface->points[sface->numPoints / 2][1];
-			basePoint[2] = sface->points[sface->numPoints / 2][2];
+			basePoint[0] = sface->points[sface->num_points / 2][0];
+			basePoint[1] = sface->points[sface->num_points / 2][1];
+			basePoint[2] = sface->points[sface->num_points / 2][2];
 			basePoint[2] += 2.0f;
 
 			//the endpoint will be 8192 units from the chosen point
@@ -670,7 +670,7 @@ using wireframeMapSurf_t = struct wireframeMapSurf_s
 {
 	bool					completelyTransparent;
 
-	int						numPoints;
+	int						num_points;
 	wireframeSurfPoint_t* points;
 
 	wireframeMapSurf_s* next;
@@ -714,11 +714,11 @@ static void R_EvaluateWireframeSurf(const msurface_t* surf)
 	{
 		const auto face = (srfSurfaceFace_t*)surf->data;
 		float* points = &face->points[0][0];
-		const int numPoints = face->numIndices;
+		const int num_points = face->numIndices;
 		const int* indices = (int*)((byte*)face + face->ofsIndices);
 		//byte *indices = (byte *)(face + face->ofsIndices);
 
-		if (points && numPoints > 0)
+		if (points && num_points > 0)
 		{ //we can add it
 			int i = 0;
 			wireframeMapSurf_t* nextSurf = R_GetNewWireframeMapSurf();
@@ -749,7 +749,7 @@ static void R_EvaluateWireframeSurf(const msurface_t* surf)
 
 			//now go through the indices and add a point for each
 			nextSurf->points = static_cast<wireframeSurfPoint_t*>(Z_Malloc(sizeof(wireframeSurfPoint_t) * face->numIndices, TAG_ALL, qtrue));
-			nextSurf->numPoints = face->numIndices;
+			nextSurf->num_points = face->numIndices;
 			while (i < face->numIndices)
 			{
 				points = &face->points[indices[i]][0];
@@ -927,9 +927,9 @@ qboolean R_WriteWireframeMapToFile(void)
 	while (surf)
 	{
 		//memory for each point
-		requiredSize += sizeof(wireframeSurfPoint_t) * surf->numPoints;
+		requiredSize += sizeof(wireframeSurfPoint_t) * surf->num_points;
 
-		//memory for numPoints
+		//memory for num_points
 		requiredSize += sizeof(int);
 
 		surf = surf->next;
@@ -954,12 +954,12 @@ qboolean R_WriteWireframeMapToFile(void)
 	surf = g_autoMapFrame.surfs;
 	while (surf)
 	{
-		memcpy(out, surf, sizeof(wireframeSurfPoint_t) * surf->numPoints + sizeof(int));
+		memcpy(out, surf, sizeof(wireframeSurfPoint_t) * surf->num_points + sizeof(int));
 
 		//memory for each point
-		out += sizeof(wireframeSurfPoint_t) * surf->numPoints;
+		out += sizeof(wireframeSurfPoint_t) * surf->num_points;
 
-		//memory for numPoints
+		//memory for num_points
 		out += sizeof(int);
 
 		surf = surf->next;
@@ -992,16 +992,16 @@ qboolean R_GetWireframeMapFromFile(void)
 	while (i < len)
 	{
 		wireframeMapSurf_t* newSurf = R_GetNewWireframeMapSurf();
-		newSurf->points = static_cast<wireframeSurfPoint_t*>(Z_Malloc(sizeof(wireframeSurfPoint_t) * surfs->numPoints, TAG_ALL, qtrue));
+		newSurf->points = static_cast<wireframeSurfPoint_t*>(Z_Malloc(sizeof(wireframeSurfPoint_t) * surfs->num_points, TAG_ALL, qtrue));
 
 		//copy the surf data into the new surf
 		//note - the surfs->points pointer is NOT pointing to valid memory, a pointer to that
 		//pointer is actually what we want to use as the location of the point offsets.
-		memcpy(newSurf->points, &surfs->points, sizeof(wireframeSurfPoint_t) * surfs->numPoints);
-		newSurf->numPoints = surfs->numPoints;
+		memcpy(newSurf->points, &surfs->points, sizeof(wireframeSurfPoint_t) * surfs->num_points);
+		newSurf->num_points = surfs->num_points;
 
 		//the size of the point data, plus an int (the number of points)
-		const int stepBytes = sizeof(wireframeSurfPoint_t) * surfs->numPoints + sizeof(int);
+		const int stepBytes = sizeof(wireframeSurfPoint_t) * surfs->num_points + sizeof(int);
 		i += stepBytes;
 
 		//increment the pointer to the start of the next surface
@@ -1177,7 +1177,7 @@ const void* R_DrawWireframeAutomap(const void* data)
 		{ //only do this if we need to
 			i = 0;
 			s->completelyTransparent = true;
-			while (i < s->numPoints)
+			while (i < s->num_points)
 			{
 				//base the color on the elevation... for now, just check the first point height
 				if (s->points[i].xyz[2] < g_playerHeight)
@@ -1249,9 +1249,9 @@ const void* R_DrawWireframeAutomap(const void* data)
 
 		i = 0;
 		qglBegin(GL_TRIANGLES);
-		while (i < s->numPoints)
+		while (i < s->num_points)
 		{
-			if (r_autoMap->integer == 2 || s->numPoints < 3)
+			if (r_autoMap->integer == 2 || s->num_points < 3)
 			{ //line mode or not enough verts on surface
 				qglColor4f(s->points[i].color[0], s->points[i].color[1], s->points[i].color[2], s->points[i].alpha);
 			}
@@ -1618,8 +1618,8 @@ void R_AddWorldSurfaces()
 		return;
 	}
 
-	tr.currententityNum = REFENTITYNUM_WORLD;
-	tr.shiftedentityNum = tr.currententityNum << QSORT_REFENTITYNUM_SHIFT;
+	tr.currententity_num = REFENTITYNUM_WORLD;
+	tr.shiftedentity_num = tr.currententity_num << QSORT_REFENTITYNUM_SHIFT;
 
 	// determine which leaves are in the PVS / areamask
 	R_MarkLeaves();

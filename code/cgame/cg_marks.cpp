@@ -125,7 +125,10 @@ passed to the renderer.
 constexpr auto MAX_MARK_FRAGMENTS = 128;
 constexpr auto MAX_MARK_POINTS = 384;
 
-void CG_ImpactMark(const qhandle_t mark_shader, const vec3_t origin, const vec3_t dir, const float orientation, const float red, const float green, const float blue, const float alpha, const qboolean alphaFade, const float radius, const qboolean temporary)
+void CG_ImpactMark(const qhandle_t mark_shader, const vec3_t origin, const vec3_t dir, const float orientation,
+	const float red,
+	const float green, const float blue, const float alpha, const qboolean alpha_fade, const float radius,
+	const qboolean temporary)
 {
 	vec3_t axis[3]{};
 	vec3_t original_points[4]{};
@@ -164,7 +167,9 @@ void CG_ImpactMark(const qhandle_t mark_shader, const vec3_t origin, const vec3_
 
 	// get the fragments
 	VectorScale(dir, -20, projection);
-	const int num_fragments = cgi_CM_MarkFragments(4, original_points, projection, MAX_MARK_POINTS, mark_points[0], MAX_MARK_FRAGMENTS, mark_fragments);
+	const int num_fragments = cgi_CM_MarkFragments(4, original_points,
+		projection, MAX_MARK_POINTS, mark_points[0],
+		MAX_MARK_FRAGMENTS, mark_fragments);
 
 	colors[0] = red * 255;
 	colors[1] = green * 255;
@@ -178,11 +183,11 @@ void CG_ImpactMark(const qhandle_t mark_shader, const vec3_t origin, const vec3_
 
 		// we have an upper limit on the complexity of polygons
 		// that we store persistantly
-		if (mf->numPoints > MAX_VERTS_ON_POLY)
+		if (mf->num_points > MAX_VERTS_ON_POLY)
 		{
-			mf->numPoints = MAX_VERTS_ON_POLY;
+			mf->num_points = MAX_VERTS_ON_POLY;
 		}
-		for (j = 0, v = verts; j < mf->numPoints; j++, v++)
+		for (j = 0, v = verts; j < mf->num_points; j++, v++)
 		{
 			vec3_t delta;
 
@@ -200,21 +205,21 @@ void CG_ImpactMark(const qhandle_t mark_shader, const vec3_t origin, const vec3_
 		// if it is a temporary (shadow) mark, add it immediately and forget about it
 		if (temporary)
 		{
-			cgi_R_AddPolyToScene(mark_shader, mf->numPoints, verts);
+			cgi_R_AddPolyToScene(mark_shader, mf->num_points, verts);
 			continue;
 		}
 
 		// otherwise save it persistently
 		markPoly_t* mark = CG_AllocMark();
 		mark->time = cg.time;
-		mark->alphaFade = alphaFade;
+		mark->alphaFade = alpha_fade;
 		mark->markShader = mark_shader;
-		mark->poly.numVerts = mf->numPoints;
+		mark->poly.numVerts = mf->num_points;
 		mark->color[0] = colors[0]; //red;
 		mark->color[1] = colors[1]; //green;
 		mark->color[2] = colors[2]; //blue;
 		mark->color[3] = colors[3]; //alpha;
-		memcpy(mark->verts, verts, mf->numPoints * sizeof verts[0]);
+		memcpy(mark->verts, verts, mf->num_points * sizeof verts[0]);
 	}
 }
 

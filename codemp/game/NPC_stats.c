@@ -3492,7 +3492,7 @@ qboolean NPC_ParseParms(const char* npc_name, gentity_t* npc)
 	}
 	else
 	{
-		npc->s.modelIndex = G_model_index(va("models/players/%s/lower.md3", playerModel));
+		npc->s.model_index = G_model_index(va("models/players/%s/lower.md3", playerModel));
 	}
 
 	return qtrue;
@@ -3539,7 +3539,7 @@ void NPC_LoadParms(void)
 			trap->FS_Read(npcParseBuffer, len, f);
 			npcParseBuffer[len] = 0;
 
-			len = COM_CompressShader(npcParseBuffer);
+			len = COM_Compress(npcParseBuffer);
 
 			strcat(marker, npcParseBuffer);
 			strcat(marker, "\n");

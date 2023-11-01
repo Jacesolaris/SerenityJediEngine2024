@@ -177,7 +177,7 @@ jpeg_read_scanlines(const j_decompress_ptr cinfo, const JSAMPARRAY scanlines,
  */
 
 GLOBAL(JDIMENSION)
-jpeg_read_raw_data(const j_decompress_ptr cinfo, const JSAMp_image data,
+jpeg_read_raw_data(const j_decompress_ptr cinfo, const JSAMPIMAGE data,
 	const JDIMENSION max_lines)
 {
 	if (cinfo->global_state != DSTATE_RAW_OK)

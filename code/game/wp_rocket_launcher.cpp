@@ -161,7 +161,7 @@ void rocketThink(gentity_t* ent)
 		ent->random *= 0.9f;
 
 		if (ent->enemy->client
-			&& ent->enemy->client->ps.groundentityNum != ENTITYNUM_NONE)
+			&& ent->enemy->client->ps.groundentity_num != ENTITYNUM_NONE)
 		{
 			//tracking a client who's on the ground, aim at the floor...?
 			// Try to crash into the ground if we get close enough to do splash damage
@@ -246,7 +246,7 @@ void WP_FireRocket(gentity_t* ent, const qboolean alt_fire)
 
 		//Shove us backwards for half a second
 		VectorMA(ent->client->ps.velocity, -200, forward_vec, ent->client->ps.velocity);
-		ent->client->ps.groundentityNum = ENTITYNUM_NONE;
+		ent->client->ps.groundentity_num = ENTITYNUM_NONE;
 
 		if (ent->client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_HALF)
 		{

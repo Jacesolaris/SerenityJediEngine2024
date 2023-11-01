@@ -107,6 +107,8 @@ cvar_t* cl_drawRecording;
 
 vec3_t cl_windVec;
 
+cvar_t* cl_com_rend2;
+
 clientActive_t cl;
 clientConnection_t clc;
 clientStatic_t cls;
@@ -2889,6 +2891,8 @@ void CL_Init(void)
 	cl_inGameVideo = Cvar_Get("r_inGameVideo", "1", CVAR_ARCHIVE_ND);
 
 	cl_serverStatusResendTime = Cvar_Get("cl_serverStatusResendTime", "750", 0);
+
+	cl_com_rend2 = Cvar_Get("com_rend2", "0", CVAR_ARCHIVE);
 
 	// init autoswitch so the ui will have it correctly even
 	// if the cgame hasn't been started

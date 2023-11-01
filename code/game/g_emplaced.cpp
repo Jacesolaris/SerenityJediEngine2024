@@ -35,7 +35,7 @@ extern void ChangeWeapon(const gentity_t* ent, int new_weapon);
 //lock the owner into place relative to the cannon pos
 void EWebPositionUser(gentity_t* owner, gentity_t* eweb)
 {
-	mdxaBone_t boltMatrix;
+	mdxaBone_t bolt_matrix;
 	vec3_t p, p2, d;
 	trace_t tr;
 	qboolean trace_over = qtrue;
@@ -68,11 +68,11 @@ void EWebPositionUser(gentity_t* owner, gentity_t* eweb)
 		}
 	}
 	//trace over
-	gi.G2API_GetBoltMatrix(eweb->ghoul2, 0, eweb->headBolt, &boltMatrix,
+	gi.G2API_GetBoltMatrix(eweb->ghoul2, 0, eweb->headBolt, &bolt_matrix,
 		eweb->s.apos.trBase, eweb->currentOrigin,
 		cg.time ? cg.time : level.time, nullptr, eweb->s.modelScale);
-	gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, p);
-	gi.G2API_GiveMeVectorFromMatrix(boltMatrix, NEGATIVE_Y, d);
+	gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, p);
+	gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, NEGATIVE_Y, d);
 	d[2] = 0;
 	VectorNormalize(d);
 	VectorMA(p, -44.0f, d, p);
@@ -210,7 +210,7 @@ void eweb_die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int da
 	vec3_t org;
 
 	// turn off any firing animations it may have been doing
-	self->s.frame = self->startFrame = self->endFrame = 0;
+	self->s.frame = self->start_frame = self->end_frame = 0;
 	self->svFlags &= ~(SVF_ANIMATING | SVF_PLAYER_USABLE);
 
 	self->health = 0;
@@ -505,6 +505,9 @@ void SP_emplaced_eweb(gentity_t* ent)
 		POSITIVE_Z, NEGATIVE_X, NEGATIVE_Y, nullptr, 0, 0);
 	gi.G2API_SetBoneAnglesIndex(&ent->ghoul2[ent->playerModel], ent->upperLumbarBone, vec3_origin, BONE_ANGLES_POSTMULT,
 		POSITIVE_Z, NEGATIVE_X, NEGATIVE_Y, nullptr, 0, 0);
+	//gi.G2API_SetBoneAngles( &ent->ghoul2[0], "cannon_Yrot", vec3_origin, BONE_ANGLES_POSTMULT, POSITIVE_Y, POSITIVE_Z, POSITIVE_X, NULL);
+	//set the constraints for this guy as an emplaced weapon, and his constraint angles
+	//ent->s.origin2[0] = 60.0f; //60 degrees in either direction
 
 	register_item(FindItemForWeapon(WP_EMPLACED_GUN));
 	ent->s.weapon = WP_EMPLACED_GUN;
@@ -726,7 +729,7 @@ void emplaced_gun_die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker
 	vec3_t org;
 
 	// turn off any firing animations it may have been doing
-	self->s.frame = self->startFrame = self->endFrame = 0;
+	self->s.frame = self->start_frame = self->end_frame = 0;
 	self->svFlags &= ~SVF_ANIMATING;
 
 	self->health = 0;
@@ -907,15 +910,15 @@ void G_UpdateEmplacedWeaponData(gentity_t* ent)
 			ent->waypoint = chair->waypoint;
 
 			//update the actual origin of the sitter
-			mdxaBone_t boltMatrix;
+			mdxaBone_t bolt_matrix;
 			const vec3_t chair_ang = { 0, ent->client->ps.viewangles[YAW], 0 };
 
 			// Getting the seat bolt here
 			gi.G2API_GetBoltMatrix(chair->ghoul2, chair->playerModel, chair->headBolt,
-				&boltMatrix, chair_ang, chair->currentOrigin, cg.time ? cg.time : level.time,
+				&bolt_matrix, chair_ang, chair->currentOrigin, cg.time ? cg.time : level.time,
 				nullptr, chair->s.modelScale);
 			// Storing ent position, bolt position, and bolt axis
-			gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, ent->client->ps.origin);
+			gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, ent->client->ps.origin);
 			gi.linkentity(ent);
 		}
 		else if (chair->e_UseFunc == useF_eweb_use) //yeah, crappy way to check this, but...

@@ -24,6 +24,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 // cg_weaponinit.c -- events and effects dealing with weapons
 #include "cg_local.h"
 #include "fx_local.h"
+extern vmCvar_t cg_com_rend2;
 
 /*
 ==========================
@@ -43,9 +44,9 @@ void CG_GrappleTrail(centity_t* ent, const weaponInfo_t* wi)
 
 	memset(&beam, 0, sizeof beam);
 	//FIXME adjust for muzzle position
-	VectorCopy(cg_entities[ent->currentState.otherentityNum].lerpOrigin, beam.origin);
+	VectorCopy(cg_entities[ent->currentState.otherentity_num].lerpOrigin, beam.origin);
 	beam.origin[2] += 26;
-	AngleVectors(cg_entities[ent->currentState.otherentityNum].lerpAngles, forward, NULL, up);
+	AngleVectors(cg_entities[ent->currentState.otherentity_num].lerpAngles, forward, NULL, up);
 	VectorMA(beam.origin, -6, up, beam.origin);
 	VectorCopy(origin, beam.oldorigin);
 
@@ -76,9 +77,9 @@ void CG_StunTrail(centity_t* ent, const weaponInfo_t* wi)
 
 	memset(&beam, 0, sizeof beam);
 	//FIXME adjust for muzzle position
-	VectorCopy(cg_entities[ent->currentState.otherentityNum].lerpOrigin, beam.origin);
+	VectorCopy(cg_entities[ent->currentState.otherentity_num].lerpOrigin, beam.origin);
 	beam.origin[2] += 26;
-	AngleVectors(cg_entities[ent->currentState.otherentityNum].lerpAngles, forward, NULL, up);
+	AngleVectors(cg_entities[ent->currentState.otherentity_num].lerpAngles, forward, NULL, up);
 	VectorMA(beam.origin, -6, up, beam.origin);
 	VectorCopy(origin, beam.oldorigin);
 

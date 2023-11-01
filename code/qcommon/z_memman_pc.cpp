@@ -76,7 +76,7 @@ using zoneTail_t = struct
 
 static inline zoneTail_t* ZoneTailFromHeader(zoneHeader_t* pHeader)
 {
-	return reinterpret_cast<zoneTail_t*>(reinterpret_cast<char*>(pHeader) + sizeof(*pHeader) + pHeader->iSize);
+	return (zoneTail_t*)((char*)pHeader + sizeof * pHeader + pHeader->iSize);
 }
 
 #ifdef DETAILED_ZONE_DEBUG_CODE
@@ -92,7 +92,7 @@ using zoneStats_t = struct zoneStats_s
 	// I'm keeping these updated on the fly, since it's quicker for cache-pool
 	//	purposes rather than recalculating each time...
 	//
-	int i_sizesPerTag[TAG_COUNT];
+	int iSizesPerTag[TAG_COUNT];
 	int iCountsPerTag[TAG_COUNT];
 };
 
@@ -141,7 +141,7 @@ int Z_Validate()
 			&& pMemory->eTag != TAG_MODEL_GLA)
 			//don't bother with disk caches as they've already been hit or will be thrown out next
 		{
-			auto memstart = reinterpret_cast<unsigned char*>(pMemory);
+			auto memstart = (unsigned char*)pMemory;
 			int totalSize = pMemory->iSize;
 			while (totalSize > 4096)
 			{
@@ -239,7 +239,7 @@ extern refexport_t re;
 #ifdef DEBUG_ZONE_ALLOCS
 void* _D_Z_Malloc(const int iSize, const memtag_t eTag, const qboolean bZeroit, const char* psFile, const int iLine)
 #else
-void* Z_Malloc(const int iSize, const memtag_t eTag, const qboolean bZeroit, const int iUnusedAlign)
+void* Z_Malloc(const int iSize, const memtag_t eTag, const qboolean bZeroit, const int unusedAlign)
 #endif
 {
 	gbMemFreeupOccured = qfalse;
@@ -378,7 +378,7 @@ void* Z_Malloc(const int iSize, const memtag_t eTag, const qboolean bZeroit, con
 	//
 	TheZone.Stats.iCurrent += iSize;
 	TheZone.Stats.iCount++;
-	TheZone.Stats.i_sizesPerTag[eTag] += iSize;
+	TheZone.Stats.iSizesPerTag[eTag] += iSize;
 	TheZone.Stats.iCountsPerTag[eTag]++;
 
 	if (TheZone.Stats.iCurrent > TheZone.Stats.iPeak)
@@ -428,7 +428,7 @@ void Z_MorphMallocTag(void* pv_address, const memtag_t eDesiredTag)
 	//
 	//	TheZone.Stats.iCurrent	- unchanged
 	//	TheZone.Stats.iCount	- unchanged
-	TheZone.Stats.i_sizesPerTag[pMemory->eTag] -= pMemory->iSize;
+	TheZone.Stats.iSizesPerTag[pMemory->eTag] -= pMemory->iSize;
 	TheZone.Stats.iCountsPerTag[pMemory->eTag]--;
 
 	// morph...
@@ -439,7 +439,7 @@ void Z_MorphMallocTag(void* pv_address, const memtag_t eDesiredTag)
 	//
 	//	TheZone.Stats.iCurrent	- unchanged
 	//	TheZone.Stats.iCount	- unchanged
-	TheZone.Stats.i_sizesPerTag[pMemory->eTag] += pMemory->iSize;
+	TheZone.Stats.iSizesPerTag[pMemory->eTag] += pMemory->iSize;
 	TheZone.Stats.iCountsPerTag[pMemory->eTag]++;
 }
 
@@ -452,7 +452,7 @@ static int Zone_FreeBlock(zoneHeader_t* pMemory)
 		//
 		TheZone.Stats.iCount--;
 		TheZone.Stats.iCurrent -= pMemory->iSize;
-		TheZone.Stats.i_sizesPerTag[pMemory->eTag] -= pMemory->iSize;
+		TheZone.Stats.iSizesPerTag[pMemory->eTag] -= pMemory->iSize;
 		TheZone.Stats.iCountsPerTag[pMemory->eTag]--;
 
 		// Sanity checks...
@@ -602,17 +602,13 @@ int Z_Free(void* pv_address)
 
 int Z_MemSize(const memtag_t eTag)
 {
-	return TheZone.Stats.i_sizesPerTag[eTag];
+	return TheZone.Stats.iSizesPerTag[eTag];
 }
 
 // Frees all blocks with the specified tag...
 //
 void Z_TagFree(const memtag_t eTag)
 {
-	//#ifdef _DEBUG
-	//	int iZoneBlocks = TheZone.Stats.iCount;
-	//#endif
-
 	zoneHeader_t* pMemory = TheZone.Header.pNext;
 	while (pMemory)
 	{
@@ -690,7 +686,7 @@ static void Z_Details_f()
 	for (int i = 0; i < TAG_COUNT; i++)
 	{
 		const int iThisCount = TheZone.Stats.iCountsPerTag[i];
-		const int iThisSize = TheZone.Stats.i_sizesPerTag[i];
+		const int iThisSize = TheZone.Stats.iSizesPerTag[i];
 
 		if (iThisCount)
 		{
@@ -955,17 +951,19 @@ void Com_TouchMemory()
 {
 	Z_Validate();
 
+	//start = Sys_Milliseconds();
+
 	int sum = 0;
 	int totalTouched = 0;
 
 	zoneHeader_t* pMemory = TheZone.Header.pNext;
 	while (pMemory)
 	{
-		const auto pMem = reinterpret_cast<byte*>(&pMemory[1]);
+		const auto pMem = (byte*)&pMemory[1];
 		const int j = pMemory->iSize >> 2;
 		for (int i = 0; i < j; i += 64)
 		{
-			sum += reinterpret_cast<int*>(pMem)[i];
+			sum += ((int*)pMem)[i];
 		}
 		totalTouched += pMemory->iSize;
 		pMemory = pMemory->pNext;

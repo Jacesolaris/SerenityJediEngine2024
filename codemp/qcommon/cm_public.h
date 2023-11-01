@@ -29,22 +29,22 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 void CM_LoadMap(const char* name, qboolean clientload, int* checksum);
 
 void CM_ClearMap(void);
-clipHandle_t CM_InlineModel(int index); // 0 = world, 1 + are bmodels
-clipHandle_t CM_TempBoxModel(const vec3_t mins, const vec3_t maxs, int capsule);
+clip_handle_t CM_InlineModel(int index); // 0 = world, 1 + are bmodels
+clip_handle_t CM_TempBoxModel(const vec3_t mins, const vec3_t maxs, int capsule);
 
-void CM_ModelBounds(clipHandle_t model, vec3_t mins, vec3_t maxs);
+void CM_ModelBounds(clip_handle_t model, vec3_t mins, vec3_t maxs);
 
 int CM_NumInlineModels(void);
 char* CM_EntityString(void);
 
 // returns an ORed contents mask
-int CM_PointContents(const vec3_t p, clipHandle_t model);
-int CM_TransformedPointContents(const vec3_t p, clipHandle_t model, const vec3_t origin, const vec3_t angles);
+int CM_PointContents(const vec3_t p, clip_handle_t model);
+int CM_TransformedPointContents(const vec3_t p, clip_handle_t model, const vec3_t origin, const vec3_t angles);
 
 void CM_BoxTrace(trace_t* results, const vec3_t start, const vec3_t end, const vec3_t mins, const vec3_t maxs,
-	clipHandle_t model, int brushmask, int capsule);
+	clip_handle_t model, int brushmask, int capsule);
 void CM_TransformedBoxTrace(trace_t* trace, const vec3_t start, const vec3_t end, const vec3_t mins,
-	const vec3_t maxs, clipHandle_t model, int brushmask, const vec3_t origin,
+	const vec3_t maxs, clip_handle_t model, int brushmask, const vec3_t origin,
 	const vec3_t angles, int capsule);
 
 byte* CM_ClusterPVS(int cluster);
@@ -70,15 +70,15 @@ bool CM_GenericBoxCollide(const vec3pair_t abounds, const vec3pair_t bbounds);
 void CM_CalcExtents(const vec3_t start, const vec3_t end, const struct traceWork_s* tw, vec3pair_t bounds);
 
 // cm_tag.c
-int CM_LerpTag(orientation_t* tag, clipHandle_t model, int startFrame, int endFrame,
+int CM_LerpTag(orientation_t* tag, clip_handle_t model, int start_frame, int end_frame,
 	float frac, const char* tagName);
 
 // cm_marks.c
-int CM_MarkFragments(int numPoints, const vec3_t* points, const vec3_t projection,
+int CM_MarkFragments(int num_points, const vec3_t* points, const vec3_t projection,
 	int maxPoints, vec3_t pointBuffer, int maxFragments, markFragment_t* fragmentBuffer);
 
 // cm_patch.c
-void CM_DrawDebugSurface(void (*drawPoly)(int color, int numPoints, const float* points));
+void CM_DrawDebugSurface(void (*drawPoly)(int color, int num_points, const float* points));
 
 // cm_trace.cpp
 bool CM_CullWorldBox(const cplane_t* frustum, const vec3pair_t bounds);

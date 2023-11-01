@@ -153,7 +153,7 @@ passed to the renderer.
 #define	MAX_DECAL_FRAGMENTS	128
 #define	MAX_DECAL_POINTS		384
 
-void RE_AddDecalToScene(const qhandle_t decalShader, const vec3_t origin, const vec3_t dir, const float orientation, const float red, const float green, const float blue, const float alpha, qboolean alphaFade, const float radius, const qboolean temporary)
+void RE_AddDecalToScene(const qhandle_t shader, const vec3_t origin, const vec3_t dir, const float orientation, const float r, const float g, const float b, const float a, qboolean alpha_fade, const float radius, const qboolean temporary)
 {
 	matrix3_t		axis{};
 	vec3_t			original_points[4]{};
@@ -163,7 +163,7 @@ void RE_AddDecalToScene(const qhandle_t decalShader, const vec3_t origin, const 
 	vec3_t			mark_points[MAX_DECAL_POINTS]{};
 	vec3_t			projection;
 
-	assert(decalShader);
+	assert(shader);
 
 	if (r_markcount->integer <= 0 && !temporary)
 		return;
@@ -194,10 +194,10 @@ void RE_AddDecalToScene(const qhandle_t decalShader, const vec3_t origin, const 
 		projection, MAX_DECAL_POINTS, mark_points[0],
 		MAX_DECAL_FRAGMENTS, mark_fragments);
 
-	colors[0] = red * 255;
-	colors[1] = green * 255;
-	colors[2] = blue * 255;
-	colors[3] = alpha * 255;
+	colors[0] = r * 255;
+	colors[1] = g * 255;
+	colors[2] = b * 255;
+	colors[3] = a * 255;
 
 	for (i = 0, mf = mark_fragments; i < num_fragments; i++, mf++)
 	{
@@ -206,10 +206,10 @@ void RE_AddDecalToScene(const qhandle_t decalShader, const vec3_t origin, const 
 
 		// we have an upper limit on the complexity of polygons
 		// that we store persistantly
-		if (mf->numPoints > MAX_VERTS_ON_DECAL_POLY)
-			mf->numPoints = MAX_VERTS_ON_DECAL_POLY;
+		if (mf->num_points > MAX_VERTS_ON_DECAL_POLY)
+			mf->num_points = MAX_VERTS_ON_DECAL_POLY;
 
-		for (j = 0, v = verts; j < mf->numPoints; j++, v++)
+		for (j = 0, v = verts; j < mf->num_points; j++, v++)
 		{
 			vec3_t		delta;
 
@@ -226,20 +226,20 @@ void RE_AddDecalToScene(const qhandle_t decalShader, const vec3_t origin, const 
 		// if it is a temporary (shadow) mark, add it immediately and forget about it
 		if (temporary)
 		{
-			RE_AddPolyToScene(decalShader, mf->numPoints, verts, 1);
+			RE_AddPolyToScene(shader, mf->num_points, verts, 1);
 			continue;
 		}
 
 		// otherwise save it persistantly
 		decalPoly_t* decal = RE_AllocDecal(DECALPOLY_TYPE_NORMAL);
 		decal->time = tr.refdef.time;
-		decal->shader = decalShader;
-		decal->poly.numVerts = mf->numPoints;
-		decal->color[0] = red;
-		decal->color[1] = green;
-		decal->color[2] = blue;
-		decal->color[3] = alpha;
-		memcpy(decal->verts, verts, mf->numPoints * sizeof verts[0]);
+		decal->shader = shader;
+		decal->poly.numVerts = mf->num_points;
+		decal->color[0] = r;
+		decal->color[1] = g;
+		decal->color[2] = b;
+		decal->color[3] = a;
+		memcpy(decal->verts, verts, mf->num_points * sizeof verts[0]);
 	}
 }
 

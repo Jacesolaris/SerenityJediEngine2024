@@ -84,7 +84,7 @@ using bot_initmove_t = struct bot_initmove_s
 	vec3_t origin; //origin of the bot
 	vec3_t velocity; //velocity of the bot
 	vec3_t viewoffset; //view offset
-	int entityNum; //entity number of the bot
+	int entity_num; //entity number of the bot
 	int client; //client number of the bot
 	float thinktime; //time the bot thinks
 	int presencetype; //presencetype of the bot

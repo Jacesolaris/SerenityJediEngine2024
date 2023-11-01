@@ -121,7 +121,7 @@ using levelitem_t = struct levelitem_s
 	vec3_t origin;						//origin of the item
 	int goalareanum;					//area the item is in
 	vec3_t goalorigin;					//goal origin within the area
-	int entityNum;						//entity number
+	int entity_num;						//entity number
 	float timeout;						//item is removed after this time
 	levelitem_s* prev, * next;
 };
@@ -131,7 +131,7 @@ using iteminfo_t = struct iteminfo_s
 	char classname[32];					//classname of the item
 	char name[MAX_STRINGFIELD];			//name of the item
 	char model[MAX_STRINGFIELD];		//model of the item
-	int modelIndex;						//model index
+	int model_index;						//model index
 	int type;							//item type
 	int index;							//index in the inventory
 	float respawntime;					//respawn time
@@ -146,7 +146,7 @@ fielddef_t iteminfo_fields[] =
 {
 {"name", ITEMINFO_OFS(name), FT_STRING},
 {"model", ITEMINFO_OFS(model), FT_STRING},
-{"modelIndex", ITEMINFO_OFS(modelIndex), FT_INT},
+{"model_index", ITEMINFO_OFS(model_index), FT_INT},
 {"type", ITEMINFO_OFS(type), FT_INT},
 {"index", ITEMINFO_OFS(index), FT_INT},
 {"respawntime", ITEMINFO_OFS(respawntime), FT_FLOAT},
@@ -544,9 +544,9 @@ void BotInitLevelItems(void)
 	//validate the model_indexes of the item info
 	for (i = 0; i < ic->numiteminfo; i++)
 	{
-		if (!ic->iteminfo[i].modelIndex)
+		if (!ic->iteminfo[i].model_index)
 		{
-			Log_Write("item %s has modelIndex 0", ic->iteminfo[i].classname);
+			Log_Write("item %s has model_index 0", ic->iteminfo[i].classname);
 		} //end if
 	} //end for
 
@@ -603,7 +603,7 @@ void BotInitLevelItems(void)
 		//
 		li->number = ++numlevelitems;
 		li->timeout = 0;
-		li->entityNum = 0;
+		li->entity_num = 0;
 		//
 		li->flags = 0;
 		AAS_IntForBSPEpairKey(ent, "notfree", &value);
@@ -855,7 +855,7 @@ int BotGetLevelItemGoal(const int index, const char* name, bot_goal_t* goal)
 		{
 			goal->areanum = li->goalareanum;
 			VectorCopy(li->goalorigin, goal->origin);
-			goal->entityNum = li->entityNum;
+			goal->entity_num = li->entity_num;
 			VectorCopy(itemconfig->iteminfo[li->iteminfo].mins, goal->mins);
 			VectorCopy(itemconfig->iteminfo[li->iteminfo].maxs, goal->maxs);
 			goal->number = li->number;
@@ -883,7 +883,7 @@ int BotGetMapLocationGoal(char* name, bot_goal_t* goal)
 		{
 			goal->areanum = ml->areanum;
 			VectorCopy(ml->origin, goal->origin);
-			goal->entityNum = 0;
+			goal->entity_num = 0;
 			VectorCopy(mins, goal->mins);
 			VectorCopy(maxs, goal->maxs);
 			return qtrue;
@@ -909,7 +909,7 @@ int BotGetNextCampSpotGoal(int num, bot_goal_t* goal)
 		{
 			goal->areanum = cs->areanum;
 			VectorCopy(cs->origin, goal->origin);
-			goal->entityNum = 0;
+			goal->entity_num = 0;
 			VectorCopy(mins, goal->mins);
 			VectorCopy(maxs, goal->maxs);
 			return num + 1;
@@ -932,9 +932,9 @@ void BotFindEntityForLevelItem(levelitem_t* li)
 	for (int ent = AAS_NextEntity(0); ent; ent = AAS_NextEntity(ent))
 	{
 		//get the model index of the entity
-		const int modelIndex = AAS_Entitymodel_index(ent);
+		const int model_index = AAS_Entitymodel_index(ent);
 		//
-		if (!modelIndex) continue;
+		if (!model_index) continue;
 		//get info about the entity
 		AAS_EntityInfo(ent, &entinfo);
 		//if the entity is still moving
@@ -942,7 +942,7 @@ void BotFindEntityForLevelItem(levelitem_t* li)
 			entinfo.origin[1] != entinfo.lastvisorigin[1] ||
 			entinfo.origin[2] != entinfo.lastvisorigin[2]) continue;
 		//
-		if (ic->iteminfo[li->iteminfo].modelIndex == modelIndex)
+		if (ic->iteminfo[li->iteminfo].model_index == model_index)
 		{
 			vec3_t dir;
 			//check if the entity is very close
@@ -950,7 +950,7 @@ void BotFindEntityForLevelItem(levelitem_t* li)
 			if (VectorLength(dir) < 30)
 			{
 				//found an entity for this level item
-				li->entityNum = ent;
+				li->entity_num = ent;
 			} //end if
 		} //end if
 	} //end for
@@ -994,9 +994,9 @@ void BotUpdateEntityItems(void)
 	{
 		if (AAS_EntityType(ent) != ET_ITEM) continue;
 		//get the model index of the entity
-		const int modelIndex = AAS_Entitymodel_index(ent);
+		const int model_index = AAS_Entitymodel_index(ent);
 		//
-		if (!modelIndex) continue;
+		if (!model_index) continue;
 		//get info about the entity
 		AAS_EntityInfo(ent, &entinfo);
 		//FIXME: don't do this
@@ -1010,10 +1010,10 @@ void BotUpdateEntityItems(void)
 		for (li = levelitems; li; li = li->next)
 		{
 			//if the level item is linked to an entity
-			if (li->entityNum && li->entityNum == ent)
+			if (li->entity_num && li->entity_num == ent)
 			{
 				//the entity is re-used if the models are different
-				if (ic->iteminfo[li->iteminfo].modelIndex != modelIndex)
+				if (ic->iteminfo[li->iteminfo].model_index != model_index)
 				{
 					//remove this level item
 					RemoveLevelItemFromList(li);
@@ -1040,7 +1040,7 @@ void BotUpdateEntityItems(void)
 		for (li = levelitems; li; li = li->next)
 		{
 			//if this level item is already linked
-			if (li->entityNum) continue;
+			if (li->entity_num) continue;
 			//
 			if (g_gametype == GT_SINGLE_PLAYER) {
 				if (li->flags & IFL_NOTSINGLE) continue;
@@ -1052,7 +1052,7 @@ void BotUpdateEntityItems(void)
 				if (li->flags & IFL_NOTFREE) continue;
 			}
 			//if the model of the level item and the entity are the same
-			if (ic->iteminfo[li->iteminfo].modelIndex == modelIndex)
+			if (ic->iteminfo[li->iteminfo].model_index == model_index)
 			{
 				vec3_t dir;
 				//check if the entity is very close
@@ -1060,7 +1060,7 @@ void BotUpdateEntityItems(void)
 				if (VectorLength(dir) < 30)
 				{
 					//found an entity for this level item
-					li->entityNum = ent;
+					li->entity_num = ent;
 					//if the origin is different
 					if (entinfo.origin[0] != li->origin[0] ||
 						entinfo.origin[1] != li->origin[1] ||
@@ -1084,7 +1084,7 @@ void BotUpdateEntityItems(void)
 		//check if the model is from a known item
 		for (i = 0; i < ic->numiteminfo; i++)
 		{
-			if (ic->iteminfo[i].modelIndex == modelIndex)
+			if (ic->iteminfo[i].model_index == model_index)
 			{
 				break;
 			} //end if
@@ -1096,7 +1096,7 @@ void BotUpdateEntityItems(void)
 		//
 		if (!li) continue;
 		//entity number of the level item
-		li->entityNum = ent;
+		li->entity_num = ent;
 		//number for the level item
 		li->number = numlevelitems + ent;
 		//set the item info index for the level item
@@ -1123,7 +1123,7 @@ void BotUpdateEntityItems(void)
 	/*
 	for (li = levelitems; li; li = li->next)
 	{
-		if (!li->entityNum)
+		if (!li->entity_num)
 		{
 			BotFindEntityForLevelItem(li);
 		} //end if
@@ -1278,7 +1278,7 @@ int BotChooseLTGItem(const int goalstate, vec3_t origin, int* inventory, const i
 		if (!li->goalareanum)
 			continue;
 		//FIXME: is this a good thing? added this for items that never spawned into the game (f.i. CTF flags in obelisk)
-		if (!li->entityNum && !(li->flags & IFL_ROAM))
+		if (!li->entity_num && !(li->flags & IFL_ROAM))
 			continue;
 		//get the fuzzy weight function for this item
 		iteminfo = &ic->iteminfo[li->iteminfo];
@@ -1332,7 +1332,7 @@ int BotChooseLTGItem(const int goalstate, vec3_t origin, int* inventory, const i
 			{
 				VectorSet(goal.mins, -15, -15, -15);
 				VectorSet(goal.maxs, 15, 15, 15);
-				goal.entityNum = 0;
+				goal.entity_num = 0;
 				goal.number = 0;
 				goal.flags = GFL_ROAM;
 				goal.iteminfo = 0;
@@ -1354,7 +1354,7 @@ int BotChooseLTGItem(const int goalstate, vec3_t origin, int* inventory, const i
 	VectorCopy(iteminfo->mins, goal.mins);
 	VectorCopy(iteminfo->maxs, goal.maxs);
 	goal.areanum = bestitem->goalareanum;
-	goal.entityNum = bestitem->entityNum;
+	goal.entity_num = bestitem->entity_num;
 	goal.number = bestitem->number;
 	goal.flags = GFL_ITEM;
 	if (bestitem->timeout)
@@ -1446,7 +1446,7 @@ int BotChooseNBGItem(const int goalstate, vec3_t origin, int* inventory, const i
 		if (!li->goalareanum)
 			continue;
 		//FIXME: is this a good thing? added this for items that never spawned into the game (f.i. CTF flags in obelisk)
-		if (!li->entityNum && !(li->flags & IFL_ROAM))
+		if (!li->entity_num && !(li->flags & IFL_ROAM))
 			continue;
 		//get the fuzzy weight function for this item
 		iteminfo = &ic->iteminfo[li->iteminfo];
@@ -1508,7 +1508,7 @@ int BotChooseNBGItem(const int goalstate, vec3_t origin, int* inventory, const i
 	VectorCopy(iteminfo->mins, goal.mins);
 	VectorCopy(iteminfo->maxs, goal.maxs);
 	goal.areanum = bestitem->goalareanum;
-	goal.entityNum = bestitem->entityNum;
+	goal.entity_num = bestitem->entity_num;
 	goal.number = bestitem->number;
 	goal.flags = GFL_ITEM;
 	if (bestitem->timeout)
@@ -1587,11 +1587,11 @@ int BotItemGoalInVisButNotVisible(const int viewer, vec3_t eye, vec3_t viewangle
 	{
 		//the goal entity number doesn't have to be valid
 		//just assume it's valid
-		if (goal->entityNum <= 0)
+		if (goal->entity_num <= 0)
 			return qfalse;
 		//
 		//if the entity data isn't valid
-		AAS_EntityInfo(goal->entityNum, &entinfo);
+		AAS_EntityInfo(goal->entity_num, &entinfo);
 		//NOTE: for some wacko reason entities are sometimes
 		// not updated
 		//if (!entinfo.valid) return qtrue;

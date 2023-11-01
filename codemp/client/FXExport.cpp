@@ -75,13 +75,13 @@ void FX_PlayEffectID(const int id, vec3_t org, vec3_t fwd, const int vol, const 
 }
 
 void FX_PlayBoltedEffectID(const int id, vec3_t org,
-	const int boltInfo, CGhoul2Info_v* ghoul2, const int iLooptime, const qboolean isRelative)
+	const int bolt_info, CGhoul2Info_v* ghoul2, const int iLooptime, const qboolean isRelative)
 {
-	theFxScheduler.PlayEffect(id, org, nullptr, boltInfo, ghoul2, -1, -1, -1, qfalse, iLooptime, !!isRelative);
+	theFxScheduler.PlayEffect(id, org, nullptr, bolt_info, ghoul2, -1, -1, -1, qfalse, iLooptime, !!isRelative);
 }
 
 void FX_PlayEntityEffectID(const int id, vec3_t org,
-	matrix3_t axis, const int boltInfo, const int entNum, const int vol, const int rad)
+	matrix3_t axis, const int bolt_info, const int ent_num, const int vol, const int rad)
 {
 #ifdef __FXCHECKER
 	if (_isnan(org[0]) || _isnan(org[1]) || _isnan(org[2]))
@@ -90,7 +90,7 @@ void FX_PlayEntityEffectID(const int id, vec3_t org,
 	}
 #endif // __FXCHECKER
 
-	theFxScheduler.PlayEffect(id, org, axis, boltInfo, nullptr, -1, vol, rad);
+	theFxScheduler.PlayEffect(id, org, axis, bolt_info, nullptr, -1, vol, rad);
 }
 
 void FX_AddScheduledEffects(const qboolean portal)

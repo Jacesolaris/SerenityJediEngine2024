@@ -39,7 +39,7 @@ CParticle* FX_AddParticle(vec3_t org, vec3_t vel, vec3_t accel,
 	int death_id, int impact_id,
 	int kill_time, qhandle_t shader, int flags,
 	EMatImpactEffect mat_impact_fx = MATIMPACTFX_NONE, int fx_parm = -1,
-	CGhoul2Info_v* ghoul2 = nullptr, int entNum = -1, int model_num = -1, int bolt_num = -1);
+	CGhoul2Info_v* ghoul2 = nullptr, int ent_num = -1, int model_num = -1, int bolt_num = -1);
 
 CLine* FX_AddLine(vec3_t start, vec3_t end,
 	float size1, float size2, float size_parm,
@@ -47,14 +47,14 @@ CLine* FX_AddLine(vec3_t start, vec3_t end,
 	vec3_t s_rgb, vec3_t e_rgb, float rgb_parm,
 	int kill_time, qhandle_t shader, int flags,
 	EMatImpactEffect mat_impact_fx = MATIMPACTFX_NONE, int fx_parm = -1,
-	CGhoul2Info_v* ghoul2 = nullptr, int entNum = -1, int model_num = -1, int bolt_num = -1);
+	CGhoul2Info_v* ghoul2 = nullptr, int ent_num = -1, int model_num = -1, int bolt_num = -1);
 
 CElectricity* FX_AddElectricity(vec3_t start, vec3_t end, float size1, float size2, float size_parm,
 	float alpha1, float alpha2, float alpha_parm,
 	vec3_t s_rgb, vec3_t e_rgb, float rgb_parm,
 	float chaos, int kill_time, qhandle_t shader, int flags,
 	EMatImpactEffect mat_impact_fx = MATIMPACTFX_NONE, int fx_parm = -1,
-	CGhoul2Info_v* ghoul2 = nullptr, int entNum = -1, int model_num = -1, int bolt_num = -1);
+	CGhoul2Info_v* ghoul2 = nullptr, int ent_num = -1, int model_num = -1, int bolt_num = -1);
 
 CTail* FX_AddTail(vec3_t org, vec3_t vel, vec3_t accel,
 	float size1, float size2, float size_parm,
@@ -65,7 +65,7 @@ CTail* FX_AddTail(vec3_t org, vec3_t vel, vec3_t accel,
 	int death_id, int impact_id,
 	int kill_time, qhandle_t shader, int flags,
 	EMatImpactEffect mat_impact_fx = MATIMPACTFX_NONE, int fx_parm = -1,
-	CGhoul2Info_v* ghoul2 = nullptr, int entNum = -1, int model_num = -1, int bolt_num = -1);
+	CGhoul2Info_v* ghoul2 = nullptr, int ent_num = -1, int model_num = -1, int bolt_num = -1);
 
 CCylinder* FX_AddCylinder(vec3_t start, vec3_t normal,
 	float size1_s, float size1_e, float size1_parm,
@@ -75,7 +75,7 @@ CCylinder* FX_AddCylinder(vec3_t start, vec3_t normal,
 	vec3_t rgb1, vec3_t rgb2, float rgb_parm,
 	int kill_time, qhandle_t shader, int flags,
 	EMatImpactEffect mat_impact_fx = MATIMPACTFX_NONE, int fx_parm = -1,
-	CGhoul2Info_v* ghoul2 = nullptr, int entNum = -1, int model_num = -1, int bolt_num = -1,
+	CGhoul2Info_v* ghoul2 = nullptr, int ent_num = -1, int model_num = -1, int bolt_num = -1,
 	qboolean trace_end = qfalse);
 
 CEmitter* FX_AddEmitter(vec3_t org, vec3_t vel, vec3_t accel,
@@ -94,7 +94,7 @@ CLight* FX_AddLight(vec3_t org, float size1, float size2, float size_parm,
 	vec3_t rgb1, vec3_t rgb2, float rgb_parm,
 	int kill_time, int flags,
 	EMatImpactEffect mat_impact_fx = MATIMPACTFX_NONE, int fx_parm = -1,
-	CGhoul2Info_v* ghoul2 = nullptr, int entNum = -1, int model_num = -1, int bolt_num = -1);
+	CGhoul2Info_v* ghoul2 = nullptr, int ent_num = -1, int model_num = -1, int bolt_num = -1);
 
 COrientedParticle* FX_AddOrientedParticle(vec3_t org, vec3_t norm, vec3_t vel, vec3_t accel,
 	float size1, float size2, float size_parm,
@@ -105,7 +105,7 @@ COrientedParticle* FX_AddOrientedParticle(vec3_t org, vec3_t norm, vec3_t vel, v
 	int death_id, int impact_id,
 	int kill_time, qhandle_t shader, int flags,
 	EMatImpactEffect mat_impact_fx = MATIMPACTFX_NONE, int fx_parm = -1,
-	CGhoul2Info_v* ghoul2 = nullptr, int entNum = -1, int model_num = -1,
+	CGhoul2Info_v* ghoul2 = nullptr, int ent_num = -1, int model_num = -1,
 	int bolt_num = -1);
 
 CPoly* FX_AddPoly(const vec3_t* verts, const vec2_t* st, int numVerts,

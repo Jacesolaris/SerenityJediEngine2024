@@ -294,7 +294,7 @@ CM_TestCapsuleInCapsule
 capsule inside capsule check
 ==================
 */
-void CM_TestCapsuleInCapsule(traceWork_t * tw, trace_t & trace, const clipHandle_t model)
+void CM_TestCapsuleInCapsule(traceWork_t * tw, trace_t & trace, const clip_handle_t model)
 {
 	vec3_t mins, maxs;
 	vec3_t top, bottom;
@@ -369,7 +369,7 @@ CM_TestBoundingBoxInCapsule
 bounding box inside capsule check
 ==================
 */
-void CM_TestBoundingBoxInCapsule(traceWork_t * tw, trace_t & trace, const clipHandle_t model)
+void CM_TestBoundingBoxInCapsule(traceWork_t * tw, trace_t & trace, const clip_handle_t model)
 {
 	vec3_t mins, maxs, offset{}, size[2]{};
 
@@ -393,7 +393,7 @@ void CM_TestBoundingBoxInCapsule(traceWork_t * tw, trace_t & trace, const clipHa
 	VectorSet(tw->sphere.offset, 0, 0, size[1][2] - tw->sphere.radius);
 
 	// replace the capsule with the bounding box
-	const clipHandle_t h = CM_TempBoxModel(tw->size[0], tw->size[1], qfalse);
+	const clip_handle_t h = CM_TempBoxModel(tw->size[0], tw->size[1], qfalse);
 	// calculate collision
 	cmodel_t* cmod = CM_clip_handleToModel(h);
 	CM_TestInLeaf(tw, trace, &cmod->leaf, &cmg);
@@ -640,7 +640,7 @@ void CM_TraceThroughBrush(traceWork_t * tw, trace_t & trace, cbrush_t * brush, c
 			{
 				trace.fraction = tw->enterFrac;
 				trace.plane = *tw->clipplane;
-				trace.surfaceFlags = cmg.shaders[tw->leadside->shaderNum].surfaceFlags;
+				trace.surfaceFlags = cmg.shaders[tw->leadside->shader_num].surfaceFlags;
 				trace.contents = brush->contents;
 			}
 		}
@@ -961,7 +961,7 @@ CM_TraceCapsuleThroughCapsule
 capsule vs. capsule collision (not rotated)
 ================
 */
-void CM_TraceCapsuleThroughCapsule(traceWork_t * tw, trace_t & trace, const clipHandle_t model)
+void CM_TraceCapsuleThroughCapsule(traceWork_t * tw, trace_t & trace, const clip_handle_t model)
 {
 	vec3_t mins, maxs;
 	vec3_t top, bottom, starttop, startbottom, endtop, endbottom;
@@ -1026,7 +1026,7 @@ CM_TraceBoundingBoxThroughCapsule
 bounding box vs. capsule collision
 ================
 */
-void CM_TraceBoundingBoxThroughCapsule(traceWork_t * tw, trace_t & trace, const clipHandle_t model)
+void CM_TraceBoundingBoxThroughCapsule(traceWork_t * tw, trace_t & trace, const clip_handle_t model)
 {
 	vec3_t mins, maxs, offset{}, size[2]{};
 
@@ -1050,7 +1050,7 @@ void CM_TraceBoundingBoxThroughCapsule(traceWork_t * tw, trace_t & trace, const 
 	VectorSet(tw->sphere.offset, 0, 0, size[1][2] - tw->sphere.radius);
 
 	// replace the capsule with the bounding box
-	const clipHandle_t h = CM_TempBoxModel(tw->size[0], tw->size[1], qfalse);
+	const clip_handle_t h = CM_TempBoxModel(tw->size[0], tw->size[1], qfalse);
 	// calculate collision
 	cmodel_t* cmod = CM_clip_handleToModel(h);
 	CM_TraceThroughLeaf(tw, trace, &cmg, &cmod->leaf);
@@ -1293,7 +1293,7 @@ CM_Trace
 */
 void CM_Trace(trace_t * trace, const vec3_t start, const vec3_t end,
 	const vec3_t mins, const vec3_t maxs,
-	clipHandle_t model, const vec3_t origin, const int brushmask, int capsule, sphere_t * sphere)
+	clip_handle_t model, const vec3_t origin, const int brushmask, int capsule, sphere_t * sphere)
 {
 	int i;
 	traceWork_t tw;
@@ -1560,7 +1560,7 @@ CM_BoxTrace
 */
 void CM_BoxTrace(trace_t * results, const vec3_t start, const vec3_t end,
 	const vec3_t mins, const vec3_t maxs,
-	const clipHandle_t model, const int brushmask, const int capsule)
+	const clip_handle_t model, const int brushmask, const int capsule)
 {
 	CM_Trace(results, start, end, mins, maxs, model, vec3_origin, brushmask, capsule, nullptr);
 }
@@ -1575,7 +1575,7 @@ rotating entities
 */
 void CM_TransformedBoxTrace(trace_t * trace, const vec3_t start, const vec3_t end,
 	const vec3_t mins, const vec3_t maxs,
-	const clipHandle_t model, const int brushmask,
+	const clip_handle_t model, const int brushmask,
 	const vec3_t origin, const vec3_t angles, int capsule)
 {
 	vec3_t start_l{}, end_l{};

@@ -1439,7 +1439,7 @@ void Cvar_Init()
 
 	cvar_cheats = Cvar_Get("helpUsObi", "0", CVAR_SYSTEMINFO);
 
-	com_outcast = Cvar_Get("com_outcast", "0", CVAR_ARCHIVE | CVAR_SAVEGAME | CVAR_NORESTART);
+	com_outcast = Cvar_Get("com_outcast", "0", CVAR_ARCHIVE | CVAR_SAVEGAME);
 
 	g_newgameplusJKA = Cvar_Get("g_newgameplusJKA", "0", CVAR_ARCHIVE | CVAR_SAVEGAME | CVAR_NORESTART);
 
@@ -1447,7 +1447,7 @@ void Cvar_Init()
 
 	g_Weather = Cvar_Get("r_weather", "0", CVAR_ARCHIVE);
 
-	com_rend2 = Cvar_Get("com_rend2", "0", CVAR_ARCHIVE | CVAR_SAVEGAME | CVAR_NORESTART);
+	com_rend2 = Cvar_Get("com_rend2", "0", CVAR_ARCHIVE | CVAR_SAVEGAME);
 
 	Cmd_AddCommand("print", Cvar_Print_f);
 	Cmd_SetCommandCompletionFunc("print", Cvar_CompleteCvarName);

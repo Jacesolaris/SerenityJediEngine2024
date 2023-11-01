@@ -557,15 +557,15 @@ static cvarTable_t cvarTable[] =
 
 	{&ui_char_model_angle, "ui_char_model_angle", "175", nullptr, 0},
 
-	{&ui_com_outcast, "com_outcast", "0", nullptr, CVAR_ARCHIVE | CVAR_SAVEGAME | CVAR_NORESTART},
-
-	{&ui_com_rend2, "com_rend2", "0", nullptr, CVAR_ARCHIVE | CVAR_SAVEGAME | CVAR_NORESTART},
+	{&ui_com_outcast, "com_outcast", "0", nullptr, CVAR_ARCHIVE | CVAR_SAVEGAME},
 
 	{&r_ratiofix, "r_ratiofix", "0", UI_Set2DRatio, CVAR_ARCHIVE},
 
 	{&ui_g_newgameplusJKA, "g_newgameplusJKA", "0", nullptr, CVAR_ARCHIVE | CVAR_SAVEGAME | CVAR_NORESTART},
 
 	{&ui_g_newgameplusJKO, "g_newgameplusJKO", "0", nullptr, CVAR_ARCHIVE | CVAR_SAVEGAME | CVAR_NORESTART},
+
+	{&ui_com_rend2, "com_rend2", "0", nullptr, CVAR_ARCHIVE | CVAR_SAVEGAME},
 };
 
 constexpr auto FP_UPDATED_NONE = -1;
@@ -943,18 +943,18 @@ qhandle_t UI_FeederItemImage(const float feederID, const int index)
 CreateNextSaveName
 =================
 */
-static int CreateNextSaveName(char* fileName)
+static int CreateNextSaveName(char* file_name)
 {
 	// Loop through all the save games and look for the first open name
 	for (int i = 0; i < MAX_SAVELOADFILES; i++)
 	{
 #ifdef JK2_MODE
-		Com_sprintf(fileName, MAX_SAVELOADNAME, "jkii%02d", i);
+		Com_sprintf(file_name, MAX_SAVELOADNAME, "jkii%02d", i);
 #else
-		Com_sprintf(fileName, MAX_SAVELOADNAME, "jedi_%02d", i);
+		Com_sprintf(file_name, MAX_SAVELOADNAME, "jedi_%02d", i);
 #endif
 
-		if (!ui.SG_GetSaveGameComment(fileName, nullptr, nullptr))
+		if (!ui.SG_GetSaveGameComment(file_name, nullptr, nullptr))
 		{
 			return qtrue;
 		}
@@ -1078,16 +1078,16 @@ static qboolean UI_RunMenuScript(const char** args)
 		}
 		else if (Q_stricmp(name, "savegame") == 0)
 		{
-			char fileName[MAX_SAVELOADNAME];
+			char file_name[MAX_SAVELOADNAME];
 			char description[64];
 
-			CreateNextSaveName(fileName); // Get a name to save to
+			CreateNextSaveName(file_name); // Get a name to save to
 
 			// Save description line
 			ui.Cvar_VariableStringBuffer("ui_gameDesc", description, sizeof description);
 			ui.SG_StoreSaveGameComment(description);
 
-			ui.Cmd_ExecuteText(EXEC_APPEND, va("save %s\n", fileName));
+			ui.Cmd_ExecuteText(EXEC_APPEND, va("save %s\n", file_name));
 			s_savegame.saveFileCnt = -1; //force a refresh the next time around
 		}
 		else if (Q_stricmp(name, "LoadMods") == 0)
@@ -2343,13 +2343,13 @@ qboolean UI_ParseAnimationFile(const char* af_filename)
 	// parse the text
 	text_p = text;
 
-	//FIXME: have some way of playing anims backwards... negative numFrames?
+	//FIXME: have some way of playing anims backwards... negative num_frames?
 
 	//initialize anim array so that from 0 to MAX_ANIMATIONS, set default values of 0 1 0 100
 	for (int i = 0; i < MAX_ANIMATIONS; i++)
 	{
 		animations[i].firstFrame = 0;
-		animations[i].numFrames = 0;
+		animations[i].num_frames = 0;
 		animations[i].loopFrames = -1;
 		animations[i].frameLerp = 100;
 		//		animations[i].initialLerp = 100;
@@ -2395,7 +2395,7 @@ qboolean UI_ParseAnimationFile(const char* af_filename)
 		{
 			break;
 		}
-		animations[animNum].numFrames = atoi(token);
+		animations[animNum].num_frames = atoi(token);
 
 		token = COM_Parse(&text_p);
 		if (!token)
@@ -2483,11 +2483,11 @@ qboolean UI_ParseAnimFileSet(const char* animCFG, int* animFileIndex)
 	return qtrue;
 }
 
-int UI_G2SetAnim(CGhoul2Info* ghlInfo, const char* boneName, const int animNum, const qboolean freeze)
+int UI_G2SetAnim(CGhoul2Info* ghl_info, const char* bone_name, const int animNum, const qboolean freeze)
 {
 	int animIndex;
 
-	const char* gla_name = re.G2API_GetGLAName(ghlInfo);
+	const char* gla_name = re.G2API_GetGLAName(ghl_info);
 
 	if (!gla_name || !gla_name[0])
 	{
@@ -2499,15 +2499,15 @@ int UI_G2SetAnim(CGhoul2Info* ghlInfo, const char* boneName, const int animNum, 
 	if (animIndex != -1)
 	{
 		const animation_t* anim = &ui_knownAnimFileSets[animIndex].animations[animNum];
-		if (anim->numFrames <= 0)
+		if (anim->num_frames <= 0)
 		{
 			return 0;
 		}
 		const int sFrame = anim->firstFrame;
-		const int eFrame = anim->firstFrame + anim->numFrames;
+		const int eFrame = anim->firstFrame + anim->num_frames;
 		int flags = BONE_ANIM_OVERRIDE;
 		const int time = uiInfo.uiDC.realTime;
-		const float animSpeed = 50.0f / anim->frameLerp;
+		const float anim_speed = 50.0f / anim->frameLerp;
 
 		// Freeze anim if it's not looping, special hack for datapad moves menu
 		if (freeze)
@@ -2526,11 +2526,11 @@ int UI_G2SetAnim(CGhoul2Info* ghlInfo, const char* boneName, const int animNum, 
 			flags = BONE_ANIM_OVERRIDE_LOOP;
 		}
 		flags |= BONE_ANIM_BLEND;
-		constexpr int blendTime = 150;
+		constexpr int blend_time = 150;
 
-		re.G2API_SetBoneAnim(ghlInfo, boneName, sFrame, eFrame, flags, animSpeed, time, -1, blendTime);
+		re.G2API_SetBoneAnim(ghl_info, bone_name, sFrame, eFrame, flags, anim_speed, time, -1, blend_time);
 
-		return anim->frameLerp * (anim->numFrames - 2);
+		return anim->frameLerp * (anim->num_frames - 2);
 	}
 
 	return 0;

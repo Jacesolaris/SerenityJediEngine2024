@@ -32,7 +32,7 @@ extern void CG_Chunks(int owner, vec3_t origin, const vec3_t mins, const vec3_t 
 	int custom_sound = 0);
 extern void G_SetEnemy(gentity_t* self, gentity_t* enemy);
 
-extern gentity_t* G_CreateObject(gentity_t* owner, vec3_t origin, vec3_t angles, int modelIndex, int frame,
+extern gentity_t* G_CreateObject(gentity_t* owner, vec3_t origin, vec3_t angles, int model_index, int frame,
 	trType_t tr_type, int effect_id);
 
 extern qboolean player_locked;
@@ -92,7 +92,7 @@ void funcBBrushDieGo(gentity_t* ent)
 	// FIXME: flag me so I should know to do this check!
 	for (auto& g_entitie : g_entities)
 	{
-		if (g_entitie.s.groundentityNum == ent->s.number && g_entitie.s.eFlags & EF_MISSILE_STICK)
+		if (g_entitie.s.groundentity_num == ent->s.number && g_entitie.s.eFlags & EF_MISSILE_STICK)
 		{
 			G_Damage(&g_entitie, ent, ent, nullptr, nullptr, 99999, 0, MOD_CRUSH); //?? MOD?
 		}
@@ -508,7 +508,7 @@ void misc_model_breakable_die(gentity_t* self, const gentity_t* inflictor, genti
 	}
 	//NOTE: Stop any scripts that are currently running (FLUSH)... ?
 	//Turn off animation
-	self->s.frame = self->startFrame = self->endFrame = 0;
+	self->s.frame = self->start_frame = self->end_frame = 0;
 	self->svFlags &= ~SVF_ANIMATING;
 
 	self->health = 0;
@@ -1467,7 +1467,7 @@ void funcGlassDie(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, in
 	// if a missile is stuck to us, blow it up so we don't look dumb....we could, alternately, just let the missile drop off??
 	for (auto& g_entitie : g_entities)
 	{
-		if (g_entitie.s.groundentityNum == self->s.number && g_entitie.s.eFlags & EF_MISSILE_STICK)
+		if (g_entitie.s.groundentity_num == self->s.number && g_entitie.s.eFlags & EF_MISSILE_STICK)
 		{
 			G_Damage(&g_entitie, self, self, nullptr, nullptr, 99999, 0, MOD_CRUSH); //?? MOD?
 		}
@@ -1570,15 +1570,15 @@ void SP_func_glass(gentity_t* self)
 	gi.linkentity(self);
 }
 
-qboolean G_EntIsBreakable(const int entityNum, const gentity_t* breaker)
+qboolean G_EntIsBreakable(const int entity_num, const gentity_t* breaker)
 {
 	//breakable brush/model that can actually be broken
-	if (entityNum < 0 || entityNum >= ENTITYNUM_WORLD)
+	if (entity_num < 0 || entity_num >= ENTITYNUM_WORLD)
 	{
 		return qfalse;
 	}
 
-	const gentity_t* ent = &g_entities[entityNum];
+	const gentity_t* ent = &g_entities[entity_num];
 	if (!ent->takedamage)
 	{
 		return qfalse;

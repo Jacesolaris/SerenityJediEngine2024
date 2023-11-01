@@ -1248,15 +1248,15 @@ void G_DebugPrint(const int printLevel, const char* format, ...)
 
 	case WL_DEBUG:
 	{
-		int entNum = atoi(text);
+		int ent_num = atoi(text);
 
 		char* buffer = text;
 		buffer += 5;
 
-		if (entNum < 0 || entNum >= MAX_GENTITIES)
-			entNum = 0;
+		if (ent_num < 0 || ent_num >= MAX_GENTITIES)
+			ent_num = 0;
 
-		Com_Printf(S_COLOR_BLUE"DEBUG: %s(%d): %s\n", g_entities[entNum].script_targetname, entNum, buffer);
+		Com_Printf(S_COLOR_BLUE"DEBUG: %s(%d): %s\n", g_entities[ent_num].script_targetname, ent_num, buffer);
 		break;
 	}
 	default:
@@ -1980,13 +1980,13 @@ void Q3_RemoveEnt(gentity_t* victim)
 			G_FreeEntity(victim->NPC->tempGoal);
 			victim->NPC->tempGoal = NULL;
 		}
-		if (victim->client->ps.saberentityNum != ENTITYNUM_NONE && victim->client->ps.saberentityNum > 0)
+		if (victim->client->ps.saberentity_num != ENTITYNUM_NONE && victim->client->ps.saberentity_num > 0)
 		{
-			if (g_entities[victim->client->ps.saberentityNum].inuse)
+			if (g_entities[victim->client->ps.saberentity_num].inuse)
 			{
-				G_FreeEntity(&g_entities[victim->client->ps.saberentityNum]);
+				G_FreeEntity(&g_entities[victim->client->ps.saberentity_num]);
 			}
-			victim->client->ps.saberentityNum = ENTITYNUM_NONE;
+			victim->client->ps.saberentity_num = ENTITYNUM_NONE;
 		}
 		//Disappear in half a second
 		victim->think = G_FreeEntity;
@@ -2362,10 +2362,10 @@ int Q3_GetFloat(const int ent_id, int type, const char* name, float* value)
 		*value = ent->client->forced_rightmove;
 		break;
 	case SET_STARTFRAME: //## %d="0" # frame to start animation sequence on
-		*value = ent->startFrame;
+		*value = ent->start_frame;
 		break;
 	case SET_ENDFRAME: //## %d="0" # frame to end animation sequence on
-		*value = ent->endFrame;
+		*value = ent->end_frame;
 		break;
 	case SET_ANIMFRAME: //## %d="0" # of current frame
 		*value = ent->s.frame;
@@ -6818,7 +6818,7 @@ Q3_LookTarget
 ?
 ============
 */
-extern void NPC_SetLookTarget(const gentity_t* self, int entNum, int clear_time);
+extern void NPC_SetLookTarget(const gentity_t* self, int ent_num, int clear_time);
 extern void NPC_ClearLookTarget(const gentity_t* self);
 
 static void Q3_LookTarget(const int ent_id, char* targetName)
@@ -7257,10 +7257,10 @@ Q3_SetStartFrame
   Description	:
   Return type	: static void
   Argument		:  int ent_id
-  Argument		: int startFrame
+  Argument		: int start_frame
 ============
 */
-static void Q3_SetStartFrame(const int ent_id, const int startFrame)
+static void Q3_SetStartFrame(const int ent_id, const int start_frame)
 {
 	gentity_t* ent = &g_entities[ent_id];
 
@@ -7276,10 +7276,10 @@ static void Q3_SetStartFrame(const int ent_id, const int startFrame)
 		return;
 	}
 
-	if (startFrame >= 0)
+	if (start_frame >= 0)
 	{
-		ent->s.frame = startFrame;
-		ent->startFrame = startFrame;
+		ent->s.frame = start_frame;
+		ent->start_frame = start_frame;
 	}
 }
 
@@ -7289,10 +7289,10 @@ Q3_SetEndFrame
   Description	:
   Return type	: static void
   Argument		:  int ent_id
-  Argument		: int endFrame
+  Argument		: int end_frame
 ============
 */
-static void Q3_SetEndFrame(const int ent_id, const int endFrame)
+static void Q3_SetEndFrame(const int ent_id, const int end_frame)
 {
 	gentity_t* ent = &g_entities[ent_id];
 
@@ -7308,9 +7308,9 @@ static void Q3_SetEndFrame(const int ent_id, const int endFrame)
 		return;
 	}
 
-	if (endFrame >= 0)
+	if (end_frame >= 0)
 	{
-		ent->endFrame = endFrame;
+		ent->end_frame = end_frame;
 	}
 }
 
@@ -7320,7 +7320,7 @@ Q3_SetAnimFrame
   Description	:
   Return type	: static void
   Argument		:  int ent_id
-  Argument		: int startFrame
+  Argument		: int start_frame
 ============
 */
 static void Q3_SetAnimFrame(const int ent_id, const int animFrame)
@@ -7339,11 +7339,11 @@ static void Q3_SetAnimFrame(const int ent_id, const int animFrame)
 		return;
 	}
 
-	if (animFrame >= ent->endFrame)
+	if (animFrame >= ent->end_frame)
 	{
-		ent->s.frame = ent->endFrame;
+		ent->s.frame = ent->end_frame;
 	}
-	else if (animFrame >= ent->startFrame)
+	else if (animFrame >= ent->start_frame)
 	{
 		ent->s.frame = animFrame;
 	}
@@ -9078,7 +9078,7 @@ void ICam_Follow(const char* cameraGroup, const float speed, const float initLer
 		return;
 	}
 
-	//figure out the entityNums of the entities in this cameraGroup
+	//figure out the entity_nums of the entities in this cameraGroup
 	while (NULL != (from = G_Find(from, FOFS(cameraGroup), cameraGroup)))
 	{
 		if (num_subjects >= 16) //MAX_CAMERA_GROUP_SUBJECTS
@@ -9316,14 +9316,14 @@ void ToggleNPCWinterGear(gentity_t* ent)
 	//toggles the winter gear for an NPC
 	char model[MAX_QPATH];
 
-	if (!ent->s.modelIndex)
+	if (!ent->s.model_index)
 	{
 		//no model?!
 		return;
 	}
 
 	//get the model name for this NPC
-	trap->GetConfigstring(CS_MODELS + ent->s.modelIndex, model, MAX_QPATH);
+	trap->GetConfigstring(CS_MODELS + ent->s.model_index, model, MAX_QPATH);
 
 	if (WinterGear)
 	{
@@ -9340,7 +9340,7 @@ void ToggleNPCWinterGear(gentity_t* ent)
 				strcpy(skinname, "torso_g1|lower_e1\0");
 			}
 
-			ent->s.modelIndex = G_model_index(model);
+			ent->s.model_index = G_model_index(model);
 		}
 	}
 }

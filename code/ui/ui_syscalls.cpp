@@ -62,7 +62,7 @@ void trap_R_DrawStretchPic(const float x, const float y, const float w, const fl
 	ui.R_DrawStretchPic(x, y, w, h, s1, t1, s2, t2, hShader);
 }
 
-void trap_R_ModelBounds(const clipHandle_t model, vec3_t mins, vec3_t maxs)
+void trap_R_ModelBounds(const clip_handle_t model, vec3_t mins, vec3_t maxs)
 {
 	//	syscall( UI_R_MODELBOUNDS, model, mins, maxs );
 	ui.R_ModelBounds(model, mins, maxs);

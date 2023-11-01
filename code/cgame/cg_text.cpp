@@ -185,20 +185,20 @@ void CG_CaptionTextStop()
 //
 // returns 0 if failed, else strlen...
 //
-static int cg_SP_GetStringTextStringWithRetry(const char* psReference, char* psDest, const int i_sizeofDest)
+static int cg_SP_GetStringTextStringWithRetry(const char* psReference, char* psDest, const int iSizeofDest)
 {
 	if (psReference[0] == '#')
 	{
 		// then we know the striped package name is already built in, so do NOT try prepending anything else...
 		//
-		return cgi_SP_GetStringTextString(va("%s", psReference + 1), psDest, i_sizeofDest);
+		return cgi_SP_GetStringTextString(va("%s", psReference + 1), psDest, iSizeofDest);
 	}
 
 	for (auto& i : cgs.stripLevelName)
 	{
 		if (i[0]) // entry present?
 		{
-			const int iReturn = cgi_SP_GetStringTextString(va("%s_%s", i, psReference), psDest, i_sizeofDest);
+			const int iReturn = cgi_SP_GetStringTextString(va("%s_%s", i, psReference), psDest, iSizeofDest);
 			if (iReturn)
 			{
 				return iReturn;

@@ -166,7 +166,7 @@ void CG_BuildSolidList(void)
 
 static QINLINE qboolean CG_VehicleClipCheck(const centity_t* ignored, const trace_t* trace)
 {
-	if (!trace || trace->entityNum < 0 || trace->entityNum >= ENTITYNUM_WORLD)
+	if (!trace || trace->entity_num < 0 || trace->entity_num >= ENTITYNUM_WORLD)
 	{
 		//it's alright then
 		return qtrue;
@@ -183,7 +183,7 @@ static QINLINE qboolean CG_VehicleClipCheck(const centity_t* ignored, const trac
 	{
 		//see if the ignore ent is a vehicle/rider - if so, see if the ent we supposedly hit is a vehicle/rider.
 		//if they belong to each other, we don't want to collide them.
-		const centity_t* otherguy = &cg_entities[trace->entityNum];
+		const centity_t* otherguy = &cg_entities[trace->entity_num];
 
 		if (otherguy->currentState.eType != ET_PLAYER &&
 			otherguy->currentState.eType != ET_NPC)
@@ -242,7 +242,7 @@ extern void bg_vehicle_adjust_b_box_for_orientation(const Vehicle_t* veh, vec3_t
 	void (*local_trace)(trace_t* results, const vec3_t start,
 		const vec3_t minimum_mins,
 		const vec3_t maximum_maxs, const vec3_t end,
-		int pass_entityNum,
+		int pass_entity_num,
 		int content_mask)); // bg_pmove.c
 
 static void CG_ClipMoveToEntities(const vec3_t start, const vec3_t mins, const vec3_t maxs, const vec3_t end,
@@ -251,7 +251,7 @@ static void CG_ClipMoveToEntities(const vec3_t start, const vec3_t mins, const v
 	int i, x, zd, zu;
 	trace_t trace, old_trace;
 	entityState_t* ent;
-	clipHandle_t cmodel;
+	clip_handle_t cmodel;
 	vec3_t bmins, bmaxs;
 	centity_t* cent;
 	centity_t* ignored = NULL;
@@ -285,7 +285,7 @@ static void CG_ClipMoveToEntities(const vec3_t start, const vec3_t mins, const v
 		if (ent->solid == SOLID_BMODEL)
 		{
 			// special value for bmodel
-			cmodel = trap->CM_InlineModel(ent->modelIndex);
+			cmodel = trap->CM_InlineModel(ent->model_index);
 			VectorCopy(cent->lerpAngles, angles);
 			BG_EvaluateTrajectory(&cent->currentState.pos, cg.physicsTime, origin);
 		}
@@ -319,7 +319,7 @@ static void CG_ClipMoveToEntities(const vec3_t start, const vec3_t mins, const v
 		}
 
 		trap->CM_TransformedTrace(&trace, start, end, mins, maxs, cmodel, mask, origin, angles, 0);
-		trace.entityNum = trace.fraction != 1.0 ? ent->number : ENTITYNUM_NONE;
+		trace.entity_num = trace.fraction != 1.0 ? ent->number : ENTITYNUM_NONE;
 
 		if (g2_check || ignored && ignored->currentState.m_iVehicleNum)
 		{
@@ -330,7 +330,7 @@ static void CG_ClipMoveToEntities(const vec3_t start, const vec3_t mins, const v
 
 		if (trace.allsolid || trace.fraction < tr->fraction)
 		{
-			trace.entityNum = ent->number;
+			trace.entity_num = ent->number;
 			*tr = trace;
 		}
 		else if (trace.startsolid)
@@ -338,13 +338,13 @@ static void CG_ClipMoveToEntities(const vec3_t start, const vec3_t mins, const v
 			tr->startsolid = qtrue;
 
 			//rww 12-02-02
-			tr->entityNum = trace.entityNum = ent->number;
+			tr->entity_num = trace.entity_num = ent->number;
 		}
 		if (tr->allsolid)
 		{
 			if (ignored && ignored->currentState.m_iVehicleNum)
 			{
-				trace.entityNum = ent->number;
+				trace.entity_num = ent->number;
 				if (CG_VehicleClipCheck(ignored, &trace))
 				{
 					//this isn't our vehicle, we're really stuck
@@ -362,11 +362,11 @@ static void CG_ClipMoveToEntities(const vec3_t start, const vec3_t mins, const v
 
 		if (g2_check)
 		{
-			if (trace.entityNum == ent->number && cent->ghoul2)
+			if (trace.entity_num == ent->number && cent->ghoul2)
 			{
 				CG_G2TraceCollide(&trace, mins, maxs, start, end);
 
-				if (trace.entityNum == ENTITYNUM_NONE)
+				if (trace.entity_num == ENTITYNUM_NONE)
 				{
 					//g2 trace failed, so put it back where it was.
 					trace = old_trace;
@@ -378,7 +378,7 @@ static void CG_ClipMoveToEntities(const vec3_t start, const vec3_t mins, const v
 		if (ignored && ignored->currentState.m_iVehicleNum)
 		{
 			//see if this is the vehicle we hit
-			centity_t* hit = &cg_entities[trace.entityNum];
+			centity_t* hit = &cg_entities[trace.entity_num];
 			if (!CG_VehicleClipCheck(ignored, &trace))
 			{
 				//looks like it
@@ -406,13 +406,13 @@ void CG_TraceItem(trace_t* result, const vec3_t start, const vec3_t mins, const 
 	VectorSet(local_maxs, 8, 8, 16);
 
 	trap->CM_Trace(&tr, start, end, mins, maxs, 0, CONTENTS_SOLID, 0);
-	tr.entityNum = tr.fraction == 1.0f ? ENTITYNUM_NONE : ENTITYNUM_WORLD;
+	tr.entity_num = tr.fraction == 1.0f ? ENTITYNUM_NONE : ENTITYNUM_WORLD;
 
 	for (int i = 0; i < cg_numTriggerEntities; i++)
 	{
 		const centity_t* cent = cg_triggerEntities[i];
 		const entityState_t* ent = &cent->currentState;
-		const gitem_t* item = &bg_itemlist[ent->modelIndex];
+		const gitem_t* item = &bg_itemlist[ent->model_index];
 		vec3_t item_mins, item_maxs;
 
 		if (ent->number == skip_number)
@@ -432,12 +432,12 @@ void CG_TraceItem(trace_t* result, const vec3_t start, const vec3_t mins, const 
 
 		VectorAdd(local_mins, ent->origin, item_mins);
 		VectorAdd(local_maxs, ent->origin, item_maxs);
-		const clipHandle_t cmodel = trap->CM_TempModel(item_mins, item_maxs, 0);
+		const clip_handle_t cmodel = trap->CM_TempModel(item_mins, item_maxs, 0);
 		trap->CM_Trace(&tr, start, end, mins, maxs, cmodel, -1, 0);
 
 		if (tr.fraction < 1.0f)
 		{
-			tr.entityNum = ent->number;
+			tr.entity_num = ent->number;
 			break;
 		}
 	}
@@ -456,7 +456,7 @@ void CG_Trace(trace_t* result, const vec3_t start, const vec3_t mins, const vec3
 	trace_t t;
 
 	trap->CM_Trace(&t, start, end, mins, maxs, 0, mask, 0);
-	t.entityNum = t.fraction != 1.0 ? ENTITYNUM_WORLD : ENTITYNUM_NONE;
+	t.entity_num = t.fraction != 1.0 ? ENTITYNUM_WORLD : ENTITYNUM_NONE;
 	// check all other solid models
 	CG_ClipMoveToEntities(start, mins, maxs, end, skip_number, mask, &t, qfalse);
 
@@ -474,7 +474,7 @@ void CG_G2Trace(trace_t* result, const vec3_t start, const vec3_t mins, const ve
 	trace_t t;
 
 	trap->CM_Trace(&t, start, end, mins, maxs, 0, mask, 0);
-	t.entityNum = t.fraction != 1.0 ? ENTITYNUM_WORLD : ENTITYNUM_NONE;
+	t.entity_num = t.fraction != 1.0 ? ENTITYNUM_WORLD : ENTITYNUM_NONE;
 	// check all other solid models
 	CG_ClipMoveToEntities(start, mins, maxs, end, skip_number, mask, &t, qtrue);
 
@@ -486,7 +486,7 @@ void CG_G2Trace(trace_t* result, const vec3_t start, const vec3_t mins, const ve
 CG_PointContents
 ================
 */
-int CG_PointContents(const vec3_t point, const int pass_entityNum)
+int CG_PointContents(const vec3_t point, const int pass_entity_num)
 {
 	int contents = trap->CM_PointContents(point, 0);
 
@@ -496,7 +496,7 @@ int CG_PointContents(const vec3_t point, const int pass_entityNum)
 
 		const entityState_t* ent = &cent->currentState;
 
-		if (ent->number == pass_entityNum)
+		if (ent->number == pass_entity_num)
 		{
 			continue;
 		}
@@ -507,7 +507,7 @@ int CG_PointContents(const vec3_t point, const int pass_entityNum)
 			continue;
 		}
 
-		const clipHandle_t cmodel = trap->CM_InlineModel(ent->modelIndex);
+		const clip_handle_t cmodel = trap->CM_InlineModel(ent->model_index);
 		if (!cmodel)
 		{
 			continue;
@@ -674,7 +674,7 @@ static void CG_TouchItem(centity_t* cent)
 		return; // can't hold it
 	}
 
-	const gitem_t* item = &bg_itemlist[cent->currentState.modelIndex];
+	const gitem_t* item = &bg_itemlist[cent->currentState.model_index];
 
 	//Currently there is no reliable way of knowing if the client has touched a certain item before another if they are next to each other, or rather
 	//if the server has touched them in the same order. This results often in grabbing an item in the prediction and the server giving you the other
@@ -802,7 +802,7 @@ static void CG_TouchTriggerPrediction(void)
 			continue;
 		}
 
-		const clipHandle_t cmodel = trap->CM_InlineModel(ent->modelIndex);
+		const clip_handle_t cmodel = trap->CM_InlineModel(ent->model_index);
 		if (!cmodel)
 		{
 			continue;
@@ -870,7 +870,7 @@ static QINLINE void CG_EntityStateToPlayerState(entityState_t* s, playerState_t*
 	ps->eFlags = s->eFlags;
 
 	ps->saberInFlight = s->saberInFlight;
-	ps->saberentityNum = s->saberentityNum;
+	ps->saberentity_num = s->saberentity_num;
 
 	ps->fd.forcePowersActive = s->forcePowersActive;
 
@@ -892,7 +892,7 @@ static QINLINE void CG_EntityStateToPlayerState(entityState_t* s, playerState_t*
 		ps->dualBlade = qfalse;
 	}
 
-	ps->emplacedIndex = s->otherentityNum2;
+	ps->emplacedIndex = s->otherentity_num2;
 
 	ps->saber_holstered = s->saber_holstered; //reuse bool in entitystate for players differently
 
@@ -924,7 +924,7 @@ static QINLINE void CG_EntityStateToPlayerState(entityState_t* s, playerState_t*
 	}
 
 	ps->weapon = s->weapon;
-	ps->groundentityNum = s->groundentityNum;
+	ps->groundentity_num = s->groundentity_num;
 
 	for ( i = 0 ; i < MAX_POWERUPS ; i++ ) {
 		if (s->powerups & (1 << i))
@@ -1254,7 +1254,7 @@ void CG_PredictPlayerState(void)
 				vec3_t delta;
 				vec3_t adjusted;
 				CG_AdjustPositionForMover(cg.predictedVehicleState.origin,
-					cg.predictedVehicleState.groundentityNum, cg.physicsTime, cg.oldTime,
+					cg.predictedVehicleState.groundentity_num, cg.physicsTime, cg.oldTime,
 					adjusted);
 
 				if (cg_showVehMiss.integer)
@@ -1330,7 +1330,7 @@ void CG_PredictPlayerState(void)
 				vec3_t delta;
 				vec3_t adjusted;
 				CG_AdjustPositionForMover(cg.predicted_player_state.origin,
-					cg.predicted_player_state.groundentityNum, cg.physicsTime, cg.oldTime,
+					cg.predicted_player_state.groundentity_num, cg.physicsTime, cg.oldTime,
 					adjusted);
 
 				if (cg_showMiss.integer)
@@ -1551,14 +1551,14 @@ void CG_PredictPlayerState(void)
 	if (CG_Piloting(cg.predicted_player_state.m_iVehicleNum))
 	{
 		CG_AdjustPositionForMover(cg.predictedVehicleState.origin,
-			cg.predictedVehicleState.groundentityNum,
+			cg.predictedVehicleState.groundentity_num,
 			cg.physicsTime, cg.time, cg.predictedVehicleState.origin);
 	}
 	else
 	{
 		// adjust for the movement of the groundentity
 		CG_AdjustPositionForMover(cg.predicted_player_state.origin,
-			cg.predicted_player_state.groundentityNum,
+			cg.predicted_player_state.groundentity_num,
 			cg.physicsTime, cg.time, cg.predicted_player_state.origin);
 	}
 

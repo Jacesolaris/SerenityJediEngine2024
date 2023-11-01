@@ -32,8 +32,8 @@ backEndState_t	backEnd;
 bool tr_stencilled = false;
 extern qboolean tr_distortionPrePost; //tr_shadows.cpp
 extern qboolean tr_distortionNegate; //tr_shadows.cpp
-extern void RB_CaptureScreenImage(void); //tr_shadows.cpp
-extern void RB_DistortionFill(void); //tr_shadows.cpp
+extern void RB_CaptureScreenImage(); //tr_shadows.cpp
+extern void RB_DistortionFill(); //tr_shadows.cpp
 static void RB_DrawGlowOverlay();
 static void RB_BlurGlowTexture();
 
@@ -43,7 +43,7 @@ bool g_bRenderGlowingObjects = false;
 // Whether the current hardware supports dynamic glows/flares.
 bool g_bDynamicGlowSupported = false;
 
-static const float s_flipMatrix[16] = {
+static constexpr float s_flipMatrix[16] = {
 	// convert from our coordinate system (looking down X)
 	// to OpenGL's coordinate system (looking down -Z)
 	0, 0, -1, 0,
@@ -80,7 +80,7 @@ void GL_Bind(image_t* image) {
 /*
 ** GL_SelectTexture
 */
-void GL_SelectTexture(int unit)
+void GL_SelectTexture(const int unit)
 {
 	if (glState.currenttmu == unit)
 	{
@@ -125,7 +125,7 @@ void GL_SelectTexture(int unit)
 /*
 ** GL_Cull
 */
-void GL_Cull(int cullType) {
+void GL_Cull(const int cullType) {
 	if (glState.faceCulling == cullType) {
 		return;
 	}
@@ -170,7 +170,7 @@ void GL_Cull(int cullType) {
 /*
 ** GL_TexEnv
 */
-void GL_TexEnv(int env)
+void GL_TexEnv(const int env)
 {
 	if (env == glState.texEnv[glState.currenttmu])
 	{
@@ -195,7 +195,6 @@ void GL_TexEnv(int env)
 		break;
 	default:
 		Com_Error(ERR_DROP, "GL_TexEnv: invalid env '%d' passed\n", env);
-		break;
 	}
 }
 
@@ -205,9 +204,9 @@ void GL_TexEnv(int env)
 ** This routine is responsible for setting the most commonly changed state
 ** in Q3.
 */
-void GL_State(uint32_t stateBits)
+void GL_State(const uint32_t stateBits)
 {
-	uint32_t diff = stateBits ^ glState.glStateBits;
+	const uint32_t diff = stateBits ^ glState.glStateBits;
 
 	if (!diff)
 	{
@@ -234,10 +233,10 @@ void GL_State(uint32_t stateBits)
 	//
 	if (diff & (GLS_SRCBLEND_BITS | GLS_DSTBLEND_BITS))
 	{
-		GLenum srcFactor, dstFactor;
-
 		if (stateBits & (GLS_SRCBLEND_BITS | GLS_DSTBLEND_BITS))
 		{
+			GLenum dstFactor;
+			GLenum srcFactor;
 			switch (stateBits & GLS_SRCBLEND_BITS)
 			{
 			case GLS_SRCBLEND_ZERO:
@@ -270,7 +269,6 @@ void GL_State(uint32_t stateBits)
 			default:
 				srcFactor = GL_ONE;		// to get warning to shut up
 				Com_Error(ERR_DROP, "GL_State: invalid src blend state bits\n");
-				break;
 			}
 
 			switch (stateBits & GLS_DSTBLEND_BITS)
@@ -302,7 +300,6 @@ void GL_State(uint32_t stateBits)
 			default:
 				dstFactor = GL_ONE;		// to get warning to shut up
 				Com_Error(ERR_DROP, "GL_State: invalid dst blend state bits\n");
-				break;
 			}
 
 			qglEnable(GL_BLEND);
@@ -401,21 +398,19 @@ RB_Hyperspace
 A player has predicted a teleport, but hasn't arrived yet
 ================
 */
-static void RB_Hyperspace(void) {
-	float		c;
-
+static void RB_Hyperspace() {
 	if (!backEnd.isHyperspace) {
 		// do initialization shit
 	}
 
-	c = (backEnd.refdef.time & 255) / 255.0f;
+	const float c = (backEnd.refdef.time & 255) / 255.0f;
 	qglClearColor(c, c, c, 1);
 	qglClear(GL_COLOR_BUFFER_BIT);
 
 	backEnd.isHyperspace = qtrue;
 }
 
-void SetViewportAndScissor(void) {
+void SetViewportAndScissor() {
 	qglMatrixMode(GL_PROJECTION);
 	qglLoadMatrixf(backEnd.viewParms.projectionMatrix);
 	qglMatrixMode(GL_MODELVIEW);
@@ -435,7 +430,7 @@ Any mirrored or portaled views have already been drawn, so prepare
 to actually render the visible surfaces for this view
 =================
 */
-static void RB_BeginDrawingView(void) {
+static void RB_BeginDrawingView() {
 	int clearBits = GL_DEPTH_BUFFER_BIT;
 
 	// sync with gl if needed
@@ -470,7 +465,7 @@ static void RB_BeginDrawingView(void) {
 	{
 		if (backEnd.refdef.rdflags & RDF_SKYBOXPORTAL)
 		{	// portal scene, clear whatever is necessary
-			if (r_fastsky->integer || (backEnd.refdef.rdflags & RDF_NOWORLDMODEL))
+			if (r_fastsky->integer || backEnd.refdef.rdflags & RDF_NOWORLDMODEL)
 			{	// fastsky: clear color
 				// try clearing first with the portal sky fog color, then the world fog color, then finally a default
 				clearBits |= GL_COLOR_BUFFER_BIT;
@@ -525,15 +520,12 @@ static void RB_BeginDrawingView(void) {
 		qglClear(clearBits);
 	}
 
-	if ((backEnd.refdef.rdflags & RDF_HYPERSPACE))
+	if (backEnd.refdef.rdflags & RDF_HYPERSPACE)
 	{
 		RB_Hyperspace();
 		return;
 	}
-	else
-	{
-		backEnd.isHyperspace = qfalse;
-	}
+	backEnd.isHyperspace = qfalse;
 
 	glState.faceCulling = -1;		// force face culling to set next time
 
@@ -542,8 +534,8 @@ static void RB_BeginDrawingView(void) {
 
 	// clip to the plane of the portal
 	if (backEnd.viewParms.isPortal) {
-		float	plane[4];
-		double	plane2[4];
+		float	plane[4]{};
+		double	plane2[4]{};
 
 		plane[0] = backEnd.viewParms.portalPlane.normal[0];
 		plane[1] = backEnd.viewParms.portalPlane.normal[1];
@@ -565,18 +557,15 @@ static void RB_BeginDrawingView(void) {
 }
 
 //used by RF_DISTORTION
-static inline bool R_WorldCoordToScreenCoordFloat(vec3_t worldCoord, float* x, float* y)
+static bool R_WorldCoordToScreenCoordFloat(vec3_t worldCoord, float* x, float* y)
 {
-	int	xcenter, ycenter;
-	vec3_t	local, transformed;
+	vec3_t	local, transformed{};
 	vec3_t	vfwd;
 	vec3_t	vright;
 	vec3_t	vup;
-	float xzi;
-	float yzi;
 
-	xcenter = glConfig.vidWidth / 2;
-	ycenter = glConfig.vidHeight / 2;
+	const int xcenter = glConfig.vidWidth / 2;
+	const int ycenter = glConfig.vidHeight / 2;
 
 	//AngleVectors (tr.refdef.viewangles, vfwd, vright, vup);
 	VectorCopy(tr.refdef.viewaxis[0], vfwd);
@@ -595,8 +584,8 @@ static inline bool R_WorldCoordToScreenCoordFloat(vec3_t worldCoord, float* x, f
 		return false;
 	}
 
-	xzi = xcenter / transformed[2] * (90.0 / tr.refdef.fov_x);
-	yzi = ycenter / transformed[2] * (90.0 / tr.refdef.fov_y);
+	const float xzi = xcenter / transformed[2] * (90.0 / tr.refdef.fov_x);
+	const float yzi = ycenter / transformed[2] * (90.0 / tr.refdef.fov_y);
 
 	*x = xcenter + xzi * transformed[0];
 	*y = ycenter - yzi * transformed[1];
@@ -605,12 +594,12 @@ static inline bool R_WorldCoordToScreenCoordFloat(vec3_t worldCoord, float* x, f
 }
 
 //used by RF_DISTORTION
-static inline bool R_WorldCoordToScreenCoord(vec3_t worldCoord, int* x, int* y)
+static bool R_WorldCoordToScreenCoord(vec3_t worldCoord, int* x, int* y)
 {
 	float	xF, yF;
-	bool retVal = R_WorldCoordToScreenCoordFloat(worldCoord, &xF, &yF);
-	*x = (int)xF;
-	*y = (int)yF;
+	const bool retVal = R_WorldCoordToScreenCoordFloat(worldCoord, &xF, &yF);
+	*x = static_cast<int>(xF);
+	*y = static_cast<int>(yF);
 	return retVal;
 }
 
@@ -622,32 +611,28 @@ RB_RenderDrawSurfList
 //number of possible surfs we can postrender.
 //note that postrenders lack much of the optimization that the standard sort-render crap does,
 //so it's slower.
-#define MAX_POST_RENDERS	128
+constexpr auto MAX_POST_RENDERS = 128;
 
-typedef struct
+using postRender_t = struct
 {
 	int			fogNum;
-	int			entNum;
+	int			ent_num;
 	int			dlighted;
 	int			depthRange;
 	drawSurf_t* drawSurf;
 	shader_t* shader;
-} postRender_t;
+};
 
 static postRender_t g_postRenders[MAX_POST_RENDERS];
 static int g_numPostRenders = 0;
 
-void RB_RenderDrawSurfList(drawSurf_t* drawSurfs, int numDrawSurfs) {
-	shader_t* shader, * oldShader;
-	int				fogNum, oldFogNum;
-	int				entityNum, oldEntityNum;
-	int				dlighted, oldDlighted;
-	int				depthRange, oldDepthRange;
+void RB_RenderDrawSurfList(drawSurf_t* drawSurfs, const int numDrawSurfs) {
+	shader_t* shader;
+	int				fogNum;
+	int				entity_num;
+	int				dlighted;
 	int				i;
 	drawSurf_t* drawSurf;
-	unsigned int	oldSort;
-	float			originalTime;
-	trRefEntity_t* curEnt;
 	postRender_t* pRender;
 	bool			didShadowPass = false;
 
@@ -657,20 +642,20 @@ void RB_RenderDrawSurfList(drawSurf_t* drawSurfs, int numDrawSurfs) {
 	}
 
 	// save original time for entity shader offsets
-	originalTime = backEnd.refdef.floatTime;
+	const float originalTime = backEnd.refdef.floatTime;
 
 	// clear the z buffer, set the modelview, etc
 	RB_BeginDrawingView();
 
 	// draw everything
-	oldEntityNum = -1;
+	int oldentity_num = -1;
 	backEnd.currentEntity = &tr.worldEntity;
-	oldShader = NULL;
-	oldFogNum = -1;
-	oldDepthRange = qfalse;
-	oldDlighted = qfalse;
-	oldSort = (unsigned int)-1;
-	depthRange = qfalse;
+	shader_t* oldShader = nullptr;
+	int oldFogNum = -1;
+	int oldDepthRange = qfalse;
+	int oldDlighted = qfalse;
+	unsigned int oldSort = static_cast<unsigned>(-1);
+	int depthRange = qfalse;
 
 	backEnd.pc.c_surfaces += numDrawSurfs;
 
@@ -680,13 +665,13 @@ void RB_RenderDrawSurfList(drawSurf_t* drawSurfs, int numDrawSurfs) {
 			rb_surfaceTable[*drawSurf->surface](drawSurf->surface);
 			continue;
 		}
-		R_DecomposeSort(drawSurf->sort, &entityNum, &shader, &fogNum, &dlighted);
+		R_DecomposeSort(drawSurf->sort, &entity_num, &shader, &fogNum, &dlighted);
 
 		// If we're rendering glowing objects, but this shader has no stages with glow, skip it!
 		if (g_bRenderGlowingObjects && !shader->hasGlow)
 		{
 			shader = oldShader;
-			entityNum = oldEntityNum;
+			entity_num = oldentity_num;
 			fogNum = oldFogNum;
 			dlighted = oldDlighted;
 			continue;
@@ -698,13 +683,13 @@ void RB_RenderDrawSurfList(drawSurf_t* drawSurfs, int numDrawSurfs) {
 		// change the tess parameters if needed
 		// a "entityMergable" shader is a shader that can have surfaces from seperate
 		// entities merged into a single batch, like smoke and blood puff sprites
-		if (entityNum != REFENTITYNUM_WORLD &&
+		if (entity_num != REFENTITYNUM_WORLD &&
 			g_numPostRenders < MAX_POST_RENDERS)
 		{
-			if ((backEnd.refdef.entities[entityNum].e.renderfx & RF_DISTORTION) ||
-				(backEnd.refdef.entities[entityNum].e.renderfx & RF_FORCE_ENT_ALPHA))
+			if (backEnd.refdef.entities[entity_num].e.renderfx & RF_DISTORTION ||
+				backEnd.refdef.entities[entity_num].e.renderfx & RF_FORCE_ENT_ALPHA)
 			{ //must render last
-				curEnt = &backEnd.refdef.entities[entityNum];
+				const trRefEntity_t* curEnt = &backEnd.refdef.entities[entity_num];
 				pRender = &g_postRenders[g_numPostRenders];
 
 				g_numPostRenders++;
@@ -726,7 +711,7 @@ void RB_RenderDrawSurfList(drawSurf_t* drawSurfs, int numDrawSurfs) {
 				depthRange = oldDepthRange;
 
 				//store off the ent num
-				pRender->entNum = entityNum;
+				pRender->ent_num = entity_num;
 
 				//remember the other values necessary for rendering this surf
 				pRender->drawSurf = drawSurf;
@@ -736,11 +721,11 @@ void RB_RenderDrawSurfList(drawSurf_t* drawSurfs, int numDrawSurfs) {
 
 				//assure the info is back to the last set state
 				shader = oldShader;
-				entityNum = oldEntityNum;
+				entity_num = oldentity_num;
 				fogNum = oldFogNum;
 				dlighted = oldDlighted;
 
-				oldSort = (unsigned int)-1; //invalidate this thing, cause we may want to postrender more surfs of the same sort
+				oldSort = static_cast<unsigned>(-1); //invalidate this thing, cause we may want to postrender more surfs of the same sort
 
 				//continue without bothering to begin a draw surf
 				continue;
@@ -748,9 +733,9 @@ void RB_RenderDrawSurfList(drawSurf_t* drawSurfs, int numDrawSurfs) {
 		}
 
 		if (shader != oldShader || fogNum != oldFogNum || dlighted != oldDlighted
-			|| (entityNum != oldEntityNum && !shader->entityMergable))
+			|| entity_num != oldentity_num && !shader->entityMergable)
 		{
-			if (oldShader != NULL) {
+			if (oldShader != nullptr) {
 				RB_EndSurface();
 
 				if (!didShadowPass && shader && shader->sort > SS_BANNER)
@@ -768,11 +753,11 @@ void RB_RenderDrawSurfList(drawSurf_t* drawSurfs, int numDrawSurfs) {
 		//
 		// change the modelview matrix if needed
 		//
-		if (entityNum != oldEntityNum) {
+		if (entity_num != oldentity_num) {
 			depthRange = qfalse;
 
-			if (entityNum != REFENTITYNUM_WORLD) {
-				backEnd.currentEntity = &backEnd.refdef.entities[entityNum];
+			if (entity_num != REFENTITYNUM_WORLD) {
+				backEnd.currentEntity = &backEnd.refdef.entities[entity_num];
 				backEnd.refdef.floatTime = originalTime - backEnd.currentEntity->e.shaderTime;
 
 				// set up the transformation matrix
@@ -823,7 +808,7 @@ void RB_RenderDrawSurfList(drawSurf_t* drawSurfs, int numDrawSurfs) {
 				oldDepthRange = depthRange;
 			}
 
-			oldEntityNum = entityNum;
+			oldentity_num = entity_num;
 		}
 
 		// add the triangles for this surface
@@ -831,7 +816,7 @@ void RB_RenderDrawSurfList(drawSurf_t* drawSurfs, int numDrawSurfs) {
 	}
 
 	// draw the contents of the last shader batch
-	if (oldShader != NULL) {
+	if (oldShader != nullptr) {
 		RB_EndSurface();
 	}
 
@@ -853,7 +838,7 @@ void RB_RenderDrawSurfList(drawSurf_t* drawSurfs, int numDrawSurfs) {
 
 			RB_BeginSurface(pRender->shader, pRender->fogNum);
 
-			backEnd.currentEntity = &backEnd.refdef.entities[pRender->entNum];
+			backEnd.currentEntity = &backEnd.refdef.entities[pRender->ent_num];
 
 			backEnd.refdef.floatTime = originalTime - backEnd.currentEntity->e.shaderTime;
 
@@ -885,20 +870,19 @@ void RB_RenderDrawSurfList(drawSurf_t* drawSurfs, int numDrawSurfs) {
 				break;
 			}
 
-			if ((backEnd.currentEntity->e.renderfx & RF_DISTORTION) &&
-				lastPostEnt != pRender->entNum)
+			if (backEnd.currentEntity->e.renderfx & RF_DISTORTION &&
+				lastPostEnt != pRender->ent_num)
 			{ //do the capture now, we only need to do it once per ent
 				int x, y;
-				int rad = backEnd.currentEntity->e.radius;
+				const int rad = backEnd.currentEntity->e.radius;
 				//We are going to just bind this, and then the CopyTexImage is going to
 				//stomp over this texture num in texture memory.
 				GL_Bind(tr.screenImage);
 
 				if (R_WorldCoordToScreenCoord(backEnd.currentEntity->e.origin, &x, &y))
 				{
-					int cX, cY;
-					cX = glConfig.vidWidth - x - (rad / 2);
-					cY = glConfig.vidHeight - y - (rad / 2);
+					int cX = glConfig.vidWidth - x - rad / 2;
+					int cY = glConfig.vidHeight - y - rad / 2;
 
 					if (cX + rad > glConfig.vidWidth)
 					{ //would it go off screen?
@@ -921,7 +905,7 @@ void RB_RenderDrawSurfList(drawSurf_t* drawSurfs, int numDrawSurfs) {
 					//now copy a portion of the screen to this texture
 					qglCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16, cX, cY, rad, rad, 0);
 
-					lastPostEnt = pRender->entNum;
+					lastPostEnt = pRender->ent_num;
 				}
 			}
 
@@ -968,7 +952,7 @@ RB_SetGL2D
 
 ================
 */
-void	RB_SetGL2D(void) {
+void	RB_SetGL2D() {
 	backEnd.projection2D = qtrue;
 
 	// set 2D virtual screen size
@@ -999,16 +983,14 @@ RB_SetColor
 =============
 */
 const void* RB_SetColor(const void* data) {
-	const setColorCommand_t* cmd;
-
-	cmd = (const setColorCommand_t*)data;
+	const auto cmd = static_cast<const setColorCommand_t*>(data);
 
 	backEnd.color2D[0] = cmd->color[0] * 255;
 	backEnd.color2D[1] = cmd->color[1] * 255;
 	backEnd.color2D[2] = cmd->color[2] * 255;
 	backEnd.color2D[3] = cmd->color[3] * 255;
 
-	return (const void*)(cmd + 1);
+	return cmd + 1;
 }
 
 /*
@@ -1017,19 +999,15 @@ RB_StretchPic
 =============
 */
 const void* RB_StretchPic(const void* data) {
-	const stretchPicCommand_t* cmd;
-	shader_t* shader;
-	int		numVerts, numIndexes;
-
-	cmd = (const stretchPicCommand_t*)data;
+	const auto cmd = static_cast<const stretchPicCommand_t*>(data);
 
 	if (!backEnd.projection2D) {
 		RB_SetGL2D();
 	}
 
-	shader = cmd->shader;
+	shader_t* shader = cmd->shader;
 	if (shader != tess.shader) {
-		if (tess.numIndexes) {
+		if (tess.num_indexes) {
 			RB_EndSurface();
 		}
 		backEnd.currentEntity = &backEnd.entity2D;
@@ -1037,24 +1015,24 @@ const void* RB_StretchPic(const void* data) {
 	}
 
 	RB_CHECKOVERFLOW(4, 6);
-	numVerts = tess.numVertexes;
-	numIndexes = tess.numIndexes;
+	const int numVerts = tess.num_vertexes;
+	const int num_indexes = tess.num_indexes;
 
-	tess.numVertexes += 4;
-	tess.numIndexes += 6;
+	tess.num_vertexes += 4;
+	tess.num_indexes += 6;
 
-	tess.indexes[numIndexes] = numVerts + 3;
-	tess.indexes[numIndexes + 1] = numVerts + 0;
-	tess.indexes[numIndexes + 2] = numVerts + 2;
-	tess.indexes[numIndexes + 3] = numVerts + 2;
-	tess.indexes[numIndexes + 4] = numVerts + 0;
-	tess.indexes[numIndexes + 5] = numVerts + 1;
+	tess.indexes[num_indexes] = numVerts + 3;
+	tess.indexes[num_indexes + 1] = numVerts + 0;
+	tess.indexes[num_indexes + 2] = numVerts + 2;
+	tess.indexes[num_indexes + 3] = numVerts + 2;
+	tess.indexes[num_indexes + 4] = numVerts + 0;
+	tess.indexes[num_indexes + 5] = numVerts + 1;
 
-	byteAlias_t* baDest = NULL, * baSource = (byteAlias_t*)&backEnd.color2D;
-	baDest = (byteAlias_t*)&tess.vertexColors[numVerts + 0]; baDest->ui = baSource->ui;
-	baDest = (byteAlias_t*)&tess.vertexColors[numVerts + 1]; baDest->ui = baSource->ui;
-	baDest = (byteAlias_t*)&tess.vertexColors[numVerts + 2]; baDest->ui = baSource->ui;
-	baDest = (byteAlias_t*)&tess.vertexColors[numVerts + 3]; baDest->ui = baSource->ui;
+	const byteAlias_t* baSource = reinterpret_cast<byteAlias_t*>(&backEnd.color2D);
+	auto baDest = reinterpret_cast<byteAlias_t*>(&tess.vertexColors[numVerts + 0]); baDest->ui = baSource->ui;
+	baDest = reinterpret_cast<byteAlias_t*>(&tess.vertexColors[numVerts + 1]); baDest->ui = baSource->ui;
+	baDest = reinterpret_cast<byteAlias_t*>(&tess.vertexColors[numVerts + 2]); baDest->ui = baSource->ui;
+	baDest = reinterpret_cast<byteAlias_t*>(&tess.vertexColors[numVerts + 3]); baDest->ui = baSource->ui;
 
 	tess.xyz[numVerts][0] = cmd->x;
 	tess.xyz[numVerts][1] = cmd->y;
@@ -1084,7 +1062,7 @@ const void* RB_StretchPic(const void* data) {
 	tess.texCoords[numVerts + 3][0][0] = cmd->s1;
 	tess.texCoords[numVerts + 3][0][1] = cmd->t2;
 
-	return (const void*)(cmd + 1);
+	return cmd + 1;
 }
 
 /*
@@ -1094,20 +1072,15 @@ RB_RotatePic
 */
 const void* RB_RotatePic(const void* data)
 {
-	const rotatePicCommand_t* cmd;
-	shader_t* shader;
-
-	cmd = (const rotatePicCommand_t*)data;
-
-	shader = cmd->shader;
+	const auto cmd = static_cast<const rotatePicCommand_t*>(data);
 
 	if (!backEnd.projection2D) {
 		RB_SetGL2D();
 	}
 
-	shader = cmd->shader;
+	shader_t* shader = cmd->shader;
 	if (shader != tess.shader) {
-		if (tess.numIndexes) {
+		if (tess.num_indexes) {
 			RB_EndSurface();
 		}
 		backEnd.currentEntity = &backEnd.entity2D;
@@ -1115,37 +1088,37 @@ const void* RB_RotatePic(const void* data)
 	}
 
 	RB_CHECKOVERFLOW(4, 6);
-	int numVerts = tess.numVertexes;
-	int numIndexes = tess.numIndexes;
+	const int numVerts = tess.num_vertexes;
+	const int num_indexes = tess.num_indexes;
 
-	float angle = DEG2RAD(cmd->a);
-	float s = sinf(angle);
-	float c = cosf(angle);
+	const float angle = DEG2RAD(cmd->a);
+	const float s = sinf(angle);
+	const float c = cosf(angle);
 
-	matrix3_t m = {
+	const matrix3_t m = {
 		{ c, s, 0.0f },
 		{ -s, c, 0.0f },
 		{ cmd->x + cmd->w, cmd->y, 1.0f }
 	};
 
-	tess.numVertexes += 4;
-	tess.numIndexes += 6;
+	tess.num_vertexes += 4;
+	tess.num_indexes += 6;
 
-	tess.indexes[numIndexes] = numVerts + 3;
-	tess.indexes[numIndexes + 1] = numVerts + 0;
-	tess.indexes[numIndexes + 2] = numVerts + 2;
-	tess.indexes[numIndexes + 3] = numVerts + 2;
-	tess.indexes[numIndexes + 4] = numVerts + 0;
-	tess.indexes[numIndexes + 5] = numVerts + 1;
+	tess.indexes[num_indexes] = numVerts + 3;
+	tess.indexes[num_indexes + 1] = numVerts + 0;
+	tess.indexes[num_indexes + 2] = numVerts + 2;
+	tess.indexes[num_indexes + 3] = numVerts + 2;
+	tess.indexes[num_indexes + 4] = numVerts + 0;
+	tess.indexes[num_indexes + 5] = numVerts + 1;
 
-	byteAlias_t* baDest = NULL, * baSource = (byteAlias_t*)&backEnd.color2D;
-	baDest = (byteAlias_t*)&tess.vertexColors[numVerts + 0]; baDest->ui = baSource->ui;
-	baDest = (byteAlias_t*)&tess.vertexColors[numVerts + 1]; baDest->ui = baSource->ui;
-	baDest = (byteAlias_t*)&tess.vertexColors[numVerts + 2]; baDest->ui = baSource->ui;
-	baDest = (byteAlias_t*)&tess.vertexColors[numVerts + 3]; baDest->ui = baSource->ui;
+	const byteAlias_t* baSource = reinterpret_cast<byteAlias_t*>(&backEnd.color2D);
+	auto baDest = reinterpret_cast<byteAlias_t*>(&tess.vertexColors[numVerts + 0]); baDest->ui = baSource->ui;
+	baDest = reinterpret_cast<byteAlias_t*>(&tess.vertexColors[numVerts + 1]); baDest->ui = baSource->ui;
+	baDest = reinterpret_cast<byteAlias_t*>(&tess.vertexColors[numVerts + 2]); baDest->ui = baSource->ui;
+	baDest = reinterpret_cast<byteAlias_t*>(&tess.vertexColors[numVerts + 3]); baDest->ui = baSource->ui;
 
-	tess.xyz[numVerts][0] = m[0][0] * (-cmd->w) + m[2][0];
-	tess.xyz[numVerts][1] = m[0][1] * (-cmd->w) + m[2][1];
+	tess.xyz[numVerts][0] = m[0][0] * -cmd->w + m[2][0];
+	tess.xyz[numVerts][1] = m[0][1] * -cmd->w + m[2][1];
 	tess.xyz[numVerts][2] = 0;
 
 	tess.texCoords[numVerts][0][0] = cmd->s1;
@@ -1158,21 +1131,21 @@ const void* RB_RotatePic(const void* data)
 	tess.texCoords[numVerts + 1][0][0] = cmd->s2;
 	tess.texCoords[numVerts + 1][0][1] = cmd->t1;
 
-	tess.xyz[numVerts + 2][0] = m[1][0] * (cmd->h) + m[2][0];
-	tess.xyz[numVerts + 2][1] = m[1][1] * (cmd->h) + m[2][1];
+	tess.xyz[numVerts + 2][0] = m[1][0] * cmd->h + m[2][0];
+	tess.xyz[numVerts + 2][1] = m[1][1] * cmd->h + m[2][1];
 	tess.xyz[numVerts + 2][2] = 0;
 
 	tess.texCoords[numVerts + 2][0][0] = cmd->s2;
 	tess.texCoords[numVerts + 2][0][1] = cmd->t2;
 
-	tess.xyz[numVerts + 3][0] = m[0][0] * (-cmd->w) + m[1][0] * (cmd->h) + m[2][0];
-	tess.xyz[numVerts + 3][1] = m[0][1] * (-cmd->w) + m[1][1] * (cmd->h) + m[2][1];
+	tess.xyz[numVerts + 3][0] = m[0][0] * -cmd->w + m[1][0] * cmd->h + m[2][0];
+	tess.xyz[numVerts + 3][1] = m[0][1] * -cmd->w + m[1][1] * cmd->h + m[2][1];
 	tess.xyz[numVerts + 3][2] = 0;
 
 	tess.texCoords[numVerts + 3][0][0] = cmd->s1;
 	tess.texCoords[numVerts + 3][0][1] = cmd->t2;
 
-	return (const void*)(cmd + 1);
+	return cmd + 1;
 }
 
 /*
@@ -1182,12 +1155,9 @@ RB_RotatePic2
 */
 const void* RB_RotatePic2(const void* data)
 {
-	const rotatePicCommand_t* cmd;
-	shader_t* shader;
+	const auto cmd = static_cast<const rotatePicCommand_t*>(data);
 
-	cmd = (const rotatePicCommand_t*)data;
-
-	shader = cmd->shader;
+	shader_t* shader = cmd->shader;
 
 	// FIXME is this needed
 	if (shader->numUnfoggedPasses)
@@ -1198,7 +1168,7 @@ const void* RB_RotatePic2(const void* data)
 
 		shader = cmd->shader;
 		if (shader != tess.shader) {
-			if (tess.numIndexes) {
+			if (tess.num_indexes) {
 				RB_EndSurface();
 			}
 			backEnd.currentEntity = &backEnd.entity2D;
@@ -1206,34 +1176,34 @@ const void* RB_RotatePic2(const void* data)
 		}
 
 		RB_CHECKOVERFLOW(4, 6);
-		int numVerts = tess.numVertexes;
-		int numIndexes = tess.numIndexes;
+		const int numVerts = tess.num_vertexes;
+		const int num_indexes = tess.num_indexes;
 
-		float angle = DEG2RAD(cmd->a);
-		float s = sinf(angle);
-		float c = cosf(angle);
+		const float angle = DEG2RAD(cmd->a);
+		const float s = sinf(angle);
+		const float c = cosf(angle);
 
-		matrix3_t m = {
+		const matrix3_t m = {
 			{ c, s, 0.0f },
 			{ -s, c, 0.0f },
 			{ cmd->x, cmd->y, 1.0f }
 		};
 
-		tess.numVertexes += 4;
-		tess.numIndexes += 6;
+		tess.num_vertexes += 4;
+		tess.num_indexes += 6;
 
-		tess.indexes[numIndexes] = numVerts + 3;
-		tess.indexes[numIndexes + 1] = numVerts + 0;
-		tess.indexes[numIndexes + 2] = numVerts + 2;
-		tess.indexes[numIndexes + 3] = numVerts + 2;
-		tess.indexes[numIndexes + 4] = numVerts + 0;
-		tess.indexes[numIndexes + 5] = numVerts + 1;
+		tess.indexes[num_indexes] = numVerts + 3;
+		tess.indexes[num_indexes + 1] = numVerts + 0;
+		tess.indexes[num_indexes + 2] = numVerts + 2;
+		tess.indexes[num_indexes + 3] = numVerts + 2;
+		tess.indexes[num_indexes + 4] = numVerts + 0;
+		tess.indexes[num_indexes + 5] = numVerts + 1;
 
-		byteAlias_t* baDest = NULL, * baSource = (byteAlias_t*)&backEnd.color2D;
-		baDest = (byteAlias_t*)&tess.vertexColors[numVerts + 0]; baDest->ui = baSource->ui;
-		baDest = (byteAlias_t*)&tess.vertexColors[numVerts + 1]; baDest->ui = baSource->ui;
-		baDest = (byteAlias_t*)&tess.vertexColors[numVerts + 2]; baDest->ui = baSource->ui;
-		baDest = (byteAlias_t*)&tess.vertexColors[numVerts + 3]; baDest->ui = baSource->ui;
+		const byteAlias_t* baSource = reinterpret_cast<byteAlias_t*>(&backEnd.color2D);
+		auto baDest = reinterpret_cast<byteAlias_t*>(&tess.vertexColors[numVerts + 0]); baDest->ui = baSource->ui;
+		baDest = reinterpret_cast<byteAlias_t*>(&tess.vertexColors[numVerts + 1]); baDest->ui = baSource->ui;
+		baDest = reinterpret_cast<byteAlias_t*>(&tess.vertexColors[numVerts + 2]); baDest->ui = baSource->ui;
+		baDest = reinterpret_cast<byteAlias_t*>(&tess.vertexColors[numVerts + 3]); baDest->ui = baSource->ui;
 
 		tess.xyz[numVerts][0] = m[0][0] * (-cmd->w * 0.5f) + m[1][0] * (-cmd->h * 0.5f) + m[2][0];
 		tess.xyz[numVerts][1] = m[0][1] * (-cmd->w * 0.5f) + m[1][1] * (-cmd->h * 0.5f) + m[2][1];
@@ -1264,7 +1234,7 @@ const void* RB_RotatePic2(const void* data)
 		tess.texCoords[numVerts + 3][0][1] = cmd->t2;
 	}
 
-	return (const void*)(cmd + 1);
+	return cmd + 1;
 }
 
 /*
@@ -1274,9 +1244,7 @@ RB_ScissorPic
 */
 const void* RB_Scissor(const void* data)
 {
-	const scissorCommand_t* cmd;
-
-	cmd = (const scissorCommand_t*)data;
+	const auto cmd = static_cast<const scissorCommand_t*>(data);
 
 	if (!backEnd.projection2D)
 	{
@@ -1285,14 +1253,14 @@ const void* RB_Scissor(const void* data)
 
 	if (cmd->x >= 0)
 	{
-		qglScissor(cmd->x, (glConfig.vidHeight - cmd->y - cmd->h), cmd->w, cmd->h);
+		qglScissor(cmd->x, glConfig.vidHeight - cmd->y - cmd->h, cmd->w, cmd->h);
 	}
 	else
 	{
 		qglScissor(0, 0, glConfig.vidWidth, glConfig.vidHeight);
 	}
 
-	return (const void*)(cmd + 1);
+	return cmd + 1;
 }
 
 /*
@@ -1302,14 +1270,12 @@ RB_DrawSurfs
 =============
 */
 const void* RB_DrawSurfs(const void* data) {
-	const drawSurfsCommand_t* cmd;
-
 	// finish any 2D drawing if needed
-	if (tess.numIndexes) {
+	if (tess.num_indexes) {
 		RB_EndSurface();
 	}
 
-	cmd = (const drawSurfsCommand_t*)data;
+	const auto cmd = static_cast<const drawSurfsCommand_t*>(data);
 
 	backEnd.refdef = cmd->refdef;
 	backEnd.viewParms = cmd->viewParms;
@@ -1342,7 +1308,12 @@ const void* RB_DrawSurfs(const void* data) {
 
 		// Render the glowing objects.
 		g_bRenderGlowingObjects = true;
-		RB_RenderDrawSurfList(cmd->drawSurfs, cmd->numDrawSurfs);
+
+		if (r_Dynamic_AMD_Fix->integer == 0)
+		{
+			RB_RenderDrawSurfList(cmd->drawSurfs, cmd->numDrawSurfs);
+		}
+
 		g_bRenderGlowingObjects = false;
 		qglFinish();
 
@@ -1382,7 +1353,7 @@ const void* RB_DrawSurfs(const void* data) {
 		RB_DrawGlowOverlay();
 	}
 
-	return (const void*)(cmd + 1);
+	return cmd + 1;
 }
 
 /*
@@ -1392,9 +1363,7 @@ RB_DrawBuffer
 =============
 */
 const void* RB_DrawBuffer(const void* data) {
-	const drawBufferCommand_t* cmd;
-
-	cmd = (const drawBufferCommand_t*)data;
+	const auto cmd = static_cast<const drawBufferCommand_t*>(data);
 
 	qglDrawBuffer(cmd->buffer);
 
@@ -1452,7 +1421,7 @@ const void* RB_DrawBuffer(const void* data) {
 		qglClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 
-	return (const void*)(cmd + 1);
+	return cmd + 1;
 }
 
 /*
@@ -1465,9 +1434,8 @@ was there.  This is used to test for texture thrashing.
 Also called by RE_EndRegistration
 ===============
 */
-void RB_ShowImages(void) {
+void RB_ShowImages() {
 	image_t* image;
-	float	x, y, w, h;
 	//int		start, end;
 
 	if (!backEnd.projection2D) {
@@ -1481,12 +1449,12 @@ void RB_ShowImages(void) {
 	int i = 0;
 	//	int iNumImages =
 	R_Images_StartIteration();
-	while ((image = R_Images_GetNextIteration()) != NULL)
+	while ((image = R_Images_GetNextIteration()) != nullptr)
 	{
-		w = glConfig.vidWidth / 20;
-		h = glConfig.vidHeight / 15;
-		x = i % 20 * w;
-		y = i / 20 * h;
+		float w = glConfig.vidWidth / static_cast<float>(20);
+		float h = glConfig.vidHeight / static_cast<float>(15);
+		const float x = i % 20 * w;
+		const float y = i / static_cast<float>(20) * h;
 
 		// show in proportional size in mode 2
 		if (r_showImages->integer == 2) {
@@ -1520,12 +1488,10 @@ RB_SwapBuffers
 
 =============
 */
-extern void RB_RenderWorldEffects(void);
+extern void RB_RenderWorldEffects();
 const void* RB_SwapBuffers(const void* data) {
-	const swapBuffersCommand_t* cmd;
-
 	// finish any 2D drawing if needed
-	if (tess.numIndexes) {
+	if (tess.num_indexes) {
 		RB_EndSurface();
 	}
 
@@ -1534,19 +1500,18 @@ const void* RB_SwapBuffers(const void* data) {
 		RB_ShowImages();
 	}
 
-	cmd = (const swapBuffersCommand_t*)data;
+	const auto cmd = static_cast<const swapBuffersCommand_t*>(data);
 
 	// we measure overdraw by reading back the stencil buffer and
 	// counting up the number of increments that have happened
 	if (r_measureOverdraw->integer) {
-		int i;
 		long sum = 0;
-		unsigned char* stencilReadback;
 
-		stencilReadback = (unsigned char*)R_Malloc(glConfig.vidWidth * glConfig.vidHeight, TAG_TEMP_WORKSPACE, qfalse);
+		const auto stencilReadback = static_cast<unsigned char*>(R_Malloc(glConfig.vidWidth * glConfig.vidHeight,
+			TAG_TEMP_WORKSPACE, qfalse));
 		qglReadPixels(0, 0, glConfig.vidWidth, glConfig.vidHeight, GL_STENCIL_INDEX, GL_UNSIGNED_BYTE, stencilReadback);
 
-		for (i = 0; i < glConfig.vidWidth * glConfig.vidHeight; i++) {
+		for (int i = 0; i < glConfig.vidWidth * glConfig.vidHeight; i++) {
 			sum += stencilReadback[i];
 		}
 
@@ -1564,17 +1529,15 @@ const void* RB_SwapBuffers(const void* data) {
 
 	backEnd.projection2D = qfalse;
 
-	return (const void*)(cmd + 1);
+	return cmd + 1;
 }
 
 const void* RB_WorldEffects(const void* data)
 {
-	const setModeCommand_t* cmd;
-
-	cmd = (const setModeCommand_t*)data;
+	const auto cmd = static_cast<const setModeCommand_t*>(data);
 
 	// Always flush the tess buffer
-	if (tess.shader && tess.numIndexes)
+	if (tess.shader && tess.num_indexes)
 	{
 		RB_EndSurface();
 	}
@@ -1585,7 +1548,7 @@ const void* RB_WorldEffects(const void* data)
 		RB_BeginSurface(tess.shader, tess.fogNum);
 	}
 
-	return (const void*)(cmd + 1);
+	return cmd + 1;
 }
 
 /*
@@ -1594,14 +1557,12 @@ RB_ExecuteRenderCommands
 ====================
 */
 void RB_ExecuteRenderCommands(const void* data) {
-	int		t1, t2;
+	const int t1 = ri.Milliseconds();
 
-	t1 = ri.Milliseconds();
-
-	while (1) {
+	while (true) {
 		data = PADP(data, sizeof(void*));
 
-		switch (*(const int*)data) {
+		switch (*static_cast<const int*>(data)) {
 		case RC_SET_COLOR:
 			data = RB_SetColor(data);
 			break;
@@ -1632,7 +1593,7 @@ void RB_ExecuteRenderCommands(const void* data) {
 		case RC_END_OF_LIST:
 		default:
 			// stop rendering
-			t2 = ri.Milliseconds();
+			const int t2 = ri.Milliseconds();
 			backEnd.pc.msec = t2 - t1;
 			return;
 		}
@@ -1643,7 +1604,7 @@ void RB_ExecuteRenderCommands(const void* data) {
 GLuint g_uiCurrentPixelShaderType = 0x0;
 
 // Begin using a Pixel Shader.
-void BeginPixelShader(GLuint uiType, GLuint uiID)
+void BeginPixelShader(const GLuint uiType, const GLuint uiID)
 {
 	switch (uiType)
 	{
@@ -1674,7 +1635,7 @@ void BeginPixelShader(GLuint uiType, GLuint uiID)
 
 		g_uiCurrentPixelShaderType = GL_FRAGMENT_PROGRAM_ARB;
 	}
-	return;
+	default:;
 	}
 }
 
@@ -1691,7 +1652,7 @@ void EndPixelShader()
 // reason it acts different on radeon! It's against the spec!).
 extern bool g_bTextureRectangleHack;
 
-static inline void RB_BlurGlowTexture()
+static void RB_BlurGlowTexture()
 {
 	qglDisable(GL_CLIP_PLANE0);
 	GL_Cull(CT_TWO_SIDED);
@@ -1713,7 +1674,7 @@ static inline void RB_BlurGlowTexture()
 
 	// NOTE: The 0.25 is because we're blending 4 textures (so = 1.0) and we want a relatively normalized pixel
 	// intensity distribution, but this won't happen anyways if intensity is higher than 1.0.
-	float fBlurDistribution = r_DynamicGlowIntensity->value * 0.25f;
+	const float fBlurDistribution = r_DynamicGlowIntensity->value * 0.25f;
 	float fBlurWeight[4] = { fBlurDistribution, fBlurDistribution, fBlurDistribution, 1.0f };
 
 	// Enable and set the Vertex Program.
@@ -1726,7 +1687,7 @@ static inline void RB_BlurGlowTexture()
 		BeginPixelShader(GL_REGISTER_COMBINERS_NV, tr.glowPShader);
 
 		// Pass the blur weight to the regcom.
-		qglCombinerParameterfvNV(GL_CONSTANT_COLOR0_NV, (float*)&fBlurWeight);
+		qglCombinerParameterfvNV(GL_CONSTANT_COLOR0_NV, reinterpret_cast<float*>(&fBlurWeight));
 	}
 	else if (qglProgramEnvParameter4fARB)
 	{
@@ -1863,7 +1824,7 @@ static inline void RB_BlurGlowTexture()
 }
 
 // Draw the glow blur over the screen additively.
-static inline void RB_DrawGlowOverlay()
+static void RB_DrawGlowOverlay()
 {
 	qglDisable(GL_CLIP_PLANE0);
 	GL_Cull(CT_TWO_SIDED);

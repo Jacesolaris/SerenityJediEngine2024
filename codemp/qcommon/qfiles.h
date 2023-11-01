@@ -105,7 +105,7 @@ typedef struct md3Tag_s {
 ** shaders			sizeof( md3Shader_t ) * numShaders
 ** triangles[0]		sizeof( md3Triangle_t ) * numTriangles
 ** st				sizeof( md3St_t ) * numVerts
-** XyzNormals		sizeof( md3XyzNormal_t ) * numVerts * numFrames
+** XyzNormals		sizeof( md3XyzNormal_t ) * numVerts * num_frames
 */
 typedef struct md3Surface_s {
 	int		ident;				//
@@ -113,7 +113,7 @@ typedef struct md3Surface_s {
 	char	name[MAX_QPATH];	// polyset name
 
 	int		flags;
-	int		numFrames;			// all surfaces in a model should have the same
+	int		num_frames;			// all surfaces in a model should have the same
 
 	int		numShaders;			// all surfaces in a model should have the same
 	int		numVerts;
@@ -123,7 +123,7 @@ typedef struct md3Surface_s {
 
 	int		ofsShaders;			// offset from start of md3Surface_t
 	int		ofsSt;				// texture coords are common for all frames
-	int		ofsXyzNormals;		// numVerts * numFrames
+	int		ofsXyzNormals;		// numVerts * num_frames
 
 	int		ofsEnd;				// next surface follows
 } md3Surface_t;
@@ -154,14 +154,14 @@ typedef struct md3Header_s {
 
 	int			flags;
 
-	int			numFrames;
+	int			num_frames;
 	int			numTags;
 	int			numSurfaces;
 
 	int			numSkins;
 
 	int			ofsFrames;			// offset for first frame
-	int			ofsTags;			// numFrames * numTags
+	int			ofsTags;			// num_frames * numTags
 	int			ofsSurfaces;		// first surface, others follow
 
 	int			ofsEnd;				// end of file
@@ -195,7 +195,7 @@ MDR file format
 #define	MDR_MAX_BONES	128
 
 typedef struct {
-	int			boneIndex;	// these are indexes into the boneReferences,
+	int			bone_index;	// these are indexes into the boneReferences,
 	float		   boneWeight;		// not the global per-frame bone list
 	vec3_t		offset;
 } mdrWeight_t;
@@ -267,7 +267,7 @@ typedef struct {
 } mdrLOD_t;
 
 typedef struct {
-	int                     boneIndex;
+	int                     bone_index;
 	char            name[32];
 } mdrTag_t;
 
@@ -278,9 +278,9 @@ typedef struct {
 	char		name[MAX_QPATH];	// model name
 
 	// frames and bones are shared by all levels of detail
-	int			numFrames;
+	int			num_frames;
 	int			numBones;
-	int			ofsFrames;			// mdrFrame_t[numFrames]
+	int			ofsFrames;			// mdrFrame_t[num_frames]
 
 	// each level of detail has completely separate sets of surfaces
 	int			numLODs;
@@ -417,14 +417,14 @@ typedef struct dleaf_s {
 
 typedef struct dbrushside_s {
 	int			planeNum;			// positive plane side faces out of the leaf
-	int			shaderNum;
+	int			shader_num;
 	int			drawSurfNum;
 } dbrushside_t;
 
 typedef struct dbrush_s {
 	int			firstSide;
 	int			numSides;
-	int			shaderNum;		// the shader that determines the contents flags
+	int			shader_num;		// the shader that determines the contents flags
 } dbrush_t;
 
 typedef struct dfog_s {
@@ -472,7 +472,7 @@ typedef enum {
 } mapSurfaceType_t;
 
 typedef struct dsurface_s {
-	int			shaderNum;
+	int			shader_num;
 	int			fogNum;
 	int			surfaceType;
 
@@ -480,10 +480,10 @@ typedef struct dsurface_s {
 	int			numVerts;
 
 	int			firstIndex;
-	int			numIndexes;
+	int			num_indexes;
 
 	byte		lightmapStyles[MAXLIGHTMAPS], vertexStyles[MAXLIGHTMAPS];
-	int			lightmapNum[MAXLIGHTMAPS];
+	int			lightmap_num[MAXLIGHTMAPS];
 	int			lightmapX[MAXLIGHTMAPS], lightmapY[MAXLIGHTMAPS];
 	int			lightmapWidth, lightmapHeight;
 

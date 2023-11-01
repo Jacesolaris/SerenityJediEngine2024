@@ -37,12 +37,10 @@ using netadrtype_t = enum netadrtype_s
 
 using netadr_t = struct netadr_s
 {
-	netadrtype_t	type;
-	union {
-		byte		ip[4];
-		int32_t		ipi;
-	};
-	uint16_t	port;
+	netadrtype_t type;
+
+	byte ip[4];
+	uint16_t port;
 };
 
 /*

@@ -83,31 +83,31 @@ void SetInUse(const gentity_t* ent)
 {
 	assert(reinterpret_cast<uintptr_t>(ent) >= reinterpret_cast<uintptr_t>(g_entities));
 	assert(reinterpret_cast<uintptr_t>(ent) <= (uintptr_t)(g_entities + MAX_GENTITIES - 1));
-	const unsigned int entNum = ent - g_entities;
-	g_entityInUseBits[entNum / 32] |= static_cast<unsigned>(1) << (entNum & 0x1f);
+	const unsigned int ent_num = ent - g_entities;
+	g_entityInUseBits[ent_num / 32] |= static_cast<unsigned>(1) << (ent_num & 0x1f);
 }
 
 void ClearInUse(const gentity_t* ent)
 {
 	assert(reinterpret_cast<uintptr_t>(ent) >= reinterpret_cast<uintptr_t>(g_entities));
 	assert(reinterpret_cast<uintptr_t>(ent) <= (uintptr_t)(g_entities + MAX_GENTITIES - 1));
-	const unsigned int entNum = ent - g_entities;
-	g_entityInUseBits[entNum / 32] &= ~(static_cast<unsigned>(1) << (entNum & 0x1f));
+	const unsigned int ent_num = ent - g_entities;
+	g_entityInUseBits[ent_num / 32] &= ~(static_cast<unsigned>(1) << (ent_num & 0x1f));
 }
 
-qboolean PInUse(const unsigned int entNum)
+qboolean PInUse(const unsigned int ent_num)
 {
-	assert(entNum >= 0);
-	assert(entNum < MAX_GENTITIES);
-	return static_cast<qboolean>((g_entityInUseBits[entNum / 32] & static_cast<unsigned>(1) << (entNum & 0x1f)) != 0);
+	assert(ent_num >= 0);
+	assert(ent_num < MAX_GENTITIES);
+	return static_cast<qboolean>((g_entityInUseBits[ent_num / 32] & static_cast<unsigned>(1) << (ent_num & 0x1f)) != 0);
 }
 
 /*qboolean PInUse2(gentity_t *ent)
 {
 	assert(((unsigned int)ent)>=(unsigned int)g_entities);
 	assert(((unsigned int)ent)<=(unsigned int)(g_entities+MAX_GENTITIES-1));
-	unsigned int entNum=ent-g_entities;
-	return((g_entityInUseBits[entNum/32]&(((unsigned int)1)<<(entNum&0x1f)))!=0);
+	unsigned int ent_num=ent-g_entities;
+	return((g_entityInUseBits[ent_num/32]&(((unsigned int)1)<<(ent_num&0x1f)))!=0);
 }
 */
 
@@ -747,7 +747,7 @@ void G_InitCvars()
 	//use +forcefocus to pull off all the special moves
 	g_debugSaberLock = gi.cvar("g_debugSaberLock", "0", CVAR_CHEAT);
 	//just for debugging/development, makes saberlocks happen all the time
-	g_saberLockRandomNess = gi.cvar("g_saberLockRandomNess", "1", CVAR_ARCHIVE);
+	g_saberLockRandomNess = gi.cvar("g_saberLockRandomNess", "0", CVAR_ARCHIVE);
 	//just for debugging/development, controls frequency of saberlocks
 	g_saberRestrictForce = gi.cvar("g_saberRestrictForce", "0", CVAR_ARCHIVE);
 	//restricts certain force powers when using a 2-handed saber or 2 sabers
@@ -758,7 +758,7 @@ void G_InitCvars()
 
 	g_AIsurrender = gi.cvar("g_AIsurrender", "0", CVAR_CHEAT);
 	g_numEntities = gi.cvar("g_numEntities", "0", 0);
-	com_outcast = gi.cvar("com_outcast", "0", CVAR_ARCHIVE | CVAR_SAVEGAME | CVAR_NORESTART);
+	com_outcast = gi.cvar("com_outcast", "0", CVAR_ARCHIVE | CVAR_SAVEGAME);
 	// Items
 	g_pullitems = gi.cvar("g_pullitems", "1", CVAR_ARCHIVE);
 	g_pushitems = gi.cvar("g_pushitems", "1", CVAR_ARCHIVE);
@@ -849,7 +849,8 @@ void G_InitCvars()
 
 	gi.cvar("g_clearstats", "1", CVAR_ROM | CVAR_NORESTART);
 
-	g_InvertedHolsteredSabers = gi.cvar("g_InvertedHolsteredSabers", "0", CVAR_ARCHIVE | CVAR_SAVEGAME | CVAR_NORESTART);
+	g_InvertedHolsteredSabers = gi.
+		cvar("g_InvertedHolsteredSabers", "0", CVAR_ARCHIVE | CVAR_SAVEGAME | CVAR_NORESTART);
 	//if 1, saber faces up when holstered not down
 
 	g_noIgniteTwirl = gi.cvar("g_noIgniteTwirl", "0", CVAR_ARCHIVE); //if 1, don't do ignite twirl
@@ -864,7 +865,7 @@ void G_InitCvars()
 
 	g_DebugSaberCombat = gi.cvar("g_DebugSaberCombat", "0", CVAR_ARCHIVE);
 
-	g_allowgunnerbash = gi.cvar("g_allowgunnerbash", "0", CVAR_ARCHIVE | CVAR_SAVEGAME | CVAR_NORESTART);
+	g_allowgunnerbash = gi.cvar("g_allowgunnerbash", "1", CVAR_ARCHIVE | CVAR_SAVEGAME | CVAR_NORESTART);
 
 	g_allowslipping = gi.cvar("g_allowslipping", "1", CVAR_ARCHIVE | CVAR_SAVEGAME | CVAR_NORESTART);
 
@@ -876,7 +877,7 @@ void G_InitCvars()
 
 	g_AllowWeaponDropping = gi.cvar("g_AllowWeaponDropping", "1", CVAR_ARCHIVE | CVAR_SAVEGAME | CVAR_NORESTART);
 
-	g_remove_unused_weapons = gi.cvar("g_remove_unused_weapons", "0", CVAR_ARCHIVE | CVAR_SAVEGAME | CVAR_NORESTART);
+	g_remove_unused_weapons = gi.cvar("g_remove_unused_weapons", "1", CVAR_ARCHIVE | CVAR_SAVEGAME | CVAR_NORESTART);
 
 	g_WeaponRemovalTime = gi.cvar("g_WeaponRemovalTime", "10", CVAR_ARCHIVE | CVAR_SAVEGAME | CVAR_NORESTART);
 	//number of seconds weapons stick around for, at least... 0 = never go away
@@ -889,7 +890,7 @@ void G_InitCvars()
 
 	g_saberLockCinematicCamera = gi.cvar("g_saberLockCinematicCamera", "1", CVAR_ARCHIVE);
 
-	com_rend2 = gi.cvar("com_rend2", "0", CVAR_ARCHIVE | CVAR_SAVEGAME | CVAR_NORESTART);
+	com_rend2 = gi.cvar("com_rend2", "0", CVAR_ARCHIVE | CVAR_SAVEGAME);
 }
 
 /*
@@ -1118,7 +1119,7 @@ Returns a pointer to the structure with all entry points
 and global variables
 =================
 */
-extern int PM_ValidateAnimRange(int startFrame, int endFrame, float animSpeed);
+extern int PM_ValidateAnimRange(int start_frame, int end_frame, float anim_speed);
 
 extern "C" Q_EXPORT game_export_t * QDECL GetGameAPI(const game_import_t * import)
 {
@@ -1347,7 +1348,7 @@ static void G_Animate(gentity_t* self)
 	{
 		return;
 	}
-	if (self->s.frame == self->endFrame)
+	if (self->s.frame == self->end_frame)
 	{
 		if (self->svFlags & SVF_ANIMATING)
 		{
@@ -1363,7 +1364,7 @@ static void G_Animate(gentity_t* self)
 					nullptr);
 
 				// It NEVER seems to get to what you'd think the last frame would be, so I'm doing this to try and catch when the animation has stopped
-				if (frame + 1 >= self->endFrame)
+				if (frame + 1 >= self->end_frame)
 				{
 					self->svFlags &= ~SVF_ANIMATING;
 					Q3_TaskIDComplete(self, TID_ANIM_BOTH);
@@ -1373,7 +1374,7 @@ static void G_Animate(gentity_t* self)
 			{
 				if (self->loopAnim)
 				{
-					self->s.frame = self->startFrame;
+					self->s.frame = self->start_frame;
 				}
 				else
 				{
@@ -1392,29 +1393,29 @@ static void G_Animate(gentity_t* self)
 	// With ghoul2, we'll just set the desired start and end frame and let it do it's thing.
 	if (self->ghoul2.size())
 	{
-		self->s.frame = self->endFrame;
+		self->s.frame = self->end_frame;
 
 		gi.G2API_SetBoneAnimIndex(&self->ghoul2[self->playerModel], self->rootBone,
-			self->startFrame, self->endFrame, BONE_ANIM_OVERRIDE_FREEZE, 1.0f, cg.time, -1, -1);
+			self->start_frame, self->end_frame, BONE_ANIM_OVERRIDE_FREEZE, 1.0f, cg.time, -1, -1);
 		return;
 	}
 
-	if (self->startFrame < self->endFrame)
+	if (self->start_frame < self->end_frame)
 	{
-		if (self->s.frame < self->startFrame || self->s.frame > self->endFrame)
+		if (self->s.frame < self->start_frame || self->s.frame > self->end_frame)
 		{
-			self->s.frame = self->startFrame;
+			self->s.frame = self->start_frame;
 		}
 		else
 		{
 			self->s.frame++;
 		}
 	}
-	else if (self->startFrame > self->endFrame)
+	else if (self->start_frame > self->end_frame)
 	{
-		if (self->s.frame > self->startFrame || self->s.frame < self->endFrame)
+		if (self->s.frame > self->start_frame || self->s.frame < self->end_frame)
 		{
-			self->s.frame = self->startFrame;
+			self->s.frame = self->start_frame;
 		}
 		else
 		{
@@ -1423,7 +1424,7 @@ static void G_Animate(gentity_t* self)
 	}
 	else
 	{
-		self->s.frame = self->endFrame;
+		self->s.frame = self->end_frame;
 	}
 }
 
@@ -1604,9 +1605,9 @@ static int G_RagAnimForPositioning(gentity_t* ent)
 	return BOTH_DEADFLOP1;
 }
 
-static inline qboolean G_RagWantsHumanoidsOnly(CGhoul2Info* ghlInfo)
+static inline qboolean G_RagWantsHumanoidsOnly(CGhoul2Info* ghl_info)
 {
-	const char* gla_name = gi.G2API_GetGLAName(ghlInfo);
+	const char* gla_name = gi.G2API_GetGLAName(ghl_info);
 	assert(gla_name);
 
 	if (!Q_stricmp("models/players/_humanoid/_humanoid", gla_name))
@@ -1690,7 +1691,7 @@ qboolean G_RagDoll(gentity_t* ent, vec3_t forcedAngles)
 			//want to rag no matter what then
 			inSomething = qtrue;
 		}
-		else if (ent->client->ps.groundentityNum == ENTITYNUM_NONE)
+		else if (ent->client->ps.groundentity_num == ENTITYNUM_NONE)
 		{
 			vec3_t cVel;
 
@@ -1719,7 +1720,7 @@ qboolean G_RagDoll(gentity_t* ent, vec3_t forcedAngles)
 			vec3_t tAng;
 			//qboolean deathDone = qfalse;
 			trace_t tr;
-			mdxaBone_t boltMatrix;
+			mdxaBone_t bolt_matrix;
 
 			VectorSet(tAng, 0, ent->client->ps.viewangles[YAW], 0);
 
@@ -1741,10 +1742,10 @@ qboolean G_RagDoll(gentity_t* ent, vec3_t forcedAngles)
 			boltChecks[4] = gi.G2API_AddBolt(&ent->ghoul2[ent->playerModel], "ltalus");
 
 			//Do the head first, because the hands reference it anyway.
-			gi.G2API_GetBoltMatrix(ent->ghoul2, ent->playerModel, boltChecks[2], &boltMatrix, tAng,
+			gi.G2API_GetBoltMatrix(ent->ghoul2, ent->playerModel, boltChecks[2], &bolt_matrix, tAng,
 				ent->client->ps.origin, cg.time ? cg.time : level.time, nullptr,
 				ent->s.modelScale);
-			gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, boltPoints[2]);
+			gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, boltPoints[2]);
 
 			while (i < 5)
 			{
@@ -1753,10 +1754,10 @@ qboolean G_RagDoll(gentity_t* ent, vec3_t forcedAngles)
 				if (i < 2)
 				{
 					//when doing hands, trace to the head instead of origin
-					gi.G2API_GetBoltMatrix(ent->ghoul2, ent->playerModel, boltChecks[i], &boltMatrix, tAng,
+					gi.G2API_GetBoltMatrix(ent->ghoul2, ent->playerModel, boltChecks[i], &bolt_matrix, tAng,
 						ent->client->ps.origin, cg.time ? cg.time : level.time, nullptr,
 						ent->s.modelScale);
-					gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, boltPoints[i]);
+					gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, boltPoints[i]);
 					VectorCopy(boltPoints[i], trStart);
 					VectorCopy(boltPoints[2], trEnd);
 				}
@@ -1765,10 +1766,10 @@ qboolean G_RagDoll(gentity_t* ent, vec3_t forcedAngles)
 					if (i > 2)
 					{
 						//2 is the head, which already has the bolt point.
-						gi.G2API_GetBoltMatrix(ent->ghoul2, ent->playerModel, boltChecks[i], &boltMatrix, tAng,
+						gi.G2API_GetBoltMatrix(ent->ghoul2, ent->playerModel, boltChecks[i], &bolt_matrix, tAng,
 							ent->client->ps.origin, cg.time ? cg.time : level.time, nullptr,
 							ent->s.modelScale);
-						gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, boltPoints[i]);
+						gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, boltPoints[i]);
 					}
 					VectorCopy(boltPoints[i], trStart);
 					VectorCopy(ent->client->ps.origin, trEnd);
@@ -1820,29 +1821,29 @@ qboolean G_RagDoll(gentity_t* ent, vec3_t forcedAngles)
 		const int ragAnim = G_RagAnimForPositioning(ent);
 
 		//these will be used as "base" frames for the ragoll settling.
-		tParms.startFrame = level.knownAnimFileSets[ent->client->clientInfo.animFileIndex].animations[ragAnim].
+		tParms.start_frame = level.knownAnimFileSets[ent->client->clientInfo.animFileIndex].animations[ragAnim].
 			firstFrame;
-		tParms.endFrame = level.knownAnimFileSets[ent->client->clientInfo.animFileIndex].animations[ragAnim].firstFrame
-			+ level.knownAnimFileSets[ent->client->clientInfo.animFileIndex].animations[ragAnim].numFrames;
+		tParms.end_frame = level.knownAnimFileSets[ent->client->clientInfo.animFileIndex].animations[ragAnim].firstFrame
+			+ level.knownAnimFileSets[ent->client->clientInfo.animFileIndex].animations[ragAnim].num_frames;
 #if 1
 		{
-			float currentFrame;
-			int startFrame, endFrame;
+			float current_frame;
+			int start_frame, end_frame;
 			int flags;
-			float animSpeed;
+			float anim_speed;
 
-			if (gi.G2API_GetBoneAnim(&ent->ghoul2[0], "model_root", cg.time ? cg.time : level.time, &currentFrame,
-				&startFrame, &endFrame, &flags, &animSpeed, nullptr))
+			if (gi.G2API_GetBoneAnim(&ent->ghoul2[0], "model_root", cg.time ? cg.time : level.time, &current_frame,
+				&start_frame, &end_frame, &flags, &anim_speed, nullptr))
 			{
 				//lock the anim on the current frame.
-				constexpr int blendTime = 500;
+				constexpr int blend_time = 500;
 
-				gi.G2API_SetBoneAnim(&ent->ghoul2[0], "lower_lumbar", currentFrame, currentFrame + 1, flags, animSpeed,
-					cg.time ? cg.time : level.time, currentFrame, blendTime);
-				gi.G2API_SetBoneAnim(&ent->ghoul2[0], "model_root", currentFrame, currentFrame + 1, flags, animSpeed,
-					cg.time ? cg.time : level.time, currentFrame, blendTime);
-				gi.G2API_SetBoneAnim(&ent->ghoul2[0], "Motion", currentFrame, currentFrame + 1, flags, animSpeed,
-					cg.time ? cg.time : level.time, currentFrame, blendTime);
+				gi.G2API_SetBoneAnim(&ent->ghoul2[0], "lower_lumbar", current_frame, current_frame + 1, flags, anim_speed,
+					cg.time ? cg.time : level.time, current_frame, blend_time);
+				gi.G2API_SetBoneAnim(&ent->ghoul2[0], "model_root", current_frame, current_frame + 1, flags, anim_speed,
+					cg.time ? cg.time : level.time, current_frame, blend_time);
+				gi.G2API_SetBoneAnim(&ent->ghoul2[0], "Motion", current_frame, current_frame + 1, flags, anim_speed,
+					cg.time ? cg.time : level.time, current_frame, blend_time);
 			}
 		}
 #endif
@@ -1860,7 +1861,7 @@ qboolean G_RagDoll(gentity_t* ent, vec3_t forcedAngles)
 		VectorCopy(usedOrg, tParms.position);
 		VectorCopy(ent->s.modelScale, tParms.scale);
 		tParms.me = ent->s.number;
-		tParms.groundEnt = ent->client->ps.groundentityNum;
+		tParms.groundEnt = ent->client->ps.groundentity_num;
 
 		tParms.collisionType = 1;
 		tParms.RagPhase = CRagDollParams::RP_DEATH_COLLISION;
@@ -1875,10 +1876,10 @@ qboolean G_RagDoll(gentity_t* ent, vec3_t forcedAngles)
 		VectorCopy(usedOrg, tuParms.position);
 		VectorCopy(ent->s.modelScale, tuParms.scale);
 		tuParms.me = ent->s.number;
-		tuParms.settleFrame = tParms.endFrame - 1;
-		tuParms.groundEnt = ent->client->ps.groundentityNum;
+		tuParms.settleFrame = tParms.end_frame - 1;
+		tuParms.groundEnt = ent->client->ps.groundentity_num;
 
-		if (ent->client->ps.groundentityNum != ENTITYNUM_NONE)
+		if (ent->client->ps.groundentity_num != ENTITYNUM_NONE)
 		{
 			VectorClear(tuParms.velocity);
 		}
@@ -1946,7 +1947,7 @@ qboolean G_RagDoll(gentity_t* ent, vec3_t forcedAngles)
 				VectorSubtract(ent->client->ragLastOrigin, ent->client->ps.origin, pDif);
 				VectorCopy(ent->client->ps.origin, ent->client->ragLastOrigin);
 
-				if (ent->client->ragLastOriginTime >= level.time && ent->client->ps.groundentityNum != ENTITYNUM_NONE)
+				if (ent->client->ragLastOriginTime >= level.time && ent->client->ps.groundentity_num != ENTITYNUM_NONE)
 				{
 					//make sure it's reasonably updated
 					float difLen = VectorLength(pDif);
@@ -2257,7 +2258,7 @@ void G_RunFrame(const int levelTime)
 					{
 						ent->client->ps.jetpackFuel -= 4;
 					}
-					else if (ent->client->ps.groundentityNum == ENTITYNUM_NONE)
+					else if (ent->client->ps.groundentity_num == ENTITYNUM_NONE)
 					{
 						//in midair
 						ent->client->ps.jetpackFuel--;
@@ -2281,7 +2282,7 @@ void G_RunFrame(const int levelTime)
 					ent->client->jetPackDebReduce = level.time + JETPACK_DEFUEL_RATE;
 				}
 			}
-			else if (ent->client->ps.jetpackFuel < 100 && ent->client->ps.groundentityNum != ENTITYNUM_NONE)
+			else if (ent->client->ps.jetpackFuel < 100 && ent->client->ps.groundentity_num != ENTITYNUM_NONE)
 			{
 				//recharge jetpack
 				if (ent->client->jetPackDebRecharge < level.time && !ent->client->flamethrowerOn && !ent->client->
@@ -2338,7 +2339,7 @@ void G_RunFrame(const int levelTime)
 			//dead
 			if (ent->health <= 0)
 			{
-				if (ent->client->ps.groundentityNum != ENTITYNUM_NONE)
+				if (ent->client->ps.groundentity_num != ENTITYNUM_NONE)
 				{
 					//on the ground
 					pitch_roll_for_slope(ent);

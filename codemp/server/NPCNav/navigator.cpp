@@ -929,11 +929,11 @@ void CNavigator::ShowNodes(void)
 		constexpr qboolean showRadius = qfalse;
 		//if( NAVDEBUG_showRadius )
 		{
-			dist = DistanceSquared(SV_GentityNum(0)->r.currentOrigin, position);
+			dist = DistanceSquared(SV_Gentity_num(0)->r.currentOrigin, position);
 		}
 		if (dist < 1048576)
 		{
-			if (SV_inPVS(SV_GentityNum(0)->r.currentOrigin, position))
+			if (SV_inPVS(SV_Gentity_num(0)->r.currentOrigin, position))
 			{
 				(*ni)->Draw(showRadius);
 			}
@@ -959,12 +959,12 @@ void CNavigator::ShowEdges(void)
 	{
 		vec3_t start;
 		(*ni)->GetPosition(start);
-		if (DistanceSquared(SV_GentityNum(0)->r.currentOrigin, start) >= 1048576)
+		if (DistanceSquared(SV_Gentity_num(0)->r.currentOrigin, start) >= 1048576)
 		{
 			continue;
 		}
 
-		if (!SV_inPVS(SV_GentityNum(0)->r.currentOrigin, start))
+		if (!SV_inPVS(SV_Gentity_num(0)->r.currentOrigin, start))
 		{
 			continue;
 		}
@@ -991,12 +991,12 @@ void CNavigator::ShowEdges(void)
 			//Set this as drawn
 			drawMap[id][(*ni)->GetID()] = true;
 
-			if (DistanceSquared(SV_GentityNum(0)->r.currentOrigin, end) >= 1048576)
+			if (DistanceSquared(SV_Gentity_num(0)->r.currentOrigin, end) >= 1048576)
 			{
 				continue;
 			}
 
-			if (!SV_inPVS(SV_GentityNum(0)->r.currentOrigin, end))
+			if (!SV_inPVS(SV_Gentity_num(0)->r.currentOrigin, end))
 				continue;
 
 			/*
@@ -1046,18 +1046,18 @@ void CNavigator::CheckBlockedEdges(void)
 				start->GetPosition(p1);
 				end->GetPosition(p2);
 
-				//FIXME: can't we just store the trace.entityNum from the HardConnect trace?  So we don't have to do another trace here...
+				//FIXME: can't we just store the trace.entity_num from the HardConnect trace?  So we don't have to do another trace here...
 				SV_Trace(&trace, p1, wpMins, wpMaxs, p2, ENTITYNUM_NONE,
 					MASK_SOLID | CONTENTS_MONSTERCLIP | CONTENTS_BOTCLIP, qfalse, 0, 10);
 
-				if (trace.entityNum < ENTITYNUM_WORLD && (trace.fraction < 1.0f || trace.startsolid == qtrue || trace.
+				if (trace.entity_num < ENTITYNUM_WORLD && (trace.fraction < 1.0f || trace.startsolid == qtrue || trace.
 					allsolid == qtrue))
 				{
 					//could be assumed, since failed before
-					if (GVM_NAV_EntIsDoor(trace.entityNum))
+					if (GVM_NAV_EntIsDoor(trace.entity_num))
 					{
 						//door
-						if (!GVM_NAV_EntIsUnlockedDoor(trace.entityNum))
+						if (!GVM_NAV_EntIsUnlockedDoor(trace.entity_num))
 						{
 							//locked door
 							failed = qtrue;
@@ -1065,18 +1065,18 @@ void CNavigator::CheckBlockedEdges(void)
 					}
 					else
 					{
-						if (GVM_NAV_EntIsBreakable(trace.entityNum))
+						if (GVM_NAV_EntIsBreakable(trace.entity_num))
 						{
 							//do same for breakable brushes/models/glass?
 							failed = qtrue;
 						}
-						else if (GVM_NAV_EntIsRemovableUsable(trace.entityNum))
+						else if (GVM_NAV_EntIsRemovableUsable(trace.entity_num))
 						{
 							failed = qtrue;
 						}
 						else if (trace.allsolid || trace.startsolid)
 						{
-							//FIXME: the entityNum would be none here, so how do we know if this is stuck inside an ent or the world?
+							//FIXME: the entity_num would be none here, so how do we know if this is stuck inside an ent or the world?
 						}
 						else
 						{
@@ -2068,7 +2068,7 @@ qboolean CNavigator::CheckFailedEdge(failedEdge_t* failedEdge) const
 		{
 			vec3_t start, end, mins, maxs;
 			int ignore, clipmask;
-			const sharedEntity_t* ent = SV_GentityNum(failedEdge->ent_id);
+			const sharedEntity_t* ent = SV_Gentity_num(failedEdge->ent_id);
 			//(failedEdge->ent_id<ENTITYNUM_WORLD)?&g_entities[failedEdge->ent_id]:NULL;
 			int hitEntNum;
 
@@ -2119,7 +2119,7 @@ qboolean CNavigator::CheckFailedEdge(failedEdge_t* failedEdge) const
 			{
 				return qfalse;
 			}
-			hitEntNum = trace.entityNum;
+			hitEntNum = trace.entity_num;
 #endif
 			//if we did hit something, see if it's just an auto-door and allow it
 			if (hitEntNum != ENTITYNUM_NONE && GVM_NAV_EntIsUnlockedDoor(hitEntNum))

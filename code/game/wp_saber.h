@@ -598,7 +598,7 @@ using saber_moveData_t = struct
 	int startQuad;
 	int endQuad;
 	unsigned animSetFlags;
-	int blendTime;
+	int blend_time;
 	int blocking;
 	saber_moveName_t chain_idle; // What move to call if the attack button is not pressed at the end of this anim
 	saber_moveName_t chain_attack; // What move to call if the attack button (and nothing else) is pressed

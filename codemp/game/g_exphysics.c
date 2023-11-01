@@ -59,14 +59,14 @@ void G_RunExPhys(gentity_t* ent, float gravity, float mass, float bounce, qboole
 
 		if (tr.fraction == 1.0f)
 		{
-			ent->s.groundentityNum = ENTITYNUM_NONE;
+			ent->s.groundentity_num = ENTITYNUM_NONE;
 		}
 		else
 		{
-			ent->s.groundentityNum = tr.entityNum;
+			ent->s.groundentity_num = tr.entity_num;
 		}
 
-		if (ent->s.groundentityNum == ENTITYNUM_NONE)
+		if (ent->s.groundentity_num == ENTITYNUM_NONE)
 		{
 			ent->epGravFactor += gravity;
 
@@ -95,7 +95,7 @@ void G_RunExPhys(gentity_t* ent, float gravity, float mass, float bounce, qboole
 				ent->clipmask, qfalse, 0, 0);
 			if (tr.startsolid || tr.allsolid)
 			{
-				ent->touch(ent, &g_entities[tr.entityNum], &tr);
+				ent->touch(ent, &g_entities[tr.entity_num], &tr);
 			}
 		}
 		return;
@@ -109,7 +109,7 @@ void G_RunExPhys(gentity_t* ent, float gravity, float mass, float bounce, qboole
 	VectorCopy(ent->epVelocity, vNorm);
 	vTotal = VectorNormalize(vNorm);
 
-	if (vTotal < 1 && ent->s.groundentityNum != ENTITYNUM_NONE)
+	if (vTotal < 1 && ent->s.groundentity_num != ENTITYNUM_NONE)
 	{
 		//we've pretty much stopped moving anyway, just clear it out then.
 		VectorClear(ent->epVelocity);
@@ -251,10 +251,10 @@ void G_RunExPhys(gentity_t* ent, float gravity, float mass, float bounce, qboole
 		}
 
 		//call touch first so we can check velocity upon impact if we want
-		if (tr.entityNum != ENTITYNUM_NONE && ent->touch)
+		if (tr.entity_num != ENTITYNUM_NONE && ent->touch)
 		{
 			//then call the touch function
-			ent->touch(ent, &g_entities[tr.entityNum], &tr);
+			ent->touch(ent, &g_entities[tr.entity_num], &tr);
 		}
 
 		VectorAdd(ent->epVelocity, vNorm, ent->epVelocity); //add it into the existing velocity.

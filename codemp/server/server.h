@@ -163,7 +163,7 @@ using client_t = struct client_s
 	int lastMessageNum; // for delta compression
 	int lastClientCommand; // reliable client message sequence
 	char lastClientCommandString[MAX_STRING_CHARS];
-	sharedEntity_t* gentity; // SV_GentityNum(client_num)
+	sharedEntity_t* gentity; // SV_Gentity_num(client_num)
 	char name[MAX_NAME_LENGTH]; // extracted from userinfo, high bits masked
 
 	// downloading
@@ -285,9 +285,6 @@ extern cvar_t* sv_autoDemoBots;
 extern cvar_t* sv_autoDemoMaxMaps;
 extern cvar_t* sv_legacyFixes;
 extern cvar_t* sv_banFile;
-extern	cvar_t* sv_maxOOBRate;
-extern	cvar_t* sv_maxOOBRateIP;
-extern	cvar_t* sv_autoWhitelist;
 
 extern serverBan_t serverBans[SERVER_MAXBANS];
 extern int serverBansCount;
@@ -318,10 +315,8 @@ struct leakyBucket_s
 
 extern leakyBucket_t outboundLeakyBucket;
 
-qboolean SVC_RateLimit(leakyBucket_t* bucket, int burst, int period, int now);
-qboolean SVC_RateLimitAddress(netadr_t from, int burst, int period, int now);
-void SVC_LoadWhitelist(void);
-void SVC_WhitelistAdr(netadr_t adr);
+qboolean SVC_RateLimit(leakyBucket_t* bucket, int burst, int period);
+qboolean SVC_RateLimitAddress(netadr_t from, int burst, int period);
 void SV_FinalMessage(char* message);
 void QDECL SV_SendServerCommand(client_t* cl, const char* fmt, ...);
 
@@ -395,7 +390,7 @@ void SV_SendClientSnapshot(client_t* client);
 // sv_game.c
 //
 int SV_NumForGentity(sharedEntity_t* ent);
-sharedEntity_t* SV_GentityNum(int num);
+sharedEntity_t* SV_Gentity_num(int num);
 playerState_t* SV_Gameclient_num(int num);
 svEntity_t* SV_SvEntityForGentity(sharedEntity_t* gEnt);
 sharedEntity_t* SV_GEntityForSvEntity(svEntity_t* svEnt);
@@ -417,7 +412,7 @@ int SV_BotGetConsoleMessage(int client, char* buf, int size);
 void* Bot_GetMemoryGame(int size);
 void Bot_FreeMemoryGame(void* ptr);
 
-int BotImport_DebugPolygonCreate(int color, int numPoints, const vec3_t* points);
+int BotImport_DebugPolygonCreate(int color, int num_points, const vec3_t* points);
 void BotImport_DebugPolygonDelete(int id);
 
 //============================================================
@@ -439,7 +434,7 @@ void SV_LinkEntity(sharedEntity_t* g_ent);
 // sets ent->leafnums[] for pvs determination even if the entity
 // is not solid
 
-clipHandle_t SV_clip_handleForEntity(const sharedEntity_t* ent);
+clip_handle_t SV_clip_handleForEntity(const sharedEntity_t* ent);
 
 void SV_SectorList_f(void);
 
@@ -451,11 +446,11 @@ int SV_AreaEntities(const vec3_t mins, const vec3_t maxs, int* entity_list, int 
 // returns the number of pointers filled in
 // The world entity is never returned in this list.
 
-int SV_PointContents(const vec3_t p, int pass_entityNum);
+int SV_PointContents(const vec3_t p, int pass_entity_num);
 // returns the CONTENTS_* value from the world and all entities at the given point.
 
 void SV_Trace(trace_t* results, const vec3_t start, const vec3_t mins, const vec3_t maxs, const vec3_t end,
-	int pass_entityNum, int contentmask, int capsule, int traceFlags, int useLod);
+	int pass_entity_num, int contentmask, int capsule, int traceFlags, int use_lod);
 // mins and maxs are relative
 
 // if the entire move stays in a solid volume, trace.allsolid will be set,
@@ -464,10 +459,10 @@ void SV_Trace(trace_t* results, const vec3_t start, const vec3_t mins, const vec
 // if the starting point is in a solid, it will be allowed to move out
 // to an open area
 
-// pass_entityNum is explicitly excluded from clipping checks (normally ENTITYNUM_NONE)
+// pass_entity_num is explicitly excluded from clipping checks (normally ENTITYNUM_NONE)
 
 void SV_ClipToEntity(trace_t* trace, const vec3_t start, const vec3_t mins, const vec3_t maxs, const vec3_t end,
-	int entityNum, int contentmask, int capsule);
+	int entity_num, int contentmask, int capsule);
 // clip to a specific entity
 
 //

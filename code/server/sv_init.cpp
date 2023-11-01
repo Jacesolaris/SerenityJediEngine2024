@@ -152,7 +152,7 @@ void SV_CreateBaseline()
 {
 	for (int entnum = 0; entnum < ge->num_entities; entnum++)
 	{
-		gentity_t* svent = SV_GentityNum(entnum);
+		gentity_t* svent = SV_Gentity_num(entnum);
 		if (!svent->inuse)
 		{
 			continue;
@@ -268,6 +268,11 @@ void SV_SpawnServer(const char* server, const ForceReload_e eForceReload, const 
 	{
 		SV_Startup();
 	}
+
+	// clear out those shaders, images and Models
+	/*R_InitImages();
+	R_InitShaders();
+	R_ModelInit();*/
 
 	re.SVModelInit();
 

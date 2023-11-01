@@ -958,7 +958,7 @@ netField_t entityStateFields[] =
 	{NETF(pos.trDuration), 32},
 	// might be able to reduce
 	{NETF(teamowner), 8},
-	{NETF(groundentityNum), GENTITYNUM_BITS},
+	{NETF(groundentity_num), GENTITYNUM_BITS},
 	{NETF(pos.trType), 8},
 	{NETF(angles[2]), 0},
 	{NETF(angles[0]), 0},
@@ -981,10 +981,10 @@ netField_t entityStateFields[] =
 	// used mostly for players and npcs - appears to be static / never changing
 	{NETF(customRGBA[2]), 8}, //0-255
 	// multiple meanings
-	{NETF(saberentityNum), GENTITYNUM_BITS},
+	{NETF(saberentity_num), GENTITYNUM_BITS},
 	// could probably just eliminate and assume a big number
 	{NETF(g2radius), 8},
-	{NETF(otherentityNum2), GENTITYNUM_BITS},
+	{NETF(otherentity_num2), GENTITYNUM_BITS},
 	// used all over the place
 	{NETF(owner), GENTITYNUM_BITS},
 	{NETF(model_index2), 8},
@@ -995,7 +995,7 @@ netField_t entityStateFields[] =
 	{NETF(apos.trDelta[1]), 0},
 	{NETF(boneAngles1[1]), 0},
 	// why raised from 8 to -16?
-	{NETF(modelIndex), -16},
+	{NETF(model_index), -16},
 	// barely used, could probably be replaced
 	{NETF(emplacedOwner), 32}, //As above, also used as a time value (for electricity render time)
 	{NETF(apos.trDelta[0]), 0},
@@ -1018,7 +1018,7 @@ netField_t entityStateFields[] =
 	{NETF(shouldtarget), 1},
 	// widely used, does not appear that they have to be 16 bits
 	{NETF(trickedentindex), 16}, //See note in PSF
-	{NETF(otherentityNum), GENTITYNUM_BITS},
+	{NETF(otherentity_num), GENTITYNUM_BITS},
 	{NETF(origin2[1]), 0},
 	{NETF(time2), 32},
 	{NETF(legsFlip), 1},
@@ -1382,7 +1382,7 @@ void MSG_ReadDeltaEntity(msg_t* msg, entityState_t* from, entityState_t* to,
 		print = 1;
 		if (sv.state)
 		{
-			Com_Printf("%3i: #%-3i (%s) ", msg->readcount, number, SV_GentityNum(number)->classname);
+			Com_Printf("%3i: #%-3i (%s) ", msg->readcount, number, SV_Gentity_num(number)->classname);
 		}
 		else
 		{
@@ -1520,7 +1520,7 @@ netField_t playerStateFields[] =
 	{PSF(legsAnim), 16}, // Maximum number of animation sequences is 2048.  Top bit is reserved for the togglebit
 	{PSF(delta_angles[0]), 16},
 	{PSF(torsoAnim), 16}, // Maximum number of animation sequences is 2048.  Top bit is reserved for the togglebit
-	{PSF(groundentityNum), GENTITYNUM_BITS},
+	{PSF(groundentity_num), GENTITYNUM_BITS},
 	{PSF(eFlags), 32},
 	{PSF(fd.forcePower), 8},
 	{PSF(eventSequence), 16},
@@ -1536,7 +1536,7 @@ netField_t playerStateFields[] =
 	{PSF(events[1]), 10}, // There is a maximum of 256 events (8 bits transmission, 2 high bits for uniqueness)
 	{PSF(customRGBA[0]), 8}, //0-255
 	{PSF(movementDir), 4},
-	{PSF(saberentityNum), GENTITYNUM_BITS},
+	{PSF(saberentity_num), GENTITYNUM_BITS},
 	//Also used for channel tracker storage, but should never exceed entity number
 	{PSF(customRGBA[3]), 8}, //0-255
 	{PSF(weaponstate), 4},
@@ -1792,7 +1792,7 @@ netField_t pilotPlayerStateFields[] =
 	{PSF(velocity[2]), 0},
 	{PSF(bobCycle), 8},
 	{PSF(speed), 0}, //sadly, the vehicles require negative speed values, so..
-	{PSF(groundentityNum), GENTITYNUM_BITS},
+	{PSF(groundentity_num), GENTITYNUM_BITS},
 	{PSF(viewheight), -8},
 	{PSF(fd.saber_anim_level), 4},
 	{PSF(fd.saberDrawAnimLevel), 4},
@@ -1800,7 +1800,7 @@ netField_t pilotPlayerStateFields[] =
 	//NOTE: This isn't just an index all the time, it's often used as a time value, and thus needs 32 bits
 	{PSF(customRGBA[0]), 8}, //0-255
 	{PSF(movementDir), 4},
-	{PSF(saberentityNum), GENTITYNUM_BITS},
+	{PSF(saberentity_num), GENTITYNUM_BITS},
 	//Also used for channel tracker storage, but should never exceed entity number
 	{PSF(customRGBA[3]), 8}, //0-255
 	{PSF(saber_move), 32},
@@ -1961,7 +1961,7 @@ netField_t vehPlayerStateFields[] =
 	{PSF(speed), 0}, //sadly, the vehicles require negative speed values, so..
 	{PSF(legsAnim), 16}, // Maximum number of animation sequences is 2048.  Top bit is reserved for the togglebit
 	{PSF(delta_angles[0]), 16},
-	{PSF(groundentityNum), GENTITYNUM_BITS},
+	{PSF(groundentity_num), GENTITYNUM_BITS},
 	{PSF(eFlags), 32},
 	{PSF(eventSequence), 16},
 	{PSF(legsTimer), 16},
@@ -2101,7 +2101,7 @@ netField_t	playerStateFields[] =
 { PSF(legsAnim), 16 },			// Maximum number of animation sequences is 2048.  Top bit is reserved for the togglebit
 { PSF(delta_angles[0]), 16 },
 { PSF(torsoAnim), 16 },			// Maximum number of animation sequences is 2048.  Top bit is reserved for the togglebit
-{ PSF(groundentityNum), GENTITYNUM_BITS },
+{ PSF(groundentity_num), GENTITYNUM_BITS },
 { PSF(eFlags), 32 },
 { PSF(fd.forcePower), 8 },
 { PSF(eventSequence), 16 },
@@ -2116,7 +2116,7 @@ netField_t	playerStateFields[] =
 { PSF(events[1]), 10 },			// There is a maximum of 256 events (8 bits transmission, 2 high bits for uniqueness)
 { PSF(customRGBA[0]), 8 }, //0-255
 { PSF(movementDir), 4 },
-{ PSF(saberentityNum), GENTITYNUM_BITS }, //Also used for channel tracker storage, but should never exceed entity number
+{ PSF(saberentity_num), GENTITYNUM_BITS }, //Also used for channel tracker storage, but should never exceed entity number
 { PSF(customRGBA[3]), 8 }, //0-255
 { PSF(weaponstate), 4 },
 { PSF(saber_move), 32 }, //This value sometimes exceeds the max LS_ value and gets set to a crazy amount, so it needs 32 bits
@@ -2312,7 +2312,7 @@ void MSG_CheckNETFPSFOverrides(const qboolean psfOverrides)
 	char overrideFile[4096];
 	char entryName[4096]{};
 	char bits[4096]{};
-	char* fileName;
+	char* file_name;
 	int ibits;
 	int i = 0;
 	int numFields;
@@ -2322,13 +2322,13 @@ void MSG_CheckNETFPSFOverrides(const qboolean psfOverrides)
 	if (psfOverrides)
 	{
 		//do PSF overrides instead of NETF
-		fileName = "psf_overrides.txt";
+		file_name = "psf_overrides.txt";
 		bitStorage = &g_psfBitStorage;
 		numFields = static_cast<int>(std::size(playerStateFields));
 	}
 	else
 	{
-		fileName = "netf_overrides.txt";
+		file_name = "netf_overrides.txt";
 		bitStorage = &g_netfBitStorage;
 		numFields = static_cast<int>(std::size(entityStateFields));
 	}
@@ -2356,7 +2356,7 @@ void MSG_CheckNETFPSFOverrides(const qboolean psfOverrides)
 		}
 	}
 
-	const int len = FS_FOpenFileRead(va("ext_data/MP/%s", fileName), &f, qfalse);
+	const int len = FS_FOpenFileRead(va("ext_data/MP/%s", file_name), &f, qfalse);
 
 	if (!f || len < 0)
 	{
@@ -2366,7 +2366,7 @@ void MSG_CheckNETFPSFOverrides(const qboolean psfOverrides)
 
 	if (len >= 4096)
 	{
-		Com_Printf("WARNING: %s is >= 4096 bytes and is being ignored\n", fileName);
+		Com_Printf("WARNING: %s is >= 4096 bytes and is being ignored\n", file_name);
 		FS_FCloseFile(f);
 		return;
 	}
@@ -2435,7 +2435,7 @@ void MSG_CheckNETFPSFOverrides(const qboolean psfOverrides)
 			if (!overrideFile[i])
 			{
 				//just give up, this shouldn't happen
-				Com_Printf("WARNING: Parsing error for %s\n", fileName);
+				Com_Printf("WARNING: Parsing error for %s\n", file_name);
 				return;
 			}
 
@@ -2498,13 +2498,13 @@ void MSG_CheckNETFPSFOverrides(const qboolean psfOverrides)
 				if (j == numFields)
 				{
 					//failed to find the value
-					Com_Printf("WARNING: Value '%s' from %s is not valid\n", entryName, fileName);
+					Com_Printf("WARNING: Value '%s' from %s is not valid\n", entryName, file_name);
 				}
 			}
 			else
 			{
 				//also should not happen
-				Com_Printf("WARNING: Parsing error for %s\n", fileName);
+				Com_Printf("WARNING: Parsing error for %s\n", file_name);
 				return;
 			}
 		}

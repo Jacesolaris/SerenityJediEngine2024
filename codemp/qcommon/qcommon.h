@@ -624,7 +624,6 @@ fileHandle_t FS_FOpenFileWrite(const char* filename, qboolean safe = qtrue);
 
 int FS_filelength(fileHandle_t f);
 fileHandle_t FS_SV_FOpenFileWrite(const char* filename);
-fileHandle_t FS_SV_FOpenFileAppend(const char* filename);
 int FS_SV_FOpenFileRead(const char* filename, fileHandle_t* fp);
 void FS_SV_Rename(const char* from, const char* to, qboolean safe);
 long FS_FOpenFileRead(const char* filename, fileHandle_t* file, qboolean uniqueFILE);
@@ -779,6 +778,7 @@ int Com_FilterPath(char* filter, char* name, int casesensitive);
 int Com_RealTime(qtime_t* qtime);
 qboolean Com_SafeMode(void);
 void Com_RunAndTimeServerPacket(netadr_t* evFrom, msg_t* buf);
+extern cvar_t* com_rend2;
 
 void Com_StartupVariable(const char* match);
 // checks for and removes command line "+set var arg" constructs
@@ -885,15 +885,14 @@ void Z_LogHeap( void );
 #ifdef DEBUG_ZONE_ALLOCS
 void* Z_Malloc(const int iSize, const memtag_t eTag, const qboolean bZeroit = qfalse, const int iUnusedAlign = 4);
 // return memory NOT zero-filled by default
-void* S_Malloc(int iSize); // NOT 0 filled memory only for small allocations
+void* S_Malloc(const int iSize); // NOT 0 filled memory only for small allocations
 #else
 void* Z_Malloc(const int iSize, const memtag_t eTag, const qboolean bZeroit = qfalse, const int iUnusedAlign = 4);	// return memory NOT zero-filled by default
-void* S_Malloc(int iSize);					// NOT 0 filled memory only for small allocations
+void* S_Malloc(const int iSize);					// NOT 0 filled memory only for small allocations
 #endif
-
-void Z_MorphMallocTag(void* pv_address, memtag_t eDesiredTag);
+void Z_MorphMallocTag(void* pv_address, const memtag_t eDesiredTag);
 void Z_Validate(void);
-int Z_MemSize(const memtag_t eTag);
+int Z_MemSize(memtag_t eTag);
 void Z_TagFree(memtag_t eTag);
 void Z_Free(void* pv_address);
 int Z_Size(void* pvAddress);
@@ -911,8 +910,6 @@ void Hunk_ClearTempMemory(void);
 void* Hunk_AllocateTempMemory(const int size);
 void Hunk_FreeTempMemory(void* buf);
 int Hunk_MemoryRemaining(void);
-void Hunk_Log(void);
-void Hunk_Trash(void);
 
 void Com_TouchMemory(void);
 

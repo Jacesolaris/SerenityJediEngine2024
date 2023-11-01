@@ -138,19 +138,19 @@ CL_GetParseEntityState
 ====================
 */
 /*
-qboolean	CL_GetParseEntityState( int parseentityNumber, entityState_t *state ) {
+qboolean	CL_GetParseEntityState( int parseentity_number, entityState_t *state ) {
 	// can't return anything that hasn't been parsed yet
-	if ( parseentityNumber >= cl.parseEntitiesNum ) {
+	if ( parseentity_number >= cl.parseEntitiesNum ) {
 		Com_Error( ERR_DROP, "CL_GetParseEntityState: %i >= %i",
-			parseentityNumber, cl.parseEntitiesNum );
+			parseentity_number, cl.parseEntitiesNum );
 	}
 
 	// can't return anything that has been overwritten in the circular buffer
-	if ( parseentityNumber <= cl.parseEntitiesNum - MAX_PARSE_ENTITIES ) {
+	if ( parseentity_number <= cl.parseEntitiesNum - MAX_PARSE_ENTITIES ) {
 		return qfalse;
 	}
 
-	*state = cl.parseEntities[ parseentityNumber & ( MAX_PARSE_ENTITIES - 1 ) ];
+	*state = cl.parseEntities[ parseentity_number & ( MAX_PARSE_ENTITIES - 1 ) ];
 	return qtrue;
 }
 */
@@ -217,8 +217,8 @@ qboolean CL_GetSnapshot(const int snapshotNumber, snapshot_t* snapshot)
 	*/
 	for (int i = 0; i < count; i++)
 	{
-		const int entNum = clSnap->parseEntitiesNum + i & MAX_PARSE_ENTITIES - 1;
-		snapshot->entities[i] = cl.parseEntities[entNum];
+		const int ent_num = clSnap->parseEntitiesNum + i & MAX_PARSE_ENTITIES - 1;
+		snapshot->entities[i] = cl.parseEntities[ent_num];
 	}
 	/*
 	Ghoul2 Insert End
@@ -1040,7 +1040,7 @@ intptr_t CL_CgameSystemCalls(intptr_t* args)
 		return re.GetLighting(static_cast<const float*>(VMA(1)), static_cast<float*>(VMA(2)),
 			static_cast<float*>(VMA(3)), static_cast<float*>(VMA(4)));
 	case CG_R_ADDPOLYTOSCENE:
-		re.AddPolyToScene(args[1], args[2], static_cast<const polyVert_t*>(VMA(3)), 1);
+		re.AddPolyToScene(args[1], args[2], (const polyVert_t*)VMA(3), 1);
 		return 0;
 	case CG_R_ADDLIGHTTOSCENE:
 		re.AddLightToScene(static_cast<const float*>(VMA(1)), VMF(2), VMF(3), VMF(4), VMF(5));

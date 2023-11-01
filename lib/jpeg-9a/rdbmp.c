@@ -322,7 +322,7 @@ start_input_bmp(const j_compress_ptr cinfo, const cjpeg_source_ptr sinfo)
 		biXPelsPerMeter = GET_4B(bmpinfoheader, 24);
 		biYPelsPerMeter = GET_4B(bmpinfoheader, 28);
 		biClrUsed = GET_4B(bmpinfoheader, 32);
-		/* bi_sizeImage, biClrImportant fields are ignored */
+		/* biSizeImage, biClrImportant fields are ignored */
 
 		switch (source->bits_per_pixel) {
 		case 8:			/* colormapped image */

@@ -615,7 +615,7 @@ void WP_FireTurboLaserMissile(gentity_t* ent, vec3_t start, vec3_t dir)
 	gentity_t* missile = create_missile(start, dir, velocity, 10000, ent, qfalse);
 
 	//use a custom shot effect
-	missile->s.otherentityNum2 = ent->genericValue14;
+	missile->s.otherentity_num2 = ent->genericValue14;
 	//use a custom impact effect
 	missile->s.emplacedOwner = ent->genericValue15;
 
@@ -881,7 +881,7 @@ static void WP_DisruptorMainFire(gentity_t* ent)
 			trap->Trace(&tr, start, shot_mins, shot_maxs, end, ignore, MASK_SHOT, qfalse, 0, 0);
 		}
 
-		trace_ent = &g_entities[tr.entityNum];
+		trace_ent = &g_entities[tr.entity_num];
 
 		if (d_projectileGhoul2Collision.integer && trace_ent->inuse && trace_ent->client)
 		{
@@ -903,7 +903,7 @@ static void WP_DisruptorMainFire(gentity_t* ent)
 		if (trace_ent && trace_ent->client && trace_ent->client->ps.duelInProgress &&
 			trace_ent->client->ps.duelIndex != ent->s.number)
 		{
-			ignore = tr.entityNum;
+			ignore = tr.entity_num;
 			VectorCopy(tr.endpos, start);
 			continue;
 		}
@@ -925,7 +925,7 @@ static void WP_DisruptorMainFire(gentity_t* ent)
 				}
 				WP_SaberBlockBolt(trace_ent, tr.endpos, qtrue);
 
-				ignore = tr.entityNum;
+				ignore = tr.entity_num;
 				VectorCopy(tr.endpos, start);
 				continue;
 			}
@@ -950,7 +950,7 @@ static void WP_DisruptorMainFire(gentity_t* ent)
 				//force player into a projective block move.
 				jedi_disruptor_dodge_evasion(trace_ent, ent, tr.endpos, -1);
 
-				ignore = tr.entityNum;
+				ignore = tr.entity_num;
 				VectorCopy(tr.endpos, start);
 				continue;
 			}
@@ -975,11 +975,11 @@ static void WP_DisruptorMainFire(gentity_t* ent)
 	VectorCopy(muzzle, tent->s.origin2);
 	tent->s.eventParm = ent->s.number;
 
-	trace_ent = &g_entities[tr.entityNum];
+	trace_ent = &g_entities[tr.entity_num];
 
 	if (render_impact)
 	{
-		if (tr.entityNum < ENTITYNUM_WORLD && trace_ent->takedamage)
+		if (tr.entity_num < ENTITYNUM_WORLD && trace_ent->takedamage)
 		{
 			if (trace_ent->client && LogAccuracyHit(trace_ent, ent))
 			{
@@ -1132,7 +1132,7 @@ void WP_DisruptorAltFire(gentity_t* ent)
 			trap->Trace(&tr, start, shot_mins, shot_maxs, end, ignore, MASK_SHOT, qfalse, 0, 0);
 		}
 
-		gentity_t* trace_ent = &g_entities[tr.entityNum];
+		gentity_t* trace_ent = &g_entities[tr.entity_num];
 
 		if (d_projectileGhoul2Collision.integer && trace_ent->inuse && trace_ent->client)
 		{
@@ -1159,7 +1159,7 @@ void WP_DisruptorAltFire(gentity_t* ent)
 		if (trace_ent && trace_ent->client && trace_ent->client->ps.duelInProgress &&
 			trace_ent->client->ps.duelIndex != ent->s.number)
 		{
-			ignore = tr.entityNum;
+			ignore = tr.entity_num;
 			VectorCopy(tr.endpos, start);
 			continue;
 		}
@@ -1181,7 +1181,7 @@ void WP_DisruptorAltFire(gentity_t* ent)
 				}
 				WP_SaberBlockBolt(trace_ent, tr.endpos, qtrue);
 
-				ignore = tr.entityNum;
+				ignore = tr.entity_num;
 				VectorCopy(tr.endpos, start);
 				continue;
 			}
@@ -1206,7 +1206,7 @@ void WP_DisruptorAltFire(gentity_t* ent)
 				//force player into a projective block move.
 				jedi_disruptor_dodge_evasion(trace_ent, ent, tr.endpos, -1);
 
-				ignore = tr.entityNum;
+				ignore = tr.entity_num;
 				VectorCopy(tr.endpos, start);
 				continue;
 			}
@@ -1223,7 +1223,7 @@ void WP_DisruptorAltFire(gentity_t* ent)
 		{
 			if (trace_ent->takedamage && trace_ent->client)
 			{
-				tent->s.otherentityNum = trace_ent->s.number;
+				tent->s.otherentity_num = trace_ent->s.number;
 
 				// Create a simple impact type mark
 				tent = G_TempEntity(tr.endpos, EV_MISSILE_MISS);
@@ -1317,7 +1317,7 @@ void WP_DisruptorAltFire(gentity_t* ent)
 		// Get ready for an attempt to trace through another person
 		VectorCopy(tr.endpos, muzzle);
 		VectorCopy(tr.endpos, start);
-		ignore = tr.entityNum;
+		ignore = tr.entity_num;
 	}
 }
 
@@ -2343,7 +2343,7 @@ void rocketThink(gentity_t* ent)
 		ent->random *= 0.9f;
 
 		if (ent->enemy->client
-			&& ent->enemy->client->ps.groundentityNum != ENTITYNUM_NONE)
+			&& ent->enemy->client->ps.groundentity_num != ENTITYNUM_NONE)
 		{
 			//tracking a client who's on the ground, aim at the floor...?
 			// Try to crash into the ground if we get close enough to do splash damage
@@ -2394,7 +2394,7 @@ static void WP_FireRocket(gentity_t* ent, const qboolean alt_fire)
 
 		//Shove us backwards for half a second
 		VectorMA(ent->client->ps.velocity, -200, forward, ent->client->ps.velocity);
-		ent->client->ps.groundentityNum = ENTITYNUM_NONE;
+		ent->client->ps.groundentity_num = ENTITYNUM_NONE;
 
 		if (ent->client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_HALF)
 		{
@@ -2865,7 +2865,7 @@ qboolean WP_LobFire(const gentity_t* self, vec3_t start, vec3_t target, vec3_t m
 				if (trace.fraction < 1.0f)
 				{
 					//hit something
-					if (trace.entityNum == enemy_num)
+					if (trace.entity_num == enemy_num)
 					{
 						//hit the enemy, that's perfect!
 						break;
@@ -2885,10 +2885,10 @@ qboolean WP_LobFire(const gentity_t* self, vec3_t start, vec3_t target, vec3_t m
 					}
 					blocked = qtrue;
 					//see if we should store this as the failCase
-					if (trace.entityNum < ENTITYNUM_WORLD)
+					if (trace.entity_num < ENTITYNUM_WORLD)
 					{
 						//hit an ent
-						const gentity_t* trace_ent = &g_entities[trace.entityNum];
+						const gentity_t* trace_ent = &g_entities[trace.entity_num];
 						if (trace_ent && trace_ent->takedamage && !OnSameTeam(self, trace_ent))
 						{
 							//hit something breakable, so that's okay
@@ -3026,9 +3026,9 @@ void touchLaserTrap(gentity_t* ent, const gentity_t* other, trace_t* trace)
 	else
 	{
 		ent->touch = 0;
-		if (trace->entityNum != ENTITYNUM_NONE)
+		if (trace->entity_num != ENTITYNUM_NONE)
 		{
-			ent->enemy = &g_entities[trace->entityNum];
+			ent->enemy = &g_entities[trace->entity_num];
 		}
 		laserTrapStick(ent, trace->endpos, trace->plane.normal);
 	}
@@ -3105,7 +3105,7 @@ void laserTrapThink(gentity_t* ent)
 	VectorMA(ent->s.pos.trBase, 1024, ent->movedir, end);
 	trap->Trace(&tr, ent->r.currentOrigin, NULL, NULL, end, ent->s.number, MASK_SHOT, qfalse, 0, 0);
 
-	const gentity_t* trace_ent = &g_entities[tr.entityNum];
+	const gentity_t* trace_ent = &g_entities[tr.entity_num];
 
 	ent->s.time = -1; //let all clients know to draw a beam from this guy
 
@@ -3217,7 +3217,7 @@ void CreateLaserTrap(gentity_t* laser_trap, vec3_t start, gentity_t* owner)
 	VectorSet(laser_trap->r.maxs, LT_SIZE, LT_SIZE, LT_SIZE);
 	laser_trap->clipmask = MASK_SHOT;
 	laser_trap->s.solid = 2;
-	laser_trap->s.modelIndex = G_model_index("models/weapons2/laser_trap/laser_trap_w.glm");
+	laser_trap->s.model_index = G_model_index("models/weapons2/laser_trap/laser_trap_w.glm");
 	laser_trap->s.modelGhoul2 = 1;
 	laser_trap->s.g2radius = 40;
 
@@ -3374,7 +3374,7 @@ void charge_stick(gentity_t* self, gentity_t* other, trace_t* trace)
 		&& trace->plane.normal[2] > 0)
 	{
 		//stick to it?
-		self->s.groundentityNum = other->s.number;
+		self->s.groundentity_num = other->s.number;
 	}
 	else if (other && other->s.number < ENTITYNUM_WORLD &&
 		(other->client || !other->s.weapon))
@@ -3525,7 +3525,7 @@ void drop_charge(gentity_t* self, vec3_t start, vec3_t dir)
 	bolt->s.eType = ET_GENERAL;
 	bolt->s.g2radius = 100;
 	bolt->s.modelGhoul2 = 1;
-	bolt->s.modelIndex = G_model_index("models/weapons2/detpack/det_pack_proj.glm");
+	bolt->s.model_index = G_model_index("models/weapons2/detpack/det_pack_proj.glm");
 
 	bolt->parent = self;
 	bolt->r.ownerNum = self->s.number;
@@ -3729,7 +3729,7 @@ static void WP_FireConcussionAlt(gentity_t* ent)
 
 	//Shove us backwards for half a second
 	VectorMA(ent->client->ps.velocity, -200, forward, ent->client->ps.velocity);
-	ent->client->ps.groundentityNum = ENTITYNUM_NONE;
+	ent->client->ps.groundentity_num = ENTITYNUM_NONE;
 
 	if (ent->client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_HALF)
 	{
@@ -3775,7 +3775,7 @@ static void WP_FireConcussionAlt(gentity_t* ent)
 			trap->Trace(&tr, start, shot_mins, shot_maxs, end, skip, MASK_SHOT, qfalse, 0, 0);
 		}
 
-		gentity_t* trace_ent = &g_entities[tr.entityNum];
+		gentity_t* trace_ent = &g_entities[tr.entity_num];
 
 		if (d_projectileGhoul2Collision.integer && trace_ent->inuse && trace_ent->client)
 		{
@@ -3797,10 +3797,10 @@ static void WP_FireConcussionAlt(gentity_t* ent)
 			render_impact = qfalse;
 		}
 
-		if (tr.entityNum == ent->s.number)
+		if (tr.entity_num == ent->s.number)
 		{
 			VectorCopy(tr.endpos, start);
-			skip = tr.entityNum;
+			skip = tr.entity_num;
 #ifdef _DEBUG
 			Com_Printf("BAD! Concussion gun shot somehow traced back and hit the owner!\n");
 #endif
@@ -3835,7 +3835,7 @@ static void WP_FireConcussionAlt(gentity_t* ent)
 				//force player into a projective block move.
 				jedi_disruptor_dodge_evasion(trace_ent, ent, tr.endpos, -1);
 
-				skip = tr.entityNum;
+				skip = tr.entity_num;
 				VectorCopy(tr.endpos, start);
 				continue;
 			}
@@ -3844,7 +3844,7 @@ static void WP_FireConcussionAlt(gentity_t* ent)
 		{
 			if (render_impact)
 			{
-				if (tr.entityNum < ENTITYNUM_WORLD && trace_ent->takedamage
+				if (tr.entity_num < ENTITYNUM_WORLD && trace_ent->takedamage
 					|| !Q_stricmp(trace_ent->classname, "misc_model_breakable")
 					|| trace_ent->s.eType == ET_MOVER)
 				{
@@ -3938,7 +3938,7 @@ static void WP_FireConcussionAlt(gentity_t* ent)
 		// Get ready for an attempt to trace through another person
 		//VectorCopy( tr.endpos, muzzle2 );
 		VectorCopy(tr.endpos, start);
-		skip = tr.entityNum;
+		skip = tr.entity_num;
 		hit_dodged = qfalse;
 	}
 
@@ -4042,12 +4042,12 @@ void WP_FireStunBaton(gentity_t* ent, const qboolean alt_fire)
 
 		trap->Trace(&tr, muzzle_stun, mins, maxs, end, ent->s.number, MASK_SHOT, qfalse, 0, 0);
 
-		if (tr.entityNum >= ENTITYNUM_WORLD)
+		if (tr.entity_num >= ENTITYNUM_WORLD)
 		{
 			return;
 		}
 
-		gentity_t* tr_ent = &g_entities[tr.entityNum];
+		gentity_t* tr_ent = &g_entities[tr.entity_num];
 
 		if (tr_ent && tr_ent->takedamage && tr_ent->client)
 		{
@@ -4147,10 +4147,10 @@ void WP_FireMelee(gentity_t* ent, qboolean alt_fire)
 
 	trap->Trace(&tr, muzzle_punch, mins, maxs, end, ent->s.number, MASK_SHOT, qfalse, 0, 0);
 
-	if (tr.entityNum != ENTITYNUM_NONE)
+	if (tr.entity_num != ENTITYNUM_NONE)
 	{
 		//hit something
-		gentity_t* tr_ent = &g_entities[tr.entityNum];
+		gentity_t* tr_ent = &g_entities[tr.entity_num];
 
 		G_Sound(ent, CHAN_AUTO, G_SoundIndex(va("sound/weapons/melee/punch%d", Q_irand(1, 4))));
 
@@ -4462,7 +4462,7 @@ void WP_TouchVehMissile(gentity_t* ent, const gentity_t* other, const trace_t* t
 	memcpy(&myTrace, trace, sizeof myTrace);
 	if (other)
 	{
-		myTrace.entityNum = other->s.number;
+		myTrace.entity_num = other->s.number;
 	}
 	G_MissileImpact(ent, &myTrace);
 }
@@ -4470,7 +4470,7 @@ void WP_TouchVehMissile(gentity_t* ent, const gentity_t* other, const trace_t* t
 void WP_CalcVehMuzzle(gentity_t* ent, const int muzzle_num)
 {
 	Vehicle_t* p_veh = ent->m_pVehicle;
-	mdxaBone_t boltMatrix;
+	mdxaBone_t bolt_matrix;
 	vec3_t veh_angles;
 
 	assert(p_veh);
@@ -4492,10 +4492,10 @@ void WP_CalcVehMuzzle(gentity_t* ent, const int muzzle_num)
 		veh_angles[PITCH] = veh_angles[ROLL] = 0;
 	}
 
-	trap->G2API_GetBoltMatrix_NoRecNoRot(ent->ghoul2, 0, p_veh->m_iMuzzleTag[muzzle_num], &boltMatrix, veh_angles,
+	trap->G2API_GetBoltMatrix_NoRecNoRot(ent->ghoul2, 0, p_veh->m_iMuzzleTag[muzzle_num], &bolt_matrix, veh_angles,
 		ent->client->ps.origin, level.time, NULL, ent->modelScale);
-	BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, p_veh->m_vMuzzlePos[muzzle_num]);
-	BG_GiveMeVectorFromMatrix(&boltMatrix, NEGATIVE_Y, p_veh->m_vMuzzleDir[muzzle_num]);
+	BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, p_veh->m_vMuzzlePos[muzzle_num]);
+	BG_GiveMeVectorFromMatrix(&bolt_matrix, NEGATIVE_Y, p_veh->m_vMuzzleDir[muzzle_num]);
 }
 
 void WP_VehWeapSetSolidToOwner(gentity_t* self)
@@ -4645,7 +4645,7 @@ gentity_t* WP_FireVehicleWeapon(gentity_t* ent, vec3_t start, vec3_t dir, const 
 			}
 			missile->nextthink = level.time + veh_weapon->iLifeTime;
 		}
-		missile->s.otherentityNum2 = veh_weapon - &g_vehWeaponInfo[0];
+		missile->s.otherentity_num2 = veh_weapon - &g_vehWeaponInfo[0];
 		missile->s.eFlags |= EF_JETPACK_ACTIVE;
 		//homing
 		if (veh_weapon->fHoming)
@@ -4704,7 +4704,7 @@ gentity_t* WP_FireVehicleWeapon(gentity_t* ent, vec3_t start, vec3_t dir, const 
 						if (missile->enemy->s.NPC_class == CLASS_VEHICLE)
 						{
 							//let vehicle know we've locked on to them
-							missile->s.otherentityNum = missile->enemy->s.number;
+							missile->s.otherentity_num = missile->enemy->s.number;
 						}
 					}
 				}
@@ -5244,7 +5244,7 @@ void FireVehicleWeapon(gentity_t* ent, const qboolean alt_fire)
 						{
 							vec3_t new_end;
 							VectorCopy(trace.endpos, new_end);
-							WP_VehLeadCrosshairVeh(&g_entities[trace.entityNum], new_end, fixed_dir, start, dir);
+							WP_VehLeadCrosshairVeh(&g_entities[trace.entity_num], new_end, fixed_dir, start, dir);
 						}
 					}
 
@@ -5660,7 +5660,7 @@ void FireWeapon(gentity_t* ent, const qboolean alt_fire)
 	// We should probably just use this as a default behavior, in special cases, just set alert to false.
 	if (alert > 0)
 	{
-		if (ent->client->ps.groundentityNum == ENTITYNUM_WORLD //FIXME: check for sand contents type?
+		if (ent->client->ps.groundentity_num == ENTITYNUM_WORLD //FIXME: check for sand contents type?
 			&& ent->s.weapon != WP_STUN_BATON
 			&& ent->s.weapon != WP_MELEE
 			//&& ent->s.weapon != WP_TUSKEN_STAFF //RAFIXME - Impliment?
@@ -6096,7 +6096,7 @@ void SP_emplaced_gun(gentity_t* ent)
 
 	G_SpawnFloat("constraint", "60", &ent->s.origin2[0]);
 
-	ent->s.modelIndex = G_model_index((char*)name);
+	ent->s.model_index = G_model_index((char*)name);
 	ent->s.modelGhoul2 = 1;
 	ent->s.g2radius = 110;
 
@@ -6181,7 +6181,7 @@ void SP_emplaced_eweb(gentity_t* ent)
 
 	G_SpawnFloat("constraint", "60", &ent->s.origin2[0]);
 
-	ent->s.modelIndex = G_model_index((char*)name);
+	ent->s.model_index = G_model_index((char*)name);
 	ent->s.modelGhoul2 = 1;
 	ent->s.g2radius = 110;
 

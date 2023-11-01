@@ -31,7 +31,7 @@ using bot_debugpoly_t = struct bot_debugpoly_s
 {
 	int inuse;
 	int color;
-	int numPoints;
+	int num_points;
 	vec3_t points[128];
 };
 
@@ -194,7 +194,7 @@ int SV_BotAllocateClient(void)
 		return -1;
 	}
 
-	cl->gentity = SV_GentityNum(i);
+	cl->gentity = SV_Gentity_num(i);
 	cl->gentity->s.number = i;
 	cl->state = CS_ACTIVE;
 	cl->lastPacketTime = svs.time;
@@ -235,7 +235,7 @@ void SV_BotFreeClient(const int client_num)
 BotDrawDebugPolygons
 ==================
 */
-void BotDrawDebugPolygons(void (*drawPoly)(int color, int numPoints, const float* points), int value)
+void BotDrawDebugPolygons(void (*drawPoly)(int color, int num_points, const float* points), int value)
 {
 	static cvar_t* bot_debug;
 
@@ -269,8 +269,8 @@ void BotDrawDebugPolygons(void (*drawPoly)(int color, int numPoints, const float
 	{
 		const bot_debugpoly_t* poly = &debugpolygons[i];
 		if (!poly->inuse) continue;
-		drawPoly(poly->color, poly->numPoints, (float*)poly->points);
-		//Com_Printf("poly %i, numpoints = %d\n", i, poly->numPoints);
+		drawPoly(poly->color, poly->num_points, (float*)poly->points);
+		//Com_Printf("poly %i, numpoints = %d\n", i, poly->num_points);
 	}
 }
 
@@ -343,7 +343,7 @@ void BotImport_Trace(bsp_trace_t* bsptrace, vec3_t start, vec3_t mins, vec3_t ma
 	bsptrace->plane.signbits = trace.plane.signbits;
 	bsptrace->plane.type = trace.plane.type;
 	bsptrace->surface.value = trace.surfaceFlags;
-	bsptrace->ent = trace.entityNum;
+	bsptrace->ent = trace.entity_num;
 	bsptrace->exp_dist = 0;
 	bsptrace->sidenum = 0;
 	bsptrace->contents = 0;
@@ -370,7 +370,7 @@ void BotImport_EntityTrace(bsp_trace_t* bsptrace, vec3_t start, vec3_t mins, vec
 	bsptrace->plane.signbits = trace.plane.signbits;
 	bsptrace->plane.type = trace.plane.type;
 	bsptrace->surface.value = trace.surfaceFlags;
-	bsptrace->ent = trace.entityNum;
+	bsptrace->ent = trace.entity_num;
 	bsptrace->exp_dist = 0;
 	bsptrace->sidenum = 0;
 	bsptrace->contents = 0;
@@ -415,7 +415,7 @@ void BotImport_BSPModelMinsMaxsOrigin(const int modelnum, vec3_t angles, vec3_t 
 {
 	vec3_t mins, maxs;
 
-	const clipHandle_t h = CM_InlineModel(modelnum);
+	const clip_handle_t h = CM_InlineModel(modelnum);
 	CM_ModelBounds(h, mins, maxs);
 	//if the model is rotated
 	if (angles[0] || angles[1] || angles[2])
@@ -496,7 +496,7 @@ void* BotImport_HunkAlloc(const int size)
 BotImport_DebugPolygonCreate
 ==================
 */
-int BotImport_DebugPolygonCreate(const int color, const int numPoints, const vec3_t* points)
+int BotImport_DebugPolygonCreate(const int color, const int num_points, const vec3_t* points)
 {
 	int i;
 
@@ -513,8 +513,8 @@ int BotImport_DebugPolygonCreate(const int color, const int numPoints, const vec
 	bot_debugpoly_t* poly = &debugpolygons[i];
 	poly->inuse = qtrue;
 	poly->color = color;
-	poly->numPoints = numPoints;
-	Com_Memcpy(poly->points, points, numPoints * sizeof(vec3_t));
+	poly->num_points = num_points;
+	Com_Memcpy(poly->points, points, num_points * sizeof(vec3_t));
 	//
 	return i;
 }
@@ -524,14 +524,14 @@ int BotImport_DebugPolygonCreate(const int color, const int numPoints, const vec
 BotImport_DebugPolygonShow
 ==================
 */
-void BotImport_DebugPolygonShow(const int id, const int color, const int numPoints, const vec3_t* points)
+void BotImport_DebugPolygonShow(const int id, const int color, const int num_points, const vec3_t* points)
 {
 	if (!debugpolygons) return;
 	bot_debugpoly_t* poly = &debugpolygons[id];
 	poly->inuse = qtrue;
 	poly->color = color;
-	poly->numPoints = numPoints;
-	Com_Memcpy(poly->points, points, numPoints * sizeof(vec3_t));
+	poly->num_points = num_points;
+	Com_Memcpy(poly->points, points, num_points * sizeof(vec3_t));
 }
 
 /*
@@ -800,7 +800,7 @@ int SV_BotGetConsoleMessage(const int client, char* buf, const int size)
 EntityInPVS
 ==================
 */
-int EntityInPVS(int client, int entityNum) {
+int EntityInPVS(int client, int entity_num) {
 	client_t* cl;
 	clientSnapshot_t* frame;
 	int					i;
@@ -808,7 +808,7 @@ int EntityInPVS(int client, int entityNum) {
 	cl = &svs.clients[client];
 	frame = &cl->frames[cl->netchan.outgoingSequence & PACKET_MASK];
 	for (i = 0; i < frame->num_entities; i++) {
-		if (svs.snapshotEntities[(frame->first_entity + i) % svs.numSnapshotEntities].number == entityNum) {
+		if (svs.snapshotEntities[(frame->first_entity + i) % svs.numSnapshotEntities].number == entity_num) {
 			return qtrue;
 		}
 	}

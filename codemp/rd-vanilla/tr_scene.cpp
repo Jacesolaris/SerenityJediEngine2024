@@ -106,8 +106,8 @@ void R_AddPolygonSurfaces() {
 	int			i;
 	srfPoly_t* poly;
 
-	tr.currententityNum = REFENTITYNUM_WORLD;
-	tr.shiftedentityNum = tr.currententityNum << QSORT_REFENTITYNUM_SHIFT;
+	tr.currententity_num = REFENTITYNUM_WORLD;
+	tr.shiftedentity_num = tr.currententity_num << QSORT_REFENTITYNUM_SHIFT;
 
 	for (i = 0, poly = tr.refdef.polys; i < tr.refdef.numPolys; i++, poly++) {
 		const shader_t* sh = R_GetShaderByHandle(poly->hShader);
@@ -121,8 +121,7 @@ RE_AddPolyToScene
 
 =====================
 */
-void RE_AddPolyToScene(const qhandle_t hShader, const int numVerts, const polyVert_t* verts, const int numPolys)
-{
+void RE_AddPolyToScene(const qhandle_t hShader, const int numVerts, const polyVert_t* verts, const int numPolys) {
 	int			fogIndex;
 
 	if (!tr.registered) {

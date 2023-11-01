@@ -52,7 +52,7 @@ void RT_FireDecide(void)
 	qboolean shoot = qfalse, hitAlly = qfalse;
 	vec3_t impactPos, enemyDir, shootDir;
 
-	if (NPCS.NPC->client->ps.groundentityNum == ENTITYNUM_NONE
+	if (NPCS.NPC->client->ps.groundentity_num == ENTITYNUM_NONE
 		&& NPCS.NPC->client->ps.fd.forceJumpZStart
 		&& !PM_FlippingAnim(NPCS.NPC->client->ps.legsAnim)
 		&& !Q_irand(0, 10))
@@ -473,7 +473,7 @@ void RT_Flying_MaintainHeight(void)
 
 			float enemyZHeight = NPCS.NPC->enemy->r.currentOrigin[2];
 			if (NPCS.NPC->enemy->client
-				&& NPCS.NPC->enemy->client->ps.groundentityNum == ENTITYNUM_NONE
+				&& NPCS.NPC->enemy->client->ps.groundentity_num == ENTITYNUM_NONE
 				&& NPCS.NPC->enemy->client->ps.fd.forcePowersActive & 1 << FP_LEVITATION)
 			{
 				//so we don't go up when they force jump up at us
@@ -503,7 +503,7 @@ void RT_Flying_MaintainHeight(void)
 			//don't get too far away from height of enemy...
 			float enemyZHeight = NPCS.NPC->enemy->r.currentOrigin[2];
 			if (NPCS.NPC->enemy->client
-				&& NPCS.NPC->enemy->client->ps.groundentityNum == ENTITYNUM_NONE
+				&& NPCS.NPC->enemy->client->ps.groundentity_num == ENTITYNUM_NONE
 				&& NPCS.NPC->enemy->client->ps.fd.forcePowersActive & 1 << FP_LEVITATION)
 			{
 				//so we don't go up when they force jump up at us
@@ -864,7 +864,7 @@ extern void RT_CheckJump(void);
 
 void NPC_BSRT_Default(void)
 {
-	if (NPCS.NPC->client->ps.groundentityNum != ENTITYNUM_NONE)
+	if (NPCS.NPC->client->ps.groundentity_num != ENTITYNUM_NONE)
 	{
 		if (NPCS.NPCInfo->rank >= RANK_LT)
 		{

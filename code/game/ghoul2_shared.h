@@ -31,7 +31,7 @@ constexpr auto G2T_SV_TIME = 0;
 constexpr auto G2T_CG_TIME = 1;
 constexpr auto NUM_G2T_TIME = 2;
 
-void G2API_SetTime(const int currentTime, const int clock);
+void G2API_SetTime(int current_time, int clock);
 int G2API_GetTime(int arg_time); // this may or may not return arg depending on ghoul2_time cvar
 
 //===================================================================
@@ -41,7 +41,7 @@ int G2API_GetTime(int arg_time); // this may or may not return arg depending on 
 // we save the whole surfaceInfo_t struct
 struct surfaceInfo_t
 {
-	int offFlags; // what the flags are for this model
+	int off_flags; // what the flags are for this model
 	int surface;
 	// index into array held inside the model definition of pointers to the actual surface data loaded in - used by both client and game
 	float genBarycentricJ; // point 0 barycentric coors
@@ -50,7 +50,7 @@ struct surfaceInfo_t
 	int genLod; // used to determine original lod of original surface and poly hit location
 
 	surfaceInfo_t() :
-		offFlags(0),
+		off_flags(0),
 		surface(0),
 		genBarycentricJ(0),
 		genBarycentricI(0),
@@ -62,7 +62,7 @@ struct surfaceInfo_t
 	void sg_export(
 		ojk::SavedGameHelper& saved_game) const
 	{
-		saved_game.write<int32_t>(offFlags);
+		saved_game.write<int32_t>(off_flags);
 		saved_game.write<int32_t>(surface);
 		saved_game.write<float>(genBarycentricJ);
 		saved_game.write<float>(genBarycentricI);
@@ -73,7 +73,7 @@ struct surfaceInfo_t
 	void sg_import(
 		ojk::SavedGameHelper& saved_game)
 	{
-		saved_game.read<int32_t>(offFlags);
+		saved_game.read<int32_t>(off_flags);
 		saved_game.read<int32_t>(surface);
 		saved_game.read<float>(genBarycentricJ);
 		saved_game.read<float>(genBarycentricI);
@@ -108,15 +108,15 @@ struct boneInfo_t
 	int boneNumber; // what bone are we overriding?
 	mdxaBone_t matrix; // details of bone angle overrides - some are pre-done on the server, some in ghoul2
 	int flags; // flags for override
-	int startFrame; // start frame for animation
-	int endFrame; // end frame for animation NOTE anim actually ends on endFrame+1
+	int start_frame; // start frame for animation
+	int end_frame; // end frame for animation NOTE anim actually ends on end_frame+1
 	int startTime; // time we started this animation
 	int pauseTime; // time we paused this animation - 0 if not paused
-	float animSpeed;
+	float anim_speed;
 	// speed at which this anim runs. 1.0f means full speed of animation incoming - ie if anim is 20hrtz, we run at 20hrts. If 5hrts, we run at 5 hrts
 	float blendFrame; // frame PLUS LERP value to blend from
 	int blendLerpFrame; // frame to lerp the blend frame with.
-	int blendTime;
+	int blend_time;
 	// Duration time for blending - used to calc amount each frame of new anim is blended with last frame of the last anim
 	int blendStart;
 	// Time when blending starts - not necessarily the same as startTime since we might start half way through an anim
@@ -194,14 +194,14 @@ struct boneInfo_t
 	boneInfo_t() :
 		boneNumber(-1), matrix(),
 		flags(0),
-		startFrame(0),
-		endFrame(0),
+		start_frame(0),
+		end_frame(0),
 		startTime(0),
 		pauseTime(0),
-		animSpeed(0),
+		anim_speed(0),
 		blendFrame(0),
 		blendLerpFrame(0),
-		blendTime(0),
+		blend_time(0),
 		blendStart(0),
 		boneBlendTime(0),
 		boneBlendStart(0), newMatrix(), lastTimeUpdated(0), lastContents(0), lastPosition{}, velocityEffector{},
@@ -245,7 +245,9 @@ struct boneInfo_t
 		animFrameMatrix(),
 		hasAnimFrameMatrix(0), airTime(0)
 	{
-		Com_Memset(&matrix, 0, sizeof(matrix));
+		matrix.matrix[0][0] = matrix.matrix[0][1] = matrix.matrix[0][2] = matrix.matrix[0][3] =
+			matrix.matrix[1][0] = matrix.matrix[1][1] = matrix.matrix[1][2] = matrix.matrix[1][3] =
+			matrix.matrix[2][0] = matrix.matrix[2][1] = matrix.matrix[2][2] = matrix.matrix[2][3] = 0.0f;
 	}
 
 	void sg_export(
@@ -254,14 +256,14 @@ struct boneInfo_t
 		saved_game.write<int32_t>(boneNumber);
 		saved_game.write<>(matrix);
 		saved_game.write<int32_t>(flags);
-		saved_game.write<int32_t>(startFrame);
-		saved_game.write<int32_t>(endFrame);
+		saved_game.write<int32_t>(start_frame);
+		saved_game.write<int32_t>(end_frame);
 		saved_game.write<int32_t>(startTime);
 		saved_game.write<int32_t>(pauseTime);
-		saved_game.write<float>(animSpeed);
+		saved_game.write<float>(anim_speed);
 		saved_game.write<float>(blendFrame);
 		saved_game.write<int32_t>(blendLerpFrame);
-		saved_game.write<int32_t>(blendTime);
+		saved_game.write<int32_t>(blend_time);
 		saved_game.write<int32_t>(blendStart);
 		saved_game.write<int32_t>(boneBlendTime);
 		saved_game.write<int32_t>(boneBlendStart);
@@ -330,14 +332,14 @@ struct boneInfo_t
 		saved_game.read<int32_t>(boneNumber);
 		saved_game.read<>(matrix);
 		saved_game.read<int32_t>(flags);
-		saved_game.read<int32_t>(startFrame);
-		saved_game.read<int32_t>(endFrame);
+		saved_game.read<int32_t>(start_frame);
+		saved_game.read<int32_t>(end_frame);
 		saved_game.read<int32_t>(startTime);
 		saved_game.read<int32_t>(pauseTime);
-		saved_game.read<float>(animSpeed);
+		saved_game.read<float>(anim_speed);
 		saved_game.read<float>(blendFrame);
 		saved_game.read<int32_t>(blendLerpFrame);
-		saved_game.read<int32_t>(blendTime);
+		saved_game.read<int32_t>(blend_time);
 		saved_game.read<int32_t>(blendStart);
 		saved_game.read<int32_t>(boneBlendTime);
 		saved_game.read<int32_t>(boneBlendStart);
@@ -405,13 +407,13 @@ struct boneInfo_t
 struct boltInfo_t
 {
 	int boneNumber; // bone number bolt attaches to
-	int surfaceNumber; // surface number bolt attaches to
+	int surface_number; // surface number bolt attaches to
 	int surfaceType;
 	// if we attach to a surface, this tells us if it is an original surface or a generated one - doesn't go across the network
 	int boltUsed; // nor does this
 	boltInfo_t() :
 		boneNumber(-1),
-		surfaceNumber(-1),
+		surface_number(-1),
 		surfaceType(0),
 		boltUsed(0)
 	{
@@ -421,7 +423,7 @@ struct boltInfo_t
 		ojk::SavedGameHelper& saved_game) const
 	{
 		saved_game.write<int32_t>(boneNumber);
-		saved_game.write<int32_t>(surfaceNumber);
+		saved_game.write<int32_t>(surface_number);
 		saved_game.write<int32_t>(surfaceType);
 		saved_game.write<int32_t>(boltUsed);
 	}
@@ -430,7 +432,7 @@ struct boltInfo_t
 		ojk::SavedGameHelper& saved_game)
 	{
 		saved_game.read<int32_t>(boneNumber);
-		saved_game.read<int32_t>(surfaceNumber);
+		saved_game.read<int32_t>(surface_number);
 		saved_game.read<int32_t>(surfaceType);
 		saved_game.read<int32_t>(boltUsed);
 	}
@@ -450,7 +452,7 @@ constexpr auto GHOUL2_NORENDER = 0x002;
 constexpr auto GHOUL2_NOMODEL = 0x004;
 constexpr auto GHOUL2_NEWORIGIN = 0x008;
 
-// NOTE order in here matters. We save out from mModelindex to mFlags, but not the STL vectors that are at the top or the bottom.
+// NOTE order in here matters. We save out from mmodel_index to mFlags, but not the STL vectors that are at the top or the bottom.
 class CBoneCache;
 struct model_s;
 //struct mdxaHeader_t;
@@ -460,18 +462,18 @@ class CRenderableSurface
 {
 public:
 	int				ident;			// ident of this surface - required so the materials renderer knows what sort of surface this refers to
-	CBoneCache* boneCache;		// pointer to transformed bone list for this surf
+	CBoneCache* bone_cache;		// pointer to transformed bone list for this surf
 	mdxmSurface_t* surfaceData;	// pointer to surface data loaded into file - only used by client renderer DO NOT USE IN GAME SIDE - if there is a vid restart this will be out of wack on the game
 
 	CRenderableSurface() :
 		ident(8), //SF_MDX
-		boneCache(0),
+		bone_cache(0),
 		surfaceData(0)
 	{}
 
 	CRenderableSurface(const CRenderableSurface& rs) :
 		ident(rs.ident),
-		boneCache(rs.boneCache),
+		bone_cache(rs.bone_cache),
 		surfaceData(rs.surfaceData)
 	{}
 };
@@ -484,8 +486,8 @@ public:
 	boltInfo_v mBltlist;
 	boneInfo_v mBlist;
 	// save from here (do not put any ptrs etc within this save block unless you adds special handlers to G2_SaveGhoul2Models / G2_LoadGhoul2Models!!!!!!!!!!!!
-#define BSAVE_START_FIELD mModelindex	// this is the start point for loadsave, keep it up to date it you change anything
-	int mModelindex;
+#define BSAVE_START_FIELD mmodel_index	// this is the start point for loadsave, keep it up to date it you change anything
+	int mmodel_index;
 	int animModelIndexOffset;
 	qhandle_t mCustomShader;
 	qhandle_t mCustomSkin;
@@ -515,14 +517,14 @@ public:
 	// these occasionally are not valid (like after a vid_restart)
 	// call the questionably efficient G2_SetupModelPointers(this) to insure validity
 	bool mValid; // all the below are proper and valid
-	const model_s* currentModel;
+	const model_s* current_model;
 	int currentModelSize;
 	const model_s* animModel;
 	int currentAnimModelSize;
 	const mdxaHeader_t* aHeader;
 
 	CGhoul2Info() :
-		mModelindex(-1),
+		mmodel_index(-1),
 		animModelIndexOffset(0),
 		mCustomShader(0),
 		mCustomSkin(0),
@@ -542,7 +544,7 @@ public:
 		mBoneCache(nullptr),
 		mSkin(0),
 		mValid(false),
-		currentModel(nullptr),
+		current_model(nullptr),
 		currentModelSize(0),
 		animModel(nullptr),
 		currentAnimModelSize(0),
@@ -554,7 +556,7 @@ public:
 	void sg_export(
 		ojk::SavedGameHelper& saved_game) const
 	{
-		saved_game.write<int32_t>(mModelindex);
+		saved_game.write<int32_t>(mmodel_index);
 
 #ifndef JK2_MODE
 		saved_game.write<int32_t>(animModelIndexOffset);
@@ -582,7 +584,7 @@ public:
 	void sg_import(
 		ojk::SavedGameHelper& saved_game)
 	{
-		saved_game.read<int32_t>(mModelindex);
+		saved_game.read<int32_t>(mmodel_index);
 
 #ifndef JK2_MODE
 		saved_game.read<int32_t>(animModelIndexOffset);
@@ -793,7 +795,7 @@ class CCollisionRecord
 {
 public:
 	float mDistance;
-	int mEntityNum;
+	int mentity_num;
 	int mModelIndex;
 	int mPolyIndex;
 	int mSurfaceIndex;
@@ -807,7 +809,7 @@ public:
 
 	CCollisionRecord() :
 		mDistance(100000),
-		mEntityNum(-1), mModelIndex(0), mPolyIndex(0), mSurfaceIndex(0), mCollisionPosition{}, mCollisionNormal{},
+		mentity_num(-1), mModelIndex(0), mPolyIndex(0), mSurfaceIndex(0), mCollisionPosition{}, mCollisionNormal{},
 		mFlags(0),
 		mMaterial(0),
 		mLocation(0),
@@ -819,7 +821,7 @@ public:
 		ojk::SavedGameHelper& saved_game) const
 	{
 		saved_game.write<float>(mDistance);
-		saved_game.write<int32_t>(mEntityNum);
+		saved_game.write<int32_t>(mentity_num);
 		saved_game.write<int32_t>(mModelIndex);
 		saved_game.write<int32_t>(mPolyIndex);
 		saved_game.write<int32_t>(mSurfaceIndex);
@@ -836,7 +838,7 @@ public:
 		ojk::SavedGameHelper& saved_game)
 	{
 		saved_game.read<float>(mDistance);
-		saved_game.read<int32_t>(mEntityNum);
+		saved_game.read<int32_t>(mentity_num);
 		saved_game.read<int32_t>(mModelIndex);
 		saved_game.read<int32_t>(mPolyIndex);
 		saved_game.read<int32_t>(mSurfaceIndex);

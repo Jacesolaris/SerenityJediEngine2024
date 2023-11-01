@@ -96,7 +96,7 @@ int AI_GetGroupSize2(gentity_t* ent, const int radius)
 
 extern int NAV_FindClosestWaypointForPoint(const gentity_t* ent, vec3_t point);
 
-int AI_ClosestGroupentityNumToPoint(const AIGroupInfo_t* group, vec3_t point)
+int AI_ClosestGroupentity_numToPoint(const AIGroupInfo_t* group, vec3_t point)
 {
 	int best_cost = Q3_INFINITE;
 	int closest = ENTITYNUM_NONE;
@@ -1034,7 +1034,7 @@ void AI_UpdateGroups(void)
 	}
 }
 
-qboolean AI_GroupContainsEntNum(const AIGroupInfo_t* group, const int entNum)
+qboolean AI_GroupContainsEntNum(const AIGroupInfo_t* group, const int ent_num)
 {
 	if (!group)
 	{
@@ -1042,7 +1042,7 @@ qboolean AI_GroupContainsEntNum(const AIGroupInfo_t* group, const int entNum)
 	}
 	for (int i = 0; i < group->numGroup; i++)
 	{
-		if (group->member[i].number == entNum)
+		if (group->member[i].number == ent_num)
 		{
 			return qtrue;
 		}

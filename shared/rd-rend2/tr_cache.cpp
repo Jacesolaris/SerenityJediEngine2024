@@ -177,7 +177,7 @@ void CModelCacheManager::DumpNonPure(void)
 
 	for (auto it = files.begin(); it != files.end(); /* empty */)
 	{
-		int iChecksum = 0;
+		int iChecksum{};
 #ifndef REND2_SP
 		int iInPak = ri.FS_FileIsInPAK(it->path, &iChecksum);
 #else
@@ -212,10 +212,10 @@ CModelCacheManager::AssetCache::iterator CModelCacheManager::FindAsset(const cha
 		});
 }
 
-qhandle_t CModelCacheManager::GetModelHandle(const char* fileName)
+qhandle_t CModelCacheManager::GetModelHandle(const char* file_name)
 {
 	char path[MAX_QPATH];
-	NormalizePath(path, fileName, sizeof(path));
+	NormalizePath(path, file_name, sizeof(path));
 
 	const auto it = FindAsset(path);
 	if (it == std::end(assets))
@@ -224,10 +224,10 @@ qhandle_t CModelCacheManager::GetModelHandle(const char* fileName)
 	return it->handle;
 }
 
-void CModelCacheManager::InsertModelHandle(const char* fileName, qhandle_t handle)
+void CModelCacheManager::InsertModelHandle(const char* file_name, qhandle_t handle)
 {
 	char path[MAX_QPATH];
-	NormalizePath(path, fileName, sizeof(path));
+	NormalizePath(path, file_name, sizeof(path));
 
 	Asset asset;
 	asset.handle = handle;

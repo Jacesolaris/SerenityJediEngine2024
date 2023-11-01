@@ -31,11 +31,11 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 R_PerformanceCounters
 =====================
 */
-void R_PerformanceCounters(void) {
+void R_PerformanceCounters() {
 	if (!r_speeds->integer) {
 		// clear the counters even if we aren't printing
-		memset(&tr.pc, 0, sizeof(tr.pc));
-		memset(&backEnd.pc, 0, sizeof(backEnd.pc));
+		memset(&tr.pc, 0, sizeof tr.pc);
+		memset(&backEnd.pc, 0, sizeof backEnd.pc);
 		return;
 	}
 
@@ -44,7 +44,7 @@ void R_PerformanceCounters(void) {
 		ri.Printf(PRINT_ALL, "%i/%i shdrs/srfs %i leafs %i vrts %i/%i tris %.2fMB tex %.2f dc\n",
 			backEnd.pc.c_shaders, backEnd.pc.c_surfaces, tr.pc.c_leafs, backEnd.pc.c_vertexes,
 			backEnd.pc.c_indexes / 3, backEnd.pc.c_totalIndexes / 3,
-			texSize, backEnd.pc.c_overDraw / (float)(glConfig.vidWidth * glConfig.vidHeight));
+			texSize, backEnd.pc.c_overDraw / static_cast<float>(glConfig.vidWidth * glConfig.vidHeight));
 	}
 	else if (r_speeds->integer == 2) {
 		ri.Printf(PRINT_ALL, "(patch) %i sin %i sclip  %i sout %i bin %i bclip %i bout\n",
@@ -74,7 +74,7 @@ void R_PerformanceCounters(void) {
 			backEnd.pc.c_flareAdds, backEnd.pc.c_flareTests, backEnd.pc.c_flareRenders);
 	}
 	else if (r_speeds->integer == 7) {
-		const float texSize = R_SumOfUsedImages(qtrue) / (1048576.0f);
+		const float texSize = R_SumOfUsedImages(qtrue) / 1048576.0f;
 		const float backBuff = glConfig.vidWidth * glConfig.vidHeight * glConfig.colorBits / (8.0f * 1024 * 1024);
 		const float depthBuff = glConfig.vidWidth * glConfig.vidHeight * glConfig.depthBits / (8.0f * 1024 * 1024);
 		const float stencilBuff = glConfig.vidWidth * glConfig.vidHeight * glConfig.stencilBits / (8.0f * 1024 * 1024);
@@ -82,8 +82,8 @@ void R_PerformanceCounters(void) {
 			texSize, backBuff * 2 + depthBuff + stencilBuff, texSize + backBuff * 2 + depthBuff + stencilBuff);
 	}
 
-	memset(&tr.pc, 0, sizeof(tr.pc));
-	memset(&backEnd.pc, 0, sizeof(backEnd.pc));
+	memset(&tr.pc, 0, sizeof tr.pc);
+	memset(&backEnd.pc, 0, sizeof backEnd.pc);
 }
 
 /*
@@ -91,20 +91,17 @@ void R_PerformanceCounters(void) {
 R_IssueRenderCommands
 ====================
 */
-int	c_blockedOnRender;
-int	c_blockedOnMain;
 
-void R_IssueRenderCommands(qboolean runPerformanceCounters) {
-	renderCommandList_t* cmdList;
-
-	cmdList = &backEndData->commands;
+void R_IssueRenderCommands(const qboolean runPerformanceCounters)
+{
+	renderCommandList_t* cmd_list = &backEndData->commands;
 
 	// add an end-of-list command
-	byteAlias_t* ba = (byteAlias_t*)&cmdList->cmds[cmdList->used];
+	auto* ba = reinterpret_cast<byteAlias_t*>(&cmd_list->cmds[cmd_list->used]);
 	ba->ui = RC_END_OF_LIST;
 
 	// clear it out, in case this is a sync and not a buffer flip
-	cmdList->used = 0;
+	cmd_list->used = 0;
 
 	// at this point, the back end thread is idle, so it is ok
 	// to look at it's performance counters
@@ -115,7 +112,7 @@ void R_IssueRenderCommands(qboolean runPerformanceCounters) {
 	// actually start the commands going
 	if (!r_skipBackEnd->integer) {
 		// let it start on the new batch
-		RB_ExecuteRenderCommands(cmdList->cmds);
+		RB_ExecuteRenderCommands(cmd_list->cmds);
 	}
 }
 
@@ -126,7 +123,7 @@ R_IssuePendingRenderCommands
 Issue any pending commands and wait for them to complete.
 ====================
 */
-void R_IssuePendingRenderCommands(void) {
+void R_IssuePendingRenderCommands() {
 	if (!tr.registered) {
 		return;
 	}
@@ -135,26 +132,23 @@ void R_IssuePendingRenderCommands(void) {
 
 /*
 ============
-R_GetCommandBuffer
+R_GetCommandBufferReserved
 
 make sure there is enough command space
 ============
 */
-void* R_GetCommandBuffer(int bytes) {
-	renderCommandList_t* cmdList;
-
-	cmdList = &backEndData->commands;
+void* R_GetCommandBufferReserved(unsigned int bytes, const int reservedBytes)
+{
+	renderCommandList_t* cmdList = &backEndData->commands;
 	bytes = PAD(bytes, sizeof(void*));
 
-	assert(cmdList);
-
 	// always leave room for the end of list command
-	if (cmdList->used + bytes + 4 > MAX_RENDER_COMMANDS) {
-		if (bytes > MAX_RENDER_COMMANDS - 4) {
-			Com_Error(ERR_FATAL, "R_GetCommandBuffer: bad size %i", bytes);
+	if (cmdList->used + bytes + sizeof(int) + reservedBytes > MAX_RENDER_COMMANDS) {
+		if (bytes > MAX_RENDER_COMMANDS - static_cast<int>(sizeof(int))) {
+			ri.Error(ERR_FATAL, "R_GetCommandBuffer: bad size %i", bytes);
 		}
 		// if we run out of room, just start dropping commands
-		return NULL;
+		return nullptr;
 	}
 
 	cmdList->used += bytes;
@@ -163,15 +157,23 @@ void* R_GetCommandBuffer(int bytes) {
 }
 
 /*
+============
+R_GetCommandBuffer
+returns NULL if there is not enough space for important commands
+============
+*/
+void* R_GetCommandBuffer(const unsigned int bytes) {
+	return R_GetCommandBufferReserved(bytes, PAD(sizeof(swapBuffersCommand_t), sizeof(void*)));
+}
+
+/*
 =============
 R_AddDrawSurfCmd
 
 =============
 */
-void	R_AddDrawSurfCmd(drawSurf_t* drawSurfs, int numDrawSurfs) {
-	drawSurfsCommand_t* cmd;
-
-	cmd = (drawSurfsCommand_t*)R_GetCommandBuffer(sizeof(*cmd));
+void	R_AddDrawSurfCmd(drawSurf_t* drawSurfs, const int numDrawSurfs) {
+	drawSurfsCommand_t* cmd = static_cast<drawSurfsCommand_t*>(R_GetCommandBuffer(sizeof * cmd));
 	if (!cmd) {
 		return;
 	}
@@ -191,29 +193,23 @@ RE_SetColor
 Passing NULL will set the color to white
 =============
 */
-void	RE_SetColor(const float* rgba) {
-	setColorCommand_t* cmd;
-
+void	RE_SetColor(const float* rgba)
+{
 	if (!tr.registered) {
 		return;
 	}
-	cmd = (setColorCommand_t*)R_GetCommandBuffer(sizeof(*cmd));
+	setColorCommand_t* cmd = static_cast<setColorCommand_t*>(R_GetCommandBuffer(sizeof * cmd));
 	if (!cmd) {
 		return;
 	}
 	cmd->commandId = RC_SET_COLOR;
-	if (rgba) {
-		cmd->color[0] = rgba[0];
-		cmd->color[1] = rgba[1];
-		cmd->color[2] = rgba[2];
-		cmd->color[3] = rgba[3];
-		return;
+	if (!rgba) {
+		rgba = colorWhite;
 	}
-
-	cmd->color[0] = 1;
-	cmd->color[1] = 1;
-	cmd->color[2] = 1;
-	cmd->color[3] = 1;
+	cmd->color[0] = rgba[0];
+	cmd->color[1] = rgba[1];
+	cmd->color[2] = rgba[2];
+	cmd->color[3] = rgba[3];
 }
 
 /*
@@ -221,11 +217,13 @@ void	RE_SetColor(const float* rgba) {
 RE_StretchPic
 =============
 */
-void RE_StretchPic(float x, float y, float w, float h,
-	float s1, float t1, float s2, float t2, qhandle_t hShader) {
-	stretchPicCommand_t* cmd;
+void RE_StretchPic(const float x, const float y, const float w, const float h,
+	const float s1, const float t1, const float s2, const float t2, const qhandle_t hShader) {
+	stretchPicCommand_t* cmd = static_cast<stretchPicCommand_t*>(R_GetCommandBuffer(sizeof * cmd));
 
-	cmd = (stretchPicCommand_t*)R_GetCommandBuffer(sizeof(*cmd));
+	if (!tr.registered) {
+		return;
+	}
 	if (!cmd) {
 		return;
 	}
@@ -246,11 +244,13 @@ void RE_StretchPic(float x, float y, float w, float h,
 RE_RotatePic
 =============
 */
-void RE_RotatePic(float x, float y, float w, float h,
-	float s1, float t1, float s2, float t2, float a, qhandle_t hShader) {
-	rotatePicCommand_t* cmd;
+void RE_RotatePic(const float x, const float y, const float w, const float h,
+	const float s1, const float t1, const float s2, const float t2, const float a, const qhandle_t hShader) {
+	rotatePicCommand_t* cmd = static_cast<rotatePicCommand_t*>(R_GetCommandBuffer(sizeof * cmd));
 
-	cmd = (rotatePicCommand_t*)R_GetCommandBuffer(sizeof(*cmd));
+	if (!tr.registered) {
+		return;
+	}
 	if (!cmd) {
 		return;
 	}
@@ -272,11 +272,13 @@ void RE_RotatePic(float x, float y, float w, float h,
 RE_RotatePic2
 =============
 */
-void RE_RotatePic2(float x, float y, float w, float h,
-	float s1, float t1, float s2, float t2, float a, qhandle_t hShader) {
-	rotatePicCommand_t* cmd;
+void RE_RotatePic2(const float x, const float y, const float w, const float h,
+	const float s1, const float t1, const float s2, const float t2, const float a, const qhandle_t hShader) {
+	rotatePicCommand_t* cmd = static_cast<rotatePicCommand_t*>(R_GetCommandBuffer(sizeof * cmd));
 
-	cmd = (rotatePicCommand_t*)R_GetCommandBuffer(sizeof(*cmd));
+	if (!tr.registered) {
+		return;
+	}
 	if (!cmd) {
 		return;
 	}
@@ -293,9 +295,9 @@ void RE_RotatePic2(float x, float y, float w, float h,
 	cmd->a = a;
 }
 
-void RE_LAGoggles(void)
+void RE_LAGoggles()
 {
-	tr.refdef.rdflags |= (RDF_doLAGoggles | RDF_doFullbright);
+	tr.refdef.rdflags |= RDF_doLAGoggles | RDF_doFullbright;
 	tr.refdef.doLAGoggles = qtrue;
 
 	fog_t* fog = &tr.world->fogs[tr.world->numfogs];
@@ -308,11 +310,13 @@ void RE_LAGoggles(void)
 	fog->tcScale = 2.0f / (fog->parms.depthForOpaque * (1.0f + cos(tr.refdef.floatTime) * 0.1f));
 }
 
-void RE_RenderWorldEffects(void)
+void RE_RenderWorldEffects()
 {
-	setModeCommand_t* cmd;
+	setModeCommand_t* cmd = static_cast<setModeCommand_t*>(R_GetCommandBuffer(sizeof * cmd));
 
-	cmd = (setModeCommand_t*)R_GetCommandBuffer(sizeof(*cmd));
+	if (!tr.registered) {
+		return;
+	}
 	if (!cmd) {
 		return;
 	}
@@ -324,11 +328,13 @@ void RE_RenderWorldEffects(void)
 RE_Scissor
 =============
 */
-void RE_Scissor(float x, float y, float w, float h)
+void RE_Scissor(const float x, const float y, const float w, const float h)
 {
-	scissorCommand_t* cmd;
+	scissorCommand_t* cmd = static_cast<scissorCommand_t*>(R_GetCommandBuffer(sizeof * cmd));
 
-	cmd = (scissorCommand_t*)R_GetCommandBuffer(sizeof(*cmd));
+	if (!tr.registered) {
+		return;
+	}
 	if (!cmd) {
 		return;
 	}
@@ -347,9 +353,7 @@ If running in stereo, RE_BeginFrame will be called twice
 for each RE_EndFrame
 ====================
 */
-void RE_BeginFrame(stereoFrame_t stereoFrame) {
-	drawBufferCommand_t* cmd;
-
+void RE_BeginFrame(const stereoFrame_t stereoFrame) {
 	if (!tr.registered) {
 		return;
 	}
@@ -429,7 +433,7 @@ void RE_BeginFrame(stereoFrame_t stereoFrame) {
 	//
 	// draw buffer stuff
 	//
-	cmd = (drawBufferCommand_t*)R_GetCommandBuffer(sizeof(*cmd));
+	drawBufferCommand_t* cmd = static_cast<drawBufferCommand_t*>(R_GetCommandBuffer(sizeof * cmd));
 	if (!cmd) {
 		return;
 	}
@@ -437,25 +441,22 @@ void RE_BeginFrame(stereoFrame_t stereoFrame) {
 
 	if (glConfig.stereoEnabled) {
 		if (stereoFrame == STEREO_LEFT) {
-			cmd->buffer = (int)GL_BACK_LEFT;
+			cmd->buffer = GL_BACK_LEFT;
 		}
 		else if (stereoFrame == STEREO_RIGHT) {
-			cmd->buffer = (int)GL_BACK_RIGHT;
+			cmd->buffer = GL_BACK_RIGHT;
 		}
 		else {
 			Com_Error(ERR_FATAL, "RE_BeginFrame: Stereo is enabled, but stereoFrame was %i", stereoFrame);
 		}
 	}
-	else {
+	else
+	{
 		if (stereoFrame != STEREO_CENTER) {
 			Com_Error(ERR_FATAL, "RE_BeginFrame: Stereo is disabled, but stereoFrame was %i", stereoFrame);
 		}
-		//		if ( !Q_stricmp( r_drawBuffer->string, "GL_FRONT" ) ) {
-		//			cmd->buffer = (int)GL_FRONT;
-		//		} else
-		{
-			cmd->buffer = (int)GL_BACK;
-		}
+
+		cmd->buffer = GL_BACK;
 	}
 }
 
@@ -466,13 +467,12 @@ RE_EndFrame
 Returns the number of msec spent in the back end
 =============
 */
-void RE_EndFrame(int* frontEndMsec, int* backEndMsec) {
-	swapBuffersCommand_t* cmd;
-
+void RE_EndFrame(int* frontEndMsec, int* backEndMsec)
+{
 	if (!tr.registered) {
 		return;
 	}
-	cmd = (swapBuffersCommand_t*)R_GetCommandBuffer(sizeof(*cmd));
+	swapBuffersCommand_t* cmd = static_cast<swapBuffersCommand_t*>(R_GetCommandBufferReserved(sizeof * cmd, 0));
 	if (!cmd) {
 		return;
 	}
@@ -491,8 +491,8 @@ void RE_EndFrame(int* frontEndMsec, int* backEndMsec) {
 	}
 	backEnd.pc.msec = 0;
 
-	for (int i = 0; i < MAX_LIGHT_STYLES; i++)
+	for (bool& i : styleUpdated)
 	{
-		styleUpdated[i] = false;
+		i = false;
 	}
 }

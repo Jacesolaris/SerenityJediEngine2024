@@ -724,7 +724,7 @@ struct SceneBlock
 	int	   globalFogIndex;
 	vec3_t primaryLightColor;
 	float primaryLightRadius;
-	float currentTime;
+	float current_time;
 	float frameTime;
 	float pad0[2];
 };
@@ -1732,7 +1732,7 @@ typedef struct srfG2GoreSurface_s
 	surfaceType_t   surfaceType;
 
 	// indexes
-	int             numIndexes;
+	int             num_indexes;
 	glIndex_t* indexes;
 
 	// vertexes
@@ -1761,7 +1761,7 @@ typedef struct srfBspSurface_s
 	cplane_t        cullPlane;
 
 	// indexes
-	int             numIndexes;
+	int             num_indexes;
 	glIndex_t* indexes;
 
 	// vertexes
@@ -1847,7 +1847,7 @@ typedef struct srfVBOMDVMesh_s
 
 	// backEnd stats
 	int				indexOffset;
-	int             numIndexes;
+	int             num_indexes;
 	int             numVerts;
 	glIndex_t       minIndex;
 	glIndex_t       maxIndex;
@@ -2076,7 +2076,7 @@ typedef struct mdvSurface_s
 	mdvVertex_t* verts;
 	mdvSt_t* st;
 
-	int             numIndexes;
+	int             num_indexes;
 	glIndex_t* indexes;
 
 	struct mdvModel_s* model;
@@ -2084,7 +2084,7 @@ typedef struct mdvSurface_s
 
 typedef struct mdvModel_s
 {
-	int             numFrames;
+	int             num_frames;
 	mdvFrame_t* frames;
 
 	int             numTags;
@@ -2125,7 +2125,7 @@ typedef struct mdxmVBOMesh_s
 	int indexOffset;
 	int minIndex;
 	int maxIndex;
-	int numIndexes;
+	int num_indexes;
 	int numVertexes;
 
 	VBO_t* vbo;
@@ -2155,6 +2155,7 @@ typedef struct model_s {
 	int			index;		// model = tr.models[model->index]
 
 	int			dataSize;	// just for listing purposes
+	md3Header_t* md3[MD3_MAX_LODS];	// only if type == MOD_MESH
 	union
 	{
 		bmodel_t* bmodel;			// type == MOD_BRUSH
@@ -2173,8 +2174,7 @@ typedef struct model_s {
 void		R_ModelInit(void);
 
 model_t* R_GetModelByHandle(qhandle_t hModel);
-int			R_LerpTag(orientation_t* tag, qhandle_t handle, int startFrame, int endFrame,
-	float frac, const char* tagName);
+int			R_LerpTag(orientation_t* tag, qhandle_t handle, int startFrame, int endFrame, float frac, const char* tagName);
 void		R_ModelBounds(qhandle_t handle, vec3_t mins, vec3_t maxs);
 
 void		R_Modellist_f(void);
@@ -2493,7 +2493,7 @@ typedef struct trGlobals_s {
 	cubemap_t* cubemaps;
 
 	trRefEntity_t			worldEntity;		// point currentEntity at this when rendering world
-	model_t* currentModel;
+	model_t* current_model;
 
 	weatherSystem_t* weatherSystem;
 
@@ -2852,12 +2852,12 @@ void R_SetupPshadowMaps(const refdef_t* fd);
 void R_RenderCubemapSide(int cubemapIndex, int cubemapSide, bool bounce);
 void R_GatherFrameViews(trRefdef_t* refdef);
 
-void R_AddMD3Surfaces(trRefEntity_t* e, int entityNum);
+void R_AddMD3Surfaces(trRefEntity_t* e, int entity_num);
 void R_AddPolygonSurfaces(const trRefdef_t* refdef);
 
-void R_DecomposeSort(uint32_t sort, int* entityNum, shader_t** shader, int* cubemap, int* postRender);
-uint32_t R_CreateSortKey(int entityNum, int sortedShaderIndex, int cubemapIndex, int postRender);
-void R_AddDrawSurf(surfaceType_t* surface, int entityNum, shader_t* shader,
+void R_DecomposeSort(uint32_t sort, int* entity_num, shader_t** shader, int* cubemap, int* postRender);
+uint32_t R_CreateSortKey(int entity_num, int sortedShaderIndex, int cubemapIndex, int postRender);
+void R_AddDrawSurf(surfaceType_t* surface, int entity_num, shader_t* shader,
 	int fogIndex, int dlightMap, int postRender, int cubemap);
 bool R_IsPostRenderEntity(const trRefEntity_t* refEntity);
 
@@ -2875,10 +2875,10 @@ qboolean R_CalcTangentVectors(srfVert_t* dv[3]);
 #define	CULL_OUT	2		// completely outside the clipping planes
 void R_LocalNormalToWorld(const vec3_t local, vec3_t world);
 void R_LocalPointToWorld(const vec3_t local, vec3_t world);
-int R_CullBox(vec3_t worldBounds[2]);
-int R_CullLocalBox(const vec3_t bounds[2]);
+int R_CullBox(vec3_t bounds[2]);
+int R_CullLocalBox(vec3_t bounds[2]);
 int R_CullPointAndRadiusEx(const vec3_t origin, float radius, const cplane_t* frustum, int numPlanes);
-int R_CullPointAndRadius(const vec3_t pt, const float radius);
+int R_CullPointAndRadius(const vec3_t origin, float radius);
 int R_CullLocalPointAndRadius(const vec3_t origin, float radius);
 
 void R_SetupProjection(viewParms_t* dest, float zProj, float zFar, qboolean computeFrustum);
@@ -2920,7 +2920,7 @@ void	RE_SetRangedFog(float range);
 #ifdef REND2_SP
 byte* RB_ReadPixels(int x, int y, int width, int height, size_t* offset, int* padlen);
 void	RE_GetScreenShot(byte* data, int w, int h);
-byte* RE_TempRawImage_ReadFromFile(const char* psLocalFilename, int* piWidth, int* piHeight, byte* pbReSampleBuffer, qboolean qbVertFlip);
+byte* RE_TempRawImage_ReadFromFile(const char* psLocalFilename, int* piWidth, int* piHeight, byte* pb_re_sample_buffer, qboolean qbVertFlip);
 void	RE_TempRawImage_CleanUp();
 #endif
 
@@ -2984,11 +2984,11 @@ extern const int lightmapsVertex[MAXLIGHTMAPS];
 extern const int lightmapsFullBright[MAXLIGHTMAPS];
 extern const byte stylesDefault[MAXLIGHTMAPS];
 
-shader_t* R_FindShader(const char* name, const int* lightmapIndex, const byte* styles, const qboolean mipRawImage);
-shader_t* R_GetShaderByHandle(const qhandle_t hShader);
+shader_t* R_FindShader(const char* name, const int* lightmapIndexes, const byte* styles, qboolean mipRawImage);
+shader_t* R_GetShaderByHandle(qhandle_t hShader);
 shader_t* R_FindShaderByName(const char* name);
-void R_InitShaders(const qboolean server);
-void R_ShaderList_f(void);
+void		R_InitShaders(qboolean server);
+void		R_ShaderList_f(void);
 void    R_RemapShader(const char* oldShader, const char* newShader, const char* timeOffset);
 shader_t* R_CreateShaderFromTextureBundle(
 	const char* name,
@@ -3054,7 +3054,7 @@ struct shaderCommands_s
 	int         pshadowBits;
 
 	int			firstIndex;
-	int			numIndexes;
+	int			num_indexes;
 	int			numVertexes;
 	glIndex_t   minIndex;
 	glIndex_t   maxIndex;
@@ -3087,10 +3087,10 @@ extern	color4ub_t	styleColors[MAX_LIGHT_STYLES];
 
 void RB_BeginSurface(shader_t* shader, int fogNum, int cubemapIndex);
 void RB_EndSurface(void);
-void RB_CheckOverflow(const int verts, const int indexes);
-#define RB_CHECKOVERFLOW(v,i) if (tess.numVertexes + (v) >= SHADER_MAX_VERTEXES || tess.numIndexes + (i) >= SHADER_MAX_INDEXES ) {RB_CheckOverflow(v,i);}
+void RB_CheckOverflow(int verts, int indexes);
+#define RB_CHECKOVERFLOW(v,i) if (tess.numVertexes + (v) >= SHADER_MAX_VERTEXES || tess.num_indexes + (i) >= SHADER_MAX_INDEXES ) {RB_CheckOverflow(v,i);}
 
-void R_DrawElementsVBO(int numIndexes, glIndex_t firstIndex, glIndex_t minIndex, glIndex_t maxIndex);
+void R_DrawElementsVBO(int num_indexes, glIndex_t firstIndex, glIndex_t minIndex, glIndex_t maxIndex);
 void RB_StageIteratorGeneric(void);
 void RB_StageIteratorSky(void);
 
@@ -3110,7 +3110,7 @@ WORLD MAP
 ============================================================
 */
 world_t* R_GetWorld(int worldIndex);
-void R_AddBrushModelSurfaces(trRefEntity_t* e, int entityNum);
+void R_AddBrushModelSurfaces(trRefEntity_t* e, int entity_num);
 void R_AddWorldSurfaces(viewParms_t* viewParms, trRefdef_t* refdef);
 void R_MarkLeaves(void);
 void R_RecursiveWorldNode(mnode_t* node, int planeBits, int dlightBits, int pshadowBits);
@@ -3144,7 +3144,7 @@ LIGHTS
 
 void R_DlightBmodel(bmodel_t* bmodel, trRefEntity_t* ent);
 void R_SetupEntityLighting(const trRefdef_t* refdef, trRefEntity_t* ent);
-void R_TransformDlights(const int count, dlight_t* dl, const orientationr_t* ori);
+void R_TransformDlights(int count, dlight_t* dl, orientationr_t* ori);
 int R_LightForPoint(vec3_t point, vec3_t ambientLight, vec3_t directedLight, vec3_t lightDir);
 int R_LightDirForPoint(vec3_t point, vec3_t lightDir, vec3_t normal, world_t* world);
 int R_DLightsForPoint(const vec3_t point, const float radius);
@@ -3161,10 +3161,10 @@ SKIES
 ============================================================
 */
 
-void R_BuildCloudData(const shaderCommands_t* input);
-void R_InitSkyTexCoords(const float heightCloud);
+void R_BuildCloudData(shaderCommands_t* shader);
+void R_InitSkyTexCoords(float cloudLayerHeight);
 void RB_DrawSun(float scale, shader_t* shader);
-void RB_ClipSkyPolygons(const shaderCommands_t* input);
+void RB_ClipSkyPolygons(shaderCommands_t* shader);
 
 /*
 ============================================================
@@ -3190,7 +3190,8 @@ MARKERS, POLYGON PROJECTION ON WORLD POLYGONS
 ============================================================
 */
 
-int R_MarkFragments(int numPoints, const vec3_t* points, const vec3_t projection, const int maxPoints, vec3_t pointBuffer, const int maxFragments, markFragment_t* fragmentBuffer);
+int R_MarkFragments(int num_points, const vec3_t* points, const vec3_t projection,
+	int maxPoints, vec3_t pointBuffer, int maxFragments, markFragment_t* fragmentBuffer);
 
 /*
 ============================================================
@@ -3306,7 +3307,7 @@ void RE_AddRefEntityToScene(const refEntity_t* ent);
 #ifndef REND2_SP
 void RE_AddMiniRefEntityToScene(const miniRefEntity_t* miniRefEnt);
 #endif
-void RE_AddPolyToScene(qhandle_t hShader, int numVerts, const polyVert_t* verts, int num = 1);
+void RE_AddPolyToScene(const qhandle_t hShader, const int numVerts, const polyVert_t* verts, const int numPolys = 1);
 void RE_AddLightToScene(const vec3_t org, float intensity, float r, float g, float b);
 void RE_AddAdditiveLightToScene(const vec3_t org, float intensity, float r, float g, float b);
 void RE_BeginScene(const refdef_t* fd);
@@ -3338,13 +3339,13 @@ ANIMATED MODELS
 =============================================================
 */
 
-void R_MDRAddAnimSurfaces(trRefEntity_t* ent, int entityNum);
+void R_MDRAddAnimSurfaces(trRefEntity_t* ent, int entity_num);
 void RB_MDRSurfaceAnim(mdrSurface_t* surface);
 qboolean R_LoadIQM(model_t* mod, void* buffer, int filesize, const char* name);
-void R_AddIQMSurfaces(trRefEntity_t* ent, int entityNum);
+void R_AddIQMSurfaces(trRefEntity_t* ent, int entity_num);
 void RB_IQMSurfaceAnim(surfaceType_t* surface);
 int R_IQMLerpTag(orientation_t* tag, iqmData_t* data,
-	int startFrame, int endFrame,
+	int start_frame, int end_frame,
 	float frac, const char* tagName);
 
 /*
@@ -3429,7 +3430,7 @@ public:
 	}
 };
 
-void R_AddGhoulSurfaces(trRefEntity_t* ent, int entityNum);
+void R_AddGhoulSurfaces(trRefEntity_t* ent, int entity_num);
 void RB_SurfaceGhoul(CRenderableSurface* surf);
 void RB_TransformBones(const trRefEntity_t* ent, const trRefdef_t* refdef, int currentFrameNum, gpuFrame_t* frame);
 int RB_GetBoneUboOffset(CRenderableSurface* surf);
@@ -3561,7 +3562,7 @@ typedef struct screenShotCommand_s {
 	int y;
 	int width;
 	int height;
-	char* fileName;
+	char* file_name;
 	screenshotFormat_t format;
 } screenshotCommand_t;
 
@@ -3689,7 +3690,7 @@ struct Pass;
 typedef struct backEndData_s {
 	unsigned realFrameNumber;
 	gpuFrame_t frames[MAX_FRAMES];
-	gpuFrame_t* currentFrame;
+	gpuFrame_t* current_frame;
 	Allocator* perFrameMemory;
 	Pass* currentPass;
 
@@ -3735,7 +3736,7 @@ void RE_TakeVideoFrame(int width, int height,
 // tr_ghoul2.cpp
 #ifdef REND2_SP
 void Create_Matrix(const float* angle, mdxaBone_t* matrix);
-void G2_SetSurfaceOnOffFromSkin(CGhoul2Info* ghlInfo, qhandle_t renderSkin);	//tr_ghoul2.cpp
+void G2_SetSurfaceOnOffFromSkin(CGhoul2Info* ghl_info, qhandle_t renderSkin);	//tr_ghoul2.cpp
 #endif
 void Mat3x4_Multiply(mdxaBone_t* out, const mdxaBone_t* in2, const mdxaBone_t* in);
 void Mat3x4_Scale(mdxaBone_t* result, const mdxaBone_t* lhs, const float scale);
@@ -3765,7 +3766,7 @@ void R_LoadPackedMaterialImage(shaderStage_t* stage, const char* packedImageName
 image_t* R_BuildSDRSpecGlossImage(shaderStage_t* stage, const char* specImageName, int flags);
 qhandle_t RE_RegisterShader(const char* name);
 qhandle_t RE_RegisterShaderNoMip(const char* name);
-const char* RE_ShaderNameFromIndex(const int index);
+const char* RE_ShaderNameFromIndex(int index);
 image_t* R_CreateImage(const char* name, byte* pic, int width, int height, imgType_t type, int flags, int internalFormat);
 
 float ProjectRadius(float r, vec3_t location);

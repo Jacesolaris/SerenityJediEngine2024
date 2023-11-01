@@ -91,7 +91,7 @@ const byte stylesDefault[MAXLIGHTMAPS] =
 	LS_LSNONE
 };
 
-qhandle_t RE_RegisterShaderLightMap(const char* name, const int* lightmapIndex, const byte* styles);
+qhandle_t RE_RegisterShaderLightMap(const char* name, const int* lightmapIndexes, const byte* styles);
 
 void KillTheShaderHashTable(void)
 {
@@ -1568,7 +1568,6 @@ static qboolean ParseStage(shaderStage_t* stage, const char** text)
 		// blendfunc <srcFactor> <dstFactor>
 		// or blendfunc <add|filter|blend>
 		//
-
 		else if (!Q_stricmp(token, "blendfunc"))
 		{
 			token = COM_ParseExt(text, qfalse);
@@ -3645,15 +3644,15 @@ static void FixRenderCommandList(int newShader) {
 					int         postRender;
 					int			sortedIndex;
 					int			cubemap;
-					int			entityNum;
+					int			entity_num;
 					const drawSurfsCommand_t* ds_cmd = (const drawSurfsCommand_t*)curCmd;
 
 					for (i = 0, drawSurf = ds_cmd->drawSurfs; i < ds_cmd->numDrawSurfs; i++, drawSurf++) {
-						R_DecomposeSort(drawSurf->sort, &entityNum, &shader, &cubemap, &postRender);
+						R_DecomposeSort(drawSurf->sort, &entity_num, &shader, &cubemap, &postRender);
 						sortedIndex = ((drawSurf->sort >> QSORT_SHADERNUM_SHIFT) & (MAX_SHADERS - 1));
 						if (sortedIndex >= newShader) {
 							sortedIndex++;
-							drawSurf->sort = R_CreateSortKey(entityNum, sortedIndex, cubemap, postRender);
+							drawSurf->sort = R_CreateSortKey(entity_num, sortedIndex, cubemap, postRender);
 						}
 					}
 					curCmd = (const void*)(ds_cmd + 1);
@@ -4243,9 +4242,6 @@ static shader_t* FinishShader(void) {
 			if (!pStage->active)
 				continue;
 
-			if (pStage->stateBits & (GLS_DSTBLEND_BITS | GLS_SRCBLEND_BITS))
-				break;
-
 			if (pStage->alphaTestType == ALPHA_TEST_NONE)
 				shader.useSimpleDepthShader = qtrue;
 			break;
@@ -4358,7 +4354,7 @@ shader_t* R_FindShaderByName(const char* name) {
 	return tr.defaultShader;
 }
 
-static qboolean IsShader(const shader_t* sh, const char* name, const int* lightmapIndex, const byte* styles)
+static qboolean IsShader(const shader_t* sh, const char* name, const int* lightmapIndexes, const byte* styles)
 {
 	if (Q_stricmp(sh->name, name) != 0)
 	{
@@ -4372,7 +4368,7 @@ static qboolean IsShader(const shader_t* sh, const char* name, const int* lightm
 
 	for (int i = 0; i < MAXLIGHTMAPS; i++)
 	{
-		if (sh->lightmapIndex[i] != lightmapIndex[i])
+		if (sh->lightmapIndex[i] != lightmapIndexes[i])
 		{
 			return qfalse;
 		}
@@ -4391,19 +4387,19 @@ static qboolean IsShader(const shader_t* sh, const char* name, const int* lightm
 R_FindLightmaps
 ===============
 */
-static inline const int* R_FindLightmaps(const int* lightmapIndex)
+static inline const int* R_FindLightmaps(const int* lightmapIndexes)
 {
 	// don't bother with vertex lighting
-	if (*lightmapIndex < 0)
-		return lightmapIndex;
+	if (*lightmapIndexes < 0)
+		return lightmapIndexes;
 
 	// do the lightmaps exist?
 	for (int i = 0; i < MAXLIGHTMAPS; i++)
 	{
-		if (lightmapIndex[i] >= tr.numLightmaps || tr.lightmaps[lightmapIndex[i]] == NULL)
+		if (lightmapIndexes[i] >= tr.numLightmaps || tr.lightmaps[lightmapIndexes[i]] == NULL)
 			return lightmapsVertex;
 	}
-	return lightmapIndex;
+	return lightmapIndexes;
 }
 
 /*
@@ -4434,7 +4430,7 @@ most world construction surfaces.
 
 ===============
 */
-shader_t* R_FindShader(const char* name, const int* lightmapIndex, const byte* styles, const qboolean mipRawImage) {
+shader_t* R_FindShader(const char* name, const int* lightmapIndexes, const byte* styles, qboolean mipRawImage) {
 	char		strippedName[MAX_QPATH];
 	int			hash, flags;
 	const char* shaderText;
@@ -4447,16 +4443,16 @@ shader_t* R_FindShader(const char* name, const int* lightmapIndex, const byte* s
 
 	// use (fullbright) vertex lighting if the bsp file doesn't have
 	// lightmaps
-	if (lightmapIndex[0] >= 0 && lightmapIndex[0] >= tr.numLightmaps) {
-		lightmapIndex = lightmapsVertex;
+	if (lightmapIndexes[0] >= 0 && lightmapIndexes[0] >= tr.numLightmaps) {
+		lightmapIndexes = lightmapsVertex;
 	}
-	else if (lightmapIndex[0] < LIGHTMAP_2D) {
+	else if (lightmapIndexes[0] < LIGHTMAP_2D) {
 		// negative lightmap indexes cause stray pointers (think tr.lightmaps[lightmapIndex])
-		ri.Printf(PRINT_WARNING, "WARNING: shader '%s' has invalid lightmap index of %d\n", name, lightmapIndex[0]);
-		lightmapIndex = lightmapsVertex;
+		ri.Printf(PRINT_WARNING, "WARNING: shader '%s' has invalid lightmap index of %d\n", name, lightmapIndexes[0]);
+		lightmapIndexes = lightmapsVertex;
 	}
 
-	lightmapIndex = R_FindLightmaps(lightmapIndex);
+	lightmapIndexes = R_FindLightmaps(lightmapIndexes);
 
 	COM_StripExtension(name, strippedName, sizeof(strippedName));
 
@@ -4470,7 +4466,7 @@ shader_t* R_FindShader(const char* name, const int* lightmapIndex, const byte* s
 		// then a default shader is created with lightmapIndex == LIGHTMAP_NONE, so we
 		// have to check all default shaders otherwise for every call to R_FindShader
 		// with that same strippedName a new default shader is created.
-		if (IsShader(sh, strippedName, lightmapIndex, styles)) {
+		if (IsShader(sh, strippedName, lightmapIndexes, styles)) {
 			// match found
 			return sh;
 		}
@@ -4479,9 +4475,9 @@ shader_t* R_FindShader(const char* name, const int* lightmapIndex, const byte* s
 	// clear the global shader
 	ClearGlobalShader();
 	Q_strncpyz(shader.name, strippedName, sizeof(shader.name));
-	Com_Memcpy(shader.lightmapIndex, lightmapIndex, sizeof(shader.lightmapIndex));
+	Com_Memcpy(shader.lightmapIndex, lightmapIndexes, sizeof(shader.lightmapIndex));
 	Com_Memcpy(shader.styles, styles, sizeof(shader.styles));
-	switch (lightmapIndex[0]) {
+	switch (lightmapIndexes[0]) {
 	case LIGHTMAP_2D:
 	case LIGHTMAP_WHITEIMAGE:
 	{
@@ -4612,7 +4608,7 @@ shader_t* R_FindShader(const char* name, const int* lightmapIndex, const byte* s
 	return FinishShader();
 }
 
-shader_t* R_FindServerShader(const char* name, const int* lightmapIndex, const byte* styles, qboolean mipRawImage)
+shader_t* R_FindServerShader(const char* name, const int* lightmapIndexes, const byte* styles, qboolean mipRawImage)
 {
 	char		strippedName[MAX_QPATH];
 	int			hash;
@@ -4634,7 +4630,7 @@ shader_t* R_FindServerShader(const char* name, const int* lightmapIndex, const b
 		// then a default shader is created with lightmapIndex == LIGHTMAP_NONE, so we
 		// have to check all default shaders otherwise for every call to R_FindShader
 		// with that same strippedName a new default shader is created.
-		if (IsShader(sh, name, lightmapIndex, styles)) {
+		if (IsShader(sh, name, lightmapIndexes, styles)) {
 			// match found
 			return sh;
 		}
@@ -4643,13 +4639,13 @@ shader_t* R_FindServerShader(const char* name, const int* lightmapIndex, const b
 	// clear the global shader
 	ClearGlobalShader();
 	Q_strncpyz(shader.name, strippedName, sizeof(shader.name));
-	Com_Memcpy(shader.lightmapIndex, lightmapIndex, sizeof(shader.lightmapIndex));
+	Com_Memcpy(shader.lightmapIndex, lightmapIndexes, sizeof(shader.lightmapIndex));
 
 	shader.defaultShader = qtrue;
 	return FinishShader();
 }
 
-qhandle_t RE_RegisterShaderFromImage(const char* name, const int* lightmapIndex, const byte* styles, image_t* image, qboolean mipRawImage) {
+qhandle_t RE_RegisterShaderFromImage(const char* name, const int* lightmapIndexes, const byte* styles, image_t* image, qboolean mipRawImage) {
 	int			hash;
 	shader_t* sh;
 
@@ -4658,8 +4654,8 @@ qhandle_t RE_RegisterShaderFromImage(const char* name, const int* lightmapIndex,
 	// probably not necessary since this function
 	// only gets called from tr_font.c with lightmapIndex == LIGHTMAP_2D
 	// but better safe than sorry.
-	if (lightmapIndex[0] >= tr.numLightmaps) {
-		lightmapIndex = lightmapsFullBright;
+	if (lightmapIndexes[0] >= tr.numLightmaps) {
+		lightmapIndexes = lightmapsFullBright;
 	}
 
 	//
@@ -4670,7 +4666,7 @@ qhandle_t RE_RegisterShaderFromImage(const char* name, const int* lightmapIndex,
 		// then a default shader is created with lightmapIndex == LIGHTMAP_NONE, so we
 		// have to check all default shaders otherwise for every call to R_FindShader
 		// with that same strippedName a new default shader is created.
-		if (IsShader(sh, name, lightmapIndex, styles)) {
+		if (IsShader(sh, name, lightmapIndexes, styles)) {
 			// match found
 			return sh->index;
 		}
@@ -4679,7 +4675,7 @@ qhandle_t RE_RegisterShaderFromImage(const char* name, const int* lightmapIndex,
 	// clear the global shader
 	ClearGlobalShader();
 	Q_strncpyz(shader.name, name, sizeof(shader.name));
-	Com_Memcpy(shader.lightmapIndex, lightmapIndex, sizeof(shader.lightmapIndex));
+	Com_Memcpy(shader.lightmapIndex, lightmapIndexes, sizeof(shader.lightmapIndex));
 
 	//
 	// create the default shading commands
@@ -4756,7 +4752,7 @@ This should really only be used for explicit shaders, because there is no
 way to ask for different implicit lighting modes (vertex, lightmap, etc)
 ====================
 */
-qhandle_t RE_RegisterShaderLightMap(const char* name, const int* lightmapIndex, const byte* styles) {
+qhandle_t RE_RegisterShaderLightMap(const char* name, const int* lightmapIndexes, const byte* styles) {
 	shader_t* sh;
 
 	if (strlen(name) >= MAX_QPATH) {
@@ -4764,7 +4760,7 @@ qhandle_t RE_RegisterShaderLightMap(const char* name, const int* lightmapIndex, 
 		return 0;
 	}
 
-	sh = R_FindShader(name, lightmapIndex, styles, qtrue);
+	sh = R_FindShader(name, lightmapIndexes, styles, qtrue);
 
 	// we want to return 0 if the shader failed to
 	// load for some reason, but R_FindShader should
@@ -4841,7 +4837,7 @@ qhandle_t RE_RegisterShaderNoMip(const char* name) {
 }
 
 //added for ui -rww
-const char* RE_ShaderNameFromIndex(const int index)
+const char* RE_ShaderNameFromIndex(int index)
 {
 	assert(index >= 0 && index < tr.numShaders && tr.shaders[index]);
 	return tr.shaders[index]->name;
@@ -4855,7 +4851,7 @@ When a handle is passed in by another module, this range checks
 it and returns a valid (possibly default) shader_t to be used internally.
 ====================
 */
-shader_t* R_GetShaderByHandle(const qhandle_t hShader) {
+shader_t* R_GetShaderByHandle(qhandle_t hShader) {
 	if (hShader < 0) {
 		ri.Printf(PRINT_WARNING, "R_GetShaderByHandle: out of range hShader '%d'\n", hShader);
 		return tr.defaultShader;
@@ -4875,7 +4871,7 @@ Dump information on all valid shaders to the console
 A second parameter will cause it to print in sorted order
 ===============
 */
-void R_ShaderList_f(void) {
+void	R_ShaderList_f(void) {
 	int			i;
 	int			count;
 	shader_t* shader;
@@ -4937,7 +4933,7 @@ Finds and loads all .shader files, combining them into
 a single large text block that can be scanned for shader names
 =====================
 */
-constexpr auto MAX_SHADER_FILES = 8192;
+#define	MAX_SHADER_FILES	4096
 static void ScanAndLoadShaderFiles(void)
 {
 	char** shaderFiles;
@@ -5065,7 +5061,7 @@ static void ScanAndLoadShaderFiles(void)
 		ri.FS_FreeFile(buffers[i]);
 	}
 
-	COM_CompressShader(s_shaderText);
+	COM_Compress(s_shaderText);
 
 	// free up memory
 	ri.FS_FreeFileList(shaderFiles);
@@ -5224,8 +5220,7 @@ static void CreateExternalShaders(void) {
 R_InitShaders
 ==================
 */
-void R_InitShaders(const qboolean server)
-{
+void R_InitShaders(qboolean server) {
 	ri.Printf(PRINT_ALL, "Initializing Shaders\n");
 
 	Com_Memset(hashTable, 0, sizeof(hashTable));

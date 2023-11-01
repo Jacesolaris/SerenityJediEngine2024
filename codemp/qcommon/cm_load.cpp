@@ -303,12 +303,12 @@ void CMod_LoadBrushes(const lump_t* l, clipMap_t& cm)
 		out->sides = cm.brushsides + LittleLong in->firstSide;
 		out->numsides = LittleLong in->numSides;
 
-		out->shaderNum = LittleLong in->shaderNum;
-		if (out->shaderNum < 0 || out->shaderNum >= cm.numShaders)
+		out->shader_num = LittleLong in->shader_num;
+		if (out->shader_num < 0 || out->shader_num >= cm.numShaders)
 		{
-			Com_Error(ERR_DROP, "CMod_LoadBrushes: bad shaderNum: %i", out->shaderNum);
+			Com_Error(ERR_DROP, "CMod_LoadBrushes: bad shader_num: %i", out->shader_num);
 		}
-		out->contents = cm.shaders[out->shaderNum].contentFlags;
+		out->contents = cm.shaders[out->shader_num].contentFlags;
 
 		CM_BoundBrush(out);
 	}
@@ -367,7 +367,7 @@ static void CMod_LoadPlanes(const lump_t* l, clipMap_t& cm)
 	if (count < 1)
 		Com_Error(ERR_DROP, "Map with no planes");
 	cm.planes = static_cast<cplane_s*>(Hunk_Alloc((BOX_PLANES + count) * sizeof * cm.planes, h_high));
-	cm.numPlanes = count;
+	cm.num_planes = count;
 
 	cplane_t* out = cm.planes;
 
@@ -456,10 +456,10 @@ static void CMod_LoadBrushSides(const lump_t* l, clipMap_t& cm)
 	{
 		const int num = in->planeNum;
 		out->plane = &cm.planes[num];
-		out->shaderNum = LittleLong in->shaderNum;
-		if (out->shaderNum < 0 || out->shaderNum >= cm.numShaders)
+		out->shader_num = LittleLong in->shader_num;
+		if (out->shader_num < 0 || out->shader_num >= cm.numShaders)
 		{
-			Com_Error(ERR_DROP, "CMod_LoadBrushSides: bad shaderNum: %i", out->shaderNum);
+			Com_Error(ERR_DROP, "CMod_LoadBrushSides: bad shader_num: %i", out->shader_num);
 		}
 	}
 }
@@ -577,9 +577,9 @@ static void CMod_LoadPatches(const lump_t* surfs, const lump_t* verts, clipMap_t
 			points[j][2] = LittleFloat dv_p->xyz[2];
 		}
 
-		const int shaderNum = in->shaderNum;
-		patch->contents = cm.shaders[shaderNum].contentFlags;
-		patch->surfaceFlags = cm.shaders[shaderNum].surfaceFlags;
+		const int shader_num = in->shader_num;
+		patch->contents = cm.shaders[shader_num].contentFlags;
+		patch->surfaceFlags = cm.shaders[shader_num].surfaceFlags;
 
 		// create the internal facet structure
 		patch->pc = CM_GeneratePatchCollide(width, height, points);
@@ -835,7 +835,7 @@ void CM_ClearMap()
 CM_clip_handleToModel
 ==================
 */
-cmodel_t* CM_clip_handleToModel(const clipHandle_t handle, clipMap_t** clip_map)
+cmodel_t* CM_clip_handleToModel(const clip_handle_t handle, clipMap_t** clip_map)
 {
 	if (handle < 0)
 	{
@@ -885,7 +885,7 @@ cmodel_t* CM_clip_handleToModel(const clipHandle_t handle, clipMap_t** clip_map)
 CM_InlineModel
 ==================
 */
-clipHandle_t CM_InlineModel(const int index)
+clip_handle_t CM_InlineModel(const int index)
 {
 	if (index < 0 || index >= TotalSubModels)
 	{
@@ -939,7 +939,7 @@ can just be stored out and get a proper clipping hull structure.
 */
 void CM_InitBoxHull()
 {
-	box_planes = &cmg.planes[cmg.numPlanes];
+	box_planes = &cmg.planes[cmg.num_planes];
 
 	box_brush = &cmg.brushes[cmg.numBrushes];
 	box_brush->numsides = 6;
@@ -958,8 +958,8 @@ void CM_InitBoxHull()
 
 		// brush sides
 		cbrushside_t* s = &cmg.brushsides[cmg.numBrushSides + i];
-		s->plane = cmg.planes + (cmg.numPlanes + i * 2 + side);
-		s->shaderNum = cmg.numShaders;
+		s->plane = cmg.planes + (cmg.num_planes + i * 2 + side);
+		s->shader_num = cmg.numShaders;
 
 		// planes
 		cplane_t* p = &box_planes[i * 2];
@@ -987,7 +987,7 @@ BSP trees instead of being compared directly.
 Capsules are handled differently though.
 ===================
 */
-clipHandle_t CM_TempBoxModel(const vec3_t mins, const vec3_t maxs, const int capsule)
+clip_handle_t CM_TempBoxModel(const vec3_t mins, const vec3_t maxs, const int capsule)
 {
 	VectorCopy(mins, box_model.mins);
 	VectorCopy(maxs, box_model.maxs);
@@ -1021,7 +1021,7 @@ clipHandle_t CM_TempBoxModel(const vec3_t mins, const vec3_t maxs, const int cap
 CM_ModelBounds
 ===================
 */
-void CM_ModelBounds(const clipHandle_t model, vec3_t mins, vec3_t maxs)
+void CM_ModelBounds(const clip_handle_t model, vec3_t mins, vec3_t maxs)
 {
 	const cmodel_t* cmod = CM_clip_handleToModel(model);
 	VectorCopy(cmod->mins, mins);
@@ -1053,10 +1053,10 @@ int CM_LoadSubBSP(const char* name, const qboolean clientload)
 	return count;
 }
 
-int CM_FindSubBSP(const int modelIndex)
+int CM_FindSubBSP(const int model_index)
 {
 	int count = cmg.numSubModels;
-	if (modelIndex < count)
+	if (model_index < count)
 	{
 		// belongs to the main bsp
 		return -1;
@@ -1065,7 +1065,7 @@ int CM_FindSubBSP(const int modelIndex)
 	for (int i = 0; i < NumSubBSP; i++)
 	{
 		count += SubBSP[i].numSubModels;
-		if (modelIndex < count)
+		if (model_index < count)
 		{
 			return i;
 		}
@@ -1079,7 +1079,7 @@ void CM_GetWorldBounds(vec3_t mins, vec3_t maxs)
 	VectorCopy(cmg.cmodels[0].maxs, maxs);
 }
 
-int CM_ModelContents_Actual(const clipHandle_t model, clipMap_t* cm)
+int CM_ModelContents_Actual(const clip_handle_t model, clipMap_t* cm)
 {
 	int contents = 0;
 	int i;
@@ -1101,18 +1101,18 @@ int CM_ModelContents_Actual(const clipHandle_t model, clipMap_t* cm)
 
 	for (i = 0; i < cmod->leaf.numLeafSurfaces; i++)
 	{
-		const int surfaceNum = cm->leafsurfaces[cmod->leaf.firstLeafSurface + i];
-		if (cm->surfaces[surfaceNum] != nullptr)
+		const int surface_num = cm->leafsurfaces[cmod->leaf.firstLeafSurface + i];
+		if (cm->surfaces[surface_num] != nullptr)
 		{
 			//HERNH?  How could we have a null surf within our cmod->leaf.numLeafSurfaces?
-			contents |= cm->surfaces[surfaceNum]->contents;
+			contents |= cm->surfaces[surface_num]->contents;
 		}
 	}
 
 	return contents;
 }
 
-int CM_ModelContents(const clipHandle_t model, const int sub_bsp_index)
+int CM_ModelContents(const clip_handle_t model, const int sub_bsp_index)
 {
 	if (sub_bsp_index < 0)
 	{

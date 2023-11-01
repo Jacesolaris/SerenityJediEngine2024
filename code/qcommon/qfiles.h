@@ -93,21 +93,21 @@ using pcx_t = struct
 ========================================================================
 */
 
-#define MD3_IDENT			(('3'<<24)+('P'<<16)+('D'<<8)+'I')
-#define MD3_VERSION			15
+constexpr auto MD3_IDENT = ('3' << 24) + ('P' << 16) + ('D' << 8) + 'I';
+constexpr auto MD3_VERSION = 15;
 
 #define MDR_IDENT	(('5'<<24)+('M'<<16)+('D'<<8)+'R')
 #define MDR_VERSION	2
 #define	MDR_MAX_BONES	128
 
 // limits
-#define MD3_MAX_LODS		3
-#define	MD3_MAX_TRIANGLES	8192	// per surface
-#define MD3_MAX_VERTS		4096	// per surface
-#define MD3_MAX_SHADERS		256		// per surface
-#define MD3_MAX_FRAMES		1024	// per model
-#define	MD3_MAX_SURFACES	32 + 32	// per model
-#define MD3_MAX_TAGS		16		// per frame
+constexpr auto MD3_MAX_LODS = 3;
+constexpr auto MD3_MAX_TRIANGLES = 8192; // per surface;
+constexpr auto MD3_MAX_VERTS = 4096; // per surface;
+constexpr auto MD3_MAX_SHADERS = 256; // per surface;
+constexpr auto MD3_MAX_FRAMES = 1024; // per model;
+constexpr auto MD3_MAX_SURFACES = 32 + 32; // per model;
+constexpr auto MD3_MAX_TAGS = 16; // per frame;
 
 // vertex scales
 constexpr auto MD3_XYZ_SCALE = 1.0 / 64;
@@ -135,7 +135,7 @@ using md3Tag_t = struct md3Tag_s
 ** shaders			sizeof( md3Shader_t ) * numShaders
 ** triangles[0]		sizeof( md3Triangle_t ) * numTriangles
 ** st				sizeof( md3St_t ) * numVerts
-** XyzNormals		sizeof( md3XyzNormal_t ) * numVerts * numFrames
+** XyzNormals		sizeof( md3XyzNormal_t ) * numVerts * num_frames
 */
 using md3Surface_t = struct
 {
@@ -144,7 +144,7 @@ using md3Surface_t = struct
 	char name[MAX_QPATH]; // polyset name
 
 	int flags;
-	int numFrames; // all surfaces in a model should have the same
+	int num_frames; // all surfaces in a model should have the same
 
 	int numShaders; // all surfaces in a model should have the same
 	int numVerts;
@@ -154,7 +154,7 @@ using md3Surface_t = struct
 
 	int ofsShaders; // offset from start of
 	int ofsSt; // texture coords are common for all frames
-	int ofsXyzNormals; // numVerts * numFrames
+	int ofsXyzNormals; // numVerts * num_frames
 
 	int ofsEnd; // next surface follows
 };
@@ -190,14 +190,14 @@ using md3Header_t = struct
 
 	int flags;
 
-	int numFrames;
+	int num_frames;
 	int numTags;
 	int numSurfaces;
 
 	int numSkins;
 
 	int ofsFrames; // offset for first frame
-	int ofsTags; // numFrames * numTags
+	int ofsTags; // num_frames * numTags
 	int ofsSurfaces; // first surface, others follow
 
 	int ofsEnd; // end of file
@@ -210,9 +210,9 @@ typedef struct {
 	char		name[MAX_QPATH];	// model name
 
 	// frames and bones are shared by all levels of detail
-	int			numFrames;
+	int			num_frames;
 	int			numBones;
-	int			ofsFrames;			// mdrFrame_t[numFrames]
+	int			ofsFrames;			// mdrFrame_t[num_frames]
 
 	// each level of detail has completely separate sets of surfaces
 	int			numLODs;
@@ -269,7 +269,7 @@ typedef struct {
 } mdrLOD_t;
 
 typedef struct {
-	int			boneIndex;	// these are indexes into the boneReferences,
+	int			bone_index;	// these are indexes into the boneReferences,
 	float		   boneWeight;		// not the global per-frame bone list
 	vec3_t		offset;
 } mdrWeight_t;
@@ -286,7 +286,7 @@ typedef struct {
 } mdrTriangle_t;
 
 typedef struct {
-	int                     boneIndex;
+	int                     bone_index;
 	char            name[32];
 } mdrTag_t;
 
@@ -435,7 +435,7 @@ using dleaf_t = struct
 using dbrushside_t = struct
 {
 	int planeNum; // positive plane side faces out of the leaf
-	int shaderNum;
+	int shader_num;
 	int drawSurfNum;
 };
 
@@ -443,7 +443,7 @@ using dbrush_t = struct
 {
 	int firstSide;
 	int numSides;
-	int shaderNum; // the shader that determines the contents flags
+	int shader_num; // the shader that determines the contents flags
 };
 
 using dfog_t = struct
@@ -459,7 +459,6 @@ constexpr auto LS_NORMAL = 0x00;
 constexpr auto LS_UNUSED = 0xfe;
 #define	LS_NONE			0xff
 #define MAX_LIGHT_STYLES		64
-#define	LS_LSNONE			0xff
 
 using mapVert_t = struct
 {
@@ -498,7 +497,7 @@ using mapSurfaceType_t = enum
 
 using dsurface_t = struct
 {
-	int shaderNum;
+	int shader_num;
 	int fogNum;
 	int surfaceType;
 
@@ -506,10 +505,10 @@ using dsurface_t = struct
 	int numVerts;
 
 	int firstIndex;
-	int numIndexes;
+	int num_indexes;
 
 	byte lightmapStyles[MAXLIGHTMAPS], vertexStyles[MAXLIGHTMAPS];
-	int lightmapNum[MAXLIGHTMAPS];
+	int lightmap_num[MAXLIGHTMAPS];
 	int lightmapX[MAXLIGHTMAPS], lightmapY[MAXLIGHTMAPS];
 	int lightmapWidth, lightmapHeight;
 

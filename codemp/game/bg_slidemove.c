@@ -72,7 +72,7 @@ void PM_VehicleImpact(bgEntity_t* p_ent, trace_t* trace)
 	float magnitude = VectorLength(pm->ps->velocity) * p_self_veh->m_pVehicleInfo->mass / 50.0f;
 	qboolean force_surf_destruction = qfalse;
 #ifdef _GAME
-	gentity_t* hit_ent = trace != NULL ? &g_entities[trace->entityNum] : NULL;
+	gentity_t* hit_ent = trace != NULL ? &g_entities[trace->entity_num] : NULL;
 
 	if (!hit_ent ||
 		p_self_veh && p_self_veh->m_pPilot &&
@@ -96,7 +96,7 @@ void PM_VehicleImpact(bgEntity_t* p_ent, trace_t* trace)
 			return;
 		}
 		if (!VectorCompare(trace->plane.normal, vec3_origin)
-			&& (trace->entityNum == ENTITYNUM_WORLD || hit_ent->r.bmodel))
+			&& (trace->entity_num == ENTITYNUM_WORLD || hit_ent->r.bmodel))
 		{
 			//have a valid hit plane and we hit a solid brush
 			vec3_t moveDir;
@@ -113,7 +113,7 @@ void PM_VehicleImpact(bgEntity_t* p_ent, trace_t* trace)
 		}
 	}
 
-	if (trace->entityNum < ENTITYNUM_WORLD
+	if (trace->entity_num < ENTITYNUM_WORLD
 		&& hit_ent->s.eType == ET_MOVER
 		&& hit_ent->s.apos.trType != TR_STATIONARY //rotating
 		&& hit_ent->spawnflags & 16 //IMPACT
@@ -169,9 +169,9 @@ void PM_VehicleImpact(bgEntity_t* p_ent, trace_t* trace)
 				float l = pm->ps->speed * 0.5f;
 				vec3_t bounceDir;
 #ifdef _CGAME
-				bgEntity_t* hit_ent = PM_BGEntForNum(trace->entityNum);
+				bgEntity_t* hit_ent = PM_BGEntForNum(trace->entity_num);
 #endif
-				if ((trace->entityNum == ENTITYNUM_WORLD || hit_ent->s.solid == SOLID_BMODEL) //bounce off any brush
+				if ((trace->entity_num == ENTITYNUM_WORLD || hit_ent->s.solid == SOLID_BMODEL) //bounce off any brush
 					&& !VectorCompare(trace->plane.normal, vec3_origin)) //have a valid plane to bounce off of
 				{
 					//bounce off in the opposite direction of the impact
@@ -200,7 +200,7 @@ void PM_VehicleImpact(bgEntity_t* p_ent, trace_t* trace)
 				{
 					//check for impact with another fighter
 #ifdef _CGAME
-					bgEntity_t* hit_ent = PM_BGEntForNum(trace->entityNum);
+					bgEntity_t* hit_ent = PM_BGEntForNum(trace->entity_num);
 #endif
 					if (hit_ent->s.NPC_class == CLASS_VEHICLE
 						&& hit_ent->m_pVehicle
@@ -546,7 +546,7 @@ void PM_VehicleImpact(bgEntity_t* p_ent, trace_t* trace)
 			}
 #else	//this is gonna result in "double effects" for the client doing the prediction.
 			//it doesn't look bad though. could just use predicted events, but I'm too lazy.
-			hit_ent = PM_BGEntForNum(trace->entityNum);
+			hit_ent = PM_BGEntForNum(trace->entity_num);
 
 			if (!hit_ent || hit_ent->s.owner != p_ent->s.number)
 			{
@@ -599,25 +599,25 @@ extern qboolean PM_CheckGrabWall(trace_t* trace);
 
 qboolean PM_ClientImpact(const trace_t* trace, qboolean damageSelf)
 {
-	const int otherentityNum = trace->entityNum;
+	const int otherentity_num = trace->entity_num;
 
 	if (!pm_entSelf)
 	{
 		return qfalse;
 	}
 
-	if (otherentityNum >= ENTITYNUM_WORLD)
+	if (otherentity_num >= ENTITYNUM_WORLD)
 	{
 		return qfalse;
 	}
 
-	const gentity_t* trace_ent = &g_entities[otherentityNum];
+	const gentity_t* trace_ent = &g_entities[otherentity_num];
 
 	if (VectorLength(pm->ps->velocity) >= 100 && pm_entSelf->s.NPC_class != CLASS_VEHICLE && pm->ps->lastOnGround + 100
 		< level.time)
 	{
-		Client_CheckImpactBBrush((gentity_t*)pm_entSelf, &g_entities[otherentityNum]);
-		//DoImpact((gentity_t*)(pm_entSelf), &g_entities[otherentityNum], damageSelf, trace);
+		Client_CheckImpactBBrush((gentity_t*)pm_entSelf, &g_entities[otherentity_num]);
+		//DoImpact((gentity_t*)(pm_entSelf), &g_entities[otherentity_num], damageSelf, trace);
 	}
 
 	if (!trace_ent
@@ -723,7 +723,7 @@ qboolean PM_SlideMove(const qboolean gravity)
 		}
 
 		// save entity for contact
-		PM_AddTouchEnt(trace.entityNum);
+		PM_AddTouchEnt(trace.entity_num);
 
 		if (pm->ps->client_num >= MAX_CLIENTS)
 		{
@@ -1034,7 +1034,7 @@ void PM_StepSlideMove(qboolean gravity)
 	{
 		if (pm->ps->client_num >= MAX_CLIENTS //NPC
 			&& is_giant
-			&& trace.entityNum < MAX_CLIENTS
+			&& trace.entity_num < MAX_CLIENTS
 			&& p_ent
 			&& p_ent->s.NPC_class == CLASS_RANCOR)
 		{

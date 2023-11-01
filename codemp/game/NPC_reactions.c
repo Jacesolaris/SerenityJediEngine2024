@@ -28,10 +28,10 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 extern qboolean G_CheckForStrongAttackMomentum(const gentity_t* self);
 extern void G_AddVoiceEvent(const gentity_t* self, int event, int speak_debounce_time);
 extern void G_SoundOnEnt(gentity_t* ent, soundChannel_t channel, const char* sound_path);
-extern void cgi_S_StartSound(vec3_t origin, int entityNum, int entchannel, sfxHandle_t sfx);
+extern void cgi_S_StartSound(vec3_t origin, int entity_num, int entchannel, sfxHandle_t sfx);
 extern qboolean Q3_TaskIDPending(const gentity_t* ent, taskID_t taskType);
 extern qboolean NPC_CheckLookTarget(const gentity_t* self);
-extern void NPC_SetLookTarget(const gentity_t* self, int entNum, int clear_time);
+extern void NPC_SetLookTarget(const gentity_t* self, int ent_num, int clear_time);
 extern qboolean Jedi_WaitingAmbush(const gentity_t* self);
 extern void Jedi_Ambush(gentity_t* self);
 extern qboolean NPC_SomeoneLookingAtMe(gentity_t* ent);
@@ -369,7 +369,7 @@ void NPC_ChoosePainAnimation(gentity_t* self, const gentity_t* other, vec3_t poi
 		{
 			self->painDebounceTime = level.time + 4000;
 		}
-		const int animLength = bgAllAnims[self->localAnimIndex].anims[pain_anim].numFrames * fabs(
+		const int animLength = bgAllAnims[self->localAnimIndex].anims[pain_anim].num_frames * fabs(
 			bgHumanoidAnimations[pain_anim].frameLerp);
 
 		self->painDebounceTime = level.time + animLength;
@@ -585,7 +585,7 @@ void npc_push(gentity_t* self, gentity_t* other, trace_t* trace)
 				gripper = &g_entities[i];
 				if (gripper && gripper->client)
 				{
-					if (gripper->client->ps.fd.forceGripentityNum == other->client->ps.client_num)
+					if (gripper->client->ps.fd.forceGripentity_num == other->client->ps.client_num)
 						break;
 				}
 			}

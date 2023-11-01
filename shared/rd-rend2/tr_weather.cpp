@@ -301,7 +301,7 @@ namespace
 							continue;
 
 						// Just draw it when batch is full
-						if (tess.numVertexes + 4 >= SHADER_MAX_VERTEXES || tess.numIndexes + 6 >= SHADER_MAX_INDEXES)
+						if (tess.numVertexes + 4 >= SHADER_MAX_VERTEXES || tess.num_indexes + 6 >= SHADER_MAX_INDEXES)
 						{
 							RB_UpdateVBOs(ATTR_POSITION);
 							GLSL_VertexAttribsState(ATTR_POSITION, NULL);
@@ -310,11 +310,11 @@ namespace
 								&tr.textureColorShader,
 								UNIFORM_MODELVIEWPROJECTIONMATRIX,
 								tr.weatherSystem->weatherMVP);
-							R_DrawElementsVBO(tess.numIndexes, tess.firstIndex, tess.minIndex, tess.maxIndex);
+							R_DrawElementsVBO(tess.num_indexes, tess.firstIndex, tess.minIndex, tess.maxIndex);
 
 							RB_CommitInternalBufferData();
 
-							tess.numIndexes = 0;
+							tess.num_indexes = 0;
 							tess.numVertexes = 0;
 							tess.firstIndex = 0;
 							tess.multiDrawPrimitives = 0;
@@ -335,11 +335,11 @@ namespace
 				&tr.textureColorShader,
 				UNIFORM_MODELVIEWPROJECTIONMATRIX,
 				tr.weatherSystem->weatherMVP);
-			R_DrawElementsVBO(tess.numIndexes, tess.firstIndex, tess.minIndex, tess.maxIndex);
+			R_DrawElementsVBO(tess.num_indexes, tess.firstIndex, tess.minIndex, tess.maxIndex);
 
 			RB_CommitInternalBufferData();
 
-			tess.numIndexes = 0;
+			tess.num_indexes = 0;
 			tess.numVertexes = 0;
 			tess.firstIndex = 0;
 			tess.multiDrawPrimitives = 0;
@@ -444,7 +444,7 @@ namespace
 
 		item.uniformData = uniformDataWriter.Finish(*backEndData->perFrameMemory);
 
-		const GLuint currentFrameUbo = backEndData->currentFrame->ubo;
+		const GLuint currentFrameUbo = backEndData->current_frame->ubo;
 		const UniformBlockBinding uniformBlockBindings[] = {
 			{ currentFrameUbo, tr.sceneUboOffset, UNIFORM_BLOCK_SCENE }
 		};
@@ -576,6 +576,8 @@ void R_LoadWeatherImages()
 		tr.weatherSystem->weatherSlots[WEATHER_SAND].drawImage = R_FindImageFile("gfx/effects/alpha_smoke2b", type, flags);
 	if (tr.weatherSystem->weatherSlots[WEATHER_FOG].active)
 		tr.weatherSystem->weatherSlots[WEATHER_FOG].drawImage = R_FindImageFile("gfx/effects/alpha_smoke2b", type, flags);
+	if (tr.weatherSystem->weatherSlots[WEATHER_LAVA].active)
+		tr.weatherSystem->weatherSlots[WEATHER_LAVA].drawImage = R_FindImageFile("gfx/effects/snowflake2", type, flags);
 }
 
 void RE_WorldEffectCommand(const char* command) // rend2 sp
@@ -1135,7 +1137,7 @@ void RB_SurfaceWeather(srfWeather_t* surf)
 		{
 			for (int x = -1; x <= 1; ++x, ++currentIndex)
 			{
-				const GLuint currentFrameUbo = backEndData->currentFrame->ubo;
+				const GLuint currentFrameUbo = backEndData->current_frame->ubo;
 				const UniformBlockBinding uniformBlockBindings[] = {
 					{ currentFrameUbo, tr.cameraUboOffsets[tr.viewParms.currentViewParm], UNIFORM_BLOCK_CAMERA }
 				};

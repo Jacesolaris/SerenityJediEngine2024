@@ -20,6 +20,8 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, see <http://www.gnu.org/licenses/>.
 ===========================================================================
 */
+#ifndef TR_QUICKSPRITE_H
+#define TR_QUICKSPRITE_H
 
 #include "tr_local.h"
 
@@ -31,7 +33,6 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 class CQuickSpriteSystem
 {
-private:
 	textureBundle_t* mTexBundle;
 	uint32_t	mGLStateBits;
 	int				mFogIndex;
@@ -43,16 +44,17 @@ private:
 	int				mNextVert;
 	qboolean		mTurnCullBackOn;
 
-	void Flush(void);
+	void Flush();
 
 public:
-	CQuickSpriteSystem(void);
-	~CQuickSpriteSystem(void);
+	CQuickSpriteSystem();
+	~CQuickSpriteSystem();
 
-	void StartGroup(textureBundle_t* bundle, uint32_t glbits, int fogIndex = -1);
-	void EndGroup(void);
+	void StartGroup(textureBundle_t* bundle, uint32_t glbits, int fog_index = -1);
+	void EndGroup();
 
-	void Add(float* pointdata, color4ub_t color, vec2_t fog = NULL);
+	void Add(const float* pointdata, color4ub_t color, vec2_t fog = nullptr);
 };
 
 extern CQuickSpriteSystem SQuickSprite;
+#endif // TR_QUICKSPRITE_H

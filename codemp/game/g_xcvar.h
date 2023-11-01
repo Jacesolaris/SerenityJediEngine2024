@@ -235,6 +235,6 @@ XCVAR_DEF(g_adminpassword, "", NULL, CVAR_INTERNAL, qfalse)
 XCVAR_DEF(g_adminlogin_saying, "has logged in as admin", NULL, CVAR_ARCHIVE, qtrue)
 XCVAR_DEF(g_adminlogout_saying, "has logged out as admin", NULL, CVAR_ARCHIVE, qtrue)
 XCVAR_DEF(g_chat_protection, "1", NULL, CVAR_ARCHIVE, qtrue)
-XCVAR_DEF(g_adminpunishment_saying, "has been punished.", NULL, CVAR_ARCHIVE, qtrue)
+XCVAR_DEF(g_adminpunishment_saying, "is being punished", NULL, CVAR_ARCHIVE, qtrue)
 
 #undef XCVAR_DEF

@@ -65,7 +65,6 @@ cvar_t* com_homepath;
 cvar_t* g_newgameplusJKA;
 cvar_t* g_newgameplusJKO;
 cvar_t* g_spskill;
-cvar_t* com_rend2;
 #ifndef _WIN32
 cvar_t* com_ansiColor = nullptr;
 #endif
@@ -78,6 +77,7 @@ cvar_t* com_G2Report;
 cvar_t* com_affinity;
 
 cvar_t* g_Weather;
+cvar_t* com_rend2;
 
 // com_speeds times
 int time_game;
@@ -285,8 +285,8 @@ void NORETURN QDECL Com_Error(int level, const char* fmt, ...)
 	}
 
 	// if we are getting a solid stream of ERR_DROP, do an ERR_FATAL
-	const int currentTime = Sys_Milliseconds();
-	if (currentTime - lastErrorTime < 100)
+	const int current_time = Sys_Milliseconds();
+	if (current_time - lastErrorTime < 100)
 	{
 		if (++errorCount > 3)
 		{
@@ -297,7 +297,7 @@ void NORETURN QDECL Com_Error(int level, const char* fmt, ...)
 	{
 		errorCount = 0;
 	}
-	lastErrorTime = currentTime;
+	lastErrorTime = current_time;
 
 #ifdef JK2_MODE
 	SCR_UnprecacheScreenshot();
@@ -1164,7 +1164,7 @@ void Com_Init(char* commandLine)
 
 		g_Weather = Cvar_Get("r_weather", "0", CVAR_ARCHIVE);
 
-		com_outcast = Cvar_Get("com_outcast", "0", CVAR_ARCHIVE | CVAR_SAVEGAME | CVAR_NORESTART);
+		com_outcast = Cvar_Get("com_outcast", "0", CVAR_ARCHIVE | CVAR_SAVEGAME);
 		com_logfile = Cvar_Get("logfile", "0", CVAR_TEMP);
 		com_speedslog = Cvar_Get("speedslog", "0", CVAR_TEMP);
 		g_spskill = Cvar_Get("g_spskill", "2", CVAR_ARCHIVE | CVAR_SAVEGAME | CVAR_NORESTART);
@@ -1178,7 +1178,7 @@ void Com_Init(char* commandLine)
 		com_showtrace = Cvar_Get("com_showtrace", "0", CVAR_CHEAT);
 		com_speeds = Cvar_Get("com_speeds", "0", 0);
 
-		com_rend2 = Cvar_Get("com_rend2", "0", CVAR_ARCHIVE | CVAR_SAVEGAME | CVAR_NORESTART);
+		com_rend2 = Cvar_Get("com_rend2", "0", CVAR_ARCHIVE | CVAR_SAVEGAME);
 
 #ifdef G2_PERFORMANCE_ANALYSIS
 		com_G2Report = Cvar_Get("com_G2Report", "0", 0);

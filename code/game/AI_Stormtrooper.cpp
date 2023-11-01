@@ -30,7 +30,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 extern void CG_DrawAlert(vec3_t origin, float rating);
 extern void G_AddVoiceEvent(const gentity_t* self, int event, int speak_debounce_time);
 extern void AI_GroupUpdateSquadstates(AIGroupInfo_t* group, const gentity_t* member, int newSquadState);
-extern qboolean AI_GroupContainsEntNum(const AIGroupInfo_t* group, int entNum);
+extern qboolean AI_GroupContainsEntNum(const AIGroupInfo_t* group, int ent_num);
 extern void AI_GroupUpdateEnemyLastSeen(AIGroupInfo_t* group, vec3_t spot);
 extern void AI_GroupUpdateClearShotTime(AIGroupInfo_t* group);
 extern void NPC_TempLookTarget(const gentity_t* self, int lookEntNum, int minLookTime, int maxLookTime);
@@ -1310,11 +1310,11 @@ void NPC_BSST_Patrol()
 		if (NPCInfo->scriptFlags & SCF_LOOK_FOR_ENEMIES)
 		{
 			//FIXME: do a FOV cone check, then a trace
-			if (trace.entityNum < ENTITYNUM_WORLD)
+			if (trace.entity_num < ENTITYNUM_WORLD)
 			{
 				//hit something
 				//try cheap check first
-				gentity_t* enemy = &g_entities[trace.entityNum];
+				gentity_t* enemy = &g_entities[trace.entity_num];
 				if (enemy && enemy->client && NPC_ValidEnemy(enemy) && enemy->client->playerTeam == NPC->client->
 					enemyTeam)
 				{
@@ -1473,7 +1473,7 @@ static void ST_CheckMoveState()
 		doMove = qtrue;
 	}
 	else if (NPC->client->NPC_class == CLASS_ROCKETTROOPER
-		&& NPC->client->ps.groundentityNum == ENTITYNUM_NONE)
+		&& NPC->client->ps.groundentity_num == ENTITYNUM_NONE)
 	{
 		//no squad stuff
 		return;
@@ -2888,26 +2888,26 @@ void Noghri_StickTrace()
 		return;
 	}
 
-	const int boltIndex = gi.G2API_AddBolt(&NPC->ghoul2[NPC->weaponModel[0]], "*weapon");
-	if (boltIndex != -1)
+	const int bolt_index = gi.G2API_AddBolt(&NPC->ghoul2[NPC->weaponModel[0]], "*weapon");
+	if (bolt_index != -1)
 	{
 		const int cur_time = cg.time ? cg.time : level.time;
 		qboolean hit = qfalse;
 		int last_hit = ENTITYNUM_NONE;
 		for (int time = cur_time - 25; time <= cur_time + 25 && !hit; time += 25)
 		{
-			mdxaBone_t boltMatrix;
+			mdxaBone_t bolt_matrix;
 			vec3_t tip, dir, base;
 			const vec3_t angles = { 0, NPC->currentAngles[YAW], 0 };
 			constexpr vec3_t mins = { -2, -2, -2 }, maxs = { 2, 2, 2 };
 			trace_t trace;
 
 			gi.G2API_GetBoltMatrix(NPC->ghoul2, NPC->weaponModel[0],
-				boltIndex,
-				&boltMatrix, angles, NPC->currentOrigin, time,
+				bolt_index,
+				&bolt_matrix, angles, NPC->currentOrigin, time,
 				nullptr, NPC->s.modelScale);
-			gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, base);
-			gi.G2API_GiveMeVectorFromMatrix(boltMatrix, POSITIVE_Y, dir);
+			gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, base);
+			gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, POSITIVE_Y, dir);
 			VectorMA(base, 48, dir, tip);
 #ifndef FINAL_BUILD
 			if (d_saberCombat->integer > 1 || g_DebugSaberCombat->integer)
@@ -2916,10 +2916,10 @@ void Noghri_StickTrace()
 			}
 #endif
 			gi.trace(&trace, base, mins, maxs, tip, NPC->s.number, MASK_SHOT, G2_RETURNONHIT, 10);
-			if (trace.fraction < 1.0f && trace.entityNum != last_hit)
+			if (trace.fraction < 1.0f && trace.entity_num != last_hit)
 			{
 				//hit something
-				gentity_t* trace_ent = &g_entities[trace.entityNum];
+				gentity_t* trace_ent = &g_entities[trace.entity_num];
 				if (trace_ent->takedamage
 					&& (!trace_ent->client || trace_ent == NPC->enemy || trace_ent->client->NPC_class != NPC->client->
 						NPC_class))
@@ -2934,7 +2934,7 @@ void Noghri_StickTrace()
 						//do pain on enemy
 						G_Knockdown(trace_ent, NPC, dir, 300, qtrue);
 					}
-					last_hit = trace.entityNum;
+					last_hit = trace.entity_num;
 					hit = qtrue;
 				}
 			}
@@ -2950,26 +2950,26 @@ void Noghri_StickTracenew(gentity_t* self)
 		return;
 	}
 
-	const int boltIndex = gi.G2API_AddBolt(&self->ghoul2[self->weaponModel[0]], "*weapon");
-	if (boltIndex != -1)
+	const int bolt_index = gi.G2API_AddBolt(&self->ghoul2[self->weaponModel[0]], "*weapon");
+	if (bolt_index != -1)
 	{
 		const int cur_time = cg.time ? cg.time : level.time;
 		qboolean hit = qfalse;
 		int last_hit = ENTITYNUM_NONE;
 		for (int time = cur_time - 25; time <= cur_time + 25 && !hit; time += 25)
 		{
-			mdxaBone_t boltMatrix;
+			mdxaBone_t bolt_matrix;
 			vec3_t tip, dir, base;
 			const vec3_t angles = { 0, self->currentAngles[YAW], 0 };
 			constexpr vec3_t mins = { -2, -2, -2 }, maxs = { 2, 2, 2 };
 			trace_t trace;
 
 			gi.G2API_GetBoltMatrix(self->ghoul2, self->weaponModel[0],
-				boltIndex,
-				&boltMatrix, angles, self->currentOrigin, time,
+				bolt_index,
+				&bolt_matrix, angles, self->currentOrigin, time,
 				nullptr, self->s.modelScale);
-			gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, base);
-			gi.G2API_GiveMeVectorFromMatrix(boltMatrix, POSITIVE_Y, dir);
+			gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, base);
+			gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, POSITIVE_Y, dir);
 			VectorMA(base, 48, dir, tip);
 #ifndef FINAL_BUILD
 			if (d_saberCombat->integer > 1 || g_DebugSaberCombat->integer)
@@ -2978,10 +2978,10 @@ void Noghri_StickTracenew(gentity_t* self)
 			}
 #endif
 			gi.trace(&trace, base, mins, maxs, tip, self->s.number, MASK_SHOT, G2_RETURNONHIT, 10);
-			if (trace.fraction < 1.0f && trace.entityNum != last_hit)
+			if (trace.fraction < 1.0f && trace.entity_num != last_hit)
 			{
 				//hit something
-				gentity_t* trace_ent = &g_entities[trace.entityNum];
+				gentity_t* trace_ent = &g_entities[trace.entity_num];
 				if (trace_ent->takedamage
 					&& (!trace_ent->client || trace_ent == self->enemy || trace_ent->client->NPC_class != self->client->
 						NPC_class))
@@ -2996,7 +2996,7 @@ void Noghri_StickTracenew(gentity_t* self)
 						//do pain on enemy
 						G_Knockdown(trace_ent, self, dir, 300, qtrue);
 					}
-					last_hit = trace.entityNum;
+					last_hit = trace.entity_num;
 					hit = qtrue;
 				}
 			}
@@ -3024,8 +3024,8 @@ qboolean Melee_CanDoGrab()
 			if (TIMER_Done(NPC, "grabEnemyDebounce"))
 			{
 				//okay to grab again
-				if (NPC->client->ps.groundentityNum != ENTITYNUM_NONE
-					&& NPC->enemy->client->ps.groundentityNum != ENTITYNUM_NONE)
+				if (NPC->client->ps.groundentity_num != ENTITYNUM_NONE
+					&& NPC->enemy->client->ps.groundentity_num != ENTITYNUM_NONE)
 				{
 					//me and enemy are on ground
 					if (!PM_InOnGroundAnims(NPC->enemy->client->ps.legsAnim))
@@ -3050,7 +3050,7 @@ qboolean Melee_CanDoGrab()
 	return qfalse;
 }
 
-extern float NPC_EnemyRangeFromBolt(int boltIndex);
+extern float NPC_EnemyRangeFromBolt(int bolt_index);
 
 void Melee_GrabEnemy()
 {

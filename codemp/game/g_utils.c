@@ -31,7 +31,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 typedef struct shaderRemap_s
 {
 	char oldShader[MAX_QPATH];
-	char new_shader_name[MAX_QPATH];
+	char newShader[MAX_QPATH];
 	float timeOffset;
 } shaderRemap_t;
 
@@ -40,21 +40,21 @@ typedef struct shaderRemap_s
 int remapCount = 0;
 shaderRemap_t remappedShaders[MAX_SHADER_REMAPS];
 
-void AddRemap(const char* oldShader, const char* new_shader_name, const float timeOffset)
+void AddRemap(const char* oldShader, const char* newShader, const float timeOffset)
 {
 	for (int i = 0; i < remapCount; i++)
 	{
 		if (Q_stricmp(oldShader, remappedShaders[i].oldShader) == 0)
 		{
 			// found it, just update this one
-			strcpy(remappedShaders[i].new_shader_name, new_shader_name);
+			strcpy(remappedShaders[i].newShader, newShader);
 			remappedShaders[i].timeOffset = timeOffset;
 			return;
 		}
 	}
 	if (remapCount < MAX_SHADER_REMAPS)
 	{
-		strcpy(remappedShaders[remapCount].new_shader_name, new_shader_name);
+		strcpy(remappedShaders[remapCount].newShader, newShader);
 		strcpy(remappedShaders[remapCount].oldShader, oldShader);
 		remappedShaders[remapCount].timeOffset = timeOffset;
 		remapCount++;
@@ -69,7 +69,7 @@ const char* BuildShaderStateConfig(void)
 	for (int i = 0; i < remapCount; i++)
 	{
 		char out[MAX_QPATH * 2 + 5];
-		Com_sprintf(out, MAX_QPATH * 2 + 5, "%s=%s:%5.2f@", remappedShaders[i].oldShader, remappedShaders[i].new_shader_name,
+		Com_sprintf(out, MAX_QPATH * 2 + 5, "%s=%s:%5.2f@", remappedShaders[i].oldShader, remappedShaders[i].newShader,
 			remappedShaders[i].timeOffset);
 		Q_strcat(buff, sizeof buff, out);
 	}
@@ -154,7 +154,7 @@ int G_model_index(const char* name)
 		trap->FS_Open(va("models/%s", name), &fh, FS_READ);
 		if (!fh)
 		{
-			Com_Printf("ERROR: Server tried to modelIndex %s but it doesn't exist.\n", name);
+			Com_Printf("ERROR: Server tried to model_index %s but it doesn't exist.\n", name);
 		}
 	}
 
@@ -519,14 +519,14 @@ void G_FreeVehicleObject(const Vehicle_t* p_veh)
 
 gclient_t* gClPtrs[MAX_GENTITIES];
 
-void G_CreateFakeClient(const int entNum, gclient_t** cl)
+void G_CreateFakeClient(const int ent_num, gclient_t** cl)
 {
 	//trap->TrueMalloc((void **)cl, sizeof(gclient_t));
-	if (!gClPtrs[entNum])
+	if (!gClPtrs[ent_num])
 	{
-		gClPtrs[entNum] = (gclient_t*)BG_Alloc(sizeof(gclient_t));
+		gClPtrs[ent_num] = (gclient_t*)BG_Alloc(sizeof(gclient_t));
 	}
-	*cl = gClPtrs[entNum];
+	*cl = gClPtrs[ent_num];
 }
 
 //call this on game shutdown to run through and get rid of all the lingering client pointers.
@@ -556,7 +556,7 @@ local anim index into account and make the call -rww
 */
 void BG_SetAnim(playerState_t* ps, const animation_t* animations, int set_anim_parts, int anim, int set_anim_flags);
 
-void G_SetAnim(gentity_t* ent, usercmd_t* ucmd, int set_anim_parts, int anim, int set_anim_flags, int blendTime)
+void G_SetAnim(gentity_t* ent, usercmd_t* ucmd, int set_anim_parts, int anim, int set_anim_flags, int blend_time)
 {
 #if 0 //old hackish way
 	pmove_t pmv;
@@ -580,7 +580,7 @@ void G_SetAnim(gentity_t* ent, usercmd_t* ucmd, int set_anim_parts, int anim, in
 
 	//don't need to bother with ghoul2 stuff, it's not even used in PM_SetAnim.
 	pm = &pmv;
-	PM_SetAnim(set_anim_parts, anim, set_anim_flags, blendTime);
+	PM_SetAnim(set_anim_parts, anim, set_anim_flags, blend_time);
 #else //new clean and shining way!
 	assert(ent->client);
 	BG_SetAnim(&ent->client->ps, bgAllAnims[ent->localAnimIndex].anims, set_anim_parts, anim, set_anim_flags);
@@ -1099,7 +1099,7 @@ void G_SendG2KillQueue(void)
 	}
 }
 
-void G_KillG2Queue(const int entNum)
+void G_KillG2Queue(const int ent_num)
 {
 	if (gG2KillNum >= MAX_G2_KILL_QUEUE)
 	{
@@ -1108,11 +1108,11 @@ void G_KillG2Queue(const int entNum)
 		Com_Printf("WARNING: Exceeded the MAX_G2_KILL_QUEUE count for this frame!\n");
 #endif
 		//Since we're out of queue slots, just send it now as a seperate command (eats more bandwidth, but we have no choice)
-		trap->SendServerCommand(-1, va("kg2 %i", entNum));
+		trap->SendServerCommand(-1, va("kg2 %i", ent_num));
 		return;
 	}
 
-	gG2KillIndex[gG2KillNum] = entNum;
+	gG2KillIndex[gG2KillNum] = ent_num;
 	gG2KillNum++;
 }
 
@@ -1183,9 +1183,9 @@ void G_FreeEntity(gentity_t* ed)
 		//this "client" structure is one of our dynamically allocated ones, so free the memory
 		int saberEntNum = -1;
 		int i = 0;
-		if (ed->client->ps.saberentityNum)
+		if (ed->client->ps.saberentity_num)
 		{
-			saberEntNum = ed->client->ps.saberentityNum;
+			saberEntNum = ed->client->ps.saberentity_num;
 		}
 		else if (ed->client->saberStoredIndex)
 		{
@@ -1521,11 +1521,11 @@ gentity_t* G_ScreenShake(vec3_t org, const gentity_t* target, const float intens
 
 	if (target)
 	{
-		te->s.modelIndex = target->s.number + 1;
+		te->s.model_index = target->s.number + 1;
 	}
 	else
 	{
-		te->s.modelIndex = 0;
+		te->s.model_index = 0;
 	}
 
 	if (global)
@@ -1545,11 +1545,11 @@ gentity_t* CGCam_BlockShakeMP(vec3_t org, const gentity_t* target, const float i
 
 	if (target)
 	{
-		te->s.modelIndex = target->s.number + 1;
+		te->s.model_index = target->s.number + 1;
 	}
 	else
 	{
-		te->s.modelIndex = 0;
+		te->s.model_index = 0;
 	}
 
 	te->r.svFlags &= ~SVF_BROADCAST;
@@ -1589,7 +1589,7 @@ void G_Sound(gentity_t* ent, const int channel, const int soundIndex)
 
 	gentity_t* te = G_SoundTempEntity(ent->r.currentOrigin, EV_GENERAL_SOUND, channel);
 	te->s.eventParm = soundIndex;
-	te->s.saberentityNum = channel;
+	te->s.saberentity_num = channel;
 
 	if (ent && ent->client && channel > TRACK_CHANNEL_NONE)
 	{
@@ -1622,7 +1622,7 @@ void G_SoundAtLoc(vec3_t loc, const int channel, const int soundIndex)
 {
 	gentity_t* te = G_TempEntity(loc, EV_GENERAL_SOUND);
 	te->s.eventParm = soundIndex;
-	te->s.saberentityNum = channel;
+	te->s.saberentity_num = channel;
 }
 
 /*
@@ -1925,12 +1925,12 @@ void TryUse(gentity_t* ent)
 	trap->Trace(&trace, src, vec3_origin, vec3_origin, dest, ent->s.number,
 		MASK_OPAQUE | CONTENTS_SOLID | CONTENTS_BODY | CONTENTS_ITEM | CONTENTS_CORPSE, qfalse, 0, 0);
 
-	if (trace.fraction == 1.0f || trace.entityNum == ENTITYNUM_NONE)
+	if (trace.fraction == 1.0f || trace.entity_num == ENTITYNUM_NONE)
 	{
 		goto tryJetPack;
 	}
 
-	gentity_t* target = &g_entities[trace.entityNum];
+	gentity_t* target = &g_entities[trace.entity_num];
 
 	//Enable for corpse dragging
 #if 0
@@ -1939,7 +1939,7 @@ void TryUse(gentity_t* ent)
 	{ //then grab the body
 		target->s.eFlags |= EF_RAG; //make sure it's in rag state
 		if (!ent->s.number)
-		{ //switch cl 0 and entityNum_none, so we can operate on the "if non-0" concept
+		{ //switch cl 0 and entity_num_none, so we can operate on the "if non-0" concept
 			target->s.ragAttach = ENTITYNUM_NONE;
 		}
 		else
@@ -2088,7 +2088,7 @@ tryJetPack:
 	//if we got here, we didn't actually use anything else, so try to toggle jetpack if we are in the air, or if it is already on
 	if (ent->client->ps.stats[STAT_HOLDABLE_ITEMS] & 1 << HI_JETPACK)
 	{
-		if ((ent->client->jetPackOn || ent->client->ps.groundentityNum == ENTITYNUM_NONE) && ent->client->ps.jetpackFuel
+		if ((ent->client->jetPackOn || ent->client->ps.groundentity_num == ENTITYNUM_NONE) && ent->client->ps.jetpackFuel
 		> 10)
 		{
 			ItemUse_Jetpack(ent);
@@ -2473,7 +2473,7 @@ gentity_t* ViewTarget(const gentity_t* ent, const int length, vec3_t* target, cp
 	if (target)
 		VectorCopy(tr.endpos, *target);
 
-	if (tr.entityNum >= ENTITYNUM_MAX_NORMAL)
+	if (tr.entity_num >= ENTITYNUM_MAX_NORMAL)
 		return NULL;
-	return &g_entities[tr.entityNum];
+	return &g_entities[tr.entity_num];
 }
