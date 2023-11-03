@@ -530,7 +530,7 @@ qboolean PlaceShield(gentity_t* playerent)
 			shield->s.otherentity_num2 = playerent->client->sess.sessionTeam;
 
 			shield->s.eType = ET_SPECIAL;
-			shield->s.model_index = HI_SHIELD; // this'll be used in CG_Useable() for rendering.
+			shield->s.modelIndex = HI_SHIELD; // this'll be used in CG_Useable() for rendering.
 			shield->classname = shieldItem->classname;
 
 			shield->r.contents = CONTENTS_TRIGGER;
@@ -1186,7 +1186,7 @@ void ItemUse_Sentry(gentity_t* ent)
 	gentity_t* sentry = G_Spawn();
 
 	sentry->classname = "sentryGun";
-	sentry->s.model_index = G_model_index("models/items/psgun.glm"); //replace ASAP
+	sentry->s.modelIndex = G_model_index("models/items/psgun.glm"); //replace ASAP
 
 	sentry->s.g2radius = 30.0f;
 	sentry->s.modelGhoul2 = 1;
@@ -1270,7 +1270,7 @@ void ItemUse_Sentry2(gentity_t* ent)
 	gentity_t* sentry = G_Spawn();
 
 	sentry->classname = "sentryGun";
-	sentry->s.model_index = G_model_index("models/items/psgun.glm"); //replace ASAP
+	sentry->s.modelIndex = G_model_index("models/items/psgun.glm"); //replace ASAP
 
 	sentry->s.g2radius = 30.0f;
 	sentry->s.modelGhoul2 = 1;
@@ -1755,7 +1755,7 @@ void G_SpecialSpawnItem(gentity_t* ent, gitem_t* item)
 	VectorSet(ent->r.maxs, 8, 8, 16);
 
 	ent->s.eType = ET_ITEM;
-	ent->s.model_index = ent->item - bg_itemlist; // store item number in model_index
+	ent->s.modelIndex = ent->item - bg_itemlist; // store item number in modelIndex
 
 	ent->r.contents = CONTENTS_TRIGGER;
 	ent->touch = Touch_Item;
@@ -1944,7 +1944,7 @@ void EWeb_SetBoneAngles(gentity_t* ent, const char* bone, vec3_t angles)
 	int* thebone = &ent->s.boneIndex1;
 	int* firstFree = NULL;
 	int i = 0;
-	const int bone_index = G_BoneIndex(bone);
+	const int boneIndex = G_BoneIndex(bone);
 	vec3_t* boneVector = &ent->s.boneAngles1;
 	vec3_t* freeBoneVec = NULL;
 
@@ -1958,7 +1958,7 @@ void EWeb_SetBoneAngles(gentity_t* ent, const char* bone, vec3_t angles)
 		}
 		else if (*thebone)
 		{
-			if (*thebone == bone_index)
+			if (*thebone == boneIndex)
 			{
 				//this is it
 				break;
@@ -2000,7 +2000,7 @@ void EWeb_SetBoneAngles(gentity_t* ent, const char* bone, vec3_t angles)
 
 		thebone = firstFree;
 
-		*thebone = bone_index;
+		*thebone = boneIndex;
 		boneVector = freeBoneVec;
 	}
 
@@ -2039,25 +2039,25 @@ void EWeb_SetBoneAngles(gentity_t* ent, const char* bone, vec3_t angles)
 }
 
 //start an animation on model_root both server side and client side
-void EWeb_SetBoneAnim(gentity_t* eweb, const int start_frame, const int end_frame)
+void EWeb_SetBoneAnim(gentity_t* eweb, const int startFrame, const int endFrame)
 {
 	//set info on the entity so it knows to start the anim on the client next snapshot.
 	eweb->s.eFlags |= EF_G2ANIMATING;
 
-	if (eweb->s.torsoAnim == start_frame && eweb->s.legsAnim == end_frame)
+	if (eweb->s.torsoAnim == startFrame && eweb->s.legsAnim == endFrame)
 	{
 		//already playing this anim, let's flag it to restart
 		eweb->s.torsoFlip = !eweb->s.torsoFlip;
 	}
 	else
 	{
-		eweb->s.torsoAnim = start_frame;
-		eweb->s.legsAnim = end_frame;
+		eweb->s.torsoAnim = startFrame;
+		eweb->s.legsAnim = endFrame;
 	}
 
 	//now set the animation on the server ghoul2 instance.
 	assert(eweb->ghoul2);
-	trap->G2API_SetBoneAnim(eweb->ghoul2, 0, "model_root", start_frame, end_frame,
+	trap->G2API_SetBoneAnim(eweb->ghoul2, 0, "model_root", startFrame, endFrame,
 		BONE_ANIM_OVERRIDE_FREEZE | BONE_ANIM_BLEND, 1.0f, level.time, -1, 100);
 }
 
@@ -2395,7 +2395,7 @@ gentity_t* EWeb_Create(gentity_t* spawner)
 	//set up the g2 model info
 	ent->s.modelGhoul2 = 1;
 	ent->s.g2radius = 128;
-	ent->s.model_index = G_model_index((char*)modelName);
+	ent->s.modelIndex = G_model_index((char*)modelName);
 
 	trap->G2API_InitGhoul2Model(&ent->ghoul2, modelName, 0, 0, 0, 0, 0);
 
@@ -3234,13 +3234,13 @@ void Touch_Item(gentity_t* ent, gentity_t* other, trace_t* trace)
 		if (!ent->speed)
 		{
 			gentity_t* te = G_TempEntity(ent->s.pos.trBase, EV_GLOBAL_ITEM_PICKUP);
-			te->s.eventParm = ent->s.model_index;
+			te->s.eventParm = ent->s.modelIndex;
 			te->r.svFlags |= SVF_BROADCAST;
 		}
 		else
 		{
 			gentity_t* te = G_TempEntity(ent->s.pos.trBase, EV_GLOBAL_ITEM_PICKUP);
-			te->s.eventParm = ent->s.model_index;
+			te->s.eventParm = ent->s.modelIndex;
 			// only send this temp entity to a single client
 			te->r.svFlags |= SVF_SINGLECLIENT;
 			te->r.singleClient = other->s.number;
@@ -3336,10 +3336,10 @@ gentity_t* LaunchItem(gitem_t* item, vec3_t origin, vec3_t velocity)
 	gentity_t* dropped = G_Spawn();
 
 	dropped->s.eType = ET_ITEM;
-	dropped->s.model_index = item - bg_itemlist; // store item number in model_index
-	if (dropped->s.model_index < 0)
+	dropped->s.modelIndex = item - bg_itemlist; // store item number in modelIndex
+	if (dropped->s.modelIndex < 0)
 	{
-		dropped->s.model_index = 0;
+		dropped->s.modelIndex = 0;
 	}
 	dropped->s.model_index2 = 1; // This is non-zero is it's a dropped item
 
@@ -3578,7 +3578,7 @@ void FinishSpawningItem(gentity_t* ent)
 	VectorSet(ent->r.maxs, 8, 8, 16);
 
 	ent->s.eType = ET_ITEM;
-	ent->s.model_index = ent->item - bg_itemlist; // store item number in model_index
+	ent->s.modelIndex = ent->item - bg_itemlist; // store item number in modelIndex
 	ent->s.model_index2 = 0; // zero indicates this isn't a dropped item
 
 	ent->r.contents = CONTENTS_TRIGGER;
@@ -3587,7 +3587,7 @@ void FinishSpawningItem(gentity_t* ent)
 	ent->use = Use_Item;
 
 	// create a Ghoul2 model if the world model is a glm
-	/*	item = &bg_itemlist[ ent->s.model_index ];
+	/*	item = &bg_itemlist[ ent->s.modelIndex ];
 		if (!Q_stricmp(&item->world_model[0][strlen(item->world_model[0]) - 4], ".glm"))
 		{
 			trap->G2API_InitGhoul2Model(&ent->s, item->world_model[0], G_model_index(item->world_model[0] ), 0, 0, 0, 0);
@@ -4092,5 +4092,5 @@ void IT_LoadWeatherParms(void)
 
 	trap->Cvar_Register(&mapname, "mapname", "", CVAR_SERVERINFO | CVAR_ROM);
 
-	trap->SendConsoleCommand(EXEC_INSERT, va("exec Weather/%s", mapname.string, mapname.string, mapname.string));
+	trap->SendConsoleCommand(EXEC_INSERT, va("exec WeatherMP/%s", mapname.string, mapname.string, mapname.string));
 }

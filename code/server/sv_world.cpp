@@ -60,7 +60,7 @@ given entity.  If the entity is a bsp model, the headnode will
 be returned, otherwise a custom box tree will be constructed.
 ================
 */
-clip_handle_t SV_clip_handleForEntity(const gentity_t* ent)
+clipHandle_t SV_clip_handleForEntity(const gentity_t* ent)
 {
 	if (ent->bmodel)
 	{
@@ -159,7 +159,7 @@ void SV_ClearWorld()
 	sv_numworldSectors = 0;
 
 	// get world map bounds
-	const clip_handle_t h = CM_InlineModel(0);
+	const clipHandle_t h = CM_InlineModel(0);
 	CM_ModelBounds(cmg, h, mins, maxs);
 	SV_CreateworldSector(0, mins, maxs);
 }
@@ -604,7 +604,7 @@ using moveclip_t = struct
 	Ghoul2 Insert Start
 	*/
 	EG2_Collision e_g2_trace_type;
-	int use_lod;
+	int useLod;
 	trace_t trace; // make sure nothing goes under here for Ghoul2 collision purposes
 	/*
 	Ghoul2 Insert End
@@ -670,7 +670,7 @@ void SV_ClipMoveToEntities(moveclip_t* clip)
 		}
 
 		// might intersect, so do an exact clip
-		clip_handle_t clip_handle = SV_clip_handleForEntity(touch);
+		clipHandle_t clip_handle = SV_clip_handleForEntity(touch);
 
 		const float* origin = touch->currentOrigin;
 		const float* angles = touch->currentAngles;
@@ -778,7 +778,7 @@ void SV_ClipMoveToEntities(moveclip_t* clip)
 				// set our trace record size
 				for (z = 0; z < MAX_G2_COLLISIONS; z++)
 				{
-					if (clip->trace.G2CollisionMap[z].mentity_num != -1)
+					if (clip->trace.G2CollisionMap[z].mEntityNum != -1)
 					{
 						old_trace_rec_size++;
 					}
@@ -809,7 +809,7 @@ void SV_ClipMoveToEntities(moveclip_t* clip)
 					re.G2API_CollisionDetect(clip->trace.G2CollisionMap, touch->ghoul2,
 						world_angles, touch->client->origin, sv.time, touch->s.number, clip->start,
 						clip->end, touch->s.modelScale, G2VertSpaceServer, clip->e_g2_trace_type,
-						clip->use_lod, radius);
+						clip->useLod, radius);
 				}
 				// no, so use the normal entity state
 				else
@@ -818,14 +818,14 @@ void SV_ClipMoveToEntities(moveclip_t* clip)
 					re.G2API_CollisionDetect(clip->trace.G2CollisionMap, touch->ghoul2,
 						touch->currentAngles, touch->currentOrigin, sv.time, touch->s.number,
 						clip->start, clip->end, touch->s.modelScale, G2VertSpaceServer,
-						clip->e_g2_trace_type, clip->use_lod, radius);
+						clip->e_g2_trace_type, clip->useLod, radius);
 				}
 
 				// set our new trace record size
 
 				for (z = 0; z < MAX_G2_COLLISIONS; z++)
 				{
-					if (clip->trace.G2CollisionMap[z].mentity_num != -1)
+					if (clip->trace.G2CollisionMap[z].mEntityNum != -1)
 					{
 						new_trace_rec_size++;
 					}
@@ -840,7 +840,7 @@ void SV_ClipMoveToEntities(moveclip_t* clip)
 				{
 					for (z = 0; z < MAX_G2_COLLISIONS; z++)
 					{
-						if (clip->trace.G2CollisionMap[z].mentity_num == touch->s.number)
+						if (clip->trace.G2CollisionMap[z].mEntityNum == touch->s.number)
 						{
 							clip->trace.plane.normal[0] = clip->trace.G2CollisionMap[z].mCollisionNormal[0];
 							clip->trace.plane.normal[1] = clip->trace.G2CollisionMap[z].mCollisionNormal[1];
@@ -871,7 +871,7 @@ pass_entity_num and entities owned by pass_entity_num are explicitly not checked
 Ghoul2 Insert Start
 */
 void SV_Trace(trace_t* results, const vec3_t start, const vec3_t mins, const vec3_t maxs, const vec3_t end,
-	const int pass_entity_num, const int contentmask, const EG2_Collision e_g2_trace_type, const int use_lod)
+	const int pass_entity_num, const int contentmask, const EG2_Collision e_g2_trace_type, const int useLod)
 {
 	/*
 	Ghoul2 Insert End
@@ -920,7 +920,7 @@ void SV_Trace(trace_t* results, const vec3_t start, const vec3_t mins, const vec
 	*/
 	VectorCopy(start, clip.start);
 	clip.e_g2_trace_type = e_g2_trace_type;
-	clip.use_lod = use_lod;
+	clip.useLod = useLod;
 	/*
 	Ghoul2 Insert End
 	*/
@@ -1011,7 +1011,7 @@ int SV_PointContents(const vec3_t p, const int pass_entity_num)
 			continue;
 		}
 		// might intersect, so do an exact clip
-		const clip_handle_t clip_handle = SV_clip_handleForEntity(hit);
+		const clipHandle_t clip_handle = SV_clip_handleForEntity(hit);
 
 		const int c2 = CM_TransformedPointContents(p, clip_handle, hit->s.origin, hit->s.angles);
 

@@ -251,7 +251,7 @@ void SV_LinkEntity(gentity_t* g_ent);
 // sets ent->leafnums[] for pvs determination even if the entity
 // is not solid
 
-clip_handle_t SV_clip_handleForEntity(const gentity_t* ent);
+clipHandle_t SV_clip_handleForEntity(const gentity_t* ent);
 
 void SV_SectorList_f();
 
@@ -270,7 +270,7 @@ int SV_PointContents(const vec3_t p, int pass_entity_num);
 Ghoul2 Insert Start
 */
 void SV_Trace(trace_t* results, const vec3_t start, const vec3_t mins, const vec3_t maxs, const vec3_t end,
-	int pass_entity_num, int contentmask, EG2_Collision e_g2_trace_type = G2_NOCOLLIDE, int use_lod = 0);
+	int pass_entity_num, int contentmask, EG2_Collision e_g2_trace_type = G2_NOCOLLIDE, int useLod = 0);
 /*
 Ghoul2 Insert End
 */

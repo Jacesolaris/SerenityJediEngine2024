@@ -171,14 +171,14 @@ using thandle_t = int32_t;
 using fxHandle_t = int32_t;
 using sfxHandle_t = int32_t;
 using fileHandle_t = int32_t;
-using clip_handle_t = int32_t;
+using clipHandle_t = int32_t;
 
 #define NULL_HANDLE ((qhandle_t)0)
 #define NULL_SOUND ((sfxHandle_t)0)
 #define NULL_FX ((fxHandle_t)0)
 #define NULL_SFX ((sfxHandle_t)0)
 #define NULL_FILE ((fileHandle_t)0)
-#define NULL_CLIP ((clip_handle_t)0)
+#define NULL_CLIP ((clipHandle_t)0)
 
 #define PAD(base, alignment)	(((base)+(alignment)-1) & ~((alignment)-1))
 #define PADLEN(base, alignment)	(PAD((base), (alignment)) - (base))
@@ -614,7 +614,7 @@ using trace_t = struct
 using markFragment_t = struct
 {
 	int firstPoint;
-	int num_points;
+	int numPoints;
 };
 
 using orientation_t = struct
@@ -3358,8 +3358,8 @@ using SSkinGoreData = struct SSkinGoreData_s
 {
 	vec3_t angles;
 	vec3_t position;
-	int current_time;
-	int ent_num;
+	int currentTime;
+	int entNum;
 	vec3_t rayDirection; // in world space
 	vec3_t hitLocation; // in world space
 	vec3_t scale;
@@ -3407,7 +3407,7 @@ using sharedRagDollUpdateParams_t = struct
 //rww - update parms for ik bone stuff
 using sharedIKMoveParams_t = struct
 {
-	char bone_name[512]; //name of bone
+	char boneName[512]; //name of bone
 	vec3_t desiredOrigin; //world coordinate that this bone should be attempting to reach
 	vec3_t origin; //world coordinate of the entity who owns the g2 instance that owns the bone
 	float movementSpeed; //how fast the bone should move toward the destination
@@ -3421,10 +3421,10 @@ using sharedSetBoneIKStateParams_t = struct
 	vec3_t angles; //angles of caller
 	vec3_t scale; //scale of caller
 	float radius; //bone rad
-	int blend_time; //bone blend time
+	int blendTime; //bone blend time
 	int pcjOverrides; //override ik bone flags
-	int start_frame; //base pose start
-	int end_frame; //base pose end
+	int startFrame; //base pose start
+	int endFrame; //base pose end
 };
 
 enum sharedEIKMoveState

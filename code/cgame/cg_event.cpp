@@ -1007,7 +1007,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 				VectorCopy(cent->gent->pos4, axis[1]);
 				CrossProduct(axis[0], axis[1], axis[2]);
 
-				// the ent_num the effect may be attached to
+				// the entNum the effect may be attached to
 				if (es->otherentity_num)
 				{
 					theFxScheduler.PlayEffect(s, cent->lerpOrigin, axis, -1, es->otherentity_num, portal_ent);

@@ -116,7 +116,7 @@ qboolean SFxHelper::GetOriginAxisFromBolt(CGhoul2Info_v* pGhoul2, const int mEnt
 {
 	mdxaBone_t bolt_matrix;
 	const auto data = reinterpret_cast<TCGGetBoltData*>(cl.mSharedMemory);
-	data->mentity_num = mEntNum;
+	data->mEntityNum = mEntNum;
 	CGVM_GetLerpData(); //this func will zero out pitch and roll for players, and ride able vehicles
 
 	//Fixme: optimize these VM calls away by storing

@@ -131,7 +131,7 @@ using iteminfo_t = struct iteminfo_s
 	char classname[32];					//classname of the item
 	char name[MAX_STRINGFIELD];			//name of the item
 	char model[MAX_STRINGFIELD];		//model of the item
-	int model_index;						//model index
+	int modelIndex;						//model index
 	int type;							//item type
 	int index;							//index in the inventory
 	float respawntime;					//respawn time
@@ -146,7 +146,7 @@ fielddef_t iteminfo_fields[] =
 {
 {"name", ITEMINFO_OFS(name), FT_STRING},
 {"model", ITEMINFO_OFS(model), FT_STRING},
-{"model_index", ITEMINFO_OFS(model_index), FT_INT},
+{"modelIndex", ITEMINFO_OFS(modelIndex), FT_INT},
 {"type", ITEMINFO_OFS(type), FT_INT},
 {"index", ITEMINFO_OFS(index), FT_INT},
 {"respawntime", ITEMINFO_OFS(respawntime), FT_FLOAT},
@@ -544,9 +544,9 @@ void BotInitLevelItems(void)
 	//validate the model_indexes of the item info
 	for (i = 0; i < ic->numiteminfo; i++)
 	{
-		if (!ic->iteminfo[i].model_index)
+		if (!ic->iteminfo[i].modelIndex)
 		{
-			Log_Write("item %s has model_index 0", ic->iteminfo[i].classname);
+			Log_Write("item %s has modelIndex 0", ic->iteminfo[i].classname);
 		} //end if
 	} //end for
 
@@ -932,9 +932,9 @@ void BotFindEntityForLevelItem(levelitem_t* li)
 	for (int ent = AAS_NextEntity(0); ent; ent = AAS_NextEntity(ent))
 	{
 		//get the model index of the entity
-		const int model_index = AAS_Entitymodel_index(ent);
+		const int modelIndex = AAS_Entitymodel_index(ent);
 		//
-		if (!model_index) continue;
+		if (!modelIndex) continue;
 		//get info about the entity
 		AAS_EntityInfo(ent, &entinfo);
 		//if the entity is still moving
@@ -942,7 +942,7 @@ void BotFindEntityForLevelItem(levelitem_t* li)
 			entinfo.origin[1] != entinfo.lastvisorigin[1] ||
 			entinfo.origin[2] != entinfo.lastvisorigin[2]) continue;
 		//
-		if (ic->iteminfo[li->iteminfo].model_index == model_index)
+		if (ic->iteminfo[li->iteminfo].modelIndex == modelIndex)
 		{
 			vec3_t dir;
 			//check if the entity is very close
@@ -994,9 +994,9 @@ void BotUpdateEntityItems(void)
 	{
 		if (AAS_EntityType(ent) != ET_ITEM) continue;
 		//get the model index of the entity
-		const int model_index = AAS_Entitymodel_index(ent);
+		const int modelIndex = AAS_Entitymodel_index(ent);
 		//
-		if (!model_index) continue;
+		if (!modelIndex) continue;
 		//get info about the entity
 		AAS_EntityInfo(ent, &entinfo);
 		//FIXME: don't do this
@@ -1013,7 +1013,7 @@ void BotUpdateEntityItems(void)
 			if (li->entity_num && li->entity_num == ent)
 			{
 				//the entity is re-used if the models are different
-				if (ic->iteminfo[li->iteminfo].model_index != model_index)
+				if (ic->iteminfo[li->iteminfo].modelIndex != modelIndex)
 				{
 					//remove this level item
 					RemoveLevelItemFromList(li);
@@ -1052,7 +1052,7 @@ void BotUpdateEntityItems(void)
 				if (li->flags & IFL_NOTFREE) continue;
 			}
 			//if the model of the level item and the entity are the same
-			if (ic->iteminfo[li->iteminfo].model_index == model_index)
+			if (ic->iteminfo[li->iteminfo].modelIndex == modelIndex)
 			{
 				vec3_t dir;
 				//check if the entity is very close
@@ -1084,7 +1084,7 @@ void BotUpdateEntityItems(void)
 		//check if the model is from a known item
 		for (i = 0; i < ic->numiteminfo; i++)
 		{
-			if (ic->iteminfo[i].model_index == model_index)
+			if (ic->iteminfo[i].modelIndex == modelIndex)
 			{
 				break;
 			} //end if

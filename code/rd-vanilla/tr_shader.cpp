@@ -3681,14 +3681,14 @@ static void SetupShaderEntryPtrs()
 
 /*
 ====================
-Scan_And_Load_Shader_Files
+ScanAndLoadShaderFiles
 
 Finds and loads all .shader files, combining them into
 a single large text block that can be scanned for shader names
 =====================
 */
-#define	MAX_SHADER_FILES	4096
-static void Scan_And_Load_Shader_Files()
+constexpr auto MAX_SHADER_FILES = 8192;
+static void ScanAndLoadShaderFiles(void)
 {
 	char* buffers[MAX_SHADER_FILES]{};
 	int num_shader_files;
@@ -3803,22 +3803,18 @@ static void CreateExternalShaders() {
 R_InitShaders
 ==================
 */
-void R_InitShaders() {
-	//ri.Printf( PRINT_ALL, "Initializing Shaders\n" );
+void R_InitShaders(const qboolean server)
+{
+	ri.Printf( PRINT_ALL, "Initializing Shaders\n" );
 
 	memset(sh_hashTable, 0, sizeof sh_hashTable);
-	/*
-	Ghoul2 Insert Start
-	*/
-	//	memset(hitMatReg, 0, sizeof(hitMatReg));
-	//	hitMatCount = 0;
-	/*
-	Ghoul2 Insert End
-	*/
 
-	CreateInternalShaders();
+	if (!server)
+	{
+		CreateInternalShaders();
 
-	Scan_And_Load_Shader_Files();
+		ScanAndLoadShaderFiles();
 
-	CreateExternalShaders();
+		CreateExternalShaders();
+	}
 }

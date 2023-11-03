@@ -32,7 +32,7 @@ extern void CG_Chunks(int owner, vec3_t origin, const vec3_t mins, const vec3_t 
 	int custom_sound = 0);
 extern void G_SetEnemy(gentity_t* self, gentity_t* enemy);
 
-extern gentity_t* G_CreateObject(gentity_t* owner, vec3_t origin, vec3_t angles, int model_index, int frame,
+extern gentity_t* G_CreateObject(gentity_t* owner, vec3_t origin, vec3_t angles, int modelIndex, int frame,
 	trType_t tr_type, int effect_id);
 
 extern qboolean player_locked;
@@ -508,7 +508,7 @@ void misc_model_breakable_die(gentity_t* self, const gentity_t* inflictor, genti
 	}
 	//NOTE: Stop any scripts that are currently running (FLUSH)... ?
 	//Turn off animation
-	self->s.frame = self->start_frame = self->end_frame = 0;
+	self->s.frame = self->startFrame = self->endFrame = 0;
 	self->svFlags &= ~SVF_ANIMATING;
 
 	self->health = 0;

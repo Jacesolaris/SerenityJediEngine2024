@@ -665,7 +665,7 @@ private:
 	int ParseEffect(const char* file, const CGPGroup* base);
 
 	void CreateEffect(CPrimitiveTemplate* fx, const vec3_t origin, matrix3_t axis, int lateTime, int fxParm = -1,
-		CGhoul2Info_v* ghoul2 = nullptr, int ent_num = -1, int modelNum = -1, int boltNum = -1);
+		CGhoul2Info_v* ghoul2 = nullptr, int entNum = -1, int modelNum = -1, int boltNum = -1);
 	void CreateEffect(const CPrimitiveTemplate* fx, SScheduledEffect* scheduledFx);
 
 public:

@@ -836,7 +836,7 @@ void NPC_SetBoneAngles(gentity_t* ent, const char* bone, vec3_t angles)
 	int* thebone = &ent->s.boneIndex1;
 	int* first_free = NULL;
 	int i = 0;
-	const int bone_index = G_BoneIndex(bone);
+	const int boneIndex = G_BoneIndex(bone);
 	vec3_t* bone_vector = &ent->s.boneAngles1;
 	vec3_t* free_bone_vec = NULL;
 
@@ -850,7 +850,7 @@ void NPC_SetBoneAngles(gentity_t* ent, const char* bone, vec3_t angles)
 		}
 		else if (*thebone)
 		{
-			if (*thebone == bone_index)
+			if (*thebone == boneIndex)
 			{
 				//this is it
 				break;
@@ -892,7 +892,7 @@ void NPC_SetBoneAngles(gentity_t* ent, const char* bone, vec3_t angles)
 
 		thebone = first_free;
 
-		*thebone = bone_index;
+		*thebone = boneIndex;
 		bone_vector = free_bone_vec;
 	}
 
@@ -924,14 +924,14 @@ void NPC_SetBoneAngles(gentity_t* ent, const char* bone, vec3_t angles)
 #define TURN_ON				0x00000000
 #define TURN_OFF			0x00000100
 
-void NPC_SetSurfaceOnOff(gentity_t* ent, const char* surface_name, const int surfaceFlags)
+void NPC_SetSurfaceOnOff(gentity_t* ent, const char* surfaceName, const int surfaceFlags)
 {
 	int i = 0;
 	qboolean foundIt = qfalse;
 
 	while (i < BG_NUM_TOGGLEABLE_SURFACES && bgToggleableSurfaces[i])
 	{
-		if (!Q_stricmp(surface_name, bgToggleableSurfaces[i]))
+		if (!Q_stricmp(surfaceName, bgToggleableSurfaces[i]))
 		{
 			//got it
 			foundIt = qtrue;
@@ -942,7 +942,7 @@ void NPC_SetSurfaceOnOff(gentity_t* ent, const char* surface_name, const int sur
 
 	if (!foundIt)
 	{
-		Com_Printf("WARNING: Tried to toggle NPC surface that isn't in toggleable surface list (%s)\n", surface_name);
+		Com_Printf("WARNING: Tried to toggle NPC surface that isn't in toggleable surface list (%s)\n", surfaceName);
 		return;
 	}
 
@@ -964,7 +964,7 @@ void NPC_SetSurfaceOnOff(gentity_t* ent, const char* surface_name, const int sur
 		return;
 	}
 
-	trap->G2API_SetSurfaceOnOff(ent->ghoul2, surface_name, surfaceFlags);
+	trap->G2API_SetSurfaceOnOff(ent->ghoul2, surfaceName, surfaceFlags);
 }
 
 //rww - cheap check to see if an armed client is looking in our general direction
@@ -1442,7 +1442,7 @@ void NPC_ClearLookTarget(const gentity_t* self)
 NPC_SetLookTarget
 -------------------------
 */
-void NPC_SetLookTarget(const gentity_t* self, const int ent_num, const int clear_time)
+void NPC_SetLookTarget(const gentity_t* self, const int entNum, const int clear_time)
 {
 	if (!self->client)
 	{
@@ -1455,7 +1455,7 @@ void NPC_SetLookTarget(const gentity_t* self, const int ent_num, const int clear
 		return;
 	}
 
-	self->client->renderInfo.lookTarget = ent_num;
+	self->client->renderInfo.lookTarget = entNum;
 	self->client->renderInfo.lookTargetClearTime = clear_time;
 }
 
@@ -1535,7 +1535,7 @@ void G_CheckCharmed(gentity_t* self)
 	}
 }
 
-void G_GetBoltPosition(gentity_t* self, const int bolt_index, vec3_t pos, const int model_index)
+void G_GetBoltPosition(gentity_t* self, const int bolt_index, vec3_t pos, const int modelIndex)
 {
 	mdxaBone_t bolt_matrix;
 	vec3_t angles;
@@ -1560,7 +1560,7 @@ void G_GetBoltPosition(gentity_t* self, const int bolt_index, vec3_t pos, const 
 		return;
 	}
 
-	trap->G2API_GetBoltMatrix(self->ghoul2, model_index,
+	trap->G2API_GetBoltMatrix(self->ghoul2, modelIndex,
 		bolt_index,
 		&bolt_matrix, angles, self->r.currentOrigin, level.time,
 		NULL, self->modelScale);

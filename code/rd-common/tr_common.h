@@ -89,6 +89,6 @@ int RE_SavePNG(const char* filename, const byte* buf, size_t width, size_t heigh
 
 void* R_Malloc(const int iSize, const memtag_t eTag, const qboolean bZeroit = qfalse);
 void R_Free(void* ptr);
-int R_MemSize(memtag_t eTag);
-void R_MorphMallocTag(void* pvBuffer, memtag_t eDesiredTag);
-void* R_Hunk_Alloc(int iSize, qboolean bZeroit = qtrue);
+int R_MemSize(const memtag_t eTag);
+void R_MorphMallocTag(void* pvBuffer, const memtag_t eDesiredTag);
+void* R_Hunk_Alloc(const int iSize, const qboolean bZeroit = qtrue);

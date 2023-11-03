@@ -162,7 +162,7 @@ typedef struct bot_entitystate_s
 	vec3_t	maxs;			// bounding box maximums
 	int		groundent;		// ground entity
 	int		solid;			// solid type
-	int		model_index;		// model used
+	int		modelIndex;		// model used
 	int		model_index2;	// weapons, CTF flags, etc
 	int		frame;			// model frame number
 	int		event;			// impulse events -- muzzle flashes, footsteps, etc
@@ -208,7 +208,7 @@ typedef struct botlib_import_s
 	void		(*DebugLineDelete)(int line);
 	void		(*DebugLineShow)(int line, vec3_t start, vec3_t end, int color);
 	//
-	int			(*DebugPolygonCreate)(int color, int num_points, const vec3_t* points);
+	int			(*DebugPolygonCreate)(int color, int numPoints, const vec3_t* points);
 	void		(*DebugPolygonDelete)(int id);
 } botlib_import_t;
 

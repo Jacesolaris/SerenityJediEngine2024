@@ -4933,11 +4933,11 @@ Finds and loads all .shader files, combining them into
 a single large text block that can be scanned for shader names
 =====================
 */
-#define	MAX_SHADER_FILES	4096
+constexpr auto MAX_SHADER_FILES = 8192;
 static void ScanAndLoadShaderFiles(void)
 {
 	char** shaderFiles;
-	char* buffers[MAX_SHADER_FILES];
+	char* buffers[MAX_SHADER_FILES]{};
 	const char* p;
 	int numShaderFiles;
 	int i;
@@ -5220,7 +5220,8 @@ static void CreateExternalShaders(void) {
 R_InitShaders
 ==================
 */
-void R_InitShaders(qboolean server) {
+void R_InitShaders(const qboolean server)
+{
 	ri.Printf(PRINT_ALL, "Initializing Shaders\n");
 
 	Com_Memset(hashTable, 0, sizeof(hashTable));

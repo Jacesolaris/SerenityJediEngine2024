@@ -3492,7 +3492,7 @@ qboolean NPC_ParseParms(const char* npc_name, gentity_t* npc)
 	}
 	else
 	{
-		npc->s.model_index = G_model_index(va("models/players/%s/lower.md3", playerModel));
+		npc->s.modelIndex = G_model_index(va("models/players/%s/lower.md3", playerModel));
 	}
 
 	return qtrue;

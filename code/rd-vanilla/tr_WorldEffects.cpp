@@ -1989,7 +1989,7 @@ void RE_WorldEffectCommand(const char* command) // vanilla sp
 
 	// Create A Sand Storm
 	//---------------------
-	else if (Q_stricmp(token, "Sandstorm") == 0)
+	else if ((Q_stricmp(token, "Sandstorm") == 0) || g_Weather->integer == 4)
 	{
 		if (mParticleClouds.full())
 		{

@@ -190,7 +190,7 @@ void R_MDRAddAnimSurfaces(trRefEntity_t* ent, int entity_num) {
 	int             cubemapIndex;
 	qboolean	personalModel;
 
-	header = (mdrHeader_t*)tr.current_model->data.mdr;
+	header = (mdrHeader_t*)tr.currentModel->data.mdr;
 
 	personalModel = (qboolean)(
 		(ent->e.renderfx & RF_THIRD_PERSON) &&
@@ -199,8 +199,8 @@ void R_MDRAddAnimSurfaces(trRefEntity_t* ent, int entity_num) {
 
 	if (ent->e.renderfx & RF_WRAP_FRAMES)
 	{
-		ent->e.frame %= header->num_frames;
-		ent->e.oldframe %= header->num_frames;
+		ent->e.frame %= header->numFrames;
+		ent->e.oldframe %= header->numFrames;
 	}
 
 	//
@@ -209,13 +209,13 @@ void R_MDRAddAnimSurfaces(trRefEntity_t* ent, int entity_num) {
 	// when the surfaces are rendered, they don't need to be
 	// range checked again.
 	//
-	if ((ent->e.frame >= header->num_frames)
+	if ((ent->e.frame >= header->numFrames)
 		|| (ent->e.frame < 0)
-		|| (ent->e.oldframe >= header->num_frames)
+		|| (ent->e.oldframe >= header->numFrames)
 		|| (ent->e.oldframe < 0))
 	{
 		ri->Printf(PRINT_DEVELOPER, "R_MDRAddAnimSurfaces: no such frame %d to %d for '%s'\n",
-			ent->e.oldframe, ent->e.frame, tr.current_model->name);
+			ent->e.oldframe, ent->e.frame, tr.currentModel->name);
 		ent->e.frame = 0;
 		ent->e.oldframe = 0;
 	}
@@ -348,7 +348,7 @@ void RB_MDRSurfaceAnim(mdrSurface_t* surface)
 
 	triangles = (int*)((byte*)surface + surface->ofsTriangles);
 	indexes = surface->numTriangles * 3;
-	baseIndex = tess.num_indexes;
+	baseIndex = tess.numIndexes;
 	baseVertex = tess.numVertexes;
 
 	// Set up all triangles.
@@ -356,7 +356,7 @@ void RB_MDRSurfaceAnim(mdrSurface_t* surface)
 	{
 		tess.indexes[baseIndex + j] = baseVertex + triangles[j];
 	}
-	tess.num_indexes += indexes;
+	tess.numIndexes += indexes;
 
 	//
 	// lerp all the needed bones
@@ -391,7 +391,7 @@ void RB_MDRSurfaceAnim(mdrSurface_t* surface)
 		w = v->weights;
 		for (k = 0; k < v->numWeights; k++, w++)
 		{
-			bone = bonePtr + w->bone_index;
+			bone = bonePtr + w->boneIndex;
 
 			tempVert[0] += w->boneWeight * (DotProduct(bone->matrix[0], w->offset) + bone->matrix[0][3]);
 			tempVert[1] += w->boneWeight * (DotProduct(bone->matrix[1], w->offset) + bone->matrix[1][3]);

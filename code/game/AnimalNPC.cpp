@@ -101,7 +101,7 @@ extern cvar_t* g_speederControlScheme;
 #ifdef _JK2MP
 #include "../namespace_begin.h"
 #endif
-extern void PM_SetAnim(const pmove_t* pm, int set_anim_parts, int anim, int set_anim_flags, int blend_time);
+extern void PM_SetAnim(const pmove_t* pm, int set_anim_parts, int anim, int set_anim_flags, int blendTime);
 extern int PM_AnimLength(int index, animNumber_t anim);
 #ifdef _JK2MP
 #include "../namespace_end.h"

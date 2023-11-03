@@ -1387,14 +1387,14 @@ void NPC_ClearLookTarget(const gentity_t* self)
 NPC_SetLookTarget
 -------------------------
 */
-void NPC_SetLookTarget(const gentity_t* self, const int ent_num, const int clear_time)
+void NPC_SetLookTarget(const gentity_t* self, const int entNum, const int clear_time)
 {
 	if (!self->client)
 	{
 		return;
 	}
 
-	self->client->renderInfo.lookTarget = ent_num;
+	self->client->renderInfo.lookTarget = entNum;
 	self->client->renderInfo.lookTargetClearTime = clear_time;
 }
 
@@ -1520,7 +1520,7 @@ void G_CheckInsanity(gentity_t* self)
 	}
 }
 
-void G_GetBoltPosition(gentity_t* self, const int bolt_index, vec3_t pos, const int model_index = 0)
+void G_GetBoltPosition(gentity_t* self, const int bolt_index, vec3_t pos, const int modelIndex = 0)
 {
 	if (!self || !self->ghoul2.size())
 	{
@@ -1529,7 +1529,7 @@ void G_GetBoltPosition(gentity_t* self, const int bolt_index, vec3_t pos, const 
 	mdxaBone_t bolt_matrix;
 	const vec3_t angles = { 0, self->currentAngles[YAW], 0 };
 
-	gi.G2API_GetBoltMatrix(self->ghoul2, model_index,
+	gi.G2API_GetBoltMatrix(self->ghoul2, modelIndex,
 		bolt_index,
 		&bolt_matrix, angles, self->currentOrigin, cg.time ? cg.time : level.time,
 		nullptr, self->s.modelScale);

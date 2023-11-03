@@ -2254,8 +2254,8 @@ void beacon_deploy(gentity_t* ent)
 	ent->nextthink = level.time + FRAMETIME * 0.5f;
 
 	ent->s.frame = 0;
-	ent->start_frame = 0;
-	ent->end_frame = 30;
+	ent->startFrame = 0;
+	ent->endFrame = 30;
 	ent->loopAnim = qfalse;
 }
 
@@ -2269,8 +2269,8 @@ void beacon_think(gentity_t* ent)
 		ent->e_ThinkFunc = thinkF_NULL;
 		ent->nextthink = -1;
 
-		ent->start_frame = 31;
-		ent->end_frame = 60;
+		ent->startFrame = 31;
+		ent->endFrame = 60;
 		ent->loopAnim = qtrue;
 
 		ent->s.loopSound = ent->noise_index;
@@ -2989,26 +2989,26 @@ void misc_atst_setanim(gentity_t* self, const int bone, const int anim)
 	}
 	int firstFrame = -1;
 	int lastFrame = -1;
-	float anim_speed = 0;
+	float animSpeed = 0;
 	//try to get anim ranges from the animation.cfg for an AT-ST
 	for (int i = 0; i < level.numKnownAnimFileSets; i++)
 	{
 		if (!Q_stricmp("atst", level.knownAnimFileSets[i].filename))
 		{
 			firstFrame = level.knownAnimFileSets[i].animations[anim].firstFrame;
-			lastFrame = firstFrame + level.knownAnimFileSets[i].animations[anim].num_frames;
-			anim_speed = 50.0f / level.knownAnimFileSets[i].animations[anim].frameLerp;
+			lastFrame = firstFrame + level.knownAnimFileSets[i].animations[anim].numFrames;
+			animSpeed = 50.0f / level.knownAnimFileSets[i].animations[anim].frameLerp;
 			break;
 		}
 	}
-	if (firstFrame != -1 && lastFrame != -1 && anim_speed != 0)
+	if (firstFrame != -1 && lastFrame != -1 && animSpeed != 0)
 	{
 		if (!gi.G2API_SetBoneAnimIndex(&self->ghoul2[self->playerModel], bone, firstFrame,
-			lastFrame, BONE_ANIM_OVERRIDE_FREEZE | BONE_ANIM_BLEND, anim_speed,
+			lastFrame, BONE_ANIM_OVERRIDE_FREEZE | BONE_ANIM_BLEND, animSpeed,
 			cg.time ? cg.time : level.time, -1, 150))
 		{
 			gi.G2API_SetBoneAnimIndex(&self->ghoul2[self->playerModel], bone, firstFrame,
-				lastFrame, BONE_ANIM_OVERRIDE_FREEZE, anim_speed,
+				lastFrame, BONE_ANIM_OVERRIDE_FREEZE, animSpeed,
 				cg.time ? cg.time : level.time, -1, 150);
 		}
 	}

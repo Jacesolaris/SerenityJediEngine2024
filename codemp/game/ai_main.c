@@ -1037,14 +1037,14 @@ BotAI_GetSnapshotEntity
 */
 int BotAI_GetSnapshotEntity(const int client_num, const int sequence, entityState_t* state)
 {
-	const int ent_num = trap->BotGetSnapshotEntity(client_num, sequence);
-	if (ent_num == -1)
+	const int entNum = trap->BotGetSnapshotEntity(client_num, sequence);
+	if (entNum == -1)
 	{
 		memset(state, 0, sizeof(entityState_t));
 		return -1;
 	}
 
-	bot_ai_get_entity_state(ent_num, state);
+	bot_ai_get_entity_state(entNum, state);
 
 	return sequence + 1;
 }
@@ -10377,7 +10377,7 @@ qboolean bot_buy_item(bot_state_t* bs, const char* msg)
 				{
 					gentity_t* te = G_TempEntity(g_entities[bs->client].s.pos.trBase, EV_ITEM_PICKUP);
 					te->s.eventParm = te - g_entities;
-					te->s.model_index = j;
+					te->s.modelIndex = j;
 					te->s.number = bs->client;
 				}
 				return qtrue;
@@ -13867,7 +13867,7 @@ int gUpdateVars = 0;
 BotAIStartFrame
 ==================
 */
-int bot_ai_start_frame(const int time)
+int bot_ai_startFrame(const int time)
 {
 	int i;
 	int thinktime;

@@ -2330,7 +2330,7 @@ static qboolean G_Dismember(gentity_t* ent, vec3_t point,
 		const animation_t* animations = level.knownAnimFileSets[ent->client->clientInfo.animFileIndex].animations;
 		//play the proper dismember anim on the limb
 		gi.G2API_SetBoneAnim(&limb->ghoul2[limb->playerModel], nullptr, animations[limb_anim].firstFrame,
-			animations[limb_anim].num_frames + animations[limb_anim].firstFrame,
+			animations[limb_anim].numFrames + animations[limb_anim].firstFrame,
 			BONE_ANIM_OVERRIDE_FREEZE, 1, cg.time, -1, -1);
 	}
 	if (rotate_bone)
@@ -4790,7 +4790,7 @@ void player_die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, cons
 
 			if (self->owner)
 			{
-				self->owner->s.frame = self->owner->start_frame = self->owner->end_frame = 0;
+				self->owner->s.frame = self->owner->startFrame = self->owner->endFrame = 0;
 				self->owner->svFlags &= ~SVF_ANIMATING;
 			}
 
@@ -7889,7 +7889,7 @@ void G_Damage(gentity_t* targ, gentity_t* inflictor, gentity_t* attacker, const 
 				if (!test_trace.startsolid &&
 					!test_trace.allsolid &&
 					test_trace.entity_num == targ->s.number &&
-					test_trace.G2CollisionMap[0].mentity_num != -1)
+					test_trace.G2CollisionMap[0].mEntityNum != -1)
 				{
 					G_PlayEffect("world/acid_fizz", test_trace.G2CollisionMap[0].mCollisionPosition);
 				}
@@ -8030,7 +8030,7 @@ void G_Damage(gentity_t* targ, gentity_t* inflictor, gentity_t* attacker, const 
 					//play the proper dismember anim on the limb
 					gi.G2API_SetBoneAnim(&limb->ghoul2[limb->playerModel], nullptr,
 						animations[BOTH_A1_BL_TR].firstFrame,
-						animations[BOTH_A1_BL_TR].num_frames + animations[BOTH_A1_BL_TR].firstFrame,
+						animations[BOTH_A1_BL_TR].numFrames + animations[BOTH_A1_BL_TR].firstFrame,
 						BONE_ANIM_OVERRIDE_FREEZE, 1, level.time, -1, -1);
 
 					// Check For Start In Solid

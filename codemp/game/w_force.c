@@ -1742,28 +1742,28 @@ void ForceHeal(gentity_t* self)
 	G_PlayBoltedEffect(G_EffectIndex("force/heal2.efx"), self, "thoracic");
 }
 
-void wp_add_to_client_bitflags(gentity_t* ent, const int ent_num)
+void wp_add_to_client_bitflags(gentity_t* ent, const int entNum)
 {
 	if (!ent)
 	{
 		return;
 	}
 
-	if (ent_num > 47)
+	if (entNum > 47)
 	{
-		ent->s.trickedentindex4 |= (1 << (ent_num - 48));
+		ent->s.trickedentindex4 |= (1 << (entNum - 48));
 	}
-	else if (ent_num > 31)
+	else if (entNum > 31)
 	{
-		ent->s.trickedentindex3 |= (1 << (ent_num - 32));
+		ent->s.trickedentindex3 |= (1 << (entNum - 32));
 	}
-	else if (ent_num > 15)
+	else if (entNum > 15)
 	{
-		ent->s.trickedentindex2 |= (1 << (ent_num - 16));
+		ent->s.trickedentindex2 |= (1 << (entNum - 16));
 	}
 	else
 	{
-		ent->s.trickedentindex |= (1 << ent_num);
+		ent->s.trickedentindex |= (1 << entNum);
 	}
 }
 
@@ -4322,28 +4322,28 @@ void ForceJump(gentity_t* self, const usercmd_t* ucmd)
 	self->client->ps.groundentity_num = ENTITYNUM_NONE;
 }
 
-void WP_AddAsMindtricked(forcedata_t* fd, const int ent_num)
+void WP_AddAsMindtricked(forcedata_t* fd, const int entNum)
 {
 	if (!fd)
 	{
 		return;
 	}
 
-	if (ent_num > 47)
+	if (entNum > 47)
 	{
-		fd->forceMindtrickTargetIndex4 |= (1 << (ent_num - 48));
+		fd->forceMindtrickTargetIndex4 |= (1 << (entNum - 48));
 	}
-	else if (ent_num > 31)
+	else if (entNum > 31)
 	{
-		fd->forceMindtrickTargetIndex3 |= (1 << (ent_num - 32));
+		fd->forceMindtrickTargetIndex3 |= (1 << (entNum - 32));
 	}
-	else if (ent_num > 15)
+	else if (entNum > 15)
 	{
-		fd->forceMindtrickTargetIndex2 |= (1 << (ent_num - 16));
+		fd->forceMindtrickTargetIndex2 |= (1 << (entNum - 16));
 	}
 	else
 	{
-		fd->forceMindtrickTargetIndex |= (1 << ent_num);
+		fd->forceMindtrickTargetIndex |= (1 << entNum);
 	}
 }
 

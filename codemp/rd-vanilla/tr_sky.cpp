@@ -263,7 +263,7 @@ void RB_ClipSkyPolygons(shaderCommands_t* input)
 {
 	ClearSkyBox();
 
-	for (int i = 0; i < input->num_indexes; i += 3)
+	for (int i = 0; i < input->numIndexes; i += 3)
 	{
 		vec3_t p[5]{};
 		for (int j = 0; j < 3; j++)
@@ -475,19 +475,19 @@ static void FillCloudySkySide(const int mins[2], const int maxs[2], const qboole
 		{
 			for (s = 0; s < s_width - 1; s++)
 			{
-				tess.indexes[tess.num_indexes] = vertex_start + s + t * s_width;
-				tess.num_indexes++;
-				tess.indexes[tess.num_indexes] = vertex_start + s + (t + 1) * s_width;
-				tess.num_indexes++;
-				tess.indexes[tess.num_indexes] = vertex_start + s + 1 + t * s_width;
-				tess.num_indexes++;
+				tess.indexes[tess.numIndexes] = vertex_start + s + t * s_width;
+				tess.numIndexes++;
+				tess.indexes[tess.numIndexes] = vertex_start + s + (t + 1) * s_width;
+				tess.numIndexes++;
+				tess.indexes[tess.numIndexes] = vertex_start + s + 1 + t * s_width;
+				tess.numIndexes++;
 
-				tess.indexes[tess.num_indexes] = vertex_start + s + (t + 1) * s_width;
-				tess.num_indexes++;
-				tess.indexes[tess.num_indexes] = vertex_start + s + 1 + (t + 1) * s_width;
-				tess.num_indexes++;
-				tess.indexes[tess.num_indexes] = vertex_start + s + 1 + t * s_width;
-				tess.num_indexes++;
+				tess.indexes[tess.numIndexes] = vertex_start + s + (t + 1) * s_width;
+				tess.numIndexes++;
+				tess.indexes[tess.numIndexes] = vertex_start + s + 1 + (t + 1) * s_width;
+				tess.numIndexes++;
+				tess.indexes[tess.numIndexes] = vertex_start + s + 1 + t * s_width;
+				tess.numIndexes++;
 			}
 		}
 	}
@@ -577,7 +577,7 @@ void R_BuildCloudData(const shaderCommands_t* input)
 	sky_max = 255.0 / 256.0f;
 
 	// set up for drawing
-	tess.num_indexes = 0;
+	tess.numIndexes = 0;
 	tess.num_vertexes = 0;
 
 	if (input->shader->sky->cloudHeight) {
@@ -721,12 +721,12 @@ void RB_DrawSun() {
 	tess.vertexColors[tess.num_vertexes][2] = 255;
 	tess.num_vertexes++;
 
-	tess.indexes[tess.num_indexes++] = 0;
-	tess.indexes[tess.num_indexes++] = 1;
-	tess.indexes[tess.num_indexes++] = 2;
-	tess.indexes[tess.num_indexes++] = 0;
-	tess.indexes[tess.num_indexes++] = 2;
-	tess.indexes[tess.num_indexes++] = 3;
+	tess.indexes[tess.numIndexes++] = 0;
+	tess.indexes[tess.numIndexes++] = 1;
+	tess.indexes[tess.numIndexes++] = 2;
+	tess.indexes[tess.numIndexes++] = 0;
+	tess.indexes[tess.numIndexes++] = 2;
+	tess.indexes[tess.numIndexes++] = 3;
 
 	RB_EndSurface();
 
@@ -789,7 +789,7 @@ void RB_StageIteratorSky()
 	// by the generic shader routine
 	R_BuildCloudData(&tess);
 
-	if (tess.num_indexes && tess.num_vertexes)
+	if (tess.numIndexes && tess.num_vertexes)
 	{
 		RB_StageIteratorGeneric();
 	}

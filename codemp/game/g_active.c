@@ -1419,9 +1419,9 @@ void G_VehicleAttachDroidUnit(gentity_t* vehEnt)
 extern qboolean BG_SabersOff(const playerState_t* ps);
 extern qboolean PM_ReloadAnim(int anim);
 
-void G_CheapWeaponFire(const int ent_num, const int ev)
+void G_CheapWeaponFire(const int entNum, const int ev)
 {
-	gentity_t* ent = &g_entities[ent_num];
+	gentity_t* ent = &g_entities[entNum];
 
 	if (!ent->inuse || !ent->client)
 	{

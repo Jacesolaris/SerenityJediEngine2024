@@ -208,11 +208,11 @@ void CG_TestModelSetAnglespost_f()
 
 void CG_TestModelAnimate_f()
 {
-	char bone_name[100];
+	char boneName[100];
 	CGhoul2Info_v& ghoul2 = *cg.testModelEntity.ghoul2;
 
-	strcpy(bone_name, CG_Argv(1));
-	gi.G2API_SetBoneAnim(&ghoul2[cg.testModel], bone_name, atoi(CG_Argv(2)), atoi(CG_Argv(3)), BONE_ANIM_OVERRIDE_LOOP,
+	strcpy(boneName, CG_Argv(1));
+	gi.G2API_SetBoneAnim(&ghoul2[cg.testModel], boneName, atoi(CG_Argv(2)), atoi(CG_Argv(3)), BONE_ANIM_OVERRIDE_LOOP,
 		atof(CG_Argv(4)), cg.time, -1, -1);
 }
 

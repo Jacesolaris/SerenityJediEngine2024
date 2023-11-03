@@ -110,8 +110,8 @@ void CG_AddGhoul2Mark(const int type, const float size, vec3_t hitloc, vec3_t hi
 	gore_skin.backFaces = false; // no back
 	gore_skin.lifeTime = life_time;
 	gore_skin.firstModel = first_model;
-	gore_skin.current_time = cg.time;
-	gore_skin.ent_num = entnum;
+	gore_skin.currentTime = cg.time;
+	gore_skin.entNum = entnum;
 	gore_skin.SSize = size;
 	gore_skin.TSize = size;
 	gore_skin.shader = type;
@@ -164,9 +164,9 @@ qboolean CG_RegisterClientModelname(clientInfo_t* ci, const char* headModelName,
 	const char* legsModelName, const char* legsSkinName);
 
 static void CG_PlayerFootsteps(const centity_t* cent, footstepType_t foot_step_type);
-static void CG_PlayerAnimEvents(int anim_file_index, qboolean torso, int old_frame, int frame, int ent_num);
-extern void BG_G2SetBoneAngles(const centity_t* cent, int bone_index, const vec3_t angles, int flags,
-	Eorientations up, Eorientations left, Eorientations forward, qhandle_t* model_list);
+static void CG_PlayerAnimEvents(int anim_file_index, qboolean torso, int old_frame, int frame, int entNum);
+extern void BG_G2SetBoneAngles(const centity_t* cent, int boneIndex, const vec3_t angles, int flags,
+	Eorientations up, Eorientations left, Eorientations forward, qhandle_t* modelList);
 extern qboolean pm_saber_in_special_attack(int anim);
 extern qboolean PM_SaberInAttack(int move);
 extern qboolean PM_SaberInTransitionAny(int move);
@@ -798,7 +798,7 @@ Sets cg.snap, cg.oldFrame, and cg.backlerp
 cg.time should be between oldFrameTime and frameTime after exit
 ===============
 */
-static qboolean CG_RunLerpFrame(clientInfo_t* ci, lerpFrame_t* lf, const int new_animation, const int ent_num)
+static qboolean CG_RunLerpFrame(clientInfo_t* ci, lerpFrame_t* lf, const int new_animation, const int entNum)
 {
 	qboolean new_frame = qfalse;
 
@@ -822,7 +822,7 @@ static qboolean CG_RunLerpFrame(clientInfo_t* ci, lerpFrame_t* lf, const int new
 		int anim_frame_time = abs(anim->frameLerp);
 
 		//special hack for player to ensure quick weapon change
-		if (ent_num == 0)
+		if (entNum == 0)
 		{
 			if (lf->animationNumber == TORSO_DROPWEAP1 || lf->animationNumber == TORSO_RAISEWEAP1)
 			{
@@ -840,26 +840,26 @@ static qboolean CG_RunLerpFrame(clientInfo_t* ci, lerpFrame_t* lf, const int new
 		}
 
 		int f = (lf->frameTime - lf->animationTime) / anim_frame_time;
-		if (f >= anim->num_frames)
+		if (f >= anim->numFrames)
 		{
 			//Reached the end of the anim
 			//FIXME: Need to set a flag here to TASK_COMPLETE
-			f -= anim->num_frames;
+			f -= anim->numFrames;
 			if (anim->loopFrames != -1) //Before 0 meant no loop
 			{
-				if (anim->num_frames - anim->loopFrames == 0)
+				if (anim->numFrames - anim->loopFrames == 0)
 				{
-					f %= anim->num_frames;
+					f %= anim->numFrames;
 				}
 				else
 				{
-					f %= anim->num_frames - anim->loopFrames;
+					f %= anim->numFrames - anim->loopFrames;
 				}
 				f += anim->loopFrames;
 			}
 			else
 			{
-				f = anim->num_frames - 1;
+				f = anim->numFrames - 1;
 				if (f < 0)
 				{
 					f = 0;
@@ -872,7 +872,7 @@ static qboolean CG_RunLerpFrame(clientInfo_t* ci, lerpFrame_t* lf, const int new
 
 		if (anim->frameLerp < 0)
 		{
-			lf->frame = anim->firstFrame + anim->num_frames - 1 - f;
+			lf->frame = anim->firstFrame + anim->numFrames - 1 - f;
 		}
 		else
 		{
@@ -921,7 +921,7 @@ static void CG_ClearLerpFrame(clientInfo_t* ci, lerpFrame_t* lf, const int anima
 	if (lf->animation->frameLerp < 0)
 	{
 		//Plays backwards
-		lf->oldFrame = lf->frame = lf->animation->firstFrame + lf->animation->num_frames;
+		lf->oldFrame = lf->frame = lf->animation->firstFrame + lf->animation->numFrames;
 	}
 	else
 	{
@@ -1128,19 +1128,19 @@ static void CG_PlayerAnimEventDo(centity_t* cent, animevent_t* anim_event)
 				}
 				else if (Q_stricmp("scepter_beam", anim_event->stringData) == 0)
 				{
-					int model_index = cent->gent->weaponModel[1];
-					if (model_index <= 0)
+					int modelIndex = cent->gent->weaponModel[1];
+					if (modelIndex <= 0)
 					{
-						model_index = cent->gent->cinematicModel;
+						modelIndex = cent->gent->cinematicModel;
 					}
-					if (model_index > 0)
+					if (modelIndex > 0)
 					{
 						//we have a cinematic model
-						const int bolt_index = gi.G2API_AddBolt(&cent->gent->ghoul2[model_index], "*flash");
+						const int bolt_index = gi.G2API_AddBolt(&cent->gent->ghoul2[modelIndex], "*flash");
 						if (bolt_index > -1)
 						{
 							//cinematic model has a flash bolt
-							CG_PlayEffectBolted("scepter/beam.efx", model_index, bolt_index,
+							CG_PlayEffectBolted("scepter/beam.efx", modelIndex, bolt_index,
 								cent->currentState.client_num,
 								cent->lerpOrigin, anim_event->eventData[AED_EFFECT_PROBABILITY], qtrue);
 						}
@@ -1242,16 +1242,16 @@ static void CG_PlayerAnimEventDo(centity_t* cent, animevent_t* anim_event)
 }
 
 static void CG_PlayerAnimEvents(const int anim_file_index, const qboolean torso, const int old_frame, const int frame,
-	const int ent_num)
+	const int entNum)
 {
 	int first_frame = 0, last_frame = 0;
 	qboolean do_event = qfalse, in_same_anim = qfalse, loop_anim = qfalse, anim_backward = qfalse;
 	animevent_t* anim_events;
 	int gla_index = -1;
 
-	if (g_entities[ent_num].ghoul2.size())
+	if (g_entities[entNum].ghoul2.size())
 	{
-		gla_index = gi.G2API_GetAnimIndex(&g_entities[ent_num].ghoul2[0]);
+		gla_index = gi.G2API_GetAnimIndex(&g_entities[entNum].ghoul2[0]);
 	}
 
 	if (torso)
@@ -1269,14 +1269,14 @@ static void CG_PlayerAnimEvents(const int anim_file_index, const qboolean torso,
 		if (torso)
 		{
 			//more precise, slower
-			old_anim = PM_TorsoAnimForFrame(&g_entities[ent_num], old_frame);
-			anim = PM_TorsoAnimForFrame(&g_entities[ent_num], frame);
+			old_anim = PM_TorsoAnimForFrame(&g_entities[entNum], old_frame);
+			anim = PM_TorsoAnimForFrame(&g_entities[entNum], frame);
 		}
 		else
 		{
 			//more precise, slower
-			old_anim = PM_LegsAnimForFrame(&g_entities[ent_num], old_frame);
-			anim = PM_LegsAnimForFrame(&g_entities[ent_num], frame);
+			old_anim = PM_LegsAnimForFrame(&g_entities[entNum], old_frame);
+			anim = PM_LegsAnimForFrame(&g_entities[entNum], frame);
 		}
 
 		if (anim != old_anim)
@@ -1296,12 +1296,12 @@ static void CG_PlayerAnimEvents(const int anim_file_index, const qboolean torso,
 				//a looping anim!
 				loop_anim = qtrue;
 				first_frame = animation->firstFrame;
-				last_frame = animation->firstFrame + animation->num_frames;
+				last_frame = animation->firstFrame + animation->numFrames;
 			}
 		}
 	}
 
-	const hstring my_model = g_entities[ent_num].NPC_type; //apparently NPC_type is always the same as the model name???
+	const hstring my_model = g_entities[entNum].NPC_type; //apparently NPC_type is always the same as the model name???
 
 	// Check for anim event
 	for (int i = 0; i < MAX_ANIM_EVENTS; ++i)
@@ -1465,7 +1465,7 @@ static void CG_PlayerAnimEvents(const int anim_file_index, const qboolean torso,
 				// do event
 				if (do_event)
 				{
-					CG_PlayerAnimEventDo(&cg_entities[ent_num], &anim_events[i]);
+					CG_PlayerAnimEventDo(&cg_entities[entNum], &anim_events[i]);
 				}
 			} // end if event matches
 		} // end if model matches
@@ -1487,14 +1487,14 @@ static void CGG2_AnimEvents(centity_t* cent)
 	if (ValidAnimFileIndex(cent->gent->client->clientInfo.animFileIndex))
 	{
 		int junk, cur_frame = 0;
-		float current_frame = 0, anim_speed;
+		float currentFrame = 0, animSpeed;
 
 		if (cent->gent->rootBone >= 0 && gi.G2API_GetBoneAnimIndex(&cent->gent->ghoul2[cent->gent->playerModel],
-			cent->gent->rootBone, cg.time, &current_frame, &junk,
-			&junk, &junk, &anim_speed, cgs.model_draw))
+			cent->gent->rootBone, cg.time, &currentFrame, &junk,
+			&junk, &junk, &animSpeed, cgs.model_draw))
 		{
 			// the above may have failed, not sure what to do about it, current frame will be zero in that case
-			cur_frame = floor(current_frame);
+			cur_frame = floor(currentFrame);
 		}
 		if (cur_frame != cent->gent->client->renderInfo.legsFrame)
 		{
@@ -1505,10 +1505,10 @@ static void CGG2_AnimEvents(centity_t* cent)
 		cent->pe.legs.frame = cur_frame;
 
 		if (cent->gent->lowerLumbarBone >= 0 && gi.G2API_GetBoneAnimIndex(
-			&cent->gent->ghoul2[cent->gent->playerModel], cent->gent->lowerLumbarBone, cg.time, &current_frame, &junk,
-			&junk, &junk, &anim_speed, cgs.model_draw))
+			&cent->gent->ghoul2[cent->gent->playerModel], cent->gent->lowerLumbarBone, cg.time, &currentFrame, &junk,
+			&junk, &junk, &animSpeed, cgs.model_draw))
 		{
-			cur_frame = floor(current_frame);
+			cur_frame = floor(currentFrame);
 		}
 		if (cur_frame != cent->gent->client->renderInfo.torsoFrame)
 		{
@@ -1763,9 +1763,9 @@ CG_AddPainTwitch
 */
 constexpr auto PAIN_TWITCH_TIME = 200;
 
-void CG_AddPainTwitch(const int pain_time, const int pain_direction, const int current_time, vec3_t torso_angles)
+void CG_AddPainTwitch(const int pain_time, const int pain_direction, const int currentTime, vec3_t torso_angles)
 {
-	const int t = current_time - pain_time;
+	const int t = currentTime - pain_time;
 	if (t >= PAIN_TWITCH_TIME)
 	{
 		return;
@@ -2233,7 +2233,7 @@ static void CG_ATSTLegsYaw(centity_t* cent, vec3_t trailing_legs_angles)
 }
 
 extern qboolean G_ClassHasBadBones(int NPC_class);
-extern void G_BoneOrientationsForClass(int NPC_class, const char* bone_name, Eorientations* oUp, Eorientations* oRt,
+extern void G_BoneOrientationsForClass(int NPC_class, const char* boneName, Eorientations* oUp, Eorientations* oRt,
 	Eorientations* oFwd);
 extern qboolean PM_FlippingAnim(int anim);
 extern qboolean PM_SpinningSaberAnim(int anim);
@@ -2275,7 +2275,7 @@ static void CG_G2ClientSpineAngles(centity_t* cent, vec3_t view_angles, const ve
 			//expensive version
 			//have a local ghoul2 instance to mess with for this stuff... :/
 			//remember the frame the lower is on
-			float upper_frame, anim_speed;
+			float upper_frame, animSpeed;
 			int junk;
 			vec3_t ll_fwd, ll_rt, dest_p_angles, cur_p_angles, temp_ang;
 
@@ -2290,7 +2290,7 @@ static void CG_G2ClientSpineAngles(centity_t* cent, vec3_t view_angles, const ve
 			}
 
 			gi.G2API_GetBoneAnimIndex(&cent->gent->ghoul2[cent->gent->playerModel], cent->gent->lowerLumbarBone,
-				cg.time, &upper_frame, &junk, &junk, &junk, &anim_speed, cgs.model_draw);
+				cg.time, &upper_frame, &junk, &junk, &junk, &animSpeed, cgs.model_draw);
 			//set the dummyGhoul2 lower body to same frame as upper
 			gi.G2API_SetBoneAnimIndex(&dummyGhoul2[0], dummyRootBone, upper_frame, upper_frame,
 				BONE_ANIM_OVERRIDE_FREEZE,
@@ -2974,9 +2974,9 @@ static void CG_G2PlayerAngles(centity_t* cent, vec3_t legs[3], vec3_t angles)
 			{
 				//override the hips bone with a turn anim when turning
 				//and clear it when we're not... does blend from and to parent actually work?
-				int start_frame, end_frame;
+				int startFrame, endFrame;
 				const qboolean animating_hips = gi.G2API_GetAnimRangeIndex(
-					&cent->gent->ghoul2[cent->gent->playerModel], cent->gent->hipsBone, &start_frame, &end_frame);
+					&cent->gent->ghoul2[cent->gent->playerModel], cent->gent->hipsBone, &startFrame, &endFrame);
 
 				//FIXME: make legs lag behind when turning in place, only play turn anim when legs have to catch up
 				if (angles[YAW] == cent->pe.legs.yawAngle)
@@ -2992,19 +2992,19 @@ static void CG_G2PlayerAngles(centity_t* cent, vec3_t legs[3], vec3_t angles)
 						const animation_t* animations = level.knownAnimFileSets[cent->gent->client->clientInfo.
 							animFileIndex].animations;
 
-						if (!animating_hips || animations[turn_anim].firstFrame != start_frame)
+						if (!animating_hips || animations[turn_anim].firstFrame != startFrame)
 							// only set the anim if we aren't going to do the same animation again
 						{
-							const float anim_speed = 50.0f / animations[turn_anim].frameLerp * PM_GetTimeScaleMod(
+							const float animSpeed = 50.0f / animations[turn_anim].frameLerp * PM_GetTimeScaleMod(
 								cent->gent);
 
 							gi.G2API_SetBoneAnimIndex(&cent->gent->ghoul2[cent->gent->playerModel],
 								cent->gent->hipsBone,
 								animations[turn_anim].firstFrame,
 								animations[turn_anim].firstFrame + animations[turn_anim].
-								num_frames,
+								numFrames,
 								BONE_ANIM_OVERRIDE_LOOP
-								/*|BONE_ANIM_OVERRIDE_FREEZE|BONE_ANIM_BLEND*/, anim_speed,
+								/*|BONE_ANIM_OVERRIDE_FREEZE|BONE_ANIM_BLEND*/, animSpeed,
 								cg.time, -1, 100);
 						}
 					}
@@ -3360,7 +3360,7 @@ static void CG_PlayerAngles(centity_t* cent, vec3_t legs[3], vec3_t torso[3], ve
 	float legs_yaw_swing_tol_min, legs_yaw_swing_tol_max;
 	float max_yaw_speed, yaw_speed, looking_speed;
 	float look_angle_speed = LOOK_TALKING_SPEED; //shut up the compiler
-	int pain_time{}, pain_direction{}, current_time{};
+	int pain_time{}, pain_direction{}, currentTime{};
 
 	qboolean looking = qfalse, talking = qfalse;
 
@@ -3671,7 +3671,7 @@ static void CG_PlayerAngles(centity_t* cent, vec3_t legs[3], vec3_t torso[3], ve
 
 	//-------------------------------------------------------------
 	// pain twitch
-	CG_AddPainTwitch(pain_time, pain_direction, current_time, torso_angles);
+	CG_AddPainTwitch(pain_time, pain_direction, currentTime, torso_angles);
 
 	// pull the angles back out of the hierarchial chain
 	AnglesSubtract(head_angles, torso_angles, head_angles);
@@ -5294,8 +5294,8 @@ CG_AddForceSightShell
 Adds the special effect
 ===============
 */
-extern void CG_AddHealthBarEnt(int ent_num);
-extern void CG_AddBlockPointBarEnt(int ent_num);
+extern void CG_AddHealthBarEnt(int entNum);
+extern void CG_AddBlockPointBarEnt(int entNum);
 
 void CG_DrawPlayerSphere(const centity_t* cent, vec3_t origin, const float scale, const int shader)
 {
@@ -6557,7 +6557,7 @@ static void CG_G2SetHeadBlink(const centity_t* cent, const qboolean b_start)
 	}
 
 	vec3_t desired_angles = { 0 };
-	int blend_time = 80;
+	int blendTime = 80;
 	qboolean b_wink = qfalse;
 
 	if (b_start)
@@ -6566,11 +6566,11 @@ static void CG_G2SetHeadBlink(const centity_t* cent, const qboolean b_start)
 		if (!in_camera && Q_flrand(0.0f, 1.0f) > 0.95f)
 		{
 			b_wink = qtrue;
-			blend_time /= 3;
+			blendTime /= 3;
 		}
 	}
 	gi.G2API_SetBoneAnglesIndex(&gent->ghoul2[gent->playerModel], h_leye, desired_angles,
-		BONE_ANGLES_POSTMULT, POSITIVE_Y, POSITIVE_Z, POSITIVE_X, nullptr, blend_time, cg.time);
+		BONE_ANGLES_POSTMULT, POSITIVE_Y, POSITIVE_Z, POSITIVE_X, nullptr, blendTime, cg.time);
 	const int h_reye = gi.G2API_GetBoneIndex(&gent->ghoul2[0], "reye", qtrue);
 	if (h_reye == -1)
 	{
@@ -6579,7 +6579,7 @@ static void CG_G2SetHeadBlink(const centity_t* cent, const qboolean b_start)
 
 	if (!b_wink)
 		gi.G2API_SetBoneAnglesIndex(&gent->ghoul2[gent->playerModel], h_reye, desired_angles,
-			BONE_ANGLES_POSTMULT, POSITIVE_Y, POSITIVE_Z, POSITIVE_X, nullptr, blend_time,
+			BONE_ANGLES_POSTMULT, POSITIVE_Y, POSITIVE_Z, POSITIVE_X, nullptr, blendTime,
 			cg.time);
 }
 
@@ -6594,9 +6594,9 @@ static void CG_G2SetHeadAnim(const centity_t* cent, const int anim)
 	const animation_t* animations = level.knownAnimFileSets[gent->client->clientInfo.animFileIndex].animations;
 	int anim_flags = BONE_ANIM_OVERRIDE;
 	const float time_scale_mod = cg_timescale.value ? 1.0 / cg_timescale.value : 1.0;
-	const float anim_speed = 50.0f / animations[anim].frameLerp * time_scale_mod;
+	const float animSpeed = 50.0f / animations[anim].frameLerp * time_scale_mod;
 
-	if (animations[anim].num_frames <= 0)
+	if (animations[anim].numFrames <= 0)
 	{
 		return;
 	}
@@ -6604,30 +6604,30 @@ static void CG_G2SetHeadAnim(const centity_t* cent, const int anim)
 	{
 		anim_flags |= BONE_ANIM_OVERRIDE_FREEZE;
 	}
-	// anim_speed is 1.0 if the frameLerp (ms/frame) is 50 (20 fps).
+	// animSpeed is 1.0 if the frameLerp (ms/frame) is 50 (20 fps).
 	int first_frame;
 	int last_frame;
-	if (anim_speed < 0)
+	if (animSpeed < 0)
 	{
 		//play anim backwards
 		last_frame = animations[anim].firstFrame - 1;
-		first_frame = animations[anim].num_frames - 1 + animations[anim].firstFrame;
+		first_frame = animations[anim].numFrames - 1 + animations[anim].firstFrame;
 	}
 	else
 	{
 		first_frame = animations[anim].firstFrame;
-		last_frame = animations[anim].num_frames + animations[anim].firstFrame;
+		last_frame = animations[anim].numFrames + animations[anim].firstFrame;
 	}
 
 	// first decide if we are doing an animation on the head already
-	//	int start_frame, end_frame;
-	//	const qboolean animatingHead =  gi.G2API_GetAnimRangeIndex(&gent->ghoul2[gent->playerModel], cent->gent->faceBone, &start_frame, &end_frame);
+	//	int startFrame, endFrame;
+	//	const qboolean animatingHead =  gi.G2API_GetAnimRangeIndex(&gent->ghoul2[gent->playerModel], cent->gent->faceBone, &startFrame, &endFrame);
 
-	//	if (!animatingHead || ( animations[anim].firstFrame != start_frame ) )// only set the anim if we aren't going to do the same animation again
+	//	if (!animatingHead || ( animations[anim].firstFrame != startFrame ) )// only set the anim if we aren't going to do the same animation again
 	{
-		constexpr int blend_time = 50;
+		constexpr int blendTime = 50;
 		gi.G2API_SetBoneAnimIndex(&gent->ghoul2[gent->playerModel], cent->gent->faceBone,
-			first_frame, last_frame, anim_flags, anim_speed, cg.time, -1, blend_time);
+			first_frame, last_frame, anim_flags, animSpeed, cg.time, -1, blendTime);
 	}
 }
 
@@ -11980,12 +11980,12 @@ static void CG_CreateSaberMarks(vec3_t start, vec3_t end, vec3_t normal)
 	{
 		polyVert_t verts[MAX_VERTS_ON_POLY]{};
 		// we have an upper limit on the complexity of polygons that we store persistantly
-		if (mf->num_points > MAX_VERTS_ON_POLY)
+		if (mf->numPoints > MAX_VERTS_ON_POLY)
 		{
-			mf->num_points = MAX_VERTS_ON_POLY;
+			mf->numPoints = MAX_VERTS_ON_POLY;
 		}
 
-		for (j = 0, v = verts; j < mf->num_points; j++, v++)
+		for (j = 0, v = verts; j < mf->numPoints; j++, v++)
 		{
 			vec3_t mid;
 			vec3_t delta;
@@ -12005,9 +12005,9 @@ static void CG_CreateSaberMarks(vec3_t start, vec3_t end, vec3_t normal)
 		mark->time = cg.time;
 		mark->alphaFade = qtrue;
 		mark->markShader = cgs.media.rivetMarkShader;
-		mark->poly.numVerts = mf->num_points;
+		mark->poly.numVerts = mf->numPoints;
 		mark->color[0] = mark->color[1] = mark->color[2] = mark->color[3] = 255;
-		memcpy(mark->verts, verts, mf->num_points * sizeof verts[0]);
+		memcpy(mark->verts, verts, mf->numPoints * sizeof verts[0]);
 
 		// And now do a glow pass
 		// by moving the start time back, we can hack it to fade out way before the burn does
@@ -12015,17 +12015,17 @@ static void CG_CreateSaberMarks(vec3_t start, vec3_t end, vec3_t normal)
 		mark->time = cg.time - 8500;
 		mark->alphaFade = qfalse;
 		mark->markShader = cgs.media.bdecal_saberglow;
-		mark->poly.numVerts = mf->num_points;
+		mark->poly.numVerts = mf->numPoints;
 		mark->color[0] = 215 + Q_flrand(0.0f, 1.0f) * 40.0f;
 		mark->color[1] = 96 + Q_flrand(0.0f, 1.0f) * 32.0f;
 		mark->color[2] = mark->color[3] = Q_flrand(0.0f, 1.0f) * 15.0f;
-		memcpy(mark->verts, verts, mf->num_points * sizeof verts[0]);
+		memcpy(mark->verts, verts, mf->numPoints * sizeof verts[0]);
 	}
 }
 
 extern void FX_AddPrimitive(CEffect** effect, int kill_time);
 //-------------------------------------------------------
-void CG_CheckSaberInWater(const centity_t* cent, const centity_t* scent, const int saber_num, const int model_index,
+void CG_CheckSaberInWater(const centity_t* cent, const centity_t* scent, const int saber_num, const int modelIndex,
 	vec3_t origin, vec3_t angles)
 {
 	gclient_t* client = cent->gent->client;
@@ -12034,11 +12034,11 @@ void CG_CheckSaberInWater(const centity_t* cent, const centity_t* scent, const i
 		return;
 	}
 	if (!scent ||
-		model_index == -1 ||
-		scent->gent->ghoul2.size() <= model_index ||
-		scent->gent->ghoul2[model_index].mBltlist.size() <= 0 ||
+		modelIndex == -1 ||
+		scent->gent->ghoul2.size() <= modelIndex ||
+		scent->gent->ghoul2[modelIndex].mBltlist.size() <= 0 ||
 		//using a camera puts away your saber so you have no bolts
-		scent->gent->ghoul2[model_index].mmodel_index == -1)
+		scent->gent->ghoul2[modelIndex].mModelindex == -1)
 	{
 		return;
 	}
@@ -12054,7 +12054,7 @@ void CG_CheckSaberInWater(const centity_t* cent, const centity_t* scent, const i
 		mdxaBone_t bolt_matrix;
 
 		// figure out where the actual model muzzle is
-		gi.G2API_GetBoltMatrix(scent->gent->ghoul2, model_index, 0, &bolt_matrix, angles, origin, cg.time,
+		gi.G2API_GetBoltMatrix(scent->gent->ghoul2, modelIndex, 0, &bolt_matrix, angles, origin, cg.time,
 			cgs.model_draw,
 			scent->currentState.modelScale);
 		// work the matrix axis stuff into the original axis and origins used.
@@ -12074,7 +12074,7 @@ void CG_CheckSaberInWater(const centity_t* cent, const centity_t* scent, const i
 
 constexpr auto SABER_TRAIL_TIME = 40.0f;
 
-static void CG_AddSaberBladeGo(const centity_t* cent, centity_t* scent, const int renderfx, const int model_index,
+static void CG_AddSaberBladeGo(const centity_t* cent, centity_t* scent, const int renderfx, const int modelIndex,
 	vec3_t origin, vec3_t angles, const int saber_num, const int blade_num)
 {
 	vec3_t org, end, axis[3] = { {0, 0, 0}, {0, 0, 0}, {0, 0, 0} };
@@ -12093,20 +12093,20 @@ static void CG_AddSaberBladeGo(const centity_t* cent, centity_t* scent, const in
 	if (true)
 	{
 		if (!scent ||
-			model_index == -1 ||
-			scent->gent->ghoul2.size() <= model_index ||
-			scent->gent->ghoul2[model_index].mmodel_index == -1)
+			modelIndex == -1 ||
+			scent->gent->ghoul2.size() <= modelIndex ||
+			scent->gent->ghoul2[modelIndex].mModelindex == -1)
 		{
 			return;
 		}
 
 		const char* tag_name = va("*blade%d", blade_num + 1);
-		int bolt = gi.G2API_AddBolt(&scent->gent->ghoul2[model_index], tag_name);
+		int bolt = gi.G2API_AddBolt(&scent->gent->ghoul2[modelIndex], tag_name);
 
 		if (bolt == -1)
 		{
 			tag_hack = qtrue; //use the hacked switch statement below to position and orient the blades
-			bolt = gi.G2API_AddBolt(&scent->gent->ghoul2[model_index], "*flash");
+			bolt = gi.G2API_AddBolt(&scent->gent->ghoul2[modelIndex], "*flash");
 			if (bolt == -1)
 			{
 				//no tag_flash either?!!
@@ -12118,17 +12118,17 @@ static void CG_AddSaberBladeGo(const centity_t* cent, centity_t* scent, const in
 		if (!WP_SaberBladeUseSecondBladeStyle(&cent->gent->client->ps.saber[saber_num], blade_num)
 			&& cent->gent->client->ps.saber[saber_num].bladeEffect)
 		{
-			CG_PlayEffectIDBolted(cent->gent->client->ps.saber[saber_num].bladeEffect, model_index, bolt,
+			CG_PlayEffectIDBolted(cent->gent->client->ps.saber[saber_num].bladeEffect, modelIndex, bolt,
 				scent->currentState.client_num, scent->lerpOrigin, -1, qfalse);
 		}
 		else if (WP_SaberBladeUseSecondBladeStyle(&cent->gent->client->ps.saber[saber_num], blade_num)
 			&& cent->gent->client->ps.saber[saber_num].bladeEffect2)
 		{
-			CG_PlayEffectIDBolted(cent->gent->client->ps.saber[saber_num].bladeEffect2, model_index, bolt,
+			CG_PlayEffectIDBolted(cent->gent->client->ps.saber[saber_num].bladeEffect2, modelIndex, bolt,
 				scent->currentState.client_num, scent->lerpOrigin, -1, qfalse);
 		}
 		//get the bolt_matrix
-		gi.G2API_GetBoltMatrix(scent->gent->ghoul2, model_index, bolt, &bolt_matrix, angles, origin, cg.time,
+		gi.G2API_GetBoltMatrix(scent->gent->ghoul2, modelIndex, bolt, &bolt_matrix, angles, origin, cg.time,
 			cgs.model_draw, scent->currentState.modelScale);
 
 		// work the matrix axis stuff into the original axis and origins used.
@@ -13574,7 +13574,7 @@ static void CG_AddSaberBladeGo(const centity_t* cent, centity_t* scent, const in
 	}
 }
 
-void CG_AddSaberBlade(const centity_t* cent, centity_t* scent, const int renderfx, const int model_index,
+void CG_AddSaberBlade(const centity_t* cent, centity_t* scent, const int renderfx, const int modelIndex,
 	vec3_t origin, vec3_t angles)
 {
 	//FIXME: if this is a dropped saber, it could be possible that it's the second saber?
@@ -13582,7 +13582,7 @@ void CG_AddSaberBlade(const centity_t* cent, centity_t* scent, const int renderf
 	{
 		for (int i = 0; i < cent->gent->client->ps.saber[0].numBlades; i++)
 		{
-			CG_AddSaberBladeGo(cent, scent, renderfx, model_index, origin, angles, 0, i);
+			CG_AddSaberBladeGo(cent, scent, renderfx, modelIndex, origin, angles, 0, i);
 		}
 		if (cent->gent->client->ps.saber[0].numBlades > 2)
 		{
@@ -15158,7 +15158,7 @@ void CG_Player(centity_t* cent)
 					}
 					if (cent->gent->weaponModel[cent->gent->count] != -1
 						&& cent->gent->ghoul2.size() > cent->gent->weaponModel[cent->gent->count]
-						&& cent->gent->ghoul2[cent->gent->weaponModel[cent->gent->count]].mmodel_index != -1)
+						&& cent->gent->ghoul2[cent->gent->weaponModel[cent->gent->count]].mModelindex != -1)
 					{
 						//get whichever one we're using now
 						mdxaBone_t matrix;
@@ -15177,7 +15177,7 @@ void CG_Player(centity_t* cent)
 						&& cent->gent->weaponModel[old_one] != -1 //have a second weapon
 						&& cent->gent->ghoul2.size() > cent->gent->weaponModel[old_one]
 						//have a valid ghoul model index
-						&& cent->gent->ghoul2[cent->gent->weaponModel[old_one]].mmodel_index != -1)
+						&& cent->gent->ghoul2[cent->gent->weaponModel[old_one]].mModelindex != -1)
 						//model exists and was loaded
 					{
 						//saboteur commando, toggle the muzzle point back and forth between the two pistols each time he fires
@@ -15207,7 +15207,7 @@ void CG_Player(centity_t* cent)
 					}
 					if (cent->gent->weaponModel[cent->gent->count] != -1
 						&& cent->gent->ghoul2.size() > cent->gent->weaponModel[cent->gent->count]
-						&& cent->gent->ghoul2[cent->gent->weaponModel[cent->gent->count]].mmodel_index != -1)
+						&& cent->gent->ghoul2[cent->gent->weaponModel[cent->gent->count]].mModelindex != -1)
 					{
 						//get whichever one we're using now
 						mdxaBone_t matrix;
@@ -15226,7 +15226,7 @@ void CG_Player(centity_t* cent)
 						&& cent->gent->weaponModel[old_one] != -1 //have a second weapon
 						&& cent->gent->ghoul2.size() > cent->gent->weaponModel[old_one]
 						//have a valid ghoul model index
-						&& cent->gent->ghoul2[cent->gent->weaponModel[old_one]].mmodel_index != -1)
+						&& cent->gent->ghoul2[cent->gent->weaponModel[old_one]].mModelindex != -1)
 						//model exists and was loaded
 					{
 						//saboteur commando, toggle the muzzle point back and forth between the two pistols each time he fires
@@ -15255,7 +15255,7 @@ void CG_Player(centity_t* cent)
 					}
 					if (cent->gent->weaponModel[cent->gent->count] != -1
 						&& cent->gent->ghoul2.size() > cent->gent->weaponModel[cent->gent->count]
-						&& cent->gent->ghoul2[cent->gent->weaponModel[cent->gent->count]].mmodel_index != -1)
+						&& cent->gent->ghoul2[cent->gent->weaponModel[cent->gent->count]].mModelindex != -1)
 					{
 						//get whichever one we're using now
 						mdxaBone_t matrix;
@@ -15274,7 +15274,7 @@ void CG_Player(centity_t* cent)
 						&& cent->gent->weaponModel[old_one] != -1 //have a second weapon
 						&& cent->gent->ghoul2.size() > cent->gent->weaponModel[old_one]
 						//have a valid ghoul model index
-						&& cent->gent->ghoul2[cent->gent->weaponModel[old_one]].mmodel_index != -1)
+						&& cent->gent->ghoul2[cent->gent->weaponModel[old_one]].mModelindex != -1)
 						//model exists and was loaded
 					{
 						//saboteur commando, toggle the muzzle point back and forth between the two pistols each time he fires
@@ -15290,7 +15290,7 @@ void CG_Player(centity_t* cent)
 				}
 				else if (cent->gent->weaponModel[0] != -1 &&
 					cent->gent->ghoul2.size() > cent->gent->weaponModel[0] &&
-					cent->gent->ghoul2[cent->gent->weaponModel[0]].mmodel_index != -1)
+					cent->gent->ghoul2[cent->gent->weaponModel[0]].mModelindex != -1)
 				{
 					mdxaBone_t matrix;
 					// figure out where the actual model muzzle is
@@ -16057,7 +16057,7 @@ void CG_Player(centity_t* cent)
 
 		VectorCopy(cent->lerpOrigin, legs.origin);
 
-		//Scale applied to a ref_ent will apply to any models attached to it...
+		//Scale applied to a refEnt will apply to any models attached to it...
 		//This seems to copy the scale to every piece attached, kinda cool, but doesn't
 		//allow the body to be scaled up without scaling a bolt on or whatnot...
 		//Only apply scale if it's not 100% scale...

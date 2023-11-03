@@ -22,7 +22,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 #include "b_local.h"
 
-extern void G_GetBoltPosition(gentity_t* self, int bolt_index, vec3_t pos, int model_index);
+extern void G_GetBoltPosition(gentity_t* self, int bolt_index, vec3_t pos, int modelIndex);
 
 // These define the working combat range for these suckers
 #define MIN_DISTANCE		128

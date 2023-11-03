@@ -29,7 +29,7 @@ void FX_PlayEffect(const char* file, vec3_t org, vec3_t fwd, int vol, int rad);
 
 void FX_PlayEffectID(int id, vec3_t org, vec3_t fwd, int vol, int rad, qboolean isPortal = qfalse);
 // builds arbitrary perp. right vector, does a cross product to define up
-void FX_PlayEntityEffectID(int id, vec3_t org, matrix3_t axis, int bolt_info, int ent_num, int vol, int rad);
+void FX_PlayEntityEffectID(int id, vec3_t org, matrix3_t axis, int bolt_info, int entNum, int vol, int rad);
 void FX_PlayBoltedEffectID(int id, vec3_t org, int bolt_info, CGhoul2Info_v* ghoul2, int iLooptime, qboolean isRelative);
 
 void FX_AddScheduledEffects(qboolean portal);

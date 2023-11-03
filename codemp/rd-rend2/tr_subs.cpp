@@ -89,7 +89,8 @@ void Z_Free(void* ptr) {
 	ri->Z_Free(ptr);
 }
 
-int Z_MemSize(memtag_t eTag) {
+int Z_MemSize(const memtag_t eTag)
+{
 	return ri->Z_MemSize(eTag);
 }
 

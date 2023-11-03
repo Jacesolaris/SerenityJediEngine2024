@@ -262,7 +262,7 @@ CParticle* FX_AddParticle(vec3_t org, vec3_t vel, vec3_t accel, const float size
 	const int death_id, const int impact_id,
 	const int kill_time, const qhandle_t shader, const int flags = 0,
 	const EMatImpactEffect mat_impact_fx, const int fx_parm,
-	CGhoul2Info_v* ghoul2, const int ent_num, const int model_num,
+	CGhoul2Info_v* ghoul2, const int entNum, const int model_num,
 	const int bolt_num)
 {
 	if (theFxHelper.mFrameTime < 1)
@@ -279,7 +279,7 @@ CParticle* FX_AddParticle(vec3_t org, vec3_t vel, vec3_t accel, const float size
 		{
 			fx->SetOrigin1(nullptr);
 			fx->SetOrgOffset(org);
-			fx->SetBoltinfo(ghoul2, ent_num, model_num, bolt_num);
+			fx->SetBoltinfo(ghoul2, entNum, model_num, bolt_num);
 		}
 		else
 		{
@@ -357,7 +357,7 @@ CLine* FX_AddLine(vec3_t start, vec3_t end, const float size1, const float size2
 	vec3_t s_rgb, vec3_t e_rgb, const float rgb_parm,
 	const int kill_time, const qhandle_t shader, const int flags = 0,
 	const EMatImpactEffect mat_impact_fx, const int fx_parm,
-	CGhoul2Info_v* ghoul2, const int ent_num, const int model_num, const int bolt_num)
+	CGhoul2Info_v* ghoul2, const int entNum, const int model_num, const int bolt_num)
 {
 	if (theFxHelper.mFrameTime < 1)
 	{
@@ -374,7 +374,7 @@ CLine* FX_AddLine(vec3_t start, vec3_t end, const float size1, const float size2
 			fx->SetOrigin1(nullptr);
 			fx->SetOrgOffset(start); //offset from bolt pos
 			fx->SetVel(end); //vel is the vector offset from bolt+orgOffset
-			fx->SetBoltinfo(ghoul2, ent_num, model_num, bolt_num);
+			fx->SetBoltinfo(ghoul2, entNum, model_num, bolt_num);
 		}
 		else
 		{
@@ -443,7 +443,7 @@ CElectricity* FX_AddElectricity(vec3_t start, vec3_t end, const float size1, con
 	vec3_t s_rgb, vec3_t e_rgb, const float rgb_parm,
 	const float chaos, const int kill_time, const qhandle_t shader, const int flags = 0,
 	const EMatImpactEffect mat_impact_fx /*MATIMPACTFX_NONE*/, const int fx_parm /*-1*/,
-	CGhoul2Info_v* ghoul2/*0*/, const int ent_num/*-1*/, const int model_num/*-1*/,
+	CGhoul2Info_v* ghoul2/*0*/, const int entNum/*-1*/, const int model_num/*-1*/,
 	const int bolt_num/*-1*/)
 {
 	if (theFxHelper.mFrameTime < 1)
@@ -461,7 +461,7 @@ CElectricity* FX_AddElectricity(vec3_t start, vec3_t end, const float size1, con
 			fx->SetOrigin1(nullptr);
 			fx->SetOrgOffset(start); //offset
 			fx->SetVel(end); //vel is the vector offset from bolt+orgOffset
-			fx->SetBoltinfo(ghoul2, ent_num, model_num, bolt_num);
+			fx->SetBoltinfo(ghoul2, entNum, model_num, bolt_num);
 		}
 		else
 		{
@@ -540,7 +540,7 @@ CTail* FX_AddTail(vec3_t org, vec3_t vel, vec3_t accel,
 	const int death_id, const int impact_id,
 	const int kill_time, const qhandle_t shader, const int flags = 0,
 	const EMatImpactEffect mat_impact_fx /*MATIMPACTFX_NONE*/, const int fx_parm /*-1*/,
-	CGhoul2Info_v* ghoul2/*0*/, const int ent_num/*-1*/, const int model_num/*-1*/, const int bolt_num/*-1*/)
+	CGhoul2Info_v* ghoul2/*0*/, const int entNum/*-1*/, const int model_num/*-1*/, const int bolt_num/*-1*/)
 {
 	if (theFxHelper.mFrameTime < 1)
 	{
@@ -556,7 +556,7 @@ CTail* FX_AddTail(vec3_t org, vec3_t vel, vec3_t accel,
 		{
 			fx->SetOrigin1(nullptr);
 			fx->SetOrgOffset(org);
-			fx->SetBoltinfo(ghoul2, ent_num, model_num, bolt_num);
+			fx->SetBoltinfo(ghoul2, entNum, model_num, bolt_num);
 		}
 		else
 		{
@@ -646,7 +646,7 @@ CCylinder* FX_AddCylinder(vec3_t start, vec3_t normal,
 	vec3_t rgb1, vec3_t rgb2, const float rgb_parm,
 	const int kill_time, const qhandle_t shader, const int flags,
 	const EMatImpactEffect mat_impact_fx /*MATIMPACTFX_NONE*/, const int fx_parm /*-1*/,
-	CGhoul2Info_v* ghoul2/*0*/, const int ent_num/*-1*/, const int model_num/*-1*/,
+	CGhoul2Info_v* ghoul2/*0*/, const int entNum/*-1*/, const int model_num/*-1*/,
 	const int bolt_num/*-1*/,
 	const qboolean trace_end)
 {
@@ -664,7 +664,7 @@ CCylinder* FX_AddCylinder(vec3_t start, vec3_t normal,
 		{
 			fx->SetOrigin1(nullptr);
 			fx->SetOrgOffset(start); //offset
-			fx->SetBoltinfo(ghoul2, ent_num, model_num, bolt_num);
+			fx->SetBoltinfo(ghoul2, entNum, model_num, bolt_num);
 		}
 		else
 		{
@@ -780,7 +780,7 @@ CEmitter* FX_AddEmitter(vec3_t org, vec3_t vel, vec3_t accel,
 		if (flags & FX_RELATIVE && ghoul2 != nullptr)
 		{
 			assert(0); //not done
-			//			fx->SetBoltinfo( ghoul2, ent_num, modelNum, boltNum );
+			//			fx->SetBoltinfo( ghoul2, entNum, modelNum, boltNum );
 		}
 		fx->SetMatImpactFX(mat_impact_fx);
 		fx->SetMatImpactParm(fx_parm);
@@ -858,7 +858,7 @@ CLight* FX_AddLight(vec3_t org, const float size1, const float size2, const floa
 	vec3_t rgb1, vec3_t rgb2, const float rgb_parm,
 	const int kill_time, const int flags = 0,
 	const EMatImpactEffect mat_impact_fx /*MATIMPACTFX_NONE*/, const int fx_parm /*-1*/,
-	CGhoul2Info_v* ghoul2/*0*/, const int ent_num/*-1*/, const int model_num/*-1*/,
+	CGhoul2Info_v* ghoul2/*0*/, const int entNum/*-1*/, const int model_num/*-1*/,
 	const int bolt_num/*-1*/)
 {
 	if (theFxHelper.mFrameTime < 1)
@@ -875,7 +875,7 @@ CLight* FX_AddLight(vec3_t org, const float size1, const float size2, const floa
 		{
 			fx->SetOrigin1(nullptr);
 			fx->SetOrgOffset(org); //offset
-			fx->SetBoltinfo(ghoul2, ent_num, model_num, bolt_num);
+			fx->SetBoltinfo(ghoul2, entNum, model_num, bolt_num);
 		}
 		else
 		{
@@ -932,7 +932,7 @@ COrientedParticle* FX_AddOrientedParticle(vec3_t org, vec3_t norm, vec3_t vel, v
 	const int kill_time, const qhandle_t shader, const int flags = 0,
 	const EMatImpactEffect mat_impact_fx /*MATIMPACTFX_NONE*/,
 	const int fx_parm /*-1*/,
-	CGhoul2Info_v* ghoul2/*0*/, const int ent_num/*-1*/, const int model_num/*-1*/,
+	CGhoul2Info_v* ghoul2/*0*/, const int entNum/*-1*/, const int model_num/*-1*/,
 	const int bolt_num/*-1*/)
 {
 	if (theFxHelper.mFrameTime < 1)
@@ -949,7 +949,7 @@ COrientedParticle* FX_AddOrientedParticle(vec3_t org, vec3_t norm, vec3_t vel, v
 		{
 			fx->SetOrigin1(nullptr);
 			fx->SetOrgOffset(org); //offset
-			fx->SetBoltinfo(ghoul2, ent_num, model_num, bolt_num);
+			fx->SetBoltinfo(ghoul2, entNum, model_num, bolt_num);
 		}
 		else
 		{

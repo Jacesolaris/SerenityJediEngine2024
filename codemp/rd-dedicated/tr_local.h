@@ -706,7 +706,7 @@ using srfSurfaceFace_t = struct srfSurfaceFace_s
 	int dlight_bits;
 
 	// triangle definitions (no normals at points)
-	int num_points;
+	int numPoints;
 	int numIndices;
 	int ofsIndices;
 	float points[1][VERTEXSIZE]; // variable sized
@@ -727,7 +727,7 @@ using srfTriangles_t = struct srfTriangles_s
 	//	float			radius;
 
 	// triangle definitions
-	int num_indexes;
+	int numIndexes;
 	int* indexes;
 
 	int numVerts;
@@ -906,7 +906,7 @@ void R_ModelInit();
 void R_InitDecals();
 
 model_t* R_GetModelByHandle(qhandle_t index);
-int R_LerpTag(orientation_t* tag, qhandle_t handle, int start_frame, int end_frame,
+int R_LerpTag(orientation_t* tag, qhandle_t handle, int startFrame, int endFrame,
 	float frac, const char* tagName);
 void R_ModelBounds(qhandle_t handle, vec3_t mins, vec3_t maxs);
 
@@ -1074,7 +1074,7 @@ using trGlobals_t = struct trGlobals_s
 	trRefEntity_t worldEntity; // point currentEntity at this when rendering world
 	int currententity_num;
 	int shiftedentity_num; // currententity_num << QSORT_ENTITYNUM_SHIFT
-	model_t* current_model;
+	model_t* currentModel;
 
 	viewParms_t viewParms;
 
@@ -1438,7 +1438,7 @@ qhandle_t RE_RegisterShaderFromImage(const char* name, const int* lightmap_index
 shader_t* R_FindShader(const char* name, const int* lightmap_index, const byte* styles, qboolean mip_raw_image);
 shader_t* R_GetShaderByHandle(qhandle_t hShader);
 shader_t* R_FindShaderByName(const char* name);
-void R_InitShaders(qboolean server);
+void R_InitShaders(const qboolean server);
 void R_ShaderList_f();
 void R_RemapShader(const char* shader_name, const char* new_shader_name, const char* time_offset);
 
@@ -1490,7 +1490,7 @@ struct shaderCommands_s
 
 	int dlight_bits; // or together of all vertexdlight_bits
 
-	int num_indexes;
+	int numIndexes;
 	int num_vertexes;
 
 	// info extracted from current shader
@@ -1511,7 +1511,7 @@ extern color4ub_t styleColors[MAX_LIGHT_STYLES];
 void RB_BeginSurface(shader_t* shader, int fogNum);
 void RB_EndSurface(void);
 void RB_CheckOverflow(int verts, int indexes);
-#define RB_CHECKOVERFLOW(v,i) if (tess.num_vertexes + (v) >= SHADER_MAX_VERTEXES || tess.num_indexes + (i) >= SHADER_MAX_INDEXES ) {RB_CheckOverflow(v,i);}
+#define RB_CHECKOVERFLOW(v,i) if (tess.num_vertexes + (v) >= SHADER_MAX_VERTEXES || tess.numIndexes + (i) >= SHADER_MAX_INDEXES ) {RB_CheckOverflow(v,i);}
 
 void RB_StageIteratorGeneric(void);
 void RB_StageIteratorSky(void);
@@ -1590,7 +1590,7 @@ MARKERS, POLYGON PROJECTION ON WORLD POLYGONS
 ============================================================
 */
 
-int R_MarkFragments(int num_points, const vec3_t* points, const vec3_t projection, int max_points, vec3_t point_buffer,
+int R_MarkFragments(int numPoints, const vec3_t* points, const vec3_t projection, int max_points, vec3_t point_buffer,
 	int max_fragments, markFragment_t* fragment_buffer);
 
 /*

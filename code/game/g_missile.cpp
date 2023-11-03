@@ -2462,13 +2462,13 @@ void g_run_missile(gentity_t* ent)
 		// did we hit or go near a Ghoul2 model?
 		for (auto& i : tr.G2CollisionMap)
 		{
-			if (i.mentity_num == -1)
+			if (i.mEntityNum == -1)
 			{
 				break;
 			}
 
 			CCollisionRecord& coll = i;
-			const gentity_t* hit_ent = &g_entities[coll.mentity_num];
+			const gentity_t* hit_ent = &g_entities[coll.mEntityNum];
 
 			// process collision records here...
 			// make sure we only do this once, not for all the entrance wounds we might generate
@@ -2476,9 +2476,9 @@ void g_run_missile(gentity_t* ent)
 			{
 				if (tr_hit_loc == HL_NONE)
 				{
-					G_GetHitLocFromSurfName(&g_entities[coll.mentity_num],
+					G_GetHitLocFromSurfName(&g_entities[coll.mEntityNum],
 						gi.G2API_GetSurfaceName(
-							&g_entities[coll.mentity_num].ghoul2[coll.mModelIndex],
+							&g_entities[coll.mEntityNum].ghoul2[coll.mModelIndex],
 							coll.mSurfaceIndex), &tr_hit_loc, coll.mCollisionPosition, nullptr,
 						nullptr, ent->methodOfDeath);
 				}

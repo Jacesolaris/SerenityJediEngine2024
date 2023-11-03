@@ -230,7 +230,7 @@ void CM_TraceThroughBrush(traceWork_t* tw, trace_t& trace, cbrush_t* brush, cons
 			{
 				trace.fraction = tw->enterFrac;
 				trace.plane = *tw->clipplane;
-				trace.surfaceFlags = cmg.shaders[tw->leadside->shader_num].surfaceFlags;
+				trace.surfaceFlags = cmg.shaders[tw->leadside->shaderNum].surfaceFlags;
 				//				tw->trace.sideNum = tw->leadside - cmg.brushsides;
 				trace.contents = brush->contents;
 			}
@@ -518,7 +518,7 @@ void CM_TraceThroughBrush(traceWork_t * tw, cbrush_t * brush)
 			}
 			tw->trace.fraction = enterFrac;
 			tw->trace.plane = *clipplane;
-			tw->trace.surfaceFlags = cmg.shaders[leadside->shader_num].surfaceFlags;
+			tw->trace.surfaceFlags = cmg.shaders[leadside->shaderNum].surfaceFlags;
 			tw->trace.contents = brush->contents;
 		}
 	}
@@ -795,7 +795,7 @@ CM_BoxTrace
 */
 void CM_BoxTrace(trace_t * results, const vec3_t start, const vec3_t end,
 	const vec3_t mins, const vec3_t maxs,
-	const clip_handle_t model, const int brushmask)
+	const clipHandle_t model, const int brushmask)
 {
 	int i;
 	traceWork_t tw;
@@ -966,7 +966,7 @@ rotating entities
 */
 void CM_TransformedBoxTrace(trace_t * results, const vec3_t start, const vec3_t end,
 	const vec3_t mins, const vec3_t maxs,
-	const clip_handle_t model, const int brushmask,
+	const clipHandle_t model, const int brushmask,
 	const vec3_t origin, const vec3_t angles)
 {
 	trace_t trace;

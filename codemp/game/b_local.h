@@ -204,7 +204,7 @@ extern void SetTeamNumbers(void);
 extern qboolean G_ActivateBehavior(gentity_t* self, int bset);
 extern void NPC_AimWiggle(vec3_t enemy_org);
 extern void NPC_ClearLookTarget(const gentity_t* self);
-extern void NPC_SetLookTarget(const gentity_t* self, int ent_num, int clear_time);
+extern void NPC_SetLookTarget(const gentity_t* self, int entNum, int clear_time);
 
 //g_nav.cpp
 extern int NAV_FindClosestWaypointForEnt(gentity_t* ent, int targWp);
@@ -228,7 +228,7 @@ extern qboolean NPC_EnemyTooFar(const gentity_t* enemy, float dist, qboolean toS
 void NPC_SetBoneAngles(gentity_t* ent, const char* bone, vec3_t angles);
 
 //rww - and another method of automatically managing surface status for the client and server at once
-void NPC_SetSurfaceOnOff(gentity_t* ent, const char* surface_name, int surfaceFlags);
+void NPC_SetSurfaceOnOff(gentity_t* ent, const char* surfaceName, int surfaceFlags);
 
 extern qboolean NPC_ClearLOS(const vec3_t start, const vec3_t end);
 extern qboolean NPC_ClearLOS5(const vec3_t end);

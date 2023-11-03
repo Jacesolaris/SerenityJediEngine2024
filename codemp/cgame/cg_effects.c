@@ -676,11 +676,11 @@ Break glass with fancy method
 */
 void CG_GlassShatter(const int entnum, vec3_t dmg_pt, vec3_t dmg_dir, const float dmg_radius, const int max_shards)
 {
-	if (cgs.inlineDrawModel[cg_entities[entnum].currentState.model_index])
+	if (cgs.inlineDrawModel[cg_entities[entnum].currentState.modelIndex])
 	{
 		vec3_t normal;
 		vec3_t verts[4];
-		trap->R_GetBModelVerts(cgs.inlineDrawModel[cg_entities[entnum].currentState.model_index], verts, normal);
+		trap->R_GetBModelVerts(cgs.inlineDrawModel[cg_entities[entnum].currentState.modelIndex], verts, normal);
 		CG_DoGlass(verts, dmg_pt, dmg_dir, dmg_radius, max_shards);
 	}
 	//otherwise something awful has happened.
@@ -1085,7 +1085,7 @@ CG_MakeExplosion
 ====================
 */
 localEntity_t* CG_MakeExplosion(vec3_t origin, vec3_t dir,
-	const qhandle_t h_model, const int num_frames, const qhandle_t shader,
+	const qhandle_t h_model, const int numFrames, const qhandle_t shader,
 	const int msec, const qboolean is_sprite, const float scale, const int flags)
 {
 	vec3_t new_origin;
@@ -1136,7 +1136,7 @@ localEntity_t* CG_MakeExplosion(vec3_t origin, vec3_t dir,
 
 	ex->refEntity.hModel = h_model;
 	ex->refEntity.customShader = shader;
-	ex->lifeRate = (float)num_frames / msec;
+	ex->lifeRate = (float)numFrames / msec;
 	ex->leFlags = flags;
 
 	//Scale the explosion

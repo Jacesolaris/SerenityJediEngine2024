@@ -107,7 +107,7 @@ using uiimport_t = struct
 	//========= model collision ===============
 
 	// R_LerpTag is only valid for md3 models
-	int			(*R_LerpTag)(orientation_t* tag, clip_handle_t mod, int startFrame, int endFrame, float frac, const char* tagName);
+	int			(*R_LerpTag)(orientation_t* tag, clipHandle_t mod, int startFrame, int endFrame, float frac, const char* tagName);
 
 	// =========== sound function calls ===============
 

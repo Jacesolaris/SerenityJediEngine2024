@@ -718,12 +718,12 @@ public:
 	void PlayEffect(int id, vec3_t origin, bool isPortal = false); // uses a default up axis
 	void PlayEffect(int id, vec3_t origin, vec3_t forward, bool isPortal = false);
 	// builds arbitrary perp. right vector, does a cross product to define up
-	void PlayEffect(int id, vec3_t origin, vec3_t axis[3], int bolt_info = -1, int ent_num = -1, bool isPortal = false,
+	void PlayEffect(int id, vec3_t origin, vec3_t axis[3], int bolt_info = -1, int entNum = -1, bool isPortal = false,
 		int iLoopTime = false, bool isRelative = false);
 	void PlayEffect(const char* file, vec3_t origin, bool isPortal = false); // uses a default up axis
 	void PlayEffect(const char* file, vec3_t origin, vec3_t forward, bool isPortal = false);
 	// builds arbitrary perp. right vector, does a cross product to define up
-	void PlayEffect(const char* file, vec3_t origin, vec3_t axis[3], int bolt_info, int ent_num, bool isPortal = false,
+	void PlayEffect(const char* file, vec3_t origin, vec3_t axis[3], int bolt_info, int entNum, bool isPortal = false,
 		int iLoopTime = false, bool isRelative = false);
 
 	//for muzzle

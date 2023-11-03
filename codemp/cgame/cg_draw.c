@@ -10205,7 +10205,7 @@ static void CG_DrawSiegeHUDItem(void)
 	}
 	else
 	{
-		handle = cgs.game_models[cent->currentState.model_index];
+		handle = cgs.game_models[cent->currentState.modelIndex];
 		g2 = NULL;
 	}
 

@@ -60,7 +60,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #define DEFAULT_REDTEAM_NAME	"Empire"
 #define DEFAULT_BLUETEAM_NAME	"Rebellion"
 
-#define CURRENT_SJE_CLIENTVERSION		"Year-23,Month-11,Day-01,BuildNum-01" // build date
+#define CURRENT_SJE_CLIENTVERSION		"Year-23,Month-11,Day-03,BuildNum-03" // build date
 
 #define	STEPSIZE		18
 
@@ -361,10 +361,10 @@ movement on the server game.
 #pragma pack(push, 1)
 typedef struct animation_s {
 	unsigned short		firstFrame;
-	unsigned short		num_frames;
+	unsigned short		numFrames;
 	short				frameLerp;			// msec between frames
 	//initialLerp is abs(frameLerp)
-	signed char			loopFrames;			// 0 to num_frames
+	signed char			loopFrames;			// 0 to numFrames
 } animation_t;
 #pragma pack(pop)
 
@@ -1659,7 +1659,7 @@ typedef struct saber_moveData_s {
 	int	startQuad;
 	int	endQuad;
 	unsigned animSetFlags;
-	int blend_time;
+	int blendTime;
 	int blocking;
 	saber_moveName_t chain_idle;			// What move to call if the attack button is not pressed at the end of this anim
 	saber_moveName_t chain_attack;		// What move to call if the attack button (and nothing else) is pressed
@@ -1950,7 +1950,7 @@ qboolean BG_LegalizedForcePowers(char* power_out, size_t power_out_size, int max
 void BG_GiveMeVectorFromMatrix(const mdxaBone_t* bolt_matrix, int flags, vec3_t vec);
 
 void BG_IK_MoveArm(void* ghoul2, int lHandBolt, int time, const entityState_t* ent, int basePose, vec3_t desiredPos, qboolean* ikInProgress,
-	vec3_t origin, vec3_t angles, vec3_t scale, int blend_time, qboolean forceHalt);
+	vec3_t origin, vec3_t angles, vec3_t scale, int blendTime, qboolean forceHalt);
 
 void BG_G2PlayerAngles(void* ghoul2, int motionBolt, entityState_t* cent, int time, vec3_t cent_lerpOrigin,
 	vec3_t cent_lerpAngles, matrix3_t legs, vec3_t legsAngles, qboolean* tYawing,
@@ -1992,7 +1992,7 @@ qboolean BG_InDeathAnim(int anim);
 qboolean BG_InSaberLockOld(int anim);
 qboolean PM_InSaberLock(int anim);
 
-void pm_saber_start_trans_anim(int client_num, int saber_anim_level, int weapon, int anim, float* anim_speed, int
+void pm_saber_start_trans_anim(int client_num, int saber_anim_level, int weapon, int anim, float* animSpeed, int
 	fatigued);
 
 void WP_ForcePowerDrain(playerState_t* ps, forcePowers_t force_power, int override_amt);
@@ -2053,9 +2053,9 @@ float BG_SI_Length(const saberInfo_t* saber);
 float BG_SI_LengthMax(const saberInfo_t* saber);
 void BG_SI_ActivateTrail(saberInfo_t* saber, float duration);
 void BG_SI_DeactivateTrail(saberInfo_t* saber, float duration);
-extern void BG_AttachToRancor(void* ghoul2, float ranc_yaw, vec3_t ranc_origin, int time, qhandle_t* model_list, vec3_t model_scale, qboolean in_mouth, vec3_t out_origin, vec3_t out_angles, matrix3_t out_axis);
+extern void BG_AttachToRancor(void* ghoul2, float ranc_yaw, vec3_t ranc_origin, int time, qhandle_t* modelList, vec3_t model_scale, qboolean in_mouth, vec3_t out_origin, vec3_t out_angles, matrix3_t out_axis);
 void BG_ClearRocketLock(playerState_t* ps);
-extern void BG_AttachToSandCreature(void* ghoul2, float ranc_yaw, vec3_t ranc_origin, int time, qhandle_t* model_list, vec3_t model_scale, vec3_t out_origin, vec3_t out_angles, vec3_t out_axis[3]);
+extern void BG_AttachToSandCreature(void* ghoul2, float ranc_yaw, vec3_t ranc_origin, int time, qhandle_t* modelList, vec3_t model_scale, vec3_t out_origin, vec3_t out_angles, vec3_t out_axis[3]);
 
 extern int WeaponReadyAnim[WP_NUM_WEAPONS];
 extern int WeaponAttackAnim[WP_NUM_WEAPONS];

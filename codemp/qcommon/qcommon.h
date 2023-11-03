@@ -892,8 +892,8 @@ void* S_Malloc(const int iSize);					// NOT 0 filled memory only for small alloc
 #endif
 void Z_MorphMallocTag(void* pv_address, const memtag_t eDesiredTag);
 void Z_Validate(void);
-int Z_MemSize(memtag_t eTag);
-void Z_TagFree(memtag_t eTag);
+int Z_MemSize(const memtag_t eTag);
+void Z_TagFree(const memtag_t eTag);
 void Z_Free(void* pv_address);
 int Z_Size(void* pvAddress);
 void Com_InitZoneMemory(void);

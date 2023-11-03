@@ -1696,7 +1696,7 @@ CG_NewClientInfo
 */
 void ParseRGBSaber(char* str, vec3_t c);
 void CG_ParseScriptedSaber(char* script, clientInfo_t* ci, int snum);
-void WP_SetSaber(int ent_num, saberInfo_t* sabers, int saber_num, const char* saber_name);
+void WP_SetSaber(int entNum, saberInfo_t* sabers, int saber_num, const char* saber_name);
 extern void* CG_G2WeaponInstance2(const centity_t* cent, int weapon);
 
 void CG_NewClientInfo(int client_num, qboolean entities_initialized)
@@ -2141,22 +2141,22 @@ void CG_NewClientInfo(int client_num, qboolean entities_initialized)
 		{
 			int flags = BONE_ANIM_OVERRIDE_FREEZE;
 			int first_frame = anim->firstFrame;
-			int set_frame = -1;
-			float anim_speed = 50.0f / anim->frameLerp;
+			int setFrame = -1;
+			float animSpeed = 50.0f / anim->frameLerp;
 
 			if (anim->loopFrames != -1)
 			{
 				flags = BONE_ANIM_OVERRIDE_LOOP;
 			}
 
-			if (cent->pe.legs.frame >= anim->firstFrame && cent->pe.legs.frame <= anim->firstFrame + anim->num_frames)
+			if (cent->pe.legs.frame >= anim->firstFrame && cent->pe.legs.frame <= anim->firstFrame + anim->numFrames)
 			{
-				set_frame = cent->pe.legs.frame;
+				setFrame = cent->pe.legs.frame;
 			}
 
 			//rww - Set the animation again because it just got reset due to the model change
-			trap->G2API_SetBoneAnim(ci->ghoul2Model, 0, "model_root", first_frame, anim->firstFrame + anim->num_frames,
-				flags, anim_speed, cg.time, set_frame, 150);
+			trap->G2API_SetBoneAnim(ci->ghoul2Model, 0, "model_root", first_frame, anim->firstFrame + anim->numFrames,
+				flags, animSpeed, cg.time, setFrame, 150);
 
 			cg_entities[client_num].currentState.legsAnim = 0.0f;
 		}
@@ -2167,22 +2167,22 @@ void CG_NewClientInfo(int client_num, qboolean entities_initialized)
 		{
 			int flags = BONE_ANIM_OVERRIDE_FREEZE;
 			int first_frame = anim->firstFrame;
-			int set_frame = -1;
-			float anim_speed = 50.0f / anim->frameLerp;
+			int setFrame = -1;
+			float animSpeed = 50.0f / anim->frameLerp;
 
 			if (anim->loopFrames != -1)
 			{
 				flags = BONE_ANIM_OVERRIDE_LOOP;
 			}
 
-			if (cent->pe.torso.frame >= anim->firstFrame && cent->pe.torso.frame <= anim->firstFrame + anim->num_frames)
+			if (cent->pe.torso.frame >= anim->firstFrame && cent->pe.torso.frame <= anim->firstFrame + anim->numFrames)
 			{
-				set_frame = cent->pe.torso.frame;
+				setFrame = cent->pe.torso.frame;
 			}
 
 			//rww - Set the animation again because it just got reset due to the model change
-			trap->G2API_SetBoneAnim(ci->ghoul2Model, 0, "lower_lumbar", first_frame, anim->firstFrame + anim->num_frames,
-				flags, anim_speed, cg.time, set_frame, 150);
+			trap->G2API_SetBoneAnim(ci->ghoul2Model, 0, "lower_lumbar", first_frame, anim->firstFrame + anim->numFrames,
+				flags, animSpeed, cg.time, setFrame, 150);
 
 			cg_entities[client_num].currentState.torsoAnim = 0;
 		}
@@ -2817,13 +2817,13 @@ void CG_PlayerAnimEventDo(centity_t* cent, animevent_t* anim_event)
 }
 
 /*
-void CG_PlayerAnimEvents( int animFileIndex, int eventFileIndex, qboolean torso, int oldFrame, int frame, const vec3_t org, int ent_num )
+void CG_PlayerAnimEvents( int animFileIndex, int eventFileIndex, qboolean torso, int oldFrame, int frame, const vec3_t org, int entNum )
 
 play any keyframed sounds - only when start a new frame
 This func is called once for legs and once for torso
 */
 void CG_PlayerAnimEvents(const int anim_file_index, const int event_file_index, const qboolean torso,
-	const int old_frame, const int frame, const int ent_num)
+	const int old_frame, const int frame, const int entNum)
 {
 	int first_frame = 0, last_frame = 0;
 	qboolean do_event = qfalse, in_same_anim = qfalse, loop_anim = qfalse, anim_backward = qfalse;
@@ -2843,13 +2843,13 @@ void CG_PlayerAnimEvents(const int anim_file_index, const int event_file_index, 
 		int old_anim, anim;
 		if (torso)
 		{
-			old_anim = cg_entities[ent_num].currentState.torsoAnim;
-			anim = cg_entities[ent_num].nextState.torsoAnim;
+			old_anim = cg_entities[entNum].currentState.torsoAnim;
+			anim = cg_entities[entNum].nextState.torsoAnim;
 		}
 		else
 		{
-			old_anim = cg_entities[ent_num].currentState.legsAnim;
-			anim = cg_entities[ent_num].nextState.legsAnim;
+			old_anim = cg_entities[entNum].currentState.legsAnim;
+			anim = cg_entities[entNum].nextState.legsAnim;
 		}
 		if (anim != old_anim)
 		{
@@ -2868,7 +2868,7 @@ void CG_PlayerAnimEvents(const int anim_file_index, const int event_file_index, 
 				//a looping anim!
 				loop_anim = qtrue;
 				first_frame = animation->firstFrame;
-				last_frame = animation->firstFrame + animation->num_frames;
+				last_frame = animation->firstFrame + animation->numFrames;
 			}
 		}
 	}
@@ -3029,7 +3029,7 @@ void CG_PlayerAnimEvents(const int anim_file_index, const int event_file_index, 
 			// do event
 			if (do_event)
 			{
-				CG_PlayerAnimEventDo(&cg_entities[ent_num], &anim_events[i]);
+				CG_PlayerAnimEventDo(&cg_entities[entNum], &anim_events[i]);
 			}
 		}
 	}
@@ -3094,16 +3094,16 @@ void CG_TriggerAnimSounds(centity_t* cent)
 {
 	//this also sets the lerp frames, so I suggest you keep calling it regardless of if you want anim sounds.
 	int cur_frame = 0;
-	float current_frame = 0;
+	float currentFrame = 0;
 
 	assert(cent->localAnimIndex >= 0);
 
 	const int s_file_index = cent->eventAnimIndex;
 
-	if (trap->G2API_GetBoneFrame(cent->ghoul2, "model_root", cg.time, &current_frame, cgs.game_models, 0))
+	if (trap->G2API_GetBoneFrame(cent->ghoul2, "model_root", cg.time, &currentFrame, cgs.game_models, 0))
 	{
 		// the above may have failed, not sure what to do about it, current frame will be zero in that case
-		cur_frame = floor(current_frame);
+		cur_frame = floor(currentFrame);
 	}
 	if (cur_frame != cent->pe.legs.frame)
 	{
@@ -3121,9 +3121,9 @@ void CG_TriggerAnimSounds(centity_t* cent)
 		return;
 	}
 
-	if (trap->G2API_GetBoneFrame(cent->ghoul2, "lower_lumbar", cg.time, &current_frame, cgs.game_models, 0))
+	if (trap->G2API_GetBoneFrame(cent->ghoul2, "lower_lumbar", cg.time, &currentFrame, cgs.game_models, 0))
 	{
-		cur_frame = floor(current_frame);
+		cur_frame = floor(currentFrame);
 	}
 	if (cur_frame != cent->pe.torso.frame)
 	{
@@ -3132,7 +3132,7 @@ void CG_TriggerAnimSounds(centity_t* cent)
 	}
 	cent->pe.torso.oldFrame = cent->pe.torso.frame;
 	cent->pe.torso.frame = cur_frame;
-	cent->pe.torso.backlerp = 1.0f - (current_frame - (float)cur_frame);
+	cent->pe.torso.backlerp = 1.0f - (currentFrame - (float)cur_frame);
 	CG_PlayerAmbientEvents(cent);
 }
 
@@ -3190,7 +3190,7 @@ CG_SetLerpFrameAnimation
 static void CG_SetLerpFrameAnimation(centity_t* cent, clientInfo_t* ci, lerpFrame_t* lf, const int new_animation,
 	const float anim_speed_mult, const qboolean torso_only, const qboolean flip_state)
 {
-	float anim_speed;
+	float animSpeed;
 	int flags = BONE_ANIM_OVERRIDE_FREEZE;
 	const float old_speed = lf->animationSpeed;
 
@@ -3221,7 +3221,7 @@ static void CG_SetLerpFrameAnimation(centity_t* cent, clientInfo_t* ci, lerpFram
 
 	if (cent->localAnimIndex > 1 &&
 		anim->firstFrame == 0 &&
-		anim->num_frames == 0)
+		anim->numFrames == 0)
 	{
 		//We'll allow this for non-humanoids.
 		return;
@@ -3243,7 +3243,7 @@ static void CG_SetLerpFrameAnimation(centity_t* cent, clientInfo_t* ci, lerpFram
 
 	if (cent->ghoul2)
 	{
-		int blend_time = 100;
+		int blendTime = 100;
 		qboolean resume_frame = qfalse;
 		int begin_frame = -1;
 		int first_frame;
@@ -3252,21 +3252,21 @@ static void CG_SetLerpFrameAnimation(centity_t* cent, clientInfo_t* ci, lerpFram
 		float unused;
 #endif
 
-		anim_speed = 50.0f / anim->frameLerp;
+		animSpeed = 50.0f / anim->frameLerp;
 		if (lf->animation->loopFrames != -1)
 		{
 			flags = BONE_ANIM_OVERRIDE_LOOP;
 		}
 
-		if (anim_speed < 0)
+		if (animSpeed < 0)
 		{
 			last_frame = anim->firstFrame;
-			first_frame = anim->firstFrame + anim->num_frames;
+			first_frame = anim->firstFrame + anim->numFrames;
 		}
 		else
 		{
 			first_frame = anim->firstFrame;
-			last_frame = anim->firstFrame + anim->num_frames;
+			last_frame = anim->firstFrame + anim->numFrames;
 		}
 
 		if (cg_animBlend.integer)
@@ -3288,12 +3288,12 @@ static void CG_SetLerpFrameAnimation(centity_t* cent, clientInfo_t* ci, lerpFram
 		{
 			if (PM_FlippingAnim(new_animation))
 			{
-				blend_time = 200;
+				blendTime = 200;
 			}
 			else if (old_anim != -1 &&
 				PM_FlippingAnim(old_anim))
 			{
-				blend_time = 200;
+				blendTime = 200;
 			}
 		}
 
@@ -3302,14 +3302,14 @@ static void CG_SetLerpFrameAnimation(centity_t* cent, clientInfo_t* ci, lerpFram
 			//make smooth animations
 			if ((active_blocking || is_holding_block_button) && cent->currentState.saber_move == LS_READY)
 			{
-				blend_time *= 1.8f;
+				blendTime *= 1.8f;
 			}
 		}
 
-		anim_speed *= anim_speed_mult;
+		animSpeed *= anim_speed_mult;
 
 		pm_saber_start_trans_anim(cent->currentState.number, cent->currentState.fireflag, cent->currentState.weapon,
-			new_animation, &anim_speed, cent->currentState.userInt3);
+			new_animation, &animSpeed, cent->currentState.userInt3);
 
 		if (torso_only)
 		{
@@ -3322,7 +3322,7 @@ static void CG_SetLerpFrameAnimation(centity_t* cent, clientInfo_t* ci, lerpFram
 			lf->animationTorsoSpeed = anim_speed_mult;
 			if ((active_blocking || is_holding_block_button) && cent->currentState.saber_move == LS_READY)
 			{
-				blend_time *= 1.8f;
+				blendTime *= 1.8f;
 			}
 		}
 		else
@@ -3339,8 +3339,8 @@ static void CG_SetLerpFrameAnimation(centity_t* cent, clientInfo_t* ci, lerpFram
 		//vehicles may have torso etc but we only want to animate the root bone
 		if (cent->currentState.NPC_class == CLASS_VEHICLE)
 		{
-			trap->G2API_SetBoneAnim(cent->ghoul2, 0, "model_root", first_frame, last_frame, flags, anim_speed, cg.time,
-				begin_frame, blend_time);
+			trap->G2API_SetBoneAnim(cent->ghoul2, 0, "model_root", first_frame, last_frame, flags, animSpeed, cg.time,
+				begin_frame, blendTime);
 			return;
 		}
 
@@ -3359,7 +3359,7 @@ static void CG_SetLerpFrameAnimation(centity_t* cent, clientInfo_t* ci, lerpFram
 			trap->G2API_GetBoneFrame(cent->ghoul2, "model_root", cg.time, &gb_ac_frame, NULL, 0);
 
 			if (cent->currentState.torsoAnim == cent->currentState.legsAnim && gb_ac_frame >= anim->firstFrame &&
-				gb_ac_frame <= anim->firstFrame + anim->num_frames)
+				gb_ac_frame <= anim->firstFrame + anim->numFrames)
 			{
 				//if the legs are already running this anim, pick up on the exact same frame to avoid the "wobbly spine" problem.
 				begin_frame = gb_ac_frame;
@@ -3371,9 +3371,9 @@ static void CG_SetLerpFrameAnimation(centity_t* cent, clientInfo_t* ci, lerpFram
 				begin_frame = -1;
 			}
 
-			trap->G2API_SetBoneAnim(cent->ghoul2, 0, "lower_lumbar", first_frame, last_frame, flags, anim_speed,
+			trap->G2API_SetBoneAnim(cent->ghoul2, 0, "lower_lumbar", first_frame, last_frame, flags, animSpeed,
 				cg.time,
-				begin_frame, blend_time);
+				begin_frame, blendTime);
 
 			// Update the torso frame with the new animation
 			cent->pe.torso.frame = first_frame;
@@ -3400,7 +3400,7 @@ static void CG_SetLerpFrameAnimation(centity_t* cent, clientInfo_t* ci, lerpFram
 			}
 
 			if (cent->currentState.torsoAnim == cent->currentState.legsAnim &&
-				(ci->legsAnim != new_animation || old_speed != anim_speed))
+				(ci->legsAnim != new_animation || old_speed != animSpeed))
 			{
 				//alright, we are starting an anim on the legs, and that same anim is already playing on the toro, so pick up the frame.
 				float gb_ac_frame = 0;
@@ -3415,8 +3415,8 @@ static void CG_SetLerpFrameAnimation(centity_t* cent, clientInfo_t* ci, lerpFram
 				}
 			}
 
-			trap->G2API_SetBoneAnim(cent->ghoul2, 0, "model_root", first_frame, last_frame, flags, anim_speed, cg.time,
-				begin_frame, blend_time);
+			trap->G2API_SetBoneAnim(cent->ghoul2, 0, "model_root", first_frame, last_frame, flags, animSpeed, cg.time,
+				begin_frame, blendTime);
 
 			if (ci)
 			{
@@ -3427,8 +3427,8 @@ static void CG_SetLerpFrameAnimation(centity_t* cent, clientInfo_t* ci, lerpFram
 		if (cent->localAnimIndex <= 1 && cent->currentState.torsoAnim == new_animation && !cent->noLumbar)
 		{
 			//make sure we're humanoid before we access the motion bone
-			trap->G2API_SetBoneAnim(cent->ghoul2, 0, "Motion", first_frame, last_frame, flags, anim_speed, cg.time,
-				begin_frame, blend_time);
+			trap->G2API_SetBoneAnim(cent->ghoul2, 0, "Motion", first_frame, last_frame, flags, animSpeed, cg.time,
+				begin_frame, blendTime);
 		}
 
 #if 0 //disabled for now
@@ -3446,7 +3446,7 @@ static void CG_SetLerpFrameAnimation(centity_t* cent, clientInfo_t* ci, lerpFram
 			ci->brokenLimbs = cent->currentState.brokenLimbs;
 
 			armFirstFrame = armAnim->firstFrame;
-			armLastFrame = armAnim->firstFrame + armAnim->num_frames;
+			armLastFrame = armAnim->firstFrame + armAnim->numFrames;
 			armAnimSpeed = 50.0f / armAnim->frameLerp;
 			armFlags = BONE_ANIM_OVERRIDE_LOOP;
 
@@ -3455,7 +3455,7 @@ static void CG_SetLerpFrameAnimation(centity_t* cent, clientInfo_t* ci, lerpFram
 				armFlags |= BONE_ANIM_BLEND;
 			}
 
-			trap->G2API_SetBoneAnim(cent->ghoul2, 0, brokenBone, armFirstFrame, armLastFrame, armFlags, armAnimSpeed, cg.time, -1, blend_time);
+			trap->G2API_SetBoneAnim(cent->ghoul2, 0, brokenBone, armFirstFrame, armLastFrame, armFlags, armAnimSpeed, cg.time, -1, blendTime);
 		}
 		else if (cent->localAnimIndex <= 1 && cent->currentState.brokenLimbs &&
 			(cent->currentState.brokenLimbs & (1 << BROKENLIMB_RARM)))
@@ -3485,8 +3485,8 @@ static void CG_SetLerpFrameAnimation(centity_t* cent, clientInfo_t* ci, lerpFram
 					armAnim = &bgAllAnims[cent->localAnimIndex].anims[BOTH_ATTACK2];
 
 					//armFirstFrame = armAnim->firstFrame;
-					armFirstFrame = armAnim->firstFrame + armAnim->num_frames;
-					armLastFrame = armAnim->firstFrame + armAnim->num_frames;
+					armFirstFrame = armAnim->firstFrame + armAnim->numFrames;
+					armLastFrame = armAnim->firstFrame + armAnim->numFrames;
 					armAnimSpeed = 50.0f / armAnim->frameLerp;
 					armFlags = BONE_ANIM_OVERRIDE_LOOP;
 
@@ -3496,7 +3496,7 @@ static void CG_SetLerpFrameAnimation(centity_t* cent, clientInfo_t* ci, lerpFram
 				}
 				else
 				{ //we want to keep the broken bone updated for some cases
-					trap->G2API_SetBoneAnim(cent->ghoul2, 0, brokenBone, firstFrame, lastFrame, flags, anim_speed, cg.time, beginFrame, blend_time);
+					trap->G2API_SetBoneAnim(cent->ghoul2, 0, brokenBone, firstFrame, lastFrame, flags, animSpeed, cg.time, beginFrame, blendTime);
 				}
 
 				if (newAnimation != BOTH_MELEE1 &&
@@ -3514,7 +3514,7 @@ static void CG_SetLerpFrameAnimation(centity_t* cent, clientInfo_t* ci, lerpFram
 					//Now set the left arm to "support" the right one
 					armAnim = &bgAllAnims[cent->localAnimIndex].anims[BOTH_STAND2];
 					armFirstFrame = armAnim->firstFrame;
-					armLastFrame = armAnim->firstFrame + armAnim->num_frames;
+					armLastFrame = armAnim->firstFrame + armAnim->numFrames;
 					armAnimSpeed = 50.0f / armAnim->frameLerp;
 					armFlags = BONE_ANIM_OVERRIDE_LOOP;
 
@@ -3527,13 +3527,13 @@ static void CG_SetLerpFrameAnimation(centity_t* cent, clientInfo_t* ci, lerpFram
 				}
 				else
 				{ //we want to keep the support bone updated for some cases
-					trap->G2API_SetBoneAnim(cent->ghoul2, 0, supportBone, firstFrame, lastFrame, flags, anim_speed, cg.time, beginFrame, blend_time);
+					trap->G2API_SetBoneAnim(cent->ghoul2, 0, supportBone, firstFrame, lastFrame, flags, animSpeed, cg.time, beginFrame, blendTime);
 				}
 			}
 			else if (cent->currentState.torsoAnim == newAnimation)
 			{ //otherwise, keep it set to the same as the torso
-				trap->G2API_SetBoneAnim(cent->ghoul2, 0, brokenBone, firstFrame, lastFrame, flags, anim_speed, cg.time, beginFrame, blend_time);
-				trap->G2API_SetBoneAnim(cent->ghoul2, 0, supportBone, firstFrame, lastFrame, flags, anim_speed, cg.time, beginFrame, blend_time);
+				trap->G2API_SetBoneAnim(cent->ghoul2, 0, brokenBone, firstFrame, lastFrame, flags, animSpeed, cg.time, beginFrame, blendTime);
+				trap->G2API_SetBoneAnim(cent->ghoul2, 0, supportBone, firstFrame, lastFrame, flags, animSpeed, cg.time, beginFrame, blendTime);
 			}
 		}
 		else if (ci &&
@@ -3649,13 +3649,13 @@ static void CG_RunLerpFrame(centity_t* cent, clientInfo_t* ci, lerpFrame_t* lf, 
 		if (lf->lastForcedFrame != cent->currentState.forceFrame)
 		{
 			const int flags = BONE_ANIM_OVERRIDE_FREEZE | BONE_ANIM_BLEND;
-			const float anim_speed = 1.0f;
+			const float animSpeed = 1.0f;
 			trap->G2API_SetBoneAnim(cent->ghoul2, 0, "lower_lumbar", cent->currentState.forceFrame,
-				cent->currentState.forceFrame + 1, flags, anim_speed, cg.time, -1, 150);
+				cent->currentState.forceFrame + 1, flags, animSpeed, cg.time, -1, 150);
 			trap->G2API_SetBoneAnim(cent->ghoul2, 0, "model_root", cent->currentState.forceFrame,
-				cent->currentState.forceFrame + 1, flags, anim_speed, cg.time, -1, 150);
+				cent->currentState.forceFrame + 1, flags, animSpeed, cg.time, -1, 150);
 			trap->G2API_SetBoneAnim(cent->ghoul2, 0, "Motion", cent->currentState.forceFrame,
-				cent->currentState.forceFrame + 1, flags, anim_speed, cg.time, -1, 150);
+				cent->currentState.forceFrame + 1, flags, animSpeed, cg.time, -1, 150);
 		}
 
 		lf->lastForcedFrame = cent->currentState.forceFrame;
@@ -3709,7 +3709,7 @@ static void CG_ClearLerpFrame(centity_t* cent, clientInfo_t* ci, lerpFrame_t* lf
 	if (lf->animation->frameLerp < 0)
 	{
 		//Plays backwards
-		lf->oldFrame = lf->frame = lf->animation->firstFrame + lf->animation->num_frames;
+		lf->oldFrame = lf->frame = lf->animation->firstFrame + lf->animation->numFrames;
 	}
 	else
 	{
@@ -3817,16 +3817,16 @@ PLAYER ANGLES
 #if 0
 typedef struct boneAngleParms_s {
 	void* ghoul2;
-	int model_index;
-	char* bone_name;
+	int modelIndex;
+	char* boneName;
 	vec3_t angles;
 	int flags;
 	int up;
 	int right;
 	int forward;
-	qhandle_t* model_list;
-	int blend_time;
-	int current_time;
+	qhandle_t* modelList;
+	int blendTime;
+	int currentTime;
 
 	qboolean refreshSet;
 } boneAngleParms_t;
@@ -3834,9 +3834,9 @@ typedef struct boneAngleParms_s {
 boneAngleParms_t cgBoneAnglePostSet;
 #endif
 
-void CG_G2SetBoneAngles(void* ghoul2, int model_index, const char* bone_name, const vec3_t angles, const int flags,
-	const int up, const int right, const int forward, qhandle_t* model_list,
-	const int blend_time, const int current_time)
+void CG_G2SetBoneAngles(void* ghoul2, int modelIndex, const char* boneName, const vec3_t angles, const int flags,
+	const int up, const int right, const int forward, qhandle_t* modelList,
+	const int blendTime, const int currentTime)
 {
 	//we want to hold off on setting the bone angles until the end of the frame, because every time we set
 	//them the entire skeleton has to be reconstructed.
@@ -3845,8 +3845,8 @@ void CG_G2SetBoneAngles(void* ghoul2, int model_index, const char* bone_name, co
 	//At the end of the frame we will check to use this information to call SetBoneAngles
 	memset(&cgBoneAnglePostSet, 0, sizeof(cgBoneAnglePostSet));
 	cgBoneAnglePostSet.ghoul2 = ghoul2;
-	cgBoneAnglePostSet.model_index = model_index;
-	cgBoneAnglePostSet.bone_name = (char*)bone_name;
+	cgBoneAnglePostSet.modelIndex = modelIndex;
+	cgBoneAnglePostSet.boneName = (char*)boneName;
 
 	cgBoneAnglePostSet.angles[0] = angles[0];
 	cgBoneAnglePostSet.angles[1] = angles[1];
@@ -3856,16 +3856,16 @@ void CG_G2SetBoneAngles(void* ghoul2, int model_index, const char* bone_name, co
 	cgBoneAnglePostSet.up = up;
 	cgBoneAnglePostSet.right = right;
 	cgBoneAnglePostSet.forward = forward;
-	cgBoneAnglePostSet.model_list = model_list;
-	cgBoneAnglePostSet.blend_time = blend_time;
-	cgBoneAnglePostSet.current_time = current_time;
+	cgBoneAnglePostSet.modelList = modelList;
+	cgBoneAnglePostSet.blendTime = blendTime;
+	cgBoneAnglePostSet.currentTime = currentTime;
 
 	cgBoneAnglePostSet.refreshSet = qtrue;
 #endif
 	//We don't want to go with the delayed approach, we want out bolt points and everything to be updated in realtime.
 	//We'll just take the reconstructs and live with them.
-	trap->G2API_SetBoneAngles(ghoul2, model_index, bone_name, angles, flags, up, right, forward, model_list,
-		blend_time, current_time);
+	trap->G2API_SetBoneAngles(ghoul2, modelIndex, boneName, angles, flags, up, right, forward, modelList,
+		blendTime, currentTime);
 }
 
 /*
@@ -4015,7 +4015,7 @@ qboolean CG_RagDoll(centity_t* cent, vec3_t forced_angles)
 		if (!in_something)
 		{
 			int anim = cent->currentState.legsAnim;
-			int dur = (bgAllAnims[cent->localAnimIndex].anims[anim].num_frames - 1) * fabs(
+			int dur = (bgAllAnims[cent->localAnimIndex].anims[anim].numFrames - 1) * fabs(
 				bgAllAnims[cent->localAnimIndex].anims[anim].frameLerp);
 			int i = 0;
 			int bolt_checks[5];
@@ -4137,15 +4137,15 @@ qboolean CG_RagDoll(centity_t* cent, vec3_t forced_angles)
 		}
 
 		//these will be used as "base" frames for the ragoll settling.
-		t_parms.start_frame = bgAllAnims[cent->localAnimIndex].anims[rag_anim].firstFrame;
-		// + bgAllAnims[cent->localAnimIndex].anims[ragAnim].num_frames;
-		t_parms.end_frame = bgAllAnims[cent->localAnimIndex].anims[rag_anim].firstFrame + bgAllAnims[cent->
+		t_parms.startFrame = bgAllAnims[cent->localAnimIndex].anims[rag_anim].firstFrame;
+		// + bgAllAnims[cent->localAnimIndex].anims[ragAnim].numFrames;
+		t_parms.endFrame = bgAllAnims[cent->localAnimIndex].anims[rag_anim].firstFrame + bgAllAnims[cent->
 			localAnimIndex].
-			anims[rag_anim].num_frames;
+			anims[rag_anim].numFrames;
 #if 0
 		{
-			float anim_speed = 0;
-			int blend_time = 600;
+			float animSpeed = 0;
+			int blendTime = 600;
 			int flags = 0;//BONE_ANIM_OVERRIDE_FREEZE;
 
 			if (bgAllAnims[cent->localAnimIndex].anims[ragAnim].loopFrames != -1)
@@ -4160,38 +4160,38 @@ qboolean CG_RagDoll(centity_t* cent, vec3_t forced_angles)
 			}
 			*/
 
-			anim_speed = 50.0f / bgAllAnims[cent->localAnimIndex].anims[ragAnim].frameLerp;
-			trap->G2API_SetBoneAnim(cent->ghoul2, 0, "lower_lumbar", tParms.start_frame, tParms.end_frame, flags, anim_speed, cg.time, -1, blend_time);
-			trap->G2API_SetBoneAnim(cent->ghoul2, 0, "Motion", tParms.start_frame, tParms.end_frame, flags, anim_speed, cg.time, -1, blend_time);
-			trap->G2API_SetBoneAnim(cent->ghoul2, 0, "model_root", tParms.start_frame, tParms.end_frame, flags, anim_speed, cg.time, -1, blend_time);
+			animSpeed = 50.0f / bgAllAnims[cent->localAnimIndex].anims[ragAnim].frameLerp;
+			trap->G2API_SetBoneAnim(cent->ghoul2, 0, "lower_lumbar", tParms.startFrame, tParms.endFrame, flags, animSpeed, cg.time, -1, blendTime);
+			trap->G2API_SetBoneAnim(cent->ghoul2, 0, "Motion", tParms.startFrame, tParms.endFrame, flags, animSpeed, cg.time, -1, blendTime);
+			trap->G2API_SetBoneAnim(cent->ghoul2, 0, "model_root", tParms.startFrame, tParms.endFrame, flags, animSpeed, cg.time, -1, blendTime);
 		}
 #elif 1 //with my new method of doing things I want it to continue the anim
 		{
-			float current_frame;
-			int start_frame, end_frame;
+			float currentFrame;
+			int startFrame, endFrame;
 			int flags;
-			float anim_speed;
+			float animSpeed;
 
-			if (trap->G2API_GetBoneAnim(cent->ghoul2, "model_root", cg.time, &current_frame, &start_frame, &end_frame,
-				&flags, &anim_speed, cgs.game_models, 0))
+			if (trap->G2API_GetBoneAnim(cent->ghoul2, "model_root", cg.time, &currentFrame, &startFrame, &endFrame,
+				&flags, &animSpeed, cgs.game_models, 0))
 			{
 				//lock the anim on the current frame.
-				int blend_time = 500;
+				int blendTime = 500;
 				animation_t* cur_anim = &bgAllAnims[cent->localAnimIndex].anims[cent->currentState.legsAnim];
 
-				if (current_frame >= cur_anim->firstFrame + cur_anim->num_frames - 1)
+				if (currentFrame >= cur_anim->firstFrame + cur_anim->numFrames - 1)
 				{
 					//this is sort of silly but it works for now.
-					current_frame = cur_anim->firstFrame + cur_anim->num_frames - 2;
+					currentFrame = cur_anim->firstFrame + cur_anim->numFrames - 2;
 				}
 
-				trap->G2API_SetBoneAnim(cent->ghoul2, 0, "lower_lumbar", current_frame, current_frame + 1, flags,
-					anim_speed, cg.time, current_frame, blend_time);
-				trap->G2API_SetBoneAnim(cent->ghoul2, 0, "model_root", current_frame, current_frame + 1, flags,
-					anim_speed,
-					cg.time, current_frame, blend_time);
-				trap->G2API_SetBoneAnim(cent->ghoul2, 0, "Motion", current_frame, current_frame + 1, flags, anim_speed,
-					cg.time, current_frame, blend_time);
+				trap->G2API_SetBoneAnim(cent->ghoul2, 0, "lower_lumbar", currentFrame, currentFrame + 1, flags,
+					animSpeed, cg.time, currentFrame, blendTime);
+				trap->G2API_SetBoneAnim(cent->ghoul2, 0, "model_root", currentFrame, currentFrame + 1, flags,
+					animSpeed,
+					cg.time, currentFrame, blendTime);
+				trap->G2API_SetBoneAnim(cent->ghoul2, 0, "Motion", currentFrame, currentFrame + 1, flags, animSpeed,
+					cg.time, currentFrame, blendTime);
 			}
 		}
 #endif
@@ -4219,7 +4219,7 @@ qboolean CG_RagDoll(centity_t* cent, vec3_t forced_angles)
 		VectorCopy(used_org, tu_parms.position);
 		VectorCopy(cent->modelScale, tu_parms.scale);
 		tu_parms.me = cent->currentState.number;
-		tu_parms.settleFrame = t_parms.end_frame - 1;
+		tu_parms.settleFrame = t_parms.endFrame - 1;
 
 		if (cent->currentState.groundentity_num != ENTITYNUM_NONE)
 		{
@@ -4435,9 +4435,9 @@ void CG_G2ServerBoneAngles(const centity_t* cent)
 		if (bone)
 		{
 			//if it's non-0 then it could have something in it.
-			const char* bone_name = CG_ConfigString(CS_G2BONES + bone);
+			const char* boneName = CG_ConfigString(CS_G2BONES + bone);
 
-			if (bone_name && bone_name[0])
+			if (boneName && boneName[0])
 			{
 				//got the bone, now set the angles from the corresponding entitystate boneangles value.
 				const int flags = BONE_ANGLES_POSTMULT;
@@ -4447,7 +4447,7 @@ void CG_G2ServerBoneAngles(const centity_t* cent)
 				const int right = cent->currentState.boneOrient >> 3 & 7; //3 bits from bit 3
 				const int up = cent->currentState.boneOrient >> 6 & 7; //3 bits from bit 6
 
-				trap->G2API_SetBoneAngles(cent->ghoul2, 0, bone_name, bone_angles, flags, up, right, forward,
+				trap->G2API_SetBoneAngles(cent->ghoul2, 0, boneName, bone_angles, flags, up, right, forward,
 					cgs.game_models, 100, cg.time);
 			}
 		}
@@ -4482,7 +4482,7 @@ CG_G2SetHeadBlink
 static void CG_G2SetHeadBlink(const centity_t* cent, const qboolean b_start)
 {
 	vec3_t desired_angles;
-	int blend_time = 80;
+	int blendTime = 80;
 	qboolean b_wink = qfalse;
 	const int h_reye = trap->G2API_AddBolt(cent->ghoul2, 0, "reye");
 	const int h_leye = trap->G2API_AddBolt(cent->ghoul2, 0, "leye");
@@ -4500,11 +4500,11 @@ static void CG_G2SetHeadBlink(const centity_t* cent, const qboolean b_start)
 		if (Q_flrand(0.0f, 1.0f) > 0.95f)
 		{
 			b_wink = qtrue;
-			blend_time /= 3;
+			blendTime /= 3;
 		}
 	}
 	trap->G2API_SetBoneAngles(cent->ghoul2, 0, "leye", desired_angles,
-		BONE_ANGLES_POSTMULT, POSITIVE_Y, POSITIVE_Z, POSITIVE_X, NULL, blend_time, cg.time);
+		BONE_ANGLES_POSTMULT, POSITIVE_Y, POSITIVE_Z, POSITIVE_X, NULL, blendTime, cg.time);
 
 	if (h_reye == -1)
 	{
@@ -4514,7 +4514,7 @@ static void CG_G2SetHeadBlink(const centity_t* cent, const qboolean b_start)
 	if (!b_wink)
 	{
 		trap->G2API_SetBoneAngles(cent->ghoul2, 0, "reye", desired_angles,
-			BONE_ANGLES_POSTMULT, POSITIVE_Y, POSITIVE_Z, POSITIVE_X, NULL, blend_time, cg.time);
+			BONE_ANGLES_POSTMULT, POSITIVE_Y, POSITIVE_Z, POSITIVE_X, NULL, blendTime, cg.time);
 	}
 }
 
@@ -4528,11 +4528,11 @@ static void CG_G2SetHeadAnim(const centity_t* cent, const int anim)
 	const animation_t* animations = bgAllAnims[cent->localAnimIndex].anims;
 	int anim_flags = BONE_ANIM_OVERRIDE;
 	const float time_scale_mod = timescale.value ? 1.0 / timescale.value : 1.0;
-	const float anim_speed = 50.0f / animations[anim].frameLerp * time_scale_mod;
+	const float animSpeed = 50.0f / animations[anim].frameLerp * time_scale_mod;
 	int first_frame;
 	int last_frame;
 
-	if (animations[anim].num_frames <= 0)
+	if (animations[anim].numFrames <= 0)
 	{
 		return;
 	}
@@ -4540,30 +4540,30 @@ static void CG_G2SetHeadAnim(const centity_t* cent, const int anim)
 	{
 		anim_flags |= BONE_ANIM_OVERRIDE_FREEZE;
 	}
-	// anim_speed is 1.0 if the frameLerp (ms/frame) is 50 (20 fps).
-	if (anim_speed < 0)
+	// animSpeed is 1.0 if the frameLerp (ms/frame) is 50 (20 fps).
+	if (animSpeed < 0)
 	{
 		//play anim backwards
 		last_frame = animations[anim].firstFrame - 1;
-		first_frame = animations[anim].num_frames - 1 + animations[anim].firstFrame;
+		first_frame = animations[anim].numFrames - 1 + animations[anim].firstFrame;
 	}
 	else
 	{
 		first_frame = animations[anim].firstFrame;
-		last_frame = animations[anim].num_frames + animations[anim].firstFrame;
+		last_frame = animations[anim].numFrames + animations[anim].firstFrame;
 	}
 
 	// first decide if we are doing an animation on the head already
-	//	int start_frame, end_frame;
-	//	const qboolean animatingHead =  gi.G2API_GetAnimRangeIndex(&gent->ghoul2[gent->playerModel], cent->gent->faceBone, &start_frame, &end_frame);
+	//	int startFrame, endFrame;
+	//	const qboolean animatingHead =  gi.G2API_GetAnimRangeIndex(&gent->ghoul2[gent->playerModel], cent->gent->faceBone, &startFrame, &endFrame);
 
-	//	if (!animatingHead || ( animations[anim].firstFrame != start_frame ) )// only set the anim if we aren't going to do the same animation again
+	//	if (!animatingHead || ( animations[anim].firstFrame != startFrame ) )// only set the anim if we aren't going to do the same animation again
 	{
-		const int blend_time = 50;
+		const int blendTime = 50;
 		//	gi.G2API_SetBoneAnimIndex(&gent->ghoul2[gent->playerModel], cent->gent->faceBone,
-		//		firstFrame, lastFrame, animFlags, anim_speed, cg.time, -1, blend_time);
-		trap->G2API_SetBoneAnim(cent->ghoul2, 0, "face", first_frame, last_frame, anim_flags, anim_speed,
-			cg.time, -1, blend_time);
+		//		firstFrame, lastFrame, animFlags, animSpeed, cg.time, -1, blendTime);
+		trap->G2API_SetBoneAnim(cent->ghoul2, 0, "face", first_frame, last_frame, anim_flags, animSpeed,
+			cg.time, -1, blendTime);
 	}
 }
 
@@ -11499,12 +11499,12 @@ void CG_CreateSaberMarks(vec3_t start, vec3_t end, vec3_t normal)
 	{
 		polyVert_t verts[MAX_VERTS_ON_POLY];
 		// we have an upper limit on the complexity of polygons that we store persistantly
-		if (mf->num_points > MAX_VERTS_ON_POLY)
+		if (mf->numPoints > MAX_VERTS_ON_POLY)
 		{
-			mf->num_points = MAX_VERTS_ON_POLY;
+			mf->numPoints = MAX_VERTS_ON_POLY;
 		}
 
-		for (j = 0, v = verts; j < mf->num_points; j++, v++)
+		for (j = 0, v = verts; j < mf->numPoints; j++, v++)
 		{
 			vec3_t mid;
 			vec3_t delta;
@@ -11566,7 +11566,7 @@ void CG_CreateSaberMarks(vec3_t start, vec3_t end, vec3_t normal)
 				return;
 			}
 
-			apArgs.numVerts = mf->num_points;
+			apArgs.numVerts = mf->numPoints;
 			VectorCopy(vec3_origin, apArgs.vel);
 			VectorCopy(vec3_origin, apArgs.accel);
 
@@ -11608,9 +11608,9 @@ void CG_CreateSaberMarks(vec3_t start, vec3_t end, vec3_t normal)
 			mark->time = cg.time;
 			mark->alphaFade = qtrue;
 			mark->markShader = cgs.media.rivetMarkShader;
-			mark->poly.numVerts = mf->num_points;
+			mark->poly.numVerts = mf->numPoints;
 			mark->color[0] = mark->color[1] = mark->color[2] = mark->color[3] = 255;
-			memcpy(mark->verts, verts, mf->num_points * sizeof verts[0]);
+			memcpy(mark->verts, verts, mf->numPoints * sizeof verts[0]);
 
 			// And now do a glow pass
 			// by moving the start time back, we can hack it to fade out way before the burn does
@@ -11618,11 +11618,11 @@ void CG_CreateSaberMarks(vec3_t start, vec3_t end, vec3_t normal)
 			mark->time = cg.time - 8500;
 			mark->alphaFade = qfalse;
 			mark->markShader = cgs.media.mSaberDamageGlow;
-			mark->poly.numVerts = mf->num_points;
+			mark->poly.numVerts = mf->numPoints;
 			mark->color[0] = 215 + Q_flrand(0.0f, 1.0f) * 40.0f;
 			mark->color[1] = 96 + Q_flrand(0.0f, 1.0f) * 32.0f;
 			mark->color[2] = mark->color[3] = Q_flrand(0.0f, 1.0f) * 15.0f;
-			memcpy(mark->verts, verts, mf->num_points * sizeof verts[0]);
+			memcpy(mark->verts, verts, mf->numPoints * sizeof verts[0]);
 		}
 	}
 }
@@ -11644,7 +11644,7 @@ qboolean CG_G2TraceCollide(trace_t* tr, const vec3_t mins, const vec3_t maxs, co
 
 	while (t_n < MAX_G2_COLLISIONS)
 	{
-		g2_trace[t_n].mentity_num = -1;
+		g2_trace[t_n].mEntityNum = -1;
 		t_n++;
 	}
 	centity_t* g2_hit = &cg_entities[tr->entity_num];
@@ -11672,7 +11672,7 @@ qboolean CG_G2TraceCollide(trace_t* tr, const vec3_t mins, const vec3_t maxs, co
 				g2_hit->modelScale, 0, cg_g2TraceLod.integer, f_radius);
 		}
 
-		if (g2_trace[0].mentity_num != g2_hit->currentState.number)
+		if (g2_trace[0].mEntityNum != g2_hit->currentState.number)
 		{
 			tr->fraction = 1.0f;
 			tr->entity_num = ENTITYNUM_NONE;
@@ -11769,8 +11769,8 @@ void CG_AddGhoul2Mark(const int shader, const float size, vec3_t start, vec3_t e
 
 	gore_skin.baseModelOnly = qfalse;
 
-	gore_skin.current_time = cg.time;
-	gore_skin.ent_num = entnum;
+	gore_skin.currentTime = cg.time;
+	gore_skin.entNum = entnum;
 	gore_skin.SSize = size;
 	gore_skin.TSize = size;
 	gore_skin.theta = flrand(0.0f, 6.28f);
@@ -13941,7 +13941,7 @@ extern playerState_t* cgSendPS[MAX_GENTITIES];
 
 void CG_G2AnimEntModelLoad(centity_t* cent)
 {
-	const char* c_model_name = CG_ConfigString(CS_MODELS + cent->currentState.model_index);
+	const char* c_model_name = CG_ConfigString(CS_MODELS + cent->currentState.modelIndex);
 
 	if (!cent->npcClient)
 	{
@@ -14226,7 +14226,7 @@ void CG_G2AnimEntModelLoad(centity_t* cent)
 
 //for now this is just gonna create a big explosion on the area of the surface,
 //because I am lazy.
-static void CG_CreateSurfaceDebris(centity_t* cent, const int surf_num, const int fx_id, const qboolean throw_part)
+static void CG_CreateSurfaceDebris(centity_t* cent, const int surfNum, const int fx_id, const qboolean throw_part)
 {
 	int lost_part_fx = 0;
 	int b = -1;
@@ -14234,9 +14234,9 @@ static void CG_CreateSurfaceDebris(centity_t* cent, const int surf_num, const in
 	mdxaBone_t bolt_matrix;
 	const char* surf_name = NULL;
 
-	if (surf_num > 0)
+	if (surfNum > 0)
 	{
-		surf_name = bgToggleableSurfaces[surf_num];
+		surf_name = bgToggleableSurfaces[surfNum];
 	}
 
 	if (!cent->ghoul2)
@@ -14246,7 +14246,7 @@ static void CG_CreateSurfaceDebris(centity_t* cent, const int surf_num, const in
 	}
 
 	//let's add the surface as a bolt so we can get the base point of it
-	if (bgToggleableSurfaceDebris[surf_num] == 3)
+	if (bgToggleableSurfaceDebris[surfNum] == 3)
 	{
 		//right wing flame
 		b = trap->G2API_AddBolt(cent->ghoul2, 0, "*r_wingdamage");
@@ -14257,7 +14257,7 @@ static void CG_CreateSurfaceDebris(centity_t* cent, const int surf_num, const in
 			lost_part_fx = cent->m_pVehicle->m_pVehicleInfo->iRWingFX;
 		}
 	}
-	else if (bgToggleableSurfaceDebris[surf_num] == 4)
+	else if (bgToggleableSurfaceDebris[surfNum] == 4)
 	{
 		//left wing flame
 		b = trap->G2API_AddBolt(cent->ghoul2, 0, "*l_wingdamage");
@@ -14268,7 +14268,7 @@ static void CG_CreateSurfaceDebris(centity_t* cent, const int surf_num, const in
 			lost_part_fx = cent->m_pVehicle->m_pVehicleInfo->iLWingFX;
 		}
 	}
-	else if (bgToggleableSurfaceDebris[surf_num] == 5)
+	else if (bgToggleableSurfaceDebris[surfNum] == 5)
 	{
 		//right wing flame 2
 		b = trap->G2API_AddBolt(cent->ghoul2, 0, "*r_wingdamage");
@@ -14279,7 +14279,7 @@ static void CG_CreateSurfaceDebris(centity_t* cent, const int surf_num, const in
 			lost_part_fx = cent->m_pVehicle->m_pVehicleInfo->iRWingFX;
 		}
 	}
-	else if (bgToggleableSurfaceDebris[surf_num] == 6)
+	else if (bgToggleableSurfaceDebris[surfNum] == 6)
 	{
 		//left wing flame 2
 		b = trap->G2API_AddBolt(cent->ghoul2, 0, "*l_wingdamage");
@@ -14290,7 +14290,7 @@ static void CG_CreateSurfaceDebris(centity_t* cent, const int surf_num, const in
 			lost_part_fx = cent->m_pVehicle->m_pVehicleInfo->iLWingFX;
 		}
 	}
-	else if (bgToggleableSurfaceDebris[surf_num] == 7)
+	else if (bgToggleableSurfaceDebris[surfNum] == 7)
 	{
 		//nose flame
 		b = trap->G2API_AddBolt(cent->ghoul2, 0, "*nosedamage");
@@ -14305,7 +14305,7 @@ static void CG_CreateSurfaceDebris(centity_t* cent, const int surf_num, const in
 		b = trap->G2API_AddBolt(cent->ghoul2, 0, surf_name);
 	}
 
-	if (b == -1 || surf_num == -1)
+	if (b == -1 || surfNum == -1)
 	{
 		//couldn't find this surface apparently, so play on origin?
 		VectorCopy(cent->lerpOrigin, v);
@@ -14622,20 +14622,20 @@ void CG_ForceFPLSPlayerModel(centity_t* cent, clientInfo_t* ci)
 	{
 		int flags = BONE_ANIM_OVERRIDE_FREEZE;
 		int firstFrame = anim->firstFrame;
-		int set_frame = -1;
-		float anim_speed = 50.0f / anim->frameLerp;
+		int setFrame = -1;
+		float animSpeed = 50.0f / anim->frameLerp;
 
 		if (anim->loopFrames != -1)
 		{
 			flags = BONE_ANIM_OVERRIDE_LOOP;
 		}
 
-		if (cent->pe.legs.frame >= anim->firstFrame && cent->pe.legs.frame <= (anim->firstFrame + anim->num_frames))
+		if (cent->pe.legs.frame >= anim->firstFrame && cent->pe.legs.frame <= (anim->firstFrame + anim->numFrames))
 		{
-			set_frame = cent->pe.legs.frame;
+			setFrame = cent->pe.legs.frame;
 		}
 
-		trap->G2API_SetBoneAnim(ci->ghoul2Model, 0, "model_root", firstFrame, anim->firstFrame + anim->num_frames, flags, anim_speed, cg.time, set_frame, 150);
+		trap->G2API_SetBoneAnim(ci->ghoul2Model, 0, "model_root", firstFrame, anim->firstFrame + anim->numFrames, flags, animSpeed, cg.time, setFrame, 150);
 
 		cent->currentState.legsAnim = 0;
 	}
@@ -14646,20 +14646,20 @@ void CG_ForceFPLSPlayerModel(centity_t* cent, clientInfo_t* ci)
 	{
 		int flags = BONE_ANIM_OVERRIDE_FREEZE;
 		int firstFrame = anim->firstFrame;
-		int set_frame = -1;
-		float anim_speed = 50.0f / anim->frameLerp;
+		int setFrame = -1;
+		float animSpeed = 50.0f / anim->frameLerp;
 
 		if (anim->loopFrames != -1)
 		{
 			flags = BONE_ANIM_OVERRIDE_LOOP;
 		}
 
-		if (cent->pe.torso.frame >= anim->firstFrame && cent->pe.torso.frame <= (anim->firstFrame + anim->num_frames))
+		if (cent->pe.torso.frame >= anim->firstFrame && cent->pe.torso.frame <= (anim->firstFrame + anim->numFrames))
 		{
-			set_frame = cent->pe.torso.frame;
+			setFrame = cent->pe.torso.frame;
 		}
 
-		trap->G2API_SetBoneAnim(ci->ghoul2Model, 0, "lower_lumbar", firstFrame, anim->firstFrame + anim->num_frames, flags, anim_speed, cg.time, set_frame, 150);
+		trap->G2API_SetBoneAnim(ci->ghoul2Model, 0, "lower_lumbar", firstFrame, anim->firstFrame + anim->numFrames, flags, animSpeed, cg.time, setFrame, 150);
 
 		cent->currentState.torsoAnim = 0;
 	}
@@ -15968,7 +15968,7 @@ void CG_HolsteredWeaponRender(centity_t* cent, const clientInfo_t* ci, const int
 	qhandle_t offset_bolt;
 	int weapon_type;
 	qboolean second_weap = qfalse;
-	int bone_index;
+	int boneIndex;
 
 	if (cent->currentState.number == cg.snap->ps.client_num &&
 		!cg.renderingThirdPerson && !cg_trueguns.integer && cg.snap->ps.weapon != WP_SABER)
@@ -15987,19 +15987,19 @@ void CG_HolsteredWeaponRender(centity_t* cent, const clientInfo_t* ci, const int
 	if (cg_holsterdebug.integer == holster_type)
 	{
 		//debug has been set for this holsterType, use the debug overrides
-		bone_index = cg_holsterdebug_boneindex.integer;
+		boneIndex = cg_holsterdebug_boneindex.integer;
 		sscanf(cg_holsterdebug_posoffset.string, "%f %f %f", &pos_offset[0], &pos_offset[1], &pos_offset[2]);
 		sscanf(cg_holsterdebug_angoffset.string, "%f %f %f", &ang_offset[0], &ang_offset[1], &ang_offset[2]);
 	}
 	else
 	{
 		//use the model's loaded data for this holsterType
-		bone_index = ci->holsterData[holster_type].bone_index;
+		boneIndex = ci->holsterData[holster_type].boneIndex;
 		VectorCopy(ci->holsterData[holster_type].posOffset, pos_offset);
 		VectorCopy(ci->holsterData[holster_type].angOffset, ang_offset);
 	}
 
-	if (bone_index == HOLSTER_NONE)
+	if (boneIndex == HOLSTER_NONE)
 	{
 		//this weapon isn't set up to be rendered on this player model.
 		return;
@@ -16056,7 +16056,7 @@ void CG_HolsteredWeaponRender(centity_t* cent, const clientInfo_t* ci, const int
 	}
 
 	//set offsetBolt
-	switch (bone_index)
+	switch (boneIndex)
 	{
 	case HOLSTER_UPPERBACK:
 		offset_bolt = 2; //2 = jetpack tag position
@@ -16071,7 +16071,7 @@ void CG_HolsteredWeaponRender(centity_t* cent, const clientInfo_t* ci, const int
 		offset_bolt = ci->bolt_rfemurYZ; //use right hip bone
 		break;
 	default:
-		Com_Printf("Unknown offsetBolt for bone_index %i in CG_HolsteredWeaponRender.\n", bone_index);
+		Com_Printf("Unknown offsetBolt for boneIndex %i in CG_HolsteredWeaponRender.\n", boneIndex);
 		return;
 	}
 
@@ -17170,7 +17170,7 @@ void CG_Player(centity_t* cent)
 
 			memset(cent->npcClient, 0, sizeof(clientInfo_t));
 			cent->npcClient->ghoul2Model = NULL;
-			cent->npcClient->gender = FindGender(CG_ConfigString(CS_MODELS + cent->currentState.model_index), cent);
+			cent->npcClient->gender = FindGender(CG_ConfigString(CS_MODELS + cent->currentState.modelIndex), cent);
 		}
 
 		assert(cent->npcClient);
@@ -19018,7 +19018,7 @@ stillDoSaber:
 			saber_ent = &cg_entities[cent->currentState.saberentity_num];
 
 			if (g2_has_weapon || !cent->bolt3 ||
-				saber_ent->serverSaberHitIndex != saber_ent->currentState.model_index)
+				saber_ent->serverSaberHitIndex != saber_ent->currentState.modelIndex)
 			{
 				//saber is in flight, do not have it as a standard weapon model
 				qboolean add_bolts = qfalse;
@@ -19052,16 +19052,16 @@ stillDoSaber:
 				saber_ent->currentState.bolt2 = 123;
 
 				if (saber_ent->ghoul2 &&
-					saber_ent->serverSaberHitIndex == saber_ent->currentState.model_index)
+					saber_ent->serverSaberHitIndex == saber_ent->currentState.modelIndex)
 				{
 					// now set up the gun bolt on it
 					add_bolts = qtrue;
 				}
 				else
 				{
-					const char* saber_model = CG_ConfigString(CS_MODELS + saber_ent->currentState.model_index);
+					const char* saber_model = CG_ConfigString(CS_MODELS + saber_ent->currentState.modelIndex);
 
-					saber_ent->serverSaberHitIndex = saber_ent->currentState.model_index;
+					saber_ent->serverSaberHitIndex = saber_ent->currentState.modelIndex;
 
 					if (saber_ent->ghoul2)
 					{
@@ -19412,7 +19412,7 @@ stillDoSaber:
 					trap->G2API_CleanGhoul2Models(&saber_ent->ghoul2);
 				}
 
-				saber_ent->currentState.model_index = 0;
+				saber_ent->currentState.modelIndex = 0;
 				saber_ent->ghoul2 = NULL;
 				VectorClear(saber_ent->currentState.pos.trBase);
 			}
@@ -20317,9 +20317,9 @@ stillDoSaber:
 
 	if (cgBoneAnglePostSet.refreshSet)
 	{
-		trap->G2API_SetBoneAngles(cgBoneAnglePostSet.ghoul2, cgBoneAnglePostSet.model_index, cgBoneAnglePostSet.bone_name,
+		trap->G2API_SetBoneAngles(cgBoneAnglePostSet.ghoul2, cgBoneAnglePostSet.modelIndex, cgBoneAnglePostSet.boneName,
 			cgBoneAnglePostSet.angles, cgBoneAnglePostSet.flags, cgBoneAnglePostSet.up, cgBoneAnglePostSet.right,
-			cgBoneAnglePostSet.forward, cgBoneAnglePostSet.model_list, cgBoneAnglePostSet.blend_time, cgBoneAnglePostSet.current_time);
+			cgBoneAnglePostSet.forward, cgBoneAnglePostSet.modelList, cgBoneAnglePostSet.blendTime, cgBoneAnglePostSet.currentTime);
 
 		cgBoneAnglePostSet.refreshSet = qfalse;
 	}
@@ -20366,7 +20366,7 @@ void CG_ResetPlayerEntity(centity_t* cent)
 
 			memset(cent->npcClient, 0, sizeof(clientInfo_t));
 			cent->npcClient->ghoul2Model = NULL;
-			cent->npcClient->gender = FindGender(CG_ConfigString(CS_MODELS + cent->currentState.model_index), cent);
+			cent->npcClient->gender = FindGender(CG_ConfigString(CS_MODELS + cent->currentState.modelIndex), cent);
 		}
 
 		ci = cent->npcClient;

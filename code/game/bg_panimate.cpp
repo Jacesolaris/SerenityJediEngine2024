@@ -5410,7 +5410,7 @@ int PM_LegsAnimForFrame(gentity_t* ent, const int legs_frame)
 			continue;
 		}
 
-		if (animations[animation].firstFrame + animations[animation].num_frames < legs_frame)
+		if (animations[animation].firstFrame + animations[animation].numFrames < legs_frame)
 		{
 			//This anim ends before this frame
 			continue;
@@ -5424,19 +5424,19 @@ int PM_LegsAnimForFrame(gentity_t* ent, const int legs_frame)
 	return -1;
 }
 
-int PM_ValidateAnimRange(const int start_frame, const int end_frame, const float anim_speed)
+int PM_ValidateAnimRange(const int startFrame, const int endFrame, const float animSpeed)
 {
 	//given a startframe and endframe, see if that lines up with any known animation
 	const animation_t* animations = level.knownAnimFileSets[0].animations;
 
 	for (int anim = 0; anim < MAX_ANIMATIONS; anim++)
 	{
-		if (anim_speed < 0)
+		if (animSpeed < 0)
 		{
 			//playing backwards
-			if (animations[anim].firstFrame == end_frame)
+			if (animations[anim].firstFrame == endFrame)
 			{
-				if (animations[anim].num_frames + animations[anim].firstFrame == start_frame)
+				if (animations[anim].numFrames + animations[anim].firstFrame == startFrame)
 				{
 					//Com_Printf( "valid reverse anim: %s\n", animTable[anim].name );
 					return anim;
@@ -5446,10 +5446,10 @@ int PM_ValidateAnimRange(const int start_frame, const int end_frame, const float
 		else
 		{
 			//playing forwards
-			if (animations[anim].firstFrame == start_frame)
+			if (animations[anim].firstFrame == startFrame)
 			{
 				//This anim starts on this frame
-				if (animations[anim].firstFrame + animations[anim].num_frames == end_frame)
+				if (animations[anim].firstFrame + animations[anim].numFrames == endFrame)
 				{
 					//This anim ends on this frame
 					//Com_Printf( "valid forward anim: %s\n", animTable[anim].name );
@@ -5461,7 +5461,7 @@ int PM_ValidateAnimRange(const int start_frame, const int end_frame, const float
 	}
 
 	//Not in ANY anim?  SHOULD NEVER HAPPEN
-	Com_Printf("invalid anim range %d to %d, speed %4.2f\n", start_frame, end_frame, anim_speed);
+	Com_Printf("invalid anim range %d to %d, speed %4.2f\n", startFrame, endFrame, animSpeed);
 	return -1;
 }
 
@@ -5497,7 +5497,7 @@ int PM_TorsoAnimForFrame(gentity_t* ent, const int torso_frame)
 			continue;
 		}
 
-		if (animations[animation].firstFrame + animations[animation].num_frames < torso_frame)
+		if (animations[animation].firstFrame + animations[animation].numFrames < torso_frame)
 		{
 			//This anim ends before this frame
 			continue;
@@ -5514,7 +5514,7 @@ int PM_TorsoAnimForFrame(gentity_t* ent, const int torso_frame)
 qboolean PM_FinishedCurrentLegsAnim(gentity_t* self)
 {
 	int junk;
-	float current_frame, anim_speed;
+	float currentFrame, animSpeed;
 
 	if (!self->client)
 	{
@@ -5522,13 +5522,13 @@ qboolean PM_FinishedCurrentLegsAnim(gentity_t* self)
 	}
 
 	gi.G2API_GetBoneAnimIndex(&self->ghoul2[self->playerModel], self->rootBone, cg.time ? cg.time : level.time,
-		&current_frame, &junk, &junk, &junk, &anim_speed, nullptr);
-	const int cur_frame = floor(current_frame);
+		&currentFrame, &junk, &junk, &junk, &animSpeed, nullptr);
+	const int cur_frame = floor(currentFrame);
 
 	const int legs_anim = self->client->ps.legsAnim;
 	const animation_t* animations = level.knownAnimFileSets[self->client->clientInfo.animFileIndex].animations;
 
-	if (cur_frame >= animations[legs_anim].firstFrame + (animations[legs_anim].num_frames - 2))
+	if (cur_frame >= animations[legs_anim].firstFrame + (animations[legs_anim].numFrames - 2))
 	{
 		return qtrue;
 	}
@@ -5560,7 +5560,7 @@ qboolean PM_HasAnimation(const gentity_t* ent, const int animation)
 	const animation_t* animations = level.knownAnimFileSets[ent->client->clientInfo.animFileIndex].animations;
 
 	//No frames, no anim
-	if (animations[animation].num_frames == 0)
+	if (animations[animation].numFrames == 0)
 		return qfalse;
 
 	//Has the sequence
@@ -5598,7 +5598,7 @@ int PM_AnimLength(const int index, const animNumber_t anim)
 	{
 		return 0;
 	}
-	return level.knownAnimFileSets[index].animations[anim].num_frames * abs(
+	return level.knownAnimFileSets[index].animations[anim].numFrames * abs(
 		level.knownAnimFileSets[index].animations[anim].frameLerp);
 }
 
@@ -5676,7 +5676,7 @@ void PM_SetTorsoAnimTimer(gentity_t* ent, int* torsoAnimTimer, const int time)
 	}
 }
 
-void pm_saber_start_trans_anim(const int saber_anim_level, const int anim, float* anim_speed, const gentity_t* gent,
+void pm_saber_start_trans_anim(const int saber_anim_level, const int anim, float* animSpeed, const gentity_t* gent,
 	const int fatigued)
 {
 	char buf[128];
@@ -5694,17 +5694,17 @@ void pm_saber_start_trans_anim(const int saber_anim_level, const int anim, float
 	{
 		if (g_saberAnimSpeed->value != 1.0f)
 		{
-			*anim_speed *= g_saberAnimSpeed->value;
+			*animSpeed *= g_saberAnimSpeed->value;
 		}
 		else if (gent && gent->client && gent->client->ps.weapon == WP_SABER)
 		{
 			if (gent->client->ps.saber[0].animSpeedScale != 1.0f)
 			{
-				*anim_speed *= gent->client->ps.saber[0].animSpeedScale;
+				*animSpeed *= gent->client->ps.saber[0].animSpeedScale;
 			}
 			if (gent->client->ps.dualSabers && gent->client->ps.saber[1].animSpeedScale != 1.0f)
 			{
-				*anim_speed *= gent->client->ps.saber[1].animSpeedScale;
+				*animSpeed *= gent->client->ps.saber[1].animSpeedScale;
 			}
 		}
 	}
@@ -5718,7 +5718,7 @@ void pm_saber_start_trans_anim(const int saber_anim_level, const int anim, float
 	{
 		if (anim >= BOTH_A1_T__B_ && anim <= BOTH_H7_S7_BR)
 		{
-			*anim_speed *= 0.75;
+			*animSpeed *= 0.75;
 		}
 	}
 
@@ -5728,7 +5728,7 @@ void pm_saber_start_trans_anim(const int saber_anim_level, const int anim, float
 		if (anim >= BOTH_A1_T__B_ && anim <= BOTH_H1_S1_BR)
 		{
 			//animate slower
-			*anim_speed *= 0.75;
+			*animSpeed *= 0.75;
 		}
 	}
 	else if (gent && gent->NPC && gent->NPC->rank == RANK_CIVILIAN)
@@ -5739,7 +5739,7 @@ void pm_saber_start_trans_anim(const int saber_anim_level, const int anim, float
 			//his fast attacks are slower
 			if (!PM_SpinningSaberAnim(anim))
 			{
-				*anim_speed *= 0.75;
+				*animSpeed *= 0.75;
 			}
 			return;
 		}
@@ -5752,7 +5752,7 @@ void pm_saber_start_trans_anim(const int saber_anim_level, const int anim, float
 			{
 				if (!PM_SpinningSaberAnim(anim))
 				{
-					*anim_speed *= 0.75;
+					*animSpeed *= 0.75;
 				}
 				return;
 			}
@@ -5782,18 +5782,18 @@ void pm_saber_start_trans_anim(const int saber_anim_level, const int anim, float
 			&& anim != BOTH_LUNGE2_B__T_)
 		{
 			constexpr float fatiguedanimscale = 0.75f;
-			*anim_speed *= fatiguedanimscale;
+			*animSpeed *= fatiguedanimscale;
 		}
 		else if (fatigued & 1 << FLAG_SLOWBOUNCE)
 		{
 			//slow animation for slow bounces
 			if (PM_BounceAnim(anim))
 			{
-				*anim_speed *= 0.6f;
+				*animSpeed *= 0.6f;
 			}
 			else if (PM_SaberReturnAnim(anim))
 			{
-				*anim_speed *= 0.8f;
+				*animSpeed *= 0.8f;
 			}
 		}
 		else if (fatigued & 1 << FLAG_OLDSLOWBOUNCE)
@@ -5802,7 +5802,7 @@ void pm_saber_start_trans_anim(const int saber_anim_level, const int anim, float
 			if (PM_BounceAnim(anim) || PM_SaberReturnAnim(anim))
 			{
 				//only apply to bounce and returns since this flag is technically turned off immediately after the animation is set.
-				*anim_speed *= 0.6f;
+				*animSpeed *= 0.6f;
 			}
 		}
 		else if (fatigued & 1 << FLAG_PARRIED)
@@ -5810,14 +5810,14 @@ void pm_saber_start_trans_anim(const int saber_anim_level, const int anim, float
 			//getting parried slows down your reaction
 			if (PM_BounceAnim(anim) || PM_SaberReturnAnim(anim))
 			{
-				*anim_speed *= 0.90f;
+				*animSpeed *= 0.90f;
 			}
 		}
 		else if (fatigued & 1 << FLAG_BLOCKED)
 		{
 			if (PM_BounceAnim(anim) || PM_SaberReturnAnim(anim))
 			{
-				*anim_speed *= 0.85f;
+				*animSpeed *= 0.85f;
 			}
 		}
 		else if (fatigued & 1 << FLAG_MBLOCKBOUNCE)
@@ -5825,7 +5825,7 @@ void pm_saber_start_trans_anim(const int saber_anim_level, const int anim, float
 			//slow animation for all bounces
 			if (PM_SaberInMassiveBounce(anim))
 			{
-				*anim_speed *= 0.5f;
+				*animSpeed *= 0.5f;
 			}
 		}
 		else if (gent
@@ -5833,7 +5833,7 @@ void pm_saber_start_trans_anim(const int saber_anim_level, const int anim, float
 			&& gent->client->NPC_class == CLASS_YODA)
 		{
 			constexpr float yoda_animscale = 1.25f;
-			*anim_speed *= yoda_animscale;
+			*animSpeed *= yoda_animscale;
 		}
 		else
 		{
@@ -5843,12 +5843,12 @@ void pm_saber_start_trans_anim(const int saber_anim_level, const int anim, float
 				if (anim >= BOTH_H6_S6_T_ && anim <= BOTH_H6_S6_BR)
 				{
 					//dual broken parries are 1/3 the frames of the single broken parries
-					*anim_speed *= 0.6f;
+					*animSpeed *= 0.6f;
 				}
 				else
 				{
 					constexpr float dualanimscale = 0.90f;
-					*anim_speed *= dualanimscale;
+					*animSpeed *= dualanimscale;
 				}
 			}
 			else if (saber_anim_level == SS_STAFF)
@@ -5856,18 +5856,18 @@ void pm_saber_start_trans_anim(const int saber_anim_level, const int anim, float
 				if (anim >= BOTH_H7_S7_T_ && anim <= BOTH_H7_S7_BR)
 				{
 					//doubles are 1/2 the frames of single broken parries
-					*anim_speed *= 0.8f;
+					*animSpeed *= 0.8f;
 				}
 				else
 				{
 					constexpr float staffanimscale = 0.90f;
-					*anim_speed *= staffanimscale;
+					*animSpeed *= staffanimscale;
 				}
 			}
 			else if (saber_anim_level == SS_FAST)
 			{
 				constexpr float blueanimscale = 1.0f;
-				*anim_speed *= blueanimscale;
+				*animSpeed *= blueanimscale;
 			}
 			else if (saber_anim_level == SS_MEDIUM)
 			{
@@ -5878,38 +5878,38 @@ void pm_saber_start_trans_anim(const int saber_anim_level, const int anim, float
 					if (gent->client->ps.saberFatigueChainCount >= MISHAPLEVEL_LIGHT)
 					{//Slow down saber moves...
 						constexpr float fatiguedanimscale = 0.96f;
-						*anim_speed *= fatiguedanimscale;
+						*animSpeed *= fatiguedanimscale;
 					}
 					else
 					{
 						constexpr float realisticanimscale = 0.98f;
-						*anim_speed *= realisticanimscale;
+						*animSpeed *= realisticanimscale;
 					}
 				}
 				else
 				{
 					constexpr float npcanimscale = 0.90f;
-					*anim_speed *= npcanimscale;
+					*animSpeed *= npcanimscale;
 				}
 			}
 			else if (saber_anim_level == SS_STRONG)
 			{
 				constexpr float redanimscale = 1.0f;
-				*anim_speed *= redanimscale;
+				*animSpeed *= redanimscale;
 			}
 			else if (saber_anim_level == SS_DESANN)
 			{
 				constexpr float heavyanimscale = 1.0f;
-				*anim_speed *= heavyanimscale;
+				*animSpeed *= heavyanimscale;
 			}
 			else if (saber_anim_level == SS_TAVION)
 			{
 				constexpr float tavionanimscale = 0.9f;
-				*anim_speed *= tavionanimscale;
+				*animSpeed *= tavionanimscale;
 			}
 			else
 			{
-				*anim_speed *= saberanimscale;
+				*animSpeed *= saberanimscale;
 			}
 		}
 	}
@@ -5951,7 +5951,7 @@ constexpr auto G2_DEBUG_TIMING = 0;
 
 void PM_SetAnimFinal(int* torso_anim, int* legs_anim, const int set_anim_parts, int anim, const int set_anim_flags,
 	int* torso_anim_timer,
-	int* legs_anim_timer, gentity_t* gent, int blend_time) // default blend_time=350
+	int* legs_anim_timer, gentity_t* gent, int blendTime) // default blendTime=350
 {
 	// BASIC SETUP AND SAFETY CHECKING
 	//=================================
@@ -5992,7 +5992,7 @@ void PM_SetAnimFinal(int* torso_anim, int* legs_anim, const int set_anim_parts, 
 
 	// Make Sure This Character Has Such An Anim And A Model
 	//-------------------------------------------------------
-	if (animations[anim].num_frames == 0)
+	if (animations[anim].numFrames == 0)
 	{
 #ifndef FINAL_BUILD
 		static int	LastAnimWarningNum = 0;
@@ -6041,27 +6041,27 @@ void PM_SetAnimFinal(int* torso_anim, int* legs_anim, const int set_anim_parts, 
 	const bool anim_override = (set_anim_flags & SETANIM_FLAG_OVERRIDE) != 0;
 	const bool anim_sync = g_synchSplitAnims->integer != 0 && !anim_restart && !anim_pace;
 	float anim_current = -1.0f;
-	float anim_speed = 50.0f / cur_anim.frameLerp * time_scale_mod;
-	// anim_speed is 1.0 if the frameLerp (ms/frame) is 50 (20 fps).
+	float animSpeed = 50.0f / cur_anim.frameLerp * time_scale_mod;
+	// animSpeed is 1.0 if the frameLerp (ms/frame) is 50 (20 fps).
 	const float anim_fps = abs(cur_anim.frameLerp);
-	const auto anim_dur_m_sec = static_cast<int>((cur_anim.num_frames - 1) * anim_fps / time_scale_mod);
+	const auto anim_dur_m_sec = static_cast<int>((cur_anim.numFrames - 1) * anim_fps / time_scale_mod);
 	const int anim_hold_m_sec = anim_holdless && time_scale_mod == 1.0f
 		? (anim_dur_m_sec > 1 ? anim_dur_m_sec - 1 : anim_fps)
 		: anim_dur_m_sec;
 	int anim_flags = cur_anim.loopFrames != -1 ? BONE_ANIM_OVERRIDE_LOOP : BONE_ANIM_OVERRIDE_FREEZE;
 	int anim_start = cur_anim.firstFrame;
-	int anim_end = cur_anim.firstFrame + animations[anim].num_frames;
+	int anim_end = cur_anim.firstFrame + animations[anim].numFrames;
 
 	// If We Have A Blend Timer, Add The Blend Flag
 	//----------------------------------------------
-	if (blend_time > 0)
+	if (blendTime > 0)
 	{
 		anim_flags |= BONE_ANIM_BLEND;
 	}
 
 	// If Animation Is Going Backwards, Swap Last And First Frames
 	//-------------------------------------------------------------
-	if (anim_speed < 0.0f)
+	if (animSpeed < 0.0f)
 	{
 #if 0
 		if (g_AnimWarning->integer == 1)
@@ -6076,14 +6076,14 @@ void PM_SetAnimFinal(int* torso_anim, int* legs_anim, const int set_anim_parts, 
 		const int temp = anim_end;
 		anim_end = anim_start;
 		anim_start = temp;
-		blend_time = 0;
+		blendTime = 0;
 	}
 
 	// If The Animation Is Walking Or Running, Attempt To Scale The Playback Speed To Match
 	//--------------------------------------------------------------------------------------
 	if (g_noFootSlide->integer
 		&& anim_foot_move
-		&& anim_speed >= 0.0f
+		&& animSpeed >= 0.0f
 		//FIXME: either read speed from animation.cfg or only do this for NPCs
 		//for whom we've specifically determined the proper numbers!
 		&& gent->client->NPC_class != CLASS_HOWLER
@@ -6146,18 +6146,18 @@ void PM_SetAnimFinal(int* torso_anim, int* legs_anim, const int set_anim_parts, 
 			}
 		}
 
-		anim_speed *= gent->resultspeed / move_speed_of_anim;
-		if (anim_speed < 0.01f)
+		animSpeed *= gent->resultspeed / move_speed_of_anim;
+		if (animSpeed < 0.01f)
 		{
-			anim_speed = 0.01f;
+			animSpeed = 0.01f;
 		}
 
 		// Make Sure Not To Play Too Fast An Anim
 		//----------------------------------------
 		const float max_playback_speed = 1.5f * time_scale_mod;
-		if (anim_speed > max_playback_speed)
+		if (animSpeed > max_playback_speed)
 		{
-			anim_speed = max_playback_speed;
+			animSpeed = max_playback_speed;
 		}
 	}
 
@@ -6217,8 +6217,8 @@ void PM_SetAnimFinal(int* torso_anim, int* legs_anim, const int set_anim_parts, 
 	//----------------------------------------------------------
 	if (!anim_restart && !anim_pace)
 	{
-		tors_play &= !(tors_on_anim_now && tors_speed == anim_speed && !tors_match_body_frame);
-		body_play &= !(body_on_anim_now && body_speed == anim_speed && !body_match_tors_frame);
+		tors_play &= !(tors_on_anim_now && tors_speed == animSpeed && !tors_match_body_frame);
+		body_play &= !(body_on_anim_now && body_speed == animSpeed && !body_match_tors_frame);
 	}
 
 #ifndef FINAL_BUILD
@@ -6297,10 +6297,10 @@ void PM_SetAnimFinal(int* torso_anim, int* legs_anim, const int set_anim_parts, 
 			tors_on_anim_now && !anim_restart && !anim_pace
 			? anim_flags & ~BONE_ANIM_BLEND
 			: anim_flags,
-			anim_speed,
+			animSpeed,
 			actual_time,
 			anim_current,
-			blend_time);
+			blendTime);
 
 		if (gent->motionBone != -1)
 		{
@@ -6310,10 +6310,10 @@ void PM_SetAnimFinal(int* torso_anim, int* legs_anim, const int set_anim_parts, 
 				tors_on_anim_now && !anim_restart && !anim_pace
 				? anim_flags & ~BONE_ANIM_BLEND
 				: anim_flags,
-				anim_speed,
+				animSpeed,
 				actual_time,
 				anim_current,
-				blend_time);
+				blendTime);
 		}
 
 		anim_current = old_anim_current;
@@ -6344,10 +6344,10 @@ void PM_SetAnimFinal(int* torso_anim, int* legs_anim, const int set_anim_parts, 
 			body_on_anim_now && !anim_restart && !anim_pace
 			? anim_flags & ~BONE_ANIM_BLEND
 			: anim_flags,
-			anim_speed,
+			animSpeed,
 			actual_time,
 			anim_current,
-			blend_time);
+			blendTime);
 
 		// If This Animation Is To Be Locked And Held, Calculate The Duration And Set The Timer
 		//--------------------------------------------------------------------------------------
@@ -6361,7 +6361,7 @@ void PM_SetAnimFinal(int* torso_anim, int* legs_anim, const int set_anim_parts, 
 	//==========================================
 }
 
-void PM_SetAnim(const pmove_t* pm, int set_anim_parts, const int anim, const int set_anim_flags, const int blend_time)
+void PM_SetAnim(const pmove_t* pm, int set_anim_parts, const int anim, const int set_anim_flags, const int blendTime)
 {
 	if (pm->ps->pm_type >= PM_DEAD)
 	{
@@ -6428,7 +6428,7 @@ void PM_SetAnim(const pmove_t* pm, int set_anim_parts, const int anim, const int
 	}
 
 	PM_SetAnimFinal(&pm->ps->torsoAnim, &pm->ps->legsAnim, set_anim_parts, anim, set_anim_flags, &pm->ps->torsoAnimTimer,
-		&pm->ps->legsAnimTimer, &g_entities[pm->ps->client_num], blend_time); //was pm->gent
+		&pm->ps->legsAnimTimer, &g_entities[pm->ps->client_num], blendTime); //was pm->gent
 }
 
 bool TorsoAgainstWindTest(gentity_t* ent)

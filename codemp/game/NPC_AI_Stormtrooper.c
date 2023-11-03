@@ -26,7 +26,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 extern void G_AddVoiceEvent(const gentity_t* self, int event, int speak_debounce_time);
 extern void AI_GroupUpdateSquadstates(AIGroupInfo_t* group, const gentity_t* member, int new_squad_state);
-extern qboolean AI_GroupContainsEntNum(const AIGroupInfo_t* group, int ent_num);
+extern qboolean AI_GroupContainsEntNum(const AIGroupInfo_t* group, int entNum);
 extern void AI_GroupUpdateEnemyLastSeen(AIGroupInfo_t* group, vec3_t spot);
 extern void AI_GroupUpdateClearShotTime(AIGroupInfo_t* group);
 extern void NPC_TempLookTarget(const gentity_t* self, int lookEntNum, int minLookTime, int maxLookTime);

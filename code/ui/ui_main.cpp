@@ -1173,14 +1173,28 @@ static qboolean UI_RunMenuScript(const char** args)
 			}
 			else
 			{
-				ui.Cmd_ExecuteText(EXEC_APPEND, "map yavin1\n");
+				if (ui_com_rend2.integer == 1) //rend2 is on
+				{
+					ui.Cmd_ExecuteText(EXEC_APPEND, "map yavin1b\n");
+				}
+				else
+				{
+					ui.Cmd_ExecuteText(EXEC_APPEND, "map yavin1\n");
+				}
 			}
 #endif
 		}
 		else if (Q_stricmp(name, "startoutcast") == 0)
 		{
 			Menus_CloseAll();
-			ui.Cmd_ExecuteText(EXEC_APPEND, "map kejim_post\n");
+			if (ui_com_rend2.integer == 1) //rend2 is on
+			{
+				ui.Cmd_ExecuteText(EXEC_APPEND, "map kejim_base\n");
+			}
+			else
+			{
+				ui.Cmd_ExecuteText(EXEC_APPEND, "map kejim_post\n");
+			}
 		}
 		else if (Q_stricmp(name, "startdemo") == 0)
 		{
@@ -2343,13 +2357,13 @@ qboolean UI_ParseAnimationFile(const char* af_filename)
 	// parse the text
 	text_p = text;
 
-	//FIXME: have some way of playing anims backwards... negative num_frames?
+	//FIXME: have some way of playing anims backwards... negative numFrames?
 
 	//initialize anim array so that from 0 to MAX_ANIMATIONS, set default values of 0 1 0 100
 	for (int i = 0; i < MAX_ANIMATIONS; i++)
 	{
 		animations[i].firstFrame = 0;
-		animations[i].num_frames = 0;
+		animations[i].numFrames = 0;
 		animations[i].loopFrames = -1;
 		animations[i].frameLerp = 100;
 		//		animations[i].initialLerp = 100;
@@ -2395,7 +2409,7 @@ qboolean UI_ParseAnimationFile(const char* af_filename)
 		{
 			break;
 		}
-		animations[animNum].num_frames = atoi(token);
+		animations[animNum].numFrames = atoi(token);
 
 		token = COM_Parse(&text_p);
 		if (!token)
@@ -2483,11 +2497,11 @@ qboolean UI_ParseAnimFileSet(const char* animCFG, int* animFileIndex)
 	return qtrue;
 }
 
-int UI_G2SetAnim(CGhoul2Info* ghl_info, const char* bone_name, const int animNum, const qboolean freeze)
+int UI_G2SetAnim(CGhoul2Info* ghlInfo, const char* boneName, const int animNum, const qboolean freeze)
 {
 	int animIndex;
 
-	const char* gla_name = re.G2API_GetGLAName(ghl_info);
+	const char* gla_name = re.G2API_GetGLAName(ghlInfo);
 
 	if (!gla_name || !gla_name[0])
 	{
@@ -2499,15 +2513,15 @@ int UI_G2SetAnim(CGhoul2Info* ghl_info, const char* bone_name, const int animNum
 	if (animIndex != -1)
 	{
 		const animation_t* anim = &ui_knownAnimFileSets[animIndex].animations[animNum];
-		if (anim->num_frames <= 0)
+		if (anim->numFrames <= 0)
 		{
 			return 0;
 		}
 		const int sFrame = anim->firstFrame;
-		const int eFrame = anim->firstFrame + anim->num_frames;
+		const int eFrame = anim->firstFrame + anim->numFrames;
 		int flags = BONE_ANIM_OVERRIDE;
 		const int time = uiInfo.uiDC.realTime;
-		const float anim_speed = 50.0f / anim->frameLerp;
+		const float animSpeed = 50.0f / anim->frameLerp;
 
 		// Freeze anim if it's not looping, special hack for datapad moves menu
 		if (freeze)
@@ -2526,11 +2540,11 @@ int UI_G2SetAnim(CGhoul2Info* ghl_info, const char* bone_name, const int animNum
 			flags = BONE_ANIM_OVERRIDE_LOOP;
 		}
 		flags |= BONE_ANIM_BLEND;
-		constexpr int blend_time = 150;
+		constexpr int blendTime = 150;
 
-		re.G2API_SetBoneAnim(ghl_info, bone_name, sFrame, eFrame, flags, anim_speed, time, -1, blend_time);
+		re.G2API_SetBoneAnim(ghlInfo, boneName, sFrame, eFrame, flags, animSpeed, time, -1, blendTime);
 
-		return anim->frameLerp * (anim->num_frames - 2);
+		return anim->frameLerp * (anim->numFrames - 2);
 	}
 
 	return 0;

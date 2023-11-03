@@ -47,7 +47,7 @@ void G2Tur_SetBoneAngles(gentity_t* ent, const char* bone, vec3_t angles)
 	int* thebone = &ent->s.boneIndex1;
 	int* first_free = NULL;
 	int i = 0;
-	const int bone_index = G_BoneIndex(bone);
+	const int boneIndex = G_BoneIndex(bone);
 	vec3_t* bone_vector = &ent->s.boneAngles1;
 	vec3_t* free_bone_vec = NULL;
 
@@ -61,7 +61,7 @@ void G2Tur_SetBoneAngles(gentity_t* ent, const char* bone, vec3_t angles)
 		}
 		else if (*thebone)
 		{
-			if (*thebone == bone_index)
+			if (*thebone == boneIndex)
 			{
 				//this is it
 				break;
@@ -103,7 +103,7 @@ void G2Tur_SetBoneAngles(gentity_t* ent, const char* bone, vec3_t angles)
 
 		thebone = first_free;
 
-		*thebone = bone_index;
+		*thebone = boneIndex;
 		bone_vector = free_bone_vec;
 	}
 
@@ -147,7 +147,7 @@ void turretG2_set_models(gentity_t* self, const qboolean dying)
 	{
 		if (!(self->spawnflags & SPF_TURRETG2_TURBO))
 		{
-			self->s.model_index = G_model_index(name2);
+			self->s.modelIndex = G_model_index(name2);
 			self->s.model_index2 = G_model_index(name);
 		}
 
@@ -157,9 +157,9 @@ void turretG2_set_models(gentity_t* self, const qboolean dying)
 		/*
 		trap->G2API_InitGhoul2Model( &self->ghoul2,
 									name2,
-									0, //base->s.model_index,
+									0, //base->s.modelIndex,
 									//note, this is not the same kind of index - this one's referring to the actual
-									//index of the model in the g2 instance, whereas model_index is the index of a
+									//index of the model in the g2 instance, whereas modelIndex is the index of a
 									//configstring -rww
 									0,
 									0,
@@ -171,14 +171,14 @@ void turretG2_set_models(gentity_t* self, const qboolean dying)
 	{
 		if (!(self->spawnflags & SPF_TURRETG2_TURBO))
 		{
-			self->s.model_index = G_model_index(name);
+			self->s.modelIndex = G_model_index(name);
 			self->s.model_index2 = G_model_index(name2);
 			//set the new onw
 			trap->G2API_InitGhoul2Model(&self->ghoul2,
 				name,
-				0, //base->s.model_index,
+				0, //base->s.modelIndex,
 				//note, this is not the same kind of index - this one's referring to the actual
-				//index of the model in the g2 instance, whereas model_index is the index of a
+				//index of the model in the g2 instance, whereas modelIndex is the index of a
 				//configstring -rww
 				0,
 				0,
@@ -187,13 +187,13 @@ void turretG2_set_models(gentity_t* self, const qboolean dying)
 		}
 		else
 		{
-			self->s.model_index = G_model_index(name3);
+			self->s.modelIndex = G_model_index(name3);
 			//set the new onw
 			trap->G2API_InitGhoul2Model(&self->ghoul2,
 				name3,
-				0, //base->s.model_index,
+				0, //base->s.modelIndex,
 				//note, this is not the same kind of index - this one's referring to the actual
-				//index of the model in the g2 instance, whereas model_index is the index of a
+				//index of the model in the g2 instance, whereas modelIndex is the index of a
 				//configstring -rww
 				0,
 				0,
@@ -342,25 +342,25 @@ void turretG2_die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, in
 #define START_DIS 15
 
 //start an animation on model_root both server side and client side
-void TurboLaser_SetBoneAnim(gentity_t* eweb, const int start_frame, const int end_frame)
+void TurboLaser_SetBoneAnim(gentity_t* eweb, const int startFrame, const int endFrame)
 {
 	//set info on the entity so it knows to start the anim on the client next snapshot.
 	eweb->s.eFlags |= EF_G2ANIMATING;
 
-	if (eweb->s.torsoAnim == start_frame && eweb->s.legsAnim == end_frame)
+	if (eweb->s.torsoAnim == startFrame && eweb->s.legsAnim == endFrame)
 	{
 		//already playing this anim, let's flag it to restart
 		eweb->s.torsoFlip = !eweb->s.torsoFlip;
 	}
 	else
 	{
-		eweb->s.torsoAnim = start_frame;
-		eweb->s.legsAnim = end_frame;
+		eweb->s.torsoAnim = startFrame;
+		eweb->s.legsAnim = endFrame;
 	}
 
 	//now set the animation on the server ghoul2 instance.
 	assert(eweb->ghoul2);
-	trap->G2API_SetBoneAnim(eweb->ghoul2, 0, "model_root", start_frame, end_frame,
+	trap->G2API_SetBoneAnim(eweb->ghoul2, 0, "model_root", startFrame, endFrame,
 		BONE_ANIM_OVERRIDE_FREEZE | BONE_ANIM_BLEND, 1.0f, level.time, -1, 100);
 }
 

@@ -2176,7 +2176,7 @@ void CG_Chunks(int owner, vec3_t origin, const vec3_t mins, const vec3_t maxs,
 void CG_MiscModelExplosion(vec3_t mins, vec3_t maxs, int size, material_t chunk_type);
 
 localEntity_t* CG_MakeExplosion(vec3_t origin, vec3_t dir,
-	qhandle_t h_model, int num_frames, qhandle_t shader, int msec,
+	qhandle_t h_model, int numFrames, qhandle_t shader, int msec,
 	qboolean is_sprite, float scale, int flags);// Overloaded in single player
 
 void CG_TestLine(vec3_t start, vec3_t end, int time, unsigned int color, int radius);

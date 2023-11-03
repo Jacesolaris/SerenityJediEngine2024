@@ -1414,7 +1414,7 @@ void CG_AddViewWeapon(playerState_t* ps)
 	}
 	else
 	{
-		float current_frame;
+		float currentFrame;
 		// get clientinfo for animation map
 		if (cent->currentState.eType == ET_NPC)
 		{
@@ -1430,10 +1430,10 @@ void CG_AddViewWeapon(playerState_t* ps)
 			ci = &cgs.clientinfo[cent->currentState.client_num];
 		}
 
-		trap->G2API_GetBoneFrame(cent->ghoul2, "lower_lumbar", cg.time, &current_frame, cgs.game_models, 0);
-		hand.frame = CG_MapTorsoToWeaponFrame(ceil(current_frame), ps->torsoAnim);
-		hand.oldframe = CG_MapTorsoToWeaponFrame(floor(current_frame), ps->torsoAnim);
-		hand.backlerp = 1.0f - (current_frame - floor(current_frame));
+		trap->G2API_GetBoneFrame(cent->ghoul2, "lower_lumbar", cg.time, &currentFrame, cgs.game_models, 0);
+		hand.frame = CG_MapTorsoToWeaponFrame(ceil(currentFrame), ps->torsoAnim);
+		hand.oldframe = CG_MapTorsoToWeaponFrame(floor(currentFrame), ps->torsoAnim);
+		hand.backlerp = 1.0f - (currentFrame - floor(currentFrame));
 
 		// Handle the fringe situation where oldframe is invalid
 		if (hand.frame == -1)
@@ -1484,7 +1484,7 @@ void CG_AddViewWeapon(playerState_t* ps)
 		}
 		else
 		{
-			float current_frame;
+			float currentFrame;
 			// get clientinfo for animation map
 			if (cent->currentState.eType == ET_NPC)
 			{
@@ -1498,10 +1498,10 @@ void CG_AddViewWeapon(playerState_t* ps)
 			{
 				ci = &cgs.clientinfo[cent->currentState.client_num];
 			}
-			trap->G2API_GetBoneFrame(cent->ghoul2, "lower_lumbar", cg.time, &current_frame, cgs.game_models, 0);
-			hand.frame = CG_MapTorsoToWeaponFrame(ceil(current_frame), ps->torsoAnim);
-			hand.oldframe = CG_MapTorsoToWeaponFrame(floor(current_frame), ps->torsoAnim);
-			hand.backlerp = 1.0f - (current_frame - floor(current_frame));
+			trap->G2API_GetBoneFrame(cent->ghoul2, "lower_lumbar", cg.time, &currentFrame, cgs.game_models, 0);
+			hand.frame = CG_MapTorsoToWeaponFrame(ceil(currentFrame), ps->torsoAnim);
+			hand.oldframe = CG_MapTorsoToWeaponFrame(floor(currentFrame), ps->torsoAnim);
+			hand.backlerp = 1.0f - (currentFrame - floor(currentFrame));
 
 			// Handle the fringe situation where oldframe is invalid
 			if (hand.frame == -1)

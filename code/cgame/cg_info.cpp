@@ -402,7 +402,7 @@ void CG_LoadBar(void)
 		{
 			if (cg_com_rend2.integer == 1) //rend2 is on
 			{
-				cgi_R_Font_DrawString(60, 2, va("Warning: When using Quality mode, longer loading times can be expected."), colorTable[CT_WHITE], cgs.media.qhFontSmall, -1, 1.0f);
+				cgi_R_Font_DrawString(40, 2, va("Warning: When using Quality mode, longer loading times can be expected."), colorTable[CT_WHITE], cgs.media.qhFontSmall, -1, 1.0f);
 			}
 		}
 		constexpr int x = (640 - LOADBAR_CLIP_WIDTH) / 2;
@@ -894,7 +894,7 @@ void CG_DrawInformation()
 			|| strcmp(s, "md_sn_jedi") == 0
 			|| strcmp(s, "secbase") == 0
 			|| strcmp(s, "level0") == 0
-			|| strcmp(s, "kejim_post") == 0)) //special case for first map!
+			|| strcmp(s, "kejim_post") == 0) && cg_com_rend2.integer != 1) //special case for first map!
 	{
 		constexpr char text[1024] = { 0 };
 

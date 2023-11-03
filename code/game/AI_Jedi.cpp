@@ -39,7 +39,7 @@ extern void G_StartStasisEffect(const gentity_t* ent, int me_flags = 0, int leng
 	int spin_time = 0);
 extern void ForceJump(gentity_t* self, const usercmd_t* ucmd);
 extern void NPC_ClearLookTarget(const gentity_t* self);
-extern void NPC_SetLookTarget(const gentity_t* self, int ent_num, int clear_time);
+extern void NPC_SetLookTarget(const gentity_t* self, int entNum, int clear_time);
 extern void NPC_TempLookTarget(const gentity_t* self, int lookEntNum, int minLookTime, int maxLookTime);
 extern qboolean G_ExpandPointToBBox(vec3_t point, const vec3_t mins, const vec3_t maxs, int ignore, int clipmask);
 extern void PM_AddFatigue(playerState_t* ps, int fatigue);
@@ -3713,15 +3713,15 @@ qboolean jedi_disruptor_dodge_evasion(gentity_t* self, gentity_t* shooter, trace
 		{
 			for (auto& z : tr->G2CollisionMap)
 			{
-				if (z.mentity_num == -1)
+				if (z.mEntityNum == -1)
 				{
 					//actually, completely break out of this for loop since nothing after this in the aray should ever be valid either
 					continue;
 				}
 
 				CCollisionRecord& coll = z;
-				G_GetHitLocFromSurfName(&g_entities[coll.mentity_num],
-					gi.G2API_GetSurfaceName(&g_entities[coll.mentity_num].ghoul2[coll.mModelIndex],
+				G_GetHitLocFromSurfName(&g_entities[coll.mEntityNum],
+					gi.G2API_GetSurfaceName(&g_entities[coll.mEntityNum].ghoul2[coll.mModelIndex],
 						coll.mSurfaceIndex), &hit_loc, coll.mCollisionPosition,
 					nullptr, nullptr, MOD_UNKNOWN);
 				//only want the first
@@ -3922,15 +3922,15 @@ qboolean jedi_dodge_evasion(gentity_t* self, gentity_t* shooter, trace_t* tr, in
 		{
 			for (auto& z : tr->G2CollisionMap)
 			{
-				if (z.mentity_num == -1)
+				if (z.mEntityNum == -1)
 				{
 					//actually, completely break out of this for loop since nothing after this in the aray should ever be valid either
 					continue; //break;//
 				}
 
 				CCollisionRecord& coll = z;
-				G_GetHitLocFromSurfName(&g_entities[coll.mentity_num],
-					gi.G2API_GetSurfaceName(&g_entities[coll.mentity_num].ghoul2[coll.mModelIndex],
+				G_GetHitLocFromSurfName(&g_entities[coll.mEntityNum],
+					gi.G2API_GetSurfaceName(&g_entities[coll.mEntityNum].ghoul2[coll.mModelIndex],
 						coll.mSurfaceIndex), &hit_loc, coll.mCollisionPosition,
 					nullptr, nullptr, MOD_UNKNOWN);
 				//only want the first

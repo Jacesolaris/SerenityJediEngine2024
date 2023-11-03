@@ -909,9 +909,9 @@ static qboolean SurfIsOffscreen(const drawSurf_t* drawSurf, vec4_t clipDest[128]
 	// based on vertex distance isn't 100% correct (we should be checking for
 	// range to the surface), but it's good enough for the types of portals
 	// we have in the game right now.
-	int numTriangles = tess.num_indexes / 3;
+	int numTriangles = tess.numIndexes / 3;
 
-	for (i = 0; i < tess.num_indexes; i += 3)
+	for (i = 0; i < tess.numIndexes; i += 3)
 	{
 		vec3_t normal;
 		// ReSharper disable once CppEntityAssignedButNoRead
@@ -1276,14 +1276,14 @@ void R_AddEntitySurfaces(void)
 			// we must set up parts of tr.ori for model culling
 			R_RotateForEntity(ent, &tr.viewParms, &tr.ori);
 
-			tr.current_model = R_GetModelByHandle(ent->e.hModel);
-			if (!tr.current_model)
+			tr.currentModel = R_GetModelByHandle(ent->e.hModel);
+			if (!tr.currentModel)
 			{
 				R_AddDrawSurf(&entitySurface, tr.defaultShader, 0, 0);
 			}
 			else
 			{
-				switch (tr.current_model->type)
+				switch (tr.currentModel->type)
 				{
 				case MOD_MESH:
 					R_AddMD3Surfaces(ent);
@@ -1364,7 +1364,7 @@ void R_GenerateDrawSurfs(void)
 R_DebugPolygon
 ================
 */
-void R_DebugPolygon(const int color, const int num_points, const float* points)
+void R_DebugPolygon(const int color, const int numPoints, const float* points)
 {
 	int i;
 
@@ -1374,7 +1374,7 @@ void R_DebugPolygon(const int color, const int num_points, const float* points)
 
 	qglColor3f(color & 1, color >> 1 & 1, color >> 2 & 1);
 	qglBegin(GL_POLYGON);
-	for (i = 0; i < num_points; i++)
+	for (i = 0; i < numPoints; i++)
 	{
 		qglVertex3fv(points + i * 3);
 	}
@@ -1385,7 +1385,7 @@ void R_DebugPolygon(const int color, const int num_points, const float* points)
 	qglDepthRange(0, 0);
 	qglColor3f(1, 1, 1);
 	qglBegin(GL_POLYGON);
-	for (i = 0; i < num_points; i++)
+	for (i = 0; i < numPoints; i++)
 	{
 		qglVertex3fv(points + i * 3);
 	}

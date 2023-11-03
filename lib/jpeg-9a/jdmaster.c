@@ -140,11 +140,11 @@ jpeg_calc_output_dimensions(const j_decompress_ptr cinfo)
 		compptr->downsampled_width = (JDIMENSION)
 			jdiv_round_up((long)cinfo->image_width *
 				(long)(compptr->h_samp_factor * compptr->DCT_h_scaled_size),
-				cinfo->max_h_samp_factor * cinfo->block_size);
+				cinfo->max_h_samp_factor * cinfo->blockSize);
 		compptr->downsampled_height = (JDIMENSION)
 			jdiv_round_up((long)cinfo->image_height *
 				(long)(compptr->v_samp_factor * compptr->DCT_v_scaled_size),
-				cinfo->max_v_samp_factor * cinfo->block_size);
+				cinfo->max_v_samp_factor * cinfo->blockSize);
 	}
 
 #endif /* IDCT_SCALING_SUPPORTED */

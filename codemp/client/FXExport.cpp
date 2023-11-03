@@ -81,7 +81,7 @@ void FX_PlayBoltedEffectID(const int id, vec3_t org,
 }
 
 void FX_PlayEntityEffectID(const int id, vec3_t org,
-	matrix3_t axis, const int bolt_info, const int ent_num, const int vol, const int rad)
+	matrix3_t axis, const int bolt_info, const int entNum, const int vol, const int rad)
 {
 #ifdef __FXCHECKER
 	if (_isnan(org[0]) || _isnan(org[1]) || _isnan(org[2]))

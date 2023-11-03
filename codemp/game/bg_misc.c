@@ -2424,12 +2424,12 @@ bgEntity_t* pm_entBot = NULL;
 
 qboolean BG_CanItemBeGrabbed(const int gametype, const entityState_t* ent, const playerState_t* ps)
 {
-	if (ent->model_index < 1 || ent->model_index >= bg_numItems)
+	if (ent->modelIndex < 1 || ent->modelIndex >= bg_numItems)
 	{
 		Com_Error(ERR_DROP, "BG_CanItemBeGrabbed: index out of range");
 	}
 
-	const gitem_t* item = &bg_itemlist[ent->model_index];
+	const gitem_t* item = &bg_itemlist[ent->modelIndex];
 
 	if (item->giType == IT_WEAPON && item->giTag == WP_BRYAR_OLD)
 	{

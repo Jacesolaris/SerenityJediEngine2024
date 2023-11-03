@@ -74,7 +74,7 @@ void BG_IK_MoveLimb(CGhoul2Info_v& ghoul2, const int bolt_index, const char* ani
 	const char* second_bone,
 	const int time, const entityState_t* ent, const int anim_file_index, const int basePose,
 	vec3_t desired_pos, qboolean* ik_in_progress, vec3_t origin,
-	vec3_t angles, vec3_t scale, const int blend_time, const qboolean force_halt)
+	vec3_t angles, vec3_t scale, const int blendTime, const qboolean force_halt)
 {
 	mdxaBone_t hold_point_matrix;
 	const animation_t* anim = &level.knownAnimFileSets[anim_file_index].animations[basePose];
@@ -98,7 +98,7 @@ void BG_IK_MoveLimb(CGhoul2Info_v& ghoul2, const int bolt_index, const char* ani
 		VectorSet(ik_p.pcjMaxs, 0, 0, 0);
 
 		//give the info on our entity.
-		ik_p.blend_time = blend_time;
+		ik_p.blendTime = blendTime;
 		VectorCopy(origin, ik_p.origin);
 		VectorCopy(angles, ik_p.angles);
 		ik_p.angles[PITCH] = 0;
@@ -107,8 +107,8 @@ void BG_IK_MoveLimb(CGhoul2Info_v& ghoul2, const int bolt_index, const char* ani
 		VectorCopy(scale, ik_p.scale);
 
 		//base pose frames for the limb
-		ik_p.start_frame = anim->firstFrame + anim->num_frames;
-		ik_p.end_frame = anim->firstFrame + anim->num_frames;
+		ik_p.startFrame = anim->firstFrame + anim->numFrames;
+		ik_p.endFrame = anim->firstFrame + anim->numFrames;
 
 		//ikP.forceAnimOnBone = qfalse; //let it use existing anim if it's the same as this one.
 
@@ -202,7 +202,7 @@ void BG_IK_MoveLimb(CGhoul2Info_v& ghoul2, const int bolt_index, const char* ani
 		}
 		VectorCopy(origin, ik_m.origin); //our position in the world.
 
-		ik_m.bone_name[0] = 0;
+		ik_m.boneName[0] = 0;
 		if (gi.G2API_IKMove(ghoul2, time, &ik_m))
 		{
 			//now do the standard model animate stuff with ragdoll update params.
@@ -225,7 +225,7 @@ void BG_IK_MoveLimb(CGhoul2Info_v& ghoul2, const int bolt_index, const char* ani
 	else if (*ik_in_progress)
 	{
 		//kill it
-		float c_frame, anim_speed;
+		float c_frame, animSpeed;
 		int s_frame, e_frame, flags;
 
 		gi.G2API_SetBoneIKState(ghoul2, time, "lower_lumbar", IKS_NONE, nullptr);
@@ -248,12 +248,12 @@ void BG_IK_MoveLimb(CGhoul2Info_v& ghoul2, const int bolt_index, const char* ani
 
 		//Get the anim/frames that the pelvis is on exactly, and match the left arm back up with them again.
 		gi.G2API_GetBoneAnim(&ghoul2[0], anim_bone, time, &c_frame, &s_frame, &e_frame, &flags,
-			&anim_speed, nullptr);
-		gi.G2API_SetBoneAnim(&ghoul2[0], "lower_lumbar", s_frame, e_frame, flags, anim_speed, time, s_frame, 300);
-		gi.G2API_SetBoneAnim(&ghoul2[0], "upper_lumbar", s_frame, e_frame, flags, anim_speed, time, s_frame, 300);
-		gi.G2API_SetBoneAnim(&ghoul2[0], "thoracic", s_frame, e_frame, flags, anim_speed, time, s_frame, 300);
-		gi.G2API_SetBoneAnim(&ghoul2[0], second_bone, s_frame, e_frame, flags, anim_speed, time, s_frame, 300);
-		gi.G2API_SetBoneAnim(&ghoul2[0], first_bone, s_frame, e_frame, flags, anim_speed, time, s_frame, 300);
+			&animSpeed, nullptr);
+		gi.G2API_SetBoneAnim(&ghoul2[0], "lower_lumbar", s_frame, e_frame, flags, animSpeed, time, s_frame, 300);
+		gi.G2API_SetBoneAnim(&ghoul2[0], "upper_lumbar", s_frame, e_frame, flags, animSpeed, time, s_frame, 300);
+		gi.G2API_SetBoneAnim(&ghoul2[0], "thoracic", s_frame, e_frame, flags, animSpeed, time, s_frame, 300);
+		gi.G2API_SetBoneAnim(&ghoul2[0], second_bone, s_frame, e_frame, flags, animSpeed, time, s_frame, 300);
+		gi.G2API_SetBoneAnim(&ghoul2[0], first_bone, s_frame, e_frame, flags, animSpeed, time, s_frame, 300);
 
 		//And finally, get rid of all the ik state effector data by calling with null bone name (similar to how we init it).
 		gi.G2API_SetBoneIKState(ghoul2, time, nullptr, IKS_NONE, nullptr);
@@ -398,14 +398,14 @@ void PM_IKUpdate(gentity_t* ent)
 	}
 }
 
-void BG_G2SetBoneAngles(const centity_t* cent, const int bone_index, const vec3_t angles,
+void BG_G2SetBoneAngles(const centity_t* cent, const int boneIndex, const vec3_t angles,
 	const int flags,
 	const Eorientations up, const Eorientations right, const Eorientations forward,
-	qhandle_t* model_list)
+	qhandle_t* modelList)
 {
-	if (bone_index != -1)
+	if (boneIndex != -1)
 	{
-		gi.G2API_SetBoneAnglesIndex(&cent->gent->ghoul2[0], bone_index, angles, flags, up, right, forward, model_list, 0,
+		gi.G2API_SetBoneAnglesIndex(&cent->gent->ghoul2[0], boneIndex, angles, flags, up, right, forward, modelList, 0,
 			0);
 	}
 }

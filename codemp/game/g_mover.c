@@ -2554,7 +2554,7 @@ void G_Chunks(const int owner, vec3_t origin, const vec3_t normal, const vec3_t 
 	te->s.speed = speed;
 	te->s.eventParm = numChunks;
 	te->s.trickedentindex = chunkType;
-	te->s.model_index = customChunk;
+	te->s.modelIndex = customChunk;
 	te->s.apos.trBase[0] = baseScale;
 }
 
@@ -3234,9 +3234,9 @@ void func_usable_think(gentity_t* self)
 	}
 }
 
-qboolean G_EntIsRemovableUsable(const int ent_num)
+qboolean G_EntIsRemovableUsable(const int entNum)
 {
-	const gentity_t* ent = &g_entities[ent_num];
+	const gentity_t* ent = &g_entities[entNum];
 	if (ent->classname && !Q_stricmp("func_usable", ent->classname))
 	{
 		if (!(ent->s.eFlags & EF_SHADER_ANIM) && !(ent->spawnflags & 8) && ent->targetname)
@@ -3322,7 +3322,7 @@ void func_usable_die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker,
 
 void station_pain(gentity_t* self, gentity_t* inflictor, int damagec)
 {
-	self->s.model_index = self->s.model_index2;
+	self->s.modelIndex = self->s.model_index2;
 	trap->LinkEntity((sharedEntity_t*)self);
 }
 

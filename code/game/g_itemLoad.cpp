@@ -738,5 +738,5 @@ void IT_LoadWeatherParms()
 
 	cgi_Cvar_Register(&mapname, "mapname", "", CVAR_SERVERINFO | CVAR_ROM);
 
-	gi.SendConsoleCommand(va("exec Weather/%s", mapname.string, mapname.string, mapname.string));
+	gi.SendConsoleCommand(va("exec WeatherSP/%s", mapname.string, mapname.string, mapname.string));
 }

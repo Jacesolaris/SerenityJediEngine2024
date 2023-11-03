@@ -147,10 +147,10 @@ qboolean CL_GetSnapshot(const int snapshotNumber, snapshot_t* snapshot)
 
 	for (int i = 0; i < count; i++)
 	{
-		const int ent_num = clSnap->parseEntitiesNum + i & MAX_PARSE_ENTITIES - 1;
+		const int entNum = clSnap->parseEntitiesNum + i & MAX_PARSE_ENTITIES - 1;
 
 		// copy everything but the ghoul2 pointer
-		memcpy(&snapshot->entities[i], &cl.parseEntities[ent_num], sizeof(entityState_t));
+		memcpy(&snapshot->entities[i], &cl.parseEntities[entNum], sizeof(entityState_t));
 	}
 
 	// FIXME: configstring changes and server commands!!!

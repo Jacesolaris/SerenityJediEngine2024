@@ -297,7 +297,7 @@ using consoleCommand_t = struct consoleCommand_s
 };
 
 static consoleCommand_t commands[] = {
-	{"model_list", R_model_list_f},
+	{"modelList", R_model_list_f},
 	{"modelist", R_ModeList_f},
 	{"modelcacheinfo", RE_RegisterModels_Info_f},
 };
@@ -488,7 +488,8 @@ R_Init
 extern void R_InitWorldEffects(); //tr_WorldEffects.cpp
 void R_Init()
 {
-	//	Com_Printf ("----- R_Init -----\n" );
+	Com_Printf("----- Loading Dedicated renderer-----\n");
+
 	// clear all our internal state
 	memset(&tr, 0, sizeof tr);
 	memset(&backEnd, 0, sizeof backEnd);
@@ -534,7 +535,7 @@ void R_Init()
 
 	R_ModelInit();
 
-	//	Com_Printf ("----- finished R_Init -----\n" );
+	Com_Printf("----- Dedicated renderer loaded -----\n");
 }
 
 /*
@@ -544,8 +545,6 @@ RE_Shutdown
 */
 void RE_Shutdown(qboolean destroy_window, qboolean restarting)
 {
-	//	Com_Printf ("RE_Shutdown( %i )\n", destroyWindow );
-
 	for (const auto& command : commands)
 		ri->Cmd_RemoveCommand(command.cmd);
 

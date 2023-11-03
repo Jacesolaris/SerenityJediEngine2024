@@ -289,28 +289,28 @@ static	void R_LoadVisibility(const lump_t* l, world_t& world_data) {
 ShaderForShaderNum
 ===============
 */
-static shader_t* ShaderForShaderNum(int shader_num, const int* lightmap_num, const byte* lightmap_styles, const byte* vertex_styles, const world_t& world_data)
+static shader_t* ShaderForShaderNum(int shaderNum, const int* lightmapNum, const byte* lightmap_styles, const byte* vertex_styles, const world_t& world_data)
 {
 	const byte* styles = lightmap_styles;
 
-	LL(shader_num);
-	if (shader_num < 0 || shader_num >= world_data.numShaders) {
-		Com_Error(ERR_DROP, "ShaderForShaderNum: bad num %i", shader_num);
+	LL(shaderNum);
+	if (shaderNum < 0 || shaderNum >= world_data.numShaders) {
+		Com_Error(ERR_DROP, "ShaderForShaderNum: bad num %i", shaderNum);
 	}
-	const dshader_t* dsh = &world_data.shaders[shader_num];
+	const dshader_t* dsh = &world_data.shaders[shaderNum];
 
-	if (lightmap_num[0] == LIGHTMAP_BY_VERTEX)
+	if (lightmapNum[0] == LIGHTMAP_BY_VERTEX)
 	{
 		styles = vertex_styles;
 	}
 
 	if (r_vertexLight->integer)
 	{
-		lightmap_num = lightmapsVertex;
+		lightmapNum = lightmapsVertex;
 		styles = vertex_styles;
 	}
 
-	shader_t* shader = R_FindShader(dsh->shader, lightmap_num, styles, qtrue);
+	shader_t* shader = R_FindShader(dsh->shader, lightmapNum, styles, qtrue);
 
 	// if the shader had errors, just use default shader
 	if (shader->defaultShader) {
@@ -327,11 +327,11 @@ ParseFace
 */
 static void ParseFace(const dsurface_t* ds, mapVert_t* verts, msurface_t* surf, int* indexes, const world_t& world_data, const int index) {
 	int					i, j, k;
-	int					lightmap_num[MAXLIGHTMAPS]{};
+	int					lightmapNum[MAXLIGHTMAPS]{};
 
 	for (i = 0; i < MAXLIGHTMAPS; i++)
 	{
-		lightmap_num[i] = LittleLong ds->lightmap_num[i];
+		lightmapNum[i] = LittleLong ds->lightmapNum[i];
 	}
 
 	// get fog volume
@@ -342,33 +342,33 @@ static void ParseFace(const dsurface_t* ds, mapVert_t* verts, msurface_t* surf, 
 	}
 
 	// get shader value
-	surf->shader = ShaderForShaderNum(ds->shader_num, lightmap_num, ds->lightmapStyles, ds->vertexStyles, world_data);
+	surf->shader = ShaderForShaderNum(ds->shaderNum, lightmapNum, ds->lightmapStyles, ds->vertexStyles, world_data);
 	if (r_singleShader->integer && !surf->shader->sky) {
 		surf->shader = tr.defaultShader;
 	}
 
-	int num_points = ds->numVerts;
-	if (num_points > MAX_FACE_POINTS) {
-		ri->Printf(PRINT_ALL, S_COLOR_YELLOW  "WARNING: MAX_FACE_POINTS exceeded: %i\n", num_points);
-		num_points = MAX_FACE_POINTS;
+	int numPoints = ds->numVerts;
+	if (numPoints > MAX_FACE_POINTS) {
+		ri->Printf(PRINT_ALL, S_COLOR_YELLOW  "WARNING: MAX_FACE_POINTS exceeded: %i\n", numPoints);
+		numPoints = MAX_FACE_POINTS;
 		surf->shader = tr.defaultShader;
 	}
 
-	const int num_indexes = ds->num_indexes;
+	const int numIndexes = ds->numIndexes;
 
 	// create the srfSurfaceFace_t
-	int sface_size = reinterpret_cast<size_t>(&static_cast<srfSurfaceFace_t*>(nullptr)->points[num_points]);
+	int sface_size = reinterpret_cast<size_t>(&static_cast<srfSurfaceFace_t*>(nullptr)->points[numPoints]);
 	const int ofs_indexes = sface_size;
-	sface_size += sizeof(int) * num_indexes;
+	sface_size += sizeof(int) * numIndexes;
 
 	srfSurfaceFace_t* cv = static_cast<srfSurfaceFace_t*>(Hunk_Alloc(sface_size, h_low));
 	cv->surfaceType = SF_FACE;
-	cv->num_points = num_points;
-	cv->numIndices = num_indexes;
+	cv->numPoints = numPoints;
+	cv->numIndices = numIndexes;
 	cv->ofsIndices = ofs_indexes;
 
 	verts += LittleLong ds->firstVert;
-	for (i = 0; i < num_points; i++) {
+	for (i = 0; i < numPoints; i++) {
 		for (j = 0; j < 3; j++) {
 			cv->points[i][j] = LittleFloat verts[i].xyz[j];
 		}
@@ -386,7 +386,7 @@ static void ParseFace(const dsurface_t* ds, mapVert_t* verts, msurface_t* surf, 
 	}
 
 	indexes += LittleLong ds->firstIndex;
-	for (i = 0; i < num_indexes; i++) {
+	for (i = 0; i < numIndexes; i++) {
 		reinterpret_cast<int*>(reinterpret_cast<byte*>(cv) + cv->ofsIndices)[i] = LittleLong indexes[i];
 	}
 
@@ -409,14 +409,14 @@ ParseMesh
 static void ParseMesh(const dsurface_t* ds, mapVert_t* verts, msurface_t* surf, const world_t& world_data, const int index) {
 	int						i, j, k;
 	drawVert_t				points[MAX_PATCH_SIZE * MAX_PATCH_SIZE]{};
-	int						lightmap_num[MAXLIGHTMAPS]{};
+	int						lightmapNum[MAXLIGHTMAPS]{};
 	vec3_t					bounds[2]{};
 	vec3_t					tmp_vec;
 	static surfaceType_t	skip_data = SF_SKIP;
 
 	for (i = 0; i < MAXLIGHTMAPS; i++)
 	{
-		lightmap_num[i] = LittleLong ds->lightmap_num[i];
+		lightmapNum[i] = LittleLong ds->lightmapNum[i];
 	}
 
 	// get fog volume
@@ -427,14 +427,14 @@ static void ParseMesh(const dsurface_t* ds, mapVert_t* verts, msurface_t* surf, 
 	}
 
 	// get shader value
-	surf->shader = ShaderForShaderNum(ds->shader_num, lightmap_num, ds->lightmapStyles, ds->vertexStyles, world_data);
+	surf->shader = ShaderForShaderNum(ds->shaderNum, lightmapNum, ds->lightmapStyles, ds->vertexStyles, world_data);
 	if (r_singleShader->integer && !surf->shader->sky) {
 		surf->shader = tr.defaultShader;
 	}
 
 	// we may have a nodraw surface, because they might still need to
 	// be around for movement clipping
-	if (world_data.shaders[LittleLong ds->shader_num].surfaceFlags & SURF_NODRAW) {
+	if (world_data.shaders[LittleLong ds->shaderNum].surfaceFlags & SURF_NODRAW) {
 		surf->data = &skip_data;
 		return;
 	}
@@ -443,8 +443,8 @@ static void ParseMesh(const dsurface_t* ds, mapVert_t* verts, msurface_t* surf, 
 	const int height = ds->patchHeight;
 
 	verts += LittleLong ds->firstVert;
-	const int num_points = width * height;
-	for (i = 0; i < num_points; i++) {
+	const int numPoints = width * height;
+	for (i = 0; i < numPoints; i++) {
 		for (j = 0; j < 3; j++) {
 			points[i].xyz[j] = LittleFloat verts[i].xyz[j];
 			points[i].normal[j] = LittleFloat verts[i].normal[j];
@@ -495,26 +495,26 @@ static void ParseTriSurf(const dsurface_t* ds, mapVert_t* verts, msurface_t* sur
 	}
 
 	// get shader
-	surf->shader = ShaderForShaderNum(ds->shader_num, lightmapsVertex, ds->lightmapStyles, ds->vertexStyles, world_data);
+	surf->shader = ShaderForShaderNum(ds->shaderNum, lightmapsVertex, ds->lightmapStyles, ds->vertexStyles, world_data);
 	if (r_singleShader->integer && !surf->shader->sky) {
 		surf->shader = tr.defaultShader;
 	}
 
 	const int numVerts = ds->numVerts;
-	const int num_indexes = ds->num_indexes;
+	const int numIndexes = ds->numIndexes;
 
 	if (numVerts >= SHADER_MAX_VERTEXES) {
 		Com_Error(ERR_DROP, "ParseTriSurf: verts > MAX (%d > %d) on misc_model %s", numVerts, SHADER_MAX_VERTEXES, surf->shader->name);
 	}
-	if (num_indexes >= SHADER_MAX_INDEXES) {
-		Com_Error(ERR_DROP, "ParseTriSurf: indices > MAX (%d > %d) on misc_model %s", num_indexes, SHADER_MAX_INDEXES, surf->shader->name);
+	if (numIndexes >= SHADER_MAX_INDEXES) {
+		Com_Error(ERR_DROP, "ParseTriSurf: indices > MAX (%d > %d) on misc_model %s", numIndexes, SHADER_MAX_INDEXES, surf->shader->name);
 	}
 
 	srfTriangles_t* tri = static_cast<srfTriangles_t*>(Hunk_Alloc(sizeof * tri + numVerts * sizeof tri->verts[0]
-		+ num_indexes * sizeof tri->indexes[0], h_low));
+		+ numIndexes * sizeof tri->indexes[0], h_low));
 	tri->surfaceType = SF_TRIANGLES;
 	tri->numVerts = numVerts;
-	tri->num_indexes = num_indexes;
+	tri->numIndexes = numIndexes;
 	tri->verts = reinterpret_cast<drawVert_t*>(tri + 1);
 	tri->indexes = reinterpret_cast<int*>(tri->verts + tri->numVerts);
 
@@ -545,7 +545,7 @@ static void ParseTriSurf(const dsurface_t* ds, mapVert_t* verts, msurface_t* sur
 
 	// copy indexes
 	indexes += LittleLong ds->firstIndex;
-	for (i = 0; i < num_indexes; i++) {
+	for (i = 0; i < numIndexes; i++) {
 		tri->indexes[i] = LittleLong indexes[i];
 		if (tri->indexes[i] < 0 || tri->indexes[i] >= numVerts) {
 			Com_Error(ERR_DROP, "Bad index in triangle surface");
@@ -569,7 +569,7 @@ static void ParseFlare(const dsurface_t* ds, msurface_t* surf, const world_t& wo
 	}
 
 	// get shader
-	surf->shader = ShaderForShaderNum(ds->shader_num, lightmaps, ds->lightmapStyles, ds->vertexStyles, world_data);
+	surf->shader = ShaderForShaderNum(ds->shaderNum, lightmaps, ds->lightmapStyles, ds->vertexStyles, world_data);
 	if (r_singleShader->integer && !surf->shader->sky) {
 		surf->shader = tr.defaultShader;
 	}

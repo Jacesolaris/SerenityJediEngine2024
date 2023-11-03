@@ -32,9 +32,9 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #include "../game/wp_saber.h"
 #include "../game/g_vehicles.h"
 
-extern void CG_AddSaberBlade(const centity_t* cent, centity_t* scent, int renderfx, int model_index,
+extern void CG_AddSaberBlade(const centity_t* cent, centity_t* scent, int renderfx, int modelIndex,
 	vec3_t origin, vec3_t angles);
-extern void CG_CheckSaberInWater(const centity_t* cent, const centity_t* scent, int saber_num, int model_index,
+extern void CG_CheckSaberInWater(const centity_t* cent, const centity_t* scent, int saber_num, int modelIndex,
 	vec3_t origin,
 	vec3_t angles);
 extern void CG_ForcePushBlur(const vec3_t org, qboolean dark_side = qfalse);
@@ -273,14 +273,14 @@ void G2_BoltToGhoul2Model(const centity_t* cent, refEntity_t* ent)
 	model_num &= MODEL_AND;
 	int bolt_num = cent->currentState.bolt_info >> BOLT_SHIFT;
 	bolt_num &= BOLT_AND;
-	int ent_num = cent->currentState.bolt_info >> ENTITY_SHIFT;
-	ent_num &= ENTITY_AND;
+	int entNum = cent->currentState.bolt_info >> ENTITY_SHIFT;
+	entNum &= ENTITY_AND;
 
 	mdxaBone_t bolt_matrix;
 
 	// go away and get me the bolt position for this frame please
-	gi.G2API_GetBoltMatrix(cent->gent->ghoul2, model_num, bolt_num, &bolt_matrix, cg_entities[ent_num].currentState.angles,
-		cg_entities[ent_num].currentState.origin, cg.time, cgs.model_draw,
+	gi.G2API_GetBoltMatrix(cent->gent->ghoul2, model_num, bolt_num, &bolt_matrix, cg_entities[entNum].currentState.angles,
+		cg_entities[entNum].currentState.origin, cg.time, cgs.model_draw,
 		cent->currentState.modelScale);
 
 	// set up the axis and origin we need for the actual effect spawning

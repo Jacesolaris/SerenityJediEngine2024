@@ -995,7 +995,7 @@ netField_t entityStateFields[] =
 	{NETF(apos.trDelta[1]), 0},
 	{NETF(boneAngles1[1]), 0},
 	// why raised from 8 to -16?
-	{NETF(model_index), -16},
+	{NETF(modelIndex), -16},
 	// barely used, could probably be replaced
 	{NETF(emplacedOwner), 32}, //As above, also used as a time value (for electricity render time)
 	{NETF(apos.trDelta[0]), 0},

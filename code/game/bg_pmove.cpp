@@ -13717,7 +13717,7 @@ void PM_Setsaber_move(saber_moveName_t new_move)
 
 	if (anim != -1)
 	{
-		PM_SetAnim(pm, parts, anim, setflags, saber_moveData[new_move].blend_time);
+		PM_SetAnim(pm, parts, anim, setflags, saber_moveData[new_move].blendTime);
 	}
 
 	if (pm->ps->torsoAnim == anim)
@@ -15026,7 +15026,7 @@ qboolean PM_SaberLocked()
 				int remaining;
 				if (ValidAnimFileIndex(gent->client->clientInfo.animFileIndex))
 				{
-					float current_frame, junk2;
+					float currentFrame, junk2;
 					int cur_frame, junk;
 					int strength = G_SaberLockStrength(gent);
 					const animation_t* anim = &level.knownAnimFileSets[gent->client->clientInfo.animFileIndex].animations[pm->ps->torsoAnim];
@@ -15034,7 +15034,7 @@ qboolean PM_SaberLocked()
 					const qboolean ret =
 #endif
 						gi.G2API_GetBoneAnimIndex(&gent->ghoul2[gent->playerModel], gent->lowerLumbarBone,
-							cg.time ? cg.time : level.time, &current_frame, &junk, &junk,
+							cg.time ? cg.time : level.time, &currentFrame, &junk, &junk,
 							&junk, &junk2, nullptr);
 #ifdef _DEBUG
 					assert(ret); // this would be pretty bad, the below code seems to assume the call succeeds. -gil
@@ -15046,7 +15046,7 @@ qboolean PM_SaberLocked()
 						if (pm->ps->torsoAnim == BOTH_CCWCIRCLELOCK ||
 							pm->ps->torsoAnim == BOTH_BF2LOCK)
 						{
-							cur_frame = floor(current_frame) - strength;
+							cur_frame = floor(currentFrame) - strength;
 							//drop my frame one
 							if (cur_frame <= anim->firstFrame)
 							{
@@ -15065,9 +15065,9 @@ qboolean PM_SaberLocked()
 						}
 						else
 						{
-							cur_frame = ceil(current_frame) + strength;
+							cur_frame = ceil(currentFrame) + strength;
 							//advance my frame one
-							if (cur_frame >= anim->firstFrame + anim->num_frames)
+							if (cur_frame >= anim->firstFrame + anim->numFrames)
 							{
 								//I won!  Break out
 								PM_SaberLockBreak(gent, genemy, LOCK_VICTORY, strength);
@@ -15075,7 +15075,7 @@ qboolean PM_SaberLocked()
 								return qtrue;
 							}
 							PM_SetAnimFrame(gent, cur_frame, qtrue, qtrue);
-							remaining = anim->firstFrame + anim->num_frames - cur_frame;
+							remaining = anim->firstFrame + anim->numFrames - cur_frame;
 							if (d_saberCombat->integer || g_DebugSaberCombat->integer)
 							{
 								Com_Printf("%s pushing in saber lock, %d frames to go!\n", gent->NPC_type,
@@ -15088,9 +15088,9 @@ qboolean PM_SaberLocked()
 						//new locks
 						if (g_check_increment_lock_anim(pm->ps->torsoAnim, SABER_LOCK_WIN))
 						{
-							cur_frame = ceil(current_frame) + strength;
+							cur_frame = ceil(currentFrame) + strength;
 							//advance my frame one
-							if (cur_frame >= anim->firstFrame + anim->num_frames)
+							if (cur_frame >= anim->firstFrame + anim->numFrames)
 							{
 								//I won!  Break out
 								PM_SaberLockBreak(gent, genemy, LOCK_VICTORY, strength);
@@ -15098,7 +15098,7 @@ qboolean PM_SaberLocked()
 								return qtrue;
 							}
 							PM_SetAnimFrame(gent, cur_frame, qtrue, qtrue);
-							remaining = anim->firstFrame + anim->num_frames - cur_frame;
+							remaining = anim->firstFrame + anim->numFrames - cur_frame;
 							if (d_saberCombat->integer || g_DebugSaberCombat->integer)
 							{
 								Com_Printf("%s pushing in saber lock, %d frames to go!\n", gent->NPC_type,
@@ -15107,7 +15107,7 @@ qboolean PM_SaberLocked()
 						}
 						else
 						{
-							cur_frame = floor(current_frame) - strength;
+							cur_frame = floor(currentFrame) - strength;
 							//drop my frame one
 							if (cur_frame <= anim->firstFrame)
 							{
@@ -15204,7 +15204,7 @@ qboolean PM_SaberLocked()
 						if (genemy->client->ps.torsoAnim == BOTH_CCWCIRCLELOCK ||
 							genemy->client->ps.torsoAnim == BOTH_BF2LOCK)
 						{
-							PM_SetAnimFrame(genemy, anim->firstFrame + anim->num_frames - remaining, qtrue, qtrue);
+							PM_SetAnimFrame(genemy, anim->firstFrame + anim->numFrames - remaining, qtrue, qtrue);
 						}
 						else
 						{
@@ -15215,7 +15215,7 @@ qboolean PM_SaberLocked()
 					{
 						if (g_check_increment_lock_anim(genemy->client->ps.torsoAnim, SABER_LOCK_LOSE))
 						{
-							PM_SetAnimFrame(genemy, anim->firstFrame + anim->num_frames - remaining, qtrue, qtrue);
+							PM_SetAnimFrame(genemy, anim->firstFrame + anim->numFrames - remaining, qtrue, qtrue);
 						}
 						else
 						{

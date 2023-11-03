@@ -108,11 +108,11 @@ void auto_turret_die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker,
 	if (self->s.model_index2)
 	{
 		// switch to damage model if we should
-		self->s.model_index = self->s.model_index2;
+		self->s.modelIndex = self->s.model_index2;
 
 		if (self->target_ent && self->target_ent->s.model_index2)
 		{
-			self->target_ent->s.model_index = self->target_ent->s.model_index2;
+			self->target_ent->s.modelIndex = self->target_ent->s.model_index2;
 		}
 
 		VectorCopy(self->r.currentAngles, self->s.apos.trBase);
@@ -721,7 +721,7 @@ void SP_misc_turret(gentity_t* base)
 	}
 
 	base->s.model_index2 = G_model_index("models/map_objects/hoth/turret_bottom.md3");
-	base->s.model_index = G_model_index("models/map_objects/hoth/turret_base.md3");
+	base->s.modelIndex = G_model_index("models/map_objects/hoth/turret_base.md3");
 
 	G_SpawnString("icon", "", &s);
 	if (s && s[0])
@@ -774,7 +774,7 @@ void SP_misc_panel_turret(gentity_t* self)
 		G_SoundIndex("sound/movers/objects/ladygun_on");
 	}
 
-	self->s.model_index = G_model_index("models/map_objects/imp_mine/ladyluck_gun.md3");
+	self->s.modelIndex = G_model_index("models/map_objects/imp_mine/ladyluck_gun.md3");
 
 	self->soundPos1 = G_SoundIndex("sound/movers/camera_on.mp3");
 	self->soundPos2 = G_SoundIndex("sound/movers/camera_off.mp3");
@@ -810,7 +810,7 @@ qboolean turret_base_spawn_top(gentity_t* base)
 		return qfalse;
 	}
 
-	top->s.model_index = G_model_index("models/map_objects/hoth/turret_top_new.md3");
+	top->s.modelIndex = G_model_index("models/map_objects/hoth/turret_top_new.md3");
 	top->s.model_index2 = G_model_index("models/map_objects/hoth/turret_top.md3");
 	G_SetAngles(top, base->s.angles);
 	VectorCopy(base->s.origin, org);

@@ -36,12 +36,12 @@ given entity.  If the entity is a bsp model, the headnode will
 be returned, otherwise a custom box tree will be constructed.
 ================
 */
-clip_handle_t SV_clip_handleForEntity(const sharedEntity_t* ent)
+clipHandle_t SV_clip_handleForEntity(const sharedEntity_t* ent)
 {
 	if (ent->r.bmodel)
 	{
 		// explicit hulls in the BSP model
-		return CM_InlineModel(ent->s.model_index);
+		return CM_InlineModel(ent->s.modelIndex);
 	}
 	if (ent->r.svFlags & SVF_CAPSULE)
 	{
@@ -160,7 +160,7 @@ void SV_ClearWorld(void)
 	sv_numworldSectors = 0;
 
 	// get world map bounds
-	const clip_handle_t h = CM_InlineModel(0);
+	const clipHandle_t h = CM_InlineModel(0);
 	CM_ModelBounds(h, mins, maxs);
 	SV_CreateworldSector(0, mins, maxs);
 }
@@ -490,7 +490,7 @@ using moveclip_t = struct moveclip_s
 	int capsule;
 
 	int traceFlags;
-	int use_lod;
+	int useLod;
 	trace_t trace; // make sure nothing goes under here for Ghoul2 collision purposes
 	/*
 	Ghoul2 Insert End
@@ -519,7 +519,7 @@ void SV_ClipToEntity(trace_t* trace, const vec3_t start, const vec3_t mins, cons
 	}
 
 	// might intersect, so do an exact clip
-	const clip_handle_t clip_handle = SV_clip_handleForEntity(touch);
+	const clipHandle_t clip_handle = SV_clip_handleForEntity(touch);
 
 	const float* origin = touch->r.currentOrigin;
 	const float* angles = touch->r.currentAngles;
@@ -643,7 +643,7 @@ static void SV_ClipMoveToEntities(moveclip_t* clip)
 		}
 
 		// might intersect, so do an exact clip
-		const clip_handle_t clip_handle = SV_clip_handleForEntity(touch);
+		const clipHandle_t clip_handle = SV_clip_handleForEntity(touch);
 
 		float* origin = touch->r.currentOrigin;
 		float* angles = touch->r.currentAngles;
@@ -708,20 +708,20 @@ static void SV_ClipMoveToEntities(moveclip_t* clip)
 				// set our trace record size
 				for (z = 0; z < MAX_G2_COLLISIONS; z++)
 				{
-					if (clip->trace.G2CollisionMap[z].mentity_num != -1)
+					if (clip->trace.G2CollisionMap[z].mEntityNum != -1)
 					{
 						oldTraceRecSize++;
 					}
 				}
 
 				G2API_CollisionDetect(&clip->trace.G2CollisionMap[0], *((CGhoul2Info_v*)touch->s.ghoul2),
-					touch->s.angles, touch->s.origin, sv.time, touch->s.number, clip->start, clip->end, touch->s.modelScale, G2VertSpaceServer, clip->traceFlags, clip->use_lod);
+					touch->s.angles, touch->s.origin, sv.time, touch->s.number, clip->start, clip->end, touch->s.modelScale, G2VertSpaceServer, clip->traceFlags, clip->useLod);
 
 				// set our new trace record size
 
 				for (z = 0; z < MAX_G2_COLLISIONS; z++)
 				{
-					if (clip->trace.G2CollisionMap[z].mentity_num != -1)
+					if (clip->trace.G2CollisionMap[z].mEntityNum != -1)
 					{
 						newTraceRecSize++;
 					}
@@ -765,7 +765,7 @@ static void SV_ClipMoveToEntities(moveclip_t* clip)
 			memset(&G2Trace, 0, sizeof G2Trace);
 			while (t_n < MAX_G2_COLLISIONS)
 			{
-				G2Trace[t_n].mentity_num = -1;
+				G2Trace[t_n].mEntityNum = -1;
 				t_n++;
 			}
 
@@ -784,7 +784,7 @@ static void SV_ClipMoveToEntities(moveclip_t* clip)
 #ifndef FINAL_BUILD
 			if (sv_showghoultraces->integer)
 			{
-				Com_Printf("Ghoul2 trace   lod=%1d   length=%6.0f   to %s\n", clip->use_lod, VectorDistance(clip->start, clip->end), re->G2API_GetModelName(*(CGhoul2Info_v*)touch->ghoul2, 0));
+				Com_Printf("Ghoul2 trace   lod=%1d   length=%6.0f   to %s\n", clip->useLod, VectorDistance(clip->start, clip->end), re->G2API_GetModelName(*(CGhoul2Info_v*)touch->ghoul2, 0));
 			}
 #endif
 
@@ -797,25 +797,25 @@ static void SV_ClipMoveToEntities(moveclip_t* clip)
 				//for vehicles cache the transform data.
 				re->G2API_CollisionDetectCache(G2Trace, *static_cast<CGhoul2Info_v*>(touch->ghoul2), vec_out,
 					touch->r.currentOrigin, sv.time, touch->s.number, clip->start, clip->end,
-					touch->modelScale, G2VertSpaceServer, 0, clip->use_lod, f_radius);
+					touch->modelScale, G2VertSpaceServer, 0, clip->useLod, f_radius);
 			}
 			else
 			{
 				re->G2API_CollisionDetect(G2Trace, *static_cast<CGhoul2Info_v*>(touch->ghoul2), vec_out,
 					touch->r.currentOrigin, sv.time, touch->s.number, clip->start, clip->end,
-					touch->modelScale, G2VertSpaceServer, 0, clip->use_lod, f_radius);
+					touch->modelScale, G2VertSpaceServer, 0, clip->useLod, f_radius);
 			}
 
 			t_n = 0;
 			while (t_n < MAX_G2_COLLISIONS)
 			{
-				if (G2Trace[t_n].mentity_num == touch->s.number)
+				if (G2Trace[t_n].mEntityNum == touch->s.number)
 				{
 					//ok, valid
 					best_tr = t_n;
 					break;
 				}
-				if (G2Trace[t_n].mentity_num == -1)
+				if (G2Trace[t_n].mEntityNum == -1)
 				{
 					//there should not be any after the first -1
 					break;
@@ -837,7 +837,7 @@ static void SV_ClipMoveToEntities(moveclip_t* clip)
 				if (clip->traceFlags & G2TRFLAG_GETSURFINDEX)
 				{
 					//we have requested that surfaceFlags be stomped over with the g2 hit surface index.
-					if (clip->trace.entity_num == G2Trace[best_tr].mentity_num)
+					if (clip->trace.entity_num == G2Trace[best_tr].mEntityNum)
 					{
 						clip->trace.surfaceFlags = G2Trace[best_tr].mSurfaceIndex;
 					}
@@ -863,7 +863,7 @@ pass_entity_num and entities owned by pass_entity_num are explicitly not checked
 Ghoul2 Insert Start
 */
 void SV_Trace(trace_t* results, const vec3_t start, const vec3_t mins, const vec3_t maxs, const vec3_t end,
-	const int pass_entity_num, const int contentmask, const int capsule, const int traceFlags, const int use_lod)
+	const int pass_entity_num, const int contentmask, const int capsule, const int traceFlags, const int useLod)
 {
 	/*
 	Ghoul2 Insert End
@@ -896,7 +896,7 @@ void SV_Trace(trace_t* results, const vec3_t start, const vec3_t mins, const vec
 	*/
 	VectorCopy(start, clip.start);
 	clip.traceFlags = traceFlags;
-	clip.use_lod = use_lod;
+	clip.useLod = useLod;
 	/*
 	Ghoul2 Insert End
 	*/
@@ -954,7 +954,7 @@ int SV_PointContents(const vec3_t p, const int pass_entity_num)
 		}
 		const sharedEntity_t* hit = SV_Gentity_num(touch[i]);
 		// might intersect, so do an exact clip
-		const clip_handle_t clip_handle = SV_clip_handleForEntity(hit);
+		const clipHandle_t clip_handle = SV_clip_handleForEntity(hit);
 
 		const int c2 = CM_TransformedPointContents(p, clip_handle, hit->r.currentOrigin, hit->r.currentAngles);
 

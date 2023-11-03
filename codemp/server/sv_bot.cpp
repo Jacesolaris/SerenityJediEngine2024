@@ -31,7 +31,7 @@ using bot_debugpoly_t = struct bot_debugpoly_s
 {
 	int inuse;
 	int color;
-	int num_points;
+	int numPoints;
 	vec3_t points[128];
 };
 
@@ -235,7 +235,7 @@ void SV_BotFreeClient(const int client_num)
 BotDrawDebugPolygons
 ==================
 */
-void BotDrawDebugPolygons(void (*drawPoly)(int color, int num_points, const float* points), int value)
+void BotDrawDebugPolygons(void (*drawPoly)(int color, int numPoints, const float* points), int value)
 {
 	static cvar_t* bot_debug;
 
@@ -269,8 +269,8 @@ void BotDrawDebugPolygons(void (*drawPoly)(int color, int num_points, const floa
 	{
 		const bot_debugpoly_t* poly = &debugpolygons[i];
 		if (!poly->inuse) continue;
-		drawPoly(poly->color, poly->num_points, (float*)poly->points);
-		//Com_Printf("poly %i, numpoints = %d\n", i, poly->num_points);
+		drawPoly(poly->color, poly->numPoints, (float*)poly->points);
+		//Com_Printf("poly %i, numpoints = %d\n", i, poly->numPoints);
 	}
 }
 
@@ -415,7 +415,7 @@ void BotImport_BSPModelMinsMaxsOrigin(const int modelnum, vec3_t angles, vec3_t 
 {
 	vec3_t mins, maxs;
 
-	const clip_handle_t h = CM_InlineModel(modelnum);
+	const clipHandle_t h = CM_InlineModel(modelnum);
 	CM_ModelBounds(h, mins, maxs);
 	//if the model is rotated
 	if (angles[0] || angles[1] || angles[2])
@@ -496,7 +496,7 @@ void* BotImport_HunkAlloc(const int size)
 BotImport_DebugPolygonCreate
 ==================
 */
-int BotImport_DebugPolygonCreate(const int color, const int num_points, const vec3_t* points)
+int BotImport_DebugPolygonCreate(const int color, const int numPoints, const vec3_t* points)
 {
 	int i;
 
@@ -513,8 +513,8 @@ int BotImport_DebugPolygonCreate(const int color, const int num_points, const ve
 	bot_debugpoly_t* poly = &debugpolygons[i];
 	poly->inuse = qtrue;
 	poly->color = color;
-	poly->num_points = num_points;
-	Com_Memcpy(poly->points, points, num_points * sizeof(vec3_t));
+	poly->numPoints = numPoints;
+	Com_Memcpy(poly->points, points, numPoints * sizeof(vec3_t));
 	//
 	return i;
 }
@@ -524,14 +524,14 @@ int BotImport_DebugPolygonCreate(const int color, const int num_points, const ve
 BotImport_DebugPolygonShow
 ==================
 */
-void BotImport_DebugPolygonShow(const int id, const int color, const int num_points, const vec3_t* points)
+void BotImport_DebugPolygonShow(const int id, const int color, const int numPoints, const vec3_t* points)
 {
 	if (!debugpolygons) return;
 	bot_debugpoly_t* poly = &debugpolygons[id];
 	poly->inuse = qtrue;
 	poly->color = color;
-	poly->num_points = num_points;
-	Com_Memcpy(poly->points, points, num_points * sizeof(vec3_t));
+	poly->numPoints = numPoints;
+	Com_Memcpy(poly->points, points, numPoints * sizeof(vec3_t));
 }
 
 /*

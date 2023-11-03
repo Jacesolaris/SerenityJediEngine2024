@@ -3868,14 +3868,14 @@ int COM_CompressShader(char* data_p)
 
 /*
 ====================
-Scan_And_Load_Shader_Files
+ScanAndLoadShaderFiles
 
 Finds and loads all .shader files, combining them into
 a single large text block that can be scanned for shader names
 =====================
 */
-#define	MAX_SHADER_FILES	4096
-static void Scan_And_Load_Shader_Files()
+constexpr auto MAX_SHADER_FILES = 8192;
+static void ScanAndLoadShaderFiles(void)
 {
 	char* buffers[MAX_SHADER_FILES]{};
 	const char* p;
@@ -4094,7 +4094,7 @@ R_InitShaders
 */
 void R_InitShaders(const qboolean server)
 {
-	//ri->Printf( PRINT_ALL, "Initializing Shaders\n" );
+	ri->Printf( PRINT_ALL, "Initializing Shaders\n" );
 
 	memset(hashTable, 0, sizeof hashTable);
 
@@ -4102,7 +4102,7 @@ void R_InitShaders(const qboolean server)
 	{
 		CreateInternalShaders();
 
-		Scan_And_Load_Shader_Files();
+		ScanAndLoadShaderFiles();
 
 		CreateExternalShaders();
 	}

@@ -284,11 +284,11 @@ void CFxScheduler::AddLoopedEffects()
 	{
 		if (i.mId && i.mNextTime < theFxHelper.mTime)
 		{
-			const int ent_num = i.mBoltInfo >> ENTITY_SHIFT & ENTITY_AND;
-			if (cg_entities[ent_num].gent->inuse)
+			const int entNum = i.mBoltInfo >> ENTITY_SHIFT & ENTITY_AND;
+			if (cg_entities[entNum].gent->inuse)
 			{
 				// only play the looped effect when the ent is still inUse....
-				PlayEffect(i.mId, cg_entities[ent_num].lerpOrigin, nullptr,
+				PlayEffect(i.mId, cg_entities[entNum].lerpOrigin, nullptr,
 					i.mBoltInfo, -1, i.mPortalEffect, false,
 					i.mIsRelative);
 				//very important to send FALSE looptime to not recursively add me!
@@ -780,7 +780,7 @@ void CFxScheduler::PlayEffect(const int id, vec3_t origin, vec3_t forward, const
 // Return:
 //	none
 //------------------------------------------------------
-void CFxScheduler::PlayEffect(const char* file, vec3_t origin, vec3_t axis[3], const int bolt_info, const int ent_num,
+void CFxScheduler::PlayEffect(const char* file, vec3_t origin, vec3_t axis[3], const int bolt_info, const int entNum,
 	const bool isPortal, const int iLoopTime, const bool isRelative)
 {
 	char sfile[MAX_QPATH];
@@ -791,9 +791,9 @@ void CFxScheduler::PlayEffect(const char* file, vec3_t origin, vec3_t axis[3], c
 	// This is a horribly dumb thing to have to do, but QuakeIII might not have calc'd the lerpOrigin
 	//	for the entity we may be trying to bolt onto.  We like having the correct origin, so we are
 	//	forced to call this function....
-	if (ent_num > -1)
+	if (entNum > -1)
 	{
-		CG_CalcEntityLerpPositions(&cg_entities[ent_num]);
+		CG_CalcEntityLerpPositions(&cg_entities[entNum]);
 	}
 
 #ifndef FINAL_BUILD
@@ -803,7 +803,7 @@ void CFxScheduler::PlayEffect(const char* file, vec3_t origin, vec3_t axis[3], c
 	}
 #endif
 
-	PlayEffect(mEffectIDs[sfile], origin, axis, bolt_info, ent_num, isPortal, iLoopTime, isRelative);
+	PlayEffect(mEffectIDs[sfile], origin, axis, bolt_info, entNum, isPortal, iLoopTime, isRelative);
 }
 
 //------------------------------------------------------
@@ -1101,7 +1101,7 @@ void CFxScheduler::CreateEffect(CPrimitiveTemplate* fx, const int client_id, int
 // Return:
 //	none
 //------------------------------------------------------
-void CFxScheduler::PlayEffect(const int id, vec3_t origin, vec3_t axis[3], const int bolt_info, const int ent_num,
+void CFxScheduler::PlayEffect(const int id, vec3_t origin, vec3_t axis[3], const int bolt_info, const int entNum,
 	const bool isPortal, const int iLoopTime, const bool isRelative)
 {
 	int delay;
@@ -1122,7 +1122,7 @@ void CFxScheduler::PlayEffect(const int id, vec3_t origin, vec3_t axis[3], const
 	}
 
 	int modelNum = 0, boltNum = -1;
-	int entity_num = ent_num;
+	int entity_num = entNum;
 
 	if (bolt_info > 0)
 	{
@@ -1187,10 +1187,10 @@ void CFxScheduler::PlayEffect(const int id, vec3_t origin, vec3_t axis[3], const
 			// if the delay is so small, we may as well just create this bit right now
 			if (delay < 1 && !forceScheduling && !isPortal)
 			{
-				if (bolt_info == -1 && ent_num != -1)
+				if (bolt_info == -1 && entNum != -1)
 				{
 					// Find out where the entity currently is
-					CreateEffect(prim, cg_entities[ent_num].lerpOrigin, axis, -delay);
+					CreateEffect(prim, cg_entities[entNum].lerpOrigin, axis, -delay);
 				}
 				else
 				{
@@ -1216,7 +1216,7 @@ void CFxScheduler::PlayEffect(const int id, vec3_t origin, vec3_t axis[3], const
 
 				if (bolt_info == -1)
 				{
-					if (ent_num == -1)
+					if (entNum == -1)
 					{
 						// we aren't bolting, so make sure the spawn system knows this by putting -1's in these fields
 						sfx->mBoltNum = -1;
@@ -1391,7 +1391,7 @@ void CFxScheduler::AddScheduledEffects(const bool portal)
 					{
 						if (effect->mModelNum >= 0 && effect->mModelNum < cent.gent->ghoul2.size())
 						{
-							if (cent.gent->ghoul2[effect->mModelNum].mmodel_index >= 0)
+							if (cent.gent->ghoul2[effect->mModelNum].mModelindex >= 0)
 							{
 								doesBoltExist = static_cast<qboolean>(theFxHelper.GetOriginAxisFromBolt(
 									cent, effect->mModelNum, effect->mBoltNum, origin, axis) != 0);

@@ -2455,7 +2455,7 @@ void Cmd_SaberDrop_f(gentity_t* ent, const int saber_num)
 
 void G_RemoveWeather()
 {
-	gi.SendConsoleCommand(va("exec Weather/clear.cfg"));
+	gi.SendConsoleCommand(va("exec WeatherSP/clear.cfg"));
 }
 
 /*
@@ -2802,6 +2802,69 @@ void ClientCommand(const int client_num)
 		{
 			//drop either left or right
 			Cmd_SaberDrop_f(ent, saber_num);
+		}
+	}
+	else if ((Q_stricmp(cmd, "weather") == 0) || (Q_stricmp(cmd, "r_weather") == 0))
+	{
+		char arg1[MAX_STRING_CHARS]{};
+		int num;
+		CG_Argv(1);
+
+		if ((Q_stricmp(arg1, "snow") == 0) || (Q_stricmp(arg1, "1") == 0))
+		{
+			G_RemoveWeather();
+			num = G_EffectIndex("*clear");
+			gi.SetConfigstring(CS_EFFECTS + num, "");
+			G_EffectIndex("*snow");
+		}
+		else if ((Q_stricmp(arg1, "lava") == 0) || (Q_stricmp(arg1, "3") == 0))
+		{
+			G_RemoveWeather();
+			num = G_EffectIndex("*clear");
+			gi.SetConfigstring(CS_EFFECTS + num, "");
+			G_EffectIndex("*lava");
+		}
+		else if ((Q_stricmp(arg1, "rain") == 0) || (Q_stricmp(arg1, "2") == 0))
+		{
+			G_RemoveWeather();
+			num = G_EffectIndex("*clear");
+			gi.SetConfigstring(CS_EFFECTS + num, "");
+			G_EffectIndex("*rain 800");
+		}
+		else if ((Q_stricmp(arg1, "sandstorm") == 0) || (Q_stricmp(arg1, "sand") == 0) || (Q_stricmp(arg1, "4") == 0))
+		{
+			G_RemoveWeather();
+			num = G_EffectIndex("*clear");
+			gi.SetConfigstring(CS_EFFECTS + num, "");
+			G_EffectIndex("*wind");
+			G_EffectIndex("*sand");
+		}
+		else if ((Q_stricmp(arg1, "fog") == 0) || (Q_stricmp(arg1, "6") == 0))
+		{
+			G_RemoveWeather();
+			num = G_EffectIndex("*clear");
+			gi.SetConfigstring(CS_EFFECTS + num, "");
+			G_EffectIndex("*heavyrainfog");
+		}
+		else if ((Q_stricmp(arg1, "spacedust") == 0) || (Q_stricmp(arg1, "9") == 0))
+		{
+			G_RemoveWeather();
+			num = G_EffectIndex("*clear");
+			gi.SetConfigstring(CS_EFFECTS + num, "");
+			G_EffectIndex("*spacedust 9000");
+		}
+		else if ((Q_stricmp(arg1, "acidrain") == 0) || (Q_stricmp(arg1, "7") == 0))
+		{
+			G_RemoveWeather();
+			num = G_EffectIndex("*clear");
+			gi.SetConfigstring(CS_EFFECTS + num, "");
+			G_EffectIndex("*acidrain 500");
+		}
+		if ((Q_stricmp(arg1, "clear") == 0) || (Q_stricmp(arg1, "0") == 0))
+		{
+			G_RemoveWeather();
+			num = G_EffectIndex("*clear");
+			gi.SetConfigstring(CS_EFFECTS + num, "");
 		}
 	}
 	else if (TryWorkshopCommand(ent))

@@ -39,7 +39,7 @@ typedef struct iqmheader
 	unsigned int num_joints, ofs_joints;
 	unsigned int num_poses, ofs_poses;
 	unsigned int num_anims, ofs_anims;
-	unsigned int num_frames, num_framechannels, ofs_frames, ofs_bounds;
+	unsigned int numFrames, num_framechannels, ofs_frames, ofs_bounds;
 	unsigned int num_comment, ofs_comment;
 	unsigned int num_extensions, ofs_extensions;
 } iqmHeader_t;
@@ -100,7 +100,7 @@ typedef struct iqmpose
 typedef struct iqmanim
 {
 	unsigned int name;
-	unsigned int first_frame, num_frames;
+	unsigned int first_frame, numFrames;
 	float framerate;
 	unsigned int flags;
 } iqmAnim_t;

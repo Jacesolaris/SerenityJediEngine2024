@@ -139,11 +139,11 @@ void CFxScheduler::AddLoopedEffects()
 	{
 		if (mLoopedEffectArray[i].mId && mLoopedEffectArray[i].mNextTime < theFxHelper.mTime)
 		{
-			const int ent_num = mLoopedEffectArray[i].mBoltInfo >> ENTITY_SHIFT & ENTITY_AND;
+			const int entNum = mLoopedEffectArray[i].mBoltInfo >> ENTITY_SHIFT & ENTITY_AND;
 			// Find out where the entity currently is
 			const auto data = reinterpret_cast<TCGVectorData*>(cl.mSharedMemory);
 
-			data->mentity_num = ent_num;
+			data->mEntityNum = entNum;
 			CGVM_GetLerpOrigin();
 
 			PlayEffect(mLoopedEffectArray[i].mId, data->mPoint, nullptr, mLoopedEffectArray[i].mBoltInfo,
@@ -907,7 +907,7 @@ void CFxScheduler::PlayEffect(const int id, vec3_t origin, matrix3_t axis, const
 					// Find out where the entity currently is
 					const auto data = reinterpret_cast<TCGVectorData*>(cl.mSharedMemory);
 
-					data->mentity_num = entity_num;
+					data->mEntityNum = entity_num;
 					CGVM_GetLerpOrigin();
 					CreateEffect(prim, data->mPoint, axis, -delay, fxParm);
 				}
@@ -1076,7 +1076,7 @@ void CFxScheduler::AddScheduledEffects(const bool portal)
 					// Find out where the entity currently is
 					const auto data = reinterpret_cast<TCGVectorData*>(cl.mSharedMemory);
 
-					data->mentity_num = effect->mEntNum;
+					data->mEntityNum = effect->mEntNum;
 					CGVM_GetLerpOrigin();
 					CreateEffect(effect->mpTemplate,
 						data->mPoint, effect->mAxis,
@@ -1198,7 +1198,7 @@ void CFxScheduler::Draw2DEffects(const float screenXScale, const float screenYSc
 //	none
 //------------------------------------------------------
 void CFxScheduler::CreateEffect(CPrimitiveTemplate* fx, const vec3_t origin, matrix3_t axis, const int lateTime,
-	const int fxParm /*-1*/, CGhoul2Info_v* ghoul2, const int ent_num, const int modelNum,
+	const int fxParm /*-1*/, CGhoul2Info_v* ghoul2, const int entNum, const int modelNum,
 	const int boltNum)
 {
 	vec3_t org, org2, temp,
@@ -1469,7 +1469,7 @@ void CFxScheduler::CreateEffect(CPrimitiveTemplate* fx, const vec3_t origin, mat
 			fx->mMin, fx->mMax, fx->mElasticity.GetVal(),
 			fx->mDeathFxHandles.GetHandle(), fx->mImpactFxHandles.GetHandle(),
 			fx->mLife.GetVal(), fx->mMediaHandles.GetHandle(), flags, fx->mMatImpactFX, fxParm,
-			ghoul2, ent_num, modelNum, boltNum);
+			ghoul2, entNum, modelNum, boltNum);
 		break;
 
 		//---------
@@ -1481,7 +1481,7 @@ void CFxScheduler::CreateEffect(CPrimitiveTemplate* fx, const vec3_t origin, mat
 			fx->mAlphaStart.GetVal(), fx->mAlphaEnd.GetVal(), fx->mAlphaParm.GetVal(),
 			sRGB, eRGB, fx->mRGBParm.GetVal(),
 			fx->mLife.GetVal(), fx->mMediaHandles.GetHandle(), flags, fx->mMatImpactFX, fxParm,
-			ghoul2, ent_num, modelNum, boltNum);
+			ghoul2, entNum, modelNum, boltNum);
 		break;
 
 		//---------
@@ -1496,7 +1496,7 @@ void CFxScheduler::CreateEffect(CPrimitiveTemplate* fx, const vec3_t origin, mat
 			fx->mMin, fx->mMax, fx->mElasticity.GetVal(),
 			fx->mDeathFxHandles.GetHandle(), fx->mImpactFxHandles.GetHandle(),
 			fx->mLife.GetVal(), fx->mMediaHandles.GetHandle(), flags, fx->mMatImpactFX, fxParm,
-			ghoul2, ent_num, modelNum, boltNum);
+			ghoul2, entNum, modelNum, boltNum);
 		break;
 
 		//----------------
@@ -1509,7 +1509,7 @@ void CFxScheduler::CreateEffect(CPrimitiveTemplate* fx, const vec3_t origin, mat
 			sRGB, eRGB, fx->mRGBParm.GetVal(),
 			fx->mElasticity.GetVal(), fx->mLife.GetVal(), fx->mMediaHandles.GetHandle(), flags,
 			fx->mMatImpactFX, fxParm,
-			ghoul2, ent_num, modelNum, boltNum);
+			ghoul2, entNum, modelNum, boltNum);
 		break;
 
 		//---------
@@ -1523,7 +1523,7 @@ void CFxScheduler::CreateEffect(CPrimitiveTemplate* fx, const vec3_t origin, mat
 			fx->mAlphaStart.GetVal(), fx->mAlphaEnd.GetVal(), fx->mAlphaParm.GetVal(),
 			sRGB, eRGB, fx->mRGBParm.GetVal(),
 			fx->mLife.GetVal(), fx->mMediaHandles.GetHandle(), flags, fx->mMatImpactFX, fxParm,
-			ghoul2, ent_num, modelNum, boltNum,
+			ghoul2, entNum, modelNum, boltNum,
 			static_cast<qboolean>(fx->mSpawnFlags & FX_ORG2_FROM_TRACE));
 		break;
 
@@ -1646,7 +1646,7 @@ void CFxScheduler::CreateEffect(CPrimitiveTemplate* fx, const vec3_t origin, mat
 			fx->mMin, fx->mMax, fx->mElasticity.GetVal(),
 			fx->mDeathFxHandles.GetHandle(), fx->mImpactFxHandles.GetHandle(),
 			fx->mLife.GetVal(), fx->mMediaHandles.GetHandle(), flags, fx->mMatImpactFX, fxParm,
-			ghoul2, ent_num, modelNum, boltNum);
+			ghoul2, entNum, modelNum, boltNum);
 		break;
 
 		//---------
@@ -1678,7 +1678,7 @@ void CFxScheduler::CreateEffect(CPrimitiveTemplate* fx, const vec3_t origin, mat
 		FX_AddLight(org, fx->mSizeStart.GetVal(), fx->mSizeEnd.GetVal(), fx->mSizeParm.GetVal(),
 			sRGB, eRGB, fx->mRGBParm.GetVal(),
 			fx->mLife.GetVal(), flags, fx->mMatImpactFX, fxParm,
-			ghoul2, ent_num, modelNum, boltNum);
+			ghoul2, entNum, modelNum, boltNum);
 		break;
 
 		//---------

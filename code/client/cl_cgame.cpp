@@ -217,8 +217,8 @@ qboolean CL_GetSnapshot(const int snapshotNumber, snapshot_t* snapshot)
 	*/
 	for (int i = 0; i < count; i++)
 	{
-		const int ent_num = clSnap->parseEntitiesNum + i & MAX_PARSE_ENTITIES - 1;
-		snapshot->entities[i] = cl.parseEntities[ent_num];
+		const int entNum = clSnap->parseEntitiesNum + i & MAX_PARSE_ENTITIES - 1;
+		snapshot->entities[i] = cl.parseEntities[entNum];
 	}
 	/*
 	Ghoul2 Insert End

@@ -1637,7 +1637,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 
 			memset(cent->npcClient, 0, sizeof(clientInfo_t));
 			cent->npcClient->ghoul2Model = NULL;
-			cent->npcClient->gender = FindGender(CG_ConfigString(CS_MODELS + cent->currentState.model_index), cent);
+			cent->npcClient->gender = FindGender(CG_ConfigString(CS_MODELS + cent->currentState.modelIndex), cent);
 		}
 
 		assert(cent->npcClient);
@@ -2557,7 +2557,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 			int index;
 			qboolean newindex = qfalse;
 
-			index = cg_entities[es->eventParm].currentState.model_index; // player predicted
+			index = cg_entities[es->eventParm].currentState.modelIndex; // player predicted
 
 			if (index < 1 && cg_entities[es->eventParm].currentState.isJediMaster)
 			{
@@ -3725,7 +3725,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 
 	case EV_SCREENSHAKE:
 		DEBUGNAME("EV_SCREENSHAKE");
-		if (!es->model_index || cg.predicted_player_state.client_num == es->model_index - 1)
+		if (!es->modelIndex || cg.predicted_player_state.client_num == es->modelIndex - 1)
 		{
 			CGCam_Shake(es->angles[0], es->time);
 		}
@@ -3739,7 +3739,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 			CGCam_BlockShake(es->angles[0], es->time);
 		}*/
 
-		if (!es->model_index || cg.predicted_player_state.client_num == es->model_index - 1)
+		if (!es->modelIndex || cg.predicted_player_state.client_num == es->modelIndex - 1)
 		{
 			CGCam_BlockShake(es->angles[0], es->time);
 		}
@@ -4696,7 +4696,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 	case EV_DEBRIS:
 		DEBUGNAME("EV_DEBRIS");
 		CG_Chunks(es->owner, es->origin, es->origin2, es->angles2, es->speed, es->eventParm,
-			es->trickedentindex, es->model_index, es->apos.trBase[0]);
+			es->trickedentindex, es->modelIndex, es->apos.trBase[0]);
 		break;
 
 	case EV_MISC_MODEL_EXP:

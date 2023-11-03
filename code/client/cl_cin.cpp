@@ -1901,7 +1901,6 @@ void CIN_DrawCinematic(const int handle)
 	if (cinTable[handle].dirty && (cinTable[handle].CIN_WIDTH != cinTable[handle].drawX || cinTable[handle].CIN_HEIGHT
 		!= cinTable[handle].drawY))
 	{
-		//buf2 = (int *)Hunk_AllocateTempMemory( 256*256*4 );
 		const auto buf2 = static_cast<int*>(Z_Malloc(256 * 256 * 4, TAG_TEMP_WORKSPACE, qfalse));
 
 		CIN_ResampleCinematic(handle, buf2);
@@ -2013,9 +2012,9 @@ static void PlayCinematic(const char* arg, const char* s, const qboolean qbInGam
 		// work out associated audio-overlay file, if any...
 		//
 		extern cvar_t* s_language;
-		const auto bIsForeign = static_cast<qboolean>(s_language && Q_stricmp(s_language->string, "english") &&
-			Q_stricmp(s_language->string, ""));
+		const auto bIsForeign = static_cast<qboolean>(s_language && Q_stricmp(s_language->string, "english") && Q_stricmp(s_language->string, ""));
 		const char* psAudioFile = nullptr;
+
 		qhandle_t hCrawl = 0;
 
 		if (!Q_stricmp(arg, "video/jk0101_sw.roq"))

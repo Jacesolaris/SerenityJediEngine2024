@@ -600,7 +600,7 @@ using srfSurfaceFace_t = struct {
 	int			dlight_bits;
 
 	// triangle definitions (no normals at points)
-	int			num_points;
+	int			numPoints;
 	int			numIndices;
 	int			ofsIndices;
 	float		points[1][VERTEXSIZE];	// variable sized
@@ -620,7 +620,7 @@ using srfTriangles_t = struct {
 	//	float			radius;
 
 		// triangle definitions
-	int				num_indexes;
+	int				numIndexes;
 	int* indexes;
 
 	int				numVerts;
@@ -946,7 +946,7 @@ using trGlobals_t = struct {
 	trRefEntity_t			worldEntity;		// point currentEntity at this when rendering world
 	int						currententity_num;
 	unsigned				shiftedentity_num;	// currententity_num << QSORT_REFENTITYNUM_SHIFT (possible with high bit set for RF_ALPHA_FADE)
-	model_t* current_model;
+	model_t* currentModel;
 
 	viewParms_t				viewParms;
 
@@ -1296,8 +1296,8 @@ qhandle_t		 RE_RegisterShaderNoMip(const char* name);
 
 shader_t* R_FindShader(const char* name, const int* lightmap_index, const byte* styles, qboolean mip_raw_image);
 shader_t* R_GetShaderByHandle(qhandle_t hShader);
-void		R_InitShaders();
-void		R_ShaderList_f();
+void R_InitShaders(const qboolean server);
+void R_ShaderList_f();
 
 //
 // tr_arb.c
@@ -1347,7 +1347,7 @@ struct shaderCommands_s
 
 	int			dlight_bits;	// or together of all vertexdlight_bits
 
-	int			num_indexes;
+	int			numIndexes;
 	int			num_vertexes;
 
 	// info extracted from current shader
@@ -1377,7 +1377,7 @@ extern	bool		styleUpdated[MAX_LIGHT_STYLES];
 void RB_BeginSurface(shader_t* shader, int fogNum);
 void RB_EndSurface();
 void RB_CheckOverflow(int verts, int indexes);
-#define RB_CHECKOVERFLOW(v,i) if (tess.num_vertexes + (v) >= SHADER_MAX_VERTEXES || tess.num_indexes + (i) >= SHADER_MAX_INDEXES ) {RB_CheckOverflow(v,i);}
+#define RB_CHECKOVERFLOW(v,i) if (tess.num_vertexes + (v) >= SHADER_MAX_VERTEXES || tess.numIndexes + (i) >= SHADER_MAX_INDEXES ) {RB_CheckOverflow(v,i);}
 
 void RB_StageIteratorGeneric();
 void RB_StageIteratorSky();
@@ -1461,7 +1461,7 @@ MARKERS, POLYGON PROJECTION ON WORLD POLYGONS
 ============================================================
 */
 
-int R_MarkFragments(int num_points, const vec3_t* points, const vec3_t projection,
+int R_MarkFragments(int numPoints, const vec3_t* points, const vec3_t projection,
 	int max_points, vec3_t point_buffer, int max_fragments, markFragment_t* fragment_buffer);
 
 /*

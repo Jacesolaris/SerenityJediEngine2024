@@ -3507,9 +3507,9 @@ shader_t* R_GetShaderByHandle(const qhandle_t hShader)
 R_InitShaders
 ==================
 */
-void R_InitShaders(qboolean server)
+void R_InitShaders(const qboolean server)
 {
-	//Com_Printf ("Initializing Shaders\n" );
+	Com_Printf ("Initializing Shaders\n" );
 
 	memset(hashTable, 0, sizeof hashTable);
 }

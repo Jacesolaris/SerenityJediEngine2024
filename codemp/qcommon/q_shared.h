@@ -170,14 +170,14 @@ typedef union fileBuffer_u {
 	byte* b;
 } fileBuffer_t;
 
-typedef int32_t qhandle_t, thandle_t, fxHandle_t, sfxHandle_t, fileHandle_t, clip_handle_t;
+typedef int32_t qhandle_t, thandle_t, fxHandle_t, sfxHandle_t, fileHandle_t, clipHandle_t;
 
 #define NULL_HANDLE ((qhandle_t)0)
 #define NULL_SOUND ((sfxHandle_t)0)
 #define NULL_FX ((fxHandle_t)0)
 #define NULL_SFX ((sfxHandle_t)0)
 #define NULL_FILE ((fileHandle_t)0)
-#define NULL_CLIP ((clip_handle_t)0)
+#define NULL_CLIP ((clipHandle_t)0)
 
 #define PAD(base, alignment)	(((base)+(alignment)-1) & ~((alignment)-1))
 #define PADLEN(base, alignment)	(PAD((base), (alignment)) - (base))
@@ -486,8 +486,8 @@ typedef struct sharedRagDollParams_s {
 	int me; //index of entity giving this update
 
 	//rww - we have convenient animation/frame access in the game, so just send this info over from there.
-	int start_frame;
-	int end_frame;
+	int startFrame;
+	int endFrame;
 
 	int collisionType; // 1 = from a fall, 0 from effectors, this will be going away soon, hence no enum
 
@@ -512,7 +512,7 @@ typedef struct sharedRagDollUpdateParams_s {
 
 //rww - update parms for ik bone stuff
 typedef struct sharedIKMoveParams_s {
-	char bone_name[512]; //name of bone
+	char boneName[512]; //name of bone
 	vec3_t desiredOrigin; //world coordinate that this bone should be attempting to reach
 	vec3_t origin; //world coordinate of the entity who owns the g2 instance that owns the bone
 	float movementSpeed; //how fast the bone should move toward the destination
@@ -525,10 +525,10 @@ typedef struct sharedSetBoneIKStateParams_s {
 	vec3_t angles; //angles of caller
 	vec3_t scale; //scale of caller
 	float radius; //bone rad
-	int blend_time; //bone blend time
+	int blendTime; //bone blend time
 	int pcjOverrides; //override ik bone flags
-	int start_frame; //base pose start
-	int end_frame; //base pose end
+	int startFrame; //base pose start
+	int endFrame; //base pose end
 	qboolean forceAnimOnBone; //normally if the bone has specified start/end frames already it will leave it alone.. if this is true, then the animation will be restarted on the bone with the specified frames anyway.
 } sharedSetBoneIKStateParams_t;
 
@@ -835,8 +835,8 @@ Ghoul2 Insert Start
 typedef struct CollisionRecord_s
 {
 	float		mDistance;
-	int			mentity_num;
-	int			mmodel_index;
+	int			mEntityNum;
+	int			mModelindex;
 	int			mPolyIndex;
 	int			mSurfaceIndex;
 	vec3_t		mCollisionPosition;
@@ -877,7 +877,7 @@ typedef struct trace_s {
 // markfragments are returned by CM_MarkFragments()
 typedef struct markFragment_s {
 	int		firstPoint;
-	int		num_points;
+	int		numPoints;
 } markFragment_t;
 
 typedef struct orientation_s {
@@ -1781,7 +1781,7 @@ typedef struct addElectricityArgStruct_s {
 	int flags;
 } addElectricityArgStruct_t;
 
-// if entityState->solid == SOLID_BMODEL, model_index is an inline model number
+// if entityState->solid == SOLID_BMODEL, modelIndex is an inline model number
 #define	SOLID_BMODEL	0xffffff
 
 typedef enum {
@@ -1860,7 +1860,7 @@ typedef struct entityState_s {
 
 	int		modelGhoul2;
 	int		g2radius;
-	int		model_index;
+	int		modelIndex;
 	int		model_index2;
 	int		client_num;		// 0 to (MAX_CLIENTS - 1), for players and corpses
 	int		frame;
@@ -2114,8 +2114,8 @@ typedef struct SSkinGoreData_s
 {
 	vec3_t			angles;
 	vec3_t			position;
-	int				current_time;
-	int				ent_num;
+	int				currentTime;
+	int				entNum;
 	vec3_t			rayDirection;	// in world space
 	vec3_t			hitLocation;	// in world space
 	vec3_t			scale;

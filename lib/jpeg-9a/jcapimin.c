@@ -74,7 +74,7 @@ jpeg_CreateCompress(const j_compress_ptr cinfo, const int version, const size_t 
 	}
 
 	/* Must do it here for emit_dqt in case jpeg_write_tables is used */
-	cinfo->block_size = DCTSIZE;
+	cinfo->blockSize = DCTSIZE;
 	cinfo->natural_order = jpeg_natural_order;
 	cinfo->lim_Se = DCTSIZE2 - 1;
 

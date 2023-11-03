@@ -158,48 +158,48 @@ int cgi_CM_NumInlineModels()
 	return Q_syscall(CG_CM_NUMINLINEMODELS);
 }
 
-clip_handle_t cgi_CM_InlineModel(const int index)
+clipHandle_t cgi_CM_InlineModel(const int index)
 {
 	return Q_syscall(CG_CM_INLINEMODEL, index);
 }
 
-clip_handle_t cgi_CM_TempBoxModel(const vec3_t mins, const vec3_t maxs)
+clipHandle_t cgi_CM_TempBoxModel(const vec3_t mins, const vec3_t maxs)
 {
 	//, const int contents ) {
 	return Q_syscall(CG_CM_TEMPBOXMODEL, mins, maxs); //, contents );
 }
 
-int cgi_CM_PointContents(const vec3_t p, const clip_handle_t model)
+int cgi_CM_PointContents(const vec3_t p, const clipHandle_t model)
 {
 	return Q_syscall(CG_CM_POINTCONTENTS, p, model);
 }
 
-int cgi_CM_TransformedPointContents(const vec3_t p, const clip_handle_t model, const vec3_t origin, const vec3_t angles)
+int cgi_CM_TransformedPointContents(const vec3_t p, const clipHandle_t model, const vec3_t origin, const vec3_t angles)
 {
 	return Q_syscall(CG_CM_TRANSFORMEDPOINTCONTENTS, p, model, origin, angles);
 }
 
 void cgi_CM_BoxTrace(trace_t* results, const vec3_t start, const vec3_t end,
 	const vec3_t mins, const vec3_t maxs,
-	const clip_handle_t model, const int brushmask)
+	const clipHandle_t model, const int brushmask)
 {
 	Q_syscall(CG_CM_BOXTRACE, results, start, end, mins, maxs, model, brushmask);
 }
 
 void cgi_CM_TransformedBoxTrace(trace_t* results, const vec3_t start, const vec3_t end,
 	const vec3_t mins, const vec3_t maxs,
-	const clip_handle_t model, const int brushmask,
+	const clipHandle_t model, const int brushmask,
 	const vec3_t origin, const vec3_t angles)
 {
 	Q_syscall(CG_CM_TRANSFORMEDBOXTRACE, results, start, end, mins, maxs, model, brushmask, origin, angles);
 }
 
-int cgi_CM_MarkFragments(const int num_points, const vec3_t* points,
+int cgi_CM_MarkFragments(const int numPoints, const vec3_t* points,
 	const vec3_t projection,
 	const int maxPoints, vec3_t pointBuffer,
 	const int maxFragments, markFragment_t* fragmentBuffer)
 {
-	return Q_syscall(CG_CM_MARKFRAGMENTS, num_points, points, projection, maxPoints, pointBuffer, maxFragments,
+	return Q_syscall(CG_CM_MARKFRAGMENTS, numPoints, points, projection, maxPoints, pointBuffer, maxFragments,
 		fragmentBuffer);
 }
 
@@ -411,10 +411,9 @@ void cgi_R_ModelBounds(const qhandle_t model, vec3_t mins, vec3_t maxs)
 	Q_syscall(CG_R_MODELBOUNDS, model, mins, maxs);
 }
 
-void cgi_R_LerpTag(orientation_t* tag, const qhandle_t mod, const int start_frame, const int end_frame,
-	const float frac, const char* tagName)
+void cgi_R_LerpTag(orientation_t* tag, const qhandle_t mod, const int startFrame, const int endFrame,const float frac, const char* tagName)
 {
-	Q_syscall(CG_R_LERPTAG, tag, mod, start_frame, end_frame, PASSFLOAT(frac), tagName);
+	Q_syscall(CG_R_LERPTAG, tag, mod, startFrame, endFrame, PASSFLOAT(frac), tagName);
 }
 
 void cgi_R_DrawRotatePic(const float x, const float y, const float w, const float h,
@@ -505,9 +504,9 @@ void cgi_SetUserCmdAngles(const float pitchOverride, const float yawOverride, co
 Ghoul2 Insert Start
 */
 // CG Specific API calls
-void trap_G2_SetGhoul2ModelIndexes(CGhoul2Info_v& ghoul2, qhandle_t* model_list, const qhandle_t* skin_list)
+void trap_G2_SetGhoul2ModelIndexes(CGhoul2Info_v& ghoul2, qhandle_t* modelList, const qhandle_t* skinList)
 {
-	Q_syscall(CG_G2_SETMODELS, &ghoul2, model_list, skin_list);
+	Q_syscall(CG_G2_SETMODELS, &ghoul2, modelList, skinList);
 }
 
 /*

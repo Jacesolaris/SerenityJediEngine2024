@@ -151,7 +151,7 @@ extern "C" {
 		 * of samples at the main buffer (preprocessing/compression interface);
 		 * DCT scaling is included, so
 		 * downsampled_width =
-		 *   ceil(image_width * Hi/Hmax * DCT_h_scaled_size/block_size)
+		 *   ceil(image_width * Hi/Hmax * DCT_h_scaled_size/blockSize)
 		 * and similarly for height.
 		 */
 		JDIMENSION downsampled_width;	 /* actual width in samples */
@@ -423,7 +423,7 @@ extern "C" {
 
 		int Ss, Se, Ah, Al;		/* progressive JPEG parameters for scan */
 
-		int block_size;		/* the basic DCT block size: 1..16 */
+		int blockSize;		/* the basic DCT block size: 1..16 */
 		const int* natural_order;	/* natural-order position array */
 		int lim_Se;			/* min( Se, DCTSIZE2-1 ) */
 
@@ -651,7 +651,7 @@ extern "C" {
 
 		/* These fields are derived from Se of first SOS marker.
 		 */
-		int block_size;		/* the basic DCT block size: 1..16 */
+		int blockSize;		/* the basic DCT block size: 1..16 */
 		const int* natural_order; /* natural-order position array for entropy decode */
 		int lim_Se;			/* min( Se, DCTSIZE2-1 ) for entropy decode */
 

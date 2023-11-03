@@ -251,7 +251,7 @@ static void CG_ClipMoveToEntities(const vec3_t start, const vec3_t mins, const v
 	int i, x, zd, zu;
 	trace_t trace, old_trace;
 	entityState_t* ent;
-	clip_handle_t cmodel;
+	clipHandle_t cmodel;
 	vec3_t bmins, bmaxs;
 	centity_t* cent;
 	centity_t* ignored = NULL;
@@ -285,7 +285,7 @@ static void CG_ClipMoveToEntities(const vec3_t start, const vec3_t mins, const v
 		if (ent->solid == SOLID_BMODEL)
 		{
 			// special value for bmodel
-			cmodel = trap->CM_InlineModel(ent->model_index);
+			cmodel = trap->CM_InlineModel(ent->modelIndex);
 			VectorCopy(cent->lerpAngles, angles);
 			BG_EvaluateTrajectory(&cent->currentState.pos, cg.physicsTime, origin);
 		}
@@ -412,7 +412,7 @@ void CG_TraceItem(trace_t* result, const vec3_t start, const vec3_t mins, const 
 	{
 		const centity_t* cent = cg_triggerEntities[i];
 		const entityState_t* ent = &cent->currentState;
-		const gitem_t* item = &bg_itemlist[ent->model_index];
+		const gitem_t* item = &bg_itemlist[ent->modelIndex];
 		vec3_t item_mins, item_maxs;
 
 		if (ent->number == skip_number)
@@ -432,7 +432,7 @@ void CG_TraceItem(trace_t* result, const vec3_t start, const vec3_t mins, const 
 
 		VectorAdd(local_mins, ent->origin, item_mins);
 		VectorAdd(local_maxs, ent->origin, item_maxs);
-		const clip_handle_t cmodel = trap->CM_TempModel(item_mins, item_maxs, 0);
+		const clipHandle_t cmodel = trap->CM_TempModel(item_mins, item_maxs, 0);
 		trap->CM_Trace(&tr, start, end, mins, maxs, cmodel, -1, 0);
 
 		if (tr.fraction < 1.0f)
@@ -507,7 +507,7 @@ int CG_PointContents(const vec3_t point, const int pass_entity_num)
 			continue;
 		}
 
-		const clip_handle_t cmodel = trap->CM_InlineModel(ent->model_index);
+		const clipHandle_t cmodel = trap->CM_InlineModel(ent->modelIndex);
 		if (!cmodel)
 		{
 			continue;
@@ -674,7 +674,7 @@ static void CG_TouchItem(centity_t* cent)
 		return; // can't hold it
 	}
 
-	const gitem_t* item = &bg_itemlist[cent->currentState.model_index];
+	const gitem_t* item = &bg_itemlist[cent->currentState.modelIndex];
 
 	//Currently there is no reliable way of knowing if the client has touched a certain item before another if they are next to each other, or rather
 	//if the server has touched them in the same order. This results often in grabbing an item in the prediction and the server giving you the other
@@ -802,7 +802,7 @@ static void CG_TouchTriggerPrediction(void)
 			continue;
 		}
 
-		const clip_handle_t cmodel = trap->CM_InlineModel(ent->model_index);
+		const clipHandle_t cmodel = trap->CM_InlineModel(ent->modelIndex);
 		if (!cmodel)
 		{
 			continue;

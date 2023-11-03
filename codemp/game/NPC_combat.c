@@ -1789,9 +1789,9 @@ gentity_t* NPC_PickEnemy(const gentity_t* closestTo, const int enemyTeam, const 
 	bestDist = 2048.0f;
 	closestEnemy = NULL;
 
-	for (int ent_num = 0; ent_num < level.num_entities; ent_num++)
+	for (int entNum = 0; entNum < level.num_entities; entNum++)
 	{
-		newenemy = &g_entities[ent_num];
+		newenemy = &g_entities[entNum];
 
 		if (newenemy->client && !(newenemy->flags & FL_NOTARGET) && !(newenemy->s.eFlags & EF_NODRAW))
 		{
@@ -1939,9 +1939,9 @@ gentity_t* NPC_PickAlly(const qboolean facingEachOther, const float range, const
 	gentity_t* closestAlly = NULL;
 	float bestDist = range;
 
-	for (int ent_num = 0; ent_num < level.num_entities; ent_num++)
+	for (int entNum = 0; entNum < level.num_entities; entNum++)
 	{
-		gentity_t* ally = &g_entities[ent_num];
+		gentity_t* ally = &g_entities[entNum];
 
 		if (ally->client)
 		{
@@ -2730,12 +2730,12 @@ static int NPC_CollectCombatPoints(const vec3_t origin, const float radius, comb
 	const float radiusSqr = radius * radius;
 	float distance;
 	float bestDistance = Q3_INFINITE;
-	int num_points = 0;
+	int numPoints = 0;
 
 	//Collect all nearest
 	for (int i = 0; i < level.numCombatPoints; i++)
 	{
-		if (num_points >= MAX_COMBAT_POINTS)
+		if (numPoints >= MAX_COMBAT_POINTS)
 		{
 			break;
 		}
@@ -2785,13 +2785,13 @@ static int NPC_CollectCombatPoints(const vec3_t origin, const float radius, comb
 				bestDistance = distance;
 			}
 
-			points[num_points].dist = distance;
-			points[num_points].index = i;
-			num_points++;
+			points[numPoints].dist = distance;
+			points[numPoints].index = i;
+			numPoints++;
 		}
 	}
 
-	return num_points;
+	return numPoints;
 }
 
 /*
@@ -2843,9 +2843,9 @@ int NPC_FindCombatPoint(const vec3_t position, const vec3_t avoidPosition, vec3_
 		//much larger radius since most will be dropped?
 		collRad = CP_COLLECT_RADIUS * 4;
 	}
-	const int num_points = NPC_CollectCombatPoints(dest_position, collRad, points, flags); //position
+	const int numPoints = NPC_CollectCombatPoints(dest_position, collRad, points, flags); //position
 
-	for (int j = 0; j < num_points; j++)
+	for (int j = 0; j < numPoints; j++)
 	{
 		//const int i = (*cpi).second;
 		const int i = points[j].index;

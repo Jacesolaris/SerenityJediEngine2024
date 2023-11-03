@@ -43,7 +43,7 @@ extern qboolean in_camera;
 int AcceptBotCommand(const char* cmd, const gentity_t* pl);
 //end rww
 
-void WP_SetSaber(int ent_num, saberInfo_t* sabers, int saber_num, const char* saber_name);
+void WP_SetSaber(int entNum, saberInfo_t* sabers, int saber_num, const char* saber_name);
 
 void Cmd_NPC_f(gentity_t* ent);
 void Cmd_AdminNPC_f(gentity_t* ent);
@@ -4408,11 +4408,73 @@ void ClientCommand(const int client_num)
 	{
 		G_SetTauntAnim(ent, TAUNT_RELOAD);
 	}
+	else if ((Q_stricmp(cmd, "weather") == 0) || (Q_stricmp(cmd, "r_weather") == 0))
+	{
+		char arg1[MAX_STRING_CHARS];
+		int num;
+		trap->Argv(1, arg1, sizeof arg1);
+
+		if ((Q_stricmp(arg1, "snow") == 0) || (Q_stricmp(arg1, "1") == 0))
+		{
+			G_RemoveWeather();
+			num = G_EffectIndex("*clear");
+			trap->SetConfigstring(CS_EFFECTS + num, "");
+			G_EffectIndex("*snow");
+		}
+		else if ((Q_stricmp(arg1, "lava") == 0) || (Q_stricmp(arg1, "3") == 0))
+		{
+			G_RemoveWeather();
+			num = G_EffectIndex("*clear");
+			trap->SetConfigstring(CS_EFFECTS + num, "");
+			G_EffectIndex("*lava");
+		}
+		else if ((Q_stricmp(arg1, "rain") == 0) || (Q_stricmp(arg1, "2") == 0))
+		{
+			G_RemoveWeather();
+			num = G_EffectIndex("*clear");
+			trap->SetConfigstring(CS_EFFECTS + num, "");
+			G_EffectIndex("*rain 500");
+		}
+		else if ((Q_stricmp(arg1, "sandstorm") == 0) || (Q_stricmp(arg1, "sand") == 0) || (Q_stricmp(arg1, "4") == 0))
+		{
+			G_RemoveWeather();
+			num = G_EffectIndex("*clear");
+			trap->SetConfigstring(CS_EFFECTS + num, "");
+			G_EffectIndex("*wind");
+			G_EffectIndex("*sand");
+		}
+		else if ((Q_stricmp(arg1, "fog") == 0) || (Q_stricmp(arg1, "6") == 0))
+		{
+			G_RemoveWeather();
+			num = G_EffectIndex("*clear");
+			trap->SetConfigstring(CS_EFFECTS + num, "");
+			G_EffectIndex("*heavyrainfog");
+		}
+		else if ((Q_stricmp(arg1, "spacedust") == 0) || (Q_stricmp(arg1, "9") == 0))
+		{
+			G_RemoveWeather();
+			num = G_EffectIndex("*clear");
+			trap->SetConfigstring(CS_EFFECTS + num, "");
+			G_EffectIndex("*spacedust 4000");
+		}
+		else if ((Q_stricmp(arg1, "acidrain") == 0) || (Q_stricmp(arg1, "7") == 0))
+		{
+			G_RemoveWeather();
+			num = G_EffectIndex("*clear");
+			trap->SetConfigstring(CS_EFFECTS + num, "");
+			G_EffectIndex("*acidrain 500");
+		}
+		if ((Q_stricmp(arg1, "clear") == 0) || (Q_stricmp(arg1, "0") == 0))
+		{
+			G_RemoveWeather();
+			num = G_EffectIndex("*clear");
+			trap->SetConfigstring(CS_EFFECTS + num, "");
+		}
+	}
 
 	const command_t* command = (command_t*)Q_LinearSearch(cmd, commands, num_commands, sizeof commands[0], cmdcmp);
 	if (!command)
 	{
-		//trap->SendServerCommand(client_num, va("print \"Unknown command %s\n\"", cmd));
 		return;
 	}
 	if (command->flags & CMD_NOINTERMISSION

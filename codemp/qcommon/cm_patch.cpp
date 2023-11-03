@@ -33,7 +33,7 @@ void CM_ClearLevelPatches( void );
 struct patchCollide_s	*CM_GeneratePatchCollide( int width, int height, const vec3_t *points );
 void CM_TraceThroughPatchCollide( traceWork_t *tw, const struct patchCollide_s *pc );
 qboolean CM_PositionTestInPatchCollide( traceWork_t *tw, const struct patchCollide_s *pc );
-void CM_DrawDebugSurface( void (*drawPoly)(int color, int num_points, flaot *points) );
+void CM_DrawDebugSurface( void (*drawPoly)(int color, int numPoints, flaot *points) );
 
 Issues for collision against curved surfaces:
 
@@ -647,7 +647,7 @@ CM_SetBorderInward
 static void CM_SetBorderInward(facet_t* facet, cGrid_t* grid, int gridPlanes[MAX_GRID_SIZE][MAX_GRID_SIZE][2],
 	int i, int j, int which) {
 	float* points[4]{};
-	int		num_points;
+	int		numPoints;
 
 	switch (which) {
 	case -1:
@@ -655,19 +655,19 @@ static void CM_SetBorderInward(facet_t* facet, cGrid_t* grid, int gridPlanes[MAX
 		points[1] = grid->points[i + 1][j];
 		points[2] = grid->points[i + 1][j + 1];
 		points[3] = grid->points[i][j + 1];
-		num_points = 4;
+		numPoints = 4;
 		break;
 	case 0:
 		points[0] = grid->points[i][j];
 		points[1] = grid->points[i + 1][j];
 		points[2] = grid->points[i + 1][j + 1];
-		num_points = 3;
+		numPoints = 3;
 		break;
 	case 1:
 		points[0] = grid->points[i + 1][j + 1];
 		points[1] = grid->points[i][j + 1];
 		points[2] = grid->points[i][j];
-		num_points = 3;
+		numPoints = 3;
 		break;
 	default:
 		Com_Error(ERR_FATAL, "CM_SetBorderInward: bad parameter");
@@ -677,7 +677,7 @@ static void CM_SetBorderInward(facet_t* facet, cGrid_t* grid, int gridPlanes[MAX
 		int front = 0;
 		int back = 0;
 
-		for (int l = 0; l < num_points; l++) {
+		for (int l = 0; l < numPoints; l++) {
 			const int side = CM_PointOnPlaneSide(points[l], facet->borderPlanes[k]);
 			if (side == SIDE_FRONT) {
 				front++;
@@ -1607,10 +1607,10 @@ Called from the renderer
 ==================
 */
 #ifndef BSPC
-void BotDrawDebugPolygons(void (*drawPoly)(int color, int num_points, const float* points), int value);
+void BotDrawDebugPolygons(void (*drawPoly)(int color, int numPoints, const float* points), int value);
 #endif
 
-void CM_DrawDebugSurface(void (*drawPoly)(int color, int num_points, const float* points)) {
+void CM_DrawDebugSurface(void (*drawPoly)(int color, int numPoints, const float* points)) {
 	static cvar_t* cv;
 #ifndef BSPC
 	static cvar_t* cv2;

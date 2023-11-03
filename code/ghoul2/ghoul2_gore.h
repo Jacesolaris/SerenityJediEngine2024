@@ -121,22 +121,22 @@ public:
 
 	virtual void EffectorCollision(const SRagDollEffectorCollision& data)
 	{
-		assert(0); // you probably meant to override this
+		//assert(0); // you probably meant to override this
 	}
 
 	virtual void RagDollBegin()
 	{
-		assert(0); // you probably meant to override this
+		//assert(0); // you probably meant to override this
 	}
 
 	virtual void RagDollSettled()
 	{
-		assert(0); // you probably meant to override this
+		//assert(0); // you probably meant to override this
 	}
 
 	virtual void Collision()
 	{
-		assert(0); // you probably meant to override this
+		//assert(0); // you probably meant to override this
 		// we had a collision, uhh I guess call SetRagDoll RP_DEATH_COLLISION
 	}
 
@@ -178,8 +178,8 @@ public:
 	int groundEnt;
 
 	//rww - we have convenient animation/frame access in the game, so just send this info over from there.
-	int start_frame;
-	int end_frame;
+	int startFrame;
+	int endFrame;
 
 	int collisionType; // 1 = from a fall, 0 from effectors, this will be going away soon, hence no enum
 

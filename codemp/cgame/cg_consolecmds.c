@@ -437,7 +437,6 @@ static const char* gcmds[] = {
 	"won",
 	"emote",
 	"r_weather",
-	"g_weather",
 	"Adminlogin",
 	"Adminlogout",
 	"Adminnpc",

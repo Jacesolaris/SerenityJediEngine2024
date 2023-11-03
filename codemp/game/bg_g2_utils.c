@@ -33,7 +33,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #include "cgame/cg_local.h"
 #endif
 
-void BG_AttachToRancor(void* ghoul2, const float ranc_yaw, vec3_t ranc_origin, int time, qhandle_t* model_list,
+void BG_AttachToRancor(void* ghoul2, const float ranc_yaw, vec3_t ranc_origin, int time, qhandle_t* modelList,
 	vec3_t model_scale, const qboolean in_mouth, vec3_t out_origin, vec3_t out_angles,
 	matrix3_t out_axis)
 {
@@ -62,9 +62,9 @@ void BG_AttachToRancor(void* ghoul2, const float ranc_yaw, vec3_t ranc_origin, i
 	}
 	VectorSet(ranc_angles, 0, ranc_yaw, 0);
 #if defined(_GAME)
-	trap->G2API_GetBoltMatrix(ghoul2, 0, bolt_index, &bolt_matrix, ranc_angles, ranc_origin, time, model_list, model_scale);
+	trap->G2API_GetBoltMatrix(ghoul2, 0, bolt_index, &bolt_matrix, ranc_angles, ranc_origin, time, modelList, model_scale);
 #elif defined(_CGAME)
-	trap->G2API_GetBoltMatrix(ghoul2, 0, bolt_index, &bolt_matrix, ranc_angles, ranc_origin, time, model_list, model_scale);
+	trap->G2API_GetBoltMatrix(ghoul2, 0, bolt_index, &bolt_matrix, ranc_angles, ranc_origin, time, modelList, model_scale);
 #endif
 	// Storing ent position, bolt position, and bolt axis
 	if (out_origin)
@@ -121,7 +121,7 @@ void BG_AttachToSandCreature(void* ghoul2,
 	const float ranc_yaw,
 	vec3_t ranc_origin,
 	const int time,
-	qhandle_t* model_list,
+	qhandle_t* modelList,
 	vec3_t model_scale,
 	vec3_t out_origin,
 	vec3_t out_angles,
@@ -136,7 +136,7 @@ void BG_AttachToSandCreature(void* ghoul2,
 	VectorSet(ranc_angles, 0, ranc_yaw, 0);
 	trap->G2API_GetBoltMatrix(ghoul2, 0, bolt_index,
 		&bolt_matrix, ranc_angles, ranc_origin, time,
-		model_list, model_scale);
+		modelList, model_scale);
 	// Storing ent position, bolt position, and bolt axis
 	if (out_origin)
 	{

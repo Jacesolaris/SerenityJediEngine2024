@@ -81,7 +81,7 @@ extern vec3_t player_mins;
 extern vec3_t player_maxs;
 extern cvar_t* g_speederControlScheme;
 extern cvar_t* in_joystick;
-extern void PM_SetAnim(const pmove_t* pm, int set_anim_parts, int anim, int set_anim_flags, int blend_time);
+extern void PM_SetAnim(const pmove_t* pm, int set_anim_parts, int anim, int set_anim_flags, int blendTime);
 extern int PM_AnimLength(int index, animNumber_t anim);
 extern void NPC_SetAnim(gentity_t* ent, int set_anim_parts, int anim, int set_anim_flags, int i_blend);
 extern void G_Knockdown(gentity_t* self, gentity_t* attacker, const vec3_t push_dir, float strength,
@@ -263,7 +263,7 @@ void G_VehicleSpawn(gentity_t* self)
 	if (vehEnt->spawnflags & 1)
 	{
 		//die without pilot
-		vehEnt->m_pVehicle->m_iPilotTime = level.time + vehEnt->end_frame;
+		vehEnt->m_pVehicle->m_iPilotTime = level.time + vehEnt->endFrame;
 	}
 #endif
 	//return vehEnt;
@@ -1800,7 +1800,7 @@ static bool update(Vehicle_t* p_veh, const usercmd_t* p_umcd)
 			if (!player || G_ClearLineOfSight(p_veh->m_pParentEntity->currentOrigin, player->currentOrigin,
 				p_veh->m_pParentEntity->s.number, MASK_OPAQUE))
 			{
-				p_veh->m_iPilotTime = level.time + p_veh->m_pParentEntity->end_frame;
+				p_veh->m_iPilotTime = level.time + p_veh->m_pParentEntity->endFrame;
 			}
 		}
 		if (p_veh->m_iPilotTime && p_veh->m_iPilotTime < level.time)
@@ -2528,32 +2528,32 @@ int G_FlyVehicleImpactDir(gentity_t * veh, trace_t * trace)
 //try to break surfaces off the ship on impact
 #define TURN_ON				0x00000000
 #define TURN_OFF			0x00000100
-extern void NPC_SetSurfaceOnOff(gentity_t * ent, const char* surface_name, int surfaceFlags); //NPC_utils.c
-int G_ShipSurfaceForSurfName(const char* surface_name)
+extern void NPC_SetSurfaceOnOff(gentity_t * ent, const char* surfaceName, int surfaceFlags); //NPC_utils.c
+int G_ShipSurfaceForSurfName(const char* surfaceName)
 {
-	if (!surface_name)
+	if (!surfaceName)
 	{
 		return -1;
 	}
-	if (!Q_strncmp("nose", surface_name, 4)
-		|| !Q_strncmp("f_gear", surface_name, 6)
-		|| !Q_strncmp("glass", surface_name, 5))
+	if (!Q_strncmp("nose", surfaceName, 4)
+		|| !Q_strncmp("f_gear", surfaceName, 6)
+		|| !Q_strncmp("glass", surfaceName, 5))
 	{
 		return SHIPSURF_FRONT;
 	}
-	if (!Q_strncmp("body", surface_name, 4))
+	if (!Q_strncmp("body", surfaceName, 4))
 	{
 		return SHIPSURF_BACK;
 	}
-	if (!Q_strncmp("r_wing1", surface_name, 7)
-		|| !Q_strncmp("r_wing2", surface_name, 7)
-		|| !Q_strncmp("r_gear", surface_name, 6))
+	if (!Q_strncmp("r_wing1", surfaceName, 7)
+		|| !Q_strncmp("r_wing2", surfaceName, 7)
+		|| !Q_strncmp("r_gear", surfaceName, 6))
 	{
 		return SHIPSURF_RIGHT;
 	}
-	if (!Q_strncmp("l_wing1", surface_name, 7)
-		|| !Q_strncmp("l_wing2", surface_name, 7)
-		|| !Q_strncmp("l_gear", surface_name, 6))
+	if (!Q_strncmp("l_wing1", surfaceName, 7)
+		|| !Q_strncmp("l_wing2", surfaceName, 7)
+		|| !Q_strncmp("l_gear", surfaceName, 6))
 	{
 		return SHIPSURF_LEFT;
 	}

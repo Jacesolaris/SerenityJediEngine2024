@@ -230,7 +230,7 @@ void R_AddMarkFragments(int num_clip_points, vec3_t clip_points[2][MAX_VERTS_ON_
 
 	markFragment_t* mf = fragment_buffer + *returned_fragments;
 	mf->firstPoint = *returned_points;
-	mf->num_points = num_clip_points;
+	mf->numPoints = num_clip_points;
 	memcpy(point_buffer + *returned_points * 3, clip_points[ping_pong], num_clip_points * sizeof(vec3_t));
 
 	*returned_points += num_clip_points;
@@ -243,7 +243,7 @@ R_MarkFragments
 
 =================
 */
-int R_MarkFragments(int num_points, const vec3_t* points, const vec3_t projection,
+int R_MarkFragments(int numPoints, const vec3_t* points, const vec3_t projection,
 	const int max_points, vec3_t point_buffer, const int max_fragments, markFragment_t* fragment_buffer) {
 	int				numsurfaces;
 	int				i, k;
@@ -263,7 +263,7 @@ int R_MarkFragments(int num_points, const vec3_t* points, const vec3_t projectio
 	VectorNormalize2(projection, projection_dir);
 	// find all the brushes that are to be considered
 	ClearBounds(mins, maxs);
-	for (i = 0; i < num_points; i++) {
+	for (i = 0; i < numPoints; i++) {
 		vec3_t	temp;
 
 		AddPointToBounds(points[i], mins, maxs);
@@ -274,10 +274,10 @@ int R_MarkFragments(int num_points, const vec3_t* points, const vec3_t projectio
 		AddPointToBounds(temp, mins, maxs);
 	}
 
-	if (num_points > MAX_VERTS_ON_POLY) num_points = MAX_VERTS_ON_POLY;
+	if (numPoints > MAX_VERTS_ON_POLY) numPoints = MAX_VERTS_ON_POLY;
 	// create the bounding planes for the to be projected polygon
-	for (i = 0; i < num_points; i++) {
-		VectorSubtract(points[(i + 1) % num_points], points[i], v1);
+	for (i = 0; i < numPoints; i++) {
+		VectorSubtract(points[(i + 1) % numPoints], points[i], v1);
 		VectorAdd(points[i], projection, v2);
 		VectorSubtract(points[i], v2, v2);
 		CrossProduct(v1, v2, normals[i]);
@@ -285,12 +285,12 @@ int R_MarkFragments(int num_points, const vec3_t* points, const vec3_t projectio
 		dists[i] = DotProduct(normals[i], points[i]);
 	}
 	// add near and far clipping planes for projection
-	VectorCopy(projection_dir, normals[num_points]);
-	dists[num_points] = DotProduct(normals[num_points], points[0]) - 32;
-	VectorCopy(projection_dir, normals[num_points + 1]);
-	VectorInverse(normals[num_points + 1]);
-	dists[num_points + 1] = DotProduct(normals[num_points + 1], points[0]) - 20;
-	const int num_planes = num_points + 2;
+	VectorCopy(projection_dir, normals[numPoints]);
+	dists[numPoints] = DotProduct(normals[numPoints], points[0]) - 32;
+	VectorCopy(projection_dir, normals[numPoints + 1]);
+	VectorInverse(normals[numPoints + 1]);
+	dists[numPoints + 1] = DotProduct(normals[numPoints + 1], points[0]) - 20;
+	const int num_planes = numPoints + 2;
 
 	numsurfaces = 0;
 	R_BoxSurfaces_r(tr.world->nodes, mins, maxs, surfaces, 64, &numsurfaces, projection_dir);
@@ -409,7 +409,7 @@ int R_MarkFragments(int num_points, const vec3_t* points, const vec3_t projectio
 		{
 			const srfTriangles_t* const surf = reinterpret_cast<srfTriangles_t*>(surfaces[i]);
 
-			for (k = 0; k < surf->num_indexes; k += 3)
+			for (k = 0; k < surf->numIndexes; k += 3)
 			{
 				const int i1 = surf->indexes[k];
 				const int i2 = surf->indexes[k + 1];

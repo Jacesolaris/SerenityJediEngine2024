@@ -2409,7 +2409,7 @@ void wp_saber_clear_damage_for_ent_num(gentity_t* attacker, const int entity_num
 	}
 }
 
-extern void pm_saber_start_trans_anim(int saber_anim_level, int anim, float* anim_speed, const gentity_t* gent,
+extern void pm_saber_start_trans_anim(int saber_anim_level, int anim, float* animSpeed, const gentity_t* gent,
 	int fatigued);
 extern float PM_GetTimeScaleMod(const gentity_t* gent);
 
@@ -3566,7 +3566,7 @@ qboolean wp_saber_damage_effects(trace_t* tr, const float length, const float dm
 
 	for (auto& z : tr->G2CollisionMap)
 	{
-		if (z.mentity_num == -1)
+		if (z.mEntityNum == -1)
 		{
 			//actually, completely break out of this for loop since nothing after this in the aray should ever be valid either
 			continue; //break;//
@@ -3577,7 +3577,7 @@ qboolean wp_saber_damage_effects(trace_t* tr, const float length, const float dm
 
 		for (i = 0; i < num_hit_ents; i++)
 		{
-			if (hit_ent_num[i] == coll.mentity_num)
+			if (hit_ent_num[i] == coll.mEntityNum)
 			{
 				//we hit this ent before
 				//we'll want to add this dist
@@ -3593,7 +3593,7 @@ qboolean wp_saber_damage_effects(trace_t* tr, const float length, const float dm
 				//hit too many damn ents!
 				continue;
 			}
-			hit_ent_num[num_hit_ents] = coll.mentity_num;
+			hit_ent_num[num_hit_ents] = coll.mEntityNum;
 			if (!coll.mFlags)
 			{
 				//hmm, we came out first, so we must have started inside
@@ -3828,9 +3828,9 @@ qboolean wp_saber_damage_effects(trace_t* tr, const float length, const float dm
 				//FIXME: find closest impact surf *first* (per ent), then call G_GetHitLocFromSurfName?
 				//FIXED: if hit multiple ents in this collision record, these trSurfName, trDismember and trDismemberLoc will get stomped/confused over the multiple ents I hit
 				const char* tr_surf_name = gi.G2API_GetSurfaceName(
-					&g_entities[coll.mentity_num].ghoul2[coll.mModelIndex],
+					&g_entities[coll.mEntityNum].ghoul2[coll.mModelIndex],
 					coll.mSurfaceIndex);
-				tr_dismember[num_hit_ents] = G_GetHitLocFromSurfName(&g_entities[coll.mentity_num], tr_surf_name,
+				tr_dismember[num_hit_ents] = G_GetHitLocFromSurfName(&g_entities[coll.mEntityNum], tr_surf_name,
 					&tr_hit_loc[num_hit_ents], coll.mCollisionPosition,
 					dmg_dir, blade_dir, MOD_SABER, saber_type);
 				if (tr_dismember[num_hit_ents])
@@ -5092,12 +5092,12 @@ qboolean WP_SabersCheckLock2(gentity_t* attacker, gentity_t* defender, sabersloc
 		if (ValidAnimFileIndex(attacker->client->clientInfo.animFileIndex))
 		{
 			anim = &level.knownAnimFileSets[attacker->client->clientInfo.animFileIndex].animations[att_anim];
-			advance = floor(anim->num_frames * att_start);
+			advance = floor(anim->numFrames * att_start);
 			PM_SetAnimFrame(attacker, anim->firstFrame + advance, qtrue, qtrue);
 			if (d_saberCombat->integer || g_DebugSaberCombat->integer)
 			{
 				Com_Printf("%s starting saber lock, anim = %s, %d frames to go!\n", attacker->NPC_type,
-					animTable[att_anim].name, anim->num_frames - advance);
+					animTable[att_anim].name, anim->numFrames - advance);
 			}
 		}
 	}
@@ -5106,9 +5106,9 @@ qboolean WP_SabersCheckLock2(gentity_t* attacker, gentity_t* defender, sabersloc
 		if (ValidAnimFileIndex(defender->client->clientInfo.animFileIndex))
 		{
 			anim = &level.knownAnimFileSets[defender->client->clientInfo.animFileIndex].animations[def_anim];
-			advance = ceil(anim->num_frames * def_start);
+			advance = ceil(anim->numFrames * def_start);
 			PM_SetAnimFrame(defender, anim->firstFrame + advance, qtrue, qtrue);
-			//was anim->firstFrame + anim->num_frames - advance, but that's wrong since they are matched anims
+			//was anim->firstFrame + anim->numFrames - advance, but that's wrong since they are matched anims
 			if (d_saberCombat->integer || g_DebugSaberCombat->integer)
 			{
 				Com_Printf("%s starting saber lock, anim = %s, %d frames to go!\n", defender->NPC_type,
@@ -24501,7 +24501,7 @@ extern void PM_SetTorsoAnimTimer(gentity_t* ent, int* torsoAnimTimer, int time);
 
 void ForceStasisWide(const gentity_t* self, gentity_t* trace_ent)
 {
-	float current_frame, anim_speed;
+	float currentFrame, animSpeed;
 	int junk;
 	trace_t tr;
 
@@ -24614,16 +24614,16 @@ void ForceStasisWide(const gentity_t* self, gentity_t* trace_ent)
 				{
 					actual_time = cg.time ? cg.time : level.time;
 					gi.G2API_GetBoneAnimIndex(&trace_ent->ghoul2[trace_ent->playerModel], trace_ent->rootBone,
-						level.time, &current_frame, &junk, &junk, &junk, &anim_speed, nullptr);
+						level.time, &currentFrame, &junk, &junk, &junk, &animSpeed, nullptr);
 
 					gi.G2API_SetBoneAnimIndex(&trace_ent->ghoul2[trace_ent->playerModel], trace_ent->rootBone,
-						current_frame, current_frame + 1,
-						BONE_ANIM_OVERRIDE_FREEZE, anim_speed, level.time, current_frame, 100);
+						currentFrame, currentFrame + 1,
+						BONE_ANIM_OVERRIDE_FREEZE, animSpeed, level.time, currentFrame, 100);
 					if (trace_ent->headModel > 0)
 					{
 						gi.G2API_SetBoneAnimIndex(&trace_ent->ghoul2[trace_ent->headModel], trace_ent->headRootBone,
-							current_frame, current_frame + 1,
-							BONE_ANIM_OVERRIDE_FREEZE, anim_speed, level.time, current_frame,
+							currentFrame, currentFrame + 1,
+							BONE_ANIM_OVERRIDE_FREEZE, animSpeed, level.time, currentFrame,
 							100);
 					}
 				}
@@ -24658,16 +24658,16 @@ void ForceStasisWide(const gentity_t* self, gentity_t* trace_ent)
 				{
 					actual_time = cg.time ? cg.time : level.time;
 					gi.G2API_GetBoneAnimIndex(&trace_ent->ghoul2[trace_ent->playerModel], trace_ent->rootBone,
-						level.time, &current_frame, &junk, &junk, &junk, &anim_speed, nullptr);
+						level.time, &currentFrame, &junk, &junk, &junk, &animSpeed, nullptr);
 
 					gi.G2API_SetBoneAnimIndex(&trace_ent->ghoul2[trace_ent->playerModel], trace_ent->rootBone,
-						current_frame, current_frame + 1,
-						BONE_ANIM_OVERRIDE_FREEZE, anim_speed, level.time, current_frame, 100);
+						currentFrame, currentFrame + 1,
+						BONE_ANIM_OVERRIDE_FREEZE, animSpeed, level.time, currentFrame, 100);
 					if (trace_ent->headModel > 0)
 					{
 						gi.G2API_SetBoneAnimIndex(&trace_ent->ghoul2[trace_ent->headModel], trace_ent->headRootBone,
-							current_frame, current_frame + 1,
-							BONE_ANIM_OVERRIDE_FREEZE, anim_speed, level.time, current_frame,
+							currentFrame, currentFrame + 1,
+							BONE_ANIM_OVERRIDE_FREEZE, animSpeed, level.time, currentFrame,
 							100);
 					}
 				}
@@ -24698,7 +24698,7 @@ void force_stasis(gentity_t* self)
 	vec3_t forward;
 	gentity_t* trace_ent = nullptr;
 	int anim, sound_index;
-	float current_frame, anim_speed;
+	float currentFrame, animSpeed;
 	int radius;
 	int junk;
 	int actual_time;
@@ -25031,16 +25031,16 @@ void force_stasis(gentity_t* self)
 			{
 				actual_time = cg.time ? cg.time : level.time;
 				gi.G2API_GetBoneAnimIndex(&trace_ent->ghoul2[trace_ent->playerModel], trace_ent->rootBone,
-					level.time, &current_frame, &junk, &junk, &junk, &anim_speed, nullptr);
+					level.time, &currentFrame, &junk, &junk, &junk, &animSpeed, nullptr);
 
 				gi.G2API_SetBoneAnimIndex(&trace_ent->ghoul2[trace_ent->playerModel], trace_ent->rootBone,
-					current_frame, current_frame + 1,
-					BONE_ANIM_OVERRIDE_FREEZE, anim_speed, level.time, current_frame, 100);
+					currentFrame, currentFrame + 1,
+					BONE_ANIM_OVERRIDE_FREEZE, animSpeed, level.time, currentFrame, 100);
 				if (trace_ent->headModel > 0)
 				{
 					gi.G2API_SetBoneAnimIndex(&trace_ent->ghoul2[trace_ent->headModel], trace_ent->headRootBone,
-						current_frame, current_frame + 1,
-						BONE_ANIM_OVERRIDE_FREEZE, anim_speed, level.time, current_frame, 100);
+						currentFrame, currentFrame + 1,
+						BONE_ANIM_OVERRIDE_FREEZE, animSpeed, level.time, currentFrame, 100);
 				}
 			}
 			if (d_slowmoaction->integer && (self->s.number < MAX_CLIENTS || G_ControlledByPlayer(self)))
@@ -25095,16 +25095,16 @@ void force_stasis(gentity_t* self)
 			{
 				actual_time = cg.time ? cg.time : level.time;
 				gi.G2API_GetBoneAnimIndex(&trace_ent->ghoul2[trace_ent->playerModel], trace_ent->rootBone,
-					level.time, &current_frame, &junk, &junk, &junk, &anim_speed, nullptr);
+					level.time, &currentFrame, &junk, &junk, &junk, &animSpeed, nullptr);
 
 				gi.G2API_SetBoneAnimIndex(&trace_ent->ghoul2[trace_ent->playerModel], trace_ent->rootBone,
-					current_frame, current_frame + 1,
-					BONE_ANIM_OVERRIDE_FREEZE, anim_speed, level.time, current_frame, 100);
+					currentFrame, currentFrame + 1,
+					BONE_ANIM_OVERRIDE_FREEZE, animSpeed, level.time, currentFrame, 100);
 				if (trace_ent->headModel > 0)
 				{
 					gi.G2API_SetBoneAnimIndex(&trace_ent->ghoul2[trace_ent->headModel], trace_ent->headRootBone,
-						current_frame, current_frame + 1,
-						BONE_ANIM_OVERRIDE_FREEZE, anim_speed, level.time, current_frame, 100);
+						currentFrame, currentFrame + 1,
+						BONE_ANIM_OVERRIDE_FREEZE, animSpeed, level.time, currentFrame, 100);
 				}
 			}
 			if (d_slowmoaction->integer && (self->s.number < MAX_CLIENTS || G_ControlledByPlayer(self)))

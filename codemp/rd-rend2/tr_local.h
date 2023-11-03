@@ -707,7 +707,7 @@ struct SceneBlock
 	int	   globalFogIndex;
 	vec3_t primaryLightColor;
 	float primaryLightRadius;
-	float current_time;
+	float currentTime;
 	float frameTime;
 	float pad0[2];
 };
@@ -1699,7 +1699,7 @@ typedef struct srfG2GoreSurface_s
 	surfaceType_t   surfaceType;
 
 	// indexes
-	int             num_indexes;
+	int             numIndexes;
 	glIndex_t* indexes;
 
 	// vertexes
@@ -1728,7 +1728,7 @@ typedef struct srfBspSurface_s
 	cplane_t        cullPlane;
 
 	// indexes
-	int             num_indexes;
+	int             numIndexes;
 	glIndex_t* indexes;
 
 	// vertexes
@@ -1765,7 +1765,7 @@ typedef struct srfBspSurface_s
 typedef struct {
 	int		num_vertexes;
 	int		num_triangles;
-	int		num_frames;
+	int		numFrames;
 	int		num_surfaces;
 	int		num_joints;
 	int		num_poses;
@@ -1814,7 +1814,7 @@ typedef struct srfVBOMDVMesh_s
 
 	// backEnd stats
 	int				indexOffset;
-	int             num_indexes;
+	int             numIndexes;
 	int             numVerts;
 	glIndex_t       minIndex;
 	glIndex_t       maxIndex;
@@ -2043,7 +2043,7 @@ typedef struct mdvSurface_s
 	mdvVertex_t* verts;
 	mdvSt_t* st;
 
-	int             num_indexes;
+	int             numIndexes;
 	glIndex_t* indexes;
 
 	struct mdvModel_s* model;
@@ -2051,7 +2051,7 @@ typedef struct mdvSurface_s
 
 typedef struct mdvModel_s
 {
-	int             num_frames;
+	int             numFrames;
 	mdvFrame_t* frames;
 
 	int             numTags;
@@ -2092,7 +2092,7 @@ typedef struct mdxmVBOMesh_s
 	int indexOffset;
 	int minIndex;
 	int maxIndex;
-	int num_indexes;
+	int numIndexes;
 	int numVertexes;
 
 	VBO_t* vbo;
@@ -2140,7 +2140,7 @@ typedef struct model_s {
 void		R_ModelInit(void);
 
 model_t* R_GetModelByHandle(qhandle_t hModel);
-int			R_LerpTag(orientation_t* tag, qhandle_t handle, int start_frame, int end_frame,
+int			R_LerpTag(orientation_t* tag, qhandle_t handle, int startFrame, int endFrame,
 	float frac, const char* tagName);
 void		R_ModelBounds(qhandle_t handle, vec3_t mins, vec3_t maxs);
 
@@ -2460,7 +2460,7 @@ typedef struct trGlobals_s {
 	cubemap_t* cubemaps;
 
 	trRefEntity_t			worldEntity;		// point currentEntity at this when rendering world
-	model_t* current_model;
+	model_t* currentModel;
 
 	weatherSystem_t* weatherSystem;
 
@@ -2946,9 +2946,9 @@ extern const byte stylesDefault[MAXLIGHTMAPS];
 shader_t* R_FindShader(const char* name, const int* lightmapIndexes, const byte* styles, qboolean mipRawImage);
 shader_t* R_GetShaderByHandle(qhandle_t hShader);
 shader_t* R_FindShaderByName(const char* name);
-void		R_InitShaders(qboolean server);
-void		R_ShaderList_f(void);
-void    R_RemapShader(const char* oldShader, const char* newShader, const char* timeOffset);
+void R_InitShaders(const qboolean server);
+void R_ShaderList_f(void);
+void R_RemapShader(const char* oldShader, const char* newShader, const char* timeOffset);
 shader_t* R_CreateShaderFromTextureBundle(
 	const char* name,
 	const textureBundle_t* bundle,
@@ -3013,7 +3013,7 @@ struct shaderCommands_s
 	int         pshadowBits;
 
 	int			firstIndex;
-	int			num_indexes;
+	int			numIndexes;
 	int			numVertexes;
 	glIndex_t   minIndex;
 	glIndex_t   maxIndex;
@@ -3047,9 +3047,9 @@ extern	color4ub_t	styleColors[MAX_LIGHT_STYLES];
 void RB_BeginSurface(shader_t* shader, int fogNum, int cubemapIndex);
 void RB_EndSurface(void);
 void RB_CheckOverflow(int verts, int indexes);
-#define RB_CHECKOVERFLOW(v,i) if (tess.numVertexes + (v) >= SHADER_MAX_VERTEXES || tess.num_indexes + (i) >= SHADER_MAX_INDEXES ) {RB_CheckOverflow(v,i);}
+#define RB_CHECKOVERFLOW(v,i) if (tess.numVertexes + (v) >= SHADER_MAX_VERTEXES || tess.numIndexes + (i) >= SHADER_MAX_INDEXES ) {RB_CheckOverflow(v,i);}
 
-void R_DrawElementsVBO(int num_indexes, glIndex_t firstIndex, glIndex_t minIndex, glIndex_t maxIndex);
+void R_DrawElementsVBO(int numIndexes, glIndex_t firstIndex, glIndex_t minIndex, glIndex_t maxIndex);
 void RB_StageIteratorGeneric(void);
 void RB_StageIteratorSky(void);
 
@@ -3142,7 +3142,7 @@ MARKERS, POLYGON PROJECTION ON WORLD POLYGONS
 ============================================================
 */
 
-int R_MarkFragments(int num_points, const vec3_t* points, const vec3_t projection,
+int R_MarkFragments(int numPoints, const vec3_t* points, const vec3_t projection,
 	int maxPoints, vec3_t pointBuffer, int maxFragments, markFragment_t* fragmentBuffer);
 
 /*
@@ -3297,7 +3297,7 @@ qboolean R_LoadIQM(model_t* mod, void* buffer, int filesize, const char* name);
 void R_AddIQMSurfaces(trRefEntity_t* ent, int entity_num);
 void RB_IQMSurfaceAnim(surfaceType_t* surface);
 int R_IQMLerpTag(orientation_t* tag, iqmData_t* data,
-	int start_frame, int end_frame,
+	int startFrame, int endFrame,
 	float frac, const char* tagName);
 
 /*
@@ -3633,7 +3633,7 @@ struct Pass;
 typedef struct backEndData_s {
 	unsigned realFrameNumber;
 	gpuFrame_t frames[MAX_FRAMES];
-	gpuFrame_t* current_frame;
+	gpuFrame_t* currentFrame;
 	Allocator* perFrameMemory;
 	Pass* currentPass;
 
@@ -3686,8 +3686,8 @@ const mdxaBone_t operator *(const mdxaBone_t& lhs, const mdxaBone_t& rhs);
 const mdxaBone_t operator *(const mdxaBone_t& lhs, const float scale);
 const mdxaBone_t operator *(const float scale, const mdxaBone_t& rhs);
 
-qboolean R_LoadMDXM(model_t* mod, void* buffer, const char* name, qboolean& bAlreadyCached);
-qboolean R_LoadMDXA(model_t* mod, void* buffer, const char* name, qboolean& bAlreadyCached);
+qboolean R_LoadMDXM(model_t* mod, void* buffer, const char* mod_name, qboolean& bAlreadyCached);
+qboolean R_LoadMDXA(model_t* mod, void* buffer, const char* mod_name, qboolean& bAlreadyCached);
 void RE_InsertModelIntoHash(const char* name, model_t* mod);
 void ResetGhoul2RenderableSurfaceHeap();
 

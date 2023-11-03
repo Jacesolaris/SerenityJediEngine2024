@@ -1974,7 +1974,7 @@ void PM_SaberLocked(void)
 
 				const animation_t* anim = &pm->animations[pm->ps->torsoAnim];
 
-				const float current_frame = pm->ps->saberLockFrame;
+				const float currentFrame = pm->ps->saberLockFrame;
 
 				//advance/decrement my frame number
 				if (BG_InSaberLockOld(pm->ps->torsoAnim))
@@ -1983,7 +1983,7 @@ void PM_SaberLocked(void)
 					if (pm->ps->torsoAnim == BOTH_CCWCIRCLELOCK ||
 						pm->ps->torsoAnim == BOTH_BF2LOCK)
 					{
-						cur_frame = floor(current_frame) - strength;
+						cur_frame = floor(currentFrame) - strength;
 						//drop my frame one
 						if (cur_frame <= anim->firstFrame)
 						{
@@ -1998,9 +1998,9 @@ void PM_SaberLocked(void)
 					}
 					else
 					{
-						cur_frame = ceil(current_frame) + strength;
+						cur_frame = ceil(currentFrame) + strength;
 						//advance my frame one
-						if (cur_frame >= anim->firstFrame + anim->num_frames)
+						if (cur_frame >= anim->firstFrame + anim->numFrames)
 						{
 							//I won!  Break out
 							PM_SaberLockBreak(genemy, qtrue, strength);
@@ -2009,7 +2009,7 @@ void PM_SaberLocked(void)
 							return;
 						}
 						PM_SetAnimFrame(pm->ps, cur_frame);
-						remaining = anim->firstFrame + anim->num_frames - cur_frame;
+						remaining = anim->firstFrame + anim->numFrames - cur_frame;
 					}
 				}
 				else
@@ -2017,9 +2017,9 @@ void PM_SaberLocked(void)
 					//new locks
 					if (g_check_increment_lock_anim(pm->ps->torsoAnim, SABER_LOCK_WIN))
 					{
-						cur_frame = ceil(current_frame) + strength;
+						cur_frame = ceil(currentFrame) + strength;
 						//advance my frame one
-						if (cur_frame >= anim->firstFrame + anim->num_frames)
+						if (cur_frame >= anim->firstFrame + anim->numFrames)
 						{
 							//I won!  Break out
 							PM_SaberLockBreak(genemy, qtrue, strength);
@@ -2028,11 +2028,11 @@ void PM_SaberLocked(void)
 							return;
 						}
 						PM_SetAnimFrame(pm->ps, cur_frame);
-						remaining = anim->firstFrame + anim->num_frames - cur_frame;
+						remaining = anim->firstFrame + anim->numFrames - cur_frame;
 					}
 					else
 					{
-						cur_frame = floor(current_frame) - strength;
+						cur_frame = floor(currentFrame) - strength;
 						//drop my frame one
 						if (cur_frame <= anim->firstFrame)
 						{
@@ -2062,7 +2062,7 @@ void PM_SaberLocked(void)
 					}
 					else
 					{
-						PM_SetAnimFrame(genemy, anim->firstFrame + anim->num_frames - remaining);
+						PM_SetAnimFrame(genemy, anim->firstFrame + anim->numFrames - remaining);
 					}
 				}
 				else
@@ -2074,7 +2074,7 @@ void PM_SaberLocked(void)
 						{
 							BG_AddPredictableEventToPlayerstate(EV_PAIN, floor((float)80 / 100 * 100.0f), genemy);
 						}
-						PM_SetAnimFrame(genemy, anim->firstFrame + anim->num_frames - remaining);
+						PM_SetAnimFrame(genemy, anim->firstFrame + anim->numFrames - remaining);
 					}
 					else
 					{
@@ -2099,7 +2099,7 @@ void PM_SaberLocked(void)
 
 					const animation_t* anim = &pm->animations[pm->ps->torsoAnim];
 
-					const float current_frame = pm->ps->saberLockFrame;
+					const float currentFrame = pm->ps->saberLockFrame;
 
 					//advance/decrement my frame number
 					if (BG_InSaberLockOld(pm->ps->torsoAnim))
@@ -2108,7 +2108,7 @@ void PM_SaberLocked(void)
 						if (pm->ps->torsoAnim == BOTH_CCWCIRCLELOCK ||
 							pm->ps->torsoAnim == BOTH_BF2LOCK)
 						{
-							cur_frame = floor(current_frame) - strength;
+							cur_frame = floor(currentFrame) - strength;
 							//drop my frame one
 							if (cur_frame <= anim->firstFrame)
 							{
@@ -2125,9 +2125,9 @@ void PM_SaberLocked(void)
 						}
 						else
 						{
-							cur_frame = ceil(current_frame) + strength;
+							cur_frame = ceil(currentFrame) + strength;
 							//advance my frame one
-							if (cur_frame >= anim->firstFrame + anim->num_frames)
+							if (cur_frame >= anim->firstFrame + anim->numFrames)
 							{
 								//I won!  Break out
 								PM_SaberLockBreak(genemy, qtrue, strength);
@@ -2138,7 +2138,7 @@ void PM_SaberLocked(void)
 								return;
 							}
 							PM_SetAnimFrame(pm->ps, cur_frame);
-							remaining = anim->firstFrame + anim->num_frames - cur_frame;
+							remaining = anim->firstFrame + anim->numFrames - cur_frame;
 						}
 					}
 					else
@@ -2146,9 +2146,9 @@ void PM_SaberLocked(void)
 						//new locks
 						if (g_check_increment_lock_anim(pm->ps->torsoAnim, SABER_LOCK_WIN))
 						{
-							cur_frame = ceil(current_frame) + strength;
+							cur_frame = ceil(currentFrame) + strength;
 							//advance my frame one
-							if (cur_frame >= anim->firstFrame + anim->num_frames)
+							if (cur_frame >= anim->firstFrame + anim->numFrames)
 							{
 								//I won!  Break out
 								PM_SaberLockBreak(genemy, qtrue, strength);
@@ -2159,11 +2159,11 @@ void PM_SaberLocked(void)
 								return;
 							}
 							PM_SetAnimFrame(pm->ps, cur_frame);
-							remaining = anim->firstFrame + anim->num_frames - cur_frame;
+							remaining = anim->firstFrame + anim->numFrames - cur_frame;
 						}
 						else
 						{
-							cur_frame = floor(current_frame) - strength;
+							cur_frame = floor(currentFrame) - strength;
 							//drop my frame one
 							if (cur_frame <= anim->firstFrame)
 							{
@@ -2195,7 +2195,7 @@ void PM_SaberLocked(void)
 						}
 						else
 						{
-							PM_SetAnimFrame(genemy, anim->firstFrame + anim->num_frames - remaining);
+							PM_SetAnimFrame(genemy, anim->firstFrame + anim->numFrames - remaining);
 						}
 					}
 					else
@@ -2207,7 +2207,7 @@ void PM_SaberLocked(void)
 							{
 								BG_AddPredictableEventToPlayerstate(EV_PAIN, floor((float)80 / 100 * 100.0f), genemy);
 							}
-							PM_SetAnimFrame(genemy, anim->firstFrame + anim->num_frames - remaining);
+							PM_SetAnimFrame(genemy, anim->firstFrame + anim->numFrames - remaining);
 						}
 						else
 						{

@@ -2795,12 +2795,12 @@ void UI_SaberAttachToChar(itemDef_t* item)
 {
 	int numSabers = 1;
 
-	if (item->ghoul2.size() > 2 && item->ghoul2[2].mmodel_index >= 0)
+	if (item->ghoul2.size() > 2 && item->ghoul2[2].mModelindex >= 0)
 	{
 		//remove any extra models
 		DC->g2_RemoveGhoul2Model(item->ghoul2, 2);
 	}
-	if (item->ghoul2.size() > 1 && item->ghoul2[1].mmodel_index >= 0)
+	if (item->ghoul2.size() > 1 && item->ghoul2[1].mModelindex >= 0)
 	{
 		//remove any extra models
 		DC->g2_RemoveGhoul2Model(item->ghoul2, 1);

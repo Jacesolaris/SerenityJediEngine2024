@@ -53,7 +53,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 int GROUND_TIME[MAX_GENTITIES];
 
 #ifdef _GAME
-extern void G_CheapWeaponFire(int ent_num, int ev);
+extern void G_CheapWeaponFire(int entNum, int ev);
 extern qboolean TryGrapple(gentity_t* ent); //g_cmds.c
 extern qboolean g_standard_humanoid(gentity_t* self);
 #endif // _GAME
@@ -16269,7 +16269,7 @@ qboolean BG_InRollES(entityState_t* ps, const int anim)
 void BG_IK_MoveArm(void* ghoul2, const int lHandBolt, const int time, const entityState_t* ent, const int basePose,
 	vec3_t desiredPos,
 	qboolean* ikInProgress,
-	vec3_t origin, vec3_t angles, vec3_t scale, const int blend_time, const qboolean forceHalt)
+	vec3_t origin, vec3_t angles, vec3_t scale, const int blendTime, const qboolean forceHalt)
 {
 	mdxaBone_t l_hand_matrix;
 
@@ -16296,7 +16296,7 @@ void BG_IK_MoveArm(void* ghoul2, const int lHandBolt, const int time, const enti
 		VectorSet(ikP.pcjMaxs, 0, 0, 0);
 
 		//give the info on our entity.
-		ikP.blend_time = blend_time;
+		ikP.blendTime = blendTime;
 		VectorCopy(origin, ikP.origin);
 		VectorCopy(angles, ikP.angles);
 		ikP.angles[PITCH] = 0;
@@ -16305,8 +16305,8 @@ void BG_IK_MoveArm(void* ghoul2, const int lHandBolt, const int time, const enti
 		VectorCopy(scale, ikP.scale);
 
 		//base pose frames for the limb
-		ikP.start_frame = bgHumanoidAnimations[basepose_anim].firstFrame + bgHumanoidAnimations[basepose_anim].num_frames;
-		ikP.end_frame = bgHumanoidAnimations[basepose_anim].firstFrame + bgHumanoidAnimations[basepose_anim].num_frames;
+		ikP.startFrame = bgHumanoidAnimations[basepose_anim].firstFrame + bgHumanoidAnimations[basepose_anim].numFrames;
+		ikP.endFrame = bgHumanoidAnimations[basepose_anim].firstFrame + bgHumanoidAnimations[basepose_anim].numFrames;
 
 		ikP.forceAnimOnBone = qfalse; //let it use existing anim if it's the same as this one.
 
@@ -16383,7 +16383,7 @@ void BG_IK_MoveArm(void* ghoul2, const int lHandBolt, const int time, const enti
 		}
 		VectorCopy(origin, ikM.origin); //our position in the world.
 
-		ikM.bone_name[0] = 0;
+		ikM.boneName[0] = 0;
 		if (trap->G2API_IKMove(ghoul2, time, &ikM))
 		{
 			//now do the standard model animate stuff with ragdoll update params.
@@ -16406,7 +16406,7 @@ void BG_IK_MoveArm(void* ghoul2, const int lHandBolt, const int time, const enti
 	else if (*ikInProgress)
 	{
 		//kill it
-		float cFrame, anim_speed;
+		float cFrame, animSpeed;
 		int sFrame, eFrame, flags;
 
 		trap->G2API_SetBoneIKState(ghoul2, time, "lhumerus", IKS_NONE, NULL);
@@ -16419,9 +16419,9 @@ void BG_IK_MoveArm(void* ghoul2, const int lHandBolt, const int time, const enti
 			NEGATIVE_Z, NULL, 0, time);
 
 		//Get the anim/frames that the pelvis is on exactly, and match the left arm back up with them again.
-		trap->G2API_GetBoneAnim(ghoul2, "pelvis", time, &cFrame, &sFrame, &eFrame, &flags, &anim_speed, 0, 0);
-		trap->G2API_SetBoneAnim(ghoul2, 0, "lhumerus", sFrame, eFrame, flags, anim_speed, time, sFrame, 300);
-		trap->G2API_SetBoneAnim(ghoul2, 0, "lradius", sFrame, eFrame, flags, anim_speed, time, sFrame, 300);
+		trap->G2API_GetBoneAnim(ghoul2, "pelvis", time, &cFrame, &sFrame, &eFrame, &flags, &animSpeed, 0, 0);
+		trap->G2API_SetBoneAnim(ghoul2, 0, "lhumerus", sFrame, eFrame, flags, animSpeed, time, sFrame, 300);
+		trap->G2API_SetBoneAnim(ghoul2, 0, "lradius", sFrame, eFrame, flags, animSpeed, time, sFrame, 300);
 
 		//And finally, get rid of all the ik state effector data by calling with null bone name (similar to how we init it).
 		trap->G2API_SetBoneIKState(ghoul2, time, NULL, IKS_NONE, NULL);
@@ -16448,7 +16448,7 @@ qboolean BG_ClassHasBadBones(const int NPC_class)
 }
 
 //used to set the proper orientations for the funky NPC class bone structures.
-void BG_BoneOrientationsForClass(const int NPC_class, const char* bone_name, int* oUp, int* oRt, int* oFwd)
+void BG_BoneOrientationsForClass(const int NPC_class, const char* boneName, int* oUp, int* oRt, int* oFwd)
 {
 	//defaults
 	*oUp = POSITIVE_X;
@@ -16458,9 +16458,9 @@ void BG_BoneOrientationsForClass(const int NPC_class, const char* bone_name, int
 	switch (NPC_class)
 	{
 	case CLASS_RANCOR:
-		if (Q_stricmp("pelvis", bone_name) == 0
-			|| Q_stricmp("lower_lumbar", bone_name) == 0
-			|| Q_stricmp("upper_lumbar", bone_name) == 0)
+		if (Q_stricmp("pelvis", boneName) == 0
+			|| Q_stricmp("lower_lumbar", boneName) == 0
+			|| Q_stricmp("upper_lumbar", boneName) == 0)
 		{
 			//only these 3 bones on them are wrong
 			*oUp = NEGATIVE_X;
@@ -16470,7 +16470,7 @@ void BG_BoneOrientationsForClass(const int NPC_class, const char* bone_name, int
 		break;
 	case CLASS_ROCKETTROOPER:
 	case CLASS_HAZARD_TROOPER:
-		if (Q_stricmp("pelvis", bone_name) == 0)
+		if (Q_stricmp("pelvis", boneName) == 0)
 		{
 			//child of root
 			//actual, when differences with root are accounted for:
@@ -16487,8 +16487,8 @@ void BG_BoneOrientationsForClass(const int NPC_class, const char* bone_name, int
 		}
 		break;
 	case CLASS_SABER_DROID:
-		if (Q_stricmp("pelvis", bone_name) == 0
-			|| Q_stricmp("thoracic", bone_name) == 0)
+		if (Q_stricmp("pelvis", boneName) == 0
+			|| Q_stricmp("thoracic", boneName) == 0)
 		{
 			*oUp = NEGATIVE_X;
 			*oRt = NEGATIVE_Z;
@@ -16502,7 +16502,7 @@ void BG_BoneOrientationsForClass(const int NPC_class, const char* bone_name, int
 		}
 		break;
 	case CLASS_WAMPA:
-		if (Q_stricmp("pelvis", bone_name) == 0)
+		if (Q_stricmp("pelvis", boneName) == 0)
 		{
 			*oUp = NEGATIVE_X;
 			*oRt = POSITIVE_Y;
@@ -16517,9 +16517,9 @@ void BG_BoneOrientationsForClass(const int NPC_class, const char* bone_name, int
 		}
 		break;
 	case CLASS_ASSASSIN_DROID:
-		if (Q_stricmp("pelvis", bone_name) == 0
-			|| Q_stricmp("lower_lumbar", bone_name) == 0
-			|| Q_stricmp("upper_lumbar", bone_name) == 0)
+		if (Q_stricmp("pelvis", boneName) == 0
+			|| Q_stricmp("lower_lumbar", boneName) == 0
+			|| Q_stricmp("upper_lumbar", boneName) == 0)
 		{
 			//only these 3 bones on them are wrong
 			*oUp = NEGATIVE_X;
@@ -17070,7 +17070,7 @@ void BG_G2PlayerAngles(void* ghoul2, const int motionBolt, entityState_t* cent, 
 	static vec3_t velPos, velAng;
 	static vec3_t ulAngles, llAngles, viewAngles, angles, thoracicAngles = { 0, 0, 0 };
 	static vec3_t headClampMinAngles = { -25, -55, -10 }, headClampMaxAngles = { 50, 50, 10 };
-	//int			painTime;{}, painDirection, current_time;
+	//int			painTime;{}, painDirection, currentTime;
 
 	if (cent->m_iVehicleNum || cent->forceFrame || PM_SaberLockBreakAnim(cent->legsAnim) || PM_SaberLockBreakAnim(
 		cent->torsoAnim))

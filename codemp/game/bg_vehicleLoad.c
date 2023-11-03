@@ -748,7 +748,7 @@ void BG_VehicleSetDefaults(vehicleInfo_t* vehicle)
 		}
 		strcpy(vehicle->model, "models/map_objects/ships/swoop.md3");
 
-		vehicle->model_index = 0;							//set internally, not until this vehicle is spawned into the level
+		vehicle->modelIndex = 0;							//set internally, not until this vehicle is spawned into the level
 		vehicle->skin = NULL;								//what skin to use - if make it an NPC's primary model, don't need this?
 		vehicle->riderAnim = BOTH_GUNSIT1;					//what animation the rider uses
 
@@ -1233,9 +1233,9 @@ int veh_load_vehicle(const char* vehicle_name)
 	if (vehicle->model)
 	{
 #ifdef _GAME
-		vehicle->model_index = G_model_index(va("models/players/%s/model.glm", vehicle->model));
+		vehicle->modelIndex = G_model_index(va("models/players/%s/model.glm", vehicle->model));
 #else
-		vehicle->model_index = trap->R_RegisterModel(va("models/players/%s/model.glm", vehicle->model));
+		vehicle->modelIndex = trap->R_RegisterModel(va("models/players/%s/model.glm", vehicle->model));
 #endif
 	}
 

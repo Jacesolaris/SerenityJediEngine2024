@@ -1882,9 +1882,9 @@ gentity_t* NPC_PickEnemy(const gentity_t* closestTo, const int enemyTeam, const 
 	bestDist = 2048.0f;
 	closestEnemy = nullptr;
 
-	for (int ent_num = 0; ent_num < globals.num_entities; ent_num++)
+	for (int entNum = 0; entNum < globals.num_entities; entNum++)
 	{
-		newenemy = &g_entities[ent_num];
+		newenemy = &g_entities[entNum];
 
 		if (newenemy != NPC && (newenemy->client || newenemy->svFlags & SVF_NONNPC_ENEMY) && !(newenemy->flags &
 			FL_NOTARGET) && !(newenemy->s.eFlags & EF_NODRAW))
@@ -2043,9 +2043,9 @@ int NPC_CheckMultipleEnemies(const gentity_t* closest_to, const int enemy_team, 
 
 	int num_choices = 0;
 
-	for (int ent_num = 0; ent_num < globals.num_entities; ent_num++)
+	for (int entNum = 0; entNum < globals.num_entities; entNum++)
 	{
-		const gentity_t* newenemy = &g_entities[ent_num];
+		const gentity_t* newenemy = &g_entities[entNum];
 
 		if (newenemy != NPC && (newenemy->client || newenemy->svFlags & SVF_NONNPC_ENEMY) && !(newenemy->flags &
 			FL_NOTARGET) && !(newenemy->s.eFlags & EF_NODRAW))
@@ -2159,9 +2159,9 @@ gentity_t* NPC_PickAlly(const qboolean facingEachOther, const float range, const
 	gentity_t* closestAlly = nullptr;
 	float bestDist = range;
 
-	for (int ent_num = 0; ent_num < globals.num_entities; ent_num++)
+	for (int entNum = 0; entNum < globals.num_entities; entNum++)
 	{
-		gentity_t* ally = &g_entities[ent_num];
+		gentity_t* ally = &g_entities[entNum];
 
 		if (ally->client)
 		{

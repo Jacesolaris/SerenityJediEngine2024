@@ -1263,9 +1263,9 @@ int veh_load_vehicle(const char* vehicle_name)
 	if (vehicle->model)
 	{
 #ifdef QAGAME
-		vehicle->model_index = G_ModelIndex(va("models/players/%s/model.glm", vehicle->model));
+		vehicle->modelIndex = G_ModelIndex(va("models/players/%s/model.glm", vehicle->model));
 #else
-		vehicle->model_index = trap_R_RegisterModel(va("models/players/%s/model.glm", vehicle->model));
+		vehicle->modelIndex = trap_R_RegisterModel(va("models/players/%s/model.glm", vehicle->model));
 #endif
 	}
 
@@ -1646,9 +1646,9 @@ void BG_GetVehicleSkinName(char* skinname)
 //so cgame can assign the function pointer for the vehicle attachment without having to
 //bother with all the other funcs that don't really exist cgame-side.
 extern int BG_GetTime(void);
-extern int trap_G2API_AddBolt(void* ghoul2, int model_index, const char* bone_name);
-extern qboolean trap_G2API_GetBoltMatrix(void* ghoul2, const int model_index, const int bolt_index, mdxaBone_t* matrix,
-	const vec3_t angles, const vec3_t position, const int frameNum, qhandle_t* model_list, vec3_t scale);
+extern int trap_G2API_AddBolt(void* ghoul2, int modelIndex, const char* boneName);
+extern qboolean trap_G2API_GetBoltMatrix(void* ghoul2, const int modelIndex, const int bolt_index, mdxaBone_t* matrix,
+	const vec3_t angles, const vec3_t position, const int frameNum, qhandle_t* modelList, vec3_t scale);
 void AttachRidersGeneric(Vehicle_t* p_veh)
 {
 	// If we have a pilot, attach him to the driver tag.

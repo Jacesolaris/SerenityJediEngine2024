@@ -445,7 +445,7 @@ model_t* R_GetModelByHandle(const qhandle_t index) {
 /*
 ** R_GetAnimModelByHandle
 */
-model_t* R_GetAnimModelByHandle(const CGhoul2Info* ghl_info, qhandle_t index)
+model_t* R_GetAnimModelByHandle(const CGhoul2Info* ghlInfo, qhandle_t index)
 {
 	// out of range gets the defualt model
 	if (index < 1 || index > tr.numModels)
@@ -455,10 +455,10 @@ model_t* R_GetAnimModelByHandle(const CGhoul2Info* ghl_info, qhandle_t index)
 
 	model_t* mod;
 
-	if (ghl_info->animModelIndexOffset)
+	if (ghlInfo->animModelIndexOffset)
 	{
 		// Have to recalculate offset to get map animations for JKA Campaign
-		index -= ghl_info->animModelIndexOffset;
+		index -= ghlInfo->animModelIndexOffset;
 		int mapIndex{};
 		constexpr int len = std::size(tr.models);
 
@@ -479,7 +479,7 @@ model_t* R_GetAnimModelByHandle(const CGhoul2Info* ghl_info, qhandle_t index)
 		}
 		else
 		{
-			mod = tr.models[index + ghl_info->animModelIndexOffset];
+			mod = tr.models[index + ghlInfo->animModelIndexOffset];
 		}
 	}
 	else
@@ -832,7 +832,7 @@ static qboolean R_LoadMD3(model_t* mod, int lod, void* buffer, const char* name,
 
 		LL(mod->md3[lod]->ident);
 		LL(mod->md3[lod]->version);
-		LL(mod->md3[lod]->num_frames);
+		LL(mod->md3[lod]->numFrames);
 		LL(mod->md3[lod]->numTags);
 		LL(mod->md3[lod]->numSurfaces);
 		LL(mod->md3[lod]->ofsFrames);
@@ -841,7 +841,7 @@ static qboolean R_LoadMD3(model_t* mod, int lod, void* buffer, const char* name,
 		LL(mod->md3[lod]->ofsEnd);
 	}
 
-	if (mod->md3[lod]->num_frames < 1) {
+	if (mod->md3[lod]->numFrames < 1) {
 		ri.Printf(PRINT_WARNING, "R_LoadMD3: %s has no frames\n", name);
 		return qfalse;
 	}
@@ -854,7 +854,7 @@ static qboolean R_LoadMD3(model_t* mod, int lod, void* buffer, const char* name,
 #ifdef Q3_BIG_ENDIAN
 	// swap all the frames
 	frame = (md3Frame_t*)((byte*)mod->md3[lod] + mod->md3[lod]->ofsFrames);
-	for (i = 0; i < mod->md3[lod]->num_frames; i++, frame++) {
+	for (i = 0; i < mod->md3[lod]->numFrames; i++, frame++) {
 		LF(frame->radius);
 		for (j = 0; j < 3; j++) {
 			LF(frame->bounds[0][j]);
@@ -865,7 +865,7 @@ static qboolean R_LoadMD3(model_t* mod, int lod, void* buffer, const char* name,
 
 	// swap all the tags
 	tag = (md3Tag_t*)((byte*)mod->md3[lod] + mod->md3[lod]->ofsTags);
-	for (i = 0; i < mod->md3[lod]->numTags * mod->md3[lod]->num_frames; i++, tag++) {
+	for (i = 0; i < mod->md3[lod]->numTags * mod->md3[lod]->numFrames; i++, tag++) {
 		for (j = 0; j < 3; j++) {
 			LF(tag->origin[j]);
 			LF(tag->axis[0][j]);
@@ -879,7 +879,7 @@ static qboolean R_LoadMD3(model_t* mod, int lod, void* buffer, const char* name,
 	surf = reinterpret_cast<md3Surface_t*>(reinterpret_cast<byte*>(mod->md3[lod]) + mod->md3[lod]->ofsSurfaces);
 	for (int i = 0; i < mod->md3[lod]->numSurfaces; i++) {
 		LL(surf->flags);
-		LL(surf->num_frames);
+		LL(surf->numFrames);
 		LL(surf->numShaders);
 		LL(surf->numTriangles);
 		LL(surf->ofsTriangles);
@@ -942,7 +942,7 @@ static qboolean R_LoadMD3(model_t* mod, int lod, void* buffer, const char* name,
 
 		// swap all the XyzNormals
 		xyz = (md3XyzNormal_t*)((byte*)surf + surf->ofsXyzNormals);
-		for (j = 0; j < surf->numVerts * surf->num_frames; j++, xyz++)
+		for (j = 0; j < surf->numVerts * surf->numFrames; j++, xyz++)
 		{
 			LS(xyz->xyz[0]);
 			LS(xyz->xyz[1]);
@@ -1073,9 +1073,9 @@ R_GetTag for MD3s
 ================
 */
 static md3Tag_t* R_GetTag(md3Header_t* mod, int frame, const char* tagName) {
-	if (frame >= mod->num_frames) {
+	if (frame >= mod->numFrames) {
 		// it is possible to have a bad frame while changing models, so don't error
-		frame = mod->num_frames - 1;
+		frame = mod->numFrames - 1;
 	}
 
 	md3Tag_t* tag = reinterpret_cast<md3Tag_t*>(reinterpret_cast<byte*>(mod) + mod->ofsTags) + frame * mod->numTags;

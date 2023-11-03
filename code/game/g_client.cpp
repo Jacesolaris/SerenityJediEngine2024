@@ -1445,7 +1445,7 @@ void G_NextTestAxes()
 	}
 }
 
-void G_BoneOrientationsForClass(const int NPC_class, const char* bone_name, Eorientations* oUp, Eorientations* oRt,
+void G_BoneOrientationsForClass(const int NPC_class, const char* boneName, Eorientations* oUp, Eorientations* oRt,
 	Eorientations* oFwd)
 {
 	//defaults
@@ -1469,7 +1469,7 @@ void G_BoneOrientationsForClass(const int NPC_class, const char* bone_name, Eori
 		//*oUp = POSITIVE_Z;
 		//*oRt = NEGATIVE_X;
 		//*oFwd = NEGATIVE_Y;
-		if (Q_stricmp("pelvis", bone_name) == 0)
+		if (Q_stricmp("pelvis", boneName) == 0)
 		{
 			//child of root
 			//in ModView:
@@ -1498,8 +1498,8 @@ void G_BoneOrientationsForClass(const int NPC_class, const char* bone_name, Eori
 		}
 		break;
 	case CLASS_SABER_DROID:
-		if (Q_stricmp("pelvis", bone_name) == 0
-			|| Q_stricmp("thoracic", bone_name) == 0)
+		if (Q_stricmp("pelvis", boneName) == 0
+			|| Q_stricmp("thoracic", boneName) == 0)
 		{
 			*oUp = NEGATIVE_X;
 			*oRt = NEGATIVE_Z;
@@ -1513,7 +1513,7 @@ void G_BoneOrientationsForClass(const int NPC_class, const char* bone_name, Eori
 		}
 		break;
 	case CLASS_WAMPA:
-		if (Q_stricmp("pelvis", bone_name) == 0)
+		if (Q_stricmp("pelvis", boneName) == 0)
 		{
 			*oUp = NEGATIVE_X;
 			*oRt = POSITIVE_Y;
@@ -1531,9 +1531,9 @@ void G_BoneOrientationsForClass(const int NPC_class, const char* bone_name, Eori
 		}
 		break;
 	case CLASS_ASSASSIN_DROID:
-		if (Q_stricmp("pelvis", bone_name) == 0
-			|| Q_stricmp("lower_lumbar", bone_name) == 0
-			|| Q_stricmp("upper_lumbar", bone_name) == 0)
+		if (Q_stricmp("pelvis", boneName) == 0
+			|| Q_stricmp("lower_lumbar", boneName) == 0
+			|| Q_stricmp("upper_lumbar", boneName) == 0)
 		{
 			//only these 3 bones on them are wrong
 			//*oUp = POSITIVE_X;
@@ -1545,9 +1545,9 @@ void G_BoneOrientationsForClass(const int NPC_class, const char* bone_name, Eori
 		}
 		break;
 	case CLASS_DROIDEKA:
-		if (Q_stricmp("pelvis", bone_name) == 0
-			|| Q_stricmp("lower_lumbar", bone_name) == 0
-			|| Q_stricmp("upper_lumbar", bone_name) == 0)
+		if (Q_stricmp("pelvis", boneName) == 0
+			|| Q_stricmp("lower_lumbar", boneName) == 0
+			|| Q_stricmp("upper_lumbar", boneName) == 0)
 		{
 			//only these 3 bones on them are wrong
 			//*oUp = POSITIVE_X;
@@ -2255,28 +2255,28 @@ qboolean G_SetG2PlayerModelInfo(gentity_t* ent, const char* model_name, const ch
 	return qtrue;
 }
 
-void g_set_g2_player_model(gentity_t* ent, const char* model_name, const char* custom_skin, const char* surf_off,
+void g_set_g2_player_model(gentity_t* ent, const char* model_name, const char* customSkin, const char* surf_off,
 	const char* surf_on)
 {
 	char skinName[MAX_QPATH];
 
 	//ok, lets register the skin name, and then pass that name to the config strings so the client can get it too.
-	if (!custom_skin)
+	if (!customSkin)
 	{
 		//use the default
 		Com_sprintf(skinName, sizeof skinName, "models/players/%s/model_default.skin", model_name);
 	}
 	else
 	{
-		if (strchr(custom_skin, '|'))
+		if (strchr(customSkin, '|'))
 		{
 			//three part skin
-			Com_sprintf(skinName, sizeof skinName, "models/players/%s/|%s", model_name, custom_skin);
+			Com_sprintf(skinName, sizeof skinName, "models/players/%s/|%s", model_name, customSkin);
 
 			if (ent == player)
 			{
 				char name[MAX_QPATH];
-				strcpy(name, custom_skin);
+				strcpy(name, customSkin);
 				char* p = strchr(name, '|');
 				*p = 0;
 				p++;
@@ -2297,13 +2297,13 @@ void g_set_g2_player_model(gentity_t* ent, const char* model_name, const char* c
 		}
 		else
 		{
-			Com_sprintf(skinName, sizeof skinName, "models/players/%s/model_%s.skin", model_name, custom_skin);
+			Com_sprintf(skinName, sizeof skinName, "models/players/%s/model_%s.skin", model_name, customSkin);
 
 			if (ent == player)
 			{
-				gi.cvar_set("g_char_skin_head", va("model_%s", custom_skin));
-				gi.cvar_set("g_char_skin_torso", va("model_%s", custom_skin));
-				gi.cvar_set("g_char_skin_legs", va("model_%s", custom_skin));
+				gi.cvar_set("g_char_skin_head", va("model_%s", customSkin));
+				gi.cvar_set("g_char_skin_torso", va("model_%s", customSkin));
+				gi.cvar_set("g_char_skin_legs", va("model_%s", customSkin));
 			}
 		}
 	}
@@ -2316,7 +2316,7 @@ void g_set_g2_player_model(gentity_t* ent, const char* model_name, const char* c
 		Vehicle_t* p_veh = ent->m_pVehicle;
 		p_veh->m_pVehicleInfo->RegisterAssets(p_veh);
 		ent->playerModel = gi.G2API_InitGhoul2Model(ent->ghoul2, va("models/players/%s/model.glm", model_name),
-			p_veh->m_pVehicleInfo->model_index, G_SkinIndex(skinName),
+			p_veh->m_pVehicleInfo->modelIndex, G_SkinIndex(skinName),
 			NULL_HANDLE, 0, 0);
 	}
 	else

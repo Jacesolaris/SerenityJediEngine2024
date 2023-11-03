@@ -860,7 +860,7 @@ const void* RB_TakeScreenshotCmd(const void* data) {
 	cmd = (const screenshotCommand_t*)data;
 
 	// finish any 2D drawing if needed
-	if (tess.num_indexes)
+	if (tess.numIndexes)
 		RB_EndSurface();
 
 	const int frameNumber = backEndData->realFrameNumber;
@@ -1126,7 +1126,7 @@ const void* RB_TakeVideoFrameCmd(const void* data)
 	GLint packAlign;
 
 	// finish any 2D drawing if needed
-	if (tess.num_indexes)
+	if (tess.numIndexes)
 		RB_EndSurface();
 
 	cmd = (const videoFrameCommand_t*)data;
@@ -1436,7 +1436,7 @@ static consoleCommand_t	commands[] = {
 	{ "gfxinfo",			GfxInfo_f },
 	{ "gfxmeminfo",			GfxMemInfo_f },
 	{ "r_we",				R_WorldEffect_f },
-	{ "model_list",			R_model_list_f },
+	{ "modelList",			R_model_list_f },
 	{ "vbolist",			R_VBOList_f },
 	{ "capframes",			R_CaptureFrameData_f },
 	{ "r_weather",			R_WeatherEffect_f },
@@ -1755,7 +1755,7 @@ static void R_InitBackEndFrameData()
 		}
 	}
 
-	backEndData->current_frame = backEndData->frames;
+	backEndData->currentFrame = backEndData->frames;
 }
 
 #ifdef _G2_GORE
@@ -1871,7 +1871,7 @@ static void R_InitStaticConstants()
 	// Setup default scene block
 	SceneBlock sceneBlock = {};
 	sceneBlock.globalFogIndex = -1;
-	sceneBlock.current_time = 0.1f;
+	sceneBlock.currentTime = 0.1f;
 	sceneBlock.frameTime = 0.1f;
 
 	tr.defaultSceneUboOffset = alignedBlockSize;

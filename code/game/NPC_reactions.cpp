@@ -35,7 +35,7 @@ extern void cgi_S_StartSound(const vec3_t origin, int entity_num, int entchannel
 extern qboolean Q3_TaskIDPending(const gentity_t* ent, taskID_t taskType);
 extern int PM_PickAnim(const gentity_t* self, int minAnim, int maxAnim);
 extern qboolean NPC_CheckLookTarget(const gentity_t* self);
-extern void NPC_SetLookTarget(const gentity_t* self, int ent_num, int clear_time);
+extern void NPC_SetLookTarget(const gentity_t* self, int entNum, int clear_time);
 extern qboolean Jedi_WaitingAmbush(const gentity_t* self);
 extern void Jedi_Ambush(gentity_t* self);
 extern qboolean G_EntIsBreakable(int entity_num, const gentity_t* breaker);

@@ -2326,11 +2326,11 @@ static QINLINE qboolean WP_SabersCheckLock2(gentity_t* attacker, gentity_t* defe
 
 	G_SetAnim(attacker, NULL, SETANIM_BOTH, att_anim, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
 
-	attacker->client->ps.saberLockFrame = bgAllAnims[attacker->localAnimIndex].anims[att_anim].firstFrame + bgAllAnims[attacker->localAnimIndex].anims[att_anim].num_frames * att_start;
+	attacker->client->ps.saberLockFrame = bgAllAnims[attacker->localAnimIndex].anims[att_anim].firstFrame + bgAllAnims[attacker->localAnimIndex].anims[att_anim].numFrames * att_start;
 
 	G_SetAnim(defender, NULL, SETANIM_BOTH, def_anim, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
 
-	defender->client->ps.saberLockFrame = bgAllAnims[defender->localAnimIndex].anims[def_anim].firstFrame + bgAllAnims[defender->localAnimIndex].anims[def_anim].num_frames * def_start;
+	defender->client->ps.saberLockFrame = bgAllAnims[defender->localAnimIndex].anims[def_anim].firstFrame + bgAllAnims[defender->localAnimIndex].anims[def_anim].numFrames * def_start;
 
 	attacker->client->ps.saberLockHits = 0;
 	defender->client->ps.saberLockHits = 0;
@@ -2713,7 +2713,7 @@ static QINLINE qboolean g_g2_trace_collide(trace_t* tr, vec3_t last_valid_start,
 
 	while (t_n < MAX_G2_COLLISIONS)
 	{
-		g2_trace[t_n].mentity_num = -1;
+		g2_trace[t_n].mEntityNum = -1;
 		t_n++;
 	}
 	gentity_t* g2_hit = &g_entities[tr->entity_num];
@@ -2754,7 +2754,7 @@ static QINLINE qboolean g_g2_trace_collide(trace_t* tr, vec3_t last_valid_start,
 				f_radius);
 		}
 
-		if (g2_trace[0].mentity_num != g2_hit->s.number)
+		if (g2_trace[0].mEntityNum != g2_hit->s.number)
 		{
 			tr->fraction = 1.0f;
 			tr->entity_num = ENTITYNUM_NONE;
@@ -2771,7 +2771,7 @@ static QINLINE qboolean g_g2_trace_collide(trace_t* tr, vec3_t last_valid_start,
 		{
 			g2_hit->client->g2LastSurfaceHit = g2_trace[0].mSurfaceIndex;
 			g2_hit->client->g2LastSurfaceTime = level.time;
-			g2_hit->client->g2LastSurfaceModel = g2_trace[0].mmodel_index;
+			g2_hit->client->g2LastSurfaceModel = g2_trace[0].mModelindex;
 		}
 		return qtrue;
 	}
@@ -4545,7 +4545,7 @@ int wp_saber_must_bolt_block(gentity_t* self, const gentity_t* atk, const qboole
 typedef struct content_s
 {
 	int content;
-	int ent_num;
+	int entNum;
 } content_t;
 
 content_t real_trace_content[MAX_REAL_PASSTHRU];
@@ -4557,7 +4557,7 @@ void init_real_trace_content(void)
 	for (int i = 0; i < MAX_REAL_PASSTHRU; i++)
 	{
 		real_trace_content[i].content = REALTRACEDATADEFAULT;
-		real_trace_content[i].ent_num = REALTRACEDATADEFAULT;
+		real_trace_content[i].entNum = REALTRACEDATADEFAULT;
 	}
 }
 
@@ -4572,12 +4572,12 @@ qboolean add_real_trace_content(const int entity_num)
 
 	for (int i = 0; i < MAX_REAL_PASSTHRU; i++)
 	{
-		if (real_trace_content[i].content == REALTRACEDATADEFAULT && real_trace_content[i].ent_num ==
+		if (real_trace_content[i].content == REALTRACEDATADEFAULT && real_trace_content[i].entNum ==
 			REALTRACEDATADEFAULT)
 		{
 			//found an empty slot.  Use it.
 			//Stored Data
-			real_trace_content[i].ent_num = entity_num;
+			real_trace_content[i].entNum = entity_num;
 			real_trace_content[i].content = g_entities[entity_num].r.contents;
 
 			//Blank it.
@@ -4595,14 +4595,14 @@ void restore_real_trace_content(void)
 {
 	for (int i = 0; i < MAX_REAL_PASSTHRU; i++)
 	{
-		if (real_trace_content[i].ent_num != REALTRACEDATADEFAULT)
+		if (real_trace_content[i].entNum != REALTRACEDATADEFAULT)
 		{
 			if (real_trace_content[i].content != REALTRACEDATADEFAULT)
 			{
-				g_entities[real_trace_content[i].ent_num].r.contents = real_trace_content[i].content;
+				g_entities[real_trace_content[i].entNum].r.contents = real_trace_content[i].content;
 
 				//Let's clean things out to be sure.
-				real_trace_content[i].ent_num = REALTRACEDATADEFAULT;
+				real_trace_content[i].entNum = REALTRACEDATADEFAULT;
 				real_trace_content[i].content = REALTRACEDATADEFAULT;
 			}
 			else
@@ -7510,7 +7510,7 @@ void Jedi_Ambush(gentity_t* self);
 evasionType_t jedi_saber_block_go(gentity_t* self, usercmd_t* cmd, vec3_t p_hitloc, vec3_t phit_dir,
 	const gentity_t* incoming,
 	float dist);
-void NPC_SetLookTarget(const gentity_t* self, int ent_num, int clear_time);
+void NPC_SetLookTarget(const gentity_t* self, int entNum, int clear_time);
 int blockedfor_quad(int quad);
 int invert_quad(int quad);
 
@@ -8863,14 +8863,14 @@ void WP_SaberAddG2Model(gentity_t* saberent, const char* saber_model, const qhan
 	WP_SaberRemoveG2Model(saberent);
 	if (saber_model && saber_model[0])
 	{
-		saberent->s.model_index = G_model_index(saber_model);
+		saberent->s.modelIndex = G_model_index(saber_model);
 	}
 	else
 	{
-		saberent->s.model_index = G_model_index(DEFAULT_SABER_MODEL);
+		saberent->s.modelIndex = G_model_index(DEFAULT_SABER_MODEL);
 	}
 	//FIXME: use customSkin?
-	trap->G2API_InitGhoul2Model(&saberent->ghoul2, saber_model, saberent->s.model_index, saber_skin, 0, 0, 0);
+	trap->G2API_InitGhoul2Model(&saberent->ghoul2, saber_model, saberent->s.modelIndex, saber_skin, 0, 0, 0);
 }
 
 //Make the saber go flying directly out of the owner's hand in the specified direction
@@ -9934,7 +9934,7 @@ void UpdateClientRenderinfo(gentity_t* self, vec3_t render_origin, vec3_t render
 }
 
 #define STAFF_KICK_RANGE 16
-extern void G_GetBoltPosition(gentity_t* self, int bolt_index, vec3_t pos, int model_index); //NPC_utils.c
+extern void G_GetBoltPosition(gentity_t* self, int bolt_index, vec3_t pos, int modelIndex); //NPC_utils.c
 
 extern qboolean BG_InKnockDown(int anim);
 

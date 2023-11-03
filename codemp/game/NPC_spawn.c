@@ -1715,14 +1715,14 @@ void NPC_Begin(gentity_t* ent)
 
 gNPC_t* gNPCPtrs[MAX_GENTITIES];
 
-gNPC_t* New_NPC_t(const int ent_num)
+gNPC_t* New_NPC_t(const int entNum)
 {
-	if (!gNPCPtrs[ent_num])
+	if (!gNPCPtrs[entNum])
 	{
-		gNPCPtrs[ent_num] = (gNPC_t*)BG_Alloc(sizeof(gNPC_t));
+		gNPCPtrs[entNum] = (gNPC_t*)BG_Alloc(sizeof(gNPC_t));
 	}
 
-	gNPC_t* ptr = gNPCPtrs[ent_num];
+	gNPC_t* ptr = gNPCPtrs[entNum];
 
 	if (ptr)
 	{

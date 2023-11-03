@@ -640,10 +640,7 @@ static cvarTable_t cvarTable[] = {
 	{&r_ratiofix, "r_ratiofix", "0", CVAR_ARCHIVE},
 	{&cg_hudRatio, "cg_hudRatio", "1", CVAR_ARCHIVE},
 
-	{
-		&cg_SaberInnonblockableAttackWarning, "g_SaberInnonblockableAttackWarning", "0",
-		CVAR_ARCHIVE | CVAR_SAVEGAME | CVAR_NORESTART
-	},
+	{&cg_SaberInnonblockableAttackWarning, "g_SaberInnonblockableAttackWarning", "0",CVAR_ARCHIVE | CVAR_SAVEGAME | CVAR_NORESTART},
 	{&cg_IsSaberDoingAttackDamage, "g_IsSaberDoingAttackDamage", "0", CVAR_ARCHIVE},
 	{&cg_DebugSaberCombat, "g_DebugSaberCombat", "0", CVAR_ARCHIVE},
 
@@ -2568,13 +2565,13 @@ void CG_CreateMiscEnts()
 void CG_DrawMiscEnts()
 {
 	cgMiscEntData_t* MiscEnt = MiscEnts;
-	refEntity_t ref_ent;
+	refEntity_t refEnt;
 	vec3_t cullOrigin;
 
-	memset(&ref_ent, 0, sizeof ref_ent);
-	ref_ent.reType = RT_MODEL;
-	ref_ent.frame = 0;
-	ref_ent.renderfx = RF_LIGHTING_ORIGIN;
+	memset(&refEnt, 0, sizeof refEnt);
+	refEnt.reType = RT_MODEL;
+	refEnt.frame = 0;
+	refEnt.renderfx = RF_LIGHTING_ORIGIN;
 	for (int i = 0; i < NumMiscEnts; i++)
 	{
 		VectorCopy(MiscEnt->origin, cullOrigin);
@@ -2587,13 +2584,13 @@ void CG_DrawMiscEnts()
 			if (VectorLengthSquared(difference) - MiscEnt->radius <= 8192 * 8192/*RMG_distancecull.value*/)
 			{
 				//fixme: need access to the real cull dist here
-				ref_ent.hModel = MiscEnt->hModel;
-				AnglesToAxis(MiscEnt->angles, ref_ent.axis);
-				VectorCopy(MiscEnt->scale, ref_ent.modelScale);
-				VectorCopy(MiscEnt->origin, ref_ent.origin);
-				VectorCopy(cullOrigin, ref_ent.lightingOrigin);
-				ScaleModelAxis(&ref_ent);
-				cgi_R_AddRefEntityToScene(&ref_ent);
+				refEnt.hModel = MiscEnt->hModel;
+				AnglesToAxis(MiscEnt->angles, refEnt.axis);
+				VectorCopy(MiscEnt->scale, refEnt.modelScale);
+				VectorCopy(MiscEnt->origin, refEnt.origin);
+				VectorCopy(cullOrigin, refEnt.lightingOrigin);
+				ScaleModelAxis(&refEnt);
+				cgi_R_AddRefEntityToScene(&refEnt);
 			}
 		}
 		MiscEnt++;

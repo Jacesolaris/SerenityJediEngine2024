@@ -373,7 +373,7 @@ emit_pseudo_sos(const j_compress_ptr cinfo)
 	emit_byte(cinfo, 0); /* Ns */
 
 	emit_byte(cinfo, 0); /* Ss */
-	emit_byte(cinfo, cinfo->block_size * cinfo->block_size - 1); /* Se */
+	emit_byte(cinfo, cinfo->blockSize * cinfo->blockSize - 1); /* Se */
 	emit_byte(cinfo, 0); /* Ah/Al */
 }
 
@@ -540,7 +540,7 @@ write_frame_header(const j_compress_ptr cinfo)
 	 * Note we assume that Huffman table numbers won't be changed later.
 	 */
 	if (cinfo->arith_code || cinfo->progressive_mode ||
-		cinfo->data_precision != 8 || cinfo->block_size != DCTSIZE) {
+		cinfo->data_precision != 8 || cinfo->blockSize != DCTSIZE) {
 		is_baseline = FALSE;
 	}
 	else {
@@ -578,7 +578,7 @@ write_frame_header(const j_compress_ptr cinfo)
 		emit_lse_ict(cinfo);
 
 	/* Check to emit pseudo SOS marker */
-	if (cinfo->progressive_mode && cinfo->block_size != DCTSIZE)
+	if (cinfo->progressive_mode && cinfo->blockSize != DCTSIZE)
 		emit_pseudo_sos(cinfo);
 }
 

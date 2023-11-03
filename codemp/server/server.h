@@ -412,7 +412,7 @@ int SV_BotGetConsoleMessage(int client, char* buf, int size);
 void* Bot_GetMemoryGame(int size);
 void Bot_FreeMemoryGame(void* ptr);
 
-int BotImport_DebugPolygonCreate(int color, int num_points, const vec3_t* points);
+int BotImport_DebugPolygonCreate(int color, int numPoints, const vec3_t* points);
 void BotImport_DebugPolygonDelete(int id);
 
 //============================================================
@@ -434,7 +434,7 @@ void SV_LinkEntity(sharedEntity_t* g_ent);
 // sets ent->leafnums[] for pvs determination even if the entity
 // is not solid
 
-clip_handle_t SV_clip_handleForEntity(const sharedEntity_t* ent);
+clipHandle_t SV_clip_handleForEntity(const sharedEntity_t* ent);
 
 void SV_SectorList_f(void);
 
@@ -450,7 +450,7 @@ int SV_PointContents(const vec3_t p, int pass_entity_num);
 // returns the CONTENTS_* value from the world and all entities at the given point.
 
 void SV_Trace(trace_t* results, const vec3_t start, const vec3_t mins, const vec3_t maxs, const vec3_t end,
-	int pass_entity_num, int contentmask, int capsule, int traceFlags, int use_lod);
+	int pass_entity_num, int contentmask, int capsule, int traceFlags, int useLod);
 // mins and maxs are relative
 
 // if the entire move stays in a solid volume, trace.allsolid will be set,

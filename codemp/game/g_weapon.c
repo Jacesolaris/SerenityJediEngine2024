@@ -3217,7 +3217,7 @@ void CreateLaserTrap(gentity_t* laser_trap, vec3_t start, gentity_t* owner)
 	VectorSet(laser_trap->r.maxs, LT_SIZE, LT_SIZE, LT_SIZE);
 	laser_trap->clipmask = MASK_SHOT;
 	laser_trap->s.solid = 2;
-	laser_trap->s.model_index = G_model_index("models/weapons2/laser_trap/laser_trap_w.glm");
+	laser_trap->s.modelIndex = G_model_index("models/weapons2/laser_trap/laser_trap_w.glm");
 	laser_trap->s.modelGhoul2 = 1;
 	laser_trap->s.g2radius = 40;
 
@@ -3525,7 +3525,7 @@ void drop_charge(gentity_t* self, vec3_t start, vec3_t dir)
 	bolt->s.eType = ET_GENERAL;
 	bolt->s.g2radius = 100;
 	bolt->s.modelGhoul2 = 1;
-	bolt->s.model_index = G_model_index("models/weapons2/detpack/det_pack_proj.glm");
+	bolt->s.modelIndex = G_model_index("models/weapons2/detpack/det_pack_proj.glm");
 
 	bolt->parent = self;
 	bolt->r.ownerNum = self->s.number;
@@ -6096,7 +6096,7 @@ void SP_emplaced_gun(gentity_t* ent)
 
 	G_SpawnFloat("constraint", "60", &ent->s.origin2[0]);
 
-	ent->s.model_index = G_model_index((char*)name);
+	ent->s.modelIndex = G_model_index((char*)name);
 	ent->s.modelGhoul2 = 1;
 	ent->s.g2radius = 110;
 
@@ -6181,7 +6181,7 @@ void SP_emplaced_eweb(gentity_t* ent)
 
 	G_SpawnFloat("constraint", "60", &ent->s.origin2[0]);
 
-	ent->s.model_index = G_model_index((char*)name);
+	ent->s.modelIndex = G_model_index((char*)name);
 	ent->s.modelGhoul2 = 1;
 	ent->s.g2radius = 110;
 

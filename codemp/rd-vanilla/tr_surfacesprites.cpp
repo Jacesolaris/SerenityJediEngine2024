@@ -616,7 +616,7 @@ static void RB_DrawVerticalSurfaceSprites(shaderStage_t* stage, shaderCommands_t
 		tess.SSInitializedWind = qtrue;
 	}
 
-	for (curindex = 0; curindex < input->num_indexes - 2; curindex += 3)
+	for (curindex = 0; curindex < input->numIndexes - 2; curindex += 3)
 	{
 		vec3_t v3;
 		vec3_t v2;
@@ -958,7 +958,7 @@ static void RB_DrawOrientedSurfaceSprites(const shaderStage_t* stage, const shad
 		ss_vert_alpha[curvert] = 1.0 - (VectorLengthSquared(dist) - fadedist2) * inv_fadediff;
 	}
 
-	for (int curindex = 0; curindex < input->num_indexes - 2; curindex += 3)
+	for (int curindex = 0; curindex < input->numIndexes - 2; curindex += 3)
 	{
 		vec3_t v3;
 		vec3_t v2;
@@ -1262,7 +1262,7 @@ static void RB_DrawEffectSurfaceSprites(shaderStage_t* stage, shaderCommands_t* 
 		//	SSVertAlpha[curvert] = fadebase - (VectorLength(dist) * fademult);
 	}
 
-	for (curindex = 0; curindex < input->num_indexes - 2; curindex += 3)
+	for (curindex = 0; curindex < input->numIndexes - 2; curindex += 3)
 	{
 		vec3_t v3;
 		vec3_t v2;

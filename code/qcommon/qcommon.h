@@ -676,8 +676,8 @@ temp file loading
 
 */
 int Z_Validate(); // also used to insure all of these are paged in
-int Z_MemSize(memtag_t eTag);
-void Z_TagFree(memtag_t eTag);
+int Z_MemSize(const memtag_t eTag);
+void Z_TagFree(const memtag_t eTag);
 int Z_Free(void* pv_address); //returns bytes freed
 int Z_Size(void* pvAddress);
 void Z_MorphMallocTag(void* pv_address, const memtag_t eDesiredTag);

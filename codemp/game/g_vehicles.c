@@ -2064,32 +2064,32 @@ int G_FlyVehicleImpactDir(const gentity_t* veh, const trace_t* trace)
 //try to break surfaces off the ship on impact
 #define TURN_ON				0x00000000
 #define TURN_OFF			0x00000100
-extern void NPC_SetSurfaceOnOff(gentity_t* ent, const char* surface_name, int surfaceFlags); //NPC_utils.c
-int G_ShipSurfaceForSurfName(const char* surface_name)
+extern void NPC_SetSurfaceOnOff(gentity_t* ent, const char* surfaceName, int surfaceFlags); //NPC_utils.c
+int G_ShipSurfaceForSurfName(const char* surfaceName)
 {
-	if (!surface_name)
+	if (!surfaceName)
 	{
 		return -1;
 	}
-	if (!Q_strncmp("nose", surface_name, 4)
-		|| !Q_strncmp("f_gear", surface_name, 6)
-		|| !Q_strncmp("glass", surface_name, 5))
+	if (!Q_strncmp("nose", surfaceName, 4)
+		|| !Q_strncmp("f_gear", surfaceName, 6)
+		|| !Q_strncmp("glass", surfaceName, 5))
 	{
 		return SHIPSURF_FRONT;
 	}
-	if (!Q_strncmp("body", surface_name, 4))
+	if (!Q_strncmp("body", surfaceName, 4))
 	{
 		return SHIPSURF_BACK;
 	}
-	if (!Q_strncmp("r_wing1", surface_name, 7)
-		|| !Q_strncmp("r_wing2", surface_name, 7)
-		|| !Q_strncmp("r_gear", surface_name, 6))
+	if (!Q_strncmp("r_wing1", surfaceName, 7)
+		|| !Q_strncmp("r_wing2", surfaceName, 7)
+		|| !Q_strncmp("r_gear", surfaceName, 6))
 	{
 		return SHIPSURF_RIGHT;
 	}
-	if (!Q_strncmp("l_wing1", surface_name, 7)
-		|| !Q_strncmp("l_wing2", surface_name, 7)
-		|| !Q_strncmp("l_gear", surface_name, 6))
+	if (!Q_strncmp("l_wing1", surfaceName, 7)
+		|| !Q_strncmp("l_wing2", surfaceName, 7)
+		|| !Q_strncmp("l_gear", surfaceName, 6))
 	{
 		return SHIPSURF_LEFT;
 	}

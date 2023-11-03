@@ -264,7 +264,7 @@ void RB_ClipSkyPolygons(shaderCommands_t* input)
 
 	ClearSkyBox();
 
-	for (i = 0; i < input->num_indexes; i += 3)
+	for (i = 0; i < input->numIndexes; i += 3)
 	{
 		for (j = 0; j < 3; j++)
 		{
@@ -367,7 +367,7 @@ static void DrawSkySide(struct image_s* image, const int mins[2], const int maxs
 	int minIndex = tess.minIndex;
 	int maxIndex = tess.maxIndex;
 
-	tess.firstIndex = tess.num_indexes;
+	tess.firstIndex = tess.numIndexes;
 
 	for (t = mins[1] + HALF_SKY_SUBDIVISIONS;
 		t <= maxs[1] + HALF_SKY_SUBDIVISIONS; t++)
@@ -402,18 +402,18 @@ static void DrawSkySide(struct image_s* image, const int mins[2], const int maxs
 	{
 		for (s = 0; s < ssize; s++)
 		{
-			if ((tess.num_indexes + 6) >= SHADER_MAX_INDEXES)
+			if ((tess.numIndexes + 6) >= SHADER_MAX_INDEXES)
 			{
 				ri->Error(ERR_DROP, "SHADER_MAX_INDEXES hit in DrawSkySideVBO()");
 			}
 
-			tess.indexes[tess.num_indexes++] = s + t * ssizePlusOne + firstVertex;
-			tess.indexes[tess.num_indexes++] = s + (t + 1) * ssizePlusOne + firstVertex;
-			tess.indexes[tess.num_indexes++] = (s + 1) + t * ssizePlusOne + firstVertex;
+			tess.indexes[tess.numIndexes++] = s + t * ssizePlusOne + firstVertex;
+			tess.indexes[tess.numIndexes++] = s + (t + 1) * ssizePlusOne + firstVertex;
+			tess.indexes[tess.numIndexes++] = (s + 1) + t * ssizePlusOne + firstVertex;
 
-			tess.indexes[tess.num_indexes++] = (s + 1) + t * ssizePlusOne + firstVertex;
-			tess.indexes[tess.num_indexes++] = s + (t + 1) * ssizePlusOne + firstVertex;
-			tess.indexes[tess.num_indexes++] = (s + 1) + (t + 1) * ssizePlusOne + firstVertex;
+			tess.indexes[tess.numIndexes++] = (s + 1) + t * ssizePlusOne + firstVertex;
+			tess.indexes[tess.numIndexes++] = s + (t + 1) * ssizePlusOne + firstVertex;
+			tess.indexes[tess.numIndexes++] = (s + 1) + (t + 1) * ssizePlusOne + firstVertex;
 		}
 	}
 
@@ -429,7 +429,7 @@ static void DrawSkySide(struct image_s* image, const int mins[2], const int maxs
 	{
 		int attributeIndex = vertexArrays.enabledAttributes[i];
 		vertexArrays.offsets[attributeIndex] +=
-			backEndData->current_frame->dynamicVboCommitOffset;
+			backEndData->currentFrame->dynamicVboCommitOffset;
 	}
 
 	vertexAttribute_t attribs[ATTR_INDEX_MAX] = {};
@@ -453,7 +453,7 @@ static void DrawSkySide(struct image_s* image, const int mins[2], const int maxs
 
 	samplerBindingsWriter.AddStaticImage(image, TB_DIFFUSEMAP);
 
-	const GLuint currentFrameUbo = backEndData->current_frame->ubo;
+	const GLuint currentFrameUbo = backEndData->currentFrame->ubo;
 	const UniformBlockBinding uniformBlockBindings[] = {
 		{ currentFrameUbo, tr.skyEntityUboOffset, UNIFORM_BLOCK_ENTITY },
 		{ currentFrameUbo, tr.cameraUboOffsets[tr.viewParms.currentViewParm], UNIFORM_BLOCK_CAMERA }
@@ -463,7 +463,7 @@ static void DrawSkySide(struct image_s* image, const int mins[2], const int maxs
 	item.renderState.cullType = CT_TWO_SIDED;
 	item.renderState.depthRange = RB_GetDepthRange(backEnd.currentEntity, tess.shader);
 	item.program = sp;
-	item.ibo = backEndData->current_frame->dynamicIbo;
+	item.ibo = backEndData->currentFrame->dynamicIbo;
 	item.uniformData = uniformDataWriter.Finish(frameAllocator);
 
 	item.samplerBindings = samplerBindingsWriter.Finish(
@@ -483,7 +483,7 @@ static void DrawSkySide(struct image_s* image, const int mins[2], const int maxs
 	RB_CommitInternalBufferData();
 
 	tess.useInternalVBO = qfalse;
-	tess.num_indexes = tess.firstIndex;
+	tess.numIndexes = tess.firstIndex;
 	tess.numVertexes = firstVertex;
 	tess.firstIndex = 0;
 	tess.minIndex = minIndex;
@@ -594,19 +594,19 @@ static void FillCloudySkySide(const int mins[2], const int maxs[2], qboolean add
 		{
 			for (s = 0; s < sWidth - 1; s++)
 			{
-				tess.indexes[tess.num_indexes] = vertexStart + s + t * (sWidth);
-				tess.num_indexes++;
-				tess.indexes[tess.num_indexes] = vertexStart + s + (t + 1) * (sWidth);
-				tess.num_indexes++;
-				tess.indexes[tess.num_indexes] = vertexStart + s + 1 + t * (sWidth);
-				tess.num_indexes++;
+				tess.indexes[tess.numIndexes] = vertexStart + s + t * (sWidth);
+				tess.numIndexes++;
+				tess.indexes[tess.numIndexes] = vertexStart + s + (t + 1) * (sWidth);
+				tess.numIndexes++;
+				tess.indexes[tess.numIndexes] = vertexStart + s + 1 + t * (sWidth);
+				tess.numIndexes++;
 
-				tess.indexes[tess.num_indexes] = vertexStart + s + (t + 1) * (sWidth);
-				tess.num_indexes++;
-				tess.indexes[tess.num_indexes] = vertexStart + s + 1 + (t + 1) * (sWidth);
-				tess.num_indexes++;
-				tess.indexes[tess.num_indexes] = vertexStart + s + 1 + t * (sWidth);
-				tess.num_indexes++;
+				tess.indexes[tess.numIndexes] = vertexStart + s + (t + 1) * (sWidth);
+				tess.numIndexes++;
+				tess.indexes[tess.numIndexes] = vertexStart + s + 1 + (t + 1) * (sWidth);
+				tess.numIndexes++;
+				tess.indexes[tess.numIndexes] = vertexStart + s + 1 + t * (sWidth);
+				tess.numIndexes++;
 			}
 		}
 	}
@@ -698,7 +698,7 @@ void R_BuildCloudData(shaderCommands_t* input)
 	sky_max = 255.0 / 256.0f;
 
 	// set up for drawing
-	tess.num_indexes = 0;
+	tess.numIndexes = 0;
 	tess.numVertexes = 0;
 	tess.firstIndex = 0;
 	tess.useInternalVBO = qtrue;

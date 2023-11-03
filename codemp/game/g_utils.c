@@ -154,7 +154,7 @@ int G_model_index(const char* name)
 		trap->FS_Open(va("models/%s", name), &fh, FS_READ);
 		if (!fh)
 		{
-			Com_Printf("ERROR: Server tried to model_index %s but it doesn't exist.\n", name);
+			Com_Printf("ERROR: Server tried to modelIndex %s but it doesn't exist.\n", name);
 		}
 	}
 
@@ -519,14 +519,14 @@ void G_FreeVehicleObject(const Vehicle_t* p_veh)
 
 gclient_t* gClPtrs[MAX_GENTITIES];
 
-void G_CreateFakeClient(const int ent_num, gclient_t** cl)
+void G_CreateFakeClient(const int entNum, gclient_t** cl)
 {
 	//trap->TrueMalloc((void **)cl, sizeof(gclient_t));
-	if (!gClPtrs[ent_num])
+	if (!gClPtrs[entNum])
 	{
-		gClPtrs[ent_num] = (gclient_t*)BG_Alloc(sizeof(gclient_t));
+		gClPtrs[entNum] = (gclient_t*)BG_Alloc(sizeof(gclient_t));
 	}
-	*cl = gClPtrs[ent_num];
+	*cl = gClPtrs[entNum];
 }
 
 //call this on game shutdown to run through and get rid of all the lingering client pointers.
@@ -556,7 +556,7 @@ local anim index into account and make the call -rww
 */
 void BG_SetAnim(playerState_t* ps, const animation_t* animations, int set_anim_parts, int anim, int set_anim_flags);
 
-void G_SetAnim(gentity_t* ent, usercmd_t* ucmd, int set_anim_parts, int anim, int set_anim_flags, int blend_time)
+void G_SetAnim(gentity_t* ent, usercmd_t* ucmd, int set_anim_parts, int anim, int set_anim_flags, int blendTime)
 {
 #if 0 //old hackish way
 	pmove_t pmv;
@@ -580,7 +580,7 @@ void G_SetAnim(gentity_t* ent, usercmd_t* ucmd, int set_anim_parts, int anim, in
 
 	//don't need to bother with ghoul2 stuff, it's not even used in PM_SetAnim.
 	pm = &pmv;
-	PM_SetAnim(set_anim_parts, anim, set_anim_flags, blend_time);
+	PM_SetAnim(set_anim_parts, anim, set_anim_flags, blendTime);
 #else //new clean and shining way!
 	assert(ent->client);
 	BG_SetAnim(&ent->client->ps, bgAllAnims[ent->localAnimIndex].anims, set_anim_parts, anim, set_anim_flags);
@@ -1099,7 +1099,7 @@ void G_SendG2KillQueue(void)
 	}
 }
 
-void G_KillG2Queue(const int ent_num)
+void G_KillG2Queue(const int entNum)
 {
 	if (gG2KillNum >= MAX_G2_KILL_QUEUE)
 	{
@@ -1108,11 +1108,11 @@ void G_KillG2Queue(const int ent_num)
 		Com_Printf("WARNING: Exceeded the MAX_G2_KILL_QUEUE count for this frame!\n");
 #endif
 		//Since we're out of queue slots, just send it now as a seperate command (eats more bandwidth, but we have no choice)
-		trap->SendServerCommand(-1, va("kg2 %i", ent_num));
+		trap->SendServerCommand(-1, va("kg2 %i", entNum));
 		return;
 	}
 
-	gG2KillIndex[gG2KillNum] = ent_num;
+	gG2KillIndex[gG2KillNum] = entNum;
 	gG2KillNum++;
 }
 
@@ -1521,11 +1521,11 @@ gentity_t* G_ScreenShake(vec3_t org, const gentity_t* target, const float intens
 
 	if (target)
 	{
-		te->s.model_index = target->s.number + 1;
+		te->s.modelIndex = target->s.number + 1;
 	}
 	else
 	{
-		te->s.model_index = 0;
+		te->s.modelIndex = 0;
 	}
 
 	if (global)
@@ -1545,11 +1545,11 @@ gentity_t* CGCam_BlockShakeMP(vec3_t org, const gentity_t* target, const float i
 
 	if (target)
 	{
-		te->s.model_index = target->s.number + 1;
+		te->s.modelIndex = target->s.number + 1;
 	}
 	else
 	{
-		te->s.model_index = 0;
+		te->s.modelIndex = 0;
 	}
 
 	te->r.svFlags &= ~SVF_BROADCAST;
