@@ -145,8 +145,7 @@ public:
 	virtual int CreateIcarus(int gameID) = 0;
 	virtual int GetByName(const char* name) = 0;
 	//Polls the engine for the sequencer of the entity matching the name passed
-	virtual int IsFrozen(int gameID) = 0;
-	// (g_entities[m_ownerID].svFlags&SVF_ICARUS_FREEZE)																	// return -1 indicates invalid
+	virtual int IsFrozen(int gameID) = 0;																// return -1 indicates invalid
 	virtual void Free(void* data) = 0;
 	virtual void* Malloc(int size) = 0;
 	virtual float MaxFloat() = 0;

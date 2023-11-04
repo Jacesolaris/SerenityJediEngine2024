@@ -2696,7 +2696,7 @@ int	G2API_GetSurfaceIndex(CGhoul2Info* ghlInfo, const char* surfaceName)
 	return -1;
 }
 
-char* G2API_GetGLAName(CGhoul2Info_v& ghoul2, int modelIndex)
+char* G2API_GetGLAName(CGhoul2Info_v& ghoul2, const int modelIndex)
 {
 	if (G2_SetupModelPointers(ghoul2))
 	{
@@ -2856,7 +2856,7 @@ void G2API_ClearSkinGore(CGhoul2Info_v& ghoul2)
 	}
 }
 
-extern int		G2_DecideTraceLod(CGhoul2Info& ghoul2, int useLod);
+extern int G2_DecideTraceLod(const CGhoul2Info& ghoul2, const int useLod);
 void G2API_AddSkinGore(CGhoul2Info_v& ghoul2, SSkinGoreData& gore)
 {
 	if (VectorLength(gore.rayDirection) < .1f)

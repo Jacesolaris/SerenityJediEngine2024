@@ -415,9 +415,9 @@ int openjk_minizip_free(void* to_free)
 // used during model cacheing to save an extra malloc, lets us morph the disk-load buffer then
 //	just not fs_freefile() it afterwards.
 //
-void Z_MorphMallocTag(void* pv_address, const memtag_t eDesiredTag)
+void Z_MorphMallocTag(void* pvAddress, const memtag_t eDesiredTag)
 {
-	zoneHeader_t* pMemory = static_cast<zoneHeader_t*>(pv_address) - 1;
+	zoneHeader_t* pMemory = static_cast<zoneHeader_t*>(pvAddress) - 1;
 
 	if (pMemory->iMagic != ZONE_MAGIC)
 	{
@@ -553,21 +553,21 @@ void Z_Label(const void* pvAddress, const char* psLabel)
 
 // Frees a block of memory...
 //
-int Z_Free(void* pv_address)
+int Z_Free(void* pvAddress)
 {
 	if (!TheZone.Stats.iCount)
 	{
 		//Com_Error(ERR_FATAL, "Z_Free(): Zone has been cleard already!");
-		Com_Printf("Z_Free(%x): Zone has been cleard already!\n", pv_address);
+		Com_Printf("Z_Free(%x): Zone has been cleard already!\n", pvAddress);
 		return -1;
 	}
 
-	zoneHeader_t* pMemory = static_cast<zoneHeader_t*>(pv_address) - 1;
+	zoneHeader_t* pMemory = static_cast<zoneHeader_t*>(pvAddress) - 1;
 
 #if 1	//debugging double free
 	if (pMemory->iMagic == INT_ID('F', 'R', 'E', 'E'))
 	{
-		Com_Error(ERR_FATAL, "Z_Free(%s): Block already-freed, or not allocated through Z_Malloc!", pv_address);
+		Com_Error(ERR_FATAL, "Z_Free(%s): Block already-freed, or not allocated through Z_Malloc!", pvAddress);
 	}
 #endif
 

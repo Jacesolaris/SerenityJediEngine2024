@@ -4088,7 +4088,25 @@ void G_RunItem(gentity_t* ent)
 
 void IT_LoadWeatherParms(void)
 {
-	vmCvar_t mapname;
+	char serverinfo[MAX_INFO_STRING] = { 0 };
+	char sje_mapname[128] = { 0 };
+	vmCvar_t mapname;// getting mapname
+
+	Q_strncpyz(sje_mapname, Info_ValueForKey(serverinfo, "mapname"), sizeof sje_mapname);
+	strcpy(level.sjemapname, sje_mapname);
+
+	if (com_rend2.integer == 1 &&
+		(Q_stricmp(sje_mapname, "yavin1") == 0)
+		|| (Q_stricmp(sje_mapname, "demo") == 0)
+		|| (Q_stricmp(sje_mapname, "kejim_post") == 0))
+	{
+		return;
+	}
+
+	if (g_AllowWeather.integer != 1)
+	{
+		return;
+	}
 
 	trap->Cvar_Register(&mapname, "mapname", "", CVAR_SERVERINFO | CVAR_ROM);
 

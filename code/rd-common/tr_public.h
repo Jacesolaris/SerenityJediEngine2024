@@ -41,7 +41,7 @@ using refimport_t = struct
 	int (*Milliseconds)();
 
 	void (*Hunk_ClearToMark)();
-	void* (*Z_Malloc)(const int iSize, const memtag_t eTag, const qboolean zeroIt, const int iUnusedAlign);
+	void* (*Z_Malloc)(const int iSize, const memtag_t eTag, const qboolean bZeroit, const int iUnusedAlign);
 	int (*Z_Free)(void* memory);
 	int (*Z_MemSize)(memtag_t eTag);
 	void (*Z_MorphMallocTag)(void* pvBuffer, memtag_t eDesiredTag);

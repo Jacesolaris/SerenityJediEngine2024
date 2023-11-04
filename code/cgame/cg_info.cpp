@@ -394,17 +394,8 @@ void CG_LoadBar(void)
 	// Draw right cap
 	CG_DrawPic(tickleft + tickwidth * cg.loadLCARSStage, ticktop, capwidth, tickheight, cgs.media.loadTickCap);
 
-	constexpr int x = (640 - LOADBAR_CLIP_WIDTH) / 2;
-
 	if (cg.loadLCARSStage >= 3)
 	{
-		if (cg.loadLCARSStage <= 6)
-		{
-			if (cg_com_rend2.integer == 1) //rend2 is on
-			{
-				cgi_R_Font_DrawString(40, 2, va("Warning: When using Quality mode, longer loading times can be expected."), colorTable[CT_WHITE], cgs.media.qhFontSmall, -1, 1.0f);
-			}
-		}
 		constexpr int x = (640 - LOADBAR_CLIP_WIDTH) / 2;
 		constexpr int y = 340;
 
@@ -871,6 +862,7 @@ void CG_DrawInformation()
 	qhandle_t levelshot = cgi_R_RegisterShaderNoMip(va("levelshots/%s", s));
 	qhandle_t levelshot2 = cgi_R_RegisterShaderNoMip(va("levelshots/%s2", s));
 	qhandle_t Loadshot = cgi_R_RegisterShaderNoMip("menu/art/loadshot");
+	qhandle_t Loadshot2 = cgi_R_RegisterShaderNoMip("menu/art/loadshot2");
 
 	if (!levelshot)
 	{
@@ -884,6 +876,10 @@ void CG_DrawInformation()
 	{
 		Loadshot = cgi_R_RegisterShaderNoMip(cg_GetCurrentLevelshot1(s));
 	}
+	if (!Loadshot2)
+	{
+		Loadshot2 = cgi_R_RegisterShaderNoMip(cg_GetCurrentLevelshot1(s));
+	}
 
 	if (g_eSavedGameJustLoaded != eFULL
 		&& (strcmp(s, "yavin1") == 0
@@ -891,35 +887,59 @@ void CG_DrawInformation()
 			|| strcmp(s, "jodemo") == 0
 			|| strcmp(s, "01nar") == 0
 			|| strcmp(s, "md2_bd_ch") == 0
-			|| strcmp(s, "md_sn_jedi") == 0
+			|| strcmp(s, "md_sn_intro_jedi") == 0
+			|| strcmp(s, "md_ch_battledroids") == 0
+			|| strcmp(s, "md_ep4_intro") == 0
 			|| strcmp(s, "secbase") == 0
 			|| strcmp(s, "level0") == 0
-			|| strcmp(s, "kejim_post") == 0) && cg_com_rend2.integer != 1) //special case for first map!
+			|| strcmp(s, "kejim_post") == 0)) //special case for first map!
 	{
 		constexpr char text[1024] = { 0 };
 
-		CG_DrawPic(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, Loadshot);
-
-		const int w = cgi_R_Font_StrLenPixels(text, cgs.media.qhFontMedium, 1.0f);
-		cgi_R_Font_DrawString(320 - w / 2, 140, text, colorTable[CT_ICON_BLUE], cgs.media.qhFontMedium, -1, 1.0f);
-	}
-	else
-	{
-		if (cg.loadLCARSStage >= 4)
+		if (cg.loadLCARSStage <= 2 && cg_com_rend2.integer == 1)
 		{
-			CG_DrawLoadingScreen(levelshot2, s);
+			CG_DrawPic(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, Loadshot2);
 		}
 		else
 		{
-			CG_DrawLoadingScreen(levelshot, s);
-			CG_MissionCompletion();
-			LoadTips();
+			CG_DrawPic(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, Loadshot);
+
+			const int w = cgi_R_Font_StrLenPixels(text, cgs.media.qhFontMedium, 1.0f);
+			cgi_R_Font_DrawString(320 - w / 2, 140, text, colorTable[CT_ICON_BLUE], cgs.media.qhFontMedium, -1, 1.0f);
+		}
+	}
+	else
+	{
+		if (cg.loadLCARSStage <= 2 && cg_com_rend2.integer == 1)
+		{
+			CG_DrawPic(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, Loadshot2);
+		}
+		else
+		{
+			if (cg.loadLCARSStage >= 4)
+			{
+				CG_DrawLoadingScreen(levelshot2, s);
+			}
+			else
+			{
+				CG_DrawLoadingScreen(levelshot, s);
+				CG_MissionCompletion();
+				LoadTips();
+			}
 		}
 		cgi_UI_MenuPaintAll();
 		CG_LoadBar();
 	}
 
 	// draw info string information
+
+	if (cg.loadLCARSStage <= 6)
+	{
+		if (cg_com_rend2.integer == 1) //rend2 is on
+		{
+			cgi_R_Font_DrawString(40, 2, va("Warning: When using Quality mode, longer loading times can be expected."), colorTable[CT_WHITE], cgs.media.qhFontSmall, -1, 1.0f);
+		}
+	}
 
 	// map-specific message (long map name)
 	s = CG_ConfigString(CS_MESSAGE);

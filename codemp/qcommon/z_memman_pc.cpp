@@ -335,9 +335,9 @@ void openjk_minizip_free(void* to_free)
 // used during model cacheing to save an extra malloc, lets us morph the disk-load buffer then
 //	just not fs_freefile() it afterwards.
 //
-void Z_MorphMallocTag(void* pv_address, const memtag_t eDesiredTag)
+void Z_MorphMallocTag(void* pvAddress, const memtag_t eDesiredTag)
 {
-	zoneHeader_t* pMemory = static_cast<zoneHeader_t*>(pv_address) - 1;
+	zoneHeader_t* pMemory = static_cast<zoneHeader_t*>(pvAddress) - 1;
 
 	if (pMemory->iMagic != ZONE_MAGIC)
 	{
@@ -422,15 +422,15 @@ int Z_Size(void* pvAddress)
 
 // Frees a block of memory...
 //
-void Z_Free(void* pv_address)
+void Z_Free(void* pvAddress)
 {
-	if (pv_address == nullptr) // I've put this in as a safety measure because of some bits of #ifdef BSPC stuff	-Ste.
+	if (pvAddress == nullptr) // I've put this in as a safety measure because of some bits of #ifdef BSPC stuff	-Ste.
 	{
 		//Com_Error(ERR_FATAL, "Z_Free(): NULL arg");
 		return;
 	}
 
-	zoneHeader_t* pMemory = static_cast<zoneHeader_t*>(pv_address) - 1;
+	zoneHeader_t* pMemory = static_cast<zoneHeader_t*>(pvAddress) - 1;
 
 	if (pMemory->eTag == TAG_STATIC)
 	{

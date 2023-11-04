@@ -84,13 +84,14 @@ void* R_Malloc(const int iSize, const memtag_t eTag, const qboolean bZeroit, con
 	return ri.Z_Malloc(iSize, eTag, bZeroit, iUnusedAlign);
 }
 
-int Z_Free(void* ptr) {
-	return ri.Z_Free(ptr);
+int Z_Free(void* pvAddress)
+{
+	return ri.Z_Free(pvAddress);
 }
 
-void R_Free(void* ptr)
+void R_Free(void* pvAddress)
 {
-	ri.Z_Free(ptr);
+	ri.Z_Free(pvAddress);
 }
 #else
 void Z_Free(void* ptr)
@@ -104,9 +105,9 @@ int Z_MemSize(const memtag_t eTag)
 	return ri.Z_MemSize(eTag);
 }
 
-void Z_MorphMallocTag(void* pv_address, const memtag_t eDesiredTag)
+void Z_MorphMallocTag(void* pvAddress, const memtag_t eDesiredTag)
 {
-	ri.Z_MorphMallocTag(pv_address, eDesiredTag);
+	ri.Z_MorphMallocTag(pvAddress, eDesiredTag);
 }
 
 // HUNK

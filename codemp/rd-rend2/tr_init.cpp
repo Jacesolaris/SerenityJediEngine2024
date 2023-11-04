@@ -248,6 +248,7 @@ cvar_t* r_marksOnTriangleMeshes;
 cvar_t* r_aviMotionJpegQuality;
 cvar_t* r_screenshotJpegQuality;
 cvar_t* r_surfaceSprites;
+cvar_t* r_AdvancedsurfaceSprites;
 
 // the limits apply to the sum of all scenes in a frame --
 // the main view, all the 3D icons, etc
@@ -1606,7 +1607,7 @@ void R_Register(void)
 
 	r_nocurves = ri->Cvar_Get("r_nocurves", "0", CVAR_CHEAT, "");
 	r_drawworld = ri->Cvar_Get("r_drawworld", "1", CVAR_CHEAT, "");
-	r_drawfog = ri->Cvar_Get("r_drawfog", "2", CVAR_CHEAT, "");
+	r_drawfog = ri->Cvar_Get("r_drawfog", "3", CVAR_NONE, "");
 	r_lightmap = ri->Cvar_Get("r_lightmap", "0", 0, "");
 	r_portalOnly = ri->Cvar_Get("r_portalOnly", "0", CVAR_CHEAT, "");
 
@@ -1645,6 +1646,7 @@ void R_Register(void)
 	r_aviMotionJpegQuality = ri->Cvar_Get("r_aviMotionJpegQuality", "90", CVAR_ARCHIVE, "");
 	r_screenshotJpegQuality = ri->Cvar_Get("r_screenshotJpegQuality", "90", CVAR_ARCHIVE, "");
 	r_surfaceSprites = ri->Cvar_Get("r_surfaceSprites", "1", CVAR_ARCHIVE, "");
+	r_AdvancedsurfaceSprites = ri->Cvar_Get("r_advancedlod", "1", CVAR_ARCHIVE, "");
 
 	r_aspectCorrectFonts = ri->Cvar_Get("r_aspectCorrectFonts", "0", CVAR_ARCHIVE, "");
 	r_maxpolys = ri->Cvar_Get("r_maxpolys", XSTRING(DEFAULT_MAX_POLYS), 0, "");

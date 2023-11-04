@@ -1173,28 +1173,14 @@ static qboolean UI_RunMenuScript(const char** args)
 			}
 			else
 			{
-				if (ui_com_rend2.integer == 1) //rend2 is on
-				{
-					ui.Cmd_ExecuteText(EXEC_APPEND, "map yavin1b\n");
-				}
-				else
-				{
-					ui.Cmd_ExecuteText(EXEC_APPEND, "map yavin1\n");
-				}
+				ui.Cmd_ExecuteText(EXEC_APPEND, "map yavin1\n");
 			}
 #endif
 		}
 		else if (Q_stricmp(name, "startoutcast") == 0)
 		{
 			Menus_CloseAll();
-			if (ui_com_rend2.integer == 1) //rend2 is on
-			{
-				ui.Cmd_ExecuteText(EXEC_APPEND, "map kejim_base\n");
-			}
-			else
-			{
-				ui.Cmd_ExecuteText(EXEC_APPEND, "map kejim_post\n");
-			}
+			ui.Cmd_ExecuteText(EXEC_APPEND, "map kejim_post\n");
 		}
 		else if (Q_stricmp(name, "startdemo") == 0)
 		{

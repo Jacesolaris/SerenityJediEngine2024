@@ -25,6 +25,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 #include "g_local.h"
 #include "g_items.h"
+#include <cgame\cg_local.h>
 
 constexpr auto PICKUPSOUND = "sound/weapons/w_pkup.wav";
 
@@ -731,10 +732,35 @@ void IT_LoadItemParms()
 }
 
 extern void cgi_Cvar_Register(vmCvar_t* vmCvar, const char* varName, const char* defaultValue, int flags);
+extern cvar_t* g_AllowWeather;
+extern cvar_t* com_rend2;
 
-void IT_LoadWeatherParms()
+void IT_LoadWeatherParms(void)
 {
 	vmCvar_t mapname;
+	const char* info = CG_ConfigString(CS_SERVERINFO);
+	const char* s = Info_ValueForKey(info, "mapname");
+
+	if (com_rend2->integer == 1 &&
+		(strcmp(s, "yavin1") == 0
+		|| strcmp(s, "demo") == 0
+		|| strcmp(s, "jodemo") == 0
+		|| strcmp(s, "01nar") == 0
+		|| strcmp(s, "md2_bd_ch") == 0
+		|| strcmp(s, "md_sn_intro_jedi") == 0
+		|| strcmp(s, "md_ch_battledroids") == 0
+		|| strcmp(s, "md_ep4_intro") == 0
+		|| strcmp(s, "secbase") == 0
+		|| strcmp(s, "level0") == 0
+		|| strcmp(s, "kejim_post") == 0)) // dont add weather on these maps when rend2 is on.
+	{
+		return;
+	}
+
+	if (com_rend2->integer == 1 && g_AllowWeather->integer != 1) 
+	{
+		return;
+	}
 
 	cgi_Cvar_Register(&mapname, "mapname", "", CVAR_SERVERINFO | CVAR_ROM);
 

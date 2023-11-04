@@ -890,11 +890,11 @@ void* S_Malloc(const int iSize); // NOT 0 filled memory only for small allocatio
 void* Z_Malloc(const int iSize, const memtag_t eTag, const qboolean bZeroit = qfalse, const int iUnusedAlign = 4);	// return memory NOT zero-filled by default
 void* S_Malloc(const int iSize);					// NOT 0 filled memory only for small allocations
 #endif
-void Z_MorphMallocTag(void* pv_address, const memtag_t eDesiredTag);
+void Z_MorphMallocTag(void* pvAddress, const memtag_t eDesiredTag);
 void Z_Validate(void);
 int Z_MemSize(const memtag_t eTag);
 void Z_TagFree(const memtag_t eTag);
-void Z_Free(void* pv_address);
+void Z_Free(void* pvAddress);
 int Z_Size(void* pvAddress);
 void Com_InitZoneMemory(void);
 void Com_InitZoneMemoryVars(void);

@@ -345,7 +345,7 @@ qboolean G2_GetAnimFileName(const char* file_name, char** filename)
 //
 /////////////////////////////////////////////////////////////////////
 
-int G2_DecideTraceLod(CGhoul2Info& ghoul2, int useLod)
+int G2_DecideTraceLod(const CGhoul2Info& ghoul2, const int useLod)
 {
 	int returnLod = useLod;
 

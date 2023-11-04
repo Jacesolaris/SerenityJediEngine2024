@@ -85,15 +85,15 @@ void* Z_Malloc(const int iSize, const memtag_t eTag, const qboolean bZeroit, con
 	return ri->Z_Malloc(iSize, eTag, bZeroit, iUnusedAlign);
 }
 
-void Z_Free(void* pv_address) {
-	ri->Z_Free(pv_address);
+void Z_Free(void* pvAddress) {
+	ri->Z_Free(pvAddress);
 }
 
 int Z_MemSize(const memtag_t eTag) {
 	return ri->Z_MemSize(eTag);
 }
 
-void Z_MorphMallocTag(void* pv_address, const memtag_t eDesiredTag)
+void Z_MorphMallocTag(void* pvAddress, const memtag_t eDesiredTag)
 {
-	ri->Z_MorphMallocTag(pv_address, eDesiredTag);
+	ri->Z_MorphMallocTag(pvAddress, eDesiredTag);
 }

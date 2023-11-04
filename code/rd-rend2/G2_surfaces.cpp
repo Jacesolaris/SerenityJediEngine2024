@@ -102,7 +102,7 @@ public:
 
 // functions preferinition
 extern void G2_ConstructUsedBoneList(CConstructBoneList& CBL);
-extern int G2_DecideTraceLod(CGhoul2Info& ghoul2, int useLod);
+extern int G2_DecideTraceLod(const CGhoul2Info& ghoul2, const int useLod);
 
 //=====================================================================================================================
 // Surface List handling routines - so entities can determine what surfaces attached to a model are operational or not.

@@ -75,9 +75,9 @@ void* R_Malloc(const int iSize, const memtag_t eTag, const qboolean bZeroit)
 	return ri.Z_Malloc(iSize, eTag, bZeroit, 4);
 }
 
-void R_Free(void* ptr)
+void R_Free(void* pvAddress)
 {
-	ri.Z_Free(ptr);
+	ri.Z_Free(pvAddress);
 }
 
 int R_MemSize(const memtag_t eTag)
