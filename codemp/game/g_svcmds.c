@@ -266,8 +266,7 @@ void Svcmd_AddIP_f(void)
 
 void G_RemoveWeather(void)
 {
-	const int num = G_EffectIndex("*clear");
-	trap->SetConfigstring(CS_EFFECTS + num, "");
+	trap->SendConsoleCommand(EXEC_APPEND, "exec Weather/clear.cfg");
 }
 
 void G_Rename_Player(gentity_t* player, const char* newname)

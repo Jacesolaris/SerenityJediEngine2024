@@ -743,26 +743,26 @@ void IT_LoadWeatherParms(void)
 
 	if (com_rend2->integer == 1 &&
 		(strcmp(s, "yavin1") == 0
-		|| strcmp(s, "demo") == 0
-		|| strcmp(s, "jodemo") == 0
-		|| strcmp(s, "01nar") == 0
-		|| strcmp(s, "md2_bd_ch") == 0
-		|| strcmp(s, "md_sn_intro_jedi") == 0
-		|| strcmp(s, "md_ch_battledroids") == 0
-		|| strcmp(s, "md_ep4_intro") == 0
-		|| strcmp(s, "secbase") == 0
-		|| strcmp(s, "level0") == 0
-		|| strcmp(s, "kejim_post") == 0)) // dont add weather on these maps when rend2 is on.
+			|| strcmp(s, "demo") == 0
+			|| strcmp(s, "jodemo") == 0
+			|| strcmp(s, "01nar") == 0
+			|| strcmp(s, "md2_bd_ch") == 0
+			|| strcmp(s, "md_sn_intro_jedi") == 0
+			|| strcmp(s, "md_ch_battledroids") == 0
+			|| strcmp(s, "md_ep4_intro") == 0
+			|| strcmp(s, "secbase") == 0
+			|| strcmp(s, "level0") == 0
+			|| strcmp(s, "kejim_post") == 0)) // dont add weather on these maps when rend2 is on.
 	{
 		return;
 	}
 
-	if (com_rend2->integer == 1 && g_AllowWeather->integer != 1) 
+	if (com_rend2->integer == 1 && g_AllowWeather->integer != 1)
 	{
 		return;
 	}
 
 	cgi_Cvar_Register(&mapname, "mapname", "", CVAR_SERVERINFO | CVAR_ROM);
 
-	gi.SendConsoleCommand(va("exec WeatherSP/%s", mapname.string, mapname.string, mapname.string));
+	gi.SendConsoleCommand(va("exec Weather/%s", mapname.string, mapname.string, mapname.string));
 }

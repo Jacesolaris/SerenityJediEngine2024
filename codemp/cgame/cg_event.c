@@ -2156,12 +2156,12 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 			case TAUNT_BOW:
 				break;
 			case TAUNT_MEDITATE:
-				sound_index = CG_CustomSound(es->number, va("*pushfail"));
+				/*sound_index = CG_CustomSound(es->number, va("*pushfail"));
 
 				if (!sound_index)
 				{
 					sound_index = CG_CustomSound(es->number, "*taunt");
-				}
+				}*/
 				break;
 			case TAUNT_FLOURISH:
 				sound_index = CG_CustomSound(es->number, va("*victory%d", Q_irand(1, 3)));

@@ -27107,8 +27107,7 @@ static void wp_force_power_run(gentity_t* self, forcePowers_t force_power, userc
 					}
 					else
 					{
-						G_SoundOnEnt(self, CHAN_VOICE,
-							va("sound/weapons/force/heal%d_%c.mp3", index, g_sex->string[0]));
+						G_SoundOnEnt(self, CHAN_VOICE,va("sound/weapons/force/heal%d_%c.mp3", index, g_sex->string[0]));
 					}
 				}
 				else if (self->NPC)

@@ -1276,7 +1276,7 @@ void G_TauntSound(gentity_t* ent, int taunt)
 	case TAUNT_BOW:
 		break;
 	case TAUNT_MEDITATE:
-		G_AddVoiceEvent(ent, EV_PUSHFAIL, 0);
+		//G_AddVoiceEvent(ent, EV_PUSHFAIL, 0);
 		break;
 	case TAUNT_FLOURISH:
 		if (Q_irand(0, 1))
@@ -1650,7 +1650,7 @@ void G_SetTauntAnim(gentity_t* ent, const int taunt)
 			}
 			break;
 		case TAUNT_MEDITATE:
-			G_TauntSound(ent, TAUNT_MEDITATE);
+			//G_TauntSound(ent, TAUNT_MEDITATE);
 			if (ent->client->ps.weapon != WP_SABER) //SP
 			{
 				if (PM_WalkingAnim(ent->client->ps.legsAnim) || PM_RunningAnim(ent->client->ps.legsAnim))
@@ -2455,7 +2455,7 @@ void Cmd_SaberDrop_f(gentity_t* ent, const int saber_num)
 
 void G_RemoveWeather()
 {
-	gi.SendConsoleCommand(va("exec WeatherSP/clear.cfg"));
+	gi.SendConsoleCommand(va("exec Weather/clear.cfg"));
 }
 
 /*

@@ -4110,5 +4110,5 @@ void IT_LoadWeatherParms(void)
 
 	trap->Cvar_Register(&mapname, "mapname", "", CVAR_SERVERINFO | CVAR_ROM);
 
-	trap->SendConsoleCommand(EXEC_INSERT, va("exec WeatherMP/%s", mapname.string, mapname.string, mapname.string));
+	trap->SendConsoleCommand(EXEC_INSERT, va("exec Weather/%s", mapname.string, mapname.string, mapname.string));
 }

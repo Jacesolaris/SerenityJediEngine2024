@@ -369,6 +369,20 @@ void CG_DrawDataPadObjectives(const centity_t* cent)
 	}
 }
 
+int SCREENTIP_NEXT_UPDATE_TIME = 0;
+
+void LoadTips()
+{
+	const int index = rand() % 15;
+	const int time = cgi_Milliseconds();
+
+	if ((SCREENTIP_NEXT_UPDATE_TIME < time || SCREENTIP_NEXT_UPDATE_TIME == 0) && cg.loadLCARSStage <= 6)
+	{
+		cgi_Cvar_Set("ui_tipsbriefing", va("@LOADTIPS_TIP%d", index));
+		SCREENTIP_NEXT_UPDATE_TIME = time + 3500;
+	}
+}
+
 constexpr auto LOADBAR_CLIP_WIDTH = 256;
 constexpr auto LOADBAR_CLIP_HEIGHT = 64;
 
@@ -396,10 +410,19 @@ void CG_LoadBar(void)
 
 	if (cg.loadLCARSStage >= 3)
 	{
+		if (cg.loadLCARSStage <= 6)
+		{
+			if (cg_com_rend2.integer == 1) //rend2 is on
+			{
+				cgi_R_Font_DrawString(40, 2, va("Warning: When using Quality mode, longer loading times can be expected."), colorTable[CT_WHITE], cgs.media.qhFontSmall, -1, 1.0f);
+			}
+		}
 		constexpr int x = (640 - LOADBAR_CLIP_WIDTH) / 2;
 		constexpr int y = 340;
 
 		CG_DrawPic(x, y, LOADBAR_CLIP_WIDTH, LOADBAR_CLIP_HEIGHT, cgs.media.load_SerenitySaberSystems);
+
+		LoadTips();
 	}
 }
 
@@ -837,20 +860,6 @@ char* cg_GetCurrentLevelshot2(const char* s)
 	return SCREENSHOT_CURRENT;
 }
 
-int SCREENTIP_NEXT_UPDATE_TIME = 0;
-
-void LoadTips()
-{
-	const int index = rand() % 15;
-	const int time = cgi_Milliseconds();
-
-	if ((SCREENTIP_NEXT_UPDATE_TIME < time || SCREENTIP_NEXT_UPDATE_TIME == 0) && cg.loadLCARSStage <= 6)
-	{
-		cgi_Cvar_Set("ui_tipsbriefing", va("@LOADTIPS_TIP%d", index));
-		SCREENTIP_NEXT_UPDATE_TIME = time + 3500;
-	}
-}
-
 void CG_DrawInformation()
 {
 	// draw the dialog background
@@ -910,36 +919,20 @@ void CG_DrawInformation()
 	}
 	else
 	{
-		if (cg.loadLCARSStage <= 2 && cg_com_rend2.integer == 1)
+		if (cg.loadLCARSStage >= 4)
 		{
-			CG_DrawPic(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, Loadshot2);
+			CG_DrawLoadingScreen(levelshot2, s);
 		}
 		else
 		{
-			if (cg.loadLCARSStage >= 4)
-			{
-				CG_DrawLoadingScreen(levelshot2, s);
-			}
-			else
-			{
-				CG_DrawLoadingScreen(levelshot, s);
-				CG_MissionCompletion();
-				LoadTips();
-			}
+			CG_DrawLoadingScreen(levelshot, s);
+			CG_MissionCompletion();
 		}
 		cgi_UI_MenuPaintAll();
 		CG_LoadBar();
 	}
 
 	// draw info string information
-
-	if (cg.loadLCARSStage <= 6)
-	{
-		if (cg_com_rend2.integer == 1) //rend2 is on
-		{
-			cgi_R_Font_DrawString(40, 2, va("Warning: When using Quality mode, longer loading times can be expected."), colorTable[CT_WHITE], cgs.media.qhFontSmall, -1, 1.0f);
-		}
-	}
 
 	// map-specific message (long map name)
 	s = CG_ConfigString(CS_MESSAGE);

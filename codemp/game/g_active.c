@@ -3014,7 +3014,7 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 			}
 			break;
 		case TAUNT_MEDITATE:
-			G_AddEvent(ent, EV_TAUNT, taunt);
+			//G_AddEvent(ent, EV_TAUNT, taunt);
 			if (ent->client->ps.weapon != WP_SABER) //MP
 			{
 				if (PM_WalkingAnim(ent->client->ps.legsAnim) || PM_RunningAnim(ent->client->ps.legsAnim))

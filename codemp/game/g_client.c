@@ -5915,6 +5915,8 @@ void ClientBegin(const int client_num, const qboolean allowTeamReset)
 	//init saber ent
 	wp_saber_init_blade_data(ent);
 
+	IT_LoadWeatherParms();
+
 	// First time model setup for that player.
 	trap->GetUserinfo(client_num, userinfo, sizeof userinfo);
 	char* modelname = Info_ValueForKey(userinfo, "model");

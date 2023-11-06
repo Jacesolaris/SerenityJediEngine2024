@@ -570,8 +570,6 @@ void R_LoadWeatherImages()
 		tr.weatherSystem->weatherSlots[WEATHER_SAND].drawImage = R_FindImageFile("gfx/effects/alpha_smoke2b", type, flags);
 	if (tr.weatherSystem->weatherSlots[WEATHER_FOG].active)
 		tr.weatherSystem->weatherSlots[WEATHER_FOG].drawImage = R_FindImageFile("gfx/effects/alpha_smoke2b", type, flags);
-	if (tr.weatherSystem->weatherSlots[WEATHER_LAVA].active)
-		tr.weatherSystem->weatherSlots[WEATHER_LAVA].drawImage = R_FindImageFile("gfx/effects/snowflake2", type, flags);
 }
 
 void RE_WorldEffectCommand(const char* command) // rend 2 mp
@@ -756,25 +754,6 @@ void RE_WorldEffectCommand(const char* command) // rend 2 mp
 			tr.weatherSystem->weatherSlots[WEATHER_RAIN].color);
 	}
 
-	else if ((Q_stricmp(token, "Lava") == 0) || r_weather->integer == 3)
-	{
-		if (!tr.weatherSystem->weatherSlots[WEATHER_LAVA].active)
-			tr.weatherSystem->activeWeatherTypes++;
-
-		tr.weatherSystem->weatherSlots[WEATHER_LAVA].particleCount = 1000;
-		tr.weatherSystem->weatherSlots[WEATHER_LAVA].active = true;
-		tr.weatherSystem->weatherSlots[WEATHER_LAVA].gravity = 0.3f;
-		tr.weatherSystem->weatherSlots[WEATHER_LAVA].fadeDistance = 6000.0f;
-
-		tr.weatherSystem->weatherSlots[WEATHER_LAVA].size[0] = 1.5f;
-		tr.weatherSystem->weatherSlots[WEATHER_LAVA].size[1] = 1.5f;
-
-		tr.weatherSystem->weatherSlots[WEATHER_LAVA].velocityOrientationScale = 0.0f;
-
-		VectorSet4(tr.weatherSystem->weatherSlots[WEATHER_LAVA].color, 0.95f, 0.95f, 0.05f, 0.05f);
-		VectorScale(tr.weatherSystem->weatherSlots[WEATHER_LAVA].color, 0.75f, tr.weatherSystem->weatherSlots[WEATHER_LAVA].color);
-	}
-
 	// Create A Rain Storm
 	//---------------------
 	else if (Q_stricmp(token, "heavyrain") == 0)
@@ -929,6 +908,25 @@ void RE_WorldEffectCommand(const char* command) // rend 2 mp
 
 		VectorSet4(tr.weatherSystem->weatherSlots[WEATHER_FOG].color, 0.19f, 0.6f, 0.7f, 0.12f);
 		VectorScale(tr.weatherSystem->weatherSlots[WEATHER_FOG].color, 0.12f, tr.weatherSystem->weatherSlots[WEATHER_FOG].color);
+	}
+
+	else if ((Q_stricmp(token, "Lava") == 0) || r_weather->integer == 3)
+	{
+		if (!tr.weatherSystem->weatherSlots[WEATHER_SNOW].active)
+			tr.weatherSystem->activeWeatherTypes++;
+
+		tr.weatherSystem->weatherSlots[WEATHER_SNOW].particleCount = 1000;
+		tr.weatherSystem->weatherSlots[WEATHER_SNOW].active = true;
+		tr.weatherSystem->weatherSlots[WEATHER_SNOW].gravity = 0.3f;
+		tr.weatherSystem->weatherSlots[WEATHER_SNOW].fadeDistance = 6000.0f;
+
+		tr.weatherSystem->weatherSlots[WEATHER_SNOW].size[0] = 1.5f;
+		tr.weatherSystem->weatherSlots[WEATHER_SNOW].size[1] = 1.5f;
+
+		tr.weatherSystem->weatherSlots[WEATHER_SNOW].velocityOrientationScale = 0.0f;
+
+		VectorSet4(tr.weatherSystem->weatherSlots[WEATHER_SNOW].color, 0.95f, 0.0f, 0.0f, 0.0f);
+		VectorScale(tr.weatherSystem->weatherSlots[WEATHER_SNOW].color, 0.95f, tr.weatherSystem->weatherSlots[WEATHER_SNOW].color);
 	}
 
 	else if (Q_stricmp(token, "outsideshake") == 0)
