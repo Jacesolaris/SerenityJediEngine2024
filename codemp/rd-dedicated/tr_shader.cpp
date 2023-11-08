@@ -2656,8 +2656,8 @@ static shader_t* FinishShader()
 
 	for (lm_stage = 0; lm_stage < MAX_SHADER_STAGES; lm_stage++)
 	{
-		const shaderStage_t* p_stage = &stages[lm_stage];
-		if (p_stage->active && p_stage->bundle[0].isLightmap)
+		const shaderStage_t* pStage = &stages[lm_stage];
+		if (pStage->active && pStage->bundle[0].isLightmap)
 		{
 			break;
 		}
@@ -2738,18 +2738,18 @@ static shader_t* FinishShader()
 	int stage_index = 0; //rwwRMG - needed for AGEN_BLEND
 	for (stage = 0; stage < MAX_SHADER_STAGES;)
 	{
-		shaderStage_t* p_stage = &stages[stage];
+		shaderStage_t* pStage = &stages[stage];
 
-		if (!p_stage->active)
+		if (!pStage->active)
 		{
 			break;
 		}
 
 		// check for a missing texture
-		if (!p_stage->bundle[0].image)
+		if (!pStage->bundle[0].image)
 		{
 			Com_Printf(S_COLOR_YELLOW "Shader %s has a stage with no image\n", shader.name);
-			p_stage->active = qfalse;
+			pStage->active = qfalse;
 			stage++;
 			continue;
 		}
@@ -2757,7 +2757,7 @@ static shader_t* FinishShader()
 		//
 		// ditch this stage if it's detail and detail textures are disabled
 		//
-		if (p_stage->isDetail && !r_detailTextures->integer)
+		if (pStage->isDetail && !r_detailTextures->integer)
 		{
 			int index;
 
@@ -2768,11 +2768,11 @@ static shader_t* FinishShader()
 			}
 
 			if (index < MAX_SHADER_STAGES)
-				memmove(p_stage, p_stage + 1, sizeof * p_stage * (index - stage));
+				memmove(pStage, pStage + 1, sizeof * pStage * (index - stage));
 			else
 			{
 				if (stage + 1 < MAX_SHADER_STAGES)
-					memmove(p_stage, p_stage + 1, sizeof * p_stage * (index - stage - 1));
+					memmove(pStage, pStage + 1, sizeof * pStage * (index - stage - 1));
 
 				Com_Memset(&stages[index - 1], 0, sizeof * stages);
 			}
@@ -2780,24 +2780,24 @@ static shader_t* FinishShader()
 			continue;
 		}
 
-		p_stage->index = stage_index; //rwwRMG - needed for AGEN_BLEND
+		pStage->index = stage_index; //rwwRMG - needed for AGEN_BLEND
 
 		//
 		// default texture coordinate generation
 		//
-		if (p_stage->bundle[0].isLightmap)
+		if (pStage->bundle[0].isLightmap)
 		{
-			if (p_stage->bundle[0].tcGen == TCGEN_BAD)
+			if (pStage->bundle[0].tcGen == TCGEN_BAD)
 			{
-				p_stage->bundle[0].tcGen = TCGEN_LIGHTMAP;
+				pStage->bundle[0].tcGen = TCGEN_LIGHTMAP;
 			}
 			has_lightmap_stage = qtrue;
 		}
 		else
 		{
-			if (p_stage->bundle[0].tcGen == TCGEN_BAD)
+			if (pStage->bundle[0].tcGen == TCGEN_BAD)
 			{
-				p_stage->bundle[0].tcGen = TCGEN_TEXTURE;
+				pStage->bundle[0].tcGen = TCGEN_TEXTURE;
 			}
 		}
 
@@ -2810,11 +2810,11 @@ static shader_t* FinishShader()
 		//
 		// determine sort order and fog color adjustment
 		//
-		if (p_stage->stateBits & (GLS_SRCBLEND_BITS | GLS_DSTBLEND_BITS) &&
+		if (pStage->stateBits & (GLS_SRCBLEND_BITS | GLS_DSTBLEND_BITS) &&
 			stages[0].stateBits & (GLS_SRCBLEND_BITS | GLS_DSTBLEND_BITS))
 		{
-			const int blend_src_bits = p_stage->stateBits & GLS_SRCBLEND_BITS;
-			const int blend_dst_bits = p_stage->stateBits & GLS_DSTBLEND_BITS;
+			const int blend_src_bits = pStage->stateBits & GLS_SRCBLEND_BITS;
+			const int blend_dst_bits = pStage->stateBits & GLS_DSTBLEND_BITS;
 
 			// fog color adjustment only works for blend modes that have a contribution
 			// that aproaches 0 as the modulate values aproach 0 --
@@ -2826,17 +2826,17 @@ static shader_t* FinishShader()
 			if (blend_src_bits == GLS_SRCBLEND_ONE && blend_dst_bits == GLS_DSTBLEND_ONE ||
 				blend_src_bits == GLS_SRCBLEND_ZERO && blend_dst_bits == GLS_DSTBLEND_ONE_MINUS_SRC_COLOR)
 			{
-				p_stage->adjustColorsForFog = ACFF_MODULATE_RGB;
+				pStage->adjustColorsForFog = ACFF_MODULATE_RGB;
 			}
 			// strict blend
 			else if (blend_src_bits == GLS_SRCBLEND_SRC_ALPHA && blend_dst_bits == GLS_DSTBLEND_ONE_MINUS_SRC_ALPHA)
 			{
-				p_stage->adjustColorsForFog = ACFF_MODULATE_ALPHA;
+				pStage->adjustColorsForFog = ACFF_MODULATE_ALPHA;
 			}
 			// premultiplied alpha
 			else if (blend_src_bits == GLS_SRCBLEND_ONE && blend_dst_bits == GLS_DSTBLEND_ONE_MINUS_SRC_ALPHA)
 			{
-				p_stage->adjustColorsForFog = ACFF_MODULATE_RGBA;
+				pStage->adjustColorsForFog = ACFF_MODULATE_RGBA;
 			}
 			else
 			{
@@ -2847,7 +2847,7 @@ static shader_t* FinishShader()
 			if (!shader.sort)
 			{
 				// see through item, like a grill or grate
-				if (p_stage->stateBits & GLS_DEPTHMASK_TRUE)
+				if (pStage->stateBits & GLS_DEPTHMASK_TRUE)
 				{
 					shader.sort = SS_SEE_THROUGH;
 				}
@@ -2883,59 +2883,59 @@ static shader_t* FinishShader()
 		}
 
 		//rww - begin hw fog
-		if ((p_stage->stateBits & (GLS_SRCBLEND_BITS | GLS_DSTBLEND_BITS)) == (GLS_SRCBLEND_ONE | GLS_DSTBLEND_ONE))
+		if ((pStage->stateBits & (GLS_SRCBLEND_BITS | GLS_DSTBLEND_BITS)) == (GLS_SRCBLEND_ONE | GLS_DSTBLEND_ONE))
 		{
-			p_stage->mGLFogColorOverride = GLFOGOVERRIDE_BLACK;
+			pStage->mGLFogColorOverride = GLFOGOVERRIDE_BLACK;
 		}
-		else if ((p_stage->stateBits & (GLS_SRCBLEND_BITS | GLS_DSTBLEND_BITS)) == (GLS_SRCBLEND_SRC_ALPHA |
+		else if ((pStage->stateBits & (GLS_SRCBLEND_BITS | GLS_DSTBLEND_BITS)) == (GLS_SRCBLEND_SRC_ALPHA |
 			GLS_DSTBLEND_ONE) &&
-			p_stage->alphaGen == AGEN_LIGHTING_SPECULAR && stage)
+			pStage->alphaGen == AGEN_LIGHTING_SPECULAR && stage)
 		{
-			p_stage->mGLFogColorOverride = GLFOGOVERRIDE_BLACK;
+			pStage->mGLFogColorOverride = GLFOGOVERRIDE_BLACK;
 		}
-		else if ((p_stage->stateBits & (GLS_SRCBLEND_BITS | GLS_DSTBLEND_BITS)) == (GLS_SRCBLEND_ZERO |
+		else if ((pStage->stateBits & (GLS_SRCBLEND_BITS | GLS_DSTBLEND_BITS)) == (GLS_SRCBLEND_ZERO |
 			GLS_DSTBLEND_ZERO))
 		{
-			p_stage->mGLFogColorOverride = GLFOGOVERRIDE_WHITE;
+			pStage->mGLFogColorOverride = GLFOGOVERRIDE_WHITE;
 		}
-		else if ((p_stage->stateBits & (GLS_SRCBLEND_BITS | GLS_DSTBLEND_BITS)) == (GLS_SRCBLEND_ONE |
+		else if ((pStage->stateBits & (GLS_SRCBLEND_BITS | GLS_DSTBLEND_BITS)) == (GLS_SRCBLEND_ONE |
 			GLS_DSTBLEND_ZERO))
 		{
-			p_stage->mGLFogColorOverride = GLFOGOVERRIDE_WHITE;
+			pStage->mGLFogColorOverride = GLFOGOVERRIDE_WHITE;
 		}
-		else if ((p_stage->stateBits & (GLS_SRCBLEND_BITS | GLS_DSTBLEND_BITS)) == 0 && stage)
+		else if ((pStage->stateBits & (GLS_SRCBLEND_BITS | GLS_DSTBLEND_BITS)) == 0 && stage)
 		{
 			//
-			p_stage->mGLFogColorOverride = GLFOGOVERRIDE_WHITE;
+			pStage->mGLFogColorOverride = GLFOGOVERRIDE_WHITE;
 		}
-		else if ((p_stage->stateBits & (GLS_SRCBLEND_BITS | GLS_DSTBLEND_BITS)) == 0 && p_stage->bundle[0].isLightmap &&
+		else if ((pStage->stateBits & (GLS_SRCBLEND_BITS | GLS_DSTBLEND_BITS)) == 0 && pStage->bundle[0].isLightmap &&
 			stage < MAX_SHADER_STAGES - 1 &&
 			stages[stage + 1].bundle[0].isLightmap)
 		{
 			// multiple light map blending
-			p_stage->mGLFogColorOverride = GLFOGOVERRIDE_WHITE;
+			pStage->mGLFogColorOverride = GLFOGOVERRIDE_WHITE;
 		}
-		else if ((p_stage->stateBits & (GLS_SRCBLEND_BITS | GLS_DSTBLEND_BITS)) == (GLS_SRCBLEND_DST_COLOR |
-			GLS_DSTBLEND_ZERO) && p_stage->bundle[0].isLightmap)
+		else if ((pStage->stateBits & (GLS_SRCBLEND_BITS | GLS_DSTBLEND_BITS)) == (GLS_SRCBLEND_DST_COLOR |
+			GLS_DSTBLEND_ZERO) && pStage->bundle[0].isLightmap)
 		{
 			//I don't know, it works. -rww
-			p_stage->mGLFogColorOverride = GLFOGOVERRIDE_WHITE;
+			pStage->mGLFogColorOverride = GLFOGOVERRIDE_WHITE;
 		}
-		else if ((p_stage->stateBits & (GLS_SRCBLEND_BITS | GLS_DSTBLEND_BITS)) == (GLS_SRCBLEND_DST_COLOR |
+		else if ((pStage->stateBits & (GLS_SRCBLEND_BITS | GLS_DSTBLEND_BITS)) == (GLS_SRCBLEND_DST_COLOR |
 			GLS_DSTBLEND_ZERO))
 		{
 			//I don't know, it works. -rww
-			p_stage->mGLFogColorOverride = GLFOGOVERRIDE_BLACK;
+			pStage->mGLFogColorOverride = GLFOGOVERRIDE_BLACK;
 		}
-		else if ((p_stage->stateBits & (GLS_SRCBLEND_BITS | GLS_DSTBLEND_BITS)) == (GLS_SRCBLEND_ONE |
+		else if ((pStage->stateBits & (GLS_SRCBLEND_BITS | GLS_DSTBLEND_BITS)) == (GLS_SRCBLEND_ONE |
 			GLS_DSTBLEND_ONE_MINUS_SRC_COLOR))
 		{
 			//I don't know, it works. -rww
-			p_stage->mGLFogColorOverride = GLFOGOVERRIDE_BLACK;
+			pStage->mGLFogColorOverride = GLFOGOVERRIDE_BLACK;
 		}
 		else
 		{
-			p_stage->mGLFogColorOverride = GLFOGOVERRIDE_NONE;
+			pStage->mGLFogColorOverride = GLFOGOVERRIDE_NONE;
 		}
 		//rww - end hw fog
 

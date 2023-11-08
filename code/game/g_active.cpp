@@ -1838,15 +1838,15 @@ void G_MatchPlayerWeapon(gentity_t* ent)
 				const int num_sabers = wp_saber_init_blade_data(ent);
 				wp_saber_add_g2_saber_models(ent);
 				G_RemoveHolsterModels(ent);
-				for (int saber_num = 0; saber_num < num_sabers; saber_num++)
+				for (int saberNum = 0; saberNum < num_sabers; saberNum++)
 				{
-					ent->client->ps.saber[saber_num].type = g_entities[0].client->ps.saber[saber_num].type;
-					for (int blade_num = 0; blade_num < ent->client->ps.saber[saber_num].numBlades; blade_num++)
+					ent->client->ps.saber[saberNum].type = g_entities[0].client->ps.saber[saberNum].type;
+					for (int blade_num = 0; blade_num < ent->client->ps.saber[saberNum].numBlades; blade_num++)
 					{
-						ent->client->ps.saber[saber_num].blade[0].active = g_entities[0].client->ps.saber[saber_num].
+						ent->client->ps.saber[saberNum].blade[0].active = g_entities[0].client->ps.saber[saberNum].
 							blade
 							[blade_num].active;
-						ent->client->ps.saber[saber_num].blade[0].length = g_entities[0].client->ps.saber[saber_num].
+						ent->client->ps.saber[saberNum].blade[0].length = g_entities[0].client->ps.saber[saberNum].
 							blade
 							[blade_num].length;
 					}
@@ -2638,14 +2638,14 @@ gentity_t* G_KickTrace(gentity_t* ent, vec3_t kick_dir, const float kick_dist, v
 		static_cast<EG2_Collision>(0),
 		0); //clipmask ok?
 
-	if (trace.fraction < 1.0f || trace.startsolid && trace.entity_num < ENTITYNUM_NONE)
+	if (trace.fraction < 1.0f || trace.startsolid && trace.entityNum < ENTITYNUM_NONE)
 	{
-		hit_ent = &g_entities[trace.entity_num];
+		hit_ent = &g_entities[trace.entityNum];
 
-		if (ent->client->ps.lastKickedEntNum != trace.entity_num)
+		if (ent->client->ps.lastKickedEntNum != trace.entityNum)
 		{
 			TIMER_Remove(ent, "kickSoundDebounce");
-			ent->client->ps.lastKickedEntNum = trace.entity_num;
+			ent->client->ps.lastKickedEntNum = trace.entityNum;
 		}
 
 		if (hit_ent)
@@ -6491,13 +6491,13 @@ void DoCallout(gentity_t* caller, gentity_t* ourFriend)
 		return;
 	}
 
-	if (tr.entity_num == ENTITYNUM_WORLD)
+	if (tr.entityNum == ENTITYNUM_WORLD)
 	{
 		// Didn't hit an entity
 		return;
 	}
 
-	gentity_t* tracedEnemy = &g_entities[tr.entity_num];
+	gentity_t* tracedEnemy = &g_entities[tr.entityNum];
 
 	if (tracedEnemy->s.eType != ET_PLAYER)
 	{

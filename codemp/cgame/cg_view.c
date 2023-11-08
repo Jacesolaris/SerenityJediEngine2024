@@ -623,12 +623,12 @@ static void CG_UpdateThirdPersonCameraDamp(void)
 
 	if (trace.fraction < 1.0)
 	{
-		if (trace.entity_num < ENTITYNUM_WORLD &&
-			cg_entities[trace.entity_num].currentState.solid == SOLID_BMODEL &&
-			cg_entities[trace.entity_num].currentState.eType == ET_MOVER)
+		if (trace.entityNum < ENTITYNUM_WORLD &&
+			cg_entities[trace.entityNum].currentState.solid == SOLID_BMODEL &&
+			cg_entities[trace.entityNum].currentState.eType == ET_MOVER)
 		{
 			//get a different position for movers -rww
-			centity_t* mover = &cg_entities[trace.entity_num];
+			centity_t* mover = &cg_entities[trace.entityNum];
 
 			//this is absolutely hackiful, since we calc view values before we add packet ents and lerp,
 			//if we hit a mover we want to update its lerp pos and force it when we do the trace against

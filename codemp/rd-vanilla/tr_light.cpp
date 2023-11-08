@@ -91,19 +91,19 @@ void R_DlightBmodel(const bmodel_t* bmodel, const bool no_light)
 	}
 
 	tr.currentEntity->needDlights = static_cast<qboolean>(mask != 0);
-	tr.currentEntity->dlight_bits = mask;
+	tr.currentEntity->dlightBits = mask;
 
 	// set the dlight bits in all the surfaces
 	for (i = 0; i < bmodel->numSurfaces; i++) {
 		const msurface_t* surf = bmodel->firstSurface + i;
 		if (*surf->data == SF_FACE) {
-			reinterpret_cast<srfSurfaceFace_t*>(surf->data)->dlight_bits = mask;
+			reinterpret_cast<srfSurfaceFace_t*>(surf->data)->dlightBits = mask;
 		}
 		else if (*surf->data == SF_GRID) {
-			reinterpret_cast<srfGridMesh_t*>(surf->data)->dlight_bits = mask;
+			reinterpret_cast<srfGridMesh_t*>(surf->data)->dlightBits = mask;
 		}
 		else if (*surf->data == SF_TRIANGLES) {
-			reinterpret_cast<srfTriangles_t*>(surf->data)->dlight_bits = mask;
+			reinterpret_cast<srfTriangles_t*>(surf->data)->dlightBits = mask;
 		}
 	}
 }

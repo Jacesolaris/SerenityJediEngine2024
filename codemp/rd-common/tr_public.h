@@ -158,20 +158,20 @@ using refexport_t = struct refexport_s
 	// G2API
 	int (*G2API_AddBolt)(CGhoul2Info_v& ghoul2, int modelIndex, const char* boneName);
 	int (*G2API_AddBoltSurfNum)(CGhoul2Info* ghlInfo, int surfIndex);
-	int (*G2API_AddSurface)(CGhoul2Info* ghlInfo, int surface_number, int polyNumber, float BarycentricI,
+	int (*G2API_AddSurface)(CGhoul2Info* ghlInfo, int surfaceNumber, int polyNumber, float BarycentricI,
 		float BarycentricJ, int lod);
 	void (*G2API_AnimateG2ModelsRag)(CGhoul2Info_v& ghoul2, int acurrent_time, CRagDollUpdateParams* params);
 	qboolean(*G2API_AttachEnt)(int* bolt_info, CGhoul2Info_v& ghoul2, int modelIndex, int toBoltIndex, int entNum,
 		int toModelNum);
 	qboolean(*G2API_AttachG2Model)(CGhoul2Info_v& ghoul2_from, int model_from, CGhoul2Info_v& ghoul2_to, int toBoltIndex,
 		int toModel);
-	void (*G2API_AttachInstanceToEntNum)(CGhoul2Info_v& ghoul2, int entity_num, qboolean server);
+	void (*G2API_AttachInstanceToEntNum)(CGhoul2Info_v& ghoul2, int entityNum, qboolean server);
 	void (*G2API_AbsurdSmoothing)(CGhoul2Info_v& ghoul2, qboolean status);
 	void (*G2API_BoltMatrixReconstruction)(qboolean reconstruct);
 	void (*G2API_BoltMatrixSPMethod)(qboolean spMethod);
 	void (*G2API_CleanEntAttachments)();
 	void (*G2API_CleanGhoul2Models)(CGhoul2Info_v** ghoul2Ptr);
-	void (*G2API_ClearAttachedInstance)(int entity_num);
+	void (*G2API_ClearAttachedInstance)(int entityNum);
 	void (*G2API_CollisionDetect)(CollisionRecord_t* collRecMap, CGhoul2Info_v& ghoul2, const vec3_t angles,
 		const vec3_t position, int frameNumber, int entNum, vec3_t rayStart, vec3_t rayEnd,
 		vec3_t scale, IHeapAllocator* G2VertSpace, int traceFlags, int useLod, float fRadius);

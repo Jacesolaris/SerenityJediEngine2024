@@ -79,9 +79,9 @@ public:
 static CQuickOverride QuickOverride;
 
 // find a particular surface in the surface override list
-const surfaceInfo_t* G2_FindOverrideSurface(const int surface_num, const surfaceInfo_v& surface_list)
+const surfaceInfo_t* G2_FindOverrideSurface(const int surfaceNum, const surfaceInfo_v& surface_list)
 {
-	if (surface_num < 0)
+	if (surfaceNum < 0)
 	{
 		// starting a new lookup
 		QuickOverride.Invalidate();
@@ -94,14 +94,14 @@ const surfaceInfo_t* G2_FindOverrideSurface(const int surface_num, const surface
 		}
 		return nullptr;
 	}
-	const int idx = QuickOverride.Test(surface_num);
+	const int idx = QuickOverride.Test(surfaceNum);
 	if (idx < 0)
 	{
-		if (surface_num == 10000)
+		if (surfaceNum == 10000)
 		{
 			for (const auto& i : surface_list)
 			{
-				if (i.surface == surface_num)
+				if (i.surface == surfaceNum)
 				{
 					return &i;
 				}
@@ -112,7 +112,7 @@ const surfaceInfo_t* G2_FindOverrideSurface(const int surface_num, const surface
 		size_t i;
 		for (i = 0; i < surface_list.size(); i++)
 		{
-			if (surface_list[i].surface == surface_num)
+			if (surface_list[i].surface == surfaceNum)
 			{
 				break;
 			}
@@ -123,7 +123,7 @@ const surfaceInfo_t* G2_FindOverrideSurface(const int surface_num, const surface
 		return nullptr;
 	}
 	assert(idx >= 0 && idx < static_cast<int>(surface_list.size()));
-	assert(surface_list[idx].surface == surface_num);
+	assert(surface_list[idx].surface == surfaceNum);
 	return &surface_list[idx];
 }
 
@@ -217,8 +217,8 @@ qboolean G2_SetSurfaceOnOff(CGhoul2Info* ghlInfo, const char* surfaceName, const
 	}
 	// ok, not in the list already - in that case, lets verify this surface exists in the model mesh
 	uint32_t flags;
-	const int surface_num = G2_IsSurfaceLegal(ghlInfo->currentModel, surfaceName, &flags);
-	if (surface_num != -1)
+	const int surfaceNum = G2_IsSurfaceLegal(ghlInfo->currentModel, surfaceName, &flags);
+	if (surfaceNum != -1)
 	{
 		uint32_t newflags = flags;
 		// the only bit we really care about in the incoming flags is the off bit
@@ -230,7 +230,7 @@ qboolean G2_SetSurfaceOnOff(CGhoul2Info* ghlInfo, const char* surfaceName, const
 			surfaceInfo_t temp_slist_entry;
 			// insert here then because it changed, no need to add an override otherwise
 			temp_slist_entry.offFlags = newflags;
-			temp_slist_entry.surface = surface_num;
+			temp_slist_entry.surface = surfaceNum;
 
 			ghlInfo->mSlist.push_back(temp_slist_entry);
 		}
@@ -239,16 +239,16 @@ qboolean G2_SetSurfaceOnOff(CGhoul2Info* ghlInfo, const char* surfaceName, const
 	return qfalse;
 }
 
-void G2_FindRecursiveSurface(const model_t* currentModel, int surface_num, surfaceInfo_v& root_list, int* active_surfaces)
+void G2_FindRecursiveSurface(const model_t* currentModel, int surfaceNum, surfaceInfo_v& root_list, int* active_surfaces)
 {
 	assert(currentModel);
 	assert(currentModel->mdxm);
-	const mdxmSurface_t* surface = static_cast<mdxmSurface_t*>(G2_FindSurface(currentModel, surface_num, 0));
+	const mdxmSurface_t* surface = static_cast<mdxmSurface_t*>(G2_FindSurface(currentModel, surfaceNum, 0));
 	const mdxmHierarchyOffsets_t* surf_indexes = reinterpret_cast<mdxmHierarchyOffsets_t*>(reinterpret_cast<byte*>(currentModel->mdxm) + sizeof(mdxmHeader_t));
 	const mdxmSurfHierarchy_t* surf_info = reinterpret_cast<mdxmSurfHierarchy_t*>((byte*)surf_indexes + surf_indexes->offsets[surface->thisSurfaceIndex]);
 
 	// see if we have an override surface in the surface list
-	const surfaceInfo_t* surf_override = G2_FindOverrideSurface(surface_num, root_list);
+	const surfaceInfo_t* surf_override = G2_FindOverrideSurface(surfaceNum, root_list);
 
 	// really, we should use the default flags for this surface unless it's been overriden
 	int offFlags = surf_info->flags;
@@ -262,7 +262,7 @@ void G2_FindRecursiveSurface(const model_t* currentModel, int surface_num, surfa
 	// if this surface is not off, indicate as such in the active surface list
 	if (!(offFlags & G2SURFACEFLAG_OFF))
 	{
-		active_surfaces[surface_num] = 1;
+		active_surfaces[surfaceNum] = 1;
 	}
 	else
 		// if we are turning off all descendants, then stop this recursion now
@@ -274,8 +274,8 @@ void G2_FindRecursiveSurface(const model_t* currentModel, int surface_num, surfa
 	// now recursively call for the children
 	for (int i = 0; i < surf_info->numChildren; i++)
 	{
-		surface_num = surf_info->childIndexes[i];
-		G2_FindRecursiveSurface(currentModel, surface_num, root_list, active_surfaces);
+		surfaceNum = surf_info->childIndexes[i];
+		G2_FindRecursiveSurface(currentModel, surfaceNum, root_list, active_surfaces);
 	}
 }
 
@@ -297,7 +297,7 @@ qboolean G2_SetRootSurface(CGhoul2Info_v& ghoul2, const int modelIndex, const ch
 }
 
 extern int G2_DecideTraceLod(const CGhoul2Info& ghoul2, const int useLod);
-int G2_AddSurface(CGhoul2Info* ghoul2, const int surface_number, const int poly_number, const float barycentric_i, const float barycentric_j, int lod)
+int G2_AddSurface(CGhoul2Info* ghoul2, const int surfaceNumber, const int poly_number, const float barycentric_i, const float barycentric_j, int lod)
 {
 	lod = G2_DecideTraceLod(*ghoul2, lod);
 
@@ -319,7 +319,7 @@ int G2_AddSurface(CGhoul2Info* ghoul2, const int surface_number, const int poly_
 	ghoul2->mSlist[i].surface = 10000;		// no model will ever have 10000 surfaces
 	ghoul2->mSlist[i].genBarycentricI = barycentric_i;
 	ghoul2->mSlist[i].genBarycentricJ = barycentric_j;
-	ghoul2->mSlist[i].genPolySurfaceIndex = (poly_number & 0xffff) << 16 | surface_number & 0xffff;
+	ghoul2->mSlist[i].genPolySurfaceIndex = (poly_number & 0xffff) << 16 | surfaceNumber & 0xffff;
 	ghoul2->mSlist[i].genLod = lod;
 	return i;
 }

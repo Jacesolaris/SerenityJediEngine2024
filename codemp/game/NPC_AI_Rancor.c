@@ -40,7 +40,7 @@ extern void G_Dismember(const gentity_t* ent, const gentity_t* enemy, vec3_t poi
 extern float NPC_EntRangeFromBolt(const gentity_t* targ_ent, int bolt_index);
 extern int NPC_GetEntsNearBolt(int* radius_ents, float radius, int bolt_index, vec3_t bolt_org);
 void Rancor_Attack(float distance, qboolean do_charge, qboolean aim_at_blocked_entity);
-extern qboolean G_EntIsBreakable(int entity_num);
+extern qboolean G_EntIsBreakable(int entityNum);
 void Rancor_Move();
 
 void Rancor_SetBolts(const gentity_t* self)
@@ -1054,8 +1054,8 @@ void Rancor_CheckAnimDamage()
 //
 //	gi.trace(&tr, start, trace_mins, trace_maxs, end, NPC->s.number, MASK_SHOT, static_cast<EG2_Collision>(0), 0);
 //
-//	gentity_t* trace_ent = &g_entities[tr.entity_num];
-//	if (tr.entity_num < ENTITYNUM_WORLD
+//	gentity_t* trace_ent = &g_entities[tr.entityNum];
+//	if (tr.entityNum < ENTITYNUM_WORLD
 //		&& trace_ent->takedamage
 //		&& trace_ent->client)
 //	{

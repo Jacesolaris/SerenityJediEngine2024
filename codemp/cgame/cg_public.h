@@ -527,19 +527,19 @@ typedef struct cgameImport_s {
 
 	// sound
 	int				(*S_AddLocalSet)						(const char* name, vec3_t listener_origin, vec3_t origin, int ent_id, int time);
-	void			(*S_AddLoopingSound)					(int entity_num, const vec3_t origin, const vec3_t velocity, sfxHandle_t sfx);
+	void			(*S_AddLoopingSound)					(int entityNum, const vec3_t origin, const vec3_t velocity, sfxHandle_t sfx);
 	void			(*S_ClearLoopingSounds)					(void);
 	int				(*S_GetVoiceVolume)						(int ent_id);
-	void			(*S_MuteSound)							(int entity_num, int entchannel);
+	void			(*S_MuteSound)							(int entityNum, int entchannel);
 	sfxHandle_t(*S_RegisterSound)						(const char* sample);
-	void			(*S_Respatialize)						(int entity_num, const vec3_t origin, matrix3_t axis, int inwater);
+	void			(*S_Respatialize)						(int entityNum, const vec3_t origin, matrix3_t axis, int inwater);
 	void			(*S_Shutup)								(qboolean shutup);
 	void			(*S_StartBackgroundTrack)				(const char* intro, const char* loop, qboolean bReturnWithoutStarting);
 	void			(*S_StartLocalSound)					(sfxHandle_t sfx, int channelNum);
 	void			(*S_StartSound)							(const vec3_t origin, int entnum, int entchannel, sfxHandle_t sfx);
 	void			(*S_StopBackgroundTrack)				(void);
-	void			(*S_StopLoopingSound)					(int entity_num);
-	void			(*S_UpdateEntityPosition)				(int entity_num, const vec3_t origin);
+	void			(*S_StopLoopingSound)					(int entityNum);
+	void			(*S_UpdateEntityPosition)				(int entityNum, const vec3_t origin);
 	void			(*S_UpdateAmbientSet)					(const char* name, vec3_t origin);
 
 	// ambient sound
@@ -708,8 +708,8 @@ typedef struct cgameImport_s {
 	qboolean(*G2API_SetBoneIKState)					(void* ghoul2, int time, const char* boneName, int ikState, sharedSetBoneIKStateParams_t* params);
 	qboolean(*G2API_IKMove)							(void* ghoul2, int time, sharedIKMoveParams_t* params);
 	qboolean(*G2API_RemoveBone)						(void* ghoul2, const char* boneName, int modelIndex);
-	void			(*G2API_AttachInstanceToEntNum)			(void* ghoul2, int entity_num, qboolean server);
-	void			(*G2API_ClearAttachedInstance)			(int entity_num);
+	void			(*G2API_AttachInstanceToEntNum)			(void* ghoul2, int entityNum, qboolean server);
+	void			(*G2API_ClearAttachedInstance)			(int entityNum);
 	void			(*G2API_CleanEntAttachments)			();
 	qboolean(*G2API_OverrideServer)					(void* serverInstance);
 	void			(*G2API_GetSurfaceName)					(void* ghoul2, int surfNumber, int modelIndex, char* fillBuf);

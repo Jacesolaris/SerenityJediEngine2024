@@ -333,7 +333,7 @@ int G2API_GetTime(int arg_time) // this may or may not return arg depending on g
 #define G2_MODEL_BITS (10)   //jacesolaris was 9
 #define G2_INDEX_MASK (MAX_G2_MODELS-1)
 
-void RemoveBoneCache(const CBoneCache* bone_cache);
+void RemoveBoneCache(const CBoneCache* boneCache);
 
 static size_t GetSizeOfGhoul2Info(const CGhoul2Info& g2Info)
 {
@@ -897,14 +897,14 @@ qboolean G2API_SetRootSurface(CGhoul2Info_v& ghlInfo, const int modelIndex, cons
 	return qfalse;
 }
 
-int G2API_AddSurface(CGhoul2Info* ghlInfo, const int surface_number, const int poly_number, const float barycentric_i, const float barycentric_j,
+int G2API_AddSurface(CGhoul2Info* ghlInfo, const int surfaceNumber, const int poly_number, const float barycentric_i, const float barycentric_j,
 	const int lod)
 {
 	if (G2_SetupModelPointers(ghlInfo))
 	{
 		// ensure we flush the cache
 		ghlInfo->mMeshFrameNum = 0;
-		return G2_AddSurface(ghlInfo, surface_number, poly_number, barycentric_i, barycentric_j, lod);
+		return G2_AddSurface(ghlInfo, surfaceNumber, poly_number, barycentric_i, barycentric_j, lod);
 	}
 	return -1;
 }
@@ -1691,7 +1691,7 @@ qboolean G2API_AttachG2Model(CGhoul2Info* ghlInfo, CGhoul2Info* ghl_info_to, int
 		if (to_bolt_index >= 0 && ghl_info_to->mBltlist.size())
 		{
 			// make sure we have a model to attach, a model to attach to, and a bolt on that model
-			if (ghl_info_to->mBltlist[to_bolt_index].boneNumber != -1 || ghl_info_to->mBltlist[to_bolt_index].surface_number != -
+			if (ghl_info_to->mBltlist[to_bolt_index].boneNumber != -1 || ghl_info_to->mBltlist[to_bolt_index].surfaceNumber != -
 				1)
 			{
 				// encode the bolt address into the model bolt link
@@ -1724,7 +1724,7 @@ qboolean G2API_AttachEnt(int* bolt_info, CGhoul2Info* ghl_info_to, int to_bolt_i
 	{
 		// make sure we have a model to attach, a model to attach to, and a bolt on that model
 		if (ghl_info_to->mBltlist.size() && (ghl_info_to->mBltlist[to_bolt_index].boneNumber != -1 || ghl_info_to->mBltlist[
-			to_bolt_index].surface_number != -1))
+			to_bolt_index].surfaceNumber != -1))
 		{
 			// encode the bolt address into the model bolt link
 			to_model_num &= MODEL_AND;
@@ -2368,4 +2368,12 @@ bool G2_SetupModelPointers(CGhoul2Info_v& ghoul2) // returns true if any model i
 		ret = ret || r;
 	}
 	return ret;
+}
+
+void G2API_SetTintType(CGhoul2Info* ghlInfo, g2Tints_t tintType)
+{
+	if (G2_SetupModelPointers(ghlInfo))
+	{
+		ghlInfo->tintType = tintType;
+	}
 }

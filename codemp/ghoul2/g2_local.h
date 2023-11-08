@@ -209,10 +209,10 @@ extern mdxaBone_t worldMatrixInv;
 qboolean G2_SetSurfaceOnOff(const CGhoul2Info* ghlInfo, surfaceInfo_v& slist, const char* surfaceName, const int offFlags);
 int G2_IsSurfaceOff(const CGhoul2Info* ghlInfo, const surfaceInfo_v& slist, const char* surfaceName);
 qboolean G2_SetRootSurface(CGhoul2Info_v& ghoul2, int modelIndex, const char* surfaceName);
-int G2_AddSurface(CGhoul2Info* ghoul2, int surface_number, int poly_number, float barycentric_i, float barycentric_j,
+int G2_AddSurface(CGhoul2Info* ghoul2, int surfaceNumber, int poly_number, float barycentric_i, float barycentric_j,
 	int lod);
 qboolean G2_RemoveSurface(surfaceInfo_v& slist, int index);
-surfaceInfo_t* G2_FindOverrideSurface(int surface_num, surfaceInfo_v& surface_list);
+surfaceInfo_t* G2_FindOverrideSurface(int surfaceNum, surfaceInfo_v& surface_list);
 int G2_IsSurfaceLegal(void* mod, const char* surfaceName, int* flags);
 int G2_GetParentSurface(const CGhoul2Info* ghlInfo, int index);
 int G2_GetSurfaceIndex(const CGhoul2Info* ghlInfo, const char* surfaceName);
@@ -274,7 +274,7 @@ int G2_Add_Bolt(const CGhoul2Info* ghlInfo, boltInfo_v& bltlist, surfaceInfo_v& 
 qboolean G2_Remove_Bolt(boltInfo_v& bltlist, int index);
 void G2_Init_Bolt_List(boltInfo_v& bltlist);
 int G2_Find_Bolt_Bone_Num(const boltInfo_v& bltlist, int boneNum);
-int G2_Find_Bolt_Surface_Num(const boltInfo_v& bltlist, const int surface_num, const int flags);
+int G2_Find_Bolt_surfaceNum(const boltInfo_v& bltlist, const int surfaceNum, const int flags);
 int G2_Add_Bolt_Surf_Num(const CGhoul2Info* ghlInfo, boltInfo_v& bltlist, const surfaceInfo_v& slist, const int surfNum);
 void G2_RemoveRedundantBolts(boltInfo_v& bltlist, surfaceInfo_v& slist, const int* activeSurfaces, const int* active_bones);
 
@@ -299,7 +299,7 @@ qboolean G2API_SetSurfaceOnOff(CGhoul2Info_v& ghoul2, const char* surfaceName, i
 int G2API_GetSurfaceOnOff(CGhoul2Info* ghlInfo, const char* surfaceName);
 qboolean G2API_SetRootSurface(CGhoul2Info_v& ghoul2, int modelIndex, const char* surfaceName);
 qboolean G2API_RemoveSurface(CGhoul2Info* ghlInfo, int index);
-int G2API_AddSurface(CGhoul2Info* ghlInfo, int surface_number, int poly_number, float barycentric_i, float barycentric_j,
+int G2API_AddSurface(CGhoul2Info* ghlInfo, int surfaceNumber, int poly_number, float barycentric_i, float barycentric_j,
 	int lod);
 qboolean G2API_SetBoneAnim(CGhoul2Info_v& ghoul2, int modelIndex, const char* boneName, int astartFrame, int aendFrame, int flags, float animSpeed, int currentTime, float aset_frame = -1, int blendTime = -1);
 qboolean G2API_GetBoneAnim(CGhoul2Info_v& ghoul2, const int modelIndex, const char* boneName, const int currentTime, float* currentFrame, int* startFrame, int* endFrame, int* flags, float* animSpeed, int* modelList);
@@ -394,8 +394,8 @@ qboolean G2API_SetBoneIKState(CGhoul2Info_v& ghoul2, int time, const char* boneN
 	sharedSetBoneIKStateParams_t* params);
 qboolean G2API_IKMove(CGhoul2Info_v& ghoul2, int time, sharedIKMoveParams_t* params);
 
-void G2API_AttachInstanceToEntNum(CGhoul2Info_v& ghoul2, int entity_num, qboolean server);
-void G2API_ClearAttachedInstance(int entity_num);
+void G2API_AttachInstanceToEntNum(CGhoul2Info_v& ghoul2, int entityNum, qboolean server);
+void G2API_ClearAttachedInstance(int entityNum);
 void G2API_CleanEntAttachments();
 qboolean G2API_OverrideServerWithClientData(CGhoul2Info_v& ghoul2, int modelIndex);
 
@@ -413,6 +413,6 @@ void G2API_ClearSkinGore(CGhoul2Info_v& ghoul2);
 #endif // _SOF2
 
 int G2API_Ghoul2Size(const CGhoul2Info_v& ghoul2);
-void RemoveBoneCache(const CBoneCache* bone_cache);
+void RemoveBoneCache(const CBoneCache* boneCache);
 
 const char* G2API_GetModelName(CGhoul2Info_v& ghoul2, int modelIndex);

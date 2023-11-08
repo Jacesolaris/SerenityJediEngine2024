@@ -973,15 +973,15 @@ static qboolean CL_G2API_RemoveBone(void* ghoul2, const char* boneName, const in
 	return re->G2API_RemoveBone(g2, modelIndex, boneName);
 }
 
-static void CL_G2API_AttachInstanceToEntNum(void* ghoul2, const int entity_num, const qboolean server)
+static void CL_G2API_AttachInstanceToEntNum(void* ghoul2, const int entityNum, const qboolean server)
 {
 	if (!ghoul2) return;
-	re->G2API_AttachInstanceToEntNum(*static_cast<CGhoul2Info_v*>(ghoul2), entity_num, server);
+	re->G2API_AttachInstanceToEntNum(*static_cast<CGhoul2Info_v*>(ghoul2), entityNum, server);
 }
 
-static void CL_G2API_ClearAttachedInstance(const int entity_num)
+static void CL_G2API_ClearAttachedInstance(const int entityNum)
 {
-	re->G2API_ClearAttachedInstance(entity_num);
+	re->G2API_ClearAttachedInstance(entityNum);
 }
 
 static void CL_G2API_CleanEntAttachments(void)

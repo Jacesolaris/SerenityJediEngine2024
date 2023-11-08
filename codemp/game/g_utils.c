@@ -1925,12 +1925,12 @@ void TryUse(gentity_t* ent)
 	trap->Trace(&trace, src, vec3_origin, vec3_origin, dest, ent->s.number,
 		MASK_OPAQUE | CONTENTS_SOLID | CONTENTS_BODY | CONTENTS_ITEM | CONTENTS_CORPSE, qfalse, 0, 0);
 
-	if (trace.fraction == 1.0f || trace.entity_num == ENTITYNUM_NONE)
+	if (trace.fraction == 1.0f || trace.entityNum == ENTITYNUM_NONE)
 	{
 		goto tryJetPack;
 	}
 
-	gentity_t* target = &g_entities[trace.entity_num];
+	gentity_t* target = &g_entities[trace.entityNum];
 
 	//Enable for corpse dragging
 #if 0
@@ -2473,7 +2473,7 @@ gentity_t* ViewTarget(const gentity_t* ent, const int length, vec3_t* target, cp
 	if (target)
 		VectorCopy(tr.endpos, *target);
 
-	if (tr.entity_num >= ENTITYNUM_MAX_NORMAL)
+	if (tr.entityNum >= ENTITYNUM_MAX_NORMAL)
 		return NULL;
-	return &g_entities[tr.entity_num];
+	return &g_entities[tr.entityNum];
 }

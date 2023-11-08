@@ -827,7 +827,7 @@ void CG_Player(centity_t* cent);
 void CG_ResetPlayerEntity(centity_t* cent);
 void CG_AddRefEntityWithPowerups(refEntity_t* ent, int powerups, centity_t* cent);
 void CG_GetTagWorldPosition(refEntity_t* model, const char* tag, vec3_t pos, vec3_t axis[3]);
-void CG_PlayerShieldHit(int entity_num, vec3_t dir, int amount);
+void CG_PlayerShieldHit(int entityNum, vec3_t dir, int amount);
 
 //
 // cg_predict.c
@@ -1049,19 +1049,19 @@ int cgi_CM_MarkFragments(int numPoints, const vec3_t* points,
 
 // normal sounds will have their volume dynamically changed as their entity
 // moves and the listener moves
-void cgi_S_StartSound(const vec3_t origin, int entity_num, int entchannel, sfxHandle_t sfx);
+void cgi_S_StartSound(const vec3_t origin, int entityNum, int entchannel, sfxHandle_t sfx);
 void cgi_S_StopSounds();
 
 // a local sound is always played full volume
 void cgi_S_StartLocalSound(sfxHandle_t sfx, int channelNum);
 void cgi_S_ClearLoopingSounds();
-void cgi_S_AddLoopingSound(int entity_num, const vec3_t origin, const vec3_t velocity, sfxHandle_t sfx,
+void cgi_S_AddLoopingSound(int entityNum, const vec3_t origin, const vec3_t velocity, sfxHandle_t sfx,
 	soundChannel_t chan = CHAN_AUTO);
-void cgi_S_UpdateEntityPosition(int entity_num, const vec3_t origin);
+void cgi_S_UpdateEntityPosition(int entityNum, const vec3_t origin);
 
 // repatialize recalculates the volumes of sound as they should be heard by the
-// given entity_num and position
-void cgi_S_Respatialize(int entity_num, const vec3_t origin, vec3_t axis[3], qboolean inwater);
+// given entityNum and position
+void cgi_S_Respatialize(int entityNum, const vec3_t origin, vec3_t axis[3], qboolean inwater);
 sfxHandle_t cgi_S_RegisterSound(const char* sample); // returns buzz if not found
 void cgi_S_StartBackgroundTrack(const char* intro, const char* loop, qboolean bForceStart); // empty name stops music
 float cgi_S_GetSampleLength(sfxHandle_t sfx);

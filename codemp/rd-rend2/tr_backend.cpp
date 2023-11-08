@@ -1157,11 +1157,11 @@ static Pass* RB_CreatePass(Allocator& allocator, int capacity)
 	return pass;
 }
 
-static void RB_PrepareForEntity(int entity_num, float originalTime)
+static void RB_PrepareForEntity(int entityNum, float originalTime)
 {
-	if (entity_num != REFENTITYNUM_WORLD)
+	if (entityNum != REFENTITYNUM_WORLD)
 	{
-		backEnd.currentEntity = &backEnd.refdef.entities[entity_num];
+		backEnd.currentEntity = &backEnd.refdef.entities[entityNum];
 
 		backEnd.refdef.floatTime = originalTime - backEnd.currentEntity->e.shaderTime;
 	}
@@ -1183,7 +1183,7 @@ static void RB_SubmitDrawSurfsForDepthFill(
 	float originalTime)
 {
 	shader_t* oldShader = nullptr;
-	int oldentity_num = -1;
+	int oldEntityNum = -1;
 	int oldSort = -1;
 	int oldDepthRange = 0;
 	CBoneCache* oldBoneCache = nullptr;
@@ -1194,9 +1194,9 @@ static void RB_SubmitDrawSurfsForDepthFill(
 		shader_t* shader;
 		int cubemapIndex;
 		int postRender;
-		int entity_num;
+		int entityNum;
 
-		R_DecomposeSort(drawSurf->sort, &entity_num, &shader, &cubemapIndex, &postRender);
+		R_DecomposeSort(drawSurf->sort, &entityNum, &shader, &cubemapIndex, &postRender);
 		assert(shader != nullptr);
 
 		if (shader->useSimpleDepthShader == qtrue)
@@ -1210,16 +1210,16 @@ static void RB_SubmitDrawSurfsForDepthFill(
 
 		if (*drawSurf->surface == SF_MDX)
 		{
-			if (((CRenderableSurface*)drawSurf->surface)->bone_cache != oldBoneCache)
+			if (((CRenderableSurface*)drawSurf->surface)->boneCache != oldBoneCache)
 			{
 				RB_EndSurface();
 				RB_BeginSurface(shader, 0, 0);
-				oldBoneCache = ((CRenderableSurface*)drawSurf->surface)->bone_cache;
+				oldBoneCache = ((CRenderableSurface*)drawSurf->surface)->boneCache;
 				tr.animationBoneUboOffset = RB_GetBoneUboOffset((CRenderableSurface*)drawSurf->surface);
 			}
 		}
 
-		if (shader == oldShader && entity_num == oldentity_num)
+		if (shader == oldShader && entityNum == oldEntityNum)
 		{
 			// fast path, same as previous sort
 			rb_surfaceTable[*drawSurf->surface](drawSurf->surface);
@@ -1231,7 +1231,7 @@ static void RB_SubmitDrawSurfsForDepthFill(
 		// seperate entities merged into a single batch, like smoke and blood
 		// puff sprites
 		if (shader != oldShader ||
-			(entity_num != oldentity_num && !shader->entityMergable))
+			(entityNum != oldEntityNum && !shader->entityMergable))
 		{
 			if (oldShader != nullptr)
 			{
@@ -1246,10 +1246,10 @@ static void RB_SubmitDrawSurfsForDepthFill(
 		oldSort = drawSurf->sort;
 
 		// change the modelview matrix if needed
-		if (entity_num != oldentity_num)
+		if (entityNum != oldEntityNum)
 		{
-			RB_PrepareForEntity(entity_num, originalTime);
-			oldentity_num = entity_num;
+			RB_PrepareForEntity(entityNum, originalTime);
+			oldEntityNum = entityNum;
 		}
 
 		// add the triangles for this surface
@@ -1270,7 +1270,7 @@ static void RB_SubmitDrawSurfs(
 	float originalTime)
 {
 	shader_t* oldShader = nullptr;
-	int oldentity_num = -1;
+	int oldEntityNum = -1;
 	int oldSort = -1;
 	int oldFogNum = -1;
 	int oldDepthRange = 0;
@@ -1285,22 +1285,22 @@ static void RB_SubmitDrawSurfs(
 		shader_t* shader;
 		int cubemapIndex;
 		int postRender;
-		int entity_num;
+		int entityNum;
 		int fogNum;
 		int dlighted;
 
-		R_DecomposeSort(drawSurf->sort, &entity_num, &shader, &cubemapIndex, &postRender);
+		R_DecomposeSort(drawSurf->sort, &entityNum, &shader, &cubemapIndex, &postRender);
 		assert(shader != nullptr);
 		fogNum = drawSurf->fogIndex;
 		dlighted = drawSurf->dlightBits;
 
 		if (*drawSurf->surface == SF_MDX)
 		{
-			if (((CRenderableSurface*)drawSurf->surface)->bone_cache != oldBoneCache)
+			if (((CRenderableSurface*)drawSurf->surface)->boneCache != oldBoneCache)
 			{
 				RB_EndSurface();
 				RB_BeginSurface(shader, fogNum, cubemapIndex);
-				oldBoneCache = ((CRenderableSurface*)drawSurf->surface)->bone_cache;
+				oldBoneCache = ((CRenderableSurface*)drawSurf->surface)->boneCache;
 				tr.animationBoneUboOffset = RB_GetBoneUboOffset((CRenderableSurface*)drawSurf->surface);
 			}
 		}
@@ -1309,7 +1309,7 @@ static void RB_SubmitDrawSurfs(
 			fogNum == oldFogNum &&
 			postRender == oldPostRender &&
 			cubemapIndex == oldCubemapIndex &&
-			entity_num == oldentity_num &&
+			entityNum == oldEntityNum &&
 			dlighted == oldDlighted &&
 			backEnd.refractionFill == shader->useDistortion)
 		{
@@ -1329,7 +1329,7 @@ static void RB_SubmitDrawSurfs(
 			dlighted != oldDlighted ||
 			postRender != oldPostRender ||
 			cubemapIndex != oldCubemapIndex ||
-			(entity_num != oldentity_num && !shader->entityMergable)))
+			(entityNum != oldEntityNum && !shader->entityMergable)))
 		{
 			if (oldShader != nullptr)
 			{
@@ -1345,10 +1345,10 @@ static void RB_SubmitDrawSurfs(
 			oldCubemapIndex = cubemapIndex;
 		}
 
-		if (entity_num != oldentity_num)
+		if (entityNum != oldEntityNum)
 		{
-			RB_PrepareForEntity(entity_num, originalTime);
-			oldentity_num = entity_num;
+			RB_PrepareForEntity(entityNum, originalTime);
+			oldEntityNum = entityNum;
 		}
 
 		qboolean isDistortionShader = (qboolean)
@@ -1533,11 +1533,12 @@ Stretches a raw 32 bit power of 2 bitmap image over the given screen rectangle.
 Used for cinematics.
 =============
 */
-void RE_StretchRaw(int x, int y, int w, int h, int cols, int rows, const byte* data, int client, qboolean dirty) {
+void RE_StretchRaw(const int x, const int y, const int w, const int h, const int cols, const int rows, const byte* data, const int client, const qboolean dirty)
+{
 	int			i, j;
 	int			start, end;
-	vec4_t quadVerts[4];
-	vec2_t texCoords[4];
+	vec4_t quadVerts[4]{};
+	vec2_t texCoords[4]{};
 
 	if (!tr.registered) {
 		return;

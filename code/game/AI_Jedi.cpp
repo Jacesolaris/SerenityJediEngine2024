@@ -93,7 +93,7 @@ extern float NPC_EnemyRangeFromBolt(int bolt_index);
 extern qboolean WP_SabersCheckLock2(gentity_t* attacker, gentity_t* defender, saberslock_mode_t lock_mode);
 extern void G_Knockdown(gentity_t* self, gentity_t* attacker, const vec3_t push_dir, float strength,
 	qboolean break_saber_lock);
-extern qboolean G_EntIsBreakable(int entity_num, const gentity_t* breaker);
+extern qboolean G_EntIsBreakable(int entityNum, const gentity_t* breaker);
 extern qboolean PM_LockedAnim(int anim);
 extern qboolean G_ClearLineOfSight(const vec3_t point1, const vec3_t point2, int ignore, int clipmask);
 void NPC_CheckEvasion();
@@ -631,13 +631,13 @@ void Tavion_ScepterDamage()
 			if (trace.fraction < 1.0f)
 			{
 				//hit something
-				gentity_t* trace_ent = &g_entities[trace.entity_num];
+				gentity_t* trace_ent = &g_entities[trace.entityNum];
 
 				//UGH
 				G_PlayEffect(G_EffectIndex("scepter/impact.efx"), trace.endpos, trace.plane.normal);
 
 				if (trace_ent->takedamage
-					&& trace.entity_num != last_hit
+					&& trace.entityNum != last_hit
 					&& (!trace_ent->client || trace_ent == NPC->enemy || trace_ent->client->NPC_class != NPC->client->
 						NPC_class))
 				{
@@ -662,7 +662,7 @@ void Tavion_ScepterDamage()
 						}
 					}
 					hit = qtrue;
-					last_hit = trace.entity_num;
+					last_hit = trace.entityNum;
 				}
 			}
 		}
@@ -1267,7 +1267,7 @@ static qboolean Jedi_ClearPathToSpot(vec3_t dest, const int impactEntNum)
 	if (trace.fraction < 1.0f)
 	{
 		//hit something
-		if (impactEntNum != ENTITYNUM_NONE && trace.entity_num == impactEntNum)
+		if (impactEntNum != ENTITYNUM_NONE && trace.entityNum == impactEntNum)
 		{
 			//hit what we're going after
 			return qtrue;
@@ -1359,7 +1359,7 @@ qboolean NPC_MoveDirClear(const int forwardmove, const int rightmove, const qboo
 	if (trace.fraction < 0.6)
 	{
 		//Going to bump into something very close, don't move, just turn
-		if (NPC->enemy && trace.entity_num == NPC->enemy->s.number || NPCInfo->goalEntity && trace.entity_num ==
+		if (NPC->enemy && trace.entityNum == NPC->enemy->s.number || NPCInfo->goalEntity && trace.entityNum ==
 			NPCInfo->goalEntity->s.number)
 		{
 			//okay to bump into enemy or goal
@@ -4287,9 +4287,9 @@ evasionType_t jedi_check_flip_evasions(gentity_t* self, const float rightdot)
 			VectorSubtract(self->currentOrigin, traceto, ideal_normal);
 			VectorNormalize(ideal_normal);
 
-			const gentity_t* trace_ent = &g_entities[trace.entity_num];
+			const gentity_t* trace_ent = &g_entities[trace.entityNum];
 
-			if (trace.entity_num < ENTITYNUM_WORLD && trace_ent && trace_ent->s.solid != SOLID_BMODEL
+			if (trace.entityNum < ENTITYNUM_WORLD && trace_ent && trace_ent->s.solid != SOLID_BMODEL
 				|| DotProduct(trace.plane.normal, ideal_normal) > 0.7f)
 			{
 				//it's a ent of some sort or it's a wall roughly facing us
@@ -5700,20 +5700,20 @@ static qboolean Jedi_SaberBlock()
 		return qfalse;
 	}
 
-	for (int saber_num = 0; saber_num < MAX_SABERS; saber_num++)
+	for (int saberNum = 0; saberNum < MAX_SABERS; saberNum++)
 	{
-		for (int blade_num = 0; blade_num < NPC->enemy->client->ps.saber[saber_num].numBlades; blade_num++)
+		for (int blade_num = 0; blade_num < NPC->enemy->client->ps.saber[saberNum].numBlades; blade_num++)
 		{
-			if (NPC->enemy->client->ps.saber[saber_num].type != SABER_NONE
-				&& NPC->enemy->client->ps.saber[saber_num].blade[blade_num].length > 0)
+			if (NPC->enemy->client->ps.saber[saberNum].type != SABER_NONE
+				&& NPC->enemy->client->ps.saber[saberNum].blade[blade_num].length > 0)
 			{
 				//valid saber and this blade is on
-				VectorMA(NPC->enemy->client->ps.saber[saber_num].blade[blade_num].muzzle_pointOld,
-					NPC->enemy->client->ps.saber[saber_num].blade[blade_num].length,
-					NPC->enemy->client->ps.saber[saber_num].blade[blade_num].muzzleDirOld, saber_tip_old);
-				VectorMA(NPC->enemy->client->ps.saber[saber_num].blade[blade_num].muzzle_point,
-					NPC->enemy->client->ps.saber[saber_num].blade[blade_num].length,
-					NPC->enemy->client->ps.saber[saber_num].blade[blade_num].muzzleDir, saber_tip);
+				VectorMA(NPC->enemy->client->ps.saber[saberNum].blade[blade_num].muzzle_pointOld,
+					NPC->enemy->client->ps.saber[saberNum].blade[blade_num].length,
+					NPC->enemy->client->ps.saber[saberNum].blade[blade_num].muzzleDirOld, saber_tip_old);
+				VectorMA(NPC->enemy->client->ps.saber[saberNum].blade[blade_num].muzzle_point,
+					NPC->enemy->client->ps.saber[saberNum].blade[blade_num].length,
+					NPC->enemy->client->ps.saber[saberNum].blade[blade_num].muzzleDir, saber_tip);
 
 				VectorCopy(NPC->currentOrigin, top);
 				top[2] = NPC->absmax[2];
@@ -5721,12 +5721,12 @@ static qboolean Jedi_SaberBlock()
 				bottom[2] = NPC->absmin[2];
 
 				dist = ShortestLineSegBewteen2LineSegs(
-					NPC->enemy->client->ps.saber[saber_num].blade[blade_num].muzzle_point, saber_tip, bottom, top,
+					NPC->enemy->client->ps.saber[saberNum].blade[blade_num].muzzle_point, saber_tip, bottom, top,
 					saber_point, axis_point);
 				if (dist < best_dist)
 				{
 					best_dist = dist;
-					closest_saber_num = saber_num;
+					closest_saber_num = saberNum;
 					closest_blade_num = blade_num;
 				}
 			}
@@ -6535,7 +6535,7 @@ gentity_t* jedi_find_enemy_in_cone(const gentity_t* self, gentity_t* fallback, c
 		//really should have a clear LOS to this thing...
 		gi.trace(&tr, self->currentOrigin, vec3_origin, vec3_origin, check->currentOrigin, self->s.number, MASK_SHOT,
 			static_cast<EG2_Collision>(0), 0);
-		if (tr.fraction < 1.0f && tr.entity_num != check->s.number)
+		if (tr.fraction < 1.0f && tr.entityNum != check->s.number)
 		{
 			//must have clear shot
 			continue;
@@ -7646,7 +7646,7 @@ static qboolean Jedi_Jump(vec3_t dest, const int goal_ent_num)
 					if (trace.fraction < 1.0f)
 					{
 						//hit something
-						if (trace.entity_num == goal_ent_num)
+						if (trace.entityNum == goal_ent_num)
 						{
 							//hit the enemy, that's perfect!
 							//Hmm, don't want to land on him, though...
@@ -8153,10 +8153,10 @@ static void Jedi_CheckJumps()
 	if (trace.allsolid || trace.startsolid || trace.fraction < 1.0f)
 	{
 		//hit ground!
-		if (trace.entity_num < ENTITYNUM_WORLD)
+		if (trace.entityNum < ENTITYNUM_WORLD)
 		{
 			//landed on an ent
-			const gentity_t* groundEnt = &g_entities[trace.entity_num];
+			const gentity_t* groundEnt = &g_entities[trace.entityNum];
 			if (groundEnt->svFlags & SVF_GLASS_BRUSH)
 			{
 				//don't land on breakable glass!

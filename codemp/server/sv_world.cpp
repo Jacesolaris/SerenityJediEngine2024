@@ -504,9 +504,9 @@ SV_ClipToEntity
 ====================
 */
 void SV_ClipToEntity(trace_t* trace, const vec3_t start, const vec3_t mins, const vec3_t maxs, const vec3_t end,
-	const int entity_num, const int contentmask, const int capsule)
+	const int entityNum, const int contentmask, const int capsule)
 {
-	const sharedEntity_t* touch = SV_Gentity_num(entity_num);
+	const sharedEntity_t* touch = SV_Gentity_num(entityNum);
 
 	Com_Memset(trace, 0, sizeof(trace_t));
 
@@ -535,7 +535,7 @@ void SV_ClipToEntity(trace_t* trace, const vec3_t start, const vec3_t mins, cons
 
 	if (trace->fraction < 1)
 	{
-		trace->entity_num = touch->s.number;
+		trace->entityNum = touch->s.number;
 	}
 }
 
@@ -666,15 +666,15 @@ static void SV_ClipMoveToEntities(moveclip_t* clip)
 		if (trace.allsolid)
 		{
 			clip->trace.allsolid = qtrue;
-			trace.entity_num = touch->s.number;
+			trace.entityNum = touch->s.number;
 		}
 		else if (trace.startsolid)
 		{
 			clip->trace.startsolid = qtrue;
-			trace.entity_num = touch->s.number;
+			trace.entityNum = touch->s.number;
 
 			//rww - added this because we want to get the number of an ent even if our trace starts inside it.
-			clip->trace.entity_num = touch->s.number;
+			clip->trace.entityNum = touch->s.number;
 		}
 
 		if (trace.fraction < clip->trace.fraction)
@@ -682,7 +682,7 @@ static void SV_ClipMoveToEntities(moveclip_t* clip)
 			// make sure we keep a startsolid from a previous trace
 			const byte oldStart = clip->trace.startsolid;
 
-			trace.entity_num = touch->s.number;
+			trace.entityNum = touch->s.number;
 			clip->trace = trace;
 			clip->trace.startsolid = static_cast<qboolean>(static_cast<unsigned>(clip->trace.startsolid) | static_cast<
 				unsigned>(oldStart));
@@ -692,7 +692,7 @@ static void SV_ClipMoveToEntities(moveclip_t* clip)
 		*/
 #if 0
 		// decide if we should do the ghoul2 collision detection right here
-		if ((trace.entity_num == touch->s.number) && (clip->traceFlags))
+		if ((trace.entityNum == touch->s.number) && (clip->traceFlags))
 		{
 			// do we actually have a ghoul2 model here?
 			if (touch->s.ghoul2)
@@ -737,7 +737,7 @@ static void SV_ClipMoveToEntities(moveclip_t* clip)
 #else
 		//rww - since this is multiplayer and we don't have the luxury of violating networking rules in horrible ways,
 		//this must be done somewhat differently.
-		if (clip->traceFlags & G2TRFLAG_DOGHOULTRACE && trace.entity_num == touch->s.number && touch->ghoul2 && (clip->
+		if (clip->traceFlags & G2TRFLAG_DOGHOULTRACE && trace.entityNum == touch->s.number && touch->ghoul2 && (clip->
 			traceFlags & G2TRFLAG_HITCORPSES || !(touch->s.eFlags & EF_DEAD)))
 		{
 			//standard behavior will be to ignore g2 col on dead ents, but if traceFlags is set to allow, then we'll try g2 col on EF_DEAD people too.
@@ -837,7 +837,7 @@ static void SV_ClipMoveToEntities(moveclip_t* clip)
 				if (clip->traceFlags & G2TRFLAG_GETSURFINDEX)
 				{
 					//we have requested that surfaceFlags be stomped over with the g2 hit surface index.
-					if (clip->trace.entity_num == G2Trace[best_tr].mEntityNum)
+					if (clip->trace.entityNum == G2Trace[best_tr].mEntityNum)
 					{
 						clip->trace.surfaceFlags = G2Trace[best_tr].mSurfaceIndex;
 					}
@@ -883,7 +883,7 @@ void SV_Trace(trace_t* results, const vec3_t start, const vec3_t mins, const vec
 
 	// clip to world
 	CM_BoxTrace(&clip.trace, start, end, mins, maxs, 0, contentmask, capsule);
-	clip.trace.entity_num = clip.trace.fraction != 1.0 ? ENTITYNUM_WORLD : ENTITYNUM_NONE;
+	clip.trace.entityNum = clip.trace.fraction != 1.0 ? ENTITYNUM_WORLD : ENTITYNUM_NONE;
 	if (clip.trace.fraction == 0)
 	{
 		*results = clip.trace;

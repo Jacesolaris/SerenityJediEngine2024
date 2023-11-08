@@ -4636,7 +4636,7 @@ void G_GetDismemberBolt(gentity_t* self, vec3_t bolt_point, const int limbType)
 		gentity_t* te = G_TempEntity(bolt_point, EV_SABER_BODY_HIT);
 		te->s.otherentity_num = self->s.number;
 		te->s.otherentity_num2 = ENTITYNUM_NONE;
-		te->s.weapon = 0; //saber_num
+		te->s.weapon = 0; //saberNum
 		te->s.legsAnim = 0; //blade_num
 
 		VectorCopy(bolt_point, te->s.origin);
@@ -7444,7 +7444,7 @@ void G_Damage(gentity_t* targ, gentity_t* inflictor, gentity_t* attacker, vec3_t
 
 			if (!testTrace.startsolid &&
 				!testTrace.allsolid &&
-				testTrace.entity_num == targ->s.number &&
+				testTrace.entityNum == targ->s.number &&
 				testTrace.G2CollisionMap[0].mEntityNum != -1)
 			{
 				if (chance_of_fizz > 0)
@@ -7971,7 +7971,7 @@ qboolean CanDamage(const gentity_t* targ, vec3_t origin)
 
 	VectorCopy(midpoint, dest);
 	trap->Trace(&tr, origin, vec3_origin, vec3_origin, dest, ENTITYNUM_NONE, MASK_SOLID, qfalse, 0, 0);
-	if (tr.fraction == 1.0 || tr.entity_num == targ->s.number)
+	if (tr.fraction == 1.0 || tr.entityNum == targ->s.number)
 		return qtrue;
 
 	// this should probably check in the plane of projection,

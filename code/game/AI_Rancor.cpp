@@ -39,7 +39,7 @@ constexpr auto LSTATE_WAITING = 1;
 constexpr auto SPF_RANCOR_MUTANT = 1;
 constexpr auto SPF_RANCOR_FASTKILL = 2;
 
-extern qboolean G_EntIsBreakable(int entity_num, const gentity_t* breaker);
+extern qboolean G_EntIsBreakable(int entityNum, const gentity_t* breaker);
 extern cvar_t* g_dismemberment;
 extern cvar_t* g_bobaDebug;
 
@@ -99,11 +99,11 @@ qboolean Rancor_CheckAhead(vec3_t end)
 	if (trace.allsolid == qfalse && trace.startsolid == qfalse && trace.fraction == 1.0f)
 		return qtrue;
 
-	if (trace.entity_num < ENTITYNUM_WORLD
-		&& G_EntIsBreakable(trace.entity_num, NPC))
+	if (trace.entityNum < ENTITYNUM_WORLD
+		&& G_EntIsBreakable(trace.entityNum, NPC))
 	{
 		//breakable brush in our way, break it
-		//	NPCInfo->blockedEntity = &g_entities[trace.entity_num];
+		//	NPCInfo->blockedEntity = &g_entities[trace.entityNum];
 		return qtrue;
 	}
 
@@ -350,9 +350,9 @@ void Rancor_Swing(const int bolt_index, const qboolean try_grab)
 	//remember pos3 for the trace from last hand pos to current hand pos next time
 	VectorCopy(bolt_org, NPC->pos3);
 	//FIXME: also do a trace TO the bolt from where we are...?
-	if (G_EntIsBreakable(trace.entity_num, NPC))
+	if (G_EntIsBreakable(trace.entityNum, NPC))
 	{
-		G_Damage(&g_entities[trace.entity_num], NPC, NPC, vec3_origin, bolt_org, 100, 0, MOD_MELEE);
+		G_Damage(&g_entities[trace.entityNum], NPC, NPC, vec3_origin, bolt_org, 100, 0, MOD_MELEE);
 	}
 	else
 	{
@@ -364,9 +364,9 @@ void Rancor_Swing(const int bolt_index, const qboolean try_grab)
 			G_DebugLine(originUp, bolt_org, 1000, 0x000000ff);
 		}
 #endif
-		if (G_EntIsBreakable(trace.entity_num, NPC))
+		if (G_EntIsBreakable(trace.entityNum, NPC))
 		{
-			G_Damage(&g_entities[trace.entity_num], NPC, NPC, vec3_origin, bolt_org, 200, 0, MOD_MELEE);
+			G_Damage(&g_entities[trace.entityNum], NPC, NPC, vec3_origin, bolt_org, 200, 0, MOD_MELEE);
 		}
 	}
 
@@ -513,9 +513,9 @@ void Rancor_Smash()
 	//remember pos3 for the trace from last hand pos to current hand pos next time
 	VectorCopy(bolt_org, NPC->pos3);
 	//FIXME: also do a trace TO the bolt from where we are...?
-	if (G_EntIsBreakable(trace.entity_num, NPC))
+	if (G_EntIsBreakable(trace.entityNum, NPC))
 	{
-		G_Damage(&g_entities[trace.entity_num], NPC, NPC, vec3_origin, bolt_org, 200, 0, MOD_MELEE);
+		G_Damage(&g_entities[trace.entityNum], NPC, NPC, vec3_origin, bolt_org, 200, 0, MOD_MELEE);
 	}
 	else
 	{
@@ -528,9 +528,9 @@ void Rancor_Smash()
 			G_DebugLine(NPC->currentOrigin, bolt_org, 1000, 0x000000ff);
 		}
 #endif
-		if (G_EntIsBreakable(trace.entity_num, NPC))
+		if (G_EntIsBreakable(trace.entityNum, NPC))
 		{
-			G_Damage(&g_entities[trace.entity_num], NPC, NPC, vec3_origin, bolt_org, 200, 0, MOD_MELEE);
+			G_Damage(&g_entities[trace.entityNum], NPC, NPC, vec3_origin, bolt_org, 200, 0, MOD_MELEE);
 		}
 	}
 
@@ -1318,7 +1318,7 @@ qboolean Rancor_AttackBBrush()
 	{
 		//close enough to just hit it
 		trace.fraction = 0.0f;
-		trace.entity_num = NPCInfo->blockedEntity->s.number;
+		trace.entityNum = NPCInfo->blockedEntity->s.number;
 	}
 	else
 	{
@@ -1334,7 +1334,7 @@ qboolean Rancor_AttackBBrush()
 		}
 	}
 	if (trace.fraction >= 1.0f //too far away
-		|| trace.entity_num != NPCInfo->blockedEntity->s.number) //OR blocked by something else
+		|| trace.entityNum != NPCInfo->blockedEntity->s.number) //OR blocked by something else
 	{
 		//keep moving towards it
 		ucmd.buttons &= ~BUTTON_WALKING; // Unset from MoveToGoal()
@@ -1343,7 +1343,7 @@ qboolean Rancor_AttackBBrush()
 		STEER::AvoidCollisions(NPC);
 		STEER::DeActivate(NPC, &ucmd);
 	}
-	else if (trace.entity_num == NPCInfo->blockedEntity->s.number)
+	else if (trace.entityNum == NPCInfo->blockedEntity->s.number)
 	{
 		//close enough, smash it!
 		Rancor_Attack(trace.fraction * check_dist, qfalse, qtrue); //FIXME: maybe charge at it, smash through?
@@ -1352,13 +1352,13 @@ qboolean Rancor_AttackBBrush()
 	}
 	else
 	{
-		//Com_Printf( S_COLOR_RED"RANCOR cannot reach intended breakable %s, blocked by %s\n", NPC->blockedEntity->targetname, g_entities[trace.entity_num].classname );
-		if (G_EntIsBreakable(trace.entity_num, NPC))
+		//Com_Printf( S_COLOR_RED"RANCOR cannot reach intended breakable %s, blocked by %s\n", NPC->blockedEntity->targetname, g_entities[trace.entityNum].classname );
+		if (G_EntIsBreakable(trace.entityNum, NPC))
 		{
 			//oh, well, smash that, then
-			//G_SetEnemy( NPC, &g_entities[trace.entity_num] );
+			//G_SetEnemy( NPC, &g_entities[trace.entityNum] );
 			gentity_t* prevblockedEnt = NPCInfo->blockedEntity;
-			NPCInfo->blockedEntity = &g_entities[trace.entity_num];
+			NPCInfo->blockedEntity = &g_entities[trace.entityNum];
 			Rancor_Attack(trace.fraction * check_dist, qfalse, qtrue); //FIXME: maybe charge at it, smash through?
 			TIMER_Remove(NPC, "attackDebounce"); //don't wait on these
 			NPCInfo->enemyLastSeenTime = level.time;
@@ -1393,8 +1393,8 @@ void Rancor_FireBreathAttack()
 
 	gi.trace(&tr, start, trace_mins, trace_maxs, end, NPC->s.number, MASK_SHOT, static_cast<EG2_Collision>(0), 0);
 
-	gentity_t* trace_ent = &g_entities[tr.entity_num];
-	if (tr.entity_num < ENTITYNUM_WORLD
+	gentity_t* trace_ent = &g_entities[tr.entityNum];
+	if (tr.entityNum < ENTITYNUM_WORLD
 		&& trace_ent->takedamage
 		&& trace_ent->client)
 	{

@@ -474,7 +474,7 @@ qboolean G2_SetRootSurface(CGhoul2Info_v& ghoul2, const int modelIndex, const ch
 	return qfalse;
 }
 
-int G2_AddSurface(CGhoul2Info* ghoul2, int surface_number, int polyNumber, float BarycentricI, float BarycentricJ, int lod)
+int G2_AddSurface(CGhoul2Info* ghoul2, int surfaceNumber, int polyNumber, float BarycentricI, float BarycentricJ, int lod)
 {
 	surfaceInfo_t temp_slist_entry;
 
@@ -501,7 +501,7 @@ int G2_AddSurface(CGhoul2Info* ghoul2, int surface_number, int polyNumber, float
 	ghoul2->mSlist[i].surface = 10000; // no model will ever have 10000 surfaces
 	ghoul2->mSlist[i].genBarycentricI = BarycentricI;
 	ghoul2->mSlist[i].genBarycentricJ = BarycentricJ;
-	ghoul2->mSlist[i].genPolySurfaceIndex = ((polyNumber & 0xffff) << 16) | (surface_number & 0xffff);
+	ghoul2->mSlist[i].genPolySurfaceIndex = ((polyNumber & 0xffff) << 16) | (surfaceNumber & 0xffff);
 	ghoul2->mSlist[i].genLod = lod;
 
 	return i;

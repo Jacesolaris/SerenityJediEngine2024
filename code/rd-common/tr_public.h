@@ -279,7 +279,7 @@ using refexport_t = struct
 	// GHOUL 2 API
 	int (*G2API_AddBolt)(CGhoul2Info* ghlInfo, const char* boneName);
 	int (*G2API_AddBoltSurfNum)(CGhoul2Info* ghlInfo, int surfIndex);
-	int (*G2API_AddSurface)(CGhoul2Info* ghlInfo, int surface_number, int polyNumber,
+	int (*G2API_AddSurface)(CGhoul2Info* ghlInfo, int surfaceNumber, int polyNumber,
 		float BarycentricI, float BarycentricJ, int lod);
 	void (*G2API_AnimateG2Models)(CGhoul2Info_v& ghoul2, int acurrent_time, CRagDollUpdateParams* params);
 	qboolean(*G2API_AttachEnt)(int* bolt_info, CGhoul2Info* ghlInfoTo, int toBoltIndex, int entNum, int toModelNum);
@@ -382,6 +382,8 @@ using refexport_t = struct
 	void (*G2API_AddSkinGore)(CGhoul2Info_v& ghoul2, SSkinGoreData& gore);
 	void (*G2API_ClearSkinGore)(CGhoul2Info_v& ghoul2);
 #endif
+
+	void (*G2API_SetTintType)(CGhoul2Info* ghlInfo, g2Tints_t tintType);
 
 	// Performance analysis (perform anal)
 	void (*G2Time_ResetTimers)();

@@ -2365,17 +2365,17 @@ void G_SetsaberdownorAnim(gentity_t* ent)
 }
 
 extern cvar_t* g_saberPickuppableDroppedSabers;
-extern void WP_RemoveSaber(gentity_t* ent, int saber_num);
+extern void WP_RemoveSaber(gentity_t* ent, int saberNum);
 extern void CG_ChangeWeapon(int num);
 extern void ChangeWeapon(const gentity_t* ent, int new_weapon);
 
-void Cmd_SaberDrop_f(gentity_t* ent, const int saber_num)
+void Cmd_SaberDrop_f(gentity_t* ent, const int saberNum)
 {
-	if (saber_num < 0)
+	if (saberNum < 0)
 	{
 		return;
 	}
-	if (saber_num > 1)
+	if (saberNum > 1)
 	{
 		return;
 	}
@@ -2383,7 +2383,7 @@ void Cmd_SaberDrop_f(gentity_t* ent, const int saber_num)
 	{
 		return;
 	}
-	if (ent->weaponModel[saber_num] <= 0)
+	if (ent->weaponModel[saberNum] <= 0)
 	{
 		return;
 	}
@@ -2413,8 +2413,8 @@ void Cmd_SaberDrop_f(gentity_t* ent, const int saber_num)
 		return;
 	}
 
-	if (!ent->client->ps.saber[saber_num].name
-		|| !ent->client->ps.saber[saber_num].name[0])
+	if (!ent->client->ps.saber[saberNum].name
+		|| !ent->client->ps.saber[saberNum].name[0])
 	{
 		return;
 	}
@@ -2422,15 +2422,15 @@ void Cmd_SaberDrop_f(gentity_t* ent, const int saber_num)
 	//have a valid string to use for saberType
 
 	//turn it into a pick-uppable item!
-	if (G_DropSaberItem(ent->client->ps.saber[saber_num].name,
-		ent->client->ps.saber[saber_num].blade[0].color,
-		saber_num == 0 ? ent->client->renderInfo.handRPoint : ent->client->renderInfo.handLPoint,
+	if (G_DropSaberItem(ent->client->ps.saber[saberNum].name,
+		ent->client->ps.saber[saberNum].blade[0].color,
+		saberNum == 0 ? ent->client->renderInfo.handRPoint : ent->client->renderInfo.handLPoint,
 		ent->client->ps.velocity,
 		ent->currentAngles)
 		!= nullptr)
 	{
 		//dropped it
-		WP_RemoveSaber(ent, saber_num);
+		WP_RemoveSaber(ent, saberNum);
 	}
 
 	if (ent->weaponModel[0] <= 0
@@ -2787,12 +2787,12 @@ void ClientCommand(const int client_num)
 	else if (Q_stricmp(cmd, "dropsaber") == 0)
 	{
 		const char* cmd2 = gi.argv(1);
-		int saber_num = 2; //by default, drop both
+		int saberNum = 2; //by default, drop both
 		if (cmd2 && cmd2[0])
 		{
-			saber_num = atoi(cmd2);
+			saberNum = atoi(cmd2);
 		}
-		if (saber_num > 1)
+		if (saberNum > 1)
 		{
 			//drop both
 			Cmd_SaberDrop_f(ent, 1);
@@ -2801,7 +2801,7 @@ void ClientCommand(const int client_num)
 		else
 		{
 			//drop either left or right
-			Cmd_SaberDrop_f(ent, saber_num);
+			Cmd_SaberDrop_f(ent, saberNum);
 		}
 	}
 	else if ((Q_stricmp(cmd, "weather") == 0) || (Q_stricmp(cmd, "r_weather") == 0))

@@ -265,6 +265,7 @@ cvar_t* g_saberLockCinematicCamera;
 cvar_t* g_remove_unused_weapons;
 
 cvar_t* com_rend2;
+cvar_t* r_AdvancedsurfaceSprites;
 
 cvar_t* g_AllowWeather;
 
@@ -893,6 +894,8 @@ void G_InitCvars()
 	g_saberLockCinematicCamera = gi.cvar("g_saberLockCinematicCamera", "1", CVAR_ARCHIVE);
 
 	com_rend2 = gi.cvar("com_rend2", "0", CVAR_ARCHIVE | CVAR_SAVEGAME);
+
+	r_AdvancedsurfaceSprites = gi.cvar("r_advancedlod", "1", CVAR_ARCHIVE | CVAR_SAVEGAME);
 
 	g_AllowWeather = gi.cvar("g_AllowWeather", "1", CVAR_ARCHIVE | CVAR_SAVEGAME | CVAR_NORESTART);
 }

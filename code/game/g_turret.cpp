@@ -525,7 +525,7 @@ static qboolean turret_find_enemies(gentity_t* self)
 		trace_t tr;
 		gi.trace(&tr, org2, nullptr, nullptr, org, self->s.number, MASK_SHOT, static_cast<EG2_Collision>(0), 0);
 
-		if (!tr.allsolid && !tr.startsolid && (tr.fraction == 1.0 || tr.entity_num == target->s.number))
+		if (!tr.allsolid && !tr.startsolid && (tr.fraction == 1.0 || tr.entityNum == target->s.number))
 		{
 			vec3_t enemy_dir;
 			// Only acquire if have a clear shot, Is it in range and closer than our best?
@@ -635,7 +635,7 @@ void turret_base_think(gentity_t* self)
 					gi.trace(&tr, org2, nullptr, nullptr, org, self->s.number, MASK_SHOT, static_cast<EG2_Collision>(0),
 						0);
 
-					if (self->spawnflags & SPF_TURRETG2_TURBO || !tr.allsolid && !tr.startsolid && tr.entity_num == self
+					if (self->spawnflags & SPF_TURRETG2_TURBO || !tr.allsolid && !tr.startsolid && tr.entityNum == self
 						->enemy->s.number)
 					{
 						turn_off = qfalse; // Can see our enemy
@@ -1085,9 +1085,9 @@ void laser_arm_fire(gentity_t* ent)
 	// Only deal damage when in alt-fire mode
 	if (trace.fraction < 1.0 && ent->alt_fire)
 	{
-		if (trace.entity_num < ENTITYNUM_WORLD)
+		if (trace.entityNum < ENTITYNUM_WORLD)
 		{
-			gentity_t* hapless_victim = &g_entities[trace.entity_num];
+			gentity_t* hapless_victim = &g_entities[trace.entityNum];
 			if (hapless_victim && hapless_victim->takedamage && ent->damage)
 			{
 				G_Damage(hapless_victim, ent, ent->nextTrain->activator, fwd, trace.endpos, ent->damage,
@@ -1442,7 +1442,7 @@ static qboolean pas_find_enemies(gentity_t* self)
 		trace_t tr;
 		gi.trace(&tr, org2, nullptr, nullptr, org, self->s.number, MASK_SHOT, static_cast<EG2_Collision>(0), 0);
 
-		if (!tr.allsolid && !tr.startsolid && (tr.fraction == 1.0 || tr.entity_num == target->s.number))
+		if (!tr.allsolid && !tr.startsolid && (tr.fraction == 1.0 || tr.entityNum == target->s.number))
 		{
 			vec3_t enemy_dir;
 			// Only acquire if have a clear shot, Is it in range and closer than our best?
@@ -1517,7 +1517,7 @@ void pas_adjust_enemy(gentity_t* ent)
 		trace_t tr;
 		gi.trace(&tr, org2, nullptr, nullptr, org, ent->s.number, MASK_SHOT, static_cast<EG2_Collision>(0), 0);
 
-		if (tr.allsolid || tr.startsolid || tr.entity_num != ent->enemy->s.number)
+		if (tr.allsolid || tr.startsolid || tr.entityNum != ent->enemy->s.number)
 		{
 			// trace failed
 			keep = qfalse;
@@ -1838,7 +1838,7 @@ qboolean place_portable_assault_sentry(gentity_t* self, vec3_t origin, vec3_t an
 	gi.trace(&tr, tr.endpos, mins, maxs, pos, self->s.number, MASK_SHOT, static_cast<EG2_Collision>(0), 0);
 
 	// check for a decent surface, meaning mostly flat...should probably also check surface parms so we don't set us down on lava or something.
-	if (!tr.startsolid && !tr.allsolid && tr.fraction < 1.0f && tr.plane.normal[2] > 0.9f && tr.entity_num >=
+	if (!tr.startsolid && !tr.allsolid && tr.fraction < 1.0f && tr.plane.normal[2] > 0.9f && tr.entityNum >=
 		ENTITYNUM_WORLD)
 	{
 		// Then spawn us if it seems cool.

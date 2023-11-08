@@ -2493,8 +2493,8 @@ void G_PilotXWing(gentity_t* ent)
 //HACK FOR FLYING
 
 extern saber_colors_t TranslateSaberColor(const char* name);
-extern void WP_RemoveSaber(gentity_t* ent, int saber_num);
-extern void WP_RemoveSecondSaber(gentity_t* ent, int saber_num);
+extern void WP_RemoveSaber(gentity_t* ent, int saberNum);
+extern void WP_RemoveSecondSaber(gentity_t* ent, int saberNum);
 void G_ChangePlayerModel(gentity_t* ent, const char* newModel);
 
 void G_SetSabersFromCVars(gentity_t* ent)

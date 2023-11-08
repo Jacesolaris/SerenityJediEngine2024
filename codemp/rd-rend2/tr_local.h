@@ -1763,7 +1763,7 @@ typedef struct srfBspSurface_s
 
 // inter-quake-model
 typedef struct {
-	int		num_vertexes;
+	int		numVertexes;
 	int		num_triangles;
 	int		numFrames;
 	int		num_surfaces;
@@ -1801,7 +1801,7 @@ typedef struct srfIQModel_s {
 	char		name[MAX_QPATH];
 	shader_t* shader;
 	iqmData_t* data;
-	int		first_vertex, num_vertexes;
+	int		first_vertex, numVertexes;
 	int		first_triangle, num_triangles;
 } srfIQModel_t;
 
@@ -2819,13 +2819,12 @@ void R_SetupPshadowMaps(const refdef_t* fd);
 void R_RenderCubemapSide(int cubemapIndex, int cubemapSide, bool bounce);
 void R_GatherFrameViews(trRefdef_t* refdef);
 
-void R_AddMD3Surfaces(trRefEntity_t* e, int entity_num);
+void R_AddMD3Surfaces(trRefEntity_t* e, int entityNum);
 void R_AddPolygonSurfaces(const trRefdef_t* refdef);
 
-void R_DecomposeSort(uint32_t sort, int* entity_num, shader_t** shader, int* cubemap, int* postRender);
-uint32_t R_CreateSortKey(int entity_num, int sortedShaderIndex, int cubemapIndex, int postRender);
-void R_AddDrawSurf(surfaceType_t* surface, int entity_num, shader_t* shader,
-	int fogIndex, int dlightMap, int postRender, int cubemap);
+void R_DecomposeSort(uint32_t sort, int* entityNum, shader_t** shader, int* cubemap, int* postRender);
+uint32_t R_CreateSortKey(int entityNum, int sortedShaderIndex, int cubemapIndex, int postRender);
+void R_AddDrawSurf(surfaceType_t* surface, int entityNum, shader_t* shader, int fogIndex, int dlightMap, int postRender, int cubemap);
 bool R_IsPostRenderEntity(const trRefEntity_t* refEntity);
 
 void R_CalcMikkTSpaceBSPSurface(int numSurfaces, packedVertex_t* vertices, glIndex_t* indices);
@@ -2883,9 +2882,9 @@ extern glconfigExt_t	glConfigExt;
 
 typedef _skinSurface_t skinSurface_t;
 
-void	RE_StretchRaw(int x, int y, int w, int h, int cols, int rows, const byte* data, int client, qboolean dirty);
-void	RE_UploadCinematic(int cols, int rows, const byte* data, int client, qboolean dirty);
-void	RE_SetRangedFog(float range);
+void RE_StretchRaw(const int x, const int y, const int w, const int h, const int cols, const int rows, const byte* data, const int client, const qboolean dirty);
+void RE_UploadCinematic(int cols, int rows, const byte* data, int client, qboolean dirty);
+void RE_SetRangedFog(float range);
 
 void		RE_BeginRegistration(glconfig_t* glconfig);
 void		RE_LoadWorldMap(const char* mapname);
@@ -3046,7 +3045,7 @@ extern	color4ub_t	styleColors[MAX_LIGHT_STYLES];
 
 void RB_BeginSurface(shader_t* shader, int fogNum, int cubemapIndex);
 void RB_EndSurface(void);
-void RB_CheckOverflow(int verts, int indexes);
+void RB_CheckOverflow(const int verts, const int indexes);
 #define RB_CHECKOVERFLOW(v,i) if (tess.numVertexes + (v) >= SHADER_MAX_VERTEXES || tess.numIndexes + (i) >= SHADER_MAX_INDEXES ) {RB_CheckOverflow(v,i);}
 
 void R_DrawElementsVBO(int numIndexes, glIndex_t firstIndex, glIndex_t minIndex, glIndex_t maxIndex);
@@ -3069,7 +3068,7 @@ WORLD MAP
 ============================================================
 */
 world_t* R_GetWorld(int worldIndex);
-void R_AddBrushModelSurfaces(trRefEntity_t* e, int entity_num);
+void R_AddBrushModelSurfaces(trRefEntity_t* e, int entityNum);
 void R_AddWorldSurfaces(viewParms_t* viewParms, trRefdef_t* refdef);
 void R_MarkLeaves(void);
 void R_RecursiveWorldNode(mnode_t* node, int planeBits, int dlightBits, int pshadowBits);
@@ -3291,10 +3290,10 @@ ANIMATED MODELS
 =============================================================
 */
 
-void R_MDRAddAnimSurfaces(trRefEntity_t* ent, int entity_num);
+void R_MDRAddAnimSurfaces(trRefEntity_t* ent, int entityNum);
 void RB_MDRSurfaceAnim(mdrSurface_t* surface);
 qboolean R_LoadIQM(model_t* mod, void* buffer, int filesize, const char* name);
-void R_AddIQMSurfaces(trRefEntity_t* ent, int entity_num);
+void R_AddIQMSurfaces(trRefEntity_t* ent, int entityNum);
 void RB_IQMSurfaceAnim(surfaceType_t* surface);
 int R_IQMLerpTag(orientation_t* tag, iqmData_t* data,
 	int startFrame, int endFrame,
@@ -3313,7 +3312,7 @@ public:
 	// sort of surface this refers to
 	int ident;
 
-	CBoneCache* bone_cache;
+	CBoneCache* boneCache;
 	mdxmVBOMesh_t* vboMesh;
 
 	// tell the renderer to render shadows for this surface
@@ -3342,7 +3341,7 @@ public:
 	CRenderableSurface& operator =(const CRenderableSurface& src)
 	{
 		ident = src.ident;
-		bone_cache = src.bone_cache;
+		boneCache = src.boneCache;
 		surfaceData = src.surfaceData;
 #ifdef _G2_GORE
 		alternateTex = src.alternateTex;
@@ -3355,7 +3354,7 @@ public:
 
 	CRenderableSurface()
 		: ident(SF_MDX)
-		, bone_cache(nullptr)
+		, boneCache(nullptr)
 		, vboMesh(nullptr)
 		, surfaceData(nullptr)
 #ifdef _G2_GORE
@@ -3371,7 +3370,7 @@ public:
 	void Init()
 	{
 		ident = SF_MDX;
-		bone_cache = nullptr;
+		boneCache = nullptr;
 		surfaceData = nullptr;
 #ifdef _G2_GORE
 		alternateTex = nullptr;
@@ -3382,7 +3381,7 @@ public:
 	}
 };
 
-void R_AddGhoulSurfaces(trRefEntity_t* ent, int entity_num);
+void R_AddGhoulSurfaces(trRefEntity_t* ent, int entityNum);
 void RB_SurfaceGhoul(CRenderableSurface* surf);
 void RB_TransformBones(const trRefEntity_t* ent, const trRefdef_t* refdef, int currentFrameNum, gpuFrame_t* frame);
 int RB_GetBoneUboOffset(CRenderableSurface* surf);
@@ -3688,7 +3687,7 @@ const mdxaBone_t operator *(const float scale, const mdxaBone_t& rhs);
 
 qboolean R_LoadMDXM(model_t* mod, void* buffer, const char* mod_name, qboolean& bAlreadyCached);
 qboolean R_LoadMDXA(model_t* mod, void* buffer, const char* mod_name, qboolean& bAlreadyCached);
-void RE_InsertModelIntoHash(const char* name, model_t* mod);
+void RE_InsertModelIntoHash(const char* name, const model_t* mod);
 void ResetGhoul2RenderableSurfaceHeap();
 
 void R_InitDecals(void);

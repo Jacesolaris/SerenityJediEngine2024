@@ -87,7 +87,7 @@ extern qboolean PM_InKnockDown(const playerState_t* ps);
 extern qboolean PM_InRoll(const playerState_t* ps);
 extern qboolean PM_SpinningAnim(int anim);
 extern qboolean PM_RunningAnim(int anim);
-extern int PM_PowerLevelForSaberAnim(const playerState_t* ps, int saber_num = 0);
+extern int PM_PowerLevelForSaberAnim(const playerState_t* ps, int saberNum = 0);
 extern qboolean pm_saber_in_special_attack(int anim);
 extern qboolean PM_SpinningSaberAnim(int anim);
 extern qboolean PM_FlippingAnim(int anim);
@@ -108,7 +108,7 @@ static int G_CheckSpecialDeathAnim(gentity_t* self);
 static void G_TrackWeaponUsage(const gentity_t* self, const gentity_t* inflictor, int add, int mod);
 static qboolean G_Dismemberable(const gentity_t* self, int hit_loc);
 extern gitem_t* FindItemForAmmo(ammo_t ammo);
-extern void WP_RemoveSaber(gentity_t* ent, int saber_num);
+extern void WP_RemoveSaber(gentity_t* ent, int saberNum);
 void AddFatigueHurtBonus(const gentity_t* attacker, const gentity_t* victim, int mod);
 void AddFatigueHurtBonusMax(const gentity_t* attacker, const gentity_t* victim, int mod);
 extern qboolean G_ControlledByPlayer(const gentity_t* self);
@@ -7888,7 +7888,7 @@ void G_Damage(gentity_t* targ, gentity_t* inflictor, gentity_t* attacker, const 
 
 				if (!test_trace.startsolid &&
 					!test_trace.allsolid &&
-					test_trace.entity_num == targ->s.number &&
+					test_trace.entityNum == targ->s.number &&
 					test_trace.G2CollisionMap[0].mEntityNum != -1)
 				{
 					G_PlayEffect("world/acid_fizz", test_trace.G2CollisionMap[0].mCollisionPosition);
@@ -8717,8 +8717,8 @@ qboolean CanDamage(const gentity_t* targ, const vec3_t origin)
 
 	VectorCopy(midpoint, dest);
 	gi.trace(&tr, origin, vec3_origin, vec3_origin, dest, ENTITYNUM_NONE, MASK_SOLID, static_cast<EG2_Collision>(0), 0);
-	if (tr.fraction == 1.0 && cant_hit_ent || tr.entity_num == targ->s.number)
-		// if we also test the entity_num's we can bust up bbrushes better!
+	if (tr.fraction == 1.0 && cant_hit_ent || tr.entityNum == targ->s.number)
+		// if we also test the entityNum's we can bust up bbrushes better!
 		return qtrue;
 
 	// this should probably check in the plane of projection,
@@ -8727,28 +8727,28 @@ qboolean CanDamage(const gentity_t* targ, const vec3_t origin)
 	dest[0] += 15.0;
 	dest[1] += 15.0;
 	gi.trace(&tr, origin, vec3_origin, vec3_origin, dest, ENTITYNUM_NONE, MASK_SOLID, static_cast<EG2_Collision>(0), 0);
-	if (tr.fraction == 1.0 && cant_hit_ent || tr.entity_num == targ->s.number)
+	if (tr.fraction == 1.0 && cant_hit_ent || tr.entityNum == targ->s.number)
 		return qtrue;
 
 	VectorCopy(midpoint, dest);
 	dest[0] += 15.0;
 	dest[1] -= 15.0;
 	gi.trace(&tr, origin, vec3_origin, vec3_origin, dest, ENTITYNUM_NONE, MASK_SOLID, static_cast<EG2_Collision>(0), 0);
-	if (tr.fraction == 1.0 && cant_hit_ent || tr.entity_num == targ->s.number)
+	if (tr.fraction == 1.0 && cant_hit_ent || tr.entityNum == targ->s.number)
 		return qtrue;
 
 	VectorCopy(midpoint, dest);
 	dest[0] -= 15.0;
 	dest[1] += 15.0;
 	gi.trace(&tr, origin, vec3_origin, vec3_origin, dest, ENTITYNUM_NONE, MASK_SOLID, static_cast<EG2_Collision>(0), 0);
-	if (tr.fraction == 1.0 && cant_hit_ent || tr.entity_num == targ->s.number)
+	if (tr.fraction == 1.0 && cant_hit_ent || tr.entityNum == targ->s.number)
 		return qtrue;
 
 	VectorCopy(midpoint, dest);
 	dest[0] -= 15.0;
 	dest[1] -= 15.0;
 	gi.trace(&tr, origin, vec3_origin, vec3_origin, dest, ENTITYNUM_NONE, MASK_SOLID, static_cast<EG2_Collision>(0), 0);
-	if (tr.fraction == 1.0 && cant_hit_ent || tr.entity_num == targ->s.number)
+	if (tr.fraction == 1.0 && cant_hit_ent || tr.entityNum == targ->s.number)
 		return qtrue;
 
 	return qfalse;

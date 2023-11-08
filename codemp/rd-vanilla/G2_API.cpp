@@ -194,25 +194,25 @@ int G2API_GetTime(int arg_time) // this may or may not return arg depending on g
 CGhoul2Info_v* g2ClientAttachments[MAX_GENTITIES];
 #endif
 
-void G2API_AttachInstanceToEntNum(CGhoul2Info_v& ghoul2, int entity_num, qboolean server)
+void G2API_AttachInstanceToEntNum(CGhoul2Info_v& ghoul2, int entityNum, qboolean server)
 {
 	//Assign the pointers in the arrays
 #ifdef _G2_LISTEN_SERVER_OPT
 	if (server)
 	{
-		ghoul2[0].entity_num = entity_num;
+		ghoul2[0].entityNum = entityNum;
 	}
 	else
 	{
-		g2ClientAttachments[entity_num] = &ghoul2;
+		g2ClientAttachments[entityNum] = &ghoul2;
 	}
 #endif
 }
 
-void G2API_ClearAttachedInstance(int entity_num)
+void G2API_ClearAttachedInstance(int entityNum)
 {
 #ifdef _G2_LISTEN_SERVER_OPT
-	g2ClientAttachments[entity_num] = NULL;
+	g2ClientAttachments[entityNum] = NULL;
 #endif
 }
 
@@ -246,12 +246,12 @@ qboolean G2API_OverrideServerWithClientData(CGhoul2Info_v& ghoul2, int modelInde
 		return qfalse;
 	}
 
-	if (!g2ClientAttachments[serverInstance->entity_num])
+	if (!g2ClientAttachments[serverInstance->entityNum])
 	{ //No clientside instance is attached to this entity
 		return qfalse;
 	}
 
-	CGhoul2Info_v& g2Ref = *g2ClientAttachments[serverInstance->entity_num];
+	CGhoul2Info_v& g2Ref = *g2ClientAttachments[serverInstance->entityNum];
 	clientInstance = &g2Ref[0];
 
 	int frameNum = G2API_GetTime(0);
@@ -949,14 +949,14 @@ qboolean G2API_SetRootSurface(CGhoul2Info_v& ghoul2, const int modelIndex, const
 	return qfalse;
 }
 
-int G2API_AddSurface(CGhoul2Info* ghlInfo, const int surface_number, const int poly_number, const float barycentric_i, const float barycentric_j,
+int G2API_AddSurface(CGhoul2Info* ghlInfo, const int surfaceNumber, const int poly_number, const float barycentric_i, const float barycentric_j,
 	const int lod)
 {
 	if (G2_SetupModelPointers(ghlInfo))
 	{
 		// ensure we flush the cache
 		ghlInfo->mMeshFrameNum = 0;
-		return G2_AddSurface(ghlInfo, surface_number, poly_number, barycentric_i, barycentric_j, lod);
+		return G2_AddSurface(ghlInfo, surfaceNumber, poly_number, barycentric_i, barycentric_j, lod);
 	}
 	return -1;
 }
@@ -1905,7 +1905,7 @@ qboolean G2API_AttachG2Model(CGhoul2Info_v& ghoul2_from, const int model_from, C
 		if (ghoul2_from.size() > model_from &&
 			ghoul2_to.size() > toModel &&
 			(ghoul2_to[toModel].mBltlist[toBoltIndex].boneNumber != -1 || ghoul2_to[toModel].mBltlist[toBoltIndex].
-				surface_number != -1))
+				surfaceNumber != -1))
 		{
 			// encode the bolt address into the model bolt link
 			toModel &= MODEL_AND;
@@ -1944,7 +1944,7 @@ qboolean G2API_AttachEnt(int* bolt_info, CGhoul2Info_v& ghoul2, const int modelI
 	{
 		// make sure we have a model to attach, a model to attach to, and a bolt on that model
 		if (ghlInfoTo->mBltlist.size() && (ghlInfoTo->mBltlist[toBoltIndex].boneNumber != -1 || ghlInfoTo->mBltlist[
-			toBoltIndex].surface_number != -1))
+			toBoltIndex].surfaceNumber != -1))
 		{
 			// encode the bolt address into the model bolt link
 			toModelNum &= MODEL_AND;

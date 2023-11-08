@@ -77,7 +77,7 @@ extern void WP_SaberDrop(const gentity_t* self, gentity_t* saber);
 extern qboolean pm_saber_innonblockable_attack(int anim);
 extern qboolean pm_saber_in_special_attack(int anim);
 extern qboolean PM_SaberInKata(saber_moveName_t saber_move);
-extern void wp_saber_clear_damage_for_ent_num(gentity_t* attacker, int entity_num, int saber_num, int blade_num);
+extern void wp_saber_clear_damage_for_ent_num(gentity_t* attacker, int entityNum, int saberNum, int blade_num);
 extern cvar_t* d_slowmoaction;
 extern void G_StartStasisEffect(const gentity_t* ent, int me_flags = 0, int length = 1000, float time_scale = 0.0f,
 	int spin_time = 0);
@@ -86,10 +86,10 @@ extern int G_GetParryForBlock(int block);
 extern qboolean WP_SaberDisarmed(gentity_t* self, vec3_t throw_dir);
 extern void wp_block_points_regenerate_over_ride(const gentity_t* self, int override_amt);
 // Saber Blocks
-extern qboolean WP_SaberMBlock(gentity_t* victim, gentity_t* attacker, int saber_num, int blade_num);
-extern qboolean WP_SaberParry(gentity_t* blocker, gentity_t* attacker, int saber_num, int blade_num);
-extern qboolean WP_SaberBlockedBounceBlock(gentity_t* blocker, gentity_t* attacker, int saber_num, int blade_num);
-extern qboolean WP_SaberFatiguedParry(gentity_t* blocker, gentity_t* attacker, int saber_num, int blade_num);
+extern qboolean WP_SaberMBlock(gentity_t* victim, gentity_t* attacker, int saberNum, int blade_num);
+extern qboolean WP_SaberParry(gentity_t* blocker, gentity_t* attacker, int saberNum, int blade_num);
+extern qboolean WP_SaberBlockedBounceBlock(gentity_t* blocker, gentity_t* attacker, int saberNum, int blade_num);
+extern qboolean WP_SaberFatiguedParry(gentity_t* blocker, gentity_t* attacker, int saberNum, int blade_num);
 void sab_beh_animate_heavy_slow_bounce_attacker(gentity_t* attacker);
 extern cvar_t* g_DebugSaberCombat;
 extern qboolean PM_InSaberLock(int anim);
@@ -98,12 +98,12 @@ extern void g_do_m_block_response(const gentity_t* speaker_npc_self);
 
 //////////Actions////////////////
 
-void sab_beh_saber_should_be_disarmed_attacker(gentity_t* attacker, const int saber_num)
+void sab_beh_saber_should_be_disarmed_attacker(gentity_t* attacker, const int saberNum)
 {
-	if (saber_num == 0)
+	if (saberNum == 0)
 	{
 		//can only lose right-hand saber for now
-		if (!(attacker->client->ps.saber[saber_num].saberFlags & SFL_NOT_DISARMABLE))
+		if (!(attacker->client->ps.saber[saberNum].saberFlags & SFL_NOT_DISARMABLE))
 		{
 			//knocked the saber right out of his hand!
 			vec3_t throw_dir = { 0, 0, 350 };
@@ -115,12 +115,12 @@ void sab_beh_saber_should_be_disarmed_attacker(gentity_t* attacker, const int sa
 	}
 }
 
-void sab_beh_saber_should_be_disarmed_blocker(gentity_t* blocker, const int saber_num)
+void sab_beh_saber_should_be_disarmed_blocker(gentity_t* blocker, const int saberNum)
 {
-	if (saber_num == 0)
+	if (saberNum == 0)
 	{
 		//can only lose right-hand saber for now
-		if (!(blocker->client->ps.saber[saber_num].saberFlags & SFL_NOT_DISARMABLE))
+		if (!(blocker->client->ps.saber[saberNum].saberFlags & SFL_NOT_DISARMABLE))
 		{
 			//knocked the saber right out of his hand!
 			vec3_t throw_dir = { 0, 0, 350 };
@@ -230,7 +230,7 @@ qboolean g_accurate_blocking(const gentity_t* blocker, const gentity_t* attacker
 	return qfalse;
 }
 
-void sab_beh_add_mishap_attacker(gentity_t* attacker, const gentity_t* blocker, const int saber_num)
+void sab_beh_add_mishap_attacker(gentity_t* attacker, const gentity_t* blocker, const int saberNum)
 {
 	if (attacker->client->ps.blockPoints <= MISHAPLEVEL_NONE)
 	{
@@ -261,7 +261,7 @@ void sab_beh_add_mishap_attacker(gentity_t* attacker, const gentity_t* blocker, 
 				}
 				else
 				{
-					sab_beh_saber_should_be_disarmed_attacker(attacker, saber_num);
+					sab_beh_saber_should_be_disarmed_attacker(attacker, saberNum);
 					if (d_attackinfo->integer || g_DebugSaberCombat->integer && (attacker->NPC && !G_ControlledByPlayer(attacker)))
 					{
 						gi.Printf(S_COLOR_RED"NPC Attacker lost his saber\n");
@@ -270,7 +270,7 @@ void sab_beh_add_mishap_attacker(gentity_t* attacker, const gentity_t* blocker, 
 			}
 			else
 			{
-				sab_beh_saber_should_be_disarmed_attacker(attacker, saber_num);
+				sab_beh_saber_should_be_disarmed_attacker(attacker, saberNum);
 				if (d_attackinfo->integer || g_DebugSaberCombat->integer && (attacker->s.number < MAX_CLIENTS || G_ControlledByPlayer(attacker)))
 				{
 					gi.Printf(S_COLOR_RED"Player Attacker lost his saber\n");
@@ -289,7 +289,7 @@ void sab_beh_add_mishap_attacker(gentity_t* attacker, const gentity_t* blocker, 
 	}
 }
 
-void sab_beh_add_mishap_Fake_attacker(gentity_t* attacker, const gentity_t* blocker, const int saber_num)
+void sab_beh_add_mishap_Fake_attacker(gentity_t* attacker, const gentity_t* blocker, const int saberNum)
 {
 	if (attacker->client->ps.blockPoints <= MISHAPLEVEL_NONE)
 	{
@@ -312,7 +312,7 @@ void sab_beh_add_mishap_Fake_attacker(gentity_t* attacker, const gentity_t* bloc
 				if (!Q_irand(0, 4))
 				{
 					//20% chance
-					sab_beh_saber_should_be_disarmed_attacker(attacker, saber_num);
+					sab_beh_saber_should_be_disarmed_attacker(attacker, saberNum);
 					if (d_attackinfo->integer || g_DebugSaberCombat->integer && (attacker->NPC && !G_ControlledByPlayer(attacker)))
 					{
 						gi.Printf(S_COLOR_RED"NPC Attacker lost his saber\n");
@@ -329,7 +329,7 @@ void sab_beh_add_mishap_Fake_attacker(gentity_t* attacker, const gentity_t* bloc
 			}
 			else
 			{
-				sab_beh_saber_should_be_disarmed_attacker(attacker, saber_num);
+				sab_beh_saber_should_be_disarmed_attacker(attacker, saberNum);
 				if (d_attackinfo->integer || g_DebugSaberCombat->integer && (attacker->s.number < MAX_CLIENTS || G_ControlledByPlayer(attacker)))
 				{
 					gi.Printf(S_COLOR_RED"Player Attacker lost his saber\n");
@@ -348,7 +348,7 @@ void sab_beh_add_mishap_Fake_attacker(gentity_t* attacker, const gentity_t* bloc
 	}
 }
 
-void sab_beh_add_mishap_blocker(gentity_t* blocker, const int saber_num)
+void sab_beh_add_mishap_blocker(gentity_t* blocker, const int saberNum)
 {
 	if (blocker->client->ps.blockPoints <= MISHAPLEVEL_NONE)
 	{
@@ -386,7 +386,7 @@ void sab_beh_add_mishap_blocker(gentity_t* blocker, const int saber_num)
 				}
 				else
 				{
-					sab_beh_saber_should_be_disarmed_blocker(blocker, saber_num);
+					sab_beh_saber_should_be_disarmed_blocker(blocker, saberNum);
 					wp_block_points_regenerate_over_ride(blocker, BLOCKPOINTS_FATIGUE);
 					if (d_blockinfo->integer || g_DebugSaberCombat->integer)
 					{
@@ -396,7 +396,7 @@ void sab_beh_add_mishap_blocker(gentity_t* blocker, const int saber_num)
 			}
 			else
 			{
-				sab_beh_saber_should_be_disarmed_blocker(blocker, saber_num);
+				sab_beh_saber_should_be_disarmed_blocker(blocker, saberNum);
 				if (d_blockinfo->integer || g_DebugSaberCombat->integer)
 				{
 					gi.Printf(S_COLOR_RED"blocker lost his saber\n");
@@ -448,7 +448,7 @@ void sab_beh_animate_slow_bounce_blocker(gentity_t* blocker)
 
 ////////Bounces//////////
 
-qboolean sab_beh_attack_blocked(gentity_t* attacker, gentity_t* blocker, const int saber_num, const qboolean force_mishap)
+qboolean sab_beh_attack_blocked(gentity_t* attacker, gentity_t* blocker, const int saberNum, const qboolean force_mishap)
 {
 	//if the attack is blocked -(Im the attacker)
 	const qboolean m_blocking = blocker->client->ps.ManualBlockingFlags & 1 << PERFECTBLOCKING ? qtrue : qfalse;
@@ -463,7 +463,7 @@ qboolean sab_beh_attack_blocked(gentity_t* attacker, gentity_t* blocker, const i
 			if (!Q_irand(0, 4))
 			{
 				//20% chance
-				sab_beh_add_mishap_attacker(attacker, blocker, saber_num);
+				sab_beh_add_mishap_attacker(attacker, blocker, saberNum);
 			}
 			else
 			{
@@ -482,7 +482,7 @@ qboolean sab_beh_attack_blocked(gentity_t* attacker, gentity_t* blocker, const i
 			{
 				gi.Printf(S_COLOR_GREEN"Attacker player is fatigued\n");
 			}
-			sab_beh_add_mishap_attacker(attacker, blocker, saber_num);
+			sab_beh_add_mishap_attacker(attacker, blocker, saberNum);
 		}
 		return qtrue;
 	}
@@ -602,7 +602,7 @@ void sab_beh_add_balance(const gentity_t* self, int amount)
 
 /////////Functions//////////////
 
-qboolean sab_beh_attack_vs_attack(gentity_t* attacker, gentity_t* blocker, const int saber_num)
+qboolean sab_beh_attack_vs_attack(gentity_t* attacker, gentity_t* blocker, const int saberNum)
 {
 	//set the saber behavior for two attacking blades hitting each other
 	const qboolean atkfake = attacker->client->ps.userInt3 & 1 << FLAG_ATTACKFAKE ? qtrue : qfalse;
@@ -662,7 +662,7 @@ qboolean sab_beh_attack_vs_attack(gentity_t* attacker, gentity_t* blocker, const
 		if (blocker->client->ps.blockPoints < BLOCKPOINTS_TEN)
 		{
 			//Low points = bad blocks
-			sab_beh_saber_should_be_disarmed_blocker(blocker, saber_num);
+			sab_beh_saber_should_be_disarmed_blocker(blocker, saberNum);
 			wp_block_points_regenerate_over_ride(blocker, BLOCKPOINTS_FATIGUE);
 		}
 		else
@@ -681,7 +681,7 @@ qboolean sab_beh_attack_vs_attack(gentity_t* attacker, gentity_t* blocker, const
 		if (attacker->client->ps.blockPoints < BLOCKPOINTS_TEN)
 		{
 			//Low points = bad blocks
-			sab_beh_saber_should_be_disarmed_attacker(attacker, saber_num);
+			sab_beh_saber_should_be_disarmed_attacker(attacker, saberNum);
 			wp_block_points_regenerate_over_ride(attacker, BLOCKPOINTS_FATIGUE);
 		}
 		else
@@ -699,14 +699,14 @@ qboolean sab_beh_attack_vs_attack(gentity_t* attacker, gentity_t* blocker, const
 		//set otherOwner
 		sab_beh_add_balance(blocker, MPCOST_PARRIED);
 
-		sab_beh_attack_blocked(attacker, blocker, saber_num, qtrue);
+		sab_beh_attack_blocked(attacker, blocker, saberNum, qtrue);
 
-		sab_beh_attack_blocked(blocker, attacker, saber_num, qtrue);
+		sab_beh_attack_blocked(blocker, attacker, saberNum, qtrue);
 	}
 	return qtrue;
 }
 
-qboolean sab_beh_attack_vs_block(gentity_t* attacker, gentity_t* blocker, const int saber_num, const int blade_num, vec3_t hit_loc)
+qboolean sab_beh_attack_vs_block(gentity_t* attacker, gentity_t* blocker, const int saberNum, const int blade_num, vec3_t hit_loc)
 {
 	//if the attack is blocked -(Im the attacker)
 	const qboolean accurate_parry = g_accurate_blocking(blocker, attacker, hit_loc); // Perfect Normal Blocking
@@ -722,11 +722,11 @@ qboolean sab_beh_attack_vs_block(gentity_t* attacker, gentity_t* blocker, const 
 		//perfect Blocking
 		if (m_blocking) // A perfectly timed block
 		{
-			sab_beh_saber_should_be_disarmed_attacker(attacker, saber_num);
+			sab_beh_saber_should_be_disarmed_attacker(attacker, saberNum);
 			//just so attacker knows that he was blocked
 			attacker->client->ps.saberEventFlags |= SEF_BLOCKED;
 			//since it was parried, take away any damage done
-			wp_saber_clear_damage_for_ent_num(attacker, blocker->s.number, saber_num, blade_num);
+			wp_saber_clear_damage_for_ent_num(attacker, blocker->s.number, saberNum, blade_num);
 			PM_AddBlockFatigue(&attacker->client->ps, BLOCKPOINTS_TEN); //BP Punish Attacker
 		}
 		else
@@ -747,7 +747,7 @@ qboolean sab_beh_attack_vs_block(gentity_t* attacker, gentity_t* blocker, const 
 			gi.Printf(S_COLOR_YELLOW"Both Attacker and Blocker are now attacking\n");
 		}
 
-		sab_beh_attack_vs_attack(blocker, attacker, saber_num);
+		sab_beh_attack_vs_attack(blocker, attacker, saberNum);
 	}
 	else if (PM_SuperBreakWinAnim(attacker->client->ps.torsoAnim))
 	{
@@ -780,7 +780,7 @@ qboolean sab_beh_attack_vs_block(gentity_t* attacker, gentity_t* blocker, const 
 			}
 
 			sab_beh_add_balance(blocker, MPCOST_PARRYING_ATTACKFAKE);
-			sab_beh_add_mishap_Fake_attacker(attacker, blocker, saber_num);
+			sab_beh_add_mishap_Fake_attacker(attacker, blocker, saberNum);
 
 			if ((d_attackinfo->integer || g_DebugSaberCombat->integer) && !PM_InSaberLock(attacker->client->ps.torsoAnim))
 			{
@@ -837,7 +837,7 @@ qboolean sab_beh_attack_vs_block(gentity_t* attacker, gentity_t* blocker, const 
 
 			if (!m_blocking)
 			{
-				sab_beh_attack_blocked(attacker, blocker, saber_num, qfalse);
+				sab_beh_attack_blocked(attacker, blocker, saberNum, qfalse);
 			}
 
 			sab_beh_add_balance(blocker, -MPCOST_PARRIED);
@@ -865,7 +865,7 @@ qboolean sab_beh_attack_vs_block(gentity_t* attacker, gentity_t* blocker, const 
 				}
 				else
 				{
-					sab_beh_attack_blocked(attacker, blocker, saber_num, qtrue);
+					sab_beh_attack_blocked(attacker, blocker, saberNum, qtrue);
 
 					G_Stagger(blocker);
 
@@ -880,7 +880,7 @@ qboolean sab_beh_attack_vs_block(gentity_t* attacker, gentity_t* blocker, const 
 	return qtrue;
 }
 
-qboolean sab_beh_block_vs_attack(gentity_t* blocker, gentity_t* attacker, const int saber_num, const int blade_num, vec3_t hit_loc)
+qboolean sab_beh_block_vs_attack(gentity_t* blocker, gentity_t* attacker, const int saberNum, const int blade_num, vec3_t hit_loc)
 {
 	//-(Im the blocker)
 	const qboolean accurate_parry = g_accurate_blocking(blocker, attacker, hit_loc); // Perfect Normal Blocking
@@ -898,11 +898,11 @@ qboolean sab_beh_block_vs_attack(gentity_t* blocker, gentity_t* attacker, const 
 				//Low points = bad blocks
 				if (blocker->NPC && !G_ControlledByPlayer(blocker)) //NPC only
 				{
-					sab_beh_add_mishap_blocker(blocker, saber_num);
+					sab_beh_add_mishap_blocker(blocker, saberNum);
 				}
 				else
 				{
-					sab_beh_saber_should_be_disarmed_blocker(blocker, saber_num);
+					sab_beh_saber_should_be_disarmed_blocker(blocker, saberNum);
 				}
 
 				if (attacker->NPC && !G_ControlledByPlayer(attacker)) //NPC only
@@ -927,7 +927,7 @@ qboolean sab_beh_block_vs_attack(gentity_t* blocker, gentity_t* attacker, const 
 				//just so attacker knows that he was blocked
 				attacker->client->ps.saberEventFlags |= SEF_BLOCKED;
 				//since it was parried, take away any damage done
-				wp_saber_clear_damage_for_ent_num(attacker, blocker->s.number, saber_num, blade_num);
+				wp_saber_clear_damage_for_ent_num(attacker, blocker->s.number, saberNum, blade_num);
 			}
 			else
 			{
@@ -946,7 +946,7 @@ qboolean sab_beh_block_vs_attack(gentity_t* blocker, gentity_t* attacker, const 
 				//just so attacker knows that he was blocked
 				attacker->client->ps.saberEventFlags |= SEF_BLOCKED;
 				//since it was parried, take away any damage done
-				wp_saber_clear_damage_for_ent_num(attacker, blocker->s.number, saber_num, blade_num);
+				wp_saber_clear_damage_for_ent_num(attacker, blocker->s.number, saberNum, blade_num);
 			}
 		}
 		else
@@ -957,11 +957,11 @@ qboolean sab_beh_block_vs_attack(gentity_t* blocker, gentity_t* attacker, const 
 				//perfect Blocking
 				if (m_blocking) // A perfectly timed block
 				{
-					WP_SaberMBlock(blocker, attacker, saber_num, blade_num);
+					WP_SaberMBlock(blocker, attacker, saberNum, blade_num);
 
 					if (attacker->client->ps.saberFatigueChainCount >= MISHAPLEVEL_THIRTEEN)
 					{
-						sab_beh_add_mishap_attacker(attacker, blocker, saber_num);
+						sab_beh_add_mishap_attacker(attacker, blocker, saberNum);
 					}
 					else
 					{
@@ -998,7 +998,7 @@ qboolean sab_beh_block_vs_attack(gentity_t* blocker, gentity_t* attacker, const 
 					//just so attacker knows that he was blocked
 					attacker->client->ps.saberEventFlags |= SEF_BLOCKED;
 					//since it was parried, take away any damage done
-					wp_saber_clear_damage_for_ent_num(attacker, blocker->s.number, saber_num, blade_num);
+					wp_saber_clear_damage_for_ent_num(attacker, blocker->s.number, saberNum, blade_num);
 
 					wp_block_points_regenerate_over_ride(blocker, BLOCKPOINTS_FATIGUE); //BP Reward blocker
 					blocker->client->ps.saberFatigueChainCount = MISHAPLEVEL_NONE; //SAC Reward blocker
@@ -1009,17 +1009,17 @@ qboolean sab_beh_block_vs_attack(gentity_t* blocker, gentity_t* attacker, const 
 					//Spamming block + attack buttons
 					if (blocker->client->ps.blockPoints <= BLOCKPOINTS_HALF)
 					{
-						WP_SaberFatiguedParry(blocker, attacker, saber_num, blade_num);
+						WP_SaberFatiguedParry(blocker, attacker, saberNum, blade_num);
 					}
 					else
 					{
 						if (attacker->client->ps.saber_anim_level == SS_DESANN || attacker->client->ps.saber_anim_level == SS_STRONG)
 						{
-							WP_SaberFatiguedParry(blocker, attacker, saber_num, blade_num);
+							WP_SaberFatiguedParry(blocker, attacker, saberNum, blade_num);
 						}
 						else
 						{
-							WP_SaberParry(blocker, attacker, saber_num, blade_num);
+							WP_SaberParry(blocker, attacker, saberNum, blade_num);
 						}
 					}
 
@@ -1045,25 +1045,25 @@ qboolean sab_beh_block_vs_attack(gentity_t* blocker, gentity_t* attacker, const 
 					//just so attacker knows that he was blocked
 					attacker->client->ps.saberEventFlags |= SEF_BLOCKED;
 					//since it was parried, take away any damage done
-					wp_saber_clear_damage_for_ent_num(attacker, blocker->s.number, saber_num, blade_num);
+					wp_saber_clear_damage_for_ent_num(attacker, blocker->s.number, saberNum, blade_num);
 				}
 			}
 			else if (blocking && !active_blocking) //Holding block button only (spamming block)
 			{
 				if (blocker->client->ps.blockPoints <= BLOCKPOINTS_HALF)
 				{
-					WP_SaberFatiguedParry(blocker, attacker, saber_num, blade_num);
+					WP_SaberFatiguedParry(blocker, attacker, saberNum, blade_num);
 				}
 				else
 				{
 					if (attacker->client->ps.saber_anim_level == SS_DESANN || attacker->client->ps.saber_anim_level ==
 						SS_STRONG)
 					{
-						WP_SaberFatiguedParry(blocker, attacker, saber_num, blade_num);
+						WP_SaberFatiguedParry(blocker, attacker, saberNum, blade_num);
 					}
 					else
 					{
-						WP_SaberBlockedBounceBlock(blocker, attacker, saber_num, blade_num);
+						WP_SaberBlockedBounceBlock(blocker, attacker, saberNum, blade_num);
 					}
 				}
 
@@ -1091,13 +1091,13 @@ qboolean sab_beh_block_vs_attack(gentity_t* blocker, gentity_t* attacker, const 
 				//just so attacker knows that he was blocked
 				attacker->client->ps.saberEventFlags |= SEF_BLOCKED;
 				//since it was parried, take away any damage done
-				wp_saber_clear_damage_for_ent_num(attacker, blocker->s.number, saber_num, blade_num);
+				wp_saber_clear_damage_for_ent_num(attacker, blocker->s.number, saberNum, blade_num);
 			}
 			else if ((accurate_parry || npc_blocking)) //Other types and npc,s
 			{
 				if (attacker->client->ps.saber_anim_level == SS_DESANN || attacker->client->ps.saber_anim_level == SS_STRONG)
 				{
-					WP_SaberFatiguedParry(blocker, attacker, saber_num, blade_num);
+					WP_SaberFatiguedParry(blocker, attacker, saberNum, blade_num);
 				}
 				else
 				{
@@ -1105,7 +1105,7 @@ qboolean sab_beh_block_vs_attack(gentity_t* blocker, gentity_t* attacker, const 
 					{
 						if (blocker->client->ps.blockPoints <= BLOCKPOINTS_FOURTY)
 						{
-							WP_SaberFatiguedParry(blocker, attacker, saber_num, blade_num);
+							WP_SaberFatiguedParry(blocker, attacker, saberNum, blade_num);
 
 							if ((d_blockinfo->integer || g_DebugSaberCombat->integer) && (blocker->NPC && !
 								G_ControlledByPlayer(blocker)))
@@ -1116,7 +1116,7 @@ qboolean sab_beh_block_vs_attack(gentity_t* blocker, gentity_t* attacker, const 
 						}
 						else
 						{
-							WP_SaberParry(blocker, attacker, saber_num, blade_num);
+							WP_SaberParry(blocker, attacker, saberNum, blade_num);
 
 							if ((d_blockinfo->integer || g_DebugSaberCombat->integer) && (blocker->NPC && !
 								G_ControlledByPlayer(blocker)))
@@ -1129,7 +1129,7 @@ qboolean sab_beh_block_vs_attack(gentity_t* blocker, gentity_t* attacker, const 
 					}
 					else
 					{
-						WP_SaberMBlock(blocker, attacker, saber_num, blade_num);
+						WP_SaberMBlock(blocker, attacker, saberNum, blade_num);
 
 						if (blocker->NPC && !G_ControlledByPlayer(blocker)) //NPC only
 						{
@@ -1159,11 +1159,11 @@ qboolean sab_beh_block_vs_attack(gentity_t* blocker, gentity_t* attacker, const 
 				//just so attacker knows that he was blocked
 				attacker->client->ps.saberEventFlags |= SEF_BLOCKED;
 				//since it was parried, take away any damage done
-				wp_saber_clear_damage_for_ent_num(attacker, blocker->s.number, saber_num, blade_num);
+				wp_saber_clear_damage_for_ent_num(attacker, blocker->s.number, saberNum, blade_num);
 			}
 			else
 			{
-				sab_beh_add_mishap_blocker(blocker, saber_num);
+				sab_beh_add_mishap_blocker(blocker, saberNum);
 
 				if (blocker->NPC && !G_ControlledByPlayer(blocker)) //NPC only
 				{
@@ -1217,7 +1217,7 @@ qboolean sab_beh_block_vs_attack(gentity_t* blocker, gentity_t* attacker, const 
 			if (blocker->client->ps.blockPoints < BLOCKPOINTS_TEN)
 			{
 				//Low points = bad blocks
-				sab_beh_saber_should_be_disarmed_blocker(blocker, saber_num);
+				sab_beh_saber_should_be_disarmed_blocker(blocker, saberNum);
 				wp_block_points_regenerate_over_ride(blocker, BLOCKPOINTS_FATIGUE);
 			}
 			else

@@ -1181,11 +1181,11 @@ int CM_ModelContents_Actual(const clipHandle_t model, clipMap_t* cm)
 
 	for (int i = 0; i < cmod->leaf.numLeafSurfaces; i++)
 	{
-		const int surface_num = cm->leafsurfaces[cmod->leaf.firstLeafSurface + i];
-		if (cm->surfaces[surface_num])
+		const int surfaceNum = cm->leafsurfaces[cmod->leaf.firstLeafSurface + i];
+		if (cm->surfaces[surfaceNum])
 		{
 			// HERNH?  How could we have a null surf within our cmod->leaf.numLeafSurfaces?
-			contents |= cm->surfaces[surface_num]->contents;
+			contents |= cm->surfaces[surfaceNum]->contents;
 		}
 	}
 

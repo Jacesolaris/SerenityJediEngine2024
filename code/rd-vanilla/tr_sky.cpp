@@ -449,7 +449,7 @@ static void DrawSkyBox(const shader_t* shader)
 static void FillCloudySkySide(const int mins[2], const int maxs[2], const qboolean add_indexes)
 {
 	int s, t;
-	const int vertex_start = tess.num_vertexes;
+	const int vertex_start = tess.numVertexes;
 
 	const int t_height = maxs[1] - mins[1] + 1;
 	const int s_width = maxs[0] - mins[0] + 1;
@@ -458,13 +458,13 @@ static void FillCloudySkySide(const int mins[2], const int maxs[2], const qboole
 	{
 		for (s = mins[0] + HALF_SKY_SUBDIVISIONS; s <= maxs[0] + HALF_SKY_SUBDIVISIONS; s++)
 		{
-			VectorAdd(s_sky_points[t][s], backEnd.viewParms.ori.origin, tess.xyz[tess.num_vertexes]);
-			tess.texCoords[tess.num_vertexes][0][0] = s_sky_tex_coords[t][s][0];
-			tess.texCoords[tess.num_vertexes][0][1] = s_sky_tex_coords[t][s][1];
+			VectorAdd(s_sky_points[t][s], backEnd.viewParms.ori.origin, tess.xyz[tess.numVertexes]);
+			tess.texCoords[tess.numVertexes][0][0] = s_sky_tex_coords[t][s][0];
+			tess.texCoords[tess.numVertexes][0][1] = s_sky_tex_coords[t][s][1];
 
-			tess.num_vertexes++;
+			tess.numVertexes++;
 
-			if (tess.num_vertexes >= SHADER_MAX_VERTEXES)
+			if (tess.numVertexes >= SHADER_MAX_VERTEXES)
 			{
 				Com_Error(ERR_DROP, "SHADER_MAX_VERTEXES hit in FillCloudySkySide()\n");
 			}
@@ -580,7 +580,7 @@ void R_BuildCloudData(shaderCommands_t* input)
 
 	// set up for drawing
 	tess.numIndexes = 0;
-	tess.num_vertexes = 0;
+	tess.numVertexes = 0;
 
 	if (input->shader->sky->cloudHeight)
 	{
@@ -686,46 +686,46 @@ void RB_DrawSun() {
 	VectorCopy(origin, temp);
 	VectorSubtract(temp, vec1, temp);
 	VectorSubtract(temp, vec2, temp);
-	VectorCopy(temp, tess.xyz[tess.num_vertexes]);
-	tess.texCoords[tess.num_vertexes][0][0] = 0;
-	tess.texCoords[tess.num_vertexes][0][1] = 0;
-	tess.vertexColors[tess.num_vertexes][0] = 255;
-	tess.vertexColors[tess.num_vertexes][1] = 255;
-	tess.vertexColors[tess.num_vertexes][2] = 255;
-	tess.num_vertexes++;
+	VectorCopy(temp, tess.xyz[tess.numVertexes]);
+	tess.texCoords[tess.numVertexes][0][0] = 0;
+	tess.texCoords[tess.numVertexes][0][1] = 0;
+	tess.vertexColors[tess.numVertexes][0] = 255;
+	tess.vertexColors[tess.numVertexes][1] = 255;
+	tess.vertexColors[tess.numVertexes][2] = 255;
+	tess.numVertexes++;
 
 	VectorCopy(origin, temp);
 	VectorAdd(temp, vec1, temp);
 	VectorSubtract(temp, vec2, temp);
-	VectorCopy(temp, tess.xyz[tess.num_vertexes]);
-	tess.texCoords[tess.num_vertexes][0][0] = 0;
-	tess.texCoords[tess.num_vertexes][0][1] = 1;
-	tess.vertexColors[tess.num_vertexes][0] = 255;
-	tess.vertexColors[tess.num_vertexes][1] = 255;
-	tess.vertexColors[tess.num_vertexes][2] = 255;
-	tess.num_vertexes++;
+	VectorCopy(temp, tess.xyz[tess.numVertexes]);
+	tess.texCoords[tess.numVertexes][0][0] = 0;
+	tess.texCoords[tess.numVertexes][0][1] = 1;
+	tess.vertexColors[tess.numVertexes][0] = 255;
+	tess.vertexColors[tess.numVertexes][1] = 255;
+	tess.vertexColors[tess.numVertexes][2] = 255;
+	tess.numVertexes++;
 
 	VectorCopy(origin, temp);
 	VectorAdd(temp, vec1, temp);
 	VectorAdd(temp, vec2, temp);
-	VectorCopy(temp, tess.xyz[tess.num_vertexes]);
-	tess.texCoords[tess.num_vertexes][0][0] = 1;
-	tess.texCoords[tess.num_vertexes][0][1] = 1;
-	tess.vertexColors[tess.num_vertexes][0] = 255;
-	tess.vertexColors[tess.num_vertexes][1] = 255;
-	tess.vertexColors[tess.num_vertexes][2] = 255;
-	tess.num_vertexes++;
+	VectorCopy(temp, tess.xyz[tess.numVertexes]);
+	tess.texCoords[tess.numVertexes][0][0] = 1;
+	tess.texCoords[tess.numVertexes][0][1] = 1;
+	tess.vertexColors[tess.numVertexes][0] = 255;
+	tess.vertexColors[tess.numVertexes][1] = 255;
+	tess.vertexColors[tess.numVertexes][2] = 255;
+	tess.numVertexes++;
 
 	VectorCopy(origin, temp);
 	VectorSubtract(temp, vec1, temp);
 	VectorAdd(temp, vec2, temp);
-	VectorCopy(temp, tess.xyz[tess.num_vertexes]);
-	tess.texCoords[tess.num_vertexes][0][0] = 1;
-	tess.texCoords[tess.num_vertexes][0][1] = 0;
-	tess.vertexColors[tess.num_vertexes][0] = 255;
-	tess.vertexColors[tess.num_vertexes][1] = 255;
-	tess.vertexColors[tess.num_vertexes][2] = 255;
-	tess.num_vertexes++;
+	VectorCopy(temp, tess.xyz[tess.numVertexes]);
+	tess.texCoords[tess.numVertexes][0][0] = 1;
+	tess.texCoords[tess.numVertexes][0][1] = 0;
+	tess.vertexColors[tess.numVertexes][0] = 255;
+	tess.vertexColors[tess.numVertexes][1] = 255;
+	tess.vertexColors[tess.numVertexes][2] = 255;
+	tess.numVertexes++;
 
 	tess.indexes[tess.numIndexes++] = 0;
 	tess.indexes[tess.numIndexes++] = 1;

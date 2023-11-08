@@ -2214,6 +2214,7 @@ extern "C" Q_EXPORT refexport_t * QDECL GetRefAPI(const int api_version, const r
 	G2EX(AddSkinGore);
 	G2EX(ClearSkinGore);
 #endif
+	G2EX(SetTintType);
 
 #ifdef G2_PERFORMANCE_ANALYSIS
 	re.G2Time_ReportTimers = G2Time_ReportTimers;

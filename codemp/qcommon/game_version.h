@@ -40,10 +40,10 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 #define VERSION_MAJOR_RELEASE		23
 #define VERSION_MINOR_RELEASE		11
-#define VERSION_INTERNAL_BUILD		06
+#define VERSION_INTERNAL_BUILD		07
 
-#define VERSION_STRING				"Year-23,Month-11,Day-06,BuildNum-06"
-#define VERSION_STRING_DOTTED		"Year-23,Month-11,Day-06,BuildNum-06" // build date
+#define VERSION_STRING				"Year-23,Month-11,Day-07,BuildNum-07"
+#define VERSION_STRING_DOTTED		"Year-23,Month-11,Day-07,BuildNum-07" // build date
 
 #if defined(_DEBUG)
 #define	JK_VERSION		"(debug)SerenityJediEngine2024-MP: " VERSION_STRING_DOTTED

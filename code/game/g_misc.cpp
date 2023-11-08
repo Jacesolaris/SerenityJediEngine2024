@@ -697,7 +697,7 @@ void G_PortalifyEntities(gentity_t* ent)
 			gi.trace(&tr, ent->s.origin, vec3_origin, vec3_origin, scan->currentOrigin, ent->s.number, CONTENTS_SOLID,
 				G2_NOCOLLIDE, 0);
 
-			if (tr.fraction == 1.0 || tr.entity_num == scan->s.number && tr.entity_num != ENTITYNUM_NONE && tr.entity_num
+			if (tr.fraction == 1.0 || tr.entityNum == scan->s.number && tr.entityNum != ENTITYNUM_NONE && tr.entityNum
 				!= ENTITYNUM_WORLD)
 			{
 				scan->s.isPortalEnt = qtrue; //he's flagged now
@@ -1973,8 +1973,8 @@ void maglock_link(gentity_t* self)
 		*/
 		return;
 	}
-	gentity_t* trace_ent = &g_entities[trace.entity_num];
-	if (trace.entity_num >= ENTITYNUM_WORLD || !trace_ent || Q_stricmp("func_door", trace_ent->classname))
+	gentity_t* trace_ent = &g_entities[trace.entityNum];
+	if (trace.entityNum >= ENTITYNUM_WORLD || !trace_ent || Q_stricmp("func_door", trace_ent->classname))
 	{
 		self->e_ThinkFunc = thinkF_maglock_link;
 		self->nextthink = level.time + 100;

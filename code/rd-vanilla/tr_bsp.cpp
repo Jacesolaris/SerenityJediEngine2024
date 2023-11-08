@@ -529,7 +529,7 @@ static void ParseTriSurf(const dsurface_t* ds, mapVert_t* verts, msurface_t* sur
 	srfTriangles_t* tri = static_cast<srfTriangles_t*>(R_Malloc(
 		sizeof * tri + numVerts * sizeof tri->verts[0] + numIndexes * sizeof tri->indexes[0], TAG_HUNKMISCMODELS,
 		qfalse));
-	tri->dlight_bits = 0; //JIC
+	tri->dlightBits = 0; //JIC
 	tri->surfaceType = SF_TRIANGLES;
 	tri->numVerts = numVerts;
 	tri->numIndexes = numIndexes;

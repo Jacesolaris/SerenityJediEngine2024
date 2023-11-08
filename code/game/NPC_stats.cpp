@@ -45,7 +45,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #include "../Rufl/hstring.h"
 #include "../Ratl/vector_vs.h"
 
-extern void WP_RemoveSaber(gentity_t* ent, int saber_num);
+extern void WP_RemoveSaber(gentity_t* ent, int saberNum);
 extern qboolean NPCsPrecached;
 extern vec3_t player_mins;
 extern vec3_t player_maxs;
@@ -400,7 +400,7 @@ static int MoveTypeNameToEnum(const char* name)
 }
 
 extern void CG_RegisterClientRenderInfo(clientInfo_t* ci, const renderInfo_t* ri);
-extern void CG_RegisterClientModels(int entity_num);
+extern void CG_RegisterClientModels(int entityNum);
 extern void CG_RegisterNPCCustomSounds(clientInfo_t* ci);
 
 #ifdef CONVENIENT_ANIMATION_FILE_DEBUG_THING

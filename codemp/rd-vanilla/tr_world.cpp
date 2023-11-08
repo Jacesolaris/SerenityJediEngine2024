@@ -245,30 +245,30 @@ static qboolean	R_CullSurface(surfaceType_t* surface, const shader_t* shader) {
 	return qfalse;
 }
 
-static int R_DlightFace(srfSurfaceFace_t* face, int dlight_bits) {
+static int R_DlightFace(srfSurfaceFace_t* face, int dlightBits) {
 	for (int i = 0; i < tr.refdef.num_dlights; i++) {
-		if (!(dlight_bits & 1 << i)) {
+		if (!(dlightBits & 1 << i)) {
 			continue;
 		}
 		const dlight_t* dl = &tr.refdef.dlights[i];
 		const float d = DotProduct(dl->origin, face->plane.normal) - face->plane.dist;
 		if (!VectorCompare(face->plane.normal, vec3_origin) && (d < -dl->radius || d > dl->radius)) {
 			// dlight doesn't reach the plane
-			dlight_bits &= ~(1 << i);
+			dlightBits &= ~(1 << i);
 		}
 	}
 
-	if (!dlight_bits) {
+	if (!dlightBits) {
 		tr.pc.c_dlightSurfacesCulled++;
 	}
 
-	face->dlight_bits = dlight_bits;
-	return dlight_bits;
+	face->dlightBits = dlightBits;
+	return dlightBits;
 }
 
-static int R_DlightGrid(srfGridMesh_t* grid, int dlight_bits) {
+static int R_DlightGrid(srfGridMesh_t* grid, int dlightBits) {
 	for (int i = 0; i < tr.refdef.num_dlights; i++) {
-		if (!(dlight_bits & 1 << i)) {
+		if (!(dlightBits & 1 << i)) {
 			continue;
 		}
 		const dlight_t* dl = &tr.refdef.dlights[i];
@@ -279,28 +279,28 @@ static int R_DlightGrid(srfGridMesh_t* grid, int dlight_bits) {
 			|| dl->origin[2] - dl->radius > grid->meshBounds[1][2]
 			|| dl->origin[2] + dl->radius < grid->meshBounds[0][2]) {
 			// dlight doesn't reach the bounds
-			dlight_bits &= ~(1 << i);
+			dlightBits &= ~(1 << i);
 		}
 	}
 
-	if (!dlight_bits) {
+	if (!dlightBits) {
 		tr.pc.c_dlightSurfacesCulled++;
 	}
 
-	grid->dlight_bits = dlight_bits;
-	return dlight_bits;
+	grid->dlightBits = dlightBits;
+	return dlightBits;
 }
 
-static int R_DlightTrisurf(srfTriangles_t* surf, int dlight_bits) {
+static int R_DlightTrisurf(srfTriangles_t* surf, int dlightBits) {
 	// FIXME: more dlight culling to trisurfs...
-	surf->dlight_bits = dlight_bits;
-	return dlight_bits;
+	surf->dlightBits = dlightBits;
+	return dlightBits;
 #if 0
 	int			i;
 	dlight_t* dl;
 
 	for (i = 0; i < tr.refdef.num_dlights; i++) {
-		if (!(dlight_bits & (1 << i))) {
+		if (!(dlightBits & (1 << i))) {
 			continue;
 		}
 		dl = &tr.refdef.dlights[i];
@@ -311,16 +311,16 @@ static int R_DlightTrisurf(srfTriangles_t* surf, int dlight_bits) {
 			|| dl->origin[2] - dl->radius > grid->meshBounds[1][2]
 			|| dl->origin[2] + dl->radius < grid->meshBounds[0][2]) {
 			// dlight doesn't reach the bounds
-			dlight_bits &= ~(1 << i);
+			dlightBits &= ~(1 << i);
 		}
 	}
 
-	if (!dlight_bits) {
+	if (!dlightBits) {
 		tr.pc.c_dlightSurfacesCulled++;
 	}
 
-	grid->dlight_bits = dlight_bits;
-	return dlight_bits;
+	grid->dlightBits = dlightBits;
+	return dlightBits;
 #endif
 }
 
@@ -333,25 +333,25 @@ that is touched by one or more dlights, so try to throw out
 more dlights if possible.
 ====================
 */
-static int R_DlightSurface(const msurface_t* surf, int dlight_bits) {
+static int R_DlightSurface(const msurface_t* surf, int dlightBits) {
 	if (*surf->data == SF_FACE) {
-		dlight_bits = R_DlightFace((srfSurfaceFace_t*)surf->data, dlight_bits);
+		dlightBits = R_DlightFace((srfSurfaceFace_t*)surf->data, dlightBits);
 	}
 	else if (*surf->data == SF_GRID) {
-		dlight_bits = R_DlightGrid((srfGridMesh_t*)surf->data, dlight_bits);
+		dlightBits = R_DlightGrid((srfGridMesh_t*)surf->data, dlightBits);
 	}
 	else if (*surf->data == SF_TRIANGLES) {
-		dlight_bits = R_DlightTrisurf((srfTriangles_t*)surf->data, dlight_bits);
+		dlightBits = R_DlightTrisurf((srfTriangles_t*)surf->data, dlightBits);
 	}
 	else {
-		dlight_bits = 0;
+		dlightBits = 0;
 	}
 
-	if (dlight_bits) {
+	if (dlightBits) {
 		tr.pc.c_dlightSurfaces++;
 	}
 
-	return dlight_bits;
+	return dlightBits;
 }
 
 #ifdef _ALT_AUTOMAP_METHOD
@@ -364,7 +364,7 @@ static float g_playerHeight = 0.0f;
 R_AddWorldSurface
 ======================
 */
-static void R_AddWorldSurface(msurface_t* surf, int dlight_bits, const qboolean noViewCount = qfalse)
+static void R_AddWorldSurface(msurface_t* surf, int dlightBits, const qboolean noViewCount = qfalse)
 {
 	if (!noViewCount)
 	{
@@ -373,15 +373,15 @@ static void R_AddWorldSurface(msurface_t* surf, int dlight_bits, const qboolean 
 			// already in this view, but lets make sure all the dlight bits are set
 			if (*surf->data == SF_FACE)
 			{
-				((srfSurfaceFace_t*)surf->data)->dlight_bits |= dlight_bits;
+				((srfSurfaceFace_t*)surf->data)->dlightBits |= dlightBits;
 			}
 			else if (*surf->data == SF_GRID)
 			{
-				((srfGridMesh_t*)surf->data)->dlight_bits |= dlight_bits;
+				((srfGridMesh_t*)surf->data)->dlightBits |= dlightBits;
 			}
 			else if (*surf->data == SF_TRIANGLES)
 			{
-				((srfTriangles_t*)surf->data)->dlight_bits |= dlight_bits;
+				((srfTriangles_t*)surf->data)->dlightBits |= dlightBits;
 			}
 			return;
 		}
@@ -392,9 +392,9 @@ static void R_AddWorldSurface(msurface_t* surf, int dlight_bits, const qboolean 
 	/*
 	if (r_shadows->integer == 2)
 	{
-		dlight_bits = R_DlightSurface( surf, dlight_bits );
-		//dlight_bits = ( dlight_bits != 0 );
-		R_AddDrawSurf( surf->data, tr.shadowShader, surf->fogIndex, dlight_bits );
+		dlightBits = R_DlightSurface( surf, dlightBits );
+		//dlightBits = ( dlightBits != 0 );
+		R_AddDrawSurf( surf->data, tr.shadowShader, surf->fogIndex, dlightBits );
 	}
 	*/
 	//world shadows?
@@ -410,10 +410,10 @@ static void R_AddWorldSurface(msurface_t* surf, int dlight_bits, const qboolean 
 	}
 
 	// check for dlighting
-	if (dlight_bits)
+	if (dlightBits)
 	{
-		dlight_bits = R_DlightSurface(surf, dlight_bits);
-		dlight_bits = dlight_bits != 0;
+		dlightBits = R_DlightSurface(surf, dlightBits);
+		dlightBits = dlightBits != 0;
 	}
 
 #ifdef _ALT_AUTOMAP_METHOD
@@ -505,7 +505,7 @@ static void R_AddWorldSurface(msurface_t* surf, int dlight_bits, const qboolean 
 	else
 #endif
 	{
-		R_AddDrawSurf(surf->data, surf->shader, surf->fogIndex, dlight_bits);
+		R_AddDrawSurf(surf->data, surf->shader, surf->fogIndex, dlightBits);
 	}
 }
 
@@ -548,7 +548,7 @@ void R_AddBrushModelSurfaces(trRefEntity_t* ent) {
 	//	}
 
 	for (int i = 0; i < bmodel->numSurfaces; i++) {
-		R_AddWorldSurface(bmodel->firstSurface + i, tr.currentEntity->dlight_bits, qtrue);
+		R_AddWorldSurface(bmodel->firstSurface + i, tr.currentEntity->dlightBits, qtrue);
 	}
 }
 
@@ -1068,7 +1068,7 @@ qboolean R_InitializeWireframeAutomap(void)
 #define QUADINFINITY			16777216
 static float g_lastHeight = 0.0f;
 static bool g_lastHeightValid = false;
-static void R_RecursiveWorldNode(mnode_t* node, int planeBits, int dlight_bits);
+static void R_RecursiveWorldNode(mnode_t* node, int planeBits, int dlightBits);
 const void* R_DrawWireframeAutomap(const void* data)
 {
 	const auto cmd = static_cast<const drawBufferCommand_t*>(data);
@@ -1312,7 +1312,7 @@ const void* R_DrawWireframeAutomap(const void* data)
 R_RecursiveWorldNode
 ================
 */
-static void R_RecursiveWorldNode(mnode_t* node, int planeBits, int dlight_bits) {
+static void R_RecursiveWorldNode(mnode_t* node, int planeBits, int dlightBits) {
 	do
 	{
 		int			newDlights[2]{};
@@ -1394,11 +1394,11 @@ static void R_RecursiveWorldNode(mnode_t* node, int planeBits, int dlight_bits) 
 		{
 			newDlights[0] = 0;
 			newDlights[1] = 0;
-			if (dlight_bits)
+			if (dlightBits)
 			{
 				for (int i = 0; i < tr.refdef.num_dlights; i++)
 				{
-					if (dlight_bits & 1 << i) {
+					if (dlightBits & 1 << i) {
 						const dlight_t* dl = &tr.refdef.dlights[i];
 						const float dist = DotProduct(dl->origin, node->plane->normal) - node->plane->dist;
 
@@ -1414,8 +1414,8 @@ static void R_RecursiveWorldNode(mnode_t* node, int planeBits, int dlight_bits) 
 		}
 		else
 		{
-			newDlights[0] = dlight_bits;
-			newDlights[1] = dlight_bits;
+			newDlights[0] = dlightBits;
+			newDlights[1] = dlightBits;
 		}
 
 		// recurse down the children, front side first
@@ -1423,7 +1423,7 @@ static void R_RecursiveWorldNode(mnode_t* node, int planeBits, int dlight_bits) 
 
 		// tail recurse
 		node = node->children[1];
-		dlight_bits = newDlights[1];
+		dlightBits = newDlights[1];
 	} while (true);
 
 	{
@@ -1457,7 +1457,7 @@ static void R_RecursiveWorldNode(mnode_t* node, int planeBits, int dlight_bits) 
 			// the surface may have already been added if it
 			// spans multiple leafs
 			msurface_t* surf = *mark;
-			R_AddWorldSurface(surf, dlight_bits);
+			R_AddWorldSurface(surf, dlightBits);
 			mark++;
 		}
 	}

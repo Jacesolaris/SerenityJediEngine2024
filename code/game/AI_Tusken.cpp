@@ -445,10 +445,10 @@ void Tusken_StaffTrace()
 			}
 #endif
 			gi.trace(&trace, base, mins, maxs, tip, NPC->s.number, MASK_SHOT, G2_RETURNONHIT, 10);
-			if (trace.fraction < 1.0f && trace.entity_num != last_hit)
+			if (trace.fraction < 1.0f && trace.entityNum != last_hit)
 			{
 				//hit something
-				gentity_t* trace_ent = &g_entities[trace.entity_num];
+				gentity_t* trace_ent = &g_entities[trace.entityNum];
 				if (trace_ent->takedamage
 					&& (!trace_ent->client || trace_ent == NPC->enemy || trace_ent->client->NPC_class != NPC->client->
 						NPC_class))
@@ -466,7 +466,7 @@ void Tusken_StaffTrace()
 						//do pain on enemy
 						G_Knockdown(trace_ent, NPC, dir, 300, qtrue);
 					}
-					last_hit = trace.entity_num;
+					last_hit = trace.entityNum;
 					hit = qtrue;
 				}
 			}
@@ -511,10 +511,10 @@ void Tusken_StaffTracenew(gentity_t* self)
 			}
 #endif
 			gi.trace(&trace, base, mins, maxs, tip, self->s.number, MASK_SHOT, G2_RETURNONHIT, 10);
-			if (trace.fraction < 1.0f && trace.entity_num != last_hit)
+			if (trace.fraction < 1.0f && trace.entityNum != last_hit)
 			{
 				//hit something
-				gentity_t* trace_ent = &g_entities[trace.entity_num];
+				gentity_t* trace_ent = &g_entities[trace.entityNum];
 				if (trace_ent->takedamage
 					&& (!trace_ent->client || trace_ent == self->enemy || trace_ent->client->NPC_class != self->client->
 						NPC_class))
@@ -532,7 +532,7 @@ void Tusken_StaffTracenew(gentity_t* self)
 						//do pain on enemy
 						G_Knockdown(trace_ent, self, dir, 300, qtrue);
 					}
-					last_hit = trace.entity_num;
+					last_hit = trace.entityNum;
 					hit = qtrue;
 				}
 			}

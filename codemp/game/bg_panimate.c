@@ -52,7 +52,7 @@ qboolean PM_SaberInTransition(int move);
 qboolean PM_SaberInDeflect(int move);
 extern qboolean PM_SaberInBounce(int move);
 extern qboolean PM_SaberInBrokenParry(int move);
-extern saberInfo_t* BG_MySaber(int client_num, int saber_num);
+extern saberInfo_t* BG_MySaber(int client_num, int saberNum);
 extern qboolean PM_InBackFlip(int anim);
 /*
 ==============================================================================

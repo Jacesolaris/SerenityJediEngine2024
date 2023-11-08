@@ -128,7 +128,7 @@ using trRefEntity_t = struct trRefEntity_s {
 	vec3_t		ambientLight;	// color normalized to 0-255
 	int			ambientLightInt;	// 32 bit rgba packed
 	vec3_t		directedLight;
-	int			dlight_bits;
+	int			dlightBits;
 };
 
 using orientationr_t = struct orientationr_s {
@@ -243,6 +243,7 @@ using colorGen_t = enum {
 	CGEN_BAD,
 	CGEN_IDENTITY_LIGHTING,	// tr.identityLight
 	CGEN_IDENTITY,			// always (1,1,1,1)
+	CGEN_SKIP,
 	CGEN_ENTITY,			// grabbed from entity's modulate field
 	CGEN_ONE_MINUS_ENTITY,	// grabbed from 1 - entity.modulate
 	CGEN_EXACT_VERTEX,		// tess.vertexColors
@@ -254,6 +255,8 @@ using colorGen_t = enum {
 	CGEN_FOG,				// standard fog
 	CGEN_CONST,				// fixed color
 	CGEN_LIGHTMAPSTYLE,
+	CGEN_ENTITY_NEW,
+	CGEN_LIGHTING_DIFFUSE_ENTITY_NEW,
 };
 
 using texCoordGen_t = enum {
@@ -651,7 +654,7 @@ using srfGridMesh_t = struct srfGridMesh_s {
 	surfaceType_t	surfaceType;
 
 	// dynamic lighting information
-	int				dlight_bits;
+	int				dlightBits;
 
 	// culling information
 	vec3_t			meshBounds[2];
@@ -678,7 +681,7 @@ using srfSurfaceFace_t = struct srfSurfaceFace_s {
 	cplane_t	plane;
 
 	// dynamic lighting information
-	int			dlight_bits;
+	int			dlightBits;
 
 	// triangle definitions (no normals at points)
 	int			numPoints;
@@ -693,7 +696,7 @@ using srfTriangles_t = struct srfTriangles_s {
 	surfaceType_t	surfaceType;
 
 	// dynamic lighting information
-	int				dlight_bits;
+	int				dlightBits;
 
 	// culling information (FIXME: use this!)
 	vec3_t			bounds[2];
@@ -1241,9 +1244,9 @@ void R_AddMD3Surfaces(trRefEntity_t* ent);
 
 void R_AddPolygonSurfaces(void);
 
-void R_DecomposeSort(unsigned sort, int* entity_num, shader_t** shader, int* fogNum, int* dlightMap);
+void R_DecomposeSort(unsigned sort, int* entityNum, shader_t** shader, int* fogNum, int* dlightMap);
 
-void R_AddDrawSurf(surfaceType_t* surface, const shader_t* shader, int fogIndex, int dlightMap);
+void R_AddDrawSurf(surfaceType_t* surface, const shader_t* shader, int fogIndex, const int dlightMap);
 
 #define	CULL_IN		0		// completely unclipped
 #define	CULL_CLIP	1		// clipped by one or more planes
@@ -1432,10 +1435,10 @@ struct shaderCommands_s
 	float   shaderTime;
 	int			fogNum;
 
-	int			dlight_bits;	// or together of all vertexdlight_bits
+	int			dlightBits;	// or together of all vertexdlight_bits
 
 	int			numIndexes;
-	int			num_vertexes;
+	int			numVertexes;
 
 	// info extracted from current shader
 	int			numPasses;
@@ -1461,14 +1464,14 @@ extern	color4ub_t	styleColors[MAX_LIGHT_STYLES];
 
 void RB_BeginSurface(shader_t* shader, int fogNum);
 void RB_EndSurface(void);
-void RB_CheckOverflow(int verts, int indexes);
-#define RB_CHECKOVERFLOW(v,i) if (tess.num_vertexes + (v) >= SHADER_MAX_VERTEXES || tess.numIndexes + (i) >= SHADER_MAX_INDEXES ) {RB_CheckOverflow(v,i);}
+void RB_CheckOverflow(const int verts, const int indexes);
+#define RB_CHECKOVERFLOW(v,i) if (tess.numVertexes + (v) >= SHADER_MAX_VERTEXES || tess.numIndexes + (i) >= SHADER_MAX_INDEXES ) {RB_CheckOverflow(v,i);}
 
 void RB_StageIteratorGeneric(void);
 void RB_StageIteratorSky(void);
 
 void RB_AddQuadStamp(vec3_t origin, vec3_t left, vec3_t up, byte* color);
-void RB_AddQuadStampExt(vec3_t origin, vec3_t left, vec3_t up, byte* color, float s1, float t1, float s2, float t2);
+void RB_AddQuadStampExt(vec3_t origin, vec3_t left, vec3_t up, byte* color, const float s1, const float t1, const float s2, const float t2);
 
 void RB_ShowImages(void);
 
@@ -1605,7 +1608,7 @@ public:
 #else
 	const int		ident;			// ident of this surface - required so the materials renderer knows what sort of surface this refers to
 #endif
-	CBoneCache* bone_cache;
+	CBoneCache* boneCache;
 	mdxmSurface_t* surfaceData;	// pointer to surface data loaded into file - only used by client renderer DO NOT USE IN GAME SIDE - if there is a vid restart this will be out of wack on the game
 #ifdef _G2_GORE
 	float* alternateTex;		// alternate texture coordinates.
@@ -1620,7 +1623,7 @@ public:
 	CRenderableSurface& operator= (const CRenderableSurface& src)
 	{
 		ident = src.ident;
-		bone_cache = src.bone_cache;
+		boneCache = src.boneCache;
 		surfaceData = src.surfaceData;
 		alternateTex = src.alternateTex;
 		goreChain = src.goreChain;
@@ -1631,7 +1634,7 @@ public:
 
 	CRenderableSurface() :
 		ident(SF_MDX),
-		bone_cache(nullptr),
+		boneCache(nullptr),
 #ifdef _G2_GORE
 		surfaceData(nullptr),
 		alternateTex(nullptr),
@@ -1645,7 +1648,7 @@ public:
 	void Init()
 	{
 		ident = SF_MDX;
-		bone_cache = nullptr;
+		boneCache = nullptr;
 		surfaceData = nullptr;
 		alternateTex = nullptr;
 		goreChain = nullptr;
@@ -1683,8 +1686,8 @@ void	RB_CalcWaveAlpha(const waveForm_t* wf, unsigned char* dst_colors);
 void	RB_CalcWaveColor(const waveForm_t* wf, unsigned char* dst_colors);
 void	RB_CalcAlphaFromEntity(unsigned char* dst_colors);
 void	RB_CalcAlphaFromOneMinusEntity(unsigned char* dst_colors);
-void	RB_calc_colorFromEntity(unsigned char* dst_colors);
-void	RB_calc_colorFromOneMinusEntity(unsigned char* dst_colors);
+void	RB_CalcColorFromEntity(unsigned char* dst_colors);
+void	RB_CalcColorFromOneMinusEntity(unsigned char* dst_colors);
 void	RB_CalcSpecularAlpha(unsigned char* alphas);
 void	RB_CalcDisintegrateColors(unsigned char* colors);
 void	RB_CalcDiffuseColor(unsigned char* colors);

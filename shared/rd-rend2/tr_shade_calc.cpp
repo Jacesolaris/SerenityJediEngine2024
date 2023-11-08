@@ -274,7 +274,7 @@ void DeformText(const char* text) {
 	vec3_t	origin, width, height;
 	int		len;
 	int		ch;
-	float	color[4];
+	float	color[4]{};
 	float	bottom, top;
 	vec3_t	mid;
 	vec3_t fNormal;

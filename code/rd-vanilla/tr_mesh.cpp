@@ -281,11 +281,12 @@ R_AddMD3Surfaces
 
 =================
 */
-void R_AddMD3Surfaces(trRefEntity_t* ent) {
+void R_AddMD3Surfaces(trRefEntity_t* ent)
+{
 	const shader_t* shader;
 
 	// don't add third_person objects if not in a portal
-	const auto personal_model = static_cast<qboolean>(ent->e.renderfx & RF_THIRD_PERSON && !tr.viewParms.isPortal);
+	const auto personalModel = static_cast<qboolean>(ent->e.renderfx & RF_THIRD_PERSON && !tr.viewParms.isPortal);
 
 	if (ent->e.renderfx & RF_CAP_FRAMES) {
 		if (ent->e.frame > tr.currentModel->md3[0]->numFrames - 1)
@@ -328,14 +329,16 @@ void R_AddMD3Surfaces(trRefEntity_t* ent) {
 	// is outside the view frustum.
 	//
 	const int cull = R_CullModel(header, ent);
-	if (cull == CULL_OUT) {
+	if (cull == CULL_OUT)
+	{
 		return;
 	}
 
 	//
 	// set up lighting now that we know we aren't culled
 	//
-	if (!personal_model || r_shadows->integer > 1) {
+	if (!personalModel || r_shadows->integer > 1)
+	{
 		R_SetupEntityLighting(&tr.refdef, ent);
 	}
 
@@ -350,27 +353,35 @@ void R_AddMD3Surfaces(trRefEntity_t* ent) {
 	const shader_t* main_shader = R_GetShaderByHandle(ent->e.customShader);
 
 	auto surface = reinterpret_cast<md3Surface_t*>(reinterpret_cast<byte*>(header) + header->ofsSurfaces);
-	for (int i = 0; i < header->numSurfaces; i++) {
-		if (ent->e.customShader) {// a little more efficient
+
+	for (int i = 0; i < header->numSurfaces; i++)
+	{
+		if (ent->e.customShader)
+		{// a little more efficient
 			shader = main_shader;
 		}
-		else if (ent->e.customSkin > 0 && ent->e.customSkin < tr.numSkins) {
+		else if (ent->e.customSkin > 0 && ent->e.customSkin < tr.numSkins)
+		{
 			const skin_t* skin = R_GetSkinByHandle(ent->e.customSkin);
 
 			// match the surface name to something in the skin file
 			shader = tr.defaultShader;
-			for (int j = 0; j < skin->numSurfaces; j++) {
+			for (int j = 0; j < skin->numSurfaces; j++)
+			{
 				// the names have both been lowercased
-				if (!strcmp(skin->surfaces[j]->name, surface->name)) {
+				if (!strcmp(skin->surfaces[j]->name, surface->name))
+				{
 					shader = skin->surfaces[j]->shader;
 					break;
 				}
 			}
 		}
-		else if (surface->numShaders <= 0) {
+		else if (surface->numShaders <= 0)
+		{
 			shader = tr.defaultShader;
 		}
-		else {
+		else
+		{
 			auto md3Shader = reinterpret_cast<md3Shader_t*>(reinterpret_cast<byte*>(surface) + surface->ofsShaders);
 			md3Shader += ent->e.skinNum % surface->numShaders;
 			shader = tr.shaders[md3Shader->shaderIndex];
@@ -379,25 +390,42 @@ void R_AddMD3Surfaces(trRefEntity_t* ent) {
 		// we will add shadows even if the main object isn't visible in the view
 
 		// stencil shadows can't do personal models unless I polyhedron clip
-		if (!personal_model
-			&& r_shadows->integer == 2
-			&& fogNum == 0
-			&& !(ent->e.renderfx & RF_DEPTHHACK)
-			&& shader->sort == SS_OPAQUE)
+		if (r_AdvancedsurfaceSprites->integer)
 		{
-			R_AddDrawSurf(reinterpret_cast<surfaceType_t*>(surface), tr.shadowShader, 0, qfalse);
+			if (!personalModel
+				&& r_shadows->integer == 2
+				&& fogNum == 0
+				&& !(ent->e.renderfx & (RF_NOSHADOW | RF_DEPTHHACK))
+				&& shader->sort == SS_OPAQUE)
+			{
+				R_AddDrawSurf(reinterpret_cast<surfaceType_t*>(surface), tr.shadowShader, 0, qfalse);
+			}
+		}
+		else
+		{
+			if (!personalModel
+				&& r_shadows->integer == 2
+				&& fogNum == 0
+				&& (ent->e.renderfx & RF_SHADOW_PLANE)
+				&& !(ent->e.renderfx & (RF_NOSHADOW | RF_DEPTHHACK))
+				&& shader->sort == SS_OPAQUE)
+			{
+				R_AddDrawSurf(reinterpret_cast<surfaceType_t*>(surface), tr.shadowShader, 0, qfalse);
+			}
 		}
 
 		// projection shadows work fine with personal models
 		if (r_shadows->integer == 3
 			&& fogNum == 0
 			&& ent->e.renderfx & RF_SHADOW_PLANE
-			&& shader->sort == SS_OPAQUE) {
+			&& shader->sort == SS_OPAQUE)
+		{
 			R_AddDrawSurf(reinterpret_cast<surfaceType_t*>(surface), tr.projectionShadowShader, 0, qfalse);
 		}
 
 		// don't add third_person objects if not viewing through a portal
-		if (!personal_model) {
+		if (!personalModel)
+		{
 			R_AddDrawSurf(reinterpret_cast<surfaceType_t*>(surface), shader, fogNum, qfalse);
 		}
 

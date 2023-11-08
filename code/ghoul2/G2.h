@@ -47,10 +47,10 @@ struct model_s;
 // internal surface calls  G2_surfaces.cpp
 qboolean G2_SetSurfaceOnOff(CGhoul2Info* ghlInfo, const char* surfaceName, int offFlags);
 qboolean G2_SetRootSurface(CGhoul2Info_v& ghoul2, int modelIndex, const char* surfaceName);
-int G2_AddSurface(CGhoul2Info* ghoul2, int surface_number, int poly_number, float barycentric_i, float barycentric_j,
+int G2_AddSurface(CGhoul2Info* ghoul2, int surfaceNumber, int poly_number, float barycentric_i, float barycentric_j,
 	int lod);
 qboolean G2_RemoveSurface(surfaceInfo_v& slist, int index);
-const surfaceInfo_t* G2_FindOverrideSurface(int surface_num, const surfaceInfo_v& surface_list);
+const surfaceInfo_t* G2_FindOverrideSurface(int surfaceNum, const surfaceInfo_v& surface_list);
 int G2_IsSurfaceLegal(const model_s*, const char* surfaceName, uint32_t* flags);
 int G2_GetParentSurface(const CGhoul2Info* ghlInfo, const int index);
 int G2_GetSurfaceIndex(const CGhoul2Info* ghlInfo, const char* surfaceName);
@@ -125,7 +125,7 @@ int G2_Add_Bolt(const CGhoul2Info* ghlInfo, boltInfo_v& bltlist, surfaceInfo_v& 
 qboolean G2_Remove_Bolt(boltInfo_v& bltlist, int index);
 void G2_Init_Bolt_List(boltInfo_v& bltlist);
 int G2_Find_Bolt_Bone_Num(const boltInfo_v& bltlist, int boneNum);
-int G2_Find_Bolt_Surface_Num(const boltInfo_v& bltlist, const int surface_num, const int flags);
+int G2_Find_Bolt_surfaceNum(const boltInfo_v& bltlist, const int surfaceNum, const int flags);
 int G2_Add_Bolt_Surf_Num(const CGhoul2Info* ghlInfo, boltInfo_v& bltlist, const surfaceInfo_v& slist, const int surfNum);
 
 // API calls - G2_API.cpp
@@ -142,7 +142,7 @@ qboolean G2API_RemoveGhoul2Model(CGhoul2Info_v& ghlInfo, int modelIndex);
 qboolean G2API_SetSurfaceOnOff(CGhoul2Info* ghlInfo, const char* surfaceName, int flags);
 qboolean G2API_SetRootSurface(CGhoul2Info_v& ghlInfo, int modelIndex, const char* surfaceName);
 qboolean G2API_RemoveSurface(CGhoul2Info* ghlInfo, int index);
-int G2API_AddSurface(CGhoul2Info* ghlInfo, int surface_number, int poly_number, float barycentric_i, float barycentric_j,
+int G2API_AddSurface(CGhoul2Info* ghlInfo, int surfaceNumber, int poly_number, float barycentric_i, float barycentric_j,
 	int lod);
 qboolean G2API_SetBoneAnim(CGhoul2Info* ghlInfo, const char* boneName, int startFrame, int endFrame,
 	int flags, float animSpeed, int acurrent_time, float setFrame = -1, int blendTime = -1);
@@ -227,5 +227,7 @@ bool G2_SetupModelPointers(CGhoul2Info* ghlInfo); // returns true if the model i
 void G2API_AddSkinGore(CGhoul2Info_v& ghoul2, SSkinGoreData& gore);
 void G2API_ClearSkinGore(CGhoul2Info_v& ghoul2);
 //#endif
+
+void G2API_SetTintType(CGhoul2Info* ghlInfo, g2Tints_t tintType);
 
 #endif // G2_H_INC

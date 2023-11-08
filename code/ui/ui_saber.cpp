@@ -129,6 +129,8 @@ static qhandle_t blueOTGlowShader;
 static qhandle_t purpleOTGlowShader;
 
 static qhandle_t unstableRedSaberCoreShader;
+extern vmCvar_t ui_com_rend2;
+extern vmCvar_t ui_r_AdvancedsurfaceSprites;
 
 void UI_CacheSaberGlowGraphics()
 {
@@ -2688,12 +2690,12 @@ void UI_SaberDrawBlade(itemDef_t* item, const char* saber_name, int saberModel, 
 extern qboolean ItemParse_asset_model_go(itemDef_t* item, const char* name);
 extern qboolean ItemParse_model_g2skin_go(itemDef_t* item, const char* skinName);
 
-void UI_GetSaberForMenu(char* saber, int saber_num)
+void UI_GetSaberForMenu(char* saber, int saberNum)
 {
 	char saberTypeString[MAX_QPATH] = { 0 };
 	saberType_t saberType = SABER_NONE;
 
-	if (saber_num == 0)
+	if (saberNum == 0)
 	{
 		DC->getCVarString("g_saber", saber, MAX_QPATH);
 	}
@@ -2748,13 +2750,13 @@ void UI_SaberDrawBlades(itemDef_t* item, vec3_t origin, float curYaw)
 		numSabers = 2;
 	}
 
-	for (int saber_num = 0; saber_num < numSabers; saber_num++)
+	for (int saberNum = 0; saberNum < numSabers; saberNum++)
 	{
 		char saber[MAX_QPATH];
 		if (item->flags & ITF_ISCHARACTER) //hacked sabermoves sabers in character's hand
 		{
-			UI_GetSaberForMenu(saber, saber_num);
-			saberModel = saber_num + 1;
+			UI_GetSaberForMenu(saber, saberNum);
+			saberModel = saberNum + 1;
 		}
 		else if (item->flags & ITF_ISSABER)
 		{
@@ -2811,13 +2813,13 @@ void UI_SaberAttachToChar(itemDef_t* item)
 		numSabers = 2;
 	}
 
-	for (int saber_num = 0; saber_num < numSabers; saber_num++)
+	for (int saberNum = 0; saberNum < numSabers; saberNum++)
 	{
 		//bolt sabers
 		char modelPath[MAX_QPATH];
 		char saber[MAX_QPATH];
 
-		UI_GetSaberForMenu(saber, saber_num);
+		UI_GetSaberForMenu(saber, saberNum);
 
 		if (UI_SaberModelForSaber(saber, modelPath))
 		{
@@ -2838,7 +2840,7 @@ void UI_SaberAttachToChar(itemDef_t* item)
 					DC->g2_SetSkin(&item->ghoul2[g2Saber], -1, 0); //turn off custom skin
 				}
 				int boltNum;
-				if (saber_num == 0)
+				if (saberNum == 0)
 				{
 					boltNum = DC->g2_AddBolt(&item->ghoul2[0], "*r_hand");
 				}
@@ -2847,6 +2849,11 @@ void UI_SaberAttachToChar(itemDef_t* item)
 					boltNum = DC->g2_AddBolt(&item->ghoul2[0], "*l_hand");
 				}
 				re.G2API_AttachG2Model(&item->ghoul2[g2Saber], &item->ghoul2[0], boltNum, 0);
+
+				if (ui_com_rend2.integer == 0 && ui_r_AdvancedsurfaceSprites.integer == 1) //rend2 is off and lod is on
+				{
+					re.G2API_SetTintType(&item->ghoul2[g2Saber], saberNum ? G2_TINT_SABER2 : G2_TINT_SABER);
+				}
 			}
 		}
 	}

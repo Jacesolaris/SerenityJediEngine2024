@@ -227,19 +227,19 @@ int trap_CM_MarkFragments(const int numPoints, const vec3_t* points, const vec3_
 		fragmentBuffer);
 }
 
-int trap_S_GetVoiceVolume(const int entity_num)
+int trap_S_GetVoiceVolume(const int entityNum)
 {
-	return Q_syscall(CG_S_GETVOICEVOLUME, entity_num);
+	return Q_syscall(CG_S_GETVOICEVOLUME, entityNum);
 }
 
-void trap_S_MuteSound(const int entity_num, const int entchannel)
+void trap_S_MuteSound(const int entityNum, const int entchannel)
 {
-	Q_syscall(CG_S_MUTESOUND, entity_num, entchannel);
+	Q_syscall(CG_S_MUTESOUND, entityNum, entchannel);
 }
 
-void trap_S_StartSound(const vec3_t origin, const int entity_num, const int entchannel, const sfxHandle_t sfx)
+void trap_S_StartSound(const vec3_t origin, const int entityNum, const int entchannel, const sfxHandle_t sfx)
 {
-	Q_syscall(CG_S_STARTSOUND, origin, entity_num, entchannel, sfx);
+	Q_syscall(CG_S_STARTSOUND, origin, entityNum, entchannel, sfx);
 }
 
 void trap_S_StartLocalSound(const sfxHandle_t sfx, const int channelNum)
@@ -252,29 +252,29 @@ void trap_S_ClearLoopingSounds(void)
 	Q_syscall(CG_S_CLEARLOOPINGSOUNDS);
 }
 
-void trap_S_AddLoopingSound(const int entity_num, const vec3_t origin, const vec3_t velocity, const sfxHandle_t sfx)
+void trap_S_AddLoopingSound(const int entityNum, const vec3_t origin, const vec3_t velocity, const sfxHandle_t sfx)
 {
-	Q_syscall(CG_S_ADDLOOPINGSOUND, entity_num, origin, velocity, sfx);
+	Q_syscall(CG_S_ADDLOOPINGSOUND, entityNum, origin, velocity, sfx);
 }
 
-void trap_S_UpdateEntityPosition(const int entity_num, const vec3_t origin)
+void trap_S_UpdateEntityPosition(const int entityNum, const vec3_t origin)
 {
-	Q_syscall(CG_S_UPDATEENTITYPOSITION, entity_num, origin);
+	Q_syscall(CG_S_UPDATEENTITYPOSITION, entityNum, origin);
 }
 
-void trap_S_AddRealLoopingSound(const int entity_num, const vec3_t origin, const vec3_t velocity, const sfxHandle_t sfx)
+void trap_S_AddRealLoopingSound(const int entityNum, const vec3_t origin, const vec3_t velocity, const sfxHandle_t sfx)
 {
-	Q_syscall(CG_S_ADDREALLOOPINGSOUND, entity_num, origin, velocity, sfx);
+	Q_syscall(CG_S_ADDREALLOOPINGSOUND, entityNum, origin, velocity, sfx);
 }
 
-void trap_S_StopLoopingSound(const int entity_num)
+void trap_S_StopLoopingSound(const int entityNum)
 {
-	Q_syscall(CG_S_STOPLOOPINGSOUND, entity_num);
+	Q_syscall(CG_S_STOPLOOPINGSOUND, entityNum);
 }
 
-void trap_S_Respatialize(const int entity_num, const vec3_t origin, matrix3_t axis, const int inwater)
+void trap_S_Respatialize(const int entityNum, const vec3_t origin, matrix3_t axis, const int inwater)
 {
-	Q_syscall(CG_S_RESPATIALIZE, entity_num, origin, axis, inwater);
+	Q_syscall(CG_S_RESPATIALIZE, entityNum, origin, axis, inwater);
 }
 
 void trap_S_ShutUp(const qboolean shutUpFactor)
@@ -1147,14 +1147,14 @@ qboolean trap_G2API_RemoveBone(void* ghoul2, const char* boneName, const int mod
 	return Q_syscall(CG_G2_REMOVEBONE, ghoul2, boneName, modelIndex);
 }
 
-void trap_G2API_AttachInstanceToEntNum(void* ghoul2, const int entity_num, const qboolean server)
+void trap_G2API_AttachInstanceToEntNum(void* ghoul2, const int entityNum, const qboolean server)
 {
-	Q_syscall(CG_G2_ATTACHINSTANCETOENTNUM, ghoul2, entity_num, server);
+	Q_syscall(CG_G2_ATTACHINSTANCETOENTNUM, ghoul2, entityNum, server);
 }
 
-void trap_G2API_ClearAttachedInstance(const int entity_num)
+void trap_G2API_ClearAttachedInstance(const int entityNum)
 {
-	Q_syscall(CG_G2_CLEARATTACHEDINSTANCE, entity_num);
+	Q_syscall(CG_G2_CLEARATTACHEDINSTANCE, entityNum);
 }
 
 void trap_G2API_CleanEntAttachments(void)

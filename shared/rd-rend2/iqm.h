@@ -34,7 +34,7 @@ typedef struct iqmheader
 	unsigned int flags;
 	unsigned int num_text, ofs_text;
 	unsigned int num_meshes, ofs_meshes;
-	unsigned int num_vertexarrays, num_vertexes, ofs_vertexarrays;
+	unsigned int num_vertexarrays, numVertexes, ofs_vertexarrays;
 	unsigned int num_triangles, ofs_triangles, ofs_adjacency;
 	unsigned int num_joints, ofs_joints;
 	unsigned int num_poses, ofs_poses;
@@ -48,7 +48,7 @@ typedef struct iqmmesh
 {
 	unsigned int name;
 	unsigned int material;
-	unsigned int first_vertex, num_vertexes;
+	unsigned int first_vertex, numVertexes;
 	unsigned int first_triangle, num_triangles;
 } iqmMesh_t;
 

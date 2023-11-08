@@ -291,7 +291,7 @@ using game_import_t = struct
 	qboolean(*G2API_SetSurfaceOnOff)(CGhoul2Info* ghlInfo, const char* surfaceName, int flags);
 	qboolean(*G2API_SetRootSurface)(CGhoul2Info_v& ghlInfo, int modelIndex, const char* surfaceName);
 	qboolean(*G2API_RemoveSurface)(CGhoul2Info* ghlInfo, int index);
-	int (*G2API_AddSurface)(CGhoul2Info* ghlInfo, int surface_number, int polyNumber, float BarycentricI,
+	int (*G2API_AddSurface)(CGhoul2Info* ghlInfo, int surfaceNumber, int polyNumber, float BarycentricI,
 		float BarycentricJ, int lod);
 	qboolean(*G2API_GetBoneAnim)(CGhoul2Info* ghlInfo, const char* boneName, int currentTime, float* currentFrame,
 		int* startFrame, int* endFrame, int* flags, float* animSpeed, int* modelList);
@@ -371,6 +371,8 @@ using game_import_t = struct
 
 	void (*G2API_AddSkinGore)(CGhoul2Info_v& ghoul2, SSkinGoreData& gore);
 	void (*G2API_ClearSkinGore)(CGhoul2Info_v& ghoul2);
+
+	void (*G2API_SetTintType)(CGhoul2Info* ghlInfo, g2Tints_t tintType);
 
 	void (*RMG_Init)(int terrainID);
 

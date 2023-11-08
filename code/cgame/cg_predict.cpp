@@ -164,7 +164,7 @@ void CG_ClipMoveToEntities(const vec3_t start, const vec3_t mins, const vec3_t m
 
 		if (trace.allsolid || trace.fraction < tr->fraction)
 		{
-			trace.entity_num = ent->number;
+			trace.entityNum = ent->number;
 			*tr = trace;
 		}
 		else if (trace.startsolid)
@@ -190,7 +190,7 @@ void CG_Trace(trace_t* result, const vec3_t start, const vec3_t mins, const vec3
 	trace_t t;
 
 	cgi_CM_BoxTrace(&t, start, end, mins, maxs, 0, mask);
-	t.entity_num = t.fraction != 1.0 ? ENTITYNUM_WORLD : ENTITYNUM_NONE;
+	t.entityNum = t.fraction != 1.0 ? ENTITYNUM_WORLD : ENTITYNUM_NONE;
 	// check all other solid models
 	CG_ClipMoveToEntities(start, mins, maxs, end, skip_number, mask, &t);
 

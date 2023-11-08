@@ -31,6 +31,14 @@ constexpr auto G2T_SV_TIME = 0;
 constexpr auto G2T_CG_TIME = 1;
 constexpr auto NUM_G2T_TIME = 2;
 
+typedef enum
+{
+	G2_TINT_DEFAULT,
+	G2_TINT_SABER,
+	G2_TINT_SABER2,
+	G2_TINT_MAX
+} g2Tints_t;
+
 void G2API_SetTime(const int currentTime, const int clock);
 int G2API_GetTime(int arg_time); // this may or may not return arg depending on ghoul2_time cvar
 
@@ -407,13 +415,13 @@ struct boneInfo_t
 struct boltInfo_t
 {
 	int boneNumber; // bone number bolt attaches to
-	int surface_number; // surface number bolt attaches to
+	int surfaceNumber; // surface number bolt attaches to
 	int surfaceType;
 	// if we attach to a surface, this tells us if it is an original surface or a generated one - doesn't go across the network
 	int boltUsed; // nor does this
 	boltInfo_t() :
 		boneNumber(-1),
-		surface_number(-1),
+		surfaceNumber(-1),
 		surfaceType(0),
 		boltUsed(0)
 	{
@@ -423,7 +431,7 @@ struct boltInfo_t
 		ojk::SavedGameHelper& saved_game) const
 	{
 		saved_game.write<int32_t>(boneNumber);
-		saved_game.write<int32_t>(surface_number);
+		saved_game.write<int32_t>(surfaceNumber);
 		saved_game.write<int32_t>(surfaceType);
 		saved_game.write<int32_t>(boltUsed);
 	}
@@ -432,7 +440,7 @@ struct boltInfo_t
 		ojk::SavedGameHelper& saved_game)
 	{
 		saved_game.read<int32_t>(boneNumber);
-		saved_game.read<int32_t>(surface_number);
+		saved_game.read<int32_t>(surfaceNumber);
 		saved_game.read<int32_t>(surfaceType);
 		saved_game.read<int32_t>(boltUsed);
 	}
@@ -462,18 +470,18 @@ class CRenderableSurface
 {
 public:
 	int				ident;			// ident of this surface - required so the materials renderer knows what sort of surface this refers to
-	CBoneCache* bone_cache;		// pointer to transformed bone list for this surf
+	CBoneCache* boneCache;		// pointer to transformed bone list for this surf
 	mdxmSurface_t* surfaceData;	// pointer to surface data loaded into file - only used by client renderer DO NOT USE IN GAME SIDE - if there is a vid restart this will be out of wack on the game
 
 	CRenderableSurface() :
 		ident(8), //SF_MDX
-		bone_cache(0),
+		boneCache(0),
 		surfaceData(0)
 	{}
 
 	CRenderableSurface(const CRenderableSurface& rs) :
 		ident(rs.ident),
-		bone_cache(rs.bone_cache),
+		boneCache(rs.boneCache),
 		surfaceData(rs.surfaceData)
 	{}
 };
@@ -523,6 +531,8 @@ public:
 	int currentAnimModelSize;
 	const mdxaHeader_t* aHeader;
 
+	g2Tints_t       tintType;
+
 	CGhoul2Info() :
 		mModelindex(-1),
 		animModelIndexOffset(0),
@@ -548,7 +558,8 @@ public:
 		currentModelSize(0),
 		animModel(nullptr),
 		currentAnimModelSize(0),
-		aHeader(nullptr)
+		aHeader(nullptr),
+		tintType(G2_TINT_DEFAULT)
 	{
 		mFileName[0] = 0;
 	}

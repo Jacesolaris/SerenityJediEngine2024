@@ -1046,18 +1046,18 @@ void CNavigator::CheckBlockedEdges(void)
 				start->GetPosition(p1);
 				end->GetPosition(p2);
 
-				//FIXME: can't we just store the trace.entity_num from the HardConnect trace?  So we don't have to do another trace here...
+				//FIXME: can't we just store the trace.entityNum from the HardConnect trace?  So we don't have to do another trace here...
 				SV_Trace(&trace, p1, wpMins, wpMaxs, p2, ENTITYNUM_NONE,
 					MASK_SOLID | CONTENTS_MONSTERCLIP | CONTENTS_BOTCLIP, qfalse, 0, 10);
 
-				if (trace.entity_num < ENTITYNUM_WORLD && (trace.fraction < 1.0f || trace.startsolid == qtrue || trace.
+				if (trace.entityNum < ENTITYNUM_WORLD && (trace.fraction < 1.0f || trace.startsolid == qtrue || trace.
 					allsolid == qtrue))
 				{
 					//could be assumed, since failed before
-					if (GVM_NAV_EntIsDoor(trace.entity_num))
+					if (GVM_NAV_EntIsDoor(trace.entityNum))
 					{
 						//door
-						if (!GVM_NAV_EntIsUnlockedDoor(trace.entity_num))
+						if (!GVM_NAV_EntIsUnlockedDoor(trace.entityNum))
 						{
 							//locked door
 							failed = qtrue;
@@ -1065,18 +1065,18 @@ void CNavigator::CheckBlockedEdges(void)
 					}
 					else
 					{
-						if (GVM_NAV_EntIsBreakable(trace.entity_num))
+						if (GVM_NAV_EntIsBreakable(trace.entityNum))
 						{
 							//do same for breakable brushes/models/glass?
 							failed = qtrue;
 						}
-						else if (GVM_NAV_EntIsRemovableUsable(trace.entity_num))
+						else if (GVM_NAV_EntIsRemovableUsable(trace.entityNum))
 						{
 							failed = qtrue;
 						}
 						else if (trace.allsolid || trace.startsolid)
 						{
-							//FIXME: the entity_num would be none here, so how do we know if this is stuck inside an ent or the world?
+							//FIXME: the entityNum would be none here, so how do we know if this is stuck inside an ent or the world?
 						}
 						else
 						{
@@ -2119,7 +2119,7 @@ qboolean CNavigator::CheckFailedEdge(failedEdge_t* failedEdge) const
 			{
 				return qfalse;
 			}
-			hitEntNum = trace.entity_num;
+			hitEntNum = trace.entityNum;
 #endif
 			//if we did hit something, see if it's just an auto-door and allow it
 			if (hitEntNum != ENTITYNUM_NONE && GVM_NAV_EntIsUnlockedDoor(hitEntNum))

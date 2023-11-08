@@ -1452,11 +1452,34 @@ static qboolean ParseStage(shaderStage_t* stage, const char** text)
 			}
 			else if (!Q_stricmp(token, "entity"))
 			{
-				stage->rgbGen = CGEN_ENTITY;
+				token = COM_ParseExt(text, qfalse);
+				if (token[0] == 0)
+				{
+					stage->rgbGen = CGEN_ENTITY;
+				}
+				else
+				{
+					stage->rgbGen = CGEN_ENTITY_NEW;
+					stage->rgbGenEntIndex = atoi(token);
+					if (stage->rgbGenEntIndex >= MAX_NEW_ENT_RGB)
+					{
+						stage->rgbGenEntIndex = MAX_NEW_ENT_RGB - 1;
+					}
+				}
 			}
 			else if (!Q_stricmp(token, "oneMinusEntity"))
 			{
 				stage->rgbGen = CGEN_ONE_MINUS_ENTITY;
+			}
+			else if (!Q_stricmp(token, "hilt"))
+			{
+				stage->rgbGen = CGEN_ENTITY_NEW;
+				stage->rgbGenEntIndex = TINT_HILT1;
+			}
+			else if (!Q_stricmp(token, "blade"))
+			{
+				stage->rgbGen = CGEN_ENTITY_NEW;
+				stage->rgbGenEntIndex = TINT_BLADE1;
 			}
 			else if (!Q_stricmp(token, "vertex"))
 			{
@@ -1487,7 +1510,38 @@ static qboolean ParseStage(shaderStage_t* stage, const char** text)
 				{
 					ri.Printf(PRINT_ERROR, "ERROR: rgbGen lightingDiffuseEntity used on a misc_model! in shader '%s'\n", shader.name);
 				}
-				stage->rgbGen = CGEN_LIGHTING_DIFFUSE_ENTITY;
+				token = COM_ParseExt(text, qfalse);
+				if (token[0] == 0)
+				{
+					stage->rgbGen = CGEN_LIGHTING_DIFFUSE_ENTITY;
+				}
+				else
+				{
+					stage->rgbGen = CGEN_LIGHTING_DIFFUSE_ENTITY_NEW;
+					stage->rgbGenEntIndex = atoi(token);
+					if (stage->rgbGenEntIndex >= MAX_NEW_ENT_RGB)
+					{
+						stage->rgbGenEntIndex = MAX_NEW_ENT_RGB - 1;
+					}
+				}
+			}
+			else if (!Q_stricmp(token, "lightingDiffuseHilt"))
+			{
+				if (shader.lightmapIndex[0] != LIGHTMAP_NONE)
+				{
+					ri.Printf(PRINT_ERROR, "ERROR: rgbGen lightingDiffuseHilt used on a misc_model! in shader '%s'\n", shader.name);
+				}
+				stage->rgbGen = CGEN_LIGHTING_DIFFUSE_ENTITY_NEW;
+				stage->rgbGenEntIndex = TINT_HILT1;
+			}
+			else if (!Q_stricmp(token, "lightingDiffuseBlade"))
+			{
+				if (shader.lightmapIndex[0] != LIGHTMAP_NONE)
+				{
+					ri.Printf(PRINT_ERROR, "ERROR: rgbGen lightingDiffuseBlade used on a misc_model! in shader '%s'\n", shader.name);
+				}
+				stage->rgbGen = CGEN_LIGHTING_DIFFUSE_ENTITY_NEW;
+				stage->rgbGenEntIndex = TINT_BLADE1;
 			}
 			else if (!Q_stricmp(token, "oneMinusVertex"))
 			{
@@ -2656,17 +2710,17 @@ static void FixRenderCommandList(int newShader) {
 					drawSurf_t* drawSurf;
 					shader_t* shader;
 					int			fogNum;
-					int			entity_num;
+					int			entityNum;
 					int			dlightMap;
 					int			sortedIndex;
 					const drawSurfsCommand_t* ds_cmd = (const drawSurfsCommand_t*)curCmd;
 
 					for (i = 0, drawSurf = ds_cmd->drawSurfs; i < ds_cmd->numDrawSurfs; i++, drawSurf++) {
-						R_DecomposeSort(drawSurf->sort, &entity_num, &shader, &fogNum, &dlightMap);
+						R_DecomposeSort(drawSurf->sort, &entityNum, &shader, &fogNum, &dlightMap);
 						sortedIndex = ((drawSurf->sort >> QSORT_SHADERNUM_SHIFT) & (MAX_SHADERS - 1));
 						if (sortedIndex >= newShader) {
 							sortedIndex++;
-							drawSurf->sort = (sortedIndex << QSORT_SHADERNUM_SHIFT) | (entity_num << QSORT_REFENTITYNUM_SHIFT) | (fogNum << QSORT_FOGNUM_SHIFT) | (int)dlightMap;
+							drawSurf->sort = (sortedIndex << QSORT_SHADERNUM_SHIFT) | (entityNum << QSORT_REFENTITYNUM_SHIFT) | (fogNum << QSORT_FOGNUM_SHIFT) | (int)dlightMap;
 						}
 					}
 					curCmd = (const void*)(ds_cmd + 1);
@@ -2882,26 +2936,26 @@ static int VertexLightingCollapse() {
 	}
 
 	for (stage = 1, nextopenstage = 1; stage < MAX_SHADER_STAGES; stage++) {
-		shaderStage_t* p_stage = &stages[stage];
+		shaderStage_t* pStage = &stages[stage];
 
-		if (!p_stage->active) {
+		if (!pStage->active) {
 			break;
 		}
 
-		if (p_stage->ss && p_stage->ss->surfaceSpriteType)
+		if (pStage->ss && pStage->ss->surfaceSpriteType)
 		{
 			// Copy this stage to the next open stage list (that is, we don't want any inactive stages before this one)
 			if (nextopenstage != stage)
 			{
-				stages[nextopenstage] = *p_stage;
-				stages[nextopenstage].bundle[0] = p_stage->bundle[0];
+				stages[nextopenstage] = *pStage;
+				stages[nextopenstage].bundle[0] = pStage->bundle[0];
 			}
 			nextopenstage++;
 			finalstagenum++;
 			continue;
 		}
 
-		memset(p_stage, 0, sizeof * p_stage);
+		memset(pStage, 0, sizeof * pStage);
 	}
 
 	return finalstagenum;
@@ -2936,8 +2990,8 @@ static shader_t* FinishShader() {
 
 	for (lm_stage = 0; lm_stage < MAX_SHADER_STAGES; lm_stage++)
 	{
-		const shaderStage_t* p_stage = &stages[lm_stage];
-		if (p_stage->active && p_stage->bundle[0].isLightmap)
+		const shaderStage_t* pStage = &stages[lm_stage];
+		if (pStage->active && pStage->bundle[0].isLightmap)
 		{
 			break;
 		}
@@ -3014,16 +3068,16 @@ static shader_t* FinishShader() {
 	//
 	int stage_index = 0;
 	for (stage = 0; stage < MAX_SHADER_STAGES; ) {
-		shaderStage_t* p_stage = &stages[stage];
+		shaderStage_t* pStage = &stages[stage];
 
-		if (!p_stage->active) {
+		if (!pStage->active) {
 			break;
 		}
 
 		// check for a missing texture
-		if (!p_stage->bundle[0].image) {
+		if (!pStage->bundle[0].image) {
 			ri.Printf(PRINT_WARNING, "Shader %s has a stage with no image\n", shader.name);
-			p_stage->active = false;
+			pStage->active = false;
 			stage++;
 			continue;
 		}
@@ -3031,7 +3085,7 @@ static shader_t* FinishShader() {
 		//
 		// ditch this stage if it's detail and detail textures are disabled
 		//
-		if (p_stage->isDetail && !r_detailTextures->integer) {
+		if (pStage->isDetail && !r_detailTextures->integer) {
 			int index;
 
 			for (index = stage + 1; index < MAX_SHADER_STAGES; index++) {
@@ -3040,10 +3094,10 @@ static shader_t* FinishShader() {
 			}
 
 			if (index < MAX_SHADER_STAGES)
-				memmove(p_stage, p_stage + 1, sizeof * p_stage * (index - stage));
+				memmove(pStage, pStage + 1, sizeof * pStage * (index - stage));
 			else {
 				if (stage + 1 < MAX_SHADER_STAGES)
-					memmove(p_stage, p_stage + 1, sizeof * p_stage * (index - stage - 1));
+					memmove(pStage, pStage + 1, sizeof * pStage * (index - stage - 1));
 
 				Com_Memset(&stages[index - 1], 0, sizeof * stages);
 			}
@@ -3051,30 +3105,30 @@ static shader_t* FinishShader() {
 			continue;
 		}
 
-		p_stage->index = stage_index;
+		pStage->index = stage_index;
 
 		//
 		// default texture coordinate generation
 		//
-		if (p_stage->bundle[0].isLightmap) {
-			if (p_stage->bundle[0].tcGen == TCGEN_BAD) {
-				p_stage->bundle[0].tcGen = TCGEN_LIGHTMAP;
+		if (pStage->bundle[0].isLightmap) {
+			if (pStage->bundle[0].tcGen == TCGEN_BAD) {
+				pStage->bundle[0].tcGen = TCGEN_LIGHTMAP;
 			}
 			has_lightmap_stage = qtrue;
 		}
 		else {
-			if (p_stage->bundle[0].tcGen == TCGEN_BAD) {
-				p_stage->bundle[0].tcGen = TCGEN_TEXTURE;
+			if (pStage->bundle[0].tcGen == TCGEN_BAD) {
+				pStage->bundle[0].tcGen = TCGEN_TEXTURE;
 			}
 		}
 
 		//
 		// determine sort order and fog color adjustment
 		//
-		if (p_stage->stateBits & (GLS_SRCBLEND_BITS | GLS_DSTBLEND_BITS) &&
+		if (pStage->stateBits & (GLS_SRCBLEND_BITS | GLS_DSTBLEND_BITS) &&
 			stages[0].stateBits & (GLS_SRCBLEND_BITS | GLS_DSTBLEND_BITS)) {
-			const int blend_src_bits = p_stage->stateBits & GLS_SRCBLEND_BITS;
-			const int blend_dst_bits = p_stage->stateBits & GLS_DSTBLEND_BITS;
+			const int blend_src_bits = pStage->stateBits & GLS_SRCBLEND_BITS;
+			const int blend_dst_bits = pStage->stateBits & GLS_DSTBLEND_BITS;
 
 			// fog color adjustment only works for blend modes that have a contribution
 			// that aproaches 0 as the modulate values aproach 0 --
@@ -3085,17 +3139,17 @@ static shader_t* FinishShader() {
 			// modulate, additive
 			if (blend_src_bits == GLS_SRCBLEND_ONE && blend_dst_bits == GLS_DSTBLEND_ONE ||
 				blend_src_bits == GLS_SRCBLEND_ZERO && blend_dst_bits == GLS_DSTBLEND_ONE_MINUS_SRC_COLOR) {
-				p_stage->adjustColorsForFog = ACFF_MODULATE_RGB;
+				pStage->adjustColorsForFog = ACFF_MODULATE_RGB;
 			}
 			// strict blend
 			else if (blend_src_bits == GLS_SRCBLEND_SRC_ALPHA && blend_dst_bits == GLS_DSTBLEND_ONE_MINUS_SRC_ALPHA)
 			{
-				p_stage->adjustColorsForFog = ACFF_MODULATE_ALPHA;
+				pStage->adjustColorsForFog = ACFF_MODULATE_ALPHA;
 			}
 			// premultiplied alpha
 			else if (blend_src_bits == GLS_SRCBLEND_ONE && blend_dst_bits == GLS_DSTBLEND_ONE_MINUS_SRC_ALPHA)
 			{
-				p_stage->adjustColorsForFog = ACFF_MODULATE_RGBA;
+				pStage->adjustColorsForFog = ACFF_MODULATE_RGBA;
 			}
 			else {
 				// we can't adjust this one correctly, so it won't be exactly correct in fog
@@ -3104,7 +3158,7 @@ static shader_t* FinishShader() {
 			// don't screw with sort order if this is a portal or environment
 			if (!shader.sort) {
 				// see through item, like a grill or grate
-				if (p_stage->stateBits & GLS_DEPTHMASK_TRUE)
+				if (pStage->stateBits & GLS_DEPTHMASK_TRUE)
 				{
 					shader.sort = SS_SEE_THROUGH;
 				}
@@ -3124,47 +3178,47 @@ static shader_t* FinishShader() {
 		}
 
 		//rww - begin hw fog
-		if ((p_stage->stateBits & (GLS_SRCBLEND_BITS | GLS_DSTBLEND_BITS)) == (GLS_SRCBLEND_ONE | GLS_DSTBLEND_ONE))
+		if ((pStage->stateBits & (GLS_SRCBLEND_BITS | GLS_DSTBLEND_BITS)) == (GLS_SRCBLEND_ONE | GLS_DSTBLEND_ONE))
 		{
-			p_stage->mGLFogColorOverride = GLFOGOVERRIDE_BLACK;
+			pStage->mGLFogColorOverride = GLFOGOVERRIDE_BLACK;
 		}
-		else if ((p_stage->stateBits & (GLS_SRCBLEND_BITS | GLS_DSTBLEND_BITS)) == (GLS_SRCBLEND_SRC_ALPHA | GLS_DSTBLEND_ONE) &&
-			p_stage->alphaGen == AGEN_LIGHTING_SPECULAR && stage)
+		else if ((pStage->stateBits & (GLS_SRCBLEND_BITS | GLS_DSTBLEND_BITS)) == (GLS_SRCBLEND_SRC_ALPHA | GLS_DSTBLEND_ONE) &&
+			pStage->alphaGen == AGEN_LIGHTING_SPECULAR && stage)
 		{
-			p_stage->mGLFogColorOverride = GLFOGOVERRIDE_BLACK;
+			pStage->mGLFogColorOverride = GLFOGOVERRIDE_BLACK;
 		}
-		else if ((p_stage->stateBits & (GLS_SRCBLEND_BITS | GLS_DSTBLEND_BITS)) == (GLS_SRCBLEND_ZERO | GLS_DSTBLEND_ZERO))
+		else if ((pStage->stateBits & (GLS_SRCBLEND_BITS | GLS_DSTBLEND_BITS)) == (GLS_SRCBLEND_ZERO | GLS_DSTBLEND_ZERO))
 		{
-			p_stage->mGLFogColorOverride = GLFOGOVERRIDE_WHITE;
+			pStage->mGLFogColorOverride = GLFOGOVERRIDE_WHITE;
 		}
-		else if ((p_stage->stateBits & (GLS_SRCBLEND_BITS | GLS_DSTBLEND_BITS)) == (GLS_SRCBLEND_ONE | GLS_DSTBLEND_ZERO))
+		else if ((pStage->stateBits & (GLS_SRCBLEND_BITS | GLS_DSTBLEND_BITS)) == (GLS_SRCBLEND_ONE | GLS_DSTBLEND_ZERO))
 		{
-			p_stage->mGLFogColorOverride = GLFOGOVERRIDE_WHITE;
+			pStage->mGLFogColorOverride = GLFOGOVERRIDE_WHITE;
 		}
-		else if ((p_stage->stateBits & (GLS_SRCBLEND_BITS | GLS_DSTBLEND_BITS)) == 0 && stage)
+		else if ((pStage->stateBits & (GLS_SRCBLEND_BITS | GLS_DSTBLEND_BITS)) == 0 && stage)
 		{	//
-			p_stage->mGLFogColorOverride = GLFOGOVERRIDE_WHITE;
+			pStage->mGLFogColorOverride = GLFOGOVERRIDE_WHITE;
 		}
-		else if ((p_stage->stateBits & (GLS_SRCBLEND_BITS | GLS_DSTBLEND_BITS)) == 0 && p_stage->bundle[0].isLightmap && stage < MAX_SHADER_STAGES - 1 &&
+		else if ((pStage->stateBits & (GLS_SRCBLEND_BITS | GLS_DSTBLEND_BITS)) == 0 && pStage->bundle[0].isLightmap && stage < MAX_SHADER_STAGES - 1 &&
 			stages[stage + 1].bundle[0].isLightmap)
 		{	// multiple light map blending
-			p_stage->mGLFogColorOverride = GLFOGOVERRIDE_WHITE;
+			pStage->mGLFogColorOverride = GLFOGOVERRIDE_WHITE;
 		}
-		else if ((p_stage->stateBits & (GLS_SRCBLEND_BITS | GLS_DSTBLEND_BITS)) == (GLS_SRCBLEND_DST_COLOR | GLS_DSTBLEND_ZERO) && p_stage->bundle[0].isLightmap)
+		else if ((pStage->stateBits & (GLS_SRCBLEND_BITS | GLS_DSTBLEND_BITS)) == (GLS_SRCBLEND_DST_COLOR | GLS_DSTBLEND_ZERO) && pStage->bundle[0].isLightmap)
 		{ //I don't know, it works. -rww
-			p_stage->mGLFogColorOverride = GLFOGOVERRIDE_WHITE;
+			pStage->mGLFogColorOverride = GLFOGOVERRIDE_WHITE;
 		}
-		else if ((p_stage->stateBits & (GLS_SRCBLEND_BITS | GLS_DSTBLEND_BITS)) == (GLS_SRCBLEND_DST_COLOR | GLS_DSTBLEND_ZERO))
+		else if ((pStage->stateBits & (GLS_SRCBLEND_BITS | GLS_DSTBLEND_BITS)) == (GLS_SRCBLEND_DST_COLOR | GLS_DSTBLEND_ZERO))
 		{ //I don't know, it works. -rww
-			p_stage->mGLFogColorOverride = GLFOGOVERRIDE_BLACK;
+			pStage->mGLFogColorOverride = GLFOGOVERRIDE_BLACK;
 		}
-		else if ((p_stage->stateBits & (GLS_SRCBLEND_BITS | GLS_DSTBLEND_BITS)) == (GLS_SRCBLEND_ONE | GLS_DSTBLEND_ONE_MINUS_SRC_COLOR))
+		else if ((pStage->stateBits & (GLS_SRCBLEND_BITS | GLS_DSTBLEND_BITS)) == (GLS_SRCBLEND_ONE | GLS_DSTBLEND_ONE_MINUS_SRC_COLOR))
 		{ //I don't know, it works. -rww
-			p_stage->mGLFogColorOverride = GLFOGOVERRIDE_BLACK;
+			pStage->mGLFogColorOverride = GLFOGOVERRIDE_BLACK;
 		}
 		else
 		{
-			p_stage->mGLFogColorOverride = GLFOGOVERRIDE_NONE;
+			pStage->mGLFogColorOverride = GLFOGOVERRIDE_NONE;
 		}
 		//rww - end hw fog
 
@@ -3805,7 +3859,7 @@ R_InitShaders
 */
 void R_InitShaders(const qboolean server)
 {
-	ri.Printf( PRINT_ALL, "Initializing Shaders\n" );
+	ri.Printf(PRINT_ALL, "Initializing Shaders\n");
 
 	memset(sh_hashTable, 0, sizeof sh_hashTable);
 

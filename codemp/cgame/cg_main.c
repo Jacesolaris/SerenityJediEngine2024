@@ -162,14 +162,14 @@ static void C_G2Mark(void)
 	VectorMA(td->start, 64.0f, td->dir, end);
 	CG_G2Trace(&tr, td->start, NULL, NULL, end, ENTITYNUM_NONE, MASK_PLAYERSOLID);
 
-	if (tr.entity_num < ENTITYNUM_WORLD && cg_entities[tr.entity_num].ghoul2)
+	if (tr.entityNum < ENTITYNUM_WORLD && cg_entities[tr.entityNum].ghoul2)
 	{
 		// hit someone with a ghoul2 instance, let's project the decal on them then.
-		centity_t* cent = &cg_entities[tr.entity_num];
+		centity_t* cent = &cg_entities[tr.entityNum];
 
 		//	CG_TestLine( tr.endpos, end, 2000, 0x0000ff, 1 );
 
-		CG_AddGhoul2Mark(td->shader, td->size, tr.endpos, end, tr.entity_num, cent->lerpOrigin, cent->lerpAngles[YAW],
+		CG_AddGhoul2Mark(td->shader, td->size, tr.endpos, end, tr.entityNum, cent->lerpOrigin, cent->lerpAngles[YAW],
 			cent->ghoul2, cent->modelScale, Q_irand(2000, 4000));
 		// I'm making fx system decals have a very short lifetime.
 	}

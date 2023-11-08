@@ -410,6 +410,10 @@ vmCvar_t ui_char_color_blue;
 vmCvar_t ui_PrecacheModels;
 vmCvar_t ui_screenshotType;
 
+vmCvar_t ui_char_color_2_red;
+vmCvar_t ui_char_color_2_green;
+vmCvar_t ui_char_color_2_blue;
+
 vmCvar_t ui_rgb_saber_red;
 vmCvar_t ui_rgb_saber_green;
 vmCvar_t ui_rgb_saber_blue;
@@ -439,12 +443,21 @@ vmCvar_t ui_SFXSabersCoreSizeTFA;
 vmCvar_t ui_SFXSabersGlowSizeCSM;
 vmCvar_t ui_SFXSabersCoreSizeCSM;
 
+vmCvar_t ui_hilt_color_red;
+vmCvar_t ui_hilt_color_green;
+vmCvar_t ui_hilt_color_blue;
+
+vmCvar_t ui_hilt2_color_red;
+vmCvar_t ui_hilt2_color_green;
+vmCvar_t ui_hilt2_color_blue;
+
 vmCvar_t ui_char_model_angle;
 
 vmCvar_t ui_com_outcast;
 vmCvar_t ui_g_newgameplusJKA;
 vmCvar_t ui_g_newgameplusJKO;
 vmCvar_t ui_com_rend2;
+vmCvar_t ui_r_AdvancedsurfaceSprites;
 
 static void UI_UpdateScreenshot()
 {
@@ -523,6 +536,10 @@ static cvarTable_t cvarTable[] =
 	{&ui_char_color_green, "ui_char_color_green", "", nullptr, 0},
 	{&ui_char_color_blue, "ui_char_color_blue", "", nullptr, 0},
 
+	{ &ui_char_color_2_red,		"ui_char_color_2_red",	"", nullptr, 0},
+	{ &ui_char_color_2_green,		"ui_char_color_2_green",	"", nullptr, 0},
+	{ &ui_char_color_2_blue,		"ui_char_color_2_blue",	"", nullptr, 0},
+
 	{&ui_PrecacheModels, "ui_PrecacheModels", "1", nullptr, CVAR_ARCHIVE},
 
 	{&ui_screenshotType, "ui_screenshotType", "jpg", UI_UpdateScreenshot, CVAR_ARCHIVE},
@@ -533,6 +550,14 @@ static cvarTable_t cvarTable[] =
 	{&ui_rgb_saber2_red, "ui_rgb_saber2_red", "", nullptr, 0},
 	{&ui_rgb_saber2_blue, "ui_rgb_saber2_blue", "", nullptr, 0},
 	{&ui_rgb_saber2_green, "ui_rgb_saber2_green", "", nullptr, 0},
+
+	{ &ui_hilt_color_red,		"ui_hilt_color_red",	"", nullptr, 0},
+	{ &ui_hilt_color_green,		"ui_hilt_color_green",	"", nullptr, 0},
+	{ &ui_hilt_color_blue,		"ui_hilt_color_blue",	"", nullptr, 0},
+
+	{ &ui_hilt2_color_red,		"ui_hilt2_color_red",	"", nullptr, 0},
+	{ &ui_hilt2_color_green,	"ui_hilt2_color_green",	"", nullptr, 0},
+	{ &ui_hilt2_color_blue,		"ui_hilt2_color_blue",	"", nullptr, 0},
 
 	{&ui_SFXSabers, "cg_SFXSabers", "5", nullptr, CVAR_ARCHIVE},
 	{&ui_SFXSabersGlowSize, "cg_SFXSabersGlowSize", "1.0", nullptr, CVAR_ARCHIVE},
@@ -566,6 +591,8 @@ static cvarTable_t cvarTable[] =
 	{&ui_g_newgameplusJKO, "g_newgameplusJKO", "0", nullptr, CVAR_ARCHIVE | CVAR_SAVEGAME | CVAR_NORESTART},
 
 	{&ui_com_rend2, "com_rend2", "0", nullptr, CVAR_ARCHIVE | CVAR_SAVEGAME},
+
+	{&ui_r_AdvancedsurfaceSprites, "r_advancedlod", "1", nullptr, CVAR_ARCHIVE | CVAR_SAVEGAME},
 };
 
 constexpr auto FP_UPDATED_NONE = -1;
@@ -5078,6 +5105,13 @@ static void UI_UpdateCharacterCvars()
 	Cvar_Set("g_char_color_red", Cvar_VariableString("ui_char_color_red"));
 	Cvar_Set("g_char_color_green", Cvar_VariableString("ui_char_color_green"));
 	Cvar_Set("g_char_color_blue", Cvar_VariableString("ui_char_color_blue"));
+
+	Cvar_Set("g_char_head_model", Cvar_VariableString("ui_char_head_model"));
+	Cvar_Set("g_char_head_skin", Cvar_VariableString("ui_char_head_skin"));
+
+	Cvar_Set("g_char_color_2_red", Cvar_VariableString("ui_char_color_2_red"));
+	Cvar_Set("g_char_color_2_green", Cvar_VariableString("ui_char_color_2_green"));
+	Cvar_Set("g_char_color_2_blue", Cvar_VariableString("ui_char_color_2_blue"));
 }
 
 static void UI_GetCharacterCvars()
@@ -5088,6 +5122,13 @@ static void UI_GetCharacterCvars()
 	Cvar_Set("ui_char_color_red", Cvar_VariableString("g_char_color_red"));
 	Cvar_Set("ui_char_color_green", Cvar_VariableString("g_char_color_green"));
 	Cvar_Set("ui_char_color_blue", Cvar_VariableString("g_char_color_blue"));
+
+	Cvar_Set("ui_char_head_model", Cvar_VariableString("g_char_head_model"));
+	Cvar_Set("ui_char_head_skin", Cvar_VariableString("g_char_head_skin"));
+
+	Cvar_Set("ui_char_color_2_red", Cvar_VariableString("g_char_color_2_red"));
+	Cvar_Set("ui_char_color_2_green", Cvar_VariableString("g_char_color_2_green"));
+	Cvar_Set("ui_char_color_2_blue", Cvar_VariableString("g_char_color_2_blue"));
 
 	const char* model = Cvar_VariableString("g_char_model");
 	Cvar_Set("ui_char_model", model);
@@ -5128,6 +5169,14 @@ static void UI_UpdateSaberCvars()
 			Cvar_VariableIntegerValue("ui_rgb_saber2_blue"));
 		Cvar_Set("g_saber2_color", rgb_color);
 	}
+
+	Cvar_Set("g_hilt_color_red", Cvar_VariableString("ui_hilt_color_red"));
+	Cvar_Set("g_hilt_color_blue", Cvar_VariableString("ui_hilt_color_blue"));
+	Cvar_Set("g_hilt_color_green", Cvar_VariableString("ui_hilt_color_green"));
+
+	Cvar_Set("g_hilt2_color_red", Cvar_VariableString("ui_hilt2_color_red"));
+	Cvar_Set("g_hilt2_color_blue", Cvar_VariableString("ui_hilt2_color_blue"));
+	Cvar_Set("g_hilt2_color_green", Cvar_VariableString("ui_hilt2_color_green"));
 }
 
 static void UI_UpdateFightingStyleChoices()
@@ -6941,6 +6990,14 @@ static void UI_GetSaberCvars()
 	}
 
 	Cvar_Set("ui_newfightingstyle", "0");
+
+	Cvar_Set("ui_hilt_color_red", Cvar_VariableString("g_hilt_color_red"));
+	Cvar_Set("ui_hilt_color_blue", Cvar_VariableString("g_hilt_color_blue"));
+	Cvar_Set("ui_hilt_color_green", Cvar_VariableString("g_hilt_color_green"));
+
+	Cvar_Set("ui_hilt2_color_red", Cvar_VariableString("g_hilt2_color_red"));
+	Cvar_Set("ui_hilt2_color_blue", Cvar_VariableString("g_hilt2_color_blue"));
+	Cvar_Set("ui_hilt2_color_green", Cvar_VariableString("g_hilt2_color_green"));
 }
 
 static void UI_ResetSaberCvars()

@@ -2658,7 +2658,7 @@ typedef enum tauntTypes_e
 } tauntTypes_t;
 
 qboolean IsHoldingGun(const gentity_t* ent);
-extern saberInfo_t* BG_MySaber(int client_num, int saber_num);
+extern saberInfo_t* BG_MySaber(int client_num, int saberNum);
 extern qboolean PM_CrouchAnim(int anim);
 extern qboolean Block_Button_Held(const gentity_t* defender);
 void ReloadGun(gentity_t* ent);

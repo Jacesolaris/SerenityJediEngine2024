@@ -808,7 +808,7 @@ void NPC_BSGM_Attack(void)
 					if (trace.fraction < 1.0f)
 					{
 						//hit something
-						gentity_t* trace_ent = &g_entities[trace.entity_num];
+						gentity_t* trace_ent = &g_entities[trace.entityNum];
 						if (trace_ent && trace_ent->takedamage)
 						{
 							//damage it

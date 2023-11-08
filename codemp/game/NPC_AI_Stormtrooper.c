@@ -1309,11 +1309,11 @@ void NPC_BSST_Patrol(void)
 		{
 			//racc - looking for entities.
 			//FIXME: do a FOV cone check, then a trace
-			if (trace.entity_num < ENTITYNUM_WORLD)
+			if (trace.entityNum < ENTITYNUM_WORLD)
 			{
 				//hit something
 				//try cheap check first
-				gentity_t* enemy = &g_entities[trace.entity_num];
+				gentity_t* enemy = &g_entities[trace.entityNum];
 				if (enemy && enemy->client && NPC_ValidEnemy(enemy) && enemy->client->playerTeam == NPCS.NPC->client->
 					enemyTeam)
 				{
@@ -2919,10 +2919,10 @@ void Noghri_StickTrace(void)
 			BG_GiveMeVectorFromMatrix(&bolt_matrix, POSITIVE_Y, dir);
 			VectorMA(base, 48, dir, tip);
 			trap->Trace(&trace, base, mins, maxs, tip, NPCS.NPC->s.number, MASK_SHOT, qfalse, 0, 0);
-			if (trace.fraction < 1.0f && trace.entity_num != lastHit)
+			if (trace.fraction < 1.0f && trace.entityNum != lastHit)
 			{
 				//hit something
-				gentity_t* trace_ent = &g_entities[trace.entity_num];
+				gentity_t* trace_ent = &g_entities[trace.entityNum];
 				if (trace_ent->takedamage
 					&& (!trace_ent->client || trace_ent == NPCS.NPC->enemy || trace_ent->client->NPC_class != NPCS.NPC->
 						client->NPC_class))
@@ -2938,7 +2938,7 @@ void Noghri_StickTrace(void)
 						//do pain on enemy
 						G_Knockdown(trace_ent, NPCS.NPC, dir, 300, qtrue);
 					}
-					lastHit = trace.entity_num;
+					lastHit = trace.entityNum;
 					hit = qtrue;
 				}
 			}
@@ -3118,7 +3118,7 @@ void NPC_BSST_Attack(void)
 				trace_t trace;
 				trap->Trace(&trace, NPCS.NPC->r.currentOrigin, NPCS.NPC->enemy->r.mins, NPCS.NPC->r.maxs,
 					NPCS.NPC->r.currentOrigin, NPCS.NPC->s.number, NPCS.NPC->clipmask, qfalse, 0, 0);
-				if (!trace.allsolid && !trace.startsolid && (trace.fraction == 1.0 || trace.entity_num == NPCS.NPC->s.
+				if (!trace.allsolid && !trace.startsolid && (trace.fraction == 1.0 || trace.entityNum == NPCS.NPC->s.
 					number))
 				{
 					//he can get right to me

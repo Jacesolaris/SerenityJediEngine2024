@@ -502,13 +502,13 @@ static void AnimalTailSwipe(Vehicle_t* p_veh, gentity_t *parent, gentity_t *pilo
 	G_VehicleTrace( &trace, vRoot, lMins, lMaxs, vTail, parent->s.number, MASK_NPCSOLID );
 	if ( trace.fraction < 1.0f )
 	{
-		if ( ENTITYNUM_NONE != trace.entity_num && g_entities[trace.entity_num].client &&
+		if ( ENTITYNUM_NONE != trace.entityNum && g_entities[trace.entityNum].client &&
 #ifndef _JK2MP //no rancor in jk2mp (at least not currently)
-			g_entities[trace.entity_num].client->NPC_class != CLASS_RANCOR &&
+			g_entities[trace.entityNum].client->NPC_class != CLASS_RANCOR &&
 #else //and in mp want to check inuse
-			g_entities[trace.entity_num].inuse &&
+			g_entities[trace.entityNum].inuse &&
 #endif
-			g_entities[trace.entity_num].client->NPC_class != CLASS_VEHICLE )
+			g_entities[trace.entityNum].client->NPC_class != CLASS_VEHICLE )
 		{
 			vec3_t push_dir;
 			vec3_t angs;
@@ -524,16 +524,16 @@ static void AnimalTailSwipe(Vehicle_t* p_veh, gentity_t *parent, gentity_t *pilo
 
 			// Smack this ho down.
 #ifdef _JK2MP
-			G_Sound( &g_entities[trace.entity_num], CHAN_AUTO, G_SoundIndex( "sound/chars/rancor/swipehit.wav" ) );
+			G_Sound( &g_entities[trace.entityNum], CHAN_AUTO, G_SoundIndex( "sound/chars/rancor/swipehit.wav" ) );
 #else
-			G_Sound( &g_entities[trace.entity_num], G_SoundIndex( "sound/chars/rancor/swipehit.wav" ) );
+			G_Sound( &g_entities[trace.entityNum], G_SoundIndex( "sound/chars/rancor/swipehit.wav" ) );
 #endif
-			g_throw( &g_entities[trace.entity_num], push_dir, 50 );
+			g_throw( &g_entities[trace.entityNum], push_dir, 50 );
 
-			if ( g_entities[trace.entity_num].health > 0 )
+			if ( g_entities[trace.entityNum].health > 0 )
 			{
 				// Knock down and dish out some hurt.
-				gentity_t *hit = &g_entities[trace.entity_num];
+				gentity_t *hit = &g_entities[trace.entityNum];
 #ifdef _JK2MP
 				if (BG_KnockDownable(&hit->client->ps))
 				{

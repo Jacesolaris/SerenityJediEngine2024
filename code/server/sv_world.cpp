@@ -687,7 +687,7 @@ void SV_ClipMoveToEntities(moveclip_t* clip)
 		{
 			shrinkBox = false;
 		}
-		else if (trace.entity_num == touch->s.number && touch->ghoul2.size() && !(touch->contents & CONTENTS_LIGHTSABER))
+		else if (trace.entityNum == touch->s.number && touch->ghoul2.size() && !(touch->contents & CONTENTS_LIGHTSABER))
 		{
 			shrinkBox = false;
 		}
@@ -718,7 +718,7 @@ void SV_ClipMoveToEntities(moveclip_t* clip)
 				clip->mins, clip->maxs, clip_handle, clip->contentmask,
 				origin, angles);
 #endif
-			//FIXME: when startsolid in another ent, doesn't return correct entity_num
+			//FIXME: when startsolid in another ent, doesn't return correct entityNum
 			//ALSO: 2 players can be standing next to each other and this function will
 			//think they're in each other!!!
 		}
@@ -728,21 +728,21 @@ void SV_ClipMoveToEntities(moveclip_t* clip)
 		{
 			if (!clip->trace.allsolid)
 			{
-				//We didn't come in here all solid, so set the clip->trace's entity_num
-				clip->trace.entity_num = touch->s.number;
+				//We didn't come in here all solid, so set the clip->trace's entityNum
+				clip->trace.entityNum = touch->s.number;
 			}
 			clip->trace.allsolid = qtrue;
-			trace.entity_num = touch->s.number;
+			trace.entityNum = touch->s.number;
 		}
 		else if (trace.startsolid)
 		{
 			if (!clip->trace.startsolid)
 			{
-				//We didn't come in here starting solid, so set the clip->trace's entity_num
-				clip->trace.entity_num = touch->s.number;
+				//We didn't come in here starting solid, so set the clip->trace's entityNum
+				clip->trace.entityNum = touch->s.number;
 			}
 			clip->trace.startsolid = qtrue;
-			trace.entity_num = touch->s.number;
+			trace.entityNum = touch->s.number;
 		}
 
 		if (trace.fraction < clip->trace.fraction)
@@ -750,7 +750,7 @@ void SV_ClipMoveToEntities(moveclip_t* clip)
 			// make sure we keep a startsolid from a previous trace
 			const qboolean oldStart = clip->trace.startsolid;
 
-			trace.entity_num = touch->s.number;
+			trace.entityNum = touch->s.number;
 			clip->trace = trace;
 			if (oldStart)
 			{
@@ -762,7 +762,7 @@ void SV_ClipMoveToEntities(moveclip_t* clip)
 		*/
 
 		// decide if we should do the ghoul2 collision detection right here
-		if (trace.entity_num == touch->s.number && clip->e_g2_trace_type != G2_NOCOLLIDE)
+		if (trace.entityNum == touch->s.number && clip->e_g2_trace_type != G2_NOCOLLIDE)
 		{
 			// do we actually have a ghoul2 model here?
 			if (touch->ghoul2.size() && !(touch->contents & CONTENTS_LIGHTSABER))
@@ -902,10 +902,10 @@ void SV_Trace(trace_t* results, const vec3_t start, const vec3_t mins, const vec
 	// clip to world
 	//NOTE: this will stop not only on static architecture but also entity brushes such as
 	//doors, etc.  This prevents us from being able to shorten the trace so that we can
-	//ignore all ents past this endpoint... perhaps need to check the entity_num in this
+	//ignore all ents past this endpoint... perhaps need to check the entityNum in this
 	//BoxTrace or have it not clip against entity brushes here.
 	CM_BoxTrace(&clip.trace, start, end, mins, maxs, 0, contentmask);
-	clip.trace.entity_num = clip.trace.fraction != 1.0 ? ENTITYNUM_WORLD : ENTITYNUM_NONE;
+	clip.trace.entityNum = clip.trace.fraction != 1.0 ? ENTITYNUM_WORLD : ENTITYNUM_NONE;
 	if (clip.trace.fraction == 0)
 	{
 		// blocked immediately by the world

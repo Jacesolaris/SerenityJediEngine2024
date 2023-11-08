@@ -121,7 +121,7 @@ using levelitem_t = struct levelitem_s
 	vec3_t origin;						//origin of the item
 	int goalareanum;					//area the item is in
 	vec3_t goalorigin;					//goal origin within the area
-	int entity_num;						//entity number
+	int entityNum;						//entity number
 	float timeout;						//item is removed after this time
 	levelitem_s* prev, * next;
 };
@@ -603,7 +603,7 @@ void BotInitLevelItems(void)
 		//
 		li->number = ++numlevelitems;
 		li->timeout = 0;
-		li->entity_num = 0;
+		li->entityNum = 0;
 		//
 		li->flags = 0;
 		AAS_IntForBSPEpairKey(ent, "notfree", &value);
@@ -855,7 +855,7 @@ int BotGetLevelItemGoal(const int index, const char* name, bot_goal_t* goal)
 		{
 			goal->areanum = li->goalareanum;
 			VectorCopy(li->goalorigin, goal->origin);
-			goal->entity_num = li->entity_num;
+			goal->entityNum = li->entityNum;
 			VectorCopy(itemconfig->iteminfo[li->iteminfo].mins, goal->mins);
 			VectorCopy(itemconfig->iteminfo[li->iteminfo].maxs, goal->maxs);
 			goal->number = li->number;
@@ -883,7 +883,7 @@ int BotGetMapLocationGoal(char* name, bot_goal_t* goal)
 		{
 			goal->areanum = ml->areanum;
 			VectorCopy(ml->origin, goal->origin);
-			goal->entity_num = 0;
+			goal->entityNum = 0;
 			VectorCopy(mins, goal->mins);
 			VectorCopy(maxs, goal->maxs);
 			return qtrue;
@@ -909,7 +909,7 @@ int BotGetNextCampSpotGoal(int num, bot_goal_t* goal)
 		{
 			goal->areanum = cs->areanum;
 			VectorCopy(cs->origin, goal->origin);
-			goal->entity_num = 0;
+			goal->entityNum = 0;
 			VectorCopy(mins, goal->mins);
 			VectorCopy(maxs, goal->maxs);
 			return num + 1;
@@ -950,7 +950,7 @@ void BotFindEntityForLevelItem(levelitem_t* li)
 			if (VectorLength(dir) < 30)
 			{
 				//found an entity for this level item
-				li->entity_num = ent;
+				li->entityNum = ent;
 			} //end if
 		} //end if
 	} //end for
@@ -1010,7 +1010,7 @@ void BotUpdateEntityItems(void)
 		for (li = levelitems; li; li = li->next)
 		{
 			//if the level item is linked to an entity
-			if (li->entity_num && li->entity_num == ent)
+			if (li->entityNum && li->entityNum == ent)
 			{
 				//the entity is re-used if the models are different
 				if (ic->iteminfo[li->iteminfo].modelIndex != modelIndex)
@@ -1040,7 +1040,7 @@ void BotUpdateEntityItems(void)
 		for (li = levelitems; li; li = li->next)
 		{
 			//if this level item is already linked
-			if (li->entity_num) continue;
+			if (li->entityNum) continue;
 			//
 			if (g_gametype == GT_SINGLE_PLAYER) {
 				if (li->flags & IFL_NOTSINGLE) continue;
@@ -1060,7 +1060,7 @@ void BotUpdateEntityItems(void)
 				if (VectorLength(dir) < 30)
 				{
 					//found an entity for this level item
-					li->entity_num = ent;
+					li->entityNum = ent;
 					//if the origin is different
 					if (entinfo.origin[0] != li->origin[0] ||
 						entinfo.origin[1] != li->origin[1] ||
@@ -1096,7 +1096,7 @@ void BotUpdateEntityItems(void)
 		//
 		if (!li) continue;
 		//entity number of the level item
-		li->entity_num = ent;
+		li->entityNum = ent;
 		//number for the level item
 		li->number = numlevelitems + ent;
 		//set the item info index for the level item
@@ -1123,7 +1123,7 @@ void BotUpdateEntityItems(void)
 	/*
 	for (li = levelitems; li; li = li->next)
 	{
-		if (!li->entity_num)
+		if (!li->entityNum)
 		{
 			BotFindEntityForLevelItem(li);
 		} //end if
@@ -1278,7 +1278,7 @@ int BotChooseLTGItem(const int goalstate, vec3_t origin, int* inventory, const i
 		if (!li->goalareanum)
 			continue;
 		//FIXME: is this a good thing? added this for items that never spawned into the game (f.i. CTF flags in obelisk)
-		if (!li->entity_num && !(li->flags & IFL_ROAM))
+		if (!li->entityNum && !(li->flags & IFL_ROAM))
 			continue;
 		//get the fuzzy weight function for this item
 		iteminfo = &ic->iteminfo[li->iteminfo];
@@ -1332,7 +1332,7 @@ int BotChooseLTGItem(const int goalstate, vec3_t origin, int* inventory, const i
 			{
 				VectorSet(goal.mins, -15, -15, -15);
 				VectorSet(goal.maxs, 15, 15, 15);
-				goal.entity_num = 0;
+				goal.entityNum = 0;
 				goal.number = 0;
 				goal.flags = GFL_ROAM;
 				goal.iteminfo = 0;
@@ -1354,7 +1354,7 @@ int BotChooseLTGItem(const int goalstate, vec3_t origin, int* inventory, const i
 	VectorCopy(iteminfo->mins, goal.mins);
 	VectorCopy(iteminfo->maxs, goal.maxs);
 	goal.areanum = bestitem->goalareanum;
-	goal.entity_num = bestitem->entity_num;
+	goal.entityNum = bestitem->entityNum;
 	goal.number = bestitem->number;
 	goal.flags = GFL_ITEM;
 	if (bestitem->timeout)
@@ -1446,7 +1446,7 @@ int BotChooseNBGItem(const int goalstate, vec3_t origin, int* inventory, const i
 		if (!li->goalareanum)
 			continue;
 		//FIXME: is this a good thing? added this for items that never spawned into the game (f.i. CTF flags in obelisk)
-		if (!li->entity_num && !(li->flags & IFL_ROAM))
+		if (!li->entityNum && !(li->flags & IFL_ROAM))
 			continue;
 		//get the fuzzy weight function for this item
 		iteminfo = &ic->iteminfo[li->iteminfo];
@@ -1508,7 +1508,7 @@ int BotChooseNBGItem(const int goalstate, vec3_t origin, int* inventory, const i
 	VectorCopy(iteminfo->mins, goal.mins);
 	VectorCopy(iteminfo->maxs, goal.maxs);
 	goal.areanum = bestitem->goalareanum;
-	goal.entity_num = bestitem->entity_num;
+	goal.entityNum = bestitem->entityNum;
 	goal.number = bestitem->number;
 	goal.flags = GFL_ITEM;
 	if (bestitem->timeout)
@@ -1587,11 +1587,11 @@ int BotItemGoalInVisButNotVisible(const int viewer, vec3_t eye, vec3_t viewangle
 	{
 		//the goal entity number doesn't have to be valid
 		//just assume it's valid
-		if (goal->entity_num <= 0)
+		if (goal->entityNum <= 0)
 			return qfalse;
 		//
 		//if the entity data isn't valid
-		AAS_EntityInfo(goal->entity_num, &entinfo);
+		AAS_EntityInfo(goal->entityNum, &entinfo);
 		//NOTE: for some wacko reason entities are sometimes
 		// not updated
 		//if (!entinfo.valid) return qtrue;

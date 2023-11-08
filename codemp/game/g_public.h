@@ -1117,8 +1117,8 @@ typedef struct gameImport_s {
 	qboolean(*G2API_SetBoneIKState)					(void* ghoul2, int time, const char* boneName, int ikState, sharedSetBoneIKStateParams_t* params);
 	qboolean(*G2API_IKMove)							(void* ghoul2, int time, sharedIKMoveParams_t* params);
 	qboolean(*G2API_RemoveBone)						(void* ghoul2, const char* boneName, int modelIndex);
-	void		(*G2API_AttachInstanceToEntNum)			(void* ghoul2, int entity_num, qboolean server);
-	void		(*G2API_ClearAttachedInstance)			(int entity_num);
+	void		(*G2API_AttachInstanceToEntNum)			(void* ghoul2, int entityNum, qboolean server);
+	void		(*G2API_ClearAttachedInstance)			(int entityNum);
 	void		(*G2API_CleanEntAttachments)			();
 	qboolean(*G2API_OverrideServer)					(void* serverInstance);
 	void		(*G2API_GetSurfaceName)					(void* ghoul2, int surfNumber, int modelIndex, char* fillBuf);
@@ -1159,9 +1159,9 @@ typedef struct gameExport_s {
 	qboolean(*NPC_ClearLOS2)					(int ent_id, const vec3_t end);
 	int			(*NAVNEW_ClearPathBetweenPoints)	(vec3_t start, vec3_t end, vec3_t mins, vec3_t maxs, int ignore, int clipmask);
 	qboolean(*NAV_CheckNodeFailedForEnt)		(int ent_id, int nodeNum);
-	qboolean(*NAV_EntIsUnlockedDoor)			(int entity_num);
-	qboolean(*NAV_EntIsDoor)					(int entity_num);
-	qboolean(*NAV_EntIsBreakable)				(int entity_num);
+	qboolean(*NAV_EntIsUnlockedDoor)			(int entityNum);
+	qboolean(*NAV_EntIsDoor)					(int entityNum);
+	qboolean(*NAV_EntIsBreakable)				(int entityNum);
 	qboolean(*NAV_EntIsRemovableUsable)			(int entNum);
 	void		(*NAV_FindCombatPointWaypoints)		(void);
 	int			(*BG_GetItemIndexByTag)				(int tag, int type);

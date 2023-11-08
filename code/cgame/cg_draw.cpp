@@ -5220,10 +5220,10 @@ static void CG_ScanForCrosshairEntity(const qboolean scanAll)
 			G2_NOCOLLIDE, 10);
 		// ); took out CONTENTS_SOLID| so you can target people through glass.... took out CONTENTS_CORPSE so disintegrated guys aren't shown, could just remove their body earlier too...
 
-		if (trace.entity_num < ENTITYNUM_WORLD)
+		if (trace.entityNum < ENTITYNUM_WORLD)
 		{
 			//hit something
-			trace_ent = &g_entities[trace.entity_num];
+			trace_ent = &g_entities[trace.entityNum];
 			if (trace_ent)
 			{
 				// Check for mind trickable-guys
@@ -5389,15 +5389,15 @@ static void CG_ScanForCrosshairEntity(const qboolean scanAll)
 			// trace should not be allowed to pick up anything if it started solid.  I tried actually moving the trace start back, which also worked,
 			//	but the dynamic cursor drawing caused it to render around the clip of the gun when I pushed the blaster all the way into a wall.
 			//	It looked quite horrible...but, if this is bad for some reason that I don't know
-			trace.entity_num = ENTITYNUM_NONE;
+			trace.entityNum = ENTITYNUM_NONE;
 		}
 
-		trace_ent = &g_entities[trace.entity_num];
+		trace_ent = &g_entities[trace.entityNum];
 	}
 	//draw crosshair at endpoint
 	CG_DrawCrosshair(trace.endpos);
 
-	g_crosshairEntNum = trace.entity_num;
+	g_crosshairEntNum = trace.entityNum;
 	g_crosshairEntDist = 4096 * trace.fraction;
 
 	if (!trace_ent)
@@ -5410,7 +5410,7 @@ static void CG_ScanForCrosshairEntity(const qboolean scanAll)
 	{
 		//looking at a valid ent
 		//store the distance
-		if (trace.entity_num != g_crosshairEntNum)
+		if (trace.entityNum != g_crosshairEntNum)
 		{
 			//new crosshair ent
 			g_crosshairSameEntTime = 0;
@@ -5443,18 +5443,18 @@ static void CG_ScanForCrosshairEntity(const qboolean scanAll)
 	}
 
 	// if the player is cloaked, don't show it
-	if (cg_entities[trace.entity_num].currentState.powerups & 1 << PW_CLOAKED)
+	if (cg_entities[trace.entityNum].currentState.powerups & 1 << PW_CLOAKED)
 	{
 		return;
 	}
 
 	// update the fade timer
-	if (cg.crosshairclient_num != trace.entity_num)
+	if (cg.crosshairclient_num != trace.entityNum)
 	{
 		infoStringCount = 0;
 	}
 
-	cg.crosshairclient_num = trace.entity_num;
+	cg.crosshairclient_num = trace.entityNum;
 	cg.crosshairClientTime = cg.time;
 }
 

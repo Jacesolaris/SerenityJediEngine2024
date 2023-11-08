@@ -581,7 +581,7 @@ void RB_BeginDrawingView(void)
 #endif
 	}
 
-	if(
+	if (
 #ifndef REND2_SP
 		tr.refdef.rdflags & RDF_AUTOMAP ||
 #endif
@@ -1414,35 +1414,6 @@ RB_RenderDrawSurfList
 */
 static void RB_RenderDrawSurfList(drawSurf_t* drawSurfs, int numDrawSurfs)
 {
-	/*
-	merging surfaces together that share the same shader (e.g. polys, patches)
-	upload per frame data - but this might be the same between render passes?
-
-	how about:
-		tr.refdef.entities[]
-
-		and .... entityCullInfo_t tr.refdef.entityCullInfo[]
-		struct visibleEntity_t
-		{
-			uint32_t frustumMask; // bitfield of frustums which intersect
-			EntityId entityId;
-		};
-
-		foreach ghoul2 model:
-			transform bones
-
-		foreach visibleEntity:
-			upload per frame data
-
-		for polygons:
-			merge them, create new surface and upload data
-
-		for patch meshes:
-			merge them, create new surface and upload data
-
-	each surface corresponds to something which has all of its gpu data uploaded
-	*/
-
 	int estimatedNumShaderStages = (backEnd.viewParms.flags & VPF_DEPTHSHADOW) ? 1 : 4;
 
 	// Prepare memory for the current render pass
@@ -1548,11 +1519,12 @@ Stretches a raw 32 bit power of 2 bitmap image over the given screen rectangle.
 Used for cinematics.
 =============
 */
-void RE_StretchRaw(int x, int y, int w, int h, int cols, int rows, const byte* data, int client, qboolean dirty) {
+void RE_StretchRaw(const int x, const int y, const int w, const int h, const int cols, const int rows, const byte* data, const int client, const qboolean dirty)
+{
 	int			i, j;
 	int			start, end;
-	vec4_t quadVerts[4];
-	vec2_t texCoords[4];
+	vec4_t quadVerts[4]{};
+	vec2_t texCoords[4]{};
 
 	if (!tr.registered) {
 		return;
@@ -2745,7 +2717,7 @@ RB_SwapBuffers
 
 =============
 */
-static const void* RB_SwapBuffers(const void* data) 
+static const void* RB_SwapBuffers(const void* data)
 {
 	const swapBuffersCommand_t* cmd;
 
@@ -2775,7 +2747,7 @@ static const void* RB_SwapBuffers(const void* data)
 		stencilReadback = (unsigned char*)Hunk_AllocateTempMemory(glConfig.vidWidth * glConfig.vidHeight);
 		qglReadPixels(0, 0, glConfig.vidWidth, glConfig.vidHeight, GL_STENCIL_INDEX, GL_UNSIGNED_BYTE, stencilReadback);
 
-		for (i = 0; i < glConfig.vidWidth * glConfig.vidHeight; i++) 
+		for (i = 0; i < glConfig.vidWidth * glConfig.vidHeight; i++)
 		{
 			sum += stencilReadback[i];
 		}

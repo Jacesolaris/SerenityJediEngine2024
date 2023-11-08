@@ -421,8 +421,6 @@ void CG_LoadBar(void)
 		constexpr int y = 340;
 
 		CG_DrawPic(x, y, LOADBAR_CLIP_WIDTH, LOADBAR_CLIP_HEIGHT, cgs.media.load_SerenitySaberSystems);
-
-		LoadTips();
 	}
 }
 
@@ -930,6 +928,8 @@ void CG_DrawInformation()
 		}
 		cgi_UI_MenuPaintAll();
 		CG_LoadBar();
+
+		LoadTips();
 	}
 
 	// draw info string information

@@ -411,31 +411,31 @@ qboolean GVM_NAV_CheckNodeFailedForEnt(const int ent_id, const int nodeNum)
 	return ge->NAV_CheckNodeFailedForEnt(ent_id, nodeNum);
 }
 
-qboolean GVM_NAV_EntIsUnlockedDoor(const int entity_num)
+qboolean GVM_NAV_EntIsUnlockedDoor(const int entityNum)
 {
 	if (gvm->isLegacy)
-		return static_cast<qboolean>(VM_Call(gvm, GAME_NAV_ENTISUNLOCKEDDOOR, entity_num));
+		return static_cast<qboolean>(VM_Call(gvm, GAME_NAV_ENTISUNLOCKEDDOOR, entityNum));
 	VMSwap v(gvm);
 
-	return ge->NAV_EntIsUnlockedDoor(entity_num);
+	return ge->NAV_EntIsUnlockedDoor(entityNum);
 }
 
-qboolean GVM_NAV_EntIsDoor(const int entity_num)
+qboolean GVM_NAV_EntIsDoor(const int entityNum)
 {
 	if (gvm->isLegacy)
-		return static_cast<qboolean>(VM_Call(gvm, GAME_NAV_ENTISDOOR, entity_num));
+		return static_cast<qboolean>(VM_Call(gvm, GAME_NAV_ENTISDOOR, entityNum));
 	VMSwap v(gvm);
 
-	return ge->NAV_EntIsDoor(entity_num);
+	return ge->NAV_EntIsDoor(entityNum);
 }
 
-qboolean GVM_NAV_EntIsBreakable(const int entity_num)
+qboolean GVM_NAV_EntIsBreakable(const int entityNum)
 {
 	if (gvm->isLegacy)
-		return static_cast<qboolean>(VM_Call(gvm, GAME_NAV_ENTISBREAKABLE, entity_num));
+		return static_cast<qboolean>(VM_Call(gvm, GAME_NAV_ENTISBREAKABLE, entityNum));
 	VMSwap v(gvm);
 
-	return ge->NAV_EntIsBreakable(entity_num);
+	return ge->NAV_EntIsBreakable(entityNum);
 }
 
 qboolean GVM_NAV_EntIsRemovableUsable(const int entNum)
@@ -2084,14 +2084,14 @@ static qboolean SV_G2API_RemoveBone(void* ghoul2, const char* boneName, const in
 	return re->G2API_RemoveBone(g2, modelIndex, boneName);
 }
 
-static void SV_G2API_AttachInstanceToEntNum(void* ghoul2, const int entity_num, const qboolean server)
+static void SV_G2API_AttachInstanceToEntNum(void* ghoul2, const int entityNum, const qboolean server)
 {
-	re->G2API_AttachInstanceToEntNum(*static_cast<CGhoul2Info_v*>(ghoul2), entity_num, server);
+	re->G2API_AttachInstanceToEntNum(*static_cast<CGhoul2Info_v*>(ghoul2), entityNum, server);
 }
 
-static void SV_G2API_ClearAttachedInstance(const int entity_num)
+static void SV_G2API_ClearAttachedInstance(const int entityNum)
 {
-	re->G2API_ClearAttachedInstance(entity_num);
+	re->G2API_ClearAttachedInstance(entityNum);
 }
 
 static void SV_G2API_CleanEntAttachments(void)

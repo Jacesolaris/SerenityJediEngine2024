@@ -44,7 +44,7 @@ extern stringID_table_t saber_moveTable[];
 #endif
 
 extern qboolean BG_SabersOff(const playerState_t* ps);
-saberInfo_t* BG_MySaber(int client_num, int saber_num);
+saberInfo_t* BG_MySaber(int client_num, int saberNum);
 extern qboolean PM_SaberInDamageMove(int move);
 void PM_AddFatigue(playerState_t* ps, int fatigue);
 extern qboolean PM_InCartwheel(int anim);
@@ -1203,9 +1203,9 @@ saber_moveName_t PM_CheckStabDown(void)
 
 	pm->trace(&tr, pm->ps->origin, trmins, trmaxs, fwd, pm->ps->client_num, MASK_PLAYERSOLID);
 
-	if (tr.entity_num < ENTITYNUM_WORLD)
+	if (tr.entityNum < ENTITYNUM_WORLD)
 	{
-		ent = PM_BGEntForNum(tr.entity_num);
+		ent = PM_BGEntForNum(tr.entityNum);
 	}
 
 	if (ent &&
@@ -2297,9 +2297,9 @@ qboolean PM_CanBackstab(void)
 
 	pm->trace(&tr, pm->ps->origin, trmins, trmaxs, back, pm->ps->client_num, MASK_PLAYERSOLID);
 
-	if (tr.fraction != 1.0 && tr.entity_num >= 0 && tr.entity_num < ENTITYNUM_NONE)
+	if (tr.fraction != 1.0 && tr.entityNum >= 0 && tr.entityNum < ENTITYNUM_NONE)
 	{
-		const bgEntity_t* bgEnt = PM_BGEntForNum(tr.entity_num);
+		const bgEntity_t* bgEnt = PM_BGEntForNum(tr.entityNum);
 
 		if (bgEnt && (bgEnt->s.eType == ET_PLAYER || bgEnt->s.eType == ET_NPC))
 		{
@@ -2624,7 +2624,7 @@ qboolean PM_Can_Do_Kill_Lunge(void)
 
 	pm->trace(&tr, pm->ps->origin, trmins, trmaxs, back, pm->ps->client_num, MASK_PLAYERSOLID);
 
-	if (tr.fraction != 1.0 && tr.entity_num >= 0 && tr.entity_num < MAX_CLIENTS)
+	if (tr.fraction != 1.0 && tr.entityNum >= 0 && tr.entityNum < MAX_CLIENTS)
 	{
 		//We don't have real entity access here so we can't do an in depth check. But if it's a client, I guess that's reason enough to attack
 		return qtrue;
@@ -2652,7 +2652,7 @@ qboolean PM_Can_Do_Kill_Lunge_back(void)
 
 	pm->trace(&tr, pm->ps->origin, trmins, trmaxs, back, pm->ps->client_num, MASK_PLAYERSOLID);
 
-	if (tr.fraction != 1.0 && tr.entity_num >= 0 && (tr.entity_num < MAX_CLIENTS))
+	if (tr.fraction != 1.0 && tr.entityNum >= 0 && (tr.entityNum < MAX_CLIENTS))
 	{ //We don't have real entity access here so we can't do an indepth check. But if it's a client and it's behind us, I guess that's reason enough to stab backward
 		return qtrue;
 	}
@@ -2979,10 +2979,10 @@ qboolean G_CheckEnemyPresence(const int dir, const float radius)
 	VectorMA(pm->ps->origin, radius, checkDir, tTo);
 	pm->trace(&tr, pm->ps->origin, tMins, tMaxs, tTo, pm->ps->client_num, MASK_PLAYERSOLID);
 
-	if (tr.fraction != 1.0f && tr.entity_num < ENTITYNUM_WORLD)
+	if (tr.fraction != 1.0f && tr.entityNum < ENTITYNUM_WORLD)
 	{
 		//let's see who we hit
-		const bgEntity_t* bgEnt = PM_BGEntForNum(tr.entity_num);
+		const bgEntity_t* bgEnt = PM_BGEntForNum(tr.entityNum);
 
 		if (bgEnt &&
 			(bgEnt->s.eType == ET_PLAYER || bgEnt->s.eType == ET_NPC))
@@ -7193,19 +7193,19 @@ void PM_Setsaber_move(saber_moveName_t new_move)
 	}
 }
 
-saberInfo_t* BG_MySaber(int client_num, int saber_num)
+saberInfo_t* BG_MySaber(int client_num, int saberNum)
 {
-	//returns a pointer to the requested saber_num
+	//returns a pointer to the requested saberNum
 #ifdef _GAME
 	const gentity_t* ent = &g_entities[client_num];
 	if (ent->inuse && ent->client)
 	{
-		if (!ent->client->saber[saber_num].model[0])
+		if (!ent->client->saber[saberNum].model[0])
 		{
 			//don't have saber anymore!
 			return NULL;
 		}
-		return &ent->client->saber[saber_num];
+		return &ent->client->saber[saberNum];
 	}
 #elif defined(_CGAME)
 	clientInfo_t* ci = NULL;
@@ -7224,12 +7224,12 @@ saberInfo_t* BG_MySaber(int client_num, int saber_num)
 	if (ci
 		&& ci->infoValid)
 	{
-		if (!ci->saber[saber_num].model[0])
+		if (!ci->saber[saberNum].model[0])
 		{
 			//don't have sabers anymore!
 			return NULL;
 		}
-		return &ci->saber[saber_num];
+		return &ci->saber[saberNum];
 	}
 #endif
 

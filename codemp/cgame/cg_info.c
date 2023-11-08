@@ -197,6 +197,86 @@ char* cg_GetCurrentLevelshot2(const char* s)
 	return SCREENSHOT_CURRENT;
 }
 
+int SCREENTIP_NEXT_UPDATE_TIME = 0;
+
+void LoadTips(void)
+{
+	const int time = trap->Milliseconds();
+	const int index = rand() % 15;
+
+	if ((SCREENTIP_NEXT_UPDATE_TIME < time || SCREENTIP_NEXT_UPDATE_TIME == 0) && cg.loadLCARSStage <= 6)
+	{
+		switch (index)
+		{
+		case 0:
+			CG_DrawProportionalString(300, 390, CG_GetStringEdString("LOADTIPS", "TIP2"),
+				UI_CENTER | UI_SMALLFONT | UI_DROPSHADOW, colorWhite);
+			break;
+		case 1:
+			CG_DrawProportionalString(300, 390, CG_GetStringEdString("LOADTIPS", "TIP3"),
+				UI_CENTER | UI_SMALLFONT | UI_DROPSHADOW, colorWhite);
+			break;
+		case 2:
+			CG_DrawProportionalString(300, 390, CG_GetStringEdString("LOADTIPS", "TIP4"),
+				UI_CENTER | UI_SMALLFONT | UI_DROPSHADOW, colorWhite);
+			break;
+		case 3:
+			CG_DrawProportionalString(300, 390, CG_GetStringEdString("LOADTIPS", "TIP5"),
+				UI_CENTER | UI_SMALLFONT | UI_DROPSHADOW, colorWhite);
+			break;
+		case 4:
+			CG_DrawProportionalString(300, 390, CG_GetStringEdString("LOADTIPS", "TIP6"),
+				UI_CENTER | UI_SMALLFONT | UI_DROPSHADOW, colorWhite);
+			break;
+		case 5:
+			CG_DrawProportionalString(300, 390, CG_GetStringEdString("LOADTIPS", "TIP7"),
+				UI_CENTER | UI_SMALLFONT | UI_DROPSHADOW, colorWhite);
+			break;
+		case 6:
+			CG_DrawProportionalString(300, 390, CG_GetStringEdString("LOADTIPS", "TIP8"),
+				UI_CENTER | UI_SMALLFONT | UI_DROPSHADOW, colorWhite);
+			break;
+		case 7:
+			CG_DrawProportionalString(300, 390, CG_GetStringEdString("LOADTIPS", "TIP9"),
+				UI_CENTER | UI_SMALLFONT | UI_DROPSHADOW, colorWhite);
+			break;
+		case 8:
+			CG_DrawProportionalString(300, 390, CG_GetStringEdString("LOADTIPS", "TIP10"),
+				UI_CENTER | UI_SMALLFONT | UI_DROPSHADOW, colorWhite);
+			break;
+		case 9:
+			CG_DrawProportionalString(300, 390, CG_GetStringEdString("LOADTIPS", "TIP11"),
+				UI_CENTER | UI_SMALLFONT | UI_DROPSHADOW, colorWhite);
+			break;
+		case 10:
+			CG_DrawProportionalString(300, 390, CG_GetStringEdString("LOADTIPS", "TIP12"),
+				UI_CENTER | UI_SMALLFONT | UI_DROPSHADOW, colorWhite);
+			break;
+		case 11:
+			CG_DrawProportionalString(300, 390, CG_GetStringEdString("LOADTIPS", "TIP13"),
+				UI_CENTER | UI_SMALLFONT | UI_DROPSHADOW, colorWhite);
+			break;
+		case 12:
+			CG_DrawProportionalString(300, 390, CG_GetStringEdString("LOADTIPS", "TIP14"),
+				UI_CENTER | UI_SMALLFONT | UI_DROPSHADOW, colorWhite);
+			break;
+		case 13:
+			CG_DrawProportionalString(300, 390, CG_GetStringEdString("LOADTIPS", "TIP15"),
+				UI_CENTER | UI_SMALLFONT | UI_DROPSHADOW, colorWhite);
+			break;
+		case 14:
+			CG_DrawProportionalString(300, 390, CG_GetStringEdString("LOADTIPS", "TIP1"),
+				UI_CENTER | UI_SMALLFONT | UI_DROPSHADOW, colorWhite);
+			break;
+		default:
+			CG_DrawProportionalString(300, 390, CG_GetStringEdString("LOADTIPS", "TIP1"),
+				UI_CENTER | UI_SMALLFONT | UI_DROPSHADOW, colorWhite);
+			break;
+		}
+		SCREENTIP_NEXT_UPDATE_TIME = time + 3500;
+	}
+}
+
 void CG_DrawInformation(void)
 {
 	int value;
@@ -231,6 +311,8 @@ void CG_DrawInformation(void)
 	}
 
 	CG_LoadBar();
+
+	LoadTips();
 
 	int y = 180 - 32;
 
@@ -448,86 +530,6 @@ void CG_DrawInformation(void)
 	}
 }
 
-int SCREENTIP_NEXT_UPDATE_TIME = 0;
-
-void LoadTips(void)
-{
-	const int time = trap->Milliseconds();
-	const int index = rand() % 15;
-
-	if ((SCREENTIP_NEXT_UPDATE_TIME < time || SCREENTIP_NEXT_UPDATE_TIME == 0) && cg.loadLCARSStage <= 6)
-	{
-		switch (index)
-		{
-		case 0:
-			CG_DrawProportionalString(300, 390, CG_GetStringEdString("LOADTIPS", "TIP2"),
-				UI_CENTER | UI_SMALLFONT | UI_DROPSHADOW, colorWhite);
-			break;
-		case 1:
-			CG_DrawProportionalString(300, 390, CG_GetStringEdString("LOADTIPS", "TIP3"),
-				UI_CENTER | UI_SMALLFONT | UI_DROPSHADOW, colorWhite);
-			break;
-		case 2:
-			CG_DrawProportionalString(300, 390, CG_GetStringEdString("LOADTIPS", "TIP4"),
-				UI_CENTER | UI_SMALLFONT | UI_DROPSHADOW, colorWhite);
-			break;
-		case 3:
-			CG_DrawProportionalString(300, 390, CG_GetStringEdString("LOADTIPS", "TIP5"),
-				UI_CENTER | UI_SMALLFONT | UI_DROPSHADOW, colorWhite);
-			break;
-		case 4:
-			CG_DrawProportionalString(300, 390, CG_GetStringEdString("LOADTIPS", "TIP6"),
-				UI_CENTER | UI_SMALLFONT | UI_DROPSHADOW, colorWhite);
-			break;
-		case 5:
-			CG_DrawProportionalString(300, 390, CG_GetStringEdString("LOADTIPS", "TIP7"),
-				UI_CENTER | UI_SMALLFONT | UI_DROPSHADOW, colorWhite);
-			break;
-		case 6:
-			CG_DrawProportionalString(300, 390, CG_GetStringEdString("LOADTIPS", "TIP8"),
-				UI_CENTER | UI_SMALLFONT | UI_DROPSHADOW, colorWhite);
-			break;
-		case 7:
-			CG_DrawProportionalString(300, 390, CG_GetStringEdString("LOADTIPS", "TIP9"),
-				UI_CENTER | UI_SMALLFONT | UI_DROPSHADOW, colorWhite);
-			break;
-		case 8:
-			CG_DrawProportionalString(300, 390, CG_GetStringEdString("LOADTIPS", "TIP10"),
-				UI_CENTER | UI_SMALLFONT | UI_DROPSHADOW, colorWhite);
-			break;
-		case 9:
-			CG_DrawProportionalString(300, 390, CG_GetStringEdString("LOADTIPS", "TIP11"),
-				UI_CENTER | UI_SMALLFONT | UI_DROPSHADOW, colorWhite);
-			break;
-		case 10:
-			CG_DrawProportionalString(300, 390, CG_GetStringEdString("LOADTIPS", "TIP12"),
-				UI_CENTER | UI_SMALLFONT | UI_DROPSHADOW, colorWhite);
-			break;
-		case 11:
-			CG_DrawProportionalString(300, 390, CG_GetStringEdString("LOADTIPS", "TIP13"),
-				UI_CENTER | UI_SMALLFONT | UI_DROPSHADOW, colorWhite);
-			break;
-		case 12:
-			CG_DrawProportionalString(300, 390, CG_GetStringEdString("LOADTIPS", "TIP14"),
-				UI_CENTER | UI_SMALLFONT | UI_DROPSHADOW, colorWhite);
-			break;
-		case 13:
-			CG_DrawProportionalString(300, 390, CG_GetStringEdString("LOADTIPS", "TIP15"),
-				UI_CENTER | UI_SMALLFONT | UI_DROPSHADOW, colorWhite);
-			break;
-		case 14:
-			CG_DrawProportionalString(300, 390, CG_GetStringEdString("LOADTIPS", "TIP1"),
-				UI_CENTER | UI_SMALLFONT | UI_DROPSHADOW, colorWhite);
-			break;
-		default:
-			CG_DrawProportionalString(300, 390, CG_GetStringEdString("LOADTIPS", "TIP1"),
-				UI_CENTER | UI_SMALLFONT | UI_DROPSHADOW, colorWhite);
-			break;
-		}
-		SCREENTIP_NEXT_UPDATE_TIME = time + 3500;
-	}
-}
-
 /*
 ===================
 CG_LoadBar
@@ -572,7 +574,5 @@ void CG_LoadBar(void)
 		const int y = 50;
 
 		CG_DrawPic(x, y, LOADBAR_CLIP_WIDTH, LOADBAR_CLIP_HEIGHT, cgs.media.load_SerenitySaberSystems);
-
-		LoadTips();
 	}
 }

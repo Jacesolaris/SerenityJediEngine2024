@@ -37,7 +37,7 @@ Used for cinematics.
 */
 
 // param 'bDirty' should be true 99% of the time
-void RE_StretchRaw(const int x, const int y, const int w, const int h, int cols, int rows, const byte* data, const int i_client, const qboolean b_dirty)
+void RE_StretchRaw(const int x, const int y, const int w, const int h, const int cols, const int rows, const byte* data, const int client, const qboolean dirty)
 {
 	if (!tr.registered) {
 		return;
@@ -62,14 +62,14 @@ void RE_StretchRaw(const int x, const int y, const int w, const int h, int cols,
 		Com_Error(ERR_DROP, "Draw_StretchRaw: size not a power of 2: %i by %i", cols, rows);
 	}
 
-	GL_Bind(tr.scratchImage[i_client]);
+	GL_Bind(tr.scratchImage[client]);
 
 	// if the scratchImage isn't in the format we want, specify it as a new texture...
 	//
-	if (cols != tr.scratchImage[i_client]->width || rows != tr.scratchImage[i_client]->height)
+	if (cols != tr.scratchImage[client]->width || rows != tr.scratchImage[client]->height)
 	{
-		tr.scratchImage[i_client]->width = cols;
-		tr.scratchImage[i_client]->height = rows;
+		tr.scratchImage[client]->width = cols;
+		tr.scratchImage[client]->height = rows;
 #ifdef TIMEBIND
 		if (r_ignore->integer)
 		{
@@ -94,7 +94,7 @@ void RE_StretchRaw(const int x, const int y, const int w, const int h, int cols,
 	}
 	else
 	{
-		if (b_dirty)	// FIXME: some TA addition or other, not sure why, yet. Should probably be true 99% of the time?
+		if (dirty)	// FIXME: some TA addition or other, not sure why, yet. Should probably be true 99% of the time?
 		{
 			// otherwise, just subimage upload it so that drivers can tell we are going to be changing
 			// it and don't try and do a texture compression

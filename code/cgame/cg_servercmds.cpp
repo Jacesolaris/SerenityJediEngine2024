@@ -105,7 +105,7 @@ CG_ConfigStringModified
 
 ================
 */
-void CG_RegisterClientModels(int entity_num);
+void CG_RegisterClientModels(int entityNum);
 extern void cgi_RE_WorldEffectCommand(const char* command);
 
 static void CG_ConfigStringModified()

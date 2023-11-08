@@ -105,7 +105,7 @@ extern int Jedi_ReCalcParryTime(const gentity_t* self, evasionType_t evasion_typ
 extern qboolean pm_saber_innonblockable_attack(int anim);
 extern qboolean NPC_IsAlive(const gentity_t* self, const gentity_t* npc);
 //////////////////////////////////////////////////
-extern qboolean sab_beh_attack_vs_block(gentity_t* attacker, gentity_t* blocker, int saber_num, int blade_num, vec3_t hit_loc);
+extern qboolean sab_beh_attack_vs_block(gentity_t* attacker, gentity_t* blocker, int saberNum, int blade_num, vec3_t hit_loc);
 //////////////////////////////////////////////////
 extern saber_moveName_t PM_AnimateOldKnockBack(int move);
 extern int G_AnimateOldKnockBack(int move);
@@ -137,7 +137,7 @@ extern int PM_InGrappleMove(int anim);
 extern qboolean PM_SaberInKillMove(int move);
 extern qboolean PM_WalkingOrRunningAnim(int anim);
 extern qboolean PM_RestAnim(int anim);
-extern qboolean sab_beh_block_vs_attack(gentity_t* blocker, gentity_t* attacker, int saber_num, int blade_num, vec3_t hit_loc);
+extern qboolean sab_beh_block_vs_attack(gentity_t* blocker, gentity_t* attacker, int saberNum, int blade_num, vec3_t hit_loc);
 extern qboolean BG_HopAnim(int anim);
 extern void wp_force_power_regenerate(const gentity_t* self, int override_amt);
 extern qboolean PM_SaberInOverHeadSlash(saber_moveName_t saber_move);
@@ -2693,7 +2693,7 @@ static QINLINE qboolean g_g2_trace_collide(trace_t* tr, vec3_t last_valid_start,
 		return qfalse;
 	}
 
-	if (!g_entities[tr->entity_num].inuse)
+	if (!g_entities[tr->entityNum].inuse)
 	{
 		//don't do perpoly on corpses.
 		return qfalse;
@@ -2716,7 +2716,7 @@ static QINLINE qboolean g_g2_trace_collide(trace_t* tr, vec3_t last_valid_start,
 		g2_trace[t_n].mEntityNum = -1;
 		t_n++;
 	}
-	gentity_t* g2_hit = &g_entities[tr->entity_num];
+	gentity_t* g2_hit = &g_entities[tr->entityNum];
 
 	if (g2_hit && g2_hit->inuse && g2_hit->ghoul2)
 	{
@@ -2757,7 +2757,7 @@ static QINLINE qboolean g_g2_trace_collide(trace_t* tr, vec3_t last_valid_start,
 		if (g2_trace[0].mEntityNum != g2_hit->s.number)
 		{
 			tr->fraction = 1.0f;
-			tr->entity_num = ENTITYNUM_NONE;
+			tr->entityNum = ENTITYNUM_NONE;
 			tr->startsolid = 0;
 			tr->allsolid = 0;
 			return qfalse;
@@ -3057,7 +3057,7 @@ void trace_copy(const trace_t* a, trace_t* b)
 	b->allsolid = a->allsolid;
 	b->contents = a->contents;
 	VectorCopy(a->endpos, b->endpos);
-	b->entity_num = a->entity_num;
+	b->entityNum = a->entityNum;
 	b->fraction = a->fraction;
 	//This is the only thing that's ever really used from the plane data.
 	VectorCopy(a->plane.normal, b->plane.normal);
@@ -3070,12 +3070,12 @@ static QINLINE void trace_clear(trace_t* tr, vec3_t end)
 {
 	tr->fraction = 1;
 	VectorCopy(end, tr->endpos);
-	tr->entity_num = ENTITYNUM_NONE;
+	tr->entityNum = ENTITYNUM_NONE;
 }
 
 //check for collision of 2 blades -rww
-qboolean WP_SaberIsOff(const gentity_t* self, int saber_num);
-qboolean WP_BladeIsOff(const gentity_t* self, int saber_num, int blade_num);
+qboolean WP_SaberIsOff(const gentity_t* self, int saberNum);
+qboolean WP_BladeIsOff(const gentity_t* self, int saberNum, int blade_num);
 
 static QINLINE qboolean g_saber_collide(gentity_t* atk, const gentity_t* def, vec3_t atk_start, vec3_t atk_end,
 	vec3_t atk_mins,
@@ -4562,9 +4562,9 @@ void init_real_trace_content(void)
 }
 
 //returns true on success
-qboolean add_real_trace_content(const int entity_num)
+qboolean add_real_trace_content(const int entityNum)
 {
-	if (entity_num == ENTITYNUM_WORLD || entity_num == ENTITYNUM_NONE)
+	if (entityNum == ENTITYNUM_WORLD || entityNum == ENTITYNUM_NONE)
 	{
 		//can't blank out the world.  Give an error.
 		return qtrue;
@@ -4577,11 +4577,11 @@ qboolean add_real_trace_content(const int entity_num)
 		{
 			//found an empty slot.  Use it.
 			//Stored Data
-			real_trace_content[i].entNum = entity_num;
-			real_trace_content[i].content = g_entities[entity_num].r.contents;
+			real_trace_content[i].entNum = entityNum;
+			real_trace_content[i].content = g_entities[entityNum].r.contents;
 
 			//Blank it.
-			g_entities[entity_num].r.contents = 0;
+			g_entities[entityNum].r.contents = 0;
 			return qtrue;
 		}
 	}
@@ -4629,7 +4629,7 @@ static QINLINE int finish_real_trace(trace_t* results, const trace_t* closest_tr
 	//restore all the entities we blanked out.
 
 	// Hit some entity...
-	const gentity_t* current_ent = &g_entities[closest_trace->entity_num];
+	const gentity_t* current_ent = &g_entities[closest_trace->entityNum];
 
 	restore_real_trace_content();
 
@@ -4639,7 +4639,7 @@ static QINLINE int finish_real_trace(trace_t* results, const trace_t* closest_tr
 		trace_clear(results, end);
 		return REALTRACE_MISS;
 	}
-	if (closest_trace->entity_num == ENTITYNUM_WORLD)
+	if (closest_trace->entityNum == ENTITYNUM_WORLD)
 	{
 		// Hit the world...
 		trace_copy(closest_trace, results);
@@ -4693,7 +4693,7 @@ int g_real_trace(gentity_t* attacker, trace_t* tr, vec3_t start, vec3_t mins, ve
 		VectorCopy(tr->endpos, current_end_pos);
 
 		//also save the storedentity_num since the internal traces normally blank out the trace_t if they fail.
-		const int current_entity_num = tr->entity_num;
+		const int current_entity_num = tr->entityNum;
 
 		if (tr->startsolid)
 		{
@@ -4701,7 +4701,7 @@ int g_real_trace(gentity_t* attacker, trace_t* tr, vec3_t start, vec3_t mins, ve
 			VectorCopy(current_start, tr->endpos);
 		}
 
-		if (tr->entity_num == ENTITYNUM_NONE)
+		if (tr->entityNum == ENTITYNUM_NONE)
 		{
 			//We've run out of things to hit so we're done.
 			if (!VectorCompare(start, current_start))
@@ -4719,7 +4719,7 @@ int g_real_trace(gentity_t* attacker, trace_t* tr, vec3_t start, vec3_t mins, ve
 		}
 
 		//set up a pointer to the entity we hit.
-		gentity_t* current_ent = &g_entities[tr->entity_num];
+		gentity_t* current_ent = &g_entities[tr->entityNum];
 
 		if (current_ent->inuse && current_ent->client)
 		{
@@ -4739,7 +4739,7 @@ int g_real_trace(gentity_t* attacker, trace_t* tr, vec3_t start, vec3_t mins, ve
 					restore_real_trace_content();
 
 					//act like the saber was hit instead of us.
-					tr->entity_num = current_ent->client->saberStoredIndex;
+					tr->entityNum = current_ent->client->saberStoredIndex;
 					return REALTRACE_SABERBLOCKHIT;
 				}
 				//something else ghoul2 related was already hit and was closer, skip to end of function
@@ -4758,7 +4758,7 @@ int g_real_trace(gentity_t* attacker, trace_t* tr, vec3_t start, vec3_t mins, ve
 
 			g_saber_collide(atk_is_saberer ? attacker : NULL, saber_owner, current_start, end, mins, maxs, tr);
 		}
-		else if (tr->entity_num < ENTITYNUM_WORLD)
+		else if (tr->entityNum < ENTITYNUM_WORLD)
 		{
 			if (current_ent->inuse && current_ent->ghoul2)
 			{
@@ -4887,7 +4887,7 @@ int wp_debug_saber_colour(const saber_colors_t saber_color)
 	}
 }
 
-extern saberInfo_t* BG_MySaber(int client_num, int saber_num);
+extern saberInfo_t* BG_MySaber(int client_num, int saberNum);
 
 #define MAX_SABER_VICTIMS 8192
 static int victimentity_num[MAX_SABER_VICTIMS];
@@ -4914,7 +4914,7 @@ void WP_SaberClearDamage(void)
 	numVictims = 0;
 }
 
-void wp_saber_specific_do_hit(const gentity_t* self, const int saber_num, const int blade_num, const gentity_t* victim, vec3_t impactpoint, const int dmg)
+void wp_saber_specific_do_hit(const gentity_t* self, const int saberNum, const int blade_num, const gentity_t* victim, vec3_t impactpoint, const int dmg)
 {
 	qboolean is_droid = qfalse;
 
@@ -4950,7 +4950,7 @@ void wp_saber_specific_do_hit(const gentity_t* self, const int saber_num, const 
 	{
 		te->s.otherentity_num = victim->s.number;
 		te->s.otherentity_num2 = self->s.number;
-		te->s.weapon = saber_num;
+		te->s.weapon = saberNum;
 		te->s.legsAnim = blade_num;
 
 		VectorCopy(impactpoint, te->s.origin);
@@ -4979,13 +4979,13 @@ void wp_saber_specific_do_hit(const gentity_t* self, const int saber_num, const 
 		}
 		else
 		{
-			if (!WP_SaberBladeUseSecondBladeStyle(&self->client->saber[saber_num], blade_num)
-				&& self->client->saber[saber_num].saberFlags2 & SFL2_NO_CLASH_FLARE)
+			if (!WP_SaberBladeUseSecondBladeStyle(&self->client->saber[saberNum], blade_num)
+				&& self->client->saber[saberNum].saberFlags2 & SFL2_NO_CLASH_FLARE)
 			{
 				//don't do clash flare
 			}
-			else if (WP_SaberBladeUseSecondBladeStyle(&self->client->saber[saber_num], blade_num)
-				&& self->client->saber[saber_num].saberFlags2 & SFL2_NO_CLASH_FLARE2)
+			else if (WP_SaberBladeUseSecondBladeStyle(&self->client->saber[saberNum], blade_num)
+				&& self->client->saber[saberNum].saberFlags2 & SFL2_NO_CLASH_FLARE2)
 			{
 				//don't do clash flare
 			}
@@ -5013,7 +5013,7 @@ static int saberClashOther = -1; //the client_num for the other player involved 
 static QINLINE void G_SetViewLock(const gentity_t* self, vec3_t impact_pos, vec3_t impact_normal);
 static QINLINE void G_SetViewLockDebounce(const gentity_t* self);
 
-void WP_SaberDoClash(const gentity_t* self, const int saber_num, const int blade_num)
+void WP_SaberDoClash(const gentity_t* self, const int saberNum, const int blade_num)
 {
 	if (saberDoClashEffect)
 	{
@@ -5022,7 +5022,7 @@ void WP_SaberDoClash(const gentity_t* self, const int saber_num, const int blade
 		VectorCopy(saberClashNorm, te->s.angles);
 		te->s.eventParm = saberClashEventParm;
 		te->s.otherentity_num2 = self->s.number;
-		te->s.weapon = saber_num;
+		te->s.weapon = saberNum;
 		te->s.legsAnim = blade_num;
 
 		if (saberClashOther != -1 && PM_SaberInParry(g_entities[saberClashOther].client->ps.saber_move))
@@ -5039,33 +5039,33 @@ void WP_SaberDoClash(const gentity_t* self, const int saber_num, const int blade
 	saberDoClashEffect = qfalse;
 }
 
-void WP_SaberBounceSound(gentity_t* ent, const int saber_num, const int blade_num)
+void WP_SaberBounceSound(gentity_t* ent, const int saberNum, const int blade_num)
 {
 	if (!ent || !ent->client)
 	{
 		return;
 	}
 	const int index = Q_irand(1, 64);
-	if (!WP_SaberBladeUseSecondBladeStyle(&ent->client->saber[saber_num], blade_num)
-		&& ent->client->saber[saber_num].bounceSound[0])
+	if (!WP_SaberBladeUseSecondBladeStyle(&ent->client->saber[saberNum], blade_num)
+		&& ent->client->saber[saberNum].bounceSound[0])
 	{
-		G_Sound(ent, CHAN_AUTO, ent->client->saber[saber_num].bounceSound[Q_irand(0, 2)]);
+		G_Sound(ent, CHAN_AUTO, ent->client->saber[saberNum].bounceSound[Q_irand(0, 2)]);
 	}
-	else if (WP_SaberBladeUseSecondBladeStyle(&ent->client->saber[saber_num], blade_num)
-		&& ent->client->saber[saber_num].bounce2Sound[0])
+	else if (WP_SaberBladeUseSecondBladeStyle(&ent->client->saber[saberNum], blade_num)
+		&& ent->client->saber[saberNum].bounce2Sound[0])
 	{
-		G_Sound(ent, CHAN_AUTO, ent->client->saber[saber_num].bounce2Sound[Q_irand(0, 2)]);
+		G_Sound(ent, CHAN_AUTO, ent->client->saber[saberNum].bounce2Sound[Q_irand(0, 2)]);
 	}
 
-	else if (!WP_SaberBladeUseSecondBladeStyle(&ent->client->saber[saber_num], blade_num)
-		&& ent->client->saber[saber_num].blockSound[0])
+	else if (!WP_SaberBladeUseSecondBladeStyle(&ent->client->saber[saberNum], blade_num)
+		&& ent->client->saber[saberNum].blockSound[0])
 	{
-		G_Sound(ent, CHAN_AUTO, ent->client->saber[saber_num].blockSound[Q_irand(0, 2)]);
+		G_Sound(ent, CHAN_AUTO, ent->client->saber[saberNum].blockSound[Q_irand(0, 2)]);
 	}
-	else if (WP_SaberBladeUseSecondBladeStyle(&ent->client->saber[saber_num], blade_num)
-		&& ent->client->saber[saber_num].block2Sound[0])
+	else if (WP_SaberBladeUseSecondBladeStyle(&ent->client->saber[saberNum], blade_num)
+		&& ent->client->saber[saberNum].block2Sound[0])
 	{
-		G_Sound(ent, CHAN_AUTO, ent->client->saber[saber_num].block2Sound[Q_irand(0, 2)]);
+		G_Sound(ent, CHAN_AUTO, ent->client->saber[saberNum].block2Sound[Q_irand(0, 2)]);
 	}
 	else
 	{
@@ -5073,7 +5073,7 @@ void WP_SaberBounceSound(gentity_t* ent, const int saber_num, const int blade_nu
 	}
 }
 
-void WP_SaberBounceOnWallSound(gentity_t* ent, const int saber_num, const int blade_num)
+void WP_SaberBounceOnWallSound(gentity_t* ent, const int saberNum, const int blade_num)
 {
 	if (!ent || !ent->client)
 	{
@@ -5082,30 +5082,30 @@ void WP_SaberBounceOnWallSound(gentity_t* ent, const int saber_num, const int bl
 	const int index = Q_irand(1, 90);
 	const int classicindex = Q_irand(1, 30);
 
-	if (!WP_SaberBladeUseSecondBladeStyle(&ent->client->saber[saber_num], blade_num)
-		&& ent->client->saber[saber_num].bounceSound[0])
+	if (!WP_SaberBladeUseSecondBladeStyle(&ent->client->saber[saberNum], blade_num)
+		&& ent->client->saber[saberNum].bounceSound[0])
 	{
-		G_Sound(ent, CHAN_AUTO, ent->client->saber[saber_num].bounceSound[Q_irand(0, 2)]);
+		G_Sound(ent, CHAN_AUTO, ent->client->saber[saberNum].bounceSound[Q_irand(0, 2)]);
 	}
-	else if (WP_SaberBladeUseSecondBladeStyle(&ent->client->saber[saber_num], blade_num)
-		&& ent->client->saber[saber_num].bounce2Sound[0])
+	else if (WP_SaberBladeUseSecondBladeStyle(&ent->client->saber[saberNum], blade_num)
+		&& ent->client->saber[saberNum].bounce2Sound[0])
 	{
-		G_Sound(ent, CHAN_AUTO, ent->client->saber[saber_num].bounce2Sound[Q_irand(0, 2)]);
+		G_Sound(ent, CHAN_AUTO, ent->client->saber[saberNum].bounce2Sound[Q_irand(0, 2)]);
 	}
 
-	else if (!WP_SaberBladeUseSecondBladeStyle(&ent->client->saber[saber_num], blade_num)
-		&& ent->client->saber[saber_num].blockSound[0])
+	else if (!WP_SaberBladeUseSecondBladeStyle(&ent->client->saber[saberNum], blade_num)
+		&& ent->client->saber[saberNum].blockSound[0])
 	{
-		G_Sound(ent, CHAN_AUTO, ent->client->saber[saber_num].blockSound[Q_irand(0, 2)]);
+		G_Sound(ent, CHAN_AUTO, ent->client->saber[saberNum].blockSound[Q_irand(0, 2)]);
 	}
-	else if (WP_SaberBladeUseSecondBladeStyle(&ent->client->saber[saber_num], blade_num)
-		&& ent->client->saber[saber_num].block2Sound[0])
+	else if (WP_SaberBladeUseSecondBladeStyle(&ent->client->saber[saberNum], blade_num)
+		&& ent->client->saber[saberNum].block2Sound[0])
 	{
-		G_Sound(ent, CHAN_AUTO, ent->client->saber[saber_num].block2Sound[Q_irand(0, 2)]);
+		G_Sound(ent, CHAN_AUTO, ent->client->saber[saberNum].block2Sound[Q_irand(0, 2)]);
 	}
 	else
 	{
-		if (ent->client->saber[saber_num].type == SABER_SINGLE_CLASSIC)
+		if (ent->client->saber[saberNum].type == SABER_SINGLE_CLASSIC)
 		{
 			G_Sound(ent, CHAN_AUTO, G_SoundIndex(va("sound/weapons/saber/classicblock%d.mp3", classicindex)));
 		}
@@ -6740,27 +6740,27 @@ static vec3_t saberHitLocation;
 static qboolean hitDismember[MAX_SABER_VICTIMS];
 static int hitDismemberLoc[MAX_SABER_VICTIMS];
 
-void wp_saber_clear_damage_for_ent_num(gentity_t* attacker, const int entity_num, const int saber_num,
+void wp_saber_clear_damage_for_ent_num(gentity_t* attacker, const int entityNum, const int saberNum,
 	const int blade_num)
 {
 	float knock_back_scale = 0.0f;
 	if (attacker && attacker->client)
 	{
-		if (!WP_SaberBladeUseSecondBladeStyle(&attacker->client->saber[saber_num], blade_num)
-			&& attacker->client->saber[saber_num].knockbackScale > 0.0f)
+		if (!WP_SaberBladeUseSecondBladeStyle(&attacker->client->saber[saberNum], blade_num)
+			&& attacker->client->saber[saberNum].knockbackScale > 0.0f)
 		{
-			knock_back_scale = attacker->client->saber[saber_num].knockbackScale;
+			knock_back_scale = attacker->client->saber[saberNum].knockbackScale;
 		}
-		else if (WP_SaberBladeUseSecondBladeStyle(&attacker->client->saber[saber_num], blade_num)
-			&& attacker->client->saber[saber_num].knockbackScale2 > 0.0f)
+		else if (WP_SaberBladeUseSecondBladeStyle(&attacker->client->saber[saberNum], blade_num)
+			&& attacker->client->saber[saberNum].knockbackScale2 > 0.0f)
 		{
-			knock_back_scale = attacker->client->saber[saber_num].knockbackScale2;
+			knock_back_scale = attacker->client->saber[saberNum].knockbackScale2;
 		}
 	}
 
 	for (int i = 0; i < numVictims; i++)
 	{
-		if (victimentity_num[i] == entity_num)
+		if (victimentity_num[i] == entityNum)
 		{
 			//hold on a sec, let's still do any accumulated knockback
 			if (knock_back_scale)
@@ -7046,8 +7046,8 @@ static QINLINE qboolean check_saber_damage(gentity_t* self, const int r_saber_nu
 
 	if (!dmg)
 	{
-		if (tr.entity_num < MAX_CLIENTS ||
-			g_entities[tr.entity_num].inuse && g_entities[tr.entity_num].r.contents & CONTENTS_LIGHTSABER)
+		if (tr.entityNum < MAX_CLIENTS ||
+			g_entities[tr.entityNum].inuse && g_entities[tr.entityNum].r.contents & CONTENTS_LIGHTSABER)
 		{
 			return qtrue;
 		}
@@ -7099,31 +7099,31 @@ static QINLINE qboolean check_saber_damage(gentity_t* self, const int r_saber_nu
 	VectorSubtract(saber_end, saber_start, dir);
 	VectorNormalize(dir);
 
-	if (tr.entity_num == ENTITYNUM_WORLD || g_entities[tr.entity_num].s.eType == ET_TERRAIN)
+	if (tr.entityNum == ENTITYNUM_WORLD || g_entities[tr.entityNum].s.eType == ET_TERRAIN)
 	{
 		//register this as a wall hit for jedi AI
 		self->client->ps.saberEventFlags |= SEF_HITWALL;
 		saber_hit_wall = qtrue;
 	}
 
-	if (g_entities[tr.entity_num].takedamage &&
-		(g_entities[tr.entity_num].health > 0 || !(g_entities[tr.entity_num].s.eFlags & EF_DISINTEGRATION)) &&
-		tr.entity_num != self->s.number &&
-		g_entities[tr.entity_num].inuse)
+	if (g_entities[tr.entityNum].takedamage &&
+		(g_entities[tr.entityNum].health > 0 || !(g_entities[tr.entityNum].s.eFlags & EF_DISINTEGRATION)) &&
+		tr.entityNum != self->s.number &&
+		g_entities[tr.entityNum].inuse)
 	{
 		//attack has hit something that had health and takes damage
-		blocker = &g_entities[tr.entity_num];
+		blocker = &g_entities[tr.entityNum];
 
-		if (g_entities[tr.entity_num].client &&
-			g_entities[tr.entity_num].client->ps.duelInProgress &&
-			g_entities[tr.entity_num].client->ps.duelIndex != self->s.number)
+		if (g_entities[tr.entityNum].client &&
+			g_entities[tr.entityNum].client->ps.duelInProgress &&
+			g_entities[tr.entityNum].client->ps.duelIndex != self->s.number)
 		{
 			return qfalse;
 		}
 
-		if (g_entities[tr.entity_num].client &&
+		if (g_entities[tr.entityNum].client &&
 			self->client->ps.duelInProgress &&
-			self->client->ps.duelIndex != g_entities[tr.entity_num].s.number)
+			self->client->ps.duelIndex != g_entities[tr.entityNum].s.number)
 		{
 			return qfalse;
 		}
@@ -7149,12 +7149,12 @@ static QINLINE qboolean check_saber_damage(gentity_t* self, const int r_saber_nu
 			blocker = NULL;
 		}
 	}
-	else if (g_entities[tr.entity_num].r.contents & CONTENTS_LIGHTSABER &&
-		g_entities[tr.entity_num].r.contents != -1 &&
-		g_entities[tr.entity_num].inuse)
+	else if (g_entities[tr.entityNum].r.contents & CONTENTS_LIGHTSABER &&
+		g_entities[tr.entityNum].r.contents != -1 &&
+		g_entities[tr.entityNum].inuse)
 	{
 		//hit a saber blade
-		blocker = &g_entities[g_entities[tr.entity_num].r.ownerNum];
+		blocker = &g_entities[g_entities[tr.entityNum].r.ownerNum];
 
 		if (!blocker->inuse || !blocker->client)
 		{
@@ -7177,7 +7177,7 @@ static QINLINE qboolean check_saber_damage(gentity_t* self, const int r_saber_nu
 		if (blocker->client->ps.saberInFlight && !wp_using_dual_saber_as_primary(&blocker->client->ps))
 		{
 			//Hit a thrown saber, deactivate it.
-			saberCheckKnockdown_Smashed(&g_entities[tr.entity_num], blocker, self, dmg);
+			saberCheckKnockdown_Smashed(&g_entities[tr.entityNum], blocker, self, dmg);
 			blocker = NULL;
 		}
 		else if (real_trace_result == REALTRACE_SABERBLOCKHIT || real_trace_result == REALTRACE_HIT)
@@ -7235,21 +7235,21 @@ static QINLINE qboolean check_saber_damage(gentity_t* self, const int r_saber_nu
 	}
 	else
 	{
-		sabimpactentity_num = tr.entity_num;
+		sabimpactentity_num = tr.entityNum;
 	}
 
-	if (self->client->sabimpact[r_saber_num][r_blade_num].entity_num == sabimpactentity_num
+	if (self->client->sabimpact[r_saber_num][r_blade_num].entityNum == sabimpactentity_num
 		&& level.time - self->client->sabimpact[r_saber_num][r_blade_num].Debounce < sabimpactdebounce)
 	{
 		//the impact debounce for this entity isn't up yet.
 		if (self->client->sabimpact[r_saber_num][r_blade_num].blade_num != -1
-			|| self->client->sabimpact[r_saber_num][r_blade_num].saber_num != -1)
+			|| self->client->sabimpact[r_saber_num][r_blade_num].saberNum != -1)
 		{
 			//the last impact was a saber on this entity
 			if (blocker)
 			{
 				if (self->client->sabimpact[r_saber_num][r_blade_num].blade_num == self->client->lastBladeCollided
-					&& self->client->sabimpact[r_saber_num][r_blade_num].saber_num == self->client->lastSaberCollided)
+					&& self->client->sabimpact[r_saber_num][r_blade_num].saberNum == self->client->lastSaberCollided)
 				{
 					return qtrue;
 				}
@@ -7283,13 +7283,13 @@ static QINLINE qboolean check_saber_damage(gentity_t* self, const int r_saber_nu
 		}
 	}
 
-	if (did_hit && (!OnSameTeam(self, &g_entities[tr.entity_num]) || g_friendlySaber.integer))
+	if (did_hit && (!OnSameTeam(self, &g_entities[tr.entityNum]) || g_friendlySaber.integer))
 	{
 		//deal damage
 		//damage the thing we hit
 		int dflags = 0;
 
-		gentity_t* victim = &g_entities[tr.entity_num];
+		gentity_t* victim = &g_entities[tr.entityNum];
 		const int index = Q_irand(1, 3);
 
 		if (dmg <= SABER_NONATTACK_DAMAGE || (G_DoSaberDodge(victim, self, tr.endpos, -1, &dmg, MOD_SABER)))
@@ -7704,7 +7704,7 @@ void wp_saber_start_missile_block_check(gentity_t* self, usercmd_t* ucmd)
 				trap->Trace(&tr, my_eyes, NULL, NULL, ent->client->ps.origin, self->s.number, MASK_PLAYERSOLID, qfalse,
 					0, 0);
 
-				if (tr.fraction == 1.0f || tr.entity_num == ent->s.number)
+				if (tr.fraction == 1.0f || tr.entityNum == ent->s.number)
 				{
 					//we have a clear line of sight to him, so it's all good.
 					look_t = ent;
@@ -7938,16 +7938,16 @@ void wp_saber_start_missile_block_check(gentity_t* self, usercmd_t* ucmd)
 			trace_to[2] = self->r.absmax[2] - 4;
 			trap->Trace(&trace, ent->r.currentOrigin, ent->r.mins, ent->r.maxs, trace_to, ent->s.number, ent->clipmask,
 				qfalse, 0, 0);
-			if (trace.allsolid || trace.startsolid || trace.fraction < 1.0f && trace.entity_num != self->s.number &&
-				trace.entity_num != self->client->ps.saberentity_num)
+			if (trace.allsolid || trace.startsolid || trace.fraction < 1.0f && trace.entityNum != self->s.number &&
+				trace.entityNum != self->client->ps.saberentity_num)
 			{
 				//okay, try one more check
 				VectorNormalize2(ent->s.pos.trDelta, ent_dir);
 				VectorMA(ent->r.currentOrigin, radius, ent_dir, trace_to);
 				trap->Trace(&trace, ent->r.currentOrigin, ent->r.mins, ent->r.maxs, trace_to, ent->s.number,
 					ent->clipmask, qfalse, 0, 0);
-				if (trace.allsolid || trace.startsolid || trace.fraction < 1.0f && trace.entity_num != self->s.number &&
-					trace.entity_num != self->client->ps.saberentity_num)
+				if (trace.allsolid || trace.startsolid || trace.fraction < 1.0f && trace.entityNum != self->s.number &&
+					trace.entityNum != self->client->ps.saberentity_num)
 				{
 					//can't hit me, ignore it
 					continue;
@@ -8140,7 +8140,7 @@ static QINLINE qboolean CheckThrownSaberDamaged(gentity_t* saberent, gentity_t* 
 
 			trap->Trace(&tr, saberent->r.currentOrigin, NULL, NULL, ent->client->ps.origin, saberent->s.number, MASK_SHOT, qfalse, 0, 0);
 
-			if (tr.fraction == 1 || tr.entity_num == ent->s.number)
+			if (tr.fraction == 1 || tr.entityNum == ent->s.number)
 			{
 				//Slice them
 				if (WP_SaberCanBlockThrownSaber(ent, tr.endpos, qtrue))
@@ -8154,10 +8154,10 @@ static QINLINE qboolean CheckThrownSaberDamaged(gentity_t* saberent, gentity_t* 
 						te->s.angles[1] = 1;
 					}
 					te->s.eventParm = 1;
-					te->s.weapon = 0; //saber_num
+					te->s.weapon = 0; //saberNum
 					te->s.legsAnim = 0; //blade_num
 
-					if (saberCheckKnockdown_Thrown(saberent, saber_owner, &g_entities[tr.entity_num]))
+					if (saberCheckKnockdown_Thrown(saberent, saber_owner, &g_entities[tr.entityNum]))
 					{
 						//it was knocked out of the air
 						return qfalse;
@@ -8208,7 +8208,7 @@ static QINLINE qboolean CheckThrownSaberDamaged(gentity_t* saberent, gentity_t* 
 					te = G_TempEntity(tr.endpos, EV_SABER_HIT);
 					te->s.otherentity_num = ent->s.number;
 					te->s.otherentity_num2 = saber_owner->s.number;
-					te->s.weapon = 0; //saber_num
+					te->s.weapon = 0; //saberNum
 					te->s.legsAnim = 0; //blade_num
 					VectorCopy(tr.endpos, te->s.origin);
 					VectorCopy(tr.plane.normal, te->s.angles);
@@ -8263,7 +8263,7 @@ static QINLINE qboolean CheckThrownSaberDamaged(gentity_t* saberent, gentity_t* 
 
 			trap->Trace(&tr, saberent->r.currentOrigin, NULL, NULL, ent_origin, saberent->s.number, MASK_SHOT, qfalse, 0, 0);
 
-			if (tr.fraction == 1 || tr.entity_num == ent->s.number)
+			if (tr.fraction == 1 || tr.entityNum == ent->s.number)
 			{
 				vec3_t dir;
 				int dflags = 0;
@@ -8293,7 +8293,7 @@ static QINLINE qboolean CheckThrownSaberDamaged(gentity_t* saberent, gentity_t* 
 				te->s.otherentity_num = ENTITYNUM_NONE; //don't do this for throw damage
 				te->s.otherentity_num2 = saber_owner->s.number;
 				//actually, do send this, though - for the overridden per-saber hit effects/sounds
-				te->s.weapon = 0; //saber_num
+				te->s.weapon = 0; //saberNum
 				te->s.legsAnim = 0; //blade_num
 				VectorCopy(tr.endpos, te->s.origin);
 				VectorCopy(tr.plane.normal, te->s.angles);
@@ -10268,21 +10268,21 @@ gentity_t* G_KickTrace(gentity_t* ent, vec3_t kick_dir, const float kick_dist, v
 		trap->Trace(&trace, trace_org, kick_mins, kick_maxs, trace_end, ent->s.number, MASK_SHOT, qfalse, 0, 0);
 	}
 
-	if (trace.fraction < 1.0f || trace.startsolid && trace.entity_num < ENTITYNUM_NONE)
+	if (trace.fraction < 1.0f || trace.startsolid && trace.entityNum < ENTITYNUM_NONE)
 	{
 		if (ent->client->jediKickTime > level.time)
 		{
-			if (trace.entity_num == ent->client->jediKickIndex)
+			if (trace.entityNum == ent->client->jediKickIndex)
 			{
 				//we are hitting the same ent we last hit in this same anim, don't hit it again
 				return NULL;
 			}
 			TIMER_Remove(ent, "kickSoundDebounce");
 		}
-		ent->client->jediKickIndex = trace.entity_num;
+		ent->client->jediKickIndex = trace.entityNum;
 		ent->client->jediKickTime = level.time + ent->client->ps.legsTimer;
 
-		hit_ent = &g_entities[trace.entity_num];
+		hit_ent = &g_entities[trace.entityNum];
 
 		if (hit_ent->inuse)
 		{
@@ -10558,7 +10558,7 @@ static void G_PunchSomeMofos(gentity_t* ent)
 		{
 			//hit something
 			vec3_t forward;
-			gentity_t* tr_ent = &g_entities[tr.entity_num];
+			gentity_t* tr_ent = &g_entities[tr.entityNum];
 
 			VectorSubtract(hand, ent->client->ps.origin, forward);
 			VectorNormalize(forward);
@@ -10566,13 +10566,13 @@ static void G_PunchSomeMofos(gentity_t* ent)
 			//Prevent punches from hitting the same entity more than once
 			if (ent->client->jediKickTime > level.time)
 			{
-				if (tr.entity_num == ent->client->jediKickIndex)
+				if (tr.entityNum == ent->client->jediKickIndex)
 				{
 					//we are hitting the same ent we last hit in this same anim, don't hit it again
 					return;
 				}
 			}
-			ent->client->jediKickIndex = tr.entity_num;
+			ent->client->jediKickIndex = tr.entityNum;
 			ent->client->jediKickTime = level.time + ent->client->ps.torsoTimer;
 
 			G_Sound(ent, CHAN_AUTO, G_SoundIndex(va("sound/weapons/melee/punch%d", Q_irand(1, 4))));
@@ -11166,14 +11166,14 @@ static void G_KickSomeMofos(gentity_t* ent)
 			if (level.framenum & 1)
 			{
 				//back
-				int hand_bolt = ent->client->ps.legsAnim == BOTH_A7_SLAP_R ? ri->handRBolt : ri->handLBolt;
+				int handBolt = ent->client->ps.legsAnim == BOTH_A7_SLAP_R ? ri->handRBolt : ri->handLBolt;
 				//mirrored anims
 				do_kick = qtrue;
 				kick_dist = 80;
-				if (hand_bolt != -1) //changed to accomodate teh new hand hand anim
+				if (handBolt != -1) //changed to accomodate teh new hand hand anim
 				{
 					//actually trace to a bolt
-					G_GetBoltPosition(ent, hand_bolt, kick_end, 0); //changed to accomodate teh new hand hand anim
+					G_GetBoltPosition(ent, handBolt, kick_end, 0); //changed to accomodate teh new hand hand anim
 					VectorSubtract(kick_end, ent->r.currentOrigin, kick_dir);
 					kick_dir[2] = 0; //ah, flatten it, I guess...
 					VectorNormalize(kick_dir);
@@ -11333,14 +11333,14 @@ static void G_KickSomeMofos(gentity_t* ent)
 			if (level.framenum & 1)
 			{
 				//back
-				int hand_bolt = ent->client->ps.legsAnim == BOTH_A7_SLAP_L ? ri->handLBolt : ri->handRBolt;
+				int handBolt = ent->client->ps.legsAnim == BOTH_A7_SLAP_L ? ri->handLBolt : ri->handRBolt;
 				//mirrored anims
 				do_kick = qtrue;
 				kick_dist = 80;
-				if (hand_bolt != -1) //changed to accomodate teh new hand hand anim
+				if (handBolt != -1) //changed to accomodate teh new hand hand anim
 				{
 					//actually trace to a bolt
-					G_GetBoltPosition(ent, hand_bolt, kick_end, 0); //changed to accomodate teh new hand hand anim
+					G_GetBoltPosition(ent, handBolt, kick_end, 0); //changed to accomodate teh new hand hand anim
 					VectorSubtract(kick_end, ent->r.currentOrigin, kick_dir);
 					kick_dir[2] = 0; //ah, flatten it, I guess...
 					VectorNormalize(kick_dir);
@@ -11642,9 +11642,9 @@ static void G_GrabSomeMofos(gentity_t* self)
 		g_g2TraceLod.integer);
 
 	if (trace.fraction != 1.0f &&
-		trace.entity_num < ENTITYNUM_WORLD)
+		trace.entityNum < ENTITYNUM_WORLD)
 	{
-		gentity_t* grabbed = &g_entities[trace.entity_num];
+		gentity_t* grabbed = &g_entities[trace.entityNum];
 
 		if (grabbed->inuse && (grabbed->s.eType == ET_PLAYER || grabbed->s.eType == ET_NPC) &&
 			grabbed->client && grabbed->health > 0 &&
@@ -11759,7 +11759,7 @@ void wp_saber_position_update(gentity_t* self, usercmd_t* ucmd)
 	vec3_t raw_angles;
 	int return_after_update = 0;
 	float anim_speed_scale = 1.0f;
-	int saber_num;
+	int saberNum;
 	qboolean client_override;
 	gentity_t* veh_ent = NULL;
 
@@ -12193,20 +12193,20 @@ void wp_saber_position_update(gentity_t* self, usercmd_t* ucmd)
 	//for this entity to save us processing time.
 	client_override = trap->G2API_OverrideServer(self->ghoul2);
 
-	saber_num = self->client->ps.saberentity_num;
+	saberNum = self->client->ps.saberentity_num;
 
-	if (!saber_num)
+	if (!saberNum)
 	{
-		saber_num = self->client->saberStoredIndex;
+		saberNum = self->client->saberStoredIndex;
 	}
 
-	if (!saber_num)
+	if (!saberNum)
 	{
 		return_after_update = 1;
 		goto nextStep;
 	}
 
-	my_saber = &g_entities[saber_num];
+	my_saber = &g_entities[saberNum];
 
 	if (self->health < 1)
 	{
@@ -12319,7 +12319,7 @@ nextStep:
 		proper_angles[1] = veh_ent->m_pVehicle->m_vOrientation[YAW];
 	}
 
-	if (return_after_update && saber_num)
+	if (return_after_update && saberNum)
 	{
 		//We don't even need to do GetBoltMatrix if we're only in here to keep the g2 server instance in sync
 		//but keep our saber entity in sync too, just copy it over our origin.
@@ -12383,7 +12383,7 @@ nextStep:
 	if (self->client->ps.saberInFlight)
 	{
 		//do the thrown-saber stuff
-		gentity_t* saberent = &g_entities[saber_num];
+		gentity_t* saberent = &g_entities[saberNum];
 
 		if (saberent)
 		{
@@ -12505,7 +12505,7 @@ nextStep:
 	{
 		int r_saber_num = 0;
 		int r_blade_num = 0;
-		gentity_t* saberent = &g_entities[saber_num];
+		gentity_t* saberent = &g_entities[saberNum];
 
 		if (!self->client->ps.saberInFlight && saberent)
 		{
@@ -15618,21 +15618,21 @@ void DebounceSaberImpact(const gentity_t* self, const gentity_t* other_saberer, 
 	//consistant damage to players
 
 	//add basic saber impact debounce
-	self->client->sabimpact[rsaber_num][rblade_num].entity_num = sabimpactentity_num;
+	self->client->sabimpact[rsaber_num][rblade_num].entityNum = sabimpactentity_num;
 	self->client->sabimpact[rsaber_num][rblade_num].Debounce = level.time;
 
 	if (other_saberer)
 	{
 		//we hit an enemy saber so update our sabimpactdebounce data with that info for us and the enemy.
-		self->client->sabimpact[rsaber_num][rblade_num].saber_num = self->client->lastSaberCollided;
+		self->client->sabimpact[rsaber_num][rblade_num].saberNum = self->client->lastSaberCollided;
 		self->client->sabimpact[rsaber_num][rblade_num].blade_num = self->client->lastBladeCollided;
 
 		//Also add this impact to the otherowner so he doesn't do do his behavior rolls twice.
-		other_saberer->client->sabimpact[self->client->lastSaberCollided][self->client->lastBladeCollided].entity_num =
+		other_saberer->client->sabimpact[self->client->lastSaberCollided][self->client->lastBladeCollided].entityNum =
 			self->client->ps.saberentity_num;
 		other_saberer->client->sabimpact[self->client->lastSaberCollided][self->client->lastBladeCollided].Debounce =
 			level.time;
-		other_saberer->client->sabimpact[self->client->lastSaberCollided][self->client->lastBladeCollided].saber_num =
+		other_saberer->client->sabimpact[self->client->lastSaberCollided][self->client->lastBladeCollided].saberNum =
 			rsaber_num;
 		other_saberer->client->sabimpact[self->client->lastSaberCollided][self->client->lastBladeCollided].blade_num =
 			rblade_num;
@@ -15640,12 +15640,12 @@ void DebounceSaberImpact(const gentity_t* self, const gentity_t* other_saberer, 
 	else
 	{
 		//blank out the saber blade impact stuff since we didn't hit another guy's saber
-		self->client->sabimpact[rsaber_num][rblade_num].saber_num = -1;
+		self->client->sabimpact[rsaber_num][rblade_num].saberNum = -1;
 		self->client->sabimpact[rsaber_num][rblade_num].blade_num = -1;
 	}
 }
 
-qboolean WP_SaberIsOff(const gentity_t* self, const int saber_num)
+qboolean WP_SaberIsOff(const gentity_t* self, const int saberNum)
 {
 	//this function checks to see if a given saber is off.
 	switch (self->client->ps.saber_holstered)
@@ -15662,7 +15662,7 @@ qboolean WP_SaberIsOff(const gentity_t* self, const int saber_num)
 			saberentity_num)
 		{
 			//special case where the secondary blade is lit instead of the primary
-			if (saber_num == 0)
+			if (saberNum == 0)
 			{
 				//primary is off
 				return qtrue;
@@ -15671,7 +15671,7 @@ qboolean WP_SaberIsOff(const gentity_t* self, const int saber_num)
 			return qfalse;
 		}
 		//the normal case
-		if (saber_num == 0)
+		if (saberNum == 0)
 		{
 			//primary is on
 			return qfalse;
@@ -15687,17 +15687,17 @@ qboolean WP_SaberIsOff(const gentity_t* self, const int saber_num)
 	}
 }
 
-qboolean WP_BladeIsOff(const gentity_t* self, const int saber_num, const int blade_num)
+qboolean WP_BladeIsOff(const gentity_t* self, const int saberNum, const int blade_num)
 {
 	//checks to see if a given saber blade is supposed to be off.  This function does not check to see if the
 	//saber or saber blade actually exists.
 
 	//We have this function to account for the special cases with dual sabers where one saber has been dropped.
 
-	if (saber_num > 0)
+	if (saberNum > 0)
 	{
 		//secondary sabers are all on/all off.
-		if (WP_SaberIsOff(self, saber_num))
+		if (WP_SaberIsOff(self, saberNum))
 		{
 			//blades are all off
 			return qtrue;
@@ -15707,7 +15707,7 @@ qboolean WP_BladeIsOff(const gentity_t* self, const int saber_num, const int bla
 	}
 	//primary blade
 	//based on number of blades on saber
-	if (WP_SaberIsOff(self, saber_num)) //This function accounts for the weird saber throw situations.
+	if (WP_SaberIsOff(self, saberNum)) //This function accounts for the weird saber throw situations.
 	{
 		//saber is off, all blades are off
 		return qtrue;

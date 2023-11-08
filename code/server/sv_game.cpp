@@ -424,11 +424,11 @@ static int SV_G2API_AddBoltSurfNum(CGhoul2Info* ghlInfo, const int surfIndex)
 	return re.G2API_AddBoltSurfNum(ghlInfo, surfIndex);
 }
 
-static int SV_G2API_AddSurface(CGhoul2Info* ghlInfo, const int surface_number, const int polyNumber,
+static int SV_G2API_AddSurface(CGhoul2Info* ghlInfo, const int surfaceNumber, const int polyNumber,
 	const float BarycentricI,
 	const float BarycentricJ, const int lod)
 {
-	return re.G2API_AddSurface(ghlInfo, surface_number, polyNumber, BarycentricI, BarycentricJ, lod);
+	return re.G2API_AddSurface(ghlInfo, surfaceNumber, polyNumber, BarycentricI, BarycentricJ, lod);
 }
 
 static void SV_G2API_AnimateG2Models(CGhoul2Info_v& ghoul2, const int acurrent_time, CRagDollUpdateParams* params)
@@ -841,6 +841,11 @@ static void SV_G2API_ClearSkinGore(
 }
 #endif
 
+static void SV_G2API_SetTintType(CGhoul2Info* ghlInfo, g2Tints_t tintType)
+{
+	return re.G2API_SetTintType(ghlInfo, tintType);
+}
+
 static IGhoul2InfoArray& SV_TheGhoul2InfoArray()
 {
 	return re.TheGhoul2InfoArray();
@@ -1053,6 +1058,8 @@ import.G2API_IKMove = SV_G2API_IKMove;
 
 import.G2API_AddSkinGore = SV_G2API_AddSkinGore;
 import.G2API_ClearSkinGore = SV_G2API_ClearSkinGore;
+
+import.G2API_SetTintType = SV_G2API_SetTintType;
 
 import.SetActiveSubBSP = SV_SetActiveSubBSP;
 

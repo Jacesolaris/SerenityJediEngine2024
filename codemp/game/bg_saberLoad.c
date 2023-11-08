@@ -3009,33 +3009,33 @@ qboolean WP_SaberValidForPlayerInMP(const char* saber_name)
 	return atoi(allowed) == 0;
 }
 
-void WP_RemoveSaber(saberInfo_t* sabers, const int saber_num)
+void WP_RemoveSaber(saberInfo_t* sabers, const int saberNum)
 {
 	if (!sabers)
 	{
 		return;
 	}
 	//reset everything for this saber just in case
-	wp_saber_set_defaults(&sabers[saber_num]);
+	wp_saber_set_defaults(&sabers[saberNum]);
 
-	strcpy(sabers[saber_num].name, "none");
-	sabers[saber_num].model[0] = 0;
+	strcpy(sabers[saberNum].name, "none");
+	sabers[saberNum].model[0] = 0;
 
 	//ent->client->ps.dualSabers = qfalse;
-	BG_SI_Deactivate(&sabers[saber_num]);
-	BG_SI_SetLength(&sabers[saber_num], 0.0f);
-	//	if ( ent->weaponModel[saber_num] > 0 )
+	BG_SI_Deactivate(&sabers[saberNum]);
+	BG_SI_SetLength(&sabers[saberNum], 0.0f);
+	//	if ( ent->weaponModel[saberNum] > 0 )
 	//	{
-	//		trap->G2API_RemoveGhoul2Model( ent->ghoul2, ent->weaponModel[saber_num] );
-	//		ent->weaponModel[saber_num] = -1;
+	//		trap->G2API_RemoveGhoul2Model( ent->ghoul2, ent->weaponModel[saberNum] );
+	//		ent->weaponModel[saberNum] = -1;
 	//	}
-	//	if ( saber_num == 1 )
+	//	if ( saberNum == 1 )
 	//	{
 	//		ent->client->ps.dualSabers = qfalse;
 	//	}
 }
 
-void WP_SetSaber(const int entNum, saberInfo_t* sabers, const int saber_num, const char* saber_name)
+void WP_SetSaber(const int entNum, saberInfo_t* sabers, const int saberNum, const char* saber_name)
 {
 	if (!sabers)
 	{
@@ -3043,10 +3043,10 @@ void WP_SetSaber(const int entNum, saberInfo_t* sabers, const int saber_num, con
 	}
 	if (Q_stricmp("none", saber_name) == 0 || Q_stricmp("remove", saber_name) == 0)
 	{
-		if (saber_num != 0)
+		if (saberNum != 0)
 		{
 			//can't remove saber 0 ever
-			WP_RemoveSaber(sabers, saber_num);
+			WP_RemoveSaber(sabers, saberNum);
 		}
 		return;
 	}
@@ -3054,11 +3054,11 @@ void WP_SetSaber(const int entNum, saberInfo_t* sabers, const int saber_num, con
 	if (entNum < MAX_CLIENTS &&
 		!WP_SaberValidForPlayerInMP(saber_name))
 	{
-		WP_SaberParseParms(DEFAULT_SABER, &sabers[saber_num]); //get saber info
+		WP_SaberParseParms(DEFAULT_SABER, &sabers[saberNum]); //get saber info
 	}
 	else
 	{
-		WP_SaberParseParms(saber_name, &sabers[saber_num]); //get saber info
+		WP_SaberParseParms(saber_name, &sabers[saberNum]); //get saber info
 	}
 	if (sabers[1].saberFlags & SFL_TWO_HANDED)
 	{
@@ -3074,13 +3074,13 @@ void WP_SetSaber(const int entNum, saberInfo_t* sabers, const int saber_num, con
 	}
 }
 
-void WP_SaberSetColor(saberInfo_t* sabers, const int saber_num, const int blade_num, const char* colorName)
+void WP_SaberSetColor(saberInfo_t* sabers, const int saberNum, const int blade_num, const char* colorName)
 {
 	if (!sabers)
 	{
 		return;
 	}
-	sabers[saber_num].blade[blade_num].color = TranslateSaberColor(colorName);
+	sabers[saberNum].blade[blade_num].color = TranslateSaberColor(colorName);
 }
 
 static char bgSaberParseTBuffer[MAX_SABER_DATA_SIZE];

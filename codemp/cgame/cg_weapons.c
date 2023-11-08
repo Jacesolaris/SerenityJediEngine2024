@@ -3028,11 +3028,11 @@ BULLETS
 CG_Calcmuzzle_point
 ======================
 */
-qboolean CG_Calcmuzzle_point(const int entity_num, vec3_t muzzle)
+qboolean CG_Calcmuzzle_point(const int entityNum, vec3_t muzzle)
 {
 	vec3_t forward;
 
-	if (entity_num == cg.snap->ps.client_num)
+	if (entityNum == cg.snap->ps.client_num)
 	{
 		vec3_t gunpoint;
 		vec3_t right;
@@ -3109,7 +3109,7 @@ qboolean CG_Calcmuzzle_point(const int entity_num, vec3_t muzzle)
 		return qtrue;
 	}
 
-	const centity_t* cent = &cg_entities[entity_num];
+	const centity_t* cent = &cg_entities[entityNum];
 	if (!cent->currentValid)
 	{
 		return qfalse;

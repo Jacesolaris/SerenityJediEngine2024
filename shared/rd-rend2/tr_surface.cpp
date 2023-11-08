@@ -46,7 +46,8 @@ use the shader system.
 RB_CheckOverflow
 ==============
 */
-void RB_CheckOverflow( int verts, int indexes ) {
+void RB_CheckOverflow(const int verts, const int indexes) 
+{
 	if ((tess.numVertexes + verts) < SHADER_MAX_VERTEXES &&
 			(tess.numIndexes + indexes) < SHADER_MAX_INDEXES)
 	{
@@ -96,7 +97,8 @@ void RB_CheckVBOandIBO(VBO_t *vbo, IBO_t *ibo)
 RB_AddQuadStampExt
 ==============
 */
-void RB_AddQuadStampExt( vec3_t origin, vec3_t left, vec3_t up, float color[4], float s1, float t1, float s2, float t2 ) {
+void RB_AddQuadStampExt( vec3_t origin, vec3_t left, vec3_t up, float color[4], float s1, float t1, float s2, float t2 ) 
+{
 	vec3_t		normal;
 	int			ndx;
 
