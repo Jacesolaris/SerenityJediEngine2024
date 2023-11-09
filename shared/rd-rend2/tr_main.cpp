@@ -2158,7 +2158,7 @@ void R_RenderView(viewParms_t* parms) {
 	R_DebugGraphics();
 }
 
-void R_RenderDlightCubemaps(const refdef_t* fd)
+void R_RenderDlightCubemaps()
 {
 	int i;
 
@@ -2293,7 +2293,6 @@ void R_SetupViewParmsForOrthoRendering(
 
 void R_SetupPshadowMaps(trRefdef_t* refdef)
 {
-	/*viewParms_t		shadowParms;*/
 	int i;
 
 	// first, make a list of shadows

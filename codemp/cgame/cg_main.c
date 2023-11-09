@@ -3357,7 +3357,7 @@ static void CG_AutomapInput(void)
 		if (cg_autoMapInput.pitch) cg_autoMapAngle[PITCH] += cg_autoMapInput.pitch;
 		cg_autoMapInput.yaw = 0.0f;
 		cg_autoMapInput.pitch = 0.0f;
-}
+	}
 }
 
 static void CG_FX_CameraShake(void)

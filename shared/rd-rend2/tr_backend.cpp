@@ -1412,7 +1412,7 @@ static void RB_SubmitRenderPass(
 RB_RenderDrawSurfList
 ==================
 */
-static void RB_RenderDrawSurfList(drawSurf_t* drawSurfs, int numDrawSurfs)
+static void RB_RenderDrawSurfList(drawSurf_t* drawSurfs, const int numDrawSurfs)
 {
 	int estimatedNumShaderStages = (backEnd.viewParms.flags & VPF_DEPTHSHADOW) ? 1 : 4;
 
@@ -1439,9 +1439,7 @@ static void RB_RenderDrawSurfList(drawSurf_t* drawSurfs, int numDrawSurfs)
 	}
 
 	// Do the drawing and release memory
-	RB_SubmitRenderPass(
-		*backEndData->currentPass,
-		*backEndData->perFrameMemory);
+	RB_SubmitRenderPass(*backEndData->currentPass,*backEndData->perFrameMemory);
 
 	backEndData->perFrameMemory->ResetTo(allocMark);
 	backEndData->currentPass = nullptr;

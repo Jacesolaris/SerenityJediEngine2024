@@ -1578,7 +1578,7 @@ void R_FreeSurfaceGridMesh(srfGridMesh_t* grid);
 Ghoul2 Insert Start
 */
 
-float ProjectRadius(float r, vec3_t location);
+float ProjectRadius(const float r, vec3_t location);
 /*
 Ghoul2 Insert End
 */

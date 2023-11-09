@@ -320,8 +320,8 @@ static void R_SurfaceSpriteFrameUpdate()
 // Surface sprite calculation and drawing.
 /////////////////////////////////////////////
 
-#define FADE_RANGE			250.0
-#define WINDPOINT_RADIUS	750.0
+constexpr auto FADE_RANGE = 300.0;
+constexpr auto WINDPOINT_RADIUS = 750.0;
 
 float ss_vert_alpha[SHADER_MAX_VERTEXES];
 float ss_vert_wind_force[SHADER_MAX_VERTEXES];

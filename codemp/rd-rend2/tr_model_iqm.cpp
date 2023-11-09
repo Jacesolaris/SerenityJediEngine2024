@@ -938,7 +938,7 @@ void R_AddIQMSurfaces(trRefEntity_t* ent, int entityNum) {
 			R_AddDrawSurf(reinterpret_cast<surfaceType_t*>(surface), entityNum, tr.projectionShadowShader, 0, 0, R_IsPostRenderEntity(ent), 0);
 		}
 
-		if (!personalModel) 
+		if (!personalModel)
 		{
 			R_AddDrawSurf(reinterpret_cast<surfaceType_t*>(surface), entityNum, shader, fogNum, 0, R_IsPostRenderEntity(ent), cubemapIndex);
 		}

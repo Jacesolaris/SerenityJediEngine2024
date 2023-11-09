@@ -1075,11 +1075,7 @@ import.WE_IsShaking = SV_WE_IsShaking;
 import.WE_AddWeatherZone = SV_WE_AddWeatherZone;
 import.WE_SetTempGlobalFogColor = SV_WE_SetTempGlobalFogColor;
 
-#ifdef JK2_MODE
-	const char* gamename = "SerenityJediEngine2024-JKO-game";
-#else
-	auto gamename = "SerenityJediEngine2024-game";
-#endif
+auto gamename = "SerenityJediEngine2024-game";
 
 	GetGameAPIProc* GetGameAPI;
 	gameLibrary = Sys_LoadSPGameDll(gamename, &GetGameAPI);

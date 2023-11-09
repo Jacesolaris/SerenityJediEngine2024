@@ -2650,7 +2650,7 @@ void R_AddGhoulSurfaces(trRefEntity_t* ent)
 		}
 	}
 	HackadelicOnClient = false;
-		}
+}
 
 bool G2_NeedsRecalc(CGhoul2Info* ghlInfo, const int frame_num)
 {
@@ -3535,7 +3535,7 @@ qboolean R_LoadMDXM(model_t* mod, void* buffer, const char* mod_name, qboolean& 
 			//hmm, load up the old JK2 ones anyway?
 			return qfalse;
 		}
-		}
+	}
 #endif
 
 	mod->numLods = mdxm->numLODs - 1; //copy this up to the model for ease of use - it wil get inced after this.
@@ -3703,18 +3703,18 @@ qboolean R_LoadMDXM(model_t* mod, void* buffer, const char* mod_name, qboolean& 
 					{
 						boneRef[j] = 0;
 					}
+				}
 			}
-		}
 #endif
 			// find the next surface
 			surf = reinterpret_cast<mdxmSurface_t*>(reinterpret_cast<byte*>(surf) + surf->ofsEnd);
-	}
+		}
 		// find the next LOD
 		lod = reinterpret_cast<mdxmLOD_t*>(reinterpret_cast<byte*>(lod) + lod->ofsEnd);
 	}
 
 	return qtrue;
-	}
+}
 
 /*
 =================

@@ -3509,7 +3509,7 @@ R_InitShaders
 */
 void R_InitShaders(const qboolean server)
 {
-	Com_Printf ("Initializing Shaders\n" );
+	Com_Printf("Initializing Shaders\n");
 
 	memset(hashTable, 0, sizeof hashTable);
 }

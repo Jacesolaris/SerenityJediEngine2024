@@ -321,7 +321,7 @@ static void R_SurfaceSpriteFrameUpdate()
 // Surface sprite calculation and drawing.
 /////////////////////////////////////////////
 
-constexpr auto FADE_RANGE = 250.0;
+constexpr auto FADE_RANGE = 300.0;
 constexpr auto WINDPOINT_RADIUS = 750.0;
 
 float ss_vert_alpha[SHADER_MAX_VERTEXES];
@@ -1445,7 +1445,6 @@ void RB_DrawSurfaceSprites(shaderStage_t* stage, shaderCommands_t* input)
 		ss_additive_transparency = qfalse;
 	}
 
-	//#ifdef JK2_MODE
 	if (ss_additive_transparency && ss_using_fog && r_drawfog->value == 2 &&
 		tr.world &&
 		(tess.fogNum == tr.world->globalFog || tess.fogNum == tr.world->numfogs))
@@ -1461,7 +1460,6 @@ void RB_DrawSurfaceSprites(shaderStage_t* stage, shaderCommands_t* input)
 	{
 		fogging = 0;
 	}
-	//#endif
 
 		//Check if this is a new entity transformation (incl. world entity), and update the appropriate vectors if so.
 	if (backEnd.currentEntity != ss_last_entity_drawn)
@@ -1499,12 +1497,10 @@ void RB_DrawSurfaceSprites(shaderStage_t* stage, shaderCommands_t* input)
 
 	SQuickSprite.EndGroup();
 
-	//#ifdef JK2_MODE
 	if (fogging)
 	{
 		qglEnable(GL_FOG);
 	}
-	//#endif
 
 	sssurfaces++;
 }

@@ -94,9 +94,9 @@ void R_Free(void* pvAddress)
 	ri.Z_Free(pvAddress);
 }
 #else
-void Z_Free(void* ptr)
+void Z_Free(void* pvAddress)
 {
-	ri.Z_Free(ptr);
+	ri.Z_Free(pvAddress);
 }
 #endif
 

@@ -1640,7 +1640,7 @@ void G2API_AnimateG2ModelsRag(
 			G2_Animate_Bone_List(ghoul2, currentTime, model, params);
 		}
 	}
-	}
+}
 // rww - RAGDOLL_END
 
 int G2_Find_Bone_Rag(
@@ -2134,16 +2134,16 @@ qboolean G2API_GetBoltMatrix(
 					matrix->matrix[0][3] = origin[0];
 					matrix->matrix[1][3] = origin[1];
 					matrix->matrix[2][3] = origin[2];
-			}
+				}
 				else
 				{ // reset it
 					gG2_GBMUseSPMethod = qfalse;
 				}
 
 				return qtrue;
+			}
 		}
 	}
-}
 	else
 	{
 		G2WARNING(0, "G2API_GetBoltMatrix Failed on empty or bad model");
@@ -2555,17 +2555,17 @@ int G2API_CopyGhoul2Instance(const CGhoul2Info_v& g2_from, CGhoul2Info_v& g2_to,
 				CGoreSet* gore = FindGoreSet(g2_to[model].mGoreSetTag);
 				assert(gore);
 				gore->mRefCount++;
-	}
+			}
 
 			model++;
-}
+		}
 #endif
 		//G2ANIM(ghoul2From,"G2API_CopyGhoul2Instance (source)");
 		//G2ANIM(ghoul2To,"G2API_CopyGhoul2Instance (dest)");
-			}
+	}
 
 	return -1;
-		}
+}
 
 void G2API_CopySpecificG2Model(CGhoul2Info_v& ghoul2From, int modelFrom, CGhoul2Info_v& ghoul2To, int modelTo)
 {
@@ -2586,7 +2586,7 @@ void G2API_CopySpecificG2Model(CGhoul2Info_v& ghoul2From, int modelFrom, CGhoul2
 #if 0
 			forceReconstruct = qtrue;
 #endif
-	}
+		}
 		// do the copy
 
 		if (ghoul2To.IsValid() && ghoul2To.size() >= modelTo)
@@ -2607,8 +2607,8 @@ void G2API_CopySpecificG2Model(CGhoul2Info_v& ghoul2From, int modelFrom, CGhoul2
 			ghoul2To[0].mSkelFrameNum = 0;
 		}
 #endif
-}
 	}
+}
 
 // This version will automatically copy everything about this model, and make a new one if necessary.
 void G2API_DuplicateGhoul2Instance(const CGhoul2Info_v& g2_from, CGhoul2Info_v** g2_to)
@@ -2668,7 +2668,7 @@ char* G2API_GetSurfaceName(CGhoul2Info_v& ghoul2, int modelIndex, int surfNumber
 		{
 			Com_Printf("G2API_GetSurfaceName: You passed in an invalid surface number (%i) for model %s.\n", surfNumber, ghlInfo->mFileName);
 			return noSurface;
-	}
+		}
 
 		surf = (mdxmSurface_t*)G2_FindSurface((void*)mod, surfNumber, 0);
 		if (surf)
@@ -2973,7 +2973,7 @@ qboolean G2_SetupModelPointers(CGhoul2Info* ghlInfo) // returns true if the mode
 	if (!ghlInfo)
 	{
 		return qfalse;
-}
+	}
 
 	//	if (ghlInfo->mValid && ghlInfo->currentModel)
 	if (0)
@@ -2984,7 +2984,7 @@ qboolean G2_SetupModelPointers(CGhoul2Info* ghlInfo) // returns true if the mode
 		G2Time_G2_SetupModelPointers += G2PerformanceTimer_G2_SetupModelPointers.End();
 #endif
 		return qtrue;
-}
+	}
 
 	ghlInfo->mValid = false;
 
@@ -3072,7 +3072,7 @@ qboolean G2_SetupModelPointers(CGhoul2Info_v& ghoul2) // returns true if any mod
 	{
 		qboolean r = G2_SetupModelPointers(&ghoul2[i]);
 		ret = ret || r;
-}
+	}
 	return (qboolean)ret;
 }
 

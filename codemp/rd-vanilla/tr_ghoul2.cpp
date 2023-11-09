@@ -3396,10 +3396,10 @@ void R_AddGhoulSurfaces(trRefEntity_t* ent)
 			if (!personalModel && RS.renderfx & RF_SHADOW_PLANE && !bInShadowRange(ent->e.origin))
 			{
 				RS.renderfx |= RF_NOSHADOW;
-		}
+			}
 			RenderSurfaces(RS);
+		}
 	}
-}
 	HackadelicOnClient = false;
 
 #ifdef G2_PERFORMANCE_ANALYSIS
@@ -3781,7 +3781,7 @@ void RB_SurfaceGhoul(CRenderableSurface* surf)
 
 			tess.texCoords[baseVertex][0][0] = pTexCoords[j].texCoords[0];
 			tess.texCoords[baseVertex][0][1] = pTexCoords[j].texCoords[1];
-	}
+		}
 #if 0
 	}
 #endif
@@ -4326,7 +4326,7 @@ qboolean R_LoadMDXM(model_t* mod, void* buffer, const char* mod_name, qboolean& 
 		// find the next surface
 		surfInfo = (mdxmSurfHierarchy_t*)((byte*)surfInfo + (size_t) & static_cast<mdxmSurfHierarchy_t*>(nullptr)->
 			childIndexes[surfInfo->numChildren]);
-}
+	}
 
 	// swap all the LOD's	(we need to do the middle part of this even for intel, because of shader reg and err-check)
 	lod = (mdxmLOD_t*)((byte*)mdxm + mdxm->ofsLODs);

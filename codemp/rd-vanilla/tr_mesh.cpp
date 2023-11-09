@@ -62,7 +62,8 @@ float ProjectRadius(const float r, vec3_t location)
 R_CullModel
 =============
 */
-static int R_CullModel(md3Header_t* header, const trRefEntity_t* ent) {
+static int R_CullModel(md3Header_t* header, const trRefEntity_t* ent)
+{
 	vec3_t		bounds[2]{};
 
 	// compute frame pointers
@@ -330,7 +331,7 @@ void R_AddMD3Surfaces(trRefEntity_t* ent)
 	//
 	// set up lighting now that we know we aren't culled
 	//
-	if (!personalModel || r_shadows->integer > 1) 
+	if (!personalModel || r_shadows->integer > 1)
 	{
 		R_SetupEntityLighting(&tr.refdef, ent);
 	}
@@ -346,14 +347,14 @@ void R_AddMD3Surfaces(trRefEntity_t* ent)
 	const shader_t* main_shader = R_GetShaderByHandle(ent->e.customShader);
 
 	auto surface = reinterpret_cast<md3Surface_t*>(reinterpret_cast<byte*>(header) + header->ofsSurfaces);
-	
+
 	for (int i = 0; i < header->numSurfaces; i++)
 	{
 		if (ent->e.customShader)
 		{// a little more efficient
 			shader = main_shader;
 		}
-		else if (ent->e.customSkin > 0 && ent->e.customSkin < tr.numSkins) 
+		else if (ent->e.customSkin > 0 && ent->e.customSkin < tr.numSkins)
 		{
 			const skin_t* skin = R_GetSkinByHandle(ent->e.customSkin);
 
@@ -362,14 +363,14 @@ void R_AddMD3Surfaces(trRefEntity_t* ent)
 			for (int j = 0; j < skin->numSurfaces; j++)
 			{
 				// the names have both been lowercased
-				if (strcmp(skin->surfaces[j]->name, surface->name) == 0) 
+				if (strcmp(skin->surfaces[j]->name, surface->name) == 0)
 				{
 					shader = static_cast<shader_t*>(skin->surfaces[j]->shader);
 					break;
 				}
 			}
 		}
-		else if (surface->numShaders <= 0) 
+		else if (surface->numShaders <= 0)
 		{
 			shader = tr.defaultShader;
 		}

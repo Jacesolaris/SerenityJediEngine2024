@@ -2811,15 +2811,13 @@ void R_SetupViewParmsForOrthoRendering(
 	const vec3_t viewBounds[2]);
 void R_SortAndSubmitDrawSurfs(drawSurf_t* drawSurfs, int numDrawSurfs);
 
-void R_SwapBuffers(int);
-
 void R_RenderView(viewParms_t* parms);
-void R_RenderDlightCubemaps(const refdef_t* fd);
-void R_SetupPshadowMaps(const refdef_t* fd);
+void R_RenderDlightCubemaps();
+void R_SetupPshadowMaps(trRefdef_t* refdef);
 void R_RenderCubemapSide(int cubemapIndex, int cubemapSide, bool bounce);
 void R_GatherFrameViews(trRefdef_t* refdef);
 
-void R_AddMD3Surfaces(trRefEntity_t* e, int entityNum);
+void R_AddMD3Surfaces(trRefEntity_t* ent, int entityNum);
 void R_AddPolygonSurfaces(const trRefdef_t* refdef);
 
 void R_DecomposeSort(uint32_t sort, int* entityNum, shader_t** shader, int* cubemap, int* postRender);
@@ -3703,7 +3701,7 @@ qhandle_t RE_RegisterShaderNoMip(const char* name);
 const char* RE_ShaderNameFromIndex(int index);
 image_t* R_CreateImage(const char* name, byte* pic, int width, int height, imgType_t type, int flags, int internalFormat);
 
-float ProjectRadius(float r, vec3_t location);
+float ProjectRadius(const float r, vec3_t location);
 void RE_RegisterModels_StoreShaderRequest(const char* psModelFileName, const char* psShaderName, int* piShaderIndexPoke);
 qboolean ShaderHashTableExists(void);
 void R_ImageLoader_Init(void);

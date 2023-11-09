@@ -30,7 +30,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #include "../qcommon/qcommon.h"
 #include "../ghoul2/ghoul2_shared.h"
 
-#define	REF_API_VERSION 20
+constexpr auto REF_API_VERSION = 20;
 
 //
 // these are the functions exported by the refresh module
@@ -295,11 +295,11 @@ using refimport_t = struct refimport_s
 	int (*Milliseconds)(void);
 
 	// memory management (can use tr_subs)
-	void* (*Hunk_AllocateTempMemory)(int size);
+	void* (*Hunk_AllocateTempMemory)(const int size);
 	void (*Hunk_FreeTempMemory)(void* buf);
 	void* (*Hunk_Alloc)(int size, ha_pref preference);
 	int (*Hunk_MemoryRemaining)(void);
-	void* (*Z_Malloc)(int iSize, memtag_t eTag, qboolean bZeroit /*= qfalse*/, int iAlign /*= 4*/);
+	void* (*Z_Malloc)(const int iSize, const memtag_t eTag, const qboolean bZeroit, const int iUnusedAlign);
 	// return memory NOT zero-filled by default
 	void (*Z_Free)(void* ptr);
 	int (*Z_MemSize)(memtag_t eTag);

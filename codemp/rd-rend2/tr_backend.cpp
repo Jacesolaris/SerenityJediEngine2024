@@ -1139,13 +1139,13 @@ void RB_AddDrawItem(Pass* pass, uint32_t sortKey, const DrawItem& drawItem)
 
 		pass->sortKeys[pass->numDrawItems] = sortKey;
 		pass->drawItems[pass->numDrawItems++] = drawItem;
-		}
+	}
 	else
 	{
 		uint32_t drawOrder[] = { 0 };
 		RB_DrawItems(1, &drawItem, drawOrder);
 	}
-	}
+}
 
 static Pass* RB_CreatePass(Allocator& allocator, int capacity)
 {
@@ -1397,37 +1397,8 @@ static void RB_SubmitRenderPass(
 RB_RenderDrawSurfList
 ==================
 */
-static void RB_RenderDrawSurfList(drawSurf_t* drawSurfs, int numDrawSurfs)
+static void RB_RenderDrawSurfList(drawSurf_t* drawSurfs, const int numDrawSurfs)
 {
-	/*
-	merging surfaces together that share the same shader (e.g. polys, patches)
-	upload per frame data - but this might be the same between render passes?
-
-	how about:
-		tr.refdef.entities[]
-
-		and .... entityCullInfo_t tr.refdef.entityCullInfo[]
-		struct visibleEntity_t
-		{
-			uint32_t frustumMask; // bitfield of frustums which intersect
-			EntityId entityId;
-		};
-
-		foreach ghoul2 model:
-			transform bones
-
-		foreach visibleEntity:
-			upload per frame data
-
-		for polygons:
-			merge them, create new surface and upload data
-
-		for patch meshes:
-			merge them, create new surface and upload data
-
-	each surface corresponds to something which has all of its gpu data uploaded
-	*/
-
 	int estimatedNumShaderStages = (backEnd.viewParms.flags & VPF_DEPTHSHADOW) ? 1 : 4;
 
 	// Prepare memory for the current render pass
@@ -1453,9 +1424,7 @@ static void RB_RenderDrawSurfList(drawSurf_t* drawSurfs, int numDrawSurfs)
 	}
 
 	// Do the drawing and release memory
-	RB_SubmitRenderPass(
-		*backEndData->currentPass,
-		*backEndData->perFrameMemory);
+	RB_SubmitRenderPass(*backEndData->currentPass,*backEndData->perFrameMemory);
 
 	backEndData->perFrameMemory->ResetTo(allocMark);
 	backEndData->currentPass = nullptr;
@@ -2855,7 +2824,7 @@ const void* RB_PostProcess(const void* data)
 	if (r_debugWeather->integer == 2)
 	{
 		FBO_BlitFromTexture(tr.weatherDepthImage, NULL, NULL, NULL, nullptr, NULL, NULL, 0);
-}
+	}
 
 	if (0)
 	{

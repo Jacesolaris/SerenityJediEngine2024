@@ -23,13 +23,13 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 #include "tr_local.h"
 
-float ProjectRadius(float r, vec3_t location)
+float ProjectRadius(const float r, vec3_t location)
 {
 	float pr;
 	float dist;
 	float c;
 	vec3_t	p;
-	float	projected[4];
+	float	projected[4]{};
 
 	c = DotProduct(tr.viewParms.ori.axis[0], tr.viewParms.ori.origin);
 	dist = DotProduct(tr.viewParms.ori.axis[0], location) - c;
@@ -74,8 +74,9 @@ float ProjectRadius(float r, vec3_t location)
 R_CullModel
 =============
 */
-static int R_CullModel(mdvModel_t* model, trRefEntity_t* ent) {
-	vec3_t		bounds[2];
+static int R_CullModel(mdvModel_t* model, trRefEntity_t* ent)
+{
+	vec3_t		bounds[2]{};
 	mdvFrame_t* oldFrame, * newFrame;
 	int			i;
 
@@ -338,22 +339,13 @@ R_AddMD3Surfaces
 
 =================
 */
-void R_AddMD3Surfaces(trRefEntity_t* ent, int entityNum) {
-	int				i;
-	mdvModel_t* model = NULL;
-	mdvSurface_t* surface = NULL;
-	shader_t* shader = NULL;
-	int				cull;
-	int				lod;
-	int				fogNum;
-	int             cubemapIndex;
-	qboolean		personalModel;
-
+void R_AddMD3Surfaces(trRefEntity_t* ent, int entityNum)
+{
 	// don't add third_person objects if not in a portal
-	personalModel = (qboolean)((ent->e.renderfx & RF_THIRD_PERSON) && !(tr.viewParms.isPortal
-		|| (tr.viewParms.flags & VPF_DEPTHSHADOW)));
+	qboolean personalModel = (qboolean)((ent->e.renderfx & RF_THIRD_PERSON) && !(tr.viewParms.isPortal || (tr.viewParms.flags & VPF_DEPTHSHADOW)));
 
-	if (ent->e.renderfx & RF_WRAP_FRAMES) {
+	if (ent->e.renderfx & RF_WRAP_FRAMES)
+	{
 		ent->e.frame %= tr.currentModel->data.mdv[0]->numFrames;
 		ent->e.oldframe %= tr.currentModel->data.mdv[0]->numFrames;
 	}
@@ -367,10 +359,9 @@ void R_AddMD3Surfaces(trRefEntity_t* ent, int entityNum) {
 	if ((ent->e.frame >= tr.currentModel->data.mdv[0]->numFrames)
 		|| (ent->e.frame < 0)
 		|| (ent->e.oldframe >= tr.currentModel->data.mdv[0]->numFrames)
-		|| (ent->e.oldframe < 0)) {
-		ri.Printf(PRINT_DEVELOPER, "R_AddMD3Surfaces: no such frame %d to %d for '%s'\n",
-			ent->e.oldframe, ent->e.frame,
-			tr.currentModel->name);
+		|| (ent->e.oldframe < 0))
+	{
+		ri.Printf(PRINT_DEVELOPER, "R_AddMD3Surfaces: no such frame %d to %d for '%s'\n", ent->e.oldframe, ent->e.frame, tr.currentModel->name);
 		ent->e.frame = 0;
 		ent->e.oldframe = 0;
 	}
@@ -378,37 +369,45 @@ void R_AddMD3Surfaces(trRefEntity_t* ent, int entityNum) {
 	//
 	// compute LOD
 	//
-	lod = R_ComputeLOD(ent);
+	const int lod = R_ComputeLOD(ent);
 
-	model = tr.currentModel->data.mdv[lod];
+	mdvModel_t* model = tr.currentModel->data.mdv[lod];
 
 	//
 	// cull the entire model if merged bounding box of both frames
 	// is outside the view frustum.
 	//
-	cull = R_CullModel(model, ent);
-	if (cull == CULL_OUT) {
+	int	cull = R_CullModel(model, ent);
+
+	if (cull == CULL_OUT)
+	{
 		return;
 	}
 
 	//
 	// see if we are in a fog volume
 	//
-	fogNum = R_ComputeFogNum(model, ent);
+	int fogNum = R_ComputeFogNum(model, ent);
 
-	cubemapIndex = R_CubemapForPoint(ent->e.origin);
+	int cubemapIndex = R_CubemapForPoint(ent->e.origin);
 	// FIX ME: not tested! Animated models might be handled incorrecly
 	int dlightBits = R_DLightsForPoint(ent->e.origin, model->frames[ent->e.frame].radius);
 
 	//
 	// draw all surfaces
 	//
-	surface = model->surfaces;
-	for (i = 0; i < model->numSurfaces; i++) {
-		if (ent->e.customShader) {
+	mdvSurface_t* surface = model->surfaces;
+
+	for (int i = 0; i < model->numSurfaces; i++)
+	{
+		shader_t* shader = nullptr;
+
+		if (ent->e.customShader)
+		{
 			shader = R_GetShaderByHandle(ent->e.customShader);
 		}
-		else if (ent->e.customSkin > 0 && ent->e.customSkin < tr.numSkins) {
+		else if (ent->e.customSkin > 0 && ent->e.customSkin < tr.numSkins)
+		{
 			skin_t* skin;
 			int		j;
 
@@ -416,26 +415,27 @@ void R_AddMD3Surfaces(trRefEntity_t* ent, int entityNum) {
 
 			// match the surface name to something in the skin file
 			shader = tr.defaultShader;
-			for (j = 0; j < skin->numSurfaces; j++) {
+
+			for (j = 0; j < skin->numSurfaces; j++)
+			{
 				// the names have both been lowercased
-				if (!strcmp(skin->surfaces[j]->name, surface->name)) {
+				if (!strcmp(skin->surfaces[j]->name, surface->name))
+				{
 					shader = (shader_t*)skin->surfaces[j]->shader;
 					break;
 				}
 			}
-			if (shader == tr.defaultShader) {
+			if (shader == tr.defaultShader)
+			{
 				ri.Printf(PRINT_DEVELOPER, "WARNING: no shader for surface %s in skin %s\n", surface->name, skin->name);
 			}
-			else if (shader->defaultShader) {
+			else if (shader->defaultShader)
+			{
 				ri.Printf(PRINT_DEVELOPER, "WARNING: shader %s in skin %s not found\n", shader->name, skin->name);
 			}
-			//} else if ( surface->numShaders <= 0 ) {
-				//shader = tr.defaultShader;
 		}
-		else {
-			//md3Shader = (md3Shader_t *) ( (byte *)surface + surface->ofsShaders );
-			//md3Shader += ent->e.skinNum % surface->numShaders;
-			//shader = tr.shaders[ md3Shader->shaderIndex ];
+		else
+		{
 			shader = tr.shaders[surface->shaderIndexes[ent->e.skinNum % surface->numShaderIndexes]];
 		}
 
@@ -445,7 +445,6 @@ void R_AddMD3Surfaces(trRefEntity_t* ent, int entityNum) {
 			srfVBOMDVMesh_t* vboSurface = &model->vboSurfaces[i];
 
 			R_AddDrawSurf((surfaceType_t*)vboSurface, entityNum, shader, fogNum, dlightBits, R_IsPostRenderEntity(ent), cubemapIndex);
-			//R_AddDrawSurf((surfaceType_t *)vboSurface, entityNum, shader, fogNum, qfalse, R_IsPostRenderEntity(ent), cubemapIndex );
 		}
 
 		surface++;

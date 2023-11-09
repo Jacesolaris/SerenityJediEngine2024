@@ -987,7 +987,7 @@ void RE_WorldEffectCommand(const char* command) // rend2 sp
 #endif
 	if (tr.world)
 		R_LoadWeatherImages();
-	}
+}
 
 void R_WorldEffect_f(void)
 {

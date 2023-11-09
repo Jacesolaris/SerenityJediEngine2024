@@ -44,7 +44,7 @@ use the shader system.
 RB_CheckOverflow
 ==============
 */
-void RB_CheckOverflow(const int verts, const int indexes) 
+void RB_CheckOverflow(const int verts, const int indexes)
 {
 	if ((tess.numVertexes + verts) < SHADER_MAX_VERTEXES &&
 		(tess.numIndexes + indexes) < SHADER_MAX_INDEXES)

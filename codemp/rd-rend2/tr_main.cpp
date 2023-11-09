@@ -2109,7 +2109,7 @@ void R_RenderView(viewParms_t* parms) {
 	R_DebugGraphics();
 }
 
-void R_RenderDlightCubemaps(const refdef_t* fd)
+void R_RenderDlightCubemaps()
 {
 	int i;
 
@@ -2244,7 +2244,6 @@ void R_SetupViewParmsForOrthoRendering(
 
 void R_SetupPshadowMaps(trRefdef_t* refdef)
 {
-	//viewParms_t		shadowParms;
 	int i;
 
 	// first, make a list of shadows
@@ -2391,8 +2390,8 @@ void R_SetupPshadowMaps(trRefdef_t* refdef)
 		shadow->cullPlane.dist = DotProduct(shadow->cullPlane.normal, shadow->lightOrigin);
 		shadow->cullPlane.type = PLANE_NON_AXIAL;
 		SetPlaneSignbits(&shadow->cullPlane);
-		}
 	}
+}
 
 void R_RenderCubemapSide(int cubemapIndex, int cubemapSide, bool bounce)
 {

@@ -1115,7 +1115,7 @@ static void R_RadixSort(drawSurf_t* source, int size)
 R_AddDrawSurf
 =================
 */
-void R_AddDrawSurf(surfaceType_t* surface, const shader_t* shader,int fogIndex, const int dlightMap)
+void R_AddDrawSurf(surfaceType_t* surface, const shader_t* shader, int fogIndex, const int dlightMap)
 {
 	if (tr.refdef.rdflags & RDF_NOFOG)
 	{

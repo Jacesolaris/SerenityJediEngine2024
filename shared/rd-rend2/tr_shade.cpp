@@ -21,7 +21,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 // tr_shade.c
 
-#include "tr_local.h" 
+#include "tr_local.h"
 #include "tr_allocator.h"
 
 /*
@@ -33,8 +33,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 color4ub_t	styleColors[MAX_LIGHT_STYLES];
 
-void RB_BinTriangleCounts( void );
-
+void RB_BinTriangleCounts(void);
 
 /*
 ==================
@@ -43,7 +42,7 @@ R_DrawElements
 ==================
 */
 
-void R_DrawElementsVBO( int numIndexes, glIndex_t firstIndex, glIndex_t minIndex, glIndex_t maxIndex )
+void R_DrawElementsVBO(int numIndexes, glIndex_t firstIndex, glIndex_t minIndex, glIndex_t maxIndex)
 {
 	int offset = firstIndex * sizeof(glIndex_t) +
 		(tess.useInternalVBO ? backEndData->currentFrame->dynamicIboCommitOffset : 0);
@@ -51,17 +50,15 @@ void R_DrawElementsVBO( int numIndexes, glIndex_t firstIndex, glIndex_t minIndex
 	GL_DrawIndexed(GL_TRIANGLES, numIndexes, GL_INDEX_TYPE, offset, 1, 0);
 }
 
-
-static void R_DrawMultiElementsVBO( int multiDrawPrimitives, glIndex_t *multiDrawMinIndex, glIndex_t *multiDrawMaxIndex, 
-	GLsizei *multiDrawNumIndexes, glIndex_t **multiDrawFirstIndex)
+static void R_DrawMultiElementsVBO(int multiDrawPrimitives, glIndex_t* multiDrawMinIndex, glIndex_t* multiDrawMaxIndex,
+	GLsizei* multiDrawNumIndexes, glIndex_t** multiDrawFirstIndex)
 {
 	GL_MultiDrawIndexed(
-			GL_TRIANGLES,
-			multiDrawNumIndexes,
-			multiDrawFirstIndex,
-			multiDrawPrimitives);
+		GL_TRIANGLES,
+		multiDrawNumIndexes,
+		multiDrawFirstIndex,
+		multiDrawPrimitives);
 }
-
 
 /*
 =============================================================
@@ -73,17 +70,16 @@ SURFACE SHADERS
 
 shaderCommands_t	tess;
 
-
 /*
 =================
 R_BindAnimatedImageToTMU
 
 =================
 */
-void R_BindAnimatedImageToTMU( textureBundle_t *bundle, int tmu ) {
+void R_BindAnimatedImageToTMU(textureBundle_t* bundle, int tmu) {
 	int		index;
 
-	if ( bundle->isVideoMap ) {
+	if (bundle->isVideoMap) {
 		int oldtmu = glState.currenttmu;
 		GL_SelectTexture(tmu);
 		ri.CIN_RunCinematic(bundle->videoMapHandle);
@@ -92,12 +88,12 @@ void R_BindAnimatedImageToTMU( textureBundle_t *bundle, int tmu ) {
 		return;
 	}
 
-	if ( bundle->numImageAnimations <= 1 ) {
-		GL_BindToTMU( bundle->image[0], tmu);
+	if (bundle->numImageAnimations <= 1) {
+		GL_BindToTMU(bundle->image[0], tmu);
 		return;
 	}
 
-	if (backEnd.currentEntity->e.renderfx & RF_SETANIMINDEX )
+	if (backEnd.currentEntity->e.renderfx & RF_SETANIMINDEX)
 	{
 		index = backEnd.currentEntity->e.skinNum;
 	}
@@ -105,17 +101,17 @@ void R_BindAnimatedImageToTMU( textureBundle_t *bundle, int tmu ) {
 	{
 		// it is necessary to do this messy calc to make sure animations line up
 		// exactly with waveforms of the same frequency
-		index = Q_ftol( tess.shaderTime * bundle->imageAnimationSpeed * FUNCTABLE_SIZE );
+		index = Q_ftol(tess.shaderTime * bundle->imageAnimationSpeed * FUNCTABLE_SIZE);
 		index >>= FUNCTABLE_SIZE2;
 
-		if ( index < 0 ) {
+		if (index < 0) {
 			index = 0;	// may happen with shader time offsets
 		}
 	}
 
-	if ( bundle->oneShotAnimMap )
+	if (bundle->oneShotAnimMap)
 	{
-		if ( index >= bundle->numImageAnimations )
+		if (index >= bundle->numImageAnimations)
 		{
 			// stick on last frame
 			index = bundle->numImageAnimations - 1;
@@ -127,7 +123,7 @@ void R_BindAnimatedImageToTMU( textureBundle_t *bundle, int tmu ) {
 		index %= bundle->numImageAnimations;
 	}
 
-	GL_BindToTMU( bundle->image[ index ], tmu );
+	GL_BindToTMU(bundle->image[index], tmu);
 }
 
 /*
@@ -139,9 +135,8 @@ because a surface may be forced to perform a RB_End due
 to overflow.
 ==============
 */
-void RB_BeginSurface( shader_t *shader, int fogNum, int cubemapIndex ) {
-
-	shader_t *state = (shader->remappedShader) ? shader->remappedShader : shader;
+void RB_BeginSurface(shader_t* shader, int fogNum, int cubemapIndex) {
+	shader_t* state = (shader->remappedShader) ? shader->remappedShader : shader;
 
 	tess.numIndexes = 0;
 	tess.firstIndex = 0;
@@ -169,17 +164,14 @@ void RB_BeginSurface( shader_t *shader, int fogNum, int cubemapIndex ) {
 	}
 }
 
+extern float EvalWaveForm(const waveForm_t* wf);
+extern float EvalWaveFormClamped(const waveForm_t* wf);
 
-
-extern float EvalWaveForm( const waveForm_t *wf );
-extern float EvalWaveFormClamped( const waveForm_t *wf );
-
-
-static void ComputeTexMods( shaderStage_t *pStage, int bundleNum, float *outMatrix, float *outOffTurb)
+static void ComputeTexMods(shaderStage_t* pStage, int bundleNum, float* outMatrix, float* outOffTurb)
 {
 	int tm;
 	float matrix[6], currentmatrix[6];
-	textureBundle_t *bundle = &pStage->bundle[bundleNum];
+	textureBundle_t* bundle = &pStage->bundle[bundleNum];
 
 	matrix[0] = 1.0f; matrix[2] = 0.0f; matrix[4] = 0.0f;
 	matrix[1] = 0.0f; matrix[3] = 1.0f; matrix[5] = 0.0f;
@@ -192,10 +184,9 @@ static void ComputeTexMods( shaderStage_t *pStage, int bundleNum, float *outMatr
 
 	outOffTurb[0] = 0.0f; outOffTurb[1] = 0.0f; outOffTurb[2] = 0.0f; outOffTurb[3] = 0.0f;
 
-	for ( tm = 0; tm < bundle->numTexMods ; tm++ ) {
-		switch ( bundle->texMods[tm].type )
+	for (tm = 0; tm < bundle->numTexMods; tm++) {
+		switch (bundle->texMods[tm].type)
 		{
-			
 		case TMOD_NONE:
 			tm = TR_MAX_TEXMODS;		// break out of for loop
 			break;
@@ -205,41 +196,41 @@ static void ComputeTexMods( shaderStage_t *pStage, int bundleNum, float *outMatr
 			break;
 
 		case TMOD_ENTITY_TRANSLATE:
-			RB_CalcScrollTexMatrix( backEnd.currentEntity->e.shaderTexCoord, matrix );
+			RB_CalcScrollTexMatrix(backEnd.currentEntity->e.shaderTexCoord, matrix);
 			break;
 
 		case TMOD_SCROLL:
-			RB_CalcScrollTexMatrix( bundle->texMods[tm].scroll,
-									 matrix );
+			RB_CalcScrollTexMatrix(bundle->texMods[tm].scroll,
+				matrix);
 			break;
 
 		case TMOD_SCALE:
-			RB_CalcScaleTexMatrix( bundle->texMods[tm].scale,
-								  matrix );
+			RB_CalcScaleTexMatrix(bundle->texMods[tm].scale,
+				matrix);
 			break;
-		
+
 		case TMOD_STRETCH:
-			RB_CalcStretchTexMatrix( &bundle->texMods[tm].wave, 
-								   matrix );
+			RB_CalcStretchTexMatrix(&bundle->texMods[tm].wave,
+				matrix);
 			break;
 
 		case TMOD_TRANSFORM:
-			RB_CalcTransformTexMatrix( &bundle->texMods[tm],
-									 matrix );
+			RB_CalcTransformTexMatrix(&bundle->texMods[tm],
+				matrix);
 			break;
 
 		case TMOD_ROTATE:
-			RB_CalcRotateTexMatrix( bundle->texMods[tm].rotateSpeed,
-									matrix );
+			RB_CalcRotateTexMatrix(bundle->texMods[tm].rotateSpeed,
+				matrix);
 			break;
 
 		default:
-			ri.Error( ERR_DROP, "ERROR: unknown texmod '%d' in shader '%s'", bundle->texMods[tm].type, tess.shader->name );
+			ri.Error(ERR_DROP, "ERROR: unknown texmod '%d' in shader '%s'", bundle->texMods[tm].type, tess.shader->name);
 			break;
 		}
 
-		switch ( bundle->texMods[tm].type )
-		{	
+		switch (bundle->texMods[tm].type)
+		{
 		case TMOD_NONE:
 		case TMOD_TURBULENT:
 		default:
@@ -271,202 +262,202 @@ static void ComputeTexMods( shaderStage_t *pStage, int bundleNum, float *outMatr
 	}
 }
 
-static void ComputeShaderColors( shaderStage_t *pStage, vec4_t baseColor, vec4_t vertColor, int blend, colorGen_t *forceRGBGen, alphaGen_t *forceAlphaGen )
+static void ComputeShaderColors(shaderStage_t* pStage, vec4_t baseColor, vec4_t vertColor, int blend, colorGen_t* forceRGBGen, alphaGen_t* forceAlphaGen)
 {
 	colorGen_t rgbGen = pStage->rgbGen;
 	alphaGen_t alphaGen = pStage->alphaGen;
 
-	baseColor[0] =  
-   	baseColor[1] = 
-   	baseColor[2] = 
-   	baseColor[3] = 1.0f; 
-   	
-   	vertColor[0] = 
-   	vertColor[1] = 
-   	vertColor[2] = 
-   	vertColor[3] = 0.0f;
+	baseColor[0] =
+		baseColor[1] =
+		baseColor[2] =
+		baseColor[3] = 1.0f;
 
-	if ( forceRGBGen != NULL && *forceRGBGen != CGEN_BAD )
+	vertColor[0] =
+		vertColor[1] =
+		vertColor[2] =
+		vertColor[3] = 0.0f;
+
+	if (forceRGBGen != NULL && *forceRGBGen != CGEN_BAD)
 	{
 		rgbGen = *forceRGBGen;
 	}
 
-	if ( forceAlphaGen != NULL && *forceAlphaGen != AGEN_IDENTITY )
+	if (forceAlphaGen != NULL && *forceAlphaGen != AGEN_IDENTITY)
 	{
 		alphaGen = *forceAlphaGen;
 	}
 
-	switch ( rgbGen )
+	switch (rgbGen)
 	{
-		case CGEN_IDENTITY_LIGHTING:
-			baseColor[0] = 
+	case CGEN_IDENTITY_LIGHTING:
+		baseColor[0] =
 			baseColor[1] =
 			baseColor[2] = tr.identityLight;
-			break;
-		case CGEN_EXACT_VERTEX:
-		case CGEN_EXACT_VERTEX_LIT:
-			baseColor[0] = 
-			baseColor[1] =
-			baseColor[2] = 
-			baseColor[3] = 0.0f;
-
-			vertColor[0] =
-			vertColor[1] =
-			vertColor[2] = 
-			vertColor[3] = 1.0f;
-			break;
-		case CGEN_CONST:
-			baseColor[0] = pStage->constantColor[0];
-			baseColor[1] = pStage->constantColor[1];
-			baseColor[2] = pStage->constantColor[2];
-			baseColor[3] = pStage->constantColor[3];
-			break;
-		case CGEN_VERTEX:
-			baseColor[0] = 
+		break;
+	case CGEN_EXACT_VERTEX:
+	case CGEN_EXACT_VERTEX_LIT:
+		baseColor[0] =
 			baseColor[1] =
 			baseColor[2] =
 			baseColor[3] = 0.0f;
 
-			vertColor[0] =
+		vertColor[0] =
 			vertColor[1] =
-			vertColor[2] = tr.identityLight;
+			vertColor[2] =
 			vertColor[3] = 1.0f;
-			break;
-		case CGEN_VERTEX_LIT:
-			baseColor[0] = 
+		break;
+	case CGEN_CONST:
+		baseColor[0] = pStage->constantColor[0];
+		baseColor[1] = pStage->constantColor[1];
+		baseColor[2] = pStage->constantColor[2];
+		baseColor[3] = pStage->constantColor[3];
+		break;
+	case CGEN_VERTEX:
+		baseColor[0] =
 			baseColor[1] =
-			baseColor[2] = 
+			baseColor[2] =
 			baseColor[3] = 0.0f;
 
-			vertColor[0] =
+		vertColor[0] =
 			vertColor[1] =
-			vertColor[2] = 
+			vertColor[2] = tr.identityLight;
+		vertColor[3] = 1.0f;
+		break;
+	case CGEN_VERTEX_LIT:
+		baseColor[0] =
+			baseColor[1] =
+			baseColor[2] =
+			baseColor[3] = 0.0f;
+
+		vertColor[0] =
+			vertColor[1] =
+			vertColor[2] =
 			vertColor[3] = tr.identityLight;
-			break;
-		case CGEN_ONE_MINUS_VERTEX:
-			baseColor[0] = 
+		break;
+	case CGEN_ONE_MINUS_VERTEX:
+		baseColor[0] =
 			baseColor[1] =
 			baseColor[2] = tr.identityLight;
 
-			vertColor[0] =
+		vertColor[0] =
 			vertColor[1] =
 			vertColor[2] = -tr.identityLight;
-			break;
-		case CGEN_FOG:
-			{
-				fog_t *fog = tr.world->fogs + tess.fogNum;
-				VectorCopy4(fog->color, baseColor);
-			}
-			break;
-		case CGEN_WAVEFORM:
-			baseColor[0] = 
-			baseColor[1] = 
-			baseColor[2] = RB_CalcWaveColorSingle( &pStage->rgbWave );
-			break;
-		case CGEN_ENTITY:
-		case CGEN_LIGHTING_DIFFUSE_ENTITY:
-			if (backEnd.currentEntity)
-			{
-				baseColor[0] = ((unsigned char *)backEnd.currentEntity->e.shaderRGBA)[0] / 255.0f;
-				baseColor[1] = ((unsigned char *)backEnd.currentEntity->e.shaderRGBA)[1] / 255.0f;
-				baseColor[2] = ((unsigned char *)backEnd.currentEntity->e.shaderRGBA)[2] / 255.0f;
-				baseColor[3] = ((unsigned char *)backEnd.currentEntity->e.shaderRGBA)[3] / 255.0f;
+		break;
+	case CGEN_FOG:
+	{
+		fog_t* fog = tr.world->fogs + tess.fogNum;
+		VectorCopy4(fog->color, baseColor);
+	}
+	break;
+	case CGEN_WAVEFORM:
+		baseColor[0] =
+			baseColor[1] =
+			baseColor[2] = RB_CalcWaveColorSingle(&pStage->rgbWave);
+		break;
+	case CGEN_ENTITY:
+	case CGEN_LIGHTING_DIFFUSE_ENTITY:
+		if (backEnd.currentEntity)
+		{
+			baseColor[0] = ((unsigned char*)backEnd.currentEntity->e.shaderRGBA)[0] / 255.0f;
+			baseColor[1] = ((unsigned char*)backEnd.currentEntity->e.shaderRGBA)[1] / 255.0f;
+			baseColor[2] = ((unsigned char*)backEnd.currentEntity->e.shaderRGBA)[2] / 255.0f;
+			baseColor[3] = ((unsigned char*)backEnd.currentEntity->e.shaderRGBA)[3] / 255.0f;
 
-				if ( alphaGen == AGEN_IDENTITY &&
-					backEnd.currentEntity->e.shaderRGBA[3] == 255 )
-				{
-					alphaGen = AGEN_SKIP;
-				}
-			}
-			break;
-		case CGEN_ONE_MINUS_ENTITY:
-			if (backEnd.currentEntity)
+			if (alphaGen == AGEN_IDENTITY &&
+				backEnd.currentEntity->e.shaderRGBA[3] == 255)
 			{
-				baseColor[0] = 1.0f - ((unsigned char *)backEnd.currentEntity->e.shaderRGBA)[0] / 255.0f;
-				baseColor[1] = 1.0f - ((unsigned char *)backEnd.currentEntity->e.shaderRGBA)[1] / 255.0f;
-				baseColor[2] = 1.0f - ((unsigned char *)backEnd.currentEntity->e.shaderRGBA)[2] / 255.0f;
-				baseColor[3] = 1.0f - ((unsigned char *)backEnd.currentEntity->e.shaderRGBA)[3] / 255.0f;
+				alphaGen = AGEN_SKIP;
 			}
-			break;
-		case CGEN_LIGHTMAPSTYLE:
-			VectorScale4 (styleColors[pStage->lightmapStyle], 1.0f / 255.0f, baseColor);
-			break;
-		case CGEN_IDENTITY:
-		case CGEN_LIGHTING_DIFFUSE:
-		case CGEN_BAD:
-			break;
-		default:
-			break;
+		}
+		break;
+	case CGEN_ONE_MINUS_ENTITY:
+		if (backEnd.currentEntity)
+		{
+			baseColor[0] = 1.0f - ((unsigned char*)backEnd.currentEntity->e.shaderRGBA)[0] / 255.0f;
+			baseColor[1] = 1.0f - ((unsigned char*)backEnd.currentEntity->e.shaderRGBA)[1] / 255.0f;
+			baseColor[2] = 1.0f - ((unsigned char*)backEnd.currentEntity->e.shaderRGBA)[2] / 255.0f;
+			baseColor[3] = 1.0f - ((unsigned char*)backEnd.currentEntity->e.shaderRGBA)[3] / 255.0f;
+		}
+		break;
+	case CGEN_LIGHTMAPSTYLE:
+		VectorScale4(styleColors[pStage->lightmapStyle], 1.0f / 255.0f, baseColor);
+		break;
+	case CGEN_IDENTITY:
+	case CGEN_LIGHTING_DIFFUSE:
+	case CGEN_BAD:
+		break;
+	default:
+		break;
 	}
 
 	//
 	// alphaGen
 	//
-	switch ( alphaGen )
+	switch (alphaGen)
 	{
-		case AGEN_SKIP:
-			break;
-		case AGEN_CONST:
-			if ( rgbGen != CGEN_CONST ) {
-				baseColor[3] = pStage->constantColor[3];
-				vertColor[3] = 0.0f;
-			}
-			break;
-		case AGEN_WAVEFORM:
-			baseColor[3] = RB_CalcWaveAlphaSingle( &pStage->alphaWave );
+	case AGEN_SKIP:
+		break;
+	case AGEN_CONST:
+		if (rgbGen != CGEN_CONST) {
+			baseColor[3] = pStage->constantColor[3];
 			vertColor[3] = 0.0f;
-			break;
-		case AGEN_ENTITY:
-			if (backEnd.currentEntity)
-			{
-				baseColor[3] = ((unsigned char *)backEnd.currentEntity->e.shaderRGBA)[3] / 255.0f;
-			}
-			vertColor[3] = 0.0f;
-			break;
-		case AGEN_ONE_MINUS_ENTITY:
-			if (backEnd.currentEntity)
-			{
-				baseColor[3] = 1.0f - ((unsigned char *)backEnd.currentEntity->e.shaderRGBA)[3] / 255.0f;
-			}
-			vertColor[3] = 0.0f;
-			break;
-		case AGEN_VERTEX:
-			if ( rgbGen != CGEN_VERTEX ) {
-				baseColor[3] = 0.0f;
-				vertColor[3] = 1.0f;
-			}
-			break;
-		case AGEN_ONE_MINUS_VERTEX:
-			baseColor[3] = 1.0f;
-			vertColor[3] = -1.0f;
-			break;
-		case AGEN_IDENTITY:
-		case AGEN_LIGHTING_SPECULAR:
-		case AGEN_PORTAL:
-			// Done entirely in vertex program
-			baseColor[3] = 1.0f;
-			vertColor[3] = 0.0f;
-			break;
-		default:
-			break;
+		}
+		break;
+	case AGEN_WAVEFORM:
+		baseColor[3] = RB_CalcWaveAlphaSingle(&pStage->alphaWave);
+		vertColor[3] = 0.0f;
+		break;
+	case AGEN_ENTITY:
+		if (backEnd.currentEntity)
+		{
+			baseColor[3] = ((unsigned char*)backEnd.currentEntity->e.shaderRGBA)[3] / 255.0f;
+		}
+		vertColor[3] = 0.0f;
+		break;
+	case AGEN_ONE_MINUS_ENTITY:
+		if (backEnd.currentEntity)
+		{
+			baseColor[3] = 1.0f - ((unsigned char*)backEnd.currentEntity->e.shaderRGBA)[3] / 255.0f;
+		}
+		vertColor[3] = 0.0f;
+		break;
+	case AGEN_VERTEX:
+		if (rgbGen != CGEN_VERTEX) {
+			baseColor[3] = 0.0f;
+			vertColor[3] = 1.0f;
+		}
+		break;
+	case AGEN_ONE_MINUS_VERTEX:
+		baseColor[3] = 1.0f;
+		vertColor[3] = -1.0f;
+		break;
+	case AGEN_IDENTITY:
+	case AGEN_LIGHTING_SPECULAR:
+	case AGEN_PORTAL:
+		// Done entirely in vertex program
+		baseColor[3] = 1.0f;
+		vertColor[3] = 0.0f;
+		break;
+	default:
+		break;
 	}
 
-	if ( forceAlphaGen != NULL )
+	if (forceAlphaGen != NULL)
 	{
 		*forceAlphaGen = alphaGen;
 	}
 
-	if ( forceRGBGen != NULL )
+	if (forceRGBGen != NULL)
 	{
 		*forceRGBGen = rgbGen;
 	}
-	
+
 	// multiply color by overbrightbits if this isn't a blend
-	if (tr.overbrightBits 
-	 && !((blend & GLS_SRCBLEND_BITS) == GLS_SRCBLEND_DST_COLOR)
-	 && !((blend & GLS_SRCBLEND_BITS) == GLS_SRCBLEND_ONE_MINUS_DST_COLOR)
-	 && !((blend & GLS_DSTBLEND_BITS) == GLS_DSTBLEND_SRC_COLOR)
-	 && !((blend & GLS_DSTBLEND_BITS) == GLS_DSTBLEND_ONE_MINUS_SRC_COLOR))
+	if (tr.overbrightBits
+		&& !((blend & GLS_SRCBLEND_BITS) == GLS_SRCBLEND_DST_COLOR)
+		&& !((blend & GLS_SRCBLEND_BITS) == GLS_SRCBLEND_ONE_MINUS_DST_COLOR)
+		&& !((blend & GLS_DSTBLEND_BITS) == GLS_DSTBLEND_SRC_COLOR)
+		&& !((blend & GLS_DSTBLEND_BITS) == GLS_DSTBLEND_ONE_MINUS_SRC_COLOR))
 	{
 		float scale = 1 << tr.overbrightBits;
 
@@ -481,11 +472,11 @@ static void ComputeShaderColors( shaderStage_t *pStage, vec4_t baseColor, vec4_t
 	// FIXME: find some way to implement this.
 #if 0
 	// if in greyscale rendering mode turn all color values into greyscale.
-	if(r_greyscale->integer)
+	if (r_greyscale->integer)
 	{
 		int scale;
-		
-		for(i = 0; i < tess.numVertexes; i++)
+
+		for (i = 0; i < tess.numVertexes; i++)
 		{
 			scale = (tess.svars.colors[i][0] + tess.svars.colors[i][1] + tess.svars.colors[i][2]) / 3;
 			tess.svars.colors[i][0] = tess.svars.colors[i][1] = tess.svars.colors[i][2] = scale;
@@ -494,81 +485,81 @@ static void ComputeShaderColors( shaderStage_t *pStage, vec4_t baseColor, vec4_t
 #endif
 }
 
-static void ComputeFogColorMask( shaderStage_t *pStage, vec4_t fogColorMask )
+static void ComputeFogColorMask(shaderStage_t* pStage, vec4_t fogColorMask)
 {
-	switch(pStage->adjustColorsForFog)
+	switch (pStage->adjustColorsForFog)
 	{
-		case ACFF_MODULATE_RGB:
-			fogColorMask[0] =
+	case ACFF_MODULATE_RGB:
+		fogColorMask[0] =
 			fogColorMask[1] =
 			fogColorMask[2] = 1.0f;
-			fogColorMask[3] = 0.0f;
-			break;
-		case ACFF_MODULATE_ALPHA:
-			fogColorMask[0] =
+		fogColorMask[3] = 0.0f;
+		break;
+	case ACFF_MODULATE_ALPHA:
+		fogColorMask[0] =
 			fogColorMask[1] =
 			fogColorMask[2] = 0.0f;
-			fogColorMask[3] = 1.0f;
-			break;
-		case ACFF_MODULATE_RGBA:
-			fogColorMask[0] =
+		fogColorMask[3] = 1.0f;
+		break;
+	case ACFF_MODULATE_RGBA:
+		fogColorMask[0] =
 			fogColorMask[1] =
 			fogColorMask[2] =
 			fogColorMask[3] = 1.0f;
-			break;
-		default:
-			fogColorMask[0] =
+		break;
+	default:
+		fogColorMask[0] =
 			fogColorMask[1] =
 			fogColorMask[2] =
 			fogColorMask[3] = 0.0f;
-			break;
+		break;
 	}
 }
 
-static void CaptureDrawData(const shaderCommands_t *input, shaderStage_t *stage, int glslShaderIndex, int stageIndex )
+static void CaptureDrawData(const shaderCommands_t* input, shaderStage_t* stage, int glslShaderIndex, int stageIndex)
 {
-	if ( !tr.numFramesToCapture )
+	if (!tr.numFramesToCapture)
 		return;
 
-	if ( input->multiDrawPrimitives )
+	if (input->multiDrawPrimitives)
 	{
 		int numIndexes = 0;
-		for ( int i = 0; i < input->multiDrawPrimitives; i++ )
+		for (int i = 0; i < input->multiDrawPrimitives; i++)
 			numIndexes += input->multiDrawNumIndexes[i];
 
-		const char *data = va("%d,%d,%s,%d,%s,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,Y\n",
-				tr.frameCount,
-				backEnd.currentEntity == &tr.worldEntity ? -1 : (backEnd.currentEntity - tr.refdef.entities),
-				stage->glslShaderGroup ? "lightall" : "generic", glslShaderIndex,
-				input->shader->name, stageIndex, input->shader->sortedIndex, (int)input->shader->sort,
-				input->fogNum,
-				input->cubemapIndex,
-				glState.vertexAttribsState,
-				glState.glStateBits,
-				glState.currentVBO->vertexesVBO,
-				glState.currentIBO->indexesVBO,
-				numIndexes / 3);
+		const char* data = va("%d,%d,%s,%d,%s,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,Y\n",
+			tr.frameCount,
+			backEnd.currentEntity == &tr.worldEntity ? -1 : (backEnd.currentEntity - tr.refdef.entities),
+			stage->glslShaderGroup ? "lightall" : "generic", glslShaderIndex,
+			input->shader->name, stageIndex, input->shader->sortedIndex, (int)input->shader->sort,
+			input->fogNum,
+			input->cubemapIndex,
+			glState.vertexAttribsState,
+			glState.glStateBits,
+			glState.currentVBO->vertexesVBO,
+			glState.currentIBO->indexesVBO,
+			numIndexes / 3);
 		ri.FS_Write(data, strlen(data), tr.debugFile);
 	}
 	else
 	{
-		const char *data = va("%d,%d,%s,%d,%s,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,N\n",
-				tr.frameCount,
-				backEnd.currentEntity == &tr.worldEntity ? -1 : (backEnd.currentEntity - tr.refdef.entities),
-				stage->glslShaderGroup ? "lightall" : "generic", glslShaderIndex,
-				input->shader->name, stageIndex, input->shader->sortedIndex, (int)input->shader->sort,
-				input->fogNum,
-				input->cubemapIndex,
-				glState.vertexAttribsState,
-				glState.glStateBits,
-				glState.currentVBO->vertexesVBO,
-				glState.currentIBO->indexesVBO,
-				input->numIndexes / 3);
+		const char* data = va("%d,%d,%s,%d,%s,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,N\n",
+			tr.frameCount,
+			backEnd.currentEntity == &tr.worldEntity ? -1 : (backEnd.currentEntity - tr.refdef.entities),
+			stage->glslShaderGroup ? "lightall" : "generic", glslShaderIndex,
+			input->shader->name, stageIndex, input->shader->sortedIndex, (int)input->shader->sort,
+			input->fogNum,
+			input->cubemapIndex,
+			glState.vertexAttribsState,
+			glState.glStateBits,
+			glState.currentVBO->vertexesVBO,
+			glState.currentIBO->indexesVBO,
+			input->numIndexes / 3);
 		ri.FS_Write(data, strlen(data), tr.debugFile);
 	}
 }
 
-uint32_t RB_CreateSortKey( const DrawItem& item, int stage, int layer )
+uint32_t RB_CreateSortKey(const DrawItem& item, int stage, int layer)
 {
 	uint32_t key = 0;
 	uintptr_t shaderProgram = (uintptr_t)item.program;
@@ -582,23 +573,23 @@ uint32_t RB_CreateSortKey( const DrawItem& item, int stage, int layer )
 	return key;
 }
 
-static cullType_t RB_GetCullType( const viewParms_t *viewParms, const trRefEntity_t *refEntity, cullType_t shaderCullType )
+static cullType_t RB_GetCullType(const viewParms_t* viewParms, const trRefEntity_t* refEntity, cullType_t shaderCullType)
 {
 	assert(refEntity);
 
 	cullType_t cullType = CT_TWO_SIDED;
-	if ( !backEnd.projection2D )
+	if (!backEnd.projection2D)
 	{
-		if ( shaderCullType != CT_TWO_SIDED )
+		if (shaderCullType != CT_TWO_SIDED)
 		{
 			bool cullFront = (shaderCullType == CT_FRONT_SIDED);
-			if ( viewParms->isMirror )
+			if (viewParms->isMirror)
 				cullFront = !cullFront;
 
-			if ( refEntity->mirrored )
+			if (refEntity->mirrored)
 				cullFront = !cullFront;
 
-			if ( viewParms->flags & VPF_DEPTHSHADOW )
+			if (viewParms->flags & VPF_DEPTHSHADOW)
 				cullFront = !cullFront;
 
 			cullType = (cullFront ? CT_FRONT_SIDED : CT_BACK_SIDED);
@@ -608,15 +599,15 @@ static cullType_t RB_GetCullType( const viewParms_t *viewParms, const trRefEntit
 	return cullType;
 }
 
-DepthRange RB_GetDepthRange( const trRefEntity_t *re, const shader_t *shader )
+DepthRange RB_GetDepthRange(const trRefEntity_t* re, const shader_t* shader)
 {
-	DepthRange range = {0.0f, 1.0f};
-	if ( shader->isSky )
+	DepthRange range = { 0.0f, 1.0f };
+	if (shader->isSky)
 	{
 		// r_showsky will let all the sky blocks be drawn in
 		// front of everything to allow developers to see how
 		// much sky is getting sucked in
-		if ( !r_showsky->integer )
+		if (!r_showsky->integer)
 		{
 			range.minDepth = 1.0f;
 			range.maxDepth = 1.0f;
@@ -626,11 +617,11 @@ DepthRange RB_GetDepthRange( const trRefEntity_t *re, const shader_t *shader )
 			range.maxDepth = 0.0f;
 		}
 	}
-	else if ( re->e.renderfx & RF_NODEPTH )
+	else if (re->e.renderfx & RF_NODEPTH)
 	{
 		range.maxDepth = 0.0f;
 	}
-	else if ( re->e.renderfx & RF_DEPTHHACK )
+	else if (re->e.renderfx & RF_DEPTHHACK)
 	{
 		range.maxDepth = 0.3f;
 	}
@@ -642,15 +633,15 @@ void RB_FillDrawCommand(
 	DrawCommand& drawCmd,
 	GLenum primitiveType,
 	int numInstances,
-	const shaderCommands_t *input
+	const shaderCommands_t* input
 )
 {
 	drawCmd.primitiveType = primitiveType;
 	drawCmd.numInstances = numInstances;
 
-	if ( input->multiDrawPrimitives )
+	if (input->multiDrawPrimitives)
 	{
-		if ( input->multiDrawPrimitives == 1 )
+		if (input->multiDrawPrimitives == 1)
 		{
 			drawCmd.type = DRAW_COMMAND_INDEXED;
 			drawCmd.params.indexed.indexType = GL_INDEX_TYPE;
@@ -664,16 +655,16 @@ void RB_FillDrawCommand(
 			drawCmd.params.multiIndexed.numDraws = input->multiDrawPrimitives;
 
 			drawCmd.params.multiIndexed.firstIndices =
-				ojkAllocArray<glIndex_t *>(*backEndData->perFrameMemory, input->multiDrawPrimitives);
+				ojkAllocArray<glIndex_t*>(*backEndData->perFrameMemory, input->multiDrawPrimitives);
 			memcpy(drawCmd.params.multiIndexed.firstIndices,
 				input->multiDrawFirstIndex,
-				sizeof(glIndex_t *) * input->multiDrawPrimitives);
+				sizeof(glIndex_t*) * input->multiDrawPrimitives);
 
 			drawCmd.params.multiIndexed.numIndices =
 				ojkAllocArray<GLsizei>(*backEndData->perFrameMemory, input->multiDrawPrimitives);
 			memcpy(drawCmd.params.multiIndexed.numIndices,
 				input->multiDrawNumIndexes,
-				sizeof(GLsizei *) * input->multiDrawPrimitives);
+				sizeof(GLsizei*) * input->multiDrawPrimitives);
 		}
 	}
 	else
@@ -690,7 +681,7 @@ void RB_FillDrawCommand(
 }
 
 static UniformBlockBinding GetCameraBlockUniformBinding(
-	const trRefEntity_t *refEntity)
+	const trRefEntity_t* refEntity)
 {
 	const GLuint currentFrameUbo = backEndData->currentFrame->ubo;
 	UniformBlockBinding binding = {};
@@ -772,7 +763,7 @@ static UniformBlockBinding GetFogsBlockUniformBinding()
 }
 
 static UniformBlockBinding GetEntityBlockUniformBinding(
-	const trRefEntity_t *refEntity)
+	const trRefEntity_t* refEntity)
 {
 	const GLuint currentFrameUbo = backEndData->currentFrame->ubo;
 	UniformBlockBinding binding = {};
@@ -806,7 +797,7 @@ static UniformBlockBinding GetEntityBlockUniformBinding(
 }
 
 static UniformBlockBinding GetBonesBlockUniformBinding(
-	const trRefEntity_t *refEntity)
+	const trRefEntity_t* refEntity)
 {
 	const GLuint currentFrameUbo = backEndData->currentFrame->ubo;
 	UniformBlockBinding binding = {};
@@ -826,7 +817,7 @@ static UniformBlockBinding GetBonesBlockUniformBinding(
 }
 
 static UniformBlockBinding GetShaderInstanceBlockUniformBinding(
-	const trRefEntity_t *refEntity, const shader_t *shader)
+	const trRefEntity_t* refEntity, const shader_t* shader)
 {
 	const GLuint currentFrameUbo = backEndData->currentFrame->ubo;
 	UniformBlockBinding binding = {};
@@ -852,8 +843,7 @@ DrawTris
 Draws triangle outlines for debugging
 ================
 */
-static void DrawTris(shaderCommands_t *input, const VertexArraysProperties *vertexArrays) {
-
+static void DrawTris(shaderCommands_t* input, const VertexArraysProperties* vertexArrays) {
 	Allocator& frameAllocator = *backEndData->perFrameMemory;
 	vertexAttribute_t attribs[ATTR_INDEX_MAX] = {};
 	GL_VertexArraysToAttribs(attribs, ARRAY_LEN(attribs), vertexArrays);
@@ -871,12 +861,12 @@ static void DrawTris(shaderCommands_t *input, const VertexArraysProperties *vert
 		}
 		else
 #endif // REND2_SP
-		if (glState.skeletalAnimation)
-		{
-			index |= GENERICDEF_USE_SKELETAL_ANIMATION;
-		}
+			if (glState.skeletalAnimation)
+			{
+				index |= GENERICDEF_USE_SKELETAL_ANIMATION;
+			}
 
-		shaderProgram_t *sp = &tr.genericShader[index];
+		shaderProgram_t* sp = &tr.genericShader[index];
 		assert(sp);
 		UniformDataWriter uniformDataWriter;
 		SamplerBindingsWriter samplerBindingsWriter;
@@ -927,16 +917,16 @@ DrawNormals
 Draws vertex normals for debugging
 ================
 */
-static void DrawNormals(shaderCommands_t *input) {
+static void DrawNormals(shaderCommands_t* input) {
 	//FIXME: implement this
 }
 
-static void ProjectPshadowVBOGLSL( const shaderCommands_t *input, const VertexArraysProperties *vertexArrays ) {
+static void ProjectPshadowVBOGLSL(const shaderCommands_t* input, const VertexArraysProperties* vertexArrays) {
 	int		l;
 	vec3_t	origin;
 	float	radius;
 
-	if ( !backEnd.refdef.num_pshadows ) {
+	if (!backEnd.refdef.num_pshadows) {
 		return;
 	}
 
@@ -944,22 +934,22 @@ static void ProjectPshadowVBOGLSL( const shaderCommands_t *input, const VertexAr
 
 	UniformDataWriter uniformDataWriter;
 	SamplerBindingsWriter samplerBindingsWriter;
-	shaderStage_t *pStage = tess.xstages[0];
+	shaderStage_t* pStage = tess.xstages[0];
 
 	vertexAttribute_t attribs[ATTR_INDEX_MAX] = {};
 	GL_VertexArraysToAttribs(attribs, ARRAY_LEN(attribs), vertexArrays);
 
-	for ( l = 0; l < backEnd.refdef.num_pshadows; l++ ) {
-		pshadow_t	*ps;
-		shaderProgram_t *sp;
+	for (l = 0; l < backEnd.refdef.num_pshadows; l++) {
+		pshadow_t* ps;
+		shaderProgram_t* sp;
 		vec4_t vector;
 
-		if ( !( tess.pshadowBits & ( 1 << l ) ) ) {
+		if (!(tess.pshadowBits & (1 << l))) {
 			continue;	// this surface definately doesn't have any of this shadow
 		}
 
 		ps = &backEnd.refdef.pshadows[l];
-		VectorCopy( ps->lightOrigin, origin );
+		VectorCopy(ps->lightOrigin, origin);
 		radius = ps->lightRadius;
 
 		sp = &tr.pshadowShader;
@@ -1002,7 +992,7 @@ static void ProjectPshadowVBOGLSL( const shaderCommands_t *input, const VertexAr
 		item.numAttributes = vertexArrays->numVertexArrays;
 		item.attributes = ojkAllocArray<vertexAttribute_t>(
 			*backEndData->perFrameMemory, vertexArrays->numVertexArrays);
-		memcpy(item.attributes, attribs, sizeof(*item.attributes)*vertexArrays->numVertexArrays);
+		memcpy(item.attributes, attribs, sizeof(*item.attributes) * vertexArrays->numVertexArrays);
 
 		item.uniformData = uniformDataWriter.Finish(*backEndData->perFrameMemory);
 		// FIXME: This is a bit ugly with the casting
@@ -1027,7 +1017,7 @@ RB_FogPass
 Blends a fog texture on top of everything else
 ===================
 */
-static void RB_FogPass( shaderCommands_t *input, const VertexArraysProperties *vertexArrays )
+static void RB_FogPass(shaderCommands_t* input, const VertexArraysProperties* vertexArrays)
 {
 	cullType_t cullType = RB_GetCullType(&backEnd.viewParms, backEnd.currentEntity, input->shader->cullType);
 
@@ -1043,10 +1033,10 @@ static void RB_FogPass( shaderCommands_t *input, const VertexArraysProperties *v
 		shaderBits |= FOGDEF_USE_VERTEX_ANIMATION;
 	else
 #endif // REND2_SP
-	if (glState.skeletalAnimation)
-		shaderBits |= FOGDEF_USE_SKELETAL_ANIMATION;
+		if (glState.skeletalAnimation)
+			shaderBits |= FOGDEF_USE_SKELETAL_ANIMATION;
 
-	if (tr.world && tr.world->globalFog && 
+	if (tr.world && tr.world->globalFog &&
 		input->fogNum != tr.world->globalFogIndex &&
 		input->shader->sort != SS_FOG)
 		shaderBits |= FOGDEF_USE_FALLBACK_GLOBAL_FOG;
@@ -1054,8 +1044,8 @@ static void RB_FogPass( shaderCommands_t *input, const VertexArraysProperties *v
 	if (input->numPasses > 0)
 		if (input->xstages[0]->alphaTestType != ALPHA_TEST_NONE)
 			shaderBits |= FOGDEF_USE_ALPHA_TEST;
-	
-	shaderProgram_t *sp = tr.fogShader + shaderBits;
+
+	shaderProgram_t* sp = tr.fogShader + shaderBits;
 
 	backEnd.pc.c_fogDraws++;
 
@@ -1064,9 +1054,9 @@ static void RB_FogPass( shaderCommands_t *input, const VertexArraysProperties *v
 	uniformDataWriter.SetUniformInt(UNIFORM_FOGINDEX, input->fogNum - 1);
 	if (input->numPasses > 0)
 		uniformDataWriter.SetUniformInt(UNIFORM_ALPHA_TEST_TYPE, input->xstages[0]->alphaTestType);
-	
+
 	uint32_t stateBits = GLS_SRCBLEND_SRC_ALPHA | GLS_DSTBLEND_ONE_MINUS_SRC_ALPHA;
-	if ( tess.shader->fogPass == FP_EQUAL )
+	if (tess.shader->fogPass == FP_EQUAL)
 		stateBits |= GLS_DEPTHFUNC_EQUAL;
 
 	if (input->shader->polygonOffset == qtrue)
@@ -1152,11 +1142,11 @@ static void RB_FogPass( shaderCommands_t *input, const VertexArraysProperties *v
 	}
 }
 
-static unsigned int RB_CalcShaderVertexAttribs( const shader_t *shader )
+static unsigned int RB_CalcShaderVertexAttribs(const shader_t* shader)
 {
 	unsigned int vertexAttribs = shader->vertexAttribs;
 #ifdef REND2_SP_MD3
-	if(glState.vertexAnimation)
+	if (glState.vertexAnimation)
 	{
 		//vertexAttribs &= ~ATTR_COLOR;
 		vertexAttribs |= ATTR_POSITION2;
@@ -1176,10 +1166,10 @@ static unsigned int RB_CalcShaderVertexAttribs( const shader_t *shader )
 	return vertexAttribs;
 }
 
-static shaderProgram_t *SelectShaderProgram( int stageIndex, shaderStage_t *stage, shaderProgram_t *glslShaderGroup, bool useAlphaTestGE192, bool forceRefraction )
+static shaderProgram_t* SelectShaderProgram(int stageIndex, shaderStage_t* stage, shaderProgram_t* glslShaderGroup, bool useAlphaTestGE192, bool forceRefraction)
 {
 	uint32_t index;
-	shaderProgram_t *result = nullptr;
+	shaderProgram_t* result = nullptr;
 
 	if (forceRefraction)
 	{
@@ -1195,10 +1185,10 @@ static shaderProgram_t *SelectShaderProgram( int stageIndex, shaderStage_t *stag
 		}
 		else
 #endif // REND2_SP
-		if (glState.skeletalAnimation)
-		{
-			index |= REFRACTIONDEF_USE_SKELETAL_ANIMATION;
-		}
+			if (glState.skeletalAnimation)
+			{
+				index |= REFRACTIONDEF_USE_SKELETAL_ANIMATION;
+			}
 
 		if (stage->bundle[0].tcGen != TCGEN_TEXTURE || (stage->bundle[0].numTexMods))
 			index |= REFRACTIONDEF_USE_TCGEN_AND_TCMOD;
@@ -1234,13 +1224,13 @@ static shaderProgram_t *SelectShaderProgram( int stageIndex, shaderStage_t *stag
 				}
 				else
 #endif // REND2_SP
-				if (glState.skeletalAnimation)
-				{
-					index |= LIGHTDEF_USE_SKELETAL_ANIMATION;
-				}
+					if (glState.skeletalAnimation)
+					{
+						index |= LIGHTDEF_USE_SKELETAL_ANIMATION;
+					}
 			}
 
-			if ( !useAlphaTestGE192 )
+			if (!useAlphaTestGE192)
 			{
 				if (stage->alphaTestType != ALPHA_TEST_NONE)
 					index |= LIGHTDEF_USE_ALPHA_TEST;
@@ -1268,12 +1258,12 @@ static shaderProgram_t *SelectShaderProgram( int stageIndex, shaderStage_t *stag
 			}
 			else
 #endif // REND2_SP
-			if (glState.skeletalAnimation)
-			{
-				index |= GENERICDEF_USE_SKELETAL_ANIMATION;
-			}
+				if (glState.skeletalAnimation)
+				{
+					index |= GENERICDEF_USE_SKELETAL_ANIMATION;
+				}
 
-			if ( !useAlphaTestGE192 )
+			if (!useAlphaTestGE192)
 			{
 				if (stage->alphaTestType != ALPHA_TEST_NONE)
 					index |= GENERICDEF_USE_TCGEN_AND_TCMOD | GENERICDEF_USE_ALPHA_TEST;
@@ -1314,10 +1304,10 @@ static shaderProgram_t *SelectShaderProgram( int stageIndex, shaderStage_t *stag
 				if (glState.skeletalAnimation)
 				{
 					index |= LIGHTDEF_USE_SKELETAL_ANIMATION;
-				} 
+				}
 			}
 
-			if ( !useAlphaTestGE192 )
+			if (!useAlphaTestGE192)
 			{
 				if (stage->alphaTestType != ALPHA_TEST_NONE)
 					index |= LIGHTDEF_USE_TCGEN_AND_TCMOD | LIGHTDEF_USE_ALPHA_TEST;
@@ -1346,7 +1336,7 @@ RB_ShadowTessEnd
 
 =================
 */
-void RB_ShadowTessEnd(shaderCommands_t *input, const VertexArraysProperties *vertexArrays) {
+void RB_ShadowTessEnd(shaderCommands_t* input, const VertexArraysProperties* vertexArrays) {
 	if (glConfig.stencilBits < 4) {
 		ri.Printf(PRINT_ALL, "no stencil bits for stencil writing\n");
 		return;
@@ -1392,7 +1382,7 @@ void RB_ShadowTessEnd(shaderCommands_t *input, const VertexArraysProperties *ver
 	RB_AddDrawItem(backEndData->currentPass, key, item);
 }
 
-static void RB_IterateStagesGeneric( shaderCommands_t *input, const VertexArraysProperties *vertexArrays )
+static void RB_IterateStagesGeneric(shaderCommands_t* input, const VertexArraysProperties* vertexArrays)
 {
 	Allocator& frameAllocator = *backEndData->perFrameMemory;
 	cullType_t cullType = RB_GetCullType(&backEnd.viewParms, backEnd.currentEntity, input->shader->cullType);
@@ -1403,10 +1393,10 @@ static void RB_IterateStagesGeneric( shaderCommands_t *input, const VertexArrays
 	UniformDataWriter uniformDataWriter;
 	SamplerBindingsWriter samplerBindingsWriter;
 
-	for ( int stage = 0; stage < MAX_SHADER_STAGES; stage++ )
+	for (int stage = 0; stage < MAX_SHADER_STAGES; stage++)
 	{
-		shaderStage_t *pStage = input->xstages[stage];
-		shaderProgram_t *sp;
+		shaderStage_t* pStage = input->xstages[stage];
+		shaderProgram_t* sp;
 		vec4_t texMatrix;
 		vec4_t texOffTurb;
 		int stateBits;
@@ -1417,12 +1407,12 @@ static void RB_IterateStagesGeneric( shaderCommands_t *input, const VertexArrays
 		bool forceRefraction = false;
 		vec4_t disintegrationInfo;
 
-		if ( !pStage )
+		if (!pStage)
 		{
 			break;
 		}
 
-		if ( pStage->ss )
+		if (pStage->ss)
 		{
 			continue;
 		}
@@ -1433,9 +1423,9 @@ static void RB_IterateStagesGeneric( shaderCommands_t *input, const VertexArrays
 		{
 			assert(backEnd.currentEntity->e.renderfx >= 0);
 
-			if ( backEnd.currentEntity->e.renderfx & ( RF_DISINTEGRATE1 | RF_DISINTEGRATE2 ))
+			if (backEnd.currentEntity->e.renderfx & (RF_DISINTEGRATE1 | RF_DISINTEGRATE2))
 			{
-				if ( backEnd.currentEntity->e.renderfx & RF_DISINTEGRATE1 )
+				if (backEnd.currentEntity->e.renderfx & RF_DISINTEGRATE1)
 				{
 					// we want to be able to rip a hole in the thing being
 					// disintegrated, and by doing the depth-testing it avoids some
@@ -1453,7 +1443,7 @@ static void RB_IterateStagesGeneric( shaderCommands_t *input, const VertexArrays
 				disintegrationInfo[3] = (backEnd.refdef.time - backEnd.currentEntity->e.endTime) * 0.045f;
 				disintegrationInfo[3] *= disintegrationInfo[3];
 			}
-			else if ( backEnd.currentEntity->e.renderfx & RF_RGB_TINT )
+			else if (backEnd.currentEntity->e.renderfx & RF_RGB_TINT)
 			{//want to use RGBGen from ent
 				forceRGBGen = CGEN_ENTITY;
 			}
@@ -1465,11 +1455,11 @@ static void RB_IterateStagesGeneric( shaderCommands_t *input, const VertexArrays
 			if (input->shader->useDistortion == qtrue || backEnd.currentEntity->e.renderfx & RF_DISTORTION)
 				forceRefraction = true;
 
-			if ( backEnd.currentEntity->e.renderfx & RF_FORCE_ENT_ALPHA )
+			if (backEnd.currentEntity->e.renderfx & RF_FORCE_ENT_ALPHA)
 			{
 				stateBits = GLS_SRCBLEND_SRC_ALPHA | GLS_DSTBLEND_ONE_MINUS_SRC_ALPHA;
 #ifndef REND2_SP
-				if ( backEnd.currentEntity->e.renderfx & RF_ALPHA_DEPTH )
+				if (backEnd.currentEntity->e.renderfx & RF_ALPHA_DEPTH)
 				{
 					// depth write, so faces through the model will be stomped
 					// over by nearer ones. this works because we draw
@@ -1498,8 +1488,8 @@ static void RB_IterateStagesGeneric( shaderCommands_t *input, const VertexArrays
 		assert(sp);
 
 		uniformDataWriter.Start(sp);
-		
-		if ( input->fogNum ) {
+
+		if (input->fogNum) {
 			vec4_t fogColorMask;
 			ComputeFogColorMask(pStage, fogColorMask);
 			uniformDataWriter.SetUniformVec4(UNIFORM_FOGCOLORMASK, fogColorMask);
@@ -1507,7 +1497,7 @@ static void RB_IterateStagesGeneric( shaderCommands_t *input, const VertexArrays
 		}
 
 		float volumetricBaseValue = -1.0f;
-		if ( backEnd.currentEntity->e.renderfx & RF_VOLUMETRIC )
+		if (backEnd.currentEntity->e.renderfx & RF_VOLUMETRIC)
 		{
 			volumetricBaseValue = backEnd.currentEntity->e.shaderRGBA[0] / 255.0f;
 		}
@@ -1537,13 +1527,13 @@ static void RB_IterateStagesGeneric( shaderCommands_t *input, const VertexArrays
 
 			if (backEnd.currentEntity->e.renderfx & RF_FORCE_ENT_ALPHA)
 			{
-				baseColor[3] = backEnd.currentEntity->e.shaderRGBA[3] / 255.0f; 
+				baseColor[3] = backEnd.currentEntity->e.shaderRGBA[3] / 255.0f;
 				vertColor[3] = 0.0f;
 			}
 
 			if (backEnd.currentEntity->e.hModel != NULL)
 			{
-				model_t *model = R_GetModelByHandle(backEnd.currentEntity->e.hModel);
+				model_t* model = R_GetModelByHandle(backEnd.currentEntity->e.hModel);
 				if (model->type != MOD_BRUSH)
 				{
 					switch (forceRGBGen)
@@ -1588,8 +1578,8 @@ static void RB_IterateStagesGeneric( shaderCommands_t *input, const VertexArrays
 		{
 			vec4_t color;
 			color[0] =
-			color[1] =
-			color[2] = powf(2.0f, r_cameraExposure->value);
+				color[1] =
+				color[2] = powf(2.0f, r_cameraExposure->value);
 			color[3] = 10.0f;
 			uniformDataWriter.SetUniformVec4(UNIFORM_COLOR, color);
 			uniformDataWriter.SetUniformVec2(UNIFORM_AUTOEXPOSUREMINMAX, tr.refdef.autoExposureMinMax);
@@ -1602,7 +1592,7 @@ static void RB_IterateStagesGeneric( shaderCommands_t *input, const VertexArrays
 			texMatrix[0] = texMatrix[3] = input->texCoords[input->firstIndex][0][0];
 		else
 #endif
-			ComputeTexMods(pStage, TB_DIFFUSEMAP, texMatrix, texOffTurb); 
+			ComputeTexMods(pStage, TB_DIFFUSEMAP, texMatrix, texOffTurb);
 
 		uniformDataWriter.SetUniformVec4(UNIFORM_DIFFUSETEXMATRIX, texMatrix);
 		uniformDataWriter.SetUniformVec4(UNIFORM_DIFFUSETEXOFFTURB, texOffTurb);
@@ -1610,7 +1600,7 @@ static void RB_IterateStagesGeneric( shaderCommands_t *input, const VertexArrays
 		texCoordGen_t bundle0TcGen = pStage->bundle[0].tcGen;
 		texCoordGen_t bundle1TcGen = pStage->bundle[1].tcGen;
 #ifdef REND2_SP
-		if (backEnd.currentEntity && backEnd.currentEntity->e.renderfx&RF_FIRST_PERSON)
+		if (backEnd.currentEntity && backEnd.currentEntity->e.renderfx & RF_FIRST_PERSON)
 		{
 			if (bundle0TcGen == TCGEN_ENVIRONMENT_MAPPED_SP)
 				bundle0TcGen = TCGEN_ENVIRONMENT_MAPPED_SP_FP;
@@ -1646,18 +1636,18 @@ static void RB_IterateStagesGeneric( shaderCommands_t *input, const VertexArrays
 		//
 		// do multitexture
 		//
-		bool enableCubeMaps = (	r_cubeMapping->integer
-								&& !(tr.viewParms.flags & VPF_NOCUBEMAPS)
-								&& input->cubemapIndex > 0
-								&& pStage->rgbGen != CGEN_LIGHTMAPSTYLE );
-		bool enableDLights = (	tess.dlightBits
-								&& tess.shader->sort <= SS_OPAQUE
-								&& !(tess.shader->surfaceFlags & (SURF_NODLIGHT | SURF_SKY))
-								&& pStage->rgbGen != CGEN_LIGHTMAPSTYLE );
+		bool enableCubeMaps = (r_cubeMapping->integer
+			&& !(tr.viewParms.flags & VPF_NOCUBEMAPS)
+			&& input->cubemapIndex > 0
+			&& pStage->rgbGen != CGEN_LIGHTMAPSTYLE);
+		bool enableDLights = (tess.dlightBits
+			&& tess.shader->sort <= SS_OPAQUE
+			&& !(tess.shader->surfaceFlags & (SURF_NODLIGHT | SURF_SKY))
+			&& pStage->rgbGen != CGEN_LIGHTMAPSTYLE);
 
 		if (forceRefraction)
 		{
-			FBO_t *srcFbo = tr.renderFbo;
+			FBO_t* srcFbo = tr.renderFbo;
 			if (tr.msaaResolveFbo)
 				srcFbo = tr.msaaResolveFbo;
 
@@ -1670,21 +1660,21 @@ static void RB_IterateStagesGeneric( shaderCommands_t *input, const VertexArrays
 			else
 				samplerBindingsWriter.AddStaticImage(tr.fixedLevelsImage, TB_LEVELSMAP);
 		}
-		else if ( backEnd.depthFill )
+		else if (backEnd.depthFill)
 		{
 			if (pStage->alphaTestType == ALPHA_TEST_NONE)
 				samplerBindingsWriter.AddStaticImage(tr.whiteImage, 0);
-			else if ( pStage->bundle[TB_COLORMAP].image[0] != 0 )
+			else if (pStage->bundle[TB_COLORMAP].image[0] != 0)
 				samplerBindingsWriter.AddAnimatedImage(&pStage->bundle[TB_COLORMAP], TB_COLORMAP);
 		}
-		else if ( pStage->glslShaderGroup == tr.lightallShader )
+		else if (pStage->glslShaderGroup == tr.lightallShader)
 		{
 			int i;
 			vec4_t enableTextures = {};
 
 			if (r_sunlightMode->integer &&
-					(backEnd.viewParms.flags & VPF_USESUNLIGHT) &&
-					(pStage->glslShaderIndex & LIGHTDEF_LIGHTTYPE_MASK))
+				(backEnd.viewParms.flags & VPF_USESUNLIGHT) &&
+				(pStage->glslShaderIndex & LIGHTDEF_LIGHTTYPE_MASK))
 			{
 				samplerBindingsWriter.AddStaticImage(tr.sunShadowArrayImage, TB_SHADOWMAP);
 				enableTextures[2] = 1.0f;
@@ -1770,23 +1760,22 @@ static void RB_IterateStagesGeneric( shaderCommands_t *input, const VertexArrays
 						samplerBindingsWriter.AddStaticImage(tr.screenSsaoImage, TB_SSAOMAP);
 					else if (r_ssao->integer)
 						samplerBindingsWriter.AddStaticImage(tr.whiteImage, TB_SSAOMAP);
-
 				}
 
-				if ( enableCubeMaps )
+				if (enableCubeMaps)
 				{
-					enableTextures[3] =  1.0f;
+					enableTextures[3] = 1.0f;
 				}
 			}
 
 			uniformDataWriter.SetUniformVec4(UNIFORM_ENABLETEXTURES, enableTextures);
 		}
-		else if ( pStage->bundle[1].image[0] != 0 )
+		else if (pStage->bundle[1].image[0] != 0)
 		{
 			samplerBindingsWriter.AddAnimatedImage(&pStage->bundle[0], 0);
 			samplerBindingsWriter.AddAnimatedImage(&pStage->bundle[1], 1);
 		}
-		else 
+		else
 		{
 			//
 			// set state
@@ -1797,10 +1786,10 @@ static void RB_IterateStagesGeneric( shaderCommands_t *input, const VertexArrays
 		//
 		// testing cube map
 		//
-		if ( enableCubeMaps )
+		if (enableCubeMaps)
 		{
 			vec4_t vec;
-			cubemap_t *cubemap = &tr.cubemaps[input->cubemapIndex - 1];
+			cubemap_t* cubemap = &tr.cubemaps[input->cubemapIndex - 1];
 
 			samplerBindingsWriter.AddStaticImage(cubemap->image, TB_CUBEMAP);
 			samplerBindingsWriter.AddStaticImage(tr.envBrdfImage, TB_ENVBRDFMAP);
@@ -1812,7 +1801,7 @@ static void RB_IterateStagesGeneric( shaderCommands_t *input, const VertexArrays
 
 			uniformDataWriter.SetUniformVec4(UNIFORM_CUBEMAPINFO, vec);
 		}
-		
+
 		if (enableDLights)
 		{
 			uniformDataWriter.SetUniformInt(UNIFORM_LIGHTMASK, tess.dlightBits);
@@ -1857,7 +1846,7 @@ static void RB_IterateStagesGeneric( shaderCommands_t *input, const VertexArrays
 		RB_AddDrawItem(backEndData->currentPass, key, item);
 
 		// allow skipping out to show just lightmaps during development
-		if ( r_lightmap->integer && ( pStage->bundle[0].isLightmap || pStage->bundle[1].isLightmap ) )
+		if (r_lightmap->integer && (pStage->bundle[0].isLightmap || pStage->bundle[1].isLightmap))
 		{
 			break;
 		}
@@ -1870,9 +1859,9 @@ static void RB_IterateStagesGeneric( shaderCommands_t *input, const VertexArrays
 /*
 ** RB_StageIteratorGeneric
 */
-void RB_StageIteratorGeneric( void )
+void RB_StageIteratorGeneric(void)
 {
-	shaderCommands_t *input = &tess;
+	shaderCommands_t* input = &tess;
 	if (!input->numVertexes || !input->numIndexes)
 	{
 		return;
@@ -1881,17 +1870,17 @@ void RB_StageIteratorGeneric( void )
 	//
 	// log this call
 	//
-	if ( r_logFile->integer ) 
+	if (r_logFile->integer)
 	{
 		// don't just call LogComment, or we will get
 		// a call to va() every frame!
-		GLimp_LogComment( va("--- RB_StageIteratorGeneric( %s ) ---\n", tess.shader->name) );
+		GLimp_LogComment(va("--- RB_StageIteratorGeneric( %s ) ---\n", tess.shader->name));
 	}
 
 	//
 	// update vertex buffer data
-	// 
-	uint32_t vertexAttribs = RB_CalcShaderVertexAttribs( input->shader );
+	//
+	uint32_t vertexAttribs = RB_CalcShaderVertexAttribs(input->shader);
 	if (tess.useInternalVBO)
 	{
 		RB_DeformTessGeometry();
@@ -1906,10 +1895,10 @@ void RB_StageIteratorGeneric( void )
 	// vertex arrays
 	//
 	VertexArraysProperties vertexArrays;
-	if ( tess.useInternalVBO )
+	if (tess.useInternalVBO)
 	{
 		CalculateVertexArraysProperties(vertexAttribs, &vertexArrays);
-		for ( int i = 0; i < vertexArrays.numVertexArrays; i++ )
+		for (int i = 0; i < vertexArrays.numVertexArrays; i++)
 		{
 			int attributeIndex = vertexArrays.enabledAttributes[i];
 			vertexArrays.offsets[attributeIndex] += backEndData->currentFrame->dynamicVboCommitOffset;
@@ -1920,23 +1909,23 @@ void RB_StageIteratorGeneric( void )
 		CalculateVertexArraysFromVBO(vertexAttribs, glState.currentVBO, &vertexArrays);
 	}
 
-	if ( backEnd.depthFill )
+	if (backEnd.depthFill)
 	{
-		RB_IterateStagesGeneric( input, &vertexArrays );
+		RB_IterateStagesGeneric(input, &vertexArrays);
 	}
 	else
 	{
-		RB_IterateStagesGeneric( input, &vertexArrays );
+		RB_IterateStagesGeneric(input, &vertexArrays);
 
 		//
 		// pshadows!
 		//
 		if (r_shadows->integer == 4 &&
-				tess.pshadowBits &&
-				tess.shader->sort <= SS_OPAQUE &&
-				!(tess.shader->surfaceFlags & (SURF_NODLIGHT | SURF_SKY)))
+			tess.pshadowBits &&
+			tess.shader->sort <= SS_OPAQUE &&
+			!(tess.shader->surfaceFlags & (SURF_NODLIGHT | SURF_SKY)))
 		{
-			ProjectPshadowVBOGLSL( input, &vertexArrays );
+			ProjectPshadowVBOGLSL(input, &vertexArrays);
 		}
 
 		//
@@ -1944,14 +1933,14 @@ void RB_StageIteratorGeneric( void )
 		//
 		if (glState.genShadows && r_shadows->integer == 2)
 		{
-			RB_ShadowTessEnd( input, &vertexArrays );
+			RB_ShadowTessEnd(input, &vertexArrays);
 		}
 
 		//
 		// now do fog
 		//
-		const fog_t *fog = nullptr;
-		if ( tr.world && input->fogNum != 0)
+		const fog_t* fog = nullptr;
+		if (tr.world && input->fogNum != 0)
 		{
 			fog = tr.world->fogs + input->fogNum;
 		}
@@ -1961,35 +1950,35 @@ void RB_StageIteratorGeneric( void )
 		//
 		// draw debugging stuff
 		//
-		if ( r_showtris->integer ) {
-			DrawTris( input, &vertexArrays );
+		if (r_showtris->integer) {
+			DrawTris(input, &vertexArrays);
 		}
-		if ( r_shownormals->integer ) {
-			DrawNormals( input );
+		if (r_shownormals->integer) {
+			DrawNormals(input);
 		}
 	}
 
 	RB_CommitInternalBufferData();
 }
 
-void RB_BinTriangleCounts( void )
+void RB_BinTriangleCounts(void)
 {
 	int numTriangles = tess.numIndexes / 3;
-	if ( numTriangles < 20 )
+	if (numTriangles < 20)
 		backEnd.pc.c_triangleCountBins[TRI_BIN_0_19]++;
-	else if ( numTriangles < 50 )
+	else if (numTriangles < 50)
 		backEnd.pc.c_triangleCountBins[TRI_BIN_20_49]++;
-	else if ( numTriangles < 100 )
+	else if (numTriangles < 100)
 		backEnd.pc.c_triangleCountBins[TRI_BIN_50_99]++;
-	else if ( numTriangles < 300 )
+	else if (numTriangles < 300)
 		backEnd.pc.c_triangleCountBins[TRI_BIN_100_299]++;
-	else if ( numTriangles < 600 )
+	else if (numTriangles < 600)
 		backEnd.pc.c_triangleCountBins[TRI_BIN_300_599]++;
-	else if ( numTriangles < 1000 )
+	else if (numTriangles < 1000)
 		backEnd.pc.c_triangleCountBins[TRI_BIN_1000_1499]++;
-	else if ( numTriangles < 1500 )
+	else if (numTriangles < 1500)
 		backEnd.pc.c_triangleCountBins[TRI_BIN_1500_1999]++;
-	else if ( numTriangles < 2000 )
+	else if (numTriangles < 2000)
 		backEnd.pc.c_triangleCountBins[TRI_BIN_2000_2999]++;
 	else
 		backEnd.pc.c_triangleCountBins[TRI_BIN_3000_PLUS]++;
@@ -1998,8 +1987,8 @@ void RB_BinTriangleCounts( void )
 /*
 ** RB_EndSurface
 */
-void RB_EndSurface( void ) {
-	shaderCommands_t *input;
+void RB_EndSurface(void) {
+	shaderCommands_t* input;
 
 	input = &tess;
 
@@ -2007,15 +1996,15 @@ void RB_EndSurface( void ) {
 		return;
 	}
 
-	if (input->indexes[SHADER_MAX_INDEXES-1] != 0) {
-		ri.Error (ERR_DROP, "RB_EndSurface() - SHADER_MAX_INDEXES hit");
-	}	
-	if (input->xyz[SHADER_MAX_VERTEXES-1][0] != 0) {
-		ri.Error (ERR_DROP, "RB_EndSurface() - SHADER_MAX_VERTEXES hit");
+	if (input->indexes[SHADER_MAX_INDEXES - 1] != 0) {
+		ri.Error(ERR_DROP, "RB_EndSurface() - SHADER_MAX_INDEXES hit");
+	}
+	if (input->xyz[SHADER_MAX_VERTEXES - 1][0] != 0) {
+		ri.Error(ERR_DROP, "RB_EndSurface() - SHADER_MAX_VERTEXES hit");
 	}
 
 	// for debugging of sort order issues, stop rendering after a given sort value
-	if ( r_debugSort->integer && r_debugSort->integer < tess.shader->sort ) {
+	if (r_debugSort->integer && r_debugSort->integer < tess.shader->sort) {
 		return;
 	}
 
@@ -2064,5 +2053,5 @@ void RB_EndSurface( void ) {
 	glState.skeletalAnimation = qfalse;
 	glState.genShadows = qfalse;
 
-	GLimp_LogComment( "----------\n" );
+	GLimp_LogComment("----------\n");
 }

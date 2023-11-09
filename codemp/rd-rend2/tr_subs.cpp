@@ -75,7 +75,8 @@ void* Hunk_Alloc(const int size, const ha_pref preference)
 	return ri->Hunk_Alloc(size, preference);
 }
 
-int Hunk_MemoryRemaining(void) {
+int Hunk_MemoryRemaining(void) 
+{
 	return ri->Hunk_MemoryRemaining();
 }
 
@@ -85,8 +86,9 @@ void* Z_Malloc(const int iSize, const memtag_t eTag, const qboolean bZeroit, con
 	return ri->Z_Malloc(iSize, eTag, bZeroit, iUnusedAlign);
 }
 
-void Z_Free(void* ptr) {
-	ri->Z_Free(ptr);
+void Z_Free(void* pvAddress)
+{
+	ri->Z_Free(pvAddress);
 }
 
 int Z_MemSize(const memtag_t eTag)

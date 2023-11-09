@@ -1106,7 +1106,7 @@ void cgi_R_DrawStretchPic(float x, float y, float w, float h,
 	float s1, float t1, float s2, float t2, qhandle_t hShader);
 
 void cgi_R_ModelBounds(qhandle_t model, vec3_t mins, vec3_t maxs);
-void cgi_R_LerpTag(orientation_t* tag, qhandle_t mod, int startFrame, int endFrame,float frac, const char* tagName);
+void cgi_R_LerpTag(orientation_t* tag, qhandle_t mod, int startFrame, int endFrame, float frac, const char* tagName);
 // Does weird, barely controllable rotation behaviour
 void cgi_R_DrawRotatePic(float x, float y, float w, float h,
 	float s1, float t1, float s2, float t2, float a, qhandle_t hShader, float aspectCorrection);

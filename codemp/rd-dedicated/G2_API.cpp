@@ -2332,7 +2332,7 @@ void G2API_CopySpecificG2Model(CGhoul2Info_v& ghoul2_from, const int model_from,
 		}
 #endif
 	}
-		}
+}
 
 // This version will automatically copy everything about this model, and make a new one if necessary.
 void G2API_DuplicateGhoul2Instance(const CGhoul2Info_v& g2_from, CGhoul2Info_v** g2_to)
