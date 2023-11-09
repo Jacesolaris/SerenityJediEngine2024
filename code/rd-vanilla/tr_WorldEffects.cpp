@@ -1931,19 +1931,16 @@ void RE_WorldEffectCommand(const char* command) // vanilla sp
 	//---------------------
 	else if ((Q_stricmp(token, "spacedust") == 0) || g_Weather->integer == 9)
 	{
-		int count;
 		if (mParticleClouds.full())
 		{
 			COM_EndParseSession();
 			return;
 		}
-		token = COM_ParseExt(&command, qfalse);
-		count = atoi(token);
 
 		CParticleCloud& nCloud = mParticleClouds.push_back();
-		nCloud.Initialize(count, "gfx/effects/snowpuff1.tga");
-		nCloud.mHeight = 1.2f;
-		nCloud.mWidth = 1.2f;
+		nCloud.Initialize(1000, "gfx/effects/snowpuff1.tga");
+		nCloud.mHeight = 2.5f;
+		nCloud.mWidth = 2.5f;
 		nCloud.mGravity = 0.0f;
 		nCloud.mBlendMode = 1;
 		nCloud.mRotationChangeNext = 0;
