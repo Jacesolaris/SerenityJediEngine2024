@@ -302,7 +302,7 @@ using refimport_t = struct refimport_s
 	void* (*Z_Malloc)(const int iSize, const memtag_t eTag, const qboolean bZeroit, const int iUnusedAlign);
 	// return memory NOT zero-filled by default
 	void (*Z_Free)(void* ptr);
-	int (*Z_MemSize)(memtag_t eTag);
+	int (*Z_MemSize)(const memtag_t eTag);
 	void (*Z_MorphMallocTag)(void* pvBuffer, memtag_t eDesiredTag);
 
 	void (*Cmd_ExecuteString)(const char* text);

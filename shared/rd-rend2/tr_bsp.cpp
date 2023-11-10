@@ -1931,7 +1931,7 @@ void R_StitchAllPatches(world_t* worldData) {
 			numstitches += R_TryStitchingPatch(worldData, i);
 		}
 	} while (stitched);
-	ri.Printf(PRINT_ALL, "stitched %d LoD cracks\n", numstitches);
+	//ri.Printf(PRINT_ALL, "stitched %d LoD cracks\n", numstitches);
 }
 
 /*
@@ -2268,7 +2268,8 @@ static void R_CreateWorldVBOs(world_t* worldData)
 R_LoadSurfaces
 ===============
 */
-static	void R_LoadSurfaces(world_t* worldData, lump_t* surfs, lump_t* verts, lump_t* indexLump) {
+static void R_LoadSurfaces(world_t* worldData, lump_t* surfs, lump_t* verts, lump_t* indexLump)
+{
 	dsurface_t* in;
 	msurface_t* out;
 	drawVert_t* dv;

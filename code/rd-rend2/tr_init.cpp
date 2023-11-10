@@ -1561,7 +1561,7 @@ void R_Register(void)
 	r_deluxeMapping = ri_Cvar_Get_NoComm("r_deluxeMapping", "1", CVAR_ARCHIVE | CVAR_LATCH, "Disable/enable reading deluxemaps when compiled with q3map2");
 	r_deluxeSpecular = ri_Cvar_Get_NoComm("r_deluxeSpecular", "1", CVAR_ARCHIVE | CVAR_LATCH, "Disable/enable/scale the specular response from deluxemaps");
 	r_parallaxMapping = ri_Cvar_Get_NoComm("r_parallaxMapping", "0", CVAR_ARCHIVE | CVAR_LATCH, "Disable/enable parallax mapping");
-	r_cubeMapping = ri_Cvar_Get_NoComm("r_cubeMapping", "1", CVAR_ARCHIVE | CVAR_LATCH, "Disable/enable cubemapping");
+	r_cubeMapping = ri_Cvar_Get_NoComm("r_cubeMapping", "0", CVAR_ARCHIVE | CVAR_LATCH, "Disable/enable cubemapping");
 	r_cubeMappingBounces = ri_Cvar_Get_NoComm("r_cubeMappingBounces", "1", CVAR_ARCHIVE | CVAR_LATCH, "Renders cubemaps multiple times to get reflections in reflections");
 	ri.Cvar_CheckRange(r_cubeMappingBounces, 0, 2, qfalse);
 	r_baseNormalX = ri_Cvar_Get_NoComm("r_baseNormalX", "1.0", CVAR_ARCHIVE | CVAR_LATCH, "");

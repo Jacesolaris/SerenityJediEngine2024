@@ -3745,26 +3745,26 @@ constexpr auto MAX_SHADER_FILES = 8192;
 static void ScanAndLoadShaderFiles(void)
 {
 	char* buffers[MAX_SHADER_FILES]{};
-	int num_shader_files;
+	int numShaderFiles;
 	int i;
 	long sum = 0;
 
 	// scan for shader files
-	char** shader_files = ri.FS_ListFiles("shaders", ".shader", &num_shader_files);
+	char** shader_files = ri.FS_ListFiles("shaders", ".shader", &numShaderFiles);
 
-	if (!shader_files || !num_shader_files)
+	if (!shader_files || !numShaderFiles)
 	{
 		ri.Error(ERR_FATAL, "WARNING: no shader files found\n");
 		return;
 	}
 
-	if (num_shader_files > MAX_SHADER_FILES)
+	if (numShaderFiles > MAX_SHADER_FILES)
 	{
-		num_shader_files = MAX_SHADER_FILES;
+		numShaderFiles = MAX_SHADER_FILES;
 	}
 
 	// load and store shader files
-	for (i = 0; i < num_shader_files; i++)
+	for (i = 0; i < numShaderFiles; i++)
 	{
 		char filename[MAX_QPATH];
 
@@ -3780,12 +3780,12 @@ static void ScanAndLoadShaderFiles(void)
 	}
 
 	// build single large buffer
-	s_shaderText = static_cast<char*>(R_Hunk_Alloc(sum + num_shader_files * 2, qtrue));
+	s_shaderText = static_cast<char*>(R_Hunk_Alloc(sum + numShaderFiles * 2, qtrue));
 	s_shaderText[0] = '\0';
 	char* text_end = s_shaderText;
 
 	// free in reverse order, so the temp files are all dumped
-	for (i = num_shader_files - 1; i >= 0; i--)
+	for (i = numShaderFiles - 1; i >= 0; i--)
 	{
 		if (!buffers[i])
 			continue;

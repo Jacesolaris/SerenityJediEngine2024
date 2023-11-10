@@ -42,9 +42,9 @@ using refimport_t = struct
 
 	void (*Hunk_ClearToMark)();
 	void* (*Z_Malloc)(const int iSize, const memtag_t eTag, const qboolean bZeroit, const int iUnusedAlign);
-	int (*Z_Free)(void* memory);
-	int (*Z_MemSize)(memtag_t eTag);
-	void (*Z_MorphMallocTag)(void* pvBuffer, memtag_t eDesiredTag);
+	int (*Z_Free)(void* pvAddress);
+	int (*Z_MemSize)(const memtag_t eTag);
+	void (*Z_MorphMallocTag)(void* pvAddress, const memtag_t eDesiredTag);
 
 	void (*Cmd_ExecuteString)(const char* text);
 	int (*Cmd_Argc)();
