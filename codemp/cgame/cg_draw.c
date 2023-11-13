@@ -8524,12 +8524,12 @@ void CG_CalcEWebmuzzle_point(centity_t* cent, vec3_t start, vec3_t d_f, vec3_t d
 
 	if (bolt != -1)
 	{
-		mdxaBone_t bolt_matrix;
+		mdxaBone_t boltMatrix;
 
-		trap->G2API_GetBoltMatrix_NoRecNoRot(cent->ghoul2, 0, bolt, &bolt_matrix, cent->lerpAngles, cent->lerpOrigin,
+		trap->G2API_GetBoltMatrix_NoRecNoRot(cent->ghoul2, 0, bolt, &boltMatrix, cent->lerpAngles, cent->lerpOrigin,
 			cg.time, NULL, cent->modelScale);
-		BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, start);
-		BG_GiveMeVectorFromMatrix(&bolt_matrix, NEGATIVE_X, d_f);
+		BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, start);
+		BG_GiveMeVectorFromMatrix(&boltMatrix, NEGATIVE_X, d_f);
 
 		//these things start the shot a little inside the bbox to assure not starting in something solid
 		VectorMA(start, -16.0f, d_f, start);

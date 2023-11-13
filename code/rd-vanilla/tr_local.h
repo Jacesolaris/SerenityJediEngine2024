@@ -455,7 +455,6 @@ using shader_t = struct shader_s {
 	// True if this shader has a stage with glow in it (just an optimization).
 	bool hasGlow;
 
-	//	struct shader_s		*remappedShader;                  // current shader this one is remapped too
 	shader_s* next;
 };
 
@@ -1344,14 +1343,14 @@ struct shaderCommands_s
 	vec2_t		texCoords[SHADER_MAX_VERTEXES][NUM_TEX_COORDS] QALIGN(16);
 	color4ub_t	vertexColors[SHADER_MAX_VERTEXES] QALIGN(16);
 	byte		vertexAlphas[SHADER_MAX_VERTEXES][4] QALIGN(16);
-	int			vertexdlight_bits[SHADER_MAX_VERTEXES] QALIGN(16);
+	int			vertexDlightBits[SHADER_MAX_VERTEXES] QALIGN(16);
 
 	stageVars_t	svars QALIGN(16);
 
 	shader_t* shader;
 	int			fogNum;
 
-	int			dlightBits;	// or together of all vertexdlight_bits
+	int			dlightBits;	// or together of all vertexDlightBits
 
 	int			numIndexes;
 	int			numVertexes;

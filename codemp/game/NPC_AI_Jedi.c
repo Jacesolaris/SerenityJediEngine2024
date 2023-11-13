@@ -429,7 +429,7 @@ void Tavion_ScepterDamage(void)
 
 		for (int time = cur_time - 25; time <= cur_time + 25 && !hit; time += 25)
 		{
-			mdxaBone_t bolt_matrix;
+			mdxaBone_t boltMatrix;
 			vec3_t tip, dir, base, angles;
 			trace_t trace;
 
@@ -437,10 +437,10 @@ void Tavion_ScepterDamage(void)
 
 			trap->G2API_GetBoltMatrix(NPCS.NPC->client->weaponGhoul2[1], 0,
 				NPCS.NPC->NPC->genericBolt1,
-				&bolt_matrix, angles, NPCS.NPC->r.currentOrigin, time,
+				&boltMatrix, angles, NPCS.NPC->r.currentOrigin, time,
 				NULL, NPCS.NPC->modelScale);
-			BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, base);
-			BG_GiveMeVectorFromMatrix(&bolt_matrix, NEGATIVE_X, dir);
+			BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, base);
+			BG_GiveMeVectorFromMatrix(&boltMatrix, NEGATIVE_X, dir);
 			VectorMA(base, 512, dir, tip);
 			trap->Trace(&trace, base, vec3_origin, vec3_origin, tip, NPCS.NPC->s.number, MASK_SHOT, qfalse, 0, 0);
 			if (trace.fraction < 1.0f)
@@ -496,10 +496,10 @@ void Tavion_ScepterSlam(void)
 		return;
 	}
 
-	const int bolt_index = trap->G2API_AddBolt(NPCS.NPC->client->weaponGhoul2[1], 0, "*weapon");
-	if (bolt_index != -1)
+	const int boltIndex = trap->G2API_AddBolt(NPCS.NPC->client->weaponGhoul2[1], 0, "*weapon");
+	if (boltIndex != -1)
 	{
-		mdxaBone_t bolt_matrix;
+		mdxaBone_t boltMatrix;
 		vec3_t handle, bottom, angles;
 		trace_t trace;
 		const float radius = 300.0f;
@@ -511,10 +511,10 @@ void Tavion_ScepterSlam(void)
 		VectorSet(angles, 0, NPCS.NPC->r.currentAngles[YAW], 0);
 
 		trap->G2API_GetBoltMatrix(NPCS.NPC->ghoul2, 2,
-			bolt_index,
-			&bolt_matrix, angles, NPCS.NPC->r.currentOrigin, level.time,
+			boltIndex,
+			&boltMatrix, angles, NPCS.NPC->r.currentOrigin, level.time,
 			NULL, NPCS.NPC->modelScale);
-		BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, handle);
+		BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, handle);
 		VectorCopy(handle, bottom);
 		bottom[2] -= 128.0f;
 
@@ -623,15 +623,15 @@ void Tavion_StartScepterBeam(void)
 {
 	//Activate the scepter beam for the current NPC.
 	//RAFIXME:  This probably needs to be moved to client side.
-	mdxaBone_t bolt_matrix;
+	mdxaBone_t boltMatrix;
 	vec3_t dir, base, angles;
 
 	VectorSet(angles, 0, NPCS.NPC->r.currentAngles[YAW], 0);
 
-	trap->G2API_GetBoltMatrix(NPCS.NPC->client->weaponGhoul2[1], 0, NPCS.NPC->NPC->genericBolt1, &bolt_matrix, angles,
+	trap->G2API_GetBoltMatrix(NPCS.NPC->client->weaponGhoul2[1], 0, NPCS.NPC->NPC->genericBolt1, &boltMatrix, angles,
 		NPCS.NPC->r.currentOrigin, level.time, NULL, NPCS.NPC->modelScale);
-	BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, base);
-	BG_GiveMeVectorFromMatrix(&bolt_matrix, NEGATIVE_X, dir);
+	BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, base);
+	BG_GiveMeVectorFromMatrix(&boltMatrix, NEGATIVE_X, dir);
 
 	G_PlayEffect(G_EffectIndex("scepter/beam_warmup.efx"), base, dir);
 	G_SoundOnEnt(NPCS.NPC, CHAN_ITEM, "sound/weapons/scepter/beam_warmup.wav");
@@ -647,17 +647,17 @@ void Tavion_StartScepterBeam(void)
 
 void Tavion_StartScepterSlam(void)
 {
-	mdxaBone_t bolt_matrix;
+	mdxaBone_t boltMatrix;
 	vec3_t dir, base, angles;
 
 	VectorSet(angles, 0, NPCS.NPC->r.currentAngles[YAW], 0);
 
 	trap->G2API_GetBoltMatrix(NPCS.NPC->client->weaponGhoul2[1], 0,
 		NPCS.NPC->NPC->genericBolt1,
-		&bolt_matrix, angles, NPCS.NPC->r.currentOrigin, level.time,
+		&boltMatrix, angles, NPCS.NPC->r.currentOrigin, level.time,
 		NULL, NPCS.NPC->modelScale);
-	BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, base);
-	BG_GiveMeVectorFromMatrix(&bolt_matrix, NEGATIVE_X, dir);
+	BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, base);
+	BG_GiveMeVectorFromMatrix(&boltMatrix, NEGATIVE_X, dir);
 	G_PlayEffect(G_EffectIndex("scepter/slam_warmup.efx"), base, dir);
 	G_SoundOnEnt(NPCS.NPC, CHAN_ITEM, "sound/weapons/scepter/slam_warmup.wav");
 	NPCS.NPC->client->ps.legsTimer = NPCS.NPC->client->ps.torsoTimer = 0;
@@ -677,23 +677,23 @@ void Tavion_SithSwordRecharge(void)
 		&& TIMER_Done(NPCS.NPC, "rechargeDebounce")
 		&& NPCS.NPC->client->weaponGhoul2[0])
 	{
-		mdxaBone_t bolt_matrix;
+		mdxaBone_t boltMatrix;
 		vec3_t dir, base, angles;
 
 		VectorSet(angles, 0, NPCS.NPC->r.currentAngles[YAW], 0);
 
 		NPCS.NPC->s.loopSound = G_SoundIndex("sound/weapons/scepter/recharge.wav");
-		const int bolt_index = trap->G2API_AddBolt(NPCS.NPC->client->weaponGhoul2[0], 0, "*weapon");
+		const int boltIndex = trap->G2API_AddBolt(NPCS.NPC->client->weaponGhoul2[0], 0, "*weapon");
 		NPCS.NPC->client->ps.legsTimer = NPCS.NPC->client->ps.torsoTimer = 0;
 		NPC_SetAnim(NPCS.NPC, SETANIM_BOTH, BOTH_TAVION_SWORDPOWER, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 
 		//RAFIXME:  This probably needs to be moved to client side.
 		trap->G2API_GetBoltMatrix(NPCS.NPC->client->weaponGhoul2[0], 0,
-			bolt_index,
-			&bolt_matrix, angles, NPCS.NPC->r.currentOrigin, level.time,
+			boltIndex,
+			&boltMatrix, angles, NPCS.NPC->r.currentOrigin, level.time,
 			NULL, NPCS.NPC->modelScale);
-		BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, base);
-		BG_GiveMeVectorFromMatrix(&bolt_matrix, NEGATIVE_X, dir);
+		BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, base);
+		BG_GiveMeVectorFromMatrix(&boltMatrix, NEGATIVE_X, dir);
 		G_PlayEffect(G_EffectIndex("scepter/recharge.efx"), base, dir);
 		NPCS.NPC->painDebounceTime = level.time + NPCS.NPC->client->ps.torsoTimer;
 		NPCS.NPC->client->ps.pm_time = NPCS.NPC->client->ps.torsoTimer;
@@ -1126,17 +1126,17 @@ void Boba_FireFlameThrower(gentity_t* self)
 {
 	const int damage = Q_irand(8, 12);
 	trace_t tr;
-	mdxaBone_t bolt_matrix;
+	mdxaBone_t boltMatrix;
 	vec3_t start, end, dir;
 	const vec3_t trace_maxs = { 4, 4, 4 };
 	const vec3_t trace_mins = { -4, -4, -4 };
 
 	trap->G2API_GetBoltMatrix(self->ghoul2, 0, self->client->renderInfo.handLBolt,
-		&bolt_matrix, self->r.currentAngles, self->r.currentOrigin, level.time,
+		&boltMatrix, self->r.currentAngles, self->r.currentOrigin, level.time,
 		NULL, self->modelScale);
 
-	BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, start);
-	BG_GiveMeVectorFromMatrix(&bolt_matrix, NEGATIVE_Y, dir);
+	BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, start);
+	BG_GiveMeVectorFromMatrix(&boltMatrix, NEGATIVE_Y, dir);
 	VectorMA(start, 128, dir, end);
 
 	trap->Trace(&tr, start, trace_mins, trace_maxs, end, self->s.number, MASK_SHOT, qfalse, 0, 0);
@@ -1176,7 +1176,7 @@ void Boba_FireFlameThrower(gentity_t* self)
 void Boba_StartFlameThrower(gentity_t* self)
 {
 	const int flameTime = 4000; //Q_irand( 1000, 3000 );
-	mdxaBone_t bolt_matrix;
+	mdxaBone_t boltMatrix;
 	vec3_t org, dir;
 
 	self->client->ps.torsoTimer = flameTime; //+1000;
@@ -1188,12 +1188,12 @@ void Boba_StartFlameThrower(gentity_t* self)
 	TIMER_Set(self, "flameTime", flameTime);
 	G_SoundOnEnt(self, CHAN_WEAPON, "sound/effects/combustfire.mp3");
 
-	trap->G2API_GetBoltMatrix(NPCS.NPC->ghoul2, 0, NPCS.NPC->client->renderInfo.handLBolt, &bolt_matrix,
+	trap->G2API_GetBoltMatrix(NPCS.NPC->ghoul2, 0, NPCS.NPC->client->renderInfo.handLBolt, &boltMatrix,
 		NPCS.NPC->r.currentAngles,
 		NPCS.NPC->r.currentOrigin, level.time, NULL, NPCS.NPC->modelScale);
 
-	BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, org);
-	BG_GiveMeVectorFromMatrix(&bolt_matrix, NEGATIVE_Y, dir);
+	BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, org);
+	BG_GiveMeVectorFromMatrix(&boltMatrix, NEGATIVE_Y, dir);
 
 	G_PlayEffectID(G_EffectIndex("flamethrower/flamethrower_mp"), org, dir);
 }
@@ -1344,19 +1344,19 @@ void Boba_FireWristMissile(gentity_t* self, const int whichMissile)
 	self->client->ps.weaponTime += addTime;
 	self->client->ps.lastShotTime = level.time;
 
-	mdxaBone_t bolt_matrix;
+	mdxaBone_t boltMatrix;
 	vec3_t muzzle_point;
 	vec3_t muzzleDir;
 
-	//trap->G2API_GetBoltMatrix(self->ghoul2, 0, self->client->renderInfo.handLBolt, &bolt_matrix, self->r.currentAngles, self->r.currentOrigin, level.time, NULL, self->modelScale);
+	//trap->G2API_GetBoltMatrix(self->ghoul2, 0, self->client->renderInfo.handLBolt, &boltMatrix, self->r.currentAngles, self->r.currentOrigin, level.time, NULL, self->modelScale);
 	trap->G2API_GetBoltMatrix(self->ghoul2, 0,
 		missileStates[whichMissile].leftBolt
 		? self->genericBolt3
-		: self->client->renderInfo.handLBolt, &bolt_matrix, self->r.currentAngles,
+		: self->client->renderInfo.handLBolt, &boltMatrix, self->r.currentAngles,
 		self->r.currentOrigin, level.time, NULL, self->modelScale);
 
-	BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, muzzle_point);
-	BG_GiveMeVectorFromMatrix(&bolt_matrix, NEGATIVE_Y, muzzleDir);
+	BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, muzzle_point);
+	BG_GiveMeVectorFromMatrix(&boltMatrix, NEGATIVE_Y, muzzleDir);
 	// work the matrix axis stuff into the original axis and origins used.
 
 	VectorCopy(muzzle_point, self->client->renderInfo.muzzle_point);
@@ -3089,7 +3089,7 @@ saber_moveName_t G_PickAutoMultiKick(gentity_t* self, qboolean allowSingles, qbo
 
 extern qboolean G_CanKickEntity(const gentity_t* self, const gentity_t* target);
 extern saber_moveName_t G_PickAutoKick(gentity_t* self, const gentity_t* enemy);
-extern float NPC_EnemyRangeFromBolt(int bolt_index);
+extern float NPC_EnemyRangeFromBolt(int boltIndex);
 extern qboolean PM_SaberInTransition(int move);
 extern void ForceDrain(gentity_t* self);
 extern qboolean PM_CrouchAnim(int anim);
@@ -9964,16 +9964,16 @@ qboolean Kothos_HealRosh(void)
 
 			if (NPCS.NPC->ghoul2)
 			{
-				mdxaBone_t bolt_matrix;
+				mdxaBone_t boltMatrix;
 				vec3_t fxOrg, fx_dir, angles;
 
 				VectorSet(angles, 0, NPCS.NPC->r.currentAngles[YAW], 0);
 
 				trap->G2API_GetBoltMatrix(NPCS.NPC->ghoul2, 0,
 					Q_irand(0, 1),
-					&bolt_matrix, angles, NPCS.NPC->r.currentOrigin, level.time,
+					&boltMatrix, angles, NPCS.NPC->r.currentOrigin, level.time,
 					NULL, NPCS.NPC->modelScale);
-				BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, fxOrg);
+				BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, fxOrg);
 				VectorSubtract(NPCS.NPC->client->leader->r.currentOrigin, fxOrg, fx_dir);
 				VectorNormalize(fx_dir);
 				G_PlayEffect(G_EffectIndex("force/kothos_beam.efx"), fxOrg, fx_dir);

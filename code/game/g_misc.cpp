@@ -2632,7 +2632,7 @@ welder_think
 void welder_think(gentity_t* self)
 {
 	self->nextthink = level.time + 200;
-	mdxaBone_t bolt_matrix;
+	mdxaBone_t boltMatrix;
 
 	if (self->svFlags & SVF_INACTIVE)
 	{
@@ -2651,10 +2651,10 @@ void welder_think(gentity_t* self)
 		//	G_PlayEffect( "blueWeldSparks", self->playerModel, newBolt, self->s.number);
 		// The welder gets rotated around a lot, and since the origin is offset by 352 I have to make this super expensive call to position the hurt...
 		gi.G2API_GetBoltMatrix(self->ghoul2, self->playerModel, newBolt,
-			&bolt_matrix, self->currentAngles, self->currentOrigin, cg.time ? cg.time : level.time,
+			&boltMatrix, self->currentAngles, self->currentOrigin, cg.time ? cg.time : level.time,
 			nullptr, self->s.modelScale);
 
-		gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, org);
+		gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, org);
 		VectorSubtract(self->currentOrigin, org, dir);
 		VectorNormalize(dir);
 		// we want the  welder effect to face inwards....

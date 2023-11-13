@@ -421,7 +421,7 @@ int G_IconIndex(const char* name);
 Ghoul2 Insert Start
 */
 int G_SkinIndex(const char* name);
-void G_SetBoltSurfaceRemoval(int entNum, int modelIndex, int bolt_index, int surfaceIndex = -1, float duration = 5000);
+void G_SetBoltSurfaceRemoval(int entNum, int modelIndex, int boltIndex, int surfaceIndex = -1, float duration = 5000);
 /*
 Ghoul2 Insert End
 */
@@ -434,12 +434,12 @@ void G_PlayEffect(const char* name, const vec3_t origin, const vec3_t axis[3]);
 void G_PlayEffect(int fx_id, const vec3_t origin);
 void G_PlayEffect(int fx_id, const vec3_t origin, const vec3_t fwd);
 void G_PlayEffect(int fx_id, const vec3_t origin, const vec3_t axis[3]);
-void G_PlayEffect(int fx_id, int modelIndex, int bolt_index, int entNum, const vec3_t origin,
+void G_PlayEffect(int fx_id, int modelIndex, int boltIndex, int entNum, const vec3_t origin,
 	int i_loop_time = qfalse,
 	qboolean is_relative = qfalse); //iLoopTime 0 = not looping, 1 for infinite, else duration
 void G_PlayEffect(int fx_id, int entNum, const vec3_t fwd);
-void G_StopEffect(int fx_id, int modelIndex, int bolt_index, int entNum);
-void G_StopEffect(const char* name, int modelIndex, int bolt_index, int entNum);
+void G_StopEffect(int fx_id, int modelIndex, int boltIndex, int entNum);
+void G_StopEffect(const char* name, int modelIndex, int boltIndex, int entNum);
 
 int G_BSPIndex(const char* name);
 

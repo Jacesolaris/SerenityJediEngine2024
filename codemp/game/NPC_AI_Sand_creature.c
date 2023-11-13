@@ -4,7 +4,7 @@
 extern void G_Knockdown(gentity_t* self, gentity_t* attacker, const vec3_t push_dir, float strength,
 	qboolean break_saber_lock);
 extern void G_SoundOnEnt(gentity_t* ent, soundChannel_t channel, const char* sound_path);
-extern void G_GetBoltPosition(gentity_t* self, int bolt_index, vec3_t pos, int modelIndix);
+extern void G_GetBoltPosition(gentity_t* self, int boltIndex, vec3_t pos, int modelIndix);
 extern void Rancor_DropVictim(gentity_t* self); //wahoo - :p
 
 #define MIN_ATTACK_DIST_SQ	128

@@ -1563,7 +1563,7 @@ const void* RB_WorldEffects(const void* data)
 		RB_BeginSurface(tess.shader, tess.fogNum);
 	}
 
-	return cmd + 1;
+	return (const void*)(cmd + 1);
 }
 
 /*

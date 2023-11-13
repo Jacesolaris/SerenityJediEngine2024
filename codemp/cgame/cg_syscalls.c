@@ -737,10 +737,10 @@ void trap_FX_PlayEffect(const char* file, vec3_t org, vec3_t fwd, const int vol,
 	Q_syscall(CG_FX_PLAY_EFFECT, file, org, fwd, vol, rad);
 }
 
-void trap_FX_PlayEntityEffect(const char* file, vec3_t org, matrix3_t axis, const int bolt_info, const int entNum,
+void trap_FX_PlayEntityEffect(const char* file, vec3_t org, matrix3_t axis, const int boltInfo, const int entNum,
 	const int vol, const int rad)
 {
-	Q_syscall(CG_FX_PLAY_ENTITY_EFFECT, file, org, axis, bolt_info, entNum, vol, rad);
+	Q_syscall(CG_FX_PLAY_ENTITY_EFFECT, file, org, axis, boltInfo, entNum, vol, rad);
 }
 
 void trap_FX_PlayEffectID(const int id, vec3_t org, vec3_t fwd, const int vol, const int rad)
@@ -753,10 +753,10 @@ void trap_FX_PlayPortalEffectID(const int id, vec3_t org, vec3_t fwd, int vol, i
 	Q_syscall(CG_FX_PLAY_PORTAL_EFFECT_ID, id, org, fwd);
 }
 
-void trap_FX_PlayEntityEffectID(const int id, vec3_t org, matrix3_t axis, const int bolt_info, const int entNum,
+void trap_FX_PlayEntityEffectID(const int id, vec3_t org, matrix3_t axis, const int boltInfo, const int entNum,
 	const int vol, const int rad)
 {
-	Q_syscall(CG_FX_PLAY_ENTITY_EFFECT_ID, id, org, axis, bolt_info, entNum, vol, rad);
+	Q_syscall(CG_FX_PLAY_ENTITY_EFFECT_ID, id, org, axis, boltInfo, entNum, vol, rad);
 }
 
 qboolean trap_FX_PlayBoltedEffectID(const int id, vec3_t org, void* ghoul2, const int boltNum, const int entNum,
@@ -890,27 +890,27 @@ qboolean trap_G2_HaveWeGhoul2Models(void* ghoul2)
 	return Q_syscall(CG_G2_HAVEWEGHOULMODELS, ghoul2);
 }
 
-qboolean trap_G2API_GetBoltMatrix(void* ghoul2, const int modelIndex, const int bolt_index, mdxaBone_t* matrix,
+qboolean trap_G2API_GetBoltMatrix(void* ghoul2, const int modelIndex, const int boltIndex, mdxaBone_t* matrix,
 	const vec3_t angles, const vec3_t position, const int frameNum, qhandle_t* modelList,
 	vec3_t scale)
 {
-	return Q_syscall(CG_G2_GETBOLT, ghoul2, modelIndex, bolt_index, matrix, angles, position, frameNum, modelList,
+	return Q_syscall(CG_G2_GETBOLT, ghoul2, modelIndex, boltIndex, matrix, angles, position, frameNum, modelList,
 		scale);
 }
 
-qboolean trap_G2API_GetBoltMatrix_NoReconstruct(void* ghoul2, const int modelIndex, const int bolt_index,
+qboolean trap_G2API_GetBoltMatrix_NoReconstruct(void* ghoul2, const int modelIndex, const int boltIndex,
 	mdxaBone_t* matrix, const vec3_t angles, const vec3_t position,
 	const int frameNum, qhandle_t* modelList, vec3_t scale)
 {
-	return Q_syscall(CG_G2_GETBOLT_NOREC, ghoul2, modelIndex, bolt_index, matrix, angles, position, frameNum,
+	return Q_syscall(CG_G2_GETBOLT_NOREC, ghoul2, modelIndex, boltIndex, matrix, angles, position, frameNum,
 		modelList, scale);
 }
 
-qboolean trap_G2API_GetBoltMatrix_NoRecNoRot(void* ghoul2, const int modelIndex, const int bolt_index,
+qboolean trap_G2API_GetBoltMatrix_NoRecNoRot(void* ghoul2, const int modelIndex, const int boltIndex,
 	mdxaBone_t* matrix, const vec3_t angles, const vec3_t position,
 	const int frameNum, qhandle_t* modelList, vec3_t scale)
 {
-	return Q_syscall(CG_G2_GETBOLT_NOREC_NOROT, ghoul2, modelIndex, bolt_index, matrix, angles, position, frameNum,
+	return Q_syscall(CG_G2_GETBOLT_NOREC_NOROT, ghoul2, modelIndex, boltIndex, matrix, angles, position, frameNum,
 		modelList, scale);
 }
 
@@ -989,9 +989,9 @@ int trap_G2API_CopyGhoul2Instance(void* g2_from, void* g2_to, const int modelInd
 	return Q_syscall(CG_G2_COPYGHOUL2INSTANCE, g2_from, g2_to, modelIndex);
 }
 
-void trap_G2API_CopySpecificGhoul2Model(void* g2_from, const int model_from, void* g2_to, const int model_to)
+void trap_G2API_CopySpecificGhoul2Model(void* g2_from, const int modelFrom, void* g2_to, const int modelTo)
 {
-	Q_syscall(CG_G2_COPYSPECIFICGHOUL2MODEL, g2_from, model_from, g2_to, model_to);
+	Q_syscall(CG_G2_COPYSPECIFICGHOUL2MODEL, g2_from, modelFrom, g2_to, modelTo);
 }
 
 void trap_G2API_DuplicateGhoul2Instance(void* g2_from, void** g2_to)
@@ -1039,15 +1039,15 @@ int trap_G2API_AddBolt(void* ghoul2, const int modelIndex, const char* boneName)
 	return Q_syscall(CG_G2_ADDBOLT, ghoul2, modelIndex, boneName);
 }
 
-qboolean trap_G2API_AttachEnt(int* bolt_info, void* ghlInfoTo, const int toBoltIndex, const int entNum,
+qboolean trap_G2API_AttachEnt(int* boltInfo, void* ghlInfoTo, const int toBoltIndex, const int entNum,
 	const int toModelNum)
 {
-	return Q_syscall(CG_G2_ATTACHENT, bolt_info, ghlInfoTo, toBoltIndex, entNum, toModelNum);
+	return Q_syscall(CG_G2_ATTACHENT, boltInfo, ghlInfoTo, toBoltIndex, entNum, toModelNum);
 }
 
-void trap_G2API_SetBoltInfo(void* ghoul2, const int modelIndex, const int bolt_info)
+void trap_G2API_SetBoltInfo(void* ghoul2, const int modelIndex, const int boltInfo)
 {
-	Q_syscall(CG_G2_SETBOLTON, ghoul2, modelIndex, bolt_info);
+	Q_syscall(CG_G2_SETBOLTON, ghoul2, modelIndex, boltInfo);
 }
 
 qboolean trap_G2API_SetRootSurface(void* ghoul2, const int modelIndex, const char* surfaceName)
@@ -1060,9 +1060,9 @@ qboolean trap_G2API_SetSurfaceOnOff(void* ghoul2, const char* surfaceName, const
 	return Q_syscall(CG_G2_SETSURFACEONOFF, ghoul2, surfaceName, flags);
 }
 
-qboolean trap_G2API_SetNewOrigin(void* ghoul2, const int bolt_index)
+qboolean trap_G2API_SetNewOrigin(void* ghoul2, const int boltIndex)
 {
-	return Q_syscall(CG_G2_SETNEWORIGIN, ghoul2, bolt_index);
+	return Q_syscall(CG_G2_SETNEWORIGIN, ghoul2, boltIndex);
 }
 
 qboolean trap_G2API_DoesBoneExist(void* ghoul2, const int modelIndex, const char* boneName)

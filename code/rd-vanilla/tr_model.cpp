@@ -1093,8 +1093,8 @@ static md3Tag_t* R_GetTag(md3Header_t* mod, int frame, const char* tagName) {
 R_LerpTag
 ================
 */
-int	R_LerpTag(orientation_t* tag, qhandle_t handle, int startFrame, int endFrame,
-	float frac, const char* tagName) {
+int	R_LerpTag(orientation_t* tag, qhandle_t handle, int startFrame, int endFrame,float frac, const char* tagName) 
+{
 	md3Tag_t* start, * finish;
 	int		i;
 	float		frontLerp, backLerp;

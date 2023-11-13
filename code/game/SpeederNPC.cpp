@@ -508,13 +508,13 @@ static void ProcessMoveCommands(Vehicle_t* p_veh)
 							p_veh->m_pParentEntity->playerState)
 						{ //fine, I'll use a tempent for this, but only because it's played only once at the start of a turbo.
 							vec3_t bolt_org, boltDir;
-							mdxaBone_t bolt_matrix;
+							mdxaBone_t boltMatrix;
 
 							VectorSet(boltDir, 0.0f, p_veh->m_pParentEntity->playerState->viewangles[YAW], 0.0f);
 
-							trap_G2API_GetBoltMatrix(p_veh->m_pParentEntity->ghoul2, 0, p_veh->m_iExhaustTag[i], &bolt_matrix, boltDir, p_veh->m_pParentEntity->playerState->origin, level.time, nullptr, p_veh->m_pParentEntity->modelScale);
-							BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, bolt_org);
-							BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, boltDir);
+							trap_G2API_GetBoltMatrix(p_veh->m_pParentEntity->ghoul2, 0, p_veh->m_iExhaustTag[i], &boltMatrix, boltDir, p_veh->m_pParentEntity->playerState->origin, level.time, nullptr, p_veh->m_pParentEntity->modelScale);
+							BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, bolt_org);
+							BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, boltDir);
 							G_PlayEffectID(p_veh->m_pVehicleInfo->iTurboStartFX, bolt_org, boltDir);
 						}
 #endif

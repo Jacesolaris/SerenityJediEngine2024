@@ -286,8 +286,7 @@ void Cmd_Exec_f()
 
 	if (Cmd_Argc() != 2)
 	{
-		Com_Printf("exec%s <filename> : execute a script file%s\n",
-			quiet ? "q" : "", quiet ? " without notification" : "");
+		Com_Printf("exec%s <filename> : execute a script file%s\n", quiet ? "q" : "", quiet ? " without notification" : "");
 		return;
 	}
 
@@ -850,7 +849,7 @@ void Cmd_CompleteCfgName(char* args, const int argNum)
 Cmd_Init
 ============
 */
-void Cmd_Init()
+void Cmd_Init(void)
 {
 	Cmd_AddCommand("cmdlist", Cmd_List_f);
 	Cmd_AddCommand("exec", Cmd_Exec_f);

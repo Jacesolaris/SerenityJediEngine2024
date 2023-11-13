@@ -60,7 +60,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #define DEFAULT_REDTEAM_NAME	"Empire"
 #define DEFAULT_BLUETEAM_NAME	"Rebellion"
 
-#define CURRENT_SJE_CLIENTVERSION		"Year-23,Month-11,Day-12,BuildNum-10" // build date
+#define CURRENT_SJE_CLIENTVERSION		"Year-23,Month-11,Day-13,BuildNum-11" // build date
 
 #define	STEPSIZE		18
 
@@ -1947,7 +1947,7 @@ qboolean BG_KnockDownable(const playerState_t* ps);
 qboolean BG_LegalizedForcePowers(char* power_out, size_t power_out_size, int max_rank, qboolean free_saber, int team_force, int gametype, int fp_disabled);
 
 // given a boltmatrix, return in vec a normalised vector for the axis requested in flags
-void BG_GiveMeVectorFromMatrix(const mdxaBone_t* bolt_matrix, int flags, vec3_t vec);
+void BG_GiveMeVectorFromMatrix(mdxaBone_t* boltMatrix, int flags, vec3_t vec);
 
 void BG_IK_MoveArm(void* ghoul2, int lHandBolt, int time, const entityState_t* ent, int basePose, vec3_t desiredPos, qboolean* ikInProgress,
 	vec3_t origin, vec3_t angles, vec3_t scale, int blendTime, qboolean forceHalt);

@@ -2359,17 +2359,17 @@ void g_run_missile(gentity_t* ent)
 		//in a sand creature's mouth
 		if (ent->activator)
 		{
-			mdxaBone_t bolt_matrix;
+			mdxaBone_t boltMatrix;
 			// Getting the bolt here
 			//in hand
 			vec3_t scAngles = { 0 };
 			scAngles[YAW] = ent->activator->currentAngles[YAW];
 			gi.G2API_GetBoltMatrix(ent->activator->ghoul2, ent->activator->playerModel, ent->activator->gutBolt,
-				&bolt_matrix, scAngles, ent->activator->currentOrigin,
+				&boltMatrix, scAngles, ent->activator->currentOrigin,
 				cg.time ? cg.time : level.time,
 				nullptr, ent->activator->s.modelScale);
 			// Storing ent position, bolt position, and bolt axis
-			gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, ent->currentOrigin);
+			gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, ent->currentOrigin);
 			G_SetOrigin(ent, ent->currentOrigin);
 		}
 		// check think function

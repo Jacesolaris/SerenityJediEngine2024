@@ -284,8 +284,7 @@ static void Cmd_Exec_f(void)
 
 	if (Cmd_Argc() != 2)
 	{
-		Com_Printf("exec%s <filename> : execute a script file%s\n",
-			quiet ? "q" : "", quiet ? " without notification" : "");
+		Com_Printf("exec%s <filename> : execute a script file%s\n", quiet ? "q" : "", quiet ? " without notification" : "");
 		return;
 	}
 

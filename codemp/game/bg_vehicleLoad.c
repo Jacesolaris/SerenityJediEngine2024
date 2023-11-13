@@ -1529,7 +1529,7 @@ void AttachRidersGeneric(const Vehicle_t* p_veh)
 	// If we have a pilot, attach him to the driver tag.
 	if (p_veh->m_pPilot)
 	{
-		mdxaBone_t bolt_matrix;
+		mdxaBone_t boltMatrix;
 		vec3_t yawOnlyAngles;
 		bgEntity_t* parent = p_veh->m_pParentEntity;
 		const bgEntity_t* pilot = p_veh->m_pPilot;
@@ -1540,9 +1540,9 @@ void AttachRidersGeneric(const Vehicle_t* p_veh)
 		VectorSet(yawOnlyAngles, 0, parent->playerState->viewangles[YAW], 0);
 
 		// Get the driver tag.
-		trap->G2API_GetBoltMatrix(parent->ghoul2, 0, crotchBolt, &bolt_matrix, yawOnlyAngles,
+		trap->G2API_GetBoltMatrix(parent->ghoul2, 0, crotchBolt, &boltMatrix, yawOnlyAngles,
 			parent->playerState->origin, BG_GetTime(), NULL, parent->modelScale);
-		BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, pilot->playerState->origin);
+		BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, pilot->playerState->origin);
 	}
 }
 #endif

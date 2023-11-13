@@ -97,13 +97,13 @@ extern qboolean BG_FullBodyTauntAnim(int anim);
 extern qboolean FlyingCreature(const gentity_t* ent);
 extern Vehicle_t* G_IsRidingVehicle(const gentity_t* p_ent);
 extern void G_AttachToVehicle(gentity_t* ent, usercmd_t** ucmd);
-extern void G_GetBoltPosition(gentity_t* self, int bolt_index, vec3_t pos, int modelIndex = 0);
+extern void G_GetBoltPosition(gentity_t* self, int boltIndex, vec3_t pos, int modelIndex = 0);
 extern void G_UpdateEmplacedWeaponData(gentity_t* ent);
 extern void RunEmplacedWeapon(gentity_t* ent, usercmd_t** ucmd);
 extern qboolean G_PointInBounds(const vec3_t point, const vec3_t mins, const vec3_t maxs);
 extern void NPC_SetPainEvent(gentity_t* self);
 extern qboolean G_HasKnockdownAnims(const gentity_t* ent);
-extern int G_GetEntsNearBolt(gentity_t* self, gentity_t** radius_ents, float radius, int bolt_index, vec3_t bolt_org);
+extern int G_GetEntsNearBolt(gentity_t* self, gentity_t** radius_ents, float radius, int boltIndex, vec3_t bolt_org);
 extern qboolean PM_InOnGroundAnim(playerState_t* ps);
 extern qboolean PM_LockedAnim(int anim);
 extern qboolean WP_SabersCheckLock2(gentity_t* attacker, gentity_t* defender, saberslock_mode_t lock_mode);
@@ -6025,22 +6025,22 @@ void G_HeldByMonster(gentity_t* ent, usercmd_t** ucmd)
 		ent->waypoint = monster->waypoint;
 
 		//update the actual origin of the victim
-		mdxaBone_t bolt_matrix;
+		mdxaBone_t boltMatrix;
 
 		// Getting the bolt here
-		int bolt_index = monster->gutBolt; //default to being held in his mouth
+		int boltIndex = monster->gutBolt; //default to being held in his mouth
 		if (monster->count == 1)
 		{
 			//being held in hand rather than the mouth, so use *that* bolt
-			bolt_index = monster->handRBolt;
+			boltIndex = monster->handRBolt;
 		}
 		vec3_t monAngles = { 0 };
 		monAngles[YAW] = monster->currentAngles[YAW]; //only use YAW when passing angles to G2
-		gi.G2API_GetBoltMatrix(monster->ghoul2, monster->playerModel, bolt_index,
-			&bolt_matrix, monAngles, monster->currentOrigin, cg.time ? cg.time : level.time,
+		gi.G2API_GetBoltMatrix(monster->ghoul2, monster->playerModel, boltIndex,
+			&boltMatrix, monAngles, monster->currentOrigin, cg.time ? cg.time : level.time,
 			nullptr, monster->s.modelScale);
 		// Storing ent position, bolt position, and bolt axis
-		gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, ent->client->ps.origin);
+		gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, ent->client->ps.origin);
 		gi.linkentity(ent);
 		//lock view angles
 		PM_AdjustAnglesForHeldByMonster(ent, monster, *ucmd);

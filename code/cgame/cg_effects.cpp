@@ -903,37 +903,37 @@ void CG_DrawTargetBeam(vec3_t start, vec3_t end, vec3_t norm, const char* beam_f
 	}
 }
 
-void CG_PlayEffectBolted(const char* fx_name, const int modelIndex, const int bolt_index, const int entNum,
+void CG_PlayEffectBolted(const char* fx_name, const int modelIndex, const int boltIndex, const int entNum,
 	vec3_t origin,
 	const int i_loop_time, const bool is_relative)
 {
 	vec3_t axis[3];
 	//FIXME: shouldn't this be initialized to something?  It isn't in the EV_PLAY_EFFECT call... irrelevant?
-	int bolt_info;
+	int boltInfo;
 
-	//pack the data into bolt_info as if we were going to send it over the network
-	gi.G2API_AttachEnt(&bolt_info,
+	//pack the data into boltInfo as if we were going to send it over the network
+	gi.G2API_AttachEnt(&boltInfo,
 		&g_entities[entNum].ghoul2[modelIndex],
-		bolt_index,
+		boltIndex,
 		entNum,
 		modelIndex);
 	//send direcly to FX scheduler
 	theFxScheduler.PlayEffect(fx_name,
 		origin,
 		axis,
-		bolt_info,
+		boltInfo,
 		-1,
 		false,
 		i_loop_time,
 		is_relative); //iLoopTime 0 = not looping, 1 for infinite, else duration
 }
 
-void CG_PlayEffectIDBolted(const int fx_id, const int modelIndex, const int bolt_index, const int entNum,
+void CG_PlayEffectIDBolted(const int fx_id, const int modelIndex, const int boltIndex, const int entNum,
 	vec3_t origin,
 	const int i_loop_time, const bool is_relative)
 {
 	const char* fx_name = CG_ConfigString(CS_EFFECTS + fx_id);
-	CG_PlayEffectBolted(fx_name, modelIndex, bolt_index, entNum, origin, i_loop_time, is_relative);
+	CG_PlayEffectBolted(fx_name, modelIndex, boltIndex, entNum, origin, i_loop_time, is_relative);
 }
 
 void CG_PlayEffectOnEnt(const char* fx_name, const int client_num, vec3_t origin, const vec3_t fwd)

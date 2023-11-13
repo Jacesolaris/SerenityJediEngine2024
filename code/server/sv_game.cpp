@@ -436,10 +436,10 @@ static void SV_G2API_AnimateG2Models(CGhoul2Info_v& ghoul2, const int acurrent_t
 	re.G2API_AnimateG2Models(ghoul2, acurrent_time, params);
 }
 
-static qboolean SV_G2API_AttachEnt(int* bolt_info, CGhoul2Info* ghlInfoTo, const int toBoltIndex, const int entNum,
+static qboolean SV_G2API_AttachEnt(int* boltInfo, CGhoul2Info* ghlInfoTo, const int toBoltIndex, const int entNum,
 	const int toModelNum)
 {
-	return re.G2API_AttachEnt(bolt_info, ghlInfoTo, toBoltIndex, entNum, toModelNum);
+	return re.G2API_AttachEnt(boltInfo, ghlInfoTo, toBoltIndex, entNum, toModelNum);
 }
 
 static qboolean SV_G2API_AttachG2Model(CGhoul2Info* ghlInfo, CGhoul2Info* ghlInfoTo, const int toBoltIndex,
@@ -456,20 +456,20 @@ static void SV_G2API_CleanGhoul2Models(CGhoul2Info_v& ghoul2)
 static void SV_G2API_CollisionDetect(
 	CCollisionRecord* collRecMap, CGhoul2Info_v& ghoul2, const vec3_t angles, const vec3_t position,
 	const int AframeNumber, const int entNum, vec3_t rayStart, vec3_t rayEnd, vec3_t scale, CMiniHeap* miniHeap,
-	const EG2_Collision e_g2_trace_type, const int useLod, const float fRadius)
+	const EG2_Collision eG2TraceType, const int useLod, const float fRadius)
 {
 	re.G2API_CollisionDetect(collRecMap, ghoul2, angles, position, AframeNumber,
-		entNum, rayStart, rayEnd, scale, miniHeap, e_g2_trace_type, useLod, fRadius);
+		entNum, rayStart, rayEnd, scale, miniHeap, eG2TraceType, useLod, fRadius);
 }
 
-static void SV_G2API_CopyGhoul2Instance(const CGhoul2Info_v& ghoul2_from, CGhoul2Info_v& ghoul2_to, const int modelIndex)
+static void SV_G2API_CopyGhoul2Instance(const CGhoul2Info_v& ghoul2From, CGhoul2Info_v& ghoul2To, const int modelIndex)
 {
-	re.G2API_CopyGhoul2Instance(ghoul2_from, ghoul2_to, modelIndex);
+	re.G2API_CopyGhoul2Instance(ghoul2From, ghoul2To, modelIndex);
 }
 
-static void SV_G2API_DetachEnt(int* bolt_info)
+static void SV_G2API_DetachEnt(int* boltInfo)
 {
-	re.G2API_DetachEnt(bolt_info);
+	re.G2API_DetachEnt(boltInfo);
 }
 
 static qboolean SV_G2API_DetachG2Model(CGhoul2Info* ghlInfo)
@@ -529,10 +529,10 @@ static int SV_G2API_GetBoneIndex(CGhoul2Info* ghlInfo, const char* boneName, con
 }
 
 static qboolean SV_G2API_GetBoltMatrix(
-	CGhoul2Info_v& ghoul2, const int modelIndex, const int bolt_index, mdxaBone_t* matrix, const vec3_t angles,
+	CGhoul2Info_v& ghoul2, const int modelIndex, const int boltIndex, mdxaBone_t* matrix, const vec3_t angles,
 	const vec3_t position, const int AframeNum, qhandle_t* modelList, const vec3_t scale)
 {
-	return re.G2API_GetBoltMatrix(ghoul2, modelIndex, bolt_index, matrix, angles,
+	return re.G2API_GetBoltMatrix(ghoul2, modelIndex, boltIndex, matrix, angles,
 		position, AframeNum, modelList, scale);
 }
 
@@ -572,9 +572,9 @@ static int SV_G2API_GetSurfaceRenderStatus(CGhoul2Info* ghlInfo, const char* sur
 	return re.G2API_GetSurfaceRenderStatus(ghlInfo, surfaceName);
 }
 
-static void SV_G2API_GiveMeVectorFromMatrix(mdxaBone_t& bolt_matrix, const Eorientations flags, vec3_t& vec)
+static void SV_G2API_GiveMeVectorFromMatrix(mdxaBone_t& boltMatrix, Eorientations flags, vec3_t& vec)
 {
-	re.G2API_GiveMeVectorFromMatrix(bolt_matrix, flags, vec);
+	re.G2API_GiveMeVectorFromMatrix(boltMatrix, flags, vec);
 }
 
 static qboolean SV_G2API_HaveWeGhoul2Models(const CGhoul2Info_v& ghoul2)
@@ -765,9 +765,9 @@ static qboolean SV_G2API_SetLodBias(CGhoul2Info* ghlInfo, const int lodBias)
 	return re.G2API_SetLodBias(ghlInfo, lodBias);
 }
 
-static qboolean SV_G2API_SetNewOrigin(CGhoul2Info* ghlInfo, const int bolt_index)
+static qboolean SV_G2API_SetNewOrigin(CGhoul2Info* ghlInfo, const int boltIndex)
 {
-	return re.G2API_SetNewOrigin(ghlInfo, bolt_index);
+	return re.G2API_SetNewOrigin(ghlInfo, boltIndex);
 }
 
 static void SV_G2API_SetRagDoll(CGhoul2Info_v& ghoul2, CRagDollParams* parms)
@@ -1075,7 +1075,7 @@ import.WE_IsShaking = SV_WE_IsShaking;
 import.WE_AddWeatherZone = SV_WE_AddWeatherZone;
 import.WE_SetTempGlobalFogColor = SV_WE_SetTempGlobalFogColor;
 
-auto gamename = "SerenityJediEngine2024-game";
+	auto gamename = "SerenityJediEngine2024-game";
 
 	GetGameAPIProc* GetGameAPI;
 	gameLibrary = Sys_LoadSPGameDll(gamename, &GetGameAPI);

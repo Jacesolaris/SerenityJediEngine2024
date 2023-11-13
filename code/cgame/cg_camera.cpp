@@ -667,13 +667,13 @@ void CGCam_FollowUpdate()
 					client_camera.cameraGroupTag);
 				if (newBolt != -1)
 				{
-					mdxaBone_t bolt_matrix;
+					mdxaBone_t boltMatrix;
 					const vec3_t fromAngles = { 0, from->client->ps.legsYaw, 0 };
 
-					gi.G2API_GetBoltMatrix(fromCent->gent->ghoul2, from->playerModel, newBolt, &bolt_matrix, fromAngles,
+					gi.G2API_GetBoltMatrix(fromCent->gent->ghoul2, from->playerModel, newBolt, &boltMatrix, fromAngles,
 						fromCent->lerpOrigin, cg.time, cgs.model_draw,
 						fromCent->currentState.modelScale);
-					gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, focus[num_subjects]);
+					gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, focus[num_subjects]);
 
 					focused = qtrue;
 				}

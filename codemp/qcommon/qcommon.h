@@ -397,7 +397,7 @@ using xcommand_t = void(*)();
 
 using callbackFunc_t = void(*)(const char* s);
 
-void Cmd_Init();
+void Cmd_Init(void);
 
 void Cmd_AddCommand(const char* cmd_name, xcommand_t function, const char* cmd_desc = nullptr);
 // called by the init functions of other parts of the program to

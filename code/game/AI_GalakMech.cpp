@@ -122,16 +122,16 @@ static void GM_CreateExplosion(gentity_t* self, const int bolt_id, const qboolea
 {
 	if (bolt_id >= 0)
 	{
-		mdxaBone_t bolt_matrix;
+		mdxaBone_t boltMatrix;
 		vec3_t org, dir;
 
 		gi.G2API_GetBoltMatrix(self->ghoul2, self->playerModel,
 			bolt_id,
-			&bolt_matrix, self->currentAngles, self->currentOrigin, level.time,
+			&boltMatrix, self->currentAngles, self->currentOrigin, level.time,
 			nullptr, self->s.modelScale);
 
-		gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, org);
-		gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, NEGATIVE_Y, dir);
+		gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, org);
+		gi.G2API_GiveMeVectorFromMatrix(boltMatrix, NEGATIVE_Y, dir);
 
 		if (doSmall)
 		{

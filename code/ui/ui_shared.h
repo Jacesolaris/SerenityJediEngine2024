@@ -236,10 +236,10 @@ using displayContextDef_t = struct
 		qhandle_t customShader, int modelFlags, int lodBias);
 	void (*g2_CleanGhoul2Models)(CGhoul2Info_v& ghoul2);
 	int (*g2_AddBolt)(CGhoul2Info* ghlInfo, const char* boneName);
-	qboolean(*g2_GetBoltMatrix)(CGhoul2Info_v& ghoul2, int modelIndex, int bolt_index, mdxaBone_t* matrix,
+	qboolean(*g2_GetBoltMatrix)(CGhoul2Info_v& ghoul2, int modelIndex, int boltIndex, mdxaBone_t* matrix,
 		const vec3_t angles, const vec3_t position, int frameNum, qhandle_t* modelList,
 		const vec3_t scale);
-	void (*g2_GiveMeVectorFromMatrix)(mdxaBone_t& bolt_matrix, Eorientations flags, vec3_t& vec);
+	void (*g2_GiveMeVectorFromMatrix)(mdxaBone_t& boltMatrix, Eorientations flags, vec3_t& vec);
 
 	//Utility functions that don't immediately redirect to ghoul2 functions
 	int (*g2hilev_SetAnim)(CGhoul2Info* ghlInfo, const char* boneName, int animNum, qboolean freeze);

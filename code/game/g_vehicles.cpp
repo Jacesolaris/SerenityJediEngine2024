@@ -273,7 +273,7 @@ void G_VehicleSpawn(gentity_t* self)
 void G_AttachToVehicle(gentity_t* p_ent, usercmd_t** ucmd)
 {
 	gentity_t* vehEnt;
-	mdxaBone_t bolt_matrix;
+	mdxaBone_t boltMatrix;
 	gentity_t* ent;
 #ifdef _JK2MP
 	int				crotchBolt;
@@ -298,18 +298,18 @@ void G_AttachToVehicle(gentity_t* p_ent, usercmd_t** ucmd)
 	crotchBolt = trap_G2API_AddBolt(vehEnt->ghoul2, 0, "*driver");
 
 	// Get the driver tag.
-	trap_G2API_GetBoltMatrix(vehEnt->ghoul2, 0, crotchBolt, &bolt_matrix,
+	trap_G2API_GetBoltMatrix(vehEnt->ghoul2, 0, crotchBolt, &boltMatrix,
 		vehEnt->m_pVehicle->m_vOrientation, vehEnt->currentOrigin,
 		level.time, nullptr, vehEnt->modelScale);
-	BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, ent->client->ps.origin);
+	BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, ent->client->ps.origin);
 	G_SetOrigin(ent, ent->client->ps.origin);
 	trap_LinkEntity(ent);
 #else
 	// Get the driver tag.
-	gi.G2API_GetBoltMatrix(vehEnt->ghoul2, vehEnt->playerModel, vehEnt->crotchBolt, &bolt_matrix,
+	gi.G2API_GetBoltMatrix(vehEnt->ghoul2, vehEnt->playerModel, vehEnt->crotchBolt, &boltMatrix,
 		vehEnt->m_pVehicle->m_vOrientation, vehEnt->currentOrigin,
 		cg.time ? cg.time : level.time, nullptr, vehEnt->s.modelScale);
-	gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, ent->client->ps.origin);
+	gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, ent->client->ps.origin);
 	gi.linkentity(ent);
 #endif
 }
@@ -2241,7 +2241,7 @@ static void AttachRiders(Vehicle_t * p_veh)
 	{
 		if (p_veh->m_ppPassengers[i])
 		{
-			mdxaBone_t bolt_matrix;
+			mdxaBone_t boltMatrix;
 			vec3_t	yawOnlyAngles;
 			gentity_t* parent = (gentity_t*)p_veh->m_pParentEntity;
 			gentity_t* pilot = (gentity_t*)p_veh->m_ppPassengers[i];
@@ -2255,10 +2255,10 @@ static void AttachRiders(Vehicle_t * p_veh)
 			VectorSet(yawOnlyAngles, 0, parent->client->ps.viewangles[YAW], 0);
 
 			// Get the driver tag.
-			trap_G2API_GetBoltMatrix(parent->ghoul2, 0, crotchBolt, &bolt_matrix,
+			trap_G2API_GetBoltMatrix(parent->ghoul2, 0, crotchBolt, &boltMatrix,
 				yawOnlyAngles, parent->client->ps.origin,
 				level.time, nullptr, parent->modelScale);
-			BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, pilot->client->ps.origin);
+			BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, pilot->client->ps.origin);
 
 			G_SetOrigin(pilot, pilot->client->ps.origin);
 			trap_LinkEntity(pilot);
@@ -2270,7 +2270,7 @@ static void AttachRiders(Vehicle_t * p_veh)
 	if (p_veh->m_pDroidUnit
 		&& p_veh->m_iDroidUnitTag != -1)
 	{
-		mdxaBone_t bolt_matrix;
+		mdxaBone_t boltMatrix;
 		vec3_t	yawOnlyAngles, fwd;
 		gentity_t* parent = (gentity_t*)p_veh->m_pParentEntity;
 		gentity_t* droid = (gentity_t*)p_veh->m_pDroidUnit;
@@ -2284,11 +2284,11 @@ static void AttachRiders(Vehicle_t * p_veh)
 			VectorSet(yawOnlyAngles, 0, parent->client->ps.viewangles[YAW], 0);
 
 			// Get the droid tag.
-			trap_G2API_GetBoltMatrix(parent->ghoul2, 0, p_veh->m_iDroidUnitTag, &bolt_matrix,
+			trap_G2API_GetBoltMatrix(parent->ghoul2, 0, p_veh->m_iDroidUnitTag, &boltMatrix,
 				yawOnlyAngles, parent->currentOrigin,
 				level.time, nullptr, parent->modelScale);
-			BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, droid->client->ps.origin);
-			BG_GiveMeVectorFromMatrix(&bolt_matrix, NEGATIVE_Y, fwd);
+			BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, droid->client->ps.origin);
+			BG_GiveMeVectorFromMatrix(&boltMatrix, NEGATIVE_Y, fwd);
 			vectoangles(fwd, droid->client->ps.viewangles);
 
 			G_SetOrigin(droid, droid->client->ps.origin);
@@ -2310,15 +2310,15 @@ static void AttachRiders(Vehicle_t * p_veh)
 	{
 		gentity_t* const parent = p_veh->m_pParentEntity;
 		gentity_t* const pilot = p_veh->m_pPilot;
-		mdxaBone_t bolt_matrix;
+		mdxaBone_t boltMatrix;
 
 		pilot->waypoint = parent->waypoint; // take the veh's waypoint as your own
 
 		// Get the driver tag.
-		gi.G2API_GetBoltMatrix(parent->ghoul2, parent->playerModel, parent->crotchBolt, &bolt_matrix,
+		gi.G2API_GetBoltMatrix(parent->ghoul2, parent->playerModel, parent->crotchBolt, &boltMatrix,
 			p_veh->m_vOrientation, parent->currentOrigin,
 			cg.time ? cg.time : level.time, nullptr, parent->s.modelScale);
-		gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, pilot->client->ps.origin);
+		gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, pilot->client->ps.origin);
 		G_SetOrigin(pilot, pilot->client->ps.origin);
 		gi.linkentity(pilot);
 	}
@@ -2327,15 +2327,15 @@ static void AttachRiders(Vehicle_t * p_veh)
 	{
 		gentity_t* const parent = p_veh->m_pParentEntity;
 		gentity_t* const pilot = p_veh->m_pOldPilot;
-		mdxaBone_t bolt_matrix;
+		mdxaBone_t boltMatrix;
 
 		pilot->waypoint = parent->waypoint; // take the veh's waypoint as your own
 
 		// Get the driver tag.
-		gi.G2API_GetBoltMatrix(parent->ghoul2, parent->playerModel, parent->crotchBolt, &bolt_matrix,
+		gi.G2API_GetBoltMatrix(parent->ghoul2, parent->playerModel, parent->crotchBolt, &boltMatrix,
 			p_veh->m_vOrientation, parent->currentOrigin,
 			cg.time ? cg.time : level.time, nullptr, parent->s.modelScale);
-		gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, pilot->client->ps.origin);
+		gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, pilot->client->ps.origin);
 		G_SetOrigin(pilot, pilot->client->ps.origin);
 		gi.linkentity(pilot);
 	}

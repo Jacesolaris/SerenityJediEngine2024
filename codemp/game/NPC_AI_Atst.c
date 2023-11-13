@@ -61,16 +61,16 @@ static void ATST_PlayEffect(gentity_t* self, const int boltID, const char* fx)
 {
 	if (boltID >= 0 && fx && fx[0])
 	{
-		mdxaBone_t	bolt_matrix;
+		mdxaBone_t	boltMatrix;
 		vec3_t		org, dir;
 
 		trap->G2API_GetBoltMatrix(self->ghoul2, 0,
 			boltID,
-			&bolt_matrix, self->r.currentAngles, self->r.currentOrigin, level.time,
+			&boltMatrix, self->r.currentAngles, self->r.currentOrigin, level.time,
 			NULL, self->modelScale);
 
-		BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, org);
-		BG_GiveMeVectorFromMatrix(&bolt_matrix, NEGATIVE_Y, dir);
+		BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, org);
+		BG_GiveMeVectorFromMatrix(&boltMatrix, NEGATIVE_Y, dir);
 
 		G_PlayEffectID(G_EffectIndex((char*)fx), org, dir);
 	}

@@ -664,10 +664,9 @@ qboolean G2API_SetLodBias(CGhoul2Info* ghlInfo, const int lodBias)
 	return qfalse;
 }
 
-void G2_SetSurfaceOnOffFromSkin(CGhoul2Info* ghlInfo, qhandle_t render_skin);
+void G2_SetSurfaceOnOffFromSkin(CGhoul2Info* ghlInfo, qhandle_t renderSkin);
 
-qboolean G2API_SetSkin(CGhoul2Info_v& ghoul2, const int modelIndex, const qhandle_t customSkin,
-	const qhandle_t renderSkin)
+qboolean G2API_SetSkin(CGhoul2Info_v& ghoul2, const int modelIndex, const qhandle_t customSkin, const qhandle_t renderSkin)
 {
 	CGhoul2Info* ghlInfo = &ghoul2[modelIndex];
 
@@ -732,15 +731,13 @@ qboolean G2API_SetRootSurface(CGhoul2Info_v& ghoul2, const int modelIndex, const
 	return qfalse;
 }
 
-int G2API_AddSurface(CGhoul2Info* ghlInfo, const int surfaceNumber, const int poly_number, const float barycentric_i,
-	const float barycentric_j,
-	const int lod)
+int G2API_AddSurface(CGhoul2Info* ghlInfo, const int surfaceNumber, const int polyNumber, const float BarycentricI, const float BarycentricJ, const int lod)
 {
 	if (G2_SetupModelPointers(ghlInfo))
 	{
 		// ensure we flush the cache
 		ghlInfo->mMeshFrameNum = 0;
-		return G2_AddSurface(ghlInfo, surfaceNumber, poly_number, barycentric_i, barycentric_j, lod);
+		return G2_AddSurface(ghlInfo, surfaceNumber, polyNumber, BarycentricI, BarycentricJ, lod);
 	}
 	return -1;
 }
@@ -990,9 +987,7 @@ qboolean G2API_DoesBoneExist(CGhoul2Info_v& ghoul2, const int modelIndex, const 
 
 //rww - RAGDOLL_END
 
-qboolean G2API_SetBoneAnimIndex(CGhoul2Info* ghlInfo, const int index, const int astartFrame, const int aendFrame,
-	const int flags, const float animSpeed, const int acurrent_time, const float aset_frame,
-	const int blendTime)
+qboolean G2API_SetBoneAnimIndex(CGhoul2Info* ghlInfo, const int index, const int astartFrame, const int aendFrame, const int flags, const float animSpeed, const int currentTime, const float asetFrame, const int blendTime)
 {
 	qboolean setPtrs = qfalse;
 	qboolean res = qfalse;
@@ -1015,7 +1010,7 @@ qboolean G2API_SetBoneAnimIndex(CGhoul2Info* ghlInfo, const int index, const int
 
 	int endFrame = aendFrame;
 	int startFrame = astartFrame;
-	float setFrame = aset_frame;
+	float setFrame = asetFrame;
 	assert(endFrame > 0);
 	assert(startFrame >= 0);
 	assert(endFrame < 100000);
@@ -1055,7 +1050,7 @@ qboolean G2API_SetBoneAnimIndex(CGhoul2Info* ghlInfo, const int index, const int
 	{
 		// ensure we flush the cache
 		ghlInfo->mSkelFrameNum = 0;
-		return G2_Set_Bone_Anim_Index(ghlInfo->mBlist, index, startFrame, endFrame, flags, animSpeed, acurrent_time,
+		return G2_Set_Bone_Anim_Index(ghlInfo->mBlist, index, startFrame, endFrame, flags, animSpeed, currentTime,
 			setFrame, blendTime, ghlInfo->aHeader->numFrames);
 	}
 	return qfalse;
@@ -1063,13 +1058,11 @@ qboolean G2API_SetBoneAnimIndex(CGhoul2Info* ghlInfo, const int index, const int
 
 #define _PLEASE_SHUT_THE_HELL_UP
 
-qboolean G2API_SetBoneAnim(CGhoul2Info_v& ghoul2, const int modelIndex, const char* boneName, const int astartFrame,
-	const int aendFrame, const int flags, const float animSpeed, const int currentTime,
-	const float aset_frame, const int blendTime)
+qboolean G2API_SetBoneAnim(CGhoul2Info_v& ghoul2, const int modelIndex, const char* boneName, const int astartFrame, const int aendFrame, const int flags, const float animSpeed, const int currentTime, const float asetFrame, const int blendTime)
 {
 	int endFrame = aendFrame;
 	int startFrame = astartFrame;
-	float setFrame = aset_frame;
+	float setFrame = asetFrame;
 #ifndef _PLEASE_SHUT_THE_HELL_UP
 	assert(endFrame > 0);
 	assert(startFrame >= 0);
@@ -1140,7 +1133,7 @@ qboolean G2API_SetBoneAnim(CGhoul2Info_v& ghoul2, const int modelIndex, const ch
 	return qfalse;
 }
 
-qboolean G2API_GetBoneAnim(CGhoul2Info_v& ghoul2, const int modelIndex, const char* boneName, const int currentTime, float* currentFrame, int* startFrame, int* endFrame, int* flags, float* animSpeed, int* modelList)
+qboolean G2API_GetBoneAnim(CGhoul2Info_v& ghoul2, const int modelIndex, const char* boneName, const int current_Time, float* currentFrame, int* startFrame, int* endFrame, int* flags, float* animSpeed, int* modelList)
 {
 	assert(startFrame != endFrame); //this is bad
 	assert(startFrame != flags); //this is bad
@@ -1151,17 +1144,9 @@ qboolean G2API_GetBoneAnim(CGhoul2Info_v& ghoul2, const int modelIndex, const ch
 
 	if (G2_SetupModelPointers(ghlInfo))
 	{
-		const int aCurrentTime = G2API_GetTime(currentTime);
+		const int aCurrentTime = G2API_GetTime(current_Time);
 		const qboolean ret = G2_Get_Bone_Anim(ghlInfo, ghlInfo->mBlist, boneName, aCurrentTime, currentFrame, startFrame, endFrame, flags, animSpeed, modelList, ghlInfo->mModelindex);
 #ifdef _DEBUG
-		/*
-		assert(*endFrame>0);
-		assert(*endFrame<100000);
-		assert(*startFrame>=0);
-		assert(*startFrame<100000);
-		assert(*currentFrame>=0.0f);
-		assert(*currentFrame<100000.0f);
-		*/
 		if (*endFrame < 1)
 		{
 			*endFrame = 1;
@@ -1225,11 +1210,11 @@ qboolean G2API_GetAnimRange(CGhoul2Info* ghlInfo, const char* boneName, int* sta
 	return qfalse;
 }
 
-qboolean G2API_PauseBoneAnim(CGhoul2Info* ghlInfo, const char* boneName, const int acurrent_time)
+qboolean G2API_PauseBoneAnim(CGhoul2Info* ghlInfo, const char* boneName, const int currentTime)
 {
 	if (G2_SetupModelPointers(ghlInfo))
 	{
-		return G2_Pause_Bone_Anim(ghlInfo, ghlInfo->mBlist, boneName, acurrent_time);
+		return G2_Pause_Bone_Anim(ghlInfo, ghlInfo->mBlist, boneName, currentTime);
 	}
 	return qfalse;
 }
@@ -1296,10 +1281,7 @@ qboolean G2API_SetBoneAnglesIndex(CGhoul2Info* ghlInfo, const int index, const v
 	return qfalse;
 }
 
-qboolean G2API_SetBoneAngles(CGhoul2Info_v& ghoul2, const int modelIndex, const char* boneName, const vec3_t angles,
-	const int flags,
-	const Eorientations up, const Eorientations left, const Eorientations forward,
-	qhandle_t* modelList, const int blendTime, const int currentTime)
+qboolean G2API_SetBoneAngles(CGhoul2Info_v& ghoul2, const int modelIndex, const char* boneName, const vec3_t angles, const int flags, const Eorientations up, const Eorientations left, const Eorientations forward, qhandle_t* modelList, const int blendTime, const int currentTime)
 {
 	if (ghoul2.size() > modelIndex)
 	{
@@ -1574,8 +1556,7 @@ qboolean G2API_RagEffectorGoal(CGhoul2Info_v& ghoul2, const char* boneName, vec3
 	return qtrue;
 }
 
-qboolean G2API_GetRagBonePos(CGhoul2Info_v& ghoul2, const char* boneName, vec3_t pos, vec3_t ent_angles, vec3_t entPos,
-	vec3_t ent_scale)
+qboolean G2API_GetRagBonePos(CGhoul2Info_v& ghoul2, const char* boneName, vec3_t pos, vec3_t entAngles, vec3_t entPos, vec3_t entScale)
 {
 	//do something?
 	return qfalse;
@@ -1626,11 +1607,9 @@ qboolean G2API_RagForceSolve(CGhoul2Info_v& ghoul2, const qboolean force)
 	return qtrue;
 }
 
-qboolean G2_SetBoneIKState(CGhoul2Info_v& ghoul2, int time, const char* boneName, int ik_state,
-	sharedSetBoneIKStateParams_t* params);
+qboolean G2_SetBoneIKState(CGhoul2Info_v& ghoul2, int time, const char* boneName, int ikState, sharedSetBoneIKStateParams_t* params);
 
-qboolean G2API_SetBoneIKState(CGhoul2Info_v& ghoul2, const int time, const char* boneName, const int ikState,
-	sharedSetBoneIKStateParams_t* params)
+qboolean G2API_SetBoneIKState(CGhoul2Info_v& ghoul2, const int time, const char* boneName, const int ikState, sharedSetBoneIKStateParams_t* params)
 {
 	return G2_SetBoneIKState(ghoul2, time, boneName, ikState, params);
 }
@@ -1675,37 +1654,36 @@ int G2API_AddBoltSurfNum(CGhoul2Info* ghlInfo, const int surfIndex)
 	return -1;
 }
 
-qboolean G2API_AttachG2Model(CGhoul2Info_v& ghoul2_from, const int model_from, CGhoul2Info_v& ghoul2_to, int toBoltIndex,
-	int toModel)
+qboolean G2API_AttachG2Model(CGhoul2Info_v& ghoul2From, const int modelFrom, CGhoul2Info_v& ghoul2To, int toBoltIndex, int toModel)
 {
 	assert(toBoltIndex >= 0);
 	if (toBoltIndex < 0)
 	{
 		return qfalse;
 	}
-	if (G2_SetupModelPointers(ghoul2_from) && G2_SetupModelPointers(ghoul2_to))
+	if (G2_SetupModelPointers(ghoul2From) && G2_SetupModelPointers(ghoul2To))
 	{
 		// make sure we have a model to attach, a model to attach to, and a bolt on that model
-		if (ghoul2_from.size() > model_from &&
-			ghoul2_to.size() > toModel &&
-			(ghoul2_to[toModel].mBltlist[toBoltIndex].boneNumber != -1 || ghoul2_to[toModel].mBltlist[toBoltIndex].
+		if (ghoul2From.size() > modelFrom &&
+			ghoul2To.size() > toModel &&
+			(ghoul2To[toModel].mBltlist[toBoltIndex].boneNumber != -1 || ghoul2To[toModel].mBltlist[toBoltIndex].
 				surfaceNumber != -1))
 		{
 			// encode the bolt address into the model bolt link
 			toModel &= MODEL_AND;
 			toBoltIndex &= BOLT_AND;
-			ghoul2_from[model_from].mModelBoltLink = toModel << MODEL_SHIFT | toBoltIndex << BOLT_SHIFT;
+			ghoul2From[modelFrom].mModelBoltLink = toModel << MODEL_SHIFT | toBoltIndex << BOLT_SHIFT;
 			return qtrue;
 		}
 	}
 	return qfalse;
 }
 
-void G2API_SetBoltInfo(CGhoul2Info_v& ghoul2, const int modelIndex, const int bolt_info)
+void G2API_SetBoltInfo(CGhoul2Info_v& ghoul2, const int modelIndex, const int boltInfo)
 {
 	if (ghoul2.size() > modelIndex)
 	{
-		ghoul2[modelIndex].mModelBoltLink = bolt_info;
+		ghoul2[modelIndex].mModelBoltLink = boltInfo;
 	}
 }
 
@@ -1719,12 +1697,11 @@ qboolean G2API_DetachG2Model(CGhoul2Info* ghlInfo)
 	return qfalse;
 }
 
-qboolean G2API_AttachEnt(int* bolt_info, CGhoul2Info_v& ghoul2, const int modelIndex, int toBoltIndex, int entNum,
-	int toModelNum)
+qboolean G2API_AttachEnt(int* boltInfo, CGhoul2Info_v& ghoul2, const int modelIndex, int toBoltIndex, int entNum, int toModelNum)
 {
 	CGhoul2Info* ghlInfoTo = &ghoul2[modelIndex];
 
-	if (bolt_info && G2_SetupModelPointers(ghlInfoTo))
+	if (boltInfo && G2_SetupModelPointers(ghlInfoTo))
 	{
 		// make sure we have a model to attach, a model to attach to, and a bolt on that model
 		if (ghlInfoTo->mBltlist.size() && (ghlInfoTo->mBltlist[toBoltIndex].boneNumber != -1 || ghlInfoTo->mBltlist[
@@ -1734,7 +1711,7 @@ qboolean G2API_AttachEnt(int* bolt_info, CGhoul2Info_v& ghoul2, const int modelI
 			toModelNum &= MODEL_AND;
 			toBoltIndex &= BOLT_AND;
 			entNum &= ENTITY_AND;
-			*bolt_info = toBoltIndex << BOLT_SHIFT | toModelNum << MODEL_SHIFT | entNum << ENTITY_SHIFT;
+			*boltInfo = toBoltIndex << BOLT_SHIFT | toModelNum << MODEL_SHIFT | entNum << ENTITY_SHIFT;
 			return qtrue;
 		}
 	}
@@ -1744,10 +1721,7 @@ qboolean G2API_AttachEnt(int* bolt_info, CGhoul2Info_v& ghoul2, const int modelI
 qboolean gG2_GBMNoReconstruct;
 qboolean gG2_GBMUseSPMethod;
 
-qboolean G2API_GetBoltMatrix_SPMethod(CGhoul2Info_v& ghoul2, const int modelIndex, const int bolt_index,
-	mdxaBone_t* matrix, const vec3_t angles,
-	const vec3_t position, const int frameNum, qhandle_t* modelList,
-	const vec3_t scale)
+qboolean G2API_GetBoltMatrix_SPMethod(CGhoul2Info_v& ghoul2, const int modelIndex, const int boltIndex, mdxaBone_t* matrix, const vec3_t angles, const vec3_t position, const int frameNum, qhandle_t* modelList, const vec3_t scale)
 {
 	assert(ghoul2.size() > modelIndex);
 
@@ -1755,7 +1729,7 @@ qboolean G2API_GetBoltMatrix_SPMethod(CGhoul2Info_v& ghoul2, const int modelInde
 	{
 		CGhoul2Info* ghlInfo = &ghoul2[modelIndex];
 
-		if (ghlInfo && bolt_index < static_cast<int>(ghlInfo->mBltlist.size()) && bolt_index >= 0)
+		if (ghlInfo && boltIndex < static_cast<int>(ghlInfo->mBltlist.size()) && boltIndex >= 0)
 		{
 			// make sure we have transformed the skeleton
 			if (!gG2_GBMNoReconstruct)
@@ -1766,7 +1740,7 @@ qboolean G2API_GetBoltMatrix_SPMethod(CGhoul2Info_v& ghoul2, const int modelInde
 			gG2_GBMNoReconstruct = qfalse;
 
 			mdxaBone_t scaled;
-			mdxaBone_t* use = &ghlInfo->mBltlist[bolt_index].position;
+			mdxaBone_t* use = &ghlInfo->mBltlist[boltIndex].position;
 
 			if (scale[0] || scale[1] || scale[2])
 			{
@@ -1807,14 +1781,9 @@ qboolean G2API_GetBoltMatrix_SPMethod(CGhoul2Info_v& ghoul2, const int modelInde
 #define G2ANIM(ghlInfo,m) ((void)0)
 bool G2_NeedsRecalc(CGhoul2Info* ghlInfo, int frame_num);
 void G2_GetBoltMatrixLow(CGhoul2Info& ghoul2, int boltNum, const vec3_t scale, mdxaBone_t& retMatrix);
-void G2_GetBoneMatrixLow(const CGhoul2Info& ghoul2, int boneNum, const vec3_t scale, mdxaBone_t& retMatrix,
-	mdxaBone_t*& ret_basepose, mdxaBone_t*& ret_basepose_inv);
+void G2_GetBoneMatrixLow(const CGhoul2Info& ghoul2, int boneNum, const vec3_t scale, mdxaBone_t& retMatrix, mdxaBone_t*& ret_basepose, mdxaBone_t*& ret_basepose_inv);
 
-//qboolean G2API_GetBoltMatrix(CGhoul2Info_v &ghoul2, const int modelIndex, const int bolt_index, mdxaBone_t *matrix, const vec3_t angles,
-//							 const vec3_t position, const int AframeNum, qhandle_t *modelList, const vec3_t scale )
-qboolean G2API_GetBoltMatrix(CGhoul2Info_v& ghoul2, const int modelIndex, const int bolt_index, mdxaBone_t* matrix,
-	const vec3_t angles,
-	const vec3_t position, const int frameNum, qhandle_t* modelList, vec3_t scale)
+qboolean G2API_GetBoltMatrix(CGhoul2Info_v& ghoul2, const int modelIndex, const int boltIndex, mdxaBone_t* matrix, const vec3_t angles, const vec3_t position, const int frameNum, qhandle_t* modelList, vec3_t scale)
 {
 	//	G2ERROR(ghoul2.IsValid(),"Invalid ghlInfo");
 	G2ERROR(matrix, "NULL matrix");
@@ -1834,10 +1803,10 @@ qboolean G2API_GetBoltMatrix(CGhoul2Info_v& ghoul2, const int modelIndex, const 
 		{
 			int tframeNum = G2API_GetTime(frameNum);
 			CGhoul2Info* ghlInfo = &ghoul2[modelIndex];
-			G2ERROR(bolt_index >= 0 && (bolt_index < ghlInfo->mBltlist.size()),
-				va("Invalid Bolt Index (%d:%s)", bolt_index, ghlInfo->mFileName));
+			G2ERROR(boltIndex >= 0 && (boltIndex < ghlInfo->mBltlist.size()),
+				va("Invalid Bolt Index (%d:%s)", boltIndex, ghlInfo->mFileName));
 
-			if (bolt_index >= 0 && ghlInfo && bolt_index < static_cast<int>(ghlInfo->mBltlist.size()))
+			if (boltIndex >= 0 && ghlInfo && boltIndex < static_cast<int>(ghlInfo->mBltlist.size()))
 			{
 				mdxaBone_t bolt;
 
@@ -1860,7 +1829,7 @@ qboolean G2API_GetBoltMatrix(CGhoul2Info_v& ghoul2, const int modelIndex, const 
 				}
 #endif
 
-				G2_GetBoltMatrixLow(*ghlInfo, bolt_index, scale, bolt);
+				G2_GetBoltMatrixLow(*ghlInfo, boltIndex, scale, bolt);
 				// scale the bolt position by the scale factor for this model since at this point its still in model space
 				if (scale[0])
 				{
@@ -2034,10 +2003,7 @@ static bool G2_NeedRetransform(CGhoul2Info* g2, const int frameNum)
 	return needTrans;
 }
 
-void G2API_CollisionDetectCache(CollisionRecord_t* collRecMap, CGhoul2Info_v& ghoul2, const vec3_t angles,
-	const vec3_t position,
-	int frameNumber, int entNum, vec3_t rayStart, vec3_t rayEnd, vec3_t scale,
-	IHeapAllocator* G2VertSpace, int traceFlags, int useLod, float fRadius)
+void G2API_CollisionDetectCache(CollisionRecord_t* collRecMap, CGhoul2Info_v& ghoul2, const vec3_t angles, const vec3_t position, int frameNumber, int entNum, vec3_t rayStart, vec3_t rayEnd, vec3_t scale, IHeapAllocator* G2VertSpace, int traceFlags, int useLod, float fRadius)
 {
 	//this will store off the transformed verts for the next trace - this is slower, but for models that do not animate
 	//frequently it is much much faster. -rww
@@ -2131,20 +2097,8 @@ void G2API_CollisionDetectCache(CollisionRecord_t* collRecMap, CGhoul2Info_v& gh
 	}
 }
 
-void G2API_CollisionDetect(CollisionRecord_t* collRecMap, CGhoul2Info_v& ghoul2, const vec3_t angles,
-	const vec3_t position,
-	int frameNumber, int entNum, vec3_t rayStart, vec3_t rayEnd, vec3_t scale,
-	IHeapAllocator* G2VertSpace, int traceFlags, int useLod, float fRadius)
+void G2API_CollisionDetect(CollisionRecord_t* collRecMap, CGhoul2Info_v& ghoul2, const vec3_t angles, const vec3_t position, int frameNumber, int entNum, vec3_t rayStart, vec3_t rayEnd, vec3_t scale, IHeapAllocator* G2VertSpace, int traceFlags, int useLod, float fRadius)
 {
-	/*
-	if (1)
-	{
-		G2API_CollisionDetectCache(collRecMap, ghoul2, angles, position, frameNumber, entNum,
-			rayStart, rayEnd, scale, G2VertSpace, traceFlags, useLod, fRadius);
-		return;
-	}
-	*/
-
 	if (G2_SetupModelPointers(ghoul2))
 	{
 		vec3_t transRayStart, transRayEnd;
@@ -2207,44 +2161,44 @@ int G2API_GetGhoul2ModelFlags(CGhoul2Info* ghlInfo)
 }
 
 // given a boltmatrix, return in vec a normalised vector for the axis requested in flags
-void G2API_GiveMeVectorFromMatrix(const mdxaBone_t* bolt_matrix, const Eorientations flags, vec3_t vec)
+void G2API_GiveMeVectorFromMatrix(mdxaBone_t* boltMatrix, Eorientations flags, vec3_t vec)
 {
 	switch (flags)
 	{
 	case ORIGIN:
-		vec[0] = bolt_matrix->matrix[0][3];
-		vec[1] = bolt_matrix->matrix[1][3];
-		vec[2] = bolt_matrix->matrix[2][3];
+		vec[0] = boltMatrix->matrix[0][3];
+		vec[1] = boltMatrix->matrix[1][3];
+		vec[2] = boltMatrix->matrix[2][3];
 		break;
 	case POSITIVE_Y:
-		vec[0] = bolt_matrix->matrix[0][1];
-		vec[1] = bolt_matrix->matrix[1][1];
-		vec[2] = bolt_matrix->matrix[2][1];
+		vec[0] = boltMatrix->matrix[0][1];
+		vec[1] = boltMatrix->matrix[1][1];
+		vec[2] = boltMatrix->matrix[2][1];
 		break;
 	case POSITIVE_X:
-		vec[0] = bolt_matrix->matrix[0][0];
-		vec[1] = bolt_matrix->matrix[1][0];
-		vec[2] = bolt_matrix->matrix[2][0];
+		vec[0] = boltMatrix->matrix[0][0];
+		vec[1] = boltMatrix->matrix[1][0];
+		vec[2] = boltMatrix->matrix[2][0];
 		break;
 	case POSITIVE_Z:
-		vec[0] = bolt_matrix->matrix[0][2];
-		vec[1] = bolt_matrix->matrix[1][2];
-		vec[2] = bolt_matrix->matrix[2][2];
+		vec[0] = boltMatrix->matrix[0][2];
+		vec[1] = boltMatrix->matrix[1][2];
+		vec[2] = boltMatrix->matrix[2][2];
 		break;
 	case NEGATIVE_Y:
-		vec[0] = -bolt_matrix->matrix[0][1];
-		vec[1] = -bolt_matrix->matrix[1][1];
-		vec[2] = -bolt_matrix->matrix[2][1];
+		vec[0] = -boltMatrix->matrix[0][1];
+		vec[1] = -boltMatrix->matrix[1][1];
+		vec[2] = -boltMatrix->matrix[2][1];
 		break;
 	case NEGATIVE_X:
-		vec[0] = -bolt_matrix->matrix[0][0];
-		vec[1] = -bolt_matrix->matrix[1][0];
-		vec[2] = -bolt_matrix->matrix[2][0];
+		vec[0] = -boltMatrix->matrix[0][0];
+		vec[1] = -boltMatrix->matrix[1][0];
+		vec[2] = -boltMatrix->matrix[2][0];
 		break;
 	case NEGATIVE_Z:
-		vec[0] = -bolt_matrix->matrix[0][2];
-		vec[1] = -bolt_matrix->matrix[1][2];
-		vec[2] = -bolt_matrix->matrix[2][2];
+		vec[0] = -boltMatrix->matrix[0][2];
+		vec[1] = -boltMatrix->matrix[1][2];
+		vec[2] = -boltMatrix->matrix[2][2];
 		break;
 	}
 }
@@ -2254,7 +2208,7 @@ int G2API_CopyGhoul2Instance(const CGhoul2Info_v& g2_from, CGhoul2Info_v& g2_to,
 	assert(modelIndex == -1); // copy individual bolted parts is not used in jk2 and I didn't want to deal with it
 	// if ya want it, we will add it back correctly
 
-	//G2ERROR(ghoul2_from.IsValid(),"Invalid ghlInfo");
+	//G2ERROR(ghoul2From.IsValid(),"Invalid ghlInfo");
 	if (g2_from.IsValid())
 	{
 #ifdef _DEBUG
@@ -2285,15 +2239,14 @@ int G2API_CopyGhoul2Instance(const CGhoul2Info_v& g2_from, CGhoul2Info_v& g2_to,
 			model++;
 		}
 #endif
-		//G2ANIM(ghoul2_from,"G2API_CopyGhoul2Instance (source)");
-		//G2ANIM(ghoul2_to,"G2API_CopyGhoul2Instance (dest)");
+		//G2ANIM(ghoul2From,"G2API_CopyGhoul2Instance (source)");
+		//G2ANIM(ghoul2To,"G2API_CopyGhoul2Instance (dest)");
 	}
 
 	return -1;
 }
 
-void G2API_CopySpecificG2Model(CGhoul2Info_v& ghoul2_from, const int model_from, CGhoul2Info_v& ghoul2_to,
-	const int model_to)
+void G2API_CopySpecificG2Model(CGhoul2Info_v& ghoul2From, const int modelFrom, CGhoul2Info_v& ghoul2To, const int modelTo)
 {
 #if 0
 	qboolean forceReconstruct = qtrue;
@@ -2301,34 +2254,34 @@ void G2API_CopySpecificG2Model(CGhoul2Info_v& ghoul2_from, const int model_from,
 	//might have been a bug in the reconstruct checking which has since been
 	//mangled and probably fixed. -rww
 	// assume we actually have a model to copy from
-	if (ghoul2_from.size() > model_from)
+	if (ghoul2From.size() > modelFrom)
 	{
 		// if we don't have enough models on the to side, resize us so we do
-		if (ghoul2_to.size() <= model_to)
+		if (ghoul2To.size() <= modelTo)
 		{
-			assert(model_to < 5);
-			ghoul2_to.resize(model_to + 1);
+			assert(modelTo < 5);
+			ghoul2To.resize(modelTo + 1);
 #if 0
 			forceReconstruct = qtrue;
 #endif
 		}
 		// do the copy
-		if (ghoul2_to.IsValid() && ghoul2_to.size() >= model_to)
+		if (ghoul2To.IsValid() && ghoul2To.size() >= modelTo)
 		{
 			//remove the bonecache before we stomp over this instance.
-			if (ghoul2_to[model_to].mBoneCache)
+			if (ghoul2To[modelTo].mBoneCache)
 			{
-				RemoveBoneCache(ghoul2_to[model_to].mBoneCache);
-				ghoul2_to[model_to].mBoneCache = nullptr;
+				RemoveBoneCache(ghoul2To[modelTo].mBoneCache);
+				ghoul2To[modelTo].mBoneCache = nullptr;
 			}
 		}
-		ghoul2_to[model_to] = ghoul2_from[model_from];
+		ghoul2To[modelTo] = ghoul2From[modelFrom];
 #if 0
 		if (forceReconstruct)
 		{ //rww - we should really do this shouldn't we? If we don't mark a reconstruct after this,
 		  //and we do a GetBoltMatrix in the same frame, it doesn't reconstruct the skeleton and returns
 		  //a completely invalid matrix
-			ghoul2_to[0].mSkelFrameNum = 0;
+			ghoul2To[0].mSkelFrameNum = 0;
 		}
 #endif
 	}
@@ -2431,7 +2384,7 @@ char* G2API_GetGLAName(CGhoul2Info_v& ghoul2, const int modelIndex)
 	return nullptr;
 }
 
-qboolean G2API_SetNewOrigin(CGhoul2Info_v& ghoul2, const int bolt_index)
+qboolean G2API_SetNewOrigin(CGhoul2Info_v& ghoul2, const int boltIndex)
 {
 	CGhoul2Info* ghlInfo = nullptr;
 
@@ -2442,7 +2395,7 @@ qboolean G2API_SetNewOrigin(CGhoul2Info_v& ghoul2, const int bolt_index)
 
 	if (G2_SetupModelPointers(ghlInfo))
 	{
-		if (bolt_index < 0)
+		if (boltIndex < 0)
 		{
 			char modelName[MAX_QPATH];
 			if (ghlInfo->currentModel &&
@@ -2455,11 +2408,11 @@ qboolean G2API_SetNewOrigin(CGhoul2Info_v& ghoul2, const int bolt_index)
 				strcpy(modelName, "None?!");
 			}
 
-			Com_Error(ERR_DROP, "Bad boltindex (%i) trying to SetNewOrigin (naughty naughty!)\nModel %s\n", bolt_index,
+			Com_Error(ERR_DROP, "Bad boltindex (%i) trying to SetNewOrigin (naughty naughty!)\nModel %s\n", boltIndex,
 				modelName);
 		}
 
-		ghlInfo->mNewOrigin = bolt_index;
+		ghlInfo->mNewOrigin = boltIndex;
 		ghlInfo->mFlags |= GHOUL2_NEWORIGIN;
 		return qtrue;
 	}

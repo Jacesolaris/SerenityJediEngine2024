@@ -35,7 +35,7 @@ extern void ChangeWeapon(const gentity_t* ent, int new_weapon);
 //lock the owner into place relative to the cannon pos
 void EWebPositionUser(gentity_t* owner, gentity_t* eweb)
 {
-	mdxaBone_t bolt_matrix;
+	mdxaBone_t boltMatrix;
 	vec3_t p, p2, d;
 	trace_t tr;
 	qboolean trace_over = qtrue;
@@ -68,11 +68,11 @@ void EWebPositionUser(gentity_t* owner, gentity_t* eweb)
 		}
 	}
 	//trace over
-	gi.G2API_GetBoltMatrix(eweb->ghoul2, 0, eweb->headBolt, &bolt_matrix,
+	gi.G2API_GetBoltMatrix(eweb->ghoul2, 0, eweb->headBolt, &boltMatrix,
 		eweb->s.apos.trBase, eweb->currentOrigin,
 		cg.time ? cg.time : level.time, nullptr, eweb->s.modelScale);
-	gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, p);
-	gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, NEGATIVE_Y, d);
+	gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, p);
+	gi.G2API_GiveMeVectorFromMatrix(boltMatrix, NEGATIVE_Y, d);
 	d[2] = 0;
 	VectorNormalize(d);
 	VectorMA(p, -44.0f, d, p);
@@ -910,15 +910,15 @@ void G_UpdateEmplacedWeaponData(gentity_t* ent)
 			ent->waypoint = chair->waypoint;
 
 			//update the actual origin of the sitter
-			mdxaBone_t bolt_matrix;
+			mdxaBone_t boltMatrix;
 			const vec3_t chair_ang = { 0, ent->client->ps.viewangles[YAW], 0 };
 
 			// Getting the seat bolt here
 			gi.G2API_GetBoltMatrix(chair->ghoul2, chair->playerModel, chair->headBolt,
-				&bolt_matrix, chair_ang, chair->currentOrigin, cg.time ? cg.time : level.time,
+				&boltMatrix, chair_ang, chair->currentOrigin, cg.time ? cg.time : level.time,
 				nullptr, chair->s.modelScale);
 			// Storing ent position, bolt position, and bolt axis
-			gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, ent->client->ps.origin);
+			gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, ent->client->ps.origin);
 			gi.linkentity(ent);
 		}
 		else if (chair->e_UseFunc == useF_eweb_use) //yeah, crappy way to check this, but...

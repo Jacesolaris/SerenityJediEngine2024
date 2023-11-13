@@ -3024,7 +3024,7 @@ using entityState_t = struct entityState_s
 	vec3_t modelScale; // used to scale models in any axis
 	int radius;
 	// used for culling all the ghoul models attached to this ent NOTE - this is automatically scaled by Ghoul2 if/when you scale the model. This is a 100% size value
-	int bolt_info;
+	int boltInfo;
 	// info used for bolting entities to Ghoul2 models - NOT used for bolting ghoul2 models to themselves, more for stuff like bolting effects to ghoul2 models
 	/*
 	Ghoul2 Insert End
@@ -3148,7 +3148,7 @@ using entityState_t = struct entityState_s
 
 		saved_game.write<float>(modelScale);
 		saved_game.write<int32_t>(radius);
-		saved_game.write<int32_t>(bolt_info);
+		saved_game.write<int32_t>(boltInfo);
 
 #ifndef JK2_MODE
 		saved_game.write<int32_t>(isPortalEnt);
@@ -3264,7 +3264,7 @@ using entityState_t = struct entityState_s
 
 		saved_game.read<float>(modelScale);
 		saved_game.read<int32_t>(radius);
-		saved_game.read<int32_t>(bolt_info);
+		saved_game.read<int32_t>(boltInfo);
 
 #ifndef JK2_MODE
 		saved_game.read<int32_t>(isPortalEnt);

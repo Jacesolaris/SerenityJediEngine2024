@@ -70,7 +70,7 @@ extern qboolean player_locked;
 extern pmove_t* pm;
 extern pml_t pml;
 
-void BG_IK_MoveLimb(CGhoul2Info_v& ghoul2, const int bolt_index, const char* anim_bone, const char* first_bone,
+void BG_IK_MoveLimb(CGhoul2Info_v& ghoul2, const int boltIndex, const char* anim_bone, const char* first_bone,
 	const char* second_bone,
 	const int time, const entityState_t* ent, const int anim_file_index, const int basePose,
 	vec3_t desired_pos, qboolean* ik_in_progress, vec3_t origin,
@@ -168,7 +168,7 @@ void BG_IK_MoveLimb(CGhoul2Info_v& ghoul2, const int bolt_index, const char* ani
 		VectorCopy(angles, t_angles);
 		t_angles[PITCH] = t_angles[ROLL] = 0;
 
-		gi.G2API_GetBoltMatrix(ghoul2, 0, bolt_index, &hold_point_matrix, t_angles, origin, time, nullptr, scale);
+		gi.G2API_GetBoltMatrix(ghoul2, 0, boltIndex, &hold_point_matrix, t_angles, origin, time, nullptr, scale);
 		//Get the point position from the matrix.
 		hold_point[0] = hold_point_matrix.matrix[0][3];
 		hold_point[1] = hold_point_matrix.matrix[1][3];
@@ -296,16 +296,16 @@ void PM_IKUpdate(gentity_t* ent)
 
 		if (ent->client->ps.heldByBolt)
 		{
-			mdxaBone_t bolt_matrix;
+			mdxaBone_t boltMatrix;
 			vec3_t bolt_org;
 			vec3_t t_angles;
 
 			VectorCopy(holder->client->ps.viewangles, t_angles);
 			t_angles[PITCH] = t_angles[ROLL] = 0;
 
-			gi.G2API_GetBoltMatrix(holder->ghoul2, 0, ent->client->ps.heldByBolt, &bolt_matrix, t_angles,
+			gi.G2API_GetBoltMatrix(holder->ghoul2, 0, ent->client->ps.heldByBolt, &boltMatrix, t_angles,
 				holder->client->ps.origin, level.time, nullptr, holder->s.modelScale);
-			gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, bolt_org);
+			gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, bolt_org);
 
 			const int grabbedByBolt = gi.G2API_AddBolt(&ent->ghoul2[0], first_bone);
 			if (grabbedByBolt)
@@ -323,9 +323,9 @@ void PM_IKUpdate(gentity_t* ent)
 				VectorCopy(ent->client->ps.viewangles, t_angles);
 				t_angles[PITCH] = t_angles[ROLL] = 0;
 
-				gi.G2API_GetBoltMatrix(ent->ghoul2, 0, grabbedByBolt, &bolt_matrix, t_angles, ent->client->ps.origin,
+				gi.G2API_GetBoltMatrix(ent->ghoul2, 0, grabbedByBolt, &boltMatrix, t_angles, ent->client->ps.origin,
 					level.time, nullptr, ent->s.modelScale);
-				gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, grabbed_by_org);
+				gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, grabbed_by_org);
 
 				//check for turn
 				vec3_t org2_targ, org2_bolt;

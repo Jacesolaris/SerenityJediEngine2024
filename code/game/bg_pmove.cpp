@@ -9000,18 +9000,18 @@ void PM_FootSlopeTrace(float* p_diff, float* p_interval)
 #else
 
 	//FIXME: these really should have been gotten on the cgame, but I guess sometimes they're not and we end up with qnan numbers!
-	mdxaBone_t	bolt_matrix;
+	mdxaBone_t	boltMatrix;
 	vec3_t		G2Angles = { 0, pm->gent->client->ps.legsYaw, 0 };
 	//get the feet
 	gi.G2API_GetBoltMatrix(pm->gent->ghoul2, pm->gent->playerModel, pm->gent->footLBolt,
-		&bolt_matrix, G2Angles, pm->ps->origin, (cg.time ? cg.time : level.time),
+		&boltMatrix, G2Angles, pm->ps->origin, (cg.time ? cg.time : level.time),
 		nullptr, pm->gent->s.modelScale);
-	gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, pm->gent->client->renderInfo.footLPoint);
+	gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, pm->gent->client->renderInfo.footLPoint);
 
 	gi.G2API_GetBoltMatrix(pm->gent->ghoul2, pm->gent->playerModel, pm->gent->footRBolt,
-		&bolt_matrix, G2Angles, pm->ps->origin, (cg.time ? cg.time : level.time),
+		&boltMatrix, G2Angles, pm->ps->origin, (cg.time ? cg.time : level.time),
 		nullptr, pm->gent->s.modelScale);
-	gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, pm->gent->client->renderInfo.footRPoint);
+	gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, pm->gent->client->renderInfo.footRPoint);
 #endif
 	//get these on the cgame and store it, save ourselves a ghoul2 construct skel call
 	VectorCopy(pm->gent->client->renderInfo.footLPoint, foot_l_org);

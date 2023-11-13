@@ -89,7 +89,7 @@ extern saber_moveName_t G_PickAutoKick(const gentity_t* self, const gentity_t* e
 extern saber_moveName_t g_pick_auto_multi_kick(gentity_t* self, qboolean allow_singles, qboolean store_move);
 extern qboolean NAV_DirSafe(const gentity_t* self, vec3_t dir, float dist);
 extern qboolean NAV_MoveDirSafe(const gentity_t* self, const usercmd_t* cmd, float distScale = 1.0f);
-extern float NPC_EnemyRangeFromBolt(int bolt_index);
+extern float NPC_EnemyRangeFromBolt(int boltIndex);
 extern qboolean WP_SabersCheckLock2(gentity_t* attacker, gentity_t* defender, saberslock_mode_t lock_mode);
 extern void G_Knockdown(gentity_t* self, gentity_t* attacker, const vec3_t push_dir, float strength,
 	qboolean break_saber_lock);
@@ -611,17 +611,17 @@ void Tavion_ScepterDamage()
 		int last_hit = ENTITYNUM_NONE;
 		for (int time = cur_time - 25; time <= cur_time + 25 && !hit; time += 25)
 		{
-			mdxaBone_t bolt_matrix;
+			mdxaBone_t boltMatrix;
 			vec3_t tip, dir, base;
 			const vec3_t angles = { 0, NPC->currentAngles[YAW], 0 };
 			trace_t trace;
 
 			gi.G2API_GetBoltMatrix(NPC->ghoul2, NPC->weaponModel[1],
 				NPC->genericBolt1,
-				&bolt_matrix, angles, NPC->currentOrigin, time,
+				&boltMatrix, angles, NPC->currentOrigin, time,
 				nullptr, NPC->s.modelScale);
-			gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, base);
-			gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, NEGATIVE_X, dir);
+			gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, base);
+			gi.G2API_GiveMeVectorFromMatrix(boltMatrix, NEGATIVE_X, dir);
 			VectorMA(base, 512, dir, tip);
 			if (d_saberCombat->integer > 1 || g_DebugSaberCombat->integer)
 			{
@@ -677,10 +677,10 @@ void Tavion_ScepterSlam()
 		return;
 	}
 
-	const int bolt_index = gi.G2API_AddBolt(&NPC->ghoul2[NPC->weaponModel[1]], "*weapon");
-	if (bolt_index != -1)
+	const int boltIndex = gi.G2API_AddBolt(&NPC->ghoul2[NPC->weaponModel[1]], "*weapon");
+	if (boltIndex != -1)
 	{
-		mdxaBone_t bolt_matrix;
+		mdxaBone_t boltMatrix;
 		vec3_t handle, bottom;
 		const vec3_t angles = { 0, NPC->currentAngles[YAW], 0 };
 		trace_t trace;
@@ -691,10 +691,10 @@ void Tavion_ScepterSlam()
 		vec3_t mins{}, maxs{}, ent_dir;
 
 		gi.G2API_GetBoltMatrix(NPC->ghoul2, NPC->weaponModel[1],
-			bolt_index,
-			&bolt_matrix, angles, NPC->currentOrigin, cg.time ? cg.time : level.time,
+			boltIndex,
+			&boltMatrix, angles, NPC->currentOrigin, cg.time ? cg.time : level.time,
 			nullptr, NPC->s.modelScale);
-		gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, handle);
+		gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, handle);
 		VectorCopy(handle, bottom);
 		bottom[2] -= 128.0f;
 
@@ -836,10 +836,10 @@ void Tavion_SithSwordRecharge()
 		&& NPC->weaponModel[0] != -1)
 	{
 		NPC->s.loopSound = G_SoundIndex("sound/weapons/scepter/recharge.wav");
-		const int bolt_index = gi.G2API_AddBolt(&NPC->ghoul2[NPC->weaponModel[0]], "*weapon");
+		const int boltIndex = gi.G2API_AddBolt(&NPC->ghoul2[NPC->weaponModel[0]], "*weapon");
 		NPC->client->ps.legsAnimTimer = NPC->client->ps.torsoAnimTimer = 0;
 		NPC_SetAnim(NPC, SETANIM_BOTH, BOTH_TAVION_SWORDPOWER, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
-		G_PlayEffect(G_EffectIndex("scepter/recharge.efx"), NPC->weaponModel[0], bolt_index, NPC->s.number,
+		G_PlayEffect(G_EffectIndex("scepter/recharge.efx"), NPC->weaponModel[0], boltIndex, NPC->s.number,
 			NPC->currentOrigin, NPC->client->ps.torsoAnimTimer, qtrue);
 		NPC->painDebounceTime = level.time + NPC->client->ps.torsoAnimTimer;
 		NPC->client->ps.pm_time = NPC->client->ps.torsoAnimTimer;
@@ -10096,15 +10096,15 @@ qboolean Kothos_HealRosh()
 			//NPC->client->ps.eFlags |= EF_POWERING_ROSH;
 			if (NPC->ghoul2.size())
 			{
-				mdxaBone_t bolt_matrix;
+				mdxaBone_t boltMatrix;
 				vec3_t fx_org, fx_dir;
 				const vec3_t angles = { 0, NPC->currentAngles[YAW], 0 };
 
 				gi.G2API_GetBoltMatrix(NPC->ghoul2, NPC->playerModel,
 					Q_irand(0, 1) ? NPC->handLBolt : NPC->handRBolt,
-					&bolt_matrix, angles, NPC->currentOrigin, cg.time ? cg.time : level.time,
+					&boltMatrix, angles, NPC->currentOrigin, cg.time ? cg.time : level.time,
 					nullptr, NPC->s.modelScale);
-				gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, fx_org);
+				gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, fx_org);
 				VectorSubtract(NPC->client->leader->currentOrigin, fx_org, fx_dir);
 				VectorNormalize(fx_dir);
 				G_PlayEffect(G_EffectIndex("force/kothos_beam.efx"), fx_org, fx_dir);

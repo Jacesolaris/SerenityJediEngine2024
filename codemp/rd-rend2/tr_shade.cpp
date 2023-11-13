@@ -135,7 +135,7 @@ because a surface may be forced to perform a RB_End due
 to overflow.
 ==============
 */
-void RB_BeginSurface(shader_t* shader, int fogNum, int cubemapIndex)
+void RB_BeginSurface(shader_t* shader, const int fogNum, const int cubemapIndex)
 {
 	shader_t* state = (shader->remappedShader) ? shader->remappedShader : shader;
 

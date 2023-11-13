@@ -535,11 +535,10 @@ qboolean G2_Set_Bone_Angles_Matrix(const CGhoul2Info* ghlInfo, boneInfo_v& blist
 #define DEBUG_G2_TIMING (0)
 
 // given a model, bone name, a bonelist, a start/end frame number, a anim speed and some anim flags, set up or modify an existing bone entry for a new set of anims
-qboolean G2_Set_Bone_Anim_Index(boneInfo_v& blist, const int index, const int startFrame,
-	const int endFrame, const int flags, const float animSpeed, const int currentTime, const float setFrame, const int ablend_time, const int numFrames)
+qboolean G2_Set_Bone_Anim_Index(boneInfo_v& blist, const int index, const int startFrame, const int endFrame, const int flags, const float animSpeed, const int currentTime, const float setFrame, const int blendTime, const int numFrames)
 {
 	int			mod_flags = flags;
-	int			blendTime = ablend_time;
+	int			blend_Time = blendTime;
 
 	if (r_Ghoul2BlendMultiplier)
 	{
@@ -551,7 +550,7 @@ qboolean G2_Set_Bone_Anim_Index(boneInfo_v& blist, const int index, const int st
 			}
 			else
 			{
-				blendTime = ceil(static_cast<float>(ablend_time) * r_Ghoul2BlendMultiplier->value);
+				blend_Time = ceil(static_cast<float>(blendTime) * r_Ghoul2BlendMultiplier->value);
 			}
 		}
 	}
@@ -2548,12 +2547,12 @@ int ragTraceCount = 0;
 #endif
 
 void Rag_Trace(trace_t* results, const vec3_t start, const vec3_t mins, const vec3_t maxs, const vec3_t end,
-	const int pass_entity_num, const int contentmask, const EG2_Collision e_g2_trace_type, const int useLod)
+	const int pass_entity_num, const int contentmask, const EG2_Collision eG2TraceType, const int useLod)
 {
 #ifdef _DEBUG
 	const int rag_pre_trace = ri.Milliseconds();
 #endif
-	ri.SV_Trace(results, start, mins, maxs, end, pass_entity_num, contentmask, e_g2_trace_type, useLod);
+	ri.SV_Trace(results, start, mins, maxs, end, pass_entity_num, contentmask, eG2TraceType, useLod);
 #ifdef _DEBUG
 	const int rag_post_trace = ri.Milliseconds();
 
@@ -3201,7 +3200,7 @@ static bool G2_RagDollSettlePositionNumeroTrois(CGhoul2Info_v& ghoul2_v, CRagDol
 	static bool start_solid;
 	bool any_solid = false;
 	static vec3_t base_pos;
-	static vec3_t ent_scale;
+	static vec3_t entScale;
 	static bool has_daddy;
 	static bool has_base_pos;
 	static vec3_t anim_pelvis_dir, pelvis_dir, anim_pelvis_pos, pelvis_pos;
@@ -3220,11 +3219,11 @@ static bool G2_RagDollSettlePositionNumeroTrois(CGhoul2Info_v& ghoul2_v, CRagDol
 
 	if (!params->scale[0] && !params->scale[1] && !params->scale[2])
 	{
-		VectorSet(ent_scale, 1.0f, 1.0f, 1.0f);
+		VectorSet(entScale, 1.0f, 1.0f, 1.0f);
 	}
 	else
 	{
-		VectorCopy(params->scale, ent_scale);
+		VectorCopy(params->scale, entScale);
 	}
 
 	if (broadsword_ragtobase &&
@@ -3270,7 +3269,7 @@ static bool G2_RagDollSettlePositionNumeroTrois(CGhoul2Info_v& ghoul2_v, CRagDol
 
 		if (bone.RagFlags & RAG_PCJ_PELVIS)
 		{
-			VectorSet(goal_spot, params->position[0], params->position[1], params->position[2] + DEFAULT_MINS_2 + (bone.radius * ent_scale[2] + 2));
+			VectorSet(goal_spot, params->position[0], params->position[1], params->position[2] + DEFAULT_MINS_2 + (bone.radius * entScale[2] + 2));
 
 			VectorSubtract(goal_spot, e.currentOrigin, desiredPelvisOffset);
 			haveDesiredPelvisOffset = true;
@@ -3298,8 +3297,8 @@ static bool G2_RagDollSettlePositionNumeroTrois(CGhoul2Info_v& ghoul2_v, CRagDol
 			continue;
 		}
 
-		VectorSet(test_mins, -e.radius * ent_scale[0], -e.radius * ent_scale[1], -e.radius * ent_scale[2]);
-		VectorSet(test_maxs, e.radius * ent_scale[0], e.radius * ent_scale[1], e.radius * ent_scale[2]);
+		VectorSet(test_mins, -e.radius * entScale[0], -e.radius * entScale[1], -e.radius * entScale[2]);
+		VectorSet(test_maxs, e.radius * entScale[0], e.radius * entScale[1], e.radius * entScale[2]);
 
 		assert(ghoul2_v[0].mBoneCache);
 
@@ -4304,7 +4303,7 @@ void G2_InitIK(CGhoul2Info_v& ghoul2_v, sharedRagDollUpdateParams_t* parms, cons
 	G2_Set_Bone_Angles_IK(ghoul2, blist, "ceyebrow", pcj_flags, 10.0f);
 }
 
-qboolean G2_SetBoneIKState(CGhoul2Info_v& ghoul2, const int time, const char* boneName, const int ik_state, sharedSetBoneIKStateParams_t* params)
+qboolean G2_SetBoneIKState(CGhoul2Info_v& ghoul2, const int time, const char* boneName, const int ikState, sharedSetBoneIKStateParams_t* params)
 {
 	constexpr int g2_index = 0;
 	int cur_time = time;
@@ -4318,7 +4317,7 @@ qboolean G2_SetBoneIKState(CGhoul2Info_v& ghoul2, const int time, const char* bo
 	{ //null bonename param means it's time to init the ik stuff on this instance
 		sharedRagDollUpdateParams_t s_rdup{};
 
-		if (ik_state == IKS_NONE)
+		if (ikState == IKS_NONE)
 		{ //this means we want to reset the IK state completely.. run through the bone list, and reset all the appropriate flags
 			size_t i = 0;
 			while (i < blist.size())
@@ -4371,7 +4370,7 @@ qboolean G2_SetBoneIKState(CGhoul2Info_v& ghoul2, const int time, const char* bo
 
 	boneInfo_t& bone = blist[index];
 
-	if (ik_state == IKS_NONE)
+	if (ikState == IKS_NONE)
 	{ //remove the bone from the list then, so it has to reinit. I don't think this should hurt anything since
 	  //we don't store bone index handles gameside anywhere.
 		if (!(bone.flags & BONE_ANGLES_RAGDOLL))

@@ -1785,30 +1785,30 @@ static qboolean SV_G2API_HaveWeGhoul2Models(void* ghoul2)
 	return re->G2API_HaveWeGhoul2Models(*static_cast<CGhoul2Info_v*>(ghoul2));
 }
 
-static qboolean SV_G2API_GetBoltMatrix(void* ghoul2, const int modelIndex, const int bolt_index, mdxaBone_t* matrix,
+static qboolean SV_G2API_GetBoltMatrix(void* ghoul2, const int modelIndex, const int boltIndex, mdxaBone_t* matrix,
 	const vec3_t angles, const vec3_t position, const int frameNum,
 	qhandle_t* modelList, vec3_t scale)
 {
-	return re->G2API_GetBoltMatrix(*static_cast<CGhoul2Info_v*>(ghoul2), modelIndex, bolt_index, matrix, angles,
+	return re->G2API_GetBoltMatrix(*static_cast<CGhoul2Info_v*>(ghoul2), modelIndex, boltIndex, matrix, angles,
 		position, frameNum, modelList, scale);
 }
 
-static qboolean SV_G2API_GetBoltMatrix_NoReconstruct(void* ghoul2, const int modelIndex, const int bolt_index,
+static qboolean SV_G2API_GetBoltMatrix_NoReconstruct(void* ghoul2, const int modelIndex, const int boltIndex,
 	mdxaBone_t* matrix, const vec3_t angles, const vec3_t position,
 	const int frameNum, qhandle_t* modelList, vec3_t scale)
 {
 	re->G2API_BoltMatrixReconstruction(qfalse);
-	return re->G2API_GetBoltMatrix(*static_cast<CGhoul2Info_v*>(ghoul2), modelIndex, bolt_index, matrix, angles,
+	return re->G2API_GetBoltMatrix(*static_cast<CGhoul2Info_v*>(ghoul2), modelIndex, boltIndex, matrix, angles,
 		position, frameNum, modelList, scale);
 }
 
-static qboolean SV_G2API_GetBoltMatrix_NoRecNoRot(void* ghoul2, const int modelIndex, const int bolt_index,
+static qboolean SV_G2API_GetBoltMatrix_NoRecNoRot(void* ghoul2, const int modelIndex, const int boltIndex,
 	mdxaBone_t* matrix, const vec3_t angles, const vec3_t position,
 	const int frameNum, qhandle_t* modelList, vec3_t scale)
 {
 	re->G2API_BoltMatrixReconstruction(qfalse);
 	re->G2API_BoltMatrixSPMethod(qtrue);
-	return re->G2API_GetBoltMatrix(*static_cast<CGhoul2Info_v*>(ghoul2), modelIndex, bolt_index, matrix, angles,
+	return re->G2API_GetBoltMatrix(*static_cast<CGhoul2Info_v*>(ghoul2), modelIndex, boltIndex, matrix, angles,
 		position, frameNum, modelList, scale);
 }
 
@@ -1899,14 +1899,14 @@ static int SV_G2API_CopyGhoul2Instance(void* g2_from, void* g2_to, const int mod
 		modelIndex);
 }
 
-static void SV_G2API_CopySpecificGhoul2Model(void* g2_from, const int model_from, void* g2_to, const int model_to)
+static void SV_G2API_CopySpecificGhoul2Model(void* g2_from, const int modelFrom, void* g2_to, const int modelTo)
 {
 	if (!g2_from || !g2_to)
 	{
 		return;
 	}
-	re->G2API_CopySpecificG2Model(*static_cast<CGhoul2Info_v*>(g2_from), model_from, *static_cast<CGhoul2Info_v*>(g2_to),
-		model_to);
+	re->G2API_CopySpecificG2Model(*static_cast<CGhoul2Info_v*>(g2_from), modelFrom, *static_cast<CGhoul2Info_v*>(g2_to),
+		modelTo);
 }
 
 static void SV_G2API_DuplicateGhoul2Instance(void* g2_from, void** g2_to)
@@ -1948,9 +1948,9 @@ static int SV_G2API_AddBolt(void* ghoul2, const int modelIndex, const char* bone
 	return re->G2API_AddBolt(*static_cast<CGhoul2Info_v*>(ghoul2), modelIndex, boneName);
 }
 
-static void SV_G2API_SetBoltInfo(void* ghoul2, const int modelIndex, const int bolt_info)
+static void SV_G2API_SetBoltInfo(void* ghoul2, const int modelIndex, const int boltInfo)
 {
-	re->G2API_SetBoltInfo(*static_cast<CGhoul2Info_v*>(ghoul2), modelIndex, bolt_info);
+	re->G2API_SetBoltInfo(*static_cast<CGhoul2Info_v*>(ghoul2), modelIndex, boltInfo);
 }
 
 static qboolean SV_G2API_SetRootSurface(void* ghoul2, const int modelIndex, const char* surfaceName)
@@ -1963,9 +1963,9 @@ static qboolean SV_G2API_SetSurfaceOnOff(void* ghoul2, const char* surfaceName, 
 	return re->G2API_SetSurfaceOnOff(*static_cast<CGhoul2Info_v*>(ghoul2), surfaceName, flags);
 }
 
-static qboolean SV_G2API_SetNewOrigin(void* ghoul2, const int bolt_index)
+static qboolean SV_G2API_SetNewOrigin(void* ghoul2, const int boltIndex)
 {
-	return re->G2API_SetNewOrigin(*static_cast<CGhoul2Info_v*>(ghoul2), bolt_index);
+	return re->G2API_SetNewOrigin(*static_cast<CGhoul2Info_v*>(ghoul2), boltIndex);
 }
 
 static qboolean SV_G2API_DoesBoneExist(void* ghoul2, const int modelIndex, const char* boneName)

@@ -46,8 +46,8 @@ extern cvar_t* g_bobaDebug;
 void Rancor_Attack(float distance, qboolean do_charge, qboolean aim_at_blocked_entity);
 extern void G_Knockdown(gentity_t* self, gentity_t* attacker, const vec3_t push_dir, float strength, qboolean break_saber_lock);
 extern qboolean G_DoDismemberment(gentity_t* self, vec3_t point, int mod, int hit_loc, qboolean force = qfalse);
-extern float NPC_EntRangeFromBolt(const gentity_t* targ_ent, int bolt_index);
-extern int NPC_GetEntsNearBolt(gentity_t** radius_ents, float radius, int bolt_index, vec3_t bolt_org);
+extern float NPC_EntRangeFromBolt(const gentity_t* targ_ent, int boltIndex);
+extern int NPC_GetEntsNearBolt(gentity_t** radius_ents, float radius, int boltIndex, vec3_t bolt_org);
 /*
 -------------------------
 NPC_Rancor_Precache
@@ -324,7 +324,7 @@ void Rancor_DropVictim(gentity_t* self)
 	self->count = 0; //drop him
 }
 
-void Rancor_Swing(const int bolt_index, const qboolean try_grab)
+void Rancor_Swing(const int boltIndex, const qboolean try_grab)
 {
 	gentity_t* radius_ents[128];
 	const float radius = NPC->spawnflags & SPF_RANCOR_MUTANT ? 200 : 88;
@@ -335,7 +335,7 @@ void Rancor_Swing(const int bolt_index, const qboolean try_grab)
 	VectorCopy(NPC->currentOrigin, origin_up);
 	origin_up[2] += NPC->maxs[2] * 0.75f;
 
-	const int num_ents = NPC_GetEntsNearBolt(radius_ents, radius, bolt_index, bolt_org);
+	const int num_ents = NPC_GetEntsNearBolt(radius_ents, radius, boltIndex, bolt_org);
 
 	//attacking a breakable brush
 	trace_t trace;
@@ -1377,18 +1377,18 @@ void Rancor_FireBreathAttack()
 {
 	const int damage = Q_irand(10, 15);
 	trace_t tr;
-	mdxaBone_t bolt_matrix;
+	mdxaBone_t boltMatrix;
 	vec3_t start, end, dir;
 	constexpr vec3_t trace_maxs = { 4, 4, 4 };
 	constexpr vec3_t trace_mins = { -4, -4, -4 };
 	const vec3_t ranc_angles = { 0, NPC->client->ps.viewangles[YAW], 0 };
 
 	gi.G2API_GetBoltMatrix(NPC->ghoul2, NPC->playerModel, NPC->gutBolt,
-		&bolt_matrix, ranc_angles, NPC->currentOrigin, cg.time ? cg.time : level.time,
+		&boltMatrix, ranc_angles, NPC->currentOrigin, cg.time ? cg.time : level.time,
 		nullptr, NPC->s.modelScale);
 
-	gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, start);
-	gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, NEGATIVE_Z, dir);
+	gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, start);
+	gi.G2API_GiveMeVectorFromMatrix(boltMatrix, NEGATIVE_Z, dir);
 	VectorMA(start, 512, dir, end);
 
 	gi.trace(&tr, start, trace_mins, trace_maxs, end, NPC->s.number, MASK_SHOT, static_cast<EG2_Collision>(0), 0);

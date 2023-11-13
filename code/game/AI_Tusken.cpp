@@ -416,26 +416,26 @@ void Tusken_StaffTrace()
 		return;
 	}
 
-	const int bolt_index = gi.G2API_AddBolt(&NPC->ghoul2[NPC->weaponModel[0]], "*weapon");
-	if (bolt_index != -1)
+	const int boltIndex = gi.G2API_AddBolt(&NPC->ghoul2[NPC->weaponModel[0]], "*weapon");
+	if (boltIndex != -1)
 	{
 		const int cur_time = cg.time ? cg.time : level.time;
 		qboolean hit = qfalse;
 		int last_hit = ENTITYNUM_NONE;
 		for (int time = cur_time - 25; time <= cur_time + 25 && !hit; time += 25)
 		{
-			mdxaBone_t bolt_matrix;
+			mdxaBone_t boltMatrix;
 			vec3_t tip, dir, base;
 			const vec3_t angles = { 0, NPC->currentAngles[YAW], 0 };
 			constexpr vec3_t mins = { -2, -2, -2 }, maxs = { 2, 2, 2 };
 			trace_t trace;
 
 			gi.G2API_GetBoltMatrix(NPC->ghoul2, NPC->weaponModel[0],
-				bolt_index,
-				&bolt_matrix, angles, NPC->currentOrigin, time,
+				boltIndex,
+				&boltMatrix, angles, NPC->currentOrigin, time,
 				nullptr, NPC->s.modelScale);
-			gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, base);
-			gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, NEGATIVE_Y, dir);
+			gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, base);
+			gi.G2API_GiveMeVectorFromMatrix(boltMatrix, NEGATIVE_Y, dir);
 			VectorMA(base, -20, dir, base);
 			VectorMA(base, 78, dir, tip);
 #ifndef FINAL_BUILD
@@ -482,26 +482,26 @@ void Tusken_StaffTracenew(gentity_t* self)
 		return;
 	}
 
-	const int bolt_index = gi.G2API_AddBolt(&self->ghoul2[self->weaponModel[0]], "*weapon");
-	if (bolt_index != -1)
+	const int boltIndex = gi.G2API_AddBolt(&self->ghoul2[self->weaponModel[0]], "*weapon");
+	if (boltIndex != -1)
 	{
 		const int cur_time = cg.time ? cg.time : level.time;
 		qboolean hit = qfalse;
 		int last_hit = ENTITYNUM_NONE;
 		for (int time = cur_time - 25; time <= cur_time + 25 && !hit; time += 25)
 		{
-			mdxaBone_t bolt_matrix;
+			mdxaBone_t boltMatrix;
 			vec3_t tip, dir, base;
 			const vec3_t angles = { 0, self->currentAngles[YAW], 0 };
 			constexpr vec3_t mins = { -2, -2, -2 }, maxs = { 2, 2, 2 };
 			trace_t trace;
 
 			gi.G2API_GetBoltMatrix(self->ghoul2, self->weaponModel[0],
-				bolt_index,
-				&bolt_matrix, angles, self->currentOrigin, time,
+				boltIndex,
+				&boltMatrix, angles, self->currentOrigin, time,
 				nullptr, self->s.modelScale);
-			gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, base);
-			gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, NEGATIVE_Y, dir);
+			gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, base);
+			gi.G2API_GiveMeVectorFromMatrix(boltMatrix, NEGATIVE_Y, dir);
 			VectorMA(base, -20, dir, base);
 			VectorMA(base, 78, dir, tip);
 #ifndef FINAL_BUILD

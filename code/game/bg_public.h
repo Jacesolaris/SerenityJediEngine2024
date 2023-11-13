@@ -303,7 +303,7 @@ using pmove_t = struct
 	// callbacks to test the world
 	// these will be different functions during game and cgame
 	void (*trace)(trace_t* results, const vec3_t start, const vec3_t mins, const vec3_t maxs, const vec3_t end,
-		int pass_entity_num, int content_mask, EG2_Collision e_g2_trace_type, int useLod);
+		int pass_entity_num, int content_mask, EG2_Collision eG2TraceType, int useLod);
 	int (*pointcontents)(const vec3_t point, int pass_entity_num);
 };
 

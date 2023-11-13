@@ -1641,8 +1641,7 @@ static md3Tag_t* R_GetTag(md3Header_t* mod, int frame, const char* tagName)
 R_LerpTag
 ================
 */
-int R_LerpTag(orientation_t* tag, const qhandle_t handle, const int startFrame, const int endFrame,
-	const float frac, const char* tagName)
+int R_LerpTag(orientation_t* tag, const qhandle_t handle, const int startFrame, const int endFrame,	const float frac, const char* tagName)
 {
 	const model_t* model = R_GetModelByHandle(handle);
 	if (!model->md3[0])

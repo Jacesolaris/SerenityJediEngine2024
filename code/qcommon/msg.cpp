@@ -653,7 +653,7 @@ Ghoul2 Insert Start
 { NETF(modelScale[1]), 0 },
 { NETF(modelScale[2]), 0 },
 { NETF(radius), 16 },
-{ NETF(bolt_info), 32 },
+{ NETF(boltInfo), 32 },
 
 { NETF(isPortalEnt), 1 },
 

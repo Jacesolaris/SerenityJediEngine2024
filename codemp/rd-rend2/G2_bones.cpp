@@ -613,17 +613,7 @@ qboolean G2_Set_Bone_Angles_Matrix(const char* file_name, boneInfo_v& blist, con
 #define DEBUG_G2_TIMING (0)
 
 // given a model, bone name, a bonelist, a start/end frame number, a anim speed and some anim flags, set up or modify an existing bone entry for a new set of anims
-qboolean G2_Set_Bone_Anim_Index(
-	boneInfo_v& blist,
-	const int index,
-	const int startFrame,
-	const int endFrame,
-	const int flags,
-	const float animSpeed,
-	const int currentTime,
-	const float setFrame,
-	const int blendTime,
-	const int numFrames)
+qboolean G2_Set_Bone_Anim_Index(boneInfo_v& blist, const int index, const int startFrame, const int endFrame, const int flags, const float animSpeed, const int currentTime, const float setFrame, const int blendTime, const int numFrames)
 {
 	int			modFlags = flags;
 
@@ -2632,7 +2622,7 @@ int ragSSCount = 0;
 int ragTraceCount = 0;
 #endif
 
-void Rag_Trace(trace_t* results, const vec3_t start, const vec3_t mins, const vec3_t maxs, const vec3_t end, const int passentity_num, const int contentmask, const EG2_Collision e_g2_trace_type, const int useLod)
+void Rag_Trace(trace_t* results, const vec3_t start, const vec3_t mins, const vec3_t maxs, const vec3_t end, const int passentity_num, const int contentmask, const EG2_Collision eG2TraceType, const int useLod)
 {
 #ifdef _DEBUG
 	int ragPreTrace = ri->Milliseconds();
@@ -2655,7 +2645,7 @@ void Rag_Trace(trace_t* results, const vec3_t start, const vec3_t mins, const ve
 	else
 	{
 		results->entityNum = ENTITYNUM_NONE;
-		//SV_Trace(results, start, mins, maxs, end, passentity_num, contentmask, e_g2_trace_type, useLod);
+		//SV_Trace(results, start, mins, maxs, end, passentity_num, contentmask, eG2TraceType, useLod);
 		ri->CM_BoxTrace(results, start, end, mins, maxs, 0, contentmask, 0);
 		results->entityNum = results->fraction != 1.0 ? ENTITYNUM_WORLD : ENTITYNUM_NONE;
 	}

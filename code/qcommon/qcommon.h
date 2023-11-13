@@ -301,7 +301,7 @@ then searches for a command or variable that matches the first token.
 using xcommand_t = void (*)();
 using callbackFunc_t = void (*)(const char* s);
 
-void Cmd_Init();
+void Cmd_Init(void);
 
 void Cmd_AddCommand(const char* cmd_name, xcommand_t function);
 // called by the init functions of other parts of the program to

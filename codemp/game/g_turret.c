@@ -225,16 +225,16 @@ void turret_head_think(gentity_t* self)
 		self->setTime = level.time + self->wait;
 
 		/*
-		mdxaBone_t	bolt_matrix;
+		mdxaBone_t	boltMatrix;
 
 		// Getting the flash bolt here
 		trap->G2API_GetBoltMatrix( self->ghoul2, self->playerModel,
 					self->torsoBolt,
-					&bolt_matrix, self->r.currentAngles, self->r.currentOrigin, (cg.time?cg.time:level.time),
+					&boltMatrix, self->r.currentAngles, self->r.currentOrigin, (cg.time?cg.time:level.time),
 					NULL, self->s.modelScale );
 
-		trap->G2API_GiveMeVectorFromMatrix( bolt_matrix, ORIGIN, org );
-		trap->G2API_GiveMeVectorFromMatrix( bolt_matrix, POSITIVE_Y, fwd );
+		trap->G2API_GiveMeVectorFromMatrix( boltMatrix, ORIGIN, org );
+		trap->G2API_GiveMeVectorFromMatrix( boltMatrix, POSITIVE_Y, fwd );
 		*/
 		VectorCopy(top->r.currentOrigin, org);
 		org[2] += top->r.maxs[2] - 8;
@@ -302,15 +302,15 @@ static void turret_aim(const gentity_t* self)
 			org[2] += 32.0f;
 		}
 		/*
-		mdxaBone_t	bolt_matrix;
+		mdxaBone_t	boltMatrix;
 
 		// Getting the "eye" here
 		trap->G2API_GetBoltMatrix( self->ghoul2, self->playerModel,
 					self->torsoBolt,
-					&bolt_matrix, self->r.currentAngles, self->s.origin, (cg.time?cg.time:level.time),
+					&boltMatrix, self->r.currentAngles, self->s.origin, (cg.time?cg.time:level.time),
 					NULL, self->s.modelScale );
 
-		trap->G2API_GiveMeVectorFromMatrix( bolt_matrix, ORIGIN, org2 );
+		trap->G2API_GiveMeVectorFromMatrix( boltMatrix, ORIGIN, org2 );
 		*/
 		VectorCopy(top->r.currentOrigin, org2);
 

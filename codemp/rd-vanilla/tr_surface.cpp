@@ -358,7 +358,7 @@ void RB_SurfaceTriangles(const srfTriangles_t* srf) {
 	}
 
 	for (i = 0; i < srf->numVerts; i++) {
-		tess.vertexdlight_bits[tess.numVertexes + i] = dlightBits;
+		tess.vertexDlightBits[tess.numVertexes + i] = dlightBits;
 	}
 
 	tess.numVertexes += srf->numVerts;
@@ -1525,13 +1525,13 @@ void RB_SurfaceFace(srfSurfaceFace_t* surf) {
 		ba.ui = ComputeFinalVertexColor((byte*)&v[VERTEX_COLOR]);
 		for (int j = 0; j < 4; j++)
 			tess.vertexColors[ndx][j] = ba.b[j];
-		tess.vertexdlight_bits[ndx] = dlightBits;
+		tess.vertexDlightBits[ndx] = dlightBits;
 	}
 
 	tess.numVertexes += surf->numPoints;
 }
 
-static float lod_error_for_volume(vec3_t local, const float radius) {
+static float LodErrorForVolume(vec3_t local, const float radius) {
 	vec3_t		world{};
 
 	// never let it go negative
@@ -1570,44 +1570,44 @@ Just copy the grid of points and triangulate
 void RB_SurfaceGrid(srfGridMesh_t* cv) {
 	int		i, j;
 	int irows, vrows;
-	int		width_table[MAX_GRID_SIZE]{};
-	int		height_table[MAX_GRID_SIZE]{};
+	int		widthTable[MAX_GRID_SIZE]{};
+	int		heightTable[MAX_GRID_SIZE]{};
 
 	const int dlightBits = cv->dlightBits;
 	tess.dlightBits |= dlightBits;
 
 	// determine the allowable discrepance
-	const float lod_error = lod_error_for_volume(cv->lodOrigin, cv->lodRadius);
+	const float lodError = LodErrorForVolume(cv->lodOrigin, cv->lodRadius);
 
 	// determine which rows and columns of the subdivision
 	// we are actually going to use
-	width_table[0] = 0;
+	widthTable[0] = 0;
 	int lod_width = 1;
 	for (i = 1; i < cv->width - 1; i++) {
-		if (cv->widthLodError[i] <= lod_error) {
-			width_table[lod_width] = i;
+		if (cv->widthLodError[i] <= lodError) {
+			widthTable[lod_width] = i;
 			lod_width++;
 		}
 	}
-	width_table[lod_width] = cv->width - 1;
+	widthTable[lod_width] = cv->width - 1;
 	lod_width++;
 
-	height_table[0] = 0;
-	int lod_height = 1;
+	heightTable[0] = 0;
+	int lodHeight = 1;
 	for (i = 1; i < cv->height - 1; i++) {
-		if (cv->heightLodError[i] <= lod_error) {
-			height_table[lod_height] = i;
-			lod_height++;
+		if (cv->heightLodError[i] <= lodError) {
+			heightTable[lodHeight] = i;
+			lodHeight++;
 		}
 	}
-	height_table[lod_height] = cv->height - 1;
-	lod_height++;
+	heightTable[lodHeight] = cv->height - 1;
+	lodHeight++;
 
 	// very large grids may have more points or indexes than can be fit
 	// in the tess structure, so we may have to issue it in multiple passes
 
 	int used = 0;
-	while (used < lod_height - 1) {
+	while (used < lodHeight - 1) {
 		// see how many rows of both verts and indexes we can add without overflowing
 		do {
 			vrows = (SHADER_MAX_VERTEXES - tess.numVertexes) / lod_width;
@@ -1627,8 +1627,8 @@ void RB_SurfaceGrid(srfGridMesh_t* cv) {
 		if (vrows < irows + 1) {
 			rows = vrows - 1;
 		}
-		if (used + rows > lod_height) {
-			rows = lod_height - used;
+		if (used + rows > lodHeight) {
+			rows = lodHeight - used;
 		}
 
 		const int numVertexes = tess.numVertexes;
@@ -1637,12 +1637,12 @@ void RB_SurfaceGrid(srfGridMesh_t* cv) {
 		float* normal = tess.normal[numVertexes];
 		float* tex_coords = tess.texCoords[numVertexes][0];
 		auto color = reinterpret_cast<unsigned char*>(&tess.vertexColors[numVertexes]);
-		int* v_dlight_bits = &tess.vertexdlight_bits[numVertexes];
+		int* v_dlight_bits = &tess.vertexDlightBits[numVertexes];
 
 		for (i = 0; i < rows; i++) {
 			for (j = 0; j < lod_width; j++) {
-				const drawVert_t* dv = cv->verts + height_table[used + i] * cv->width
-					+ width_table[j];
+				const drawVert_t* dv = cv->verts + heightTable[used + i] * cv->width
+					+ widthTable[j];
 
 				xyz[0] = dv->xyz[0];
 				xyz[1] = dv->xyz[1];

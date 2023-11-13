@@ -266,7 +266,7 @@ void Svcmd_AddIP_f(void)
 
 void G_RemoveWeather(void)
 {
-	trap->SendConsoleCommand(EXEC_APPEND, "exec Weather/clear.cfg");
+	trap->SendConsoleCommand(EXEC_APPEND, "execq Weather/clear.cfg");
 }
 
 void G_Rename_Player(gentity_t* player, const char* newname)

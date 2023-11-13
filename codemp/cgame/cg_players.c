@@ -2582,7 +2582,7 @@ static void CG_PlayerFootsteps(centity_t* cent, const footstepType_t foot_step_t
 		&& cent->currentState.NPC_class != CLASS_SENTRY
 		&& cent->currentState.NPC_class != CLASS_SWAMP)
 	{
-		mdxaBone_t bolt_matrix;
+		mdxaBone_t boltMatrix;
 		vec3_t temp_angles, side_origin;
 		int foot_bolt;
 
@@ -2608,9 +2608,9 @@ static void CG_PlayerFootsteps(centity_t* cent, const footstepType_t foot_step_t
 		}
 
 		//FIXME: get yaw orientation of the foot and use on decal
-		trap->G2API_GetBoltMatrix(cent->ghoul2, 0, foot_bolt, &bolt_matrix, temp_angles, cent->lerpOrigin,
+		trap->G2API_GetBoltMatrix(cent->ghoul2, 0, foot_bolt, &boltMatrix, temp_angles, cent->lerpOrigin,
 			cg.time, cgs.game_models, cent->modelScale);
-		BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, side_origin);
+		BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, side_origin);
 		side_origin[2] += 15; //fudge up a bit for coplanar
 		player_foot_step(side_origin, cent->pe.legs.yawAngle, 6, cent, foot_step_type);
 	}
@@ -3889,7 +3889,7 @@ void CG_Rag_Trace(trace_t* result, const vec3_t start, const vec3_t mins, const 
 #ifdef _RAG_BOLT_TESTING
 void CG_TempTestFunction(centity_t* cent, vec3_t forcedAngles)
 {
-	mdxaBone_t bolt_matrix;
+	mdxaBone_t boltMatrix;
 	vec3_t tAngles;
 	vec3_t bOrg;
 	vec3_t bDir;
@@ -3897,10 +3897,10 @@ void CG_TempTestFunction(centity_t* cent, vec3_t forcedAngles)
 
 	VectorSet(tAngles, 0, cent->lerpAngles[YAW], 0);
 
-	trap->G2API_GetBoltMatrix(cent->ghoul2, 1, 0, &bolt_matrix, tAngles, cent->lerpOrigin,
+	trap->G2API_GetBoltMatrix(cent->ghoul2, 1, 0, &boltMatrix, tAngles, cent->lerpOrigin,
 		cg.time, cgs.game_models, cent->modelScale);
-	BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, bOrg);
-	BG_GiveMeVectorFromMatrix(&bolt_matrix, NEGATIVE_Y, bDir);
+	BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, bOrg);
+	BG_GiveMeVectorFromMatrix(&boltMatrix, NEGATIVE_Y, bDir);
 
 	VectorMA(bOrg, 40, bDir, uOrg);
 
@@ -4023,7 +4023,7 @@ qboolean CG_RagDoll(centity_t* cent, vec3_t forced_angles)
 			vec3_t t_ang;
 			qboolean death_done = qfalse;
 			trace_t tr;
-			mdxaBone_t bolt_matrix;
+			mdxaBone_t boltMatrix;
 
 			VectorSet(t_ang, cent->turAngles[PITCH], cent->turAngles[YAW], cent->turAngles[ROLL]);
 
@@ -4050,9 +4050,9 @@ qboolean CG_RagDoll(centity_t* cent, vec3_t forced_angles)
 
 			//This may seem bad, but since we have a bone cache now it should manage to not be too disgustingly slow.
 			//Do the head first, because the hands reference it anyway.
-			trap->G2API_GetBoltMatrix(cent->ghoul2, 0, bolt_checks[2], &bolt_matrix, t_ang, cent->lerpOrigin, cg.time,
+			trap->G2API_GetBoltMatrix(cent->ghoul2, 0, bolt_checks[2], &boltMatrix, t_ang, cent->lerpOrigin, cg.time,
 				cgs.game_models, cent->modelScale);
-			BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, bolt_points[2]);
+			BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, bolt_points[2]);
 
 			while (i < 5)
 			{
@@ -4061,9 +4061,9 @@ qboolean CG_RagDoll(centity_t* cent, vec3_t forced_angles)
 				if (i < 2)
 				{
 					//when doing hands, trace to the head instead of origin
-					trap->G2API_GetBoltMatrix(cent->ghoul2, 0, bolt_checks[i], &bolt_matrix, t_ang, cent->lerpOrigin,
+					trap->G2API_GetBoltMatrix(cent->ghoul2, 0, bolt_checks[i], &boltMatrix, t_ang, cent->lerpOrigin,
 						cg.time, cgs.game_models, cent->modelScale);
-					BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, bolt_points[i]);
+					BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, bolt_points[i]);
 					VectorCopy(bolt_points[i], tr_start);
 					VectorCopy(bolt_points[2], tr_end);
 				}
@@ -4072,10 +4072,10 @@ qboolean CG_RagDoll(centity_t* cent, vec3_t forced_angles)
 					if (i > 2)
 					{
 						//2 is the head, which already has the bolt point.
-						trap->G2API_GetBoltMatrix(cent->ghoul2, 0, bolt_checks[i], &bolt_matrix, t_ang,
+						trap->G2API_GetBoltMatrix(cent->ghoul2, 0, bolt_checks[i], &boltMatrix, t_ang,
 							cent->lerpOrigin,
 							cg.time, cgs.game_models, cent->modelScale);
-						BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, bolt_points[i]);
+						BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, bolt_points[i]);
 					}
 					VectorCopy(bolt_points[i], tr_start);
 					VectorCopy(cent->lerpOrigin, tr_end);
@@ -4792,12 +4792,12 @@ static void CG_G2PlayerAngles(centity_t* cent, matrix3_t legs, vec3_t legs_angle
 
 			if (other && other->ghoul2 && ci->bolt_lhand)
 			{
-				mdxaBone_t bolt_matrix;
+				mdxaBone_t boltMatrix;
 				vec3_t bolt_org;
 
-				trap->G2API_GetBoltMatrix(other->ghoul2, 0, ci->bolt_lhand, &bolt_matrix, other->turAngles,
+				trap->G2API_GetBoltMatrix(other->ghoul2, 0, ci->bolt_lhand, &boltMatrix, other->turAngles,
 					other->lerpOrigin, cg.time, cgs.game_models, other->modelScale);
-				BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, bolt_org);
+				BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, bolt_org);
 
 				BG_IK_MoveArm(cent->ghoul2, ci->bolt_lhand, cg.time, &cent->currentState,
 					cent->currentState.torsoAnim/*BOTH_DEAD1*/, bolt_org, &cent->ikStatus, cent->lerpOrigin,
@@ -4908,7 +4908,7 @@ static void CG_PlayerFlag(centity_t* cent, const qhandle_t h_model)
 	vec3_t angles;
 	matrix3_t axis;
 	vec3_t bolt_org, t_ang, get_ang, right;
-	mdxaBone_t bolt_matrix;
+	mdxaBone_t boltMatrix;
 	clientInfo_t* ci;
 
 	if (cent->currentState.number == cg.snap->ps.client_num
@@ -4935,11 +4935,11 @@ static void CG_PlayerFlag(centity_t* cent, const qhandle_t h_model)
 
 	VectorSet(t_ang, cent->turAngles[PITCH], cent->turAngles[YAW], cent->turAngles[ROLL]);
 
-	trap->G2API_GetBoltMatrix(cent->ghoul2, 0, ci->bolt_llumbar, &bolt_matrix, t_ang, cent->lerpOrigin, cg.time,
+	trap->G2API_GetBoltMatrix(cent->ghoul2, 0, ci->bolt_llumbar, &boltMatrix, t_ang, cent->lerpOrigin, cg.time,
 		cgs.game_models, cent->modelScale);
-	BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, bolt_org);
+	BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, bolt_org);
 
-	BG_GiveMeVectorFromMatrix(&bolt_matrix, POSITIVE_X, t_ang);
+	BG_GiveMeVectorFromMatrix(&boltMatrix, POSITIVE_X, t_ang);
 	vectoangles(t_ang, t_ang);
 
 	VectorCopy(cent->lerpAngles, angles);
@@ -5094,13 +5094,13 @@ static void CG_PlayerPowerups(centity_t* cent)
 			tent.frame = cent->client->poisonTime;
 		}*/
 
-		mdxaBone_t bolt_matrix;
+		mdxaBone_t boltMatrix;
 		const vec3_t angles = { 0, 0, 0 };
 
-		trap->G2API_GetBoltMatrix(cent->ghoul2, 0, bolt, &bolt_matrix, angles, cent->lerpOrigin, cg.time,
+		trap->G2API_GetBoltMatrix(cent->ghoul2, 0, bolt, &boltMatrix, angles, cent->lerpOrigin, cg.time,
 			cgs.game_models,
 			cent->modelScale);
-		BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, tent.origin); // pass in the emitter origin here
+		BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, tent.origin); // pass in the emitter origin here
 
 		tent.endTime = cent->fx_time + 1000;
 		// if you want the shell to build around the guy, pass in a time that is 1000ms after the start of the turn-on-effect
@@ -5875,7 +5875,7 @@ static const char* cg_pushBoneNames[] =
 
 static void CG_ForcePushBodyBlur(centity_t* cent)
 {
-	mdxaBone_t bolt_matrix;
+	mdxaBone_t boltMatrix;
 
 	if (cent->localAnimIndex > 1)
 	{
@@ -5922,9 +5922,9 @@ static void CG_ForcePushBodyBlur(centity_t* cent)
 			}
 		}
 
-		trap->G2API_GetBoltMatrix(cent->ghoul2, 0, bolt, &bolt_matrix, cent->turAngles, cent->lerpOrigin, cg.time,
+		trap->G2API_GetBoltMatrix(cent->ghoul2, 0, bolt, &boltMatrix, cent->turAngles, cent->lerpOrigin, cg.time,
 			cgs.game_models, cent->modelScale);
-		BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, fx_org);
+		BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, fx_org);
 
 		if ((cent->currentState.weapon == WP_NONE || cent->currentState.weapon == WP_MELEE)
 			&& cent->currentState.forcePowersActive & 1 << FP_PUSH && cent->currentState.groundentity_num ==
@@ -12017,7 +12017,7 @@ void CG_AddSaberBlade(centity_t* cent, centity_t* scent, int renderfx, int saber
 	clientInfo_t* client;
 	centity_t* saber_ent;
 	saberTrail_t* saber_trail;
-	mdxaBone_t bolt_matrix;
+	mdxaBone_t boltMatrix;
 	vec3_t future_angles;
 	effectTrailArgStruct_t fx;
 	int scolor = 0;
@@ -12068,13 +12068,13 @@ void CG_AddSaberBlade(centity_t* cent, centity_t* scent, int renderfx, int saber
 		trap->FX_PlayBoltedEffectID(client->saber[saberNum].bladeEffect2, scent->lerpOrigin,
 			scent->ghoul2, blade_num, scent->currentState.number, use_model_index, -1, qfalse);
 	}
-	//get the bolt_matrix
-	trap->G2API_GetBoltMatrix(scent->ghoul2, use_model_index, blade_num, &bolt_matrix, future_angles, origin, cg.time,
+	//get the boltMatrix
+	trap->G2API_GetBoltMatrix(scent->ghoul2, use_model_index, blade_num, &boltMatrix, future_angles, origin, cg.time,
 		cgs.game_models, scent->modelScale);
 
 	// work the matrix axis stuff into the original axis and origins used.
-	BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, org);
-	BG_GiveMeVectorFromMatrix(&bolt_matrix, NEGATIVE_Y, axis[0]);
+	BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, org);
+	BG_GiveMeVectorFromMatrix(&boltMatrix, NEGATIVE_Y, axis[0]);
 
 	if (!from_saber && saber_ent && !cent->currentState.saberInFlight)
 	{
@@ -14231,7 +14231,7 @@ static void CG_CreateSurfaceDebris(centity_t* cent, const int surfNum, const int
 	int lost_part_fx = 0;
 	int b = -1;
 	vec3_t v, d;
-	mdxaBone_t bolt_matrix;
+	mdxaBone_t boltMatrix;
 	const char* surf_name = NULL;
 
 	if (surfNum > 0)
@@ -14315,10 +14315,10 @@ static void CG_CreateSurfaceDebris(centity_t* cent, const int surfNum, const int
 	else
 	{
 		//now let's get the position and direction of this surface and make a big explosion
-		trap->G2API_GetBoltMatrix(cent->ghoul2, 0, b, &bolt_matrix, cent->lerpAngles, cent->lerpOrigin, cg.time,
+		trap->G2API_GetBoltMatrix(cent->ghoul2, 0, b, &boltMatrix, cent->lerpAngles, cent->lerpOrigin, cg.time,
 			cgs.game_models, cent->modelScale);
-		BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, v);
-		BG_GiveMeVectorFromMatrix(&bolt_matrix, POSITIVE_Z, d);
+		BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, v);
+		BG_GiveMeVectorFromMatrix(&boltMatrix, POSITIVE_Z, d);
 	}
 
 	trap->FX_PlayEffectID(fx_id, v, d, -1, -1, qfalse);
@@ -14336,7 +14336,7 @@ static void CG_CreateSurfaceDebris(centity_t* cent, const int surfNum, const int
 static void CG_CreateSurfaceSmoke(centity_t* cent, const int ship_surf, const int fx_id)
 {
 	vec3_t v, d;
-	mdxaBone_t bolt_matrix;
+	mdxaBone_t boltMatrix;
 	const char* surf_name;
 
 	if (!cent->ghoul2)
@@ -14379,10 +14379,10 @@ static void CG_CreateSurfaceSmoke(centity_t* cent, const int ship_surf, const in
 	}
 
 	//now let's get the position and direction of this surface and make a big explosion
-	trap->G2API_GetBoltMatrix(cent->ghoul2, 0, b, &bolt_matrix, cent->lerpAngles, cent->lerpOrigin, cg.time,
+	trap->G2API_GetBoltMatrix(cent->ghoul2, 0, b, &boltMatrix, cent->lerpAngles, cent->lerpOrigin, cg.time,
 		cgs.game_models, cent->modelScale);
-	BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, v);
-	BG_GiveMeVectorFromMatrix(&bolt_matrix, POSITIVE_Z, d);
+	BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, v);
+	BG_GiveMeVectorFromMatrix(&boltMatrix, POSITIVE_Z, d);
 
 	trap->FX_PlayEffectID(fx_id, v, d, -1, -1, qfalse);
 }
@@ -14420,15 +14420,15 @@ qboolean CG_VehicleAttachDroidUnit(centity_t* droid_cent)
 			&& veh_cent->ghoul2
 			&& veh_cent->m_pVehicle->m_iDroidUnitTag != -1)
 		{
-			mdxaBone_t bolt_matrix;
+			mdxaBone_t boltMatrix;
 			vec3_t fwd, rt, temp_ang;
 
-			trap->G2API_GetBoltMatrix(veh_cent->ghoul2, 0, veh_cent->m_pVehicle->m_iDroidUnitTag, &bolt_matrix,
+			trap->G2API_GetBoltMatrix(veh_cent->ghoul2, 0, veh_cent->m_pVehicle->m_iDroidUnitTag, &boltMatrix,
 				veh_cent->lerpAngles, veh_cent->lerpOrigin, cg.time,
 				cgs.game_models, veh_cent->modelScale);
-			BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, droid_cent->lerpOrigin);
-			BG_GiveMeVectorFromMatrix(&bolt_matrix, POSITIVE_X, fwd); //WTF???
-			BG_GiveMeVectorFromMatrix(&bolt_matrix, NEGATIVE_Y, rt); //WTF???
+			BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, droid_cent->lerpOrigin);
+			BG_GiveMeVectorFromMatrix(&boltMatrix, POSITIVE_X, fwd); //WTF???
+			BG_GiveMeVectorFromMatrix(&boltMatrix, NEGATIVE_Y, rt); //WTF???
 			vectoangles(fwd, droid_cent->lerpAngles);
 			vectoangles(rt, temp_ang);
 			droid_cent->lerpAngles[ROLL] = temp_ang[PITCH];
@@ -14760,7 +14760,7 @@ static void CG_ForceElectrocution(centity_t* cent, const vec3_t origin, vec3_t t
 	qboolean found = qfalse;
 	vec3_t fx_org, fx_org2, dir;
 	vec3_t rgb;
-	mdxaBone_t bolt_matrix;
+	mdxaBone_t boltMatrix;
 	trace_t tr;
 	int bolt = -1;
 	int iter = 0;
@@ -14847,21 +14847,21 @@ static void CG_ForceElectrocution(centity_t* cent, const vec3_t origin, vec3_t t
 	if (bolt >= 0)
 	{
 		found = trap->G2API_GetBoltMatrix(cent->ghoul2, 0, bolt,
-			&bolt_matrix, temp_angles, origin, cg.time,
+			&boltMatrix, temp_angles, origin, cg.time,
 			cgs.game_models, cent->modelScale);
 	}
 
 	// Make sure that it's safe to even try and get these values out of the Matrix, otherwise the values could be garbage
 	if (found)
 	{
-		BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, fx_org);
+		BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, fx_org);
 		if (Q_flrand(0.0f, 1.0f) > 0.5f)
 		{
-			BG_GiveMeVectorFromMatrix(&bolt_matrix, NEGATIVE_X, dir);
+			BG_GiveMeVectorFromMatrix(&boltMatrix, NEGATIVE_X, dir);
 		}
 		else
 		{
-			BG_GiveMeVectorFromMatrix(&bolt_matrix, NEGATIVE_Y, dir);
+			BG_GiveMeVectorFromMatrix(&boltMatrix, NEGATIVE_Y, dir);
 		}
 
 		// Add some fudge, makes us not normalized, but that isn't really important
@@ -15237,13 +15237,13 @@ static QINLINE void CG_VehicleEffects(centity_t* cent)
 						else
 						{
 							//fixme: bolt these too
-							mdxaBone_t bolt_matrix;
+							mdxaBone_t boltMatrix;
 							vec3_t bolt_org, bolt_dir;
 
-							trap->G2API_GetBoltMatrix(cent->ghoul2, 0, p_veh_npc->m_iExhaustTag[i], &bolt_matrix, flat,
+							trap->G2API_GetBoltMatrix(cent->ghoul2, 0, p_veh_npc->m_iExhaustTag[i], &boltMatrix, flat,
 								cent->lerpOrigin, cg.time, cgs.game_models, cent->modelScale);
 
-							BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, bolt_org);
+							BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, bolt_org);
 							VectorCopy(fwd, bolt_dir); //fixme?
 
 							trap->FX_PlayEffectID(fx, bolt_org, bolt_dir, -1, -1, qfalse);
@@ -15257,7 +15257,7 @@ static QINLINE void CG_VehicleEffects(centity_t* cent)
 				//FIXME: not in space!!!
 				if (p_veh_npc->m_pVehicleInfo->iTrailFX != 0 && cent->ghoul2)
 				{
-					mdxaBone_t bolt_matrix;
+					mdxaBone_t boltMatrix;
 					vec3_t get_bolt_angles;
 
 					VectorCopy(cent->lerpAngles, get_bolt_angles);
@@ -15278,10 +15278,10 @@ static QINLINE void CG_VehicleEffects(centity_t* cent)
 							break;
 						}
 
-						trap->G2API_GetBoltMatrix(cent->ghoul2, 0, trail_bolt, &bolt_matrix, get_bolt_angles,
+						trap->G2API_GetBoltMatrix(cent->ghoul2, 0, trail_bolt, &boltMatrix, get_bolt_angles,
 							cent->lerpOrigin, cg.time, cgs.game_models, cent->modelScale);
 
-						BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, bolt_org);
+						BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, bolt_org);
 						VectorCopy(fwd, bolt_dir); //fixme?
 
 						trap->FX_PlayEffectID(p_veh_npc->m_pVehicleInfo->iTrailFX, bolt_org, bolt_dir, -1, -1, qfalse);
@@ -15962,7 +15962,7 @@ void CG_HolsteredWeaponRender(centity_t* cent, const clientInfo_t* ci, const int
 	refEntity_t ent;
 	vec3_t axis[3];
 	vec3_t bolt_org;
-	mdxaBone_t bolt_matrix;
+	mdxaBone_t boltMatrix;
 	vec3_t pos_offset;
 	vec3_t ang_offset;
 	qhandle_t offset_bolt;
@@ -16075,14 +16075,14 @@ void CG_HolsteredWeaponRender(centity_t* cent, const clientInfo_t* ci, const int
 		return;
 	}
 
-	trap->G2API_GetBoltMatrix(cent->ghoul2, 0, offset_bolt, &bolt_matrix, cent->turAngles, cent->lerpOrigin, cg.time,
+	trap->G2API_GetBoltMatrix(cent->ghoul2, 0, offset_bolt, &boltMatrix, cent->turAngles, cent->lerpOrigin, cg.time,
 		cgs.game_models, cent->modelScale);
-	BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, bolt_org);
+	BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, bolt_org);
 
 	//find bolt rotation unit vectors
-	BG_GiveMeVectorFromMatrix(&bolt_matrix, POSITIVE_X, axis[0]); //left/right
-	BG_GiveMeVectorFromMatrix(&bolt_matrix, NEGATIVE_Z, axis[1]); //fwd/back
-	BG_GiveMeVectorFromMatrix(&bolt_matrix, POSITIVE_Y, axis[2]); //up/down?!
+	BG_GiveMeVectorFromMatrix(&boltMatrix, POSITIVE_X, axis[0]); //left/right
+	BG_GiveMeVectorFromMatrix(&boltMatrix, NEGATIVE_Z, axis[1]); //fwd/back
+	BG_GiveMeVectorFromMatrix(&boltMatrix, POSITIVE_Y, axis[2]); //up/down?!
 
 	memset(&ent, 0, sizeof ent);
 
@@ -16999,7 +16999,7 @@ void CG_Player(centity_t* cent)
 	vec3_t angles, dir, elevated;
 	int iwantout = 0;
 	int team;
-	mdxaBone_t bolt_matrix, l_hand_matrix;
+	mdxaBone_t boltMatrix, l_hand_matrix;
 	int do_alpha = 0;
 	qboolean got_l_hand_matrix = qfalse;
 	qboolean g2_has_weapon = qfalse;
@@ -18623,23 +18623,23 @@ SkipTrueView:
 			//VectorSet( tAng, 0, cent->pe.torso.yawAngle, 0 );
 			VectorSet(t_ang, cent->turAngles[PITCH], cent->turAngles[YAW], cent->turAngles[ROLL]);
 
-			trap->G2API_GetBoltMatrix(cent->ghoul2, 0, ci->bolt_head, &bolt_matrix, t_ang, cent->lerpOrigin, cg.time,
+			trap->G2API_GetBoltMatrix(cent->ghoul2, 0, ci->bolt_head, &boltMatrix, t_ang, cent->lerpOrigin, cg.time,
 				cgs.game_models, cent->modelScale);
 
-			BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, ef_org);
-			BG_GiveMeVectorFromMatrix(&bolt_matrix, NEGATIVE_Y, fx_ang);
+			BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, ef_org);
+			BG_GiveMeVectorFromMatrix(&boltMatrix, NEGATIVE_Y, fx_ang);
 
-			axis[0][0] = bolt_matrix.matrix[0][0];
-			axis[0][1] = bolt_matrix.matrix[1][0];
-			axis[0][2] = bolt_matrix.matrix[2][0];
+			axis[0][0] = boltMatrix.matrix[0][0];
+			axis[0][1] = boltMatrix.matrix[1][0];
+			axis[0][2] = boltMatrix.matrix[2][0];
 
-			axis[1][0] = bolt_matrix.matrix[0][1];
-			axis[1][1] = bolt_matrix.matrix[1][1];
-			axis[1][2] = bolt_matrix.matrix[2][1];
+			axis[1][0] = boltMatrix.matrix[0][1];
+			axis[1][1] = boltMatrix.matrix[1][1];
+			axis[1][2] = boltMatrix.matrix[2][1];
 
-			axis[2][0] = bolt_matrix.matrix[0][2];
-			axis[2][1] = bolt_matrix.matrix[1][2];
-			axis[2][2] = bolt_matrix.matrix[2][2];
+			axis[2][0] = boltMatrix.matrix[0][2];
+			axis[2][1] = boltMatrix.matrix[1][2];
+			axis[2][2] = boltMatrix.matrix[2][2];
 
 			trap->FX_PlayEntityEffectID(cgs.effects.mForceConfustionOld, ef_org, axis, -1, -1, -1, -1);
 		}
@@ -18853,23 +18853,23 @@ SkipTrueView:
 
 			VectorSet(t_ang, cent->turAngles[PITCH], cent->turAngles[YAW], cent->turAngles[ROLL]);
 
-			trap->G2API_GetBoltMatrix(cent->ghoul2, 0, ci->bolt_head, &bolt_matrix, t_ang, cent->lerpOrigin, cg.time,
+			trap->G2API_GetBoltMatrix(cent->ghoul2, 0, ci->bolt_head, &boltMatrix, t_ang, cent->lerpOrigin, cg.time,
 				cgs.game_models, cent->modelScale);
 
-			BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, ef_org);
-			BG_GiveMeVectorFromMatrix(&bolt_matrix, NEGATIVE_Y, fx_ang);
+			BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, ef_org);
+			BG_GiveMeVectorFromMatrix(&boltMatrix, NEGATIVE_Y, fx_ang);
 
-			axis[0][0] = bolt_matrix.matrix[0][0];
-			axis[0][1] = bolt_matrix.matrix[1][0];
-			axis[0][2] = bolt_matrix.matrix[2][0];
+			axis[0][0] = boltMatrix.matrix[0][0];
+			axis[0][1] = boltMatrix.matrix[1][0];
+			axis[0][2] = boltMatrix.matrix[2][0];
 
-			axis[1][0] = bolt_matrix.matrix[0][1];
-			axis[1][1] = bolt_matrix.matrix[1][1];
-			axis[1][2] = bolt_matrix.matrix[2][1];
+			axis[1][0] = boltMatrix.matrix[0][1];
+			axis[1][1] = boltMatrix.matrix[1][1];
+			axis[1][2] = boltMatrix.matrix[2][1];
 
-			axis[2][0] = bolt_matrix.matrix[0][2];
-			axis[2][1] = bolt_matrix.matrix[1][2];
-			axis[2][2] = bolt_matrix.matrix[2][2];
+			axis[2][0] = boltMatrix.matrix[0][2];
+			axis[2][1] = boltMatrix.matrix[1][2];
+			axis[2][2] = boltMatrix.matrix[2][2];
 
 			trap->FX_PlayEntityEffectID(cgs.effects.forceInvincibility, ef_org, axis, -1, -1, -1, -1);
 		}
@@ -18886,23 +18886,23 @@ SkipTrueView:
 
 			VectorSet(t_ang, cent->turAngles[PITCH], cent->turAngles[YAW], cent->turAngles[ROLL]);
 
-			trap->G2API_GetBoltMatrix(cent->ghoul2, 0, ci->bolt_head, &bolt_matrix, t_ang, cent->lerpOrigin, cg.time,
+			trap->G2API_GetBoltMatrix(cent->ghoul2, 0, ci->bolt_head, &boltMatrix, t_ang, cent->lerpOrigin, cg.time,
 				cgs.game_models, cent->modelScale);
 
-			BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, ef_org);
-			BG_GiveMeVectorFromMatrix(&bolt_matrix, NEGATIVE_Y, fx_ang);
+			BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, ef_org);
+			BG_GiveMeVectorFromMatrix(&boltMatrix, NEGATIVE_Y, fx_ang);
 
-			axis[0][0] = bolt_matrix.matrix[0][0];
-			axis[0][1] = bolt_matrix.matrix[1][0];
-			axis[0][2] = bolt_matrix.matrix[2][0];
+			axis[0][0] = boltMatrix.matrix[0][0];
+			axis[0][1] = boltMatrix.matrix[1][0];
+			axis[0][2] = boltMatrix.matrix[2][0];
 
-			axis[1][0] = bolt_matrix.matrix[0][1];
-			axis[1][1] = bolt_matrix.matrix[1][1];
-			axis[1][2] = bolt_matrix.matrix[2][1];
+			axis[1][0] = boltMatrix.matrix[0][1];
+			axis[1][1] = boltMatrix.matrix[1][1];
+			axis[1][2] = boltMatrix.matrix[2][1];
 
-			axis[2][0] = bolt_matrix.matrix[0][2];
-			axis[2][1] = bolt_matrix.matrix[1][2];
-			axis[2][2] = bolt_matrix.matrix[2][2];
+			axis[2][0] = boltMatrix.matrix[0][2];
+			axis[2][1] = boltMatrix.matrix[1][2];
+			axis[2][2] = boltMatrix.matrix[2][2];
 
 			trap->FX_PlayEntityEffectID(cgs.effects.forceInvincibility, ef_org, axis, -1, -1, -1, -1);
 		}
@@ -19292,13 +19292,13 @@ stillDoSaber:
 				//Make the player's hand glow while guiding the saber
 				VectorSet(t_ang, cent->turAngles[PITCH], cent->turAngles[YAW], cent->turAngles[ROLL]);
 
-				trap->G2API_GetBoltMatrix(cent->ghoul2, 0, ci->bolt_rhand, &bolt_matrix, t_ang, cent->lerpOrigin,
+				trap->G2API_GetBoltMatrix(cent->ghoul2, 0, ci->bolt_rhand, &boltMatrix, t_ang, cent->lerpOrigin,
 					cg.time,
 					cgs.game_models, cent->modelScale);
 
-				ef_org[0] = bolt_matrix.matrix[0][3];
-				ef_org[1] = bolt_matrix.matrix[1][3];
-				ef_org[2] = bolt_matrix.matrix[2][3];
+				ef_org[0] = boltMatrix.matrix[0][3];
+				ef_org[1] = boltMatrix.matrix[1][3];
+				ef_org[2] = boltMatrix.matrix[2][3];
 
 				wv = sin(cg.time * 0.003f) * 0.08f + 0.1f;
 

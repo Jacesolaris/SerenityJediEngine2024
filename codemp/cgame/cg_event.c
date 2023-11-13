@@ -1446,7 +1446,7 @@ void CG_G2MarkEvent(entityState_t* es)
 
 void CG_CalcVehMuzzle(Vehicle_t* p_veh, centity_t* ent, const int muzzle_num)
 {
-	mdxaBone_t bolt_matrix;
+	mdxaBone_t boltMatrix;
 	vec3_t veh_angles;
 
 	assert(p_veh);
@@ -1472,10 +1472,10 @@ void CG_CalcVehMuzzle(Vehicle_t* p_veh, centity_t* ent, const int muzzle_num)
 			veh_angles[PITCH] = 0.0f;
 		}
 	}
-	trap->G2API_GetBoltMatrix_NoRecNoRot(ent->ghoul2, 0, p_veh->m_iMuzzleTag[muzzle_num], &bolt_matrix, veh_angles,
+	trap->G2API_GetBoltMatrix_NoRecNoRot(ent->ghoul2, 0, p_veh->m_iMuzzleTag[muzzle_num], &boltMatrix, veh_angles,
 		ent->lerpOrigin, cg.time, NULL, ent->modelScale);
-	BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, p_veh->m_vMuzzlePos[muzzle_num]);
-	BG_GiveMeVectorFromMatrix(&bolt_matrix, NEGATIVE_Y, p_veh->m_vMuzzleDir[muzzle_num]);
+	BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, p_veh->m_vMuzzlePos[muzzle_num]);
+	BG_GiveMeVectorFromMatrix(&boltMatrix, NEGATIVE_Y, p_veh->m_vMuzzleDir[muzzle_num]);
 }
 
 //corresponds to G_VehMuzzleFireFX -rww
@@ -1663,7 +1663,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 			cl_ent->bolt4 = 0;
 			cl_ent->bodyHeight = 0; //SABER_LENGTH_MAX;
 			//cl_ent->saberExtendTime = 0;
-			cl_ent->bolt_info = 0;
+			cl_ent->boltInfo = 0;
 			cl_ent->frame_minus1_refreshed = 0;
 			cl_ent->frame_minus2_refreshed = 0;
 			cl_ent->frame_hold_time = 0;
@@ -1864,22 +1864,22 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 			if (client && client->infoValid && enemy_client && enemy_client->infoValid)
 			{
 				vec3_t our_base, our_tip, their_base, their_tip;
-				mdxaBone_t bolt_matrix;
+				mdxaBone_t boltMatrix;
 				vec3_t flash_point, temp;
 				qboolean cull_pass = qfalse;
 				qhandle_t lock_sound = trap->S_RegisterSound(va("sound/weapons/saber/saberlock%d.mp3", index));
 
 				//get our blade
-				trap->G2API_GetBoltMatrix(cent->ghoul2, 1, 0, &bolt_matrix, cent->lerpAngles, cent->lerpOrigin,
+				trap->G2API_GetBoltMatrix(cent->ghoul2, 1, 0, &boltMatrix, cent->lerpAngles, cent->lerpOrigin,
 					cg.time, cgs.game_models, cent->modelScale);
-				BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, our_base);
-				BG_GiveMeVectorFromMatrix(&bolt_matrix, NEGATIVE_Y, temp);
+				BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, our_base);
+				BG_GiveMeVectorFromMatrix(&boltMatrix, NEGATIVE_Y, temp);
 				VectorMA(our_base, client->saber[0].blade[0].length, temp, our_tip);
 				//get their blade.
-				trap->G2API_GetBoltMatrix(enemy->ghoul2, 1, 0, &bolt_matrix, enemy->lerpAngles, enemy->lerpOrigin,
+				trap->G2API_GetBoltMatrix(enemy->ghoul2, 1, 0, &boltMatrix, enemy->lerpAngles, enemy->lerpOrigin,
 					cg.time, cgs.game_models, enemy->modelScale);
-				BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, their_base);
-				BG_GiveMeVectorFromMatrix(&bolt_matrix, NEGATIVE_Y, temp);
+				BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, their_base);
+				BG_GiveMeVectorFromMatrix(&boltMatrix, NEGATIVE_Y, temp);
 				VectorMA(their_base, client->saber[0].blade[0].length, temp, their_tip);
 				ShortestLineSegBewteen2LineSegs(our_base, our_tip, their_base, their_tip, flash_point, temp);
 

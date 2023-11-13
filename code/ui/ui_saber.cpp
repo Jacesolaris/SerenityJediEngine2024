@@ -2367,7 +2367,7 @@ void UI_SaberDrawBlade(itemDef_t* item, const char* saber_name, int saberModel, 
 	const float bladeRadius = UI_SaberBladeRadiusForSaber(saber_name, blade_num);
 	vec3_t bladeOrigin = { 0 };
 	vec3_t axis[3] = {};
-	mdxaBone_t bolt_matrix;
+	mdxaBone_t boltMatrix;
 	qboolean tagHack = qfalse;
 
 	const char* tagName = va("*blade%d", blade_num + 1);
@@ -2385,15 +2385,15 @@ void UI_SaberDrawBlade(itemDef_t* item, const char* saber_name, int saberModel, 
 		}
 	}
 
-	DC->g2_GetBoltMatrix(item->ghoul2, saberModel, bolt, &bolt_matrix, angles, origin, uiInfo.uiDC.realTime, nullptr,
+	DC->g2_GetBoltMatrix(item->ghoul2, saberModel, bolt, &boltMatrix, angles, origin, uiInfo.uiDC.realTime, nullptr,
 		vec3_origin); //NULL was cgs.model_draw
 
 	// work the matrix axis stuff into the original axis and origins used.
-	DC->g2_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, bladeOrigin);
-	DC->g2_GiveMeVectorFromMatrix(bolt_matrix, NEGATIVE_X, axis[0]);
+	DC->g2_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, bladeOrigin);
+	DC->g2_GiveMeVectorFromMatrix(boltMatrix, NEGATIVE_X, axis[0]);
 	//front (was NEGATIVE_Y, but the md3->glm exporter screws up this tag somethin' awful)
-	DC->g2_GiveMeVectorFromMatrix(bolt_matrix, NEGATIVE_Y, axis[1]); //right
-	DC->g2_GiveMeVectorFromMatrix(bolt_matrix, POSITIVE_Z, axis[2]); //up
+	DC->g2_GiveMeVectorFromMatrix(boltMatrix, NEGATIVE_Y, axis[1]); //right
+	DC->g2_GiveMeVectorFromMatrix(boltMatrix, POSITIVE_Z, axis[2]); //up
 
 	const float scale = DC->xscale;
 

@@ -38,7 +38,7 @@ extern void NPC_AimAdjust(int change);
 extern qboolean FlyingCreature(const gentity_t* ent);
 extern void NPC_EvasionSaber(void);
 extern qboolean RT_Flying(const gentity_t* self);
-extern float NPC_EnemyRangeFromBolt(int bolt_index);
+extern float NPC_EnemyRangeFromBolt(int boltIndex);
 extern qboolean in_camera;
 extern void NPC_CheckEvasion(void);
 extern qboolean PM_InKnockDown(const playerState_t* ps);
@@ -2894,15 +2894,15 @@ void Noghri_StickTrace(void)
 		return;
 	}
 
-	const int bolt_index = trap->G2API_AddBolt(NPCS.NPC->client->weaponGhoul2[0], 0, "*weapon");
-	if (bolt_index != -1)
+	const int boltIndex = trap->G2API_AddBolt(NPCS.NPC->client->weaponGhoul2[0], 0, "*weapon");
+	if (boltIndex != -1)
 	{
 		const int cur_time = level.time;
 		qboolean hit = qfalse;
 		int lastHit = ENTITYNUM_NONE;
 		for (int time = cur_time - 25; time <= cur_time + 25 && !hit; time += 25)
 		{
-			mdxaBone_t bolt_matrix;
+			mdxaBone_t boltMatrix;
 			vec3_t tip, dir, base, angles;
 			vec3_t mins, maxs;
 			trace_t trace;
@@ -2912,11 +2912,11 @@ void Noghri_StickTrace(void)
 			VectorSet(maxs, 2, 2, 2);
 
 			trap->G2API_GetBoltMatrix(NPCS.NPC->ghoul2, 1,
-				bolt_index,
-				&bolt_matrix, angles, NPCS.NPC->r.currentOrigin, time,
+				boltIndex,
+				&boltMatrix, angles, NPCS.NPC->r.currentOrigin, time,
 				NULL, NPCS.NPC->modelScale);
-			BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, base);
-			BG_GiveMeVectorFromMatrix(&bolt_matrix, POSITIVE_Y, dir);
+			BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, base);
+			BG_GiveMeVectorFromMatrix(&boltMatrix, POSITIVE_Y, dir);
 			VectorMA(base, 48, dir, tip);
 			trap->Trace(&trace, base, mins, maxs, tip, NPCS.NPC->s.number, MASK_SHOT, qfalse, 0, 0);
 			if (trace.fraction < 1.0f && trace.entityNum != lastHit)

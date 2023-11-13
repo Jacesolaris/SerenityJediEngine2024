@@ -198,9 +198,9 @@ qboolean G2_SetSurfaceOnOff(const CGhoul2Info* ghlInfo, surfaceInfo_v& slist, co
 	return qfalse;
 }
 
-void G2_SetSurfaceOnOffFromSkin(CGhoul2Info* ghlInfo, const qhandle_t render_skin)
+void G2_SetSurfaceOnOffFromSkin(CGhoul2Info* ghlInfo, const qhandle_t renderSkin)
 {
-	const skin_t* skin = R_GetSkinByHandle(render_skin);
+	const skin_t* skin = R_GetSkinByHandle(renderSkin);
 
 	ghlInfo->mSlist.clear();	//remove any overrides we had before.
 	ghlInfo->mMeshFrameNum = 0;
@@ -500,7 +500,7 @@ qboolean G2_SetRootSurface(CGhoul2Info_v& ghoul2, const int modelIndex, const ch
 }
 
 extern int G2_DecideTraceLod(const CGhoul2Info& ghoul2, const int useLod);
-int G2_AddSurface(CGhoul2Info* ghoul2, const int surfaceNumber, const int poly_number, const float barycentric_i, const float barycentric_j, int lod)
+int G2_AddSurface(CGhoul2Info* ghoul2, const int surfaceNumber, const int polyNumber, const float BarycentricI, const float BarycentricJ, int lod)
 {
 	surfaceInfo_t temp_slist_entry;
 
@@ -515,9 +515,9 @@ int G2_AddSurface(CGhoul2Info* ghoul2, const int surfaceNumber, const int poly_n
 		{
 			ghoul2->mSlist[i].offFlags = G2SURFACEFLAG_GENERATED;
 			ghoul2->mSlist[i].surface = 10000;		// no model will ever have 10000 surfaces
-			ghoul2->mSlist[i].genBarycentricI = barycentric_i;
-			ghoul2->mSlist[i].genBarycentricJ = barycentric_j;
-			ghoul2->mSlist[i].genPolySurfaceIndex = (poly_number & 0xffff) << 16 | surfaceNumber & 0xffff;
+			ghoul2->mSlist[i].genBarycentricI = BarycentricI;
+			ghoul2->mSlist[i].genBarycentricJ = BarycentricJ;
+			ghoul2->mSlist[i].genPolySurfaceIndex = (polyNumber & 0xffff) << 16 | surfaceNumber & 0xffff;
 			ghoul2->mSlist[i].genLod = lod;
 			return i;
 		}
@@ -527,9 +527,9 @@ int G2_AddSurface(CGhoul2Info* ghoul2, const int surfaceNumber, const int poly_n
 
 	temp_slist_entry.offFlags = G2SURFACEFLAG_GENERATED;
 	temp_slist_entry.surface = 10000;
-	temp_slist_entry.genBarycentricI = barycentric_i;
-	temp_slist_entry.genBarycentricJ = barycentric_j;
-	temp_slist_entry.genPolySurfaceIndex = (poly_number & 0xffff) << 16 | surfaceNumber & 0xffff;
+	temp_slist_entry.genBarycentricI = BarycentricI;
+	temp_slist_entry.genBarycentricJ = BarycentricJ;
+	temp_slist_entry.genPolySurfaceIndex = (polyNumber & 0xffff) << 16 | surfaceNumber & 0xffff;
 	temp_slist_entry.genLod = lod;
 
 	ghoul2->mSlist.push_back(temp_slist_entry);

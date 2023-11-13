@@ -1535,9 +1535,9 @@ void G_CheckCharmed(gentity_t* self)
 	}
 }
 
-void G_GetBoltPosition(gentity_t* self, const int bolt_index, vec3_t pos, const int modelIndex)
+void G_GetBoltPosition(gentity_t* self, const int boltIndex, vec3_t pos, const int modelIndex)
 {
-	mdxaBone_t bolt_matrix;
+	mdxaBone_t boltMatrix;
 	vec3_t angles;
 
 	if (!self || !self->inuse)
@@ -1561,18 +1561,18 @@ void G_GetBoltPosition(gentity_t* self, const int bolt_index, vec3_t pos, const 
 	}
 
 	trap->G2API_GetBoltMatrix(self->ghoul2, modelIndex,
-		bolt_index,
-		&bolt_matrix, angles, self->r.currentOrigin, level.time,
+		boltIndex,
+		&boltMatrix, angles, self->r.currentOrigin, level.time,
 		NULL, self->modelScale);
 	if (pos)
 	{
 		vec3_t result;
-		BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, result);
+		BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, result);
 		VectorCopy(result, pos);
 	}
 }
 
-float NPC_EntRangeFromBolt(const gentity_t* targ_ent, const int bolt_index)
+float NPC_EntRangeFromBolt(const gentity_t* targ_ent, const int boltIndex)
 {
 	vec3_t org;
 
@@ -1581,24 +1581,24 @@ float NPC_EntRangeFromBolt(const gentity_t* targ_ent, const int bolt_index)
 		return Q3_INFINITE;
 	}
 
-	G_GetBoltPosition(NPCS.NPC, bolt_index, org, 0);
+	G_GetBoltPosition(NPCS.NPC, boltIndex, org, 0);
 
 	return Distance(targ_ent->r.currentOrigin, org);
 }
 
-float NPC_EnemyRangeFromBolt(const int bolt_index)
+float NPC_EnemyRangeFromBolt(const int boltIndex)
 {
-	return NPC_EntRangeFromBolt(NPCS.NPC->enemy, bolt_index);
+	return NPC_EntRangeFromBolt(NPCS.NPC->enemy, boltIndex);
 }
 
-int NPC_GetEntsNearBolt(int* radius_ents, const float radius, const int bolt_index, vec3_t bolt_org)
+int NPC_GetEntsNearBolt(int* radius_ents, const float radius, const int boltIndex, vec3_t bolt_org)
 {
 	vec3_t mins, maxs;
 
 	//get my handRBolt's position
 	vec3_t org;
 
-	G_GetBoltPosition(NPCS.NPC, bolt_index, org, 0);
+	G_GetBoltPosition(NPCS.NPC, boltIndex, org, 0);
 
 	VectorCopy(org, bolt_org);
 

@@ -832,8 +832,7 @@ using world_t = struct world_s {
 void		R_ModelInit(void);
 
 model_t* R_GetModelByHandle(qhandle_t index);
-int			R_LerpTag(orientation_t* tag, qhandle_t handle, int startFrame, int endFrame,
-	float frac, const char* tagName);
+int			R_LerpTag(orientation_t* tag, const qhandle_t handle, const int startFrame, const int endFrame, const float frac, const char* tagName);
 void		R_ModelBounds(qhandle_t handle, vec3_t mins, vec3_t maxs);
 
 void		R_model_list_f(void);
@@ -1427,7 +1426,7 @@ struct shaderCommands_s
 	vec2_t		texCoords[SHADER_MAX_VERTEXES][NUM_TEX_COORDS] QALIGN(16);
 	color4ub_t	vertexColors[SHADER_MAX_VERTEXES] QALIGN(16);
 	byte		vertexAlphas[SHADER_MAX_VERTEXES][4]; QALIGN(16) //rwwRMG - added support
-		int			vertexdlight_bits[SHADER_MAX_VERTEXES]; QALIGN(16)
+		int			vertexDlightBits[SHADER_MAX_VERTEXES]; QALIGN(16)
 
 		stageVars_t	svars QALIGN(16);
 
@@ -1435,7 +1434,7 @@ struct shaderCommands_s
 	float   shaderTime;
 	int			fogNum;
 
-	int			dlightBits;	// or together of all vertexdlight_bits
+	int			dlightBits;	// or together of all vertexDlightBits
 
 	int			numIndexes;
 	int			numVertexes;
@@ -1462,7 +1461,7 @@ extern	shaderCommands_t	tess;
 
 extern	color4ub_t	styleColors[MAX_LIGHT_STYLES];
 
-void RB_BeginSurface(shader_t* shader, int fogNum);
+void RB_BeginSurface(shader_t* shader, const int fogNum);
 void RB_EndSurface(void);
 void RB_CheckOverflow(const int verts, const int indexes);
 #define RB_CHECKOVERFLOW(v,i) if (tess.numVertexes + (v) >= SHADER_MAX_VERTEXES || tess.numIndexes + (i) >= SHADER_MAX_INDEXES ) {RB_CheckOverflow(v,i);}

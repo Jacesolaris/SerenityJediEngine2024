@@ -340,7 +340,8 @@ because a surface may be forced to perform a RB_End due
 to overflow.
 ==============
 */
-void RB_BeginSurface(shader_t* shader, const int fogNum) {
+void RB_BeginSurface(shader_t* shader, const int fogNum)
+{
 	shader_t* state = shader->remappedShader ? shader->remappedShader : shader;
 
 	tess.numIndexes = 0;

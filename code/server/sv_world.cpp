@@ -603,7 +603,7 @@ using moveclip_t = struct
 	/*
 	Ghoul2 Insert Start
 	*/
-	EG2_Collision e_g2_trace_type;
+	EG2_Collision eG2TraceType;
 	int useLod;
 	trace_t trace; // make sure nothing goes under here for Ghoul2 collision purposes
 	/*
@@ -683,7 +683,7 @@ void SV_ClipMoveToEntities(moveclip_t* clip)
 #if 0 //G2_SUPERSIZEDBBOX is not being used
 		bool shrinkBox = true;
 
-		if (clip->e_g2_trace_type != G2_SUPERSIZEDBBOX)
+		if (clip->eG2TraceType != G2_SUPERSIZEDBBOX)
 		{
 			shrinkBox = false;
 		}
@@ -762,7 +762,7 @@ void SV_ClipMoveToEntities(moveclip_t* clip)
 		*/
 
 		// decide if we should do the ghoul2 collision detection right here
-		if (trace.entityNum == touch->s.number && clip->e_g2_trace_type != G2_NOCOLLIDE)
+		if (trace.entityNum == touch->s.number && clip->eG2TraceType != G2_NOCOLLIDE)
 		{
 			// do we actually have a ghoul2 model here?
 			if (touch->ghoul2.size() && !(touch->contents & CONTENTS_LIGHTSABER))
@@ -787,7 +787,7 @@ void SV_ClipMoveToEntities(moveclip_t* clip)
 				// if we are looking at an entity then use the player state to get it's angles and origin from
 				float radius;
 #if 0 //G2_SUPERSIZEDBBOX is not being used
-				if (clip->e_g2_trace_type == G2_SUPERSIZEDBBOX)
+				if (clip->eG2TraceType == G2_SUPERSIZEDBBOX)
 				{
 					radius = (clip->maxs[0] - clip->mins[0] - 2.0f * superSizedAdd) / 2.0f;
 				}
@@ -808,7 +808,7 @@ void SV_ClipMoveToEntities(moveclip_t* clip)
 
 					re.G2API_CollisionDetect(clip->trace.G2CollisionMap, touch->ghoul2,
 						world_angles, touch->client->origin, sv.time, touch->s.number, clip->start,
-						clip->end, touch->s.modelScale, G2VertSpaceServer, clip->e_g2_trace_type,
+						clip->end, touch->s.modelScale, G2VertSpaceServer, clip->eG2TraceType,
 						clip->useLod, radius);
 				}
 				// no, so use the normal entity state
@@ -818,7 +818,7 @@ void SV_ClipMoveToEntities(moveclip_t* clip)
 					re.G2API_CollisionDetect(clip->trace.G2CollisionMap, touch->ghoul2,
 						touch->currentAngles, touch->currentOrigin, sv.time, touch->s.number,
 						clip->start, clip->end, touch->s.modelScale, G2VertSpaceServer,
-						clip->e_g2_trace_type, clip->useLod, radius);
+						clip->eG2TraceType, clip->useLod, radius);
 				}
 
 				// set our new trace record size
@@ -871,7 +871,7 @@ pass_entity_num and entities owned by pass_entity_num are explicitly not checked
 Ghoul2 Insert Start
 */
 void SV_Trace(trace_t* results, const vec3_t start, const vec3_t mins, const vec3_t maxs, const vec3_t end,
-	const int pass_entity_num, const int contentmask, const EG2_Collision e_g2_trace_type, const int useLod)
+	const int pass_entity_num, const int contentmask, const EG2_Collision eG2TraceType, const int useLod)
 {
 	/*
 	Ghoul2 Insert End
@@ -919,7 +919,7 @@ void SV_Trace(trace_t* results, const vec3_t start, const vec3_t mins, const vec
 	Ghoul2 Insert Start
 	*/
 	VectorCopy(start, clip.start);
-	clip.e_g2_trace_type = e_g2_trace_type;
+	clip.eG2TraceType = eG2TraceType;
 	clip.useLod = useLod;
 	/*
 	Ghoul2 Insert End
@@ -942,7 +942,7 @@ void SV_Trace(trace_t* results, const vec3_t start, const vec3_t mins, const vec
 	vec3_t superMin;
 	vec3_t superMax;  // prison, in boscobel
 
-	if (e_g2_trace_type == G2_SUPERSIZEDBBOX)
+	if (eG2TraceType == G2_SUPERSIZEDBBOX)
 	{
 		for (i = 0; i < 3; i++)
 		{

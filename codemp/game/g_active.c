@@ -1389,14 +1389,14 @@ void G_VehicleAttachDroidUnit(gentity_t* vehEnt)
 	if (vehEnt && vehEnt->m_pVehicle && vehEnt->m_pVehicle->m_pDroidUnit != NULL)
 	{
 		gentity_t* droidEnt = (gentity_t*)vehEnt->m_pVehicle->m_pDroidUnit;
-		mdxaBone_t bolt_matrix;
+		mdxaBone_t boltMatrix;
 		vec3_t fwd;
 
-		trap->G2API_GetBoltMatrix(vehEnt->ghoul2, 0, vehEnt->m_pVehicle->m_iDroidUnitTag, &bolt_matrix,
+		trap->G2API_GetBoltMatrix(vehEnt->ghoul2, 0, vehEnt->m_pVehicle->m_iDroidUnitTag, &boltMatrix,
 			vehEnt->r.currentAngles, vehEnt->r.currentOrigin, level.time,
 			NULL, vehEnt->modelScale);
-		BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, droidEnt->r.currentOrigin);
-		BG_GiveMeVectorFromMatrix(&bolt_matrix, NEGATIVE_Y, fwd);
+		BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, droidEnt->r.currentOrigin);
+		BG_GiveMeVectorFromMatrix(&boltMatrix, NEGATIVE_Y, fwd);
 		vectoangles(fwd, droidEnt->r.currentAngles);
 
 		if (droidEnt->client)
@@ -5614,12 +5614,12 @@ void ClientThink_real(gentity_t* ent)
 
 				//Get the direction between the pelvis and position of the hand
 #if 0
-				mdxaBone_t bolt_matrix, pBoltMatrix;
+				mdxaBone_t boltMatrix, pBoltMatrix;
 
-				trap->G2API_GetBoltMatrix(thrower->ghoul2, 0, lHandBolt, &bolt_matrix, tAngles, thrower->client->ps.origin, level.time, 0, thrower->modelScale);
-				bolt_org[0] = bolt_matrix.matrix[0][3];
-				bolt_org[1] = bolt_matrix.matrix[1][3];
-				bolt_org[2] = bolt_matrix.matrix[2][3];
+				trap->G2API_GetBoltMatrix(thrower->ghoul2, 0, lHandBolt, &boltMatrix, tAngles, thrower->client->ps.origin, level.time, 0, thrower->modelScale);
+				bolt_org[0] = boltMatrix.matrix[0][3];
+				bolt_org[1] = boltMatrix.matrix[1][3];
+				bolt_org[2] = boltMatrix.matrix[2][3];
 
 				trap->G2API_GetBoltMatrix(thrower->ghoul2, 0, pelBolt, &pBoltMatrix, tAngles, thrower->client->ps.origin, level.time, 0, thrower->modelScale);
 				pBoltOrg[0] = pBoltMatrix.matrix[0][3];

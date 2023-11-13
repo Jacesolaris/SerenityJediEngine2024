@@ -269,36 +269,36 @@ void CG_SetGhoul2Info(refEntity_t* ent, const centity_t* cent)
 void G2_BoltToGhoul2Model(const centity_t* cent, refEntity_t* ent)
 {
 	// extract the wraith ID from the bolt info
-	int model_num = cent->currentState.bolt_info >> MODEL_SHIFT;
+	int model_num = cent->currentState.boltInfo >> MODEL_SHIFT;
 	model_num &= MODEL_AND;
-	int bolt_num = cent->currentState.bolt_info >> BOLT_SHIFT;
+	int bolt_num = cent->currentState.boltInfo >> BOLT_SHIFT;
 	bolt_num &= BOLT_AND;
-	int entNum = cent->currentState.bolt_info >> ENTITY_SHIFT;
+	int entNum = cent->currentState.boltInfo >> ENTITY_SHIFT;
 	entNum &= ENTITY_AND;
 
-	mdxaBone_t bolt_matrix;
+	mdxaBone_t boltMatrix;
 
 	// go away and get me the bolt position for this frame please
-	gi.G2API_GetBoltMatrix(cent->gent->ghoul2, model_num, bolt_num, &bolt_matrix, cg_entities[entNum].currentState.angles,
+	gi.G2API_GetBoltMatrix(cent->gent->ghoul2, model_num, bolt_num, &boltMatrix, cg_entities[entNum].currentState.angles,
 		cg_entities[entNum].currentState.origin, cg.time, cgs.model_draw,
 		cent->currentState.modelScale);
 
 	// set up the axis and origin we need for the actual effect spawning
-	ent->origin[0] = bolt_matrix.matrix[0][3];
-	ent->origin[1] = bolt_matrix.matrix[1][3];
-	ent->origin[2] = bolt_matrix.matrix[2][3];
+	ent->origin[0] = boltMatrix.matrix[0][3];
+	ent->origin[1] = boltMatrix.matrix[1][3];
+	ent->origin[2] = boltMatrix.matrix[2][3];
 
-	ent->axis[0][0] = bolt_matrix.matrix[0][0];
-	ent->axis[0][1] = bolt_matrix.matrix[1][0];
-	ent->axis[0][2] = bolt_matrix.matrix[2][0];
+	ent->axis[0][0] = boltMatrix.matrix[0][0];
+	ent->axis[0][1] = boltMatrix.matrix[1][0];
+	ent->axis[0][2] = boltMatrix.matrix[2][0];
 
-	ent->axis[1][0] = bolt_matrix.matrix[0][1];
-	ent->axis[1][1] = bolt_matrix.matrix[1][1];
-	ent->axis[1][2] = bolt_matrix.matrix[2][1];
+	ent->axis[1][0] = boltMatrix.matrix[0][1];
+	ent->axis[1][1] = boltMatrix.matrix[1][1];
+	ent->axis[1][2] = boltMatrix.matrix[2][1];
 
-	ent->axis[2][0] = bolt_matrix.matrix[0][2];
-	ent->axis[2][1] = bolt_matrix.matrix[1][2];
-	ent->axis[2][2] = bolt_matrix.matrix[2][2];
+	ent->axis[2][0] = boltMatrix.matrix[0][2];
+	ent->axis[2][1] = boltMatrix.matrix[1][2];
+	ent->axis[2][2] = boltMatrix.matrix[2][2];
 }
 
 void ScaleModelAxis(refEntity_t* ent)
@@ -509,7 +509,7 @@ static void CG_General(centity_t* cent)
 	Ghoul2 Insert Start
 	*/
 	// are we bolted to a Ghoul2 model?
-	if (s1->bolt_info)
+	if (s1->boltInfo)
 	{
 		G2_BoltToGhoul2Model(cent, &ent);
 	}
@@ -580,7 +580,7 @@ static void CG_General(centity_t* cent)
 
 			// get alternating muzzle end bolts
 			int bolt = cent->gent->handRBolt;
-			mdxaBone_t bolt_matrix;
+			mdxaBone_t boltMatrix;
 
 			if (!cc->gent->fxID || bolt == -1)
 			{
@@ -592,20 +592,20 @@ static void CG_General(centity_t* cent)
 				bolt = 0;
 			}
 			gi.G2API_GetBoltMatrix(cent->gent->ghoul2, 0, bolt,
-				&bolt_matrix, cent->lerpAngles, cent->lerpOrigin, cg.time,
+				&boltMatrix, cent->lerpAngles, cent->lerpOrigin, cg.time,
 				cgs.model_draw, cent->currentState.modelScale);
 
 			// store the muzzle point and direction so that we can fire in the right direction
-			gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, cc->gent->client->renderInfo.muzzle_point);
+			gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, cc->gent->client->renderInfo.muzzle_point);
 			if (cent->gent->bounceCount)
 			{
 				//EWeb - *sigh* the muzzle tag on this is not aligned like th eone on the emplaced gun... consistency anyone...?
-				gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, NEGATIVE_X, cc->gent->client->renderInfo.muzzleDir);
+				gi.G2API_GiveMeVectorFromMatrix(boltMatrix, NEGATIVE_X, cc->gent->client->renderInfo.muzzleDir);
 			}
 			else
 			{
 				//Emplaced gun
-				gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, POSITIVE_Y, cc->gent->client->renderInfo.muzzleDir);
+				gi.G2API_GiveMeVectorFromMatrix(boltMatrix, POSITIVE_Y, cc->gent->client->renderInfo.muzzleDir);
 			}
 			cc->gent->client->renderInfo.mPCalcTime = cg.time;
 
@@ -2465,7 +2465,7 @@ void CG_MatrixEffect(const centity_t* cent)
 {
 	float MATRIX_EFFECT_TIME = 1000.0f;
 
-	if (cent->currentState.bolt_info & MEF_MULTI_SPIN)
+	if (cent->currentState.boltInfo & MEF_MULTI_SPIN)
 	{
 		//multiple spins
 		if (cent->currentState.time2 > 0)
@@ -2487,7 +2487,7 @@ void CG_MatrixEffect(const centity_t* cent)
 	float elapsed_time = total_elapsed_time;
 	bool stop_effect = total_elapsed_time > cent->currentState.eventParm || cg.missionStatusShow || in_camera;
 
-	if (!stop_effect && cent->currentState.bolt_info & MEF_HIT_GROUND_STOP && g_entities[cent->currentState.
+	if (!stop_effect && cent->currentState.boltInfo & MEF_HIT_GROUND_STOP && g_entities[cent->currentState.
 		otherentity_num].client)
 	{
 		if (g_entities[cent->currentState.otherentity_num].client->ps.groundentity_num != ENTITYNUM_NONE)
@@ -2503,7 +2503,7 @@ void CG_MatrixEffect(const centity_t* cent)
 			}
 		}
 	}
-	if (!stop_effect && cent->currentState.bolt_info & MEF_LOOK_AT_ENEMY)
+	if (!stop_effect && cent->currentState.boltInfo & MEF_LOOK_AT_ENEMY)
 	{
 		if (!g_entities[cent->currentState.otherentity_num].lastEnemy ||
 			!g_entities[cent->currentState.otherentity_num].lastEnemy->inuse)
@@ -2543,7 +2543,7 @@ void CG_MatrixEffect(const centity_t* cent)
 
 	MatrixMode = qtrue;
 
-	if (cent->currentState.bolt_info & MEF_LOOK_AT_ENEMY)
+	if (cent->currentState.boltInfo & MEF_LOOK_AT_ENEMY)
 	{
 		vec3_t to_enemy;
 		vec3_t to_enemy_angles;
@@ -2570,14 +2570,14 @@ void CG_MatrixEffect(const centity_t* cent)
 		cg.overrides.thirdPersonRange = cg_thirdPersonRange.value * 3.0f;
 	}
 
-	if (!(cent->currentState.bolt_info & MEF_NO_SPIN))
+	if (!(cent->currentState.boltInfo & MEF_NO_SPIN))
 	{
 		//rotate around them
 		//rotate
 		cg.overrides.active |= CG_OVERRIDE_3RD_PERSON_ANG;
 		cg.overrides.thirdPersonAngle = 360.0f * elapsed_time / MATRIX_EFFECT_TIME;
 
-		if (cent->currentState.bolt_info & MEF_REVERSE_SPIN)
+		if (cent->currentState.boltInfo & MEF_REVERSE_SPIN)
 		{
 			cg.overrides.thirdPersonAngle *= -1;
 		}
@@ -2588,7 +2588,7 @@ void CG_MatrixEffect(const centity_t* cent)
 	{
 		cgi_Cvar_Set("timescale", va("%4.2f", cent->currentState.angles2[0]));
 	}
-	else if (!(cent->currentState.bolt_info & MEF_NO_TIMESCALE))
+	else if (!(cent->currentState.boltInfo & MEF_NO_TIMESCALE))
 	{
 		//ramp the timescale
 		//slowdown
@@ -2604,7 +2604,7 @@ void CG_MatrixEffect(const centity_t* cent)
 		//FIXME: MEF_HIT_GROUND_STOP: if they're on the ground, stop spinning and stop timescale
 	}
 
-	if (!(cent->currentState.bolt_info & MEF_NO_VERTBOB))
+	if (!(cent->currentState.boltInfo & MEF_NO_VERTBOB))
 	{
 		//bob the pitch
 		//pitch
@@ -2626,7 +2626,7 @@ void CG_MatrixEffect(const centity_t* cent)
 		}
 	}
 
-	if (!(cent->currentState.bolt_info & MEF_NO_RANGEVAR))
+	if (!(cent->currentState.boltInfo & MEF_NO_RANGEVAR))
 	{
 		//vary the camera range
 		//pull back
@@ -2651,7 +2651,7 @@ void CG_StasisEffect(const centity_t* cent)
 {
 	float STASIS_EFFECT_TIME = 75.0f;
 
-	if (cent->currentState.bolt_info & MEF_MULTI_SPIN)
+	if (cent->currentState.boltInfo & MEF_MULTI_SPIN)
 	{
 		//multiple spins
 		if (cent->currentState.time2 > 0)
@@ -2673,7 +2673,7 @@ void CG_StasisEffect(const centity_t* cent)
 	float elapsed_time = total_elapsed_time;
 	bool stop_effect = total_elapsed_time > cent->currentState.eventParm || cg.missionStatusShow || in_camera;
 
-	if (!stop_effect && cent->currentState.bolt_info & MEF_HIT_GROUND_STOP && g_entities[cent->currentState.
+	if (!stop_effect && cent->currentState.boltInfo & MEF_HIT_GROUND_STOP && g_entities[cent->currentState.
 		otherentity_num].client)
 	{
 		if (g_entities[cent->currentState.otherentity_num].client->ps.groundentity_num != ENTITYNUM_NONE)
@@ -2689,7 +2689,7 @@ void CG_StasisEffect(const centity_t* cent)
 			}
 		}
 	}
-	if (!stop_effect && cent->currentState.bolt_info & MEF_LOOK_AT_ENEMY)
+	if (!stop_effect && cent->currentState.boltInfo & MEF_LOOK_AT_ENEMY)
 	{
 		if (!g_entities[cent->currentState.otherentity_num].lastEnemy ||
 			!g_entities[cent->currentState.otherentity_num].lastEnemy->inuse)
@@ -2729,7 +2729,7 @@ void CG_StasisEffect(const centity_t* cent)
 
 	MatrixMode = qtrue;
 
-	if (cent->currentState.bolt_info & MEF_LOOK_AT_ENEMY)
+	if (cent->currentState.boltInfo & MEF_LOOK_AT_ENEMY)
 	{
 		vec3_t to_enemy;
 		vec3_t to_enemy_angles;
@@ -2761,7 +2761,7 @@ void CG_StasisEffect(const centity_t* cent)
 	{
 		cgi_Cvar_Set("timescale", va("%4.2f", cent->currentState.angles2[0]));
 	}
-	else if (!(cent->currentState.bolt_info & MEF_NO_TIMESCALE))
+	else if (!(cent->currentState.boltInfo & MEF_NO_TIMESCALE))
 	{
 		//ramp the timescale
 		//slowdown

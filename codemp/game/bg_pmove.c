@@ -8941,24 +8941,24 @@ void PM_FootSlopeTrace(float* p_diff, float* p_interval)
 
 	trace_t trace;
 
-	mdxaBone_t bolt_matrix;
+	mdxaBone_t boltMatrix;
 	vec3_t G2Angles;
 
 	VectorSet(G2Angles, 0, pm->ps->viewangles[YAW], 0);
 
 	const float interval = 4; //?
 
-	trap->G2API_GetBoltMatrix(pm->ghoul2, 0, pm->g2Bolts_LFoot, &bolt_matrix, G2Angles, pm->ps->origin,
+	trap->G2API_GetBoltMatrix(pm->ghoul2, 0, pm->g2Bolts_LFoot, &boltMatrix, G2Angles, pm->ps->origin,
 		pm->cmd.serverTime, NULL, pm->modelScale);
-	footLPoint[0] = bolt_matrix.matrix[0][3];
-	footLPoint[1] = bolt_matrix.matrix[1][3];
-	footLPoint[2] = bolt_matrix.matrix[2][3];
+	footLPoint[0] = boltMatrix.matrix[0][3];
+	footLPoint[1] = boltMatrix.matrix[1][3];
+	footLPoint[2] = boltMatrix.matrix[2][3];
 
-	trap->G2API_GetBoltMatrix(pm->ghoul2, 0, pm->g2Bolts_RFoot, &bolt_matrix, G2Angles, pm->ps->origin,
+	trap->G2API_GetBoltMatrix(pm->ghoul2, 0, pm->g2Bolts_RFoot, &boltMatrix, G2Angles, pm->ps->origin,
 		pm->cmd.serverTime, NULL, pm->modelScale);
-	footRPoint[0] = bolt_matrix.matrix[0][3];
-	footRPoint[1] = bolt_matrix.matrix[1][3];
-	footRPoint[2] = bolt_matrix.matrix[2][3];
+	footRPoint[0] = boltMatrix.matrix[0][3];
+	footRPoint[1] = boltMatrix.matrix[1][3];
+	footRPoint[2] = boltMatrix.matrix[2][3];
 
 	//get these on the cgame and store it, save ourselves a ghoul2 construct skel call
 	VectorCopy(footLPoint, footLOrg);
@@ -16860,21 +16860,21 @@ static void BG_G2ClientSpineAngles(void* ghoul2, const int motionBolt, vec3_t ce
 	{
 		//FIXME: no need to do this if legs and torso on are same frame
 		//adjust for motion offset
-		mdxaBone_t bolt_matrix;
+		mdxaBone_t boltMatrix;
 		vec3_t motionFwd, motionAngles;
 		vec3_t motionRt, tempAng;
 
-		trap->G2API_GetBoltMatrix_NoRecNoRot(ghoul2, 0, motionBolt, &bolt_matrix, vec3_origin, cent_lerpOrigin, time, 0,
+		trap->G2API_GetBoltMatrix_NoRecNoRot(ghoul2, 0, motionBolt, &boltMatrix, vec3_origin, cent_lerpOrigin, time, 0,
 			modelScale);
-		motionFwd[0] = -bolt_matrix.matrix[0][1];
-		motionFwd[1] = -bolt_matrix.matrix[1][1];
-		motionFwd[2] = -bolt_matrix.matrix[2][1];
+		motionFwd[0] = -boltMatrix.matrix[0][1];
+		motionFwd[1] = -boltMatrix.matrix[1][1];
+		motionFwd[2] = -boltMatrix.matrix[2][1];
 
 		vectoangles(motionFwd, motionAngles);
 
-		motionRt[0] = -bolt_matrix.matrix[0][0];
-		motionRt[1] = -bolt_matrix.matrix[1][0];
-		motionRt[2] = -bolt_matrix.matrix[2][0];
+		motionRt[0] = -boltMatrix.matrix[0][0];
+		motionRt[1] = -boltMatrix.matrix[1][0];
+		motionRt[2] = -boltMatrix.matrix[2][0];
 
 		vectoangles(motionRt, tempAng);
 		motionAngles[ROLL] = -tempAng[PITCH];

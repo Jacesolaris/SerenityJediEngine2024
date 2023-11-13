@@ -4470,7 +4470,7 @@ void WP_TouchVehMissile(gentity_t* ent, const gentity_t* other, const trace_t* t
 void WP_CalcVehMuzzle(gentity_t* ent, const int muzzle_num)
 {
 	Vehicle_t* p_veh = ent->m_pVehicle;
-	mdxaBone_t bolt_matrix;
+	mdxaBone_t boltMatrix;
 	vec3_t veh_angles;
 
 	assert(p_veh);
@@ -4492,10 +4492,10 @@ void WP_CalcVehMuzzle(gentity_t* ent, const int muzzle_num)
 		veh_angles[PITCH] = veh_angles[ROLL] = 0;
 	}
 
-	trap->G2API_GetBoltMatrix_NoRecNoRot(ent->ghoul2, 0, p_veh->m_iMuzzleTag[muzzle_num], &bolt_matrix, veh_angles,
+	trap->G2API_GetBoltMatrix_NoRecNoRot(ent->ghoul2, 0, p_veh->m_iMuzzleTag[muzzle_num], &boltMatrix, veh_angles,
 		ent->client->ps.origin, level.time, NULL, ent->modelScale);
-	BG_GiveMeVectorFromMatrix(&bolt_matrix, ORIGIN, p_veh->m_vMuzzlePos[muzzle_num]);
-	BG_GiveMeVectorFromMatrix(&bolt_matrix, NEGATIVE_Y, p_veh->m_vMuzzleDir[muzzle_num]);
+	BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, p_veh->m_vMuzzlePos[muzzle_num]);
+	BG_GiveMeVectorFromMatrix(&boltMatrix, NEGATIVE_Y, p_veh->m_vMuzzleDir[muzzle_num]);
 }
 
 void WP_VehWeapSetSolidToOwner(gentity_t* self)

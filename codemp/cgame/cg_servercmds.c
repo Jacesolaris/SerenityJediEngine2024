@@ -1103,7 +1103,7 @@ void CG_KillCEntityInstances(void)
 		cent->bodyHeight = 0; //SABER_LENGTH_MAX;
 		//cent->saberExtendTime = 0;
 
-		cent->bolt_info = 0;
+		cent->boltInfo = 0;
 
 		cent->frame_minus1_refreshed = 0;
 		cent->frame_minus2_refreshed = 0;

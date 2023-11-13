@@ -540,10 +540,10 @@ static qboolean CGFX_PlayBoltedEffectID(const int id, vec3_t org, void* ghoul2, 
 	if (!ghoul2) return qfalse;
 
 	CGhoul2Info_v& g2 = *static_cast<CGhoul2Info_v*>(ghoul2);
-	int bolt_info = 0;
-	if (re->G2API_AttachEnt(&bolt_info, g2, modelNum, boltNum, entNum, modelNum))
+	int boltInfo = 0;
+	if (re->G2API_AttachEnt(&boltInfo, g2, modelNum, boltNum, entNum, modelNum))
 	{
-		FX_PlayBoltedEffectID(id, org, bolt_info, &g2, iLooptime, isRelative);
+		FX_PlayBoltedEffectID(id, org, boltInfo, &g2, iLooptime, isRelative);
 		return qtrue;
 	}
 	return qfalse;
@@ -587,32 +587,32 @@ static qboolean CL_G2API_HaveWeGhoul2Models(void* ghoul2)
 	return re->G2API_HaveWeGhoul2Models(*static_cast<CGhoul2Info_v*>(ghoul2));
 }
 
-static qboolean CL_G2API_GetBoltMatrix(void* ghoul2, const int modelIndex, const int bolt_index, mdxaBone_t* matrix,
+static qboolean CL_G2API_GetBoltMatrix(void* ghoul2, const int modelIndex, const int boltIndex, mdxaBone_t* matrix,
 	const vec3_t angles, const vec3_t position, const int frameNum,
 	qhandle_t* modelList, vec3_t scale)
 {
 	if (!ghoul2) return qfalse;
-	return re->G2API_GetBoltMatrix(*static_cast<CGhoul2Info_v*>(ghoul2), modelIndex, bolt_index, matrix, angles,
+	return re->G2API_GetBoltMatrix(*static_cast<CGhoul2Info_v*>(ghoul2), modelIndex, boltIndex, matrix, angles,
 		position, frameNum, modelList, scale);
 }
 
-static qboolean CL_G2API_GetBoltMatrix_NoReconstruct(void* ghoul2, const int modelIndex, const int bolt_index,
+static qboolean CL_G2API_GetBoltMatrix_NoReconstruct(void* ghoul2, const int modelIndex, const int boltIndex,
 	mdxaBone_t* matrix, const vec3_t angles, const vec3_t position,
 	const int frameNum, qhandle_t* modelList, vec3_t scale)
 {
 	if (!ghoul2) return qfalse;
 	re->G2API_BoltMatrixReconstruction(qfalse);
-	return re->G2API_GetBoltMatrix(*static_cast<CGhoul2Info_v*>(ghoul2), modelIndex, bolt_index, matrix, angles,
+	return re->G2API_GetBoltMatrix(*static_cast<CGhoul2Info_v*>(ghoul2), modelIndex, boltIndex, matrix, angles,
 		position, frameNum, modelList, scale);
 }
 
-static qboolean CL_G2API_GetBoltMatrix_NoRecNoRot(void* ghoul2, const int modelIndex, const int bolt_index,
+static qboolean CL_G2API_GetBoltMatrix_NoRecNoRot(void* ghoul2, const int modelIndex, const int boltIndex,
 	mdxaBone_t* matrix, const vec3_t angles, const vec3_t position,
 	const int frameNum, qhandle_t* modelList, vec3_t scale)
 {
 	if (!ghoul2) return qfalse;
 	re->G2API_BoltMatrixSPMethod(qtrue);
-	return re->G2API_GetBoltMatrix(*static_cast<CGhoul2Info_v*>(ghoul2), modelIndex, bolt_index, matrix, angles,
+	return re->G2API_GetBoltMatrix(*static_cast<CGhoul2Info_v*>(ghoul2), modelIndex, boltIndex, matrix, angles,
 		position, frameNum, modelList, scale);
 }
 
@@ -727,11 +727,11 @@ static int CL_G2API_CopyGhoul2Instance(void* g2_from, void* g2_to, const int mod
 		modelIndex);
 }
 
-static void CL_G2API_CopySpecificGhoul2Model(void* g2_from, const int model_from, void* g2_to, const int model_to)
+static void CL_G2API_CopySpecificGhoul2Model(void* g2_from, const int modelFrom, void* g2_to, const int modelTo)
 {
 	if (!g2_from || !g2_to) return;
-	re->G2API_CopySpecificG2Model(*static_cast<CGhoul2Info_v*>(g2_from), model_from, *static_cast<CGhoul2Info_v*>(g2_to),
-		model_to);
+	re->G2API_CopySpecificG2Model(*static_cast<CGhoul2Info_v*>(g2_from), modelFrom, *static_cast<CGhoul2Info_v*>(g2_to),
+		modelTo);
 }
 
 static void CL_G2API_DuplicateGhoul2Instance(void* g2_from, void** g2_to)
@@ -803,18 +803,18 @@ static int CL_G2API_AddBolt(void* ghoul2, const int modelIndex, const char* bone
 	return re->G2API_AddBolt(*static_cast<CGhoul2Info_v*>(ghoul2), modelIndex, boneName);
 }
 
-static qboolean CL_G2API_AttachEnt(int* bolt_info, void* ghlInfoTo, const int toBoltIndex, const int entNum,
+static qboolean CL_G2API_AttachEnt(int* boltInfo, void* ghlInfoTo, const int toBoltIndex, const int entNum,
 	const int toModelNum)
 {
 	if (!ghlInfoTo) return qfalse;
 	CGhoul2Info_v& g2 = *static_cast<CGhoul2Info_v*>(ghlInfoTo);
-	return re->G2API_AttachEnt(bolt_info, g2, 0, toBoltIndex, entNum, toModelNum);
+	return re->G2API_AttachEnt(boltInfo, g2, 0, toBoltIndex, entNum, toModelNum);
 }
 
-static void CL_G2API_SetBoltInfo(void* ghoul2, const int modelIndex, const int bolt_info)
+static void CL_G2API_SetBoltInfo(void* ghoul2, const int modelIndex, const int boltInfo)
 {
 	if (!ghoul2) return;
-	re->G2API_SetBoltInfo(*static_cast<CGhoul2Info_v*>(ghoul2), modelIndex, bolt_info);
+	re->G2API_SetBoltInfo(*static_cast<CGhoul2Info_v*>(ghoul2), modelIndex, boltInfo);
 }
 
 static qboolean CL_G2API_SetRootSurface(void* ghoul2, const int modelIndex, const char* surfaceName)
@@ -829,10 +829,10 @@ static qboolean CL_G2API_SetSurfaceOnOff(void* ghoul2, const char* surfaceName, 
 	return re->G2API_SetSurfaceOnOff(*static_cast<CGhoul2Info_v*>(ghoul2), surfaceName, flags);
 }
 
-static qboolean CL_G2API_SetNewOrigin(void* ghoul2, const int bolt_index)
+static qboolean CL_G2API_SetNewOrigin(void* ghoul2, const int boltIndex)
 {
 	if (!ghoul2) return qfalse;
-	return re->G2API_SetNewOrigin(*static_cast<CGhoul2Info_v*>(ghoul2), bolt_index);
+	return re->G2API_SetNewOrigin(*static_cast<CGhoul2Info_v*>(ghoul2), boltIndex);
 }
 
 static qboolean CL_G2API_DoesBoneExist(void* ghoul2, const int modelIndex, const char* boneName)

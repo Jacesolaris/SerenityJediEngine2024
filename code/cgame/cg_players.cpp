@@ -1136,11 +1136,11 @@ static void CG_PlayerAnimEventDo(centity_t* cent, animevent_t* anim_event)
 					if (modelIndex > 0)
 					{
 						//we have a cinematic model
-						const int bolt_index = gi.G2API_AddBolt(&cent->gent->ghoul2[modelIndex], "*flash");
-						if (bolt_index > -1)
+						const int boltIndex = gi.G2API_AddBolt(&cent->gent->ghoul2[modelIndex], "*flash");
+						if (boltIndex > -1)
 						{
 							//cinematic model has a flash bolt
-							CG_PlayEffectBolted("scepter/beam.efx", modelIndex, bolt_index,
+							CG_PlayEffectBolted("scepter/beam.efx", modelIndex, boltIndex,
 								cent->currentState.client_num,
 								cent->lerpOrigin, anim_event->eventData[AED_EFFECT_PROBABILITY], qtrue);
 						}
@@ -1814,10 +1814,10 @@ static void CG_BreathPuffs(const centity_t* cent, vec3_t angles, vec3_t origin)
 	}
 
 	vec3_t v_effect_origin;
-	mdxaBone_t bolt_matrix;
-	gi.G2API_GetBoltMatrix(cent->gent->ghoul2, cent->gent->playerModel, bolt, &bolt_matrix, angles, origin, cg.time,
+	mdxaBone_t boltMatrix;
+	gi.G2API_GetBoltMatrix(cent->gent->ghoul2, cent->gent->playerModel, bolt, &boltMatrix, angles, origin, cg.time,
 		cgs.model_draw, cent->currentState.modelScale);
-	gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, v_effect_origin);
+	gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, v_effect_origin);
 
 	const int contents = cgi_CM_PointContents(v_effect_origin, 0);
 	if (contents & (CONTENTS_SLIME | CONTENTS_LAVA)) // If they're submerged in something bad, leave.
@@ -1870,10 +1870,10 @@ static void CG_BreathPuffsSith(const centity_t* cent, vec3_t angles, vec3_t orig
 	}
 
 	vec3_t v_effect_origin;
-	mdxaBone_t bolt_matrix;
-	gi.G2API_GetBoltMatrix(cent->gent->ghoul2, cent->gent->playerModel, bolt, &bolt_matrix, angles, origin, cg.time,
+	mdxaBone_t boltMatrix;
+	gi.G2API_GetBoltMatrix(cent->gent->ghoul2, cent->gent->playerModel, bolt, &boltMatrix, angles, origin, cg.time,
 		cgs.model_draw, cent->currentState.modelScale);
-	gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, v_effect_origin);
+	gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, v_effect_origin);
 
 	const int contents = cgi_CM_PointContents(v_effect_origin, 0);
 	if (contents & (CONTENTS_SLIME | CONTENTS_LAVA)) // If they're submerged in something bad, leave.
@@ -2268,7 +2268,7 @@ static void CG_G2ClientSpineAngles(centity_t* cent, vec3_t view_angles, const ve
 		//these guys' bones are so fucked up we shouldn't even bother with this motion bone comp...
 	{
 		//FIXME: no need to do this if legs and torso on are same frame
-		mdxaBone_t bolt_matrix;
+		mdxaBone_t boltMatrix;
 
 		if (cg_motionBoneComp.integer > 2 && cent->gent->rootBone >= 0 && cent->gent->lowerLumbarBone >= 0)
 		{
@@ -2296,18 +2296,18 @@ static void CG_G2ClientSpineAngles(centity_t* cent, vec3_t view_angles, const ve
 				BONE_ANIM_OVERRIDE_FREEZE,
 				1, cg.time, upper_frame, 0);
 			//get the dummyGhoul2 lower_lumbar orientation
-			gi.G2API_GetBoltMatrix(dummyGhoul2, 0, dummyHipsBolt, &bolt_matrix, vec3_origin, vec3_origin, cg.time,
+			gi.G2API_GetBoltMatrix(dummyGhoul2, 0, dummyHipsBolt, &boltMatrix, vec3_origin, vec3_origin, cg.time,
 				cgs.model_draw, cent->currentState.modelScale);
-			gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, NEGATIVE_Z, ll_fwd);
-			gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, NEGATIVE_Y, ll_rt);
+			gi.G2API_GiveMeVectorFromMatrix(boltMatrix, NEGATIVE_Z, ll_fwd);
+			gi.G2API_GiveMeVectorFromMatrix(boltMatrix, NEGATIVE_Y, ll_rt);
 			vectoangles(ll_fwd, dest_p_angles);
 			vectoangles(ll_rt, temp_ang);
 			dest_p_angles[ROLL] = -temp_ang[PITCH];
 			//get my lower_lumbar
-			gi.G2API_GetBoltMatrix(cent->gent->ghoul2, cent->gent->playerModel, cent->gent->crotchBolt, &bolt_matrix,
+			gi.G2API_GetBoltMatrix(cent->gent->ghoul2, cent->gent->playerModel, cent->gent->crotchBolt, &boltMatrix,
 				vec3_origin, vec3_origin, cg.time, cgs.model_draw, cent->currentState.modelScale);
-			gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, NEGATIVE_Z, ll_fwd);
-			gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, NEGATIVE_Y, ll_rt);
+			gi.G2API_GiveMeVectorFromMatrix(boltMatrix, NEGATIVE_Z, ll_fwd);
+			gi.G2API_GiveMeVectorFromMatrix(boltMatrix, NEGATIVE_Y, ll_rt);
 			vectoangles(ll_fwd, cur_p_angles);
 			vectoangles(ll_rt, temp_ang);
 			cur_p_angles[ROLL] = -temp_ang[PITCH];
@@ -2328,16 +2328,16 @@ static void CG_G2ClientSpineAngles(centity_t* cent, vec3_t view_angles, const ve
 			//adjust for motion offset
 			vec3_t motion_fwd, motion_angles;
 
-			gi.G2API_GetBoltMatrix(cent->gent->ghoul2, cent->gent->playerModel, cent->gent->motionBolt, &bolt_matrix,
+			gi.G2API_GetBoltMatrix(cent->gent->ghoul2, cent->gent->playerModel, cent->gent->motionBolt, &boltMatrix,
 				vec3_origin, cent->lerpOrigin, cg.time, cgs.model_draw,
 				cent->currentState.modelScale);
-			gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, NEGATIVE_Y, motion_fwd);
+			gi.G2API_GiveMeVectorFromMatrix(boltMatrix, NEGATIVE_Y, motion_fwd);
 			vectoangles(motion_fwd, motion_angles);
 			if (cg_motionBoneComp.integer > 1)
 			{
 				//do roll, too
 				vec3_t motionRt, tempAng;
-				gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, NEGATIVE_X, motionRt);
+				gi.G2API_GiveMeVectorFromMatrix(boltMatrix, NEGATIVE_X, motionRt);
 				vectoangles(motionRt, tempAng);
 				motion_angles[ROLL] = -tempAng[PITCH];
 			}
@@ -3843,11 +3843,11 @@ static qboolean CG_PlayerShadow(const centity_t* cent, float* shadow_plane)
 		//If it has an animOffset it's a cinematic anim
 	{
 		//i might be running out of my bounding box, so get my root origin
-		mdxaBone_t bolt_matrix;
+		mdxaBone_t boltMatrix;
 		gi.G2API_GetBoltMatrix(cent->gent->ghoul2, cent->gent->playerModel, cent->gent->rootBone,
-			&bolt_matrix, temp_angles, cent->lerpOrigin,
+			&boltMatrix, temp_angles, cent->lerpOrigin,
 			cg.time, cgs.model_draw, cent->currentState.modelScale);
-		gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, root_origin);
+		gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, root_origin);
 	}
 	else
 	{
@@ -3862,20 +3862,20 @@ static qboolean CG_PlayerShadow(const centity_t* cent, float* shadow_plane)
 
 	if (cent->gent->client->NPC_class == CLASS_ATST)
 	{
-		mdxaBone_t bolt_matrix;
+		mdxaBone_t boltMatrix;
 		vec3_t side_origin;
 
 		gi.G2API_GetBoltMatrix(cent->gent->ghoul2, cent->gent->playerModel, cent->gent->footLBolt,
-			&bolt_matrix, temp_angles, cent->lerpOrigin,
+			&boltMatrix, temp_angles, cent->lerpOrigin,
 			cg.time, cgs.model_draw, cent->currentState.modelScale);
-		gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, side_origin);
+		gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, side_origin);
 		side_origin[2] += 30; //fudge up a bit for coplaner
 		qboolean b_shadowed = player_shadow(side_origin, 0, shadow_plane, 28);
 
 		gi.G2API_GetBoltMatrix(cent->gent->ghoul2, cent->gent->playerModel, cent->gent->footRBolt,
-			&bolt_matrix, temp_angles, cent->lerpOrigin, cg.time,
+			&boltMatrix, temp_angles, cent->lerpOrigin, cg.time,
 			cgs.model_draw, cent->currentState.modelScale);
-		gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, side_origin);
+		gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, side_origin);
 		side_origin[2] += 30; //fudge up a bit for coplaner
 		b_shadowed = static_cast<qboolean>(player_shadow(side_origin, 0, shadow_plane, 28) ||
 			b_shadowed);
@@ -4216,7 +4216,7 @@ static void CG_PlayerFootsteps(const centity_t* cent, const footstepType_t foot_
 		&& cent->gent->client->NPC_class != CLASS_SENTRY
 		&& cent->gent->client->NPC_class != CLASS_SWAMP)
 	{
-		mdxaBone_t bolt_matrix;
+		mdxaBone_t boltMatrix;
 		vec3_t temp_angles{}, side_origin, foot_down_dir;
 
 		temp_angles[PITCH] = 0;
@@ -4232,10 +4232,10 @@ static void CG_PlayerFootsteps(const centity_t* cent, const footstepType_t foot_
 		}
 		//FIXME: get yaw orientation of the foot and use on decal
 		gi.G2API_GetBoltMatrix(cent->gent->ghoul2, cent->gent->playerModel, foot_bolt,
-			&bolt_matrix, temp_angles, cent->lerpOrigin,
+			&boltMatrix, temp_angles, cent->lerpOrigin,
 			cg.time, cgs.model_draw, cent->currentState.modelScale);
-		gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, side_origin);
-		gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, NEGATIVE_Y, foot_down_dir);
+		gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, side_origin);
+		gi.G2API_GiveMeVectorFromMatrix(boltMatrix, NEGATIVE_Y, foot_down_dir);
 		VectorMA(side_origin, -8.0f, foot_down_dir, side_origin); //was [2] += 15;	//fudge up a bit for coplanar
 		player_foot_step(side_origin, foot_down_dir, cent->pe.legs.yawAngle, 6, cent, foot_step_type);
 	}
@@ -4329,7 +4329,7 @@ static void CG_PlayerSplash(const centity_t* cent)
 		{
 			if (cl->NPC_class == CLASS_ATST)
 			{
-				mdxaBone_t bolt_matrix;
+				mdxaBone_t boltMatrix;
 				vec3_t temp_angles{}, side_origin;
 
 				temp_angles[PITCH] = 0;
@@ -4337,16 +4337,16 @@ static void CG_PlayerSplash(const centity_t* cent)
 				temp_angles[ROLL] = 0;
 
 				gi.G2API_GetBoltMatrix(cent->gent->ghoul2, cent->gent->playerModel, cent->gent->footLBolt,
-					&bolt_matrix, temp_angles, cent->lerpOrigin,
+					&boltMatrix, temp_angles, cent->lerpOrigin,
 					cg.time, cgs.model_draw, cent->currentState.modelScale);
-				gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, side_origin);
+				gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, side_origin);
 				side_origin[2] += 22; //fudge up a bit for coplaner
 				player_splash(side_origin, cl->ps.velocity, 42, cent->gent->maxs[2]);
 
 				gi.G2API_GetBoltMatrix(cent->gent->ghoul2, cent->gent->playerModel, cent->gent->footRBolt,
-					&bolt_matrix, temp_angles, cent->lerpOrigin, cg.time,
+					&boltMatrix, temp_angles, cent->lerpOrigin, cg.time,
 					cgs.model_draw, cent->currentState.modelScale);
-				gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, side_origin);
+				gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, side_origin);
 				side_origin[2] += 22; //fudge up a bit for coplaner
 
 				player_splash(side_origin, cl->ps.velocity, 42, cent->gent->maxs[2]);
@@ -4922,7 +4922,7 @@ void CG_ForceDeadlySightBlur(const vec3_t org)
 static void CG_ForcePushBodyBlur(const centity_t* cent, const vec3_t origin, vec3_t temp_angles)
 {
 	vec3_t fx_org;
-	mdxaBone_t bolt_matrix;
+	mdxaBone_t boltMatrix;
 
 	// Head blur
 	CG_ForcePushBlur(cent->gent->client->renderInfo.eyePoint);
@@ -4931,9 +4931,9 @@ static void CG_ForcePushBodyBlur(const centity_t* cent, const vec3_t origin, vec
 	if (cent->gent->torsoBolt >= 0)
 	{
 		gi.G2API_GetBoltMatrix(cent->gent->ghoul2, cent->gent->playerModel, cent->gent->torsoBolt,
-			&bolt_matrix, temp_angles, origin, cg.time,
+			&boltMatrix, temp_angles, origin, cg.time,
 			cgs.model_draw, cent->currentState.modelScale);
-		gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, fx_org);
+		gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, fx_org);
 		CG_ForcePushBlur(fx_org);
 	}
 
@@ -4941,9 +4941,9 @@ static void CG_ForcePushBodyBlur(const centity_t* cent, const vec3_t origin, vec
 	{
 		// Do a right-hand based blur
 		gi.G2API_GetBoltMatrix(cent->gent->ghoul2, cent->gent->playerModel, cent->gent->handRBolt,
-			&bolt_matrix, temp_angles, origin, cg.time,
+			&boltMatrix, temp_angles, origin, cg.time,
 			cgs.model_draw, cent->currentState.modelScale);
-		gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, fx_org);
+		gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, fx_org);
 		CG_ForcePushBlur(fx_org);
 	}
 
@@ -4951,9 +4951,9 @@ static void CG_ForcePushBodyBlur(const centity_t* cent, const vec3_t origin, vec
 	{
 		// Do a left-hand based blur
 		gi.G2API_GetBoltMatrix(cent->gent->ghoul2, cent->gent->playerModel, cent->gent->handLBolt,
-			&bolt_matrix, temp_angles, origin, cg.time,
+			&boltMatrix, temp_angles, origin, cg.time,
 			cgs.model_draw, cent->currentState.modelScale);
-		gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, fx_org);
+		gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, fx_org);
 		CG_ForcePushBlur(fx_org);
 	}
 
@@ -4961,18 +4961,18 @@ static void CG_ForcePushBodyBlur(const centity_t* cent, const vec3_t origin, vec
 	if (cent->gent->kneeLBolt >= 0)
 	{
 		gi.G2API_GetBoltMatrix(cent->gent->ghoul2, cent->gent->playerModel, cent->gent->kneeLBolt,
-			&bolt_matrix, temp_angles, origin, cg.time,
+			&boltMatrix, temp_angles, origin, cg.time,
 			cgs.model_draw, cent->currentState.modelScale);
-		gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, fx_org);
+		gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, fx_org);
 		CG_ForcePushBlur(fx_org);
 	}
 
 	if (cent->gent->kneeRBolt >= 0)
 	{
 		gi.G2API_GetBoltMatrix(cent->gent->ghoul2, cent->gent->playerModel, cent->gent->kneeRBolt,
-			&bolt_matrix, temp_angles, origin, cg.time,
+			&boltMatrix, temp_angles, origin, cg.time,
 			cgs.model_draw, cent->currentState.modelScale);
-		gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, fx_org);
+		gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, fx_org);
 		CG_ForcePushBlur(fx_org);
 	}
 
@@ -4980,17 +4980,17 @@ static void CG_ForcePushBodyBlur(const centity_t* cent, const vec3_t origin, vec
 	{
 		// Do the elbows
 		gi.G2API_GetBoltMatrix(cent->gent->ghoul2, cent->gent->playerModel, cent->gent->elbowLBolt,
-			&bolt_matrix, temp_angles, origin, cg.time,
+			&boltMatrix, temp_angles, origin, cg.time,
 			cgs.model_draw, cent->currentState.modelScale);
-		gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, fx_org);
+		gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, fx_org);
 		CG_ForcePushBlur(fx_org);
 	}
 	if (cent->gent->elbowRBolt >= 0)
 	{
 		gi.G2API_GetBoltMatrix(cent->gent->ghoul2, cent->gent->playerModel, cent->gent->elbowRBolt,
-			&bolt_matrix, temp_angles, origin, cg.time,
+			&boltMatrix, temp_angles, origin, cg.time,
 			cgs.model_draw, cent->currentState.modelScale);
-		gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, fx_org);
+		gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, fx_org);
 		CG_ForcePushBlur(fx_org);
 	}
 }
@@ -5003,7 +5003,7 @@ static void CG_ForceElectrocution(const centity_t* cent, const vec3_t origin, ve
 	qboolean found = qfalse;
 	vec3_t fx_org, fx_org2, dir;
 	vec3_t rgb = { 1.0f, 1.0f, 1.0f };
-	mdxaBone_t bolt_matrix;
+	mdxaBone_t boltMatrix;
 
 	int bolt = -1;
 	int iter = 0;
@@ -5057,20 +5057,20 @@ static void CG_ForceElectrocution(const centity_t* cent, const vec3_t origin, ve
 	if (bolt >= 0)
 	{
 		found = gi.G2API_GetBoltMatrix(cent->gent->ghoul2, cent->gent->playerModel, bolt,
-			&bolt_matrix, temp_angles, origin, cg.time,
+			&boltMatrix, temp_angles, origin, cg.time,
 			cgs.model_draw, cent->currentState.modelScale);
 	}
 	// Make sure that it's safe to even try and get these values out of the Matrix, otherwise the values could be garbage
 	if (found)
 	{
-		gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, fx_org);
+		gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, fx_org);
 		if (Q_flrand(0.0f, 1.0f) > 0.5f)
 		{
-			gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, NEGATIVE_X, dir);
+			gi.G2API_GiveMeVectorFromMatrix(boltMatrix, NEGATIVE_X, dir);
 		}
 		else
 		{
-			gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, NEGATIVE_Y, dir);
+			gi.G2API_GiveMeVectorFromMatrix(boltMatrix, NEGATIVE_Y, dir);
 		}
 
 		// Add some fudge, makes us not normalized, but that isn't really important
@@ -5798,11 +5798,11 @@ void CG_AddRefEntityWithPowerups(refEntity_t* ent, int powerups, centity_t* cent
 		if (cg.time - ent->endTime < 1000 && cg_timescale.value * cg_timescale.value * Q_flrand(0.0f, 1.0f) > 0.05f)
 		{
 			vec3_t fx_org;
-			mdxaBone_t bolt_matrix;
+			mdxaBone_t boltMatrix;
 
-			gi.G2API_GetBoltMatrix(cent->gent->ghoul2, gent->playerModel, gent->torsoBolt, &bolt_matrix,
+			gi.G2API_GetBoltMatrix(cent->gent->ghoul2, gent->playerModel, gent->torsoBolt, &boltMatrix,
 				gent->currentAngles, ent->origin, cg.time, cgs.model_draw, gent->s.modelScale);
-			gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, fx_org);
+			gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, fx_org);
 
 			VectorMA(fx_org, -18, cg.refdef.viewaxis[0], fx_org);
 			fx_org[2] += Q_flrand(-1.0f, 1.0f) * 20;
@@ -6050,12 +6050,12 @@ void CG_AddRefEntityWithPowerups(refEntity_t* ent, int powerups, centity_t* cent
 				tent.frame = gent->client->stunTime;
 			}
 
-			mdxaBone_t bolt_matrix;
+			mdxaBone_t boltMatrix;
 			vec3_t angles = { 0, gent->client->ps.legsYaw, 0 };
 
-			gi.G2API_GetBoltMatrix(cent->gent->ghoul2, gent->playerModel, gent->headModel, &bolt_matrix, angles,
+			gi.G2API_GetBoltMatrix(cent->gent->ghoul2, gent->playerModel, gent->headModel, &boltMatrix, angles,
 				cent->lerpOrigin, cg.time, cgs.model_draw, cent->currentState.modelScale);
-			gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, tent.origin); // pass in the emitter origin here
+			gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, tent.origin); // pass in the emitter origin here
 
 			tent.endTime = gent->fx_time + 1000;
 			// if you want the shell to build around the guy, pass in a time that is 1000ms after the start of the turn-on-effect
@@ -6116,12 +6116,12 @@ void CG_AddRefEntityWithPowerups(refEntity_t* ent, int powerups, centity_t* cent
 					tent.frame = gent->client->stunTime;
 				}
 
-				mdxaBone_t bolt_matrix;
+				mdxaBone_t boltMatrix;
 				vec3_t angles = { 0, gent->client->ps.legsYaw, 0 };
 
-				gi.G2API_GetBoltMatrix(cent->gent->ghoul2, gent->playerModel, gent->headModel, &bolt_matrix, angles,
+				gi.G2API_GetBoltMatrix(cent->gent->ghoul2, gent->playerModel, gent->headModel, &boltMatrix, angles,
 					cent->lerpOrigin, cg.time, cgs.model_draw, cent->currentState.modelScale);
-				gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, tent.origin); // pass in the emitter origin here
+				gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, tent.origin); // pass in the emitter origin here
 
 				tent.endTime = gent->fx_time + 1000;
 				// if you want the shell to build around the guy, pass in a time that is 1000ms after the start of the turn-on-effect
@@ -6156,12 +6156,12 @@ void CG_AddRefEntityWithPowerups(refEntity_t* ent, int powerups, centity_t* cent
 			tent.frame = gent->client->stunTime;
 		}
 
-		mdxaBone_t bolt_matrix;
+		mdxaBone_t boltMatrix;
 		vec3_t angles = { 0, gent->client->ps.legsYaw, 0 };
 
-		gi.G2API_GetBoltMatrix(cent->gent->ghoul2, gent->playerModel, gent->genericBolt1, &bolt_matrix, angles,
+		gi.G2API_GetBoltMatrix(cent->gent->ghoul2, gent->playerModel, gent->genericBolt1, &boltMatrix, angles,
 			cent->lerpOrigin, cg.time, cgs.model_draw, cent->currentState.modelScale);
-		gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, tent.origin); // pass in the emitter origin here
+		gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, tent.origin); // pass in the emitter origin here
 
 		tent.endTime = gent->fx_time + 1000;
 		// if you want the shell to build around the guy, pass in a time that is 1000ms after the start of the turn-on-effect
@@ -12078,14 +12078,14 @@ void CG_CheckSaberInWater(const centity_t* cent, const centity_t* scent, const i
 	if (gi.totalMapContents() & (CONTENTS_WATER | CONTENTS_SLIME))
 	{
 		vec3_t saber_org;
-		mdxaBone_t bolt_matrix;
+		mdxaBone_t boltMatrix;
 
 		// figure out where the actual model muzzle is
-		gi.G2API_GetBoltMatrix(scent->gent->ghoul2, modelIndex, 0, &bolt_matrix, angles, origin, cg.time,
+		gi.G2API_GetBoltMatrix(scent->gent->ghoul2, modelIndex, 0, &boltMatrix, angles, origin, cg.time,
 			cgs.model_draw,
 			scent->currentState.modelScale);
 		// work the matrix axis stuff into the original axis and origins used.
-		gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, saber_org);
+		gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, saber_org);
 
 		const int contents = gi.pointcontents(saber_org, cent->currentState.client_num);
 		if (contents & (CONTENTS_WATER | CONTENTS_SLIME))
@@ -12107,7 +12107,7 @@ static void CG_AddSaberBladeGo(const centity_t* cent, centity_t* scent, const in
 	vec3_t org, end, axis[3] = { {0, 0, 0}, {0, 0, 0}, {0, 0, 0} };
 	trace_t trace;
 	float length;
-	mdxaBone_t bolt_matrix;
+	mdxaBone_t boltMatrix;
 	qboolean tag_hack = qfalse;
 
 	gclient_t* client = cent->gent->client;
@@ -12154,16 +12154,16 @@ static void CG_AddSaberBladeGo(const centity_t* cent, centity_t* scent, const in
 			CG_PlayEffectIDBolted(cent->gent->client->ps.saber[saberNum].bladeEffect2, modelIndex, bolt,
 				scent->currentState.client_num, scent->lerpOrigin, -1, qfalse);
 		}
-		//get the bolt_matrix
-		gi.G2API_GetBoltMatrix(scent->gent->ghoul2, modelIndex, bolt, &bolt_matrix, angles, origin, cg.time,
+		//get the boltMatrix
+		gi.G2API_GetBoltMatrix(scent->gent->ghoul2, modelIndex, bolt, &boltMatrix, angles, origin, cg.time,
 			cgs.model_draw, scent->currentState.modelScale);
 
 		// work the matrix axis stuff into the original axis and origins used.
-		gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, org);
-		gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, NEGATIVE_X, axis[0]);
+		gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, org);
+		gi.G2API_GiveMeVectorFromMatrix(boltMatrix, NEGATIVE_X, axis[0]);
 		//front (was NEGATIVE_Y, but the md3->glm exporter screws up this tag somethin' awful)
-		gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, NEGATIVE_Y, axis[1]); //right
-		gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, POSITIVE_Z, axis[2]); //up
+		gi.G2API_GiveMeVectorFromMatrix(boltMatrix, NEGATIVE_Y, axis[1]); //right
+		gi.G2API_GiveMeVectorFromMatrix(boltMatrix, POSITIVE_Z, axis[2]); //up
 	}
 
 	if (tag_hack)
@@ -14252,7 +14252,7 @@ void CG_Player(centity_t* cent)
 			if (chair && chair->gent)
 			{
 				vec3_t temp;
-				mdxaBone_t bolt_matrix;
+				mdxaBone_t boltMatrix;
 
 				//NOTE: call this so it updates on the server and client
 				if (chair->gent->bounceCount)
@@ -14291,14 +14291,14 @@ void CG_Player(centity_t* cent)
 
 				// Getting the seat bolt here
 				gi.G2API_GetBoltMatrix(chair->gent->ghoul2, chair->gent->playerModel, chair->gent->headBolt,
-					&bolt_matrix, chair->gent->s.apos.trBase, chair->gent->currentOrigin, cg.time,
+					&boltMatrix, chair->gent->s.apos.trBase, chair->gent->currentOrigin, cg.time,
 					cgs.model_draw, chair->currentState.modelScale);
 
 				if (chair->gent->bounceCount)
 				{
 					//put behind it, not in chair
-					gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, ent.origin);
-					gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, NEGATIVE_Y, chair->gent->pos3);
+					gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, ent.origin);
+					gi.G2API_GiveMeVectorFromMatrix(boltMatrix, NEGATIVE_Y, chair->gent->pos3);
 					chair->gent->pos3[2] = 0;
 					VectorNormalizeFast(chair->gent->pos3);
 					VectorMA(ent.origin, -44.0f, chair->gent->pos3, ent.origin);
@@ -14312,10 +14312,10 @@ void CG_Player(centity_t* cent)
 				{
 					//sitting in it
 					// Storing ent position, bolt position, and bolt axis
-					gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, ent.origin);
+					gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, ent.origin);
 					VectorCopy(ent.origin, chair->gent->pos2);
-					gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, POSITIVE_Y, chair->gent->pos3);
-					gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, NEGATIVE_Z, chair->gent->pos4);
+					gi.G2API_GiveMeVectorFromMatrix(boltMatrix, POSITIVE_Y, chair->gent->pos3);
+					gi.G2API_GiveMeVectorFromMatrix(boltMatrix, NEGATIVE_Z, chair->gent->pos4);
 
 					AnglesToAxis(cent->lerpAngles, ent.axis);
 					VectorCopy(cent->lerpAngles, tempAngles); //tempAngles is needed a lot below
@@ -14335,11 +14335,11 @@ void CG_Player(centity_t* cent)
 			centity_t* veh_ent = &cg_entities[cent->gent->owner->s.number];
 			CG_CalcEntityLerpPositions(veh_ent);
 			// Get the driver tag.
-			mdxaBone_t bolt_matrix;
+			mdxaBone_t boltMatrix;
 			gi.G2API_GetBoltMatrix(veh_ent->gent->ghoul2, veh_ent->gent->playerModel, veh_ent->gent->crotchBolt,
-				&bolt_matrix, veh_ent->lerpAngles, veh_ent->lerpOrigin,
+				&boltMatrix, veh_ent->lerpAngles, veh_ent->lerpOrigin,
 				cg.time ? cg.time : level.time, nullptr, veh_ent->currentState.modelScale);
-			gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, ent.origin);
+			gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, ent.origin);
 
 			float savPitch = cent->lerpAngles[PITCH];
 			VectorCopy(veh_ent->lerpAngles, cent->lerpAngles);
@@ -14361,39 +14361,39 @@ void CG_Player(centity_t* cent)
 			centity_t* monster = &cg_entities[cent->gent->activator->s.number];
 			if (monster && monster->gent && monster->gent->inuse && monster->gent->health > 0)
 			{
-				mdxaBone_t bolt_matrix;
+				mdxaBone_t boltMatrix;
 				// Getting the bolt here
 				//in mouth
-				int bolt_index = monster->gent->gutBolt;
+				int boltIndex = monster->gent->gutBolt;
 				if (monster->gent->count == 1)
 				{
 					//in hand
-					bolt_index = monster->gent->handRBolt;
+					boltIndex = monster->gent->handRBolt;
 				}
 				vec3_t ranc_angles = { 0 };
 				ranc_angles[YAW] = monster->lerpAngles[YAW];
-				gi.G2API_GetBoltMatrix(monster->gent->ghoul2, monster->gent->playerModel, bolt_index,
-					&bolt_matrix, ranc_angles, monster->lerpOrigin, cg.time,
+				gi.G2API_GetBoltMatrix(monster->gent->ghoul2, monster->gent->playerModel, boltIndex,
+					&boltMatrix, ranc_angles, monster->lerpOrigin, cg.time,
 					cgs.model_draw, monster->currentState.modelScale);
 				// Storing ent position, bolt position, and bolt axis
-				gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, ent.origin);
+				gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, ent.origin);
 				if (cent->gent->client->ps.eFlags & EF_HELD_BY_WAMPA)
 				{
-					gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, NEGATIVE_Y, ent.axis[0]);
-					gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, POSITIVE_X, ent.axis[1]);
-					gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, POSITIVE_Z, ent.axis[2]);
+					gi.G2API_GiveMeVectorFromMatrix(boltMatrix, NEGATIVE_Y, ent.axis[0]);
+					gi.G2API_GiveMeVectorFromMatrix(boltMatrix, POSITIVE_X, ent.axis[1]);
+					gi.G2API_GiveMeVectorFromMatrix(boltMatrix, POSITIVE_Z, ent.axis[2]);
 				}
 				else if (monster->gent->count == 1)
 				{
-					gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, NEGATIVE_Y, ent.axis[0]);
-					gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, POSITIVE_X, ent.axis[1]);
-					gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, POSITIVE_Z, ent.axis[2]);
+					gi.G2API_GiveMeVectorFromMatrix(boltMatrix, NEGATIVE_Y, ent.axis[0]);
+					gi.G2API_GiveMeVectorFromMatrix(boltMatrix, POSITIVE_X, ent.axis[1]);
+					gi.G2API_GiveMeVectorFromMatrix(boltMatrix, POSITIVE_Z, ent.axis[2]);
 				}
 				else
 				{
-					gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, POSITIVE_Z, ent.axis[0]);
-					gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, NEGATIVE_Y, ent.axis[1]);
-					gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, NEGATIVE_X, ent.axis[2]);
+					gi.G2API_GiveMeVectorFromMatrix(boltMatrix, POSITIVE_Z, ent.axis[0]);
+					gi.G2API_GiveMeVectorFromMatrix(boltMatrix, NEGATIVE_Y, ent.axis[1]);
+					gi.G2API_GiveMeVectorFromMatrix(boltMatrix, NEGATIVE_X, ent.axis[2]);
 				}
 				//FIXME: this is messing up our axis and turning us inside-out
 				if (cent->gent->client->isRagging)
@@ -14431,20 +14431,20 @@ void CG_Player(centity_t* cent)
 			centity_t* sand_creature = &cg_entities[cent->gent->activator->s.number];
 			if (sand_creature && sand_creature->gent)
 			{
-				mdxaBone_t bolt_matrix;
+				mdxaBone_t boltMatrix;
 				// Getting the bolt here
 				//in hand
 				vec3_t sc_angles = { 0 };
 				sc_angles[YAW] = sand_creature->lerpAngles[YAW];
 				gi.G2API_GetBoltMatrix(sand_creature->gent->ghoul2, sand_creature->gent->playerModel,
 					sand_creature->gent->gutBolt,
-					&bolt_matrix, sc_angles, sand_creature->lerpOrigin, cg.time,
+					&boltMatrix, sc_angles, sand_creature->lerpOrigin, cg.time,
 					cgs.model_draw, sand_creature->currentState.modelScale);
 				// Storing ent position, bolt position, and bolt axis
-				gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, ent.origin);
-				gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, NEGATIVE_Y, ent.axis[0]);
-				gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, NEGATIVE_X, ent.axis[1]);
-				gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, POSITIVE_Z, ent.axis[2]);
+				gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, ent.origin);
+				gi.G2API_GiveMeVectorFromMatrix(boltMatrix, NEGATIVE_Y, ent.axis[0]);
+				gi.G2API_GiveMeVectorFromMatrix(boltMatrix, NEGATIVE_X, ent.axis[1]);
+				gi.G2API_GiveMeVectorFromMatrix(boltMatrix, POSITIVE_Z, ent.axis[2]);
 				//FIXME: this is messing up our axis and turning us inside-out
 				if (cent->gent->client->isRagging)
 				{
@@ -14555,40 +14555,40 @@ void CG_Player(centity_t* cent)
 		}
 		//now try to get the right data
 
-		mdxaBone_t bolt_matrix;
+		mdxaBone_t boltMatrix;
 		vec3_t G2Angles = { 0, tempAngles[YAW], 0 };
 
 		if (cent->gent->handRBolt != -1)
 		{
 			//Get handRPoint
 			gi.G2API_GetBoltMatrix(cent->gent->ghoul2, cent->gent->playerModel, cent->gent->handRBolt,
-				&bolt_matrix, G2Angles, ent.origin, cg.time,
+				&boltMatrix, G2Angles, ent.origin, cg.time,
 				cgs.model_draw, cent->currentState.modelScale);
-			gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, cent->gent->client->renderInfo.handRPoint);
+			gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, cent->gent->client->renderInfo.handRPoint);
 		}
 		if (cent->gent->handLBolt != -1)
 		{
 			//always get handLPoint too...?
 			gi.G2API_GetBoltMatrix(cent->gent->ghoul2, cent->gent->playerModel, cent->gent->handLBolt,
-				&bolt_matrix, G2Angles, ent.origin, cg.time,
+				&boltMatrix, G2Angles, ent.origin, cg.time,
 				cgs.model_draw, cent->currentState.modelScale);
-			gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, cent->gent->client->renderInfo.handLPoint);
+			gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, cent->gent->client->renderInfo.handLPoint);
 		}
 		if (cent->gent->footLBolt != -1)
 		{
 			//get the feet
 			gi.G2API_GetBoltMatrix(cent->gent->ghoul2, cent->gent->playerModel, cent->gent->footLBolt,
-				&bolt_matrix, G2Angles, ent.origin, cg.time,
+				&boltMatrix, G2Angles, ent.origin, cg.time,
 				cgs.model_draw, cent->currentState.modelScale);
-			gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, cent->gent->client->renderInfo.footLPoint);
+			gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, cent->gent->client->renderInfo.footLPoint);
 		}
 
 		if (cent->gent->footRBolt != -1)
 		{
 			gi.G2API_GetBoltMatrix(cent->gent->ghoul2, cent->gent->playerModel, cent->gent->footRBolt,
-				&bolt_matrix, G2Angles, ent.origin, cg.time,
+				&boltMatrix, G2Angles, ent.origin, cg.time,
 				cgs.model_draw, cent->currentState.modelScale);
-			gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, cent->gent->client->renderInfo.footRPoint);
+			gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, cent->gent->client->renderInfo.footRPoint);
 		}
 
 		//Restrict True View Model changes to the player and do the True View camera view work.
@@ -14993,21 +14993,21 @@ void CG_Player(centity_t* cent)
 			else
 			{
 				//FIXME: if head is missing, we should let the dismembered head set our eyePoint...
-				gi.G2API_GetBoltMatrix(cent->gent->ghoul2, cent->gent->playerModel, cent->gent->headBolt, &bolt_matrix,
+				gi.G2API_GetBoltMatrix(cent->gent->ghoul2, cent->gent->playerModel, cent->gent->headBolt, &boltMatrix,
 					tempAngles, ent.origin, cg.time, cgs.model_draw, cent->currentState.modelScale);
-				gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, cent->gent->client->renderInfo.eyePoint);
+				gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, cent->gent->client->renderInfo.eyePoint);
 				if (cent->gent->client->NPC_class == CLASS_RANCOR)
 				{
 					//temp hack
-					gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, POSITIVE_X, temp_axis);
+					gi.G2API_GiveMeVectorFromMatrix(boltMatrix, POSITIVE_X, temp_axis);
 				}
 				else
 				{
-					gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, NEGATIVE_Y, temp_axis);
+					gi.G2API_GiveMeVectorFromMatrix(boltMatrix, NEGATIVE_Y, temp_axis);
 				}
 				vectoangles(temp_axis, cent->gent->client->renderInfo.eyeAngles);
 				//estimate where the neck would be...
-				gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, NEGATIVE_Z, temp_axis); //go down to find neck
+				gi.G2API_GiveMeVectorFromMatrix(boltMatrix, NEGATIVE_Z, temp_axis); //go down to find neck
 				VectorMA(cent->gent->client->renderInfo.eyePoint, 8, temp_axis,
 					cent->gent->client->renderInfo.headPoint);
 
@@ -15018,10 +15018,10 @@ void CG_Player(centity_t* cent)
 			//Get torsoPoint & torsoAngles
 			if (cent->gent->chestBolt >= 0)
 			{
-				gi.G2API_GetBoltMatrix(cent->gent->ghoul2, cent->gent->playerModel, cent->gent->chestBolt, &bolt_matrix,
+				gi.G2API_GetBoltMatrix(cent->gent->ghoul2, cent->gent->playerModel, cent->gent->chestBolt, &boltMatrix,
 					tempAngles, ent.origin, cg.time, cgs.model_draw, cent->currentState.modelScale);
-				gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, cent->gent->client->renderInfo.torsoPoint);
-				gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, NEGATIVE_Z, temp_axis);
+				gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, cent->gent->client->renderInfo.torsoPoint);
+				gi.G2API_GiveMeVectorFromMatrix(boltMatrix, NEGATIVE_Z, temp_axis);
 				vectoangles(temp_axis, cent->gent->client->renderInfo.torsoAngles);
 			}
 			else
@@ -15033,9 +15033,9 @@ void CG_Player(centity_t* cent)
 			if (cent->gent->crotchBolt >= 0)
 			{
 				gi.G2API_GetBoltMatrix(cent->gent->ghoul2, cent->gent->playerModel, cent->gent->crotchBolt,
-					&bolt_matrix,
+					&boltMatrix,
 					tempAngles, ent.origin, cg.time, cgs.model_draw, cent->currentState.modelScale);
-				gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN, cent->gent->client->renderInfo.crotchPoint);
+				gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, cent->gent->client->renderInfo.crotchPoint);
 			}
 			else
 			{
@@ -15131,14 +15131,14 @@ void CG_Player(centity_t* cent)
 					}
 					else
 					{
-						gi.G2API_GetBoltMatrix(cent->gent->ghoul2, cent->gent->playerModel, bolt, &bolt_matrix,
+						gi.G2API_GetBoltMatrix(cent->gent->ghoul2, cent->gent->playerModel, bolt, &boltMatrix,
 							tempAngles, ent.origin, cg.time, cgs.model_draw,
 							cent->currentState.modelScale);
 
 						// work the matrix axis stuff into the original axis and origins used.
-						gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, ORIGIN,
+						gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN,
 							cent->gent->client->renderInfo.muzzle_point);
-						gi.G2API_GiveMeVectorFromMatrix(bolt_matrix, NEGATIVE_Y,
+						gi.G2API_GiveMeVectorFromMatrix(boltMatrix, NEGATIVE_Y,
 							cent->gent->client->renderInfo.muzzleDir);
 					}
 				}
