@@ -69,7 +69,8 @@ void R_DlightBmodel(const bmodel_t* bmodel, const bool NoLight)
 	if (!NoLight)
 	{
 		int j;
-		for (i = 0; i < tr.refdef.num_dlights; i++) {
+		for (i = 0; i < tr.refdef.num_dlights; i++)
+		{
 			const dlight_t* dl = &tr.refdef.dlights[i];
 
 			// see if the point is close enough to the bounds to matter
@@ -305,10 +306,6 @@ by the Calc_* functions
 void R_SetupEntityLighting(const trRefdef_t* refdef, trRefEntity_t* ent)
 {
 	int				i;
-	dlight_t* dl;
-	float			power;
-	vec3_t			dir;
-	float			d;
 	vec3_t			lightDir;
 	vec3_t			lightOrigin;
 
@@ -345,43 +342,34 @@ void R_SetupEntityLighting(const trRefdef_t* refdef, trRefEntity_t* ent)
 	}
 
 	// bonus items and view weapons have a fixed minimum add
-	if (1 /* ent->e.renderfx & RF_MINLIGHT */) {
-		// give everything a minimum light add
-		ent->ambientLight[0] += tr.identityLight * 32;
-		ent->ambientLight[1] += tr.identityLight * 32;
-		ent->ambientLight[2] += tr.identityLight * 32;
-	}
-
 	if (ent->e.renderfx & RF_MINLIGHT)
-	{ //the minlight flag is now for items rotating on their holo thing
-		if (ent->e.shaderRGBA[0] == 255 &&
-			ent->e.shaderRGBA[1] == 255 &&
-			ent->e.shaderRGBA[2] == 0)
-		{
-			ent->ambientLight[0] += tr.identityLight * 255;
-			ent->ambientLight[1] += tr.identityLight * 255;
-			ent->ambientLight[2] += tr.identityLight * 0;
-		}
-		else
-		{
-			ent->ambientLight[0] += tr.identityLight * 16;
-			ent->ambientLight[1] += tr.identityLight * 96;
-			ent->ambientLight[2] += tr.identityLight * 150;
-		}
+	{
+		ent->ambientLight[0] += tr.identityLight * 96;
+		ent->ambientLight[1] += tr.identityLight * 96;
+		ent->ambientLight[2] += tr.identityLight * 96;
+	}
+	else
+	{
+		// give everything a minimum light add
+		ent->ambientLight[0] += tr.identityLight * 16;
+		ent->ambientLight[1] += tr.identityLight * 16;
+		ent->ambientLight[2] += tr.identityLight * 16;
 	}
 
 	//
 	// modify the light by dynamic lights
 	//
-	d = VectorLength(ent->directedLight);
+	float d = VectorLength(ent->directedLight);
 	VectorScale(ent->lightDir, d, lightDir);
 
-	for (i = 0; i < refdef->num_dlights; i++) {
-		dl = &refdef->dlights[i];
+	for (i = 0; i < refdef->num_dlights; i++) 
+	{
+		vec3_t dir;
+		const dlight_t* dl = &refdef->dlights[i];
 		VectorSubtract(dl->origin, lightOrigin, dir);
 		d = VectorNormalize(dir);
 
-		power = DLIGHT_AT_RADIUS * (dl->radius * dl->radius);
+		const float power = DLIGHT_AT_RADIUS * (dl->radius * dl->radius);
 		if (d < DLIGHT_MINIMUM_RADIUS) {
 			d = DLIGHT_MINIMUM_RADIUS;
 		}
@@ -403,10 +391,10 @@ void R_SetupEntityLighting(const trRefdef_t* refdef, trRefEntity_t* ent)
 	}
 
 	// save out the byte packet version
-	((byte*)&ent->ambientLightInt)[0] = Q_ftol(ent->ambientLight[0]);
-	((byte*)&ent->ambientLightInt)[1] = Q_ftol(ent->ambientLight[1]);
-	((byte*)&ent->ambientLightInt)[2] = Q_ftol(ent->ambientLight[2]);
-	((byte*)&ent->ambientLightInt)[3] = 0xff;
+	reinterpret_cast<byte*>(&ent->ambientLightInt)[0] = Q_ftol(ent->ambientLight[0]);
+	reinterpret_cast<byte*>(&ent->ambientLightInt)[1] = Q_ftol(ent->ambientLight[1]);
+	reinterpret_cast<byte*>(&ent->ambientLightInt)[2] = Q_ftol(ent->ambientLight[2]);
+	reinterpret_cast<byte*>(&ent->ambientLightInt)[3] = 0xff;
 
 	// transform the direction to local space
 	VectorNormalize(lightDir);

@@ -48,7 +48,7 @@ R_InitNextFrame
 
 ====================
 */
-void R_InitNextFrame() {
+void R_InitNextFrame(void) {
 	backEndData->commands.used = 0;
 
 	r_firstSceneDrawSurf = 0;
@@ -232,7 +232,8 @@ RE_AddLightToScene
 
 =====================
 */
-void RE_AddLightToScene(const vec3_t org, const float intensity, const float r, const float g, const float b) {
+void RE_AddLightToScene(const vec3_t org, const float intensity, const float r, const float g, const float b)
+{
 	if (!tr.registered) {
 		return;
 	}

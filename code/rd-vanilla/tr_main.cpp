@@ -1544,7 +1544,7 @@ void R_RenderView(const viewParms_t* parms)
 	tr.viewParms.frameSceneNum = tr.frameSceneNum;
 	tr.viewParms.frameCount = tr.frameCount;
 
-	const int first_draw_surf = tr.refdef.numDrawSurfs;
+	const int firstDrawSurf = tr.refdef.numDrawSurfs;
 
 	tr.viewCount++;
 
@@ -1564,13 +1564,13 @@ void R_RenderView(const viewParms_t* parms)
 	// if we overflowed MAX_DRAWSURFS, the drawsurfs
 	// wrapped around in the buffer and we will be missing
 	// the first surfaces, not the last ones
-	int num_draw_surfs = tr.refdef.numDrawSurfs;
-	if (num_draw_surfs > MAX_DRAWSURFS)
+	int numDrawSurfs = tr.refdef.numDrawSurfs;
+	if (numDrawSurfs > MAX_DRAWSURFS)
 	{
-		num_draw_surfs = MAX_DRAWSURFS;
+		numDrawSurfs = MAX_DRAWSURFS;
 	}
 
-	R_SortDrawSurfs(tr.refdef.drawSurfs + first_draw_surf, num_draw_surfs - first_draw_surf);
+	R_SortDrawSurfs(tr.refdef.drawSurfs + firstDrawSurf, numDrawSurfs - firstDrawSurf);
 
 	// draw main system development information (surface outlines, etc)
 	R_DebugGraphics();

@@ -1171,6 +1171,7 @@ extern cvar_t* r_inGameVideo; // controls whether in game video should be draw
 extern cvar_t* r_fastsky; // controls whether sky should be cleared or drawn
 extern cvar_t* r_drawSun; // controls drawing of sun quad
 extern cvar_t* r_dynamiclight; // dynamic lights enabled/disabled
+extern cvar_t* r_Turn_Off_dynamiclight; // dynamic lights enabled/disabled
 // rjr - removed for hacking extern cvar_t	*r_dlightBacks;			// dlight non-facing surfaces for continuity
 
 extern cvar_t* r_norefresh; // bypasses the ref rendering
@@ -1428,18 +1429,18 @@ extern const int lightmapsVertex[MAXLIGHTMAPS];
 extern const int lightmapsFullBright[MAXLIGHTMAPS];
 extern const byte stylesDefault[MAXLIGHTMAPS];
 
-qhandle_t RE_RegisterShaderLightMap(const char* name, const int* lightmap_index, const byte* styles);
+qhandle_t RE_RegisterShaderLightMap(const char* name, const int* lightmapIndexes, const byte* styles);
 qhandle_t RE_RegisterShader(const char* name);
 qhandle_t RE_RegisterShaderNoMip(const char* name);
 const char* RE_ShaderNameFromIndex(int index);
-qhandle_t RE_RegisterShaderFromImage(const char* name, const int* lightmap_index, const byte* styles, image_t* image);
+qhandle_t RE_RegisterShaderFromImage(const char* name, const int* lightmapIndexes, const byte* styles, image_t* image);
 
-shader_t* R_FindShader(const char* name, const int* lightmap_index, const byte* styles, qboolean mip_raw_image);
-shader_t* R_GetShaderByHandle(qhandle_t hShader);
+shader_t* R_FindShader(const char* name, const int* lightmapIndexes, const byte* styles, qboolean mip_raw_image);
+shader_t* R_GetShaderByHandle(const qhandle_t hShader);
 shader_t* R_FindShaderByName(const char* name);
 void R_InitShaders(const qboolean server);
-void R_ShaderList_f();
-void R_RemapShader(const char* shader_name, const char* new_shader_name, const char* time_offset);
+void R_ShaderList_f(void);
+void R_RemapShader(const char* shaderName, const char* newShaderName, const char* timeOffset);
 
 /*
 ====================================================================
@@ -1610,8 +1611,8 @@ void RE_AddPolyToScene(const qhandle_t hShader, const int numVerts, const polyVe
 
 void RE_AddDecalToScene(const qhandle_t decalShader, const vec3_t origin, const vec3_t dir, const float orientation, const float red, const float green, const float blue, const float alpha, qboolean alphaFade, const float radius, const qboolean temporary);
 
-void RE_AddLightToScene(const vec3_t org, float intensity, float r, float g, float b);
-void RE_AddAdditiveLightToScene(const vec3_t org, float intensity, float r, float g, float b);
+void RE_AddLightToScene(const vec3_t org, const float intensity, const float r, const float g, const float b);
+void RE_AddAdditiveLightToScene(const vec3_t org, const float intensity, const float r, const float g, const float b);
 void RE_RenderScene(const refdef_t* fd);
 
 /*

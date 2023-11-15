@@ -1679,6 +1679,19 @@ static void RB_IterateStagesGeneric(const shaderCommands_t* input)
 			qglColorPointer(4, GL_UNSIGNED_BYTE, 0, input->svars.colors);
 		}
 
+		if (pStage->bundle[0].isLightmap && r_debugStyle->integer >= 0)
+		{
+			if (pStage->lightmapStyle != r_debugStyle->integer)
+			{
+				if (pStage->lightmapStyle == 0)
+				{
+					GL_State(GLS_DSTBLEND_ZERO | GLS_SRCBLEND_ZERO);
+					R_DrawElements(input->numIndexes, input->indexes);
+				}
+				continue;
+			}
+		}
+
 		//
 		// do multitexture
 		//

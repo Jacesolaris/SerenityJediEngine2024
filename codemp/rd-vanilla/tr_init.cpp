@@ -63,6 +63,7 @@ cvar_t* r_inGameVideo;
 cvar_t* r_fastsky;
 cvar_t* r_drawSun;
 cvar_t* r_dynamiclight;
+cvar_t* r_Turn_Off_dynamiclight;
 // rjr - removed for hacking cvar_t	*r_dlightBacks;
 
 cvar_t* r_lodbias;
@@ -1617,6 +1618,7 @@ void R_Register()
 	r_inGameVideo = ri->Cvar_Get("r_inGameVideo", "1", CVAR_ARCHIVE_ND, "");
 	r_drawSun = ri->Cvar_Get("r_drawSun", "0", CVAR_ARCHIVE_ND, "");
 	r_dynamiclight = ri->Cvar_Get("r_dynamiclight", "1", CVAR_ARCHIVE, "");
+	r_Turn_Off_dynamiclight = ri->Cvar_Get("r_turn_off_dynamiclight", "0", CVAR_ARCHIVE, "");
 	// rjr - removed for hacking
 //	r_dlightBacks						= ri->Cvar_Get( "r_dlightBacks",					"1",						CVAR_CHEAT, "" );
 	r_finish = ri->Cvar_Get("r_finish", "0", CVAR_ARCHIVE_ND, "");

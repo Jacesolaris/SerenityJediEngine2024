@@ -550,7 +550,7 @@ typedef struct cgameImport_s {
 	// renderer
 	void			(*R_AddAdditiveLightToScene)			(const vec3_t org, float intensity, float r, float g, float b);
 	void			(*R_AddDecalToScene)					(qhandle_t shader, const vec3_t origin, const vec3_t dir, float orientation, float r, float g, float b, float a, qboolean alphaFade, float radius, qboolean temporary);
-	void			(*R_AddLightToScene)					(const vec3_t org, float intensity, float r, float g, float b);
+	void			(*R_AddLightToScene)					(const vec3_t org, const float intensity, const float r, const float g, const float b);
 	void			(*R_AddPolysToScene)					(qhandle_t hShader, int numVerts, const polyVert_t* verts, int num);
 	void			(*R_AddRefEntityToScene)				(const refEntity_t* re);
 	unsigned int	(*R_AnyLanguage_ReadCharFromString)		(const char* psText, int* piAdvanceCount, qboolean* pbIsTrailingPunctuation);

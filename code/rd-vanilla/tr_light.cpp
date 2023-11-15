@@ -379,7 +379,8 @@ Calculates all the lighting values that will be used
 by the Calc_* functions
 =================
 */
-void R_SetupEntityLighting(const trRefdef_t* refdef, trRefEntity_t* ent) {
+void R_SetupEntityLighting(const trRefdef_t* refdef, trRefEntity_t* ent) 
+{
 	int				i;
 	vec3_t			lightDir;
 	vec3_t			lightOrigin;

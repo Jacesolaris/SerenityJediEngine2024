@@ -169,7 +169,8 @@ instead of using the single glDrawElements call that may be inefficient
 without compiled vertex arrays.
 ==================
 */
-static void R_DrawElements(const int numIndexes, const glIndex_t* indexes) {
+static void R_DrawElements(const int numIndexes, const glIndex_t* indexes)
+{
 	int primitives = r_primitives->integer;
 
 	// default is to use triangles if compiled vertex arrays are present

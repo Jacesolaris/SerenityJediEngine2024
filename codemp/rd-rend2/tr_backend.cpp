@@ -525,7 +525,7 @@ Any mirrored or portaled views have already been drawn, so prepare
 to actually render the visible surfaces for this view
 =================
 */
-void RB_BeginDrawingView(void) {
+static void RB_BeginDrawingView(void) {
 	int clearBits = 0;
 
 	// we will need to change the projection matrix before drawing

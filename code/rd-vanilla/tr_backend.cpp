@@ -430,7 +430,7 @@ Any mirrored or portaled views have already been drawn, so prepare
 to actually render the visible surfaces for this view
 =================
 */
-static void RB_BeginDrawingView()
+static void RB_BeginDrawingView(void)
 {
 	int clearBits = GL_DEPTH_BUFFER_BIT;
 
@@ -627,7 +627,7 @@ using postRender_t = struct
 static postRender_t g_postRenders[MAX_POST_RENDERS];
 static int g_numPostRenders = 0;
 
-void RB_RenderDrawSurfList(drawSurf_t* drawSurfs, const int numDrawSurfs)
+static void RB_RenderDrawSurfList(drawSurf_t* drawSurfs, const int numDrawSurfs)
 {
 	shader_t* shader;
 	int				fogNum;

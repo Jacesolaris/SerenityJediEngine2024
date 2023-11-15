@@ -118,7 +118,8 @@ added to the sorting list.
 This will also allow mirrors on both sides of a model without recursion.
 ================
 */
-static qboolean	R_CullSurface(surfaceType_t* surface, shader_t* shader) {
+static qboolean	R_CullSurface(surfaceType_t* surface, const shader_t* shader)
+{
 	srfSurfaceFace_t* sface;
 	float			d;
 
@@ -252,17 +253,15 @@ static qboolean	R_CullSurface(surfaceType_t* surface, shader_t* shader) {
 	return qfalse;
 }
 
-static int R_DlightFace(srfSurfaceFace_t* face, int dlightBits) {
-	float		d;
-	int			i;
-	dlight_t* dl;
-
-	for (i = 0; i < tr.refdef.num_dlights; i++) {
-		if (!(dlightBits & (1 << i))) {
+static int R_DlightFace(srfSurfaceFace_t* face, int dlightBits)
+{
+	for (int i = 0; i < tr.refdef.num_dlights; i++)
+	{
+		if (!(dlightBits & 1 << i)) {
 			continue;
 		}
-		dl = &tr.refdef.dlights[i];
-		d = DotProduct(dl->origin, face->plane.normal) - face->plane.dist;
+		const dlight_t* dl = &tr.refdef.dlights[i];
+		const float d = DotProduct(dl->origin, face->plane.normal) - face->plane.dist;
 		if (!VectorCompare(face->plane.normal, vec3_origin) && (d < -dl->radius || d > dl->radius)) {
 			// dlight doesn't reach the plane
 			dlightBits &= ~(1 << i);
@@ -277,15 +276,15 @@ static int R_DlightFace(srfSurfaceFace_t* face, int dlightBits) {
 	return dlightBits;
 }
 
-static int R_DlightGrid(srfGridMesh_t* grid, int dlightBits) {
-	int			i;
-	dlight_t* dl;
-
-	for (i = 0; i < tr.refdef.num_dlights; i++) {
-		if (!(dlightBits & (1 << i))) {
+static int R_DlightGrid(srfGridMesh_t* grid, int dlightBits) 
+{
+	for (int i = 0; i < tr.refdef.num_dlights; i++)
+	{
+		if (!(dlightBits & 1 << i))
+		{
 			continue;
 		}
-		dl = &tr.refdef.dlights[i];
+		const dlight_t* dl = &tr.refdef.dlights[i];
 		if (dl->origin[0] - dl->radius > grid->meshBounds[1][0]
 			|| dl->origin[0] + dl->radius < grid->meshBounds[0][0]
 			|| dl->origin[1] - dl->radius > grid->meshBounds[1][1]
@@ -304,7 +303,6 @@ static int R_DlightGrid(srfGridMesh_t* grid, int dlightBits) {
 	grid->dlightBits = dlightBits;
 	return dlightBits;
 }
-
 
 static int R_DlightTrisurf(srfTriangles_t* surf, int dlightBits) {
 	// FIXME: more dlight culling to trisurfs...
@@ -348,15 +346,16 @@ that is touched by one or more dlights, so try to throw out
 more dlights if possible.
 ====================
 */
-static int R_DlightSurface(msurface_t* surf, int dlightBits) {
+static int R_DlightSurface(msurface_t* surf, int dlightBits) 
+{
 	if (*surf->data == SF_FACE) {
-		dlightBits = R_DlightFace((srfSurfaceFace_t*)surf->data, dlightBits);
+		dlightBits = R_DlightFace(reinterpret_cast<srfSurfaceFace_t*>(surf->data), dlightBits);
 	}
 	else if (*surf->data == SF_GRID) {
-		dlightBits = R_DlightGrid((srfGridMesh_t*)surf->data, dlightBits);
+		dlightBits = R_DlightGrid(reinterpret_cast<srfGridMesh_t*>(surf->data), dlightBits);
 	}
 	else if (*surf->data == SF_TRIANGLES) {
-		dlightBits = R_DlightTrisurf((srfTriangles_t*)surf->data, dlightBits);
+		dlightBits = R_DlightTrisurf(reinterpret_cast<srfTriangles_t*>(surf->data), dlightBits);
 	}
 	else {
 		dlightBits = 0;
@@ -381,7 +380,7 @@ static float g_playerHeight = 0.0f;
 R_AddWorldSurface
 ======================
 */
-static void R_AddWorldSurface(msurface_t* surf, int dlightBits, qboolean noViewCount = qfalse)
+static void R_AddWorldSurface(msurface_t* surf, int dlightBits, const qboolean noViewCount = qfalse)
 {
 	if (!noViewCount)
 	{
@@ -390,139 +389,35 @@ static void R_AddWorldSurface(msurface_t* surf, int dlightBits, qboolean noViewC
 			// already in this view, but lets make sure all the dlight bits are set
 			if (*surf->data == SF_FACE)
 			{
-				((srfSurfaceFace_t*)surf->data)->dlightBits |= dlightBits;
+				reinterpret_cast<srfSurfaceFace_t*>(surf->data)->dlightBits |= dlightBits;
 			}
 			else if (*surf->data == SF_GRID)
 			{
-				((srfGridMesh_t*)surf->data)->dlightBits |= dlightBits;
+				reinterpret_cast<srfGridMesh_t*>(surf->data)->dlightBits |= dlightBits;
 			}
 			else if (*surf->data == SF_TRIANGLES)
 			{
-				((srfTriangles_t*)surf->data)->dlightBits |= dlightBits;
+				reinterpret_cast<srfTriangles_t*>(surf->data)->dlightBits |= dlightBits;
 			}
 			return;
 		}
 		surf->viewCount = tr.viewCount;
-		// FIXME: bmodel fog?
 	}
-
-	/*
-	if (r_shadows->integer == 2)
-	{
-		dlightBits = R_DlightSurface( surf, dlightBits );
-		//dlightBits = ( dlightBits != 0 );
-		R_AddDrawSurf( surf->data, tr.shadowShader, surf->fogIndex, dlightBits );
-	}
-	*/
-	//world shadows?
 
 	// try to cull before dlighting or adding
-#ifdef _ALT_AUTOMAP_METHOD
-	if (!tr_drawingAutoMap && R_CullSurface(surf->data, surf->shader))
-#else
 	if (R_CullSurface(surf->data, surf->shader))
-#endif
 	{
 		return;
 	}
 
 	// check for dlighting
-	if (dlightBits) {
+	if (dlightBits)
+	{
 		dlightBits = R_DlightSurface(surf, dlightBits);
-		dlightBits = (dlightBits != 0);
+		dlightBits = dlightBits != 0;
 	}
 
-#ifdef _ALT_AUTOMAP_METHOD
-	if (tr_drawingAutoMap)
-	{
-		//	if (g_playerHeight != g_lastHeight ||
-		//		!g_lastHeightValid)
-		if (*surf->data == SF_FACE)
-		{ //only do this if we need to
-			bool completelyTransparent = true;
-			int i = 0;
-			srfSurfaceFace_t* face = (srfSurfaceFace_t*)surf->data;
-			byte* indices = (byte*)(face + face->ofsIndices);
-			float* point;
-			vec3_t color;
-			float alpha;
-			float e;
-			bool polyStarted = false;
-
-			while (i < face->numIndices)
-			{
-				point = &face->points[indices[i]][0];
-
-				//base the color on the elevation... for now, just check the first point height
-				if (point[2] < g_playerHeight)
-				{
-					e = point[2] - g_playerHeight;
-				}
-				else
-				{
-					e = g_playerHeight - point[2];
-				}
-				if (e < 0.0f)
-				{
-					e = -e;
-				}
-
-				//set alpha and color based on relative height of point
-				alpha = e / 256.0f;
-				e /= 512.0f;
-
-				//cap color
-				if (e > 1.0f)
-				{
-					e = 1.0f;
-				}
-				else if (e < 0.0f)
-				{
-					e = 0.0f;
-				}
-				VectorSet(color, e, 1.0f - e, 0.0f);
-
-				//cap alpha
-				if (alpha > 1.0f)
-				{
-					alpha = 1.0f;
-				}
-				else if (alpha < 0.0f)
-				{
-					alpha = 0.0f;
-				}
-
-				if (alpha != 1.0f)
-				{ //this point is not entirely alpha'd out, so still draw the surface
-					completelyTransparent = false;
-				}
-
-				if (!completelyTransparent)
-				{
-					if (!polyStarted)
-					{
-						qglBegin(GL_POLYGON);
-						polyStarted = true;
-					}
-
-					qglColor4f(color[0], color[1], color[2], 1.0f - alpha);
-					qglVertex3f(point[i], point[i], point[2]);
-				}
-
-				i++;
-			}
-
-			if (polyStarted)
-			{
-				qglEnd();
-			}
-		}
-	}
-	else
-#endif
-	{
-		R_AddDrawSurf(surf->data, surf->shader, surf->fogIndex, dlightBits);
-	}
+	R_AddDrawSurf(surf->data, surf->shader, surf->fogIndex, dlightBits);
 }
 
 /*
@@ -558,22 +453,14 @@ void R_AddBrushModelSurfaces(trRefEntity_t* ent) {
 		R_SetupEntityLighting(&tr.refdef, ent);
 	}
 
-	//rww - Take this into account later?
-//	if ( !ri.Cvar_VariableIntegerValue( "com_RMG" ) )
-//	{	// don't dlight bmodels on rmg, as multiple copies of the same instance will light up
 	R_DlightBmodel(bmodel, false);
-	//	}
-	//	else
-	//	{
-	//		R_DlightBmodel( bmodel, true );
-	//	}
 
 	for (i = 0; i < bmodel->numSurfaces; i++) {
 		R_AddWorldSurface(bmodel->firstSurface + i, tr.currentEntity->dlightBits, qtrue);
 	}
 }
 
-float GetQuadArea(vec3_t v1, vec3_t v2, vec3_t v3, vec3_t v4)
+static float GetQuadArea(vec3_t v1, vec3_t v2, vec3_t v3, vec3_t v4)
 {
 	vec3_t	vec1, vec2, dis1, dis2;
 
@@ -1478,7 +1365,7 @@ static void R_RecursiveWorldNode(mnode_t* node, int planeBits, int dlightBits)
 		node = node->children[1];
 		dlightBits = newDlights[1];
 	}
-	while (1);
+	while (true);
 	{
 		// leaf node, so add mark surfaces
 		int			c;

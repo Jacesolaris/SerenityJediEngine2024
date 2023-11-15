@@ -3099,14 +3099,14 @@ static void CG_Missile(centity_t* cent)
 		/*else if (s1->weapon == WP_ROCKET_LAUNCHER)
 		{
 			FX_BlastProjectileThink(cent, weapon);
-			cgi_R_AddLightToScene(cent->lerpOrigin, 125, 1.0f, 0.65f, 0.0f);
+			trap->R_AddLightToScene(cent->lerpOrigin, 125, 1.0f, 0.65f, 0.0f);
 			cgi_S_AddLoopingSound(cent->currentState.number, cent->lerpOrigin, vec3_origin, cgs.media.blastSound);
 			return;
 		}
 		else if (s1->weapon == WP_DISRUPTOR)
 		{
 			FX_StrikeProjectileThink(cent, weapon);
-			cgi_R_AddLightToScene(cent->lerpOrigin, 125, 1.0f, 0.65f, 0.0f);
+			trap->R_AddLightToScene(cent->lerpOrigin, 125, 1.0f, 0.65f, 0.0f);
 			return;
 		}*/
 	}

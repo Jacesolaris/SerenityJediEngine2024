@@ -432,7 +432,8 @@ Any mirrored or portaled views have already been drawn, so prepare
 to actually render the visible surfaces for this view
 =================
 */
-void RB_BeginDrawingView(void) {
+static void RB_BeginDrawingView(void) 
+{
 	int clearBits = GL_DEPTH_BUFFER_BIT;
 
 	// sync with gl if needed
@@ -605,7 +606,7 @@ RB_RenderDrawSurfList
 //number of possible surfs we can postrender.
 //note that postrenders lack much of the optimization that the standard sort-render crap does,
 //so it's slower.
-#define MAX_POST_RENDERS	128
+constexpr auto MAX_POST_RENDERS = 128;
 
 using postRender_t = struct postRender_s {
 	int			fogNum;
@@ -656,7 +657,7 @@ static inline bool R_AverageTessXYZ(vec3_t dest)
 }
 #endif
 
-void RB_RenderDrawSurfList(drawSurf_t* drawSurfs, const int numDrawSurfs)
+static void RB_RenderDrawSurfList(drawSurf_t* drawSurfs, const int numDrawSurfs)
 {
 	shader_t* shader;
 	int				fogNum;

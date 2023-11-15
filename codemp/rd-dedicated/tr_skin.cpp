@@ -27,7 +27,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 bool gServerSkinHack = false;
 
-shader_t* R_FindServerShader(const char* name, const int* lightmap_index, const byte* styles);
+shader_t* R_FindServerShader(const char* name, const int* lightmapIndexes, const byte* styles);
 static char* CommaParse(char** data_p);
 /*
 ===============

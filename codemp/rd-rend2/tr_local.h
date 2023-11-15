@@ -2810,7 +2810,7 @@ void R_SetupViewParmsForOrthoRendering(
 	const vec3_t viewBounds[2]);
 void R_SortAndSubmitDrawSurfs(drawSurf_t* drawSurfs, int numDrawSurfs);
 
-void R_RenderView(viewParms_t* parms);
+void R_RenderView(const viewParms_t* parms);
 void R_RenderDlightCubemaps();
 void R_SetupPshadowMaps(trRefdef_t* refdef);
 void R_RenderCubemapSide(int cubemapIndex, int cubemapSide, bool bounce);
@@ -2940,11 +2940,11 @@ extern const int lightmapsFullBright[MAXLIGHTMAPS];
 extern const byte stylesDefault[MAXLIGHTMAPS];
 
 shader_t* R_FindShader(const char* name, const int* lightmapIndexes, const byte* styles, qboolean mipRawImage);
-shader_t* R_GetShaderByHandle(qhandle_t hShader);
+shader_t* R_GetShaderByHandle(const qhandle_t hShader);
 shader_t* R_FindShaderByName(const char* name);
 void R_InitShaders(const qboolean server);
 void R_ShaderList_f(void);
-void R_RemapShader(const char* oldShader, const char* newShader, const char* timeOffset);
+void R_RemapShader(const char* shaderName, const char* newShaderName, const char* timeOffset);
 shader_t* R_CreateShaderFromTextureBundle(
 	const char* name,
 	const textureBundle_t* bundle,
@@ -3254,8 +3254,8 @@ void RE_ClearScene(void);
 void RE_AddRefEntityToScene(const refEntity_t* ent);
 void RE_AddMiniRefEntityToScene(const miniRefEntity_t* miniRefEnt);
 void RE_AddPolyToScene(const qhandle_t hShader, const int numVerts, const polyVert_t* verts, const int numPolys);
-void RE_AddLightToScene(const vec3_t org, float intensity, float r, float g, float b);
-void RE_AddAdditiveLightToScene(const vec3_t org, float intensity, float r, float g, float b);
+void RE_AddLightToScene(const vec3_t org, const float intensity, const float r, const float g, const float b);
+void RE_AddAdditiveLightToScene(const vec3_t org, const float intensity, const float r, const float g, const float b);
 void RE_BeginScene(const refdef_t* fd);
 void RE_RenderScene(const refdef_t* fd);
 void RE_EndScene(void);

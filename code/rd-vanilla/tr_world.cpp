@@ -158,8 +158,10 @@ static qboolean	R_CullSurface(surfaceType_t* surface, const shader_t* shader)
 	return qfalse;
 }
 
-static int R_DlightFace(srfSurfaceFace_t* face, int dlightBits) {
-	for (int i = 0; i < tr.refdef.num_dlights; i++) {
+static int R_DlightFace(srfSurfaceFace_t* face, int dlightBits)
+{
+	for (int i = 0; i < tr.refdef.num_dlights; i++) 
+	{
 		if (!(dlightBits & 1 << i)) {
 			continue;
 		}
@@ -179,9 +181,12 @@ static int R_DlightFace(srfSurfaceFace_t* face, int dlightBits) {
 	return dlightBits;
 }
 
-static int R_DlightGrid(srfGridMesh_t* grid, int dlightBits) {
-	for (int i = 0; i < tr.refdef.num_dlights; i++) {
-		if (!(dlightBits & 1 << i)) {
+static int R_DlightGrid(srfGridMesh_t* grid, int dlightBits)
+{
+	for (int i = 0; i < tr.refdef.num_dlights; i++)
+	{
+		if (!(dlightBits & 1 << i))
+		{
 			continue;
 		}
 		const dlight_t* dl = &tr.refdef.dlights[i];
@@ -273,9 +278,9 @@ static int R_DlightSurface(msurface_t* surf, int dlightBits)
 R_AddWorldSurface
 ======================
 */
-static void R_AddWorldSurface(msurface_t* surf, int dlightBits, const qboolean no_view_count = qfalse)
+static void R_AddWorldSurface(msurface_t* surf, int dlightBits, const qboolean noViewCount = qfalse)
 {
-	if (!no_view_count)
+	if (!noViewCount)
 	{
 		if (surf->viewCount == tr.viewCount)
 		{
@@ -348,7 +353,7 @@ void R_AddBrushModelSurfaces(trRefEntity_t* ent) {
 	}
 }
 
-float GetQuadArea(vec3_t v1, vec3_t v2, vec3_t v3, vec3_t v4)
+static float GetQuadArea(vec3_t v1, vec3_t v2, vec3_t v3, vec3_t v4)
 {
 	vec3_t	vec1, vec2, dis1, dis2;
 
@@ -454,7 +459,8 @@ void RE_GetBModelVerts(const int bmodelIndex, vec3_t* verts, vec3_t normal)
 R_RecursiveWorldNode
 ================
 */
-static void R_RecursiveWorldNode(mnode_t* node, int plane_bits, int dlightBits) {
+static void R_RecursiveWorldNode(mnode_t* node, int planeBits, int dlightBits) 
+{
 	do {
 		int			new_dlights[2]{};
 
@@ -469,53 +475,53 @@ static void R_RecursiveWorldNode(mnode_t* node, int plane_bits, int dlightBits) 
 		if (r_nocull->integer != 1) {
 			int		r;
 
-			if (plane_bits & 1) {
+			if (planeBits & 1) {
 				r = BoxOnPlaneSide(node->mins, node->maxs, &tr.viewParms.frustum[0]);
 				if (r == 2) {
 					return;						// culled
 				}
 				if (r == 1) {
-					plane_bits &= ~1;			// all descendants will also be in front
+					planeBits &= ~1;			// all descendants will also be in front
 				}
 			}
 
-			if (plane_bits & 2) {
+			if (planeBits & 2) {
 				r = BoxOnPlaneSide(node->mins, node->maxs, &tr.viewParms.frustum[1]);
 				if (r == 2) {
 					return;						// culled
 				}
 				if (r == 1) {
-					plane_bits &= ~2;			// all descendants will also be in front
+					planeBits &= ~2;			// all descendants will also be in front
 				}
 			}
 
-			if (plane_bits & 4) {
+			if (planeBits & 4) {
 				r = BoxOnPlaneSide(node->mins, node->maxs, &tr.viewParms.frustum[2]);
 				if (r == 2) {
 					return;						// culled
 				}
 				if (r == 1) {
-					plane_bits &= ~4;			// all descendants will also be in front
+					planeBits &= ~4;			// all descendants will also be in front
 				}
 			}
 
-			if (plane_bits & 8) {
+			if (planeBits & 8) {
 				r = BoxOnPlaneSide(node->mins, node->maxs, &tr.viewParms.frustum[3]);
 				if (r == 2) {
 					return;						// culled
 				}
 				if (r == 1) {
-					plane_bits &= ~8;			// all descendants will also be in front
+					planeBits &= ~8;			// all descendants will also be in front
 				}
 			}
 
-			if (plane_bits & 16) {
+			if (planeBits & 16) {
 				r = BoxOnPlaneSide(node->mins, node->maxs, &tr.viewParms.frustum[4]);
 				if (r == 2) {
 					return;						// culled
 				}
 				if (r == 1) {
-					plane_bits &= ~16;			// all descendants will also be in front
+					planeBits &= ~16;			// all descendants will also be in front
 				}
 			}
 		}
@@ -553,13 +559,13 @@ static void R_RecursiveWorldNode(mnode_t* node, int plane_bits, int dlightBits) 
 			new_dlights[1] = dlightBits;
 		}
 		// recurse down the children, front side first
-		R_RecursiveWorldNode(node->children[0], plane_bits, new_dlights[0]);
+		R_RecursiveWorldNode(node->children[0], planeBits, new_dlights[0]);
 
 		// tail recurse
 		node = node->children[1];
 		dlightBits = new_dlights[1];
-	} while (true);
-
+	}
+	while (true);
 	{
 		tr.pc.c_leafs++;
 
@@ -759,7 +765,8 @@ void R_AddWorldSurfaces(void)
 	ClearBounds(tr.viewParms.visBounds[0], tr.viewParms.visBounds[1]);
 
 	// perform frustum culling and add all the potentially visible surfaces
-	if (tr.refdef.num_dlights > 32) {
+	if (tr.refdef.num_dlights > 32) 
+	{
 		tr.refdef.num_dlights = 32;
 	}
 

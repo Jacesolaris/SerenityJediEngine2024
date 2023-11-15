@@ -318,7 +318,7 @@ typedef struct uiImport_s {
 	qboolean(*R_Language_UsesSpaces)				(void);
 	unsigned int	(*R_AnyLanguage_ReadCharFromString)		(const char* psText, int* piAdvanceCount, qboolean* pbIsTrailingPunctuation);
 
-	void			(*R_AddLightToScene)					(const vec3_t org, float intensity, float r, float g, float b);
+	void			(*R_AddLightToScene)					(const vec3_t org, const float intensity, const float r, const float g, const float b);
 	void			(*R_AddPolysToScene)					(qhandle_t hShader, int numVerts, const polyVert_t* verts, int num);
 	void			(*R_AddRefEntityToScene)				(const refEntity_t* re);
 	void			(*R_ClearScene)							(void);

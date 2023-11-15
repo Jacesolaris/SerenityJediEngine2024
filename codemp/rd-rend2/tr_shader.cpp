@@ -157,29 +157,30 @@ static long generateHashValue(const char* fname, const int size) {
 	return hash;
 }
 
-void R_RemapShader(const char* shaderName, const char* newShaderName, const char* timeOffset) {
+void R_RemapShader(const char* shaderName, const char* newShaderName, const char* timeOffset)
+{
 	char		strippedName[MAX_QPATH];
 	int			hash;
 	shader_t* sh, * sh2;
 	qhandle_t	h;
 
 	sh = R_FindShaderByName(shaderName);
-	if (sh == NULL || sh == tr.defaultShader) {
+	if (sh == nullptr || sh == tr.defaultShader) {
 		h = RE_RegisterShaderLightMap(shaderName, lightmapsNone, stylesDefault);
 		sh = R_GetShaderByHandle(h);
 	}
-	if (sh == NULL || sh == tr.defaultShader) {
+	if (sh == nullptr || sh == tr.defaultShader) {
 		ri->Printf(PRINT_WARNING, "WARNING: R_RemapShader: shader %s not found\n", shaderName);
 		return;
 	}
 
 	sh2 = R_FindShaderByName(newShaderName);
-	if (sh2 == NULL || sh2 == tr.defaultShader) {
+	if (sh2 == nullptr || sh2 == tr.defaultShader) {
 		h = RE_RegisterShaderLightMap(newShaderName, lightmapsNone, stylesDefault);
 		sh2 = R_GetShaderByHandle(h);
 	}
 
-	if (sh2 == NULL || sh2 == tr.defaultShader) {
+	if (sh2 == nullptr || sh2 == tr.defaultShader) {
 		ri->Printf(PRINT_WARNING, "WARNING: R_RemapShader: new shader %s not found\n", newShaderName);
 		return;
 	}
@@ -208,7 +209,7 @@ void R_RemapShader(const char* shaderName, const char* newShaderName, const char
 ParseVector
 ===============
 */
-static qboolean ParseVector(const char** text, int count, float* v) {
+static qboolean ParseVector(const char** text, const int count, float* v) {
 	char* token;
 	int		i;
 
@@ -2459,7 +2460,7 @@ const char* materialNames[MATERIAL_LAST] =
 	MATERIALS
 };
 
-void ParseMaterial(const char** text)
+static void ParseMaterial(const char** text)
 {
 	char* token;
 	int		i;
@@ -3565,7 +3566,8 @@ sortedIndex.
 ==============
 */
 extern bool gServerSkinHack;
-static void FixRenderCommandList(int newShader) {
+static void FixRenderCommandList(const int newShader)
+{
 	if (!gServerSkinHack) {
 		renderCommandList_t* cmdList = &backEndData->commands;
 
@@ -3649,7 +3651,8 @@ shaders.
 Sets shader->sortedIndex
 ==============
 */
-static void SortNewShader(void) {
+static void SortNewShader(void)
+{
 	int		i;
 	float	sort;
 	shader_t* newShader;
@@ -3903,7 +3906,8 @@ Returns a freshly allocated shader with all the needed info
 from the current global working shader
 =========================
 */
-static shader_t* FinishShader(void) {
+static shader_t* FinishShader(void)
+{
 	int stage;
 	uint32_t shaderStateBits = 0;
 	qboolean hasLightmapStage = qfalse;
@@ -4387,7 +4391,8 @@ most world construction surfaces.
 
 ===============
 */
-shader_t* R_FindShader(const char* name, const int* lightmapIndexes, const byte* styles, qboolean mipRawImage) {
+shader_t* R_FindShader(const char* name, const int* lightmapIndexes, const byte* styles, qboolean mipRawImage)
+{
 	char		strippedName[MAX_QPATH];
 	int			hash, flags;
 	const char* shaderText;
@@ -4593,7 +4598,8 @@ shader_t* R_FindServerShader(const char* name, const int* lightmapIndexes, const
 	return FinishShader();
 }
 
-qhandle_t RE_RegisterShaderFromImage(const char* name, const int* lightmapIndexes, const byte* styles, image_t* image, qboolean mipRawImage) {
+qhandle_t RE_RegisterShaderFromImage(const char* name, const int* lightmapIndexes, const byte* styles, image_t* image) 
+{
 	int			hash;
 	shader_t* sh;
 
@@ -4799,7 +4805,7 @@ When a handle is passed in by another module, this range checks
 it and returns a valid (possibly default) shader_t to be used internally.
 ====================
 */
-shader_t* R_GetShaderByHandle(qhandle_t hShader) {
+shader_t* R_GetShaderByHandle(const qhandle_t hShader) {
 	if (hShader < 0) {
 		ri->Printf(PRINT_WARNING, "R_GetShaderByHandle: out of range hShader '%d'\n", hShader);
 		return tr.defaultShader;
@@ -4819,7 +4825,8 @@ Dump information on all valid shaders to the console
 A second parameter will cause it to print in sorted order
 ===============
 */
-void	R_ShaderList_f(void) {
+void R_ShaderList_f(void)
+{
 	int			i;
 	int			count;
 	shader_t* shader;

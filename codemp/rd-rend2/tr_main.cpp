@@ -2088,7 +2088,8 @@ A view may be either the actual camera view,
 or a mirror / remote location
 ================
 */
-void R_RenderView(viewParms_t* parms) {
+void R_RenderView(const viewParms_t* parms)
+{
 	if (parms->viewportWidth <= 0 || parms->viewportHeight <= 0) {
 		return;
 	}

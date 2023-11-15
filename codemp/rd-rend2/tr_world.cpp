@@ -405,7 +405,7 @@ void R_AddBrushModelSurfaces(trRefEntity_t* ent, int entityNum)
 	}
 }
 
-float GetQuadArea(vec3_t v1, vec3_t v2, vec3_t v3, vec3_t v4)
+static float GetQuadArea(vec3_t v1, vec3_t v2, vec3_t v3, vec3_t v4)
 {
 	vec3_t	vec1, vec2, dis1, dis2;
 
@@ -864,7 +864,8 @@ void R_MarkLeaves(void)
 R_AddWorldSurfaces
 =============
 */
-void R_AddWorldSurfaces(viewParms_t* viewParms, trRefdef_t* refdef) {
+void R_AddWorldSurfaces(viewParms_t* viewParms, trRefdef_t* refdef)
+{
 	int planeBits, dlightBits, pshadowBits;
 
 	if (!r_drawworld->integer) {

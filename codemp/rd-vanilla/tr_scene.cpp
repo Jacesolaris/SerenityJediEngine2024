@@ -53,7 +53,7 @@ R_InitNextFrame
 
 ====================
 */
-void R_InitNextFrame() {
+void R_InitNextFrame(void) {
 	backEndData->commands.used = 0;
 
 	r_firstSceneDrawSurf = 0;
@@ -314,11 +314,14 @@ RE_AddDynamicLightToScene
 
 =====================
 */
-void RE_AddDynamicLightToScene(const vec3_t org, const float intensity, const float r, const float g, const float b, const int additive) {
-	if (!tr.registered) {
+static void RE_AddDynamicLightToScene(const vec3_t org, const float intensity, const float r, const float g, const float b, const int additive)
+{
+	if (!tr.registered)
+	{
 		return;
 	}
-	if (r_numdlights >= MAX_DLIGHTS) {
+	if (r_numdlights >= MAX_DLIGHTS)
+	{
 		return;
 	}
 	if (intensity <= 0) {
@@ -339,7 +342,8 @@ RE_AddLightToScene
 
 =====================
 */
-void RE_AddLightToScene(const vec3_t org, const float intensity, const float r, const float g, const float b) {
+void RE_AddLightToScene(const vec3_t org, const float intensity, const float r, const float g, const float b)
+{
 	RE_AddDynamicLightToScene(org, intensity, r, g, b, qfalse);
 }
 
@@ -349,7 +353,8 @@ RE_AddAdditiveLightToScene
 
 =====================
 */
-void RE_AddAdditiveLightToScene(const vec3_t org, const float intensity, const float r, const float g, const float b) {
+void RE_AddAdditiveLightToScene(const vec3_t org, const float intensity, const float r, const float g, const float b)
+{
 	RE_AddDynamicLightToScene(org, intensity, r, g, b, qtrue);
 }
 
@@ -475,7 +480,7 @@ void RE_RenderScene(const refdef_t* fd) {
 
 	// turn off dynamic lighting globally by clearing all the
 	// dlights if it needs to be disabled or if vertex lighting is enabled
-	if (r_dynamiclight->integer == 0 || r_vertexLight->integer == 1)
+	if (r_dynamiclight->integer == 0 || r_Turn_Off_dynamiclight->integer == 1 || r_vertexLight->integer == 1)
 	{
 		tr.refdef.num_dlights = 0;
 	}

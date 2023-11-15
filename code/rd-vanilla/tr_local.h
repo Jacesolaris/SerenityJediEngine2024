@@ -39,7 +39,7 @@ extern refimport_t ri;
 // 13 bits
 // can't be increased without changing bit packing for drawsurfs
 // see QSORT_SHADERNUM_SHIFT
-#define SHADERNUM_BITS	13
+#define SHADERNUM_BITS	14
 #define MAX_SHADERS		(1<<SHADERNUM_BITS)
 
 using dlight_t = struct dlight_s {
@@ -1299,10 +1299,10 @@ extern	const byte	stylesDefault[MAXLIGHTMAPS];
 qhandle_t		 RE_RegisterShader(const char* name);
 qhandle_t		 RE_RegisterShaderNoMip(const char* name);
 
-shader_t* R_FindShader(const char* name, const int* lightmap_index, const byte* styles, qboolean mip_raw_image);
-shader_t* R_GetShaderByHandle(qhandle_t hShader);
+shader_t* R_FindShader(const char* name, const int* lightmapIndexes, const byte* styles, qboolean mip_raw_image);
+shader_t* R_GetShaderByHandle(const qhandle_t hShader);
 void R_InitShaders(const qboolean server);
-void R_ShaderList_f();
+void R_ShaderList_f(void);
 
 //
 // tr_arb.c
@@ -1479,12 +1479,12 @@ SCENE GENERATION
 ============================================================
 */
 
-void R_InitNextFrame();
+void R_InitNextFrame(void);
 
 void RE_ClearScene();
 void RE_AddRefEntityToScene(const refEntity_t* ent);
 void RE_AddPolyToScene(const qhandle_t hShader, const int numVerts, const polyVert_t* verts, const int numPolys);
-void RE_AddLightToScene(const vec3_t org, float intensity, float r, float g, float b);
+void RE_AddLightToScene(const vec3_t org, const float intensity, const float r, const float g, const float b);
 void RE_RenderScene(const refdef_t* fd);
 
 qboolean RE_GetLighting(const vec3_t origin, vec3_t ambient_light, vec3_t directed_light, vec3_t lightDir);
