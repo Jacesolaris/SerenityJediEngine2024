@@ -155,11 +155,13 @@ R_LoadLightmaps
 ===============
 */
 #define	LIGHTMAP_SIZE	128
-static	void R_LoadLightmaps(const lump_t* l, const char* ps_map_name, const world_t& worldData) {
+
+static void R_LoadLightmaps(const lump_t* l, const char* ps_map_name, const world_t& worldData)
+{
 	byte		image[LIGHTMAP_SIZE * LIGHTMAP_SIZE * 4]{};
 	int j;
-	float max_intensity = 0;
-	double sum_intensity = 0;
+	float maxIntensity = 0;
+	double sumIntensity = 0;
 
 	if (&worldData == &s_worldData)
 	{
@@ -211,8 +213,8 @@ static	void R_LoadLightmaps(const lump_t* l, const char* ps_map_name, const worl
 				else
 					intensity /= 255.0f;
 
-				if (intensity > max_intensity)
-					max_intensity = intensity;
+				if (intensity > maxIntensity)
+					maxIntensity = intensity;
 
 				HSVtoRGB(intensity, 1.00, 0.50, out);
 
@@ -221,7 +223,7 @@ static	void R_LoadLightmaps(const lump_t* l, const char* ps_map_name, const worl
 				image[j * 4 + 2] = out[2] * 255;
 				image[j * 4 + 3] = 255;
 
-				sum_intensity += intensity;
+				sumIntensity += intensity;
 			}
 		}
 		else {
@@ -235,7 +237,7 @@ static	void R_LoadLightmaps(const lump_t* l, const char* ps_map_name, const worl
 	}
 
 	if (r_lightmap->integer == 2) {
-		ri->Printf(PRINT_ALL, "Brightest lightmap value: %d\n", static_cast<int>(max_intensity * 255));
+		ri->Printf(PRINT_ALL, "Brightest lightmap value: %d\n", static_cast<int>(maxIntensity * 255));
 	}
 }
 
@@ -406,7 +408,8 @@ static void ParseFace(const dsurface_t* ds, mapVert_t* verts, msurface_t* surf, 
 ParseMesh
 ===============
 */
-static void ParseMesh(const dsurface_t* ds, mapVert_t* verts, msurface_t* surf, const world_t& worldData, const int index) {
+static void ParseMesh(const dsurface_t* ds, mapVert_t* verts, msurface_t* surf, const world_t& worldData, const int index)
+{
 	int						i, j, k;
 	drawVert_t				points[MAX_PATCH_SIZE * MAX_PATCH_SIZE]{};
 	int						lightmapNum[MAXLIGHTMAPS]{};

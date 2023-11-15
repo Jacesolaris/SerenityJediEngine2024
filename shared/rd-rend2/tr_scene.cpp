@@ -380,7 +380,7 @@ void RE_BeginScene(const refdef_t* fd)
 
 		if (r_forceSun->integer == 2)
 		{
-			vec4_t lightDir, lightCol;
+			vec4_t lightDir{}, lightCol{};
 			int scale = 32768;
 			float angle = (fd->time % scale) / (float)scale * M_PI;
 			lightDir[0] = cos(angle);
@@ -457,7 +457,9 @@ void RE_BeginScene(const refdef_t* fd)
 	// Add the decals here because decals add polys and we need to ensure
 	// that the polys are added before the the renderer is prepared
 	if (!(fd->rdflags & RDF_NOWORLDMODEL))
+	{
 		R_AddDecals();
+	}
 
 	tr.refdef.numPolys = r_numpolys - r_firstScenePoly;
 	tr.refdef.polys = &backEndData->polys[r_firstScenePoly];
@@ -467,8 +469,8 @@ void RE_BeginScene(const refdef_t* fd)
 
 	// turn off dynamic lighting globally by clearing all the
 	// dlights if it needs to be disabled or if vertex lighting is enabled
-	if (r_dynamiclight->integer == 0 ||
-		r_vertexLight->integer == 1) {
+	if (r_dynamiclight->integer == 0 || r_vertexLight->integer == 1)
+	{
 		tr.refdef.num_dlights = 0;
 	}
 

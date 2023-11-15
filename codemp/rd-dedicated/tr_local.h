@@ -1071,8 +1071,8 @@ using trGlobals_t = struct trGlobals_s
 
 	trRefEntity_t* currentEntity;
 	trRefEntity_t worldEntity; // point currentEntity at this when rendering world
-	int currententity_num;
-	int shiftedentity_num; // currententity_num << QSORT_ENTITYNUM_SHIFT
+	int currentEntityNum;
+	int shiftedEntityNum; // currentEntityNum << QSORT_ENTITYNUM_SHIFT
 	model_t* currentModel;
 
 	viewParms_t viewParms;
@@ -1529,7 +1529,7 @@ WORLD MAP
 */
 
 void R_AddBrushModelSurfaces(trRefEntity_t* ent);
-void R_AddWorldSurfaces();
+void R_AddWorldSurfaces(void);
 qboolean R_inPVS(const vec3_t p1, const vec3_t p2, const byte* mask);
 
 /*
@@ -1540,10 +1540,10 @@ LIGHTS
 ============================================================
 */
 
-void R_DlightBmodel(const bmodel_t* bmodel, bool no_light);
+void R_DlightBmodel(const bmodel_t* bmodel, const bool NoLight);
 void R_SetupEntityLighting(const trRefdef_t* refdef, trRefEntity_t* ent);
-void R_TransformDlights(int count, dlight_t* dl, const orientationr_t* ori);
-int R_LightForPoint(vec3_t point, vec3_t ambient_light, vec3_t directed_light, vec3_t light_dir);
+void R_TransformDlights(const int count, dlight_t* dl, const orientationr_t* ori);
+int R_LightForPoint(vec3_t point, vec3_t ambient_light, vec3_t directed_light, vec3_t lightDir);
 
 /*
 ============================================================
@@ -1607,8 +1607,9 @@ void RE_ClearDecals();
 void RE_AddRefEntityToScene(const refEntity_t* ent);
 void RE_AddMiniRefEntityToScene(const miniRefEntity_t* ent);
 void RE_AddPolyToScene(const qhandle_t hShader, const int numVerts, const polyVert_t* verts, const int numPolys);
-void RE_AddDecalToScene(qhandle_t shader, const vec3_t origin, const vec3_t dir, float orientation, float r, float g,
-	float b, float a, qboolean alpha_fade, float radius, qboolean temporary);
+
+void RE_AddDecalToScene(const qhandle_t decalShader, const vec3_t origin, const vec3_t dir, const float orientation, const float red, const float green, const float blue, const float alpha, qboolean alphaFade, const float radius, const qboolean temporary);
+
 void RE_AddLightToScene(const vec3_t org, float intensity, float r, float g, float b);
 void RE_AddAdditiveLightToScene(const vec3_t org, float intensity, float r, float g, float b);
 void RE_RenderScene(const refdef_t* fd);
@@ -1697,14 +1698,14 @@ void R_TransformClipToWindow(const vec4_t clip, const viewParms_t* view, vec4_t 
 
 void RB_DeformTessGeometry(void);
 
-void RB_CalcEnvironmentTexCoords(float* dst_tex_coords);
-void RB_CalcFogTexCoords(float* dst_tex_coords);
-void RB_CalcScrollTexCoords(const float scroll_speed[2], float* dst_tex_coords);
-void RB_CalcRotateTexCoords(float degs_per_second, float* dst_tex_coords);
-void RB_CalcScaleTexCoords(const float scale[2], float* dst_tex_coords);
-void RB_CalcTurbulentTexCoords(const waveForm_t* wf, float* dst_tex_coords);
-void RB_CalcTransformTexCoords(const texModInfo_t* tmi, float* dst_tex_coords);
-void RB_CalcStretchTexCoords(const waveForm_t* wf, float* tex_coords);
+void RB_CalcEnvironmentTexCoords(float* dstTexCoords);
+void RB_CalcFogTexCoords(float* dstTexCoords);
+void RB_CalcScrollTexCoords(const float scroll_speed[2], float* dstTexCoords);
+void RB_CalcRotateTexCoords(const float degs_per_second, float* dstTexCoords);
+void RB_CalcScaleTexCoords(const float scale[2], float* dstTexCoords);
+void RB_CalcTurbulentTexCoords(const waveForm_t* wf, float* dstTexCoords);
+void RB_CalcTransformTexCoords(const texModInfo_t* tmi, float* dstTexCoords);
+void RB_CalcStretchTexCoords(const waveForm_t* wf, float* texCoords);
 void RB_CalcModulateColorsByFog(unsigned char* dst_colors);
 void RB_CalcModulateAlphasByFog(unsigned char* dst_colors);
 void RB_CalcModulateRGBAsByFog(unsigned char* dst_colors);
@@ -1715,10 +1716,10 @@ void RB_CalcAlphaFromOneMinusEntity(unsigned char* dst_colors);
 void RB_CalcColorFromEntity(unsigned char* dst_colors);
 void RB_CalcColorFromOneMinusEntity(unsigned char* dst_colors);
 void RB_CalcSpecularAlpha(unsigned char* alphas);
-void RB_CalcDisintegrateColors(unsigned char* colors);
+void RB_CalcDisintegrateColors(unsigned char* colors, colorGen_t rgbGen);
 void RB_CalcDiffuseColor(unsigned char* colors);
 void RB_CalcDiffuseEntityColor(unsigned char* colors);
-void RB_CalcDisintegrateVertDeform(void);
+void RB_CalcDisintegrateVertDeform();
 
 /*
 =============================================================

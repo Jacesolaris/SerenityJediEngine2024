@@ -492,14 +492,14 @@ ProjectDlightTexture
 Perform dynamic lighting with another rendering pass
 ===================
 */
-static void ProjectDlightTexture2()
+static void ProjectDlightTexture2(void)
 {
 	int		i;
-	byte	clip_bits[SHADER_MAX_VERTEXES]{};
-	float	tex_coords_array[SHADER_MAX_VERTEXES][2]{};
-	float	old_tex_coords_array[SHADER_MAX_VERTEXES][2]{};
-	unsigned int		color_array[SHADER_MAX_VERTEXES]{};
-	glIndex_t	hit_indexes[SHADER_MAX_INDEXES]{};
+	byte	clipBits[SHADER_MAX_VERTEXES]{};
+	float	texCoordsArray[SHADER_MAX_VERTEXES][2]{};
+	float	oldTexCoordsArray[SHADER_MAX_VERTEXES][2]{};
+	unsigned int		colorArray[SHADER_MAX_VERTEXES]{};
+	glIndex_t	hitIndexes[SHADER_MAX_INDEXES]{};
 	int		numIndexes;
 	float	radius;
 #ifndef JK2_MODE
@@ -509,7 +509,7 @@ static void ProjectDlightTexture2()
 	vec3_t	float_color{};
 	byte color_temp[4]{};
 
-	int		need_reset_verts = 0;
+	int		needResetVerts = 0;
 
 	if (!backEnd.refdef.num_dlights)
 	{
@@ -560,7 +560,7 @@ static void ProjectDlightTexture2()
 				clip |= 32;
 			}
 
-			clip_bits[i] = clip;
+			clipBits[i] = clip;
 			clipall &= clip;
 		}
 		if (clipall)
@@ -583,7 +583,7 @@ static void ProjectDlightTexture2()
 			const int a = tess.indexes[i];
 			const int b = tess.indexes[i + 1];
 			const int c = tess.indexes[i + 2];
-			if (clip_bits[a] & clip_bits[b] & clip_bits[c])
+			if (clipBits[a] & clipBits[b] & clipBits[c])
 			{
 				continue;	// not lighted
 			}
@@ -633,21 +633,21 @@ static void ProjectDlightTexture2()
 			VectorScale(e2, fac, e2);
 
 			VectorSubtract(posa, origin, dist);
-			tex_coords_array[numIndexes][0] = DotProduct(dist, e1) + 0.5f;
-			tex_coords_array[numIndexes][1] = DotProduct(dist, e2) + 0.5f;
+			texCoordsArray[numIndexes][0] = DotProduct(dist, e1) + 0.5f;
+			texCoordsArray[numIndexes][1] = DotProduct(dist, e2) + 0.5f;
 
 			VectorSubtract(posb, origin, dist);
-			tex_coords_array[numIndexes + 1][0] = DotProduct(dist, e1) + 0.5f;
-			tex_coords_array[numIndexes + 1][1] = DotProduct(dist, e2) + 0.5f;
+			texCoordsArray[numIndexes + 1][0] = DotProduct(dist, e1) + 0.5f;
+			texCoordsArray[numIndexes + 1][1] = DotProduct(dist, e2) + 0.5f;
 
 			VectorSubtract(posc, origin, dist);
-			tex_coords_array[numIndexes + 2][0] = DotProduct(dist, e1) + 0.5f;
-			tex_coords_array[numIndexes + 2][1] = DotProduct(dist, e2) + 0.5f;
+			texCoordsArray[numIndexes + 2][0] = DotProduct(dist, e1) + 0.5f;
+			texCoordsArray[numIndexes + 2][1] = DotProduct(dist, e2) + 0.5f;
 
-			if (tex_coords_array[numIndexes][0] < 0.0f && tex_coords_array[numIndexes + 1][0] < 0.0f && tex_coords_array[numIndexes + 2][0] < 0.0f ||
-				tex_coords_array[numIndexes][0] > 1.0f && tex_coords_array[numIndexes + 1][0] > 1.0f && tex_coords_array[numIndexes + 2][0] > 1.0f ||
-				tex_coords_array[numIndexes][1] < 0.0f && tex_coords_array[numIndexes + 1][1] < 0.0f && tex_coords_array[numIndexes + 2][1] < 0.0f ||
-				tex_coords_array[numIndexes][1] > 1.0f && tex_coords_array[numIndexes + 1][1] > 1.0f && tex_coords_array[numIndexes + 2][1] > 1.0f)
+			if (texCoordsArray[numIndexes][0] < 0.0f && texCoordsArray[numIndexes + 1][0] < 0.0f && texCoordsArray[numIndexes + 2][0] < 0.0f ||
+				texCoordsArray[numIndexes][0] > 1.0f && texCoordsArray[numIndexes + 1][0] > 1.0f && texCoordsArray[numIndexes + 2][0] > 1.0f ||
+				texCoordsArray[numIndexes][1] < 0.0f && texCoordsArray[numIndexes + 1][1] < 0.0f && texCoordsArray[numIndexes + 2][1] < 0.0f ||
+				texCoordsArray[numIndexes][1] > 1.0f && texCoordsArray[numIndexes + 1][1] > 1.0f && texCoordsArray[numIndexes + 2][1] > 1.0f)
 			{
 				continue; // didn't end up hitting this tri
 			}
@@ -662,12 +662,12 @@ static void ProjectDlightTexture2()
 			oldTexCoordsArray[numIndexes+2][0]=tess.svars.texcoords[0][c][0];
 			oldTexCoordsArray[numIndexes+2][1]=tess.svars.texcoords[0][c][1];
 			*/
-			old_tex_coords_array[numIndexes][0] = tess.texCoords[a][0][0];
-			old_tex_coords_array[numIndexes][1] = tess.texCoords[a][0][1];
-			old_tex_coords_array[numIndexes + 1][0] = tess.texCoords[b][0][0];
-			old_tex_coords_array[numIndexes + 1][1] = tess.texCoords[b][0][1];
-			old_tex_coords_array[numIndexes + 2][0] = tess.texCoords[c][0][0];
-			old_tex_coords_array[numIndexes + 2][1] = tess.texCoords[c][0][1];
+			oldTexCoordsArray[numIndexes][0] = tess.texCoords[a][0][0];
+			oldTexCoordsArray[numIndexes][1] = tess.texCoords[a][0][1];
+			oldTexCoordsArray[numIndexes + 1][0] = tess.texCoords[b][0][0];
+			oldTexCoordsArray[numIndexes + 1][1] = tess.texCoords[b][0][1];
+			oldTexCoordsArray[numIndexes + 2][0] = tess.texCoords[c][0][0];
+			oldTexCoordsArray[numIndexes + 2][1] = tess.texCoords[c][0][1];
 
 			color_temp[0] = Q_ftol(float_color[0] * modulate);
 			color_temp[1] = Q_ftol(float_color[1] * modulate);
@@ -675,13 +675,13 @@ static void ProjectDlightTexture2()
 			color_temp[3] = 255;
 
 			const auto* ba = reinterpret_cast<byteAlias_t*>(&color_temp);
-			color_array[numIndexes + 0] = ba->ui;
-			color_array[numIndexes + 1] = ba->ui;
-			color_array[numIndexes + 2] = ba->ui;
+			colorArray[numIndexes + 0] = ba->ui;
+			colorArray[numIndexes + 1] = ba->ui;
+			colorArray[numIndexes + 2] = ba->ui;
 
-			hit_indexes[numIndexes] = numIndexes;
-			hit_indexes[numIndexes + 1] = numIndexes + 1;
-			hit_indexes[numIndexes + 2] = numIndexes + 2;
+			hitIndexes[numIndexes] = numIndexes;
+			hitIndexes[numIndexes + 1] = numIndexes + 1;
+			hitIndexes[numIndexes + 2] = numIndexes + 2;
 			numIndexes += 3;
 
 			if (numIndexes >= SHADER_MAX_VERTEXES - 3)
@@ -713,9 +713,9 @@ static void ProjectDlightTexture2()
 		}
 #endif
 
-		if (!need_reset_verts)
+		if (!needResetVerts)
 		{
-			need_reset_verts = 1;
+			needResetVerts = 1;
 			if (qglUnlockArraysEXT)
 			{
 				qglUnlockArraysEXT();
@@ -746,7 +746,7 @@ static void ProjectDlightTexture2()
 		{
 			GL_SelectTexture(0);
 			GL_State(0);
-			qglTexCoordPointer(2, GL_FLOAT, 0, old_tex_coords_array[0]);
+			qglTexCoordPointer(2, GL_FLOAT, 0, oldTexCoordsArray[0]);
 			if (d_stage->bundle[0].image && !d_stage->bundle[0].isLightmap && !d_stage->bundle[0].numTexMods && d_stage->bundle[0].tcGen != TCGEN_ENVIRONMENT_MAPPED && d_stage->bundle[0].tcGen != TCGEN_FOG)
 			{
 				R_BindAnimatedImage(&d_stage->bundle[0]);
@@ -759,15 +759,15 @@ static void ProjectDlightTexture2()
 			GL_SelectTexture(1);
 			qglEnable(GL_TEXTURE_2D);
 			qglEnableClientState(GL_TEXTURE_COORD_ARRAY);
-			qglTexCoordPointer(2, GL_FLOAT, 0, tex_coords_array[0]);
+			qglTexCoordPointer(2, GL_FLOAT, 0, texCoordsArray[0]);
 			qglEnableClientState(GL_COLOR_ARRAY);
-			qglColorPointer(4, GL_UNSIGNED_BYTE, 0, color_array);
+			qglColorPointer(4, GL_UNSIGNED_BYTE, 0, colorArray);
 			GL_Bind(tr.dlightImage);
 			GL_TexEnv(GL_MODULATE);
 
 			GL_State(GLS_SRCBLEND_ONE | GLS_DSTBLEND_ONE | GLS_DEPTHFUNC_EQUAL);// | GLS_ATEST_GT_0);
 
-			R_DrawElements(numIndexes, hit_indexes);
+			R_DrawElements(numIndexes, hitIndexes);
 
 			qglDisable(GL_TEXTURE_2D);
 			GL_SelectTexture(0);
@@ -775,10 +775,10 @@ static void ProjectDlightTexture2()
 		else
 		{
 			qglEnableClientState(GL_TEXTURE_COORD_ARRAY);
-			qglTexCoordPointer(2, GL_FLOAT, 0, tex_coords_array[0]);
+			qglTexCoordPointer(2, GL_FLOAT, 0, texCoordsArray[0]);
 
 			qglEnableClientState(GL_COLOR_ARRAY);
-			qglColorPointer(4, GL_UNSIGNED_BYTE, 0, color_array);
+			qglColorPointer(4, GL_UNSIGNED_BYTE, 0, colorArray);
 
 			GL_Bind(tr.dlightImage);
 			// include GLS_DEPTHFUNC_EQUAL so alpha tested surfaces don't add light
@@ -791,7 +791,7 @@ static void ProjectDlightTexture2()
 				GL_State(GLS_SRCBLEND_DST_COLOR | GLS_DSTBLEND_ONE | GLS_DEPTHFUNC_EQUAL);
 			}
 
-			R_DrawElements(numIndexes, hit_indexes);
+			R_DrawElements(numIndexes, hitIndexes);
 		}
 
 #ifndef JK2_MODE
@@ -804,7 +804,7 @@ static void ProjectDlightTexture2()
 		backEnd.pc.c_totalIndexes += numIndexes;
 		backEnd.pc.c_dlightIndexes += numIndexes;
 	}
-	if (need_reset_verts)
+	if (needResetVerts)
 	{
 		qglVertexPointer(3, GL_FLOAT, 16, tess.xyz);	// padded for SIMD
 		if (qglLockArraysEXT)
@@ -814,13 +814,13 @@ static void ProjectDlightTexture2()
 		}
 	}
 }
-static void ProjectDlightTexture()
+static void ProjectDlightTexture(void)
 {
 	int		i;
-	float* tex_coords;
+	float* texCoords;
 	byte* colors;
-	byte	clip_bits[SHADER_MAX_VERTEXES]{};
-	glIndex_t	hit_indexes[SHADER_MAX_INDEXES]{};
+	byte	clipBits[SHADER_MAX_VERTEXES]{};
+	glIndex_t	hitIndexes[SHADER_MAX_INDEXES]{};
 	int		numIndexes;
 	float	scale;
 	float	radius;
@@ -835,14 +835,14 @@ static void ProjectDlightTexture()
 	}
 
 	for (int l = 0; l < backEnd.refdef.num_dlights; l++) {
-		byte color_array[SHADER_MAX_VERTEXES][4]{};
-		float tex_coords_array[SHADER_MAX_VERTEXES][2]{};
+		byte colorArray[SHADER_MAX_VERTEXES][4]{};
+		float texCoordsArray[SHADER_MAX_VERTEXES][2]{};
 		vec3_t origin;
 		if (!(tess.dlightBits & 1 << l)) {
 			continue;	// this surface definately doesn't have any of this light
 		}
 
-		tex_coords = tess.svars.texcoords[0][0];
+		texCoords = tess.svars.texcoords[0][0];
 		colors = tess.svars.colors[0];
 
 		const dlight_t* dl = &backEnd.refdef.dlights[l];
@@ -854,7 +854,7 @@ static void ProjectDlightTexture()
 		float_color[1] = dl->color[1] * 255.0f;
 		float_color[2] = dl->color[2] * 255.0f;
 
-		for (i = 0; i < tess.numVertexes; i++, tex_coords += 2, colors += 4) {
+		for (i = 0; i < tess.numVertexes; i++, texCoords += 2, colors += 4) {
 			vec3_t	dist;
 			float	modulate;
 
@@ -927,8 +927,8 @@ static void ProjectDlightTexture()
 					scale = 1.0f / (radius * d_use);
 				}
 
-				tex_coords[0] = 0.5f + dist[0] * scale;
-				tex_coords[1] = 0.5f + dist[1] * scale;
+				texCoords[0] = 0.5f + dist[0] * scale;
+				texCoords[1] = 0.5f + dist[1] * scale;
 			}
 			else if (best_index == 1)
 			{
@@ -958,8 +958,8 @@ static void ProjectDlightTexture()
 					scale = 1.0f / (radius * d_use);
 				}
 
-				tex_coords[0] = 0.5f + dist[0] * scale;
-				tex_coords[1] = 0.5f + dist[2] * scale;
+				texCoords[0] = 0.5f + dist[0] * scale;
+				texCoords[1] = 0.5f + dist[2] * scale;
 			}
 			else
 			{
@@ -989,21 +989,21 @@ static void ProjectDlightTexture()
 					scale = 1.0f / (radius * d_use);
 				}
 
-				tex_coords[0] = 0.5f + dist[1] * scale;
-				tex_coords[1] = 0.5f + dist[2] * scale;
+				texCoords[0] = 0.5f + dist[1] * scale;
+				texCoords[1] = 0.5f + dist[2] * scale;
 			}
 
 			int clip = 0;
-			if (tex_coords[0] < 0.0f) {
+			if (texCoords[0] < 0.0f) {
 				clip |= 1;
 			}
-			else if (tex_coords[0] > 1.0f) {
+			else if (texCoords[0] > 1.0f) {
 				clip |= 2;
 			}
-			if (tex_coords[1] < 0.0f) {
+			if (texCoords[1] < 0.0f) {
 				clip |= 4;
 			}
-			else if (tex_coords[1] > 1.0f) {
+			else if (texCoords[1] > 1.0f) {
 				clip |= 8;
 			}
 			// modulate the strength based on the height and color
@@ -1024,7 +1024,7 @@ static void ProjectDlightTexture()
 					modulate = 2.0f * (radius - dist[best_index]) * scale;
 				}
 			}
-			clip_bits[i] = clip;
+			clipBits[i] = clip;
 
 			colors[0] = Q_ftol(float_color[0] * modulate);
 			colors[1] = Q_ftol(float_color[1] * modulate);
@@ -1037,12 +1037,12 @@ static void ProjectDlightTexture()
 			const int a = tess.indexes[i];
 			const int b = tess.indexes[i + 1];
 			const int c = tess.indexes[i + 2];
-			if (clip_bits[a] & clip_bits[b] & clip_bits[c]) {
+			if (clipBits[a] & clipBits[b] & clipBits[c]) {
 				continue;	// not lighted
 			}
-			hit_indexes[numIndexes] = a;
-			hit_indexes[numIndexes + 1] = b;
-			hit_indexes[numIndexes + 2] = c;
+			hitIndexes[numIndexes] = a;
+			hitIndexes[numIndexes + 1] = b;
+			hitIndexes[numIndexes + 2] = c;
 			numIndexes += 3;
 		}
 
@@ -1105,15 +1105,15 @@ static void ProjectDlightTexture()
 			GL_SelectTexture(1);
 			qglEnable(GL_TEXTURE_2D);
 			qglEnableClientState(GL_TEXTURE_COORD_ARRAY);
-			qglTexCoordPointer(2, GL_FLOAT, 0, tex_coords_array[0]);
+			qglTexCoordPointer(2, GL_FLOAT, 0, texCoordsArray[0]);
 			qglEnableClientState(GL_COLOR_ARRAY);
-			qglColorPointer(4, GL_UNSIGNED_BYTE, 0, color_array);
+			qglColorPointer(4, GL_UNSIGNED_BYTE, 0, colorArray);
 			GL_Bind(tr.dlightImage);
 			GL_TexEnv(GL_MODULATE);
 
 			GL_State(GLS_SRCBLEND_ONE | GLS_DSTBLEND_ONE | GLS_DEPTHFUNC_EQUAL);// | GLS_ATEST_GT_0);
 
-			R_DrawElements(numIndexes, hit_indexes);
+			R_DrawElements(numIndexes, hitIndexes);
 
 			qglDisable(GL_TEXTURE_2D);
 			GL_SelectTexture(0);
@@ -1121,10 +1121,10 @@ static void ProjectDlightTexture()
 		else
 		{
 			qglEnableClientState(GL_TEXTURE_COORD_ARRAY);
-			qglTexCoordPointer(2, GL_FLOAT, 0, tex_coords_array[0]);
+			qglTexCoordPointer(2, GL_FLOAT, 0, texCoordsArray[0]);
 
 			qglEnableClientState(GL_COLOR_ARRAY);
-			qglColorPointer(4, GL_UNSIGNED_BYTE, 0, color_array);
+			qglColorPointer(4, GL_UNSIGNED_BYTE, 0, colorArray);
 
 			GL_Bind(tr.dlightImage);
 			// include GLS_DEPTHFUNC_EQUAL so alpha tested surfaces don't add light
@@ -1137,7 +1137,7 @@ static void ProjectDlightTexture()
 				GL_State(GLS_SRCBLEND_DST_COLOR | GLS_DSTBLEND_ONE | GLS_DEPTHFUNC_EQUAL);
 			}
 
-			R_DrawElements(numIndexes, hit_indexes);
+			R_DrawElements(numIndexes, hitIndexes);
 		}
 
 #ifndef JK2_MODE
@@ -1423,7 +1423,8 @@ static void ComputeColors(shaderStage_t* pStage, alphaGen_t forceAlphaGen, color
 		RB_CalcSpecularAlpha(reinterpret_cast<unsigned char*>(tess.svars.colors));
 		break;
 	case AGEN_ENTITY:
-		if (forceRGBGen != CGEN_ENTITY) { //already got it in the CGEN_entity since it does all 4 components
+		if (forceRGBGen != CGEN_ENTITY)
+		{ //already got it in the CGEN_entity since it does all 4 components
 			RB_CalcAlphaFromEntity(reinterpret_cast<unsigned char*>(tess.svars.colors));
 		}
 		break;
@@ -1655,8 +1656,8 @@ extern bool tr_stencilled; //tr_backend.cpp
 static void RB_IterateStagesGeneric(const shaderCommands_t* input)
 {
 #ifndef JK2_MODE
-	bool	use_gl_fog = false;
-	bool	fog_color_change = false;
+	bool	UseGLFog = false;
+	bool	FogColorChange = false;
 	const fog_t* fog = nullptr;
 
 	if (tess.fogNum && tess.shader->fogPass && (tess.fogNum == tr.world->globalFog || tess.fogNum == tr.world->numfogs)
@@ -1714,7 +1715,7 @@ static void RB_IterateStagesGeneric(const shaderCommands_t* input)
 		}
 
 		qglEnable(GL_FOG);
-		use_gl_fog = true;
+		UseGLFog = true;
 	}
 #endif
 
@@ -1777,16 +1778,16 @@ static void RB_IterateStagesGeneric(const shaderCommands_t* input)
 		}
 
 #ifndef JK2_MODE
-		if (use_gl_fog)
+		if (UseGLFog)
 		{
 			if (pStage->mGLFogColorOverride)
 			{
 				qglFogfv(GL_FOG_COLOR, GLFogOverrideColors[pStage->mGLFogColorOverride]);
-				fog_color_change = true;
+				FogColorChange = true;
 			}
-			else if (fog_color_change && fog)
+			else if (FogColorChange && fog)
 			{
-				fog_color_change = false;
+				FogColorChange = false;
 				qglFogfv(GL_FOG_COLOR, fog->parms.color);
 			}
 		}
@@ -1887,7 +1888,7 @@ static void RB_IterateStagesGeneric(const shaderCommands_t* input)
 		}
 	}
 #ifndef JK2_MODE
-	if (fog_color_change)
+	if (FogColorChange)
 	{
 		qglFogfv(GL_FOG_COLOR, fog->parms.color);
 	}

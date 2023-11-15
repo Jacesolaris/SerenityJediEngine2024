@@ -282,7 +282,7 @@ PFNGLUNLOCKARRAYSEXTPROC qglUnlockArraysEXT;
 bool g_bTextureRectangleHack = false;
 
 void RE_SetLightStyle(int style, int color);
-void RE_GetBModelVerts(int bmodel_index, vec3_t* verts, vec3_t normal);
+void RE_GetBModelVerts(const int bmodelIndex, vec3_t* verts, vec3_t normal);
 
 static void R_Splash()
 {

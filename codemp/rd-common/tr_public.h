@@ -128,7 +128,7 @@ using refexport_t = struct refexport_s
 	void (*GetLightStyle)(int style, color4ub_t color);
 	void (*SetLightStyle)(int style, int color);
 
-	void (*GetBModelVerts)(int bmodel_index, vec3_t* vec, vec3_t normal);
+	void (*GetBModelVerts)(int bmodelIndex, vec3_t* vec, vec3_t normal);
 
 	// These were missing in 1.01, had direct access to renderer backend
 	void (*SetRangedFog)(float range);

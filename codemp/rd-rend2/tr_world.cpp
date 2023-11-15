@@ -158,7 +158,8 @@ that is touched by one or more dlights, so try to throw out
 more dlights if possible.
 ====================
 */
-static int R_DlightSurface(msurface_t* surf, int dlightBits) {
+static int R_DlightSurface(msurface_t* surf, int dlightBits)
+{
 	float       d;
 	int         i;
 	dlight_t* dl;
@@ -325,12 +326,7 @@ static int R_PshadowSurface(msurface_t* surf, int pshadowBits) {
 R_AddWorldSurface
 ======================
 */
-static void R_AddWorldSurface(
-	msurface_t* surf,
-	const trRefEntity_t* entity,
-	int entityNum,
-	int dlightBits,
-	int pshadowBits)
+static void R_AddWorldSurface(msurface_t* surf, const trRefEntity_t* entity, int entityNum, int dlightBits, int pshadowBits)
 {
 	// FIXME: bmodel fog?
 
@@ -385,7 +381,8 @@ static void R_AddWorldSurface(
 R_AddBrushModelSurfaces
 =================
 */
-void R_AddBrushModelSurfaces(trRefEntity_t* ent, int entityNum) {
+void R_AddBrushModelSurfaces(trRefEntity_t* ent, int entityNum)
+{
 	model_t* pModel = R_GetModelByHandle(ent->e.hModel);
 	bmodel_t* bmodel = pModel->data.bmodel;
 	int clip = R_CullLocalBox(bmodel->bounds);
@@ -429,7 +426,7 @@ float GetQuadArea(vec3_t v1, vec3_t v2, vec3_t v3, vec3_t v4)
 		dis2[0] * dis2[0] + dis2[1] * dis2[1] + dis2[2] * dis2[2]);
 }
 
-void RE_GetBModelVerts(int bmodel_index, vec3_t* verts, vec3_t normal)
+void RE_GetBModelVerts(const int bmodelIndex, vec3_t* verts, vec3_t normal)
 {
 	int					surf;
 	srfBspSurface_t* face;
@@ -439,7 +436,7 @@ void RE_GetBModelVerts(int bmodel_index, vec3_t* verts, vec3_t normal)
 	int					dist = 0;
 	float				dot1, dot2;
 
-	model_t* pModel = R_GetModelByHandle(bmodel_index);
+	model_t* pModel = R_GetModelByHandle(bmodelIndex);
 	bmodel_t* bmodel = pModel->data.bmodel;
 	world_t* world = R_GetWorld(bmodel->worldIndex);
 

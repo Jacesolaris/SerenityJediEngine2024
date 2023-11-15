@@ -22,7 +22,7 @@ enum
 
 #define		DECAL_FADE_TIME		1000
 
-decalPoly_t* RE_AllocDecal(int type);
+decalPoly_t* RE_AllocDecal(const int type);
 
 static decalPoly_t	re_decalPolys[DECALPOLY_TYPE_MAX][MAX_DECAL_POLYS];
 
@@ -46,7 +46,7 @@ void R_InitDecals(void) {
 	RE_ClearDecals();
 }
 
-void RE_FreeDecal(int type, int index) {
+void RE_FreeDecal(const int type, const int index) {
 	if (!re_decalPolys[type][index].time)
 		return;
 
@@ -73,7 +73,7 @@ RE_AllocDecal
 Will allways succeed, even if it requires freeing an old active mark
 ===================
 */
-decalPoly_t* RE_AllocDecal(int type) {
+decalPoly_t* RE_AllocDecal(const int type) {
 	decalPoly_t* le;
 
 	// See if the cvar changed
@@ -134,16 +134,16 @@ passed to the renderer.
 #define	MAX_DECAL_FRAGMENTS	128
 #define	MAX_DECAL_POINTS		384
 
-void RE_AddDecalToScene(qhandle_t decalShader, const vec3_t origin, const vec3_t dir, float orientation, float red, float green, float blue, float alpha, qboolean alphaFade, float radius, qboolean temporary)
+void RE_AddDecalToScene(const qhandle_t decalShader, const vec3_t origin, const vec3_t dir, const float orientation, const float red, const float green, const float blue, const float alpha, qboolean alphaFade, const float radius, const qboolean temporary)
 {
-	matrix3_t		axis;
+	matrix3_t		axis{};
 	float			texCoordScale;
-	vec3_t			originalPoints[4];
-	byte			colors[4];
+	vec3_t			originalPoints[4]{};
+	byte			colors[4]{};
 	int				i, j;
 	int				numFragments;
 	markFragment_t	markFragments[MAX_DECAL_FRAGMENTS], * mf;
-	vec3_t			markPoints[MAX_DECAL_POINTS];
+	vec3_t			markPoints[MAX_DECAL_POINTS]{};
 	vec3_t			projection;
 
 	assert(decalShader);
@@ -275,7 +275,7 @@ void R_AddDecals(void)
 							p->verts[j].modulate[3] = fade;
 						}
 
-						RE_AddPolyToScene(p->shader, p->poly.numVerts, p->verts);
+						RE_AddPolyToScene(p->shader, p->poly.numVerts, p->verts, 1);
 					}
 					else
 					{
@@ -284,7 +284,7 @@ void R_AddDecals(void)
 				}
 				else
 				{
-					RE_AddPolyToScene(p->shader, p->poly.numVerts, p->verts);
+					RE_AddPolyToScene(p->shader, p->poly.numVerts, p->verts, 1);
 				}
 			}
 

@@ -819,7 +819,7 @@ constexpr auto QSORT_FOGNUM_SHIFT = 2;
 constexpr auto QSORT_REFENTITYNUM_SHIFT = 7;
 #define	QSORT_SHADERNUM_SHIFT	(QSORT_REFENTITYNUM_SHIFT+REFENTITYNUM_BITS)
 // Note: 32nd bit is reserved for RF_ALPHA_FADE voodoo magic
-// see R_AddEntitySurfaces tr.shiftedentity_num
+// see R_AddEntitySurfaces tr.shiftedEntityNum
 #if (QSORT_SHADERNUM_SHIFT+SHADERNUM_BITS) > 31
 #error "Need to update sorting, too many bits."
 #endif
@@ -949,8 +949,8 @@ using trGlobals_t = struct {
 
 	trRefEntity_t* currentEntity;
 	trRefEntity_t			worldEntity;		// point currentEntity at this when rendering world
-	int						currententity_num;
-	unsigned				shiftedentity_num;	// currententity_num << QSORT_REFENTITYNUM_SHIFT (possible with high bit set for RF_ALPHA_FADE)
+	int						currentEntityNum;
+	unsigned				shiftedEntityNum;	// currentEntityNum << QSORT_REFENTITYNUM_SHIFT (possible with high bit set for RF_ALPHA_FADE)
 	model_t* currentModel;
 
 	viewParms_t				viewParms;
@@ -1387,7 +1387,7 @@ void RB_CheckOverflow(const int verts, const int indexes);
 #define RB_CHECKOVERFLOW(v,i) if (tess.numVertexes + (v) >= SHADER_MAX_VERTEXES || tess.numIndexes + (i) >= SHADER_MAX_INDEXES ) {RB_CheckOverflow(v,i);}
 
 void RB_StageIteratorGeneric();
-void RB_StageIteratorSky();
+void RB_StageIteratorSky(void);
 
 void RB_AddQuadStamp(vec3_t origin, vec3_t left, vec3_t up, byte* color);
 void RB_AddQuadStampExt(vec3_t origin, vec3_t left, vec3_t up, byte* color, const float s1, const float t1, const float s2, const float t2);
@@ -1403,7 +1403,7 @@ WORLD MAP
 */
 
 void R_AddBrushModelSurfaces(trRefEntity_t* ent);
-void R_AddWorldSurfaces();
+void R_AddWorldSurfaces(void);
 
 /*
 ============================================================
@@ -1413,9 +1413,9 @@ LIGHTS
 ============================================================
 */
 
-void R_DlightBmodel(const bmodel_t* bmodel, qboolean no_light);
+void R_DlightBmodel(const bmodel_t* bmodel, const qboolean NoLight);
 void R_SetupEntityLighting(const trRefdef_t* refdef, trRefEntity_t* ent);
-void R_TransformDlights(int count, dlight_t* dl, const orientationr_t* ori);
+void R_TransformDlights(const int count, dlight_t* dl, const orientationr_t* ori);
 
 /*
 ============================================================
@@ -1425,9 +1425,9 @@ SHADOWS
 ============================================================
 */
 
-void RB_ShadowTessEnd();
-void RB_ShadowFinish();
-void RB_ProjectionShadowDeform();
+void RB_ShadowTessEnd(void);
+void RB_ShadowFinish(void);
+void RB_ProjectionShadowDeform(void);
 
 /*
 ============================================================
@@ -1437,9 +1437,9 @@ SKIES
 ============================================================
 */
 
-void R_BuildCloudData(const shaderCommands_t* shader);
-void R_InitSkyTexCoords(float height_cloud);
-void RB_DrawSun();
+void R_BuildCloudData(const shaderCommands_t* input);
+void R_InitSkyTexCoords(const float heightCloud);
+void RB_DrawSun(void);
 void RB_ClipSkyPolygons(const shaderCommands_t* input);
 
 /*
@@ -1487,10 +1487,10 @@ void RE_AddPolyToScene(const qhandle_t hShader, const int numVerts, const polyVe
 void RE_AddLightToScene(const vec3_t org, float intensity, float r, float g, float b);
 void RE_RenderScene(const refdef_t* fd);
 
-qboolean RE_GetLighting(const vec3_t origin, vec3_t ambient_light, vec3_t directed_light, vec3_t light_dir);
+qboolean RE_GetLighting(const vec3_t origin, vec3_t ambient_light, vec3_t directed_light, vec3_t lightDir);
 
 // Only returns a four sided face and normal of the best face to break ( this is for glass right now )
-void RE_GetBModelVerts(int bmodel_index, vec3_t* verts, vec3_t normal);
+void RE_GetBModelVerts(const int bmodelIndex, vec3_t* verts, vec3_t normal);
 
 /*
 =============================================================
@@ -1579,15 +1579,15 @@ void	R_TransformClipToWindow(const vec4_t clip, const viewParms_t* view, vec4_t 
 
 void	RB_DeformTessGeometry();
 
-void	RB_CalcScaleTexCoords(const float scale[2], float* dst_tex_coords);
-void	RB_CalcScrollTexCoords(const float scroll_speed[2], float* dst_tex_coords);
-void	RB_CalcStretchTexCoords(const waveForm_t* wf, float* tex_coords);
+void	RB_CalcScaleTexCoords(const float scale[2], float* dstTexCoords);
+void	RB_CalcScrollTexCoords(const float scroll_speed[2], float* dstTexCoords);
+void	RB_CalcStretchTexCoords(const waveForm_t* wf, float* texCoords);
 void	RB_CalcTransformTexCoords(const texModInfo_t* tmi, float* dstTexCoords);
-void	RB_CalcRotateTexCoords(float degs_per_second, float* dst_tex_coords);
+void	RB_CalcRotateTexCoords(float degs_per_second, float* dstTexCoords);
 
-void	RB_CalcEnvironmentTexCoords(float* dst_tex_coords);
-void	RB_CalcFogTexCoords(float* dst_tex_coords);
-void	RB_CalcTurbulentTexCoords(const waveForm_t* wf, float* dst_tex_coords);
+void	RB_CalcEnvironmentTexCoords(float* dstTexCoords);
+void	RB_CalcFogTexCoords(float* dstTexCoords);
+void	RB_CalcTurbulentTexCoords(const waveForm_t* wf, float* dstTexCoords);
 
 void	RB_CalcWaveColor(const waveForm_t* wf, unsigned char* dst_colors);
 void	RB_CalcColorFromEntityNew(unsigned char* dstColors, int index);

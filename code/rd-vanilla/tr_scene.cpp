@@ -98,8 +98,8 @@ void R_AddPolygonSurfaces() {
 	int			i;
 	srfPoly_t* poly;
 
-	tr.currententity_num = REFENTITYNUM_WORLD;
-	tr.shiftedentity_num = tr.currententity_num << QSORT_REFENTITYNUM_SHIFT;
+	tr.currentEntityNum = REFENTITYNUM_WORLD;
+	tr.shiftedEntityNum = tr.currentEntityNum << QSORT_REFENTITYNUM_SHIFT;
 
 	for (i = 0, poly = tr.refdef.polys; i < tr.refdef.numPolys; i++, poly++) {
 		const shader_t* sh = R_GetShaderByHandle(poly->hShader);
@@ -262,7 +262,9 @@ to handle mirrors,
 @@@@@@@@@@@@@@@@@@@@@
 */
 extern int	recursivePortalCount;
-void RE_RenderScene(const refdef_t* fd) {
+
+void RE_RenderScene(const refdef_t* fd)
+{
 	viewParms_t		parms;
 	static int		lastTime = 0;
 
@@ -355,8 +357,8 @@ void RE_RenderScene(const refdef_t* fd) {
 
 	// turn off dynamic lighting globally by clearing all the
 	// dlights if it needs to be disabled or if vertex lighting is enabled
-	if (r_dynamiclight->integer == 0 ||
-		r_vertexLight->integer == 1) {
+	if (r_dynamiclight->integer == 0 || r_vertexLight->integer == 1)
+	{
 		tr.refdef.num_dlights = 0;
 	}
 

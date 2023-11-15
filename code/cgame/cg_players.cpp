@@ -6959,7 +6959,7 @@ CG_GetPlayerLightLevel
 
 static void CG_GetPlayerLightLevel(const centity_t* cent)
 {
-	vec3_t ambient = { 0 }, directed, light_dir;
+	vec3_t ambient = { 0 }, directed, lightDir;
 
 	//Poll the renderer for the light level
 	if (cent->currentState.client_num == cg.snap->ps.client_num)
@@ -6967,7 +6967,7 @@ static void CG_GetPlayerLightLevel(const centity_t* cent)
 		//hAX0R
 		ambient[0] = 666;
 	}
-	cgi_R_GetLighting(cent->lerpOrigin, ambient, directed, light_dir);
+	cgi_R_GetLighting(cent->lerpOrigin, ambient, directed, lightDir);
 
 	//Get the maximum value for the player
 	cent->gent->lightLevel = directed[0];
@@ -11970,9 +11970,9 @@ static void CG_CreateSaberMarks(vec3_t start, vec3_t end, vec3_t normal)
 {
 	int i, j;
 	vec3_t axis[3]{}, original_points[4]{};
-	vec3_t mark_points[MAX_MARK_POINTS], projection;
+	vec3_t markPoints[MAX_MARK_POINTS], projection;
 	polyVert_t* v;
-	markFragment_t mark_fragments[MAX_MARK_FRAGMENTS], * mf;
+	markFragment_t markFragments[MAX_MARK_FRAGMENTS], * mf;
 
 	if (!cg_addMarks.integer)
 	{
@@ -11999,11 +11999,11 @@ static void CG_CreateSaberMarks(vec3_t start, vec3_t end, vec3_t normal)
 	VectorScale(normal, -1, projection);
 
 	// get the fragments
-	const int num_fragments = cgi_CM_MarkFragments(4, original_points,
-		projection, MAX_MARK_POINTS, mark_points[0], MAX_MARK_FRAGMENTS,
-		mark_fragments);
+	const int numFragments = cgi_CM_MarkFragments(4, original_points,
+		projection, MAX_MARK_POINTS, markPoints[0], MAX_MARK_FRAGMENTS,
+		markFragments);
 
-	for (i = 0, mf = mark_fragments; i < num_fragments; i++, mf++)
+	for (i = 0, mf = markFragments; i < numFragments; i++, mf++)
 	{
 		polyVert_t verts[MAX_VERTS_ON_POLY]{};
 		// we have an upper limit on the complexity of polygons that we store persistantly
@@ -12018,7 +12018,7 @@ static void CG_CreateSaberMarks(vec3_t start, vec3_t end, vec3_t normal)
 			vec3_t delta;
 
 			// Set up our texture coords, this may need some work
-			VectorCopy(mark_points[mf->firstPoint + j], v->xyz);
+			VectorCopy(markPoints[mf->firstPoint + j], v->xyz);
 			VectorAdd(end, start, mid);
 			VectorScale(mid, 0.5f, mid);
 			VectorSubtract(v->xyz, mid, delta);

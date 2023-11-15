@@ -564,7 +564,7 @@ typedef struct cgameImport_s {
 	int				(*R_Font_HeightPixels)					(int iFontIndex, float scale);
 	int				(*R_Font_StrLenChars)					(const char* text);
 	int				(*R_Font_StrLenPixels)					(const char* text, int iFontIndex, float scale);
-	void			(*R_GetBModelVerts)						(int bmodel_index, vec3_t* vec, vec3_t normal);
+	void			(*R_GetBModelVerts)						(int bmodelIndex, vec3_t* vec, vec3_t normal);
 	float			(*R_GetDistanceCull)					(void);
 	qboolean(*R_GetEntityToken)						(char* buffer, int size);
 	void			(*R_GetLightStyle)						(int style, color4ub_t color);

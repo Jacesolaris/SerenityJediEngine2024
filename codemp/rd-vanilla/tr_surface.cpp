@@ -233,7 +233,8 @@ static void RB_SurfaceOrientedQuad(void)
 RB_SurfacePolychain
 =============
 */
-void RB_SurfacePolychain(const srfPoly_t* p) {
+static void RB_SurfacePolychain(const srfPoly_t* p)
+{
 	int		i;
 
 	RB_CHECKOVERFLOW(p->numVerts, 3 * (p->numVerts - 2));
@@ -303,7 +304,8 @@ static uint32_t ComputeFinalVertexColor(const byte* colors) {
 RB_SurfaceTriangles
 =============
 */
-void RB_SurfaceTriangles(const srfTriangles_t* srf) {
+static void RB_SurfaceTriangles(const srfTriangles_t* srf)
+{
 	int			i;
 
 	const int dlightBits = srf->dlightBits;
@@ -371,7 +373,7 @@ RB_SurfaceBeam
 */
 static void RB_SurfaceBeam(void)
 {
-#define NUM_BEAM_SEGS 6
+	constexpr auto NUM_BEAM_SEGS = 6;
 	int	i;
 	vec3_t perpvec;
 	vec3_t direction{}, normalized_direction{};
@@ -467,25 +469,6 @@ static void RB_SurfaceSaberGlow()
 	// Please don't kill me Jeff...  The pulse is good, but now I want the halo bigger if the saber is shorter...  --Pat
 	DoSprite(e->origin, 5.5f + Q_flrand(0.0f, 1.0f) * 0.15f, 0.0f);//Q_flrand(0.0f, 1.0f) * 360.0f );
 }
-
-/*
-==============
-RB_SurfaceLine
-==============
-*/
-//
-//	Values for a proper line render primitive...
-//		Width
-//		STScale (how many times to loop a texture)
-//		alpha
-//		RGB
-//
-//  Values for proper line object...
-//		lifetime
-//		dscale
-//		startalpha, endalpha
-//		startRGB, endRGB
-//
 
 static void DoLine(const vec3_t start, const vec3_t end, const vec3_t up, const float spanWidth)
 {
@@ -1241,7 +1224,7 @@ static void RB_SurfaceElectricity()
 	DoBoltSeg(start, end, right, radius);
 }
 
-void RB_SurfaceLightningBolt()
+static void RB_SurfaceLightningBolt()
 {
 	vec3_t		right;
 	vec3_t		vec;
@@ -1339,7 +1322,7 @@ static void LerpMeshVertexes(md3Surface_t* surf, const float backlerp)
 	int		vert_num;
 	unsigned lat, lng;
 
-	float* out_xyz = tess.xyz[tess.numVertexes];
+	float* outXYZ = tess.xyz[tess.numVertexes];
 	float* out_normal = tess.normal[tess.numVertexes];
 
 	short* new_xyz = reinterpret_cast<short*>(reinterpret_cast<byte*>(surf) + surf->ofsXyzNormals)
@@ -1357,11 +1340,11 @@ static void LerpMeshVertexes(md3Surface_t* surf, const float backlerp)
 		//
 		for (vert_num = 0; vert_num < numVerts; vert_num++,
 			new_xyz += 4, new_normals += 4,
-			out_xyz += 4, out_normal += 4)
+			outXYZ += 4, out_normal += 4)
 		{
-			out_xyz[0] = new_xyz[0] * new_xyz_scale;
-			out_xyz[1] = new_xyz[1] * new_xyz_scale;
-			out_xyz[2] = new_xyz[2] * new_xyz_scale;
+			outXYZ[0] = new_xyz[0] * new_xyz_scale;
+			outXYZ[1] = new_xyz[1] * new_xyz_scale;
+			outXYZ[2] = new_xyz[2] * new_xyz_scale;
 
 			lat = new_normals[0] >> 8 & 0xff;
 			lng = new_normals[0] & 0xff;
@@ -1389,14 +1372,14 @@ static void LerpMeshVertexes(md3Surface_t* surf, const float backlerp)
 
 		for (vert_num = 0; vert_num < numVerts; vert_num++,
 			old_xyz += 4, new_xyz += 4, old_normals += 4, new_normals += 4,
-			out_xyz += 4, out_normal += 4)
+			outXYZ += 4, out_normal += 4)
 		{
 			vec3_t uncompressed_old_normal{}, uncompressed_new_normal{};
 
 			// interpolate the xyz
-			out_xyz[0] = old_xyz[0] * old_xyz_scale + new_xyz[0] * new_xyz_scale;
-			out_xyz[1] = old_xyz[1] * old_xyz_scale + new_xyz[1] * new_xyz_scale;
-			out_xyz[2] = old_xyz[2] * old_xyz_scale + new_xyz[2] * new_xyz_scale;
+			outXYZ[0] = old_xyz[0] * old_xyz_scale + new_xyz[0] * new_xyz_scale;
+			outXYZ[1] = old_xyz[1] * old_xyz_scale + new_xyz[1] * new_xyz_scale;
+			outXYZ[2] = old_xyz[2] * old_xyz_scale + new_xyz[2] * new_xyz_scale;
 
 			// FIXME: interpolate lat/long instead?
 			lat = new_normals[0] >> 8 & 0xff;
@@ -1431,7 +1414,8 @@ static void LerpMeshVertexes(md3Surface_t* surf, const float backlerp)
 RB_SurfaceMesh
 =============
 */
-void RB_SurfaceMesh(md3Surface_t* surface) {
+static void RB_SurfaceMesh(md3Surface_t* surface)
+{
 	int				j;
 	float			backlerp;
 
@@ -1455,12 +1439,12 @@ void RB_SurfaceMesh(md3Surface_t* surface) {
 	}
 	tess.numIndexes += indexes;
 
-	const float* tex_coords = reinterpret_cast<float*>(reinterpret_cast<byte*>(surface) + surface->ofsSt);
+	const float* texCoords = reinterpret_cast<float*>(reinterpret_cast<byte*>(surface) + surface->ofsSt);
 
 	const int numVerts = surface->numVerts;
 	for (j = 0; j < numVerts; j++) {
-		tess.texCoords[doug + j][0][0] = tex_coords[j * 2 + 0];
-		tess.texCoords[doug + j][0][1] = tex_coords[j * 2 + 1];
+		tess.texCoords[doug + j][0][0] = texCoords[j * 2 + 0];
+		tess.texCoords[doug + j][0][1] = texCoords[j * 2 + 1];
 		// FIXME: fill in lightmapST for completeness?
 	}
 
@@ -1472,7 +1456,8 @@ void RB_SurfaceMesh(md3Surface_t* surface) {
 RB_SurfaceFace
 ==============
 */
-void RB_SurfaceFace(srfSurfaceFace_t* surf) {
+static void RB_SurfaceFace(srfSurfaceFace_t* surf)
+{
 	int			i;
 
 	RB_CHECKOVERFLOW(surf->numPoints, surf->numIndices);
@@ -1567,7 +1552,8 @@ RB_SurfaceGrid
 Just copy the grid of points and triangulate
 =============
 */
-void RB_SurfaceGrid(srfGridMesh_t* cv) {
+static void RB_SurfaceGrid(srfGridMesh_t* cv)
+{
 	int		i, j;
 	int irows, vrows;
 	int		widthTable[MAX_GRID_SIZE]{};
@@ -1582,15 +1568,15 @@ void RB_SurfaceGrid(srfGridMesh_t* cv) {
 	// determine which rows and columns of the subdivision
 	// we are actually going to use
 	widthTable[0] = 0;
-	int lod_width = 1;
+	int lodWidth = 1;
 	for (i = 1; i < cv->width - 1; i++) {
 		if (cv->widthLodError[i] <= lodError) {
-			widthTable[lod_width] = i;
-			lod_width++;
+			widthTable[lodWidth] = i;
+			lodWidth++;
 		}
 	}
-	widthTable[lod_width] = cv->width - 1;
-	lod_width++;
+	widthTable[lodWidth] = cv->width - 1;
+	lodWidth++;
 
 	heightTable[0] = 0;
 	int lodHeight = 1;
@@ -1610,8 +1596,8 @@ void RB_SurfaceGrid(srfGridMesh_t* cv) {
 	while (used < lodHeight - 1) {
 		// see how many rows of both verts and indexes we can add without overflowing
 		do {
-			vrows = (SHADER_MAX_VERTEXES - tess.numVertexes) / lod_width;
-			irows = (SHADER_MAX_INDEXES - tess.numIndexes) / (lod_width * 6);
+			vrows = (SHADER_MAX_VERTEXES - tess.numVertexes) / lodWidth;
+			irows = (SHADER_MAX_INDEXES - tess.numIndexes) / (lodWidth * 6);
 
 			// if we don't have enough space for at least one strip, flush the buffer
 			if (vrows < 2 || irows < 1) {
@@ -1635,12 +1621,12 @@ void RB_SurfaceGrid(srfGridMesh_t* cv) {
 
 		float* xyz = tess.xyz[numVertexes];
 		float* normal = tess.normal[numVertexes];
-		float* tex_coords = tess.texCoords[numVertexes][0];
+		float* texCoords = tess.texCoords[numVertexes][0];
 		auto color = reinterpret_cast<unsigned char*>(&tess.vertexColors[numVertexes]);
 		int* v_dlight_bits = &tess.vertexDlightBits[numVertexes];
 
 		for (i = 0; i < rows; i++) {
-			for (j = 0; j < lod_width; j++) {
+			for (j = 0; j < lodWidth; j++) {
 				const drawVert_t* dv = cv->verts + heightTable[used + i] * cv->width
 					+ widthTable[j];
 
@@ -1649,14 +1635,14 @@ void RB_SurfaceGrid(srfGridMesh_t* cv) {
 				xyz[2] = dv->xyz[2];
 				xyz += 4;
 
-				tex_coords[0] = dv->st[0];
-				tex_coords[1] = dv->st[1];
+				texCoords[0] = dv->st[0];
+				texCoords[1] = dv->st[1];
 				for (int k = 0; k < MAXLIGHTMAPS; k++)
 				{
-					tex_coords[2 + k * 2] = dv->lightmap[k][0];
-					tex_coords[2 + k * 2 + 1] = dv->lightmap[k][1];
+					texCoords[2 + k * 2] = dv->lightmap[k][0];
+					texCoords[2 + k * 2 + 1] = dv->lightmap[k][1];
 				}
-				tex_coords += NUM_TEX_COORDS * 2;
+				texCoords += NUM_TEX_COORDS * 2;
 
 				//if ( needsNormal )
 				{
@@ -1675,14 +1661,14 @@ void RB_SurfaceGrid(srfGridMesh_t* cv) {
 		// add the indexes
 		{
 			const int h = rows - 1;
-			const int w = lod_width - 1;
+			const int w = lodWidth - 1;
 			int numIndexes = tess.numIndexes;
 			for (i = 0; i < h; i++) {
 				for (j = 0; j < w; j++) {
 					// vertex order to be reckognized as tristrips
-					const int v1 = numVertexes + i * lod_width + j + 1;
+					const int v1 = numVertexes + i * lodWidth + j + 1;
 					const int v2 = v1 - 1;
-					const int v3 = v2 + lod_width;
+					const int v3 = v2 + lodWidth;
 					const int v4 = v3 + 1;
 
 					tess.indexes[numIndexes] = v2;
@@ -1699,7 +1685,7 @@ void RB_SurfaceGrid(srfGridMesh_t* cv) {
 			tess.numIndexes = numIndexes;
 		}
 
-		tess.numVertexes += rows * lod_width;
+		tess.numVertexes += rows * lodWidth;
 
 		used += rows - 1;
 	}
@@ -1747,8 +1733,10 @@ RB_SurfaceEntity
 Entities that have a single procedurally generated surface
 ====================
 */
-void RB_SurfaceEntity(surfaceType_t* surf_type) {
-	switch (backEnd.currentEntity->e.reType) {
+static void RB_SurfaceEntity(surfaceType_t* surfType)
+{
+	switch (backEnd.currentEntity->e.reType)
+	{
 	case RT_SPRITE:
 		RB_SurfaceSprite();
 		break;
@@ -1799,7 +1787,7 @@ void RB_SurfaceEntity(surfaceType_t* surf_type) {
 
 			assert(backEnd.currentEntity->e.renderfx >= 0);
 
-			RB_SurfaceEntity(surf_type);
+			RB_SurfaceEntity(surfType);
 		}
 	}
 	break;
@@ -1809,7 +1797,8 @@ void RB_SurfaceEntity(surfaceType_t* surf_type) {
 	}
 }
 
-void RB_SurfaceBad(surfaceType_t* surf_type) {
+static void RB_SurfaceBad(surfaceType_t* surfType)
+{
 	ri->Printf(PRINT_ALL, "Bad surface tesselated.\n");
 }
 
@@ -1820,7 +1809,8 @@ RB_TestZFlare
 This is called at surface tesselation time
 ==================
 */
-static bool RB_TestZFlare(vec3_t point) {
+static bool RB_TestZFlare(vec3_t point)
+{
 	vec4_t			eye, clip, normalized, window;
 
 	// if the point is off the screen, don't bother adding it
@@ -1861,7 +1851,8 @@ static bool RB_TestZFlare(vec3_t point) {
 	return visible;
 }
 
-void RB_SurfaceFlare(srfFlare_t* surf) {
+static void RB_SurfaceFlare(srfFlare_t* surf)
+{
 	vec3_t		left, up;
 	byte		color[4]{};
 	vec3_t		dir;
@@ -1912,13 +1903,14 @@ void RB_SurfaceFlare(srfFlare_t* surf) {
 	RB_AddQuadStamp(origin, left, up, color);
 }
 
-void RB_SurfaceDisplayList(const srfDisplayList_t* surf) {
+static void RB_SurfaceDisplayList(const srfDisplayList_t* surf) {
 	// all appropriate state must be set in RB_BeginSurface
 	// this isn't implemented yet...
 	qglCallList(surf->listNum);
 }
 
-void RB_SurfaceSkip(void* surf) {
+static void RB_SurfaceSkip(void* surf)
+{
 }
 
 void (*rb_surfaceTable[SF_NUM_SURFACE_TYPES])(void*) =
@@ -1930,15 +1922,8 @@ void (*rb_surfaceTable[SF_NUM_SURFACE_TYPES])(void*) =
 	reinterpret_cast<void(*)(void*)>(RB_SurfaceTriangles),	// SF_TRIANGLES,
 	reinterpret_cast<void(*)(void*)>(RB_SurfacePolychain),	// SF_POLY,
 	reinterpret_cast<void(*)(void*)>(RB_SurfaceMesh),			// SF_MD3,
-	/*
-	Ghoul2 Insert Start
-	*/
-		reinterpret_cast<void(*)(void*)>(RB_SurfaceGhoul),		// SF_MDX,
-		/*
-		Ghoul2 Insert End
-		*/
-			reinterpret_cast<void(*)(void*)>(RB_SurfaceFlare),		// SF_FLARE,
-			reinterpret_cast<void(*)(void*)>(RB_SurfaceEntity),		// SF_ENTITY
-			reinterpret_cast<void(*)(void*)>(RB_SurfaceDisplayList // SF_DISPLAY_LIST
-			)	// SF_DISPLAY_LIST
+	reinterpret_cast<void(*)(void*)>(RB_SurfaceGhoul),		// SF_MDX,
+	reinterpret_cast<void(*)(void*)>(RB_SurfaceFlare),		// SF_FLARE,
+	reinterpret_cast<void(*)(void*)>(RB_SurfaceEntity),		// SF_ENTITY
+	reinterpret_cast<void(*)(void*)>(RB_SurfaceDisplayList)	// SF_DISPLAY_LIST
 };

@@ -2170,7 +2170,7 @@ void RE_SetLightStyle(int style, int color)
 	}
 }
 
-void RE_GetBModelVerts(int bmodel_index, vec3_t* verts, vec3_t normal);
+void RE_GetBModelVerts(const int bmodelIndex, vec3_t* verts, vec3_t normal);
 void RE_WorldEffectCommand(const char* cmd);
 
 void stub_RE_AddWeatherZone(vec3_t mins, vec3_t maxs) {} // Intentionally left blank. Rend2 reads the zones manually on bsp load

@@ -127,15 +127,15 @@ constexpr auto MAX_MARK_POINTS = 384;
 
 void CG_ImpactMark(const qhandle_t mark_shader, const vec3_t origin, const vec3_t dir, const float orientation,
 	const float red,
-	const float green, const float blue, const float alpha, const qboolean alpha_fade, const float radius,
+	const float green, const float blue, const float alpha, const qboolean alphaFade, const float radius,
 	const qboolean temporary)
 {
 	vec3_t axis[3]{};
 	vec3_t original_points[4]{};
 	byte colors[4]{};
 	int i, j;
-	markFragment_t mark_fragments[MAX_MARK_FRAGMENTS], * mf;
-	vec3_t mark_points[MAX_MARK_POINTS]{};
+	markFragment_t markFragments[MAX_MARK_FRAGMENTS], * mf;
+	vec3_t markPoints[MAX_MARK_POINTS]{};
 	vec3_t projection;
 
 	if (!cg_addMarks.integer)
@@ -167,16 +167,16 @@ void CG_ImpactMark(const qhandle_t mark_shader, const vec3_t origin, const vec3_
 
 	// get the fragments
 	VectorScale(dir, -20, projection);
-	const int num_fragments = cgi_CM_MarkFragments(4, original_points,
-		projection, MAX_MARK_POINTS, mark_points[0],
-		MAX_MARK_FRAGMENTS, mark_fragments);
+	const int numFragments = cgi_CM_MarkFragments(4, original_points,
+		projection, MAX_MARK_POINTS, markPoints[0],
+		MAX_MARK_FRAGMENTS, markFragments);
 
 	colors[0] = red * 255;
 	colors[1] = green * 255;
 	colors[2] = blue * 255;
 	colors[3] = alpha * 255;
 
-	for (i = 0, mf = mark_fragments; i < num_fragments; i++, mf++)
+	for (i = 0, mf = markFragments; i < numFragments; i++, mf++)
 	{
 		polyVert_t* v;
 		polyVert_t verts[MAX_VERTS_ON_POLY]{};
@@ -191,7 +191,7 @@ void CG_ImpactMark(const qhandle_t mark_shader, const vec3_t origin, const vec3_
 		{
 			vec3_t delta;
 
-			VectorCopy(mark_points[mf->firstPoint + j], v->xyz);
+			VectorCopy(markPoints[mf->firstPoint + j], v->xyz);
 
 			VectorSubtract(v->xyz, origin, delta);
 			v->st[0] = 0.5f + DotProduct(delta, axis[1]) * texCoordScale;
@@ -212,7 +212,7 @@ void CG_ImpactMark(const qhandle_t mark_shader, const vec3_t origin, const vec3_
 		// otherwise save it persistently
 		markPoly_t* mark = CG_AllocMark();
 		mark->time = cg.time;
-		mark->alphaFade = alpha_fade;
+		mark->alphaFade = alphaFade;
 		mark->markShader = mark_shader;
 		mark->poly.numVerts = mf->numPoints;
 		mark->color[0] = colors[0]; //red;

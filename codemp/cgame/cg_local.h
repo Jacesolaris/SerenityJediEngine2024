@@ -2142,7 +2142,7 @@ void	CG_ImpactMark(qhandle_t mark_shader,
 	const vec3_t origin, const vec3_t dir,
 	float orientation,
 	float red, float green, float blue, float alpha,
-	qboolean alpha_fade,
+	qboolean alphaFade,
 	float radius, qboolean temporary);
 
 //

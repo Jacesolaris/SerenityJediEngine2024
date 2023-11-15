@@ -510,9 +510,9 @@ void trap_R_SetLightStyle(const int style, const int color)
 	Q_syscall(CG_R_SET_LIGHT_STYLE, style, color);
 }
 
-void trap_R_GetBModelVerts(const int bmodel_index, vec3_t* verts, vec3_t normal)
+void trap_R_GetBModelVerts(const int bmodelIndex, vec3_t* verts, vec3_t normal)
 {
-	Q_syscall(CG_R_GET_BMODEL_VERTS, bmodel_index, verts, normal);
+	Q_syscall(CG_R_GET_BMODEL_VERTS, bmodelIndex, verts, normal);
 }
 
 void trap_R_GetDistanceCull(float* f)

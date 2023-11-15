@@ -677,7 +677,7 @@ qboolean R_GetPortalOrientations(const drawSurf_t* drawSurf, const int entityNum
 	// rotate the plane if necessary
 	if (entityNum != REFENTITYNUM_WORLD)
 	{
-		tr.currententity_num = entityNum;
+		tr.currentEntityNum = entityNum;
 		tr.currentEntity = &tr.refdef.entities[entityNum];
 
 		// get the orientation of the entity
@@ -804,7 +804,7 @@ static qboolean IsMirror(const drawSurf_t* drawSurf, const int entityNum)
 	// rotate the plane if necessary
 	if (entityNum != REFENTITYNUM_WORLD)
 	{
-		tr.currententity_num = entityNum;
+		tr.currentEntityNum = entityNum;
 		tr.currentEntity = &tr.refdef.entities[entityNum];
 
 		// get the orientation of the entity
@@ -1134,7 +1134,7 @@ void R_AddDrawSurf(surfaceType_t* surface, const shader_t* shader, int fogIndex,
 	// the sort data is packed into a single 32 bit value so it can be
 	// compared quickly during the qsorting process
 	tr.refdef.drawSurfs[index].sort = shader->sortedIndex << QSORT_SHADERNUM_SHIFT
-		| tr.shiftedentity_num | fogIndex << QSORT_FOGNUM_SHIFT | dlightMap;
+		| tr.shiftedEntityNum | fogIndex << QSORT_FOGNUM_SHIFT | dlightMap;
 	tr.refdef.drawSurfs[index].surface = surface;
 	tr.refdef.numDrawSurfs++;
 }
@@ -1222,18 +1222,18 @@ void R_AddEntitySurfaces(void)
 		return;
 	}
 
-	for (tr.currententity_num = 0;
-		tr.currententity_num < tr.refdef.num_entities;
-		tr.currententity_num++)
+	for (tr.currentEntityNum = 0;
+		tr.currentEntityNum < tr.refdef.num_entities;
+		tr.currentEntityNum++)
 	{
-		trRefEntity_t* ent = tr.currentEntity = &tr.refdef.entities[tr.currententity_num];
+		trRefEntity_t* ent = tr.currentEntity = &tr.refdef.entities[tr.currentEntityNum];
 
 		assert(ent->e.renderfx >= 0);
 
 		ent->needDlights = qfalse;
 
 		// preshift the value we are going to OR into the drawsurf sort
-		tr.shiftedentity_num = tr.currententity_num << QSORT_REFENTITYNUM_SHIFT;
+		tr.shiftedEntityNum = tr.currentEntityNum << QSORT_REFENTITYNUM_SHIFT;
 
 		//
 		// the weapon model must be handled special --

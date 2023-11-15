@@ -118,46 +118,45 @@ RB_CalcDeformVertexes
 
 ========================
 */
-void RB_CalcDeformVertexes(deformStage_t* ds)
+void RB_CalcDeformVertexes(const deformStage_t* ds)
 {
 	int i;
 	vec3_t	offset;
 	float	scale;
-	float* xyz = (float*)tess.xyz;
-	uint32_t* normal = (uint32_t*)tess.normal;
-	float* table;
+	auto* xyz = reinterpret_cast<float*>(tess.xyz);
+	auto* normal = reinterpret_cast<float*>(tess.normal);
 
 	if (ds->deformationWave.frequency == 0)
 	{
 		scale = EvalWaveForm(&ds->deformationWave);
 
-		for (i = 0; i < tess.numVertexes; i++, xyz += 4, normal++)
+		for (i = 0; i < tess.numVertexes; i++, xyz += 4, normal += 4)
 		{
-			R_VboUnpackNormal(offset, *normal);
+			VectorScale(normal, scale, offset);
 
-			xyz[0] += offset[0] * scale;
-			xyz[1] += offset[1] * scale;
-			xyz[2] += offset[2] * scale;
+			xyz[0] += offset[0];
+			xyz[1] += offset[1];
+			xyz[2] += offset[2];
 		}
 	}
 	else
 	{
-		table = TableForFunc(ds->deformationWave.func);
+		const float* table = TableForFunc(ds->deformationWave.func);
 
-		for (i = 0; i < tess.numVertexes; i++, xyz += 4, normal++)
+		for (i = 0; i < tess.numVertexes; i++, xyz += 4, normal += 4)
 		{
-			float off = (xyz[0] + xyz[1] + xyz[2]) * ds->deformationSpread;
+			const float off = (xyz[0] + xyz[1] + xyz[2]) * ds->deformationSpread;
 
 			scale = WAVEVALUE(table, ds->deformationWave.base,
 				ds->deformationWave.amplitude,
 				ds->deformationWave.phase + off,
 				ds->deformationWave.frequency);
 
-			R_VboUnpackNormal(offset, *normal);
+			VectorScale(normal, scale, offset);
 
-			xyz[0] += offset[0] * scale;
-			xyz[1] += offset[1] * scale;
-			xyz[2] += offset[2] * scale;
+			xyz[0] += offset[0];
+			xyz[1] += offset[1];
+			xyz[2] += offset[2];
 		}
 	}
 }
@@ -169,13 +168,15 @@ RB_CalcDeformNormals
 Wiggle the normals for wavy environment mapping
 =========================
 */
-void RB_CalcDeformNormals(deformStage_t* ds) {
+void RB_CalcDeformNormals(const deformStage_t* ds)
+{
 	int i;
 	float	scale;
 	float* xyz = (float*)tess.xyz;
 	uint32_t* normal = (uint32_t*)tess.normal;
 
-	for (i = 0; i < tess.numVertexes; i++, xyz += 4, normal++) {
+	for (i = 0; i < tess.numVertexes; i++, xyz += 4, normal++)
+	{
 		vec3_t fNormal;
 
 		R_VboUnpackNormal(fNormal, *normal);
@@ -207,7 +208,8 @@ RB_CalcBulgeVertexes
 
 ========================
 */
-void RB_CalcBulgeVertexes(deformStage_t* ds) {
+void RB_CalcBulgeVertexes(const deformStage_t* ds)
+{
 	int i;
 	const float* st = (const float*)tess.texCoords[0];
 	float* xyz = (float*)tess.xyz;
@@ -240,24 +242,21 @@ RB_CalcMoveVertexes
 A deformation that can move an entire surface along a wave path
 ======================
 */
-void RB_CalcMoveVertexes(deformStage_t* ds) {
-	int			i;
-	float* xyz;
-	float* table;
-	float		scale;
+void RB_CalcMoveVertexes(const deformStage_t* ds)
+{
 	vec3_t		offset;
 
-	table = TableForFunc(ds->deformationWave.func);
+	const float* table = TableForFunc(ds->deformationWave.func);
 
-	scale = WAVEVALUE(table, ds->deformationWave.base,
+	const float scale = WAVEVALUE(table, ds->deformationWave.base,
 		ds->deformationWave.amplitude,
 		ds->deformationWave.phase,
 		ds->deformationWave.frequency);
 
 	VectorScale(ds->moveVector, scale, offset);
 
-	xyz = (float*)tess.xyz;
-	for (i = 0; i < tess.numVertexes; i++, xyz += 4) {
+	auto* xyz = reinterpret_cast<float*>(tess.xyz);
+	for (int i = 0; i < tess.numVertexes; i++, xyz += 4) {
 		VectorAdd(xyz, offset, xyz);
 	}
 }
@@ -269,12 +268,13 @@ DeformText
 Change a polygon into a bunch of text polygons
 =============
 */
-void DeformText(const char* text) {
+void DeformText(const char* text)
+{
 	int		i;
-	vec3_t	origin, width, height;
+	vec3_t	origin, width, height{};
 	int		len;
 	int		ch;
-	float	color[4];
+	float	color[4]{};
 	float	bottom, top;
 	vec3_t	mid;
 	vec3_t fNormal;
@@ -288,8 +288,8 @@ void DeformText(const char* text) {
 
 	// find the midpoint of the box
 	VectorClear(mid);
-	bottom = 999999;
-	top = -999999;
+	bottom = WORLD_SIZE;
+	top = -WORLD_SIZE;
 	for (i = 0; i < 4; i++) {
 		VectorAdd(tess.xyz[i], mid, mid);
 		if (tess.xyz[i][2] < bottom) {
@@ -360,11 +360,12 @@ Assuming all the triangles for this shader are independant
 quads, rebuild them as forward facing sprites
 =====================
 */
-static void AutospriteDeform(void) {
+static void AutospriteDeform(void)
+{
 	int		i;
 	int		oldVerts;
 	float* xyz;
-	vec3_t	mid, delta;
+	vec3_t	mid{}, delta;
 	float	radius;
 	vec3_t	left, up;
 	vec3_t	leftDir, upDir;
@@ -442,7 +443,8 @@ int edgeVerts[6][2] = {
 	{ 2, 3 }
 };
 
-static void Autosprite2Deform(void) {
+static void Autosprite2Deform(void)
+{
 	int		i, j, k;
 	int		indexes;
 	float* xyz;
@@ -553,7 +555,8 @@ RB_DeformTessGeometry
 
 =====================
 */
-void RB_DeformTessGeometry(void) {
+void RB_DeformTessGeometry(void)
+{
 	int		i;
 	deformStage_t* ds;
 
@@ -563,7 +566,8 @@ void RB_DeformTessGeometry(void) {
 		return;
 	}
 
-	for (i = 0; i < tess.shader->numDeforms; i++) {
+	for (i = 0; i < tess.shader->numDeforms; i++)
+	{
 		ds = &tess.shader->deforms[i];
 
 		switch (ds->deformation) {
@@ -647,20 +651,21 @@ float RB_CalcWaveAlphaSingle(const waveForm_t* wf)
 /*
 ** RB_CalcModulateColorsByFog
 */
-void RB_CalcModulateColorsByFog(unsigned char* colors) {
-	int		i;
-	float	texCoords[SHADER_MAX_VERTEXES][2];
+void RB_CalcModulateColorsByFog(unsigned char* dst_colors)
+{
+	float	texCoords[SHADER_MAX_VERTEXES][2]{};
 
 	// calculate texcoords so we can derive density
 	// this is not wasted, because it would only have
 	// been previously called if the surface was opaque
 	RB_CalcFogTexCoords(texCoords[0]);
 
-	for (i = 0; i < tess.numVertexes; i++, colors += 4) {
-		float f = 1.0 - R_FogFactor(texCoords[i][0], texCoords[i][1]);
-		colors[0] *= f;
-		colors[1] *= f;
-		colors[2] *= f;
+	for (int i = 0; i < tess.numVertexes; i++, dst_colors += 4)
+	{
+		const float f = 1.0 - R_FogFactor(texCoords[i][0], texCoords[i][1]);
+		dst_colors[0] *= f;
+		dst_colors[1] *= f;
+		dst_colors[2] *= f;
 	}
 }
 
@@ -689,7 +694,7 @@ void RB_CalcFogTexCoords(float* st) {
 	qboolean	eyeOutside;
 	fog_t* fog;
 	vec3_t		local;
-	vec4_t		fogDistanceVector, fogDepthVector = { 0, 0, 0, 0 };
+	vec4_t		fogDistanceVector{}, fogDepthVector = { 0, 0, 0, 0 };
 
 	fog = tr.world->fogs + tess.fogNum;
 

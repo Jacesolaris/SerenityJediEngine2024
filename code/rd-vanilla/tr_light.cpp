@@ -61,14 +61,15 @@ R_DlightBmodel
 Determine which dynamic lights may effect this bmodel
 =============
 */
-void R_DlightBmodel(const bmodel_t* bmodel, const qboolean no_light) {
+void R_DlightBmodel(const bmodel_t* bmodel, const qboolean NoLight)
+{
 	int			i;
 
 	// transform all the lights
 	R_TransformDlights(tr.refdef.num_dlights, tr.refdef.dlights, &tr.ori);
 
 	int mask = 0;
-	if (!no_light)
+	if (!NoLight)
 	{
 		int j;
 		for (i = 0; i < tr.refdef.num_dlights; i++) {
@@ -96,16 +97,20 @@ void R_DlightBmodel(const bmodel_t* bmodel, const qboolean no_light) {
 	tr.currentEntity->dlightBits = mask;
 
 	// set the dlight bits in all the surfaces
-	for (i = 0; i < bmodel->numSurfaces; i++) {
+	for (i = 0; i < bmodel->numSurfaces; i++) 
+	{
 		const msurface_t* surf = bmodel->firstSurface + i;
 
-		if (*surf->data == SF_FACE) {
+		if (*surf->data == SF_FACE)
+		{
 			reinterpret_cast<srfSurfaceFace_t*>(surf->data)->dlightBits = mask;
 		}
-		else if (*surf->data == SF_GRID) {
+		else if (*surf->data == SF_GRID)
+		{
 			reinterpret_cast<srfGridMesh_t*>(surf->data)->dlightBits = mask;
 		}
-		else if (*surf->data == SF_TRIANGLES) {
+		else if (*surf->data == SF_TRIANGLES) 
+		{
 			reinterpret_cast<srfTriangles_t*>(surf->data)->dlightBits = mask;
 		}
 	}
@@ -131,14 +136,14 @@ R_SetupEntityLightingGrid
 */
 static void R_SetupEntityLightingGrid(trRefEntity_t* ent)
 {
-	vec3_t			light_origin;
+	vec3_t			lightOrigin;
 	int				pos[3]{};
 	int				i, j;
 	float			frac[3]{};
-	int				grid_step[3]{};
+	int				gridStep[3]{};
 	vec3_t			direction;
-	float			total_factor;
-	unsigned short* start_grid_pos;
+	float			totalFactor;
+	unsigned short* startGridPos;
 
 	if (r_fullbright->integer || r_ambientScale->integer == -1 || tr.refdef.rdflags & RDF_doLAGoggles)
 	{
@@ -153,23 +158,23 @@ static void R_SetupEntityLightingGrid(trRefEntity_t* ent)
 		// seperate lightOrigins are needed so an object that is
 		// sinking into the ground can still be lit, and so
 		// multi-part models can be lit identically
-		VectorCopy(ent->e.lightingOrigin, light_origin);
+		VectorCopy(ent->e.lightingOrigin, lightOrigin);
 	}
 	else
 	{
-		VectorCopy(ent->e.origin, light_origin);
+		VectorCopy(ent->e.origin, lightOrigin);
 	}
 #define ACCURATE_LIGHTGRID_SAMPLING 1
 #if ACCURATE_LIGHTGRID_SAMPLING
 	vec3_t	start_light_origin;
-	VectorCopy(light_origin, start_light_origin);
+	VectorCopy(lightOrigin, start_light_origin);
 #endif
 
-	VectorSubtract(light_origin, tr.world->lightGridOrigin, light_origin);
+	VectorSubtract(lightOrigin, tr.world->lightGridOrigin, lightOrigin);
 	for (i = 0; i < 3; i++) {
 		float	v;
 
-		v = light_origin[i] * tr.world->lightGridInverseSize[i];
+		v = lightOrigin[i] * tr.world->lightGridInverseSize[i];
 		pos[i] = floor(v);
 		frac[i] = v - pos[i];
 		if (pos[i] < 0) {
@@ -185,10 +190,10 @@ static void R_SetupEntityLightingGrid(trRefEntity_t* ent)
 	VectorClear(direction);
 
 	// trilerp the light value
-	grid_step[0] = 1;
-	grid_step[1] = tr.world->lightGridBounds[0];
-	grid_step[2] = tr.world->lightGridBounds[0] * tr.world->lightGridBounds[1];
-	start_grid_pos = tr.world->lightGridArray + pos[0] * grid_step[0] + pos[1] * grid_step[1] + pos[2] * grid_step[2];
+	gridStep[0] = 1;
+	gridStep[1] = tr.world->lightGridBounds[0];
+	gridStep[2] = tr.world->lightGridBounds[0] * tr.world->lightGridBounds[1];
+	startGridPos = tr.world->lightGridArray + pos[0] * gridStep[0] + pos[1] * gridStep[1] + pos[2] * gridStep[2];
 #if ACCURATE_LIGHTGRID_SAMPLING
 	vec3_t	startGridOrg;
 	VectorCopy(tr.world->lightGridOrigin, startGridOrg);
@@ -197,7 +202,7 @@ static void R_SetupEntityLightingGrid(trRefEntity_t* ent)
 	startGridOrg[2] += pos[2] * tr.world->lightGridSize[2];
 #endif
 
-	total_factor = 0;
+	totalFactor = 0;
 	for (i = 0; i < 8; i++) {
 		float			factor;
 		mgrid_t* data;
@@ -210,11 +215,11 @@ static void R_SetupEntityLightingGrid(trRefEntity_t* ent)
 #endif
 
 		factor = 1.0;
-		grid_pos = start_grid_pos;
+		grid_pos = startGridPos;
 		for (j = 0; j < 3; j++) {
 			if (i & 1 << j) {
 				factor *= frac[j];
-				grid_pos += grid_step[j];
+				grid_pos += gridStep[j];
 #if ACCURATE_LIGHTGRID_SAMPLING
 				gridOrg[j] += tr.world->lightGridSize[j];
 #endif
@@ -242,7 +247,7 @@ static void R_SetupEntityLightingGrid(trRefEntity_t* ent)
 		}
 #endif
 
-		total_factor += factor;
+		totalFactor += factor;
 
 		for (j = 0; j < MAXLIGHTMAPS; j++)
 		{
@@ -318,11 +323,11 @@ static void R_SetupEntityLightingGrid(trRefEntity_t* ent)
 #endif
 	}
 
-	if (total_factor > 0 && total_factor < 0.99)
+	if (totalFactor > 0 && totalFactor < 0.99)
 	{
-		total_factor = 1.0 / total_factor;
-		VectorScale(ent->ambientLight, total_factor, ent->ambientLight);
-		VectorScale(ent->directedLight, total_factor, ent->directedLight);
+		totalFactor = 1.0 / totalFactor;
+		VectorScale(ent->ambientLight, totalFactor, ent->ambientLight);
+		VectorScale(ent->directedLight, totalFactor, ent->directedLight);
 	}
 
 	VectorScale(ent->ambientLight, r_ambientScale->value, ent->ambientLight);
@@ -376,8 +381,8 @@ by the Calc_* functions
 */
 void R_SetupEntityLighting(const trRefdef_t* refdef, trRefEntity_t* ent) {
 	int				i;
-	vec3_t			light_dir;
-	vec3_t			light_origin;
+	vec3_t			lightDir;
+	vec3_t			lightOrigin;
 
 	// lighting calculations
 	if (ent->lightingCalculated) {
@@ -392,10 +397,10 @@ void R_SetupEntityLighting(const trRefdef_t* refdef, trRefEntity_t* ent) {
 		// seperate lightOrigins are needed so an object that is
 		// sinking into the ground can still be lit, and so
 		// multi-part models can be lit identically
-		VectorCopy(ent->e.lightingOrigin, light_origin);
+		VectorCopy(ent->e.lightingOrigin, lightOrigin);
 	}
 	else {
-		VectorCopy(ent->e.origin, light_origin);
+		VectorCopy(ent->e.origin, lightOrigin);
 	}
 
 	// if NOWORLDMODEL, only use dynamic lights (menu system, etc)
@@ -430,12 +435,12 @@ void R_SetupEntityLighting(const trRefdef_t* refdef, trRefEntity_t* ent) {
 	// modify the light by dynamic lights
 	//
 	float d = VectorLength(ent->directedLight);
-	VectorScale(ent->lightDir, d, light_dir);
+	VectorScale(ent->lightDir, d, lightDir);
 
 	for (i = 0; i < refdef->num_dlights; i++) {
 		vec3_t dir;
 		const dlight_t* dl = &refdef->dlights[i];
-		VectorSubtract(dl->origin, light_origin, dir);
+		VectorSubtract(dl->origin, lightOrigin, dir);
 		d = VectorNormalize(dir);
 
 		const float power = DLIGHT_AT_RADIUS * (dl->radius * dl->radius);
@@ -445,7 +450,7 @@ void R_SetupEntityLighting(const trRefdef_t* refdef, trRefEntity_t* ent) {
 		d = power / (d * d);
 
 		VectorMA(ent->directedLight, d, dl->color, ent->directedLight);
-		VectorMA(light_dir, d, dir, light_dir);
+		VectorMA(lightDir, d, dir, lightDir);
 	}
 
 	// clamp ambient
@@ -466,20 +471,20 @@ void R_SetupEntityLighting(const trRefdef_t* refdef, trRefEntity_t* ent) {
 	reinterpret_cast<byte*>(&ent->ambientLightInt)[3] = 0xff;
 
 	// transform the direction to local space
-	VectorNormalize(light_dir);
-	ent->lightDir[0] = DotProduct(light_dir, ent->e.axis[0]);
-	ent->lightDir[1] = DotProduct(light_dir, ent->e.axis[1]);
-	ent->lightDir[2] = DotProduct(light_dir, ent->e.axis[2]);
+	VectorNormalize(lightDir);
+	ent->lightDir[0] = DotProduct(lightDir, ent->e.axis[0]);
+	ent->lightDir[1] = DotProduct(lightDir, ent->e.axis[1]);
+	ent->lightDir[2] = DotProduct(lightDir, ent->e.axis[2]);
 }
 
 //pass in origin
-qboolean RE_GetLighting(const vec3_t origin, vec3_t ambient_light, vec3_t directed_light, vec3_t light_dir) {
+qboolean RE_GetLighting(const vec3_t origin, vec3_t ambient_light, vec3_t directed_light, vec3_t lightDir) {
 	trRefEntity_t tr_ent;
 
 	if (!tr.world || !tr.world->lightGridData) {
 		ambient_light[0] = ambient_light[1] = ambient_light[2] = 255.0;
 		directed_light[0] = directed_light[1] = directed_light[2] = 255.0;
-		VectorCopy(tr.sunDirection, light_dir);
+		VectorCopy(tr.sunDirection, lightDir);
 		return qfalse;
 	}
 	memset(&tr_ent, 0, sizeof tr_ent);
@@ -493,7 +498,7 @@ qboolean RE_GetLighting(const vec3_t origin, vec3_t ambient_light, vec3_t direct
 	R_SetupEntityLightingGrid(&tr_ent);
 	VectorCopy(tr_ent.ambientLight, ambient_light);
 	VectorCopy(tr_ent.directedLight, directed_light);
-	VectorCopy(tr_ent.lightDir, light_dir);
+	VectorCopy(tr_ent.lightDir, lightDir);
 	return qtrue;
 }
 
@@ -502,7 +507,7 @@ qboolean RE_GetLighting(const vec3_t origin, vec3_t ambient_light, vec3_t direct
 R_LightForPoint
 =================
 */
-int R_LightForPoint(vec3_t point, vec3_t ambient_light, vec3_t directed_light, vec3_t light_dir)
+int R_LightForPoint(vec3_t point, vec3_t ambient_light, vec3_t directed_light, vec3_t lightDir)
 {
 	trRefEntity_t ent;
 
@@ -515,7 +520,7 @@ int R_LightForPoint(vec3_t point, vec3_t ambient_light, vec3_t directed_light, v
 	R_SetupEntityLightingGrid(&ent);
 	VectorCopy(ent.ambientLight, ambient_light);
 	VectorCopy(ent.directedLight, directed_light);
-	VectorCopy(ent.lightDir, light_dir);
+	VectorCopy(ent.lightDir, lightDir);
 
 	return qtrue;
 }

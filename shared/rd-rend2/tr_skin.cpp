@@ -379,7 +379,7 @@ AnimationCFGs_t AnimationCFGs;
 // Usage:  call with psDest == NULL for a size enquire (for malloc),
 //				then with NZ ptr for it to copy to your supplied buffer...
 //
-int RE_GetAnimationCFG(const char* psCFGFilename, char* psDest, int iDestSize)
+int RE_GetAnimationCFG(const char* psCFGFilename, char* psDest, const int iDestSize)
 {
 	char* psText = NULL;
 

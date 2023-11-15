@@ -1620,7 +1620,7 @@ void R_Register()
 	r_primitives = ri.Cvar_Get("r_primitives", "0", CVAR_ARCHIVE_ND);
 	ri.Cvar_CheckRange(r_primitives, MIN_PRIMITIVES, MAX_PRIMITIVES, qtrue);
 
-	r_ambientScale = ri.Cvar_Get("r_ambientScale", "0.5", CVAR_CHEAT);
+	r_ambientScale = ri.Cvar_Get("r_ambientScale", "0.6", CVAR_CHEAT);
 	r_directedScale = ri.Cvar_Get("r_directedScale", "1", CVAR_CHEAT);
 
 	//

@@ -33,10 +33,11 @@ Returns true if the grid is completely culled away.
 Also sets the clipped hint bit in tess
 =================
 */
-static qboolean	R_CullTriSurf(const srfTriangles_t* cv) {
-	const int box_cull = R_CullLocalBox(cv->bounds);
+static qboolean	R_CullTriSurf(const srfTriangles_t* cv)
+{
+	const int boxCull = R_CullLocalBox(cv->bounds);
 
-	if (box_cull == CULL_OUT) {
+	if (boxCull == CULL_OUT) {
 		return qtrue;
 	}
 	return qfalse;
@@ -50,39 +51,40 @@ Returns true if the grid is completely culled away.
 Also sets the clipped hint bit in tess
 =================
 */
-static qboolean	R_CullGrid(const srfGridMesh_t* cv) {
-	int 	sphere_cull;
+static qboolean	R_CullGrid(const srfGridMesh_t* cv)
+{
+	int 	sphereCull;
 
 	if (r_nocurves->integer) {
 		return qtrue;
 	}
 
-	if (tr.currententity_num != REFENTITYNUM_WORLD) {
-		sphere_cull = R_CullLocalPointAndRadius(cv->localOrigin, cv->meshRadius);
+	if (tr.currentEntityNum != REFENTITYNUM_WORLD) {
+		sphereCull = R_CullLocalPointAndRadius(cv->localOrigin, cv->meshRadius);
 	}
 	else {
-		sphere_cull = R_CullPointAndRadius(cv->localOrigin, cv->meshRadius);
+		sphereCull = R_CullPointAndRadius(cv->localOrigin, cv->meshRadius);
 	}
 
 	// check for trivial reject
-	if (sphere_cull == CULL_OUT)
+	if (sphereCull == CULL_OUT)
 	{
 		tr.pc.c_sphere_cull_patch_out++;
 		return qtrue;
 	}
 	// check bounding box if necessary
-	if (sphere_cull == CULL_CLIP)
+	if (sphereCull == CULL_CLIP)
 	{
 		tr.pc.c_sphere_cull_patch_clip++;
 
-		const int box_cull = R_CullLocalBox(cv->meshBounds);
+		const int boxCull = R_CullLocalBox(cv->meshBounds);
 
-		if (box_cull == CULL_OUT)
+		if (boxCull == CULL_OUT)
 		{
 			tr.pc.c_box_cull_patch_out++;
 			return qtrue;
 		}
-		if (box_cull == CULL_IN)
+		if (boxCull == CULL_IN)
 		{
 			tr.pc.c_box_cull_patch_in++;
 		}
@@ -109,7 +111,8 @@ added to the sorting list.
 This will also allow mirrors on both sides of a model without recursion.
 ================
 */
-static qboolean	R_CullSurface(surfaceType_t* surface, const shader_t* shader) {
+static qboolean	R_CullSurface(surfaceType_t* surface, const shader_t* shader)
+{
 	if (r_nocull->integer == 1) {
 		return qfalse;
 	}
@@ -243,7 +246,8 @@ that is touched by one or more dlights, so try to throw out
 more dlights if possible.
 ====================
 */
-static int R_DlightSurface(const msurface_t* surf, int dlightBits) {
+static int R_DlightSurface(msurface_t* surf, int dlightBits)
+{
 	if (*surf->data == SF_FACE) {
 		dlightBits = R_DlightFace(reinterpret_cast<srfSurfaceFace_t*>(surf->data), dlightBits);
 	}
@@ -291,14 +295,11 @@ static void R_AddWorldSurface(msurface_t* surf, int dlightBits, const qboolean n
 			return;
 		}
 		surf->viewCount = tr.viewCount;
-		// FIXME: bmodel fog?
 	}
 
-	//	surf->viewCount = tr.viewCount;
-		// FIXME: bmodel fog?
-
-		// try to cull before dlighting or adding
-	if (R_CullSurface(surf->data, surf->shader)) {
+	// try to cull before dlighting or adding
+	if (R_CullSurface(surf->data, surf->shader))
+	{
 		return;
 	}
 
@@ -368,7 +369,7 @@ float GetQuadArea(vec3_t v1, vec3_t v2, vec3_t v3, vec3_t v4)
 		dis2[0] * dis2[0] + dis2[1] * dis2[1] + dis2[2] * dis2[2];
 }
 
-void RE_GetBModelVerts(const int bmodel_index, vec3_t* verts, vec3_t normal)
+void RE_GetBModelVerts(const int bmodelIndex, vec3_t* verts, vec3_t normal)
 {
 	msurface_t* surfs;
 	srfSurfaceFace_t* face;
@@ -377,7 +378,7 @@ void RE_GetBModelVerts(const int bmodel_index, vec3_t* verts, vec3_t normal)
 	int					max_dist[2] = { 0,0 };
 	int					max_indx[2] = { 0,0 };
 
-	const model_t* p_model = R_GetModelByHandle(bmodel_index);
+	const model_t* p_model = R_GetModelByHandle(bmodelIndex);
 	const bmodel_t* bmodel = p_model->bmodel;
 
 	// Loop through all surfaces on the brush and find the best two candidates
@@ -737,7 +738,7 @@ static void R_MarkLeaves() {
 R_AddWorldSurfaces
 =============
 */
-void R_AddWorldSurfaces()
+void R_AddWorldSurfaces(void)
 {
 	if (!r_drawworld->integer)
 	{
@@ -748,8 +749,8 @@ void R_AddWorldSurfaces()
 		return;
 	}
 
-	tr.currententity_num = REFENTITYNUM_WORLD;
-	tr.shiftedentity_num = tr.currententity_num << QSORT_REFENTITYNUM_SHIFT;
+	tr.currentEntityNum = REFENTITYNUM_WORLD;
+	tr.shiftedEntityNum = tr.currentEntityNum << QSORT_REFENTITYNUM_SHIFT;
 
 	// determine which leaves are in the PVS / areamask
 	R_MarkLeaves();

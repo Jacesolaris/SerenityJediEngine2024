@@ -1424,7 +1424,7 @@ static void RB_RenderDrawSurfList(drawSurf_t* drawSurfs, const int numDrawSurfs)
 	}
 
 	// Do the drawing and release memory
-	RB_SubmitRenderPass(*backEndData->currentPass,*backEndData->perFrameMemory);
+	RB_SubmitRenderPass(*backEndData->currentPass, *backEndData->perFrameMemory);
 
 	backEndData->perFrameMemory->ResetTo(allocMark);
 	backEndData->currentPass = nullptr;

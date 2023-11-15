@@ -656,7 +656,7 @@ static inline bool R_AverageTessXYZ(vec3_t dest)
 }
 #endif
 
-void RB_RenderDrawSurfList(drawSurf_t* drawSurfs, const int numDrawSurfs) 
+void RB_RenderDrawSurfList(drawSurf_t* drawSurfs, const int numDrawSurfs)
 {
 	shader_t* shader;
 	int				fogNum;
@@ -752,17 +752,7 @@ void RB_RenderDrawSurfList(drawSurf_t* drawSurfs, const int numDrawSurfs)
 				pRender->dlighted = dlighted;
 				pRender->fogNum = fogNum;
 				pRender->shader = shader;
-
-				/*
-				if (shader == tr.distortionShader)
-				{
-					pRender->eValid = qfalse;
-				}
-				else
-				*/
-				{
-					pRender->eValid = qtrue;
-				}
+				pRender->eValid = qtrue;
 
 				//assure the info is back to the last set state
 				shader = oldShader;
@@ -776,49 +766,12 @@ void RB_RenderDrawSurfList(drawSurf_t* drawSurfs, const int numDrawSurfs)
 				continue;
 			}
 		}
-		/*
-		else if (shader == tr.distortionShader &&
-			g_numPostRenders < MAX_POST_RENDERS)
-		{ //not an ent, just a surface that needs this effect
-			pRender = &g_postRenders[g_numPostRenders];
-
-			g_numPostRenders++;
-
-			depthRange = 0;
-			pRender->depthRange = depthRange;
-
-			//It is not necessary to update the old* values because
-			//we are not updating now with the current values.
-			depthRange = oldDepthRange;
-
-			//store off the ent num
-			pRender->entNum = entityNum;
-
-			//remember the other values necessary for rendering this surf
-			pRender->drawSurf = drawSurf;
-			pRender->dlighted = dlighted;
-			pRender->fogNum = fogNum;
-			pRender->shader = shader;
-
-			pRender->eValid = qfalse;
-
-			//assure the info is back to the last set state
-			shader = oldShader;
-			entityNum = oldEntityNum;
-			fogNum = oldFogNum;
-			dlighted = oldDlighted;
-
-			oldSort = -20; //invalidate this thing, cause we may want to postrender more surfs of the same sort
-
-			//continue without bothering to begin a draw surf
-			continue;
-		}
-		*/
 
 		if (shader != oldShader || fogNum != oldFogNum || dlighted != oldDlighted
 			|| entityNum != oldEntityNum && !shader->entityMergable)
 		{
-			if (oldShader != nullptr) {
+			if (oldShader != nullptr)
+			{
 				RB_EndSurface();
 
 				if (!didShadowPass && shader && shader->sort > SS_BANNER)
@@ -907,9 +860,6 @@ void RB_RenderDrawSurfList(drawSurf_t* drawSurfs, const int numDrawSurfs)
 
 	backEnd.refdef.floatTime = originalTime;
 
-	// draw the contents of the last shader batch
-	//assert(entityNum < MAX_GENTITIES);
-
 	if (oldShader != nullptr) {
 		RB_EndSurface();
 	}
@@ -972,75 +922,6 @@ void RB_RenderDrawSurfList(drawSurf_t* drawSurfs, const int numDrawSurfs)
 				qglDepthRange(0, 0);
 				break;
 			}
-
-			/*
-			if (!pRender->eValid)
-			{ //special full-screen "distortion" (or refraction or whatever the heck you want to call it)
-				if (!tr_stencilled)
-				{ //only need to do this once every frame (that a surface using it is around)
-					int radX = 2048;
-					int radY = 2048;
-					int x = glConfig.vidWidth/2;
-					int y = glConfig.vidHeight/2;
-					int cX, cY;
-
-					GL_Bind( tr.screenImage );
-					//using this method, we could pixel-filter the texture and all sorts of crazy stuff.
-					//but, it is slow as hell.
-#if 0
-					static byte *tmp = NULL;
-					if (!tmp)
-					{
-						tmp = (byte *)Z_Malloc((sizeof(byte)*4)*(glConfig.vidWidth*glConfig.vidHeight), TAG_ICARUS, qtrue);
-					}
-					qglReadPixels(0, 0, glConfig.vidWidth, glConfig.vidHeight, GL_RGBA, GL_UNSIGNED_BYTE, tmp);
-					qglTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 512, 512, 0, GL_RGBA, GL_UNSIGNED_BYTE, tmp);
-#endif
-
-					if (radX > glConfig.maxTextureSize)
-					{
-						radX = glConfig.maxTextureSize;
-					}
-					if (radY > glConfig.maxTextureSize)
-					{
-						radY = glConfig.maxTextureSize;
-					}
-
-					while (glConfig.vidWidth < radX)
-					{
-						radX /= 2;
-					}
-					while (glConfig.vidHeight < radY)
-					{
-						radY /= 2;
-					}
-
-					cX = x-(radX/2);
-					cY = y-(radY/2);
-
-					if (cX+radX > glConfig.vidWidth)
-					{ //would it go off screen?
-						cX = glConfig.vidWidth-radX;
-					}
-					else if (cX < 0)
-					{ //cap it off at 0
-						cX = 0;
-					}
-
-					if (cY+radY > glConfig.vidHeight)
-					{ //would it go off screen?
-						cY = glConfig.vidHeight-radY;
-					}
-					else if (cY < 0)
-					{ //cap it off at 0
-						cY = 0;
-					}
-
-					qglCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16, cX, cY, radX, radY, 0);
-				}
-				lastPostEnt = ENTITYNUM_NONE;
-			}
-			*/
 			if (!pRender->eValid)
 			{
 			}
@@ -1664,7 +1545,7 @@ const void* RB_DrawBuffer(const void* data) {
 
 		if (i == 42) {
 			i = Q_irand(0, 8);
-		}
+	}
 		switch (i)
 		{
 		default:
@@ -1696,7 +1577,7 @@ const void* RB_DrawBuffer(const void* data) {
 			break;
 		}
 		qglClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	}
+}
 
 	return cmd + 1;
 }

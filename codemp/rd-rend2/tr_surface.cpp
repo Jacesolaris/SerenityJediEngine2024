@@ -94,7 +94,7 @@ void RB_CheckVBOandIBO(VBO_t* vbo, IBO_t* ibo)
 RB_AddQuadStampExt
 ==============
 */
-void RB_AddQuadStampExt(vec3_t origin, vec3_t left, vec3_t up, float color[4], float s1, float t1, float s2, float t2)
+void RB_AddQuadStampExt(vec3_t origin, vec3_t left, vec3_t up, float color[4], const float s1, const float t1, const float s2, const float t2)
 {
 	vec3_t		normal;
 	int			ndx;
@@ -346,7 +346,8 @@ static void RB_SurfaceOrientedQuad(void)
 RB_SurfacePolychain
 =============
 */
-static void RB_SurfacePolychain(srfPoly_t* p) {
+static void RB_SurfacePolychain(const srfPoly_t* p) 
+{
 	int		i;
 	int		numv;
 
@@ -603,14 +604,14 @@ RB_SurfaceBeam
 */
 static void RB_SurfaceBeam(void)
 {
-#define NUM_BEAM_SEGS 6
+	constexpr auto NUM_BEAM_SEGS = 6;
 	refEntity_t* e;
 	shaderProgram_t* sp = &tr.textureColorShader;
 	int	i;
 	vec3_t perpvec;
-	vec3_t direction, normalized_direction;
-	vec3_t	start_points[NUM_BEAM_SEGS], end_points[NUM_BEAM_SEGS];
-	vec3_t oldorigin, origin;
+	vec3_t direction{}, normalized_direction{};
+	vec3_t	start_points[NUM_BEAM_SEGS]{}, end_points[NUM_BEAM_SEGS]{};
+	vec3_t oldorigin{}, origin{};
 
 	e = &backEnd.currentEntity->e;
 
@@ -695,12 +696,12 @@ static void RB_SurfaceBeam(void)
 //------------------
 // DoSprite
 //------------------
-static void DoSprite(vec3_t origin, float radius, float rotation)
+static void DoSprite(vec3_t origin, const float radius, const float rotation)
 {
 	float	s, c;
 	float	ang;
 	vec3_t	left, up;
-	float	color[4];
+	float	color[4]{};
 
 	ang = M_PI * rotation / 180.0f;
 	s = sin(ang);
@@ -727,55 +728,31 @@ static void DoSprite(vec3_t origin, float radius, float rotation)
 //------------------
 static void RB_SurfaceSaberGlow()
 {
-	vec3_t		end;
-	refEntity_t* e;
-
-	e = &backEnd.currentEntity->e;
+	refEntity_t* e = &backEnd.currentEntity->e;
 
 	// Render the glow part of the blade
 	for (float i = e->saberLength; i > 0; i -= e->radius * 0.65f)
 	{
+		vec3_t end;
 		VectorMA(e->origin, i, e->axis[0], end);
 
-		DoSprite(end, e->radius, 0.0f);//random() * 360.0f );
+		DoSprite(end, e->radius, 0.0f);//Q_flrand(0.0f, 1.0f) * 360.0f );
 		e->radius += 0.017f;
 	}
 
 	// Big hilt sprite
 	// Please don't kill me Pat...I liked the hilt glow blob, but wanted a subtle pulse.:)  Feel free to ditch it if you don't like it.  --Jeff
 	// Please don't kill me Jeff...  The pulse is good, but now I want the halo bigger if the saber is shorter...  --Pat
-	DoSprite(e->origin, 5.5f + Q_flrand(0.0f, 1.0f) * 0.25f, 0.0f);//random() * 360.0f );
+	DoSprite(e->origin, 5.5f + Q_flrand(0.0f, 1.0f) * 0.15f, 0.0f);//Q_flrand(0.0f, 1.0f) * 360.0f );
 }
 
-/*
-==============
-RB_SurfaceLine
-==============
-*/
-//
-//	Values for a proper line render primitive...
-//		Width
-//		STScale (how many times to loop a texture)
-//		alpha
-//		RGB
-//
-//  Values for proper line object...
-//		lifetime
-//		dscale
-//		startalpha, endalpha
-//		startRGB, endRGB
-//
-
-static void DoLine(const vec3_t start, const vec3_t end, const vec3_t up, float spanWidth)
+static void DoLine(const vec3_t start, const vec3_t end, const vec3_t up, const float spanWidth)
 {
-	float		spanWidth2;
-	int			vbase;
-
 	RB_CHECKOVERFLOW(4, 6);
 
-	vbase = tess.numVertexes;
+	const int vbase = tess.numVertexes;
 
-	spanWidth2 = -spanWidth;
+	const float spanWidth2 = -spanWidth;
 
 	VectorMA(start, spanWidth, up, tess.xyz[tess.numVertexes]);
 	tess.texCoords[tess.numVertexes][0][0] = 0;
@@ -1116,7 +1093,7 @@ static void CreateShape()
 }
 
 //----------------------------------------------------------------------------
-static void ApplyShape(vec3_t start, vec3_t end, vec3_t right, float sradius, float eradius, int count)
+static void ApplyShape(vec3_t start, vec3_t end, vec3_t right, const float sradius, const float eradius, const int count)
 //----------------------------------------------------------------------------
 {
 	vec3_t	point1, point2, fwd;
@@ -1165,7 +1142,7 @@ static void ApplyShape(vec3_t start, vec3_t end, vec3_t right, float sradius, fl
 }
 
 //----------------------------------------------------------------------------
-static void DoBoltSeg(vec3_t start, vec3_t end, vec3_t right, float radius)
+static void DoBoltSeg(vec3_t start, vec3_t end, vec3_t right, const float radius)
 //----------------------------------------------------------------------------
 {
 	refEntity_t* e;
@@ -1492,7 +1469,7 @@ static void LerpMeshVertexes_altivec(md3Surface_t* surf, float backlerp)
 #endif
 #endif
 
-static void LerpMeshVertexes_scalar(mdvSurface_t* surf, float backlerp)
+static void LerpMeshVertexes_scalar(mdvSurface_t* surf, const float backlerp)
 {
 #if 0
 	short* oldXyz, * newXyz, * oldNormals, * newNormals;
@@ -1648,7 +1625,7 @@ static void LerpMeshVertexes_scalar(mdvSurface_t* surf, float backlerp)
 	}
 }
 
-static void LerpMeshVertexes(mdvSurface_t* surf, float backlerp)
+static void LerpMeshVertexes(mdvSurface_t* surf, const float backlerp)
 {
 #if 0
 #if idppc_altivec
@@ -1720,8 +1697,9 @@ static void RB_SurfaceBSPFace(srfBspSurface_t* srf) {
 		srf->indexes, srf->dlightBits, srf->pshadowBits);
 }
 
-static float	LodErrorForVolume(vec3_t local, float radius) {
-	vec3_t		world;
+static float LodErrorForVolume(vec3_t local, float radius)
+{
+	vec3_t		world{};
 	float		d;
 
 	// never let it go negative
@@ -1990,8 +1968,10 @@ RB_SurfaceEntity
 Entities that have a single procedurally generated surface
 ====================
 */
-static void RB_SurfaceEntity(surfaceType_t* surfType) {
-	switch (backEnd.currentEntity->e.reType) {
+static void RB_SurfaceEntity(surfaceType_t* surfType)
+{
+	switch (backEnd.currentEntity->e.reType) 
+	{
 	case RT_SPRITE:
 		RB_SurfaceSprite();
 		break;
@@ -2048,7 +2028,8 @@ static void RB_SurfaceEntity(surfaceType_t* surfType) {
 	tess.shader->entityMergable = qtrue;
 }
 
-static void RB_SurfaceBad(surfaceType_t* surfType) {
+static void RB_SurfaceBad(surfaceType_t* surfType) 
+{
 	ri->Printf(PRINT_ALL, "Bad surface tesselated.\n");
 }
 

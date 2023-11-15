@@ -33,7 +33,7 @@ bool tr_stencilled = false;
 extern qboolean tr_distortionPrePost; //tr_shadows.cpp
 extern qboolean tr_distortionNegate; //tr_shadows.cpp
 extern void RB_CaptureScreenImage(); //tr_shadows.cpp
-extern void RB_DistortionFill(); //tr_shadows.cpp
+extern void RB_DistortionFill(void); //tr_shadows.cpp
 static void RB_DrawGlowOverlay();
 static void RB_BlurGlowTexture();
 

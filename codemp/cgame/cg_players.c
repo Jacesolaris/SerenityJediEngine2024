@@ -6127,14 +6127,14 @@ CG_LightVerts
 int CG_LightVerts(vec3_t normal, const int numVerts, polyVert_t* verts)
 {
 	vec3_t ambient_light;
-	vec3_t light_dir;
+	vec3_t lightDir;
 	vec3_t directed_light;
 
-	trap->R_LightForPoint(verts[0].xyz, ambient_light, directed_light, light_dir);
+	trap->R_LightForPoint(verts[0].xyz, ambient_light, directed_light, lightDir);
 
 	for (int i = 0; i < numVerts; i++)
 	{
-		const float incoming = DotProduct(normal, light_dir);
+		const float incoming = DotProduct(normal, lightDir);
 		if (incoming <= 0)
 		{
 			verts[i].modulate[0] = ambient_light[0];
@@ -11462,9 +11462,9 @@ void CG_CreateSaberMarks(vec3_t start, vec3_t end, vec3_t normal)
 	int i, j;
 	matrix3_t axis;
 	vec3_t original_points[4];
-	vec3_t mark_points[MAX_MARK_POINTS], projection;
+	vec3_t markPoints[MAX_MARK_POINTS], projection;
 	polyVert_t* v;
-	markFragment_t mark_fragments[MAX_MARK_FRAGMENTS], * mf;
+	markFragment_t markFragments[MAX_MARK_FRAGMENTS], * mf;
 
 	if (!cg_marks.integer)
 	{
@@ -11492,10 +11492,10 @@ void CG_CreateSaberMarks(vec3_t start, vec3_t end, vec3_t normal)
 	VectorScale(normal, -1, projection);
 
 	// get the fragments
-	const int num_fragments = trap->R_MarkFragments(4, (const float(*)[3])original_points,
-		projection, MAX_MARK_POINTS, mark_points[0], MAX_MARK_FRAGMENTS, mark_fragments);
+	const int numFragments = trap->R_MarkFragments(4, (const float(*)[3])original_points,
+		projection, MAX_MARK_POINTS, markPoints[0], MAX_MARK_FRAGMENTS, markFragments);
 
-	for (i = 0, mf = mark_fragments; i < num_fragments; i++, mf++)
+	for (i = 0, mf = markFragments; i < numFragments; i++, mf++)
 	{
 		polyVert_t verts[MAX_VERTS_ON_POLY];
 		// we have an upper limit on the complexity of polygons that we store persistantly
@@ -11510,7 +11510,7 @@ void CG_CreateSaberMarks(vec3_t start, vec3_t end, vec3_t normal)
 			vec3_t delta;
 
 			// Set up our texture coords, this may need some work
-			VectorCopy(mark_points[mf->firstPoint + j], v->xyz);
+			VectorCopy(markPoints[mf->firstPoint + j], v->xyz);
 			VectorAdd(end, start, mid);
 			VectorScale(mid, 0.5f, mid);
 			VectorSubtract(v->xyz, mid, delta);

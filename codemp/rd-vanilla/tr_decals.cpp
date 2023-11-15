@@ -45,7 +45,7 @@ enum
 
 #define		DECAL_FADE_TIME		1000
 
-decalPoly_t* RE_AllocDecal(int type);
+decalPoly_t* RE_AllocDecal(const int type);
 
 static decalPoly_t	re_decalPolys[DECALPOLY_TYPE_MAX][MAX_DECAL_POLYS];
 
@@ -153,17 +153,17 @@ passed to the renderer.
 #define	MAX_DECAL_FRAGMENTS	128
 #define	MAX_DECAL_POINTS		384
 
-void RE_AddDecalToScene(const qhandle_t shader, const vec3_t origin, const vec3_t dir, const float orientation, const float r, const float g, const float b, const float a, qboolean alpha_fade, const float radius, const qboolean temporary)
+void RE_AddDecalToScene(const qhandle_t decalShader, const vec3_t origin, const vec3_t dir, const float orientation, const float red, const float green, const float blue, const float alpha, qboolean alphaFade, const float radius, const qboolean temporary)
 {
 	matrix3_t		axis{};
 	vec3_t			original_points[4]{};
 	byte			colors[4]{};
 	int				i, j;
-	markFragment_t	mark_fragments[MAX_DECAL_FRAGMENTS], * mf;
-	vec3_t			mark_points[MAX_DECAL_POINTS]{};
+	markFragment_t	markFragments[MAX_DECAL_FRAGMENTS], * mf;
+	vec3_t			markPoints[MAX_DECAL_POINTS]{};
 	vec3_t			projection;
 
-	assert(shader);
+	assert(decalShader);
 
 	if (r_markcount->integer <= 0 && !temporary)
 		return;
@@ -190,16 +190,16 @@ void RE_AddDecalToScene(const qhandle_t shader, const vec3_t origin, const vec3_
 
 	// get the fragments
 	VectorScale(dir, -20, projection);
-	const int num_fragments = R_MarkFragments(4, original_points,
-		projection, MAX_DECAL_POINTS, mark_points[0],
-		MAX_DECAL_FRAGMENTS, mark_fragments);
+	const int numFragments = R_MarkFragments(4, original_points,
+		projection, MAX_DECAL_POINTS, markPoints[0],
+		MAX_DECAL_FRAGMENTS, markFragments);
 
-	colors[0] = r * 255;
-	colors[1] = g * 255;
-	colors[2] = b * 255;
-	colors[3] = a * 255;
+	colors[0] = red * 255;
+	colors[1] = green * 255;
+	colors[2] = blue * 255;
+	colors[3] = alpha * 255;
 
-	for (i = 0, mf = mark_fragments; i < num_fragments; i++, mf++)
+	for (i = 0, mf = markFragments; i < numFragments; i++, mf++)
 	{
 		polyVert_t* v;
 		polyVert_t	verts[MAX_VERTS_ON_DECAL_POLY]{};
@@ -213,7 +213,7 @@ void RE_AddDecalToScene(const qhandle_t shader, const vec3_t origin, const vec3_
 		{
 			vec3_t		delta;
 
-			VectorCopy(mark_points[mf->firstPoint + j], v->xyz);
+			VectorCopy(markPoints[mf->firstPoint + j], v->xyz);
 
 			VectorSubtract(v->xyz, origin, delta);
 			v->st[0] = 0.5 + DotProduct(delta, axis[1]) * tex_coord_scale;
@@ -226,19 +226,19 @@ void RE_AddDecalToScene(const qhandle_t shader, const vec3_t origin, const vec3_
 		// if it is a temporary (shadow) mark, add it immediately and forget about it
 		if (temporary)
 		{
-			RE_AddPolyToScene(shader, mf->numPoints, verts, 1);
+			RE_AddPolyToScene(decalShader, mf->numPoints, verts, 1);
 			continue;
 		}
 
 		// otherwise save it persistantly
 		decalPoly_t* decal = RE_AllocDecal(DECALPOLY_TYPE_NORMAL);
 		decal->time = tr.refdef.time;
-		decal->shader = shader;
+		decal->shader = decalShader;
 		decal->poly.numVerts = mf->numPoints;
-		decal->color[0] = r;
-		decal->color[1] = g;
-		decal->color[2] = b;
-		decal->color[3] = a;
+		decal->color[0] = red;
+		decal->color[1] = green;
+		decal->color[2] = blue;
+		decal->color[3] = alpha;
 		memcpy(decal->verts, verts, mf->numPoints * sizeof verts[0]);
 	}
 }
@@ -248,15 +248,15 @@ void RE_AddDecalToScene(const qhandle_t shader, const vec3_t origin, const vec3_
 R_AddDecals
 ===============
 */
-void R_AddDecals()
+void R_AddDecals(void)
 {
-	static int  last_mark_count = -1;
+	static int  lastMarkCount = -1;
 
-	if (r_markcount->integer != last_mark_count) {
-		if (last_mark_count != -1)
+	if (r_markcount->integer != lastMarkCount) {
+		if (lastMarkCount != -1)
 			RE_ClearDecals();
 
-		last_mark_count = r_markcount->integer;
+		lastMarkCount = r_markcount->integer;
 	}
 
 	if (r_markcount->integer <= 0)

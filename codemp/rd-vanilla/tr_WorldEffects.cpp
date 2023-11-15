@@ -98,7 +98,7 @@ inline float FloatRand()
 	return static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
 }
 
-inline void SnapFloatToGrid(float& f, const int grid_size)
+inline void SnapFloatToGrid(float& f, const int GridSize)
 {
 	f = static_cast<int>(f);
 
@@ -108,11 +108,11 @@ inline void SnapFloatToGrid(float& f, const int grid_size)
 		f *= -1; // Temporarly make it positive
 	}
 
-	int offset = static_cast<int>(f) % grid_size;
+	int offset = static_cast<int>(f) % GridSize;
 	const int offset_abs = abs(offset);
-	if (offset_abs > grid_size / 2)
+	if (offset_abs > GridSize / 2)
 	{
-		offset = (grid_size - offset_abs) * -1;
+		offset = (GridSize - offset_abs) * -1;
 	}
 
 	f -= offset;
@@ -124,14 +124,14 @@ inline void SnapFloatToGrid(float& f, const int grid_size)
 
 	f = static_cast<int>(f);
 
-	assert(static_cast<int>(f) % grid_size == 0);
+	assert(static_cast<int>(f) % GridSize == 0);
 }
 
-inline void SnapVectorToGrid(CVec3& vec, const int grid_size)
+inline void SnapVectorToGrid(CVec3& vec, const int GridSize)
 {
-	SnapFloatToGrid(vec[0], grid_size);
-	SnapFloatToGrid(vec[1], grid_size);
-	SnapFloatToGrid(vec[2], grid_size);
+	SnapFloatToGrid(vec[0], GridSize);
+	SnapFloatToGrid(vec[1], GridSize);
+	SnapFloatToGrid(vec[2], GridSize);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////

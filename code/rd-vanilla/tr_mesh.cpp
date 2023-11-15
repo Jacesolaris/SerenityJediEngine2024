@@ -99,22 +99,22 @@ static int R_CullModel(md3Header_t* header, const trRefEntity_t* ent)
 		{
 			int sphere_cull_b;
 
-			const int sphere_cull = R_CullLocalPointAndRadius(new_frame->localOrigin, new_frame->radius);
+			const int sphereCull = R_CullLocalPointAndRadius(new_frame->localOrigin, new_frame->radius);
 			if (new_frame == old_frame) {
-				sphere_cull_b = sphere_cull;
+				sphere_cull_b = sphereCull;
 			}
 			else {
 				sphere_cull_b = R_CullLocalPointAndRadius(old_frame->localOrigin, old_frame->radius);
 			}
 
-			if (sphere_cull == sphere_cull_b)
+			if (sphereCull == sphere_cull_b)
 			{
-				if (sphere_cull == CULL_OUT)
+				if (sphereCull == CULL_OUT)
 				{
 					tr.pc.c_sphere_cull_md3_out++;
 					return CULL_OUT;
 				}
-				if (sphere_cull == CULL_IN)
+				if (sphereCull == CULL_IN)
 				{
 					tr.pc.c_sphere_cull_md3_in++;
 					return CULL_IN;

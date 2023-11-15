@@ -183,7 +183,9 @@ R_LoadLightmaps
 */
 #define	DEFAULT_LIGHTMAP_SIZE	128
 #define MAX_LIGHTMAP_PAGES 2
-static	void R_LoadLightmaps(world_t* worldData, lump_t* l, lump_t* surfs) {
+
+static void R_LoadLightmaps(world_t* worldData, lump_t* l, lump_t* surfs)
+{
 	byte* buf, * buf_p;
 	dsurface_t* surf;
 	int			len;
@@ -982,15 +984,16 @@ static void ParseFace(const world_t* worldData, dsurface_t* ds, drawVert_t* vert
 ParseMesh
 ===============
 */
-static void ParseMesh(const world_t* worldData, dsurface_t* ds, drawVert_t* verts, packedTangentSpace_t* tangentSpace, float* hdrVertColors, msurface_t* surf) {
+static void ParseMesh(const world_t* worldData, dsurface_t* ds, drawVert_t* verts, packedTangentSpace_t* tangentSpace, float* hdrVertColors, msurface_t* surf)
+{
 	srfBspSurface_t* grid;
 	int				i, j;
 	int				width, height, numPoints;
-	srfVert_t points[MAX_PATCH_SIZE * MAX_PATCH_SIZE];
-	vec3_t			bounds[2];
+	srfVert_t points[MAX_PATCH_SIZE * MAX_PATCH_SIZE]{};
+	vec3_t			bounds[2]{};
 	vec3_t			tmpVec;
 	static surfaceType_t	skipData = SF_SKIP;
-	int realLightmapNum[MAXLIGHTMAPS];
+	int realLightmapNum[MAXLIGHTMAPS]{};
 
 	for (j = 0; j < MAXLIGHTMAPS; j++)
 		realLightmapNum[j] = FatLightmap(LittleLong(ds->lightmapNum[j]));
@@ -3539,7 +3542,7 @@ static void R_MergeLeafSurfaces(world_t* worldData)
 	{
 		msurface_t* surf1;
 
-		vec3_t bounds[2];
+		vec3_t bounds[2]{};
 
 		int numSurfsToMerge;
 		int numIndexes;

@@ -750,8 +750,9 @@ qboolean R_LoadIQM(model_t* mod, void* buffer, int filesize, const char* mod_nam
 R_CullIQM
 =============
 */
-static int R_CullIQM(iqmData_t* data, trRefEntity_t* ent) {
-	vec3_t		bounds[2];
+static int R_CullIQM(iqmData_t* data, trRefEntity_t* ent)
+{
+	vec3_t		bounds[2]{};
 	float* oldBounds, * newBounds;
 	int		i;
 

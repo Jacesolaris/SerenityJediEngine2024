@@ -496,11 +496,11 @@ static int G_CheckSoundEvents(gentity_t* self, float max_hear_dist, const int ig
 
 float G_GetLightLevel(vec3_t pos, vec3_t from_dir)
 {
-	vec3_t ambient = { 0 }, directed, light_dir;
+	vec3_t ambient = { 0 }, directed, lightDir;
 
-	cgi_R_GetLighting(pos, ambient, directed, light_dir);
+	cgi_R_GetLighting(pos, ambient, directed, lightDir);
 
-	const float light_level = VectorLength(ambient) + VectorLength(directed) * DotProduct(light_dir, from_dir);
+	const float light_level = VectorLength(ambient) + VectorLength(directed) * DotProduct(lightDir, from_dir);
 
 	return light_level;
 }

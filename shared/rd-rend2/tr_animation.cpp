@@ -41,8 +41,9 @@ R_MDRCullModel
 =============
 */
 
-static int R_MDRCullModel(mdrHeader_t* header, trRefEntity_t* ent) {
-	vec3_t		bounds[2];
+static int R_MDRCullModel(mdrHeader_t* header, trRefEntity_t* ent)
+{
+	vec3_t		bounds[2]{};
 	mdrFrame_t* oldFrame, * newFrame;
 	int			i, frameSize;
 
