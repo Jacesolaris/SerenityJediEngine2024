@@ -1321,11 +1321,11 @@ void R_RotateForEntity(const trRefEntity_t* ent, const viewParms_t* viewParms, o
 */
 void GL_Bind(image_t* image);
 void GL_SetDefaultState(void);
-void GL_SelectTexture(int unit);
+void GL_SelectTexture(const int unit);
 void GL_TextureMode(const char* string);
 void GL_CheckErrors(void);
-void GL_State(uint32_t stateBits);
-void GL_TexEnv(int env);
+void GL_State(const uint32_t stateBits);
+void GL_TexEnv(const int env);
 void GL_Cull(int cullType);
 
 #define GLS_SRCBLEND_ZERO						0x00000001
@@ -1366,9 +1366,9 @@ void GL_Cull(int cullType);
 #define GLS_ALPHA			(GLS_SRCBLEND_SRC_ALPHA | GLS_DSTBLEND_ONE_MINUS_SRC_ALPHA)
 
 void RE_StretchRaw(const int x, const int y, const int w, const int h, const int cols, const int rows, const byte* data, const int client, const qboolean dirty);
-void RE_UploadCinematic(int cols, int rows, const byte* data, int client, qboolean dirty);
+void RE_UploadCinematic(const int cols, const int rows, const byte* data, const int client, const qboolean dirty);
 
-void RE_BeginFrame(stereoFrame_t stereoFrame);
+void RE_BeginFrame(const stereoFrame_t stereoFrame);
 void RE_BeginRegistration(glconfig_t* glconfigOut);
 void RE_LoadWorldMap(const char* name);
 
@@ -1406,7 +1406,7 @@ qboolean R_GetModeInfo(int* width, int* height, int mode);
 void R_SetColorMappings();
 void R_GammaCorrect(byte* buffer, int buf_size);
 
-void R_ImageList_f();
+void R_ImageList_f(void);
 void R_SkinList_f(void);
 void R_FontList_f(void);
 
@@ -1414,7 +1414,7 @@ void R_InitFogTable(void);
 float R_FogFactor(float s, float t);
 void R_InitImages();
 void R_DeleteTextures();
-float R_SumOfUsedImages(qboolean b_use_format);
+float R_SumOfUsedImages(const qboolean b_use_format);
 void R_InitSkins(void);
 skin_t* R_GetSkinByHandle(qhandle_t h_skin);
 const void* RB_TakeVideoFrameCmd(const void* data);
@@ -1853,21 +1853,18 @@ extern int max_polyverts;
 
 extern backEndData_t* backEndData;
 
-void* R_GetCommandBuffer(int bytes);
+void* R_GetCommandBuffer(const unsigned int bytes);
 void RB_ExecuteRenderCommands(const void* data);
 
 void R_IssuePendingRenderCommands();
 
-void R_AddDrawSurfCmd(drawSurf_t* drawSurfs, int numDrawSurfs);
+void R_AddDrawSurfCmd(drawSurf_t* drawSurfs, const int numDrawSurfs);
 
 void RE_SetColor(const float* rgba);
-void RE_StretchPic(float x, float y, float w, float h,
-	float s1, float t1, float s2, float t2, qhandle_t hShader);
-void RE_RotatePic(float x, float y, float w, float h,
-	float s1, float t1, float s2, float t2, float a, qhandle_t hShader);
-void RE_RotatePic2(float x, float y, float w, float h,
-	float s1, float t1, float s2, float t2, float a, qhandle_t hShader);
-void RE_BeginFrame(stereoFrame_t stereoFrame);
+void RE_StretchPic(const float x, const float y, const float w, const float h, const float s1, const float t1, const float s2, const float t2, const qhandle_t hShader);
+void RE_RotatePic(const float x, const float y, const float w, const float h, const float s1, const float t1, const float s2, const float t2, const float a, const qhandle_t hShader);
+void RE_RotatePic2(const float x, const float y, const float w, const float h, const float s1, const float t1, const float s2, const float t2, const float a, const qhandle_t hShader);
+void RE_BeginFrame(const stereoFrame_t stereoFrame);
 void RE_EndFrame(int* frontEndMsec, int* backEndMsec);
 void RE_TakeVideoFrame(int width, int height, byte* captureBuffer, byte* encodeBuffer, qboolean motionJpeg);
 

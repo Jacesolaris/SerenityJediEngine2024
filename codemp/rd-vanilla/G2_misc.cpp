@@ -45,7 +45,7 @@ int goremodel_index;
 
 static cvar_t* cg_g2MarksAllModels = nullptr;
 
-GoreTextureCoordinates* FindGoreRecord(int tag);
+GoreTextureCoordinates* FindGoreRecord(const int tag);
 static void DestroyGoreTexCoordinates(const int tag)
 {
 	GoreTextureCoordinates* gTC = FindGoreRecord(tag);
@@ -115,7 +115,7 @@ GoreTextureCoordinates* FindGoreRecord(const int tag)
 	return nullptr;
 }
 
-void* G2_GetGoreRecord(const int tag)
+static void* G2_GetGoreRecord(const int tag)
 {
 	return FindGoreRecord(tag);
 }
@@ -262,9 +262,9 @@ public:
 
 // assorted Ghoul 2 functions.
 // list all surfaces associated with a model
-void G2_List_Model_Surfaces(const char* file_name)
+void G2_List_Model_Surfaces(const char* fileName)
 {
-	const model_t* mod_m = R_GetModelByHandle(RE_RegisterModel(file_name));
+	const model_t* mod_m = R_GetModelByHandle(RE_RegisterModel(fileName));
 
 	auto surf = (mdxmSurfHierarchy_t*)((byte*)mod_m->mdxm + mod_m->mdxm->ofsSurfHierarchy);
 	auto surface = (mdxmSurface_t*)((byte*)mod_m->mdxm + mod_m->mdxm->ofsLODs + sizeof(mdxmLOD_t));
@@ -287,9 +287,9 @@ void G2_List_Model_Surfaces(const char* file_name)
 }
 
 // list all bones associated with a model
-void G2_List_Model_Bones(const char* file_name, int frame)
+void G2_List_Model_Bones(const char* fileName, int frame)
 {
-	const model_t* mod_m = R_GetModelByHandle(RE_RegisterModel(file_name));
+	const model_t* mod_m = R_GetModelByHandle(RE_RegisterModel(fileName));
 	const model_t* mod_a = R_GetModelByHandle(mod_m->mdxm->animIndex);
 	// 	mdxaFrame_t		*aframe=0;
 	//	int				frameSize;
@@ -332,10 +332,10 @@ void G2_List_Model_Bones(const char* file_name, int frame)
  *    true if we successfully obtained a filename, false otherwise
  *
  ************************************************************************************************/
-qboolean G2_GetAnimFileName(const char* file_name, char** filename)
+qboolean G2_GetAnimFileName(const char* fileName, char** filename)
 {
 	// find the model we want
-	const model_t* mod = R_GetModelByHandle(RE_RegisterModel(file_name));
+	const model_t* mod = R_GetModelByHandle(RE_RegisterModel(fileName));
 
 	if (mod && mod->mdxm && mod->mdxm->animName[0] != 0)
 	{
@@ -375,7 +375,7 @@ int G2_DecideTraceLod(const CGhoul2Info& ghoul2, const int useLod)
 	return returnLod;
 }
 
-void R_TransformEachSurface(const mdxmSurface_t* surface, vec3_t scale, IHeapAllocator* G2VertSpace, size_t* TransformedVertsArray, CBoneCache* boneCache)
+static void R_TransformEachSurface(const mdxmSurface_t* surface, vec3_t scale, IHeapAllocator* G2VertSpace, size_t* TransformedVertsArray, CBoneCache* boneCache)
 {
 	int				 j, k;
 

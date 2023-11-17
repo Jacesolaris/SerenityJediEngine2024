@@ -707,7 +707,7 @@ qboolean R_GetPortalOrientations(const drawSurf_t* drawSurf, const int entityNum
 	// rotate the plane if necessary
 	if (entityNum != REFENTITYNUM_WORLD)
 	{
-		tr.currentEntityNum = entityNum;
+		tr.currententity_num = entityNum;
 		tr.currentEntity = &tr.refdef.entities[entityNum];
 
 		// get the orientation of the entity
@@ -823,7 +823,7 @@ static qboolean IsMirror(const drawSurf_t* drawSurf, const int entityNum)
 	// rotate the plane if necessary
 	if (entityNum != REFENTITYNUM_WORLD)
 	{
-		tr.currentEntityNum = entityNum;
+		tr.currententity_num = entityNum;
 		tr.currentEntity = &tr.refdef.entities[entityNum];
 
 		// get the orientation of the entity
@@ -1158,7 +1158,7 @@ static void R_RadixSort(drawSurf_t* source, int size)
 R_AddDrawSurf
 =================
 */
-void R_AddDrawSurf(const surfaceType_t* surface, const shader_t* shader, int fogIndex, const int dlightMap, g2Tints_t tintType)
+void R_AddDrawSurf(const surfaceType_t* surface, const shader_t* shader, int fogIndex, const int dlightMap)
 {
 	// instead of checking for overflow, we just mask the index
 	// so it wraps around
@@ -1178,9 +1178,8 @@ void R_AddDrawSurf(const surfaceType_t* surface, const shader_t* shader, int fog
 	// the sort data is packed into a single 32 bit value so it can be
 	// compared quickly during the qsorting process
 	tr.refdef.drawSurfs[index].sort = shader->sortedIndex << QSORT_SHADERNUM_SHIFT
-		| tr.shiftedEntityNum | fogIndex << QSORT_FOGNUM_SHIFT | dlightMap;
+		| tr.shiftedentity_num | fogIndex << QSORT_FOGNUM_SHIFT | dlightMap;
 	tr.refdef.drawSurfs[index].surface = const_cast<surfaceType_t*>(surface);
-	tr.refdef.drawSurfs[index].tintType = tintType;
 	tr.refdef.numDrawSurfs++;
 }
 
@@ -1267,16 +1266,16 @@ void R_AddEntitySurfaces()
 		return;
 	}
 
-	for (tr.currentEntityNum = 0;
-		tr.currentEntityNum < tr.refdef.num_entities;
-		tr.currentEntityNum++)
+	for (tr.currententity_num = 0;
+		tr.currententity_num < tr.refdef.num_entities;
+		tr.currententity_num++)
 	{
-		trRefEntity_t* ent = tr.currentEntity = &tr.refdef.entities[tr.currentEntityNum];
+		trRefEntity_t* ent = tr.currentEntity = &tr.refdef.entities[tr.currententity_num];
 
 		ent->needDlights = qfalse;
 
 		// preshift the value we are going to OR into the drawsurf sort
-		tr.shiftedEntityNum = tr.currentEntityNum << QSORT_REFENTITYNUM_SHIFT;
+		tr.shiftedentity_num = tr.currententity_num << QSORT_REFENTITYNUM_SHIFT;
 
 		if (ent->e.renderfx & RF_ALPHA_FADE)
 		{
@@ -1284,7 +1283,7 @@ void R_AddEntitySurfaces()
 			// want this to be sorted quite late...like how about last.
 			// I don't want to use the highest bit, since no doubt someone fumbled
 			// handling that as an unsigned quantity somewhere
-			tr.shiftedEntityNum |= 0x80000000;
+			tr.shiftedentity_num |= 0x80000000;
 		}
 		//
 		// the weapon model must be handled special --
@@ -1442,7 +1441,7 @@ R_DebugGraphics
 Visualization aid for movement clipping debugging
 ====================
 */
-void R_DebugGraphics(void)
+void R_DebugGraphics()
 {
 	if (!r_debugSurface->integer)
 	{
@@ -1544,7 +1543,7 @@ void R_RenderView(const viewParms_t* parms)
 	tr.viewParms.frameSceneNum = tr.frameSceneNum;
 	tr.viewParms.frameCount = tr.frameCount;
 
-	const int firstDrawSurf = tr.refdef.numDrawSurfs;
+	const int first_draw_surf = tr.refdef.numDrawSurfs;
 
 	tr.viewCount++;
 
@@ -1564,13 +1563,13 @@ void R_RenderView(const viewParms_t* parms)
 	// if we overflowed MAX_DRAWSURFS, the drawsurfs
 	// wrapped around in the buffer and we will be missing
 	// the first surfaces, not the last ones
-	int numDrawSurfs = tr.refdef.numDrawSurfs;
-	if (numDrawSurfs > MAX_DRAWSURFS)
+	int num_draw_surfs = tr.refdef.numDrawSurfs;
+	if (num_draw_surfs > MAX_DRAWSURFS)
 	{
-		numDrawSurfs = MAX_DRAWSURFS;
+		num_draw_surfs = MAX_DRAWSURFS;
 	}
 
-	R_SortDrawSurfs(tr.refdef.drawSurfs + firstDrawSurf, numDrawSurfs - firstDrawSurf);
+	R_SortDrawSurfs(tr.refdef.drawSurfs + first_draw_surf, num_draw_surfs - first_draw_surf);
 
 	// draw main system development information (surface outlines, etc)
 	R_DebugGraphics();

@@ -25,7 +25,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 // tr_draw.c
 #include "tr_local.h"
 
-void RE_GetScreenShot(byte* buffer, int w, int h)
+void RE_GetScreenShot(byte* data, const int w, const int h)
 {
 	byte* source, * allsource;
 	byte* src, * dst;
@@ -56,7 +56,7 @@ void RE_GetScreenShot(byte* buffer, int w, int h)
 					b += src[2];
 				}
 			}
-			dst = buffer + 4 * (h * w - y * w + x);
+			dst = data + 4 * (h * w - y * w + x);
 			dst[0] = r / 12;
 			dst[1] = g / 12;
 			dst[2] = b / 12;
@@ -65,7 +65,7 @@ void RE_GetScreenShot(byte* buffer, int w, int h)
 
 	// gamma correct
 	if (glConfig.deviceSupportsGamma)
-		R_GammaCorrect(buffer, w * h * 4);
+		R_GammaCorrect(data, w * h * 4);
 
 	Hunk_FreeTempMemory(allsource);
 }
@@ -73,9 +73,7 @@ void RE_GetScreenShot(byte* buffer, int w, int h)
 // this is just a chunk of code from RE_TempRawImage_ReadFromFile() below, subroutinised so I can call it
 //	from the screen dissolve code as well...
 //
-static byte* RE_ReSample(byte* pbLoadedPic, int iLoadedWidth, int iLoadedHeight,
-	byte* pb_re_sample_buffer, int* piWidth, int* piHeight
-)
+static byte* RE_ReSample(byte* pbLoadedPic, const int iLoadedWidth, const int iLoadedHeight, byte* pb_re_sample_buffer, int* piWidth, int* piHeight)
 {
 	byte* pbReturn = NULL;
 
@@ -163,7 +161,7 @@ static byte* RE_ReSample(byte* pbLoadedPic, int iLoadedWidth, int iLoadedHeight,
 //
 byte* pbLoadedPic = NULL;
 
-byte* RE_TempRawImage_ReadFromFile(const char* psLocalFilename, int* piWidth, int* piHeight, byte* pb_re_sample_buffer, qboolean qbVertFlip)
+byte* RE_TempRawImage_ReadFromFile(const char* psLocalFilename, int* piWidth, int* piHeight, byte* pb_re_sample_buffer, const qboolean qbVertFlip)
 {
 	RE_TempRawImage_CleanUp();	// jic
 
@@ -265,10 +263,7 @@ static int PowerOf2(int iArg)
 Dissolve_t Dissolve = { 0 };
 #define fDISSOLVE_SECONDS 0.75f
 
-static void RE_Blit(float fX0, float fY0, float fX1, float fY1, float fX2, float fY2, float fX3, float fY3,
-	//float fU0, float fV0, float fU1, float fV1, float fU2, float fV2, float fU3, float fV3,
-	image_t* pImage, int iGLState, bool atest
-)
+static void RE_Blit(float fX0, float fY0, float fX1, float fY1, float fX2, float fY2, float fX3, float fY3, image_t* pImage, int iGLState, bool atest)
 {
 	//
 	// some junk they had at the top of other StretchRaw code...
@@ -607,7 +602,7 @@ qboolean RE_ProcessDissolve(void)
 
 // return = qtrue(success) else fail, for those interested...
 //
-qboolean RE_InitDissolve(qboolean bForceCircularExtroWipe)
+qboolean RE_InitDissolve(const qboolean bForceCircularExtroWipe)
 {
 	R_IssuePendingRenderCommands();
 

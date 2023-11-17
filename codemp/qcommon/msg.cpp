@@ -2312,7 +2312,7 @@ void MSG_CheckNETFPSFOverrides(const qboolean psfOverrides)
 	char overrideFile[4096];
 	char entryName[4096]{};
 	char bits[4096]{};
-	char* file_name;
+	char* fileName;
 	int ibits;
 	int i = 0;
 	int numFields;
@@ -2322,13 +2322,13 @@ void MSG_CheckNETFPSFOverrides(const qboolean psfOverrides)
 	if (psfOverrides)
 	{
 		//do PSF overrides instead of NETF
-		file_name = "psf_overrides.txt";
+		fileName = "psf_overrides.txt";
 		bitStorage = &g_psfBitStorage;
 		numFields = static_cast<int>(std::size(playerStateFields));
 	}
 	else
 	{
-		file_name = "netf_overrides.txt";
+		fileName = "netf_overrides.txt";
 		bitStorage = &g_netfBitStorage;
 		numFields = static_cast<int>(std::size(entityStateFields));
 	}
@@ -2356,7 +2356,7 @@ void MSG_CheckNETFPSFOverrides(const qboolean psfOverrides)
 		}
 	}
 
-	const int len = FS_FOpenFileRead(va("ext_data/MP/%s", file_name), &f, qfalse);
+	const int len = FS_FOpenFileRead(va("ext_data/MP/%s", fileName), &f, qfalse);
 
 	if (!f || len < 0)
 	{
@@ -2366,7 +2366,7 @@ void MSG_CheckNETFPSFOverrides(const qboolean psfOverrides)
 
 	if (len >= 4096)
 	{
-		Com_Printf("WARNING: %s is >= 4096 bytes and is being ignored\n", file_name);
+		Com_Printf("WARNING: %s is >= 4096 bytes and is being ignored\n", fileName);
 		FS_FCloseFile(f);
 		return;
 	}
@@ -2435,7 +2435,7 @@ void MSG_CheckNETFPSFOverrides(const qboolean psfOverrides)
 			if (!overrideFile[i])
 			{
 				//just give up, this shouldn't happen
-				Com_Printf("WARNING: Parsing error for %s\n", file_name);
+				Com_Printf("WARNING: Parsing error for %s\n", fileName);
 				return;
 			}
 
@@ -2498,13 +2498,13 @@ void MSG_CheckNETFPSFOverrides(const qboolean psfOverrides)
 				if (j == numFields)
 				{
 					//failed to find the value
-					Com_Printf("WARNING: Value '%s' from %s is not valid\n", entryName, file_name);
+					Com_Printf("WARNING: Value '%s' from %s is not valid\n", entryName, fileName);
 				}
 			}
 			else
 			{
 				//also should not happen
-				Com_Printf("WARNING: Parsing error for %s\n", file_name);
+				Com_Printf("WARNING: Parsing error for %s\n", fileName);
 				return;
 			}
 		}

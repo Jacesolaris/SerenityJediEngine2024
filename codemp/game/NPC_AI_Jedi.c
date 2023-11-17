@@ -423,11 +423,11 @@ void Tavion_ScepterDamage(void)
 
 	if (NPCS.NPC->NPC->genericBolt1 != -1)
 	{
-		const int cur_time = level.time;
+		const int curTime = level.time;
 		qboolean hit = qfalse;
 		int lastHit = ENTITYNUM_NONE;
 
-		for (int time = cur_time - 25; time <= cur_time + 25 && !hit; time += 25)
+		for (int time = curTime - 25; time <= curTime + 25 && !hit; time += 25)
 		{
 			mdxaBone_t boltMatrix;
 			vec3_t tip, dir, base, angles;
@@ -449,7 +449,7 @@ void Tavion_ScepterDamage(void)
 				gentity_t* trace_ent = &g_entities[trace.entityNum];
 
 				//FIXME: too expensive!
-				//if ( time == cur_time )
+				//if ( time == curTime )
 				{
 					//UGH
 					G_PlayEffect(G_EffectIndex("scepter/impact.efx"), trace.endpos, trace.plane.normal);

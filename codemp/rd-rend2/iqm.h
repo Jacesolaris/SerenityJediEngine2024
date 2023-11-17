@@ -33,7 +33,7 @@ typedef struct iqmheader
 	unsigned int filesize;
 	unsigned int flags;
 	unsigned int num_text, ofs_text;
-	unsigned int num_meshes, ofs_meshes;
+	unsigned int numMeshes, ofs_meshes;
 	unsigned int num_vertexarrays, numVertexes, ofs_vertexarrays;
 	unsigned int num_triangles, ofs_triangles, ofs_adjacency;
 	unsigned int num_joints, ofs_joints;

@@ -73,7 +73,7 @@ void GL_Bind(image_t* image) {
 /*
 ** GL_SelectTexture
 */
-void GL_SelectTexture(int unit)
+void GL_SelectTexture(const int unit)
 {
 	if (glState.currenttmu == unit)
 	{
@@ -121,7 +121,8 @@ void GL_BindToTMU(image_t* image, int tmu)
 /*
 ** GL_Cull
 */
-void GL_Cull(int cullType) {
+void GL_Cull(int cullType)
+{
 	if (glState.faceCulling == cullType) {
 		return;
 	}
@@ -165,7 +166,7 @@ void GL_DepthRange(float min, float max)
 ** This routine is responsible for setting the most commonly changed state
 ** in Q3.
 */
-void GL_State(uint32_t stateBits)
+void GL_State(const uint32_t stateBits)
 {
 	uint32_t diff = stateBits ^ glState.glStateBits;
 
@@ -1439,7 +1440,7 @@ static void RB_RenderDrawSurfList(drawSurf_t* drawSurfs, const int numDrawSurfs)
 	}
 
 	// Do the drawing and release memory
-	RB_SubmitRenderPass(*backEndData->currentPass,*backEndData->perFrameMemory);
+	RB_SubmitRenderPass(*backEndData->currentPass, *backEndData->perFrameMemory);
 
 	backEndData->perFrameMemory->ResetTo(allocMark);
 	backEndData->currentPass = nullptr;
@@ -1464,7 +1465,7 @@ RB_SetGL2D
 
 ================
 */
-void	RB_SetGL2D(void) {
+void RB_SetGL2D(void) {
 	matrix_t matrix;
 	int width, height;
 
@@ -1587,7 +1588,8 @@ void RE_StretchRaw(const int x, const int y, const int w, const int h, const int
 	RB_InstantQuad2(quadVerts, texCoords);
 }
 
-void RE_UploadCinematic(int cols, int rows, const byte* data, int client, qboolean dirty) {
+void RE_UploadCinematic(const int cols, const int rows, const byte* data, const int client, const qboolean dirty)
+{
 	GL_Bind(tr.scratchImage[client]);
 
 	// if the scratchImage isn't in the format we want, specify it as a new texture
@@ -1902,7 +1904,7 @@ static const void* RB_RotatePic2(const void* data)
 RB_ScissorPic
 =============
 */
-const void* RB_Scissor(const void* data)
+static const void* RB_Scissor(const void* data)
 {
 	const scissorCommand_t* cmd;
 

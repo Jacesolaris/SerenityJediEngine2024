@@ -86,7 +86,7 @@ long generateHashValue(const char* fname) {
 
 // makeup a nice clean, consistant name to query for and file under, for map<> usage...
 //
-char* GenerateImageMappingName(const char* name)
+static char* GenerateImageMappingName(const char* name)
 {
 	static char s_name[MAX_QPATH];
 	int		i = 0;
@@ -236,7 +236,7 @@ float R_SumOfUsedImages(const qboolean b_use_format)
 R_ImageList_f
 ===============
 */
-void R_ImageList_f() {
+void R_ImageList_f(void) {
 	int		i = 0;
 	image_t* image;
 	int		texels = 0;
@@ -385,37 +385,37 @@ Uses temp mem, but then copies back to input, quartering the size of the texture
 Proper linear filter
 ================
 */
-static void R_MipMap2(unsigned* in, const int in_width, const int in_height) {
-	const int out_width = in_width >> 1;
-	const int out_height = in_height >> 1;
+static void R_MipMap2(unsigned* in, const int inWidth, const int inheight) {
+	const int out_width = inWidth >> 1;
+	const int out_height = inheight >> 1;
 	const auto temp = static_cast<unsigned*>(R_Malloc(out_width * out_height * 4, TAG_TEMP_WORKSPACE, qfalse));
 
-	const int in_width_mask = in_width - 1;
-	const int in_height_mask = in_height - 1;
+	const int in_width_mask = inWidth - 1;
+	const int in_height_mask = inheight - 1;
 
 	for (int i = 0; i < out_height; i++) {
 		for (int j = 0; j < out_width; j++) {
 			const auto outpix = reinterpret_cast<byte*>(temp + i * out_width + j);
 			for (int k = 0; k < 4; k++) {
-				const int total = 1 * reinterpret_cast<byte*>(&in[(i * 2 - 1 & in_height_mask) * in_width + (j * 2 - 1 & in_width_mask)])[k] +
-					2 * reinterpret_cast<byte*>(&in[(i * 2 - 1 & in_height_mask) * in_width + (j * 2 & in_width_mask)])[k] +
-					2 * reinterpret_cast<byte*>(&in[(i * 2 - 1 & in_height_mask) * in_width + (j * 2 + 1 & in_width_mask)])[k] +
-					1 * reinterpret_cast<byte*>(&in[(i * 2 - 1 & in_height_mask) * in_width + (j * 2 + 2 & in_width_mask)])[k] +
+				const int total = 1 * reinterpret_cast<byte*>(&in[(i * 2 - 1 & in_height_mask) * inWidth + (j * 2 - 1 & in_width_mask)])[k] +
+					2 * reinterpret_cast<byte*>(&in[(i * 2 - 1 & in_height_mask) * inWidth + (j * 2 & in_width_mask)])[k] +
+					2 * reinterpret_cast<byte*>(&in[(i * 2 - 1 & in_height_mask) * inWidth + (j * 2 + 1 & in_width_mask)])[k] +
+					1 * reinterpret_cast<byte*>(&in[(i * 2 - 1 & in_height_mask) * inWidth + (j * 2 + 2 & in_width_mask)])[k] +
 
-					2 * reinterpret_cast<byte*>(&in[(i * 2 & in_height_mask) * in_width + (j * 2 - 1 & in_width_mask)])[k] +
-					4 * reinterpret_cast<byte*>(&in[(i * 2 & in_height_mask) * in_width + (j * 2 & in_width_mask)])[k] +
-					4 * reinterpret_cast<byte*>(&in[(i * 2 & in_height_mask) * in_width + (j * 2 + 1 & in_width_mask)])[k] +
-					2 * reinterpret_cast<byte*>(&in[(i * 2 & in_height_mask) * in_width + (j * 2 + 2 & in_width_mask)])[k] +
+					2 * reinterpret_cast<byte*>(&in[(i * 2 & in_height_mask) * inWidth + (j * 2 - 1 & in_width_mask)])[k] +
+					4 * reinterpret_cast<byte*>(&in[(i * 2 & in_height_mask) * inWidth + (j * 2 & in_width_mask)])[k] +
+					4 * reinterpret_cast<byte*>(&in[(i * 2 & in_height_mask) * inWidth + (j * 2 + 1 & in_width_mask)])[k] +
+					2 * reinterpret_cast<byte*>(&in[(i * 2 & in_height_mask) * inWidth + (j * 2 + 2 & in_width_mask)])[k] +
 
-					2 * reinterpret_cast<byte*>(&in[(i * 2 + 1 & in_height_mask) * in_width + (j * 2 - 1 & in_width_mask)])[k] +
-					4 * reinterpret_cast<byte*>(&in[(i * 2 + 1 & in_height_mask) * in_width + (j * 2 & in_width_mask)])[k] +
-					4 * reinterpret_cast<byte*>(&in[(i * 2 + 1 & in_height_mask) * in_width + (j * 2 + 1 & in_width_mask)])[k] +
-					2 * reinterpret_cast<byte*>(&in[(i * 2 + 1 & in_height_mask) * in_width + (j * 2 + 2 & in_width_mask)])[k] +
+					2 * reinterpret_cast<byte*>(&in[(i * 2 + 1 & in_height_mask) * inWidth + (j * 2 - 1 & in_width_mask)])[k] +
+					4 * reinterpret_cast<byte*>(&in[(i * 2 + 1 & in_height_mask) * inWidth + (j * 2 & in_width_mask)])[k] +
+					4 * reinterpret_cast<byte*>(&in[(i * 2 + 1 & in_height_mask) * inWidth + (j * 2 + 1 & in_width_mask)])[k] +
+					2 * reinterpret_cast<byte*>(&in[(i * 2 + 1 & in_height_mask) * inWidth + (j * 2 + 2 & in_width_mask)])[k] +
 
-					1 * reinterpret_cast<byte*>(&in[(i * 2 + 2 & in_height_mask) * in_width + (j * 2 - 1 & in_width_mask)])[k] +
-					2 * reinterpret_cast<byte*>(&in[(i * 2 + 2 & in_height_mask) * in_width + (j * 2 & in_width_mask)])[k] +
-					2 * reinterpret_cast<byte*>(&in[(i * 2 + 2 & in_height_mask) * in_width + (j * 2 + 1 & in_width_mask)])[k] +
-					1 * reinterpret_cast<byte*>(&in[(i * 2 + 2 & in_height_mask) * in_width + (j * 2 + 2 & in_width_mask)])[k];
+					1 * reinterpret_cast<byte*>(&in[(i * 2 + 2 & in_height_mask) * inWidth + (j * 2 - 1 & in_width_mask)])[k] +
+					2 * reinterpret_cast<byte*>(&in[(i * 2 + 2 & in_height_mask) * inWidth + (j * 2 & in_width_mask)])[k] +
+					2 * reinterpret_cast<byte*>(&in[(i * 2 + 2 & in_height_mask) * inWidth + (j * 2 + 1 & in_width_mask)])[k] +
+					1 * reinterpret_cast<byte*>(&in[(i * 2 + 2 & in_height_mask) * inWidth + (j * 2 + 2 & in_width_mask)])[k];
 				outpix[k] = total / 36;
 			}
 		}
@@ -477,7 +477,7 @@ R_BlendOverTexture
 Apply a color blend over a set of pixels
 ==================
 */
-static void R_BlendOverTexture(byte* data, const int pixel_count, byte blend[4]) {
+static void R_BlendOverTexture(byte* data, const int pixelCount, byte blend[4]) {
 	int		premult[3]{};
 
 	const int inverse_alpha = 255 - blend[3];
@@ -485,7 +485,7 @@ static void R_BlendOverTexture(byte* data, const int pixel_count, byte blend[4])
 	premult[1] = blend[1] * blend[3];
 	premult[2] = blend[2] * blend[3];
 
-	for (int i = 0; i < pixel_count; i++, data += 4) {
+	for (int i = 0; i < pixelCount; i++, data += 4) {
 		data[0] = (data[0] * inverse_alpha + premult[0]) >> 9;
 		data[1] = (data[1] * inverse_alpha + premult[1]) >> 9;
 		data[2] = (data[2] * inverse_alpha + premult[2]) >> 9;
@@ -517,14 +517,7 @@ Upload32
 
 ===============
 */
-static void Upload32(unsigned* data,
-	const GLenum format,
-	const qboolean mipmap,
-	const qboolean picmip,
-	const qboolean is_lightmap,
-	const qboolean allow_tc,
-	int* pformat,
-	word* p_upload_width, word* p_upload_height)
+static void Upload32(unsigned* data, const GLenum format, const qboolean mipmap, const qboolean picmip, const qboolean is_lightmap, const qboolean allow_tc, int* pformat, word* p_upload_width, word* p_upload_height)
 {
 	if (format == GL_RGBA)
 	{
@@ -767,7 +760,7 @@ static void GL_ResetBinds()
 
 // special function used in conjunction with "devmapbsp"...
 //
-void R_Images_DeleteLightMaps()
+void R_Images_DeleteLightMaps(void)
 {
 	for (auto it_image = AllocatedImages.begin(); it_image != AllocatedImages.end(); /* empty */)
 	{

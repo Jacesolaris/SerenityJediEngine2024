@@ -798,7 +798,7 @@ qboolean UI_GameCommand();
 byte* SCR_GetScreenshot(qboolean* qValid);
 #ifdef JK2_MODE
 void	SCR_SetScreenshot(const byte* pbData, int w, int h);
-byte* SCR_TempRawImage_ReadFromFile(const char* psLocalFilename, int* pi_width, int* pi_height, byte* pb_re_sample_buffer, qboolean qbVertFlip);
+byte* SCR_TempRawImage_ReadFromFile(const char* psLocalFilename, int* piWidth, int* piHeight, byte* pb_re_sample_buffer, qboolean qbVertFlip);
 void	SCR_TempRawImage_CleanUp();
 #endif
 

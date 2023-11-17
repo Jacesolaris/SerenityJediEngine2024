@@ -76,21 +76,6 @@ void CQuickSpriteSystem::Flush()
 	{
 		return;
 	}
-
-	/*
-	if (mUseFog && r_drawfog->integer == 2 &&
-		mFogIndex == tr.world->globalFog)
-	{ //enable hardware fog when we draw this thing if applicable -rww
-		fog_t *fog = tr.world->fogs + mFogIndex;
-
-		qglFogf(GL_FOG_MODE, GL_EXP2);
-		qglFogf(GL_FOG_DENSITY, logtestExp2 / fog->parms.depthForOpaque);
-		qglFogfv(GL_FOG_COLOR, fog->parms.color);
-		qglEnable(GL_FOG);
-	}
-	*/
-	//this should not be needed, since I just wait to disable fog for the surface til after surface sprites are done
-
 	//
 	// render the main pass
 	//

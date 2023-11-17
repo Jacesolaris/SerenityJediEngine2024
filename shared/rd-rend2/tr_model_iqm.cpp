@@ -176,7 +176,7 @@ qboolean R_LoadIQM(model_t* mod, void* buffer, int filesize, const char* mod_nam
 	LL(header->flags);
 	LL(header->num_text);
 	LL(header->ofs_text);
-	LL(header->num_meshes);
+	LL(header->numMeshes);
 	LL(header->ofs_meshes);
 	LL(header->num_vertexarrays);
 	LL(header->numVertexes);
@@ -318,11 +318,11 @@ qboolean R_LoadIQM(model_t* mod, void* buffer, int filesize, const char* mod_nam
 
 	// check and swap meshes
 	if (IQM_CheckRange(header, header->ofs_meshes,
-		header->num_meshes, sizeof(iqmMesh_t))) {
+		header->numMeshes, sizeof(iqmMesh_t))) {
 		return qfalse;
 	}
 	mesh = (iqmMesh_t*)((byte*)header + header->ofs_meshes);
-	for (i = 0; i < header->num_meshes; i++, mesh++) {
+	for (i = 0; i < header->numMeshes; i++, mesh++) {
 		LL(mesh->name);
 		LL(mesh->material);
 		LL(mesh->first_vertex);
@@ -461,7 +461,7 @@ qboolean R_LoadIQM(model_t* mod, void* buffer, int filesize, const char* mod_nam
 
 	// allocate the model and copy the data
 	size = sizeof(iqmData_t);
-	size += header->num_meshes * sizeof(srfIQModel_t);
+	size += header->numMeshes * sizeof(srfIQModel_t);
 	size += header->num_joints * 12 * sizeof(float); // joint mats
 	size += header->num_poses * header->numFrames * 12 * sizeof(float); // pose mats
 	if (header->ofs_bounds)
@@ -492,7 +492,7 @@ qboolean R_LoadIQM(model_t* mod, void* buffer, int filesize, const char* mod_nam
 	iqmData->numVertexes = header->numVertexes;
 	iqmData->num_triangles = header->num_triangles;
 	iqmData->numFrames = header->numFrames;
-	iqmData->num_surfaces = header->num_meshes;
+	iqmData->num_surfaces = header->numMeshes;
 	iqmData->num_joints = header->num_joints;
 	iqmData->num_poses = header->num_poses;
 	iqmData->blendWeightsType = blendWeightsType;
@@ -622,7 +622,7 @@ qboolean R_LoadIQM(model_t* mod, void* buffer, int filesize, const char* mod_nam
 	mesh = (iqmMesh_t*)((byte*)header + header->ofs_meshes);
 	surface = iqmData->surfaces;
 	str = (char*)header + header->ofs_text;
-	for (i = 0; i < header->num_meshes; i++, mesh++, surface++) {
+	for (i = 0; i < header->numMeshes; i++, mesh++, surface++) {
 		surface->surfaceType = SF_IQM;
 		Q_strncpyz(surface->name, str + mesh->name, sizeof(surface->name));
 		Q_strlwr(surface->name); // lowercase the surface name so skin compares are faster

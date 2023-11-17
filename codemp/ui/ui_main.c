@@ -4990,19 +4990,19 @@ static void UI_LoadDemosInDirectory(loadDemoContext_t* ctx, const char* director
 
 		// Iterate through child directories
 		char* childDirListBase = ctx->dirListHead;
-		char* file_name = dirList;
+		char* fileName = dirList;
 		for (i = 0; i < numFiles; i++)
 		{
-			const size_t len = strlen(file_name);
+			const size_t len = strlen(fileName);
 
-			if (Q_stricmp(file_name, ".") && Q_stricmp(file_name, "..") && len)
-				UI_LoadDemosInDirectory(ctx, va("%s/%s", directory, file_name));
+			if (Q_stricmp(fileName, ".") && Q_stricmp(fileName, "..") && len)
+				UI_LoadDemosInDirectory(ctx, va("%s/%s", directory, fileName));
 
 			ctx->dirListHead = childDirListBase;
-			file_name += len + 1;
+			fileName += len + 1;
 		}
 
-		assert(file_name + 1 == childDirListBase);
+		assert(fileName + 1 == childDirListBase);
 	}
 
 	ctx->depth--;

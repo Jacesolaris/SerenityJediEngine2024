@@ -44,9 +44,9 @@ void RB_RenderWorldEffects();
 
 void RE_WorldEffectCommand(const char* command);
 
-void R_WorldEffect_f(void);
-void R_SetWeatherEffect_f(void);
-void R_WeatherEffect_f(void);
+void R_WorldEffect_f();
+void R_SetWeatherEffect_f();
+void R_WeatherEffect_f();
 
 ////////////////////////////////////////////////////////////////////////////////////////
 // Exported Functionality

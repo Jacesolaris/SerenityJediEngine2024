@@ -1811,21 +1811,18 @@ extern	int		max_polyverts;
 
 extern	backEndData_t* backEndData;
 
-void* R_GetCommandBuffer(int bytes);
+void* R_GetCommandBuffer(const unsigned int bytes);
 void RB_ExecuteRenderCommands(const void* data);
 
 void R_IssuePendingRenderCommands();
 
-void R_AddDrawSurfCmd(drawSurf_t* drawSurfs, int numDrawSurfs);
+void R_AddDrawSurfCmd(drawSurf_t* drawSurfs, const int numDrawSurfs);
 
 void RE_SetColor(const float* rgba);
-void RE_StretchPic(float x, float y, float w, float h,
-	float s1, float t1, float s2, float t2, qhandle_t hShader);
-void RE_RotatePic(float x, float y, float w, float h,
-	float s1, float t1, float s2, float t2, float a, qhandle_t hShader);
-void RE_RotatePic2(float x, float y, float w, float h,
-	float s1, float t1, float s2, float t2, float a, qhandle_t hShader);
-void RE_BeginFrame(stereoFrame_t stereoFrame);
+void RE_StretchPic(const float x, const float y, const float w, const float h, const float s1, const float t1, const float s2, const float t2, const qhandle_t hShader);
+void RE_RotatePic(const float x, const float y, const float w, const float h, const float s1, const float t1, const float s2, const float t2, const float a, const qhandle_t hShader);
+void RE_RotatePic2(const float x, const float y, const float w, const float h, const float s1, const float t1, const float s2, const float t2, const float a, const qhandle_t hShader);
+void RE_BeginFrame(const stereoFrame_t stereoFrame);
 void RE_EndFrame(int* frontEndMsec, int* backEndMsec);
 void RE_TakeVideoFrame(int width, int height, byte* captureBuffer, byte* encodeBuffer, qboolean motionJpeg);
 

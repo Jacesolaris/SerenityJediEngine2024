@@ -80,7 +80,7 @@ typedef struct move_rotate2_s
 typedef struct roff_list_s
 {
 	int type; // roff type number, 1-old, 2-new
-	char* file_name; // roff filename
+	char* fileName; // roff filename
 	int frames; // number of roff entries
 	move_rotate2_t data[MAXNOTETRACKSNEW]; // delta move and rotate vector list
 	int NumData; //number of data positions we are currently using.
@@ -95,7 +95,7 @@ extern int num_roffs;
 
 // Function prototypes
 //-------------------------
-int G_LoadRoffs(const char* file_name);
+int G_LoadRoffs(const char* fileName);
 //void    G_Roffs(gentity_t* ent);
 void G_SaveCachedRoffs();
 void G_LoadCachedRoffs();

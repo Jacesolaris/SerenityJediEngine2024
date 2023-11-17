@@ -71,39 +71,39 @@ int			mParticlesRendered;
 ////////////////////////////////////////////////////////////////////////////////////////
 // Handy Functions
 ////////////////////////////////////////////////////////////////////////////////////////
-inline static void VectorMA(vec3_t vecAdd, const float scale, const vec3_t vecScale)
+inline void		VectorMA(vec3_t vecAdd, const float scale, const vec3_t vecScale)
 {
 	vecAdd[0] += scale * vecScale[0];
 	vecAdd[1] += scale * vecScale[1];
 	vecAdd[2] += scale * vecScale[2];
 }
 
-inline static void VectorFloor(vec3_t in)
+inline void VectorFloor(vec3_t in)
 {
 	in[0] = floorf(in[0]);
 	in[1] = floorf(in[1]);
 	in[2] = floorf(in[2]);
 }
 
-inline static void VectorCeil(vec3_t in)
+inline void VectorCeil(vec3_t in)
 {
 	in[0] = ceilf(in[0]);
 	in[1] = ceilf(in[1]);
 	in[2] = ceilf(in[2]);
 }
 
-inline static float FloatRand()
+inline float	FloatRand()
 {
 	return static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
 }
 
-inline static float fast_flrand(const float min, const float max)
+inline float	fast_flrand(const float min, const float max)
 {
 	//return min + (max - min) * flrand;
 	return Q_flrand(min, max); //fixme?
 }
 
-inline static void SnapFloatToGrid(float& f, const int GridSize)
+inline	void	SnapFloatToGrid(float& f, const int grid_size)
 {
 	f = static_cast<int>(f);
 
@@ -113,11 +113,11 @@ inline static void SnapFloatToGrid(float& f, const int GridSize)
 		f *= -1;		// Temporarly make it positive
 	}
 
-	int		offset = static_cast<int>(f) % GridSize;
+	int		offset = static_cast<int>(f) % grid_size;
 	const int		offset_abs = abs(offset);
-	if (offset_abs > GridSize / 2)
+	if (offset_abs > grid_size / 2)
 	{
-		offset = (GridSize - offset_abs) * -1;
+		offset = (grid_size - offset_abs) * -1;
 	}
 
 	f -= offset;
@@ -129,14 +129,14 @@ inline static void SnapFloatToGrid(float& f, const int GridSize)
 
 	f = static_cast<int>(f);
 
-	assert(static_cast<int>(f) % static_cast<int>(GridSize) == 0);
+	assert(static_cast<int>(f) % static_cast<int>(grid_size) == 0);
 }
 
-inline static void	SnapVectorToGrid(CVec3& vec, const int GridSize)
+inline	void	SnapVectorToGrid(CVec3& vec, const int grid_size)
 {
-	SnapFloatToGrid(vec[0], GridSize);
-	SnapFloatToGrid(vec[1], GridSize);
-	SnapFloatToGrid(vec[2], GridSize);
+	SnapFloatToGrid(vec[0], grid_size);
+	SnapFloatToGrid(vec[1], grid_size);
+	SnapFloatToGrid(vec[2], grid_size);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -468,7 +468,7 @@ private:
 		////////////////////////////////////////////////////////////////////////////////////
 		// Convert To Cell
 		////////////////////////////////////////////////////////////////////////////////////
-		void ConvertToCell(const CVec3& pos, int& x, int& y, int& z, int& bit)
+		void	ConvertToCell(const CVec3& pos, int& x, int& y, int& z, int& bit)
 		{
 			x = static_cast<int>(pos[0] / POINTCACHE_CELL_SIZE - mSize.mMins[0]);
 			y = static_cast<int>(pos[1] / POINTCACHE_CELL_SIZE - mSize.mMins[1]);
@@ -481,7 +481,7 @@ private:
 		////////////////////////////////////////////////////////////////////////////////////
 		// CellOutside - Test to see if a given cell is outside
 		////////////////////////////////////////////////////////////////////////////////////
-		bool CellOutside(const int x, const int y, const int z, const int bit) const
+		bool	CellOutside(const int x, const int y, const int z, const int bit) const
 		{
 			if (x < 0 || x >= mWidth || (y < 0 || y >= mHeight) || (z < 0 || z >= mDepth) || (bit < 0 || bit >= 32))
 			{
@@ -512,7 +512,7 @@ private:
 	////////////////////////////////////////////////////////////////////////////////////
 	// Contents Outside
 	////////////////////////////////////////////////////////////////////////////////////
-	bool ContentsOutside(const int contents) const
+	bool	ContentsOutside(const int contents) const
 	{
 		if (contents & CONTENTS_WATER || contents & CONTENTS_SOLID)
 		{
@@ -790,7 +790,7 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////
 	// PointOutside - Test to see if a given point is outside
 	////////////////////////////////////////////////////////////////////////////////////
-	bool PointOutside(const CVec3& pos)
+	bool	PointOutside(const CVec3& pos)
 	{
 		if (!mCacheInit)
 		{
@@ -812,7 +812,7 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////
 	// PointOutside - Test to see if a given bounded plane is outside
 	////////////////////////////////////////////////////////////////////////////////////
-	bool PointOutside(const CVec3& pos, const float width, const float height)
+	bool	PointOutside(const CVec3& pos, const float width, const float height)
 	{
 		for (int zone = 0; zone < mWeatherZones.size(); zone++)
 		{
@@ -992,7 +992,7 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////
 	// Initialize - Create Image, Particles, And Setup All Values
 	////////////////////////////////////////////////////////////////////////////////////
-	void Initialize(const int count, const char* texturePath, const int VertexCount = 4)
+	void	Initialize(const int count, const char* texturePath, const int VertexCount = 4)
 	{
 		Reset();
 		assert(mParticleCount == 0 && mParticles == nullptr);
@@ -1105,7 +1105,7 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////
 	// UseSpawnPlane - Check To See If We Should Spawn On A Plane, Or Just Wrap The Box
 	////////////////////////////////////////////////////////////////////////////////////
-	bool UseSpawnPlane() const
+	bool	UseSpawnPlane() const
 	{
 		return mGravity != 0.0f;
 	}
@@ -1113,7 +1113,7 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////
 	// Update - Applies All Physics Forces To All Contained Particles
 	////////////////////////////////////////////////////////////////////////////////////
-	void Update()
+	void		Update()
 	{
 		const float		particleFade = mFade * mSecondsElapsed;
 		const int			numLocalWindZones = mLocalWindZones.size();
@@ -1367,7 +1367,7 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////
 	// Render -
 	////////////////////////////////////////////////////////////////////////////////////
-	void Render()
+	void		Render()
 	{
 		// Set The GL State And Image Binding
 		//------------------------------------
@@ -1581,10 +1581,6 @@ void RB_RenderWorldEffects()
 			mParticleClouds[i].Update();
 			mParticleClouds[i].Render();
 		}
-		if (false)
-		{
-			Com_Printf("Weather: %d Particles Rendered\n", mParticlesRendered);
-		}
 	}
 }
 
@@ -1616,8 +1612,8 @@ Imported from MP/Ensiform's fixes
 ==================
 */
 
-static qboolean WE_ParseVector(const char** text, const int count, float* v)
-{
+qboolean WE_ParseVector(const char** text, const int count, float* v) {
+	// FIXME: spaces are currently required after parens, should change parseext...
 	COM_BeginParseSession();
 	const char* token = COM_ParseExt(text, qfalse);
 	if (strcmp(token, "(") != 0) {

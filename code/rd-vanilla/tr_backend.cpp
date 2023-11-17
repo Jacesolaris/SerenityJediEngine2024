@@ -33,7 +33,7 @@ bool tr_stencilled = false;
 extern qboolean tr_distortionPrePost; //tr_shadows.cpp
 extern qboolean tr_distortionNegate; //tr_shadows.cpp
 extern void RB_CaptureScreenImage(); //tr_shadows.cpp
-extern void RB_DistortionFill(void); //tr_shadows.cpp
+extern void RB_DistortionFill(); //tr_shadows.cpp
 static void RB_DrawGlowOverlay();
 static void RB_BlurGlowTexture();
 
@@ -125,7 +125,8 @@ void GL_SelectTexture(const int unit)
 /*
 ** GL_Cull
 */
-void GL_Cull(const int cullType) {
+void GL_Cull(int cullType) 
+{
 	if (glState.faceCulling == cullType) {
 		return;
 	}
@@ -398,7 +399,8 @@ RB_Hyperspace
 A player has predicted a teleport, but hasn't arrived yet
 ================
 */
-static void RB_Hyperspace() {
+static void RB_Hyperspace(void)
+{
 	if (!backEnd.isHyperspace) {
 		// do initialization shit
 	}
@@ -430,8 +432,7 @@ Any mirrored or portaled views have already been drawn, so prepare
 to actually render the visible surfaces for this view
 =================
 */
-static void RB_BeginDrawingView(void)
-{
+static void RB_BeginDrawingView(void) {
 	int clearBits = GL_DEPTH_BUFFER_BIT;
 
 	// sync with gl if needed
@@ -637,7 +638,6 @@ static void RB_RenderDrawSurfList(drawSurf_t* drawSurfs, const int numDrawSurfs)
 	drawSurf_t* drawSurf;
 	postRender_t* pRender;
 	bool			didShadowPass = false;
-	g2Tints_t       tintType, oldTintType;
 
 	if (g_bRenderGlowingObjects)
 	{ //only shadow on initial passes
@@ -651,35 +651,30 @@ static void RB_RenderDrawSurfList(drawSurf_t* drawSurfs, const int numDrawSurfs)
 	RB_BeginDrawingView();
 
 	// draw everything
-	int oldEntityNum = -1;
+	int oldentity_num = -1;
 	backEnd.currentEntity = &tr.worldEntity;
 	shader_t* oldShader = nullptr;
 	int oldFogNum = -1;
 	int oldDepthRange = qfalse;
 	int oldDlighted = qfalse;
 	unsigned int oldSort = static_cast<unsigned>(-1);
-	oldTintType = G2_TINT_DEFAULT;
 	int depthRange = qfalse;
 
 	backEnd.pc.c_surfaces += numDrawSurfs;
 
-	for (i = 0, drawSurf = drawSurfs; i < numDrawSurfs; i++, drawSurf++)
-	{
-		if (drawSurf->sort == oldSort && drawSurf->tintType == oldTintType)
-		{
+	for (i = 0, drawSurf = drawSurfs; i < numDrawSurfs; i++, drawSurf++) {
+		if (drawSurf->sort == oldSort) {
 			// fast path, same as previous sort
 			rb_surfaceTable[*drawSurf->surface](drawSurf->surface);
 			continue;
 		}
 		R_DecomposeSort(drawSurf->sort, &entityNum, &shader, &fogNum, &dlighted);
 
-		tintType = drawSurf->tintType;
-
 		// If we're rendering glowing objects, but this shader has no stages with glow, skip it!
 		if (g_bRenderGlowingObjects && !shader->hasGlow)
 		{
 			shader = oldShader;
-			entityNum = oldEntityNum;
+			entityNum = oldentity_num;
 			fogNum = oldFogNum;
 			dlighted = oldDlighted;
 			continue;
@@ -729,10 +724,9 @@ static void RB_RenderDrawSurfList(drawSurf_t* drawSurfs, const int numDrawSurfs)
 
 				//assure the info is back to the last set state
 				shader = oldShader;
-				entityNum = oldEntityNum;
+				entityNum = oldentity_num;
 				fogNum = oldFogNum;
 				dlighted = oldDlighted;
-				tintType = oldTintType;
 
 				oldSort = static_cast<unsigned>(-1); //invalidate this thing, cause we may want to postrender more surfs of the same sort
 
@@ -741,8 +735,8 @@ static void RB_RenderDrawSurfList(drawSurf_t* drawSurfs, const int numDrawSurfs)
 			}
 		}
 
-		if (tintType != oldTintType || shader != oldShader || fogNum != oldFogNum || dlighted != oldDlighted
-			|| (entityNum != oldEntityNum && !shader->entityMergable))
+		if (shader != oldShader || fogNum != oldFogNum || dlighted != oldDlighted
+			|| entityNum != oldentity_num && !shader->entityMergable)
 		{
 			if (oldShader != nullptr) {
 				RB_EndSurface();
@@ -757,13 +751,12 @@ static void RB_RenderDrawSurfList(drawSurf_t* drawSurfs, const int numDrawSurfs)
 			oldShader = shader;
 			oldFogNum = fogNum;
 			oldDlighted = dlighted;
-			oldTintType = tintType;
 		}
 
 		//
 		// change the modelview matrix if needed
 		//
-		if (entityNum != oldEntityNum) {
+		if (entityNum != oldentity_num) {
 			depthRange = qfalse;
 
 			if (entityNum != REFENTITYNUM_WORLD) {
@@ -818,7 +811,7 @@ static void RB_RenderDrawSurfList(drawSurf_t* drawSurfs, const int numDrawSurfs)
 				oldDepthRange = depthRange;
 			}
 
-			oldEntityNum = entityNum;
+			oldentity_num = entityNum;
 		}
 
 		// add the triangles for this surface
@@ -962,7 +955,7 @@ RB_SetGL2D
 
 ================
 */
-void	RB_SetGL2D() {
+void RB_SetGL2D(void) {
 	backEnd.projection2D = qtrue;
 
 	// set 2D virtual screen size
@@ -992,7 +985,7 @@ RB_SetColor
 
 =============
 */
-const void* RB_SetColor(const void* data) {
+static const void* RB_SetColor(const void* data) {
 	const auto cmd = static_cast<const setColorCommand_t*>(data);
 
 	backEnd.color2D[0] = cmd->color[0] * 255;
@@ -1008,7 +1001,7 @@ const void* RB_SetColor(const void* data) {
 RB_StretchPic
 =============
 */
-const void* RB_StretchPic(const void* data) {
+static const void* RB_StretchPic(const void* data) {
 	const auto cmd = static_cast<const stretchPicCommand_t*>(data);
 
 	if (!backEnd.projection2D) {
@@ -1080,7 +1073,7 @@ const void* RB_StretchPic(const void* data) {
 RB_RotatePic
 =============
 */
-const void* RB_RotatePic(const void* data)
+static const void* RB_RotatePic(const void* data)
 {
 	const auto cmd = static_cast<const rotatePicCommand_t*>(data);
 
@@ -1163,7 +1156,7 @@ const void* RB_RotatePic(const void* data)
 RB_RotatePic2
 =============
 */
-const void* RB_RotatePic2(const void* data)
+static const void* RB_RotatePic2(const void* data)
 {
 	const auto cmd = static_cast<const rotatePicCommand_t*>(data);
 
@@ -1252,7 +1245,7 @@ const void* RB_RotatePic2(const void* data)
 RB_ScissorPic
 =============
 */
-const void* RB_Scissor(const void* data)
+static const void* RB_Scissor(const void* data)
 {
 	const auto cmd = static_cast<const scissorCommand_t*>(data);
 
@@ -1279,7 +1272,7 @@ RB_DrawSurfs
 
 =============
 */
-const void* RB_DrawSurfs(const void* data) {
+static const void* RB_DrawSurfs(const void* data) {
 	// finish any 2D drawing if needed
 	if (tess.numIndexes) {
 		RB_EndSurface();
@@ -1372,7 +1365,7 @@ RB_DrawBuffer
 
 =============
 */
-const void* RB_DrawBuffer(const void* data) {
+static const void* RB_DrawBuffer(const void* data) {
 	const auto cmd = static_cast<const drawBufferCommand_t*>(data);
 
 	qglDrawBuffer(cmd->buffer);
@@ -1444,7 +1437,7 @@ was there.  This is used to test for texture thrashing.
 Also called by RE_EndRegistration
 ===============
 */
-void RB_ShowImages() {
+void RB_ShowImages(void) {
 	image_t* image;
 	//int		start, end;
 
@@ -1499,17 +1492,15 @@ RB_SwapBuffers
 =============
 */
 extern void RB_RenderWorldEffects();
-const void* RB_SwapBuffers(const void* data)
+static const void* RB_SwapBuffers(const void* data) 
 {
 	// finish any 2D drawing if needed
-	if (tess.numIndexes)
-	{
+	if (tess.numIndexes) {
 		RB_EndSurface();
 	}
 
 	// texture swapping test
-	if (r_showImages->integer)
-	{
+	if (r_showImages->integer) {
 		RB_ShowImages();
 	}
 
@@ -1517,15 +1508,14 @@ const void* RB_SwapBuffers(const void* data)
 
 	// we measure overdraw by reading back the stencil buffer and
 	// counting up the number of increments that have happened
-	if (r_measureOverdraw->integer)
-	{
+	if (r_measureOverdraw->integer) {
 		long sum = 0;
 
-		const auto stencilReadback = static_cast<unsigned char*>(R_Malloc(glConfig.vidWidth * glConfig.vidHeight, TAG_TEMP_WORKSPACE, qfalse));
+		const auto stencilReadback = static_cast<unsigned char*>(R_Malloc(glConfig.vidWidth * glConfig.vidHeight,
+			TAG_TEMP_WORKSPACE, qfalse));
 		qglReadPixels(0, 0, glConfig.vidWidth, glConfig.vidHeight, GL_STENCIL_INDEX, GL_UNSIGNED_BYTE, stencilReadback);
 
-		for (int i = 0; i < glConfig.vidWidth * glConfig.vidHeight; i++)
-		{
+		for (int i = 0; i < glConfig.vidWidth * glConfig.vidHeight; i++) {
 			sum += stencilReadback[i];
 		}
 
@@ -1533,8 +1523,7 @@ const void* RB_SwapBuffers(const void* data)
 		R_Free(stencilReadback);
 	}
 
-	if (!glState.finishCalled)
-	{
+	if (!glState.finishCalled) {
 		qglFinish();
 	}
 
@@ -1547,7 +1536,7 @@ const void* RB_SwapBuffers(const void* data)
 	return cmd + 1;
 }
 
-const void* RB_WorldEffects(const void* data)
+static const void* RB_WorldEffects(const void* data)
 {
 	const auto cmd = static_cast<const setModeCommand_t*>(data);
 
@@ -1563,7 +1552,7 @@ const void* RB_WorldEffects(const void* data)
 		RB_BeginSurface(tess.shader, tess.fogNum);
 	}
 
-	return (const void*)(cmd + 1);
+	return cmd + 1;
 }
 
 /*
@@ -1619,7 +1608,7 @@ void RB_ExecuteRenderCommands(const void* data) {
 GLuint g_uiCurrentPixelShaderType = 0x0;
 
 // Begin using a Pixel Shader.
-void BeginPixelShader(const GLuint uiType, const GLuint uiID)
+static void BeginPixelShader(const GLuint uiType, const GLuint uiID)
 {
 	switch (uiType)
 	{
@@ -1655,7 +1644,7 @@ void BeginPixelShader(const GLuint uiType, const GLuint uiID)
 }
 
 // Stop using a Pixel Shader and return states to normal.
-void EndPixelShader()
+static void EndPixelShader()
 {
 	if (g_uiCurrentPixelShaderType == 0x0)
 		return;

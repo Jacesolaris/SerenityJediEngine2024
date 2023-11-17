@@ -31,7 +31,7 @@ typedef enum //# dynamicMusic_e
 
 struct DynamicTransition_s
 {
-	char file_name[MAX_QPATH];
+	char fileName[MAX_QPATH];
 	int fileLength;
 	int exitPoints[MAX_DMS_EXITPOINTS];
 	int numExitPoints;
@@ -41,7 +41,7 @@ typedef struct DynamicTransition_s DynamicTransition_t;
 
 struct DynamicMusicSet_s
 {
-	char file_name[MAX_QPATH];
+	char fileName[MAX_QPATH];
 	int fileLength;
 	DynamicTransition_t Transitions[MAX_DMS_TRANSITIONS];
 	int numTransitions;

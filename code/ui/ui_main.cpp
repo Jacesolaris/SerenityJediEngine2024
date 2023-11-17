@@ -970,18 +970,18 @@ qhandle_t UI_FeederItemImage(const float feederID, const int index)
 CreateNextSaveName
 =================
 */
-static int CreateNextSaveName(char* file_name)
+static int CreateNextSaveName(char* fileName)
 {
 	// Loop through all the save games and look for the first open name
 	for (int i = 0; i < MAX_SAVELOADFILES; i++)
 	{
 #ifdef JK2_MODE
-		Com_sprintf(file_name, MAX_SAVELOADNAME, "jkii%02d", i);
+		Com_sprintf(fileName, MAX_SAVELOADNAME, "jkii%02d", i);
 #else
-		Com_sprintf(file_name, MAX_SAVELOADNAME, "jedi_%02d", i);
+		Com_sprintf(fileName, MAX_SAVELOADNAME, "jedi_%02d", i);
 #endif
 
-		if (!ui.SG_GetSaveGameComment(file_name, nullptr, nullptr))
+		if (!ui.SG_GetSaveGameComment(fileName, nullptr, nullptr))
 		{
 			return qtrue;
 		}
@@ -1105,16 +1105,16 @@ static qboolean UI_RunMenuScript(const char** args)
 		}
 		else if (Q_stricmp(name, "savegame") == 0)
 		{
-			char file_name[MAX_SAVELOADNAME];
+			char fileName[MAX_SAVELOADNAME];
 			char description[64];
 
-			CreateNextSaveName(file_name); // Get a name to save to
+			CreateNextSaveName(fileName); // Get a name to save to
 
 			// Save description line
 			ui.Cvar_VariableStringBuffer("ui_gameDesc", description, sizeof description);
 			ui.SG_StoreSaveGameComment(description);
 
-			ui.Cmd_ExecuteText(EXEC_APPEND, va("save %s\n", file_name));
+			ui.Cmd_ExecuteText(EXEC_APPEND, va("save %s\n", fileName));
 			s_savegame.saveFileCnt = -1; //force a refresh the next time around
 		}
 		else if (Q_stricmp(name, "LoadMods") == 0)

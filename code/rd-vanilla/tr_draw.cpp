@@ -137,7 +137,8 @@ void RE_StretchRaw(const int x, const int y, const int w, const int h, const int
 	qglEnd();
 }
 
-void RE_UploadCinematic(const int cols, const int rows, const byte* data, const int client, const qboolean dirty) {
+void RE_UploadCinematic(const int cols, const int rows, const byte* data, const int client, const qboolean dirty)
+{
 	GL_Bind(tr.scratchImage[client]);
 
 	// if the scratchImage isn't in the format we want, specify it as a new texture
@@ -202,37 +203,35 @@ void RE_GetScreenShot(byte* data, const int w, const int h)
 // this is just a chunk of code from RE_TempRawImage_ReadFromFile() below, subroutinised so I can call it
 //	from the screen dissolve code as well...
 //
-static byte* RE_ReSample(byte* pb_loaded_pic, const int i_loaded_width, const int i_loaded_height,
-	byte* pb_re_sample_buffer, int* pi_width, int* pi_height
-)
+static byte* RE_ReSample(byte* pbLoadedPic, const int iLoadedWidth, const int iLoadedHeight, byte* pb_re_sample_buffer, int* piWidth, int* piHeight)
 {
 	byte* pb_return;
 
 	// if not resampling, just return some values and return...
 	//
-	if (pb_re_sample_buffer == nullptr || i_loaded_width == *pi_width && i_loaded_height == *pi_height)
+	if (pb_re_sample_buffer == nullptr || iLoadedWidth == *piWidth && iLoadedHeight == *piHeight)
 	{
 		// if not resampling, we're done, just return the loaded size...
 		//
-		*pi_width = i_loaded_width;
-		*pi_height = i_loaded_height;
-		pb_return = pb_loaded_pic;
+		*piWidth = iLoadedWidth;
+		*piHeight = iLoadedHeight;
+		pb_return = pbLoadedPic;
 	}
 	else
 	{
-		// resample from pb_loaded_pic to pbReSampledBuffer...
+		// resample from pbLoadedPic to pbReSampledBuffer...
 		//
-		const float	f_x_step = static_cast<float>(i_loaded_width) / static_cast<float>(*pi_width);
-		const float	f_y_step = static_cast<float>(i_loaded_height) / static_cast<float>(*pi_height);
+		const float	f_x_step = static_cast<float>(iLoadedWidth) / static_cast<float>(*piWidth);
+		const float	f_y_step = static_cast<float>(iLoadedHeight) / static_cast<float>(*piHeight);
 		const int		i_tot_pixels_per_down_sample = static_cast<int>(ceil(f_x_step)) * static_cast<int>(ceil(f_y_step));
 
 		int g, b;
 
 		byte* pb_dst = pb_re_sample_buffer;
 
-		for (int y = 0; y < *pi_height; y++)
+		for (int y = 0; y < *piHeight; y++)
 		{
-			for (int x = 0; x < *pi_width; x++)
+			for (int x = 0; x < *piWidth; x++)
 			{
 				int r = g = b = 0;
 
@@ -240,9 +239,9 @@ static byte* RE_ReSample(byte* pb_loaded_pic, const int i_loaded_width, const in
 				{
 					for (float xx = static_cast<float>(x) * f_x_step; xx < static_cast<float>(x + 1) * f_x_step; xx += 1)
 					{
-						const byte* pb_src = pb_loaded_pic + 4 * (static_cast<int>(yy) * i_loaded_width + static_cast<int>(xx));
+						const byte* pb_src = pbLoadedPic + 4 * (static_cast<int>(yy) * iLoadedWidth + static_cast<int>(xx));
 
-						assert(pb_src < pb_loaded_pic + i_loaded_width * i_loaded_height * 4);
+						assert(pb_src < pbLoadedPic + iLoadedWidth * iLoadedHeight * 4);
 
 						r += pb_src[0];
 						g += pb_src[1];
@@ -250,7 +249,7 @@ static byte* RE_ReSample(byte* pb_loaded_pic, const int i_loaded_width, const in
 					}
 				}
 
-				assert(pb_dst < pb_re_sample_buffer + *pi_width * *pi_height * 4);
+				assert(pb_dst < pb_re_sample_buffer + *piWidth * *piHeight * 4);
 
 				pb_dst[0] = r / i_tot_pixels_per_down_sample;
 				pb_dst[1] = g / i_tot_pixels_per_down_sample;
@@ -290,42 +289,42 @@ static byte* RE_ReSample(byte* pb_loaded_pic, const int i_loaded_width, const in
 //
 // (not brilliantly fast, but it's only used for weird stuff anyway)
 //
-byte* pb_loaded_pic = nullptr;
+byte* pbLoadedPic = nullptr;
 
-byte* RE_TempRawImage_ReadFromFile(const char* ps_local_filename, int* pi_width, int* pi_height, byte* pb_re_sample_buffer, const qboolean qb_vert_flip)
+byte* RE_TempRawImage_ReadFromFile(const char* psLocalFilename, int* piWidth, int* piHeight, byte* pb_re_sample_buffer, const qboolean qbVertFlip)
 {
 	RE_TempRawImage_CleanUp();	// jic
 
 	byte* pb_return = nullptr;
 
-	if (ps_local_filename && pi_width && pi_height)
+	if (psLocalFilename && piWidth && piHeight)
 	{
-		int	 i_loaded_width, i_loaded_height;
+		int	 iLoadedWidth, iLoadedHeight;
 
-		R_LoadImage(ps_local_filename, &pb_loaded_pic, &i_loaded_width, &i_loaded_height);
-		if (pb_loaded_pic)
+		R_LoadImage(psLocalFilename, &pbLoadedPic, &iLoadedWidth, &iLoadedHeight);
+		if (pbLoadedPic)
 		{
-			pb_return = RE_ReSample(pb_loaded_pic, i_loaded_width, i_loaded_height,
-				pb_re_sample_buffer, pi_width, pi_height);
+			pb_return = RE_ReSample(pbLoadedPic, iLoadedWidth, iLoadedHeight,
+				pb_re_sample_buffer, piWidth, piHeight);
 		}
 	}
 
-	if (pb_return && qb_vert_flip)
+	if (pb_return && qbVertFlip)
 	{
 		auto p_src_line = reinterpret_cast<unsigned int*>(pb_return);
-		unsigned int* p_dst_line = reinterpret_cast<unsigned int*>(pb_return) + *pi_height * *pi_width;	// *4 done by compiler (longs)
-		p_dst_line -= *pi_width;	// point at start of last line, not first after buffer
+		unsigned int* p_dst_line = reinterpret_cast<unsigned int*>(pb_return) + *piHeight * *piWidth;	// *4 done by compiler (longs)
+		p_dst_line -= *piWidth;	// point at start of last line, not first after buffer
 
-		for (int i_line_count = 0; i_line_count < *pi_height / 2; i_line_count++)
+		for (int i_line_count = 0; i_line_count < *piHeight / 2; i_line_count++)
 		{
-			for (int x = 0; x < *pi_width; x++)
+			for (int x = 0; x < *piWidth; x++)
 			{
 				const unsigned int l = p_src_line[x];
 				p_src_line[x] = p_dst_line[x];
 				p_dst_line[x] = l;
 			}
-			p_src_line += *pi_width;
-			p_dst_line -= *pi_width;
+			p_src_line += *piWidth;
+			p_dst_line -= *piWidth;
 		}
 	}
 
@@ -334,10 +333,10 @@ byte* RE_TempRawImage_ReadFromFile(const char* ps_local_filename, int* pi_width,
 
 void RE_TempRawImage_CleanUp()
 {
-	if (pb_loaded_pic)
+	if (pbLoadedPic)
 	{
-		R_Free(pb_loaded_pic);
-		pb_loaded_pic = nullptr;
+		R_Free(pbLoadedPic);
+		pbLoadedPic = nullptr;
 	}
 }
 
@@ -373,21 +372,21 @@ using Dissolve_t = struct
 	qboolean	bTouchNeeded;
 };
 
-static int PowerOf2(int i_arg)
+static int PowerOf2(int iArg)
 {
-	if ((i_arg & i_arg - 1) != 0)
+	if ((iArg & iArg - 1) != 0)
 	{
 		int i_shift = 0;
-		while (i_arg)
+		while (iArg)
 		{
-			i_arg >>= 1;
+			iArg >>= 1;
 			i_shift++;
 		}
 
-		i_arg = 1 << i_shift;
+		iArg = 1 << i_shift;
 	}
 
-	return i_arg;
+	return iArg;
 }
 
 Dissolve_t Dissolve = { 0 };
@@ -395,10 +394,7 @@ constexpr auto fDISSOLVE_SECONDS = 0.75f;
 
 // leave the UV stuff in for now as comments in case I ever need to do some sneaky stuff, but for now...
 //
-static void RE_Blit(const float f_x0, const float f_y0, const float f_x1, const float f_y1, const float f_x2, const float f_y2, const float f_x3, const float f_y3,
-	//float fU0, float fV0, float fU1, float fV1, float fU2, float fV2, float fU3, float fV3,
-	image_t* p_image, const int i_gl_state
-)
+static void RE_Blit(const float f_x0, const float f_y0, const float f_x1, const float f_y1, const float f_x2, const float f_y2, const float f_x3, const float f_y3, image_t* p_image, const int iGLState)
 {
 	//
 	// some junk they had at the top of other StretchRaw code...
@@ -407,7 +403,7 @@ static void RE_Blit(const float f_x0, const float f_y0, const float f_x1, const 
 	//	qglFinish();
 
 	GL_Bind(p_image);
-	GL_State(i_gl_state);
+	GL_State(iGLState);
 	GL_Cull(CT_TWO_SIDED);
 
 	qglColor3f(1.0f, 1.0f, 1.0f);
@@ -456,7 +452,7 @@ static void RE_KillDissolve()
 // return = qtrue while still processing, for those interested...
 //
 constexpr auto iSAFETY_SPRITE_OVERLAP = 2;	// #pixels to overlap blit region by, in case some drivers leave onscreen seams;
-qboolean RE_ProcessDissolve()
+qboolean RE_ProcessDissolve(void)
 {
 	if (Dissolve.iStartTime)
 	{
@@ -848,13 +844,13 @@ qboolean RE_InitDissolve(const qboolean bForceCircularExtroWipe)
 
 			// re-sample screen...
 			//
-			const byte* pbScreenSprite = RE_ReSample(pBuffer,				// byte *pb_loaded_pic
-				iPow2VidWidth,			// int i_loaded_width
-				iPow2VidHeight,			// int i_loaded_height
+			const byte* pbScreenSprite = RE_ReSample(pBuffer,				// byte *pbLoadedPic
+				iPow2VidWidth,			// int iLoadedWidth
+				iPow2VidHeight,			// int iLoadedHeight
 				//
 				pb_re_sample_buffer,		// byte *pb_re_sample_buffer
-				&Dissolve.iUploadWidth,	// int *pi_width
-				&Dissolve.iUploadHeight	// int *pi_height
+				&Dissolve.iUploadWidth,	// int *piWidth
+				&Dissolve.iUploadHeight	// int *piHeight
 			);
 
 			Dissolve.p_image = R_CreateImage("*DissolveImage",		// const char *name

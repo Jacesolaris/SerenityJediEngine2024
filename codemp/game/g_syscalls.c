@@ -1435,11 +1435,11 @@ qboolean trap_G2API_GetBoltMatrix_NoRecNoRot(void* ghoul2, const int modelIndex,
 		modelList, scale);
 }
 
-int trap_G2API_InitGhoul2Model(void** ghoul2Ptr, const char* file_name, const int modelIndex,
+int trap_G2API_InitGhoul2Model(void** ghoul2Ptr, const char* fileName, const int modelIndex,
 	const qhandle_t customSkin,
 	const qhandle_t customShader, const int modelFlags, const int lodBias)
 {
-	return Q_syscall(G_G2_INITGHOUL2MODEL, ghoul2Ptr, file_name, modelIndex, customSkin, customShader, modelFlags,
+	return Q_syscall(G_G2_INITGHOUL2MODEL, ghoul2Ptr, fileName, modelIndex, customSkin, customShader, modelFlags,
 		lodBias);
 }
 

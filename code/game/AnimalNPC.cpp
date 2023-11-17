@@ -161,7 +161,7 @@ static void ProcessMoveCommands(Vehicle_t* p_veh)
 	//Client sets ucmds and such for speed alterations
 	float speedInc, speedIdleDec, speedIdle, /*speedIdleAccel, */speedMin, speedMax;
 	float fWalkSpeedMax;
-	int cur_time;
+	int curTime;
 	bgEntity_t* parent = p_veh->m_pParentEntity;
 #ifdef _JK2MP
 	playerState_t* parent_ps = parent->playerState;
@@ -170,12 +170,12 @@ static void ProcessMoveCommands(Vehicle_t* p_veh)
 #endif
 
 #ifndef _JK2MP//SP
-	cur_time = level.time;
+	curTime = level.time;
 #elif defined QAGAME//MP GAME
-	cur_time = level.time;
+	curTime = level.time;
 #elif defined CGAME//MP CGAME
 	//FIXME: pass in ucmd?  Not sure if this is reliable...
-	cur_time = pm->cmd.serverTime;
+	curTime = pm->cmd.serverTime;
 #endif
 
 #ifndef _JK2MP //bad for prediction - fixme
@@ -199,9 +199,9 @@ static void ProcessMoveCommands(Vehicle_t* p_veh)
 	if (p_veh->m_pPilot /*&& (pilotPS->weapon == WP_NONE || pilotPS->weapon == WP_MELEE )*/ &&
 		p_veh->m_ucmd.buttons & BUTTON_ALT_ATTACK && p_veh->m_pVehicleInfo->turboSpeed)
 	{
-		if (cur_time - p_veh->m_iTurboTime > p_veh->m_pVehicleInfo->turboRecharge)
+		if (curTime - p_veh->m_iTurboTime > p_veh->m_pVehicleInfo->turboRecharge)
 		{
-			p_veh->m_iTurboTime = cur_time + p_veh->m_pVehicleInfo->turboDuration;
+			p_veh->m_iTurboTime = curTime + p_veh->m_pVehicleInfo->turboDuration;
 #ifndef _JK2MP //kill me now
 			if (p_veh->m_pVehicleInfo->soundTurbo)
 			{
@@ -212,7 +212,7 @@ static void ProcessMoveCommands(Vehicle_t* p_veh)
 		}
 	}
 
-	if (cur_time < p_veh->m_iTurboTime)
+	if (curTime < p_veh->m_iTurboTime)
 	{
 		speedMax = p_veh->m_pVehicleInfo->turboSpeed;
 	}
@@ -295,7 +295,7 @@ static void ProcessMoveCommands(Vehicle_t* p_veh)
 	}
 
 	fWalkSpeedMax = speedMax * 0.275f;
-	if (cur_time > p_veh->m_iTurboTime && p_veh->m_ucmd.buttons & BUTTON_WALKING && parent_ps->speed > fWalkSpeedMax)
+	if (curTime > p_veh->m_iTurboTime && p_veh->m_ucmd.buttons & BUTTON_WALKING && parent_ps->speed > fWalkSpeedMax)
 	{
 		parent_ps->speed = fWalkSpeedMax;
 	}

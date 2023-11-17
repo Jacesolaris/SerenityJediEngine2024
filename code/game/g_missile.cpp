@@ -57,8 +57,7 @@ extern qboolean WP_DoingForcedAnimationForForcePowers(const gentity_t* self);
 extern qboolean G_ControlledByPlayer(const gentity_t* self);
 extern qboolean PM_SaberInStart(int move);
 extern qboolean wp_saber_block_non_random_missile(gentity_t* self, vec3_t hitloc, qboolean missileBlock);
-extern int wp_saber_must_block(gentity_t* self, const gentity_t* atk, qboolean check_b_box_block, vec3_t point,
-	int r_saber_num, int r_blade_num);
+extern int wp_saber_must_block(gentity_t* self, const gentity_t* atk, qboolean check_b_box_block, vec3_t point, int r_saber_num, int r_blade_num);
 extern float VectorBlockDistance(vec3_t v1, vec3_t v2);
 vec3_t g_crosshairWorldCoord = { 0, 0, 0 };
 extern qboolean PM_RunningAnim(int anim);
@@ -78,7 +77,7 @@ extern void G_KnockOver(gentity_t* self, const gentity_t* attacker, const vec3_t
 extern qboolean WP_SaberFatiguedParryDirection(gentity_t* self, vec3_t hitloc, qboolean missileBlock);
 
 //-------------------------------------------------------------------------
-void g_missile_bounce_effect(const gentity_t* ent, vec3_t org, vec3_t dir, const qboolean hit_world)
+static void g_missile_bounce_effect(const gentity_t* ent, vec3_t org, vec3_t dir, const qboolean hit_world)
 {
 	switch (ent->s.weapon)
 	{
@@ -141,7 +140,7 @@ void g_missile_reflect_effect(const gentity_t* ent, vec3_t dir)
 	}
 }
 
-void G_MissileBounceBeskarEffect(const gentity_t* ent, vec3_t dir)
+static void G_MissileBounceBeskarEffect(const gentity_t* ent, vec3_t dir)
 {
 	G_PlayEffect("blaster/beskar_impact", ent->currentOrigin, dir);
 
@@ -357,9 +356,7 @@ void g_reflect_missile_auto(gentity_t* ent, gentity_t* missile, vec3_t forward)
 	VectorNormalize(bounce_dir);
 	VectorScale(bounce_dir, speed, missile->s.pos.trDelta);
 #ifdef _DEBUG
-	assert(
-		!Q_isnan(missile->s.pos.trDelta[0]) && !Q_isnan(missile->s.pos.trDelta[1]) && !Q_isnan(missile->s.pos.trDelta[2]
-		));
+	assert(!Q_isnan(missile->s.pos.trDelta[0]) && !Q_isnan(missile->s.pos.trDelta[1]) && !Q_isnan(missile->s.pos.trDelta[2]));
 #endif// _DEBUG
 	missile->s.pos.trTime = level.time - 10; // move a bit on the very first frame
 	VectorCopy(missile->currentOrigin, missile->s.pos.trBase);
@@ -531,9 +528,7 @@ void g_reflect_missile_npc(gentity_t* ent, gentity_t* missile, vec3_t forward)
 	VectorNormalize(bounce_dir);
 	VectorScale(bounce_dir, speed, missile->s.pos.trDelta);
 #ifdef _DEBUG
-	assert(
-		!Q_isnan(missile->s.pos.trDelta[0]) && !Q_isnan(missile->s.pos.trDelta[1]) && !Q_isnan(missile->s.pos.trDelta[2]
-		));
+	assert(!Q_isnan(missile->s.pos.trDelta[0]) && !Q_isnan(missile->s.pos.trDelta[1]) && !Q_isnan(missile->s.pos.trDelta[2]));
 #endif// _DEBUG
 	missile->s.pos.trTime = level.time - 10; // move a bit on the very first frame
 	VectorCopy(missile->currentOrigin, missile->s.pos.trBase);
@@ -554,7 +549,7 @@ void g_reflect_missile_npc(gentity_t* ent, gentity_t* missile, vec3_t forward)
 	}
 }
 
-void g_missile_bouncedoff_saber(gentity_t* ent, gentity_t* missile, vec3_t forward)
+static void g_missile_bouncedoff_saber(gentity_t* ent, gentity_t* missile, vec3_t forward)
 {
 	vec3_t bounce_dir;
 	int i;
@@ -570,8 +565,7 @@ void g_missile_bouncedoff_saber(gentity_t* ent, gentity_t* missile, vec3_t forwa
 	const float speed = VectorNormalize(missile->s.pos.trDelta);
 
 	if (ent && owner && owner->client && !owner->client->ps.saberInFlight &&
-		(owner->client->ps.forcePowerLevel[FP_SABER_DEFENSE] > FORCE_LEVEL_2 || owner->client->ps.forcePowerLevel[
-			FP_SABER_DEFENSE] > FORCE_LEVEL_1 && !Q_irand(0, 3)))
+		(owner->client->ps.forcePowerLevel[FP_SABER_DEFENSE] > FORCE_LEVEL_2 || owner->client->ps.forcePowerLevel[FP_SABER_DEFENSE] > FORCE_LEVEL_1 && !Q_irand(0, 3)))
 	{
 		//if high enough defense skill and saber in-hand (100% at level 3, 25% at level 2, 0% at level 1), reflections are perfectly deflected toward an enemy
 		gentity_t* enemy;
@@ -704,9 +698,7 @@ void g_missile_bouncedoff_saber(gentity_t* ent, gentity_t* missile, vec3_t forwa
 	VectorNormalize(bounce_dir);
 	VectorScale(bounce_dir, speed, missile->s.pos.trDelta);
 #ifdef _DEBUG
-	assert(
-		!Q_isnan(missile->s.pos.trDelta[0]) && !Q_isnan(missile->s.pos.trDelta[1]) && !Q_isnan(missile->s.pos.trDelta[2]
-		));
+	assert(!Q_isnan(missile->s.pos.trDelta[0]) && !Q_isnan(missile->s.pos.trDelta[1]) && !Q_isnan(missile->s.pos.trDelta[2]));
 #endif// _DEBUG
 	missile->s.pos.trTime = level.time - 10; // move a bit on the very first frame
 	VectorCopy(missile->currentOrigin, missile->s.pos.trBase);
@@ -727,7 +719,7 @@ void g_missile_bouncedoff_saber(gentity_t* ent, gentity_t* missile, vec3_t forwa
 	}
 }
 
-void wp_handle_bolt_block(gentity_t* ent, gentity_t* missile, vec3_t forward)
+static void wp_handle_bolt_block(gentity_t* ent, gentity_t* missile, vec3_t forward)
 {
 	vec3_t bounce_dir;
 	int i;
@@ -744,15 +736,11 @@ void wp_handle_bolt_block(gentity_t* ent, gentity_t* missile, vec3_t forward)
 	}
 
 	const qboolean manual_blocking = blocker->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
-	const qboolean manual_proj_blocking = blocker->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK
-		? qtrue
-		: qfalse;
+	const qboolean manual_proj_blocking = blocker->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK ? qtrue : qfalse;
 	const qboolean npc_is_blocking = blocker->client->ps.ManualBlockingFlags & 1 << MBF_NPCBLOCKING ? qtrue : qfalse;
-	const qboolean accurate_missile_blocking =
-		blocker->client->ps.ManualBlockingFlags & 1 << MBF_ACCURATEMISSILEBLOCKING ? qtrue : qfalse;
+	const qboolean accurate_missile_blocking = blocker->client->ps.ManualBlockingFlags & 1 << MBF_ACCURATEMISSILEBLOCKING ? qtrue : qfalse;
 	//Active NPC Blocking
-	float slop_factor = (FATIGUE_AUTOBOLTBLOCK - 6) * (static_cast<float>(FORCE_LEVEL_3) - blocker->client->ps.forcePowerLevel[
-		FP_SABER_DEFENSE]) / FORCE_LEVEL_3;
+	float slop_factor = (FATIGUE_AUTOBOLTBLOCK - 6) * (static_cast<float>(FORCE_LEVEL_3) - blocker->client->ps.forcePowerLevel[FP_SABER_DEFENSE]) / FORCE_LEVEL_3;
 
 	//save the original speed
 	const float speed = VectorNormalize(missile->s.pos.trDelta);
@@ -826,7 +814,6 @@ void wp_handle_bolt_block(gentity_t* ent, gentity_t* missile, vec3_t forward)
 			AngleVectors(angs, forward, nullptr, nullptr);
 		}
 
-		reflected = qtrue;
 		VectorCopy(forward, bounce_dir);
 
 		if (blocker->client->ps.blockPoints < BLOCKPOINTS_THIRTY)
@@ -867,6 +854,8 @@ void wp_handle_bolt_block(gentity_t* ent, gentity_t* missile, vec3_t forward)
 		{
 			WP_BlockPointsDrain(blocker, block_points_used_used);
 		}
+
+		reflected = qtrue;
 	}
 	else if (bolt_block_reflection) //GOES TO ENEMY
 	{
@@ -923,7 +912,6 @@ void wp_handle_bolt_block(gentity_t* ent, gentity_t* missile, vec3_t forward)
 			}
 
 			VectorNormalize(bounce_dir);
-			reflected = qtrue;
 
 			if (blocker->client->ps.blockPoints < BLOCKPOINTS_THIRTY)
 			{
@@ -963,6 +951,7 @@ void wp_handle_bolt_block(gentity_t* ent, gentity_t* missile, vec3_t forward)
 			{
 				WP_BlockPointsDrain(blocker, block_points_used_used);
 			}
+			reflected = qtrue;
 		}
 	}
 	else if (npc_reflection && blocker->s.client_num >= MAX_CLIENTS) //GOES TO ENEMY
@@ -1016,7 +1005,6 @@ void wp_handle_bolt_block(gentity_t* ent, gentity_t* missile, vec3_t forward)
 			}
 
 			VectorNormalize(bounce_dir);
-			reflected = qtrue;
 
 			if (blocker->client->ps.blockPoints < BLOCKPOINTS_THIRTY)
 			{
@@ -1056,6 +1044,7 @@ void wp_handle_bolt_block(gentity_t* ent, gentity_t* missile, vec3_t forward)
 			{
 				WP_BlockPointsDrain(blocker, block_points_used_used);
 			}
+			reflected = qtrue;
 		}
 	}
 
@@ -1075,9 +1064,7 @@ void wp_handle_bolt_block(gentity_t* ent, gentity_t* missile, vec3_t forward)
 	VectorNormalize(bounce_dir);
 	VectorScale(bounce_dir, speed, missile->s.pos.trDelta);
 #ifdef _DEBUG
-	assert(
-		!Q_isnan(missile->s.pos.trDelta[0]) && !Q_isnan(missile->s.pos.trDelta[1]) && !Q_isnan(missile->s.pos.trDelta[2]
-		));
+	assert(!Q_isnan(missile->s.pos.trDelta[0]) && !Q_isnan(missile->s.pos.trDelta[1]) && !Q_isnan(missile->s.pos.trDelta[2]));
 #endif// _DEBUG
 	missile->s.pos.trTime = level.time - 10; // move a bit on the very first frame
 	VectorCopy(missile->currentOrigin, missile->s.pos.trBase);
@@ -1104,7 +1091,7 @@ G_BounceRollMissile
 
 ================
 */
-void g_bounce_roll_missile(gentity_t* ent, const trace_t* trace)
+static void g_bounce_roll_missile(gentity_t* ent, const trace_t* trace)
 {
 	vec3_t velocity, normal;
 
@@ -1276,7 +1263,7 @@ void NoghriGasCloudThink(gentity_t* self)
 	}
 }
 
-void G_SpawnNoghriGasCloud(gentity_t* ent)
+static void G_SpawnNoghriGasCloud(gentity_t* ent)
 {
 	//FIXME: force-pushable/dispensable?
 	ent->freeAfterEvent = qfalse;
@@ -1477,7 +1464,7 @@ static void g_missile_add_alerts(gentity_t* ent)
 }
 
 //------------------------------------------------------
-void g_missile_impact(gentity_t* ent, trace_t* trace, const int hit_loc = HL_NONE)
+static void g_missile_impact(gentity_t* ent, trace_t* trace, const int hit_loc = HL_NONE)
 {
 	vec3_t diff;
 
@@ -2006,7 +1993,7 @@ void g_explode_missile(gentity_t* ent)
 	G_FreeEntity(ent);
 }
 
-void g_run_stuck_missile(gentity_t* ent)
+static void g_run_stuck_missile(gentity_t* ent)
 {
 	if (ent->takedamage)
 	{
@@ -2034,7 +2021,7 @@ G_GroundTrace
 
 ==================
 */
-int g_ground_trace(const gentity_t* ent, pml_t* p_pml)
+static int g_ground_trace(const gentity_t* ent, pml_t* p_pml)
 {
 	vec3_t point{};
 	trace_t trace;
@@ -2085,7 +2072,7 @@ int g_ground_trace(const gentity_t* ent, pml_t* p_pml)
 	return trace.entityNum;
 }
 
-void g_clip_velocity(vec3_t in, vec3_t normal, vec3_t out, const float overbounce)
+static void g_clip_velocity(vec3_t in, vec3_t normal, vec3_t out, const float overbounce)
 {
 	float backoff = DotProduct(in, normal);
 
@@ -2123,7 +2110,7 @@ Also gets stuck inside thrower if looking down when thrown
 constexpr auto MAX_CLIP_PLANES = 5;
 constexpr auto BUMPCLIP = 1.5f;
 
-void g_roll_missile(gentity_t* ent)
+static void g_roll_missile(gentity_t* ent)
 {
 	int numplanes;
 	vec3_t planes[MAX_CLIP_PLANES]{};

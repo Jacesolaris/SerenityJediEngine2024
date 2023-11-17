@@ -90,7 +90,7 @@ R2GoreTextureCoordinates* FindR2GoreRecord(int tag)
 	return 0;
 }
 
-void* G2_GetGoreRecord(int tag)
+static void* G2_GetGoreRecord(const int tag)
 {
 	return FindR2GoreRecord(tag);
 }
@@ -104,7 +104,7 @@ void DeleteR2GoreRecord(int tag)
 static int CurrentGoreSet = 1; // this is a UUID for gore sets
 static std::map<int, CGoreSet*> GoreSets; // map from uuid to goreset
 
-CGoreSet* FindGoreSet(int goreSetTag)
+CGoreSet* FindGoreSet(const int goreSetTag)
 {
 	std::map<int, CGoreSet*>::iterator f = GoreSets.find(goreSetTag);
 	if (f != GoreSets.end())
@@ -122,7 +122,7 @@ CGoreSet* NewGoreSet()
 	return ret;
 }
 
-void DeleteGoreSet(int goreSetTag)
+void DeleteGoreSet(const int goreSetTag)
 {
 	std::map<int, CGoreSet*>::iterator f = GoreSets.find(goreSetTag);
 	if (f != GoreSets.end())
@@ -246,10 +246,10 @@ public:
 
 // assorted Ghoul 2 functions.
 // list all surfaces associated with a model
-void G2_List_Model_Surfaces(const char* file_name)
+void G2_List_Model_Surfaces(const char* fileName)
 {
 	int			i, x;
-	model_t* mod_m = R_GetModelByHandle(RE_RegisterModel(file_name));
+	model_t* mod_m = R_GetModelByHandle(RE_RegisterModel(fileName));
 	mdxmSurfHierarchy_t* surf;
 	mdxmHeader_t* mdxm = mod_m->data.glm->header;
 
@@ -274,12 +274,12 @@ void G2_List_Model_Surfaces(const char* file_name)
 }
 
 // list all bones associated with a model
-void G2_List_Model_Bones(const char* file_name, int frame)
+void G2_List_Model_Bones(const char* fileName, int frame)
 {
 	int				x, i;
 	mdxaSkel_t* skel;
 	mdxaSkelOffsets_t* offsets;
-	model_t* mod_m = R_GetModelByHandle(RE_RegisterModel(file_name));
+	model_t* mod_m = R_GetModelByHandle(RE_RegisterModel(fileName));
 	model_t* mod_a = R_GetModelByHandle(mod_m->data.glm->header->animIndex);
 	// 	mdxaFrame_t		*aframe=0;
 	//	int				frameSize;
@@ -322,10 +322,10 @@ void G2_List_Model_Bones(const char* file_name, int frame)
  *    true if we successfully obtained a filename, false otherwise
  *
  ************************************************************************************************/
-qboolean G2_GetAnimFileName(const char* file_name, char** filename)
+qboolean G2_GetAnimFileName(const char* fileName, char** filename)
 {
 	// find the model we want
-	model_t* mod = R_GetModelByHandle(RE_RegisterModel(file_name));
+	model_t* mod = R_GetModelByHandle(RE_RegisterModel(fileName));
 
 	if (mod)
 	{
@@ -370,7 +370,7 @@ int G2_DecideTraceLod(const CGhoul2Info& ghoul2, const int useLod)
 	return returnLod;
 }
 
-void R_TransformEachSurface(const mdxmSurface_t* surface, vec3_t scale, IHeapAllocator* G2VertSpace, size_t* TransformedVertsArray, CBoneCache* boneCache)
+static void R_TransformEachSurface(const mdxmSurface_t* surface, vec3_t scale, IHeapAllocator* G2VertSpace, size_t* TransformedVertsArray, CBoneCache* boneCache)
 {
 	int				 j, k;
 	mdxmVertex_t* v;
@@ -1173,7 +1173,7 @@ static bool G2_RadiusTracePolys(
 {
 	int		j;
 	vec3_t basis1;
-	vec3_t basis2;
+	vec3_t basis2{};
 	vec3_t taxis;
 	vec3_t saxis;
 
@@ -1224,7 +1224,7 @@ static bool G2_RadiusTracePolys(
 	for (j = 0; j < numVerts; j++)
 	{
 		const int pos = j * 5;
-		vec3_t delta;
+		vec3_t delta{};
 		delta[0] = verts[pos + 0] - TS.rayStart[0];
 		delta[1] = verts[pos + 1] - TS.rayStart[1];
 		delta[2] = verts[pos + 2] - TS.rayStart[2];
@@ -1630,7 +1630,7 @@ void G2_GenerateWorldMatrix(const vec3_t angles, const vec3_t origin)
 }
 
 // go away and determine what the pointer for a specific surface definition within the model definition is
-void* G2_FindSurface(void* mod_t, int index, int lod)
+void* G2_FindSurface(void* mod_t, const int index, const int lod)
 {
 	// damn include file dependancies
 	model_t* mod = (model_t*)mod_t;

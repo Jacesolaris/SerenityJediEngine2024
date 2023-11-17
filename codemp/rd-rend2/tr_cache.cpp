@@ -204,10 +204,10 @@ CModelCacheManager::AssetCache::iterator CModelCacheManager::FindAsset(const cha
 		});
 }
 
-qhandle_t CModelCacheManager::GetModelHandle(const char* file_name)
+qhandle_t CModelCacheManager::GetModelHandle(const char* fileName)
 {
 	char path[MAX_QPATH];
-	NormalizePath(path, file_name, sizeof(path));
+	NormalizePath(path, fileName, sizeof(path));
 
 	const auto it = FindAsset(path);
 	if (it == std::end(assets))
@@ -216,10 +216,10 @@ qhandle_t CModelCacheManager::GetModelHandle(const char* file_name)
 	return it->handle;
 }
 
-void CModelCacheManager::InsertModelHandle(const char* file_name, qhandle_t handle)
+void CModelCacheManager::InsertModelHandle(const char* fileName, qhandle_t handle)
 {
 	char path[MAX_QPATH];
-	NormalizePath(path, file_name, sizeof(path));
+	NormalizePath(path, fileName, sizeof(path));
 
 	Asset asset;
 	asset.handle = handle;

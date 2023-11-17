@@ -2919,7 +2919,7 @@ void	RE_SetRangedFog(float range);
 #ifdef REND2_SP
 byte* RB_ReadPixels(int x, int y, int width, int height, size_t* offset, int* padlen);
 void	RE_GetScreenShot(byte* data, int w, int h);
-byte* RE_TempRawImage_ReadFromFile(const char* psLocalFilename, int* piWidth, int* piHeight, byte* pb_re_sample_buffer, qboolean qbVertFlip);
+byte* RE_TempRawImage_ReadFromFile(const char* psLocalFilename, int* piWidth, int* piHeight, byte* pb_re_sample_buffer, const qboolean qbVertFlip);
 void	RE_TempRawImage_CleanUp();
 #endif
 
@@ -3561,7 +3561,7 @@ typedef struct screenShotCommand_s {
 	int y;
 	int width;
 	int height;
-	char* file_name;
+	char* fileName;
 	screenshotFormat_t format;
 } screenshotCommand_t;
 
@@ -3707,26 +3707,26 @@ extern	int		max_polyverts;
 
 extern	backEndData_t* backEndData;
 
-void* R_GetCommandBuffer(int bytes);
+void* R_GetCommandBuffer(const unsigned int bytes);
 void RB_ExecuteRenderCommands(const void* data);
 
 void R_IssuePendingRenderCommands(void);
 
-void R_AddDrawSurfCmd(drawSurf_t* drawSurfs, int numDrawSurfs);
+void R_AddDrawSurfCmd(drawSurf_t* drawSurfs, const int numDrawSurfs);
 void R_AddConvolveCubemapCmd(cubemap_t* cubemap, int cubemapId);
 void R_AddPostProcessCmd(void);
 qhandle_t R_BeginTimedBlockCmd(const char* name);
 void R_EndTimedBlockCmd(qhandle_t timerHandle);
 
 void RE_SetColor(const float* rgba);
-void RE_StretchPic(float x, float y, float w, float h, float s1, float t1, float s2, float t2, qhandle_t hShader);
-void RE_RotatePic(float x, float y, float w, float h, float s1, float t1, float s2, float t2, float a, qhandle_t hShader);
-void RE_RotatePic2(float x, float y, float w, float h, float s1, float t1, float s2, float t2, float a, qhandle_t hShader);
+void RE_StretchPic(const float x, const float y, const float w, const float h, const float s1, const float t1, const float s2, const float t2, const qhandle_t hShader);
+void RE_RotatePic(const float x, const float y, const float w, const float h, const float s1, const float t1, const float s2, const float t2, const float a, const qhandle_t hShader);
+void RE_RotatePic2(const float x, const float y, const float w, const float h, const float s1, const float t1, const float s2, const float t2, const float a, const qhandle_t hShader);
 #ifdef REND2_SP
 void RE_LAGoggles(void);
-void RE_Scissor(float x, float y, float w, float h);
+void RE_Scissor(const float x, const float y, const float w, const float h);
 #endif
-void RE_BeginFrame(stereoFrame_t stereoFrame);
+void RE_BeginFrame(const stereoFrame_t stereoFrame);
 void R_NewFrameSync();
 void RE_EndFrame(int* frontEndMsec, int* backEndMsec);
 void RE_TakeVideoFrame(int width, int height,

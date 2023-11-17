@@ -290,23 +290,23 @@ cvar_t* r_com_rend2;
 
 #ifdef REND2_SP
 static qboolean gbAllowScreenDissolve = qtrue;
-extern qboolean RE_InitDissolve(qboolean bForceCircularExtroWipe);
+extern qboolean RE_InitDissolve(const qboolean bForceCircularExtroWipe);
 extern qboolean RE_ProcessDissolve(void);
 #endif // REND2_SP
 
 // STUBS, REPLACEME
 
-void stub_R_InitWorldEffects(void) {}
-bool stub_R_SetTempGlobalFogColor(vec3_t color) { return qfalse; }
+static void stub_R_InitWorldEffects(void) {}
+static bool stub_R_SetTempGlobalFogColor(vec3_t color) { return qfalse; }
 
 float tr_distortionAlpha = 1.0f; //opaque
 float tr_distortionStretch = 0.0f; //no stretch override
 qboolean tr_distortionPrePost = qfalse; //capture before postrender phase?
 qboolean tr_distortionNegate = qfalse; //negative blend mode
-float* stub_get_tr_distortionAlpha(void) { return &tr_distortionAlpha; }
-float* stub_get_tr_distortionStretch(void) { return &tr_distortionStretch; }
-qboolean* stub_get_tr_distortionPrePost(void) { return &tr_distortionPrePost; }
-qboolean* stub_get_tr_distortionNegate(void) { return &tr_distortionNegate; }
+static float* stub_get_tr_distortionAlpha(void) { return &tr_distortionAlpha; }
+static float* stub_get_tr_distortionStretch(void) { return &tr_distortionStretch; }
+static qboolean* stub_get_tr_distortionPrePost(void) { return &tr_distortionPrePost; }
+static qboolean* stub_get_tr_distortionNegate(void) { return &tr_distortionNegate; }
 
 extern void	RB_SetGL2D(void);
 static void R_Splash()
@@ -371,7 +371,7 @@ static void R_Splash()
 
   Cannot use strstr directly to differentiate between (for eg) reg_combiners and reg_combiners2
 */
-bool GL_CheckForExtension(const char* ext)
+static bool GL_CheckForExtension(const char* ext)
 {
 	const char* ptr = Q_stristr(glConfigExt.originalExtensionString, ext);
 	if (ptr == NULL)
@@ -927,7 +927,7 @@ const void* RB_TakeScreenshotCmd(const void* data) {
 	screenshot->height = cmd->height;
 	screenshot->format = cmd->format;
 	Q_strncpyz(
-		screenshot->filename, cmd->file_name, sizeof(screenshot->filename));
+		screenshot->filename, cmd->fileName, sizeof(screenshot->filename));
 
 	return (const void*)(cmd + 1);
 }
@@ -937,8 +937,8 @@ const void* RB_TakeScreenshotCmd(const void* data) {
 R_TakeScreenshot
 ==================
 */
-void R_TakeScreenshot(int x, int y, int width, int height, char* name, screenshotFormat_t format) {
-	static char	file_name[MAX_OSPATH]; // bad things if two screenshots per frame?
+static void R_TakeScreenshot(int x, int y, int width, int height, char* name, screenshotFormat_t format) {
+	static char	fileName[MAX_OSPATH]; // bad things if two screenshots per frame?
 	screenshotCommand_t* cmd;
 
 	cmd = (screenshotCommand_t*)R_GetCommandBuffer(sizeof(*cmd));
@@ -951,8 +951,8 @@ void R_TakeScreenshot(int x, int y, int width, int height, char* name, screensho
 	cmd->y = y;
 	cmd->width = width;
 	cmd->height = height;
-	Q_strncpyz(file_name, name, sizeof(file_name));
-	cmd->file_name = file_name;
+	Q_strncpyz(fileName, name, sizeof(fileName));
+	cmd->fileName = fileName;
 	cmd->format = format;
 }
 
@@ -961,7 +961,7 @@ void R_TakeScreenshot(int x, int y, int width, int height, char* name, screensho
 R_ScreenshotFilename
 ==================
 */
-void R_ScreenshotFilename(char* buf, int bufSize, const char* ext) {
+static void R_ScreenshotFilename(char* buf, int bufSize, const char* ext) {
 	time_t rawtime;
 	char timeStr[32] = { 0 }; // should really only reach ~19 chars
 
@@ -1289,7 +1289,7 @@ R_PrintLongString
 Workaround for ri.Printf's 1024 characters buffer limit.
 ================
 */
-void R_PrintLongString(const char* string) {
+static void R_PrintLongString(const char* string) {
 	char buffer[1024];
 	const char* p;
 	int size = strlen(string);
@@ -1385,7 +1385,7 @@ static void GfxInfo_f(void)
 GfxMemInfo_f
 ================
 */
-void GfxMemInfo_f(void)
+static void GfxMemInfo_f(void)
 {
 	switch (glRefConfig.memInfo)
 	{
@@ -1417,7 +1417,7 @@ void GfxMemInfo_f(void)
 	case MI_ATI:
 	{
 		// GL_ATI_meminfo
-		int value[4];
+		int value[4]{};
 
 		qglGetIntegerv(GL_VBO_FREE_MEMORY_ATI, &value[0]);
 		ri.Printf(PRINT_ALL, "VBO_FREE_MEMORY_ATI: %ikb total %ikb largest aux: %ikb total %ikb largest\n", value[0], value[1], value[2], value[3]);
@@ -1485,7 +1485,7 @@ static const size_t numCommands = ARRAY_LEN(commands);
 R_Register
 ===============
 */
-void R_Register(void)
+static void R_Register(void)
 {
 	//
 	// latched and archived variables
@@ -1736,13 +1736,13 @@ void R_Register(void)
 		ri.Cmd_AddCommand(commands[i].cmd, commands[i].func);
 }
 
-void R_InitQueries(void)
+static void R_InitQueries(void)
 {
 	if (r_drawSunRays->integer)
 		qglGenQueries(ARRAY_LEN(tr.sunFlareQuery), tr.sunFlareQuery);
 }
 
-void R_ShutDownQueries(void)
+static void R_ShutDownQueries(void)
 {
 	if (r_drawSunRays->integer)
 		qglDeleteQueries(ARRAY_LEN(tr.sunFlareQuery), tr.sunFlareQuery);
@@ -1986,7 +1986,7 @@ static void R_ShutdownBackEndFrameData()
 
 // need to do this hackery so ghoul2 doesn't crash the game because of ITS hackery...
 //
-void R_ClearStuffToStopGhoul2CrashingThings(void)
+static void R_ClearStuffToStopGhoul2CrashingThings(void)
 {
 	memset(&tr, 0, sizeof(tr));
 }
@@ -2175,13 +2175,9 @@ RE_EndRegistration
 Touch all images to make sure they are resident
 =============
 */
-void RE_EndRegistration(void) {
+static void RE_EndRegistration(void) 
+{
 	R_IssuePendingRenderCommands();
-	/*
-	if (!ri.Sys_LowPhysicalMemory()) {
-		RB_ShowImages();
-	}
-	*/
 }
 
 // HACK
@@ -2200,9 +2196,9 @@ static void GetRealRes(int* w, int* h) {
 }
 
 // STUBS, REPLACEME
-qboolean stub_InitializeWireframeAutomap() { return qtrue; }
+static qboolean stub_InitializeWireframeAutomap() { return qtrue; }
 
-void RE_GetLightStyle(int style, color4ub_t color)
+static void RE_GetLightStyle(int style, color4ub_t color)
 {
 	if (style >= MAX_LIGHT_STYLES)
 	{
@@ -2230,10 +2226,10 @@ void RE_SetLightStyle(int style, int color)
 
 void RE_GetBModelVerts(const int bmodelIndex, vec3_t* verts, vec3_t normal);
 
-void stub_RE_AddWeatherZone(vec3_t mins, vec3_t maxs) {} // Intentionally left blank. Rend2 reads the zones manually on bsp load
+static void stub_RE_AddWeatherZone(vec3_t mins, vec3_t maxs) {} // Intentionally left blank. Rend2 reads the zones manually on bsp load
 static void RE_SetRefractionProperties(float distortionAlpha, float distortionStretch, qboolean distortionPrePost, qboolean distortionNegate) { }
 
-void C_LevelLoadBegin(const char* psMapName, ForceReload_e eForceReload, qboolean bAllowScreenDissolve)
+static void C_LevelLoadBegin(const char* psMapName, ForceReload_e eForceReload, qboolean bAllowScreenDissolve)
 {
 	static char sPrevMapName[MAX_QPATH] = { 0 };
 	bool bDeleteModels = eForceReload == eForceReload_MODELS || eForceReload == eForceReload_ALL;
@@ -2253,12 +2249,12 @@ void C_LevelLoadBegin(const char* psMapName, ForceReload_e eForceReload, qboolea
 	}
 }
 
-int C_GetLevel(void)
+static int C_GetLevel(void)
 {
 	return tr.currentLevel;
 }
 
-void C_LevelLoadEnd(void)
+static void C_LevelLoadEnd(void)
 {
 #ifndef REND2_SP
 	CModelCache->LevelLoadEnd(qfalse);
@@ -2297,7 +2293,7 @@ extern void G2Time_ReportTimers(void);
 #endif
 
 #ifdef JK2_MODE
-unsigned int AnyLanguage_ReadCharFromString_JK2(char** text, qboolean* pbIsTrailingPunctuation) {
+static unsigned int AnyLanguage_ReadCharFromString_JK2(char** text, qboolean* pbIsTrailingPunctuation) {
 	return AnyLanguage_ReadCharFromString(text, pbIsTrailingPunctuation);
 }
 #endif

@@ -18,7 +18,7 @@
 // Bolt List handling routines - so entities can attach themselves to any part of the model in question
 
 // Given a bone number, see if that bone is already in our bone list
-int G2_Find_Bolt_Bone_Num(boltInfo_v& bltlist, const int boneNum)
+int G2_Find_Bolt_boneNum(const boltInfo_v& bltlist, const int boneNum)
 {
 	if (boneNum == -1)
 	{
@@ -39,7 +39,7 @@ int G2_Find_Bolt_Bone_Num(boltInfo_v& bltlist, const int boneNum)
 }
 
 // Given a bone number, see if that surface is already in our surfacelist list
-int G2_Find_Bolt_surfaceNum(boltInfo_v& bltlist, const int surfaceNum, const int flags)
+int G2_Find_Bolt_surfaceNum(const boltInfo_v& bltlist, const int surfaceNum, const int flags)
 {
 	if (surfaceNum == -1)
 	{
@@ -224,7 +224,7 @@ int G2_Add_Bolt(const CGhoul2Info* ghlInfo, boltInfo_v& bltlist, surfaceInfo_v& 
 }
 
 // Given a model handle, and a bone name, we want to remove this bone from the bone override list
-qboolean G2_Remove_Bolt(boltInfo_v& bltlist, int index)
+qboolean G2_Remove_Bolt(boltInfo_v& bltlist, const int index)
 {
 	// did we find it?
 	if (index != -1)

@@ -48,7 +48,7 @@ static	byte* fileBase;
 
 //===============================================================================
 
-static void HSVtoRGB(float h, float s, float v, float rgb[3])
+static void HSVtoRGB(float h, const float s, const float v, float rgb[3])
 {
 	int i;
 	float f;
@@ -167,7 +167,7 @@ static void R_ColorShiftLightingFloats(float in[4], float out[4], float scale, b
 	out[3] = in[3];
 }
 
-void ColorToRGBA16F(const vec3_t color, unsigned short rgba16f[4])
+static void ColorToRGBA16F(const vec3_t color, unsigned short rgba16f[4])
 {
 	rgba16f[0] = FloatToHalf(color[0]);
 	rgba16f[1] = FloatToHalf(color[1]);
@@ -451,7 +451,7 @@ static void R_LoadLightmaps(world_t* worldData, lump_t* l, lump_t* surfs)
 					}
 					else if (buf_p && hdr_capable)
 					{
-						vec4_t color;
+						vec4_t color{};
 
 						//hack: convert LDR lightmap to HDR one
 						color[0] = MAX(buf_p[j * numColorComponents + 0], 0.499f);
@@ -836,7 +836,7 @@ static void ParseFace(const world_t* worldData, dsurface_t* ds, drawVert_t* vert
 	srfBspSurface_t* cv;
 	glIndex_t* tri;
 	int			numVerts, numIndexes, badTriangles;
-	int realLightmapNum[MAXLIGHTMAPS];
+	int realLightmapNum[MAXLIGHTMAPS]{};
 
 	for (j = 0; j < MAXLIGHTMAPS; j++)
 	{
@@ -880,7 +880,7 @@ static void ParseFace(const world_t* worldData, dsurface_t* ds, drawVert_t* vert
 		tangentSpace += LittleLong(ds->firstVert);
 	for (i = 0; i < numVerts; i++)
 	{
-		vec4_t color;
+		vec4_t color{};
 
 		for (j = 0; j < 3; j++)
 		{
@@ -1033,7 +1033,7 @@ static void ParseMesh(const world_t* worldData, dsurface_t* ds, drawVert_t* vert
 	numPoints = width * height;
 	for (i = 0; i < numPoints; i++)
 	{
-		vec4_t color;
+		vec4_t color{};
 
 		for (j = 0; j < 3; j++)
 		{
@@ -1115,7 +1115,7 @@ static void ParseTriSurf(const world_t* worldData, dsurface_t* ds, drawVert_t* v
 	glIndex_t* tri;
 	int             i, j;
 	int             numVerts, numIndexes, badTriangles;
-	int realLightmapNum[MAXLIGHTMAPS];
+	int realLightmapNum[MAXLIGHTMAPS]{};
 
 	for (j = 0; j < MAXLIGHTMAPS; j++)
 		realLightmapNum[j] = FatLightmap(LittleLong(ds->lightmapNum[j]));
@@ -1159,7 +1159,7 @@ static void ParseTriSurf(const world_t* worldData, dsurface_t* ds, drawVert_t* v
 		tangentSpace += LittleLong(ds->firstVert);
 	for (i = 0; i < numVerts; i++)
 	{
-		vec4_t color;
+		vec4_t color{};
 
 		for (j = 0; j < 3; j++)
 		{
@@ -1297,7 +1297,7 @@ R_MergedWidthPoints
 returns true if there are grid points merged on a width edge
 =================
 */
-int R_MergedWidthPoints(srfBspSurface_t* grid, int offset) {
+static int R_MergedWidthPoints(srfBspSurface_t* grid, int offset) {
 	int i, j;
 
 	for (i = 1; i < grid->width - 1; i++) {
@@ -1318,7 +1318,7 @@ R_MergedHeightPoints
 returns true if there are grid points merged on a height edge
 =================
 */
-int R_MergedHeightPoints(srfBspSurface_t* grid, int offset) {
+static int R_MergedHeightPoints(srfBspSurface_t* grid, int offset) {
 	int i, j;
 
 	for (i = 1; i < grid->height - 1; i++) {
@@ -1341,7 +1341,7 @@ NOTE: never sync LoD through grid edges with merged points!
 FIXME: write generalized version that also avoids cracks between a patch and one that meets half way?
 =================
 */
-void R_FixSharedVertexLodError_r(world_t* worldData, int start, srfBspSurface_t* grid1) {
+static void R_FixSharedVertexLodError_r(world_t* worldData, int start, srfBspSurface_t* grid1) {
 	int j, k, l, m, n, offset1, offset2, touch;
 	srfBspSurface_t* grid2;
 
@@ -1449,7 +1449,7 @@ This function assumes that all patches in one group are nicely stitched together
 If this is not the case this function will still do its job but won't fix the highest LoD cracks.
 =================
 */
-void R_FixSharedVertexLodError(world_t* worldData) {
+static void R_FixSharedVertexLodError(world_t* worldData) {
 	int i;
 	srfBspSurface_t* grid1;
 
@@ -1474,7 +1474,7 @@ void R_FixSharedVertexLodError(world_t* worldData) {
 R_StitchPatches
 ===============
 */
-int R_StitchPatches(world_t* worldData, int grid1num, int grid2num) {
+static int R_StitchPatches(world_t* worldData, int grid1num, int grid2num) {
 	float* v1, * v2;
 	srfBspSurface_t* grid1, * grid2;
 	int k, l, m, n, offset1, offset2, row, column;
@@ -1879,7 +1879,7 @@ of the patch (on the same row or column) the vertices will not be joined and cra
 might still appear at that side.
 ===============
 */
-int R_TryStitchingPatch(world_t* worldData, int grid1num) {
+static int R_TryStitchingPatch(world_t* worldData, int grid1num) {
 	int j, numstitches;
 	srfBspSurface_t* grid1, * grid2;
 
@@ -1910,7 +1910,7 @@ int R_TryStitchingPatch(world_t* worldData, int grid1num) {
 R_StitchAllPatches
 ===============
 */
-void R_StitchAllPatches(world_t* worldData) {
+static void R_StitchAllPatches(world_t* worldData) {
 	int i, stitched, numstitches;
 	srfBspSurface_t* grid1;
 
@@ -1942,7 +1942,7 @@ void R_StitchAllPatches(world_t* worldData) {
 R_MovePatchSurfacesToHunk
 ===============
 */
-void R_MovePatchSurfacesToHunk(world_t* worldData) {
+static void R_MovePatchSurfacesToHunk(world_t* worldData) {
 	int i, size;
 	srfBspSurface_t* grid, * hunkgrid;
 
@@ -2498,7 +2498,8 @@ static	void R_SetParent(mnode_t* node, mnode_t* parent)
 R_LoadNodesAndLeafs
 =================
 */
-static	void R_LoadNodesAndLeafs(world_t* worldData, lump_t* nodeLump, lump_t* leafLump) {
+static void R_LoadNodesAndLeafs(world_t* worldData, lump_t* nodeLump, lump_t* leafLump)
+{
 	int			i, j, p;
 	dnode_t* in;
 	dleaf_t* inLeaf;
@@ -2575,7 +2576,8 @@ static	void R_LoadNodesAndLeafs(world_t* worldData, lump_t* nodeLump, lump_t* le
 R_LoadShaders
 =================
 */
-static	void R_LoadShaders(world_t* worldData, lump_t* l) {
+static void R_LoadShaders(world_t* worldData, lump_t* l)
+{
 	int		i, count;
 	dshader_t* in, * out;
 
@@ -2601,7 +2603,7 @@ static	void R_LoadShaders(world_t* worldData, lump_t* l) {
 R_LoadMarksurfaces
 =================
 */
-static	void R_LoadMarksurfaces(world_t* worldData, lump_t* l)
+static void R_LoadMarksurfaces(world_t* worldData, lump_t* l)
 {
 	int		i, j, count;
 	int* in;
@@ -2628,7 +2630,8 @@ static	void R_LoadMarksurfaces(world_t* worldData, lump_t* l)
 R_LoadPlanes
 =================
 */
-static	void R_LoadPlanes(world_t* worldData, lump_t* l) {
+static void R_LoadPlanes(world_t* worldData, lump_t* l)
+{
 	int			i, j;
 	cplane_t* out;
 	dplane_t* in;
@@ -2665,7 +2668,8 @@ R_LoadFogs
 
 =================
 */
-static	void R_LoadFogs(world_t* worldData, lump_t* l, lump_t* brushesLump, lump_t* sidesLump) {
+static void R_LoadFogs(world_t* worldData, lump_t* l, lump_t* brushesLump, lump_t* sidesLump) 
+{
 	int			i;
 	fog_t* out;
 	dfog_t* fogs;
@@ -2798,9 +2802,9 @@ R_LoadLightGrid
 
 ================
 */
-void R_LoadLightGrid(world_t* worldData, lump_t* l) {
+static void R_LoadLightGrid(world_t* worldData, lump_t* l) {
 	int		i;
-	vec3_t	maxs;
+	vec3_t	maxs{};
 	float* wMins, * wMaxs;
 
 	worldData->lightGridInverseSize[0] = 1.0f / worldData->lightGridSize[0];
@@ -2839,7 +2843,7 @@ void R_LoadLightGrid(world_t* worldData, lump_t* l) {
 	if (r_hdr->integer)
 	{
 		char filename[MAX_QPATH];
-		float* hdrLightGrid;
+		float* hdrLightGrid = nullptr;
 		int size;
 
 		Com_sprintf(filename, sizeof(filename), "maps/%s/lightgrid.raw", worldData->baseName);
@@ -2878,7 +2882,7 @@ R_LoadLightGridArray
 
 ================
 */
-void R_LoadLightGridArray(world_t* worldData, lump_t* l) {
+static void R_LoadLightGridArray(world_t* worldData, lump_t* l) {
 	worldData->numGridArrayElements = worldData->lightGridBounds[0] * worldData->lightGridBounds[1] * worldData->lightGridBounds[2];
 
 	if ((unsigned)l->filelen != worldData->numGridArrayElements * sizeof(*worldData->lightGridArray)) {
@@ -2896,7 +2900,7 @@ void R_LoadLightGridArray(world_t* worldData, lump_t* l) {
 R_LoadEntities
 ================
 */
-void R_LoadEntities(world_t* worldData, lump_t* l) {
+static void R_LoadEntities(world_t* worldData, lump_t* l) {
 	const char* p;
 	char* token, * s;
 	char vertexRemapShaderText[] = "vertexremapshader";
@@ -3095,7 +3099,7 @@ void R_LoadEnvironmentJson(const char* baseName)
 	union {
 		char* c;
 		void* v;
-	} buffer;
+	} buffer{};
 	char* bufferEnd;
 
 	const char* environmentArrayJson;
@@ -3161,7 +3165,7 @@ void R_LoadEnvironmentJson(const char* baseName)
 	ri->FS_FreeFile(buffer.v);
 }
 
-void R_LoadCubemapEntities(const char* cubemapEntityName)
+static void R_LoadCubemapEntities(const char* cubemapEntityName)
 {
 	char spawnVarChars[2048];
 	int numSpawnVars;
@@ -3191,7 +3195,7 @@ void R_LoadCubemapEntities(const char* cubemapEntityName)
 	while (R_ParseSpawnVars(spawnVarChars, sizeof(spawnVarChars), &numSpawnVars, spawnVars))
 	{
 		int i;
-		char name[MAX_QPATH];
+		char name[MAX_QPATH]{};
 		qboolean isCubemap = qfalse;
 		qboolean originSet = qfalse;
 		vec3_t origin;
@@ -3291,7 +3295,7 @@ static void R_RenderAllCubemaps()
 	}
 }
 
-void R_LoadWeatherZones(world_t* worldData, lump_t* brushesLump, lump_t* sidesLump)
+static void R_LoadWeatherZones(world_t* worldData, lump_t* brushesLump, lump_t* sidesLump)
 {
 	dbrush_t* brushes;
 	dbrushside_t* sides;
@@ -3327,7 +3331,7 @@ void R_LoadWeatherZones(world_t* worldData, lump_t* brushesLump, lump_t* sidesLu
 			return;
 		}
 
-		vec4_t planes[64];
+		vec4_t planes[64]{};
 		for (int j = 0; j < brushes->numSides; j++)
 		{
 			int currentSideIndex = brushes->firstSide + j;
@@ -4165,7 +4169,7 @@ world_t* R_LoadBSP(const char* name, int* bspIndex)
 	union {
 		byte* b;
 		void* v;
-	} buffer;
+	} buffer{};
 
 	world_t* worldData;
 	int worldIndex = -1;

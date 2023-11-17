@@ -4647,7 +4647,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 				{
 					char sound_name[MAX_QPATH];
 					char* name_slash;
-					char* file_name;
+					char* fileName;
 
 					if (!strstr(s, "SOUND/CHARS/JADEN_MALE/MISC/"))
 					{
@@ -4663,8 +4663,8 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 					name_slash = Q_strrchr(sound_name, '/');
 
 					//find the filename
-					file_name = Q_strrchr(r, '/');
-					strcpy(name_slash, file_name);
+					fileName = Q_strrchr(r, '/');
+					strcpy(name_slash, fileName);
 
 					trap->S_StartSound(NULL, es->client_num, es->trickedentindex,
 						CG_CustomSound(es->client_num, sound_name));

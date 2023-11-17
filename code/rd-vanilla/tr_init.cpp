@@ -189,7 +189,6 @@ cvar_t* broadsword_dircap;
 cvar_t* r_ratiofix;
 
 cvar_t* r_com_rend2;
-cvar_t* g_Weather;
 
 // More bullshit needed for the proper modular renderer
 cvar_t* sv_mapname;
@@ -202,6 +201,7 @@ cvar_t* com_buildScript;
 
 cvar_t* r_environmentMapping;
 cvar_t* r_screenshotJpegQuality;
+cvar_t* g_Weather;
 
 #if !defined(__APPLE__)
 PFNGLSTENCILOPSEPARATEPROC qglStencilOpSeparate;
@@ -445,7 +445,7 @@ static void GLimp_InitExtensions()
 	{
 		Com_Printf("*** IGNORING OPENGL EXTENSIONS ***\n");
 		g_bDynamicGlowSupported = false;
-		ri.Cvar_Set("r_dynamicglow", "0");
+		ri.Cvar_Set("r_DynamicGlow", "0");
 		return;
 	}
 
@@ -714,7 +714,7 @@ static void GLimp_InitExtensions()
 	else
 	{
 		g_bDynamicGlowSupported = false;
-		ri.Cvar_Set("r_dynamicglow", "0");
+		ri.Cvar_Set("r_DynamicGlow", "0");
 	}
 
 #if !defined(__APPLE__)
@@ -736,7 +736,7 @@ static void GLimp_InitExtensions()
 ** setting variables, checking GL constants, and reporting the gfx system config
 ** to the user.
 */
-static void InitOpenGL()
+static void InitOpenGL(void)
 {
 	//
 	// initialize OS specific portions of the renderer
@@ -876,7 +876,7 @@ byte* RB_ReadPixels(const int x, const int y, const int width, const int height,
 R_TakeScreenshot
 ==================
 */
-void R_TakeScreenshot(const int x, const int y, const int width, const int height, const char* file_name) {
+static void R_TakeScreenshot(const int x, const int y, const int width, const int height, const char* fileName) {
 	byte* destptr;
 
 	int padlen;
@@ -923,7 +923,7 @@ void R_TakeScreenshot(const int x, const int y, const int width, const int heigh
 	if (glConfig.deviceSupportsGamma)
 		R_GammaCorrect(allbuf + offset, memcount);
 
-	ri.FS_WriteFile(file_name, buffer, memcount + 18);
+	ri.FS_WriteFile(fileName, buffer, memcount + 18);
 
 	R_Free(allbuf);
 }
@@ -933,12 +933,12 @@ void R_TakeScreenshot(const int x, const int y, const int width, const int heigh
 R_TakeScreenshotPNG
 ==================
 */
-void R_TakeScreenshotPNG(const int x, const int y, const int width, const int height, const char* file_name) {
+static void R_TakeScreenshotPNG(const int x, const int y, const int width, const int height, const char* fileName) {
 	size_t offset = 0;
 	int padlen = 0;
 
 	byte* buffer = RB_ReadPixels(x, y, width, height, &offset, &padlen);
-	RE_SavePNG(file_name, buffer, width, height, 3);
+	RE_SavePNG(fileName, buffer, width, height, 3);
 	R_Free(buffer);
 }
 
@@ -947,7 +947,7 @@ void R_TakeScreenshotPNG(const int x, const int y, const int width, const int he
 R_TakeScreenshotJPEG
 ==================
 */
-void R_TakeScreenshotJPEG(const int x, const int y, const int width, const int height, const char* file_name) {
+static void R_TakeScreenshotJPEG(const int x, const int y, const int width, const int height, const char* fileName) {
 	size_t offset = 0;
 	int padlen;
 
@@ -958,7 +958,7 @@ void R_TakeScreenshotJPEG(const int x, const int y, const int width, const int h
 	if (glConfig.deviceSupportsGamma)
 		R_GammaCorrect(buffer + offset, memcount);
 
-	RE_SaveJPG(file_name, r_screenshotJpegQuality->integer, width, height, buffer + offset, padlen);
+	RE_SaveJPG(fileName, r_screenshotJpegQuality->integer, width, height, buffer + offset, padlen);
 	R_Free(buffer);
 }
 
@@ -967,7 +967,7 @@ void R_TakeScreenshotJPEG(const int x, const int y, const int width, const int h
 R_ScreenshotFilename
 ==================
 */
-void R_ScreenshotFilename(char* buf, const int buf_size, const char* ext) {
+static void R_ScreenshotFilename(char* buf, const int buf_size, const char* ext) {
 	time_t rawtime;
 	char time_str[32] = { 0 }; // should really only reach ~19 chars
 
@@ -1215,7 +1215,7 @@ R_PrintLongString
 Workaround for Com_Printf's 1024 characters buffer limit.
 ================
 */
-void R_PrintLongString(const char* string)
+static void R_PrintLongString(const char* string)
 {
 	const char* p = string;
 	int remaining_length = strlen(string);
@@ -1380,7 +1380,7 @@ void GfxInfo_f()
 	}
 }
 
-void R_AtiHackToggle_f()
+static void R_AtiHackToggle_f()
 {
 	g_bTextureRectangleHack = !g_bTextureRectangleHack;
 }
@@ -1399,7 +1399,7 @@ void R_AtiHackToggle_f()
  *    none                                                                                      *
  *                                                                                              *
  ************************************************************************************************/
-void R_FogDistance_f()
+static void R_FogDistance_f()
 {
 	float	distance;
 
@@ -1459,7 +1459,7 @@ void R_FogDistance_f()
  *    none                                                                                      *
  *                                                                                              *
  ************************************************************************************************/
-void R_FogColor_f()
+static void R_FogColor_f()
 {
 	if (!tr.world)
 	{
@@ -1538,7 +1538,7 @@ static consoleCommand_t	commands[] = {
 R_Register
 ===============
 */
-void R_Register()
+static void R_Register()
 {
 	//
 	// latched and archived variables
@@ -1554,7 +1554,7 @@ void R_Register()
 	r_ext_texture_env_add = ri.Cvar_Get("r_ext_texture_env_add", "1", CVAR_ARCHIVE_ND | CVAR_LATCH);
 	r_ext_texture_filter_anisotropic = ri.Cvar_Get("r_ext_texture_filter_anisotropic", "16", CVAR_ARCHIVE_ND);
 
-	r_DynamicGlow = ri.Cvar_Get("r_dynamicglow", "1", CVAR_ARCHIVE_ND);
+	r_DynamicGlow = ri.Cvar_Get("r_DynamicGlow", "1", CVAR_ARCHIVE_ND);
 	r_DynamicGlowPasses = ri.Cvar_Get("r_DynamicGlowPasses", "5", CVAR_ARCHIVE_ND);
 	r_DynamicGlowDelta = ri.Cvar_Get("r_DynamicGlowDelta", "0.8f", CVAR_ARCHIVE_ND);
 	r_DynamicGlowIntensity = ri.Cvar_Get("r_DynamicGlowIntensity", "1.13f", CVAR_ARCHIVE_ND);
@@ -1620,7 +1620,7 @@ void R_Register()
 	r_primitives = ri.Cvar_Get("r_primitives", "0", CVAR_ARCHIVE_ND);
 	ri.Cvar_CheckRange(r_primitives, MIN_PRIMITIVES, MAX_PRIMITIVES, qtrue);
 
-	r_ambientScale = ri.Cvar_Get("r_ambientScale", "0.6", CVAR_CHEAT);
+	r_ambientScale = ri.Cvar_Get("r_ambientScale", "0.5", CVAR_CHEAT);
 	r_directedScale = ri.Cvar_Get("r_directedScale", "1", CVAR_CHEAT);
 
 	//
@@ -1728,7 +1728,7 @@ void R_Register()
 
 // need to do this hackery so ghoul2 doesn't crash the game because of ITS hackery...
 //
-void R_ClearStuffToStopGhoul2CrashingThings()
+static void R_ClearStuffToStopGhoul2CrashingThings()
 {
 	memset(&tr, 0, sizeof tr);
 }
@@ -1899,11 +1899,11 @@ RE_EndRegistration
 Touch all images to make sure they are resident
 =============
 */
-void	RE_EndRegistration() {
+static void	RE_EndRegistration() {
 	R_IssuePendingRenderCommands();
 }
 
-void RE_GetLightStyle(const int style, color4ub_t color)
+static void RE_GetLightStyle(const int style, color4ub_t color)
 {
 	if (style >= MAX_LIGHT_STYLES)
 	{
@@ -1942,22 +1942,22 @@ extern float tr_distortionStretch;
 extern qboolean tr_distortionPrePost;
 extern qboolean tr_distortionNegate;
 
-float* get_tr_distortionAlpha()
+static float* get_tr_distortionAlpha()
 {
 	return &tr_distortionAlpha;
 }
 
-float* get_tr_distortionStretch()
+static float* get_tr_distortionStretch()
 {
 	return &tr_distortionStretch;
 }
 
-qboolean* get_tr_distortionPrePost()
+static qboolean* get_tr_distortionPrePost()
 {
 	return &tr_distortionPrePost;
 }
 
-qboolean* get_tr_distortionNegate()
+static qboolean* get_tr_distortionNegate()
 {
 	return &tr_distortionNegate;
 }
@@ -1977,7 +1977,7 @@ void RE_SetRangedFog(const float dist)
 }
 
 //bool inServer = false;
-void RE_SVModelInit()
+static void RE_SVModelInit()
 {
 	tr.numModels = 0;
 	tr.numShaders = 0;
@@ -1996,7 +1996,7 @@ GetRefAPI
 extern void R_LoadImage(const char* shortname, byte** pic, int* width, int* height);
 extern void RE_WorldEffectCommand(const char* command);
 extern qboolean R_inPVS(vec3_t p1, vec3_t p2);
-extern void RE_GetModelBounds(const refEntity_t* refEnt, vec3_t bounds1, vec3_t bounds2);
+extern void RE_GetModelBounds(const refEntity_t* ref_ent, vec3_t bounds1, vec3_t bounds2);
 extern void G2API_AnimateG2Models(CGhoul2Info_v& ghoul2, const int acurrent_time, CRagDollUpdateParams* params);
 extern qboolean G2API_GetRagBonePos(CGhoul2Info_v& ghoul2, const char* boneName, vec3_t pos, vec3_t entAngles, vec3_t entPos, vec3_t entScale);
 extern qboolean G2API_RagEffectorKick(CGhoul2Info_v& ghoul2, const char* boneName, vec3_t velocity);
@@ -2004,7 +2004,7 @@ extern qboolean G2API_RagForceSolve(CGhoul2Info_v& ghoul2, const qboolean force)
 extern qboolean G2API_SetBoneIKState(CGhoul2Info_v& ghoul2, const int time, const char* boneName, const int ikState, sharedSetBoneIKStateParams_t* params);
 extern qboolean G2API_IKMove(CGhoul2Info_v& ghoul2, const int time, sharedIKMoveParams_t* params);
 extern qboolean G2API_RagEffectorGoal(CGhoul2Info_v& ghoul2, const char* boneName, vec3_t pos);
-extern qboolean G2API_RagPCJGradientSpeed(CGhoul2Info_v& ghoul2, const char* boneName, float speed);
+extern qboolean G2API_RagPCJGradientSpeed(CGhoul2Info_v& ghoul2, const char* boneName, const float speed);
 extern qboolean G2API_RagPCJConstraint(CGhoul2Info_v& ghoul2, const char* boneName, vec3_t min, vec3_t max);
 extern void G2API_SetRagDoll(CGhoul2Info_v& ghoul2, CRagDollParams* parms);
 #ifdef G2_PERFORMANCE_ANALYSIS
@@ -2014,7 +2014,7 @@ extern void G2Time_ReportTimers(void);
 extern IGhoul2InfoArray& TheGhoul2InfoArray();
 
 #ifdef JK2_MODE
-unsigned int AnyLanguage_ReadCharFromString_JK2(char** text, qboolean* pbIsTrailingPunctuation) {
+static unsigned int AnyLanguage_ReadCharFromString_JK2(char** text, qboolean* pbIsTrailingPunctuation) {
 	return AnyLanguage_ReadCharFromString(text, pbIsTrailingPunctuation);
 }
 #endif
@@ -2214,7 +2214,6 @@ extern "C" Q_EXPORT refexport_t * QDECL GetRefAPI(const int api_version, const r
 	G2EX(AddSkinGore);
 	G2EX(ClearSkinGore);
 #endif
-	G2EX(SetTintType);
 
 #ifdef G2_PERFORMANCE_ANALYSIS
 	re.G2Time_ReportTimers = G2Time_ReportTimers;

@@ -127,7 +127,7 @@ void GL_SelectTexture(const int unit)
 /*
 ** GL_Cull
 */
-void GL_Cull(const int cullType) {
+void GL_Cull(int cullType) {
 	if (glState.faceCulling == cullType) {
 		return;
 	}
@@ -432,7 +432,7 @@ Any mirrored or portaled views have already been drawn, so prepare
 to actually render the visible surfaces for this view
 =================
 */
-static void RB_BeginDrawingView(void) 
+static void RB_BeginDrawingView(void)
 {
 	int clearBits = GL_DEPTH_BUFFER_BIT;
 
@@ -1028,7 +1028,7 @@ RB_SetGL2D
 
 ================
 */
-void	RB_SetGL2D() {
+void RB_SetGL2D(void) {
 	backEnd.projection2D = qtrue;
 
 	// set 2D virtual screen size
@@ -1129,7 +1129,8 @@ void RE_StretchRaw(const int x, const int y, const int w, const int h, const int
 	qglEnd();
 }
 
-void RE_UploadCinematic(const int cols, const int rows, const byte* data, const int client, const qboolean dirty) {
+void RE_UploadCinematic(const int cols, const int rows, const byte* data, const int client, const qboolean dirty)
+{
 	GL_Bind(tr.scratchImage[client]);
 
 	// if the scratchImage isn't in the format we want, specify it as a new texture
@@ -1158,7 +1159,7 @@ RB_SetColor
 
 =============
 */
-const void* RB_SetColor(const void* data) {
+static const void* RB_SetColor(const void* data) {
 	const auto cmd = static_cast<const setColorCommand_t*>(data);
 
 	backEnd.color2D[0] = cmd->color[0] * 255;
@@ -1174,7 +1175,7 @@ const void* RB_SetColor(const void* data) {
 RB_StretchPic
 =============
 */
-const void* RB_StretchPic(const void* data) {
+static const void* RB_StretchPic(const void* data) {
 	const auto cmd = static_cast<const stretchPicCommand_t*>(data);
 
 	if (!backEnd.projection2D) {
@@ -1246,7 +1247,7 @@ const void* RB_StretchPic(const void* data) {
 RB_DrawRotatePic
 =============
 */
-const void* RB_RotatePic(const void* data)
+static const void* RB_RotatePic(const void* data)
 {
 	const auto cmd = static_cast<const rotatePicCommand_t*>(data);
 
@@ -1336,7 +1337,7 @@ const void* RB_RotatePic(const void* data)
 RB_DrawRotatePic2
 =============
 */
-const void* RB_RotatePic2(const void* data)
+static const void* RB_RotatePic2(const void* data)
 {
 	const auto cmd = static_cast<const rotatePicCommand_t*>(data);
 
@@ -1439,7 +1440,7 @@ RB_DrawSurfs
 
 =============
 */
-const void* RB_DrawSurfs(const void* data) {
+static const void* RB_DrawSurfs(const void* data) {
 	// finish any 2D drawing if needed
 	if (tess.numIndexes) {
 		RB_EndSurface();
@@ -1528,7 +1529,7 @@ RB_DrawBuffer
 
 =============
 */
-const void* RB_DrawBuffer(const void* data) {
+static const void* RB_DrawBuffer(const void* data) {
 	const auto cmd = static_cast<const drawBufferCommand_t*>(data);
 
 	qglDrawBuffer(cmd->buffer);
@@ -1546,7 +1547,7 @@ const void* RB_DrawBuffer(const void* data) {
 
 		if (i == 42) {
 			i = Q_irand(0, 8);
-	}
+		}
 		switch (i)
 		{
 		default:
@@ -1578,7 +1579,7 @@ const void* RB_DrawBuffer(const void* data) {
 			break;
 		}
 		qglClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-}
+	}
 
 	return cmd + 1;
 }
@@ -1693,7 +1694,7 @@ RB_SwapBuffers
 
 =============
 */
-const void* RB_SwapBuffers(const void* data)
+static const void* RB_SwapBuffers(const void* data)
 {
 	// finish any 2D drawing if needed
 	if (tess.numIndexes) {
@@ -1741,7 +1742,7 @@ const void* RB_SwapBuffers(const void* data)
 	return cmd + 1;
 }
 
-const void* RB_WorldEffects(const void* data)
+static const void* RB_WorldEffects(const void* data)
 {
 	const auto cmd = static_cast<const drawBufferCommand_t*>(data);
 
@@ -1817,7 +1818,7 @@ void RB_ExecuteRenderCommands(const void* data) {
 GLuint g_uiCurrentPixelShaderType = 0x0;
 
 // Begin using a Pixel Shader.
-void BeginPixelShader(const GLuint uiType, const GLuint uiID)
+static void BeginPixelShader(const GLuint uiType, const GLuint uiID)
 {
 	switch (uiType)
 	{
@@ -1853,7 +1854,7 @@ void BeginPixelShader(const GLuint uiType, const GLuint uiID)
 }
 
 // Stop using a Pixel Shader and return states to normal.
-void EndPixelShader()
+static void EndPixelShader()
 {
 	if (g_uiCurrentPixelShaderType == 0x0)
 		return;

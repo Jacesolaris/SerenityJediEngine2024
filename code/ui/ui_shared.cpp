@@ -5774,17 +5774,17 @@ PC_StartParseSession
 ===============
 */
 
-int PC_StartParseSession(const char* file_name, char** buffer)
+int PC_StartParseSession(const char* fileName, char** buffer)
 {
 	// Try to open file and read it in.
-	const int len = ui.FS_ReadFile(file_name, (void**)buffer);
+	const int len = ui.FS_ReadFile(fileName, (void**)buffer);
 
 	// Not there?
 	if (len > 0)
 	{
 		COM_BeginParseSession();
 
-		Q_strncpyz(parseData[parseDataCount].file_name, file_name, sizeof parseData[0].file_name);
+		Q_strncpyz(parseData[parseDataCount].fileName, fileName, sizeof parseData[0].fileName);
 		parseData[parseDataCount].bufferStart = *buffer;
 		parseData[parseDataCount].bufferCurrent = *buffer;
 	}
@@ -5811,7 +5811,7 @@ PC_ParseWarning
 void PC_ParseWarning(const char* message)
 {
 	ui.Printf(S_COLOR_YELLOW "WARNING: %s Line #%d of File '%s'\n", message, parseData[parseDataCount].com_lines,
-		parseData[parseDataCount].file_name);
+		parseData[parseDataCount].fileName);
 }
 
 char* PC_ParseExt()

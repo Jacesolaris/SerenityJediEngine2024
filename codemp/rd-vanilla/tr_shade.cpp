@@ -1527,7 +1527,7 @@ static void ComputeTexCoords(shaderStage_t* pStage)
 	}
 }
 
-void ForceAlpha(unsigned char* dst_colors, const int tr_force_ent_alpha)
+static void ForceAlpha(unsigned char* dst_colors, const int tr_force_ent_alpha)
 {
 	dst_colors += 3;
 
@@ -1780,10 +1780,7 @@ static void RB_IterateStagesGeneric(const shaderCommands_t* input)
 */
 void RB_StageIteratorGeneric(void)
 {
-	shaderCommands_t* input;
-	int stage;
-
-	input = &tess;
+	shaderCommands_t* input = &tess;
 
 	RB_DeformTessGeometry();
 
@@ -1899,7 +1896,7 @@ void RB_StageIteratorGeneric(void)
 	// Now check for surfacesprites.
 	if (r_surfaceSprites->integer)
 	{
-		for (stage = 1; stage < tess.shader->numUnfoggedPasses; stage++)
+		for (int stage = 1; stage < tess.shader->numUnfoggedPasses; stage++)
 		{
 			if (tess.xstages[stage].ss && tess.xstages[stage].ss->surfaceSpriteType)
 			{	// Draw the surfacesprite
@@ -1910,8 +1907,9 @@ void RB_StageIteratorGeneric(void)
 
 	//don't disable the hardware fog til after we do surface sprites
 	if (r_drawfog->value == 2 &&
-		tess.fogNum && tess.shader->fogPass &&
-		(tess.fogNum == tr.world->globalFog || tess.fogNum == tr.world->numfogs))
+		(tess.fogNum == tr.world->globalFog || tess.fogNum == tr.world->numfogs) &&
+		tess.fogNum &&
+		tess.shader->fogPass)
 	{
 		qglDisable(GL_FOG);
 	}

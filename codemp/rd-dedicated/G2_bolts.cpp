@@ -28,7 +28,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 // Bolt List handling routines - so entities can attach themselves to any part of the model in question
 
 // Given a bone number, see if that bone is already in our bone list
-int G2_Find_Bolt_Bone_Num(const boltInfo_v& bltlist, const int boneNum)
+int G2_Find_Bolt_boneNum(const boltInfo_v& bltlist, const int boneNum)
 {
 	// look through entire list
 	for (size_t i = 0; i < bltlist.size(); i++)

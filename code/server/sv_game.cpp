@@ -587,11 +587,11 @@ static qboolean SV_G2API_IKMove(CGhoul2Info_v& ghoul2, const int time, sharedIKM
 	return re.G2API_IKMove(ghoul2, time, params);
 }
 
-static int SV_G2API_InitGhoul2Model(CGhoul2Info_v& ghoul2, const char* file_name, const int modelIndex,
+static int SV_G2API_InitGhoul2Model(CGhoul2Info_v& ghoul2, const char* fileName, const int modelIndex,
 	const qhandle_t customSkin, const qhandle_t customShader, const int modelFlags,
 	const int lodBias)
 {
-	return re.G2API_InitGhoul2Model(ghoul2, file_name, modelIndex, customSkin, customShader, modelFlags, lodBias);
+	return re.G2API_InitGhoul2Model(ghoul2, fileName, modelIndex, customSkin, customShader, modelFlags, lodBias);
 }
 
 static qboolean SV_G2API_IsPaused(CGhoul2Info* ghlInfo, const char* boneName)
@@ -629,9 +629,9 @@ static qboolean SV_G2API_PauseBoneAnimIndex(CGhoul2Info* ghlInfo, const int bone
 	return re.G2API_PauseBoneAnimIndex(ghlInfo, boneIndex, acurrent_time);
 }
 
-static qhandle_t SV_G2API_PrecacheGhoul2Model(const char* file_name)
+static qhandle_t SV_G2API_PrecacheGhoul2Model(const char* fileName)
 {
-	return re.G2API_PrecacheGhoul2Model(file_name);
+	return re.G2API_PrecacheGhoul2Model(fileName);
 }
 
 static qboolean SV_G2API_RagEffectorGoal(CGhoul2Info_v& ghoul2, const char* boneName, vec3_t pos)
@@ -840,11 +840,6 @@ static void SV_G2API_ClearSkinGore(
 	static_cast<void>(ghoul2);
 }
 #endif
-
-static void SV_G2API_SetTintType(CGhoul2Info* ghlInfo, g2Tints_t tintType)
-{
-	return re.G2API_SetTintType(ghlInfo, tintType);
-}
 
 static IGhoul2InfoArray& SV_TheGhoul2InfoArray()
 {
@@ -1058,8 +1053,6 @@ import.G2API_IKMove = SV_G2API_IKMove;
 
 import.G2API_AddSkinGore = SV_G2API_AddSkinGore;
 import.G2API_ClearSkinGore = SV_G2API_ClearSkinGore;
-
-import.G2API_SetTintType = SV_G2API_SetTintType;
 
 import.SetActiveSubBSP = SV_SetActiveSubBSP;
 

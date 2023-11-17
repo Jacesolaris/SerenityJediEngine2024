@@ -60,7 +60,7 @@ void LoadDMSSongData(const char* buffer, char* song, DynamicMusicSet_t* songData
 	}
 
 	//convert/store the name of the music file
-	strcpy(songData->file_name, va("music/%s/%s.mp3", mapname, song));
+	strcpy(songData->fileName, va("music/%s/%s.mp3", mapname, song));
 
 	songData->numTransitions = 0; //init the struct's number of transitions.
 
@@ -86,7 +86,7 @@ void LoadDMSSongData(const char* buffer, char* song, DynamicMusicSet_t* songData
 
 		//find transition file name
 		BG_SiegeGetPairedValue(transitionGroup, "nextfile", Value);
-		strcpy(songData->Transitions[numTransitions].file_name, va("music/%s/%s.mp3", mapname, Value));
+		strcpy(songData->Transitions[numTransitions].fileName, va("music/%s/%s.mp3", mapname, Value));
 
 		//load in exit points for this transition file
 		while (BG_SiegeGetPairedValue(transitionGroup, va("time%i", numExits), Value))
@@ -127,7 +127,7 @@ void LoadLengthforSong(const char* buffer, DynamicMusicSet_t* song)
 	//get length for the primary song
 
 	//grab the token name
-	char* tokenpointer = strrchr(song->file_name, '/');
+	char* tokenpointer = strrchr(song->fileName, '/');
 	tokenpointer++;
 	strcpy(token, tokenpointer);
 	tokenpointer = strrchr(token, '.');
@@ -140,7 +140,7 @@ void LoadLengthforSong(const char* buffer, DynamicMusicSet_t* song)
 	for (; transNum > 0; transNum--)
 	{
 		//grab pointer
-		tokenpointer = strrchr(song->Transitions[transNum - 1].file_name, '/');
+		tokenpointer = strrchr(song->Transitions[transNum - 1].fileName, '/');
 		tokenpointer++;
 		strcpy(token, tokenpointer);
 		tokenpointer = strrchr(token, '.');
@@ -288,12 +288,12 @@ void TransitionBetweenState(void)
 		if (DMSData.dmState == DM_ACTION)
 		{
 			//want to switch to action
-			trap->SetConfigstring(CS_MUSIC, DMSData.actionMusic.file_name);
+			trap->SetConfigstring(CS_MUSIC, DMSData.actionMusic.fileName);
 		}
 		else
 		{
 			//want to switch to explore
-			trap->SetConfigstring(CS_MUSIC, DMSData.exploreMusic.file_name);
+			trap->SetConfigstring(CS_MUSIC, DMSData.exploreMusic.fileName);
 		}
 		DMSData.olddmState = DMSData.dmState;
 		DMSData.dmStartTime = level.time;
@@ -332,8 +332,8 @@ void TransitionBetweenState(void)
 			{
 				//on the money or close enough
 				trap->SetConfigstring(CS_MUSIC, va("%s %s",
-					oldSongGroup->Transitions[i].file_name,
-					newSongGroup->file_name));
+					oldSongGroup->Transitions[i].fileName,
+					newSongGroup->fileName));
 				DMSData.olddmState = DMSData.dmState;
 				DMSData.dmStartTime = level.time + oldSongGroup->Transitions[i].fileLength;
 				return;
@@ -374,7 +374,7 @@ void G_DynamicMusicUpdate(void)
 	{
 		if (DMSData.olddmState != DM_BOSS)
 		{
-			trap->SetConfigstring(CS_MUSIC, DMSData.bossMusic.file_name);
+			trap->SetConfigstring(CS_MUSIC, DMSData.bossMusic.fileName);
 			DMSData.olddmState = DM_BOSS;
 		}
 		return;

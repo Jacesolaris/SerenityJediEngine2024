@@ -1244,7 +1244,7 @@ Scale up the pixel values in a texture to increase the
 lighting range
 ================
 */
-void R_LightScaleTexture(byte* in, int inwidth, int inheight, qboolean only_gamma)
+static void R_LightScaleTexture(byte* in, const int inwidth, const int inheight, const qboolean only_gamma)
 {
 	if (only_gamma)
 	{
@@ -1302,7 +1302,8 @@ Operates in place, quartering the size of the texture
 Proper linear filter
 ================
 */
-static void R_MipMap2(byte* in, int inWidth, int inHeight) {
+static void R_MipMap2(byte* in, const int inWidth, const int inheight)
+{
 	int			i, j, k;
 	byte* outpix;
 	int			inWidthMask, inHeightMask;
@@ -1311,11 +1312,11 @@ static void R_MipMap2(byte* in, int inWidth, int inHeight) {
 	unsigned* temp;
 
 	outWidth = inWidth >> 1;
-	outHeight = inHeight >> 1;
+	outHeight = inheight >> 1;
 	temp = (unsigned int*)Hunk_AllocateTempMemory(outWidth * outHeight * 4);
 
 	inWidthMask = inWidth - 1;
-	inHeightMask = inHeight - 1;
+	inHeightMask = inheight - 1;
 
 	for (i = 0; i < outHeight; i++) {
 		for (j = 0; j < outWidth; j++) {
@@ -1350,7 +1351,7 @@ static void R_MipMap2(byte* in, int inWidth, int inHeight) {
 	Hunk_FreeTempMemory(temp);
 }
 
-static void R_MipMapsRGB(byte* in, int inWidth, int inHeight)
+static void R_MipMapsRGB(byte* in, int inWidth, int inheight)
 {
 	int			i, j, k;
 	int			outWidth, outHeight;
@@ -1360,7 +1361,7 @@ static void R_MipMapsRGB(byte* in, int inWidth, int inHeight)
 		return;
 
 	outWidth = inWidth >> 1;
-	outHeight = inHeight >> 1;
+	outHeight = inheight >> 1;
 	temp = (byte*)Hunk_AllocateTempMemory(outWidth * outHeight * 4);
 
 	for (i = 0; i < outHeight; i++) {
@@ -1502,7 +1503,8 @@ R_BlendOverTexture
 Apply a color blend over a set of pixels
 ==================
 */
-static void R_BlendOverTexture(byte* data, int pixelCount, byte blend[4]) {
+static void R_BlendOverTexture(byte* data, const int pixelCount, byte blend[4])
+{
 	int		i;
 	int		inverseAlpha;
 	int		premult[3];
@@ -2070,8 +2072,7 @@ Upload32
 ===============
 */
 extern qboolean charSet;
-static void Upload32(byte* data, int width, int height, imgType_t type, int flags,
-	qboolean lightMap, GLenum internalFormat, int* pUploadWidth, int* pUploadHeight)
+static void Upload32(byte* data, int width, int height, imgType_t type, int flags, qboolean lightMap, GLenum internalFormat, int* pUploadWidth, int* pUploadHeight)
 {
 	byte* scaledBuffer = NULL;
 	byte* resampledBuffer = NULL;

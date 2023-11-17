@@ -2897,10 +2897,10 @@ void Noghri_StickTrace(void)
 	const int boltIndex = trap->G2API_AddBolt(NPCS.NPC->client->weaponGhoul2[0], 0, "*weapon");
 	if (boltIndex != -1)
 	{
-		const int cur_time = level.time;
+		const int curTime = level.time;
 		qboolean hit = qfalse;
 		int lastHit = ENTITYNUM_NONE;
-		for (int time = cur_time - 25; time <= cur_time + 25 && !hit; time += 25)
+		for (int time = curTime - 25; time <= curTime + 25 && !hit; time += 25)
 		{
 			mdxaBone_t boltMatrix;
 			vec3_t tip, dir, base, angles;

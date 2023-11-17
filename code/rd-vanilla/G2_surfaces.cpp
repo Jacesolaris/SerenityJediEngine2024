@@ -79,17 +79,17 @@ public:
 static CQuickOverride QuickOverride;
 
 // find a particular surface in the surface override list
-const surfaceInfo_t* G2_FindOverrideSurface(const int surfaceNum, const surfaceInfo_v& surface_list)
+const surfaceInfo_t* G2_FindOverrideSurface(const int surfaceNum, const surfaceInfo_v& surfaceList)
 {
 	if (surfaceNum < 0)
 	{
 		// starting a new lookup
 		QuickOverride.Invalidate();
-		for (size_t i = 0; i < surface_list.size(); i++)
+		for (size_t i = 0; i < surfaceList.size(); i++)
 		{
-			if (surface_list[i].surface >= 0)
+			if (surfaceList[i].surface >= 0)
 			{
-				QuickOverride.Set(surface_list[i].surface, i);
+				QuickOverride.Set(surfaceList[i].surface, i);
 			}
 		}
 		return nullptr;
@@ -99,7 +99,7 @@ const surfaceInfo_t* G2_FindOverrideSurface(const int surfaceNum, const surfaceI
 	{
 		if (surfaceNum == 10000)
 		{
-			for (const auto& i : surface_list)
+			for (const auto& i : surfaceList)
 			{
 				if (i.surface == surfaceNum)
 				{
@@ -110,21 +110,21 @@ const surfaceInfo_t* G2_FindOverrideSurface(const int surfaceNum, const surfaceI
 #if _DEBUG
 		// look through entire list
 		size_t i;
-		for (i = 0; i < surface_list.size(); i++)
+		for (i = 0; i < surfaceList.size(); i++)
 		{
-			if (surface_list[i].surface == surfaceNum)
+			if (surfaceList[i].surface == surfaceNum)
 			{
 				break;
 			}
 		}
 		// didn't find it.
-		assert(i == surface_list.size()); // our quickoverride is not working right
+		assert(i == surfaceList.size()); // our quickoverride is not working right
 #endif
 		return nullptr;
 	}
-	assert(idx >= 0 && idx < static_cast<int>(surface_list.size()));
-	assert(surface_list[idx].surface == surfaceNum);
-	return &surface_list[idx];
+	assert(idx >= 0 && idx < static_cast<int>(surfaceList.size()));
+	assert(surfaceList[idx].surface == surfaceNum);
+	return &surfaceList[idx];
 }
 
 // given a surface name, lets see if it's legal in the model
@@ -160,12 +160,12 @@ int G2_IsSurfaceLegal(const model_s* mod_m, const char* surfaceName, uint32_t* f
  *    pointer to surface if successful, false otherwise
  *
  ************************************************************************************************/
-const mdxmSurface_t* G2_FindSurface(const CGhoul2Info* ghlInfo, const surfaceInfo_v& slist, const char* surfaceName, int* surfIndex)
+static const mdxmSurface_t* G2_FindSurface(const CGhoul2Info* ghlInfo, const surfaceInfo_v& slist, const char* surfaceName, int* surfIndex)
 {
 	// find the model we want
 	assert(G2_MODEL_OK(ghlInfo));
 
-	const mdxmHierarchyOffsets_t* surf_indexes = reinterpret_cast<mdxmHierarchyOffsets_t*>(reinterpret_cast<byte*>(ghlInfo->currentModel->mdxm) + sizeof(mdxmHeader_t));
+	const mdxmHierarchyOffsets_t* surfIndexes = reinterpret_cast<mdxmHierarchyOffsets_t*>(reinterpret_cast<byte*>(ghlInfo->currentModel->mdxm) + sizeof(mdxmHeader_t));
 
 	// first find if we already have this surface in the list
 	for (int i = slist.size() - 1; i >= 0; i--)
@@ -174,10 +174,10 @@ const mdxmSurface_t* G2_FindSurface(const CGhoul2Info* ghlInfo, const surfaceInf
 		{
 			const mdxmSurface_t* surf = static_cast<mdxmSurface_t*>(G2_FindSurface(ghlInfo->currentModel, slist[i].surface, 0));
 			// back track and get the surfinfo struct for this surface
-			const mdxmSurfHierarchy_t* surf_info = reinterpret_cast<mdxmSurfHierarchy_t*>((byte*)surf_indexes + surf_indexes->offsets[surf->thisSurfaceIndex]);
+			const mdxmSurfHierarchy_t* surfInfo = reinterpret_cast<mdxmSurfHierarchy_t*>((byte*)surfIndexes + surfIndexes->offsets[surf->thisSurfaceIndex]);
 
 			// are these the droids we're looking for?
-			if (!Q_stricmp(surf_info->name, surfaceName))
+			if (!Q_stricmp(surfInfo->name, surfaceName))
 			{
 				// yup
 				if (surfIndex)
@@ -239,19 +239,19 @@ qboolean G2_SetSurfaceOnOff(CGhoul2Info* ghlInfo, const char* surfaceName, const
 	return qfalse;
 }
 
-void G2_FindRecursiveSurface(const model_t* currentModel, int surfaceNum, surfaceInfo_v& root_list, int* active_surfaces)
+static void G2_FindRecursiveSurface(const model_t* currentModel, int surfaceNum, surfaceInfo_v& root_list, int* activeSurfaces)
 {
 	assert(currentModel);
 	assert(currentModel->mdxm);
 	const mdxmSurface_t* surface = static_cast<mdxmSurface_t*>(G2_FindSurface(currentModel, surfaceNum, 0));
-	const mdxmHierarchyOffsets_t* surf_indexes = reinterpret_cast<mdxmHierarchyOffsets_t*>(reinterpret_cast<byte*>(currentModel->mdxm) + sizeof(mdxmHeader_t));
-	const mdxmSurfHierarchy_t* surf_info = reinterpret_cast<mdxmSurfHierarchy_t*>((byte*)surf_indexes + surf_indexes->offsets[surface->thisSurfaceIndex]);
+	const mdxmHierarchyOffsets_t* surfIndexes = reinterpret_cast<mdxmHierarchyOffsets_t*>(reinterpret_cast<byte*>(currentModel->mdxm) + sizeof(mdxmHeader_t));
+	const mdxmSurfHierarchy_t* surfInfo = reinterpret_cast<mdxmSurfHierarchy_t*>((byte*)surfIndexes + surfIndexes->offsets[surface->thisSurfaceIndex]);
 
 	// see if we have an override surface in the surface list
 	const surfaceInfo_t* surf_override = G2_FindOverrideSurface(surfaceNum, root_list);
 
 	// really, we should use the default flags for this surface unless it's been overriden
-	int offFlags = surf_info->flags;
+	int offFlags = surfInfo->flags;
 
 	// set the off flags if we have some
 	if (surf_override)
@@ -262,7 +262,7 @@ void G2_FindRecursiveSurface(const model_t* currentModel, int surfaceNum, surfac
 	// if this surface is not off, indicate as such in the active surface list
 	if (!(offFlags & G2SURFACEFLAG_OFF))
 	{
-		active_surfaces[surfaceNum] = 1;
+		activeSurfaces[surfaceNum] = 1;
 	}
 	else
 		// if we are turning off all descendants, then stop this recursion now
@@ -272,10 +272,10 @@ void G2_FindRecursiveSurface(const model_t* currentModel, int surfaceNum, surfac
 		}
 
 	// now recursively call for the children
-	for (int i = 0; i < surf_info->numChildren; i++)
+	for (int i = 0; i < surfInfo->numChildren; i++)
 	{
-		surfaceNum = surf_info->childIndexes[i];
-		G2_FindRecursiveSurface(currentModel, surfaceNum, root_list, active_surfaces);
+		surfaceNum = surfInfo->childIndexes[i];
+		G2_FindRecursiveSurface(currentModel, surfaceNum, root_list, activeSurfaces);
 	}
 }
 
@@ -296,7 +296,7 @@ qboolean G2_SetRootSurface(CGhoul2Info_v& ghoul2, const int modelIndex, const ch
 	return qfalse;
 }
 
-extern int G2_DecideTraceLod(const CGhoul2Info& ghoul2, const int useLod);
+extern int G2_DecideTraceLod(const CGhoul2Info& ghoul2, int useLod);
 int G2_AddSurface(CGhoul2Info* ghoul2, const int surfaceNumber, const int polyNumber, const float BarycentricI, const float BarycentricJ, int lod)
 {
 	lod = G2_DecideTraceLod(*ghoul2, lod);
@@ -339,13 +339,13 @@ int G2_GetParentSurface(const CGhoul2Info* ghlInfo, const int index)
 {
 	assert(ghlInfo->currentModel);
 	assert(ghlInfo->currentModel->mdxm);
-	const mdxmHierarchyOffsets_t* surf_indexes = reinterpret_cast<mdxmHierarchyOffsets_t*>(reinterpret_cast<byte*>(ghlInfo->currentModel->mdxm) + sizeof(mdxmHeader_t));
+	const mdxmHierarchyOffsets_t* surfIndexes = reinterpret_cast<mdxmHierarchyOffsets_t*>(reinterpret_cast<byte*>(ghlInfo->currentModel->mdxm) + sizeof(mdxmHeader_t));
 
 	// walk each surface and see if this index is listed in it's children
 	const mdxmSurface_t* surf = static_cast<mdxmSurface_t*>(G2_FindSurface(ghlInfo->currentModel, index, 0));
-	const mdxmSurfHierarchy_t* surf_info = reinterpret_cast<mdxmSurfHierarchy_t*>((byte*)surf_indexes + surf_indexes->offsets[surf->thisSurfaceIndex]);
+	const mdxmSurfHierarchy_t* surfInfo = reinterpret_cast<mdxmSurfHierarchy_t*>((byte*)surfIndexes + surfIndexes->offsets[surf->thisSurfaceIndex]);
 
-	return surf_info->parentIndex;
+	return surfInfo->parentIndex;
 }
 
 int G2_GetSurfaceIndex(const CGhoul2Info* ghlInfo, const char* surfaceName)
@@ -372,15 +372,15 @@ int G2_IsSurfaceRendered(const CGhoul2Info* ghlInfo, const char* surfaceName, co
 	int surfNum = G2_IsSurfaceLegal(ghlInfo->currentModel, surfaceName, &flags);
 	if (surfNum != -1)
 	{//must be legal
-		const mdxmHierarchyOffsets_t* surf_indexes = reinterpret_cast<mdxmHierarchyOffsets_t*>(reinterpret_cast<byte*>(ghlInfo->currentModel->mdxm) + sizeof(mdxmHeader_t));
-		const mdxmSurfHierarchy_t* surf_info = reinterpret_cast<mdxmSurfHierarchy_t*>((byte*)surf_indexes + surf_indexes->offsets[surfNum]);
-		surfNum = surf_info->parentIndex;
+		const mdxmHierarchyOffsets_t* surfIndexes = reinterpret_cast<mdxmHierarchyOffsets_t*>(reinterpret_cast<byte*>(ghlInfo->currentModel->mdxm) + sizeof(mdxmHeader_t));
+		const mdxmSurfHierarchy_t* surfInfo = reinterpret_cast<mdxmSurfHierarchy_t*>((byte*)surfIndexes + surfIndexes->offsets[surfNum]);
+		surfNum = surfInfo->parentIndex;
 		// walk the surface hierarchy up until we hit the root
 		while (surfNum != -1)
 		{
 			uint32_t parent_flags = 0u;
 
-			const mdxmSurfHierarchy_t* parent_surf_info = reinterpret_cast<mdxmSurfHierarchy_t*>((byte*)surf_indexes + surf_indexes->offsets[
+			const mdxmSurfHierarchy_t* parent_surf_info = reinterpret_cast<mdxmSurfHierarchy_t*>((byte*)surfIndexes + surfIndexes->offsets[
 				surfNum]);
 
 			// find the original surface in the surface list

@@ -805,7 +805,7 @@ static const char* TruncateGLExtensionsString(const char* extensions_string, con
 ** setting variables, checking GL constants, and reporting the gfx system config
 ** to the user.
 */
-static void InitOpenGL()
+static void InitOpenGL(void)
 {
 	//
 	// initialize OS specific portions of the renderer
@@ -952,7 +952,7 @@ byte* RB_ReadPixels(const int x, const int y, const int width, const int height,
 R_TakeScreenshot
 ==================
 */
-void R_TakeScreenshot(const int x, const int y, const int width, const int height, const char* file_name) {
+static void R_TakeScreenshot(const int x, const int y, const int width, const int height, const char* fileName) {
 	byte* destptr;
 
 	int padlen;
@@ -999,7 +999,7 @@ void R_TakeScreenshot(const int x, const int y, const int width, const int heigh
 	if (glConfig.deviceSupportsGamma && !glConfigExt.doGammaCorrectionWithShaders)
 		R_GammaCorrect(allbuf + offset, memcount);
 
-	ri->FS_WriteFile(file_name, buffer, memcount + 18);
+	ri->FS_WriteFile(fileName, buffer, memcount + 18);
 
 	ri->Hunk_FreeTempMemory(allbuf);
 }
@@ -1009,12 +1009,12 @@ void R_TakeScreenshot(const int x, const int y, const int width, const int heigh
 R_TakeScreenshotPNG
 ==================
 */
-void R_TakeScreenshotPNG(const int x, const int y, const int width, const int height, const char* file_name) {
+static void R_TakeScreenshotPNG(const int x, const int y, const int width, const int height, const char* fileName) {
 	size_t offset = 0;
 	int padlen = 0;
 
 	byte* buffer = RB_ReadPixels(x, y, width, height, &offset, &padlen);
-	RE_SavePNG(file_name, buffer, width, height, 3);
+	RE_SavePNG(fileName, buffer, width, height, 3);
 	ri->Hunk_FreeTempMemory(buffer);
 }
 
@@ -1023,7 +1023,7 @@ void R_TakeScreenshotPNG(const int x, const int y, const int width, const int he
 R_TakeScreenshotJPEG
 ==================
 */
-void R_TakeScreenshotJPEG(const int x, const int y, const int width, const int height, const char* file_name) {
+static void R_TakeScreenshotJPEG(const int x, const int y, const int width, const int height, const char* fileName) {
 	size_t offset = 0;
 	int padlen;
 
@@ -1034,7 +1034,7 @@ void R_TakeScreenshotJPEG(const int x, const int y, const int width, const int h
 	if (glConfig.deviceSupportsGamma && !glConfigExt.doGammaCorrectionWithShaders)
 		R_GammaCorrect(buffer + offset, memcount);
 
-	RE_SaveJPG(file_name, r_screenshotJpegQuality->integer, width, height, buffer + offset, padlen);
+	RE_SaveJPG(fileName, r_screenshotJpegQuality->integer, width, height, buffer + offset, padlen);
 	ri->Hunk_FreeTempMemory(buffer);
 }
 
@@ -1043,7 +1043,7 @@ void R_TakeScreenshotJPEG(const int x, const int y, const int width, const int h
 R_ScreenshotFilename
 ==================
 */
-void R_ScreenshotFilename(char* buf, const int buf_size, const char* ext) {
+static void R_ScreenshotFilename(char* buf, const int buf_size, const char* ext) {
 	time_t rawtime;
 	char time_str[32] = { 0 }; // should really only reach ~19 chars
 
@@ -1359,7 +1359,7 @@ R_PrintLongString
 Workaround for ri->Printf's 1024 characters buffer limit.
 ================
 */
-void R_PrintLongString(const char* string)
+static void R_PrintLongString(const char* string)
 {
 	const char* p = string;
 	int remaining_length = strlen(string);
@@ -1523,7 +1523,7 @@ void GfxInfo_f()
 	}
 }
 
-void R_AtiHackToggle_f()
+static void R_AtiHackToggle_f()
 {
 	g_bTextureRectangleHack = !g_bTextureRectangleHack;
 }
@@ -1564,7 +1564,7 @@ R_Register
 ===============
 */
 
-void R_Register()
+static void R_Register()
 {
 	//FIXME: lol badness
 	se_language = ri->Cvar_Get("se_language", "english", CVAR_ARCHIVE | CVAR_NORESTART, "");
@@ -1915,14 +1915,14 @@ RE_EndRegistration
 Touch all images to make sure they are resident
 =============
 */
-void RE_EndRegistration() {
+static void RE_EndRegistration() {
 	R_IssuePendingRenderCommands();
 	if (!ri->Sys_LowPhysicalMemory()) {
 		RB_ShowImages();
 	}
 }
 
-void RE_GetLightStyle(const int style, color4ub_t color)
+static void RE_GetLightStyle(const int style, color4ub_t color)
 {
 	if (style >= MAX_LIGHT_STYLES)
 	{

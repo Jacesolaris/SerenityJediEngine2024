@@ -800,7 +800,7 @@ cg.time should be between oldFrameTime and frameTime after exit
 */
 static qboolean CG_RunLerpFrame(clientInfo_t* ci, lerpFrame_t* lf, const int new_animation, const int entNum)
 {
-	qboolean new_frame = qfalse;
+	qboolean newFrame = qfalse;
 
 	// see if the animation sequence is switching
 	//FIXME: allow multiple-frame overlapped lerping between sequences? - Possibly last 3 of last seq and first 3 of next seq?
@@ -884,7 +884,7 @@ static qboolean CG_RunLerpFrame(clientInfo_t* ci, lerpFrame_t* lf, const int new
 			lf->frameTime = cg.time;
 		}
 
-		new_frame = qtrue;
+		newFrame = qtrue;
 	}
 
 	if (lf->frameTime > cg.time + 200)
@@ -906,7 +906,7 @@ static qboolean CG_RunLerpFrame(clientInfo_t* ci, lerpFrame_t* lf, const int new
 		lf->backlerp = 1.0 - static_cast<float>(cg.time - lf->oldFrameTime) / (lf->frameTime - lf->oldFrameTime);
 	}
 
-	return new_frame;
+	return newFrame;
 }
 
 /*

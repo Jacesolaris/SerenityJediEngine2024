@@ -35,7 +35,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #define	LS(x) x=LittleShort(x)
 #define	LF(x) x=LittleFloat(x)
 
-void RE_LoadWorldMap_Actual(const char* name, world_t& worldData, int index); //should only be called for sub-bsp instances
+void RE_LoadWorldMap_Actual(const char* name, world_t& worldData, const int index); //should only be called for sub-bsp instances
 
 static qboolean R_LoadMD3(model_t* mod, int lod, void* buffer, const char* name, qboolean& bAlreadyCached);
 
@@ -1093,8 +1093,8 @@ static md3Tag_t* R_GetTag(md3Header_t* mod, int frame, const char* tagName) {
 R_LerpTag
 ================
 */
-int	R_LerpTag(orientation_t* tag, qhandle_t handle, int startFrame, int endFrame,float frac, const char* tagName) 
-{
+int	R_LerpTag(orientation_t* tag, qhandle_t handle, int startFrame, int endFrame,
+	float frac, const char* tagName) {
 	md3Tag_t* start, * finish;
 	int		i;
 	float		frontLerp, backLerp;

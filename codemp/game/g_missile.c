@@ -79,7 +79,7 @@ extern void G_KnockOver(gentity_t* self, const gentity_t* attacker, const vec3_t
 extern float manual_running_and_saberblocking(const gentity_t* defender);
 extern qboolean WP_SaberFatiguedParryDirection(gentity_t* self, vec3_t hitloc, qboolean missileBlock);
 
-float vector_bolt_distance(vec3_t v1, vec3_t v2)
+static float vector_bolt_distance(vec3_t v1, vec3_t v2)
 {
 	//returns the distance between the two points.
 	vec3_t dir;
@@ -97,7 +97,7 @@ G_ReflectMissile
 */
 
 //////////////////// Boltblock new ////////////////////////////////
-void g_manual_block_missile(const gentity_t* ent, gentity_t* missile, vec3_t forward)
+static void g_manual_block_missile(const gentity_t* ent, gentity_t* missile, vec3_t forward)
 {
 	vec3_t bounce_dir;
 
@@ -140,7 +140,7 @@ void g_manual_block_missile(const gentity_t* ent, gentity_t* missile, vec3_t for
 	}
 }
 
-void g_missile_bouncedoff_saber(const gentity_t* ent, gentity_t* missile, vec3_t forward)
+static void g_missile_bouncedoff_saber(const gentity_t* ent, gentity_t* missile, vec3_t forward)
 {
 	vec3_t bounce_dir;
 
@@ -183,7 +183,7 @@ void g_missile_bouncedoff_saber(const gentity_t* ent, gentity_t* missile, vec3_t
 	}
 }
 
-void g_deflect_missile_to_attacker(const gentity_t* ent, gentity_t* missile, vec3_t forward)
+static void g_deflect_missile_to_attacker(const gentity_t* ent, gentity_t* missile, vec3_t forward)
 {
 	vec3_t bounce_dir;
 
@@ -226,7 +226,7 @@ void g_deflect_missile_to_attacker(const gentity_t* ent, gentity_t* missile, vec
 	}
 }
 
-void g_reflect_missile_to_attacker(const gentity_t* ent, gentity_t* missile, vec3_t forward)
+static void g_reflect_missile_to_attacker(const gentity_t* ent, gentity_t* missile, vec3_t forward)
 {
 	vec3_t bounce_dir;
 	int isowner = 0;
@@ -509,7 +509,7 @@ g_bounce_missile
 
 ================
 */
-void G_BounceMissile(gentity_t* ent, trace_t* trace)
+static void G_BounceMissile(gentity_t* ent, trace_t* trace)
 {
 	vec3_t velocity;
 
@@ -621,7 +621,7 @@ void g_explode_missile(gentity_t* ent)
 	trap->LinkEntity((sharedEntity_t*)ent);
 }
 
-void g_run_stuck_missile(gentity_t* ent)
+static void g_run_stuck_missile(gentity_t* ent)
 {
 	if (ent->takedamage)
 	{
@@ -660,8 +660,7 @@ void g_bounce_projectile(vec3_t start, vec3_t impact, vec3_t dir, vec3_t endout)
 }
 
 //-----------------------------------------------------------------------------
-gentity_t* create_missile(vec3_t org, vec3_t dir, const float vel, const int life, gentity_t* owner,
-	const qboolean alt_fire)
+gentity_t* create_missile(vec3_t org, vec3_t dir, const float vel, const int life, gentity_t* owner, const qboolean alt_fire)
 {
 	gentity_t* missile = G_Spawn();
 
@@ -692,7 +691,7 @@ gentity_t* create_missile(vec3_t org, vec3_t dir, const float vel, const int lif
 	return missile;
 }
 
-void g_missile_bounce_effect(gentity_t* ent, vec3_t org, vec3_t dir, const qboolean hit_world)
+static void g_missile_bounce_effect(gentity_t* ent, vec3_t org, vec3_t dir, const qboolean hit_world)
 {
 	switch (ent->s.weapon)
 	{
@@ -753,7 +752,7 @@ void g_missile_reflect_effect(gentity_t* ent, vec3_t dir)
 	}
 }
 
-void G_MissileBounceBeskarEffect(gentity_t* ent, vec3_t org, vec3_t dir, const qboolean hit_world)
+static void G_MissileBounceBeskarEffect(gentity_t* ent, vec3_t org, vec3_t dir, const qboolean hit_world)
 {
 	G_PlayEffectID(G_EffectIndex("blaster/beskar_impact"), ent->r.currentOrigin, dir);
 }
@@ -1656,7 +1655,7 @@ gentity_t* fire_stun(gentity_t* self, vec3_t start, vec3_t dir)
 
 //=============================================================================
 
-int ReflectionLevel(const gentity_t* player)
+static int ReflectionLevel(const gentity_t* player)
 {
 	//determine reflection level.
 	const qboolean manual_blocking = player->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
@@ -1675,15 +1674,11 @@ void wp_handle_bolt_block(gentity_t* bolt, gentity_t* blocker, trace_t* trace, v
 {
 	//handles all the behavior needed to saber block a blaster bolt.
 	const int other_def_level = ReflectionLevel(blocker);
-	float slop_factor = (MISHAP_MAXINACCURACY - 6) * (FORCE_LEVEL_3 - blocker->client->ps.fd.forcePowerLevel[
-		FP_SABER_DEFENSE]) / FORCE_LEVEL_3;
+	float slop_factor = (MISHAP_MAXINACCURACY - 6) * (FORCE_LEVEL_3 - blocker->client->ps.fd.forcePowerLevel[FP_SABER_DEFENSE]) / FORCE_LEVEL_3;
 	gentity_t* prev_owner = &g_entities[bolt->r.ownerNum];
 	const float distance = vector_bolt_distance(blocker->r.currentOrigin, prev_owner->r.currentOrigin);
-	const qboolean manual_proj_blocking = blocker->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK
-		? qtrue
-		: qfalse;
-	const qboolean accurate_missile_blocking =
-		blocker->client->ps.ManualBlockingFlags & 1 << MBF_ACCURATEMISSILEBLOCKING ? qtrue : qfalse;
+	const qboolean manual_proj_blocking = blocker->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK ? qtrue : qfalse;
+	const qboolean accurate_missile_blocking = blocker->client->ps.ManualBlockingFlags & 1 << MBF_ACCURATEMISSILEBLOCKING ? qtrue : qfalse;
 	const int manual_run_blocking = manual_running_and_saberblocking(blocker);
 	const int npc_is_blocking = manual_npc_saberblocking(blocker);
 

@@ -33,11 +33,10 @@ Returns true if the grid is completely culled away.
 Also sets the clipped hint bit in tess
 =================
 */
-static qboolean	R_CullTriSurf(const srfTriangles_t* cv)
-{
-	const int boxCull = R_CullLocalBox(cv->bounds);
+static qboolean	R_CullTriSurf(const srfTriangles_t* cv) {
+	const int box_cull = R_CullLocalBox(cv->bounds);
 
-	if (boxCull == CULL_OUT) {
+	if (box_cull == CULL_OUT) {
 		return qtrue;
 	}
 	return qfalse;
@@ -51,40 +50,39 @@ Returns true if the grid is completely culled away.
 Also sets the clipped hint bit in tess
 =================
 */
-static qboolean	R_CullGrid(const srfGridMesh_t* cv)
-{
-	int 	sphereCull;
+static qboolean	R_CullGrid(const srfGridMesh_t* cv) {
+	int 	sphere_cull;
 
 	if (r_nocurves->integer) {
 		return qtrue;
 	}
 
-	if (tr.currentEntityNum != REFENTITYNUM_WORLD) {
-		sphereCull = R_CullLocalPointAndRadius(cv->localOrigin, cv->meshRadius);
+	if (tr.currententity_num != REFENTITYNUM_WORLD) {
+		sphere_cull = R_CullLocalPointAndRadius(cv->localOrigin, cv->meshRadius);
 	}
 	else {
-		sphereCull = R_CullPointAndRadius(cv->localOrigin, cv->meshRadius);
+		sphere_cull = R_CullPointAndRadius(cv->localOrigin, cv->meshRadius);
 	}
 
 	// check for trivial reject
-	if (sphereCull == CULL_OUT)
+	if (sphere_cull == CULL_OUT)
 	{
 		tr.pc.c_sphere_cull_patch_out++;
 		return qtrue;
 	}
 	// check bounding box if necessary
-	if (sphereCull == CULL_CLIP)
+	if (sphere_cull == CULL_CLIP)
 	{
 		tr.pc.c_sphere_cull_patch_clip++;
 
-		const int boxCull = R_CullLocalBox(cv->meshBounds);
+		const int box_cull = R_CullLocalBox(cv->meshBounds);
 
-		if (boxCull == CULL_OUT)
+		if (box_cull == CULL_OUT)
 		{
 			tr.pc.c_box_cull_patch_out++;
 			return qtrue;
 		}
-		if (boxCull == CULL_IN)
+		if (box_cull == CULL_IN)
 		{
 			tr.pc.c_box_cull_patch_in++;
 		}
@@ -111,8 +109,7 @@ added to the sorting list.
 This will also allow mirrors on both sides of a model without recursion.
 ================
 */
-static qboolean	R_CullSurface(surfaceType_t* surface, const shader_t* shader)
-{
+static qboolean	R_CullSurface(surfaceType_t* surface, const shader_t* shader) {
 	if (r_nocull->integer == 1) {
 		return qfalse;
 	}
@@ -158,10 +155,8 @@ static qboolean	R_CullSurface(surfaceType_t* surface, const shader_t* shader)
 	return qfalse;
 }
 
-static int R_DlightFace(srfSurfaceFace_t* face, int dlightBits)
-{
-	for (int i = 0; i < tr.refdef.num_dlights; i++) 
-	{
+static int R_DlightFace(srfSurfaceFace_t* face, int dlightBits) {
+	for (int i = 0; i < tr.refdef.num_dlights; i++) {
 		if (!(dlightBits & 1 << i)) {
 			continue;
 		}
@@ -181,12 +176,9 @@ static int R_DlightFace(srfSurfaceFace_t* face, int dlightBits)
 	return dlightBits;
 }
 
-static int R_DlightGrid(srfGridMesh_t* grid, int dlightBits)
-{
-	for (int i = 0; i < tr.refdef.num_dlights; i++)
-	{
-		if (!(dlightBits & 1 << i))
-		{
+static int R_DlightGrid(srfGridMesh_t* grid, int dlightBits) {
+	for (int i = 0; i < tr.refdef.num_dlights; i++) {
+		if (!(dlightBits & 1 << i)) {
 			continue;
 		}
 		const dlight_t* dl = &tr.refdef.dlights[i];
@@ -251,8 +243,7 @@ that is touched by one or more dlights, so try to throw out
 more dlights if possible.
 ====================
 */
-static int R_DlightSurface(msurface_t* surf, int dlightBits)
-{
+static int R_DlightSurface(const msurface_t* surf, int dlightBits) {
 	if (*surf->data == SF_FACE) {
 		dlightBits = R_DlightFace(reinterpret_cast<srfSurfaceFace_t*>(surf->data), dlightBits);
 	}
@@ -278,9 +269,9 @@ static int R_DlightSurface(msurface_t* surf, int dlightBits)
 R_AddWorldSurface
 ======================
 */
-static void R_AddWorldSurface(msurface_t* surf, int dlightBits, const qboolean noViewCount = qfalse)
+static void R_AddWorldSurface(msurface_t* surf, int dlightBits, const qboolean no_view_count = qfalse)
 {
-	if (!noViewCount)
+	if (!no_view_count)
 	{
 		if (surf->viewCount == tr.viewCount)
 		{
@@ -300,11 +291,14 @@ static void R_AddWorldSurface(msurface_t* surf, int dlightBits, const qboolean n
 			return;
 		}
 		surf->viewCount = tr.viewCount;
+		// FIXME: bmodel fog?
 	}
 
-	// try to cull before dlighting or adding
-	if (R_CullSurface(surf->data, surf->shader))
-	{
+	//	surf->viewCount = tr.viewCount;
+		// FIXME: bmodel fog?
+
+		// try to cull before dlighting or adding
+	if (R_CullSurface(surf->data, surf->shader)) {
 		return;
 	}
 
@@ -353,7 +347,7 @@ void R_AddBrushModelSurfaces(trRefEntity_t* ent) {
 	}
 }
 
-static float GetQuadArea(vec3_t v1, vec3_t v2, vec3_t v3, vec3_t v4)
+float GetQuadArea(vec3_t v1, vec3_t v2, vec3_t v3, vec3_t v4)
 {
 	vec3_t	vec1, vec2, dis1, dis2;
 
@@ -374,7 +368,7 @@ static float GetQuadArea(vec3_t v1, vec3_t v2, vec3_t v3, vec3_t v4)
 		dis2[0] * dis2[0] + dis2[1] * dis2[1] + dis2[2] * dis2[2];
 }
 
-void RE_GetBModelVerts(const int bmodelIndex, vec3_t* verts, vec3_t normal)
+void RE_GetBModelVerts(const int bmodel_index, vec3_t* verts, vec3_t normal)
 {
 	msurface_t* surfs;
 	srfSurfaceFace_t* face;
@@ -383,7 +377,7 @@ void RE_GetBModelVerts(const int bmodelIndex, vec3_t* verts, vec3_t normal)
 	int					max_dist[2] = { 0,0 };
 	int					max_indx[2] = { 0,0 };
 
-	const model_t* p_model = R_GetModelByHandle(bmodelIndex);
+	const model_t* p_model = R_GetModelByHandle(bmodel_index);
 	const bmodel_t* bmodel = p_model->bmodel;
 
 	// Loop through all surfaces on the brush and find the best two candidates
@@ -459,8 +453,7 @@ void RE_GetBModelVerts(const int bmodelIndex, vec3_t* verts, vec3_t normal)
 R_RecursiveWorldNode
 ================
 */
-static void R_RecursiveWorldNode(mnode_t* node, int planeBits, int dlightBits) 
-{
+static void R_RecursiveWorldNode(mnode_t* node, int plane_bits, int dlightBits) {
 	do {
 		int			new_dlights[2]{};
 
@@ -475,53 +468,53 @@ static void R_RecursiveWorldNode(mnode_t* node, int planeBits, int dlightBits)
 		if (r_nocull->integer != 1) {
 			int		r;
 
-			if (planeBits & 1) {
+			if (plane_bits & 1) {
 				r = BoxOnPlaneSide(node->mins, node->maxs, &tr.viewParms.frustum[0]);
 				if (r == 2) {
 					return;						// culled
 				}
 				if (r == 1) {
-					planeBits &= ~1;			// all descendants will also be in front
+					plane_bits &= ~1;			// all descendants will also be in front
 				}
 			}
 
-			if (planeBits & 2) {
+			if (plane_bits & 2) {
 				r = BoxOnPlaneSide(node->mins, node->maxs, &tr.viewParms.frustum[1]);
 				if (r == 2) {
 					return;						// culled
 				}
 				if (r == 1) {
-					planeBits &= ~2;			// all descendants will also be in front
+					plane_bits &= ~2;			// all descendants will also be in front
 				}
 			}
 
-			if (planeBits & 4) {
+			if (plane_bits & 4) {
 				r = BoxOnPlaneSide(node->mins, node->maxs, &tr.viewParms.frustum[2]);
 				if (r == 2) {
 					return;						// culled
 				}
 				if (r == 1) {
-					planeBits &= ~4;			// all descendants will also be in front
+					plane_bits &= ~4;			// all descendants will also be in front
 				}
 			}
 
-			if (planeBits & 8) {
+			if (plane_bits & 8) {
 				r = BoxOnPlaneSide(node->mins, node->maxs, &tr.viewParms.frustum[3]);
 				if (r == 2) {
 					return;						// culled
 				}
 				if (r == 1) {
-					planeBits &= ~8;			// all descendants will also be in front
+					plane_bits &= ~8;			// all descendants will also be in front
 				}
 			}
 
-			if (planeBits & 16) {
+			if (plane_bits & 16) {
 				r = BoxOnPlaneSide(node->mins, node->maxs, &tr.viewParms.frustum[4]);
 				if (r == 2) {
 					return;						// culled
 				}
 				if (r == 1) {
-					planeBits &= ~16;			// all descendants will also be in front
+					plane_bits &= ~16;			// all descendants will also be in front
 				}
 			}
 		}
@@ -559,13 +552,13 @@ static void R_RecursiveWorldNode(mnode_t* node, int planeBits, int dlightBits)
 			new_dlights[1] = dlightBits;
 		}
 		// recurse down the children, front side first
-		R_RecursiveWorldNode(node->children[0], planeBits, new_dlights[0]);
+		R_RecursiveWorldNode(node->children[0], plane_bits, new_dlights[0]);
 
 		// tail recurse
 		node = node->children[1];
 		dlightBits = new_dlights[1];
-	}
-	while (true);
+	} while (true);
+
 	{
 		tr.pc.c_leafs++;
 
@@ -744,7 +737,7 @@ static void R_MarkLeaves() {
 R_AddWorldSurfaces
 =============
 */
-void R_AddWorldSurfaces(void)
+void R_AddWorldSurfaces()
 {
 	if (!r_drawworld->integer)
 	{
@@ -755,8 +748,8 @@ void R_AddWorldSurfaces(void)
 		return;
 	}
 
-	tr.currentEntityNum = REFENTITYNUM_WORLD;
-	tr.shiftedEntityNum = tr.currentEntityNum << QSORT_REFENTITYNUM_SHIFT;
+	tr.currententity_num = REFENTITYNUM_WORLD;
+	tr.shiftedentity_num = tr.currententity_num << QSORT_REFENTITYNUM_SHIFT;
 
 	// determine which leaves are in the PVS / areamask
 	R_MarkLeaves();
@@ -765,8 +758,7 @@ void R_AddWorldSurfaces(void)
 	ClearBounds(tr.viewParms.visBounds[0], tr.viewParms.visBounds[1]);
 
 	// perform frustum culling and add all the potentially visible surfaces
-	if (tr.refdef.num_dlights > 32) 
-	{
+	if (tr.refdef.num_dlights > 32) {
 		tr.refdef.num_dlights = 32;
 	}
 

@@ -31,14 +31,6 @@ constexpr auto G2T_SV_TIME = 0;
 constexpr auto G2T_CG_TIME = 1;
 constexpr auto NUM_G2T_TIME = 2;
 
-typedef enum
-{
-	G2_TINT_DEFAULT,
-	G2_TINT_SABER,
-	G2_TINT_SABER2,
-	G2_TINT_MAX
-} g2Tints_t;
-
 void G2API_SetTime(const int currentTime, const int clock);
 int G2API_GetTime(int arg_time); // this may or may not return arg depending on ghoul2_time cvar
 
@@ -531,8 +523,6 @@ public:
 	int currentAnimModelSize;
 	const mdxaHeader_t* aHeader;
 
-	g2Tints_t       tintType;
-
 	CGhoul2Info() :
 		mModelindex(-1),
 		animModelIndexOffset(0),
@@ -558,8 +548,7 @@ public:
 		currentModelSize(0),
 		animModel(nullptr),
 		currentAnimModelSize(0),
-		aHeader(nullptr),
-		tintType(G2_TINT_DEFAULT)
+		aHeader(nullptr)
 	{
 		mFileName[0] = 0;
 	}

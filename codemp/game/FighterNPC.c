@@ -295,16 +295,16 @@ static void ProcessMoveCommands(Vehicle_t* p_veh)
 	bgEntity_t* parent = p_veh->m_pParentEntity;
 	//this function should only be called from pmove.. if it gets called else where,
 	//obviously this will explode.
-	const int cur_time = pm->cmd.serverTime;
+	const int curTime = pm->cmd.serverTime;
 
 	playerState_t* parent_ps = parent->playerState;
 
 	if (parent_ps->hyperSpaceTime
-		&& cur_time - parent_ps->hyperSpaceTime < HYPERSPACE_TIME)
+		&& curTime - parent_ps->hyperSpaceTime < HYPERSPACE_TIME)
 	{
 		//Going to Hyperspace
 		//totally override movement
-		const float timeFrac = (float)(cur_time - parent_ps->hyperSpaceTime) / HYPERSPACE_TIME;
+		const float timeFrac = (float)(curTime - parent_ps->hyperSpaceTime) / HYPERSPACE_TIME;
 		if (timeFrac < HYPERSPACE_TELEPORT_FRAC)
 		{
 			//for first half, instantly jump to top speed!
@@ -344,7 +344,7 @@ static void ProcessMoveCommands(Vehicle_t* p_veh)
 		return;
 	}
 
-	if (p_veh->m_iDropTime >= cur_time)
+	if (p_veh->m_iDropTime >= curTime)
 	{
 		//no speed, just drop
 		parent_ps->speed = 0.0f;
@@ -406,9 +406,9 @@ static void ProcessMoveCommands(Vehicle_t* p_veh)
 
 	if (p_veh->m_ucmd.upmove > 0 && p_veh->m_pVehicleInfo->turboSpeed)
 	{
-		if (cur_time - p_veh->m_iTurboTime > p_veh->m_pVehicleInfo->turboRecharge)
+		if (curTime - p_veh->m_iTurboTime > p_veh->m_pVehicleInfo->turboRecharge)
 		{
-			p_veh->m_iTurboTime = cur_time + p_veh->m_pVehicleInfo->turboDuration;
+			p_veh->m_iTurboTime = curTime + p_veh->m_pVehicleInfo->turboDuration;
 
 #ifdef _GAME//MP GAME-side
 			//NOTE: turbo sound can't be part of effect if effect is played on every muzzle!
@@ -420,7 +420,7 @@ static void ProcessMoveCommands(Vehicle_t* p_veh)
 		}
 	}
 	float speedInc = p_veh->m_pVehicleInfo->acceleration * p_veh->m_fTimeModifier;
-	if (cur_time < p_veh->m_iTurboTime)
+	if (curTime < p_veh->m_iTurboTime)
 	{
 		//going turbo speed
 		speedMax = p_veh->m_pVehicleInfo->turboSpeed;
@@ -458,7 +458,7 @@ static void ProcessMoveCommands(Vehicle_t* p_veh)
 	}
 
 	if (p_veh->m_iRemovedSurfaces
-		|| parent_ps->electrifyTime >= cur_time)
+		|| parent_ps->electrifyTime >= curTime)
 	{
 		//go out of control
 		parent_ps->speed += speedInc;
@@ -639,8 +639,8 @@ static void ProcessMoveCommands(Vehicle_t* p_veh)
 		&& p_veh->m_pVehicleInfo->Inhabited(p_veh) //has to have a driver in order to be capable of landing
 #endif
 		&& !p_veh->m_iRemovedSurfaces
-		&& parent_ps->electrifyTime < cur_time
-		&& parent_ps->vehTurnaroundTime < cur_time
+		&& parent_ps->electrifyTime < curTime
+		&& parent_ps->vehTurnaroundTime < curTime
 		&& (p_veh->m_LandTrace.fraction >= 1.0f //no ground
 			|| p_veh->m_LandTrace.plane.normal[2] < MIN_LANDING_SLOPE //can't land here
 			|| parent_ps->speed > MIN_LANDING_SPEED) //going too fast to land
@@ -748,7 +748,7 @@ static void ProcessMoveCommands(Vehicle_t* p_veh)
 	}
 
 	if (p_veh->m_iRemovedSurfaces
-		|| parent_ps->electrifyTime >= cur_time)
+		|| parent_ps->electrifyTime >= curTime)
 	{
 		//going down
 		if (FighterIsInSpace((gentity_t*)parent))
@@ -1290,14 +1290,14 @@ void FighterPitchAdjust(const Vehicle_t* p_veh, const playerState_t* rider_ps, c
 }
 #endif// VEH_CONTROL_SCHEME_4
 
-void FighterPitchClamp(Vehicle_t* p_veh, const playerState_t* rider_ps, const playerState_t* parent_ps, const int cur_time)
+void FighterPitchClamp(Vehicle_t* p_veh, const playerState_t* rider_ps, const playerState_t* parent_ps, const int curTime)
 {
 	if (!BG_UnrestrainedPitchRoll(rider_ps, p_veh))
 	{
 		//cap pitch reasonably
 		if (p_veh->m_pVehicleInfo->pitchLimit != -1
 			&& !p_veh->m_iRemovedSurfaces
-			&& parent_ps->electrifyTime < cur_time)
+			&& parent_ps->electrifyTime < curTime)
 		{
 			if (p_veh->m_vOrientation[PITCH] > p_veh->m_pVehicleInfo->pitchLimit)
 			{
@@ -1334,10 +1334,10 @@ static void ProcessOrientCommands(Vehicle_t* p_veh)
 	qboolean isDead;
 	qboolean isLandingOrLanded;
 #ifdef _GAME
-	int cur_time = level.time;
+	int curTime = level.time;
 #elif _CGAME
 	//FIXME: pass in ucmd?  Not sure if this is reliable...
-	int cur_time = pm->cmd.serverTime;
+	int curTime = pm->cmd.serverTime;
 #endif
 
 	const bgEntity_t* rider = NULL;
@@ -1357,32 +1357,32 @@ static void ProcessOrientCommands(Vehicle_t* p_veh)
 
 #ifdef VEH_CONTROL_SCHEME_4
 	if (parent_ps->hyperSpaceTime
-		&& (cur_time - parent_ps->hyperSpaceTime) < HYPERSPACE_TIME)
+		&& (curTime - parent_ps->hyperSpaceTime) < HYPERSPACE_TIME)
 	{//Going to Hyperspace
 		//VectorCopy( rider_ps->viewangles, p_veh->m_vOrientation );
 		//VectorCopy( rider_ps->viewangles, parent_ps->viewangles );
 		VectorCopy(parent_ps->viewangles, p_veh->m_vOrientation);
 		VectorClear(p_veh->m_vPrevRiderViewAngles);
 		p_veh->m_vPrevRiderViewAngles[YAW] = AngleNormalize180(rider_ps->viewangles[YAW]);
-		FighterPitchClamp(p_veh, rider_ps, parent_ps, cur_time);
+		FighterPitchClamp(p_veh, rider_ps, parent_ps, curTime);
 		return;
 	}
 	else if (parent_ps->vehTurnaroundIndex
-		&& parent_ps->vehTurnaroundTime > cur_time)
+		&& parent_ps->vehTurnaroundTime > curTime)
 	{//in turn-around brush
 		//VectorCopy( rider_ps->viewangles, p_veh->m_vOrientation );
 		//VectorCopy( rider_ps->viewangles, parent_ps->viewangles );
 		VectorCopy(parent_ps->viewangles, p_veh->m_vOrientation);
 		VectorClear(p_veh->m_vPrevRiderViewAngles);
 		p_veh->m_vPrevRiderViewAngles[YAW] = AngleNormalize180(rider_ps->viewangles[YAW]);
-		FighterPitchClamp(p_veh, rider_ps, parent_ps, cur_time);
+		FighterPitchClamp(p_veh, rider_ps, parent_ps, curTime);
 		return;
 	}
 
 #else// VEH_CONTROL_SCHEME_4
 
 	if (parent_ps->hyperSpaceTime
-		&& cur_time - parent_ps->hyperSpaceTime < HYPERSPACE_TIME)
+		&& curTime - parent_ps->hyperSpaceTime < HYPERSPACE_TIME)
 	{
 		//Going to Hyperspace
 		VectorCopy(rider_ps->viewangles, p_veh->m_vOrientation);
@@ -1391,7 +1391,7 @@ static void ProcessOrientCommands(Vehicle_t* p_veh)
 	}
 #endif// VEH_CONTROL_SCHEME_4
 
-	if (p_veh->m_iDropTime >= cur_time)
+	if (p_veh->m_iDropTime >= curTime)
 	{
 		//you can only YAW during this
 		parent_ps->viewangles[YAW] = p_veh->m_vOrientation[YAW] = rider_ps->viewangles[YAW];
@@ -1404,7 +1404,7 @@ static void ProcessOrientCommands(Vehicle_t* p_veh)
 
 	angleTimeMod = p_veh->m_fTimeModifier;
 
-	if (isDead || parent_ps->electrifyTime >= cur_time ||
+	if (isDead || parent_ps->electrifyTime >= curTime ||
 		p_veh->m_pVehicleInfo->surfDestruction &&
 		p_veh->m_iRemovedSurfaces &&
 		p_veh->m_iRemovedSurfaces & SHIPSURF_BROKEN_C &&
@@ -1474,7 +1474,7 @@ static void ProcessOrientCommands(Vehicle_t* p_veh)
 	// If we're landed, we shouldn't be able to do anything but take off.
 	if (isLandingOrLanded //going slow enough to start landing
 		&& !p_veh->m_iRemovedSurfaces
-		&& parent_ps->electrifyTime < cur_time) //not spiraling out of control
+		&& parent_ps->electrifyTime < curTime) //not spiraling out of control
 	{
 		if (parent_ps->speed > 0.0f)
 		{
@@ -1504,7 +1504,7 @@ static void ProcessOrientCommands(Vehicle_t* p_veh)
 		}
 #endif// VEH_CONTROL_SCHEME_4
 	}
-	else if ((p_veh->m_iRemovedSurfaces || parent_ps->electrifyTime >= cur_time) //spiralling out of control
+	else if ((p_veh->m_iRemovedSurfaces || parent_ps->electrifyTime >= curTime) //spiralling out of control
 		&& (!(p_veh->m_pParentEntity->s.number % 2) || !(p_veh->m_pParentEntity->s.number % 6)))
 	{
 		//no yaw control
@@ -1540,7 +1540,7 @@ static void ProcessOrientCommands(Vehicle_t* p_veh)
 
 				FighterPitchAdjust(p_veh, rider_ps, parent_ps);
 #ifdef VEH_CONTROL_SCHEME_4
-				FighterPitchClamp(p_veh, rider_ps, parent_ps, cur_time);
+				FighterPitchClamp(p_veh, rider_ps, parent_ps, curTime);
 #endif// VEH_CONTROL_SCHEME_4
 
 				FighterNoseMalfunctionCheck(p_veh, parent_ps);
@@ -1598,7 +1598,7 @@ static void ProcessOrientCommands(Vehicle_t* p_veh)
 	{
 		//only if capable of landing
 		if (!isDead
-			&& parent_ps->electrifyTime < cur_time
+			&& parent_ps->electrifyTime < curTime
 			&& (!p_veh->m_pVehicleInfo->surfDestruction || !p_veh->m_iRemovedSurfaces))
 		{
 			//not crashing or spiraling out of control...
@@ -1643,7 +1643,7 @@ static void ProcessOrientCommands(Vehicle_t* p_veh)
 		if (p_veh->m_vOrientation[ROLL])
 		{
 			//continually adjust the yaw based on the roll..
-			if ((p_veh->m_iRemovedSurfaces || parent_ps->electrifyTime >= cur_time) //spiralling out of control
+			if ((p_veh->m_iRemovedSurfaces || parent_ps->electrifyTime >= curTime) //spiralling out of control
 				&& (!(p_veh->m_pParentEntity->s.number % 2) || !(p_veh->m_pParentEntity->s.number % 6)))
 			{
 				//leave YAW alone
@@ -1669,7 +1669,7 @@ static void ProcessOrientCommands(Vehicle_t* p_veh)
 			//cap it reasonably
 			if (p_veh->m_pVehicleInfo->rollLimit != -1
 				&& !p_veh->m_iRemovedSurfaces
-				&& parent_ps->electrifyTime < cur_time)
+				&& parent_ps->electrifyTime < curTime)
 			{
 				if (p_veh->m_vOrientation[ROLL] > p_veh->m_pVehicleInfo->rollLimit)
 				{
@@ -1701,10 +1701,10 @@ static void AnimateVehicle(Vehicle_t* p_veh)
 {
 	int Anim = -1;
 	const playerState_t* parent_ps = p_veh->m_pParentEntity->playerState;
-	const int cur_time = level.time;
+	const int curTime = level.time;
 
 	if (parent_ps->hyperSpaceTime
-		&& cur_time - parent_ps->hyperSpaceTime < HYPERSPACE_TIME)
+		&& curTime - parent_ps->hyperSpaceTime < HYPERSPACE_TIME)
 	{
 		//Going to Hyperspace
 		//close the wings (FIXME: makes sense on X-Wing, not Shuttle?)

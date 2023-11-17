@@ -3159,7 +3159,7 @@ most world construction surfaces.
 shader_t* R_FindShader(const char* name, const int* lightmapIndexes, const byte* styles, qboolean mip_raw_image)
 {
 	char stripped_name[MAX_QPATH];
-	char file_name[MAX_QPATH];
+	char fileName[MAX_QPATH];
 	const char* shader_text;
 	shader_t* sh;
 
@@ -3225,7 +3225,7 @@ shader_t* R_FindShader(const char* name, const int* lightmapIndexes, const byte*
 	// if not defined in the in-memory shader descriptions,
 	// look for a single TGA, BMP, or PCX
 	//
-	COM_StripExtension(name, file_name, sizeof file_name);
+	COM_StripExtension(name, fileName, sizeof fileName);
 	shader.defaultShader = qtrue;
 	return FinishShader();
 }

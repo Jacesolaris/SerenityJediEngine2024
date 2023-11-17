@@ -1812,14 +1812,14 @@ static qboolean SV_G2API_GetBoltMatrix_NoRecNoRot(void* ghoul2, const int modelI
 		position, frameNum, modelList, scale);
 }
 
-static int SV_G2API_InitGhoul2Model(void** ghoul2Ptr, const char* file_name, const int modelIndex,
+static int SV_G2API_InitGhoul2Model(void** ghoul2Ptr, const char* fileName, const int modelIndex,
 	const qhandle_t customSkin, const qhandle_t customShader, const int modelFlags,
 	const int lodBias)
 {
 #ifdef _FULL_G2_LEAK_CHECKING
 	g_G2AllocServer = 1;
 #endif
-	return re->G2API_InitGhoul2Model(reinterpret_cast<CGhoul2Info_v**>(ghoul2Ptr), file_name, modelIndex, customSkin, customShader,
+	return re->G2API_InitGhoul2Model(reinterpret_cast<CGhoul2Info_v**>(ghoul2Ptr), fileName, modelIndex, customSkin, customShader,
 		modelFlags, lodBias);
 }
 

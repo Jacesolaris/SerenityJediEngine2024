@@ -38,7 +38,8 @@ Used by both the front end (for DlightBmodel) and
 the back end (before doing the lighting calculation)
 ===============
 */
-void R_TransformDlights(const int count, dlight_t* dl, const orientationr_t* ori) {
+void R_TransformDlights(const int count, dlight_t* dl, const orientationr_t* ori) 
+{
 	int		i;
 	vec3_t	temp;
 
@@ -297,7 +298,7 @@ static void R_SetupEntityLightingGrid(trRefEntity_t* ent, world_t* world) {
 LogLight
 ===============
 */
-static void LogLight(trRefEntity_t* ent) {
+static void LogLight(const trRefEntity_t* ent) {
 	int	max1, max2;
 
 	if (!(ent->e.renderfx & RF_FIRST_PERSON)) {

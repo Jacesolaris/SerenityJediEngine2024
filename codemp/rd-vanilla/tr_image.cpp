@@ -227,7 +227,7 @@ float R_SumOfUsedImages(const qboolean b_use_format)
 R_ImageList_f
 ===============
 */
-void R_ImageList_f()
+void R_ImageList_f(void)
 {
 	int i = 0;
 	image_t* image;
@@ -319,7 +319,7 @@ Scale up the pixel values in a texture to increase the
 lighting range
 ================
 */
-void R_LightScaleTexture(unsigned* in, const int inwidth, const int inheight, const qboolean only_gamma)
+static void R_LightScaleTexture(unsigned* in, const int inwidth, const int inheight, const qboolean only_gamma)
 {
 	if (only_gamma)
 	{
@@ -373,14 +373,14 @@ Operates in place, quartering the size of the texture
 Proper linear filter
 ================
 */
-static void R_MipMap2(unsigned* in, const int in_width, const int in_height)
+static void R_MipMap2(unsigned* in, const int inWidth, const int inheight)
 {
-	const int out_width = in_width >> 1;
-	const int out_height = in_height >> 1;
+	const int out_width = inWidth >> 1;
+	const int out_height = inheight >> 1;
 	const auto temp = static_cast<unsigned*>(Hunk_AllocateTempMemory(out_width * out_height * 4));
 
-	const int in_width_mask = in_width - 1;
-	const int in_height_mask = in_height - 1;
+	const int in_width_mask = inWidth - 1;
+	const int in_height_mask = inheight - 1;
 
 	for (int i = 0; i < out_height; i++)
 	{
@@ -389,25 +389,25 @@ static void R_MipMap2(unsigned* in, const int in_width, const int in_height)
 			const auto outpix = reinterpret_cast<byte*>(temp + i * out_width + j);
 			for (int k = 0; k < 4; k++)
 			{
-				const int total = 1 * reinterpret_cast<byte*>(&in[(i * 2 - 1 & in_height_mask) * in_width + (j * 2 - 1 & in_width_mask)])[k] +
-					2 * reinterpret_cast<byte*>(&in[(i * 2 - 1 & in_height_mask) * in_width + (j * 2 & in_width_mask)])[k] +
-					2 * reinterpret_cast<byte*>(&in[(i * 2 - 1 & in_height_mask) * in_width + (j * 2 + 1 & in_width_mask)])[k] +
-					1 * reinterpret_cast<byte*>(&in[(i * 2 - 1 & in_height_mask) * in_width + (j * 2 + 2 & in_width_mask)])[k] +
+				const int total = 1 * reinterpret_cast<byte*>(&in[(i * 2 - 1 & in_height_mask) * inWidth + (j * 2 - 1 & in_width_mask)])[k] +
+					2 * reinterpret_cast<byte*>(&in[(i * 2 - 1 & in_height_mask) * inWidth + (j * 2 & in_width_mask)])[k] +
+					2 * reinterpret_cast<byte*>(&in[(i * 2 - 1 & in_height_mask) * inWidth + (j * 2 + 1 & in_width_mask)])[k] +
+					1 * reinterpret_cast<byte*>(&in[(i * 2 - 1 & in_height_mask) * inWidth + (j * 2 + 2 & in_width_mask)])[k] +
 
-					2 * reinterpret_cast<byte*>(&in[(i * 2 & in_height_mask) * in_width + (j * 2 - 1 & in_width_mask)])[k] +
-					4 * reinterpret_cast<byte*>(&in[(i * 2 & in_height_mask) * in_width + (j * 2 & in_width_mask)])[k] +
-					4 * reinterpret_cast<byte*>(&in[(i * 2 & in_height_mask) * in_width + (j * 2 + 1 & in_width_mask)])[k] +
-					2 * reinterpret_cast<byte*>(&in[(i * 2 & in_height_mask) * in_width + (j * 2 + 2 & in_width_mask)])[k] +
+					2 * reinterpret_cast<byte*>(&in[(i * 2 & in_height_mask) * inWidth + (j * 2 - 1 & in_width_mask)])[k] +
+					4 * reinterpret_cast<byte*>(&in[(i * 2 & in_height_mask) * inWidth + (j * 2 & in_width_mask)])[k] +
+					4 * reinterpret_cast<byte*>(&in[(i * 2 & in_height_mask) * inWidth + (j * 2 + 1 & in_width_mask)])[k] +
+					2 * reinterpret_cast<byte*>(&in[(i * 2 & in_height_mask) * inWidth + (j * 2 + 2 & in_width_mask)])[k] +
 
-					2 * reinterpret_cast<byte*>(&in[(i * 2 + 1 & in_height_mask) * in_width + (j * 2 - 1 & in_width_mask)])[k] +
-					4 * reinterpret_cast<byte*>(&in[(i * 2 + 1 & in_height_mask) * in_width + (j * 2 & in_width_mask)])[k] +
-					4 * reinterpret_cast<byte*>(&in[(i * 2 + 1 & in_height_mask) * in_width + (j * 2 + 1 & in_width_mask)])[k] +
-					2 * reinterpret_cast<byte*>(&in[(i * 2 + 1 & in_height_mask) * in_width + (j * 2 + 2 & in_width_mask)])[k] +
+					2 * reinterpret_cast<byte*>(&in[(i * 2 + 1 & in_height_mask) * inWidth + (j * 2 - 1 & in_width_mask)])[k] +
+					4 * reinterpret_cast<byte*>(&in[(i * 2 + 1 & in_height_mask) * inWidth + (j * 2 & in_width_mask)])[k] +
+					4 * reinterpret_cast<byte*>(&in[(i * 2 + 1 & in_height_mask) * inWidth + (j * 2 + 1 & in_width_mask)])[k] +
+					2 * reinterpret_cast<byte*>(&in[(i * 2 + 1 & in_height_mask) * inWidth + (j * 2 + 2 & in_width_mask)])[k] +
 
-					1 * reinterpret_cast<byte*>(&in[(i * 2 + 2 & in_height_mask) * in_width + (j * 2 - 1 & in_width_mask)])[k] +
-					2 * reinterpret_cast<byte*>(&in[(i * 2 + 2 & in_height_mask) * in_width + (j * 2 & in_width_mask)])[k] +
-					2 * reinterpret_cast<byte*>(&in[(i * 2 + 2 & in_height_mask) * in_width + (j * 2 + 1 & in_width_mask)])[k] +
-					1 * reinterpret_cast<byte*>(&in[(i * 2 + 2 & in_height_mask) * in_width + (j * 2 + 2 & in_width_mask)])[k];
+					1 * reinterpret_cast<byte*>(&in[(i * 2 + 2 & in_height_mask) * inWidth + (j * 2 - 1 & in_width_mask)])[k] +
+					2 * reinterpret_cast<byte*>(&in[(i * 2 + 2 & in_height_mask) * inWidth + (j * 2 & in_width_mask)])[k] +
+					2 * reinterpret_cast<byte*>(&in[(i * 2 + 2 & in_height_mask) * inWidth + (j * 2 + 1 & in_width_mask)])[k] +
+					1 * reinterpret_cast<byte*>(&in[(i * 2 + 2 & in_height_mask) * inWidth + (j * 2 + 2 & in_width_mask)])[k];
 				outpix[k] = total / 36;
 			}
 		}
@@ -476,7 +476,7 @@ R_BlendOverTexture
 Apply a color blend over a set of pixels
 ==================
 */
-static void R_BlendOverTexture(byte* data, const int pixel_count, byte blend[4])
+static void R_BlendOverTexture(byte* data, const int pixelCount, byte blend[4])
 {
 	int premult[3]{};
 
@@ -485,7 +485,7 @@ static void R_BlendOverTexture(byte* data, const int pixel_count, byte blend[4])
 	premult[1] = blend[1] * blend[3];
 	premult[2] = blend[2] * blend[3];
 
-	for (int i = 0; i < pixel_count; i++, data += 4)
+	for (int i = 0; i < pixelCount; i++, data += 4)
 	{
 		data[0] = (data[0] * inverse_alpha + premult[0]) >> 9;
 		data[1] = (data[1] * inverse_alpha + premult[1]) >> 9;
@@ -561,14 +561,7 @@ Upload32
 
 ===============
 */
-static void Upload32(unsigned* data,
-	const GLenum format,
-	const qboolean mipmap,
-	const qboolean picmip,
-	const qboolean is_lightmap,
-	const qboolean allow_tc,
-	int* pformat,
-	word* p_upload_width, word* p_upload_height, const bool b_rectangle = false)
+static void Upload32(unsigned* data, const GLenum format, const qboolean mipmap, const qboolean picmip, const qboolean is_lightmap, const qboolean allow_tc, int* pformat, word* p_upload_width, word* p_upload_height, const bool b_rectangle = false)
 {
 	GLuint uiTarget = GL_TEXTURE_2D;
 	if (b_rectangle)
@@ -788,7 +781,7 @@ static void GL_ResetBinds()
 //
 // (avoid using ri->xxxx stuff here in case running on dedicated)
 //
-void R_Images_DeleteLightMaps()
+void R_Images_DeleteLightMaps(void)
 {
 	for (auto it_image = AllocatedImages.begin(); it_image != AllocatedImages.end(); /* empty */)
 	{

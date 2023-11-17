@@ -458,12 +458,12 @@ int WeaponAltAttackAnim[WP_NUM_WEAPONS] =
 	BOTH_ATTACK1 //WP_TURRET,
 };
 
-qboolean BG_FileExists(const char* file_name)
+qboolean BG_FileExists(const char* fileName)
 {
-	if (file_name && file_name[0])
+	if (fileName && fileName[0])
 	{
 		fileHandle_t f = NULL_FILE;
-		trap->FS_Open(file_name, &f, FS_READ);
+		trap->FS_Open(fileName, &f, FS_READ);
 
 		if (f > 0)
 		{

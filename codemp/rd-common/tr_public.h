@@ -211,7 +211,7 @@ using refexport_t = struct refexport_s
 	qboolean(*G2API_HasGhoul2ModelOnIndex)(CGhoul2Info_v** ghlRemove, int modelIndex);
 	qboolean(*G2API_HaveWeGhoul2Models)(const CGhoul2Info_v& ghoul2);
 	qboolean(*G2API_IKMove)(CGhoul2Info_v& ghoul2, int time, sharedIKMoveParams_t* params);
-	int (*G2API_InitGhoul2Model)(CGhoul2Info_v** ghoul2Ptr, const char* file_name, int modelIndex, qhandle_t customSkin,
+	int (*G2API_InitGhoul2Model)(CGhoul2Info_v** ghoul2Ptr, const char* fileName, int modelIndex, qhandle_t customSkin,
 		qhandle_t customShader, int modelFlags, int lodBias);
 	qboolean(*G2API_IsGhoul2InfovValid)(const CGhoul2Info_v& ghoul2);
 	qboolean(*G2API_IsPaused)(CGhoul2Info* ghlInfo, const char* boneName);
@@ -221,7 +221,7 @@ using refexport_t = struct refexport_s
 	void (*G2API_LoadSaveCodeDestructGhoul2Info)(CGhoul2Info_v& ghoul2);
 	qboolean(*G2API_OverrideServerWithClientData)(CGhoul2Info_v& serverInstance, int modelIndex);
 	qboolean(*G2API_PauseBoneAnim)(CGhoul2Info* ghlInfo, const char* boneName, int currentTime);
-	qhandle_t(*G2API_PrecacheGhoul2Model)(const char* file_name);
+	qhandle_t(*G2API_PrecacheGhoul2Model)(const char* fileName);
 	qboolean(*G2API_RagEffectorGoal)(CGhoul2Info_v& ghoul2, const char* boneName, vec3_t pos);
 	qboolean(*G2API_RagEffectorKick)(CGhoul2Info_v& ghoul2, const char* boneName, vec3_t velocity);
 	qboolean(*G2API_RagForceSolve)(CGhoul2Info_v& ghoul2, qboolean force);

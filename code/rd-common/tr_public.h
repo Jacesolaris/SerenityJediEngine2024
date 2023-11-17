@@ -216,7 +216,7 @@ using refexport_t = struct
 	// this is so you can get access to raw pixels from a graphics format (TGA/JPG/BMP etc),
 	//	currently only the save game uses it (to make raw shots for the autosaves)
 	//
-	byte* (*TempRawImage_ReadFromFile)(const char* psLocalFilename, int* pi_width, int* pi_height, byte* pb_re_sample_buffer,
+	byte* (*TempRawImage_ReadFromFile)(const char* psLocalFilename, int* piWidth, int* piHeight, byte* pb_re_sample_buffer,
 		qboolean qbVertFlip);
 	void (*TempRawImage_CleanUp)();
 
@@ -304,7 +304,7 @@ using refexport_t = struct
 	qboolean(*G2API_GetBoneAnimIndex)(CGhoul2Info* ghlInfo, int iBoneIndex, int acurrent_time,
 		float* currentFrame, int* startFrame, int* endFrame, int* flags,
 		float* animSpeed, int* modelList);
-	int (*G2API_GetBoneIndex)(CGhoul2Info* ghlInfo, const char* boneName, qboolean bAddIfNotFound);
+	int (*G2API_GetBoneIndex)(CGhoul2Info* ghlInfo, const char* boneName, const qboolean bAddIfNotFound);
 	qboolean(*G2API_GetBoltMatrix)(CGhoul2Info_v& ghoul2, int modelIndex, int boltIndex, mdxaBone_t* matrix,
 		const vec3_t angles, const vec3_t position, int AframeNum, qhandle_t* modelList,
 		const vec3_t scale);
@@ -320,7 +320,7 @@ using refexport_t = struct
 	void (*G2API_GiveMeVectorFromMatrix)(mdxaBone_t& boltMatrix, Eorientations flags, vec3_t& vec);
 	qboolean(*G2API_HaveWeGhoul2Models)(const CGhoul2Info_v& ghoul2);
 	qboolean(*G2API_IKMove)(CGhoul2Info_v& ghoul2, int time, sharedIKMoveParams_t* params);
-	int (*G2API_InitGhoul2Model)(CGhoul2Info_v& ghoul2, const char* file_name, int modelIndex,
+	int (*G2API_InitGhoul2Model)(CGhoul2Info_v& ghoul2, const char* fileName, int modelIndex,
 		qhandle_t customSkin, qhandle_t customShader, int modelFlags, int lodBias);
 	qboolean(*G2API_IsPaused)(CGhoul2Info* ghlInfo, const char* boneName);
 	void (*G2API_ListBones)(CGhoul2Info* ghlInfo, int frame);
@@ -329,7 +329,7 @@ using refexport_t = struct
 	void (*G2API_LoadSaveCodeDestructGhoul2Info)(CGhoul2Info_v& ghoul2);
 	qboolean(*G2API_PauseBoneAnim)(CGhoul2Info* ghlInfo, const char* boneName, int acurrent_time);
 	qboolean(*G2API_PauseBoneAnimIndex)(CGhoul2Info* ghlInfo, int boneIndex, int acurrent_time);
-	qhandle_t(*G2API_PrecacheGhoul2Model)(const char* file_name);
+	qhandle_t(*G2API_PrecacheGhoul2Model)(const char* fileName);
 	qboolean(*G2API_RagEffectorGoal)(CGhoul2Info_v& ghoul2, const char* boneName, vec3_t pos);
 	qboolean(*G2API_RagEffectorKick)(CGhoul2Info_v& ghoul2, const char* boneName, vec3_t velocity);
 	qboolean(*G2API_RagForceSolve)(CGhoul2Info_v& ghoul2, qboolean force);
@@ -382,8 +382,6 @@ using refexport_t = struct
 	void (*G2API_AddSkinGore)(CGhoul2Info_v& ghoul2, SSkinGoreData& gore);
 	void (*G2API_ClearSkinGore)(CGhoul2Info_v& ghoul2);
 #endif
-
-	void (*G2API_SetTintType)(CGhoul2Info* ghlInfo, g2Tints_t tintType);
 
 	// Performance analysis (perform anal)
 	void (*G2Time_ResetTimers)();

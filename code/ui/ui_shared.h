@@ -232,7 +232,7 @@ using displayContextDef_t = struct
 	qboolean(*g2_SetBoneAnim)(CGhoul2Info* ghlInfo, const char* boneName, int startFrame, int endFrame,
 		int flags, float animSpeed, int currentTime, float setFrame, int blendTime);
 	qboolean(*g2_RemoveGhoul2Model)(CGhoul2Info_v& ghlInfo, int modelIndex);
-	int (*g2_InitGhoul2Model)(CGhoul2Info_v& ghoul2, const char* file_name, int, qhandle_t customSkin,
+	int (*g2_InitGhoul2Model)(CGhoul2Info_v& ghoul2, const char* fileName, int, qhandle_t customSkin,
 		qhandle_t customShader, int modelFlags, int lodBias);
 	void (*g2_CleanGhoul2Models)(CGhoul2Info_v& ghoul2);
 	int (*g2_AddBolt)(CGhoul2Info* ghlInfo, const char* boneName);
@@ -513,7 +513,7 @@ qboolean PC_ParseString(const char** string);
 qboolean PC_ParseStringMem(const char** out);
 void PC_ParseWarning(const char* message);
 qboolean PC_String_Parse(int handle, const char** out);
-int PC_StartParseSession(const char* file_name, char** buffer);
+int PC_StartParseSession(const char* fileName, char** buffer);
 char* PC_ParseExt();
 qboolean PC_ParseInt(int* number);
 qboolean PC_ParseFloat(float* number);

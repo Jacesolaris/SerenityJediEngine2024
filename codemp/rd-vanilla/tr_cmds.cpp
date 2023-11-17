@@ -28,7 +28,8 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 R_PerformanceCounters
 =====================
 */
-void R_PerformanceCounters(void) {
+static void R_PerformanceCounters(void)
+{
 	if (!r_speeds->integer) {
 		// clear the counters even if we aren't printing
 		memset(&tr.pc, 0, sizeof tr.pc);
@@ -88,7 +89,7 @@ void R_PerformanceCounters(void) {
 R_IssueRenderCommands
 ====================
 */
-void R_IssueRenderCommands(const qboolean runPerformanceCounters)
+static void R_IssueRenderCommands(const qboolean runPerformanceCounters)
 {
 	renderCommandList_t* cmd_list = &backEndData->commands;
 
@@ -133,7 +134,7 @@ R_GetCommandBufferReserved
 make sure there is enough command space
 ============
 */
-void* R_GetCommandBufferReserved(unsigned int bytes, const int reservedBytes)
+static void* R_GetCommandBufferReserved(unsigned int bytes, const int reservedBytes)
 {
 	renderCommandList_t* cmdList = &backEndData->commands;
 	bytes = PAD(bytes, sizeof(void*));
@@ -168,7 +169,8 @@ R_AddDrawSurfCmd
 
 =============
 */
-void	R_AddDrawSurfCmd(drawSurf_t* drawSurfs, const int numDrawSurfs) {
+void R_AddDrawSurfCmd(drawSurf_t* drawSurfs, const int numDrawSurfs)
+{
 	drawSurfsCommand_t* cmd = static_cast<drawSurfsCommand_t*>(R_GetCommandBuffer(sizeof * cmd));
 	if (!cmd) {
 		return;
@@ -189,7 +191,8 @@ RE_SetColor
 Passing NULL will set the color to white
 =============
 */
-void	RE_SetColor(const float* rgba) {
+void RE_SetColor(const float* rgba)
+{
 	if (!tr.registered) {
 		return;
 	}
@@ -212,8 +215,8 @@ void	RE_SetColor(const float* rgba) {
 RE_StretchPic
 =============
 */
-void RE_StretchPic(const float x, const float y, const float w, const float h,
-	const float s1, const float t1, const float s2, const float t2, const qhandle_t hShader) {
+void RE_StretchPic(const float x, const float y, const float w, const float h, const float s1, const float t1, const float s2, const float t2, const qhandle_t hShader)
+{
 	stretchPicCommand_t* cmd = static_cast<stretchPicCommand_t*>(R_GetCommandBuffer(sizeof * cmd));
 
 	if (!tr.registered) {
@@ -239,8 +242,8 @@ void RE_StretchPic(const float x, const float y, const float w, const float h,
 RE_RotatePic
 =============
 */
-void RE_RotatePic(const float x, const float y, const float w, const float h,
-	const float s1, const float t1, const float s2, const float t2, const float a, const qhandle_t hShader) {
+void RE_RotatePic(const float x, const float y, const float w, const float h, const float s1, const float t1, const float s2, const float t2, const float a, const qhandle_t hShader)
+{
 	rotatePicCommand_t* cmd = static_cast<rotatePicCommand_t*>(R_GetCommandBuffer(sizeof * cmd));
 
 	if (!tr.registered) {
@@ -267,8 +270,8 @@ void RE_RotatePic(const float x, const float y, const float w, const float h,
 RE_RotatePic2
 =============
 */
-void RE_RotatePic2(const float x, const float y, const float w, const float h,
-	const float s1, const float t1, const float s2, const float t2, const float a, const qhandle_t hShader) {
+void RE_RotatePic2(const float x, const float y, const float w, const float h, const float s1, const float t1, const float s2, const float t2, const float a, const qhandle_t hShader)
+{
 	rotatePicCommand_t* cmd = static_cast<rotatePicCommand_t*>(R_GetCommandBuffer(sizeof * cmd));
 
 	if (!tr.registered) {

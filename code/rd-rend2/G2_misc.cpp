@@ -111,7 +111,7 @@ R2GoreTextureCoordinates* FindR2GoreRecord(int tag)
 	return 0;
 }
 
-GoreTextureCoordinates* FindGoreRecord(int tag)
+GoreTextureCoordinates* FindGoreRecord(const int tag)
 {
 	std::map<int, R2GoreTextureCoordinates>::iterator i = GoreRecords.find(tag);
 	if (i != GoreRecords.end())
@@ -121,7 +121,7 @@ GoreTextureCoordinates* FindGoreRecord(int tag)
 	return 0;
 }
 
-void* G2_GetGoreRecord(int tag)
+static void* G2_GetGoreRecord(const int tag)
 {
 	return FindGoreRecord(tag);
 }
@@ -131,7 +131,7 @@ void DeleteR2GoreRecord(int tag)
 	DeleteGoreRecord(tag);
 }
 
-void DeleteGoreRecord(int tag)
+void DeleteGoreRecord(const int tag)
 {
 	DestroyGoreTexCoordinates(tag);
 	GoreRecords.erase(tag);
@@ -140,7 +140,7 @@ void DeleteGoreRecord(int tag)
 static int CurrentGoreSet = 1; // this is a UUID for gore sets
 static std::map<int, CGoreSet*> GoreSets; // map from uuid to goreset
 
-CGoreSet* FindGoreSet(int goreSetTag)
+CGoreSet* FindGoreSet(const int goreSetTag)
 {
 	std::map<int, CGoreSet*>::iterator f = GoreSets.find(goreSetTag);
 	if (f != GoreSets.end())
@@ -158,7 +158,7 @@ CGoreSet* NewGoreSet()
 	return ret;
 }
 
-void DeleteGoreSet(int goreSetTag)
+void DeleteGoreSet(const int goreSetTag)
 {
 	std::map<int, CGoreSet*>::iterator f = GoreSets.find(goreSetTag);
 	if (f != GoreSets.end())
@@ -409,7 +409,7 @@ int G2_DecideTraceLod(const CGhoul2Info& ghoul2, const int useLod)
 	return returnLod;
 }
 
-void R_TransformEachSurface(const mdxmSurface_t* surface, vec3_t scale, CMiniHeap* G2VertSpace, intptr_t* TransformedVertsArray, CBoneCache* boneCache)
+static void R_TransformEachSurface(const mdxmSurface_t* surface, vec3_t scale, CMiniHeap* G2VertSpace, intptr_t* TransformedVertsArray, CBoneCache* boneCache)
 {
 	int				 j, k;
 	mdxmVertex_t* v;
@@ -576,12 +576,12 @@ void G2_TransformModel(CGhoul2Info_v& ghoul2, const int frameNum, vec3_t scale, 
 #endif // !JK2_MODE || _G2_GORE
 
 #ifndef _G2_GORE
-	if (cg_g2MarksAllModels == NULL)
+	if (cg_g2MarksAllModels == nullptr)
 	{
 		cg_g2MarksAllModels = ri.Cvar_Get("cg_g2MarksAllModels", "0", 0);
 	}
 
-	if (cg_g2MarksAllModels == NULL || !cg_g2MarksAllModels->integer)
+	if (cg_g2MarksAllModels == nullptr || !cg_g2MarksAllModels->integer)
 	{
 		firstModelOnly = qtrue;
 	}
@@ -1267,7 +1267,7 @@ static bool G2_RadiusTracePolys(
 {
 	int		j;
 	vec3_t basis1;
-	vec3_t basis2;
+	vec3_t basis2{};
 	vec3_t taxis;
 	vec3_t saxis;
 
@@ -1318,7 +1318,7 @@ static bool G2_RadiusTracePolys(
 	for (j = 0; j < numVerts; j++)
 	{
 		const int pos = j * 5;
-		vec3_t delta;
+		vec3_t delta{};
 		delta[0] = verts[pos + 0] - TS.rayStart[0];
 		delta[1] = verts[pos + 1] - TS.rayStart[1];
 		delta[2] = verts[pos + 2] - TS.rayStart[2];
@@ -1577,12 +1577,12 @@ void G2_TraceModels(CGhoul2Info_v& ghoul2, vec3_t rayStart, vec3_t rayEnd, CColl
 	int				firstModel = 0;
 
 #ifndef _G2_GORE
-	if (cg_g2MarksAllModels == NULL)
+	if (cg_g2MarksAllModels == nullptr)
 	{
 		cg_g2MarksAllModels = ri.Cvar_Get("cg_g2MarksAllModels", "0", 0);
 	}
 
-	if (cg_g2MarksAllModels == NULL
+	if (cg_g2MarksAllModels == nullptr
 		|| !cg_g2MarksAllModels->integer)
 	{
 		firstModelOnly = qtrue;
@@ -1739,7 +1739,7 @@ void G2_GenerateWorldMatrix(const vec3_t angles, const vec3_t origin)
 }
 
 // go away and determine what the pointer for a specific surface definition within the model definition is
-void* G2_FindSurface(const model_s* mod, int index, int lod)
+void* G2_FindSurface(const model_s* mod, const int index, const int lod)
 {
 	// damn include file dependancies
 	mdxmHeader_t* mdxm = mod->data.glm->header;

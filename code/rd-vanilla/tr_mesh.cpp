@@ -66,12 +66,11 @@ float ProjectRadius(const float r, vec3_t location)
 R_CullModel
 =============
 */
-static int R_CullModel(md3Header_t* header, const trRefEntity_t* ent)
-{
+static int R_CullModel(md3Header_t* header, const trRefEntity_t* ent) {
 	vec3_t		bounds[2]{};
 
 	// compute frame pointers
-	const md3Frame_t* new_frame = reinterpret_cast<md3Frame_t*>(reinterpret_cast<byte*>(header) + header->ofsFrames) + ent->e.frame;
+	const md3Frame_t* newFrame = reinterpret_cast<md3Frame_t*>(reinterpret_cast<byte*>(header) + header->ofsFrames) + ent->e.frame;
 	const md3Frame_t* old_frame = reinterpret_cast<md3Frame_t*>(reinterpret_cast<byte*>(header) + header->ofsFrames) + ent->e.oldframe;
 
 	// cull bounding sphere ONLY if this is not an upscaled entity
@@ -79,7 +78,7 @@ static int R_CullModel(md3Header_t* header, const trRefEntity_t* ent)
 	{
 		if (ent->e.frame == ent->e.oldframe)
 		{
-			switch (R_CullLocalPointAndRadius(new_frame->localOrigin, new_frame->radius))
+			switch (R_CullLocalPointAndRadius(newFrame->localOrigin, newFrame->radius))
 			{
 			case CULL_OUT:
 				tr.pc.c_sphere_cull_md3_out++;
@@ -99,22 +98,22 @@ static int R_CullModel(md3Header_t* header, const trRefEntity_t* ent)
 		{
 			int sphere_cull_b;
 
-			const int sphereCull = R_CullLocalPointAndRadius(new_frame->localOrigin, new_frame->radius);
-			if (new_frame == old_frame) {
-				sphere_cull_b = sphereCull;
+			const int sphere_cull = R_CullLocalPointAndRadius(newFrame->localOrigin, newFrame->radius);
+			if (newFrame == old_frame) {
+				sphere_cull_b = sphere_cull;
 			}
 			else {
 				sphere_cull_b = R_CullLocalPointAndRadius(old_frame->localOrigin, old_frame->radius);
 			}
 
-			if (sphereCull == sphere_cull_b)
+			if (sphere_cull == sphere_cull_b)
 			{
-				if (sphereCull == CULL_OUT)
+				if (sphere_cull == CULL_OUT)
 				{
 					tr.pc.c_sphere_cull_md3_out++;
 					return CULL_OUT;
 				}
-				if (sphereCull == CULL_IN)
+				if (sphere_cull == CULL_IN)
 				{
 					tr.pc.c_sphere_cull_md3_in++;
 					return CULL_IN;
@@ -126,8 +125,8 @@ static int R_CullModel(md3Header_t* header, const trRefEntity_t* ent)
 
 	// calculate a bounding box in the current coordinate system
 	for (int i = 0; i < 3; i++) {
-		bounds[0][i] = old_frame->bounds[0][i] < new_frame->bounds[0][i] ? old_frame->bounds[0][i] : new_frame->bounds[0][i];
-		bounds[1][i] = old_frame->bounds[1][i] > new_frame->bounds[1][i] ? old_frame->bounds[1][i] : new_frame->bounds[1][i];
+		bounds[0][i] = old_frame->bounds[0][i] < newFrame->bounds[0][i] ? old_frame->bounds[0][i] : newFrame->bounds[0][i];
+		bounds[1][i] = old_frame->bounds[1][i] > newFrame->bounds[1][i] ? old_frame->bounds[1][i] : newFrame->bounds[1][i];
 	}
 
 	switch (R_CullLocalBox(bounds))
@@ -154,15 +153,15 @@ RE_GetModelBounds
 =================
 */
 
-void RE_GetModelBounds(const refEntity_t* refEnt, vec3_t bounds1, vec3_t bounds2)
+void RE_GetModelBounds(const refEntity_t* ref_ent, vec3_t bounds1, vec3_t bounds2)
 {
-	assert(refEnt);
+	assert(ref_ent);
 
-	const model_t* model = R_GetModelByHandle(refEnt->hModel);
+	const model_t* model = R_GetModelByHandle(ref_ent->hModel);
 	assert(model);
 	md3Header_t* header = model->md3[0];
 	assert(header);
-	const md3Frame_t* frame = reinterpret_cast<md3Frame_t*>(reinterpret_cast<byte*>(header) + header->ofsFrames) + refEnt->frame;
+	const md3Frame_t* frame = reinterpret_cast<md3Frame_t*>(reinterpret_cast<byte*>(header) + header->ofsFrames) + ref_ent->frame;
 	assert(frame);
 
 	VectorCopy(frame->bounds[0], bounds1);
@@ -175,8 +174,7 @@ R_ComputeLOD
 
 =================
 */
-static int R_ComputeLOD(trRefEntity_t* ent)
-{
+static int R_ComputeLOD(trRefEntity_t* ent) {
 	float radius;
 	float flod;
 	float projectedRadius;
@@ -229,8 +227,7 @@ R_ComputeFogNum
 
 =================
 */
-static int R_ComputeFogNum(md3Header_t* header, const trRefEntity_t* ent)
-{
+static int R_ComputeFogNum(md3Header_t* header, const trRefEntity_t* ent) {
 	vec3_t			localOrigin;
 
 	if (tr.refdef.rdflags & RDF_NOWORLDMODEL) {
@@ -284,8 +281,7 @@ R_AddMD3Surfaces
 
 =================
 */
-void R_AddMD3Surfaces(trRefEntity_t* ent)
-{
+void R_AddMD3Surfaces(trRefEntity_t* ent) {
 	const shader_t* shader;
 
 	// don't add third_person objects if not in a portal
@@ -332,16 +328,14 @@ void R_AddMD3Surfaces(trRefEntity_t* ent)
 	// is outside the view frustum.
 	//
 	const int cull = R_CullModel(header, ent);
-	if (cull == CULL_OUT)
-	{
+	if (cull == CULL_OUT) {
 		return;
 	}
 
 	//
 	// set up lighting now that we know we aren't culled
 	//
-	if (!personalModel || r_shadows->integer > 1)
-	{
+	if (!personalModel || r_shadows->integer > 1) {
 		R_SetupEntityLighting(&tr.refdef, ent);
 	}
 
@@ -356,35 +350,27 @@ void R_AddMD3Surfaces(trRefEntity_t* ent)
 	const shader_t* main_shader = R_GetShaderByHandle(ent->e.customShader);
 
 	auto surface = reinterpret_cast<md3Surface_t*>(reinterpret_cast<byte*>(header) + header->ofsSurfaces);
-
-	for (int i = 0; i < header->numSurfaces; i++)
-	{
-		if (ent->e.customShader)
-		{// a little more efficient
+	for (int i = 0; i < header->numSurfaces; i++) {
+		if (ent->e.customShader) {// a little more efficient
 			shader = main_shader;
 		}
-		else if (ent->e.customSkin > 0 && ent->e.customSkin < tr.numSkins)
-		{
+		else if (ent->e.customSkin > 0 && ent->e.customSkin < tr.numSkins) {
 			const skin_t* skin = R_GetSkinByHandle(ent->e.customSkin);
 
 			// match the surface name to something in the skin file
 			shader = tr.defaultShader;
-			for (int j = 0; j < skin->numSurfaces; j++)
-			{
+			for (int j = 0; j < skin->numSurfaces; j++) {
 				// the names have both been lowercased
-				if (!strcmp(skin->surfaces[j]->name, surface->name))
-				{
+				if (!strcmp(skin->surfaces[j]->name, surface->name)) {
 					shader = skin->surfaces[j]->shader;
 					break;
 				}
 			}
 		}
-		else if (surface->numShaders <= 0)
-		{
+		else if (surface->numShaders <= 0) {
 			shader = tr.defaultShader;
 		}
-		else
-		{
+		else {
 			auto md3Shader = reinterpret_cast<md3Shader_t*>(reinterpret_cast<byte*>(surface) + surface->ofsShaders);
 			md3Shader += ent->e.skinNum % surface->numShaders;
 			shader = tr.shaders[md3Shader->shaderIndex];
@@ -427,8 +413,7 @@ void R_AddMD3Surfaces(trRefEntity_t* ent)
 		}
 
 		// don't add third_person objects if not viewing through a portal
-		if (!personalModel)
-		{
+		if (!personalModel) {
 			R_AddDrawSurf(reinterpret_cast<surfaceType_t*>(surface), shader, fogNum, qfalse);
 		}
 

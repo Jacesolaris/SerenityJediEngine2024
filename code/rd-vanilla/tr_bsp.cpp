@@ -130,7 +130,7 @@ R_ColorShiftLightingBytes
 
 ===============
 */
-void R_ColorShiftLightingBytes(byte in[3]) {
+static void R_ColorShiftLightingBytes(byte in[3]) {
 	// shift the color data based on overbright range
 	const int shift = Q_max(0, r_mapOverBrightBits->integer - tr.overbrightBits);
 
@@ -160,13 +160,12 @@ R_LoadLightmaps
 ===============
 */
 constexpr auto LIGHTMAP_SIZE = 128;
-
-static void R_LoadLightmaps(const lump_t* l, const char* ps_map_name, world_t& worldData)
+static	void R_LoadLightmaps(const lump_t* l, const char* ps_map_name, world_t& worldData)
 {
 	byte		image[LIGHTMAP_SIZE * LIGHTMAP_SIZE * 4]{};
 	int j;
-	float				maxIntensity = 0;
-	double				sumIntensity = 0;
+	float				max_intensity = 0;
+	double				sum_intensity = 0;
 
 	if (&worldData == &s_worldData)
 	{
@@ -215,8 +214,8 @@ static void R_LoadLightmaps(const lump_t* l, const char* ps_map_name, world_t& w
 				else
 					intensity /= 255.0f;
 
-				if (intensity > maxIntensity)
-					maxIntensity = intensity;
+				if (intensity > max_intensity)
+					max_intensity = intensity;
 
 				HSVtoRGB(intensity, 1.00, 0.50, out);
 
@@ -225,7 +224,7 @@ static void R_LoadLightmaps(const lump_t* l, const char* ps_map_name, world_t& w
 				image[j * 4 + 2] = out[2] * 255;
 				image[j * 4 + 3] = 255;
 
-				sumIntensity += intensity;
+				sum_intensity += intensity;
 			}
 		}
 		else {
@@ -242,7 +241,7 @@ static void R_LoadLightmaps(const lump_t* l, const char* ps_map_name, world_t& w
 	}
 
 	if (r_lightmap->integer == 2) {
-		ri.Printf(PRINT_ALL, "Brightest lightmap value: %d\n", static_cast<int>(maxIntensity * 255));
+		ri.Printf(PRINT_ALL, "Brightest lightmap value: %d\n", static_cast<int>(max_intensity * 255));
 	}
 }
 
@@ -254,7 +253,7 @@ This is called by the clipmodel subsystem so we can share the 1.8 megs of
 space in big maps...
 =================
 */
-void		RE_SetWorldVisData(const byte* vis) {
+void RE_SetWorldVisData(const byte* vis) {
 	tr.externalVisData = vis;
 }
 
@@ -263,7 +262,7 @@ void		RE_SetWorldVisData(const byte* vis) {
 R_LoadVisibility
 =================
 */
-static	void R_LoadVisibility(const lump_t* l, world_t& worldData) {
+static void R_LoadVisibility(const lump_t* l, world_t& worldData) {
 	int len = worldData.numClusters + 63 & ~63;
 	worldData.novis = static_cast<unsigned char*>(R_Hunk_Alloc(len, qfalse));
 	memset(worldData.novis, 0xff, len);
@@ -419,8 +418,7 @@ static void ParseFace(const dsurface_t* ds, mapVert_t* verts, msurface_t* surf, 
 ParseMesh
 ===============
 */
-static void ParseMesh(const dsurface_t* ds, mapVert_t* verts, msurface_t* surf, const world_t& worldData, const int index)
-{
+static void ParseMesh(const dsurface_t* ds, mapVert_t* verts, msurface_t* surf, const world_t& worldData, const int index) {
 	int				i, j, k;
 	drawVert_t points[MAX_PATCH_SIZE * MAX_PATCH_SIZE]{};
 	int				lightmapNum[MAXLIGHTMAPS]{};
@@ -615,10 +613,10 @@ static void R_LoadSurfaces(const lump_t* surfs, const lump_t* verts, const lump_
 {
 	int			i;
 
-	int num_faces = 0;
-	int num_meshes = 0;
-	int num_tri_surfs = 0;
-	int num_flares = 0;
+	int numFaces = 0;
+	int numMeshes = 0;
+	int numTriSurfs = 0;
+	int numFlares = 0;
 
 	dsurface_t* in = reinterpret_cast<dsurface_t*>(fileBase + surfs->fileofs);
 	if (surfs->filelen % sizeof * in)
@@ -669,19 +667,19 @@ static void R_LoadSurfaces(const lump_t* surfs, const lump_t* verts, const lump_
 		switch (LittleLong in->surfaceType) {
 		case MST_PATCH:
 			ParseMesh(in, dv, out, worldData, index);
-			num_meshes++;
+			numMeshes++;
 			break;
 		case MST_TRIANGLE_SOUP:
 			ParseTriSurf(in, dv, out, indexes, worldData, index);
-			num_tri_surfs++;
+			numTriSurfs++;
 			break;
 		case MST_PLANAR:
 			ParseFace(in, dv, out, indexes, p_face_data_buffer, worldData, index);
-			num_faces++;
+			numFaces++;
 			break;
 		case MST_FLARE:
 			ParseFlare(in, out, worldData, index);
-			num_flares++;
+			numFlares++;
 			break;
 		default:
 			Com_Error(ERR_DROP, "Bad surfaceType");
@@ -689,7 +687,7 @@ static void R_LoadSurfaces(const lump_t* surfs, const lump_t* verts, const lump_
 	}
 
 	ri.Printf(PRINT_ALL, "...loaded %d faces, %i meshes, %i trisurfs, %i flares\n",
-		num_faces, num_meshes, num_tri_surfs, num_flares);
+		numFaces, numMeshes, numTriSurfs, numFlares);
 }
 
 /*
@@ -697,7 +695,7 @@ static void R_LoadSurfaces(const lump_t* surfs, const lump_t* verts, const lump_
 R_LoadSubmodels
 =================
 */
-static	void R_LoadSubmodels(const lump_t* l, world_t& worldData, const int index) {
+static void R_LoadSubmodels(const lump_t* l, world_t& worldData, const int index) {
 	bmodel_t* out;
 
 	dmodel_t* in = reinterpret_cast<dmodel_t*>(fileBase + l->fileofs);
@@ -752,7 +750,7 @@ static	void R_LoadSubmodels(const lump_t* l, world_t& worldData, const int index
 R_SetParent
 =================
 */
-static	void R_SetParent(mnode_t* node, mnode_t* parent)
+static void R_SetParent(mnode_t* node, mnode_t* parent)
 {
 	node->parent = parent;
 	if (node->contents != -1)
@@ -766,16 +764,17 @@ static	void R_SetParent(mnode_t* node, mnode_t* parent)
 R_LoadNodesAndLeafs
 =================
 */
-static	void R_LoadNodesAndLeafs(const lump_t* node_lump, const lump_t* leaf_lump, world_t& worldData) {
+static void R_LoadNodesAndLeafs(const lump_t* nodeLump, const lump_t* leafLump, world_t& worldData)
+{
 	int			i, j;
 
-	dnode_t* in = reinterpret_cast<dnode_t*>(fileBase + node_lump->fileofs);
-	if (node_lump->filelen % sizeof(dnode_t) ||
-		leaf_lump->filelen % sizeof(dleaf_t)) {
+	dnode_t* in = reinterpret_cast<dnode_t*>(fileBase + nodeLump->fileofs);
+	if (nodeLump->filelen % sizeof(dnode_t) ||
+		leafLump->filelen % sizeof(dleaf_t)) {
 		Com_Error(ERR_DROP, "LoadMap: funny lump size in %s", worldData.name);
 	}
-	const int num_nodes = node_lump->filelen / sizeof(dnode_t);
-	const int num_leafs = leaf_lump->filelen / sizeof(dleaf_t);
+	const int num_nodes = nodeLump->filelen / sizeof(dnode_t);
+	const int num_leafs = leafLump->filelen / sizeof(dleaf_t);
 
 	mnode_t* out = static_cast<mnode_s*>(R_Hunk_Alloc((num_nodes + num_leafs) * sizeof * out, qtrue));
 
@@ -808,7 +807,7 @@ static	void R_LoadNodesAndLeafs(const lump_t* node_lump, const lump_t* leaf_lump
 	}
 
 	// load leafs
-	dleaf_t* in_leaf = reinterpret_cast<dleaf_t*>(fileBase + leaf_lump->fileofs);
+	dleaf_t* in_leaf = reinterpret_cast<dleaf_t*>(fileBase + leafLump->fileofs);
 	for (i = 0; i < num_leafs; i++, in_leaf++, out++)
 	{
 		for (j = 0; j < 3; j++)
@@ -840,7 +839,8 @@ static	void R_LoadNodesAndLeafs(const lump_t* node_lump, const lump_t* leaf_lump
 R_LoadShaders
 =================
 */
-static	void R_LoadShaders(const lump_t* l, world_t& worldData) {
+static void R_LoadShaders(const lump_t* l, world_t& worldData) 
+{
 	const dshader_t* in = reinterpret_cast<dshader_t*>(fileBase + l->fileofs);
 	if (l->filelen % sizeof * in)
 		Com_Error(ERR_DROP, "LoadMap: funny lump size in %s", worldData.name);
@@ -863,7 +863,7 @@ static	void R_LoadShaders(const lump_t* l, world_t& worldData) {
 R_LoadMarksurfaces
 =================
 */
-static	void R_LoadMarksurfaces(const lump_t* l, world_t& worldData)
+static void R_LoadMarksurfaces(const lump_t* l, world_t& worldData)
 {
 	const int* in = reinterpret_cast<int*>(fileBase + l->fileofs);
 	if (l->filelen % sizeof * in)
@@ -886,7 +886,8 @@ static	void R_LoadMarksurfaces(const lump_t* l, world_t& worldData)
 R_LoadPlanes
 =================
 */
-static	void R_LoadPlanes(const lump_t* l, world_t& worldData) {
+static void R_LoadPlanes(const lump_t* l, world_t& worldData)
+{
 	dplane_t* in = reinterpret_cast<dplane_t*>(fileBase + l->fileofs);
 	if (l->filelen % sizeof * in)
 		Com_Error(ERR_DROP, "LoadMap: funny lump size in %s", worldData.name);
@@ -917,7 +918,8 @@ R_LoadFogs
 
 =================
 */
-static	void R_LoadFogs(const lump_t* l, const lump_t* brushes_lump, const lump_t* sides_lump, world_t& worldData, const int index) {
+static void R_LoadFogs(const lump_t* l, const lump_t* brushesLump, const lump_t* sidesLump, world_t& worldData, const int index) 
+{
 	fog_t* out;
 	int			side_num;
 	int			plane_num;
@@ -952,17 +954,17 @@ static	void R_LoadFogs(const lump_t* l, const lump_t* brushes_lump, const lump_t
 		return;
 	}
 
-	const dbrush_t* brushes = reinterpret_cast<dbrush_t*>(fileBase + brushes_lump->fileofs);
-	if (brushes_lump->filelen % sizeof * brushes) {
+	const dbrush_t* brushes = reinterpret_cast<dbrush_t*>(fileBase + brushesLump->fileofs);
+	if (brushesLump->filelen % sizeof * brushes) {
 		Com_Error(ERR_DROP, "LoadMap: funny lump size in %s", worldData.name);
 	}
-	const int brushes_count = brushes_lump->filelen / sizeof * brushes;
+	const int brushes_count = brushesLump->filelen / sizeof * brushes;
 
-	const dbrushside_t* sides = reinterpret_cast<dbrushside_t*>(fileBase + sides_lump->fileofs);
-	if (sides_lump->filelen % sizeof * sides) {
+	const dbrushside_t* sides = reinterpret_cast<dbrushside_t*>(fileBase + sidesLump->fileofs);
+	if (sidesLump->filelen % sizeof * sides) {
 		Com_Error(ERR_DROP, "LoadMap: funny lump size in %s", worldData.name);
 	}
-	const int sides_count = sides_lump->filelen / sizeof * sides;
+	const int sides_count = sidesLump->filelen / sizeof * sides;
 
 	for (int i = 0; i < count; i++, fogs++) {
 		out->originalBrushNumber = LittleLong fogs->brushNum;
@@ -1077,7 +1079,7 @@ R_LoadLightGrid
 
 ================
 */
-void R_LoadLightGrid(const lump_t* l, world_t& worldData) {
+static void R_LoadLightGrid(const lump_t* l, world_t& worldData) {
 	int		i;
 	vec3_t	maxs{};
 
@@ -1117,7 +1119,7 @@ R_LoadLightGridArray
 
 ================
 */
-void R_LoadLightGridArray(const lump_t* l, world_t& worldData) {
+static void R_LoadLightGridArray(const lump_t* l, world_t& worldData) {
 	world_t* w;
 #ifdef Q3_BIG_ENDIAN
 	int i;
@@ -1148,7 +1150,7 @@ void R_LoadLightGridArray(const lump_t* l, world_t& worldData) {
 R_LoadEntities
 ================
 */
-void R_LoadEntities(const lump_t* l, world_t& worldData) {
+static void R_LoadEntities(const lump_t* l, world_t& worldData) {
 	const char* p;
 	float ambient = 1;
 

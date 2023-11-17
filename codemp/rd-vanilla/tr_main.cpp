@@ -584,7 +584,7 @@ void R_SetupFrustum(void)
 R_MirrorPoint
 =================
 */
-void R_MirrorPoint(vec3_t in, const orientation_t* surface, const orientation_t* camera, vec3_t out)
+static void R_MirrorPoint(vec3_t in, const orientation_t* surface, const orientation_t* camera, vec3_t out)
 {
 	vec3_t local;
 	vec3_t transformed;
@@ -601,7 +601,7 @@ void R_MirrorPoint(vec3_t in, const orientation_t* surface, const orientation_t*
 	VectorAdd(transformed, camera->origin, out);
 }
 
-void R_MirrorVector(vec3_t in, const orientation_t* surface, const orientation_t* camera, vec3_t out)
+static void R_MirrorVector(vec3_t in, const orientation_t* surface, const orientation_t* camera, vec3_t out)
 {
 	VectorClear(out);
 	for (int i = 0; i < 3; i++)
@@ -616,7 +616,7 @@ void R_MirrorVector(vec3_t in, const orientation_t* surface, const orientation_t
 R_PlaneForSurface
 =============
 */
-void R_PlaneForSurface(surfaceType_t* surfType, cplane_t* plane)
+static void R_PlaneForSurface(surfaceType_t* surfType, cplane_t* plane)
 {
 	srfTriangles_t* tri;
 	srfPoly_t* poly;

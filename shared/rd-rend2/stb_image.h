@@ -4596,7 +4596,7 @@ static int stbi__create_png_image(stbi__png* a, stbi_uc* image_data, stbi__uint3
 static int stbi__compute_transparency(stbi__png* z, stbi_uc tc[3], int out_n)
 {
 	stbi__context* s = z->s;
-	stbi__uint32 i, pixel_count = s->img_x * s->img_y;
+	stbi__uint32 i, pixelCount = s->img_x * s->img_y;
 	stbi_uc* p = z->out;
 
 	// compute color-based transparency, assuming we've
@@ -4604,13 +4604,13 @@ static int stbi__compute_transparency(stbi__png* z, stbi_uc tc[3], int out_n)
 	STBI_ASSERT(out_n == 2 || out_n == 4);
 
 	if (out_n == 2) {
-		for (i = 0; i < pixel_count; ++i) {
+		for (i = 0; i < pixelCount; ++i) {
 			p[1] = (p[0] == tc[0] ? 0 : 255);
 			p += 2;
 		}
 	}
 	else {
-		for (i = 0; i < pixel_count; ++i) {
+		for (i = 0; i < pixelCount; ++i) {
 			if (p[0] == tc[0] && p[1] == tc[1] && p[2] == tc[2])
 				p[3] = 0;
 			p += 4;
@@ -4622,7 +4622,7 @@ static int stbi__compute_transparency(stbi__png* z, stbi_uc tc[3], int out_n)
 static int stbi__compute_transparency16(stbi__png* z, stbi__uint16 tc[3], int out_n)
 {
 	stbi__context* s = z->s;
-	stbi__uint32 i, pixel_count = s->img_x * s->img_y;
+	stbi__uint32 i, pixelCount = s->img_x * s->img_y;
 	stbi__uint16* p = (stbi__uint16*)z->out;
 
 	// compute color-based transparency, assuming we've
@@ -4630,13 +4630,13 @@ static int stbi__compute_transparency16(stbi__png* z, stbi__uint16 tc[3], int ou
 	STBI_ASSERT(out_n == 2 || out_n == 4);
 
 	if (out_n == 2) {
-		for (i = 0; i < pixel_count; ++i) {
+		for (i = 0; i < pixelCount; ++i) {
 			p[1] = (p[0] == tc[0] ? 0 : 65535);
 			p += 2;
 		}
 	}
 	else {
-		for (i = 0; i < pixel_count; ++i) {
+		for (i = 0; i < pixelCount; ++i) {
 			if (p[0] == tc[0] && p[1] == tc[1] && p[2] == tc[2])
 				p[3] = 0;
 			p += 4;
@@ -4647,17 +4647,17 @@ static int stbi__compute_transparency16(stbi__png* z, stbi__uint16 tc[3], int ou
 
 static int stbi__expand_png_palette(stbi__png* a, stbi_uc* palette, int len, int pal_img_n)
 {
-	stbi__uint32 i, pixel_count = a->s->img_x * a->s->img_y;
+	stbi__uint32 i, pixelCount = a->s->img_x * a->s->img_y;
 	stbi_uc* p, * temp_out, * orig = a->out;
 
-	p = (stbi_uc*)stbi__malloc_mad2(pixel_count, pal_img_n, 0);
+	p = (stbi_uc*)stbi__malloc_mad2(pixelCount, pal_img_n, 0);
 	if (p == NULL) return stbi__err("outofmem", "Out of memory");
 
 	// between here and free(out) below, exitting would leak
 	temp_out = p;
 
 	if (pal_img_n == 3) {
-		for (i = 0; i < pixel_count; ++i) {
+		for (i = 0; i < pixelCount; ++i) {
 			int n = orig[i] * 4;
 			p[0] = palette[n];
 			p[1] = palette[n + 1];
@@ -4666,7 +4666,7 @@ static int stbi__expand_png_palette(stbi__png* a, stbi_uc* palette, int len, int
 		}
 	}
 	else {
-		for (i = 0; i < pixel_count; ++i) {
+		for (i = 0; i < pixelCount; ++i) {
 			int n = orig[i] * 4;
 			p[0] = palette[n];
 			p[1] = palette[n + 1];
@@ -4699,11 +4699,11 @@ STBIDEF void stbi_convert_iphone_png_to_rgb(int flag_true_if_should_convert)
 static void stbi__de_iphone(stbi__png* z)
 {
 	stbi__context* s = z->s;
-	stbi__uint32 i, pixel_count = s->img_x * s->img_y;
+	stbi__uint32 i, pixelCount = s->img_x * s->img_y;
 	stbi_uc* p = z->out;
 
 	if (s->img_out_n == 3) {  // convert bgr to rgb
-		for (i = 0; i < pixel_count; ++i) {
+		for (i = 0; i < pixelCount; ++i) {
 			stbi_uc t = p[0];
 			p[0] = p[2];
 			p[2] = t;
@@ -4714,7 +4714,7 @@ static void stbi__de_iphone(stbi__png* z)
 		STBI_ASSERT(s->img_out_n == 4);
 		if (stbi__unpremultiply_on_load) {
 			// convert bgr to rgb and unpremultiply
-			for (i = 0; i < pixel_count; ++i) {
+			for (i = 0; i < pixelCount; ++i) {
 				stbi_uc a = p[3];
 				stbi_uc t = p[0];
 				if (a) {
@@ -4732,7 +4732,7 @@ static void stbi__de_iphone(stbi__png* z)
 		}
 		else {
 			// convert bgr to rgb
-			for (i = 0; i < pixel_count; ++i) {
+			for (i = 0; i < pixelCount; ++i) {
 				stbi_uc t = p[0];
 				p[0] = p[2];
 				p[2] = t;

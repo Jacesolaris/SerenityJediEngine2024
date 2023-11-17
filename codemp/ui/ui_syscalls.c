@@ -367,8 +367,8 @@ qboolean trap_G2API_GetBoltMatrix_NoReconstruct(void* ghoul2, const int modelInd
 qboolean trap_G2API_GetBoltMatrix_NoRecNoRot(void* ghoul2, const int modelIndex, const int boltIndex, mdxaBone_t* matrix, const vec3_t angles, const vec3_t position, const int frameNum, qhandle_t* modelList, vec3_t scale) {
 	return Q_syscall(UI_G2_GETBOLT_NOREC_NOROT, ghoul2, modelIndex, boltIndex, matrix, angles, position, frameNum, modelList, scale);
 }
-int trap_G2API_InitGhoul2Model(void** ghoul2Ptr, const char* file_name, int modelIndex, qhandle_t customSkin, qhandle_t customShader, int modelFlags, int lodBias) {
-	return Q_syscall(UI_G2_INITGHOUL2MODEL, ghoul2Ptr, file_name, modelIndex, customSkin, customShader, modelFlags, lodBias);
+int trap_G2API_InitGhoul2Model(void** ghoul2Ptr, const char* fileName, int modelIndex, qhandle_t customSkin, qhandle_t customShader, int modelFlags, int lodBias) {
+	return Q_syscall(UI_G2_INITGHOUL2MODEL, ghoul2Ptr, fileName, modelIndex, customSkin, customShader, modelFlags, lodBias);
 }
 qboolean trap_G2API_SetSkin(void* ghoul2, int modelIndex, qhandle_t customSkin, qhandle_t renderSkin) {
 	return Q_syscall(UI_G2_SETSKIN, ghoul2, modelIndex, customSkin, renderSkin);

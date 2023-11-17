@@ -3482,7 +3482,7 @@ Ghoul2 Insert End
 constexpr auto MAX_PARSEFILES = 16;
 using parseData_t = struct parseData_s
 {
-	char file_name[MAX_QPATH]; // Name of current file being read in
+	char fileName[MAX_QPATH]; // Name of current file being read in
 	int com_lines; // Number of lines read in
 	int com_tokenline;
 	const char* bufferStart; // Start address of buffer holding data that was read in

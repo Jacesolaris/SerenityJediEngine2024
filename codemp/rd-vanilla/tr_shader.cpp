@@ -3255,9 +3255,10 @@ inline static qboolean IsShader(const shader_t* sh, const char* name, const int*
  ===============
  */
 #define EXTERNAL_LIGHTMAP     "lm_%04d.tga"     // THIS MUST BE IN SYNC WITH Q3MAP2
+
 static const int* R_FindLightmap(const int* lightmapIndexes)
 {
-	char          file_name[MAX_QPATH];
+	char          fileName[MAX_QPATH];
 
 	// don't bother with vertex lighting
 	if (*lightmapIndexes < 0)
@@ -3277,8 +3278,8 @@ static const int* R_FindLightmap(const int* lightmapIndexes)
 	//R_SyncRenderThread();
 
 	// attempt to load an external lightmap
-	Com_sprintf(file_name, sizeof file_name, "%s/" EXTERNAL_LIGHTMAP, tr.worldDir, *lightmapIndexes);
-	image_t* image = R_FindImageFile(file_name, qfalse, qfalse, static_cast<qboolean>(r_ext_compressed_lightmaps->integer), GL_CLAMP);
+	Com_sprintf(fileName, sizeof fileName, "%s/" EXTERNAL_LIGHTMAP, tr.worldDir, *lightmapIndexes);
+	image_t* image = R_FindImageFile(fileName, qfalse, qfalse, static_cast<qboolean>(r_ext_compressed_lightmaps->integer), GL_CLAMP);
 	if (image == nullptr)
 	{
 		return lightmapsVertex;
@@ -3322,7 +3323,7 @@ most world construction surfaces.
 shader_t* R_FindShader(const char* name, const int* lightmapIndexes, const byte* styles, qboolean mip_raw_image)
 {
 	char		stripped_name[MAX_QPATH];
-	char		file_name[MAX_QPATH];
+	char		fileName[MAX_QPATH];
 	const char* shader_text;
 	shader_t* sh;
 
@@ -3380,8 +3381,8 @@ shader_t* R_FindShader(const char* name, const int* lightmapIndexes, const byte*
 	// if not defined in the in-memory shader descriptions,
 	// look for a single TGA, BMP, or PCX
 	//
-	COM_StripExtension(name, file_name, sizeof file_name);
-	image_t* image = R_FindImageFile(file_name, mip_raw_image, mip_raw_image, qtrue, mip_raw_image ? GL_REPEAT : GL_CLAMP);
+	COM_StripExtension(name, fileName, sizeof fileName);
+	image_t* image = R_FindImageFile(fileName, mip_raw_image, mip_raw_image, qtrue, mip_raw_image ? GL_REPEAT : GL_CLAMP);
 	if (!image)
 	{
 		//ri->Printf( PRINT_DEVELOPER, S_COLOR_RED "Couldn't find image for shader %s\n", name );
@@ -4081,7 +4082,7 @@ static void CreateInternalShaders(void) {
 	ARB_InitGPUShaders();
 }
 
-static void CreateExternalShaders() {
+static void CreateExternalShaders(void) {
 	tr.projectionShadowShader = R_FindShader("projectionShadow", lightmapsNone, stylesDefault, qtrue);
 	tr.projectionShadowShader->sort = SS_STENCIL_SHADOW;
 	tr.sunShader = R_FindShader("sun", lightmapsNone, stylesDefault, qtrue);

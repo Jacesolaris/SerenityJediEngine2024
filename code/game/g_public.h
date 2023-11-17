@@ -261,9 +261,9 @@ using game_import_t = struct
 	/*
 	Ghoul2 Insert Start
 	*/
-	qhandle_t(*G2API_PrecacheGhoul2Model)(const char* file_name);
+	qhandle_t(*G2API_PrecacheGhoul2Model)(const char* fileName);
 
-	int (*G2API_InitGhoul2Model)(CGhoul2Info_v& ghoul2, const char* file_name, int modelIndex, qhandle_t customSkin,
+	int (*G2API_InitGhoul2Model)(CGhoul2Info_v& ghoul2, const char* fileName, int modelIndex, qhandle_t customSkin,
 		qhandle_t customShader, int modelFlags, int lodBias);
 	qboolean(*G2API_SetSkin)(CGhoul2Info* ghlInfo, qhandle_t customSkin, qhandle_t renderSkin);
 	qboolean(*G2API_SetBoneAnim)(CGhoul2Info* ghlInfo, const char* boneName, int startFrame, int endFrame,
@@ -338,7 +338,7 @@ using game_import_t = struct
 	char* (*G2API_GetSurfaceName)(CGhoul2Info* ghlInfo, int surfNumber);
 	char* (*G2API_GetGLAName)(CGhoul2Info* ghlInfo);
 	qboolean(*G2API_SetNewOrigin)(CGhoul2Info* ghlInfo, int boltIndex);
-	int (*G2API_GetBoneIndex)(CGhoul2Info* ghlInfo, const char* boneName, qboolean bAddIfNotFound);
+	int (*G2API_GetBoneIndex)(CGhoul2Info* ghlInfo, const char* boneName, const qboolean bAddIfNotFound);
 	qboolean(*G2API_StopBoneAnglesIndex)(CGhoul2Info* ghlInfo, int index);
 	qboolean(*G2API_StopBoneAnimIndex)(CGhoul2Info* ghlInfo, int index);
 	qboolean(*G2API_SetBoneAnglesMatrixIndex)(CGhoul2Info* ghlInfo, int index, const mdxaBone_t& matrix,
@@ -371,8 +371,6 @@ using game_import_t = struct
 
 	void (*G2API_AddSkinGore)(CGhoul2Info_v& ghoul2, SSkinGoreData& gore);
 	void (*G2API_ClearSkinGore)(CGhoul2Info_v& ghoul2);
-
-	void (*G2API_SetTintType)(CGhoul2Info* ghlInfo, g2Tints_t tintType);
 
 	void (*RMG_Init)(int terrainID);
 

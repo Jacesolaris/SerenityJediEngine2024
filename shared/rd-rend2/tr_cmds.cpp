@@ -27,7 +27,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 R_PerformanceCounters
 =====================
 */
-void R_PerformanceCounters(void) {
+static void R_PerformanceCounters(void)
+{
 	gpuFrame_t* currentFrame = backEndData->frames + (backEndData->realFrameNumber % MAX_FRAMES);
 
 	if (!r_speeds->integer) {
@@ -139,7 +140,8 @@ void R_PerformanceCounters(void) {
 R_IssueRenderCommands
 ====================
 */
-void R_IssueRenderCommands(qboolean runPerformanceCounters) {
+static void R_IssueRenderCommands(const qboolean runPerformanceCounters)
+{
 	renderCommandList_t* cmdList;
 
 	cmdList = &backEndData->commands;
@@ -182,7 +184,8 @@ R_GetCommandBuffer
 make sure there is enough command space
 ============
 */
-static void* R_GetCommandBufferReserved(int bytes, int reservedBytes) {
+static void* R_GetCommandBufferReserved(unsigned int bytes, const int reservedBytes)
+{
 	renderCommandList_t* cmdList;
 
 	cmdList = &backEndData->commands;
@@ -208,7 +211,7 @@ R_GetCommandBuffer
 make sure there is enough command space
 ============
 */
-void* R_GetCommandBuffer(int bytes) {
+void* R_GetCommandBuffer(const unsigned int bytes) {
 	return R_GetCommandBufferReserved(bytes, PAD(sizeof(swapBuffersCommand_t), sizeof(void*)));
 }
 
@@ -218,7 +221,8 @@ R_AddDrawSurfCmd
 
 =============
 */
-void	R_AddDrawSurfCmd(drawSurf_t* drawSurfs, int numDrawSurfs) {
+void R_AddDrawSurfCmd(drawSurf_t* drawSurfs, const int numDrawSurfs)
+{
 	drawSurfsCommand_t* cmd;
 
 	if (!tr.registered) {
@@ -243,7 +247,8 @@ R_AddConvolveCubemapsCmd
 
 =============
 */
-void	R_AddConvolveCubemapCmd(cubemap_t* cubemap, int cubemapId) {
+void R_AddConvolveCubemapCmd(cubemap_t* cubemap, int cubemapId)
+{
 	convolveCubemapCommand_t* cmd;
 
 	if (!tr.registered) {
@@ -363,8 +368,8 @@ void	RE_SetColor(const float* rgba) {
 RE_RotatePic
 =============
 */
-void RE_RotatePic(float x, float y, float w, float h,
-	float s1, float t1, float s2, float t2, float a, qhandle_t hShader) {
+void RE_RotatePic(const float x, const float y, const float w, const float h, const float s1, const float t1, const float s2, const float t2, const float a, const qhandle_t hShader)
+{
 	rotatePicCommand_t* cmd;
 
 	if (!tr.registered) {
@@ -392,8 +397,8 @@ void RE_RotatePic(float x, float y, float w, float h,
 RE_RotatePic2
 =============
 */
-void RE_RotatePic2(float x, float y, float w, float h,
-	float s1, float t1, float s2, float t2, float a, qhandle_t hShader) {
+void RE_RotatePic2(const float x, const float y, const float w, const float h, const float s1, const float t1, const float s2, const float t2, const float a, const qhandle_t hShader)
+{
 	rotatePicCommand_t* cmd;
 
 	if (!tr.registered) {
@@ -421,8 +426,8 @@ void RE_RotatePic2(float x, float y, float w, float h,
 RE_StretchPic
 =============
 */
-void RE_StretchPic(float x, float y, float w, float h,
-	float s1, float t1, float s2, float t2, qhandle_t hShader) {
+void RE_StretchPic(const float x, const float y, const float w, const float h, const float s1, const float t1, const float s2, const float t2, const qhandle_t hShader)
+{
 	stretchPicCommand_t* cmd;
 
 	if (!tr.registered) {
@@ -499,7 +504,7 @@ void RE_LAGoggles(void)
 RE_Scissor
 =============
 */
-void RE_Scissor(float x, float y, float w, float h)
+void RE_Scissor(const float x, const float y, const float w, const float h)
 {
 	scissorCommand_t* cmd;
 
@@ -523,7 +528,7 @@ If running in stereo, RE_BeginFrame will be called twice
 for each RE_EndFrame
 ====================
 */
-void RE_BeginFrame(stereoFrame_t stereoFrame) {
+void RE_BeginFrame(const stereoFrame_t stereoFrame) {
 	drawBufferCommand_t* cmd = NULL;
 	colorMaskCommand_t* colcmd = NULL;
 

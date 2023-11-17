@@ -54,8 +54,8 @@ struct GoreTextureCoordinates
 };
 
 int AllocGoreRecord();
-GoreTextureCoordinates* FindGoreRecord(int tag);
-void DeleteGoreRecord(int tag);
+GoreTextureCoordinates* FindGoreRecord(const int tag);
+void DeleteGoreRecord(const int tag);
 
 struct SGoreSurface
 {
@@ -85,9 +85,9 @@ public:
 	~CGoreSet();
 };
 
-CGoreSet* FindGoreSet(int goreSetTag);
+CGoreSet* FindGoreSet(const int goreSetTag);
 CGoreSet* NewGoreSet();
-void DeleteGoreSet(int goreSetTag);
+void DeleteGoreSet(const int goreSetTag);
 
 #endif // _G2_GORE
 

@@ -29,7 +29,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #include "../rd-common/tr_common.h"
 #define	WAVEVALUE( table, base, amplitude, phase, freq )  ((base) + table[ Q_ftol( ( ( (phase) + backEnd.refdef.floatTime * (freq) ) * FUNCTABLE_SIZE ) ) & FUNCTABLE_MASK ] * (amplitude))
 
-static float* TableForFunc(const genFunc_t func)
+static float* table_for_func(const genFunc_t func)
 {
 	switch (func)
 	{
@@ -49,7 +49,6 @@ static float* TableForFunc(const genFunc_t func)
 	}
 
 	Com_Error(ERR_DROP, "TableForFunc called with invalid function '%d' in shader '%s'\n", func, tess.shader->name);
-	return NULL;
 }
 
 /*
@@ -68,7 +67,7 @@ static float EvalWaveForm(const waveForm_t* wf)
 		}
 		return wf->base;
 	}
-	const float* table = TableForFunc(wf->func);
+	const float* table = table_for_func(wf->func);
 	return WAVEVALUE(table, wf->base, wf->amplitude, wf->phase, wf->frequency);
 }
 
@@ -92,7 +91,7 @@ static float EvalWaveFormClamped(const waveForm_t* wf)
 /*
 ** RB_CalcStretchTexCoords
 */
-void RB_CalcStretchTexCoords(const waveForm_t* wf, float* texCoords)
+void RB_CalcStretchTexCoords(const waveForm_t* wf, float* tex_coords)
 {
 	texModInfo_t tmi{};
 
@@ -106,7 +105,7 @@ void RB_CalcStretchTexCoords(const waveForm_t* wf, float* texCoords)
 	tmi.matrix[1][1] = p;
 	tmi.translate[1] = 0.5f - 0.5f * p;
 
-	RB_CalcTransformTexCoords(&tmi, texCoords);
+	RB_CalcTransformTexCoords(&tmi, tex_coords);
 }
 
 /*
@@ -146,7 +145,7 @@ void RB_CalcDeformVertexes(const deformStage_t* ds)
 	}
 	else
 	{
-		const float* table = TableForFunc(ds->deformationWave.func);
+		const float* table = table_for_func(ds->deformationWave.func);
 
 		for (i = 0; i < tess.numVertexes; i++, xyz += 4, normal += 4)
 		{
@@ -252,7 +251,7 @@ void RB_CalcMoveVertexes(const deformStage_t* ds)
 {
 	vec3_t		offset;
 
-	const float* table = TableForFunc(ds->deformationWave.func);
+	const float* table = table_for_func(ds->deformationWave.func);
 
 	const float scale = WAVEVALUE(table, ds->deformationWave.base,
 		ds->deformationWave.amplitude,
@@ -274,10 +273,9 @@ DeformText
 Change a polygon into a bunch of text polygons
 =============
 */
-void DeformText(const char* text)
-{
+void DeformText(const char* text) {
 	int		i;
-	vec3_t	origin, width, height{};
+	vec3_t	origin, width, height;
 	byte	color[4]{};
 	vec3_t	mid;
 
@@ -356,7 +354,7 @@ Assuming all the triangles for this shader are independant
 quads, rebuild them as forward facing sprites
 =====================
 */
-static void AutospriteDeform(void)
+static void AutospriteDeform()
 {
 	vec3_t	mid{};
 	vec3_t	left_dir, up_dir;
@@ -422,7 +420,7 @@ static constexpr glIndex_t edgeVerts[6][2] = {
 	{ 2, 3 }
 };
 
-static void Autosprite2Deform(void)
+static void Autosprite2Deform()
 {
 	int		i, j, k;
 	int		indexes;
@@ -530,14 +528,13 @@ RB_DeformTessGeometry
 
 =====================
 */
-void RB_DeformTessGeometry(void)
+void RB_DeformTessGeometry()
 {
 	for (int i = 0; i < tess.shader->numDeforms; i++)
 	{
 		const deformStage_t* ds = tess.shader->deforms[i];
 
-		switch (ds->deformation)
-		{
+		switch (ds->deformation) {
 		case DEFORM_NONE:
 			break;
 		case DEFORM_NORMALS:
@@ -585,27 +582,9 @@ COLORS
 */
 
 /*
-** RB_CalcColorFromEntity
+** RB_calc_colorFromEntity
 */
-
-void RB_CalcColorFromEntityNew(unsigned char* dstColors, int index)
-{
-	int	i;
-	int* pColors = (int*)dstColors;
-	int c;
-
-	if (!backEnd.currentEntity)
-		return;
-
-	c = *(int*)backEnd.currentEntity->e.newShaderRGBA[index];
-
-	for (i = 0; i < tess.numVertexes; i++, pColors++)
-	{
-		*pColors = c;
-	}
-}
-
-void RB_CalcColorFromEntity(unsigned char* dst_colors)
+void RB_calc_colorFromEntity(unsigned char* dst_colors)
 {
 	auto* p_colors = reinterpret_cast<int*>(dst_colors);
 
@@ -620,9 +599,9 @@ void RB_CalcColorFromEntity(unsigned char* dst_colors)
 }
 
 /*
-** RB_CalcColorFromOneMinusEntity
+** RB_calc_colorFromOneMinusEntity
 */
-void RB_CalcColorFromOneMinusEntity(unsigned char* dst_colors)
+void RB_calc_colorFromOneMinusEntity(unsigned char* dst_colors)
 {
 	auto* p_colors = reinterpret_cast<int*>(dst_colors);
 	unsigned char inv_modulate[4]{};
@@ -728,16 +707,15 @@ void RB_CalcWaveAlpha(const waveForm_t* wf, unsigned char* dst_colors)
 */
 void RB_CalcModulateColorsByFog(unsigned char* dst_colors)
 {
-	float	texCoords[SHADER_MAX_VERTEXES][2]{};
+	float	tex_coords[SHADER_MAX_VERTEXES][2]{};
 
 	// calculate texcoords so we can derive density
 	// this is not wasted, because it would only have
 	// been previously called if the surface was opaque
-	RB_CalcFogTexCoords(texCoords[0]);
+	RB_CalcFogTexCoords(tex_coords[0]);
 
-	for (int i = 0; i < tess.numVertexes; i++, dst_colors += 4)
-	{
-		const float f = 1.0 - R_FogFactor(texCoords[i][0], texCoords[i][1]);
+	for (int i = 0; i < tess.numVertexes; i++, dst_colors += 4) {
+		const float f = 1.0 - R_FogFactor(tex_coords[i][0], tex_coords[i][1]);
 		dst_colors[0] *= f;
 		dst_colors[1] *= f;
 		dst_colors[2] *= f;
@@ -749,15 +727,15 @@ void RB_CalcModulateColorsByFog(unsigned char* dst_colors)
 */
 void RB_CalcModulateAlphasByFog(unsigned char* dst_colors)
 {
-	float	texCoords[SHADER_MAX_VERTEXES][2]{};
+	float	tex_coords[SHADER_MAX_VERTEXES][2]{};
 
 	// calculate texcoords so we can derive density
 	// this is not wasted, because it would only have
 	// been previously called if the surface was opaque
-	RB_CalcFogTexCoords(texCoords[0]);
+	RB_CalcFogTexCoords(tex_coords[0]);
 
 	for (int i = 0; i < tess.numVertexes; i++, dst_colors += 4) {
-		const float f = 1.0 - R_FogFactor(texCoords[i][0], texCoords[i][1]);
+		const float f = 1.0 - R_FogFactor(tex_coords[i][0], tex_coords[i][1]);
 		dst_colors[3] *= f;
 	}
 }
@@ -767,15 +745,15 @@ void RB_CalcModulateAlphasByFog(unsigned char* dst_colors)
 */
 void RB_CalcModulateRGBAsByFog(unsigned char* dst_colors)
 {
-	float	texCoords[SHADER_MAX_VERTEXES][2]{};
+	float	tex_coords[SHADER_MAX_VERTEXES][2]{};
 
 	// calculate texcoords so we can derive density
 	// this is not wasted, because it would only have
 	// been previously called if the surface was opaque
-	RB_CalcFogTexCoords(texCoords[0]);
+	RB_CalcFogTexCoords(tex_coords[0]);
 
 	for (int i = 0; i < tess.numVertexes; i++, dst_colors += 4) {
-		const float f = 1.0 - R_FogFactor(texCoords[i][0], texCoords[i][1]);
+		const float f = 1.0 - R_FogFactor(tex_coords[i][0], tex_coords[i][1]);
 		dst_colors[0] *= f;
 		dst_colors[1] *= f;
 		dst_colors[2] *= f;
@@ -801,29 +779,29 @@ doesn't fit our shader data.
 ========================
 */
 
-void RB_CalcFogTexCoords(float* dstTexCoords)
+void RB_CalcFogTexCoords(float* dst_tex_coords)
 {
 	int			i;
 	float* v;
 	float		eye_t;
 	qboolean	eye_outside;
 	vec3_t		local_vec;
-	vec4_t		fogDistanceVector{}, fogDepthVector{};
+	vec4_t		fog_distance_vector{}, fogDepthVector;
 
 	const fog_t* fog = tr.world->fogs + tess.fogNum;
 
 	// all fogging distance is based on world Z units
 	VectorSubtract(backEnd.ori.origin, backEnd.viewParms.ori.origin, local_vec);
-	fogDistanceVector[0] = -backEnd.ori.modelMatrix[2];
-	fogDistanceVector[1] = -backEnd.ori.modelMatrix[6];
-	fogDistanceVector[2] = -backEnd.ori.modelMatrix[10];
-	fogDistanceVector[3] = DotProduct(local_vec, backEnd.viewParms.ori.axis[0]);
+	fog_distance_vector[0] = -backEnd.ori.modelMatrix[2];
+	fog_distance_vector[1] = -backEnd.ori.modelMatrix[6];
+	fog_distance_vector[2] = -backEnd.ori.modelMatrix[10];
+	fog_distance_vector[3] = DotProduct(local_vec, backEnd.viewParms.ori.axis[0]);
 
 	// scale the fog vectors based on the fog's thickness
-	fogDistanceVector[0] *= fog->tcScale;
-	fogDistanceVector[1] *= fog->tcScale;
-	fogDistanceVector[2] *= fog->tcScale;
-	fogDistanceVector[3] *= fog->tcScale;
+	fog_distance_vector[0] *= fog->tcScale;
+	fog_distance_vector[1] *= fog->tcScale;
+	fog_distance_vector[2] *= fog->tcScale;
+	fog_distance_vector[3] *= fog->tcScale;
 
 	// rotate the gradient vector for this orientation
 	if (fog->hasSurface) {
@@ -853,12 +831,12 @@ void RB_CalcFogTexCoords(float* dstTexCoords)
 		eye_outside = qfalse;
 	}
 
-	fogDistanceVector[3] += 1.0 / 512;
+	fog_distance_vector[3] += 1.0 / 512;
 
 	// calculate density for each point
 	for (i = 0, v = tess.xyz[0]; i < tess.numVertexes; i++, v += 4) {
 		// calculate the length in fog
-		const float s = DotProduct(v, fogDistanceVector) + fogDistanceVector[3];
+		const float s = DotProduct(v, fog_distance_vector) + fog_distance_vector[3];
 		float t = DotProduct(v, fogDepthVector) + fogDepthVector[3];
 
 		// partially clipped fogs use the T axis
@@ -879,16 +857,16 @@ void RB_CalcFogTexCoords(float* dstTexCoords)
 			}
 		}
 
-		dstTexCoords[0] = Q_isnan(s) ? 0.0f : s;
-		dstTexCoords[1] = Q_isnan(s) ? 0.0f : t;
-		dstTexCoords += 2;
+		dst_tex_coords[0] = Q_isnan(s) ? 0.0f : s;
+		dst_tex_coords[1] = Q_isnan(s) ? 0.0f : t;
+		dst_tex_coords += 2;
 	}
 }
 
 /*
 ** RB_CalcEnvironmentTexCoords
 */
-void RB_CalcEnvironmentTexCoords(float* dstTexCoords)
+void RB_CalcEnvironmentTexCoords(float* dst_tex_coords)
 {
 	int			i;
 	float		d;
@@ -898,23 +876,23 @@ void RB_CalcEnvironmentTexCoords(float* dstTexCoords)
 
 	if (backEnd.currentEntity && backEnd.currentEntity->e.renderfx & RF_FIRST_PERSON)	//this is a view model so we must use world lights instead of vieworg
 	{
-		for (i = 0; i < tess.numVertexes; i++, v += 4, normal += 4, dstTexCoords += 2)
+		for (i = 0; i < tess.numVertexes; i++, v += 4, normal += 4, dst_tex_coords += 2)
 		{
 			d = DotProduct(normal, backEnd.currentEntity->lightDir);
-			dstTexCoords[0] = normal[0] * d - backEnd.currentEntity->lightDir[0];
-			dstTexCoords[1] = normal[1] * d - backEnd.currentEntity->lightDir[1];
+			dst_tex_coords[0] = normal[0] * d - backEnd.currentEntity->lightDir[0];
+			dst_tex_coords[1] = normal[1] * d - backEnd.currentEntity->lightDir[1];
 		}
 	}
 	else {	//the normal way
-		for (i = 0; i < tess.numVertexes; i++, v += 4, normal += 4, dstTexCoords += 2)
+		for (i = 0; i < tess.numVertexes; i++, v += 4, normal += 4, dst_tex_coords += 2)
 		{
 			vec3_t viewer;
 			VectorSubtract(backEnd.ori.viewOrigin, v, viewer);
 			VectorNormalizeFast(viewer);
 
 			d = DotProduct(normal, viewer);
-			dstTexCoords[0] = normal[0] * d - 0.5 * viewer[0];
-			dstTexCoords[1] = normal[1] * d - 0.5 * viewer[1];
+			dst_tex_coords[0] = normal[0] * d - 0.5 * viewer[0];
+			dst_tex_coords[1] = normal[1] * d - 0.5 * viewer[1];
 		}
 	}
 }
@@ -922,36 +900,36 @@ void RB_CalcEnvironmentTexCoords(float* dstTexCoords)
 /*
 ** RB_CalcTurbulentTexCoords
 */
-void RB_CalcTurbulentTexCoords(const waveForm_t* wf, float* dstTexCoords)
+void RB_CalcTurbulentTexCoords(const waveForm_t* wf, float* dst_tex_coords)
 {
 	const float now = wf->phase + backEnd.refdef.floatTime * wf->frequency;
 
-	for (int i = 0; i < tess.numVertexes; i++, dstTexCoords += 2)
+	for (int i = 0; i < tess.numVertexes; i++, dst_tex_coords += 2)
 	{
-		const float s = dstTexCoords[0];
-		const float t = dstTexCoords[1];
+		const float s = dst_tex_coords[0];
+		const float t = dst_tex_coords[1];
 
-		dstTexCoords[0] = s + tr.sinTable[static_cast<int>(((tess.xyz[i][0] + tess.xyz[i][2]) * 1.0 / 128 * 0.125 + now) * FUNCTABLE_SIZE) & FUNCTABLE_MASK] * wf->amplitude;
-		dstTexCoords[1] = t + tr.sinTable[static_cast<int>((tess.xyz[i][1] * 1.0 / 128 * 0.125 + now) * FUNCTABLE_SIZE) & FUNCTABLE_MASK] * wf->amplitude;
+		dst_tex_coords[0] = s + tr.sinTable[static_cast<int>(((tess.xyz[i][0] + tess.xyz[i][2]) * 1.0 / 128 * 0.125 + now) * FUNCTABLE_SIZE) & FUNCTABLE_MASK] * wf->amplitude;
+		dst_tex_coords[1] = t + tr.sinTable[static_cast<int>((tess.xyz[i][1] * 1.0 / 128 * 0.125 + now) * FUNCTABLE_SIZE) & FUNCTABLE_MASK] * wf->amplitude;
 	}
 }
 
 /*
 ** RB_CalcScaleTexCoords
 */
-void RB_CalcScaleTexCoords(const float scale[2], float* dstTexCoords)
+void RB_CalcScaleTexCoords(const float scale[2], float* dst_tex_coords)
 {
-	for (int i = 0; i < tess.numVertexes; i++, dstTexCoords += 2)
+	for (int i = 0; i < tess.numVertexes; i++, dst_tex_coords += 2)
 	{
-		dstTexCoords[0] *= scale[0];
-		dstTexCoords[1] *= scale[1];
+		dst_tex_coords[0] *= scale[0];
+		dst_tex_coords[1] *= scale[1];
 	}
 }
 
 /*
 ** RB_CalcScrollTexCoords
 */
-void RB_CalcScrollTexCoords(const float scroll_speed[2], float* dstTexCoords)
+void RB_CalcScrollTexCoords(const float scroll_speed[2], float* dst_tex_coords)
 {
 	const float time_scale = backEnd.refdef.floatTime;
 
@@ -963,10 +941,10 @@ void RB_CalcScrollTexCoords(const float scroll_speed[2], float* dstTexCoords)
 	adjusted_scroll_s = adjusted_scroll_s - floor(adjusted_scroll_s);
 	adjusted_scroll_t = adjusted_scroll_t - floor(adjusted_scroll_t);
 
-	for (int i = 0; i < tess.numVertexes; i++, dstTexCoords += 2)
+	for (int i = 0; i < tess.numVertexes; i++, dst_tex_coords += 2)
 	{
-		dstTexCoords[0] += adjusted_scroll_s;
-		dstTexCoords[1] += adjusted_scroll_t;
+		dst_tex_coords[0] += adjusted_scroll_s;
+		dst_tex_coords[1] += adjusted_scroll_t;
 	}
 }
 
@@ -985,7 +963,7 @@ void RB_CalcTransformTexCoords(const texModInfo_t* tmi, float* dstTexCoords)
 	}
 }
 
-void RB_CalcRotateTexCoords(const float degs_per_second, float* dstTexCoords)
+void RB_CalcRotateTexCoords(const float degs_per_second, float* dst_tex_coords)
 {
 	const float time_scale = backEnd.refdef.floatTime;
 	texModInfo_t tmi{};
@@ -1004,7 +982,7 @@ void RB_CalcRotateTexCoords(const float degs_per_second, float* dstTexCoords)
 	tmi.matrix[1][1] = cos_value;
 	tmi.translate[1] = 0.5 - 0.5 * sin_value - 0.5 * cos_value;
 
-	RB_CalcTransformTexCoords(&tmi, dstTexCoords);
+	RB_CalcTransformTexCoords(&tmi, dst_tex_coords);
 }
 
 /*
@@ -1026,25 +1004,25 @@ void RB_CalcSpecularAlpha(unsigned char* alphas)
 
 	const int numVertexes = tess.numVertexes;
 	for (int i = 0; i < numVertexes; i++, v += 4, normal += 4, alphas += 4) {
-		vec3_t lightDir;
+		vec3_t light_dir;
 		vec3_t viewer;
 		if (backEnd.currentEntity &&
 			(backEnd.currentEntity->e.hModel || backEnd.currentEntity->e.ghoul2))	//this is a model so we can use world lights instead fake light
 		{
-			VectorCopy(backEnd.currentEntity->lightDir, lightDir);
+			VectorCopy(backEnd.currentEntity->lightDir, light_dir);
 		}
 		else {
-			VectorSubtract(lightOrigin, v, lightDir);
-			VectorNormalizeFast(lightDir);
+			VectorSubtract(lightOrigin, v, light_dir);
+			VectorNormalizeFast(light_dir);
 		}
 		// calculate the specular color
-		const float d = 2 * DotProduct(normal, lightDir);
+		const float d = 2 * DotProduct(normal, light_dir);
 
 		// we don't optimize for the d < 0 case since this tends to
 		// cause visual artifacts such as faceted "snapping"
-		reflected[0] = normal[0] * d - lightDir[0];
-		reflected[1] = normal[1] * d - lightDir[1];
-		reflected[2] = normal[2] * d - lightDir[2];
+		reflected[0] = normal[0] * d - light_dir[0];
+		reflected[1] = normal[1] * d - light_dir[1];
+		reflected[2] = normal[2] * d - light_dir[2];
 
 		VectorSubtract(backEnd.ori.viewOrigin, v, viewer);
 		const float ilength = Q_rsqrt(DotProduct(viewer, viewer));
@@ -1075,14 +1053,14 @@ void RB_CalcSpecularAlpha(unsigned char* alphas)
 void RB_CalcDiffuseColor(unsigned char* colors)
 {
 	vec3_t			ambient_light;
-	vec3_t			lightDir;
+	vec3_t			light_dir;
 	vec3_t			directed_light;
 
 	const trRefEntity_t* ent = backEnd.currentEntity;
 	const int ambient_light_int = ent->ambientLightInt;
 	VectorCopy(ent->ambientLight, ambient_light);
 	VectorCopy(ent->directedLight, directed_light);
-	VectorCopy(ent->lightDir, lightDir);
+	VectorCopy(ent->lightDir, light_dir);
 
 	float* v = tess.xyz[0];
 	float* normal = tess.normal[0];
@@ -1091,7 +1069,7 @@ void RB_CalcDiffuseColor(unsigned char* colors)
 
 	for (int i = 0; i < numVertexes; i++, v += 4, normal += 4)
 	{
-		const float incoming = DotProduct(normal, lightDir);
+		const float incoming = DotProduct(normal, light_dir);
 		if (incoming <= 0) {
 			*reinterpret_cast<int*>(&colors[i * 4]) = ambient_light_int;
 			continue;
@@ -1123,77 +1101,11 @@ void RB_CalcDiffuseColor(unsigned char* colors)
 **
 ** The basic vertex lighting calc * Entity Color
 */
-void RB_CalcDiffuseEntityColorNew(unsigned char* colors, int index)
-{
-	int				i;
-	float* v, * normal;
-	float			incoming;
-	trRefEntity_t* ent;
-	int				ambientLightInt;
-	vec3_t			ambientLight;
-	vec3_t			lightDir;
-	vec3_t			directedLight;
-	int				numVertexes;
-	float			j, r, g, b;
-
-	if (!backEnd.currentEntity)
-	{//error, use the normal lighting
-		RB_CalcDiffuseColor(colors);
-	}
-
-	ent = backEnd.currentEntity;
-	VectorCopy(ent->ambientLight, ambientLight);
-	VectorCopy(ent->directedLight, directedLight);
-	VectorCopy(ent->lightDir, lightDir);
-
-	r = backEnd.currentEntity->e.newShaderRGBA[index][0] / 255.0f;
-	g = backEnd.currentEntity->e.newShaderRGBA[index][1] / 255.0f;
-	b = backEnd.currentEntity->e.newShaderRGBA[index][2] / 255.0f;
-
-	((byte*)&ambientLightInt)[0] = Q_ftol(r * ent->ambientLight[0]);
-	((byte*)&ambientLightInt)[1] = Q_ftol(g * ent->ambientLight[1]);
-	((byte*)&ambientLightInt)[2] = Q_ftol(b * ent->ambientLight[2]);
-	((byte*)&ambientLightInt)[3] = backEnd.currentEntity->e.shaderRGBA[3];
-
-	v = tess.xyz[0];
-	normal = tess.normal[0];
-
-	numVertexes = tess.numVertexes;
-
-	for (i = 0; i < numVertexes; i++, v += 4, normal += 4)
-	{
-		incoming = DotProduct(normal, lightDir);
-		if (incoming <= 0) {
-			*(int*)&colors[i * 4] = ambientLightInt;
-			continue;
-		}
-		j = (ambientLight[0] + incoming * directedLight[0]);
-		if (j > 255) {
-			j = 255;
-		}
-		colors[i * 4 + 0] = Q_ftol(j * r);
-
-		j = (ambientLight[1] + incoming * directedLight[1]);
-		if (j > 255) {
-			j = 255;
-		}
-		colors[i * 4 + 1] = Q_ftol(j * g);
-
-		j = (ambientLight[2] + incoming * directedLight[2]);
-		if (j > 255) {
-			j = 255;
-		}
-		colors[i * 4 + 2] = Q_ftol(j * b);
-
-		colors[i * 4 + 3] = backEnd.currentEntity->e.newShaderRGBA[index][3];
-	}
-}
-
 void RB_CalcDiffuseEntityColor(unsigned char* colors)
 {
 	int				ambient_light_int = 0;
 	vec3_t			ambient_light;
-	vec3_t			lightDir;
+	vec3_t			light_dir;
 	vec3_t			directed_light;
 
 	if (!backEnd.currentEntity)
@@ -1204,7 +1116,7 @@ void RB_CalcDiffuseEntityColor(unsigned char* colors)
 	const trRefEntity_t* ent = backEnd.currentEntity;
 	VectorCopy(ent->ambientLight, ambient_light);
 	VectorCopy(ent->directedLight, directed_light);
-	VectorCopy(ent->lightDir, lightDir);
+	VectorCopy(ent->lightDir, light_dir);
 
 	const float r = backEnd.currentEntity->e.shaderRGBA[0] / 255.0f;
 	const float g = backEnd.currentEntity->e.shaderRGBA[1] / 255.0f;
@@ -1222,7 +1134,7 @@ void RB_CalcDiffuseEntityColor(unsigned char* colors)
 
 	for (int i = 0; i < numVertexes; i++, v += 4, normal += 4)
 	{
-		const float incoming = DotProduct(normal, lightDir);
+		const float incoming = DotProduct(normal, light_dir);
 		if (incoming <= 0) {
 			*reinterpret_cast<int*>(&colors[i * 4]) = ambient_light_int;
 			continue;
@@ -1250,7 +1162,7 @@ void RB_CalcDiffuseEntityColor(unsigned char* colors)
 }
 
 //---------------------------------------------------------
-void RB_CalcDisintegrateColors(unsigned char* colors, const colorGen_t rgbGen)
+void RB_CalcDisintegrateColors(unsigned char* colors, const colorGen_t rgb_gen)
 {
 	int			i;
 	float		dis;
@@ -1289,7 +1201,7 @@ void RB_CalcDisintegrateColors(unsigned char* colors, const colorGen_t rgbGen)
 			else if (dis < threshold * threshold + 150)
 			{
 				// darken more
-				if (rgbGen == CGEN_LIGHTING_DIFFUSE_ENTITY)
+				if (rgb_gen == CGEN_LIGHTING_DIFFUSE_ENTITY)
 				{
 					colors[i * 4 + 0] = backEnd.currentEntity->e.shaderRGBA[0] * 0x6f / 255.0f;
 					colors[i * 4 + 1] = backEnd.currentEntity->e.shaderRGBA[1] * 0x6f / 255.0f;
@@ -1306,7 +1218,7 @@ void RB_CalcDisintegrateColors(unsigned char* colors, const colorGen_t rgbGen)
 			else if (dis < threshold * threshold + 180)
 			{
 				// darken at edge of burn
-				if (rgbGen == CGEN_LIGHTING_DIFFUSE_ENTITY)
+				if (rgb_gen == CGEN_LIGHTING_DIFFUSE_ENTITY)
 				{
 					colors[i * 4 + 0] = backEnd.currentEntity->e.shaderRGBA[0] * 0xaf / 255.0f;
 					colors[i * 4 + 1] = backEnd.currentEntity->e.shaderRGBA[1] * 0xaf / 255.0f;
@@ -1323,7 +1235,7 @@ void RB_CalcDisintegrateColors(unsigned char* colors, const colorGen_t rgbGen)
 			else
 			{
 				// not burning at all yet
-				if (rgbGen == CGEN_LIGHTING_DIFFUSE_ENTITY)
+				if (rgb_gen == CGEN_LIGHTING_DIFFUSE_ENTITY)
 				{
 					colors[i * 4 + 0] = backEnd.currentEntity->e.shaderRGBA[0];
 					colors[i * 4 + 1] = backEnd.currentEntity->e.shaderRGBA[1];

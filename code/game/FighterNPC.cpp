@@ -391,12 +391,12 @@ static void ProcessMoveCommands(Vehicle_t* p_veh)
 	bgEntity_t* parent = p_veh->m_pParentEntity;
 	qboolean is_landing_or_launching;
 #ifndef _JK2MP//SP
-	const int cur_time = level.time;
+	const int curTime = level.time;
 #elif defined QAGAME//MP GAME
-	int cur_time = level.time;
+	int curTime = level.time;
 #elif defined CGAME//MP CGAME
 	//FIXME: pass in ucmd?  Not sure if this is reliable...
-	int cur_time = pm->cmd.serverTime;
+	int curTime = pm->cmd.serverTime;
 #endif
 
 #ifdef _JK2MP
@@ -405,11 +405,11 @@ static void ProcessMoveCommands(Vehicle_t* p_veh)
 	playerState_t* parent_ps = &parent->client->ps;
 #endif
 
-	if (parent_ps->hyperSpaceTime && cur_time - parent_ps->hyperSpaceTime < HYPERSPACE_TIME)
+	if (parent_ps->hyperSpaceTime && curTime - parent_ps->hyperSpaceTime < HYPERSPACE_TIME)
 	{
 		//Going to Hyperspace
 		//totally override movement
-		const float time_frac = static_cast<float>(cur_time - parent_ps->hyperSpaceTime) / HYPERSPACE_TIME;
+		const float time_frac = static_cast<float>(curTime - parent_ps->hyperSpaceTime) / HYPERSPACE_TIME;
 
 		if (time_frac < HYPERSPACE_TELEPORT_FRAC)
 		{
@@ -465,7 +465,7 @@ static void ProcessMoveCommands(Vehicle_t* p_veh)
 		return;
 	}
 
-	if (p_veh->m_iDropTime >= cur_time)
+	if (p_veh->m_iDropTime >= curTime)
 	{
 		//no speed, just drop
 		parent_ps->speed = 0.0f;
@@ -554,9 +554,9 @@ static void ProcessMoveCommands(Vehicle_t* p_veh)
 	if (p_veh->m_pPilot &&
 		(p_veh->m_ucmd.upmove > 0 && p_veh->m_ucmd.forwardmove > 0 && p_veh->m_pVehicleInfo->turboSpeed))
 	{
-		if (cur_time - p_veh->m_iTurboTime > p_veh->m_pVehicleInfo->turboRecharge)
+		if (curTime - p_veh->m_iTurboTime > p_veh->m_pVehicleInfo->turboRecharge)
 		{
-			p_veh->m_iTurboTime = cur_time + p_veh->m_pVehicleInfo->turboDuration;
+			p_veh->m_iTurboTime = curTime + p_veh->m_pVehicleInfo->turboDuration;
 			if (p_veh->m_pVehicleInfo->iTurboStartFX)
 			{
 				for (int i = 0; i < MAX_VEHICLE_EXHAUSTS && p_veh->m_iExhaustTag[i] != -1; i++)
@@ -606,7 +606,7 @@ static void ProcessMoveCommands(Vehicle_t* p_veh)
 	}
 	speed_inc = p_veh->m_pVehicleInfo->acceleration * p_veh->m_fTimeModifier;
 
-	if (cur_time < p_veh->m_iTurboTime)
+	if (curTime < p_veh->m_iTurboTime)
 	{
 		//going turbo speed
 		speed_max = p_veh->m_pVehicleInfo->turboSpeed;
@@ -644,7 +644,7 @@ static void ProcessMoveCommands(Vehicle_t* p_veh)
 	}
 
 	if (p_veh->m_iRemovedSurfaces
-		|| parent_ps->electrifyTime >= cur_time)
+		|| parent_ps->electrifyTime >= curTime)
 	{
 		//go out of control
 		parent_ps->speed += speed_inc;
@@ -833,8 +833,8 @@ static void ProcessMoveCommands(Vehicle_t* p_veh)
 		&& p_veh->m_pVehicleInfo->Inhabited(p_veh) //has to have a driver in order to be capable of landing
 #endif
 		&& !p_veh->m_iRemovedSurfaces
-		&& parent_ps->electrifyTime < cur_time
-		&& parent_ps->vehTurnaroundTime < cur_time
+		&& parent_ps->electrifyTime < curTime
+		&& parent_ps->vehTurnaroundTime < curTime
 		&& (p_veh->m_LandTrace.fraction >= 1.0f //no ground
 			|| p_veh->m_LandTrace.plane.normal[2] < MIN_LANDING_SLOPE //can't land here
 			|| parent_ps->speed > MIN_LANDING_SPEED) //going too fast to land
@@ -940,7 +940,7 @@ static void ProcessMoveCommands(Vehicle_t* p_veh)
 	}
 
 	if (p_veh->m_iRemovedSurfaces
-		|| parent_ps->electrifyTime >= cur_time)
+		|| parent_ps->electrifyTime >= curTime)
 	{
 		//going down
 		if (FighterIsInSpace(parent))
@@ -1296,12 +1296,12 @@ static void ProcessOrientCommands(Vehicle_t* p_veh)
 	qboolean is_dead;
 	qboolean is_landing_or_landed;
 #ifndef _JK2MP//SP
-	const int cur_time = level.time;
+	const int curTime = level.time;
 #elif defined QAGAME//MP GAME
-	int cur_time = level.time;
+	int curTime = level.time;
 #elif defined CGAME//MP CGAME
 	//FIXME: pass in ucmd?  Not sure if this is reliable...
-	int cur_time = pm->cmd.serverTime;
+	int curTime = pm->cmd.serverTime;
 #endif
 
 #ifdef _JK2MP
@@ -1334,7 +1334,7 @@ static void ProcessOrientCommands(Vehicle_t* p_veh)
 #endif
 
 	if (parent_ps->hyperSpaceTime
-		&& cur_time - parent_ps->hyperSpaceTime < HYPERSPACE_TIME)
+		&& curTime - parent_ps->hyperSpaceTime < HYPERSPACE_TIME)
 	{
 		//Going to Hyperspace
 		VectorCopy(rider_ps->viewangles, p_veh->m_vOrientation);
@@ -1342,7 +1342,7 @@ static void ProcessOrientCommands(Vehicle_t* p_veh)
 		return;
 	}
 
-	if (p_veh->m_iDropTime >= cur_time)
+	if (p_veh->m_iDropTime >= curTime)
 	{
 		//you can only YAW during this
 		parent_ps->viewangles[YAW] = p_veh->m_vOrientation[YAW] = rider_ps->viewangles[YAW];
@@ -1351,7 +1351,7 @@ static void ProcessOrientCommands(Vehicle_t* p_veh)
 
 	angle_time_mod = p_veh->m_fTimeModifier;
 
-	if (is_dead || parent_ps->electrifyTime >= cur_time ||
+	if (is_dead || parent_ps->electrifyTime >= curTime ||
 		p_veh->m_pVehicleInfo->surfDestruction &&
 		p_veh->m_iRemovedSurfaces &&
 		p_veh->m_iRemovedSurfaces & SHIPSURF_BROKEN_C &&
@@ -1425,7 +1425,7 @@ static void ProcessOrientCommands(Vehicle_t* p_veh)
 	// If we're landed, we shouldn't be able to do anything but take off.
 	if (is_landing_or_landed //going slow enough to start landing
 		&& !p_veh->m_iRemovedSurfaces
-		&& parent_ps->electrifyTime < cur_time) //not spiraling out of control
+		&& parent_ps->electrifyTime < curTime) //not spiraling out of control
 	{
 		if (parent_ps->speed > 0.0f)
 		{
@@ -1452,7 +1452,7 @@ static void ProcessOrientCommands(Vehicle_t* p_veh)
 #endif
 		}
 	}
-	else if ((p_veh->m_iRemovedSurfaces || parent_ps->electrifyTime >= cur_time) //spiralling out of control
+	else if ((p_veh->m_iRemovedSurfaces || parent_ps->electrifyTime >= curTime) //spiralling out of control
 		&& (!(p_veh->m_pParentEntity->s.number % 2) || !(p_veh->m_pParentEntity->s.number % 6)))
 	{
 		//no yaw control
@@ -1530,7 +1530,7 @@ static void ProcessOrientCommands(Vehicle_t* p_veh)
 	{
 		//only if capable of landing
 		if (!is_dead
-			&& parent_ps->electrifyTime < cur_time
+			&& parent_ps->electrifyTime < curTime
 			&& (!p_veh->m_pVehicleInfo->surfDestruction || !p_veh->m_iRemovedSurfaces))
 		{
 			//not crashing or spiraling out of control...
@@ -1575,7 +1575,7 @@ static void ProcessOrientCommands(Vehicle_t* p_veh)
 		if (p_veh->m_vOrientation[ROLL])
 		{
 			//continually adjust the yaw based on the roll..
-			if ((p_veh->m_iRemovedSurfaces || parent_ps->electrifyTime >= cur_time) //spiralling out of control
+			if ((p_veh->m_iRemovedSurfaces || parent_ps->electrifyTime >= curTime) //spiralling out of control
 				&& (!(p_veh->m_pParentEntity->s.number % 2) || !(p_veh->m_pParentEntity->s.number % 6)))
 			{
 				//leave YAW alone
@@ -1601,7 +1601,7 @@ static void ProcessOrientCommands(Vehicle_t* p_veh)
 			//cap it reasonably
 			if (p_veh->m_pVehicleInfo->rollLimit != -1
 				&& !p_veh->m_iRemovedSurfaces
-				&& parent_ps->electrifyTime < cur_time)
+				&& parent_ps->electrifyTime < curTime)
 			{
 				if (p_veh->m_vOrientation[ROLL] > p_veh->m_pVehicleInfo->rollLimit)
 				{
@@ -1642,15 +1642,15 @@ static void AnimateVehicle(Vehicle_t* p_veh)
 #ifndef _JK2MP//SP
 	//nothing
 #elif defined QAGAME//MP GAME
-	int cur_time = level.time;
+	int curTime = level.time;
 #elif defined CGAME//MP CGAME
 	//FIXME: pass in ucmd?  Not sure if this is reliable...
-	int cur_time = pm->cmd.serverTime;
+	int curTime = pm->cmd.serverTime;
 #endif
-	int cur_time = level.time;
+	int curTime = level.time;
 
 	if (parent_ps->hyperSpaceTime
-		&& cur_time - parent_ps->hyperSpaceTime < HYPERSPACE_TIME)
+		&& curTime - parent_ps->hyperSpaceTime < HYPERSPACE_TIME)
 	{
 		//Going to Hyperspace
 		//close the wings (FIXME: makes sense on X-Wing, not Shuttle?)

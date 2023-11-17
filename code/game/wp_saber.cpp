@@ -845,11 +845,6 @@ void wp_saber_add_g2_saber_models(gentity_t* ent, const int specific_saber_num)
 		}
 		g_create_g2_attached_weapon_model(ent, ent->client->ps.saber[saberNum].model, handBolt, saberNum);
 
-		if (com_rend2->integer == 0 && r_AdvancedsurfaceSprites->integer == 1) //rend2 is off advanced lod is on
-		{
-			gi.G2API_SetTintType(&ent->ghoul2[ent->weaponModel[saberNum]], saberNum ? G2_TINT_SABER2 : G2_TINT_SABER);
-		}
-
 		if (ent->client->ps.saber[saberNum].skin != nullptr)
 		{
 			//if this saber has a customSkin, use it
@@ -857,8 +852,7 @@ void wp_saber_add_g2_saber_models(gentity_t* ent, const int specific_saber_num)
 			const int saberSkin = gi.RE_RegisterSkin(ent->client->ps.saber[saberNum].skin);
 			if (saberSkin)
 			{
-				gi.G2API_SetSkin(&ent->ghoul2[ent->weaponModel[saberNum]],
-					G_SkinIndex(ent->client->ps.saber[saberNum].skin), saberSkin);
+				gi.G2API_SetSkin(&ent->ghoul2[ent->weaponModel[saberNum]],	G_SkinIndex(ent->client->ps.saber[saberNum].skin), saberSkin);
 			}
 		}
 	}
@@ -1137,11 +1131,6 @@ void wp_saber_add_holstered_g2_saber_models(gentity_t* ent, const int specific_s
 			}
 		}
 		g_create_g2_holstered_weapon_model(ent, ent->client->ps.saber[saberNum].model, handBolt, saberNum, angles, offset);
-
-		if (com_rend2->integer == 0 && r_AdvancedsurfaceSprites->integer == 1) //rend2 is off advanced lod is on
-		{
-			gi.G2API_SetTintType(&ent->ghoul2[ent->holsterModel[saberNum]], saberNum ? G2_TINT_SABER2 : G2_TINT_SABER);
-		}
 
 		if (ent->client->ps.saber[saberNum].skin != nullptr)
 		{

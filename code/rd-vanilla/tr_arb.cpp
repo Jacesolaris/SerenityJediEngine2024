@@ -112,7 +112,8 @@ constexpr unsigned char g_strGlowPShaderARB[] =
 #define GL_PROGRAM_ERROR_STRING_ARB						0x8874
 #define GL_PROGRAM_ERROR_POSITION_ARB					0x864B
 
-void ARB_InitGlowShaders() {
+void ARB_InitGPUShaders()
+{
 	// Allocate and Load the global 'Glow' Vertex Program. - AReis
 	if (qglGenProgramsARB)
 	{

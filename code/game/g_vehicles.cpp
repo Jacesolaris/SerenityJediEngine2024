@@ -1701,7 +1701,7 @@ static bool update(Vehicle_t* p_veh, const usercmd_t* p_umcd)
 
 	playerState_t* parent_ps = &p_veh->m_pParentEntity->client->ps;
 
-	const int cur_time = level.time;
+	const int curTime = level.time;
 
 	//increment the ammo for all rechargeable weapons
 	for (i = 0; i < MAX_VEHICLE_WEAPONS; i++)
@@ -1896,8 +1896,8 @@ static bool update(Vehicle_t* p_veh, const usercmd_t* p_umcd)
 
 	// Shifting Sounds
 	//=====================================================================
-	if (p_veh->m_iTurboTime < cur_time &&
-		p_veh->m_iSoundDebounceTimer < cur_time &&
+	if (p_veh->m_iTurboTime < curTime &&
+		p_veh->m_iSoundDebounceTimer < curTime &&
 		(next_speed > prev_speed && next_speed > half_max_speed && prev_speed < half_max_speed || next_speed >
 			half_max_speed && !
 			Q_irand(0, 1000)))
@@ -1917,7 +1917,7 @@ static bool update(Vehicle_t* p_veh, const usercmd_t* p_umcd)
 		}
 		if (shiftSound)
 		{
-			p_veh->m_iSoundDebounceTimer = cur_time + Q_irand(1000, 4000);
+			p_veh->m_iSoundDebounceTimer = curTime + Q_irand(1000, 4000);
 			// NOTE: Use this type so it's spatialized and updates play origin as bike moves - MCG
 			G_SoundIndexOnEnt(p_veh->m_pParentEntity, CHAN_AUTO, shiftSound);
 		}

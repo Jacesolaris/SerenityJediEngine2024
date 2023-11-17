@@ -126,7 +126,7 @@ static const byte FakeGLAFile[] =
 	0x00, 0x80, 0x00, 0x80, 0x00, 0x80
 };
 
-void RE_LoadWorldMap_Actual(const char* name, world_t& worldData, int index);
+void RE_LoadWorldMap_Actual(const char* name, world_t& worldData, const int index);
 
 // returns qtrue if loaded, and sets the supplied qbool to true if it was from cache (instead of disk)
 //   (which we need to know to avoid LittleLong()ing everything again (well, the Mac needs to know anyway)...

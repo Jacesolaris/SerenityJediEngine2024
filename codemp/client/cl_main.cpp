@@ -2647,14 +2647,14 @@ void CL_SetModel_f(void)
 		//tends to put things out of sync regarding cvar status. And I sort of doubt someone
 		//is going to write a client and figure out the protocol so that they can annoy people
 		//by changing models real fast.
-		int cur_time = Com_Milliseconds();
-		if (gCLModelDelay > cur_time)
+		int curTime = Com_Milliseconds();
+		if (gCLModelDelay > curTime)
 		{
 			Com_Printf("You can only change your model every %i seconds.\n", (MODEL_CHANGE_DELAY/1000));
 			return;
 		}
 
-		gCLModelDelay = cur_time + MODEL_CHANGE_DELAY;
+		gCLModelDelay = curTime + MODEL_CHANGE_DELAY;
 		*/
 		//rwwFIXMEFIXME: This is currently broken and doesn't seem to work for connecting clients
 		Cvar_Set("model", arg);

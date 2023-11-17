@@ -2849,11 +2849,6 @@ void UI_SaberAttachToChar(itemDef_t* item)
 					boltNum = DC->g2_AddBolt(&item->ghoul2[0], "*l_hand");
 				}
 				re.G2API_AttachG2Model(&item->ghoul2[g2Saber], &item->ghoul2[0], boltNum, 0);
-
-				if (ui_com_rend2.integer == 0 && ui_r_AdvancedsurfaceSprites.integer == 1) //rend2 is off and lod is on
-				{
-					re.G2API_SetTintType(&item->ghoul2[g2Saber], saberNum ? G2_TINT_SABER2 : G2_TINT_SABER);
-				}
 			}
 		}
 	}

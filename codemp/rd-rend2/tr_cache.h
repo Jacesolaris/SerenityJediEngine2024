@@ -53,12 +53,12 @@ public:
 	/*
 	 * Return -1 if asset not currently loaded, return positive qhandle_t if found
 	 */
-	qhandle_t	GetModelHandle(const char* file_name);
+	qhandle_t	GetModelHandle(const char* fileName);
 
 	/*
 	 * We have a loaded model, let's insert it into the list of loaded models
 	 */
-	void		InsertModelHandle(const char* file_name, qhandle_t handle);
+	void		InsertModelHandle(const char* fileName, qhandle_t handle);
 
 	qboolean	LevelLoadEnd(qboolean deleteUnusedByLevel);
 	void		StoreShaderRequest(const char* psModelFileName, const char* psShaderName, int* piShaderIndexPoke);

@@ -110,7 +110,7 @@ extern int G2_DecideTraceLod(const CGhoul2Info& ghoul2, const int useLod);
 // find a particular surface in the surface override list
 static CQuickOverride QuickOverride;
 
-const surfaceInfo_t* G2_FindOverrideSurface(int surfaceNum, const surfaceInfo_v& surfaceList)
+const surfaceInfo_t* G2_FindOverrideSurface(const int surfaceNum, const surfaceInfo_v& surfaceList)
 {
 	if (surfaceNum < 0)
 	{
@@ -192,7 +192,7 @@ int G2_IsSurfaceLegal(const model_s* mod_m, const char* surfaceName, uint32_t* f
  *    pointer to surface if successful, false otherwise
  *
  ************************************************************************************************/
-const mdxmSurface_t* G2_FindSurface(const CGhoul2Info* ghlInfo, const surfaceInfo_v& slist, const char* surfaceName, int* surfIndex)
+static const mdxmSurface_t* G2_FindSurface(const CGhoul2Info* ghlInfo, const surfaceInfo_v& slist, const char* surfaceName, int* surfIndex)
 {
 	int						i = 0;
 	// find the model we want
@@ -372,7 +372,7 @@ int G2_IsSurfaceOff (CGhoul2Info *ghlInfo, surfaceInfo_v &slist, const char *sur
 }
 */
 
-void G2_FindRecursiveSurface(const model_t* currentModel, int surfaceNum, surfaceInfo_v& rootList, int* activeSurfaces)
+static void G2_FindRecursiveSurface(const model_t* currentModel, int surfaceNum, surfaceInfo_v& rootList, int* activeSurfaces)
 {
 	assert(currentModel);
 	assert(currentModel->data.glm);
@@ -474,7 +474,7 @@ qboolean G2_SetRootSurface(CGhoul2Info_v& ghoul2, const int modelIndex, const ch
 	return qfalse;
 }
 
-int G2_AddSurface(CGhoul2Info* ghoul2, int surfaceNumber, int polyNumber, float BarycentricI, float BarycentricJ, int lod)
+int G2_AddSurface(CGhoul2Info* ghoul2, const int surfaceNumber, const int polyNumber, const float BarycentricI, const float BarycentricJ, int lod)
 {
 	surfaceInfo_t temp_slist_entry;
 

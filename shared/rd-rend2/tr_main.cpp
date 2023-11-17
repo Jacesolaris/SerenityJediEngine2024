@@ -1141,7 +1141,8 @@ void R_SetupProjectionOrtho(viewParms_t* dest, const vec3_t viewBounds[2])
 R_MirrorPoint
 =================
 */
-void R_MirrorPoint(vec3_t in, orientation_t* surface, orientation_t* camera, vec3_t out) {
+static void R_MirrorPoint(vec3_t in, const orientation_t* surface, const orientation_t* camera, vec3_t out)
+{
 	int		i;
 	vec3_t	local;
 	vec3_t	transformed;
@@ -1158,7 +1159,8 @@ void R_MirrorPoint(vec3_t in, orientation_t* surface, orientation_t* camera, vec
 	VectorAdd(transformed, camera->origin, out);
 }
 
-void R_MirrorVector(vec3_t in, orientation_t* surface, orientation_t* camera, vec3_t out) {
+static void R_MirrorVector(vec3_t in, const orientation_t* surface, const orientation_t* camera, vec3_t out)
+{
 	int		i;
 	float	d;
 
@@ -1174,7 +1176,8 @@ void R_MirrorVector(vec3_t in, orientation_t* surface, orientation_t* camera, ve
 R_PlaneForSurface
 =============
 */
-void R_PlaneForSurface(surfaceType_t* surfType, cplane_t* plane) {
+static void R_PlaneForSurface(surfaceType_t* surfType, cplane_t* plane) 
+{
 	srfBspSurface_t* tri;
 	srfPoly_t* poly;
 	srfVert_t* v1, * v2, * v3;
