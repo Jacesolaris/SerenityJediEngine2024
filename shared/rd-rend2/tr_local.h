@@ -2173,12 +2173,12 @@ typedef struct model_s {
 
 void		R_ModelInit(void);
 
-model_t* R_GetModelByHandle(qhandle_t hModel);
-int			R_LerpTag(orientation_t* tag, const qhandle_t handle, const int startFrame, const int endFrame, const float frac, const char* tagName);
+model_t* R_GetModelByHandle(const qhandle_t index);
+int	R_LerpTag(orientation_t* tag, const qhandle_t handle, const int startFrame, const int endFrame, const float frac, const char* tagName);
 
-void		R_ModelBounds(qhandle_t handle, vec3_t mins, vec3_t maxs);
+void R_ModelBounds(const qhandle_t handle, vec3_t mins, vec3_t maxs);
 
-void		R_Modellist_f(void);
+void R_Modellist_f(void);
 
 //====================================================
 
@@ -2875,10 +2875,10 @@ qboolean R_CalcTangentVectors(srfVert_t* dv[3]);
 void R_LocalNormalToWorld(const vec3_t local, vec3_t world);
 void R_LocalPointToWorld(const vec3_t local, vec3_t world);
 int R_CullBox(vec3_t bounds[2]);
-int R_CullLocalBox(vec3_t bounds[2]);
+int R_CullLocalBox(const vec3_t bounds[2]);
 int R_CullPointAndRadiusEx(const vec3_t origin, float radius, const cplane_t* frustum, int numPlanes);
-int R_CullPointAndRadius(const vec3_t origin, float radius);
-int R_CullLocalPointAndRadius(const vec3_t origin, float radius);
+int R_CullPointAndRadius(const vec3_t pt, const float radius);
+int R_CullLocalPointAndRadius(const vec3_t pt, const float radius);
 
 void R_SetupProjection(viewParms_t* dest, float zProj, float zFar, qboolean computeFrustum);
 void R_RotateForEntity(const trRefEntity_t* ent, const viewParms_t* viewParms, orientationr_t* ori);
@@ -2930,7 +2930,7 @@ qhandle_t	RE_RegisterServerModel(const char* name);
 qhandle_t	RE_RegisterModel(const char* name);
 qhandle_t	RE_RegisterServerSkin(const char* name);
 qhandle_t	RE_RegisterSkin(const char* name);
-void		RE_Shutdown(qboolean destroyWindow, qboolean restarting);
+void RE_Shutdown(const qboolean destroyWindow, const qboolean restarting);
 world_t* R_LoadBSP(const char* name, int* bspIndex = nullptr);
 
 #ifdef REND2_SP
@@ -3189,8 +3189,7 @@ MARKERS, POLYGON PROJECTION ON WORLD POLYGONS
 ============================================================
 */
 
-int R_MarkFragments(int numPoints, const vec3_t* points, const vec3_t projection,
-	int maxPoints, vec3_t pointBuffer, int maxFragments, markFragment_t* fragmentBuffer);
+int R_MarkFragments(int numPoints, const vec3_t* points, const vec3_t projection, const int maxPoints, vec3_t pointBuffer, const int maxFragments, markFragment_t* fragmentBuffer);
 
 /*
 ============================================================

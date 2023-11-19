@@ -886,7 +886,7 @@ static void DoRailCore(const vec3_t start, const vec3_t end, const vec3_t up, co
 	tess.indexes[tess.numIndexes++] = vbase + 3;
 }
 
-void RB_SurfaceLightningBolt()
+static void RB_SurfaceLightningBolt()
 {
 	vec3_t		right;
 	vec3_t		vec;
@@ -1945,7 +1945,8 @@ RB_SurfaceEntity
 Entities that have a single procedurally generated surface
 ====================
 */
-void RB_SurfaceEntity(surfaceType_t* surf_type) {
+static void RB_SurfaceEntity(surfaceType_t* surf_type)
+{
 	switch (backEnd.currentEntity->e.reType) {
 	case RT_SPRITE:
 		RB_SurfaceSprite();

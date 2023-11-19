@@ -220,7 +220,7 @@ static int numModelLoaders = ARRAY_LEN(modelLoaders);
 /*
 ** R_GetModelByHandle
 */
-model_t* R_GetModelByHandle(qhandle_t index) {
+model_t* R_GetModelByHandle(const qhandle_t index) {
 	model_t* mod;
 
 	// out of range gets the defualt model
@@ -1775,7 +1775,8 @@ int R_LerpTag(orientation_t* tag, const qhandle_t handle, const int startFrame, 
 R_ModelBounds
 ====================
 */
-void R_ModelBounds(qhandle_t handle, vec3_t mins, vec3_t maxs) {
+void R_ModelBounds(const qhandle_t handle, vec3_t mins, vec3_t maxs)
+{
 	model_t* model;
 
 	model = R_GetModelByHandle(handle);

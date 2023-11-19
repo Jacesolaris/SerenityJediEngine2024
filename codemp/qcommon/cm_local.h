@@ -118,7 +118,7 @@ using clipMap_t = struct clipMap_s
 	int numBrushSides;
 	cbrushside_t* brushsides;
 
-	int num_planes;
+	int numPlanes;
 	cplane_t* planes;
 
 	int numNodes;

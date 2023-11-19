@@ -2657,11 +2657,11 @@ typedef enum tauntTypes_e
 	TAUNT_RELOAD
 } tauntTypes_t;
 
-qboolean IsHoldingGun(const gentity_t* ent);
+qboolean IsHoldingReloadableGun(const gentity_t* ent);
 extern saberInfo_t* BG_MySaber(int client_num, int saberNum);
 extern qboolean PM_CrouchAnim(int anim);
 extern qboolean Block_Button_Held(const gentity_t* defender);
-void ReloadGun(gentity_t* ent);
+void WP_ReloadGun(gentity_t* ent);
 void CancelReload(gentity_t* ent);
 extern qboolean PM_RestAnim(int anim);
 
@@ -3496,7 +3496,7 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 			}
 			break;
 		case TAUNT_RELOAD:
-			if (IsHoldingGun(ent)) //MP
+			if (IsHoldingReloadableGun(ent)) //MP
 			{
 				if (ent->reloadTime > 0)
 				{
@@ -3504,7 +3504,7 @@ void G_SetTauntAnim(gentity_t* ent, int taunt)
 				}
 				else
 				{
-					ReloadGun(ent);
+					WP_ReloadGun(ent);
 				}
 				break;
 			}
@@ -3737,9 +3737,16 @@ void G_SetsaberdownorAnim(gentity_t* ent)
 	}
 	else
 	{
-		if (ent->client->ps.weapon == WP_MELEE)
+		if (IsHoldingReloadableGun(ent)) //mp
 		{
-			//
+			if (ent->reloadTime > 0)
+			{
+				CancelReload(ent);
+			}
+			else
+			{
+				WP_ReloadGun(ent);
+			}
 		}
 		else
 		{
@@ -3750,7 +3757,7 @@ void G_SetsaberdownorAnim(gentity_t* ent)
 
 //// reload ////
 
-int ReloadTime(const gentity_t* ent)
+static int ReloadTime(const gentity_t* ent)
 {
 	if (ent->client->ps.weapon == WP_FLECHETTE)
 	{
@@ -3763,7 +3770,7 @@ int ReloadTime(const gentity_t* ent)
 	return 300;
 }
 
-int PainTime(const gentity_t* ent)
+static int PainTime(const gentity_t* ent)
 {
 	if (ent->client->ps.weapon == WP_FLECHETTE)
 	{
@@ -3781,7 +3788,7 @@ int fire_deley_time()
 	return 500;
 }
 
-qboolean IsHoldingGun(const gentity_t* ent)
+qboolean IsHoldingReloadableGun(const gentity_t* ent)
 {
 	switch (ent->s.weapon)
 	{
@@ -3801,7 +3808,7 @@ qboolean IsHoldingGun(const gentity_t* ent)
 	return qfalse;
 }
 
-int ClipSize(const int ammo, gentity_t* ent)
+static int ClipSize(const int ammo, gentity_t* ent)
 {
 	switch (ammo)
 	{
@@ -3818,7 +3825,7 @@ int ClipSize(const int ammo, gentity_t* ent)
 	return -1;
 }
 
-int MagazineSize(const int ammo, gentity_t* ent)
+static int MagazineSize(const int ammo, gentity_t* ent)
 {
 	switch (ammo)
 	{
@@ -3835,14 +3842,14 @@ int MagazineSize(const int ammo, gentity_t* ent)
 	return -1;
 }
 
-void ReloadGun(gentity_t* ent)
+void WP_ReloadGun(gentity_t* ent)
 {
 	if (ent->reloadCooldown > level.time)
 	{
 		return;
 	}
 
-	if (IsHoldingGun(ent))
+	if (IsHoldingReloadableGun(ent))
 	{
 		if (ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_TWELVE)
 		{
@@ -3926,7 +3933,7 @@ void ReloadGun(gentity_t* ent)
 
 void FireOverheatFail(gentity_t* ent)
 {
-	if (IsHoldingGun(ent))
+	if (IsHoldingReloadableGun(ent))
 	{
 		NPC_SetAnim(ent, SETANIM_TORSO, BOTH_RELOADFAIL, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 		G_SoundOnEnt(ent, CHAN_WEAPON, "sound/weapons/reloadfail.mp3");

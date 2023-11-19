@@ -763,7 +763,7 @@ CG_AddOLine
 For forcefields/other rectangular things
 ===================
 */
-void CG_AddOLine(localEntity_t* le)
+static void CG_AddOLine(localEntity_t* le)
 {
 	refEntity_t* re = &le->refEntity;
 

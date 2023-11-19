@@ -2126,7 +2126,8 @@ void R_Init(void)
 RE_Shutdown
 ===============
 */
-void RE_Shutdown(qboolean destroyWindow, qboolean restarting) {
+void RE_Shutdown(const qboolean destroyWindow, const qboolean restarting)
+{
 	ri.Printf(PRINT_ALL, "RE_Shutdown( %i )\n", destroyWindow);
 
 	for (size_t i = 0; i < numCommands; i++)
@@ -2175,7 +2176,7 @@ RE_EndRegistration
 Touch all images to make sure they are resident
 =============
 */
-static void RE_EndRegistration(void) 
+static void RE_EndRegistration(void)
 {
 	R_IssuePendingRenderCommands();
 }

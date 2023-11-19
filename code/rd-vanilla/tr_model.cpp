@@ -130,7 +130,7 @@ static const byte FakeGLAFile[] =
 // returns qtrue if loaded, and sets the supplied qbool to true if it was from cache (instead of disk)
 //   (which we need to know to avoid LittleLong()ing everything again (well, the Mac needs to know anyway)...
 //
-qboolean RE_RegisterModels_GetDiskFile(const char* psModelFileName, void** ppvBuffer, qboolean* pqbAlreadyCached)
+static qboolean RE_RegisterModels_GetDiskFile(const char* psModelFileName, void** ppvBuffer, qboolean* pqbAlreadyCached)
 {
 	char sModelName[MAX_QPATH];
 
@@ -244,7 +244,7 @@ extern cvar_t* r_modelpoolmegs;
 // return qtrue if at least one cached model was freed (which tells z_malloc()-fail recovery code to try again)
 //
 extern qboolean gbInsideRegisterModel;
-qboolean RE_RegisterModels_LevelLoadEnd(const qboolean bDeleteEverythingNotUsedThisLevel /* = qfalse */)
+qboolean RE_RegisterModels_LevelLoadEnd(const qboolean bDeleteEverythingNotUsedThisLevel)
 {
 	qboolean bAtLeastoneModelFreed = qfalse;
 
@@ -303,7 +303,7 @@ qboolean RE_RegisterModels_LevelLoadEnd(const qboolean bDeleteEverythingNotUsedT
 	return bAtLeastoneModelFreed;
 }
 
-void RE_RegisterModels_Info_f()
+void RE_RegisterModels_Info_f(void)
 {
 	int iTotalBytes = 0;
 	if (!CachedModels) {
@@ -412,7 +412,7 @@ int RE_RegisterMedia_GetLevel()
 	return giRegisterMedia_CurrentLevel;
 }
 
-void RE_RegisterMedia_LevelLoadEnd()
+void RE_RegisterMedia_LevelLoadEnd(void)
 {
 	RE_RegisterModels_LevelLoadEnd(qfalse);
 	RE_RegisterImages_LevelLoadEnd();
@@ -494,7 +494,8 @@ model_t* R_GetAnimModelByHandle(const CGhoul2Info* ghlInfo, qhandle_t index)
 /*
 ** R_AllocModel
 */
-model_t* R_AllocModel() {
+model_t* R_AllocModel(void)
+{
 	if (tr.numModels == MAX_MOD_KNOWN) {
 		return nullptr;
 	}
@@ -775,7 +776,8 @@ qhandle_t RE_RegisterModel(const char* name)
 R_LoadMD3
 =================
 */
-static qboolean R_LoadMD3(model_t* mod, int lod, void* buffer, const char* name, qboolean& bAlreadyCached) {
+static qboolean R_LoadMD3(model_t* mod, int lod, void* buffer, const char* name, qboolean& bAlreadyCached)
+{
 	int j;
 	md3Header_t* pinmodel;
 	md3Surface_t* surf;
@@ -987,7 +989,7 @@ void RE_BeginRegistration(glconfig_t* glconfigOut) {
 R_ModelInit
 ===============
 */
-void R_ModelInit()
+void R_ModelInit(void)
 {
 	static CachedModels_t singleton;	// sorry vv, your dynamic allocation was a (false) memory leak
 	CachedModels = &singleton;
@@ -1012,7 +1014,7 @@ void R_ModelInit()
 R_Modellist_f
 ================
 */
-void R_Modellist_f() {
+void R_Modellist_f(void) {
 	int j;
 	int		lods;
 
@@ -1093,8 +1095,8 @@ static md3Tag_t* R_GetTag(md3Header_t* mod, int frame, const char* tagName) {
 R_LerpTag
 ================
 */
-int	R_LerpTag(orientation_t* tag, qhandle_t handle, int startFrame, int endFrame,
-	float frac, const char* tagName) {
+int	R_LerpTag(orientation_t* tag, const qhandle_t handle, const int startFrame, const int endFrame, const float frac, const char* tagName)
+{
 	md3Tag_t* start, * finish;
 	int		i;
 	float		frontLerp, backLerp;
@@ -1139,7 +1141,8 @@ int	R_LerpTag(orientation_t* tag, qhandle_t handle, int startFrame, int endFrame
 R_ModelBounds
 ====================
 */
-void R_ModelBounds(const qhandle_t handle, vec3_t mins, vec3_t maxs) {
+void R_ModelBounds(const qhandle_t handle, vec3_t mins, vec3_t maxs)
+{
 	const model_t* model = R_GetModelByHandle(handle);
 
 	if (model->bmodel) {

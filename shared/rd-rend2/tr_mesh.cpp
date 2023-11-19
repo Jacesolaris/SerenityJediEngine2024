@@ -74,7 +74,7 @@ float ProjectRadius(const float r, vec3_t location)
 R_CullModel
 =============
 */
-static int R_CullModel(mdvModel_t* model, trRefEntity_t* ent)
+static int R_CullModel(mdvModel_t* model, const trRefEntity_t* ent)
 {
 	vec3_t		bounds[2]{};
 	mdvFrame_t* oldFrame, * newFrame;
@@ -267,7 +267,7 @@ R_ComputeFogNum
 
 =================
 */
-int R_ComputeFogNum(mdvModel_t* model, trRefEntity_t* ent) {
+static int R_ComputeFogNum(mdvModel_t* model, trRefEntity_t* ent) {
 	int				i/*, j*/;
 	float			frameRadius;
 	fog_t* fog;

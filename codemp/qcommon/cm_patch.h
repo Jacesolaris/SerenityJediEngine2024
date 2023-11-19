@@ -81,7 +81,7 @@ using facet_t = struct facet_s
 using patchCollide_t = struct patchCollide_s
 {
 	vec3_t bounds[2];
-	int num_planes; // surface planes plus edge planes
+	int numPlanes; // surface planes plus edge planes
 	patchPlane_t* planes;
 	int numFacets;
 	facet_t* facets;

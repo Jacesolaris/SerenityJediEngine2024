@@ -91,7 +91,7 @@ void CG_GrappleTrail(centity_t* ent, const weaponInfo_t* wi)
 	cgi_R_AddRefEntityToScene(&beam);
 }
 
-void CG_StunTrail(centity_t* ent, const weaponInfo_t* wi)
+static void CG_StunTrail(centity_t* ent, const weaponInfo_t* wi)
 {
 	vec3_t origin;
 	vec3_t forward, up;

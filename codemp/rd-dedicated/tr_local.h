@@ -902,12 +902,12 @@ typedef struct model_s {
 
 #define	MAX_MOD_KNOWN	1024
 
-void R_ModelInit();
+void R_ModelInit(void);
 void R_InitDecals();
 
-model_t* R_GetModelByHandle(qhandle_t index);
+model_t* R_GetModelByHandle(const qhandle_t index);
 int R_LerpTag(orientation_t* tag, const qhandle_t handle, const int startFrame, const int endFrame, const float frac, const char* tagName);
-void R_ModelBounds(qhandle_t handle, vec3_t mins, vec3_t maxs);
+void R_ModelBounds(const qhandle_t handle, vec3_t mins, vec3_t maxs);
 
 void R_model_list_f(void);
 
@@ -1300,7 +1300,7 @@ void R_AddMD3Surfaces(trRefEntity_t* ent);
 
 void R_AddPolygonSurfaces(void);
 
-void R_DecomposeSort(unsigned sort, int* entityNum, shader_t** shader, int* fogNum, int* dlightMap);
+void R_DecomposeSort(const unsigned sort, int* entityNum, shader_t** shader, int* fogNum, int* dlightMap);
 
 void R_AddDrawSurf(surfaceType_t* surface, const shader_t* shader, int fogIndex, const int dlightMap);
 
@@ -1311,8 +1311,8 @@ void R_LocalNormalToWorld(const vec3_t local, vec3_t world);
 void R_LocalPointToWorld(const vec3_t local, vec3_t world);
 void R_WorldNormalToEntity(const vec3_t worldvec, vec3_t entvec);
 int R_CullLocalBox(const vec3_t bounds[2]);
-int R_CullPointAndRadius(const vec3_t pt, float radius);
-int R_CullLocalPointAndRadius(const vec3_t pt, float radius);
+int R_CullPointAndRadius(const vec3_t pt, const float radius);
+int R_CullLocalPointAndRadius(const vec3_t pt, const float radius);
 
 void R_RotateForEntity(const trRefEntity_t* ent, const viewParms_t* viewParms, orientationr_t* ori);
 
@@ -1378,13 +1378,12 @@ qhandle_t RE_RegisterServerModel(const char* name);
 qhandle_t RE_RegisterModel(const char* name);
 qhandle_t RE_RegisterSkin(const char* name);
 
-void RE_RegisterMedia_LevelLoadBegin(const char* psMapName, ForceReload_e eForceReload);
+void RE_RegisterMedia_LevelLoadBegin(const char* psMapName, const ForceReload_e eForceReload);
 void RE_RegisterMedia_LevelLoadEnd(void);
 int RE_RegisterMedia_GetLevel(void);
 //
 qboolean RE_RegisterModels_LevelLoadEnd(qboolean bDeleteEverythingNotUsedThisLevel = qfalse);
-void* RE_RegisterModels_Malloc(int iSize, void* pvDiskBufferIfJustLoaded, const char* psModelFileName,
-	qboolean* pqbAlreadyFound, memtag_t eTag);
+void* RE_RegisterModels_Malloc(const int iSize, void* pvDiskBufferIfJustLoaded, const char* psModelFileName, qboolean* pqbAlreadyFound, const memtag_t eTag);
 void RE_RegisterModels_StoreShaderRequest(const char* psModelFileName, const char* psShaderName,
 	int* piShaderIndexPoke);
 void RE_RegisterModels_Info_f(void);
@@ -1590,8 +1589,7 @@ MARKERS, POLYGON PROJECTION ON WORLD POLYGONS
 ============================================================
 */
 
-int R_MarkFragments(int numPoints, const vec3_t* points, const vec3_t projection, int max_points, vec3_t point_buffer,
-	int max_fragments, markFragment_t* fragment_buffer);
+int R_MarkFragments(int numPoints, const vec3_t* points, const vec3_t projection, const int maxPoints, vec3_t pointBuffer, const int maxFragments, markFragment_t* fragmentBuffer);
 
 /*
 ============================================================
@@ -1693,8 +1691,7 @@ Ghoul2 Insert End
 =============================================================
 =============================================================
 */
-void R_TransformModelToClip(const vec3_t src, const float* modelMatrix, const float* projectionMatrix,
-	vec4_t eye, vec4_t dst);
+void R_TransformModelToClip(const vec3_t src, const float* modelMatrix, const float* projectionMatrix, vec4_t eye, vec4_t dst);
 void R_TransformClipToWindow(const vec4_t clip, const viewParms_t* view, vec4_t normalized, vec4_t window);
 
 void RB_DeformTessGeometry(void);

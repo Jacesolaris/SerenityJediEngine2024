@@ -1321,7 +1321,7 @@ extern qboolean PM_SaberInStart(int move);
 extern qboolean pm_saber_in_special_attack(int anim);
 extern qboolean PM_SpinningSaberAnim(int anim);
 extern qboolean PM_SpinningAnim(int anim);
-extern void ReloadGun(gentity_t* ent);
+extern void WP_ReloadGun(gentity_t* ent);
 
 extern void BubbleShield_TurnOn();
 extern qboolean droideka_npc(const gentity_t* ent);

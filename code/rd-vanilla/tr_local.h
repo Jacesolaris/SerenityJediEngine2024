@@ -770,9 +770,9 @@ using model_t = struct model_s {
 constexpr auto MAX_MOD_KNOWN = 1024;
 
 void		R_ModelInit();
-model_t* R_GetModelByHandle(qhandle_t index);
+model_t* R_GetModelByHandle(const qhandle_t index);
 
-int R_LerpTag(orientation_t* tag, qhandle_t handle, int startFrame, int endFrame, float frac, const char* tagName);
+int R_LerpTag(orientation_t* tag, const qhandle_t handle, const int startFrame, const int endFrame, const float frac, const char* tagName);
 
 void		R_ModelBounds(qhandle_t handle, vec3_t mins, vec3_t maxs);
 
@@ -1165,12 +1165,11 @@ void R_RenderView(const viewParms_t* parms);
 
 void R_AddMD3Surfaces(trRefEntity_t* ent);
 
-void R_AddPolygonSurfaces();
+void R_AddPolygonSurfaces(void);
 
-void R_DecomposeSort(unsigned sort, int* entityNum, shader_t** shader,
-	int* fogNum, int* dlightMap);
+void R_DecomposeSort(const unsigned sort, int* entityNum, shader_t** shader, int* fogNum, int* dlightMap);
 
-void R_AddDrawSurf(const surfaceType_t* surface, const shader_t* shader, int fogIndex, int dlightMap);
+void R_AddDrawSurf(surfaceType_t* surface, const shader_t* shader, int fogIndex, const int dlightMap);
 
 #define	CULL_IN		0		// completely unclipped
 #define	CULL_CLIP	1		// clipped by one or more planes
@@ -1179,8 +1178,8 @@ void R_LocalNormalToWorld(const vec3_t local, vec3_t world);
 void R_LocalPointToWorld(const vec3_t local, vec3_t world);
 void R_WorldNormalToEntity(const vec3_t worldvec, vec3_t entvec);
 int R_CullLocalBox(const vec3_t bounds[2]);
-int R_CullPointAndRadius(const vec3_t pt, float radius);
-int R_CullLocalPointAndRadius(const vec3_t pt, float radius);
+int R_CullPointAndRadius(const vec3_t pt, const float radius);
+int R_CullLocalPointAndRadius(const vec3_t pt, const float radius);
 
 void R_RotateForEntity(const trRefEntity_t* ent, const viewParms_t* viewParms, orientationr_t* ori);
 
@@ -1250,13 +1249,13 @@ void		RE_RegisterMedia_LevelLoadBegin(const char* psMapName, ForceReload_e eForc
 void		RE_RegisterMedia_LevelLoadEnd();
 int			RE_RegisterMedia_GetLevel();
 qboolean	RE_RegisterModels_LevelLoadEnd(qboolean bDeleteEverythingNotUsedThisLevel = qfalse);
-void* RE_RegisterModels_Malloc(int iSize, void* pvDiskBufferIfJustLoaded, const char* psModelFileName, qboolean* pqbAlreadyFound, memtag_t eTag);
+void* RE_RegisterModels_Malloc(const int iSize, void* pvDiskBufferIfJustLoaded, const char* psModelFileName, qboolean* pqbAlreadyFound, const memtag_t eTag);
 void		RE_RegisterModels_StoreShaderRequest(const char* psModelFileName, const char* psShaderName, const int* piShaderIndexPoke);
 void		RE_RegisterModels_Info_f();
 qboolean	RE_RegisterImages_LevelLoadEnd();
 void		RE_RegisterImages_Info_f();
 
-model_t* R_AllocModel();
+model_t* R_AllocModel(void);
 
 void    	R_Init();
 image_t* R_FindImageFile(const char* name, qboolean mipmap, qboolean allow_picmip, qboolean allow_tc, int gl_wrap_clamp_mode);
@@ -1461,8 +1460,7 @@ MARKERS, POLYGON PROJECTION ON WORLD POLYGONS
 ============================================================
 */
 
-int R_MarkFragments(int numPoints, const vec3_t* points, const vec3_t projection,
-	int max_points, vec3_t point_buffer, int max_fragments, markFragment_t* fragment_buffer);
+int R_MarkFragments(int numPoints, const vec3_t* points, const vec3_t projection, const int maxPoints, vec3_t pointBuffer, const int maxFragments, markFragment_t* fragmentBuffer);
 
 /*
 ============================================================
@@ -1472,12 +1470,12 @@ SCENE GENERATION
 ============================================================
 */
 
-void R_InitNextFrame();
+void R_InitNextFrame(void);
 
-void RE_ClearScene();
+void RE_ClearScene(void);
 void RE_AddRefEntityToScene(const refEntity_t* ent);
 void RE_AddPolyToScene(const qhandle_t hShader, const int numVerts, const polyVert_t* verts, const int numPolys);
-void RE_AddLightToScene(const vec3_t org, float intensity, float r, float g, float b);
+void RE_AddLightToScene(const vec3_t org, const float intensity, const float r, const float g, const float b);
 void RE_RenderScene(const refdef_t* fd);
 
 qboolean RE_GetLighting(const vec3_t origin, vec3_t ambient_light, vec3_t directed_light, vec3_t light_dir);
@@ -1739,7 +1737,7 @@ qboolean	RE_InitDissolve(qboolean bForceCircularExtroWipe);
 long generateHashValue(const char* fname);
 void R_LoadImage(const char* shortname, byte** pic, int* width, int* height);
 void		RE_InsertModelIntoHash(const char* name, const model_t* mod);
-qboolean R_FogParmsMatch(int fog1, int fog2);
+qboolean R_FogParmsMatch(const int fog1, const int fog2);
 
 /*
 Ghoul2 Insert Start

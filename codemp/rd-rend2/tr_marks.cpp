@@ -38,12 +38,11 @@ Out must have space for two more vertexes than in
 #define	SIDE_FRONT	0
 #define	SIDE_BACK	1
 #define	SIDE_ON		2
-static void R_ChopPolyBehindPlane(int numInPoints, vec3_t inPoints[MAX_VERTS_ON_POLY],
-	int* numOutPoints, vec3_t outPoints[MAX_VERTS_ON_POLY],
-	vec3_t normal, float dist, float epsilon) {
+static void R_ChopPolyBehindPlane(const int numInPoints, vec3_t inPoints[MAX_VERTS_ON_POLY], int* numOutPoints, vec3_t outPoints[MAX_VERTS_ON_POLY], vec3_t normal, const float dist, const float epsilon)
+{
 	float		dists[MAX_VERTS_ON_POLY + 4] = { 0 };
 	int			sides[MAX_VERTS_ON_POLY + 4] = { 0 };
-	int			counts[3];
+	int			counts[3]{};
 	float		dot;
 	int			i, j;
 	float* p1, * p2, * clip;
@@ -134,7 +133,8 @@ R_BoxSurfaces_r
 
 =================
 */
-void R_BoxSurfaces_r(mnode_t* node, vec3_t mins, vec3_t maxs, surfaceType_t** list, int listsize, int* listlength, vec3_t dir) {
+static void R_BoxSurfaces_r(const mnode_t* node, vec3_t mins, vec3_t maxs, surfaceType_t** list, const int listsize, int* listlength, vec3_t dir)
+{
 	int			s, c;
 	msurface_t* surf;
 	int* mark;
@@ -201,12 +201,8 @@ R_AddMarkFragments
 
 =================
 */
-void R_AddMarkFragments(int numClipPoints, vec3_t clipPoints[2][MAX_VERTS_ON_POLY],
-	int numPlanes, vec3_t* normals, float* dists,
-	int maxPoints, vec3_t pointBuffer,
-	int maxFragments, markFragment_t* fragmentBuffer,
-	int* returnedPoints, int* returnedFragments,
-	vec3_t mins, vec3_t maxs) {
+static void R_AddMarkFragments(int numClipPoints, vec3_t clipPoints[2][MAX_VERTS_ON_POLY], const int numPlanes, vec3_t* normals, const float* dists, const int maxPoints, vec3_t pointBuffer, int maxFragments, markFragment_t* fragmentBuffer, int* returnedPoints, int* returnedFragments, vec3_t mins, vec3_t maxs)
+{
 	int pingPong, i;
 	markFragment_t* mf;
 
@@ -259,17 +255,17 @@ R_MarkFragments
 
 =================
 */
-int R_MarkFragments(int numPoints, const vec3_t* points, const vec3_t projection,
-	int maxPoints, vec3_t pointBuffer, int maxFragments, markFragment_t* fragmentBuffer) {
+int R_MarkFragments(int numPoints, const vec3_t* points, const vec3_t projection, const int maxPoints, vec3_t pointBuffer, const int maxFragments, markFragment_t* fragmentBuffer)
+{
 	int				numsurfaces, numPlanes;
 	int				i, j, k, m, n;
 	surfaceType_t* surfaces[64];
 	vec3_t			mins, maxs;
 	int				returnedFragments;
 	int				returnedPoints;
-	vec3_t			normals[MAX_VERTS_ON_POLY + 2];
-	float			dists[MAX_VERTS_ON_POLY + 2];
-	vec3_t			clipPoints[2][MAX_VERTS_ON_POLY];
+	vec3_t			normals[MAX_VERTS_ON_POLY + 2]{};
+	float			dists[MAX_VERTS_ON_POLY + 2]{};
+	vec3_t			clipPoints[2][MAX_VERTS_ON_POLY]{};
 	int				numClipPoints;
 	float* v;
 	srfBspSurface_t* cv;

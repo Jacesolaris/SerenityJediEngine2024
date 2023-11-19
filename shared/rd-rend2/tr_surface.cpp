@@ -1273,7 +1273,7 @@ static void DoBoltSeg(vec3_t start, vec3_t end, vec3_t right, const float radius
 		VectorCopy(cur, old);
 		oldPerc = perc;
 	}
-	}
+}
 
 //------------------------------------------
 static void RB_SurfaceElectricity()
@@ -1323,6 +1323,90 @@ static void RB_SurfaceElectricity()
 	f_count = 3;
 #endif
 	DoBoltSeg(start, end, right, radius);
+}
+
+static void DoRailCore(const vec3_t start, const vec3_t end, const vec3_t up, const float len, const float span_width)
+{
+	const float		t = len / 256.0f;
+
+	const int vbase = tess.numVertexes;
+
+	const float spanWidth2 = -span_width;
+
+	// FIXME: use quad stamp?
+	VectorMA(start, span_width, up, tess.xyz[tess.numVertexes]);
+	tess.texCoords[tess.numVertexes][0][0] = 0;
+	tess.texCoords[tess.numVertexes][0][1] = 0;
+	tess.vertexColors[tess.numVertexes][0] = backEnd.currentEntity->e.shaderRGBA[0] * 0.25;
+	tess.vertexColors[tess.numVertexes][1] = backEnd.currentEntity->e.shaderRGBA[1] * 0.25;
+	tess.vertexColors[tess.numVertexes][2] = backEnd.currentEntity->e.shaderRGBA[2] * 0.25;
+	tess.numVertexes++;
+
+	VectorMA(start, spanWidth2, up, tess.xyz[tess.numVertexes]);
+	tess.texCoords[tess.numVertexes][0][0] = 0;
+	tess.texCoords[tess.numVertexes][0][1] = 1;
+	tess.vertexColors[tess.numVertexes][0] = backEnd.currentEntity->e.shaderRGBA[0];
+	tess.vertexColors[tess.numVertexes][1] = backEnd.currentEntity->e.shaderRGBA[1];
+	tess.vertexColors[tess.numVertexes][2] = backEnd.currentEntity->e.shaderRGBA[2];
+	tess.numVertexes++;
+
+	VectorMA(end, span_width, up, tess.xyz[tess.numVertexes]);
+
+	tess.texCoords[tess.numVertexes][0][0] = t;
+	tess.texCoords[tess.numVertexes][0][1] = 0;
+	tess.vertexColors[tess.numVertexes][0] = backEnd.currentEntity->e.shaderRGBA[0];
+	tess.vertexColors[tess.numVertexes][1] = backEnd.currentEntity->e.shaderRGBA[1];
+	tess.vertexColors[tess.numVertexes][2] = backEnd.currentEntity->e.shaderRGBA[2];
+	tess.numVertexes++;
+
+	VectorMA(end, spanWidth2, up, tess.xyz[tess.numVertexes]);
+	tess.texCoords[tess.numVertexes][0][0] = t;
+	tess.texCoords[tess.numVertexes][0][1] = 1;
+	tess.vertexColors[tess.numVertexes][0] = backEnd.currentEntity->e.shaderRGBA[0];
+	tess.vertexColors[tess.numVertexes][1] = backEnd.currentEntity->e.shaderRGBA[1];
+	tess.vertexColors[tess.numVertexes][2] = backEnd.currentEntity->e.shaderRGBA[2];
+	tess.numVertexes++;
+
+	tess.indexes[tess.numIndexes++] = vbase;
+	tess.indexes[tess.numIndexes++] = vbase + 1;
+	tess.indexes[tess.numIndexes++] = vbase + 2;
+
+	tess.indexes[tess.numIndexes++] = vbase + 2;
+	tess.indexes[tess.numIndexes++] = vbase + 1;
+	tess.indexes[tess.numIndexes++] = vbase + 3;
+}
+
+void RB_SurfaceLightningBolt()
+{
+	vec3_t		right;
+	vec3_t		vec;
+	vec3_t		start, end;
+	vec3_t		v1, v2;
+
+	const refEntity_t* e = &backEnd.currentEntity->e;
+
+	VectorCopy(e->oldorigin, end);
+	VectorCopy(e->origin, start);
+
+	// compute variables
+	VectorSubtract(end, start, vec);
+	const int len = VectorNormalize(vec);
+
+	// compute side vector
+	VectorSubtract(start, backEnd.viewParms.ori.origin, v1);
+	VectorNormalize(v1);
+	VectorSubtract(end, backEnd.viewParms.ori.origin, v2);
+	VectorNormalize(v2);
+	CrossProduct(v1, v2, right);
+	VectorNormalize(right);
+
+	for (int i = 0; i < 4; i++) {
+		vec3_t	temp;
+
+		DoRailCore(start, end, right, len, 8);
+		RotatePointAroundVector(temp, vec, right, 45);
+		VectorCopy(temp, right);
+	}
 }
 
 //================================================================================
@@ -1676,7 +1760,7 @@ static void LerpMeshVertexes_scalar(mdvSurface_t * surf, const float backlerp)
 	}
 }
 
-static void LerpMeshVertexes(mdvSurface_t* surf, const float backlerp)
+static void LerpMeshVertexes(mdvSurface_t * surf, const float backlerp)
 {
 #if 0
 #if idppc_altivec
@@ -2349,7 +2433,7 @@ Entities that have a single procedurally generated surface
 */
 static void RB_SurfaceEntity(surfaceType_t * surfType)
 {
-	switch (backEnd.currentEntity->e.reType) 
+	switch (backEnd.currentEntity->e.reType)
 	{
 	case RT_SPRITE:
 		RB_SurfaceSprite();
@@ -2371,6 +2455,9 @@ static void RB_SurfaceEntity(surfaceType_t * surfType)
 		break;
 	case RT_CYLINDER:
 		RB_SurfaceCylinder();
+		break;
+	case RT_LIGHTNING:
+		RB_SurfaceLightningBolt();
 		break;
 #ifndef REND2_SP
 	case RT_ORIENTEDLINE:
@@ -2397,8 +2484,8 @@ static void RB_SurfaceEntity(surfaceType_t * surfType)
 			assert(backEnd.currentEntity->e.renderfx >= 0);
 
 			RB_SurfaceEntity(surfType);
-		}
 	}
+}
 	break;
 #else
 	case RT_LATHE:

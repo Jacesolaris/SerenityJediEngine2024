@@ -846,10 +846,10 @@ void RE_WorldEffectCommand(const char* command) // rend2 sp
 		if (!tr.weatherSystem->weatherSlots[WEATHER_SAND].active)
 			tr.weatherSystem->activeWeatherTypes++;
 
-		tr.weatherSystem->weatherSlots[WEATHER_SAND].particleCount = 1200;
+		tr.weatherSystem->weatherSlots[WEATHER_SAND].particleCount = 1600;
 		tr.weatherSystem->weatherSlots[WEATHER_SAND].active = true;
 		tr.weatherSystem->weatherSlots[WEATHER_SAND].gravity = 0.0f;
-		tr.weatherSystem->weatherSlots[WEATHER_SAND].fadeDistance = 2400.f;
+		tr.weatherSystem->weatherSlots[WEATHER_SAND].fadeDistance = 3000.f;
 
 		tr.weatherSystem->weatherSlots[WEATHER_SAND].size[0] = 300.f;
 		tr.weatherSystem->weatherSlots[WEATHER_SAND].size[1] = 300.f;
@@ -866,10 +866,10 @@ void RE_WorldEffectCommand(const char* command) // rend2 sp
 		if (!tr.weatherSystem->weatherSlots[WEATHER_FOG].active)
 			tr.weatherSystem->activeWeatherTypes++;
 
-		tr.weatherSystem->weatherSlots[WEATHER_FOG].particleCount = 1200;
+		tr.weatherSystem->weatherSlots[WEATHER_FOG].particleCount = 1600;
 		tr.weatherSystem->weatherSlots[WEATHER_FOG].active = true;
 		tr.weatherSystem->weatherSlots[WEATHER_FOG].gravity = 0.0f;
-		tr.weatherSystem->weatherSlots[WEATHER_FOG].fadeDistance = 2400.f;
+		tr.weatherSystem->weatherSlots[WEATHER_FOG].fadeDistance = 3000.f;
 
 		tr.weatherSystem->weatherSlots[WEATHER_FOG].size[0] = 300.f;
 		tr.weatherSystem->weatherSlots[WEATHER_FOG].size[1] = 300.f;

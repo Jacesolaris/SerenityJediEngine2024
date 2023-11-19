@@ -64,8 +64,8 @@ extern qboolean BG_IsAlreadyinTauntAnim(int anim);
 extern cvar_t* g_sex;
 extern void G_PilotXWing(gentity_t* ent);
 extern void G_DriveATST(gentity_t* p_ent, gentity_t* atst);
-extern qboolean IsHoldingGun(const gentity_t* ent);
-extern void ReloadGun(gentity_t* ent);
+extern qboolean IsHoldingReloadableGun(const gentity_t* ent);
+extern void WP_ReloadGun(gentity_t* ent);
 extern void RemoveBarrier(gentity_t* ent);
 extern void CancelReload(gentity_t* ent);
 extern Vehicle_t* G_IsRidingVehicle(const gentity_t* p_ent);
@@ -2142,7 +2142,7 @@ void G_SetTauntAnim(gentity_t* ent, const int taunt)
 			}
 			break;
 		case TAUNT_RELOAD:
-			if (IsHoldingGun(ent)) //SP
+			if (IsHoldingReloadableGun(ent)) //SP
 			{
 				if (ent->reloadTime > 0)
 				{
@@ -2150,7 +2150,7 @@ void G_SetTauntAnim(gentity_t* ent, const int taunt)
 				}
 				else
 				{
-					ReloadGun(ent);
+					WP_ReloadGun(ent);
 				}
 				break;
 			}
@@ -2354,13 +2354,23 @@ void G_SetsaberdownorAnim(gentity_t* ent)
 		ent->client->ps.ManualBlockingFlags &= ~(1 << HOLDINGBLOCK);
 		ent->client->ps.ManualBlockingFlags &= ~(1 << HOLDINGBLOCKANDATTACK);
 	}
-	else if (ent->client->ps.weapon != WP_SABER)
-	{
-		G_SetTauntAnim(ent, TAUNT_TAUNT);
-	}
 	else
 	{
-		G_SetTauntAnim(ent, TAUNT_TAUNT);
+		if (IsHoldingReloadableGun(ent)) //SP
+		{
+			if (ent->reloadTime > 0)
+			{
+				CancelReload(ent);
+			}
+			else
+			{
+				WP_ReloadGun(ent);
+			}
+		}
+		else
+		{
+			G_SetTauntAnim(ent, TAUNT_TAUNT);
+		}
 	}
 }
 
@@ -2369,7 +2379,7 @@ extern void WP_RemoveSaber(gentity_t* ent, int saberNum);
 extern void CG_ChangeWeapon(int num);
 extern void ChangeWeapon(const gentity_t* ent, int new_weapon);
 
-void Cmd_SaberDrop_f(gentity_t* ent, const int saberNum)
+static void Cmd_SaberDrop_f(gentity_t* ent, const int saberNum)
 {
 	if (saberNum < 0)
 	{

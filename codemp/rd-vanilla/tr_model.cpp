@@ -133,7 +133,7 @@ void RE_LoadWorldMap_Actual(const char* name, world_t& worldData, const int inde
 //
 // don't use ri->xxx functions in case running on dedicated...
 //
-qboolean RE_RegisterModels_GetDiskFile(const char* psModelFileName, void** ppvBuffer, qboolean* pqbAlreadyCached)
+static qboolean RE_RegisterModels_GetDiskFile(const char* psModelFileName, void** ppvBuffer, qboolean* pqbAlreadyCached)
 {
 	char sModelName[MAX_QPATH];
 
@@ -255,7 +255,7 @@ void* RE_RegisterModels_Malloc(const int iSize, void* pvDiskBufferIfJustLoaded, 
 
 // Unfortunately the dedicated server also hates shader loading. So we need an alternate of this func.
 //
-void* RE_RegisterServerModels_Malloc(const int iSize, void* pvDiskBufferIfJustLoaded, const char* psModelFileName, qboolean* pqbAlreadyFound, const memtag_t eTag)
+static void* RE_RegisterServerModels_Malloc(const int iSize, void* pvDiskBufferIfJustLoaded, const char* psModelFileName, qboolean* pqbAlreadyFound, const memtag_t eTag)
 {
 	char sModelName[MAX_QPATH];
 
@@ -339,7 +339,7 @@ extern cvar_t* r_modelpoolmegs;
 // return qtrue if at least one cached model was freed (which tells z_malloc()-fail recoveryt code to try again)
 //
 extern qboolean gbInsideRegisterModel;
-qboolean RE_RegisterModels_LevelLoadEnd(const qboolean bDeleteEverythingNotUsedThisLevel /* = qfalse */)
+qboolean RE_RegisterModels_LevelLoadEnd(const qboolean bDeleteEverythingNotUsedThisLevel)
 {
 	qboolean bAtLeastoneModelFreed = qfalse;
 
@@ -644,7 +644,7 @@ Ghoul2 Insert End
 ServerLoadMDXA - load a Ghoul 2 animation file
 =================
 */
-qboolean ServerLoadMDXA(model_t* mod, void* buffer, const char* mod_name, qboolean& bAlreadyCached)
+static qboolean ServerLoadMDXA(model_t* mod, void* buffer, const char* mod_name, qboolean& bAlreadyCached)
 {
 	mdxaHeader_t* pinmodel, * mdxa;
 	int					version;
@@ -775,7 +775,7 @@ qboolean ServerLoadMDXA(model_t* mod, void* buffer, const char* mod_name, qboole
 ServerLoadMDXM - load a Ghoul 2 Mesh file
 =================
 */
-qboolean ServerLoadMDXM(model_t* mod, void* buffer, const char* mod_name, qboolean& bAlreadyCached) {
+static qboolean ServerLoadMDXM(model_t* mod, void* buffer, const char* mod_name, qboolean& bAlreadyCached) {
 	int					i;
 	mdxmHeader_t* pinmodel, * mdxm;
 	mdxmLOD_t* lod;
@@ -1592,7 +1592,7 @@ void RE_HunkClearCrap(void)
 	tr.numSkins = 0;
 }
 
-void R_ModelFree(void)
+static void R_ModelFree(void)
 {
 	if (CachedModels) {
 		RE_RegisterModels_DeleteAll();

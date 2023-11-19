@@ -41,7 +41,8 @@ R_InitNextFrame
 
 ====================
 */
-void R_InitNextFrame(void) {
+void R_InitNextFrame(void)
+{
 	backEndData->commands.used = 0;
 
 	tr.numTimedBlocks = 0;

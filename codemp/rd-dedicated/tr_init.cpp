@@ -545,8 +545,10 @@ void R_Init()
 RE_Shutdown
 ===============
 */
-void RE_Shutdown(qboolean destroy_window, qboolean restarting)
+void RE_Shutdown(const qboolean destroyWindow, const qboolean restarting)
 {
+	Com_Printf("RE_Shutdown( %i )\n", destroyWindow);
+
 	for (const auto& command : commands)
 		ri->Cmd_RemoveCommand(command.cmd);
 

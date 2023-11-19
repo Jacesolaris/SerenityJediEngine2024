@@ -7245,7 +7245,7 @@ int fire_deley_time()
 	return 500;
 }
 
-qboolean IsHoldingGun(const gentity_t* ent)
+qboolean IsHoldingReloadableGun(const gentity_t* ent)
 {
 	switch (ent->s.weapon)
 	{
@@ -7265,7 +7265,7 @@ qboolean IsHoldingGun(const gentity_t* ent)
 	return qfalse;
 }
 
-int ClipSize(const int ammo, gentity_t* ent)
+static int ClipSize(const int ammo, gentity_t* ent)
 {
 	switch (ammo)
 	{
@@ -7282,7 +7282,7 @@ int ClipSize(const int ammo, gentity_t* ent)
 	return -1;
 }
 
-int MagazineSize(const int ammo, gentity_t* ent)
+static int MagazineSize(const int ammo, gentity_t* ent)
 {
 	switch (ammo)
 	{
@@ -7299,7 +7299,7 @@ int MagazineSize(const int ammo, gentity_t* ent)
 	return -1;
 }
 
-void ReloadGun(gentity_t* ent)
+void WP_ReloadGun(gentity_t* ent)
 {
 	if (ent->reloadCooldown > level.time)
 	{
@@ -7316,7 +7316,7 @@ void ReloadGun(gentity_t* ent)
 		return;
 	}
 
-	if (IsHoldingGun(ent))
+	if (IsHoldingReloadableGun(ent))
 	{
 		if (ent->client->ps.BlasterAttackChainCount >= BLASTERMISHAPLEVEL_TWELVE)
 		{
@@ -7409,7 +7409,7 @@ void ReloadGun(gentity_t* ent)
 
 void FireOverheatFail(gentity_t* ent)
 {
-	if (IsHoldingGun(ent))
+	if (IsHoldingReloadableGun(ent))
 	{
 		NPC_SetAnim(ent, SETANIM_TORSO, BOTH_RELOADFAIL, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 		G_SoundOnEnt(ent, CHAN_WEAPON, "sound/weapons/reloadfail.mp3");
@@ -7432,7 +7432,7 @@ extern void Ent_CheckBarrierIsAllowed(gentity_t* ent);
 extern void Ent_CheckBarrierIsAllowed_WithSaber(gentity_t* ent);
 extern qboolean droideka_npc(const gentity_t* ent);
 
-void ClientThink_real(gentity_t* ent, usercmd_t* ucmd)
+static void ClientThink_real(gentity_t* ent, usercmd_t* ucmd)
 {
 	gclient_t* client;
 	pmove_t pm;

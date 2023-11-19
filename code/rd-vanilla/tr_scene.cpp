@@ -48,7 +48,7 @@ R_InitNextFrame
 
 ====================
 */
-void R_InitNextFrame() {
+void R_InitNextFrame(void) {
 	backEndData->commands.used = 0;
 
 	r_firstSceneDrawSurf = 0;
@@ -71,7 +71,7 @@ RE_ClearScene
 
 ====================
 */
-void RE_ClearScene() {
+void RE_ClearScene(void) {
 	r_firstSceneDlight = r_numdlights;
 	r_firstSceneEntity = r_numentities;
 	r_firstScenePoly = r_numpolys;
@@ -94,7 +94,7 @@ R_AddPolygonSurfaces
 Adds all the scene's polys into this view's drawsurf list
 =====================
 */
-void R_AddPolygonSurfaces() {
+void R_AddPolygonSurfaces(void) {
 	int			i;
 	srfPoly_t* poly;
 

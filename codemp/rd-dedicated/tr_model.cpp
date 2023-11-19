@@ -133,7 +133,7 @@ void RE_LoadWorldMap_Actual(const char* name, world_t& worldData, const int inde
 //
 // don't use ri->xxx functions in case running on dedicated...
 //
-qboolean RE_RegisterModels_GetDiskFile(const char* psModelFileName, void** ppvBuffer, qboolean* pqbAlreadyCached)
+static qboolean RE_RegisterModels_GetDiskFile(const char* psModelFileName, void** ppvBuffer, qboolean* pqbAlreadyCached)
 {
 	char sModelName[MAX_QPATH];
 
@@ -182,8 +182,7 @@ qboolean RE_RegisterModels_GetDiskFile(const char* psModelFileName, void** ppvBu
 //
 // don't use ri->xxx functions in case running on dedicated
 //
-void* RE_RegisterModels_Malloc(const int iSize, void* pvDiskBufferIfJustLoaded, const char* psModelFileName,
-	qboolean* pqbAlreadyFound, const memtag_t eTag)
+void* RE_RegisterModels_Malloc(const int iSize, void* pvDiskBufferIfJustLoaded, const char* psModelFileName, qboolean* pqbAlreadyFound, const memtag_t eTag)
 {
 	char sModelName[MAX_QPATH];
 
@@ -235,8 +234,7 @@ void* RE_RegisterModels_Malloc(const int iSize, void* pvDiskBufferIfJustLoaded, 
 
 // Unfortunately the dedicated server also hates shader loading. So we need an alternate of this func.
 //
-void* RE_RegisterServerModels_Malloc(const int iSize, void* pvDiskBufferIfJustLoaded, const char* psModelFileName,
-	qboolean* pqbAlreadyFound, const memtag_t eTag)
+void* RE_RegisterServerModels_Malloc(const int iSize, void* pvDiskBufferIfJustLoaded, const char* psModelFileName, qboolean* pqbAlreadyFound, const memtag_t eTag)
 {
 	char sModelName[MAX_QPATH];
 
@@ -322,7 +320,7 @@ extern cvar_t* r_modelpoolmegs;
 //
 extern qboolean gbInsideRegisterModel;
 
-qboolean RE_RegisterModels_LevelLoadEnd(const qboolean bDeleteEverythingNotUsedThisLevel /* = qfalse */)
+qboolean RE_RegisterModels_LevelLoadEnd(const qboolean bDeleteEverythingNotUsedThisLevel)
 {
 	qboolean bAtLeastoneModelFreed = qfalse;
 
@@ -1641,7 +1639,7 @@ static md3Tag_t* R_GetTag(md3Header_t* mod, int frame, const char* tagName)
 R_LerpTag
 ================
 */
-int R_LerpTag(orientation_t* tag, const qhandle_t handle, const int startFrame, const int endFrame,	const float frac, const char* tagName)
+int R_LerpTag(orientation_t* tag, const qhandle_t handle, const int startFrame, const int endFrame, const float frac, const char* tagName)
 {
 	const model_t* model = R_GetModelByHandle(handle);
 	if (!model->md3[0])
