@@ -53,13 +53,13 @@ void RB_ShadowFinish(void) {
 
 	GL_Cull(CT_TWO_SIDED);
 	GLSL_BindProgram(&tr.textureColorShader);
-	vec4_t color;
+	vec4_t color{};
 	VectorSet4(color, 0.6f, 0.6f, 0.6f, 1.0f);
 	GLSL_SetUniformVec4(&tr.textureColorShader, UNIFORM_COLOR, color);
 	GLSL_SetUniformMatrix4x4(&tr.textureColorShader, UNIFORM_MODELVIEWPROJECTIONMATRIX, projection);
 
-	vec4i_t dstBox;
-	vec4_t quadVerts[4];
+	vec4i_t dstBox{};
+	vec4_t quadVerts[4]{};
 	vec2_t texCoords[4];
 	VectorSet4(dstBox, 0, glConfig.vidHeight, glConfig.vidWidth, 0);
 
@@ -83,8 +83,8 @@ void RB_ProjectionShadowDeform(void) {
 	float* xyz;
 	int		i;
 	float	h;
-	vec3_t	ground;
-	vec3_t	light;
+	vec3_t	ground{};
+	vec3_t	light{};
 	float	groundDist;
 	float	d;
 	vec3_t	lightDir;

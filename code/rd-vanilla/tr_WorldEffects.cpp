@@ -71,39 +71,39 @@ int			mParticlesRendered;
 ////////////////////////////////////////////////////////////////////////////////////////
 // Handy Functions
 ////////////////////////////////////////////////////////////////////////////////////////
-inline void		VectorMA(vec3_t vecAdd, const float scale, const vec3_t vecScale)
+inline static void	VectorMA(vec3_t vecAdd, const float scale, const vec3_t vecScale)
 {
 	vecAdd[0] += scale * vecScale[0];
 	vecAdd[1] += scale * vecScale[1];
 	vecAdd[2] += scale * vecScale[2];
 }
 
-inline void VectorFloor(vec3_t in)
+inline static void VectorFloor(vec3_t in)
 {
 	in[0] = floorf(in[0]);
 	in[1] = floorf(in[1]);
 	in[2] = floorf(in[2]);
 }
 
-inline void VectorCeil(vec3_t in)
+inline static void VectorCeil(vec3_t in)
 {
 	in[0] = ceilf(in[0]);
 	in[1] = ceilf(in[1]);
 	in[2] = ceilf(in[2]);
 }
 
-inline float	FloatRand()
+inline static float	FloatRand()
 {
 	return static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
 }
 
-inline float	fast_flrand(const float min, const float max)
+inline static float	fast_flrand(const float min, const float max)
 {
 	//return min + (max - min) * flrand;
 	return Q_flrand(min, max); //fixme?
 }
 
-inline	void	SnapFloatToGrid(float& f, const int grid_size)
+inline	static void	SnapFloatToGrid(float& f, const int grid_size)
 {
 	f = static_cast<int>(f);
 
@@ -132,7 +132,7 @@ inline	void	SnapFloatToGrid(float& f, const int grid_size)
 	assert(static_cast<int>(f) % static_cast<int>(grid_size) == 0);
 }
 
-inline	void	SnapVectorToGrid(CVec3& vec, const int grid_size)
+inline	static void	SnapVectorToGrid(CVec3& vec, const int grid_size)
 {
 	SnapFloatToGrid(vec[0], grid_size);
 	SnapFloatToGrid(vec[1], grid_size);
@@ -1612,7 +1612,7 @@ Imported from MP/Ensiform's fixes
 ==================
 */
 
-qboolean WE_ParseVector(const char** text, const int count, float* v) {
+static qboolean WE_ParseVector(const char** text, const int count, float* v) {
 	// FIXME: spaces are currently required after parens, should change parseext...
 	COM_BeginParseSession();
 	const char* token = COM_ParseExt(text, qfalse);

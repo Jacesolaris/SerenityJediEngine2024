@@ -28,7 +28,7 @@ float ProjectRadius(const float r, vec3_t location)
 	float pr;
 	float dist;
 	float c;
-	vec3_t	p;
+	vec3_t	p{};
 	float	projected[4]{};
 
 	c = DotProduct(tr.viewParms.ori.axis[0], tr.viewParms.ori.origin);
@@ -268,7 +268,7 @@ R_ComputeFogNum
 =================
 */
 static int R_ComputeFogNum(mdvModel_t* model, trRefEntity_t* ent) {
-	int				i/*, j*/;
+	int				i, j = 0;
 	float			frameRadius;
 	fog_t* fog;
 	mdvFrame_t* mdvFrame;
@@ -317,12 +317,6 @@ static int R_ComputeFogNum(mdvModel_t* model, trRefEntity_t* ent) {
 			(localOrigin[0] + frameRadius >= fog->bounds[0][0] && localOrigin[1] + frameRadius >= fog->bounds[0][1] && localOrigin[2] + frameRadius >= fog->bounds[0][2] &&
 				localOrigin[0] + frameRadius <= fog->bounds[1][0] && localOrigin[1] + frameRadius <= fog->bounds[1][1] && localOrigin[2] + frameRadius <= fog->bounds[1][2]))
 		{//partially inside it
-			//if (tr.refdef.fogIndex == i || R_FogParmsMatch(tr.refdef.fogIndex, i))
-			//{//take new one only if it's the same one that the viewpoint is in
-			//	return i;
-			//	break;
-			//}
-			//else
 			if (!partialFog)
 			{//first partialFog
 				partialFog = i;

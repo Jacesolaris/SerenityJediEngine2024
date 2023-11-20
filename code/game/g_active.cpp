@@ -1357,7 +1357,7 @@ void DoImpact(gentity_t* self, gentity_t* other, const qboolean damage_self, con
 					700)
 				{
 					if ((self->s.weapon == WP_SABER || self->s.number == 0) && self->client && self->client->ps.
-						groundentity_num < ENTITYNUM_NONE && magnitude < 1000)
+						groundEntityNum < ENTITYNUM_NONE && magnitude < 1000)
 					{
 						//players and jedi take less impact damage
 						magnitude /= 2;
@@ -1420,7 +1420,7 @@ void DoImpact(gentity_t* self, gentity_t* other, const qboolean damage_self, con
 					if ((self->s.weapon == WP_SABER || self->s.number < MAX_CLIENTS || self->client && (self->client->
 						NPC_class == CLASS_BOBAFETT || self->client->NPC_class == CLASS_ROCKETTROOPER)) && self->
 						client
-						&& self->client->ps.groundentity_num < ENTITYNUM_NONE && magnitude < 1000)
+						&& self->client->ps.groundEntityNum < ENTITYNUM_NONE && magnitude < 1000)
 					{
 						//players and jedi take less impact damage
 						magnitude /= 2;
@@ -1989,7 +1989,7 @@ void ClientTimerActions(gentity_t* ent, const int msec)
 			&& !PM_InKnockDown(&ent->client->ps)
 			&& ent->client->ps.saberLockTime < level.time
 			&& ent->client->ps.saberBlockingTime < level.time
-			&& ent->client->ps.groundentity_num != ENTITYNUM_NONE)
+			&& ent->client->ps.groundEntityNum != ENTITYNUM_NONE)
 		{
 			if (!(ent->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK))
 			{
@@ -2006,7 +2006,7 @@ void ClientTimerActions(gentity_t* ent, const int msec)
 			&& !PM_InKnockDown(&ent->client->ps)
 			&& ent->client->ps.saberLockTime < level.time
 			&& ent->client->ps.saberBlockingTime < level.time
-			&& ent->client->ps.groundentity_num != ENTITYNUM_NONE)
+			&& ent->client->ps.groundEntityNum != ENTITYNUM_NONE)
 		{
 			WP_SaberFatigueRegenerate(1);
 		}
@@ -2768,7 +2768,7 @@ gentity_t* G_KickTrace(gentity_t* ent, vec3_t kick_dir, const float kick_dist, v
 						if (hit_ent->health > 0)
 						{
 							//knock down
-							if (hit_ent->client->ps.groundentity_num == ENTITYNUM_NONE)
+							if (hit_ent->client->ps.groundEntityNum == ENTITYNUM_NONE)
 							{
 								//he's in the air?  Send him flying back
 								if (!(hit_ent->flags & FL_NO_KNOCKBACK))
@@ -3036,7 +3036,7 @@ qboolean G_GrabClient(gentity_t* ent, const usercmd_t* ucmd)
 			//don't interrupt
 			continue;
 		}
-		if (radius_ents[i]->client->ps.groundentity_num == ENTITYNUM_NONE)
+		if (radius_ents[i]->client->ps.groundEntityNum == ENTITYNUM_NONE)
 		{
 			//must be on ground
 			continue;
@@ -3366,7 +3366,7 @@ qboolean G_CheckClampUcmd(gentity_t* ent, usercmd_t* ucmd)
 	{
 		vec3_t vFwd, fwdAng = { 0, ent->currentAngles[YAW], 0 };
 		AngleVectors(fwdAng, vFwd, nullptr, nullptr);
-		if (ent->client->ps.groundentity_num == ENTITYNUM_NONE)
+		if (ent->client->ps.groundEntityNum == ENTITYNUM_NONE)
 		{
 			float savZ = ent->client->ps.velocity[2];
 			VectorScale(vFwd, 100, ent->client->ps.velocity);
@@ -3379,7 +3379,7 @@ qboolean G_CheckClampUcmd(gentity_t* ent, usercmd_t* ucmd)
 	if (ent->client->ps.saber_move == LS_A_JUMP_T__B_ || ent->client->ps.saber_move == LS_A_JUMP_PALP_)
 	{
 		//can't move during leap
-		if (ent->client->ps.groundentity_num != ENTITYNUM_NONE || !ent->s.number && (player_locked ||
+		if (ent->client->ps.groundEntityNum != ENTITYNUM_NONE || !ent->s.number && (player_locked ||
 			PlayerAffectedByStasis()))
 		{
 			//hit the ground
@@ -3406,7 +3406,7 @@ qboolean G_CheckClampUcmd(gentity_t* ent, usercmd_t* ucmd)
 			400) //not in beginning
 		{
 			//middle of anim
-			if (ent->client->ps.groundentity_num != ENTITYNUM_NONE)
+			if (ent->client->ps.groundEntityNum != ENTITYNUM_NONE)
 			{
 				//still on ground?
 				vec3_t yawAngles, backDir;
@@ -3467,7 +3467,7 @@ qboolean G_CheckClampUcmd(gentity_t* ent, usercmd_t* ucmd)
 			400) //not in beginning
 		{
 			//one of the two jumps
-			if (ent->client->ps.groundentity_num != ENTITYNUM_NONE)
+			if (ent->client->ps.groundEntityNum != ENTITYNUM_NONE)
 			{
 				//still on ground?
 				//jump!
@@ -3562,7 +3562,7 @@ qboolean G_CheckClampUcmd(gentity_t* ent, usercmd_t* ucmd)
 			if (ent->client->ps.legsAnimTimer >= 1700 && ent->client->ps.legsAnimTimer < 1800)
 			{
 				//one of the two jumps
-				if (ent->client->ps.groundentity_num != ENTITYNUM_NONE)
+				if (ent->client->ps.groundEntityNum != ENTITYNUM_NONE)
 				{
 					//still on ground?
 					//jump!
@@ -3629,7 +3629,7 @@ qboolean G_CheckClampUcmd(gentity_t* ent, usercmd_t* ucmd)
 			&& ent->client->ps.legsAnimTimer < 2850)
 		{
 			//the jump
-			if (ent->client->ps.groundentity_num != ENTITYNUM_NONE)
+			if (ent->client->ps.groundEntityNum != ENTITYNUM_NONE)
 			{
 				//still on ground?
 				//jump!
@@ -5325,11 +5325,11 @@ qboolean G_CheckClampUcmd(gentity_t* ent, usercmd_t* ucmd)
 		float elapsedTime = animLength - ent->client->ps.torsoAnimTimer;
 		ucmd->upmove = ucmd->rightmove = ucmd->forwardmove = 0;
 		if (elapsedTime > 600 && elapsedTime < 800
-			&& ent->client->ps.groundentity_num != ENTITYNUM_NONE)
+			&& ent->client->ps.groundEntityNum != ENTITYNUM_NONE)
 		{
 			//jump - FIXME: how do we stop double-jumps?
 			ent->client->ps.pm_flags |= PMF_JUMP_HELD;
-			ent->client->ps.groundentity_num = ENTITYNUM_NONE;
+			ent->client->ps.groundEntityNum = ENTITYNUM_NONE;
 			ent->client->ps.jumpZStart = ent->currentOrigin[2];
 			ent->client->ps.velocity[2] = JUMP_VELOCITY;
 			G_AddEvent(ent, EV_JUMP, 0);
@@ -5688,7 +5688,7 @@ qboolean G_CheckClampUcmd(gentity_t* ent, usercmd_t* ucmd)
 		//can't move
 		ucmd->rightmove = 0;
 		ucmd->upmove = 0;
-		if (ent->client->ps.groundentity_num != ENTITYNUM_NONE)
+		if (ent->client->ps.groundEntityNum != ENTITYNUM_NONE)
 		{
 			//hit the ground
 			ucmd->forwardmove = 0;
@@ -6935,13 +6935,13 @@ void ClientAlterSpeed(gentity_t* ent, usercmd_t* ucmd, const qboolean controlled
 
 	if (!p_veh)
 	{
-		if (ucmd->forwardmove < 0 && !(ucmd->buttons & BUTTON_WALKING) && client->ps.groundentity_num != ENTITYNUM_NONE)
+		if (ucmd->forwardmove < 0 && !(ucmd->buttons & BUTTON_WALKING) && client->ps.groundEntityNum != ENTITYNUM_NONE)
 		{
 			//running backwards is slower than running forwards
 			client->ps.speed *= 0.75f;
 		}
 
-		if (ucmd->forwardmove < 0 && ucmd->buttons & BUTTON_WALKING && client->ps.groundentity_num != ENTITYNUM_NONE)
+		if (ucmd->forwardmove < 0 && ucmd->buttons & BUTTON_WALKING && client->ps.groundEntityNum != ENTITYNUM_NONE)
 		{
 			//walking backwards also makes a player move a little slower
 			if (client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK)
@@ -6957,7 +6957,7 @@ void ClientAlterSpeed(gentity_t* ent, usercmd_t* ucmd, const qboolean controlled
 		if (!ucmd->forwardmove
 			&& ucmd->rightmove
 			&& !(ucmd->buttons & BUTTON_WALKING)
-			&& client->ps.groundentity_num != ENTITYNUM_NONE)
+			&& client->ps.groundEntityNum != ENTITYNUM_NONE)
 		{
 			//pure strafe running is slower.
 			client->ps.speed *= 0.75f;
@@ -7694,10 +7694,10 @@ static void ClientThink_real(gentity_t* ent, usercmd_t* ucmd)
 			{
 				ucmd->upmove = 0;
 			}
-			if (ent->client->ps.groundentity_num != ENTITYNUM_NONE)
+			if (ent->client->ps.groundEntityNum != ENTITYNUM_NONE)
 			{
 				//ATST crushes anything underneath it
-				gentity_t* under = &g_entities[ent->client->ps.groundentity_num];
+				gentity_t* under = &g_entities[ent->client->ps.groundEntityNum];
 				if (under && under->health && under->takedamage)
 				{
 					vec3_t down = { 0, 0, -1 };
@@ -7714,10 +7714,10 @@ static void ClientThink_real(gentity_t* ent, usercmd_t* ucmd)
 				}
 			}
 		}
-		else if (ent->client->ps.groundentity_num < ENTITYNUM_WORLD && !ent->client->ps.forceJumpCharge)
+		else if (ent->client->ps.groundEntityNum < ENTITYNUM_WORLD && !ent->client->ps.forceJumpCharge)
 		{
 			//standing on an entity and not currently force jumping
-			gentity_t* groundEnt = &g_entities[ent->client->ps.groundentity_num];
+			gentity_t* groundEnt = &g_entities[ent->client->ps.groundEntityNum];
 			if (groundEnt && groundEnt->client)
 			{
 				// If you landed on a speeder or animal vehicle...
@@ -7768,7 +7768,7 @@ static void ClientThink_real(gentity_t* ent, usercmd_t* ucmd)
 							SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 					}
 				}
-				else if (groundEnt->client->ps.groundentity_num != ENTITYNUM_NONE &&
+				else if (groundEnt->client->ps.groundEntityNum != ENTITYNUM_NONE &&
 					groundEnt->health > 0 && !PM_InRoll(&groundEnt->client->ps)
 					&& !(groundEnt->client->ps.eFlags & EF_LOCKED_TO_WEAPON)
 					&& !(groundEnt->client->ps.eFlags & EF_HELD_BY_RANCOR)
@@ -8799,7 +8799,7 @@ static void ClientThink_real(gentity_t* ent, usercmd_t* ucmd)
 			}
 			else
 			{
-				if (ent->client->moveType == MT_FLYSWIM || ent->s.groundentity_num == ENTITYNUM_NONE || JET_Flying(ent)
+				if (ent->client->moveType == MT_FLYSWIM || ent->s.groundEntityNum == ENTITYNUM_NONE || JET_Flying(ent)
 					|| PM_CrouchAnim(ent->client->ps.legsAnim))
 				{
 					Boba_FireWristMissile(ent, BOBA_MISSILE_VIBROBLADE);

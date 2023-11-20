@@ -79,26 +79,26 @@ inline float WE_flrand(const float min, const float max)
 ////////////////////////////////////////////////////////////////////////////////////////
 extern void SetViewportAndScissor();
 
-inline void VectorFloor(vec3_t in)
+inline static void VectorFloor(vec3_t in)
 {
 	in[0] = floorf(in[0]);
 	in[1] = floorf(in[1]);
 	in[2] = floorf(in[2]);
 }
 
-inline void VectorCeil(vec3_t in)
+inline static void VectorCeil(vec3_t in)
 {
 	in[0] = ceilf(in[0]);
 	in[1] = ceilf(in[1]);
 	in[2] = ceilf(in[2]);
 }
 
-inline float FloatRand()
+inline static float FloatRand()
 {
 	return static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
 }
 
-inline void SnapFloatToGrid(float& f, const int GridSize)
+inline static void SnapFloatToGrid(float& f, const int GridSize)
 {
 	f = static_cast<int>(f);
 
@@ -127,7 +127,7 @@ inline void SnapFloatToGrid(float& f, const int GridSize)
 	assert(static_cast<int>(f) % GridSize == 0);
 }
 
-inline void SnapVectorToGrid(CVec3& vec, const int GridSize)
+inline static void SnapVectorToGrid(CVec3& vec, const int GridSize)
 {
 	SnapFloatToGrid(vec[0], GridSize);
 	SnapFloatToGrid(vec[1], GridSize);
@@ -361,7 +361,7 @@ bool R_GetWindSpeed(float& windSpeed)
 	return true;
 }
 
-bool R_GetWindGusting()
+static bool R_GetWindGusting()
 {
 	return mGlobalWindSpeed > 1000.0f;
 }
@@ -687,7 +687,7 @@ bool R_IsOutside(vec3_t pos)
 	return mOutside.PointOutside(pos);
 }
 
-bool R_IsShaking()
+static bool R_IsShaking()
 {
 	return mOutside.mOutsideShake && mOutside.PointOutside(backEnd.viewParms.ori.origin);
 }
@@ -1370,7 +1370,7 @@ void R_SetWeatherEffect_f(void)
 WE_ParseVector
 ===============
 */
-qboolean WE_ParseVector(const char** text, const int count, float* v)
+static qboolean WE_ParseVector(const char** text, const int count, float* v)
 {
 	// FIXME: spaces are currently required after parens, should change parseext...
 	const char* token = COM_ParseExt(text, qfalse);

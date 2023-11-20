@@ -958,7 +958,7 @@ netField_t entityStateFields[] =
 	{NETF(pos.trDuration), 32},
 	// might be able to reduce
 	{NETF(teamowner), 8},
-	{NETF(groundentity_num), GENTITYNUM_BITS},
+	{NETF(groundEntityNum), GENTITYNUM_BITS},
 	{NETF(pos.trType), 8},
 	{NETF(angles[2]), 0},
 	{NETF(angles[0]), 0},
@@ -1520,7 +1520,7 @@ netField_t playerStateFields[] =
 	{PSF(legsAnim), 16}, // Maximum number of animation sequences is 2048.  Top bit is reserved for the togglebit
 	{PSF(delta_angles[0]), 16},
 	{PSF(torsoAnim), 16}, // Maximum number of animation sequences is 2048.  Top bit is reserved for the togglebit
-	{PSF(groundentity_num), GENTITYNUM_BITS},
+	{PSF(groundEntityNum), GENTITYNUM_BITS},
 	{PSF(eFlags), 32},
 	{PSF(fd.forcePower), 8},
 	{PSF(eventSequence), 16},
@@ -1792,7 +1792,7 @@ netField_t pilotPlayerStateFields[] =
 	{PSF(velocity[2]), 0},
 	{PSF(bobCycle), 8},
 	{PSF(speed), 0}, //sadly, the vehicles require negative speed values, so..
-	{PSF(groundentity_num), GENTITYNUM_BITS},
+	{PSF(groundEntityNum), GENTITYNUM_BITS},
 	{PSF(viewheight), -8},
 	{PSF(fd.saber_anim_level), 4},
 	{PSF(fd.saberDrawAnimLevel), 4},
@@ -1961,7 +1961,7 @@ netField_t vehPlayerStateFields[] =
 	{PSF(speed), 0}, //sadly, the vehicles require negative speed values, so..
 	{PSF(legsAnim), 16}, // Maximum number of animation sequences is 2048.  Top bit is reserved for the togglebit
 	{PSF(delta_angles[0]), 16},
-	{PSF(groundentity_num), GENTITYNUM_BITS},
+	{PSF(groundEntityNum), GENTITYNUM_BITS},
 	{PSF(eFlags), 32},
 	{PSF(eventSequence), 16},
 	{PSF(legsTimer), 16},
@@ -2101,7 +2101,7 @@ netField_t	playerStateFields[] =
 { PSF(legsAnim), 16 },			// Maximum number of animation sequences is 2048.  Top bit is reserved for the togglebit
 { PSF(delta_angles[0]), 16 },
 { PSF(torsoAnim), 16 },			// Maximum number of animation sequences is 2048.  Top bit is reserved for the togglebit
-{ PSF(groundentity_num), GENTITYNUM_BITS },
+{ PSF(groundEntityNum), GENTITYNUM_BITS },
 { PSF(eFlags), 32 },
 { PSF(fd.forcePower), 8 },
 { PSF(eventSequence), 16 },

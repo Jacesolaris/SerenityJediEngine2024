@@ -190,7 +190,7 @@ qboolean ValidateBoard(Vehicle_t* p_veh, bgEntity_t* p_ent)
 		if (p_veh->m_pVehicleInfo->type == VH_WALKER)
 		{
 			//I know, I know, this should by in the walker's validateboard()
-			if (!ent->client || ent->client->ps.groundentity_num != parent->s.number)
+			if (!ent->client || ent->client->ps.groundEntityNum != parent->s.number)
 			{
 				//can only steal an occupied AT-ST if you're on top (by the hatch)
 				return qfalse;

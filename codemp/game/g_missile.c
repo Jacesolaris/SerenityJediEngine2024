@@ -625,9 +625,9 @@ static void g_run_stuck_missile(gentity_t* ent)
 {
 	if (ent->takedamage)
 	{
-		if (ent->s.groundentity_num >= 0 && ent->s.groundentity_num < ENTITYNUM_WORLD)
+		if (ent->s.groundEntityNum >= 0 && ent->s.groundEntityNum < ENTITYNUM_WORLD)
 		{
-			gentity_t* other = &g_entities[ent->s.groundentity_num];
+			gentity_t* other = &g_entities[ent->s.groundEntityNum];
 
 			if (!VectorCompare(vec3_origin, other->s.pos.trDelta) && other->s.pos.trType != TR_STATIONARY ||
 				!VectorCompare(vec3_origin, other->s.apos.trDelta) && other->s.apos.trType != TR_STATIONARY)
@@ -1463,11 +1463,11 @@ void g_run_missile(gentity_t* ent)
 
 		if (!tr_g.startsolid && !tr_g.allsolid && tr_g.entityNum == ENTITYNUM_WORLD)
 		{
-			ent->s.groundentity_num = tr_g.entityNum;
+			ent->s.groundEntityNum = tr_g.entityNum;
 		}
 		else
 		{
-			ent->s.groundentity_num = ENTITYNUM_NONE;
+			ent->s.groundEntityNum = ENTITYNUM_NONE;
 		}
 	}
 
@@ -1566,7 +1566,7 @@ passthrough:
 
 	if (ent->s.weapon == G2_MODEL_PART)
 	{
-		if (ent->s.groundentity_num == ENTITYNUM_WORLD)
+		if (ent->s.groundEntityNum == ENTITYNUM_WORLD)
 		{
 			ent->s.pos.trType = TR_LINEAR;
 			VectorClear(ent->s.pos.trDelta);

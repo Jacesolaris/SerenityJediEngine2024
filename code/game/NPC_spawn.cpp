@@ -1397,7 +1397,7 @@ void NPC_Begin(gentity_t* ent)
 		}
 	}
 
-	ent->s.groundentity_num = ENTITYNUM_NONE;
+	ent->s.groundEntityNum = ENTITYNUM_NONE;
 	ent->mass = 10;
 	ent->takedamage = qtrue;
 
@@ -1562,7 +1562,7 @@ void NPC_Begin(gentity_t* ent)
 	memset(&ucmd, 0, sizeof ucmd);
 	VectorCopyM(client->pers.cmd_angles, ucmd.angles);
 
-	ent->client->ps.groundentity_num = ENTITYNUM_NONE;
+	ent->client->ps.groundEntityNum = ENTITYNUM_NONE;
 
 	if (ent->NPC->aiFlags & NPCAI_MATCHPLAYERWEAPON)
 	{

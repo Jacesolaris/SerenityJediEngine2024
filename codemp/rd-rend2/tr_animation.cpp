@@ -135,7 +135,8 @@ R_MDRComputeFogNum
 =================
 */
 
-int R_MDRComputeFogNum(mdrHeader_t* header, trRefEntity_t* ent) {
+static int R_MDRComputeFogNum(mdrHeader_t* header, trRefEntity_t* ent)
+{
 	int				i, j;
 	fog_t* fog;
 	mdrFrame_t* mdrFrame;
@@ -321,7 +322,7 @@ void RB_MDRSurfaceAnim(mdrSurface_t* surface)
 	mdrHeader_t* header;
 	mdrFrame_t* frame;
 	mdrFrame_t* oldFrame;
-	mdrBone_t		bones[MDR_MAX_BONES], * bonePtr, * bone;
+	mdrBone_t		bones[MDR_MAX_BONES]{}, * bonePtr, * bone;
 
 	int			frameSize;
 

@@ -207,7 +207,7 @@ unsigned short FloatToHalf(float in)
 	{
 		float f;
 		unsigned int i;
-	} f32;
+	} f32{};
 
 	int sign, inExponent, inFraction;
 	int outExponent, outFraction;

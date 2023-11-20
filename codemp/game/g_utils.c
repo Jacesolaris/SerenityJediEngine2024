@@ -2088,7 +2088,7 @@ tryJetPack:
 	//if we got here, we didn't actually use anything else, so try to toggle jetpack if we are in the air, or if it is already on
 	if (ent->client->ps.stats[STAT_HOLDABLE_ITEMS] & 1 << HI_JETPACK)
 	{
-		if ((ent->client->jetPackOn || ent->client->ps.groundentity_num == ENTITYNUM_NONE) && ent->client->ps.jetpackFuel
+		if ((ent->client->jetPackOn || ent->client->ps.groundEntityNum == ENTITYNUM_NONE) && ent->client->ps.jetpackFuel
 		> 10)
 		{
 			ItemUse_Jetpack(ent);

@@ -728,7 +728,7 @@ void ai_mod_jump(bot_state_t* bs)
 			else
 				bot->client->ps.velocity[2] = -16;
 		}
-		else if (bot->s.groundentity_num != ENTITYNUM_NONE)
+		else if (bot->s.groundEntityNum != ENTITYNUM_NONE)
 		{
 			//Landed, start landing anim
 			//FIXME: if the
@@ -1377,7 +1377,7 @@ void bot_update_input(bot_state_t* bs, const int time, const int elapsed_time)
 		if (bs->currentEnemy
 			&& bs->currentEnemy->client
 			&& bs->currentEnemy->health > 0
-			&& bs->currentEnemy->client->ps.groundentity_num != ENTITYNUM_NONE
+			&& bs->currentEnemy->client->ps.groundEntityNum != ENTITYNUM_NONE
 			&& VectorDistance(g_entities[bs->cur_ps.client_num].r.currentOrigin, bs->currentEnemy->r.currentOrigin) < SABER_KICK_RANGE
 			|| next_kick[bs->cur_ps.client_num] > level.time)
 		{
@@ -1413,7 +1413,7 @@ void bot_update_input(bot_state_t* bs, const int time, const int elapsed_time)
 			&& bs->jumpTime <= level.time // Don't gesture during jumping...
 			&& !bs->doAttack
 			&& !bs->doAltAttack
-			&& bs->currentEnemy->client->ps.groundentity_num != ENTITYNUM_NONE
+			&& bs->currentEnemy->client->ps.groundEntityNum != ENTITYNUM_NONE
 			&& VectorDistance(g_entities[bs->cur_ps.client_num].r.currentOrigin,
 				bs->currentEnemy->r.currentOrigin) < 300
 			|| next_gloat[bs->cur_ps.client_num] > level.time)
@@ -1450,7 +1450,7 @@ void bot_update_input(bot_state_t* bs, const int time, const int elapsed_time)
 			&& bs->jumpTime <= level.time // Don't gesture during jumping...
 			&& !bs->doAttack
 			&& !bs->doAltAttack
-			&& bs->currentEnemy->client->ps.groundentity_num != ENTITYNUM_NONE
+			&& bs->currentEnemy->client->ps.groundEntityNum != ENTITYNUM_NONE
 			&& VectorDistance(g_entities[bs->cur_ps.client_num].r.currentOrigin,
 				bs->currentEnemy->r.currentOrigin) < 300
 			|| next_flourish[bs->cur_ps.client_num] > level.time)
@@ -3363,7 +3363,7 @@ void bot_move(bot_state_t* bs, vec3_t dest, const qboolean wptravel, qboolean st
 			//never strafe during when jumping somewhere
 			strafe = qfalse;
 
-			if (bs->cur_ps.groundentity_num != ENTITYNUM_NONE &&
+			if (bs->cur_ps.groundEntityNum != ENTITYNUM_NONE &&
 				(diststart < distend || bs->origin[2] < bs->wpCurrent->origin[2]))
 			{
 				//before jump attempt
@@ -3384,7 +3384,7 @@ void bot_move(bot_state_t* bs, vec3_t dest, const qboolean wptravel, qboolean st
 
 			//make sure we're stopped or moving towards our goal before jumping
 			if (diststart < distend && (VectorCompare(vec3_origin, velocity) || DotProduct(velocity, viewang) > .7)
-				|| bs->cur_ps.groundentity_num == ENTITYNUM_NONE)
+				|| bs->cur_ps.groundEntityNum == ENTITYNUM_NONE)
 			{
 				//moving towards to our jump target or not moving at all or already on route and not already near the target.
 				//hold down jump until we're pretty sure that we'll hit our target by just falling onto it.
@@ -4746,12 +4746,12 @@ void wp_constant_routine(bot_state_t* bs)
 		}
 
 		if (height_dif > 40 && bs->cur_ps.fd.forcePowersKnown & 1 << FP_LEVITATION && (bs->cur_ps.fd.forceJumpCharge
-			< forceJumpStrength[bs->cur_ps.fd.forcePowerLevel[FP_LEVITATION]] - 100 || bs->cur_ps.groundentity_num ==
+			< forceJumpStrength[bs->cur_ps.fd.forcePowerLevel[FP_LEVITATION]] - 100 || bs->cur_ps.groundEntityNum ==
 			ENTITYNUM_NONE))
 		{
 			//alright, let's jump
 			bs->forceJumpChargeTime = level.time + 1000;
-			if (bs->cur_ps.groundentity_num != ENTITYNUM_NONE && bs->jumpPrep < level.time - 300)
+			if (bs->cur_ps.groundEntityNum != ENTITYNUM_NONE && bs->jumpPrep < level.time - 300)
 			{
 				bs->jumpPrep = level.time + 700;
 			}
@@ -4962,7 +4962,7 @@ int bot_trace_strafe(const bot_state_t* bs, vec3_t traceto)
 	vec3_t forward, right;
 	trace_t tr;
 
-	if (bs->cur_ps.groundentity_num == ENTITYNUM_NONE)
+	if (bs->cur_ps.groundEntityNum == ENTITYNUM_NONE)
 	{
 		//don't do this in the air, it can be.. dangerous.
 		return 0;
@@ -10453,7 +10453,7 @@ int bot_use_inventory_item(bot_state_t* bs)
 			bs->cur_ps.stats[STAT_HOLDABLE_ITEM] = BG_GetItemIndexByTag(HI_JETPACK, IT_HOLDABLE);
 			goto wantuseitem;
 		}
-		if (bs->cur_ps.groundentity_num == ENTITYNUM_NONE)
+		if (bs->cur_ps.groundEntityNum == ENTITYNUM_NONE)
 		{
 			bs->cur_ps.stats[STAT_HOLDABLE_ITEM] = BG_GetItemIndexByTag(HI_JETPACK, IT_HOLDABLE);
 			goto wantuseitem;
@@ -10471,7 +10471,7 @@ int bot_use_inventory_item(bot_state_t* bs)
 			bs->cur_ps.stats[STAT_HOLDABLE_ITEM] = BG_GetItemIndexByTag(HI_FLAMETHROWER, IT_HOLDABLE);
 			goto wantuseitem;
 		}
-		if (bs->currentEnemy && bs->frame_Enemy_Len <= MELEE_ATTACK_RANGE && bs->cur_ps.groundentity_num ==
+		if (bs->currentEnemy && bs->frame_Enemy_Len <= MELEE_ATTACK_RANGE && bs->cur_ps.groundEntityNum ==
 			ENTITYNUM_NONE)
 		{
 			bs->cur_ps.stats[STAT_HOLDABLE_ITEM] = BG_GetItemIndexByTag(IT_HOLDABLE, IT_HOLDABLE);
@@ -11909,7 +11909,7 @@ void standard_bot_ai(bot_state_t* bs)
 				&& bs->currentEnemy->r.currentOrigin[2] > bs->origin[2] + 32
 				&& bs->currentEnemy->health > 0
 				&& bs->currentEnemy->client
-				&& bs->currentEnemy->client->ps.groundentity_num != ENTITYNUM_NONE)
+				&& bs->currentEnemy->client->ps.groundEntityNum != ENTITYNUM_NONE)
 			{
 				// Jump to enemy. NPC style! They are above us. Do a Jump.
 				bs->BOTjumpState = JS_FACING;
@@ -11923,7 +11923,7 @@ void standard_bot_ai(bot_state_t* bs)
 				&& bs->currentEnemy->r.currentOrigin[2] < bs->origin[2] - 32
 				&& bs->currentEnemy->health > 0
 				&& bs->currentEnemy->client
-				&& bs->currentEnemy->client->ps.groundentity_num != ENTITYNUM_NONE)
+				&& bs->currentEnemy->client->ps.groundEntityNum != ENTITYNUM_NONE)
 			{
 				// Jump to enemy. NPC style! They are below us.
 				bs->BOTjumpState = JS_FACING;
@@ -11937,7 +11937,7 @@ void standard_bot_ai(bot_state_t* bs)
 				&& bs->currentEnemy->r.currentOrigin[2] > bs->origin[2] + 32
 				&& bs->currentEnemy->health > 0
 				&& bs->currentEnemy->client
-				&& bs->currentEnemy->client->ps.groundentity_num != ENTITYNUM_NONE)
+				&& bs->currentEnemy->client->ps.groundEntityNum != ENTITYNUM_NONE)
 			{
 				// Jump to enemy. NPC style! They are above us. Do a Jump.
 				bs->BOTjumpState = JS_FACING;
@@ -11951,7 +11951,7 @@ void standard_bot_ai(bot_state_t* bs)
 				&& bs->currentEnemy->r.currentOrigin[2] < bs->origin[2] - 32
 				&& bs->currentEnemy->health > 0
 				&& bs->currentEnemy->client
-				&& bs->currentEnemy->client->ps.groundentity_num != ENTITYNUM_NONE)
+				&& bs->currentEnemy->client->ps.groundEntityNum != ENTITYNUM_NONE)
 			{
 				// Jump to enemy. NPC style! They are below us.
 				bs->BOTjumpState = JS_FACING;
@@ -12552,7 +12552,7 @@ void standard_bot_ai(bot_state_t* bs)
 			{
 				trap->EA_MoveForward(bs->client);
 			}
-			if (g_entities[bs->client].client->ps.groundentity_num == ENTITYNUM_NONE)
+			if (g_entities[bs->client].client->ps.groundEntityNum == ENTITYNUM_NONE)
 			{
 				g_entities[bs->client].client->ps.pm_flags |= PMF_JUMP_HELD;
 			}

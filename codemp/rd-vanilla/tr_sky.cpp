@@ -247,7 +247,7 @@ static void ClipSkyPolygon(const int nump, vec3_t vecs, const int stage)
 ClearSkyBox
 ==============
 */
-static void ClearSkyBox() {
+static void ClearSkyBox(void) {
 	for (int i = 0; i < 6; i++) {
 		sky_mins[0][i] = sky_mins[1][i] = 9999;
 		sky_maxs[0][i] = sky_maxs[1][i] = -9999;

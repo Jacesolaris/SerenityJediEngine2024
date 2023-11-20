@@ -193,7 +193,7 @@ static void g_missile_stick(gentity_t* missile, gentity_t* other, trace_t* tr)
 	if (other->s.eType == ET_MOVER || other->e_DieFunc == dieF_funcBBrushDie || other->e_DieFunc == dieF_funcGlassDie)
 	{
 		// movers and breakable brushes need extra info...so sticky missiles can ride lifts and blow up when the thing they are attached to goes away.
-		missile->s.groundentity_num = tr->entityNum;
+		missile->s.groundEntityNum = tr->entityNum;
 	}
 }
 
@@ -1997,9 +1997,9 @@ static void g_run_stuck_missile(gentity_t* ent)
 {
 	if (ent->takedamage)
 	{
-		if (ent->s.groundentity_num >= 0 && ent->s.groundentity_num < ENTITYNUM_WORLD)
+		if (ent->s.groundEntityNum >= 0 && ent->s.groundEntityNum < ENTITYNUM_WORLD)
 		{
-			gentity_t* other = &g_entities[ent->s.groundentity_num];
+			gentity_t* other = &g_entities[ent->s.groundEntityNum];
 
 			if (!VectorCompare(vec3_origin, other->s.pos.trDelta) && other->s.pos.trType != TR_STATIONARY ||
 				!VectorCompare(vec3_origin, other->s.apos.trDelta) && other->s.apos.trType != TR_STATIONARY)

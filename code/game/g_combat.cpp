@@ -4483,7 +4483,7 @@ int G_CheckLedgeDive(gentity_t* self, const float check_dist, const vec3_t check
 		VectorClear(self->client->ps.velocity);
 		g_throw(self, fall_forward_dir, 85);
 		self->client->ps.velocity[2] = 100;
-		self->client->ps.groundentity_num = ENTITYNUM_NONE;
+		self->client->ps.groundEntityNum = ENTITYNUM_NONE;
 	}
 	else if (try_opposite)
 	{
@@ -4494,7 +4494,7 @@ int G_CheckLedgeDive(gentity_t* self, const float check_dist, const vec3_t check
 			VectorClear(self->client->ps.velocity);
 			g_throw(self, fall_forward_dir, 85);
 			self->client->ps.velocity[2] = 100;
-			self->client->ps.groundentity_num = ENTITYNUM_NONE;
+			self->client->ps.groundEntityNum = ENTITYNUM_NONE;
 		}
 	}
 	if (!cliff_fall && try_perp)
@@ -4803,7 +4803,7 @@ void player_die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, cons
 			|| self->client->NPC_class == CLASS_MANDO
 			|| self->client->NPC_class == CLASS_ROCKETTROOPER)
 		{
-			if (self->client->moveType == MT_FLYSWIM || self->client->ps.groundentity_num == ENTITYNUM_NONE)
+			if (self->client->moveType == MT_FLYSWIM || self->client->ps.groundEntityNum == ENTITYNUM_NONE)
 			{
 				jet_fly_stop(self);
 			}
@@ -4972,7 +4972,7 @@ void player_die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, cons
 			{
 				//what the hell, always do slow-mo when player dies
 				//FIXME: don't do this when crushed to death?
-				if (means_of_death == MOD_FALLING && self->client->ps.groundentity_num == ENTITYNUM_NONE)
+				if (means_of_death == MOD_FALLING && self->client->ps.groundEntityNum == ENTITYNUM_NONE)
 				{
 					//falling to death, have not hit yet
 					G_StartMatrixEffect(self, MEF_NO_VERTBOB | MEF_HIT_GROUND_STOP | MEF_MULTI_SPIN, 10000, 0.25f);
@@ -5306,7 +5306,7 @@ void player_die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, cons
 		torsoAnim == BOTH_FALLDEATH1)
 	{
 		//FIXME: no good way to predict you're going to fall to your death... need falling bushes/triggers?
-		if (self->client->ps.groundentity_num == ENTITYNUM_NONE //in the air
+		if (self->client->ps.groundEntityNum == ENTITYNUM_NONE //in the air
 			&& self->client->ps.velocity[2] < 0 //falling
 			&& self->client->ps.legsAnim != BOTH_FALLDEATH1INAIR //not already in falling loop
 			&& self->client->ps.torsoAnim != BOTH_FALLDEATH1INAIR) //not already in falling loop
@@ -5884,7 +5884,7 @@ void PlayerPain(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, cons
 				{
 					//strong attacks and spins cannot be interrupted by pain, no pain when in knockdown
 					int parts;
-					if (self->client->ps.groundentity_num != ENTITYNUM_NONE &&
+					if (self->client->ps.groundEntityNum != ENTITYNUM_NONE &&
 						!PM_SpinningSaberAnim(self->client->ps.legsAnim) &&
 						!PM_FlippingAnim(self->client->ps.legsAnim) &&
 						!PM_InSpecialJump(self->client->ps.legsAnim) &&
@@ -6430,7 +6430,7 @@ void G_CheckKnockdown(gentity_t* targ, gentity_t* attacker, vec3_t new_dir, cons
 		return;
 	}
 
-	if (targ->client->ps.groundentity_num == ENTITYNUM_NONE)
+	if (targ->client->ps.groundEntityNum == ENTITYNUM_NONE)
 	{
 		//already in air
 		return;
@@ -6508,7 +6508,7 @@ void G_CheckLightningKnockdown(gentity_t* targ, gentity_t* attacker, vec3_t new_
 		return;
 	}
 
-	if (targ->client->ps.groundentity_num == ENTITYNUM_NONE)
+	if (targ->client->ps.groundEntityNum == ENTITYNUM_NONE)
 	{
 		//already in air
 		return;

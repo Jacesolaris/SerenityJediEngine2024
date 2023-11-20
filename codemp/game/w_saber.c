@@ -2440,8 +2440,8 @@ qboolean WP_SabersCheckLock(gentity_t* ent1, gentity_t* ent2)
 		return qfalse;
 	}
 
-	if (ent1->client->ps.groundentity_num == ENTITYNUM_NONE ||
-		ent2->client->ps.groundentity_num == ENTITYNUM_NONE)
+	if (ent1->client->ps.groundEntityNum == ENTITYNUM_NONE ||
+		ent2->client->ps.groundEntityNum == ENTITYNUM_NONE)
 	{
 		return qfalse;
 	}
@@ -3327,7 +3327,7 @@ int WP_SaberBlockCost(gentity_t* defender, const gentity_t* attacker, vec3_t hit
 		{
 			saber_block_cost++; //Walking
 		}
-		if (defender->client->ps.groundentity_num == ENTITYNUM_NONE)
+		if (defender->client->ps.groundEntityNum == ENTITYNUM_NONE)
 		{
 			saber_block_cost += 10;
 		}
@@ -3580,7 +3580,7 @@ int WP_SaberBlockCost(gentity_t* defender, const gentity_t* attacker, vec3_t hit
 			saber_block_cost *= 2.5;
 		}
 	}
-	if (defender->client->ps.groundentity_num == ENTITYNUM_NONE)
+	if (defender->client->ps.groundEntityNum == ENTITYNUM_NONE)
 	{
 		//in mid-air
 		if (defender->client->ps.fd.saber_anim_level == SS_DUAL) //Ataru's other perk much less cost for air hit
@@ -3636,7 +3636,7 @@ int WP_SaberBoltBlockCost(gentity_t* defender, const gentity_t* attacker)
 		{
 			saber_block_cost++; //Walking
 		}
-		if (defender->client->ps.groundentity_num == ENTITYNUM_NONE)
+		if (defender->client->ps.groundEntityNum == ENTITYNUM_NONE)
 		{
 			saber_block_cost += 10;
 		}
@@ -3866,7 +3866,7 @@ int WP_SaberBoltBlockCost(gentity_t* defender, const gentity_t* attacker)
 			saber_block_cost *= 2.5;
 		}
 	}
-	if (defender->client->ps.groundentity_num == ENTITYNUM_NONE)
+	if (defender->client->ps.groundEntityNum == ENTITYNUM_NONE)
 	{
 		//in mid-air
 		if (defender->client->ps.fd.saber_anim_level == SS_DUAL) //Ataru's other perk much less cost for air hit
@@ -4171,7 +4171,7 @@ int wp_player_must_dodge(const gentity_t* self, const gentity_t* shooter)
 		return qfalse;
 	}
 
-	if (self->client->ps.groundentity_num == ENTITYNUM_NONE)
+	if (self->client->ps.groundEntityNum == ENTITYNUM_NONE)
 	{
 		//can't dodge in mid-air
 		return qfalse;
@@ -5610,7 +5610,7 @@ qboolean G_DoDodge(gentity_t* self, gentity_t* shooter, vec3_t dmg_origin, int h
 		return qtrue;
 	}
 
-	if (self->client->ps.groundentity_num == ENTITYNUM_NONE
+	if (self->client->ps.groundEntityNum == ENTITYNUM_NONE
 		&& mod != MOD_REPEATER_ALT_SPLASH
 		&& mod != MOD_FLECHETTE_ALT_SPLASH
 		&& mod != MOD_ROCKET_SPLASH
@@ -5632,7 +5632,7 @@ qboolean G_DoDodge(gentity_t* self, gentity_t* shooter, vec3_t dmg_origin, int h
 		return qfalse;
 	}
 
-	if (self->client->ps.groundentity_num == ENTITYNUM_NONE)
+	if (self->client->ps.groundEntityNum == ENTITYNUM_NONE)
 	{
 		//can't dodge in mid-air
 		return qfalse;
@@ -6240,7 +6240,7 @@ qboolean G_DoSaberDodge(gentity_t* dodger, gentity_t* attacker, vec3_t dmg_origi
 		return qtrue;
 	}
 
-	if (dodger->client->ps.groundentity_num == ENTITYNUM_NONE)
+	if (dodger->client->ps.groundEntityNum == ENTITYNUM_NONE)
 	{
 		//can't dodge direct fire in mid-air
 		return qfalse;
@@ -6777,7 +6777,7 @@ void wp_saber_clear_damage_for_ent_num(gentity_t* attacker, const int entityNum,
 					VectorSubtract(victim->r.currentOrigin, saberHitLocation, dir_to_center);
 					VectorNormalize(dir_to_center);
 					g_throw(victim, dir_to_center, knockback);
-					if (victim->client->ps.groundentity_num != ENTITYNUM_NONE
+					if (victim->client->ps.groundEntityNum != ENTITYNUM_NONE
 						&& dir_to_center[2] <= 0)
 					{
 						//hit downward on someone who is standing on firm ground, so more likely to knock them down
@@ -7794,7 +7794,7 @@ void wp_saber_start_missile_block_check(gentity_t* self, usercmd_t* ucmd)
 				if (dist < ent->splashRadius &&
 					ent->nextthink < level.time + 600 &&
 					ent->count &&
-					self->client->ps.groundentity_num != ENTITYNUM_NONE &&
+					self->client->ps.groundEntityNum != ENTITYNUM_NONE &&
 					(ent->s.pos.trType == TR_STATIONARY ||
 						ent->s.pos.trType == TR_INTERPOLATE ||
 						(dot1 = DotProduct(dir, forward)) < SABER_REFLECT_MISSILE_CONE))
@@ -7870,7 +7870,7 @@ void wp_saber_start_missile_block_check(gentity_t* self, usercmd_t* ucmd)
 				}
 			}
 			else if (dist < ent->splashRadius
-				&& self->client->ps.groundentity_num != ENTITYNUM_NONE
+				&& self->client->ps.groundEntityNum != ENTITYNUM_NONE
 				&& DotProduct(dir, forward) < SABER_REFLECT_MISSILE_CONE)
 			{
 				//try to evade it
@@ -10405,7 +10405,7 @@ gentity_t* G_KickTrace(gentity_t* ent, vec3_t kick_dir, const float kick_dist, v
 						if (hit_ent->health > 0)
 						{
 							//knock down
-							if (hit_ent->client->ps.groundentity_num == ENTITYNUM_NONE)
+							if (hit_ent->client->ps.groundEntityNum == ENTITYNUM_NONE)
 							{
 								//he's in the air?  Send him flying back
 								if (!(hit_ent->flags & FL_NO_KNOCKBACK))
@@ -13047,7 +13047,7 @@ float manual_forceblocking(const gentity_t* defender)
 		|| PM_SuperBreakWinAnim(defender->client->ps.torsoAnim)
 		|| pm_saber_in_special_attack(defender->client->ps.torsoAnim)
 		|| PM_InSpecialJump(defender->client->ps.torsoAnim)
-		|| defender->client->ps.groundentity_num == ENTITYNUM_NONE
+		|| defender->client->ps.groundEntityNum == ENTITYNUM_NONE
 		|| !walk_check(defender)
 		|| in_camera)
 	{
@@ -13132,7 +13132,7 @@ qboolean manual_saberblocking(const gentity_t* defender)
 		|| PM_SaberInBrokenParry(defender->client->ps.saber_move)
 		|| PM_SaberInMassiveBounce(defender->client->ps.saber_move)
 		|| PM_SaberInBashedAnim(defender->client->ps.saber_move)
-		|| defender->client->ps.groundentity_num == ENTITYNUM_NONE
+		|| defender->client->ps.groundEntityNum == ENTITYNUM_NONE
 		|| defender->client->ps.fd.blockPoints < BLOCKPOINTS_FIVE
 		|| defender->client->ps.fd.forcePower < BLOCKPOINTS_FIVE)
 	{
@@ -13206,7 +13206,7 @@ float manual_running_and_saberblocking(const gentity_t* defender)
 		|| PM_SaberInMassiveBounce(defender->client->ps.torsoAnim)
 		|| PM_SaberInBashedAnim(defender->client->ps.torsoAnim)
 		|| PM_SaberInBrokenParry(defender->client->ps.saber_move)
-		|| defender->client->ps.groundentity_num == ENTITYNUM_NONE
+		|| defender->client->ps.groundEntityNum == ENTITYNUM_NONE
 		|| defender->client->ps.fd.blockPoints < BLOCKPOINTS_FIVE
 		|| defender->client->ps.fd.forcePower < BLOCKPOINTS_FIVE)
 	{
@@ -13329,7 +13329,7 @@ float manual_npc_saberblocking(const gentity_t* defender)
 		|| PM_SaberInMassiveBounce(defender->client->ps.torsoAnim)
 		|| PM_SaberInBashedAnim(defender->client->ps.torsoAnim)
 		|| PM_SaberInBrokenParry(defender->client->ps.saber_move)
-		|| defender->client->ps.groundentity_num == ENTITYNUM_NONE
+		|| defender->client->ps.groundEntityNum == ENTITYNUM_NONE
 		|| defender->client->ps.fd.blockPoints < BLOCKPOINTS_FIVE
 		|| defender->client->ps.fd.forcePower < BLOCKPOINTS_FIVE)
 	{
@@ -13412,7 +13412,7 @@ int PlayerCanAbsorbKick(const gentity_t* defender, const vec3_t push_dir) //Can 
 		|| defender->client->ps.fd.forcePowerLevel[FP_SABER_DEFENSE] < FORCE_LEVEL_1
 		// No force saber deference (Gunners cant do it at all)
 		|| defender->client->ps.eFlags2 & EF2_FLYING // Bobafett flying cant do it
-		|| defender->client->ps.groundentity_num == ENTITYNUM_NONE // Your in the air (jumping).
+		|| defender->client->ps.groundEntityNum == ENTITYNUM_NONE // Your in the air (jumping).
 		|| defender->client->ps.fd.blockPoints < FATIGUE_DODGEING // Less than 35 Block points
 		|| defender->client->ps.fd.forcePower < FATIGUE_DODGEING // Less than 35 Force points
 		|| defender->client->ps.saberFatigueChainCount >= MISHAPLEVEL_TEN) // Your saber fatigued
@@ -13466,7 +13466,7 @@ int BotCanAbsorbKick(const gentity_t* defender, const vec3_t push_dir) //Can the
 		|| defender->client->ps.fd.forcePowerLevel[FP_SABER_DEFENSE] < FORCE_LEVEL_1
 		// No force saber deference (Gunners cant do it at all)
 		|| defender->client->ps.eFlags2 & EF2_FLYING // Bobafett flying cant do it
-		|| defender->client->ps.groundentity_num == ENTITYNUM_NONE // Your in the air (jumping).
+		|| defender->client->ps.groundEntityNum == ENTITYNUM_NONE // Your in the air (jumping).
 		|| defender->client->ps.fd.blockPoints < FATIGUE_DODGEING // Less than 35 Block points
 		|| defender->client->ps.fd.forcePower < FATIGUE_DODGEING // Less than 35 Force points
 		|| defender->client->ps.saberFatigueChainCount >= MISHAPLEVEL_TEN) // Your saber fatigued
@@ -13512,7 +13512,7 @@ float manual_npc_kick_absorbing(const gentity_t* defender)
 		|| PM_SaberInBrokenParry(defender->client->ps.saber_move)
 		|| PM_SaberInMassiveBounce(defender->client->ps.saber_move)
 		|| PM_SaberInBashedAnim(defender->client->ps.saber_move)
-		|| defender->client->ps.groundentity_num == ENTITYNUM_NONE
+		|| defender->client->ps.groundEntityNum == ENTITYNUM_NONE
 		|| defender->client->ps.fd.blockPoints < BLOCKPOINTS_THIRTY
 		|| defender->client->ps.fd.forcePower < BLOCKPOINTS_THIRTY
 		|| defender->client->ps.userInt3 & 1 << FLAG_FATIGUED)
@@ -15239,7 +15239,7 @@ saber_moveName_t G_PickAutoKick(gentity_t* self, const gentity_t* enemy)
 		if (f_dot > 0)
 		{
 			//kick fwd
-			if (self->client->ps.groundentity_num != ENTITYNUM_NONE && self->client->ps.weapon == WP_SABER && !
+			if (self->client->ps.groundEntityNum != ENTITYNUM_NONE && self->client->ps.weapon == WP_SABER && !
 				BG_SabersOff(&self->client->ps))
 			{
 				kick_move = LS_KICK_F2;
@@ -15269,7 +15269,7 @@ saber_moveName_t G_PickAutoKick(gentity_t* self, const gentity_t* enemy)
 	if (kick_move != LS_NONE)
 	{
 		//have a valid one to do
-		if (self->client->ps.groundentity_num == ENTITYNUM_NONE)
+		if (self->client->ps.groundEntityNum == ENTITYNUM_NONE)
 		{
 			//if in air, convert kick to an in-air kick
 			const float g_dist = G_GroundDistance(self);

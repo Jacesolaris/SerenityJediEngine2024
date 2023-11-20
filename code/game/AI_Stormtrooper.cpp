@@ -1473,7 +1473,7 @@ static void ST_CheckMoveState()
 		doMove = qtrue;
 	}
 	else if (NPC->client->NPC_class == CLASS_ROCKETTROOPER
-		&& NPC->client->ps.groundentity_num == ENTITYNUM_NONE)
+		&& NPC->client->ps.groundEntityNum == ENTITYNUM_NONE)
 	{
 		//no squad stuff
 		return;
@@ -3024,8 +3024,8 @@ qboolean Melee_CanDoGrab()
 			if (TIMER_Done(NPC, "grabEnemyDebounce"))
 			{
 				//okay to grab again
-				if (NPC->client->ps.groundentity_num != ENTITYNUM_NONE
-					&& NPC->enemy->client->ps.groundentity_num != ENTITYNUM_NONE)
+				if (NPC->client->ps.groundEntityNum != ENTITYNUM_NONE
+					&& NPC->enemy->client->ps.groundEntityNum != ENTITYNUM_NONE)
 				{
 					//me and enemy are on ground
 					if (!PM_InOnGroundAnims(NPC->enemy->client->ps.legsAnim))

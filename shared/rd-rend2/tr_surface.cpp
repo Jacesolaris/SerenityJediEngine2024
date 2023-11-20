@@ -64,7 +64,7 @@ void RB_CheckOverflow(const int verts, const int indexes)
 	RB_BeginSurface(tess.shader, tess.fogNum, tess.cubemapIndex);
 }
 
-void RB_CheckVBOandIBO(VBO_t* vbo, IBO_t* ibo)
+static void RB_CheckVBOandIBO(VBO_t* vbo, IBO_t* ibo)
 {
 	if (vbo != glState.currentVBO ||
 		ibo != glState.currentIBO ||
@@ -228,7 +228,7 @@ void RB_InstantQuad2(vec4_t quadVerts[4], vec2_t texCoords[4])
 
 void RB_InstantQuad(vec4_t quadVerts[4])
 {
-	vec2_t texCoords[4];
+	vec2_t texCoords[4]{};
 
 	VectorSet2(texCoords[0], 0.0f, 0.0f);
 	VectorSet2(texCoords[1], 1.0f, 0.0f);
@@ -256,7 +256,7 @@ RB_SurfaceSprite
 static void RB_SurfaceSprite(void) {
 	vec3_t		left, up;
 	float		radius;
-	float			colors[4];
+	float			colors[4]{};
 	trRefEntity_t* ent = backEnd.currentEntity;
 
 	// calculate the xyz locations for the four corners
@@ -297,7 +297,7 @@ static void RB_SurfaceOrientedQuad(void)
 {
 	vec3_t	left, up;
 	float	radius;
-	float	color[4];
+	float	color[4]{};
 
 	// calculate the xyz locations for the four corners
 	radius = backEnd.currentEntity->e.radius;
@@ -788,7 +788,7 @@ static void DoLine(const vec3_t start, const vec3_t end, const vec3_t up, const 
 	tess.indexes[tess.numIndexes++] = vbase + 3;
 }
 
-static void DoLine2(const vec3_t start, const vec3_t end, const vec3_t up, float spanWidth, float spanWidth2, const float tcStart = 0.0f, const float tcEnd = 1.0f)
+static void DoLine2(const vec3_t start, const vec3_t end, const vec3_t up, const float spanWidth, const float spanWidth2, const float tcStart = 0.0f, const float tcEnd = 1.0f)
 {
 	int			vbase;
 
@@ -1325,16 +1325,16 @@ static void RB_SurfaceElectricity()
 	DoBoltSeg(start, end, right, radius);
 }
 
-static void DoRailCore(const vec3_t start, const vec3_t end, const vec3_t up, const float len, const float span_width)
+static void DoRailCore(const vec3_t start, const vec3_t end, const vec3_t up, const float len, const float spanWidth)
 {
 	const float		t = len / 256.0f;
 
 	const int vbase = tess.numVertexes;
 
-	const float spanWidth2 = -span_width;
+	const float spanWidth2 = -spanWidth;
 
 	// FIXME: use quad stamp?
-	VectorMA(start, span_width, up, tess.xyz[tess.numVertexes]);
+	VectorMA(start, spanWidth, up, tess.xyz[tess.numVertexes]);
 	tess.texCoords[tess.numVertexes][0][0] = 0;
 	tess.texCoords[tess.numVertexes][0][1] = 0;
 	tess.vertexColors[tess.numVertexes][0] = backEnd.currentEntity->e.shaderRGBA[0] * 0.25;
@@ -1350,7 +1350,7 @@ static void DoRailCore(const vec3_t start, const vec3_t end, const vec3_t up, co
 	tess.vertexColors[tess.numVertexes][2] = backEnd.currentEntity->e.shaderRGBA[2];
 	tess.numVertexes++;
 
-	VectorMA(end, span_width, up, tess.xyz[tess.numVertexes]);
+	VectorMA(end, spanWidth, up, tess.xyz[tess.numVertexes]);
 
 	tess.texCoords[tess.numVertexes][0][0] = t;
 	tess.texCoords[tess.numVertexes][0][1] = 0;
@@ -1376,7 +1376,7 @@ static void DoRailCore(const vec3_t start, const vec3_t end, const vec3_t up, co
 	tess.indexes[tess.numIndexes++] = vbase + 3;
 }
 
-void RB_SurfaceLightningBolt()
+static void RB_SurfaceLightningBolt()
 {
 	vec3_t		right;
 	vec3_t		vec;
@@ -1832,7 +1832,7 @@ static void RB_SurfaceBSPFace(srfBspSurface_t * srf) {
 		srf->indexes, srf->dlightBits, srf->pshadowBits);
 }
 
-static float LodErrorForVolume(vec3_t local, float radius)
+static float LodErrorForVolume(vec3_t local, const float radius)
 {
 	vec3_t		world{};
 	float		d;
@@ -1873,7 +1873,7 @@ Just copy the grid of points and triangulate
 static void RB_SurfaceBSPGrid(srfBspSurface_t * srf) {
 	int		i, j;
 	float* xyz;
-	float* texCoords, * lightCoords[MAXLIGHTMAPS];
+	float* texCoords, * lightCoords[MAXLIGHTMAPS]{};
 	uint32_t* normal;
 	uint32_t* tangent;
 	float* color;
@@ -1881,8 +1881,8 @@ static void RB_SurfaceBSPGrid(srfBspSurface_t * srf) {
 	srfVert_t* dv;
 	int		rows, irows, vrows;
 	int		used;
-	int		widthTable[MAX_GRID_SIZE];
-	int		heightTable[MAX_GRID_SIZE];
+	int		widthTable[MAX_GRID_SIZE]{};
+	int		heightTable[MAX_GRID_SIZE]{};
 	float	lodError;
 	int		lodWidth, lodHeight;
 	int		numVertexes;
@@ -2066,8 +2066,8 @@ static void RB_SurfaceBSPGrid(srfBspSurface_t * srf) {
 static void RB_SurfaceLathe()
 {
 	refEntity_t* e;
-	vec2_t		pt, oldpt, l_oldpt;
-	vec2_t		pt2, oldpt2, l_oldpt2;
+	vec2_t		pt{}, oldpt{}, l_oldpt{};
+	vec2_t		pt2{}, oldpt2{}, l_oldpt2{};
 	float		bezierStep, latheStep;
 	float		temp, mu, mum1;
 	float		mum13, mu3, group1, group2;
@@ -2484,8 +2484,8 @@ static void RB_SurfaceEntity(surfaceType_t * surfType)
 			assert(backEnd.currentEntity->e.renderfx >= 0);
 
 			RB_SurfaceEntity(surfType);
+		}
 	}
-}
 	break;
 #else
 	case RT_LATHE:
@@ -2520,7 +2520,7 @@ static void RB_SurfaceVBOMesh(srfBspSurface_t * srf)
 		srf->minIndex, srf->maxIndex, srf->dlightBits, srf->pshadowBits, qfalse);
 }
 
-void RB_SurfaceVBOMDVMesh(srfVBOMDVMesh_t * surface)
+static void RB_SurfaceVBOMDVMesh(srfVBOMDVMesh_t * surface)
 {
 	int i, mergeForward, mergeBack;
 	GLvoid* firstIndexOffset, * lastIndexOffset;

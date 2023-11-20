@@ -126,7 +126,7 @@ float R_GetChanceOfSaberFizz();
 bool R_GetWindVector(vec3_t windVector, vec3_t atPoint); // doesn't work?
 bool R_GetWindGusting(vec3_t atPoint); // doesn't work
 
-void RE_WorldEffectCommand(const char* cmd);
+void RE_WorldEffectCommand(const char* command);
 void R_WorldEffect_f(void);
 void R_WeatherEffect_f(void);
 void R_SetWeatherEffect_f(void);

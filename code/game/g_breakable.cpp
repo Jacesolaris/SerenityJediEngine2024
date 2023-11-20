@@ -92,7 +92,7 @@ void funcBBrushDieGo(gentity_t* ent)
 	// FIXME: flag me so I should know to do this check!
 	for (auto& g_entitie : g_entities)
 	{
-		if (g_entitie.s.groundentity_num == ent->s.number && g_entitie.s.eFlags & EF_MISSILE_STICK)
+		if (g_entitie.s.groundEntityNum == ent->s.number && g_entitie.s.eFlags & EF_MISSILE_STICK)
 		{
 			G_Damage(&g_entitie, ent, ent, nullptr, nullptr, 99999, 0, MOD_CRUSH); //?? MOD?
 		}
@@ -1467,7 +1467,7 @@ void funcGlassDie(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, in
 	// if a missile is stuck to us, blow it up so we don't look dumb....we could, alternately, just let the missile drop off??
 	for (auto& g_entitie : g_entities)
 	{
-		if (g_entitie.s.groundentity_num == self->s.number && g_entitie.s.eFlags & EF_MISSILE_STICK)
+		if (g_entitie.s.groundEntityNum == self->s.number && g_entitie.s.eFlags & EF_MISSILE_STICK)
 		{
 			G_Damage(&g_entitie, self, self, nullptr, nullptr, 99999, 0, MOD_CRUSH); //?? MOD?
 		}

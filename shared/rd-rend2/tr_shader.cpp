@@ -2411,7 +2411,8 @@ static void ParseSkyParms(const char** text) {
 ParseSort
 =================
 */
-void ParseSort(const char** text) {
+static void ParseSort(const char** text)
+{
 	char* token;
 
 	token = COM_ParseExt(text, qfalse);
@@ -3911,7 +3912,7 @@ static void VertexLightingCollapse(void) {
 	}
 }
 
-int FindFirstLightmapStage(const shaderStage_t* stages, int numStages)
+static int FindFirstLightmapStage(const shaderStage_t* stages, int numStages)
 {
 	for (int i = 0; i < numStages; i++)
 	{
@@ -3925,7 +3926,7 @@ int FindFirstLightmapStage(const shaderStage_t* stages, int numStages)
 	return numStages;
 }
 
-int GetNumStylesInShader(const shader_t* shader)
+static int GetNumStylesInShader(const shader_t* shader)
 {
 	for (int i = 0; i < MAXLIGHTMAPS; i++)
 	{
@@ -4431,7 +4432,7 @@ most world construction surfaces.
 
 ===============
 */
-shader_t* R_FindShader(const char* name, const int* lightmapIndexes, const byte* styles, qboolean mipRawImage)
+shader_t* R_FindShader(const char* name, const int* lightmapIndexes, const byte* styles, const qboolean mipRawImage)
 {
 	char		strippedName[MAX_QPATH];
 	int			hash, flags;
@@ -4610,7 +4611,7 @@ shader_t* R_FindShader(const char* name, const int* lightmapIndexes, const byte*
 	return FinishShader();
 }
 
-shader_t* R_FindServerShader(const char* name, const int* lightmapIndexes, const byte* styles, qboolean mipRawImage)
+shader_t* R_FindServerShader(const char* name, const int* lightmapIndexes, const byte* styles, const qboolean mipRawImage)
 {
 	char		strippedName[MAX_QPATH];
 	int			hash;

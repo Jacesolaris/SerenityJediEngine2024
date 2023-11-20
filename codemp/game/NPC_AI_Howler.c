@@ -84,7 +84,7 @@ static qboolean NPC_Howler_Move(const int random_jump_chance)
 		//standing around
 		return qfalse;
 	}
-	if (NPCS.NPC->client->ps.groundentity_num == ENTITYNUM_NONE)
+	if (NPCS.NPC->client->ps.groundEntityNum == ENTITYNUM_NONE)
 	{
 		//in air, don't do anything
 		return qfalse;
@@ -418,7 +418,7 @@ static void Howler_Attack(const float enemy_dist, const qboolean howl)
 			AngleVectors(yawAng, fwd, NULL, NULL);
 			VectorScale(fwd, enemy_dist * 3.0f, NPCS.NPC->client->ps.velocity);
 			NPCS.NPC->client->ps.velocity[2] = 200;
-			NPCS.NPC->client->ps.groundentity_num = ENTITYNUM_NONE;
+			NPCS.NPC->client->ps.groundEntityNum = ENTITYNUM_NONE;
 
 			attackAnim = BOTH_ATTACK1;
 		}
@@ -501,7 +501,7 @@ static void Howler_Attack(const float enemy_dist, const qboolean howl)
 static void Howler_Combat(void)
 {
 	qboolean faced = qfalse;
-	if (NPCS.NPC->client->ps.groundentity_num == ENTITYNUM_NONE)
+	if (NPCS.NPC->client->ps.groundEntityNum == ENTITYNUM_NONE)
 	{
 		//not on the ground
 		if (NPCS.NPC->client->ps.legsAnim == BOTH_JUMP1

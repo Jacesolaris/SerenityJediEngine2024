@@ -50,7 +50,7 @@ static	int			numEdgeDefs[SHADER_MAX_VERTEXES];
 static	int			facing[SHADER_MAX_INDEXES / 3];
 static	vec3_t		shadowXyz[SHADER_MAX_VERTEXES];
 
-void R_AddEdgeDef(const int i1, const int i2, const int facing) {
+static void R_AddEdgeDef(const int i1, const int i2, const int facing) {
 	const int c = numEdgeDefs[i1];
 	if (c == MAX_EDGE_DEFS) {
 		return;		// overflow
@@ -61,7 +61,7 @@ void R_AddEdgeDef(const int i1, const int i2, const int facing) {
 	numEdgeDefs[i1]++;
 }
 
-void R_RenderShadowEdges() {
+static void R_RenderShadowEdges() {
 	int		i;
 	int		c;
 	int		i2;
@@ -176,7 +176,7 @@ triangleFromEdge[ v1 ][ v2 ]
 =================
 */
 void RB_DoShadowTessEnd(vec3_t light_pos);
-void RB_ShadowTessEnd()
+void RB_ShadowTessEnd(void)
 {
 #if 0
 	if (backEnd.currentEntity &&
@@ -415,7 +415,7 @@ because otherwise shadows from different body parts would
 overlap and double darken.
 =================
 */
-void RB_ShadowFinish() {
+void RB_ShadowFinish(void) {
 	if (r_shadows->integer != 2) {
 		return;
 	}
@@ -514,7 +514,7 @@ void RB_ProjectionShadowDeform() {
 }
 
 //update tr.screenImage
-void RB_CaptureScreenImage()
+void RB_CaptureScreenImage(void)
 {
 	int rad_x = 2048;
 	int rad_y = 2048;
@@ -522,17 +522,6 @@ void RB_CaptureScreenImage()
 	const int y = glConfig.vidHeight / 2;
 
 	GL_Bind(tr.screenImage);
-	//using this method, we could pixel-filter the texture and all sorts of crazy stuff.
-	//but, it is slow as hell.
-	/*
-	static byte *tmp = NULL;
-	if (!tmp)
-	{
-		tmp = (byte *)R_Malloc((sizeof(byte)*4)*(glConfig.vidWidth*glConfig.vidHeight), TAG_ICARUS, qtrue);
-	}
-	qglReadPixels(0, 0, glConfig.vidWidth, glConfig.vidHeight, GL_RGBA, GL_UNSIGNED_BYTE, tmp);
-	qglTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 512, 512, 0, GL_RGBA, GL_UNSIGNED_BYTE, tmp);
-	*/
 
 	if (rad_x > glConfig.maxTextureSize)
 	{
@@ -581,7 +570,7 @@ float tr_distortionAlpha = 1.0f; //opaque
 float tr_distortionStretch = 0.0f; //no stretch override
 qboolean tr_distortionPrePost = qfalse; //capture before postrender phase?
 qboolean tr_distortionNegate = qfalse; //negative blend mode
-void RB_DistortionFill()
+void RB_DistortionFill(void)
 {
 	float alpha = tr_distortionAlpha;
 	float spost;

@@ -1483,7 +1483,7 @@ static void Svcmd_Grab_f()
 
 static void Svcmd_Knockdown_f()
 {
-	if (g_entities[0].s.groundentity_num == ENTITYNUM_NONE)
+	if (g_entities[0].s.groundEntityNum == ENTITYNUM_NONE)
 	{
 	}
 	else
@@ -1494,7 +1494,7 @@ static void Svcmd_Knockdown_f()
 
 static void Svcmd_PlayerModel_f()
 {
-	if (g_entities[0].s.groundentity_num == ENTITYNUM_NONE && PM_InLedgeMove(g_entities[0].client->ps.legsAnim))
+	if (g_entities[0].s.groundEntityNum == ENTITYNUM_NONE && PM_InLedgeMove(g_entities[0].client->ps.legsAnim))
 	{
 		g_entities[0].client->ps.pm_flags &= ~PMF_STUCK_TO_WALL;
 		g_entities[0].client->ps.legsAnimTimer = 0;

@@ -383,7 +383,8 @@ DrawNormals
 Draws vertex normals for debugging
 ================
 */
-static void DrawNormals(const shaderCommands_t* input) {
+static void DrawNormals(const shaderCommands_t* input)
+{
 	GL_Bind(tr.whiteImage);
 	qglColor3f(1, 1, 1);
 	qglDepthRange(0, 0);	// never occluded
@@ -410,8 +411,8 @@ because a surface may be forced to perform a RB_End due
 to overflow.
 ==============
 */
-void RB_BeginSurface(shader_t* shader, const int fogNum) {
-	//	shader_t *state = (shader->remappedShader) ? shader->remappedShader : shader;
+void RB_BeginSurface(shader_t* shader, const int fogNum)
+{
 	shader_t* state = shader;
 
 	tess.numIndexes = 0;
@@ -490,19 +491,17 @@ ProjectDlightTexture
 Perform dynamic lighting with another rendering pass
 ===================
 */
-static void ProjectDlightTexture2()
+static void ProjectDlightTexture2(void)
 {
 	int		i;
 	byte	clip_bits[SHADER_MAX_VERTEXES]{};
 	float	tex_coords_array[SHADER_MAX_VERTEXES][2]{};
 	float	old_tex_coords_array[SHADER_MAX_VERTEXES][2]{};
 	unsigned int		color_array[SHADER_MAX_VERTEXES]{};
-	glIndex_t	hit_indexes[SHADER_MAX_INDEXES]{};
+	glIndex_t	hitIndexes[SHADER_MAX_INDEXES]{};
 	int		numIndexes;
 	float	radius;
-#ifndef JK2_MODE
 	int		fogging;
-#endif
 	shaderStage_t* d_stage;
 	vec3_t	float_color{};
 	byte color_temp[4]{};
@@ -649,17 +648,6 @@ static void ProjectDlightTexture2()
 			{
 				continue; // didn't end up hitting this tri
 			}
-
-			// these are the old texture coordinates for the multitexture dlight
-
-			/* old code, get from the svars = wrong
-			oldTexCoordsArray[numIndexes][0]=tess.svars.texcoords[0][a][0];
-			oldTexCoordsArray[numIndexes][1]=tess.svars.texcoords[0][a][1];
-			oldTexCoordsArray[numIndexes+1][0]=tess.svars.texcoords[0][b][0];
-			oldTexCoordsArray[numIndexes+1][1]=tess.svars.texcoords[0][b][1];
-			oldTexCoordsArray[numIndexes+2][0]=tess.svars.texcoords[0][c][0];
-			oldTexCoordsArray[numIndexes+2][1]=tess.svars.texcoords[0][c][1];
-			*/
 			old_tex_coords_array[numIndexes][0] = tess.texCoords[a][0][0];
 			old_tex_coords_array[numIndexes][1] = tess.texCoords[a][0][1];
 			old_tex_coords_array[numIndexes + 1][0] = tess.texCoords[b][0][0];
@@ -677,9 +665,9 @@ static void ProjectDlightTexture2()
 			color_array[numIndexes + 1] = ba->ui;
 			color_array[numIndexes + 2] = ba->ui;
 
-			hit_indexes[numIndexes] = numIndexes;
-			hit_indexes[numIndexes + 1] = numIndexes + 1;
-			hit_indexes[numIndexes + 2] = numIndexes + 2;
+			hitIndexes[numIndexes] = numIndexes;
+			hitIndexes[numIndexes + 1] = numIndexes + 1;
+			hitIndexes[numIndexes + 2] = numIndexes + 2;
 			numIndexes += 3;
 
 			if (numIndexes >= SHADER_MAX_VERTEXES - 3)
@@ -691,7 +679,6 @@ static void ProjectDlightTexture2()
 		if (!numIndexes) {
 			continue;
 		}
-#ifndef JK2_MODE
 		//don't have fog enabled when we redraw with alpha test, or it will double over
 		//and screw the tri up -rww
 		if (r_drawfog->value == 2 &&
@@ -709,7 +696,6 @@ static void ProjectDlightTexture2()
 		{
 			fogging = 0;
 		}
-#endif
 
 		if (!need_reset_verts)
 		{
@@ -765,7 +751,7 @@ static void ProjectDlightTexture2()
 
 			GL_State(GLS_SRCBLEND_ONE | GLS_DSTBLEND_ONE | GLS_DEPTHFUNC_EQUAL);// | GLS_ATEST_GT_0);
 
-			R_DrawElements(numIndexes, hit_indexes);
+			R_DrawElements(numIndexes, hitIndexes);
 
 			qglDisable(GL_TEXTURE_2D);
 			GL_SelectTexture(0);
@@ -789,15 +775,13 @@ static void ProjectDlightTexture2()
 				GL_State(GLS_SRCBLEND_DST_COLOR | GLS_DSTBLEND_ONE | GLS_DEPTHFUNC_EQUAL);
 			}
 
-			R_DrawElements(numIndexes, hit_indexes);
+			R_DrawElements(numIndexes, hitIndexes);
 		}
 
-#ifndef JK2_MODE
 		if (fogging)
 		{
 			qglEnable(GL_FOG);
 		}
-#endif
 
 		backEnd.pc.c_totalIndexes += numIndexes;
 		backEnd.pc.c_dlightIndexes += numIndexes;
@@ -818,13 +802,11 @@ static void ProjectDlightTexture()
 	float* tex_coords;
 	byte* colors;
 	byte	clip_bits[SHADER_MAX_VERTEXES]{};
-	glIndex_t	hit_indexes[SHADER_MAX_INDEXES]{};
+	glIndex_t	hitIndexes[SHADER_MAX_INDEXES]{};
 	int		numIndexes;
 	float	scale;
 	float	radius;
-#ifndef JK2_MODE
 	int		fogging;
-#endif
 	vec3_t	float_color{};
 	shaderStage_t* d_stage;
 
@@ -1038,17 +1020,15 @@ static void ProjectDlightTexture()
 			if (clip_bits[a] & clip_bits[b] & clip_bits[c]) {
 				continue;	// not lighted
 			}
-			hit_indexes[numIndexes] = a;
-			hit_indexes[numIndexes + 1] = b;
-			hit_indexes[numIndexes + 2] = c;
+			hitIndexes[numIndexes] = a;
+			hitIndexes[numIndexes + 1] = b;
+			hitIndexes[numIndexes + 2] = c;
 			numIndexes += 3;
 		}
 
 		if (!numIndexes) {
 			continue;
 		}
-
-#ifndef JK2_MODE
 		//don't have fog enabled when we redraw with alpha test, or it will double over
 		//and screw the tri up -rww
 		if (r_drawfog->value == 2 &&
@@ -1066,7 +1046,6 @@ static void ProjectDlightTexture()
 		{
 			fogging = 0;
 		}
-#endif
 
 		d_stage = nullptr;
 		if (tess.shader && qglActiveTextureARB)
@@ -1111,7 +1090,7 @@ static void ProjectDlightTexture()
 
 			GL_State(GLS_SRCBLEND_ONE | GLS_DSTBLEND_ONE | GLS_DEPTHFUNC_EQUAL);// | GLS_ATEST_GT_0);
 
-			R_DrawElements(numIndexes, hit_indexes);
+			R_DrawElements(numIndexes, hitIndexes);
 
 			qglDisable(GL_TEXTURE_2D);
 			GL_SelectTexture(0);
@@ -1135,15 +1114,13 @@ static void ProjectDlightTexture()
 				GL_State(GLS_SRCBLEND_DST_COLOR | GLS_DSTBLEND_ONE | GLS_DEPTHFUNC_EQUAL);
 			}
 
-			R_DrawElements(numIndexes, hit_indexes);
+			R_DrawElements(numIndexes, hitIndexes);
 		}
 
-#ifndef JK2_MODE
 		if (fogging)
 		{
 			qglEnable(GL_FOG);
 		}
-#endif
 
 		backEnd.pc.c_totalIndexes += numIndexes;
 		backEnd.pc.c_dlightIndexes += numIndexes;
@@ -1190,7 +1167,7 @@ static void RB_FogPass() {
 ComputeColors
 ===============
 */
-static void ComputeColors(shaderStage_t* p_stage, alphaGen_t force_alpha_gen, colorGen_t force_rgb_gen)
+static void ComputeColors(shaderStage_t* p_stage, alphaGen_t forceAlphaGen, colorGen_t forceRGBGen)
 {
 	int i;
 
@@ -1201,16 +1178,16 @@ static void ComputeColors(shaderStage_t* p_stage, alphaGen_t force_alpha_gen, co
 		RB_CalcDisintegrateVertDeform();
 
 		// We've done some custom alpha and color stuff, so we can skip the rest.  Let it do fog though
-		force_rgb_gen = CGEN_SKIP;
-		force_alpha_gen = AGEN_SKIP;
+		forceRGBGen = CGEN_SKIP;
+		forceAlphaGen = AGEN_SKIP;
 	}
 
 	//
 	// rgbGen
 	//
-	if (!force_rgb_gen)
+	if (!forceRGBGen)
 	{
-		force_rgb_gen = p_stage->rgbGen;
+		forceRGBGen = p_stage->rgbGen;
 	}
 
 	if (backEnd.currentEntity->e.renderfx & RF_VOLUMETRIC) // does not work for rotated models, technically, this should also be a CGEN type, but that would entail adding new shader commands....which is too much work for one thing
@@ -1234,16 +1211,16 @@ static void ComputeColors(shaderStage_t* p_stage, alphaGen_t force_alpha_gen, co
 			color[0] = color[1] = color[2] = color[3] = Q_ftol(backEnd.currentEntity->e.shaderRGBA[0] * (1 - dot));
 		}
 
-		force_rgb_gen = CGEN_SKIP;
-		force_alpha_gen = AGEN_SKIP;
+		forceRGBGen = CGEN_SKIP;
+		forceAlphaGen = AGEN_SKIP;
 	}
 
-	if (!force_alpha_gen)	//set this up so we can override below
+	if (!forceAlphaGen)	//set this up so we can override below
 	{
-		force_alpha_gen = p_stage->alphaGen;
+		forceAlphaGen = p_stage->alphaGen;
 	}
 
-	switch (force_rgb_gen)
+	switch (forceRGBGen)
 	{
 	case CGEN_SKIP:
 		break;
@@ -1260,10 +1237,10 @@ static void ComputeColors(shaderStage_t* p_stage, alphaGen_t force_alpha_gen, co
 	case CGEN_LIGHTING_DIFFUSE_ENTITY:
 		RB_CalcDiffuseEntityColor(reinterpret_cast<unsigned char*>(tess.svars.colors));
 
-		if (force_alpha_gen == AGEN_IDENTITY &&
+		if (forceAlphaGen == AGEN_IDENTITY &&
 			backEnd.currentEntity->e.shaderRGBA[3] == 0xff)
 		{
-			force_alpha_gen = AGEN_SKIP;	//already got it in this set since it does all 4 components
+			forceAlphaGen = AGEN_SKIP;	//already got it in this set since it does all 4 components
 		}
 		break;
 	case CGEN_EXACT_VERTEX:
@@ -1327,10 +1304,10 @@ static void ComputeColors(shaderStage_t* p_stage, alphaGen_t force_alpha_gen, co
 		break;
 	case CGEN_ENTITY:
 		RB_calc_colorFromEntity(reinterpret_cast<unsigned char*>(tess.svars.colors));
-		if (force_alpha_gen == AGEN_IDENTITY &&
+		if (forceAlphaGen == AGEN_IDENTITY &&
 			backEnd.currentEntity->e.shaderRGBA[3] == 0xff)
 		{
-			force_alpha_gen = AGEN_SKIP;	//already got it in this set since it does all 4 components
+			forceAlphaGen = AGEN_SKIP;	//already got it in this set since it does all 4 components
 		}
 
 		break;
@@ -1351,14 +1328,14 @@ static void ComputeColors(shaderStage_t* p_stage, alphaGen_t force_alpha_gen, co
 	// alphaGen
 	//
 
-	switch (force_alpha_gen)
+	switch (forceAlphaGen)
 	{
 	case AGEN_SKIP:
 		break;
 	case AGEN_IDENTITY:
-		if (force_rgb_gen != CGEN_IDENTITY && force_rgb_gen != CGEN_LIGHTING_DIFFUSE) {
-			if (force_rgb_gen == CGEN_VERTEX && tr.identityLight != 1 ||
-				force_rgb_gen != CGEN_VERTEX) {
+		if (forceRGBGen != CGEN_IDENTITY && forceRGBGen != CGEN_LIGHTING_DIFFUSE) {
+			if (forceRGBGen == CGEN_VERTEX && tr.identityLight != 1 ||
+				forceRGBGen != CGEN_VERTEX) {
 				for (i = 0; i < tess.numVertexes; i++) {
 					tess.svars.colors[i][3] = 0xff;
 				}
@@ -1366,7 +1343,7 @@ static void ComputeColors(shaderStage_t* p_stage, alphaGen_t force_alpha_gen, co
 		}
 		break;
 	case AGEN_CONST:
-		if (force_rgb_gen != CGEN_CONST) {
+		if (forceRGBGen != CGEN_CONST) {
 			for (i = 0; i < tess.numVertexes; i++) {
 				tess.svars.colors[i][3] = p_stage->constantColor[3];
 			}
@@ -1379,7 +1356,7 @@ static void ComputeColors(shaderStage_t* p_stage, alphaGen_t force_alpha_gen, co
 		RB_CalcSpecularAlpha(reinterpret_cast<unsigned char*>(tess.svars.colors));
 		break;
 	case AGEN_ENTITY:
-		if (force_rgb_gen != CGEN_ENTITY) { //already got it in the CGEN_entity since it does all 4 components
+		if (forceRGBGen != CGEN_ENTITY) { //already got it in the CGEN_entity since it does all 4 components
 			RB_CalcAlphaFromEntity(reinterpret_cast<unsigned char*>(tess.svars.colors));
 		}
 		break;
@@ -1387,7 +1364,7 @@ static void ComputeColors(shaderStage_t* p_stage, alphaGen_t force_alpha_gen, co
 		RB_CalcAlphaFromOneMinusEntity(reinterpret_cast<unsigned char*>(tess.svars.colors));
 		break;
 	case AGEN_VERTEX:
-		if (force_rgb_gen != CGEN_VERTEX) {
+		if (forceRGBGen != CGEN_VERTEX) {
 			for (i = 0; i < tess.numVertexes; i++) {
 				tess.svars.colors[i][3] = tess.vertexColors[i][3];
 			}
@@ -1430,7 +1407,7 @@ static void ComputeColors(shaderStage_t* p_stage, alphaGen_t force_alpha_gen, co
 	}
 	break;
 	case AGEN_BLEND:
-		if (force_rgb_gen != CGEN_VERTEX)
+		if (forceRGBGen != CGEN_VERTEX)
 		{
 			for (i = 0; i < tess.numVertexes; i++)
 			{
@@ -1584,7 +1561,7 @@ static void ComputeTexCoords(shaderStage_t* p_stage) {
 	}
 }
 
-void ForceAlpha(unsigned char* dst_colors, const int tr_force_ent_alpha)
+static void ForceAlpha(unsigned char* dst_colors, const int tr_force_ent_alpha)
 {
 	dst_colors += 3;
 
@@ -1597,7 +1574,6 @@ void ForceAlpha(unsigned char* dst_colors, const int tr_force_ent_alpha)
 /*
 ** RB_IterateStagesGeneric
 */
-#ifndef JK2_MODE
 static vec4_t	GLFogOverrideColors[GLFOGOVERRIDE_MAX] =
 {
 	{ 0.0, 0.0, 0.0, 1.0 },	// GLFOGOVERRIDE_NONE
@@ -1606,13 +1582,12 @@ static vec4_t	GLFogOverrideColors[GLFOGOVERRIDE_MAX] =
 };
 
 static const float logtestExp2 = sqrt(-log(1.0 / 255.0));
-#endif
 extern bool tr_stencilled; //tr_backend.cpp
+
 static void RB_IterateStagesGeneric(const shaderCommands_t* input)
 {
-#ifndef JK2_MODE
-	bool	use_gl_fog = false;
-	bool	fog_color_change = false;
+	bool	UseGLFog = false;
+	bool	FogColorChange = false;
 	const fog_t* fog = nullptr;
 
 	if (tess.fogNum && tess.shader->fogPass && (tess.fogNum == tr.world->globalFog || tess.fogNum == tr.world->numfogs)
@@ -1670,9 +1645,8 @@ static void RB_IterateStagesGeneric(const shaderCommands_t* input)
 		}
 
 		qglEnable(GL_FOG);
-		use_gl_fog = true;
+		UseGLFog = true;
 	}
-#endif
 
 	for (int stage = 0; stage < input->shader->numUnfoggedPasses; stage++)
 	{
@@ -1689,8 +1663,8 @@ static void RB_IterateStagesGeneric(const shaderCommands_t* input)
 		}
 
 		int	state_bits = p_stage->stateBits;
-		auto force_alpha_gen = static_cast<alphaGen_t>(0);
-		auto force_rgb_gen = static_cast<colorGen_t>(0);
+		auto forceAlphaGen = static_cast<alphaGen_t>(0);
+		auto forceRGBGen = static_cast<colorGen_t>(0);
 
 		// allow skipping out to show just lightmaps during development
 		if (stage && r_lightmap->integer)
@@ -1716,13 +1690,13 @@ static void RB_IterateStagesGeneric(const shaderCommands_t* input)
 				if (backEnd.currentEntity->e.shaderRGBA[3] < 255)
 				{
 					state_bits = GLS_SRCBLEND_SRC_ALPHA | GLS_DSTBLEND_ONE_MINUS_SRC_ALPHA;
-					force_alpha_gen = AGEN_ENTITY;
+					forceAlphaGen = AGEN_ENTITY;
 				}
 			}
 
 			if (backEnd.currentEntity->e.renderfx & RF_RGB_TINT)
 			{//want to use RGBGen from ent
-				force_rgb_gen = CGEN_ENTITY;
+				forceRGBGen = CGEN_ENTITY;
 			}
 		}
 
@@ -1731,26 +1705,23 @@ static void RB_IterateStagesGeneric(const shaderCommands_t* input)
 			// We check for surfacesprites AFTER drawing everything else
 			continue;
 		}
-
-#ifndef JK2_MODE
-		if (use_gl_fog)
+		if (UseGLFog)
 		{
 			if (p_stage->mGLFogColorOverride)
 			{
 				qglFogfv(GL_FOG_COLOR, GLFogOverrideColors[p_stage->mGLFogColorOverride]);
-				fog_color_change = true;
+				FogColorChange = true;
 			}
-			else if (fog_color_change && fog)
+			else if (FogColorChange && fog)
 			{
-				fog_color_change = false;
+				FogColorChange = false;
 				qglFogfv(GL_FOG_COLOR, fog->parms.color);
 			}
 		}
-#endif
 
 		if (!input->fading)
 		{ //this means ignore this, while we do a fade-out
-			ComputeColors(p_stage, force_alpha_gen, force_rgb_gen);
+			ComputeColors(p_stage, forceAlphaGen, forceRGBGen);
 		}
 		ComputeTexCoords(p_stage);
 
@@ -1842,18 +1813,16 @@ static void RB_IterateStagesGeneric(const shaderCommands_t* input)
 			}
 		}
 	}
-#ifndef JK2_MODE
-	if (fog_color_change)
+	if (FogColorChange)
 	{
 		qglFogfv(GL_FOG_COLOR, fog->parms.color);
 	}
-#endif
 }
 
 /*
 ** RB_StageIteratorGeneric
 */
-void RB_StageIteratorGeneric()
+void RB_StageIteratorGeneric(void)
 {
 	shaderCommands_t* input = &tess;
 
@@ -1947,11 +1916,7 @@ void RB_StageIteratorGeneric()
 	//
 	// now do fog
 	//
-#ifdef JK2_MODE
-	if (tess.fogNum && tess.shader->fogPass && r_drawfog->value)
-#else
 	if (tr.world && (tess.fogNum != tr.world->globalFog || r_drawfog->value != 2) && r_drawfog->value && tess.fogNum && tess.shader->fogPass)
-#endif
 	{
 		RB_FogPass();
 	}
@@ -1984,8 +1949,6 @@ void RB_StageIteratorGeneric()
 			}
 		}
 	}
-
-#ifndef JK2_MODE
 	//don't disable the hardware fog til after we do surface sprites
 	if (r_drawfog->value == 2 &&
 		tess.fogNum && tess.shader->fogPass &&
@@ -1993,13 +1956,12 @@ void RB_StageIteratorGeneric()
 	{
 		qglDisable(GL_FOG);
 	}
-#endif
 }
 
 /*
 ** RB_EndSurface
 */
-void RB_EndSurface() {
+void RB_EndSurface(void) {
 	const shaderCommands_t* input = &tess;
 
 	if (input->numIndexes == 0) {
@@ -2055,11 +2017,7 @@ void RB_EndSurface() {
 		backEnd.pc.c_vertexes += tess.numVertexes;
 		backEnd.pc.c_indexes += tess.numIndexes;
 		backEnd.pc.c_totalIndexes += tess.numIndexes * tess.numPasses;
-#ifdef JK2_MODE
-		if (tess.fogNum && tess.shader->fogPass && r_drawfog->value)
-#else
 		if (tess.fogNum && tess.shader->fogPass && r_drawfog->value == 1)
-#endif
 		{	// Fogging adds an additional pass
 			backEnd.pc.c_totalIndexes += tess.numIndexes;
 		}

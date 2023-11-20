@@ -23,7 +23,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 #include "tr_local.h"
 
-inline void Q_CastShort2Float(float* f, const short* s)
+inline static void Q_CastShort2Float(float* f, const short* s)
 {
 	*f = ((float)*s);
 }
@@ -37,7 +37,7 @@ Returns true if the grid is completely culled away.
 Also sets the clipped hint bit in tess
 =================
 */
-static qboolean	R_CullTriSurf(srfTriangles_t* cv) {
+static qboolean	R_CullTriSurf(const srfTriangles_t* cv) {
 	int 	boxCull;
 
 	boxCull = R_CullLocalBox(cv->bounds);
@@ -56,7 +56,7 @@ Returns true if the grid is completely culled away.
 Also sets the clipped hint bit in tess
 =================
 */
-static qboolean	R_CullGrid(srfGridMesh_t* cv) {
+static qboolean	R_CullGrid(const srfGridMesh_t* cv) {
 	int 	boxCull;
 	int 	sphereCull;
 
@@ -346,7 +346,7 @@ that is touched by one or more dlights, so try to throw out
 more dlights if possible.
 ====================
 */
-static int R_DlightSurface(msurface_t* surf, int dlightBits) 
+static int R_DlightSurface(msurface_t* surf, int dlightBits)
 {
 	if (*surf->data == SF_FACE) {
 		dlightBits = R_DlightFace(reinterpret_cast<srfSurfaceFace_t*>(surf->data), dlightBits);
@@ -481,7 +481,7 @@ static float GetQuadArea(vec3_t v1, vec3_t v2, vec3_t v3, vec3_t v4)
 		dis2[0] * dis2[0] + dis2[1] * dis2[1] + dis2[2] * dis2[2]);
 }
 
-void RE_GetBModelVerts(int bmodelIndex, vec3_t* verts, vec3_t normal)
+void RE_GetBModelVerts(const int bmodelIndex, vec3_t* verts, vec3_t normal)
 {
 	msurface_t* surfs;
 	srfSurfaceFace_t* face;
@@ -811,7 +811,7 @@ static void R_GenerateWireframeMap(mnode_t* baseNode)
 }
 
 //clear out the wireframe map data -rww
-void R_DestroyWireframeMap(void)
+static void R_DestroyWireframeMap(void)
 {
 	wireframeMapSurf_t* next;
 	wireframeMapSurf_t* last;
@@ -842,7 +842,7 @@ void R_DestroyWireframeMap(void)
 }
 
 //save 3d automap data to file -rww
-qboolean R_WriteWireframeMapToFile(void)
+static qboolean R_WriteWireframeMapToFile(void)
 {
 	fileHandle_t f;
 	int requiredSize = 0;
@@ -902,7 +902,7 @@ qboolean R_WriteWireframeMapToFile(void)
 }
 
 //load 3d automap data from file -rww
-qboolean R_GetWireframeMapFromFile(void)
+static qboolean R_GetWireframeMapFromFile(void)
 {
 	wireframeMapSurf_t* surfs, * rSurfs;
 	wireframeMapSurf_t* newSurf;
@@ -1190,7 +1190,7 @@ const void* R_DrawWireframeAutomap(const void* data)
 			}
 			else
 			{ //fill mode
-				vec3_t planeNormal;
+				vec3_t planeNormal{};
 				float fAlpha = s->points[i].alpha;
 				planeNormal[0] = s->points[0].xyz[1] * (s->points[1].xyz[2] - s->points[2].xyz[2]) + s->points[1].xyz[1] * (s->points[2].xyz[2] - s->points[0].xyz[2]) + s->points[2].xyz[1] * (s->points[0].xyz[2] - s->points[1].xyz[2]);
 				planeNormal[1] = s->points[0].xyz[2] * (s->points[1].xyz[0] - s->points[2].xyz[0]) + s->points[1].xyz[2] * (s->points[2].xyz[0] - s->points[0].xyz[0]) + s->points[2].xyz[2] * (s->points[0].xyz[0] - s->points[1].xyz[0]);
@@ -1200,15 +1200,6 @@ const void* R_DrawWireframeAutomap(const void* data)
 				if (planeNormal[1] < 0.0f) planeNormal[1] = -planeNormal[1];
 				if (planeNormal[2] < 0.0f) planeNormal[2] = -planeNormal[2];
 
-				/*
-				if (s->points[i].xyz[2] > g_playerHeight+64.0f &&
-					planeNormal[2] > 0.7f)
-				{ //surface above player facing up/down directly
-					fAlpha = 1.0f-planeNormal[2];
-				}
-				*/
-
-				//qglColor4f(planeNormal[0], planeNormal[1], planeNormal[2], fAlpha);
 				qglColor4f(s->points[i].color[0], s->points[i].color[1], 1.0f - planeNormal[2], fAlpha);
 			}
 			qglVertex3f(s->points[i].xyz[0], s->points[i].xyz[1], s->points[i].xyz[2]);
@@ -1445,7 +1436,7 @@ static mnode_t* R_PointInLeaf(const vec3_t p) {
 R_ClusterPVS
 ==============
 */
-static const byte* R_ClusterPVS(int cluster) {
+static const byte* R_ClusterPVS(const int cluster) {
 	if (!tr.world || !tr.world->vis || cluster < 0 || cluster >= tr.world->numClusters) {
 		return tr.world->novis;
 	}

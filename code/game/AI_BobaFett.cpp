@@ -1463,7 +1463,7 @@ void Boba_Update()
 
 	// Occasionally A Jump Turns Into A Rocket Fly
 	//---------------------------------------------
-	if (NPC->client->ps.groundentity_num == ENTITYNUM_NONE
+	if (NPC->client->ps.groundEntityNum == ENTITYNUM_NONE
 		&& NPC->client->ps.forceJumpZStart
 		&& !Q_irand(0, 10))
 	{

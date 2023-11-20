@@ -1278,8 +1278,8 @@ float	R_FogFactor(float s, float t);
 void	R_InitImages();
 void	R_DeleteTextures();
 float	R_SumOfUsedImages(qboolean b_use_format);
-void	R_InitSkins();
-skin_t* R_GetSkinByHandle(qhandle_t h_skin);
+void R_InitSkins(void);
+skin_t* R_GetSkinByHandle(const qhandle_t hSkin);
 
 //
 // tr_shader.c
@@ -1293,8 +1293,8 @@ extern	const byte	stylesDefault[MAXLIGHTMAPS];
 qhandle_t		 RE_RegisterShader(const char* name);
 qhandle_t		 RE_RegisterShaderNoMip(const char* name);
 
-shader_t* R_FindShader(const char* name, const int* lightmap_index, const byte* styles, qboolean mip_raw_image);
-shader_t* R_GetShaderByHandle(qhandle_t hShader);
+shader_t* R_FindShader(const char* name, const int* lightmapIndexes, const byte* styles, const qboolean mipRawImage);
+shader_t* R_GetShaderByHandle(const qhandle_t hShader);
 void R_InitShaders(const qboolean server);
 void R_ShaderList_f(void);
 
@@ -1373,16 +1373,16 @@ extern	shaderCommands_t	tess;
 extern	color4ub_t	styleColors[MAX_LIGHT_STYLES];
 extern	bool		styleUpdated[MAX_LIGHT_STYLES];
 
-void RB_BeginSurface(shader_t* shader, int fogNum);
+void RB_BeginSurface(shader_t* shader, const int fogNum);
 void RB_EndSurface();
-void RB_CheckOverflow(int verts, int indexes);
+void RB_CheckOverflow(const int verts, const int indexes);
 #define RB_CHECKOVERFLOW(v,i) if (tess.numVertexes + (v) >= SHADER_MAX_VERTEXES || tess.numIndexes + (i) >= SHADER_MAX_INDEXES ) {RB_CheckOverflow(v,i);}
 
-void RB_StageIteratorGeneric();
-void RB_StageIteratorSky();
+void RB_StageIteratorGeneric(void);
+void RB_StageIteratorSky(void);
 
 void RB_AddQuadStamp(vec3_t origin, vec3_t left, vec3_t up, byte* color);
-void RB_AddQuadStampExt(vec3_t origin, vec3_t left, vec3_t up, byte* color, float s1, float t1, float s2, float t2);
+void RB_AddQuadStampExt(vec3_t origin, vec3_t left, vec3_t up, byte* color, const float s1, const float t1, const float s2, const float t2);
 
 void RB_ShowImages(void);
 
@@ -1395,7 +1395,7 @@ WORLD MAP
 */
 
 void R_AddBrushModelSurfaces(trRefEntity_t* ent);
-void R_AddWorldSurfaces();
+void R_AddWorldSurfaces(void);
 
 /*
 ============================================================
@@ -1417,8 +1417,8 @@ SHADOWS
 ============================================================
 */
 
-void RB_ShadowTessEnd();
-void RB_ShadowFinish();
+void RB_ShadowTessEnd(void);
+void RB_ShadowFinish(void);
 void RB_ProjectionShadowDeform();
 
 /*
@@ -1430,8 +1430,8 @@ SKIES
 */
 
 void R_BuildCloudData(const shaderCommands_t* shader);
-void R_InitSkyTexCoords(float height_cloud);
-void RB_DrawSun();
+void R_InitSkyTexCoords(const float heightCloud);
+void RB_DrawSun(void);
 void RB_ClipSkyPolygons(const shaderCommands_t* input);
 
 /*
@@ -1447,7 +1447,7 @@ srfGridMesh_t* R_SubdividePatchToGrid(int width, int height,
 Ghoul2 Insert Start
 */
 
-float ProjectRadius(float r, vec3_t location);
+float ProjectRadius(const float r, vec3_t location);
 /*
 Ghoul2 Insert End
 */
@@ -1481,7 +1481,7 @@ void RE_RenderScene(const refdef_t* fd);
 qboolean RE_GetLighting(const vec3_t origin, vec3_t ambient_light, vec3_t directed_light, vec3_t light_dir);
 
 // Only returns a four sided face and normal of the best face to break ( this is for glass right now )
-void RE_GetBModelVerts(int bmodel_index, vec3_t* verts, vec3_t normal);
+void RE_GetBModelVerts(const int bmodelIndex, vec3_t* verts, vec3_t normal);
 
 /*
 =============================================================
@@ -1568,15 +1568,15 @@ void	R_TransformClipToWindow(const vec4_t clip, const viewParms_t* view, vec4_t 
 
 void	RB_DeformTessGeometry();
 
-void	RB_CalcScaleTexCoords(const float scale[2], float* dst_tex_coords);
-void	RB_CalcScrollTexCoords(const float scroll_speed[2], float* dst_tex_coords);
+void	RB_CalcScaleTexCoords(const float scale[2], float* dstTexCoords);
+void	RB_CalcScrollTexCoords(const float scroll_speed[2], float* dstTexCoords);
 void	RB_CalcStretchTexCoords(const waveForm_t* wf, float* tex_coords);
 void	RB_CalcTransformTexCoords(const texModInfo_t* tmi, float* dstTexCoords);
-void	RB_CalcRotateTexCoords(float degs_per_second, float* dst_tex_coords);
+void	RB_CalcRotateTexCoords(float degs_per_second, float* dstTexCoords);
 
-void	RB_CalcEnvironmentTexCoords(float* dst_tex_coords);
-void	RB_CalcFogTexCoords(float* dst_tex_coords);
-void	RB_CalcTurbulentTexCoords(const waveForm_t* wf, float* dst_tex_coords);
+void	RB_CalcEnvironmentTexCoords(float* dstTexCoords);
+void	RB_CalcFogTexCoords(float* dstTexCoords);
+void	RB_CalcTurbulentTexCoords(const waveForm_t* wf, float* dstTexCoords);
 
 void	RB_CalcWaveColor(const waveForm_t* wf, unsigned char* dst_colors);
 void	RB_calc_colorFromEntity(unsigned char* dst_colors);
@@ -1591,7 +1591,7 @@ void	RB_CalcModulateRGBAsByFog(unsigned char* dst_colors);
 
 void	RB_CalcDiffuseColor(unsigned char* colors);
 void	RB_CalcDiffuseEntityColor(unsigned char* colors);
-void	RB_CalcDisintegrateColors(unsigned char* colors, colorGen_t rgb_gen);
+void	RB_CalcDisintegrateColors(unsigned char* colors, colorGen_t rgbGen);
 void	RB_CalcDisintegrateVertDeform();
 /*
 =============================================================

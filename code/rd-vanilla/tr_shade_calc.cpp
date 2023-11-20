@@ -29,7 +29,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #include "../rd-common/tr_common.h"
 #define	WAVEVALUE( table, base, amplitude, phase, freq )  ((base) + table[ Q_ftol( ( ( (phase) + backEnd.refdef.floatTime * (freq) ) * FUNCTABLE_SIZE ) ) & FUNCTABLE_MASK ] * (amplitude))
 
-static float* table_for_func(const genFunc_t func)
+static float* TableForFunc(const genFunc_t func)
 {
 	switch (func)
 	{
@@ -67,7 +67,7 @@ static float EvalWaveForm(const waveForm_t* wf)
 		}
 		return wf->base;
 	}
-	const float* table = table_for_func(wf->func);
+	const float* table = TableForFunc(wf->func);
 	return WAVEVALUE(table, wf->base, wf->amplitude, wf->phase, wf->frequency);
 }
 
@@ -122,7 +122,7 @@ RB_CalcDeformVertexes
 
 ========================
 */
-void RB_CalcDeformVertexes(const deformStage_t* ds)
+static void RB_CalcDeformVertexes(const deformStage_t* ds)
 {
 	int i;
 	vec3_t	offset;
@@ -145,7 +145,7 @@ void RB_CalcDeformVertexes(const deformStage_t* ds)
 	}
 	else
 	{
-		const float* table = table_for_func(ds->deformationWave.func);
+		const float* table = TableForFunc(ds->deformationWave.func);
 
 		for (i = 0; i < tess.numVertexes; i++, xyz += 4, normal += 4)
 		{
@@ -172,7 +172,7 @@ RB_CalcDeformNormals
 Wiggle the normals for wavy environment mapping
 =========================
 */
-void RB_CalcDeformNormals(const deformStage_t* ds)
+static void RB_CalcDeformNormals(const deformStage_t* ds)
 {
 	auto* xyz = reinterpret_cast<float*>(tess.xyz);
 	auto* normal = reinterpret_cast<float*>(tess.normal);
@@ -203,7 +203,7 @@ RB_CalcBulgeVertexes
 
 ========================
 */
-void RB_CalcBulgeVertexes(const deformStage_t* ds)
+static void RB_CalcBulgeVertexes(const deformStage_t* ds)
 {
 	int		i;
 	auto* xyz = reinterpret_cast<float*>(tess.xyz);
@@ -247,11 +247,11 @@ RB_CalcMoveVertexes
 A deformation that can move an entire surface along a wave path
 ======================
 */
-void RB_CalcMoveVertexes(const deformStage_t* ds)
+static void RB_CalcMoveVertexes(const deformStage_t* ds)
 {
 	vec3_t		offset;
 
-	const float* table = table_for_func(ds->deformationWave.func);
+	const float* table = TableForFunc(ds->deformationWave.func);
 
 	const float scale = WAVEVALUE(table, ds->deformationWave.base,
 		ds->deformationWave.amplitude,
@@ -273,9 +273,9 @@ DeformText
 Change a polygon into a bunch of text polygons
 =============
 */
-void DeformText(const char* text) {
+static void DeformText(const char* text) {
 	int		i;
-	vec3_t	origin, width, height;
+	vec3_t	origin, width, height{};
 	byte	color[4]{};
 	vec3_t	mid;
 
@@ -354,7 +354,7 @@ Assuming all the triangles for this shader are independant
 quads, rebuild them as forward facing sprites
 =====================
 */
-static void AutospriteDeform()
+static void AutospriteDeform(void)
 {
 	vec3_t	mid{};
 	vec3_t	left_dir, up_dir;
@@ -420,7 +420,7 @@ static constexpr glIndex_t edgeVerts[6][2] = {
 	{ 2, 3 }
 };
 
-static void Autosprite2Deform()
+static void Autosprite2Deform(void)
 {
 	int		i, j, k;
 	int		indexes;
@@ -528,7 +528,7 @@ RB_DeformTessGeometry
 
 =====================
 */
-void RB_DeformTessGeometry()
+void RB_DeformTessGeometry(void)
 {
 	for (int i = 0; i < tess.shader->numDeforms; i++)
 	{
@@ -779,14 +779,14 @@ doesn't fit our shader data.
 ========================
 */
 
-void RB_CalcFogTexCoords(float* dst_tex_coords)
+void RB_CalcFogTexCoords(float* dstTexCoords)
 {
 	int			i;
 	float* v;
 	float		eye_t;
 	qboolean	eye_outside;
 	vec3_t		local_vec;
-	vec4_t		fog_distance_vector{}, fogDepthVector;
+	vec4_t		fog_distance_vector{}, fogDepthVector{};
 
 	const fog_t* fog = tr.world->fogs + tess.fogNum;
 
@@ -857,16 +857,16 @@ void RB_CalcFogTexCoords(float* dst_tex_coords)
 			}
 		}
 
-		dst_tex_coords[0] = Q_isnan(s) ? 0.0f : s;
-		dst_tex_coords[1] = Q_isnan(s) ? 0.0f : t;
-		dst_tex_coords += 2;
+		dstTexCoords[0] = Q_isnan(s) ? 0.0f : s;
+		dstTexCoords[1] = Q_isnan(s) ? 0.0f : t;
+		dstTexCoords += 2;
 	}
 }
 
 /*
 ** RB_CalcEnvironmentTexCoords
 */
-void RB_CalcEnvironmentTexCoords(float* dst_tex_coords)
+void RB_CalcEnvironmentTexCoords(float* dstTexCoords)
 {
 	int			i;
 	float		d;
@@ -876,23 +876,23 @@ void RB_CalcEnvironmentTexCoords(float* dst_tex_coords)
 
 	if (backEnd.currentEntity && backEnd.currentEntity->e.renderfx & RF_FIRST_PERSON)	//this is a view model so we must use world lights instead of vieworg
 	{
-		for (i = 0; i < tess.numVertexes; i++, v += 4, normal += 4, dst_tex_coords += 2)
+		for (i = 0; i < tess.numVertexes; i++, v += 4, normal += 4, dstTexCoords += 2)
 		{
 			d = DotProduct(normal, backEnd.currentEntity->lightDir);
-			dst_tex_coords[0] = normal[0] * d - backEnd.currentEntity->lightDir[0];
-			dst_tex_coords[1] = normal[1] * d - backEnd.currentEntity->lightDir[1];
+			dstTexCoords[0] = normal[0] * d - backEnd.currentEntity->lightDir[0];
+			dstTexCoords[1] = normal[1] * d - backEnd.currentEntity->lightDir[1];
 		}
 	}
 	else {	//the normal way
-		for (i = 0; i < tess.numVertexes; i++, v += 4, normal += 4, dst_tex_coords += 2)
+		for (i = 0; i < tess.numVertexes; i++, v += 4, normal += 4, dstTexCoords += 2)
 		{
 			vec3_t viewer;
 			VectorSubtract(backEnd.ori.viewOrigin, v, viewer);
 			VectorNormalizeFast(viewer);
 
 			d = DotProduct(normal, viewer);
-			dst_tex_coords[0] = normal[0] * d - 0.5 * viewer[0];
-			dst_tex_coords[1] = normal[1] * d - 0.5 * viewer[1];
+			dstTexCoords[0] = normal[0] * d - 0.5 * viewer[0];
+			dstTexCoords[1] = normal[1] * d - 0.5 * viewer[1];
 		}
 	}
 }
@@ -900,36 +900,36 @@ void RB_CalcEnvironmentTexCoords(float* dst_tex_coords)
 /*
 ** RB_CalcTurbulentTexCoords
 */
-void RB_CalcTurbulentTexCoords(const waveForm_t* wf, float* dst_tex_coords)
+void RB_CalcTurbulentTexCoords(const waveForm_t* wf, float* dstTexCoords)
 {
 	const float now = wf->phase + backEnd.refdef.floatTime * wf->frequency;
 
-	for (int i = 0; i < tess.numVertexes; i++, dst_tex_coords += 2)
+	for (int i = 0; i < tess.numVertexes; i++, dstTexCoords += 2)
 	{
-		const float s = dst_tex_coords[0];
-		const float t = dst_tex_coords[1];
+		const float s = dstTexCoords[0];
+		const float t = dstTexCoords[1];
 
-		dst_tex_coords[0] = s + tr.sinTable[static_cast<int>(((tess.xyz[i][0] + tess.xyz[i][2]) * 1.0 / 128 * 0.125 + now) * FUNCTABLE_SIZE) & FUNCTABLE_MASK] * wf->amplitude;
-		dst_tex_coords[1] = t + tr.sinTable[static_cast<int>((tess.xyz[i][1] * 1.0 / 128 * 0.125 + now) * FUNCTABLE_SIZE) & FUNCTABLE_MASK] * wf->amplitude;
+		dstTexCoords[0] = s + tr.sinTable[static_cast<int>(((tess.xyz[i][0] + tess.xyz[i][2]) * 1.0 / 128 * 0.125 + now) * FUNCTABLE_SIZE) & FUNCTABLE_MASK] * wf->amplitude;
+		dstTexCoords[1] = t + tr.sinTable[static_cast<int>((tess.xyz[i][1] * 1.0 / 128 * 0.125 + now) * FUNCTABLE_SIZE) & FUNCTABLE_MASK] * wf->amplitude;
 	}
 }
 
 /*
 ** RB_CalcScaleTexCoords
 */
-void RB_CalcScaleTexCoords(const float scale[2], float* dst_tex_coords)
+void RB_CalcScaleTexCoords(const float scale[2], float* dstTexCoords)
 {
-	for (int i = 0; i < tess.numVertexes; i++, dst_tex_coords += 2)
+	for (int i = 0; i < tess.numVertexes; i++, dstTexCoords += 2)
 	{
-		dst_tex_coords[0] *= scale[0];
-		dst_tex_coords[1] *= scale[1];
+		dstTexCoords[0] *= scale[0];
+		dstTexCoords[1] *= scale[1];
 	}
 }
 
 /*
 ** RB_CalcScrollTexCoords
 */
-void RB_CalcScrollTexCoords(const float scroll_speed[2], float* dst_tex_coords)
+void RB_CalcScrollTexCoords(const float scroll_speed[2], float* dstTexCoords)
 {
 	const float time_scale = backEnd.refdef.floatTime;
 
@@ -941,10 +941,10 @@ void RB_CalcScrollTexCoords(const float scroll_speed[2], float* dst_tex_coords)
 	adjusted_scroll_s = adjusted_scroll_s - floor(adjusted_scroll_s);
 	adjusted_scroll_t = adjusted_scroll_t - floor(adjusted_scroll_t);
 
-	for (int i = 0; i < tess.numVertexes; i++, dst_tex_coords += 2)
+	for (int i = 0; i < tess.numVertexes; i++, dstTexCoords += 2)
 	{
-		dst_tex_coords[0] += adjusted_scroll_s;
-		dst_tex_coords[1] += adjusted_scroll_t;
+		dstTexCoords[0] += adjusted_scroll_s;
+		dstTexCoords[1] += adjusted_scroll_t;
 	}
 }
 
@@ -963,7 +963,7 @@ void RB_CalcTransformTexCoords(const texModInfo_t* tmi, float* dstTexCoords)
 	}
 }
 
-void RB_CalcRotateTexCoords(const float degs_per_second, float* dst_tex_coords)
+void RB_CalcRotateTexCoords(const float degs_per_second, float* dstTexCoords)
 {
 	const float time_scale = backEnd.refdef.floatTime;
 	texModInfo_t tmi{};
@@ -982,7 +982,7 @@ void RB_CalcRotateTexCoords(const float degs_per_second, float* dst_tex_coords)
 	tmi.matrix[1][1] = cos_value;
 	tmi.translate[1] = 0.5 - 0.5 * sin_value - 0.5 * cos_value;
 
-	RB_CalcTransformTexCoords(&tmi, dst_tex_coords);
+	RB_CalcTransformTexCoords(&tmi, dstTexCoords);
 }
 
 /*
@@ -1162,7 +1162,7 @@ void RB_CalcDiffuseEntityColor(unsigned char* colors)
 }
 
 //---------------------------------------------------------
-void RB_CalcDisintegrateColors(unsigned char* colors, const colorGen_t rgb_gen)
+void RB_CalcDisintegrateColors(unsigned char* colors, const colorGen_t rgbGen)
 {
 	int			i;
 	float		dis;
@@ -1201,7 +1201,7 @@ void RB_CalcDisintegrateColors(unsigned char* colors, const colorGen_t rgb_gen)
 			else if (dis < threshold * threshold + 150)
 			{
 				// darken more
-				if (rgb_gen == CGEN_LIGHTING_DIFFUSE_ENTITY)
+				if (rgbGen == CGEN_LIGHTING_DIFFUSE_ENTITY)
 				{
 					colors[i * 4 + 0] = backEnd.currentEntity->e.shaderRGBA[0] * 0x6f / 255.0f;
 					colors[i * 4 + 1] = backEnd.currentEntity->e.shaderRGBA[1] * 0x6f / 255.0f;
@@ -1218,7 +1218,7 @@ void RB_CalcDisintegrateColors(unsigned char* colors, const colorGen_t rgb_gen)
 			else if (dis < threshold * threshold + 180)
 			{
 				// darken at edge of burn
-				if (rgb_gen == CGEN_LIGHTING_DIFFUSE_ENTITY)
+				if (rgbGen == CGEN_LIGHTING_DIFFUSE_ENTITY)
 				{
 					colors[i * 4 + 0] = backEnd.currentEntity->e.shaderRGBA[0] * 0xaf / 255.0f;
 					colors[i * 4 + 1] = backEnd.currentEntity->e.shaderRGBA[1] * 0xaf / 255.0f;
@@ -1235,7 +1235,7 @@ void RB_CalcDisintegrateColors(unsigned char* colors, const colorGen_t rgb_gen)
 			else
 			{
 				// not burning at all yet
-				if (rgb_gen == CGEN_LIGHTING_DIFFUSE_ENTITY)
+				if (rgbGen == CGEN_LIGHTING_DIFFUSE_ENTITY)
 				{
 					colors[i * 4 + 0] = backEnd.currentEntity->e.shaderRGBA[0];
 					colors[i * 4 + 1] = backEnd.currentEntity->e.shaderRGBA[1];

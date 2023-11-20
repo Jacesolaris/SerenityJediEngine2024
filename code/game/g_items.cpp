@@ -1318,7 +1318,7 @@ void FinishSpawningItem(gentity_t* ent)
 		}
 
 		// allow to ride movers
-		ent->s.groundentity_num = tr.entityNum;
+		ent->s.groundEntityNum = tr.entityNum;
 
 		G_SetOrigin(ent, tr.endpos);
 	}
@@ -1558,7 +1558,7 @@ void G_BounceItem(gentity_t* ent, trace_t* trace)
 	{
 		//stop
 		G_SetOrigin(ent, trace->endpos);
-		ent->s.groundentity_num = trace->entityNum;
+		ent->s.groundEntityNum = trace->entityNum;
 		if (droppedSaber)
 		{
 			//a dropped saber item
@@ -1630,7 +1630,7 @@ void G_RunItem(gentity_t* ent)
 	int mask;
 
 	// if groundentity has been set to -1, it may have been pushed off an edge
-	if (ent->s.groundentity_num == ENTITYNUM_NONE)
+	if (ent->s.groundEntityNum == ENTITYNUM_NONE)
 	{
 		if (ent->s.pos.trType != TR_GRAVITY)
 		{

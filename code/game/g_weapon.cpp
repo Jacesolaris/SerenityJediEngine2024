@@ -1912,7 +1912,7 @@ void FireWeapon(gentity_t* ent, const qboolean alt_fire)
 	// We should probably just use this as a default behavior, in special cases, just set alert to false.
 	if (ent->s.number == 0 && alert > 0)
 	{
-		if (ent->client->ps.groundentity_num == ENTITYNUM_WORLD //FIXME: check for sand contents type?
+		if (ent->client->ps.groundEntityNum == ENTITYNUM_WORLD //FIXME: check for sand contents type?
 			&& ent->s.weapon != WP_STUN_BATON
 			&& ent->s.weapon != WP_MELEE
 			&& ent->s.weapon != WP_TUSKEN_STAFF

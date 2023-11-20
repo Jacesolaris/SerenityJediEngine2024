@@ -326,7 +326,7 @@ void Wampa_Attack(const float distance, const qboolean do_charge)
 			AngleVectors(yawAng, fwd, NULL, NULL);
 			VectorScale(fwd, distance * 1.5f, NPCS.NPC->client->ps.velocity);
 			NPCS.NPC->client->ps.velocity[2] = 150;
-			NPCS.NPC->client->ps.groundentity_num = ENTITYNUM_NONE;
+			NPCS.NPC->client->ps.groundEntityNum = ENTITYNUM_NONE;
 		}
 		else
 		{

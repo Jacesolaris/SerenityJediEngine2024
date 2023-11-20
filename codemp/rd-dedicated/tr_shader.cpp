@@ -93,7 +93,7 @@ const byte stylesDefault[MAXLIGHTMAPS] =
 	LS_LSNONE
 };
 
-static void ClearGlobalShader()
+static void ClearGlobalShader(void)
 {
 	memset(&shader, 0, sizeof shader);
 	memset(&stages, 0, sizeof stages);
@@ -1140,8 +1140,8 @@ ParseStage
 */
 static qboolean ParseStage(shaderStage_t* stage, const char** text)
 {
-	int depth_mask_bits = GLS_DEPTHMASK_TRUE, blend_src_bits = 0, blend_dst_bits = 0, atest_bits = 0, depth_func_bits = 0;
-	qboolean depth_mask_explicit = qfalse;
+	int depthMaskBits = GLS_DEPTHMASK_TRUE, blendSrcBits = 0, blend_dst_bits = 0, atest_bits = 0, depth_func_bits = 0;
+	qboolean depthMaskExplicit = qfalse;
 
 	stage->active = qtrue;
 
@@ -1215,7 +1215,7 @@ static qboolean ParseStage(shaderStage_t* stage, const char** text)
 		if (!Q_stricmp(token, "animMap") || !Q_stricmp(token, "clampanimMap") || !Q_stricmp(token, "oneshotanimMap"))
 		{
 			constexpr auto max_image_animations = 64;
-			image_t* images[max_image_animations];
+			image_t* images[max_image_animations]{};
 			const bool b_clamp = !Q_stricmp(token, "clampanimMap");
 			const bool one_shot = !Q_stricmp(token, "oneshotanimMap");
 
@@ -1335,23 +1335,23 @@ static qboolean ParseStage(shaderStage_t* stage, const char** text)
 			// check for "simple" blends first
 			if (!Q_stricmp(token, "add"))
 			{
-				blend_src_bits = GLS_SRCBLEND_ONE;
+				blendSrcBits = GLS_SRCBLEND_ONE;
 				blend_dst_bits = GLS_DSTBLEND_ONE;
 			}
 			else if (!Q_stricmp(token, "filter"))
 			{
-				blend_src_bits = GLS_SRCBLEND_DST_COLOR;
+				blendSrcBits = GLS_SRCBLEND_DST_COLOR;
 				blend_dst_bits = GLS_DSTBLEND_ZERO;
 			}
 			else if (!Q_stricmp(token, "blend"))
 			{
-				blend_src_bits = GLS_SRCBLEND_SRC_ALPHA;
+				blendSrcBits = GLS_SRCBLEND_SRC_ALPHA;
 				blend_dst_bits = GLS_DSTBLEND_ONE_MINUS_SRC_ALPHA;
 			}
 			else
 			{
 				// complex double blends
-				blend_src_bits = NameToSrcBlendMode(token);
+				blendSrcBits = NameToSrcBlendMode(token);
 
 				token = COM_ParseExt(text, qfalse);
 				if (token[0] == 0)
@@ -1363,9 +1363,9 @@ static qboolean ParseStage(shaderStage_t* stage, const char** text)
 			}
 
 			// clear depth mask for blended surfaces
-			if (!depth_mask_explicit)
+			if (!depthMaskExplicit)
 			{
-				depth_mask_bits = 0;
+				depthMaskBits = 0;
 			}
 		}
 		//
@@ -1585,8 +1585,8 @@ static qboolean ParseStage(shaderStage_t* stage, const char** text)
 		//
 		else if (!Q_stricmp(token, "depthwrite"))
 		{
-			depth_mask_bits = GLS_DEPTHMASK_TRUE;
-			depth_mask_explicit = qtrue;
+			depthMaskBits = GLS_DEPTHMASK_TRUE;
+			depthMaskExplicit = qtrue;
 		}
 		// If this stage has glow...	GLOWXXX
 		else if (Q_stricmp(token, "glow") == 0)
@@ -1654,8 +1654,8 @@ static qboolean ParseStage(shaderStage_t* stage, const char** text)
 	if (stage->rgbGen == CGEN_BAD)
 	{
 		if ( //blendSrcBits == 0 ||
-			blend_src_bits == GLS_SRCBLEND_ONE ||
-			blend_src_bits == GLS_SRCBLEND_SRC_ALPHA)
+			blendSrcBits == GLS_SRCBLEND_ONE ||
+			blendSrcBits == GLS_SRCBLEND_SRC_ALPHA)
 		{
 			stage->rgbGen = CGEN_IDENTITY_LIGHTING;
 		}
@@ -1668,11 +1668,11 @@ static qboolean ParseStage(shaderStage_t* stage, const char** text)
 	//
 	// implicitly assume that a GL_ONE GL_ZERO blend mask disables blending
 	//
-	if (blend_src_bits == GLS_SRCBLEND_ONE &&
+	if (blendSrcBits == GLS_SRCBLEND_ONE &&
 		blend_dst_bits == GLS_DSTBLEND_ZERO)
 	{
-		blend_dst_bits = blend_src_bits = 0;
-		depth_mask_bits = GLS_DEPTHMASK_TRUE;
+		blend_dst_bits = blendSrcBits = 0;
+		depthMaskBits = GLS_DEPTHMASK_TRUE;
 	}
 
 	// decide which agens we can skip
@@ -1688,8 +1688,8 @@ static qboolean ParseStage(shaderStage_t* stage, const char** text)
 	//
 	// compute state bits
 	//
-	stage->stateBits = depth_mask_bits |
-		blend_src_bits | blend_dst_bits |
+	stage->stateBits = depthMaskBits |
+		blendSrcBits | blend_dst_bits |
 		atest_bits |
 		depth_func_bits;
 
@@ -2813,7 +2813,7 @@ static shader_t* FinishShader(void)
 		if (pStage->stateBits & (GLS_SRCBLEND_BITS | GLS_DSTBLEND_BITS) &&
 			stages[0].stateBits & (GLS_SRCBLEND_BITS | GLS_DSTBLEND_BITS))
 		{
-			const int blend_src_bits = pStage->stateBits & GLS_SRCBLEND_BITS;
+			const int blendSrcBits = pStage->stateBits & GLS_SRCBLEND_BITS;
 			const int blend_dst_bits = pStage->stateBits & GLS_DSTBLEND_BITS;
 
 			// fog color adjustment only works for blend modes that have a contribution
@@ -2823,18 +2823,18 @@ static shader_t* FinishShader(void)
 			// GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA
 
 			// modulate, additive
-			if (blend_src_bits == GLS_SRCBLEND_ONE && blend_dst_bits == GLS_DSTBLEND_ONE ||
-				blend_src_bits == GLS_SRCBLEND_ZERO && blend_dst_bits == GLS_DSTBLEND_ONE_MINUS_SRC_COLOR)
+			if (blendSrcBits == GLS_SRCBLEND_ONE && blend_dst_bits == GLS_DSTBLEND_ONE ||
+				blendSrcBits == GLS_SRCBLEND_ZERO && blend_dst_bits == GLS_DSTBLEND_ONE_MINUS_SRC_COLOR)
 			{
 				pStage->adjustColorsForFog = ACFF_MODULATE_RGB;
 			}
 			// strict blend
-			else if (blend_src_bits == GLS_SRCBLEND_SRC_ALPHA && blend_dst_bits == GLS_DSTBLEND_ONE_MINUS_SRC_ALPHA)
+			else if (blendSrcBits == GLS_SRCBLEND_SRC_ALPHA && blend_dst_bits == GLS_DSTBLEND_ONE_MINUS_SRC_ALPHA)
 			{
 				pStage->adjustColorsForFog = ACFF_MODULATE_ALPHA;
 			}
 			// premultiplied alpha
-			else if (blend_src_bits == GLS_SRCBLEND_ONE && blend_dst_bits == GLS_DSTBLEND_ONE_MINUS_SRC_ALPHA)
+			else if (blendSrcBits == GLS_SRCBLEND_ONE && blend_dst_bits == GLS_DSTBLEND_ONE_MINUS_SRC_ALPHA)
 			{
 				pStage->adjustColorsForFog = ACFF_MODULATE_RGBA;
 			}
@@ -2869,7 +2869,7 @@ static shader_t* FinishShader(void)
 						shader.sort = SS_BLEND0;
 					}
 					*/
-					if (blend_src_bits == GLS_SRCBLEND_ONE && blend_dst_bits == GLS_DSTBLEND_ONE)
+					if (blendSrcBits == GLS_SRCBLEND_ONE && blend_dst_bits == GLS_DSTBLEND_ONE)
 					{
 						// GL_ONE GL_ONE needs to come a bit later
 						shader.sort = SS_BLEND1;
@@ -3156,7 +3156,7 @@ most world construction surfaces.
 
 ===============
 */
-shader_t* R_FindShader(const char* name, const int* lightmapIndexes, const byte* styles, qboolean mip_raw_image)
+shader_t* R_FindShader(const char* name, const int* lightmapIndexes, const byte* styles, const qboolean mipRawImage)
 {
 	char stripped_name[MAX_QPATH];
 	char fileName[MAX_QPATH];

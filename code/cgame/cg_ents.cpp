@@ -2102,7 +2102,7 @@ void CG_CalcEntityLerpPositions(centity_t* cent)
 	EvaluateTrajectory(&cent->currentState.apos, cg.time, cent->lerpAngles);
 
 	// adjust for riding a mover
-	CG_AdjustPositionForMover(cent->lerpOrigin, cent->currentState.groundentity_num, cg.time, cent->lerpOrigin);
+	CG_AdjustPositionForMover(cent->lerpOrigin, cent->currentState.groundEntityNum, cg.time, cent->lerpOrigin);
 	/*
 	Ghoul2 Insert Start
 	*/
@@ -2215,7 +2215,7 @@ void CG_CalcEntityLerpPositions(centity_t* cent)
 	EvaluateTrajectory(&cent->currentState.apos, cg.time, cent->lerpAngles);
 
 	// adjust for riding a mover
-	CG_AdjustPositionForMover(cent->lerpOrigin, cent->currentState.groundentity_num, cg.time, cent->lerpOrigin);
+	CG_AdjustPositionForMover(cent->lerpOrigin, cent->currentState.groundEntityNum, cg.time, cent->lerpOrigin);
 }
 #endif
 /*
@@ -2490,7 +2490,7 @@ void CG_MatrixEffect(const centity_t* cent)
 	if (!stop_effect && cent->currentState.boltInfo & MEF_HIT_GROUND_STOP && g_entities[cent->currentState.
 		otherentity_num].client)
 	{
-		if (g_entities[cent->currentState.otherentity_num].client->ps.groundentity_num != ENTITYNUM_NONE)
+		if (g_entities[cent->currentState.otherentity_num].client->ps.groundEntityNum != ENTITYNUM_NONE)
 		{
 			stop_effect = true;
 		}
@@ -2676,7 +2676,7 @@ void CG_StasisEffect(const centity_t* cent)
 	if (!stop_effect && cent->currentState.boltInfo & MEF_HIT_GROUND_STOP && g_entities[cent->currentState.
 		otherentity_num].client)
 	{
-		if (g_entities[cent->currentState.otherentity_num].client->ps.groundentity_num != ENTITYNUM_NONE)
+		if (g_entities[cent->currentState.otherentity_num].client->ps.groundEntityNum != ENTITYNUM_NONE)
 		{
 			stop_effect = true;
 		}

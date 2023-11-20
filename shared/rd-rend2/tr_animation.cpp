@@ -136,8 +136,9 @@ R_MDRComputeFogNum
 =================
 */
 
-int R_MDRComputeFogNum(mdrHeader_t* header, trRefEntity_t* ent) {
-	int				i/*, j*/;
+static int R_MDRComputeFogNum(mdrHeader_t* header, trRefEntity_t* ent) 
+{
+	int				i, j = 0;
 	float			frameRadius;
 	fog_t* fog;
 	mdrFrame_t* mdrFrame;
@@ -189,12 +190,6 @@ int R_MDRComputeFogNum(mdrHeader_t* header, trRefEntity_t* ent) {
 			(localOrigin[0] + frameRadius >= fog->bounds[0][0] && localOrigin[1] + frameRadius >= fog->bounds[0][1] && localOrigin[2] + frameRadius >= fog->bounds[0][2] &&
 				localOrigin[0] + frameRadius <= fog->bounds[1][0] && localOrigin[1] + frameRadius <= fog->bounds[1][1] && localOrigin[2] + frameRadius <= fog->bounds[1][2]))
 		{//partially inside it
-			//if (tr.refdef.fogIndex == i || R_FogParmsMatch(tr.refdef.fogIndex, i))
-			//{//take new one only if it's the same one that the viewpoint is in
-			//	return i;
-			//	break;
-			//}
-			//else
 			if (!partialFog)
 			{//first partialFog
 				partialFog = i;
@@ -357,7 +352,7 @@ void RB_MDRSurfaceAnim(mdrSurface_t* surface)
 	mdrHeader_t* header;
 	mdrFrame_t* frame;
 	mdrFrame_t* oldFrame;
-	mdrBone_t		bones[MDR_MAX_BONES], * bonePtr, * bone;
+	mdrBone_t		bones[MDR_MAX_BONES]{}, * bonePtr, * bone;
 
 	int			frameSize;
 

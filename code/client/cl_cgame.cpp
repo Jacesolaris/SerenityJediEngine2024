@@ -54,7 +54,7 @@ extern sfxHandle_t AS_GetBModelSound(const char* name, int stage);
 extern void AS_AddPrecacheEntry(const char* name);
 extern menuDef_t* Menus_FindByName(const char* p);
 
-extern qboolean R_inPVS(vec3_t p1, vec3_t p2);
+extern qboolean R_inPVS(const vec3_t p1, const vec3_t p2);
 
 void UI_SetActiveMenu(const char* menuname, const char* menuID);
 

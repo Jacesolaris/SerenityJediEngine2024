@@ -3983,7 +3983,7 @@ qboolean CG_RagDoll(centity_t* cent, vec3_t forced_angles)
 			//want to go into it no matter what then
 			in_something = qtrue;
 		}
-		else if (cent->currentState.groundentity_num == ENTITYNUM_NONE)
+		else if (cent->currentState.groundEntityNum == ENTITYNUM_NONE)
 		{
 			vec3_t c_vel;
 
@@ -4221,7 +4221,7 @@ qboolean CG_RagDoll(centity_t* cent, vec3_t forced_angles)
 		tu_parms.me = cent->currentState.number;
 		tu_parms.settleFrame = t_parms.endFrame - 1;
 
-		if (cent->currentState.groundentity_num != ENTITYNUM_NONE)
+		if (cent->currentState.groundEntityNum != ENTITYNUM_NONE)
 		{
 			VectorClear(tu_parms.velocity);
 		}
@@ -4320,7 +4320,7 @@ qboolean CG_RagDoll(centity_t* cent, vec3_t forced_angles)
 				VectorSubtract(cent->ragLastOrigin, cent->lerpOrigin, p_dif);
 				VectorCopy(cent->lerpOrigin, cent->ragLastOrigin);
 
-				if (cent->ragLastOriginTime >= cg.time && cent->currentState.groundentity_num != ENTITYNUM_NONE)
+				if (cent->ragLastOriginTime >= cg.time && cent->currentState.groundEntityNum != ENTITYNUM_NONE)
 				{
 					float dif_len;
 					//make sure it's reasonably updated
@@ -5755,7 +5755,7 @@ static void CG_ForceRepulseRefraction(vec3_t org, centity_t* cent, vec3_t colour
 
 		//scale from 1.0f to 0.1f then hold at 0.1 for the rest of the duration
 		if ((cent->currentState.weapon == WP_NONE || cent->currentState.weapon == WP_MELEE)
-			&& cent->currentState.forcePowersActive & 1 << FP_PUSH && cent->currentState.groundentity_num ==
+			&& cent->currentState.forcePowersActive & 1 << FP_PUSH && cent->currentState.groundEntityNum ==
 			ENTITYNUM_NONE)
 		{
 			scale = 1.0f;
@@ -5780,7 +5780,7 @@ static void CG_ForceRepulseRefraction(vec3_t org, centity_t* cent, vec3_t colour
 
 		//start alpha at 244, fade to 10
 		if ((cent->currentState.weapon == WP_NONE || cent->currentState.weapon == WP_MELEE)
-			&& cent->currentState.forcePowersActive & 1 << FP_PUSH && cent->currentState.groundentity_num ==
+			&& cent->currentState.forcePowersActive & 1 << FP_PUSH && cent->currentState.groundEntityNum ==
 			ENTITYNUM_NONE)
 		{
 			alpha = 244.0f;
@@ -5927,7 +5927,7 @@ static void CG_ForcePushBodyBlur(centity_t* cent)
 		BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, fx_org);
 
 		if ((cent->currentState.weapon == WP_NONE || cent->currentState.weapon == WP_MELEE)
-			&& cent->currentState.forcePowersActive & 1 << FP_PUSH && cent->currentState.groundentity_num ==
+			&& cent->currentState.forcePowersActive & 1 << FP_PUSH && cent->currentState.groundEntityNum ==
 			ENTITYNUM_NONE)
 		{
 			vec3_t blue;
@@ -17039,7 +17039,7 @@ void CG_Player(centity_t* cent)
 		VectorClear(cent->modelScale);
 	}
 
-	if ((cg_smoothClients.integer || cent->currentState.heldByClient) && (cent->currentState.groundentity_num >=
+	if ((cg_smoothClients.integer || cent->currentState.heldByClient) && (cent->currentState.groundEntityNum >=
 		ENTITYNUM_WORLD || cent->currentState.eType == ET_TERRAIN) &&
 		!(cent->currentState.eFlags2 & EF2_HYPERSPACE) && cg.predicted_player_state.m_iVehicleNum != cent->currentState.
 		number)
@@ -18842,7 +18842,7 @@ SkipTrueView:
 	health = cg.snap->ps.stats[STAT_HEALTH];
 
 	if (cent->currentState.powerups & 1 << PW_INVINCIBLE
-		&& cent->currentState.groundentity_num != ENTITYNUM_NONE
+		&& cent->currentState.groundEntityNum != ENTITYNUM_NONE
 		&& health > 1)
 	{
 		if (cent->ghoul2)

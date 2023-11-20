@@ -59,14 +59,14 @@ void G_RunExPhys(gentity_t* ent, float gravity, float mass, float bounce, qboole
 
 		if (tr.fraction == 1.0f)
 		{
-			ent->s.groundentity_num = ENTITYNUM_NONE;
+			ent->s.groundEntityNum = ENTITYNUM_NONE;
 		}
 		else
 		{
-			ent->s.groundentity_num = tr.entityNum;
+			ent->s.groundEntityNum = tr.entityNum;
 		}
 
-		if (ent->s.groundentity_num == ENTITYNUM_NONE)
+		if (ent->s.groundEntityNum == ENTITYNUM_NONE)
 		{
 			ent->epGravFactor += gravity;
 
@@ -109,7 +109,7 @@ void G_RunExPhys(gentity_t* ent, float gravity, float mass, float bounce, qboole
 	VectorCopy(ent->epVelocity, vNorm);
 	vTotal = VectorNormalize(vNorm);
 
-	if (vTotal < 1 && ent->s.groundentity_num != ENTITYNUM_NONE)
+	if (vTotal < 1 && ent->s.groundEntityNum != ENTITYNUM_NONE)
 	{
 		//we've pretty much stopped moving anyway, just clear it out then.
 		VectorClear(ent->epVelocity);

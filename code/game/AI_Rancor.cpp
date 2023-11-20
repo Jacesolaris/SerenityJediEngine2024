@@ -601,7 +601,7 @@ void Rancor_Smash()
 				&& radius_ents[i]->client->NPC_class != CLASS_ATST)
 			{
 				if (dist_sq < half_rad_squared
-					|| radius_ents[i]->client->ps.groundentity_num != ENTITYNUM_NONE)
+					|| radius_ents[i]->client->ps.groundEntityNum != ENTITYNUM_NONE)
 				{
 					//within range of my fist or withing ground-shaking range and not in the air
 					if (NPC->spawnflags & SPF_RANCOR_MUTANT)
@@ -820,7 +820,7 @@ void Rancor_Attack(const float distance, const qboolean do_charge, const qboolea
 				AngleVectors(yaw_ang, fwd, nullptr, nullptr);
 				VectorScale(fwd, distance * 1.5f, NPC->client->ps.velocity);
 				NPC->client->ps.velocity[2] = 150;
-				NPC->client->ps.groundentity_num = ENTITYNUM_NONE;
+				NPC->client->ps.groundEntityNum = ENTITYNUM_NONE;
 				if (NPC->enemy && NPC->enemy->s.number == 0)
 				{
 					//don't attack the player again for a bit

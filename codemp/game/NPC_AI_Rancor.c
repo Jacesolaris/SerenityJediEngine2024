@@ -437,7 +437,7 @@ void Rancor_Smash(void)
 				&& radius_ent->client->NPC_class != CLASS_ATST)
 			{
 				if (dist_sq < half_rad_squared
-					|| radius_ent->client->ps.groundentity_num != ENTITYNUM_NONE)
+					|| radius_ent->client->ps.groundEntityNum != ENTITYNUM_NONE)
 				{
 					//within range of my fist or withing ground-shaking range and not in the air
 					G_Knockdown(radius_ent, NPCS.NPC, vec3_origin, 100, qtrue);
@@ -572,7 +572,7 @@ void Rancor_Attack(const float distance, const qboolean do_charge, const qboolea
 				AngleVectors(yaw_ang, fwd, NULL, NULL);
 				VectorScale(fwd, distance * 1.5f, NPCS.NPC->client->ps.velocity);
 				NPCS.NPC->client->ps.velocity[2] = 150;
-				NPCS.NPC->client->ps.groundentity_num = ENTITYNUM_NONE;
+				NPCS.NPC->client->ps.groundEntityNum = ENTITYNUM_NONE;
 
 				NPC_SetAnim(NPCS.NPC, SETANIM_BOTH, BOTH_MELEE2, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 				TIMER_Set(NPCS.NPC, "attack_dmg", 1250);
@@ -987,13 +987,13 @@ void Rancor_Crush(void)
 {
 	if (!NPCS.NPC ||
 		!NPCS.NPC->client ||
-		NPCS.NPC->client->ps.groundentity_num >= ENTITYNUM_WORLD)
+		NPCS.NPC->client->ps.groundEntityNum >= ENTITYNUM_WORLD)
 	{
 		//nothing to crush
 		return;
 	}
 
-	gentity_t* crush = &g_entities[NPCS.NPC->client->ps.groundentity_num];
+	gentity_t* crush = &g_entities[NPCS.NPC->client->ps.groundEntityNum];
 	if (crush->inuse && crush->client && !crush->localAnimIndex)
 	{
 		//a humanoid, smash them good.

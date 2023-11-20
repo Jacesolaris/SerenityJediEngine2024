@@ -333,8 +333,7 @@ qboolean ss_using_fog = qfalse;
 /////////////////////////////////////////////
 // Vertical surface sprites
 
-static void RB_VerticalSurfaceSprite(vec3_t loc, const float width, const float height, const byte light,
-	const byte alpha, const float wind, const float windidle, vec2_t fog, const int hangdown, vec2_t skew, const bool flattened)
+static void RB_VerticalSurfaceSprite(vec3_t loc, const float width, const float height, const byte light, const byte alpha, const float wind, const float windidle, vec2_t fog, const int hangdown, vec2_t skew, const bool flattened)
 {
 	vec3_t loc2{}, right{};
 	float windsway;
@@ -1450,7 +1449,7 @@ void RB_DrawSurfaceSprites(shaderStage_t* stage, shaderCommands_t* input)
 		ss_additive_transparency = qfalse;
 	}
 
-	if (ss_additive_transparency && ss_using_fog && r_drawfog->value == 2 
+	if (ss_additive_transparency && ss_using_fog && r_drawfog->value == 2
 		&& tr.world &&
 		(tess.fogNum == tr.world->globalFog || tess.fogNum == tr.world->numfogs))
 	{

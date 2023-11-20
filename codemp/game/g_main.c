@@ -3674,7 +3674,7 @@ void CheckTournament(void)
 				//this is really pretty nasty, but..
 				te->s.otherentity_num = level.sortedClients[0];
 				te->s.otherentity_num2 = level.sortedClients[1];
-				te->s.groundentity_num = level.sortedClients[2];
+				te->s.groundEntityNum = level.sortedClients[2];
 
 				trap->SetConfigstring(CS_CLIENT_DUELISTS, va("%i|%i|%i", level.sortedClients[0], level.sortedClients[1],
 					level.sortedClients[2]));
@@ -3715,7 +3715,7 @@ void CheckTournament(void)
 					//this is really pretty nasty, but..
 					te->s.otherentity_num = level.sortedClients[0];
 					te->s.otherentity_num2 = level.sortedClients[1];
-					te->s.groundentity_num = level.sortedClients[2];
+					te->s.groundEntityNum = level.sortedClients[2];
 
 					trap->SetConfigstring(CS_CLIENT_DUELISTS, va("%i|%i|%i", level.sortedClients[0],
 						level.sortedClients[1], level.sortedClients[2]));
@@ -4788,7 +4788,7 @@ void G_RunFrame(const int levelTime)
 					{
 						if (!(ent->r.svFlags & SVF_BOT))
 						{
-							if (ent->client->ps.groundentity_num == ENTITYNUM_NONE)
+							if (ent->client->ps.groundEntityNum == ENTITYNUM_NONE)
 							{
 								//in midair
 								ent->client->ps.jetpackFuel--;
@@ -4812,7 +4812,7 @@ void G_RunFrame(const int levelTime)
 					ent->client->jetPackDebReduce = level.time + JETPACK_DEFUEL_RATE;
 				}
 			}
-			else if (ent->client->ps.jetpackFuel < 100 && ent->client->ps.groundentity_num != ENTITYNUM_NONE)
+			else if (ent->client->ps.jetpackFuel < 100 && ent->client->ps.groundEntityNum != ENTITYNUM_NONE)
 			{
 				//recharge jetpack
 				if (ent->client->jetPackDebRecharge < level.time && !ent->client->flamethrowerOn)

@@ -2343,7 +2343,7 @@ void rocketThink(gentity_t* ent)
 		ent->random *= 0.9f;
 
 		if (ent->enemy->client
-			&& ent->enemy->client->ps.groundentity_num != ENTITYNUM_NONE)
+			&& ent->enemy->client->ps.groundEntityNum != ENTITYNUM_NONE)
 		{
 			//tracking a client who's on the ground, aim at the floor...?
 			// Try to crash into the ground if we get close enough to do splash damage
@@ -2394,7 +2394,7 @@ static void WP_FireRocket(gentity_t* ent, const qboolean alt_fire)
 
 		//Shove us backwards for half a second
 		VectorMA(ent->client->ps.velocity, -200, forward, ent->client->ps.velocity);
-		ent->client->ps.groundentity_num = ENTITYNUM_NONE;
+		ent->client->ps.groundEntityNum = ENTITYNUM_NONE;
 
 		if (ent->client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_HALF)
 		{
@@ -3374,7 +3374,7 @@ void charge_stick(gentity_t* self, gentity_t* other, trace_t* trace)
 		&& trace->plane.normal[2] > 0)
 	{
 		//stick to it?
-		self->s.groundentity_num = other->s.number;
+		self->s.groundEntityNum = other->s.number;
 	}
 	else if (other && other->s.number < ENTITYNUM_WORLD &&
 		(other->client || !other->s.weapon))
@@ -3729,7 +3729,7 @@ static void WP_FireConcussionAlt(gentity_t* ent)
 
 	//Shove us backwards for half a second
 	VectorMA(ent->client->ps.velocity, -200, forward, ent->client->ps.velocity);
-	ent->client->ps.groundentity_num = ENTITYNUM_NONE;
+	ent->client->ps.groundEntityNum = ENTITYNUM_NONE;
 
 	if (ent->client->ps.BlasterAttackChainCount > BLASTERMISHAPLEVEL_HALF)
 	{
@@ -5660,7 +5660,7 @@ void FireWeapon(gentity_t* ent, const qboolean alt_fire)
 	// We should probably just use this as a default behavior, in special cases, just set alert to false.
 	if (alert > 0)
 	{
-		if (ent->client->ps.groundentity_num == ENTITYNUM_WORLD //FIXME: check for sand contents type?
+		if (ent->client->ps.groundEntityNum == ENTITYNUM_WORLD //FIXME: check for sand contents type?
 			&& ent->s.weapon != WP_STUN_BATON
 			&& ent->s.weapon != WP_MELEE
 			//&& ent->s.weapon != WP_TUSKEN_STAFF //RAFIXME - Impliment?

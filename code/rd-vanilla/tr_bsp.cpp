@@ -160,6 +160,7 @@ R_LoadLightmaps
 ===============
 */
 constexpr auto LIGHTMAP_SIZE = 128;
+
 static	void R_LoadLightmaps(const lump_t* l, const char* ps_map_name, world_t& worldData)
 {
 	byte		image[LIGHTMAP_SIZE * LIGHTMAP_SIZE * 4]{};

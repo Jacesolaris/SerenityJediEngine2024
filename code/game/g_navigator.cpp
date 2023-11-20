@@ -4330,7 +4330,7 @@ bool STEER::GoTo(gentity_t* actor, gentity_t* target, const float reachedRadius,
 	// Check To See If It Is Safe To Attempt Steering Toward The Target Position
 	//---------------------------------------------------------------------------
 	if (
-		//(target->client && target->client->ps.groundentity_num==ENTITYNUM_NONE) ||
+		//(target->client && target->client->ps.groundEntityNum==ENTITYNUM_NONE) ||
 		!SafeToGoTo(actor, target->currentOrigin, NAV::GetNearestNode(target))
 		)
 	{
@@ -5272,7 +5272,7 @@ bool STEER::Reached(gentity_t* actor, const vec3_t& target, const float targetRa
 		return true;
 	}
 
-	//	if (target->client && target->client->ps.groundentity_num == ENTITYNUM_NONE)
+	//	if (target->client && target->client->ps.groundEntityNum == ENTITYNUM_NONE)
 	//	{
 	//		TargetPos -= ActorPos;
 	//		if (fabsf(TargetPos[2]<(targetRadius*8)))

@@ -818,7 +818,7 @@ void NPC_BSJump(void)
 			G_Cube(p1, p2, NPCDEBUG_BLUE, 0.5);
 		}
 
-		if (NPCS.NPC->s.groundentity_num != ENTITYNUM_NONE)
+		if (NPCS.NPC->s.groundEntityNum != ENTITYNUM_NONE)
 		{
 			//Landed, start landing anim
 			VectorClear(NPCS.NPC->client->ps.velocity);
@@ -1412,7 +1412,7 @@ void NPC_Surrender(void)
 qboolean NPC_CheckSurrender(void)
 {
 	if (!trap->ICARUS_TaskIDPending((sharedEntity_t*)NPCS.NPC, TID_MOVE_NAV)
-		&& NPCS.NPC->client->ps.groundentity_num != ENTITYNUM_NONE
+		&& NPCS.NPC->client->ps.groundEntityNum != ENTITYNUM_NONE
 		&& !NPCS.NPC->client->ps.weaponTime && !PM_InKnockDown(&NPCS.NPC->client->ps)
 		&& NPCS.NPC->enemy && NPCS.NPC->enemy->client && NPCS.NPC->enemy->enemy == NPCS.NPC && NPCS.NPC->enemy->s.weapon
 		!= WP_NONE && NPCS.NPC->enemy->s.weapon != WP_STUN_BATON

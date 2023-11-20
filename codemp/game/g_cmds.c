@@ -2104,7 +2104,7 @@ static void Cmd_VoiceCommand_f(gentity_t* ent)
 	if (level.gametype >= GT_TEAM)
 	{
 		gentity_t* te = G_TempEntity(vec3_origin, EV_VOICECMD_SOUND);
-		te->s.groundentity_num = ent->s.number;
+		te->s.groundEntityNum = ent->s.number;
 		te->s.eventParm = G_SoundIndex((char*)bg_customSiegeSoundNames[i]);
 		te->r.svFlags |= SVF_BROADCAST;
 	}

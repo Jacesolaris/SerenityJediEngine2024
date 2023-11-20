@@ -181,8 +181,8 @@ R_LoadLightmaps
 
 ===============
 */
-#define	DEFAULT_LIGHTMAP_SIZE	128
-#define MAX_LIGHTMAP_PAGES 2
+constexpr auto DEFAULT_LIGHTMAP_SIZE = 128;
+constexpr auto MAX_LIGHTMAP_PAGES = 2;
 
 static void R_LoadLightmaps(world_t* worldData, lump_t* l, lump_t* surfs)
 {

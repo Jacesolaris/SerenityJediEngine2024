@@ -2684,7 +2684,7 @@ void G_ChangePlayerModel(gentity_t* ent, const char* newModel)
 		return;
 	}
 
-	if (ent->client && (ent->client->moveType == MT_FLYSWIM || ent->s.groundentity_num == ENTITYNUM_NONE ||
+	if (ent->client && (ent->client->moveType == MT_FLYSWIM || ent->s.groundEntityNum == ENTITYNUM_NONE ||
 		JET_Flying(ent) || ent->client->flamethrowerOn)
 		&& (ent->client->NPC_class == CLASS_BOBAFETT
 			|| ent->client->NPC_class == CLASS_MANDO
@@ -2729,7 +2729,7 @@ void G_ChangePlayerModel(gentity_t* ent, const char* newModel)
 		g_create_g2_attached_weapon_model(ent, weaponData[ent->client->ps.weapon].weaponMdl, ent->handLBolt, 1);
 	}
 
-	if (ent->client->ps.groundentity_num == ENTITYNUM_NONE && PM_InLedgeMove(ent->client->ps.legsAnim))
+	if (ent->client->ps.groundEntityNum == ENTITYNUM_NONE && PM_InLedgeMove(ent->client->ps.legsAnim))
 	{
 		ent->client->ps.pm_flags &= ~PMF_STUCK_TO_WALL;
 		ent->client->ps.legsAnimTimer = 0;
@@ -3170,7 +3170,7 @@ qboolean client_spawn(gentity_t* ent, SavedGameJustLoaded_e e_saved_game_just_lo
 
 		// clear entity values
 		client->ps.stats[STAT_MAX_HEALTH] = client->pers.maxHealth;
-		ent->s.groundentity_num = ENTITYNUM_NONE;
+		ent->s.groundEntityNum = ENTITYNUM_NONE;
 		ent->client = &level.clients[index];
 		ent->mass = 10;
 		ent->takedamage = qtrue;
@@ -3380,7 +3380,7 @@ qboolean client_spawn(gentity_t* ent, SavedGameJustLoaded_e e_saved_game_just_lo
 		VectorCopyM(client->pers.cmd_angles, ucmd.angles);
 		ucmd.weapon = client->ps.weapon;
 		// client think calls Pmove which sets the client->ps.weapon to ucmd.weapon, so ...
-		ent->client->ps.groundentity_num = ENTITYNUM_NONE;
+		ent->client->ps.groundEntityNum = ENTITYNUM_NONE;
 		ClientThink(ent - g_entities, &ucmd);
 
 		// run the presend to set anything else

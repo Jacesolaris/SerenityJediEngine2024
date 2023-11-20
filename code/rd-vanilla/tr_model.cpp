@@ -329,6 +329,7 @@ void RE_RegisterModels_Info_f(void)
 	ri.Printf(PRINT_ALL, "%d bytes total (%.2fMB)\n", iTotalBytes, static_cast<float>(iTotalBytes) / 1024.0f / 1024.0f);
 }
 
+extern void RE_AnimationCFGs_DeleteAll();
 static void RE_RegisterModels_DeleteAll()
 {
 	if (!CachedModels) {
@@ -345,8 +346,6 @@ static void RE_RegisterModels_DeleteAll()
 
 		CachedModels->erase(itModel++);
 	}
-
-	extern void RE_AnimationCFGs_DeleteAll();
 	RE_AnimationCFGs_DeleteAll();
 }
 

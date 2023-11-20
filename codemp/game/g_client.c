@@ -1150,7 +1150,7 @@ static qboolean CopyToBodyQue(gentity_t* ent)
 	body->timestamp = level.time;
 	body->physicsObject = qtrue;
 	body->physicsBounce = 0.0f; // don't bounce
-	if (body->s.groundentity_num == ENTITYNUM_NONE)
+	if (body->s.groundEntityNum == ENTITYNUM_NONE)
 	{
 		body->s.pos.trType = TR_GRAVITY;
 		body->s.pos.trTime = level.time;
@@ -6743,7 +6743,7 @@ void ClientSpawn(gentity_t* ent)
 	client->ps.eFlags = flags;
 	client->mGameFlags = gameFlags;
 
-	client->ps.groundentity_num = ent->s.groundentity_num = ENTITYNUM_NONE;
+	client->ps.groundEntityNum = ent->s.groundEntityNum = ENTITYNUM_NONE;
 	ent->client = &level.clients[index];
 	ent->playerState = &ent->client->ps;
 	ent->takedamage = qtrue;

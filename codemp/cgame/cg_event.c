@@ -1979,7 +1979,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 		//if (cg.predicted_player_state.persistant[PERS_TEAM] != TEAM_SPECTATOR)
 		if (es->otherentity_num == cg.predicted_player_state.client_num ||
 			es->otherentity_num2 == cg.predicted_player_state.client_num ||
-			es->groundentity_num == cg.predicted_player_state.client_num)
+			es->groundEntityNum == cg.predicted_player_state.client_num)
 		{
 			CG_CenterPrint(CG_GetStringEdString("MP_SVGAME", "BEGIN_DUEL"), 120, GIANTCHAR_WIDTH * 2);
 			trap->S_StartLocalSound(cgs.media.countFightSound, CHAN_ANNOUNCER);
@@ -4457,9 +4457,9 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 
 	case EV_VOICECMD_SOUND:
 		DEBUGNAME("EV_VOICECMD_SOUND");
-		if (es->groundentity_num < MAX_CLIENTS && es->groundentity_num >= 0)
+		if (es->groundEntityNum < MAX_CLIENTS && es->groundEntityNum >= 0)
 		{
-			int entnum = es->groundentity_num;
+			int entnum = es->groundEntityNum;
 			sfxHandle_t sfx = cgs.gameSounds[es->eventParm];
 			clientInfo_t* ci = &cgs.clientinfo[entnum];
 			centity_t* v_chat_ent = &cg_entities[entnum];

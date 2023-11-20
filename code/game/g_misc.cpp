@@ -3054,7 +3054,7 @@ void misc_atst_use(gentity_t* self, gentity_t* other, gentity_t* activator)
 	if (activator->client->NPC_class != CLASS_ATST)
 	{
 		//get in the ATST
-		if (activator->client->ps.groundentity_num != self->s.number)
+		if (activator->client->ps.groundEntityNum != self->s.number)
 		{
 			//can only get in if on top of me...
 			//we *could* even check for the hatch surf...?

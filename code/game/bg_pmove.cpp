@@ -303,7 +303,7 @@ qboolean PM_CanForceFall()
 		&& !(pm->ps->pm_flags & PMF_JUMP_HELD) // have to have released jump since last press
 		&& pm->cmd.upmove > 10 // pressing the jump button
 		&& pm->ps->velocity[2] < FORCEFALLVELOCITY // falling
-		&& pm->ps->groundentity_num == ENTITYNUM_NONE // in the air
+		&& pm->ps->groundEntityNum == ENTITYNUM_NONE // in the air
 		&& pm->ps->forcePowerLevel[FP_LEVITATION] > FORCE_LEVEL_1 //have force jump level 2 or above
 		&& pm->ps->forcePower > FM_FORCEFALL // have atleast 5 force power points
 		&& pm->waterlevel < 2 // above water level
@@ -384,7 +384,7 @@ qboolean PM_CheckGrabWall(const trace_t* trace)
 		//must be alive
 		return qfalse;
 	}
-	if (pm->gent->client->ps.groundentity_num != ENTITYNUM_NONE)
+	if (pm->gent->client->ps.groundEntityNum != ENTITYNUM_NONE)
 	{
 		//must be in air
 		return qfalse;
@@ -681,7 +681,7 @@ void PM_ClipVelocity(vec3_t in, vec3_t normal, vec3_t out, const float overbounc
 		if (pm->ps->client_num < MAX_CLIENTS //normal player
 			&& normal[2] < MIN_WALK_NORMAL) //sliding against a steep slope
 		{
-			if (pm->ps->groundentity_num != ENTITYNUM_NONE) //on the ground
+			if (pm->ps->groundEntityNum != ENTITYNUM_NONE) //on the ground
 			{
 				//if walking on the ground, don't slide up slopes that are too steep to walk on
 				out[2] = old_in_z;
@@ -759,7 +759,7 @@ static void PM_Friction()
 						|| pm->ps->legsAnim == BOTH_FORCELONGLEAP_LAND)
 					{
 						//super forward jump
-						if (pm->ps->groundentity_num != ENTITYNUM_NONE)
+						if (pm->ps->groundEntityNum != ENTITYNUM_NONE)
 						{
 							//not in air
 							if (pm->cmd.forwardmove < 0)
@@ -813,7 +813,7 @@ static void PM_Friction()
 		}
 	}
 	// If on a client then there is no friction
-	else if (pm->ps->groundentity_num < MAX_CLIENTS)
+	else if (pm->ps->groundEntityNum < MAX_CLIENTS)
 	{
 		drop = 0;
 	}
@@ -1185,7 +1185,7 @@ qboolean PM_ForceJumpingUp(const gentity_t* gent)
 		//player can't use force powers in cinematic
 		return qfalse;
 	}
-	if (gent->client->ps.groundentity_num == ENTITYNUM_NONE //in air
+	if (gent->client->ps.groundEntityNum == ENTITYNUM_NONE //in air
 		&& (gent->client->ps.pm_flags & PMF_JUMPING && gent->client->ps.velocity[2] > 0)
 		//jumped & going up or at water surface///*(gent->client->ps.waterHeightLevel==WHL_SHOULDERS&&gent->client->usercmd.upmove>0) ||*/
 		&& gent->client->ps.forcePowerLevel[FP_LEVITATION] > FORCE_LEVEL_0 //force-jump capable
@@ -1345,7 +1345,7 @@ static qboolean pm_check_jump()
 		if (pm->cmd.upmove > 0)
 		{
 			//turn on/go up
-			if (pm->ps->groundentity_num == ENTITYNUM_NONE && !(pm->ps->pm_flags & PMF_JUMP_HELD))
+			if (pm->ps->groundEntityNum == ENTITYNUM_NONE && !(pm->ps->pm_flags & PMF_JUMP_HELD))
 			{
 				//double-tap - must activate while in air
 				ItemUse_Jetpack(&g_entities[pm->ps->client_num]);
@@ -1395,7 +1395,7 @@ static qboolean pm_check_jump()
 				{
 					//still in start anim, but it's run out
 					pm->ps->forcePowersActive |= 1 << FP_LEVITATION;
-					if (pm->ps->groundentity_num == ENTITYNUM_NONE)
+					if (pm->ps->groundEntityNum == ENTITYNUM_NONE)
 					{
 						//still in air?
 						//hold it for another 50ms
@@ -1406,7 +1406,7 @@ static qboolean pm_check_jump()
 					//in land-slide anim
 					//FIXME: force some forward movement?  Less if holding back?
 				}
-				if (pm->ps->groundentity_num == ENTITYNUM_NONE //still in air
+				if (pm->ps->groundEntityNum == ENTITYNUM_NONE //still in air
 					&& pm->ps->origin[2] < pm->ps->jumpZStart) //dropped below original jump start
 				{
 					//slow down
@@ -1429,7 +1429,7 @@ static qboolean pm_check_jump()
 				&& pm->ps->forcePowersActive & 1 << FP_SPEED //force-speed is on
 				&& pm->cmd.forwardmove > 0 //pushing forward
 				&& !pm->cmd.rightmove //not strafing
-				&& pm->ps->groundentity_num != ENTITYNUM_NONE //not in mid-air
+				&& pm->ps->groundEntityNum != ENTITYNUM_NONE //not in mid-air
 				&& !(pm->ps->pm_flags & PMF_JUMP_HELD)
 				&& level.time - pm->ps->forcePowerDebounce[FP_SPEED] <= 500
 				//have to have just started the force speed within the last half second
@@ -1444,7 +1444,7 @@ static qboolean pm_check_jump()
 				pm->ps->velocity[2] = 320;
 				pml.groundPlane = qfalse;
 				pml.walking = qfalse;
-				pm->ps->groundentity_num = ENTITYNUM_NONE;
+				pm->ps->groundEntityNum = ENTITYNUM_NONE;
 				pm->ps->jumpZStart = pm->ps->origin[2];
 				pm->ps->pm_flags |= PMF_JUMP_HELD;
 				pm->ps->pm_flags |= PMF_JUMPING | PMF_SLOW_MO_FALL;
@@ -1760,7 +1760,7 @@ static qboolean pm_check_jump()
 			return qfalse;
 		}
 
-		if (pm->ps->groundentity_num == ENTITYNUM_NONE)
+		if (pm->ps->groundEntityNum == ENTITYNUM_NONE)
 		{
 			//need to set some things and return
 			//Jumping
@@ -1768,7 +1768,7 @@ static qboolean pm_check_jump()
 			pml.groundPlane = qfalse;
 			pml.walking = qfalse;
 			pm->ps->pm_flags |= PMF_JUMPING | PMF_JUMP_HELD;
-			pm->ps->groundentity_num = ENTITYNUM_NONE;
+			pm->ps->groundEntityNum = ENTITYNUM_NONE;
 			pm->ps->jumpZStart = pm->ps->origin[2];
 
 			if (pm->gent)
@@ -1802,7 +1802,7 @@ static qboolean pm_check_jump()
 			//reborn who are not acrobats can't do any of these acrobatics
 			//FIXME: extern these abilities in the .npc file!
 		}
-		else if (pm->ps->groundentity_num != ENTITYNUM_NONE)
+		else if (pm->ps->groundEntityNum != ENTITYNUM_NONE)
 		{
 			//on the ground
 			//check for left-wall and right-wall special jumps
@@ -2643,7 +2643,7 @@ static qboolean pm_check_jump()
 			}
 		}
 	}
-	if (pm->ps->groundentity_num == ENTITYNUM_NONE)
+	if (pm->ps->groundEntityNum == ENTITYNUM_NONE)
 	{
 		if (!(pm->waterlevel == 1 && pm->cmd.upmove > 0 && pm->ps->forcePowerLevel[FP_LEVITATION] == FORCE_LEVEL_3 && pm
 			->ps->forcePower >= 5))
@@ -2681,7 +2681,7 @@ static qboolean pm_check_jump()
 	pml.groundPlane = qfalse;
 	pml.walking = qfalse;
 	pm->ps->pm_flags |= PMF_JUMP_HELD;
-	pm->ps->groundentity_num = ENTITYNUM_NONE;
+	pm->ps->groundEntityNum = ENTITYNUM_NONE;
 	pm->ps->jumpZStart = pm->ps->origin[2];
 
 	if (pm->gent)
@@ -3116,7 +3116,7 @@ static void PM_FlyVehicleMove()
 	//smove = pm->cmd.rightmove;
 
 	// normal slowdown
-	if (pm->ps->gravity && pm->ps->velocity[2] < 0 && pm->ps->groundentity_num == ENTITYNUM_NONE)
+	if (pm->ps->gravity && pm->ps->velocity[2] < 0 && pm->ps->groundEntityNum == ENTITYNUM_NONE)
 	{
 		//falling
 		const float zVel = pm->ps->velocity[2];
@@ -3126,7 +3126,7 @@ static void PM_FlyVehicleMove()
 	else
 	{
 		PM_Friction();
-		if (pm->ps->velocity[2] < 0 && pm->ps->groundentity_num != ENTITYNUM_NONE)
+		if (pm->ps->velocity[2] < 0 && pm->ps->groundEntityNum != ENTITYNUM_NONE)
 		{
 			pm->ps->velocity[2] = 0; // ignore slope movement
 		}
@@ -3533,7 +3533,7 @@ static void PM_WalkMove()
 	{
 		//float away
 		pm->ps->velocity[2] -= pm->ps->gravity * pml.frametime;
-		pm->ps->groundentity_num = ENTITYNUM_NONE;
+		pm->ps->groundEntityNum = ENTITYNUM_NONE;
 		pml.groundPlane = qfalse;
 		pml.walking = qfalse;
 		if (pm->waterlevel > 1)
@@ -3594,7 +3594,7 @@ static void PM_WalkMove()
 		return;
 	}
 
-	if (pm->ps->groundentity_num != ENTITYNUM_NONE && //on ground
+	if (pm->ps->groundEntityNum != ENTITYNUM_NONE && //on ground
 		pm->ps->velocity[2] <= 0 && //not going up
 		pm->ps->pm_flags & PMF_TIME_KNOCKBACK) //knockback fimter on (stops friction)
 	{
@@ -3605,10 +3605,10 @@ static void PM_WalkMove()
 	if (pm->ps->pm_type == PM_DEAD)
 	{
 		//corpse
-		if (g_entities[pm->ps->groundentity_num].client)
+		if (g_entities[pm->ps->groundEntityNum].client)
 		{
 			//on a client
-			if (g_entities[pm->ps->groundentity_num].health > 0)
+			if (g_entities[pm->ps->groundEntityNum].health > 0)
 			{
 				//a living client
 				//no friction
@@ -3788,7 +3788,7 @@ static void PM_WalkMove()
 	if (pml.groundTrace.surfaceFlags & SURF_SLICK || pm->ps->pm_flags & PMF_TIME_KNOCKBACK || pm->ps->pm_flags &
 		PMF_TIME_NOFRICTION)
 	{
-		if (pm->ps->gravity >= 0 && pm->ps->groundentity_num != ENTITYNUM_NONE && !VectorLengthSquared(pm->ps->velocity)
+		if (pm->ps->gravity >= 0 && pm->ps->groundEntityNum != ENTITYNUM_NONE && !VectorLengthSquared(pm->ps->velocity)
 			&& pml.groundTrace.plane.normal[2] == 1.0)
 		{
 			//on ground and not moving and on level ground, no reason to do stupid fucking gravity with the clipvelocity!!!!
@@ -4362,7 +4362,7 @@ qboolean pm_try_roll()
 	{
 		if (pm->ps->weapon == WP_SABER)
 		{
-			if (pm->ps->groundentity_num != ENTITYNUM_NONE)
+			if (pm->ps->groundEntityNum != ENTITYNUM_NONE)
 			{
 				anim = BOTH_ROLL_R;
 				VectorMA(pm->ps->origin, roll_dist, right, traceto);
@@ -4383,7 +4383,7 @@ qboolean pm_try_roll()
 	{
 		if (pm->ps->weapon == WP_SABER)
 		{
-			if (pm->ps->groundentity_num != ENTITYNUM_NONE)
+			if (pm->ps->groundEntityNum != ENTITYNUM_NONE)
 			{
 				anim = BOTH_ROLL_L;
 				VectorMA(pm->ps->origin, -roll_dist, right, traceto);
@@ -4590,7 +4590,7 @@ qboolean PM_TryRoll_SJE()
 	{
 		if (pm->ps->weapon == WP_SABER)
 		{
-			if (pm->ps->groundentity_num != ENTITYNUM_NONE)
+			if (pm->ps->groundEntityNum != ENTITYNUM_NONE)
 			{
 				anim = BOTH_ROLL_R;
 				VectorMA(pm->ps->origin, roll_dist, right, traceto);
@@ -4611,7 +4611,7 @@ qboolean PM_TryRoll_SJE()
 	{
 		if (pm->ps->weapon == WP_SABER)
 		{
-			if (pm->ps->groundentity_num != ENTITYNUM_NONE)
+			if (pm->ps->groundEntityNum != ENTITYNUM_NONE)
 			{
 				anim = BOTH_ROLL_L;
 				VectorMA(pm->ps->origin, -roll_dist, right, traceto);
@@ -5206,7 +5206,7 @@ static void PM_CorrectAllSolid()
 
 	// FIXME: jitter around
 
-	pm->ps->groundentity_num = ENTITYNUM_NONE;
+	pm->ps->groundEntityNum = ENTITYNUM_NONE;
 	pml.groundPlane = qfalse;
 	pml.walking = qfalse;
 }
@@ -5553,7 +5553,7 @@ static void PM_GroundTraceMissed()
 				&& pm->gent->client->NPC_class != CLASS_DESANN && pm->gent->client->NPC_class != CLASS_VADER)
 				//desann never falls to his death
 			{
-				if (pm->ps->groundentity_num == ENTITYNUM_NONE)
+				if (pm->ps->groundEntityNum == ENTITYNUM_NONE)
 				{
 					if (pm->ps->stats[STAT_HEALTH] > 0
 						&& !(pm->gent->NPC->aiFlags & NPCAI_DIE_ON_IMPACT)
@@ -5787,7 +5787,7 @@ static void PM_GroundTraceMissed()
 					&& !PM_FlippingAnim(pm->ps->legsAnim)
 					&& !PM_InSpecialJump(pm->ps->legsAnim))
 				{
-					if (pm->ps->groundentity_num != ENTITYNUM_NONE)
+					if (pm->ps->groundEntityNum != ENTITYNUM_NONE)
 					{
 						// we just transitioned into freefall
 						if (pm->debugLevel)
@@ -5915,12 +5915,12 @@ static void PM_GroundTraceMissed()
 			}
 		}
 
-		if (pm->ps->groundentity_num != ENTITYNUM_NONE)
+		if (pm->ps->groundEntityNum != ENTITYNUM_NONE)
 		{
 			pm->ps->jumpZStart = pm->ps->origin[2];
 		}
 	}
-	pm->ps->groundentity_num = ENTITYNUM_NONE;
+	pm->ps->groundEntityNum = ENTITYNUM_NONE;
 	pml.groundPlane = qfalse;
 	pml.walking = qfalse;
 }
@@ -6006,7 +6006,7 @@ static void PM_GroundTrace()
 	{
 		pml.groundPlane = qtrue;
 		pml.walking = qtrue;
-		pm->ps->groundentity_num = ENTITYNUM_WORLD;
+		pm->ps->groundEntityNum = ENTITYNUM_WORLD;
 		pm->ps->lastOnGround = level.time;
 		return;
 	}
@@ -6018,7 +6018,7 @@ static void PM_GroundTrace()
 		//wall-running forces you to be in the air
 		pml.groundPlane = qfalse;
 		pml.walking = qfalse;
-		pm->ps->groundentity_num = ENTITYNUM_NONE;
+		pm->ps->groundEntityNum = ENTITYNUM_NONE;
 		return;
 	}
 
@@ -6099,7 +6099,7 @@ static void PM_GroundTrace()
 				PM_JumpForDir();
 			}
 
-			pm->ps->groundentity_num = ENTITYNUM_NONE;
+			pm->ps->groundEntityNum = ENTITYNUM_NONE;
 			pml.groundPlane = qfalse;
 			pml.walking = qfalse;
 			return;
@@ -6115,7 +6115,7 @@ static void PM_GroundTrace()
 		}
 		// FIXME: if they can't slide down the slope, let them
 		// walk (sharp crevices)
-		pm->ps->groundentity_num = ENTITYNUM_NONE;
+		pm->ps->groundEntityNum = ENTITYNUM_NONE;
 		pml.groundPlane = qtrue;
 		pml.walking = qfalse;
 		return;
@@ -6134,7 +6134,7 @@ static void PM_GroundTrace()
 		pm->ps->pm_time = 0;
 	}
 
-	if (pm->ps->groundentity_num == ENTITYNUM_NONE)
+	if (pm->ps->groundEntityNum == ENTITYNUM_NONE)
 	{
 		// just hit the ground
 		if (pm->debugLevel)
@@ -6183,7 +6183,7 @@ static void PM_GroundTrace()
 		}
 	}
 
-	pm->ps->groundentity_num = trace.entityNum;
+	pm->ps->groundEntityNum = trace.entityNum;
 	pm->ps->lastOnGround = level.time;
 	if (pm->ps->client_num < MAX_CLIENTS || PM_ControlledByPlayer())
 	{
@@ -6653,7 +6653,7 @@ static void PM_CheckDuck()
 		// trying to duck
 		pm->maxs[2] = crouchheight;
 		pm->ps->viewheight = crouchheight + STANDARD_VIEWHEIGHT_OFFSET; //CROUCH_VIEWHEIGHT;
-		if (pm->ps->groundentity_num == ENTITYNUM_NONE && !PM_SwimmingAnim(pm->ps->legsAnim))
+		if (pm->ps->groundEntityNum == ENTITYNUM_NONE && !PM_SwimmingAnim(pm->ps->legsAnim))
 		{
 			//Not ducked already and trying to duck in mid-air
 			//will raise your feet, unducking whilst in air will drop feet
@@ -6682,7 +6682,7 @@ static void PM_CheckDuck()
 		if (pm->ps->pm_flags & PMF_DUCKED)
 		{
 			//Was ducking
-			if (pm->ps->groundentity_num == ENTITYNUM_NONE)
+			if (pm->ps->groundEntityNum == ENTITYNUM_NONE)
 			{
 				//unducking whilst in air will try to drop feet
 				pm->maxs[2] = standheight;
@@ -10019,7 +10019,7 @@ static void PM_Footsteps()
 		flipping = qtrue;
 	}
 
-	if (pm->ps->groundentity_num == ENTITYNUM_NONE
+	if (pm->ps->groundEntityNum == ENTITYNUM_NONE
 		|| pm->watertype & CONTENTS_LADDER
 		|| pm->ps->waterHeightLevel >= WHL_TORSO)
 	{
@@ -10090,7 +10090,7 @@ static void PM_Footsteps()
 			{
 				if (!PM_ForceJumpingUp(pm->gent))
 				{
-					if (pm->ps->groundentity_num != ENTITYNUM_NONE && pm->ps->pm_flags & PMF_DUCKED)
+					if (pm->ps->groundEntityNum != ENTITYNUM_NONE && pm->ps->pm_flags & PMF_DUCKED)
 					{
 						if (!flipping)
 						{
@@ -10151,7 +10151,7 @@ static void PM_Footsteps()
 			}
 			//hmm, in water, but not high enough to swim
 			//fall through to walk/run/stand
-			if (pm->ps->groundentity_num == ENTITYNUM_NONE)
+			if (pm->ps->groundEntityNum == ENTITYNUM_NONE)
 			{
 				//unless in the air
 				if (pm->ps->pm_flags & PMF_DUCKED)
@@ -10418,7 +10418,7 @@ static void PM_Footsteps()
 						|| PM_SaberInAttack(pm->ps->saber_move)
 						|| PM_SaberInTransitionAny(pm->ps->saber_move))
 						&& pm->ps->legsAnim != BOTH_FORCELONGLEAP_LAND
-						&& (pm->ps->groundentity_num == ENTITYNUM_NONE //in air
+						&& (pm->ps->groundEntityNum == ENTITYNUM_NONE //in air
 							|| !PM_JumpingAnim(pm->ps->torsoAnim) && !PM_InAirKickingAnim(pm->ps->torsoAnim)))
 					{
 						legs_anim = pm->ps->torsoAnim;
@@ -11657,7 +11657,7 @@ DoFootSteps:
 		{
 			if (!pm->noFootsteps)
 			{
-				if (pm->ps->groundentity_num == ENTITYNUM_NONE)
+				if (pm->ps->groundEntityNum == ENTITYNUM_NONE)
 				{
 					// on ladder
 					PM_AddEvent(EV_FOOTSTEP_METAL);
@@ -12005,7 +12005,7 @@ static void PM_BeginWeaponChange(const int weapon)
 				{
 					if (!g_noIgniteTwirl->integer && !IsSurrendering(pm->gent))
 					{
-						if (PM_RunningAnim(pm->ps->legsAnim) || pm->ps->groundentity_num == ENTITYNUM_NONE ||
+						if (PM_RunningAnim(pm->ps->legsAnim) || pm->ps->groundEntityNum == ENTITYNUM_NONE ||
 							in_camera)
 						{
 							PM_Setsaber_move(LS_PUTAWAY);
@@ -12180,7 +12180,7 @@ static void PM_FinishWeaponChange()
 					if (!g_noIgniteTwirl->integer && !IsSurrendering(pm->gent) && !active_blocking
 						&& !is_holding_block_button)
 					{
-						if (PM_RunningAnim(pm->ps->legsAnim) || pm->ps->groundentity_num == ENTITYNUM_NONE ||
+						if (PM_RunningAnim(pm->ps->legsAnim) || pm->ps->groundEntityNum == ENTITYNUM_NONE ||
 							in_camera)
 						{
 							//running or in air or in camera
@@ -12902,7 +12902,7 @@ void PM_SetJumped(const float height, const qboolean force)
 	pm->ps->velocity[2] = height;
 	pml.groundPlane = qfalse;
 	pml.walking = qfalse;
-	pm->ps->groundentity_num = ENTITYNUM_NONE;
+	pm->ps->groundEntityNum = ENTITYNUM_NONE;
 	pm->ps->pm_flags |= PMF_JUMP_HELD;
 	pm->ps->pm_flags |= PMF_JUMPING;
 	pm->cmd.upmove = 0;
@@ -13510,7 +13510,7 @@ void PM_Setsaber_move(saber_moveName_t new_move)
 		|| new_move == LS_KICK_R_AIR
 		|| new_move == LS_KICK_L_AIR)
 	{
-		if (pm->ps->groundentity_num != ENTITYNUM_NONE)
+		if (pm->ps->groundEntityNum != ENTITYNUM_NONE)
 		{
 			PM_SetJumped(200, qtrue);
 		}
@@ -13690,7 +13690,7 @@ void PM_Setsaber_move(saber_moveName_t new_move)
 					&& !PM_PainAnim(pm->ps->legsAnim)
 					&& !PM_InSpecialJump(pm->ps->legsAnim)
 					&& !PM_InSlopeAnim(pm->ps->legsAnim)
-					&& pm->ps->groundentity_num != ENTITYNUM_NONE
+					&& pm->ps->groundEntityNum != ENTITYNUM_NONE
 					&& !(pm->ps->pm_flags & PMF_DUCKED)
 					&& new_move != LS_PUTAWAY)
 				{
@@ -15384,7 +15384,7 @@ saber_moveName_t G_PickAutoKick(const gentity_t* self, const gentity_t* enemy, c
 		if (f_dot > 0)
 		{
 			//kick fwd
-			if (self->client->ps.groundentity_num != ENTITYNUM_NONE && self->client->ps.weapon == WP_SABER && self->
+			if (self->client->ps.groundEntityNum != ENTITYNUM_NONE && self->client->ps.weapon == WP_SABER && self->
 				client->ps.SaberActive())
 			{
 				kick_move = LS_KICK_F2;
@@ -15414,7 +15414,7 @@ saber_moveName_t G_PickAutoKick(const gentity_t* self, const gentity_t* enemy, c
 	if (kick_move != LS_NONE)
 	{
 		//have a valid one to do
-		if (self->client->ps.groundentity_num == ENTITYNUM_NONE)
+		if (self->client->ps.groundEntityNum == ENTITYNUM_NONE)
 		{
 			//if in air, convert kick to an in-air kick
 			const float gDist = G_GroundDistance(self);
@@ -15589,7 +15589,7 @@ saber_moveName_t g_pick_auto_multi_kick(gentity_t* self, const qboolean allow_si
 		}
 	}
 	kick_move = LS_NONE;
-	if (self->client->ps.groundentity_num != ENTITYNUM_NONE)
+	if (self->client->ps.groundEntityNum != ENTITYNUM_NONE)
 	{
 		//can't do the multikicks in air
 		if (enemies_front && enemies_back
@@ -15762,7 +15762,7 @@ qboolean PM_CanDoKata()
 		&& !PM_SaberInKata(static_cast<saber_moveName_t>(pm->ps->saber_move))
 		&& !PM_InKataAnim(pm->ps->legsAnim)
 		&& !PM_InKataAnim(pm->ps->torsoAnim)
-		&& pm->ps->groundentity_num != ENTITYNUM_NONE //not in the air
+		&& pm->ps->groundEntityNum != ENTITYNUM_NONE //not in the air
 		&& pm->cmd.buttons & BUTTON_ATTACK //pressing attack
 		&& pm->cmd.forwardmove >= 0 //not moving back (used to be !pm->cmd.forwardmove)
 		&& !pm->cmd.rightmove //not moving r/l
@@ -15778,7 +15778,7 @@ qboolean PM_CanDoKata()
 qboolean PM_CanDoRollStab()
 {
 	if (!pm->ps->saberInFlight //not throwing saber
-		&& pm->ps->groundentity_num != ENTITYNUM_NONE //not in the air
+		&& pm->ps->groundEntityNum != ENTITYNUM_NONE //not in the air
 		&& pm->cmd.buttons & BUTTON_ATTACK //pressing attack
 		&& pm->cmd.forwardmove >= 0 //not moving back (used to be !pm->cmd.forwardmove)
 		&& !pm->cmd.rightmove //not moving r/l
@@ -15917,7 +15917,7 @@ void PM_SaberDroidWeapon()
 
 void PM_TryGrab()
 {
-	if (pm->ps->groundentity_num != ENTITYNUM_NONE && pm->ps->weaponTime <= 0)
+	if (pm->ps->groundEntityNum != ENTITYNUM_NONE && pm->ps->weaponTime <= 0)
 	{
 		PM_SetAnim(pm, SETANIM_BOTH, BOTH_KYLE_GRAB, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 		pm->ps->torsoAnimTimer += 200;
@@ -15936,7 +15936,7 @@ void PM_TryGrab()
 
 void PM_TryAirKick(const saber_moveName_t kick_move)
 {
-	if (pm->ps->groundentity_num < ENTITYNUM_NONE)
+	if (pm->ps->groundEntityNum < ENTITYNUM_NONE)
 	{
 		//just do it
 		PM_Setsaber_move(kick_move);
@@ -16160,7 +16160,7 @@ void PM_SetMeleeBlock()
 					pm->cmd.rightmove = 0;
 					pm->cmd.upmove = 0;
 				}
-				if (pm->ps->groundentity_num != ENTITYNUM_NONE && !pm->cmd.upmove)
+				if (pm->ps->groundEntityNum != ENTITYNUM_NONE && !pm->cmd.upmove)
 				{
 					PM_SetAnim(pm, SETANIM_LEGS, anim, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 					pm->ps->legsAnimTimer = pm->ps->torsoAnimTimer;
@@ -16210,7 +16210,7 @@ void PM_CheckKick()
 			if (pm->cmd.rightmove > 0)
 			{
 				//kick right
-				if (pm->ps->groundentity_num == ENTITYNUM_NONE || pm->cmd.upmove > 0)
+				if (pm->ps->groundEntityNum == ENTITYNUM_NONE || pm->cmd.upmove > 0)
 				{
 					PM_TryAirKick(LS_KICK_R_AIR);
 				}
@@ -16229,7 +16229,7 @@ void PM_CheckKick()
 			else
 			{
 				//kick left
-				if (pm->ps->groundentity_num == ENTITYNUM_NONE || pm->cmd.upmove > 0)
+				if (pm->ps->groundEntityNum == ENTITYNUM_NONE || pm->cmd.upmove > 0)
 				{
 					PM_TryAirKick(LS_KICK_L_AIR);
 				}
@@ -16253,11 +16253,11 @@ void PM_CheckKick()
 			if (pm->cmd.forwardmove > 0)
 			{
 				//kick fwd
-				if (pm->ps->groundentity_num == ENTITYNUM_NONE || pm->cmd.upmove > 0)
+				if (pm->ps->groundEntityNum == ENTITYNUM_NONE || pm->cmd.upmove > 0)
 				{
 					PM_TryAirKick(LS_KICK_F_AIR);
 				}
-				else if (pm->ps->groundentity_num != ENTITYNUM_NONE && pm->ps->weapon == WP_SABER && pm->ps->
+				else if (pm->ps->groundEntityNum != ENTITYNUM_NONE && pm->ps->weapon == WP_SABER && pm->ps->
 					SaberActive())
 				{
 					if (G_CheckEnemyPresence(pm->gent, DIR_FRONT, 64.0f, 12.0f))
@@ -16281,7 +16281,7 @@ void PM_CheckKick()
 					PM_Setsaber_move(LS_KICK_F);
 				}
 			}
-			else if (pm->ps->groundentity_num == ENTITYNUM_NONE || pm->cmd.upmove > 0)
+			else if (pm->ps->groundEntityNum == ENTITYNUM_NONE || pm->cmd.upmove > 0)
 			{
 				PM_TryAirKick(LS_KICK_B_AIR);
 			}
@@ -16331,7 +16331,7 @@ void PM_CheckKick()
 						G_StartMatrixEffect(pm->gent, 0, pm->ps->legsAnimTimer + 500);
 					}
 				}
-				if (pm->ps->groundentity_num == ENTITYNUM_NONE
+				if (pm->ps->groundEntityNum == ENTITYNUM_NONE
 					&& (pm->ps->saber_move == LS_KICK_S
 						|| pm->ps->saber_move == LS_KICK_BF
 						|| pm->ps->saber_move == LS_KICK_RL))
@@ -16393,7 +16393,7 @@ void PM_CheckKick()
 				{
 					G_StartMatrixEffect(pm->gent, me_flags, pm->ps->legsAnimTimer + 500);
 				}
-				if (pm->ps->groundentity_num == ENTITYNUM_NONE
+				if (pm->ps->groundEntityNum == ENTITYNUM_NONE
 					&& (pm->ps->saber_move == LS_KICK_S
 						|| pm->ps->saber_move == LS_KICK_BF
 						|| pm->ps->saber_move == LS_KICK_RL))
@@ -16426,7 +16426,7 @@ void PM_MeleeKickForConditions()
 			if (pm->cmd.rightmove > 0)
 			{
 				//kick right
-				if (pm->ps->groundentity_num == ENTITYNUM_NONE || pm->cmd.upmove > 0)
+				if (pm->ps->groundEntityNum == ENTITYNUM_NONE || pm->cmd.upmove > 0)
 				{
 					PM_TryAirKick(LS_KICK_R_AIR);
 				}
@@ -16445,7 +16445,7 @@ void PM_MeleeKickForConditions()
 			else
 			{
 				//kick left
-				if (pm->ps->groundentity_num == ENTITYNUM_NONE || pm->cmd.upmove > 0)
+				if (pm->ps->groundEntityNum == ENTITYNUM_NONE || pm->cmd.upmove > 0)
 				{
 					PM_TryAirKick(LS_KICK_L_AIR);
 				}
@@ -16469,11 +16469,11 @@ void PM_MeleeKickForConditions()
 			if (pm->cmd.forwardmove > 0)
 			{
 				//kick fwd
-				if (pm->ps->groundentity_num == ENTITYNUM_NONE || pm->cmd.upmove > 0)
+				if (pm->ps->groundEntityNum == ENTITYNUM_NONE || pm->cmd.upmove > 0)
 				{
 					PM_TryAirKick(LS_KICK_F_AIR);
 				}
-				else if (pm->ps->groundentity_num != ENTITYNUM_NONE && pm->ps->weapon == WP_SABER && pm->ps->
+				else if (pm->ps->groundEntityNum != ENTITYNUM_NONE && pm->ps->weapon == WP_SABER && pm->ps->
 					SaberActive())
 				{
 					if (G_CheckEnemyPresence(pm->gent, DIR_FRONT, 64.0f, 12.0f))
@@ -16497,7 +16497,7 @@ void PM_MeleeKickForConditions()
 					PM_Setsaber_move(LS_KICK_F);
 				}
 			}
-			else if (pm->ps->groundentity_num == ENTITYNUM_NONE || pm->cmd.upmove > 0)
+			else if (pm->ps->groundEntityNum == ENTITYNUM_NONE || pm->cmd.upmove > 0)
 			{
 				PM_TryAirKick(LS_KICK_B_AIR);
 			}
@@ -16547,7 +16547,7 @@ void PM_MeleeKickForConditions()
 						G_StartMatrixEffect(pm->gent, 0, pm->ps->legsAnimTimer + 500);
 					}
 				}
-				if (pm->ps->groundentity_num == ENTITYNUM_NONE
+				if (pm->ps->groundEntityNum == ENTITYNUM_NONE
 					&& (pm->ps->saber_move == LS_KICK_S
 						|| pm->ps->saber_move == LS_KICK_BF
 						|| pm->ps->saber_move == LS_KICK_RL))
@@ -16609,7 +16609,7 @@ void PM_MeleeKickForConditions()
 				{
 					G_StartMatrixEffect(pm->gent, me_flags, pm->ps->legsAnimTimer + 500);
 				}
-				if (pm->ps->groundentity_num == ENTITYNUM_NONE
+				if (pm->ps->groundEntityNum == ENTITYNUM_NONE
 					&& (pm->ps->saber_move == LS_KICK_S
 						|| pm->ps->saber_move == LS_KICK_BF
 						|| pm->ps->saber_move == LS_KICK_RL))
@@ -16642,7 +16642,7 @@ void PM_MeleeMoveForConditions()
 			if (pm->cmd.rightmove > 0)
 			{
 				//kick right
-				if (pm->ps->groundentity_num == ENTITYNUM_NONE || pm->cmd.upmove > 0)
+				if (pm->ps->groundEntityNum == ENTITYNUM_NONE || pm->cmd.upmove > 0)
 				{
 					PM_TryAirKick(LS_KICK_R_AIR);
 				}
@@ -16661,7 +16661,7 @@ void PM_MeleeMoveForConditions()
 			else
 			{
 				//kick left
-				if (pm->ps->groundentity_num == ENTITYNUM_NONE || pm->cmd.upmove > 0)
+				if (pm->ps->groundEntityNum == ENTITYNUM_NONE || pm->cmd.upmove > 0)
 				{
 					PM_TryAirKick(LS_KICK_L_AIR);
 				}
@@ -16685,11 +16685,11 @@ void PM_MeleeMoveForConditions()
 			if (pm->cmd.forwardmove > 0)
 			{
 				//kick fwd
-				if (pm->ps->groundentity_num == ENTITYNUM_NONE || pm->cmd.upmove > 0)
+				if (pm->ps->groundEntityNum == ENTITYNUM_NONE || pm->cmd.upmove > 0)
 				{
 					PM_TryAirKick(LS_KICK_F_AIR);
 				}
-				else if (pm->ps->groundentity_num != ENTITYNUM_NONE && pm->ps->weapon == WP_SABER && pm->ps->
+				else if (pm->ps->groundEntityNum != ENTITYNUM_NONE && pm->ps->weapon == WP_SABER && pm->ps->
 					SaberActive())
 				{
 					if (G_CheckEnemyPresence(pm->gent, DIR_FRONT, 64.0f, 12.0f))
@@ -16713,7 +16713,7 @@ void PM_MeleeMoveForConditions()
 					PM_Setsaber_move(LS_KICK_F);
 				}
 			}
-			else if (pm->ps->groundentity_num == ENTITYNUM_NONE || pm->cmd.upmove > 0)
+			else if (pm->ps->groundEntityNum == ENTITYNUM_NONE || pm->cmd.upmove > 0)
 			{
 				PM_TryAirKick(LS_KICK_B_AIR);
 			}
@@ -16763,7 +16763,7 @@ void PM_MeleeMoveForConditions()
 						G_StartMatrixEffect(pm->gent, 0, pm->ps->legsAnimTimer + 500);
 					}
 				}
-				if (pm->ps->groundentity_num == ENTITYNUM_NONE
+				if (pm->ps->groundEntityNum == ENTITYNUM_NONE
 					&& (pm->ps->saber_move == LS_KICK_S
 						|| pm->ps->saber_move == LS_KICK_BF
 						|| pm->ps->saber_move == LS_KICK_RL))
@@ -16825,7 +16825,7 @@ void PM_MeleeMoveForConditions()
 				{
 					G_StartMatrixEffect(pm->gent, me_flags, pm->ps->legsAnimTimer + 500);
 				}
-				if (pm->ps->groundentity_num == ENTITYNUM_NONE
+				if (pm->ps->groundEntityNum == ENTITYNUM_NONE
 					&& (pm->ps->saber_move == LS_KICK_S
 						|| pm->ps->saber_move == LS_KICK_BF
 						|| pm->ps->saber_move == LS_KICK_RL))
@@ -18697,7 +18697,7 @@ void PM_WeaponLightsaber()
 					}
 				}
 
-				if (!pm->cmd.forwardmove && !pm->cmd.rightmove && pm->cmd.upmove >= 0 && pm->ps->groundentity_num !=
+				if (!pm->cmd.forwardmove && !pm->cmd.rightmove && pm->cmd.upmove >= 0 && pm->ps->groundEntityNum !=
 					ENTITYNUM_NONE)
 				{
 					//not moving at all, so set the anim on entire body
@@ -21507,7 +21507,7 @@ void Pmove(pmove_t* pmove)
 		}
 	}
 
-	if (pm->ps->groundentity_num != ENTITYNUM_NONE)
+	if (pm->ps->groundEntityNum != ENTITYNUM_NONE)
 	{
 		//on ground
 		pm->ps->forceJumpZStart = 0;
@@ -22196,7 +22196,7 @@ void PM_CheckGrab()
 	float lerpyaw = 0;
 	qboolean skip_Cmdtrace = qfalse;
 
-	if (pm->ps->groundentity_num != ENTITYNUM_NONE)
+	if (pm->ps->groundEntityNum != ENTITYNUM_NONE)
 	{
 		//not in the air don't attempt a ledge grab
 		return;

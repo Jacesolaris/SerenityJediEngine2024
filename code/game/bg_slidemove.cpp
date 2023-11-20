@@ -69,7 +69,7 @@ qboolean PM_SlideMove(const float gravity)
 	{
 		//a non-player client, not an NPC under player control
 		if (pml.walking //walking on the ground
-			|| pm->ps->groundentity_num != ENTITYNUM_NONE //in air
+			|| pm->ps->groundEntityNum != ENTITYNUM_NONE //in air
 			&& PM_InSpecialJump(pm->ps->legsAnim) //in a special jump
 			&& !(pm->ps->eFlags & EF_FORCE_GRIPPED) //not being gripped
 			&& !(pm->ps->eFlags & EF_FORCE_GRABBED) //not being gripped

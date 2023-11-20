@@ -540,7 +540,7 @@ qboolean PlaceShield(gentity_t* playerent)
 			shield->use = 0; //Use_Item;
 
 			// allow to ride movers
-			shield->s.groundentity_num = tr.entityNum;
+			shield->s.groundEntityNum = tr.entityNum;
 
 			G_SetOrigin(shield, tr.endpos);
 
@@ -3622,7 +3622,7 @@ void FinishSpawningItem(gentity_t* ent)
 		ent->r.maxs[2] += 0.1f;
 
 		// allow to ride movers
-		ent->s.groundentity_num = tr.entityNum;
+		ent->s.groundEntityNum = tr.entityNum;
 
 		G_SetOrigin(ent, tr.endpos);
 	}
@@ -3955,7 +3955,7 @@ void G_BounceItem(gentity_t* ent, trace_t* trace)
 		trace->endpos[2] += 1.0; // make sure it is off ground
 		SnapVector(trace->endpos);
 		G_SetOrigin(ent, trace->endpos);
-		ent->s.groundentity_num = trace->entityNum;
+		ent->s.groundEntityNum = trace->entityNum;
 		return;
 	}
 
@@ -4007,7 +4007,7 @@ void G_RunItem(gentity_t* ent)
 	int mask;
 
 	// if groundentity has been set to ENTITYNUM_NONE, it may have been pushed off an edge
-	if (ent->s.groundentity_num == ENTITYNUM_NONE)
+	if (ent->s.groundEntityNum == ENTITYNUM_NONE)
 	{
 		if (ent->s.pos.trType != TR_GRAVITY)
 		{

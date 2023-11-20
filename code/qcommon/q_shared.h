@@ -1839,7 +1839,7 @@ public:
 	int delta_angles[3]; // add to command angles to get view direction
 	// changed by spawns, rotating objects, and teleporters
 
-	int groundentity_num; // ENTITYNUM_NONE = in air
+	int groundEntityNum; // ENTITYNUM_NONE = in air
 	int legsAnim; //
 	int legsAnimTimer; // don't change low priority animations on legs until this runs out
 	int torsoAnim; //
@@ -2283,7 +2283,7 @@ public:
 		saved_game.write<int32_t>(friction);
 		saved_game.write<int32_t>(speed);
 		saved_game.write<int32_t>(delta_angles);
-		saved_game.write<int32_t>(groundentity_num);
+		saved_game.write<int32_t>(groundEntityNum);
 		saved_game.write<int32_t>(legsAnim);
 		saved_game.write<int32_t>(legsAnimTimer);
 		saved_game.write<int32_t>(torsoAnim);
@@ -2539,7 +2539,7 @@ public:
 		saved_game.read<int32_t>(friction);
 		saved_game.read<int32_t>(speed);
 		saved_game.read<int32_t>(delta_angles);
-		saved_game.read<int32_t>(groundentity_num);
+		saved_game.read<int32_t>(groundEntityNum);
 		saved_game.read<int32_t>(legsAnim);
 		saved_game.read<int32_t>(legsAnimTimer);
 		saved_game.read<int32_t>(torsoAnim);
@@ -2975,7 +2975,7 @@ using entityState_t = struct entityState_s
 	int otherentity_num; // shotgun sources, etc
 	int otherentity_num2;
 
-	int groundentity_num; // -1 = in air
+	int groundEntityNum; // -1 = in air
 
 	int constantLight; // r + (g<<8) + (b<<16) + (intensity<<24)
 	int loopSound; // constantly loop this sound
@@ -3118,7 +3118,7 @@ using entityState_t = struct entityState_s
 		saved_game.write<float>(angles2);
 		saved_game.write<int32_t>(otherentity_num);
 		saved_game.write<int32_t>(otherentity_num2);
-		saved_game.write<int32_t>(groundentity_num);
+		saved_game.write<int32_t>(groundEntityNum);
 		saved_game.write<int32_t>(constantLight);
 		saved_game.write<int32_t>(loopSound);
 		saved_game.write<int32_t>(modelindex);
@@ -3234,7 +3234,7 @@ using entityState_t = struct entityState_s
 		saved_game.read<float>(angles2);
 		saved_game.read<int32_t>(otherentity_num);
 		saved_game.read<int32_t>(otherentity_num2);
-		saved_game.read<int32_t>(groundentity_num);
+		saved_game.read<int32_t>(groundEntityNum);
 		saved_game.read<int32_t>(constantLight);
 		saved_game.read<int32_t>(loopSound);
 		saved_game.read<int32_t>(modelindex);

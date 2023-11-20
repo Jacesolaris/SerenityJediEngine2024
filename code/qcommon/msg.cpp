@@ -615,7 +615,7 @@ const netField_t	entityStateFields[] =
 { NETF(angles2[2]), 0 },
 
 { NETF(otherentity_num), GENTITYNUM_BITS },
-{ NETF(groundentity_num), GENTITYNUM_BITS },
+{ NETF(groundEntityNum), GENTITYNUM_BITS },
 
 { NETF(constantLight), 32 },
 { NETF(loopSound), 16 },
@@ -1121,7 +1121,7 @@ static const netField_t playerStateFields[] =
 	{PSF(delta_angles[0]), 16},
 	{PSF(delta_angles[1]), 16},
 	{PSF(delta_angles[2]), 16},
-	{PSF(groundentity_num), GENTITYNUM_BITS},
+	{PSF(groundEntityNum), GENTITYNUM_BITS},
 	//{ PSF(animationTimer), 16 },
 	{PSF(legsAnim), 16},
 	{PSF(torsoAnim), 16},

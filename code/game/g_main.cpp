@@ -1698,7 +1698,7 @@ qboolean G_RagDoll(gentity_t* ent, vec3_t forcedAngles)
 			//want to rag no matter what then
 			inSomething = qtrue;
 		}
-		else if (ent->client->ps.groundentity_num == ENTITYNUM_NONE)
+		else if (ent->client->ps.groundEntityNum == ENTITYNUM_NONE)
 		{
 			vec3_t cVel;
 
@@ -1868,7 +1868,7 @@ qboolean G_RagDoll(gentity_t* ent, vec3_t forcedAngles)
 		VectorCopy(usedOrg, tParms.position);
 		VectorCopy(ent->s.modelScale, tParms.scale);
 		tParms.me = ent->s.number;
-		tParms.groundEnt = ent->client->ps.groundentity_num;
+		tParms.groundEnt = ent->client->ps.groundEntityNum;
 
 		tParms.collisionType = 1;
 		tParms.RagPhase = CRagDollParams::RP_DEATH_COLLISION;
@@ -1884,9 +1884,9 @@ qboolean G_RagDoll(gentity_t* ent, vec3_t forcedAngles)
 		VectorCopy(ent->s.modelScale, tuParms.scale);
 		tuParms.me = ent->s.number;
 		tuParms.settleFrame = tParms.endFrame - 1;
-		tuParms.groundEnt = ent->client->ps.groundentity_num;
+		tuParms.groundEnt = ent->client->ps.groundEntityNum;
 
-		if (ent->client->ps.groundentity_num != ENTITYNUM_NONE)
+		if (ent->client->ps.groundEntityNum != ENTITYNUM_NONE)
 		{
 			VectorClear(tuParms.velocity);
 		}
@@ -1954,7 +1954,7 @@ qboolean G_RagDoll(gentity_t* ent, vec3_t forcedAngles)
 				VectorSubtract(ent->client->ragLastOrigin, ent->client->ps.origin, pDif);
 				VectorCopy(ent->client->ps.origin, ent->client->ragLastOrigin);
 
-				if (ent->client->ragLastOriginTime >= level.time && ent->client->ps.groundentity_num != ENTITYNUM_NONE)
+				if (ent->client->ragLastOriginTime >= level.time && ent->client->ps.groundEntityNum != ENTITYNUM_NONE)
 				{
 					//make sure it's reasonably updated
 					float difLen = VectorLength(pDif);
@@ -2265,7 +2265,7 @@ void G_RunFrame(const int levelTime)
 					{
 						ent->client->ps.jetpackFuel -= 4;
 					}
-					else if (ent->client->ps.groundentity_num == ENTITYNUM_NONE)
+					else if (ent->client->ps.groundEntityNum == ENTITYNUM_NONE)
 					{
 						//in midair
 						ent->client->ps.jetpackFuel--;
@@ -2289,7 +2289,7 @@ void G_RunFrame(const int levelTime)
 					ent->client->jetPackDebReduce = level.time + JETPACK_DEFUEL_RATE;
 				}
 			}
-			else if (ent->client->ps.jetpackFuel < 100 && ent->client->ps.groundentity_num != ENTITYNUM_NONE)
+			else if (ent->client->ps.jetpackFuel < 100 && ent->client->ps.groundEntityNum != ENTITYNUM_NONE)
 			{
 				//recharge jetpack
 				if (ent->client->jetPackDebRecharge < level.time && !ent->client->flamethrowerOn && !ent->client->
@@ -2346,7 +2346,7 @@ void G_RunFrame(const int levelTime)
 			//dead
 			if (ent->health <= 0)
 			{
-				if (ent->client->ps.groundentity_num != ENTITYNUM_NONE)
+				if (ent->client->ps.groundEntityNum != ENTITYNUM_NONE)
 				{
 					//on the ground
 					pitch_roll_for_slope(ent);

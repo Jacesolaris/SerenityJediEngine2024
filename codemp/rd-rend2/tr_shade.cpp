@@ -917,8 +917,24 @@ DrawNormals
 Draws vertex normals for debugging
 ================
 */
-static void DrawNormals(shaderCommands_t* input) {
-	//FIXME: implement this
+static void DrawNormals(const shaderCommands_t* input)
+{
+	//GL_Bind(tr.whiteImage);
+	//qglColor3f(1, 1, 1);
+	//qglDepthRange(0, 0);	// never occluded
+	//GL_State(GLS_POLYMODE_LINE | GLS_DEPTHMASK_TRUE);
+
+	//qglBegin(GL_LINES);
+	//for (int i = 0; i < input->numVertexes; i++)
+	//{
+	//	vec3_t temp;
+	//	qglVertex3fv(input->xyz[i]);
+	//	VectorMA(input->xyz[i], 2, input->normal[i], temp);
+	//	qglVertex3fv(temp);
+	//}
+	//qglEnd();
+
+	//qglDepthRange(0, 1);
 }
 
 static void ProjectPshadowVBOGLSL(const shaderCommands_t* input, const VertexArraysProperties* vertexArrays) {

@@ -2024,7 +2024,7 @@ int G_CheckLedgeDive(gentity_t* self, const float check_dist, const vec3_t check
 		VectorClear(self->client->ps.velocity);
 		g_throw(self, fall_forward_dir, 85);
 		self->client->ps.velocity[2] = 100;
-		self->client->ps.groundentity_num = ENTITYNUM_NONE;
+		self->client->ps.groundEntityNum = ENTITYNUM_NONE;
 	}
 	else if (try_opposite)
 	{
@@ -2035,7 +2035,7 @@ int G_CheckLedgeDive(gentity_t* self, const float check_dist, const vec3_t check
 			VectorClear(self->client->ps.velocity);
 			g_throw(self, fall_forward_dir, 85);
 			self->client->ps.velocity[2] = 100;
-			self->client->ps.groundentity_num = ENTITYNUM_NONE;
+			self->client->ps.groundEntityNum = ENTITYNUM_NONE;
 		}
 	}
 	if (!cliff_fall && try_perp)
@@ -3160,7 +3160,7 @@ void player_die(gentity_t* self, const gentity_t* inflictor, gentity_t* attacker
 			|| self->client->pers.botclass == BCLASS_MANDOLORIAN1
 			|| self->client->pers.botclass == BCLASS_MANDOLORIAN2)
 		{
-			if (self->client->ps.eFlags2 & EF2_FLYING || self->client->ps.groundentity_num == ENTITYNUM_NONE)
+			if (self->client->ps.eFlags2 & EF2_FLYING || self->client->ps.groundEntityNum == ENTITYNUM_NONE)
 			{
 				Boba_FlyStop(self);
 			}
@@ -3693,7 +3693,7 @@ void player_die(gentity_t* self, const gentity_t* inflictor, gentity_t* attacker
 			//if ((dflags&DAMAGE_DISMEMBER)
 			//	&& G_DoDismemberment(self, self->pos1, meansOfDeath, damage, hit_loc))
 			//{//we did dismemberment and our death anim is okay to override
-			//	if (hit_loc == HL_HAND_RT && self->locationDamage[hit_loc] >= Q3_INFINITE && self->client->ps.groundentity_num != ENTITYNUM_NONE)
+			//	if (hit_loc == HL_HAND_RT && self->locationDamage[hit_loc] >= Q3_INFINITE && self->client->ps.groundEntityNum != ENTITYNUM_NONE)
 			//	{//just lost our right hand and we're on the ground, use the special anim
 			//		NPC_SetAnim(self, SETANIM_BOTH, BOTH_RIGHTHANDCHOPPEDOFF, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 			//	}
@@ -3951,7 +3951,7 @@ void PlayerPain(gentity_t* self, const int damage)
 				{
 					//strong attacks and spins cannot be interrupted by pain, no pain when in knockdown
 					int parts;
-					if (self->client->ps.groundentity_num != ENTITYNUM_NONE &&
+					if (self->client->ps.groundEntityNum != ENTITYNUM_NONE &&
 						!PM_SpinningSaberAnim(self->client->ps.legsAnim) &&
 						!PM_FlippingAnim(self->client->ps.legsAnim) &&
 						!PM_InSpecialJump(self->client->ps.legsAnim) &&
@@ -4184,7 +4184,7 @@ void G_CheckKnockdown(gentity_t* targ, gentity_t* attacker, vec3_t new_dir, cons
 		return;
 	}
 
-	if (targ->client->ps.groundentity_num == ENTITYNUM_NONE)
+	if (targ->client->ps.groundEntityNum == ENTITYNUM_NONE)
 	{
 		//already in air
 		return;
@@ -4241,7 +4241,7 @@ void G_CheckLightningKnockdown(gentity_t* targ, gentity_t* attacker, vec3_t new_
 		return;
 	}
 
-	if (targ->client->ps.groundentity_num == ENTITYNUM_NONE)
+	if (targ->client->ps.groundEntityNum == ENTITYNUM_NONE)
 	{
 		//already in air
 		return;

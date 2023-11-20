@@ -2854,7 +2854,7 @@ qboolean PM_CheckEnemyInBack(const float backCheckDist)
 		//don't auto-backstab
 		return qfalse;
 	}
-	if (pm->ps->groundentity_num == ENTITYNUM_NONE)
+	if (pm->ps->groundEntityNum == ENTITYNUM_NONE)
 	{
 		//only when on ground
 		return qfalse;
@@ -2875,7 +2875,7 @@ qboolean PM_CheckEnemyInBack(const float backCheckDist)
 			&& trace_ent->health > 0
 			&& trace_ent->client
 			&& trace_ent->client->playerTeam == pm->gent->client->enemyTeam
-			&& trace_ent->client->ps.groundentity_num != ENTITYNUM_NONE)
+			&& trace_ent->client->ps.groundEntityNum != ENTITYNUM_NONE)
 		{
 			if (pm->ps->client_num < MAX_CLIENTS || PM_ControlledByPlayer())
 			{
@@ -2980,7 +2980,7 @@ saber_moveName_t PM_CheckStabDown()
 	if (pm->ps->client_num < MAX_CLIENTS || PM_ControlledByPlayer())
 	{
 		//player
-		if (pm->ps->groundentity_num == ENTITYNUM_NONE) //in air
+		if (pm->ps->groundEntityNum == ENTITYNUM_NONE) //in air
 		{
 			//sorry must be on ground (or have just jumped)
 			if (level.time - pm->ps->lastOnGround <= 50 && pm->ps->pm_flags & PMF_JUMPING)
@@ -2998,7 +2998,7 @@ saber_moveName_t PM_CheckStabDown()
 	else if (pm->ps->client_num >= MAX_CLIENTS && !PM_ControlledByPlayer())
 	{
 		//NPC
-		if (pm->ps->groundentity_num == ENTITYNUM_NONE) //in air
+		if (pm->ps->groundEntityNum == ENTITYNUM_NONE) //in air
 		{
 			//sorry must be on ground (or have just jumped)
 			if (level.time - pm->ps->lastOnGround <= 250 && pm->ps->pm_flags & PMF_JUMPING)
@@ -3141,7 +3141,7 @@ saber_moveName_t PM_AttackForEnemyPos(const qboolean allow_fb, const qboolean al
 					if (pm->ps->client_num && !PM_ControlledByPlayer())
 					{
 						//player should never do this automatically
-						if (pm->ps->groundentity_num != ENTITYNUM_NONE)
+						if (pm->ps->groundEntityNum != ENTITYNUM_NONE)
 						{
 							//only when on ground
 							if (pm->gent && pm->gent->client && pm->gent->NPC && pm->gent->NPC->rank >= RANK_LT_JG &&
@@ -3233,10 +3233,10 @@ saber_moveName_t PM_AttackForEnemyPos(const qboolean allow_fb, const qboolean al
 			&& (!pm->ps->dualSabers || !(pm->ps->saber[1].saberFlags & SFL_NO_BACK_ATTACK)))
 		{
 			//okay to do backstabs with this saber
-			if (pm->ps->groundentity_num != ENTITYNUM_NONE)
+			if (pm->ps->groundEntityNum != ENTITYNUM_NONE)
 			{
 				//only when on ground
-				if (!pm->gent->enemy->client || pm->gent->enemy->client->ps.groundentity_num != ENTITYNUM_NONE)
+				if (!pm->gent->enemy->client || pm->gent->enemy->client->ps.groundEntityNum != ENTITYNUM_NONE)
 				{
 					//enemy not a client or is a client and on ground
 					if (dot < -0.75f
@@ -3809,7 +3809,7 @@ qboolean PM_CheckJumpForwardAttackMove()
 		&& pm->ps->forcePowerLevel[FP_LEVITATION] > FORCE_LEVEL_1 //can force jump
 		&& pm->gent && !(pm->gent->flags & FL_LOCK_PLAYER_WEAPONS)
 		// yes this locked weapons check also includes force powers, if we need a separate check later I'll make one
-		&& (pm->ps->groundentity_num != ENTITYNUM_NONE || level.time - pm->ps->lastOnGround <= 250))
+		&& (pm->ps->groundEntityNum != ENTITYNUM_NONE || level.time - pm->ps->lastOnGround <= 250))
 	{
 		if (pm->ps->saber_anim_level == SS_DUAL
 			|| pm->ps->saber_anim_level == SS_STAFF)
@@ -4064,7 +4064,7 @@ qboolean PM_CheckFlipOverAttackMove(const qboolean checkEnemy)
 		&& pm->ps->forcePowerLevel[FP_LEVITATION] > FORCE_LEVEL_1 //can force jump
 		&& !(pm->gent->flags & FL_LOCK_PLAYER_WEAPONS)
 		// yes this locked weapons check also includes force powers, if we need a separate check later I'll make one
-		&& (pm->ps->groundentity_num != ENTITYNUM_NONE || level.time - pm->ps->lastOnGround <= 250)
+		&& (pm->ps->groundEntityNum != ENTITYNUM_NONE || level.time - pm->ps->lastOnGround <= 250)
 		//on ground or just jumped
 		)
 	{
@@ -4212,7 +4212,7 @@ qboolean PM_CheckBackflipAttackMove()
 		&& pm->ps->forceRageRecoveryTime < pm->cmd.serverTime //not in a force Rage recovery period
 		&& pm->gent && !(pm->gent->flags & FL_LOCK_PLAYER_WEAPONS)
 		// yes this locked weapons check also includes force powers, if we need a separate check later I'll make one
-		&& (pm->ps->groundentity_num != ENTITYNUM_NONE || level.time - pm->ps->lastOnGround <= 250))
+		&& (pm->ps->groundEntityNum != ENTITYNUM_NONE || level.time - pm->ps->lastOnGround <= 250))
 		//on ground or just jumped (if not player)
 	{
 		if (pm->cmd.forwardmove < 0 //moving backwards
@@ -4405,7 +4405,7 @@ saber_moveName_t PM_CheckPullAttack()
 
 	if ((pm->ps->saber_move == LS_READY || PM_SaberInReturn(pm->ps->saber_move) || PM_SaberInReflect(pm->ps->saber_move))
 		//ready
-		&& pm->ps->groundentity_num != ENTITYNUM_NONE
+		&& pm->ps->groundEntityNum != ENTITYNUM_NONE
 		&& pm->ps->saber_anim_level >= SS_FAST
 		&& pm->ps->saber_anim_level <= SS_STRONG
 		&& G_TryingPullAttack(pm->gent, &pm->cmd, qfalse)
@@ -4654,7 +4654,7 @@ saber_moveName_t PM_SaberAttackForMovement(const int forwardmove, const int righ
 		//moving right
 		if (!noSpecials
 			&& overrideJumpRightAttackMove != LS_NONE
-			&& (pm->ps->groundentity_num != ENTITYNUM_NONE || level.time - pm->ps->lastOnGround <= 250)
+			&& (pm->ps->groundEntityNum != ENTITYNUM_NONE || level.time - pm->ps->lastOnGround <= 250)
 			//on ground or just jumped
 			&& (pm->cmd.buttons & BUTTON_ATTACK && !(pm->cmd.buttons & BUTTON_BLOCK)) //hitting attack
 			&& pm->ps->forcePowerLevel[FP_LEVITATION] > FORCE_LEVEL_0 //have force jump 1 at least
@@ -4723,7 +4723,7 @@ saber_moveName_t PM_SaberAttackForMovement(const int forwardmove, const int righ
 		//moving left
 		if (!noSpecials
 			&& override_jump_left_attack_move != LS_NONE
-			&& (pm->ps->groundentity_num != ENTITYNUM_NONE || level.time - pm->ps->lastOnGround <= 250)
+			&& (pm->ps->groundEntityNum != ENTITYNUM_NONE || level.time - pm->ps->lastOnGround <= 250)
 			//on ground or just jumped
 			&& (pm->cmd.buttons & BUTTON_ATTACK && !(pm->cmd.buttons & BUTTON_BLOCK)) //hitting attack
 			&& pm->ps->forcePowerLevel[FP_LEVITATION] > FORCE_LEVEL_0 //have force jump 1 at least
@@ -4923,7 +4923,7 @@ saber_moveName_t PM_SaberAttackForMovement(const int forwardmove, const int righ
 					&& (!pm->ps->dualSabers || !(pm->ps->saber[1].saberFlags & SFL_NO_BACK_ATTACK)))
 				{
 					//okay to do backstabs with this saber
-					if (pm->ps->groundentity_num != ENTITYNUM_NONE)
+					if (pm->ps->groundEntityNum != ENTITYNUM_NONE)
 					{
 						//only when on ground
 						if (pm->gent && pm->gent->enemy)
@@ -6435,7 +6435,7 @@ bool TorsoAgainstWindTest(gentity_t* ent)
 {
 	if (ent && //valid ent
 		ent->client && //a client
-		ent->client->ps.groundentity_num != ENTITYNUM_NONE &&
+		ent->client->ps.groundEntityNum != ENTITYNUM_NONE &&
 		//either not holding a saber or the saber is in the ready pose
 		(ent->s.number < MAX_CLIENTS || G_ControlledByPlayer(ent)) &&
 		gi.WE_GetWindGusting(ent->currentOrigin) &&
@@ -6596,7 +6596,7 @@ void PM_TorsoAnimLightsaber()
 				if (!g_noIgniteTwirl->integer && !IsSurrendering(pm->gent) && !active_blocking
 					&& !is_holding_block_button)
 				{
-					if (PM_RunningAnim(pm->ps->legsAnim) || pm->ps->groundentity_num == ENTITYNUM_NONE || in_camera)
+					if (PM_RunningAnim(pm->ps->legsAnim) || pm->ps->groundEntityNum == ENTITYNUM_NONE || in_camera)
 					{
 						//running or in air or in camera
 						PM_Setsaber_move(LS_DRAW);
@@ -6691,7 +6691,7 @@ void PM_TorsoAnimLightsaber()
 				if (!g_noIgniteTwirl->integer && !IsSurrendering(pm->gent) && !active_blocking
 					&& !is_holding_block_button)
 				{
-					if (PM_RunningAnim(pm->ps->legsAnim) || pm->ps->groundentity_num == ENTITYNUM_NONE || in_camera)
+					if (PM_RunningAnim(pm->ps->legsAnim) || pm->ps->groundEntityNum == ENTITYNUM_NONE || in_camera)
 					{
 						PM_Setsaber_move(LS_PUTAWAY);
 					}

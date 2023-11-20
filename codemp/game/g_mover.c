@@ -199,7 +199,7 @@ qboolean G_TryPushingEntity(gentity_t* check, gentity_t* pusher, vec3_t move, ve
 	// EF_MOVER_STOP will just stop when contacting another entity
 	// instead of pushing it, but entities can still ride on top of it
 	if ( ( pusher->s.eFlags & EF_MOVER_STOP ) &&
-		check->s.groundentity_num != pusher->s.number ) {
+		check->s.groundEntityNum != pusher->s.number ) {
 		return qfalse;
 	}
 	*/
@@ -254,9 +254,9 @@ qboolean G_TryPushingEntity(gentity_t* check, gentity_t* pusher, vec3_t move, ve
 	}
 
 	// may have pushed them off an edge
-	if (check->s.groundentity_num != pusher->s.number)
+	if (check->s.groundEntityNum != pusher->s.number)
 	{
-		check->s.groundentity_num = ENTITYNUM_NONE;
+		check->s.groundEntityNum = ENTITYNUM_NONE;
 	}
 
 	const gentity_t* block = G_TestEntityPosition(check);
@@ -295,7 +295,7 @@ qboolean G_TryPushingEntity(gentity_t* check, gentity_t* pusher, vec3_t move, ve
 	block = G_TestEntityPosition(check);
 	if (!block)
 	{
-		check->s.groundentity_num = ENTITYNUM_NONE;
+		check->s.groundEntityNum = ENTITYNUM_NONE;
 		pushed_p--;
 		return qtrue;
 	}
@@ -386,7 +386,7 @@ qboolean g_mover_push(gentity_t* pusher, vec3_t move, vec3_t amove, gentity_t** 
 		}
 
 		// if the entity is standing on the pusher, it will definitely be moved
-		if (check->s.groundentity_num != pusher->s.number)
+		if (check->s.groundEntityNum != pusher->s.number)
 		{
 			// see if the ent needs to be tested
 			if (check->r.absmin[0] >= maxs[0]
@@ -2569,7 +2569,7 @@ void funcBBrushDieGo(gentity_t* ent)
 	// if a missile is stuck to us, blow it up so we don't look dumb
 	for (int i = 0; i < MAX_GENTITIES; i++)
 	{
-		if (g_entities[i].s.groundentity_num == ent->s.number && g_entities[i].s.eFlags & EF_MISSILE_STICK)
+		if (g_entities[i].s.groundEntityNum == ent->s.number && g_entities[i].s.eFlags & EF_MISSILE_STICK)
 		{
 			G_Damage(&g_entities[i], ent, ent, NULL, NULL, 99999, 0, MOD_CRUSH); //?? MOD?
 		}

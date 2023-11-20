@@ -924,7 +924,7 @@ static QINLINE void CG_EntityStateToPlayerState(entityState_t* s, playerState_t*
 	}
 
 	ps->weapon = s->weapon;
-	ps->groundentity_num = s->groundentity_num;
+	ps->groundEntityNum = s->groundEntityNum;
 
 	for ( i = 0 ; i < MAX_POWERUPS ; i++ ) {
 		if (s->powerups & (1 << i))
@@ -1254,7 +1254,7 @@ void CG_PredictPlayerState(void)
 				vec3_t delta;
 				vec3_t adjusted;
 				CG_AdjustPositionForMover(cg.predictedVehicleState.origin,
-					cg.predictedVehicleState.groundentity_num, cg.physicsTime, cg.oldTime,
+					cg.predictedVehicleState.groundEntityNum, cg.physicsTime, cg.oldTime,
 					adjusted);
 
 				if (cg_showVehMiss.integer)
@@ -1330,7 +1330,7 @@ void CG_PredictPlayerState(void)
 				vec3_t delta;
 				vec3_t adjusted;
 				CG_AdjustPositionForMover(cg.predicted_player_state.origin,
-					cg.predicted_player_state.groundentity_num, cg.physicsTime, cg.oldTime,
+					cg.predicted_player_state.groundEntityNum, cg.physicsTime, cg.oldTime,
 					adjusted);
 
 				if (cg_showMiss.integer)
@@ -1551,14 +1551,14 @@ void CG_PredictPlayerState(void)
 	if (CG_Piloting(cg.predicted_player_state.m_iVehicleNum))
 	{
 		CG_AdjustPositionForMover(cg.predictedVehicleState.origin,
-			cg.predictedVehicleState.groundentity_num,
+			cg.predictedVehicleState.groundEntityNum,
 			cg.physicsTime, cg.time, cg.predictedVehicleState.origin);
 	}
 	else
 	{
 		// adjust for the movement of the groundentity
 		CG_AdjustPositionForMover(cg.predicted_player_state.origin,
-			cg.predicted_player_state.groundentity_num,
+			cg.predicted_player_state.groundEntityNum,
 			cg.physicsTime, cg.time, cg.predicted_player_state.origin);
 	}
 

@@ -159,7 +159,7 @@ void CorpsePhysics(gentity_t* self)
 	}
 
 	//FIXME: match my pitch and roll for the slope of my groundPlane
-	if (self->client->ps.groundentity_num != ENTITYNUM_NONE && !(self->flags & FL_DISINTEGRATED))
+	if (self->client->ps.groundEntityNum != ENTITYNUM_NONE && !(self->flags & FL_DISINTEGRATED))
 	{
 		//on the ground
 		//FIXME: check 4 corners
@@ -581,9 +581,9 @@ void NPC_PostDeathThink( void )
 	qboolean	frontbackbothclear = false;
 	qboolean	rightleftbothclear = false;
 
-	if( NPC->client->ps.groundentity_num == ENTITYNUM_NONE || !VectorCompare( vec3_origin, NPC->client->ps.velocity ) )
+	if( NPC->client->ps.groundEntityNum == ENTITYNUM_NONE || !VectorCompare( vec3_origin, NPC->client->ps.velocity ) )
 	{
-		if ( NPC->client->ps.groundentity_num != ENTITYNUM_NONE && NPC->client->ps.friction == 1.0 )//check avelocity?
+		if ( NPC->client->ps.groundEntityNum != ENTITYNUM_NONE && NPC->client->ps.friction == 1.0 )//check avelocity?
 		{
 			pitch_roll_for_slope( NPC );
 		}
@@ -878,7 +878,7 @@ static void DeadThink()
 	}
 
 	// If the player is on the ground and the resting position contents haven't been set yet...(BounceCount tracks the contents)
-	if (NPC->bounceCount < 0 && NPC->s.groundentity_num >= 0)
+	if (NPC->bounceCount < 0 && NPC->s.groundEntityNum >= 0)
 	{
 		// if client is in a nodrop area, make him/her nodraw
 		const int contents = NPC->bounceCount = gi.pointcontents(NPC->currentOrigin, -1);
@@ -1061,7 +1061,7 @@ void NPC_HandleAIFlags()
 	{
 		bool should_fly = !!(NPCInfo->aiFlags & NPCAI_FLY);
 		const bool is_flying = !!JET_Flying(NPC);
-		bool is_in_the_air = NPC->client->ps.groundentity_num == ENTITYNUM_NONE;
+		bool is_in_the_air = NPC->client->ps.groundEntityNum == ENTITYNUM_NONE;
 
 		if (is_flying)
 		{
@@ -1164,7 +1164,7 @@ void NPC_AvoidWallsAndCliffs()
 			return;
 		}
 
-		if ( ucmd.upmove > 0 || NPC->client->ps.groundentity_num == ENTITYNUM_NONE )
+		if ( ucmd.upmove > 0 || NPC->client->ps.groundEntityNum == ENTITYNUM_NONE )
 		{//Going to jump or in the air
 			return;
 		}
@@ -2635,7 +2635,7 @@ void NPC_Think(gentity_t* self)
 			&& NPC->client->NPC_class == CLASS_ROCKETTROOPER
 			&& (NPC->client->ps.eFlags & EF_FORCE_GRIPPED || NPC->client->ps.eFlags & EF_FORCE_GRABBED)
 			&& NPC->client->moveType == MT_FLYSWIM
-			&& NPC->client->ps.groundentity_num == ENTITYNUM_NONE)
+			&& NPC->client->ps.groundEntityNum == ENTITYNUM_NONE)
 		{
 			//reduce velocity
 			VectorScale(NPC->client->ps.velocity, 0.75f, NPC->client->ps.velocity);

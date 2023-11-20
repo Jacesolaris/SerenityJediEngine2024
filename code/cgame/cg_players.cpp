@@ -1214,7 +1214,7 @@ static void CG_PlayerAnimEventDo(centity_t* cent, animevent_t* anim_event)
 		//make him jump
 		if (cent && cent->gent && cent->gent->client)
 		{
-			if (cent->gent->client->ps.groundentity_num != ENTITYNUM_NONE)
+			if (cent->gent->client->ps.groundEntityNum != ENTITYNUM_NONE)
 			{
 				//on something
 				vec3_t fwd, rt, up;
@@ -2872,7 +2872,7 @@ static void CG_G2PlayerAngles(centity_t* cent, vec3_t legs[3], vec3_t angles)
 				{
 					//don't turn legs if in a spinning saber transition
 					//FIXME: use actual swing/clamp tolerances?
-					if (cent->gent->client->ps.groundentity_num != ENTITYNUM_NONE && !PM_InRoll(&cent->gent->client->ps))
+					if (cent->gent->client->ps.groundEntityNum != ENTITYNUM_NONE && !PM_InRoll(&cent->gent->client->ps))
 					{
 						//on the ground
 						CG_PlayerLegsYawFromMovement(cent, cent->gent->client->ps.velocity, &angles[YAW],
@@ -3083,7 +3083,7 @@ static void CG_G2PlayerAngles(centity_t* cent, vec3_t legs[3], vec3_t angles)
 				|| (cent->gent->client->NPC_class == CLASS_BOBAFETT || cent->gent->client->NPC_class == CLASS_MANDO
 					|| cent->gent->client->NPC_class == CLASS_ROCKETTROOPER) && cent->gent->client->moveType ==
 				MT_FLYSWIM)
-				&& cent->gent->client->ps.groundentity_num == ENTITYNUM_NONE)
+				&& cent->gent->client->ps.groundEntityNum == ENTITYNUM_NONE)
 			{
 				vec3_t cent_fwd, centRt;
 				float div_factor = 1.0f;
@@ -3215,7 +3215,7 @@ static void CG_G2PlayerAngles(centity_t* cent, vec3_t legs[3], vec3_t angles)
 			angles[PITCH] = 0;
 
 			//FIXME: use actual swing/clamp tolerances?
-			if (cent->gent->client->ps.groundentity_num != ENTITYNUM_NONE)
+			if (cent->gent->client->ps.groundEntityNum != ENTITYNUM_NONE)
 			{
 				//on the ground
 				CG_PlayerLegsYawFromMovement(cent, cent->gent->client->ps.velocity, &angles[YAW], cent->lerpAngles[YAW],
@@ -4591,7 +4591,7 @@ static void CG_ForceRepulseRefraction(vec3_t org, const centity_t* cent, const f
 
 	//scale from 1.0f to 0.1f then hold at 0.1 for the rest of the duration
 	if ((cent->gent->client->ps.weapon == WP_NONE || cent->gent->client->ps.weapon == WP_MELEE)
-		&& cent->gent->client->ps.forcePowersActive & 1 << FP_PUSH && cent->gent->client->ps.groundentity_num ==
+		&& cent->gent->client->ps.forcePowersActive & 1 << FP_PUSH && cent->gent->client->ps.groundEntityNum ==
 		ENTITYNUM_NONE)
 	{
 		scale = 1.0f;
@@ -4615,7 +4615,7 @@ static void CG_ForceRepulseRefraction(vec3_t org, const centity_t* cent, const f
 
 	//start alpha at 244, fade to 10
 	if ((cent->gent->client->ps.weapon == WP_NONE || cent->gent->client->ps.weapon == WP_MELEE)
-		&& cent->gent->client->ps.forcePowersActive & 1 << FP_PUSH && cent->gent->client->ps.groundentity_num ==
+		&& cent->gent->client->ps.forcePowersActive & 1 << FP_PUSH && cent->gent->client->ps.groundEntityNum ==
 		ENTITYNUM_NONE)
 	{
 		alpha = 244.0f;
@@ -6174,7 +6174,7 @@ void CG_AddRefEntityWithPowerups(refEntity_t* ent, int powerups, centity_t* cent
 	//------------------------------------------------------
 
 	if (powerups & 1 << PW_INVINCIBLE
-		&& cent->gent->client->ps.groundentity_num != ENTITYNUM_NONE
+		&& cent->gent->client->ps.groundEntityNum != ENTITYNUM_NONE
 		&& cent->gent->health > 1)
 	{
 		theFxScheduler.PlayEffect(cgs.effects.forceInvincibility, cent->lerpOrigin);
@@ -15881,7 +15881,7 @@ void CG_Player(centity_t* cent)
 		if (cent->gent->client->ps.powerups[PW_FORCE_PUSH] > cg.time)
 		{
 			if ((cent->gent->client->ps.weapon == WP_NONE || cent->gent->client->ps.weapon == WP_MELEE) && cent->gent->
-				client->ps.groundentity_num == ENTITYNUM_NONE)
+				client->ps.groundEntityNum == ENTITYNUM_NONE)
 			{
 				vec3_t blue;
 				VectorScale(colorTable[CT_LTBLUE1], 255.0f, blue);
@@ -15909,7 +15909,7 @@ void CG_Player(centity_t* cent)
 		else if (cent->gent->client->ps.powerups[PW_FORCE_PUSH_RHAND] > cg.time)
 		{
 			if ((cent->gent->client->ps.weapon == WP_NONE || cent->gent->client->ps.weapon == WP_MELEE) && cent->gent->
-				client->ps.groundentity_num == ENTITYNUM_NONE)
+				client->ps.groundEntityNum == ENTITYNUM_NONE)
 			{
 				vec3_t blue;
 				VectorScale(colorTable[CT_LTBLUE1], 255.0f, blue);

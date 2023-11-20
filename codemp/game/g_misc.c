@@ -898,7 +898,7 @@ void HolocronTouch(gentity_t* self, gentity_t* other, const trace_t* trace)
 
 	if (trace)
 	{
-		self->s.groundentity_num = trace->entityNum;
+		self->s.groundEntityNum = trace->entityNum;
 	}
 
 	if (!other || !other->client || other->health < 1)
@@ -1138,7 +1138,7 @@ void SP_misc_holocron(gentity_t* ent)
 	ent->r.maxs[2] += 0.1f;
 
 	// allow to ride movers
-	//	ent->s.groundentity_num = tr.entityNum;
+	//	ent->s.groundEntityNum = tr.entityNum;
 
 	G_SetOrigin(ent, tr.endpos);
 
@@ -1729,7 +1729,7 @@ void SP_misc_ammo_floor_unit(gentity_t* ent)
 	ent->r.maxs[2] += 0.1f;
 
 	// allow to ride movers
-	ent->s.groundentity_num = tr.entityNum;
+	ent->s.groundEntityNum = tr.entityNum;
 
 	G_SetOrigin(ent, tr.endpos);
 
@@ -1823,7 +1823,7 @@ void SP_misc_shield_floor_unit(gentity_t* ent)
 	ent->r.maxs[2] += 0.1f;
 
 	// allow to ride movers
-	ent->s.groundentity_num = tr.entityNum;
+	ent->s.groundEntityNum = tr.entityNum;
 
 	G_SetOrigin(ent, tr.endpos);
 

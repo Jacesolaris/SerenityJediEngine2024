@@ -265,7 +265,7 @@ qboolean NPC_CanTryJump()
 		NPCS.NPCInfo->jumpTime || // Don't Jump If Already Going
 		PM_InKnockDown(&NPCS.NPC->client->ps) || // Don't Jump If In Knockdown
 		BG_InRoll(&NPCS.NPC->client->ps, NPCS.NPC->client->ps.legsAnim) || // ... Or Roll
-		NPCS.NPC->client->ps.groundentity_num == ENTITYNUM_NONE)
+		NPCS.NPC->client->ps.groundEntityNum == ENTITYNUM_NONE)
 	{
 		return qfalse;
 	}
@@ -321,7 +321,7 @@ qboolean NPC_TryJump2(gentity_t* goal, const float max_xy_dist, const float max_
 
 		// Can't Jump At Targets In The Air
 		//---------------------------------
-		if (goal->client && goal->client->ps.groundentity_num == ENTITYNUM_NONE)
+		if (goal->client && goal->client->ps.groundEntityNum == ENTITYNUM_NONE)
 		{
 			return qfalse;
 		}
@@ -557,7 +557,7 @@ qboolean NPC_TryJump_Gent(gentity_t* goal, const float max_xy_dist, const float 
 
 		// Can't Jump At Targets In The Air
 		//---------------------------------
-		if (goal->client && goal->client->ps.groundentity_num == ENTITYNUM_NONE)
+		if (goal->client && goal->client->ps.groundEntityNum == ENTITYNUM_NONE)
 		{
 			return qfalse;
 		}
@@ -634,7 +634,7 @@ qboolean NPC_Jumping()
 	//checks to see if we're jumping
 	if (NPCS.NPCInfo->jumpTime)
 	{
-		if (NPCS.NPC->client->ps.groundentity_num != ENTITYNUM_NONE)
+		if (NPCS.NPC->client->ps.groundEntityNum != ENTITYNUM_NONE)
 		{
 			//landed
 			NPCS.NPCInfo->jumpTime = 0;
@@ -934,7 +934,7 @@ NPC_LadderMove
 
 static void NPC_LadderMove(vec3_t dir)
 {
-	if (dir[2] > 0 || dir[2] < 0 && NPCS.NPC->client->ps.groundentity_num == ENTITYNUM_NONE)
+	if (dir[2] > 0 || dir[2] < 0 && NPCS.NPC->client->ps.groundEntityNum == ENTITYNUM_NONE)
 	{
 		//Set our movement direction
 		NPCS.ucmd.upmove = dir[2] > 0 ? 127 : -127;
@@ -1302,7 +1302,7 @@ qboolean SJE_UcmdMoveForDir(const gentity_t* self, usercmd_t* cmd, vec3_t dir, q
 		cmd->upmove = 127.0;
 	}
 
-	if (self->client->ps.groundentity_num != ENTITYNUM_NONE
+	if (self->client->ps.groundEntityNum != ENTITYNUM_NONE
 		&& !NPC_MoveDirClear(cmd->forwardmove, cmd->rightmove, qfalse))
 	{
 		// Dir not clear, or we would fall!
@@ -1553,7 +1553,7 @@ qboolean NPC_CheckFallPositionOK(const gentity_t* NPC, vec3_t position)
 
 	downPos[2] -= 96.0;
 
-	if (NPC->s.groundentity_num < ENTITYNUM_MAX_NORMAL)
+	if (NPC->s.groundEntityNum < ENTITYNUM_MAX_NORMAL)
 		downPos[2] -= 192.0;
 
 	testPos[2] += 48.0;

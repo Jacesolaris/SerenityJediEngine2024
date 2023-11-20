@@ -243,7 +243,7 @@ that is touched by one or more dlights, so try to throw out
 more dlights if possible.
 ====================
 */
-static int R_DlightSurface(const msurface_t* surf, int dlightBits) {
+static int R_DlightSurface(msurface_t* surf, int dlightBits) {
 	if (*surf->data == SF_FACE) {
 		dlightBits = R_DlightFace(reinterpret_cast<srfSurfaceFace_t*>(surf->data), dlightBits);
 	}
@@ -347,7 +347,7 @@ void R_AddBrushModelSurfaces(trRefEntity_t* ent) {
 	}
 }
 
-float GetQuadArea(vec3_t v1, vec3_t v2, vec3_t v3, vec3_t v4)
+static float GetQuadArea(vec3_t v1, vec3_t v2, vec3_t v3, vec3_t v4)
 {
 	vec3_t	vec1, vec2, dis1, dis2;
 
@@ -368,7 +368,7 @@ float GetQuadArea(vec3_t v1, vec3_t v2, vec3_t v3, vec3_t v4)
 		dis2[0] * dis2[0] + dis2[1] * dis2[1] + dis2[2] * dis2[2];
 }
 
-void RE_GetBModelVerts(const int bmodel_index, vec3_t* verts, vec3_t normal)
+void RE_GetBModelVerts(const int bmodelIndex, vec3_t* verts, vec3_t normal)
 {
 	msurface_t* surfs;
 	srfSurfaceFace_t* face;
@@ -377,7 +377,7 @@ void RE_GetBModelVerts(const int bmodel_index, vec3_t* verts, vec3_t normal)
 	int					max_dist[2] = { 0,0 };
 	int					max_indx[2] = { 0,0 };
 
-	const model_t* p_model = R_GetModelByHandle(bmodel_index);
+	const model_t* p_model = R_GetModelByHandle(bmodelIndex);
 	const bmodel_t* bmodel = p_model->bmodel;
 
 	// Loop through all surfaces on the brush and find the best two candidates
@@ -601,7 +601,7 @@ static void R_RecursiveWorldNode(mnode_t* node, int plane_bits, int dlightBits) 
 R_PointInLeaf
 ===============
 */
-static mnode_t* R_PointInLeaf(vec3_t p) {
+static mnode_t* R_PointInLeaf(const vec3_t p) {
 	if (!tr.world) {
 		Com_Error(ERR_DROP, "R_PointInLeaf: bad model");
 	}
@@ -630,8 +630,10 @@ static mnode_t* R_PointInLeaf(vec3_t p) {
 R_ClusterPVS
 ==============
 */
-static const byte* R_ClusterPVS(const int cluster) {
-	if (!tr.world || !tr.world->vis || cluster < 0 || cluster >= tr.world->numClusters) {
+static const byte* R_ClusterPVS(const int cluster) 
+{
+	if (!tr.world || !tr.world->vis || cluster < 0 || cluster >= tr.world->numClusters)
+	{
 		return tr.world->novis;
 	}
 
@@ -644,7 +646,7 @@ R_inPVS
 =================
 */
 
-qboolean R_inPVS(vec3_t p1, vec3_t p2) {
+qboolean R_inPVS(const vec3_t p1, const vec3_t p2) {
 	const mnode_t* leaf = R_PointInLeaf(p1);
 	const byte* vis = ri.CM_ClusterPVS(leaf->cluster);
 	leaf = R_PointInLeaf(p2);
@@ -663,7 +665,7 @@ Mark the leaves and nodes that are in the PVS for the current
 cluster
 ===============
 */
-static void R_MarkLeaves() {
+static void R_MarkLeaves(void) {
 	int		i;
 
 	// lockpvs lets designers walk around to determine the
@@ -737,7 +739,7 @@ static void R_MarkLeaves() {
 R_AddWorldSurfaces
 =============
 */
-void R_AddWorldSurfaces()
+void R_AddWorldSurfaces(void)
 {
 	if (!r_drawworld->integer)
 	{

@@ -1045,7 +1045,7 @@ static void CG_General(centity_t* cent)
 	}
 	else if (cent->currentState.eFlags & EF_CLIENTSMOOTH)
 	{
-		if (cent->currentState.groundentity_num >= ENTITYNUM_WORLD)
+		if (cent->currentState.groundEntityNum >= ENTITYNUM_WORLD)
 		{
 			float smooth_factor = 0.5f * timescale.value;
 			int k = 0;
@@ -3882,7 +3882,7 @@ void CG_CalcEntityLerpPositions(centity_t* cent)
 	// player state
 	if (cent->currentState.number != cg.client_num)
 	{
-		CG_AdjustPositionForMover(cent->lerpOrigin, cent->currentState.groundentity_num,
+		CG_AdjustPositionForMover(cent->lerpOrigin, cent->currentState.groundEntityNum,
 			cg.snap->serverTime, cg.time, cent->lerpOrigin);
 	}
 }

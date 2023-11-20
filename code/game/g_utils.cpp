@@ -1837,7 +1837,7 @@ qboolean CanUseInfrontOf(const gentity_t* ent)
 		else if (target->e_UseFunc == useF_misc_atst_use)
 		{
 			//drivable AT-ST from JK2
-			if (ent->client->ps.groundentity_num != target->s.number)
+			if (ent->client->ps.groundEntityNum != target->s.number)
 			{
 				//must be standing on it to use it
 				return qfalse;
@@ -1966,7 +1966,7 @@ tryJetPack:
 		|| ent->client->NPC_class == CLASS_MANDO
 		|| ent->client->NPC_class == CLASS_ROCKETTROOPER)
 	{
-		if ((ent->client->jetPackOn || ent->client->ps.groundentity_num == ENTITYNUM_NONE) && ent->client->ps.jetpackFuel
+		if ((ent->client->jetPackOn || ent->client->ps.groundEntityNum == ENTITYNUM_NONE) && ent->client->ps.jetpackFuel
 		> 10)
 		{
 			ItemUse_Jetpack(ent);

@@ -3355,7 +3355,7 @@ void BG_PlayerStateToEntityState(playerState_t* ps, entityState_t* s, const qboo
 	}
 
 	s->weapon = ps->weapon;
-	s->groundentity_num = ps->groundentity_num;
+	s->groundEntityNum = ps->groundEntityNum;
 	s->ManualBlockingFlags = ps->ManualBlockingFlags; //Blockingflag on OK
 	s->ManualBlockingTime = ps->ManualBlockingTime; //Blocking time 1 on
 	s->ManualblockStartTime = ps->ManualblockStartTime; //Blocking 2
@@ -3563,7 +3563,7 @@ void BG_PlayerStateToEntityStateExtraPolate(playerState_t* ps, entityState_t* s,
 		ps->entityEventSequence++;
 	}
 	s->weapon = ps->weapon;
-	s->groundentity_num = ps->groundentity_num;
+	s->groundEntityNum = ps->groundEntityNum;
 	s->ManualBlockingFlags = ps->ManualBlockingFlags; //Blockingflag on OK
 	s->ManualBlockingTime = ps->ManualBlockingTime; //Blocking time 1 on
 	s->ManualblockStartTime = ps->ManualblockStartTime; //Blocking 2

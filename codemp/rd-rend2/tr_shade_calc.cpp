@@ -25,7 +25,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 #define	WAVEVALUE( table, base, amplitude, phase, freq )  ((base) + table[ Q_ftol( ( ( (phase) + tess.shaderTime * (freq) ) * FUNCTABLE_SIZE ) ) & FUNCTABLE_MASK ] * (amplitude))
 
-static float* TableForFunc(genFunc_t func)
+static float* TableForFunc(const genFunc_t func)
 {
 	switch (func)
 	{
@@ -118,7 +118,7 @@ RB_CalcDeformVertexes
 
 ========================
 */
-void RB_CalcDeformVertexes(const deformStage_t* ds)
+static void RB_CalcDeformVertexes(const deformStage_t* ds)
 {
 	int i;
 	vec3_t	offset;
@@ -168,7 +168,7 @@ RB_CalcDeformNormals
 Wiggle the normals for wavy environment mapping
 =========================
 */
-void RB_CalcDeformNormals(const deformStage_t* ds)
+static void RB_CalcDeformNormals(const deformStage_t* ds)
 {
 	int i;
 	float	scale;
@@ -208,7 +208,7 @@ RB_CalcBulgeVertexes
 
 ========================
 */
-void RB_CalcBulgeVertexes(const deformStage_t* ds)
+static void RB_CalcBulgeVertexes(const deformStage_t* ds)
 {
 	int i;
 	const float* st = (const float*)tess.texCoords[0];
@@ -242,7 +242,7 @@ RB_CalcMoveVertexes
 A deformation that can move an entire surface along a wave path
 ======================
 */
-void RB_CalcMoveVertexes(const deformStage_t* ds)
+static void RB_CalcMoveVertexes(const deformStage_t* ds)
 {
 	vec3_t		offset;
 
@@ -268,7 +268,7 @@ DeformText
 Change a polygon into a bunch of text polygons
 =============
 */
-void DeformText(const char* text)
+static void DeformText(const char* text)
 {
 	int		i;
 	vec3_t	origin, width, height{};
@@ -468,9 +468,9 @@ static void Autosprite2Deform(void)
 	// we could precalculate a lot of it is an issue, but it would mess up
 	// the shader abstraction
 	for (i = 0, indexes = 0; i < tess.numVertexes; i += 4, indexes += 6) {
-		float	lengths[2];
-		int		nums[2];
-		vec3_t	mid[2];
+		float	lengths[2]{};
+		int		nums[2]{};
+		vec3_t	mid[2]{};
 		vec3_t	major, minor;
 		float* v1, * v2;
 

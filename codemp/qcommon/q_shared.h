@@ -1137,7 +1137,7 @@ typedef struct playerState_s {
 
 	int			useTime;
 
-	int			groundentity_num;// ENTITYNUM_NONE = in air
+	int			groundEntityNum;// ENTITYNUM_NONE = in air
 
 	int			legsTimer;		// don't change low priority animations until this runs out
 	int			legsAnim;
@@ -1850,7 +1850,7 @@ typedef struct entityState_s {
 	int		otherentity_num;	// shotgun sources, etc
 	int		otherentity_num2;
 
-	int		groundentity_num;	// ENTITYNUM_NONE = in air
+	int		groundEntityNum;	// ENTITYNUM_NONE = in air
 
 	int		constantLight;	// r + (g<<8) + (b<<16) + (intensity<<24)
 	int		loopSound;		// constantly loop this sound

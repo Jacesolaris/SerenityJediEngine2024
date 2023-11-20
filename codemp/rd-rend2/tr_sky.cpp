@@ -57,7 +57,7 @@ AddSkyPolygon
 static void AddSkyPolygon(const int nump, vec3_t vecs)
 {
 	int		i, j;
-	vec3_t	v, av;
+	vec3_t	v, av{};
 	float	s, t, dv;
 	int		axis;
 	float* vp;
@@ -259,7 +259,7 @@ RB_ClipSkyPolygons
 */
 void RB_ClipSkyPolygons(const shaderCommands_t* input)
 {
-	vec3_t		p[5];	// need one extra point for clipping
+	vec3_t		p[5]{};	// need one extra point for clipping
 	int			i, j;
 
 	ClearSkyBox();
@@ -304,7 +304,7 @@ static void MakeSkyVec(float s, float t, const int axis, float outSt[2], vec3_t 
 		{2,-1,-3}		// look straight down
 	};
 
-	vec3_t		b;
+	vec3_t		b{};
 	int			j, k;
 	float	boxSize;
 
@@ -501,7 +501,7 @@ static void DrawSkyBox(const shader_t* shader)
 
 	for (i = 0; i < 6; i++)
 	{
-		int sky_mins_subd[2], sky_maxs_subd[2];
+		int sky_mins_subd[2]{}, sky_maxs_subd[2]{};
 		int s, t;
 
 		sky_mins[0][i] = floor(sky_mins[0][i] * HALF_SKY_SUBDIVISIONS) / HALF_SKY_SUBDIVISIONS;

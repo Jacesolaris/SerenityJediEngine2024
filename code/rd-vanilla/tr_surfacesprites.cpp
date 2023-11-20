@@ -76,7 +76,7 @@ constexpr auto WIND_GUST_TIME = 2500.0;
 #define WIND_GUST_DECAY (1.0 / WIND_GUST_TIME)
 
 int		last_ss_update_time = 0;
-float	cur_wind_speed = 0;
+float	curWindSpeed = 0;
 float	cur_wind_gust = 5;
 float	cur_weather_amount = 1;
 vec3_t	cur_wind_blow_vect = { 0,0,0 }, target_wind_blow_vect = { 0,0,0 };
@@ -100,7 +100,7 @@ int		rightvectorcount;
 trRefEntity_t* ss_last_entity_drawn = nullptr;
 vec3_t	ss_view_origin, ss_view_right, ss_view_up;
 
-static void R_SurfaceSpriteFrameUpdate()
+static void R_SurfaceSpriteFrameUpdate(void)
 {
 	vec3_t ang, diff, retwindvec;
 	float targetspeed;
@@ -112,7 +112,7 @@ static void R_SurfaceSpriteFrameUpdate()
 	if (backEnd.refdef.time < last_ss_update_time)
 	{	// Time is BEFORE the last update time, so reset everything.
 		cur_wind_gust = 5;
-		cur_wind_speed = r_windSpeed->value;
+		curWindSpeed = r_windSpeed->value;
 		next_gust_time = 0;
 		gust_left = 0;
 		cur_wind_grass_dir[0] = cur_wind_grass_dir[1] = cur_wind_grass_dir[2] = 0.0f;
@@ -275,13 +275,13 @@ static void R_SurfaceSpriteFrameUpdate()
 	const float ratio = pow(dampfactor, dtime);
 
 	// Apply this ratio to the windspeed...
-	if (fabsf(targetspeed - cur_wind_speed) > ratio)
+	if (fabsf(targetspeed - curWindSpeed) > ratio)
 	{
-		cur_wind_speed = targetspeed - ratio * (targetspeed - cur_wind_speed);
+		curWindSpeed = targetspeed - ratio * (targetspeed - curWindSpeed);
 	}
 
 	// Use the curWindSpeed to calculate the final target wind vector (with speed)
-	VectorScale(target_wind_blow_vect, cur_wind_speed, target_wind_blow_vect);
+	VectorScale(target_wind_blow_vect, curWindSpeed, target_wind_blow_vect);
 	VectorSubtract(target_wind_blow_vect, cur_wind_blow_vect, diff);
 	VectorMA(target_wind_blow_vect, -ratio, diff, cur_wind_blow_vect);
 
@@ -334,8 +334,7 @@ qboolean ss_using_fog = qfalse;
 /////////////////////////////////////////////
 // Vertical surface sprites
 
-static void RB_VerticalSurfaceSprite(vec3_t loc, const float width, const float height, const byte light,
-	const byte alpha, const float wind, const float windidle, vec2_t fog, const int hangdown, vec2_t skew, const bool flattened)
+static void RB_VerticalSurfaceSprite(vec3_t loc, const float width, const float height, const byte light, const byte alpha, const float wind, const float windidle, vec2_t fog, const int hangdown, vec2_t skew, const bool flattened)
 {
 	vec3_t loc2{}, right{};
 	float windsway;
@@ -373,16 +372,16 @@ static void RB_VerticalSurfaceSprite(vec3_t loc, const float width, const float 
 		}
 	}
 
-	if (wind > 0.0 && cur_wind_speed > 0.001)
+	if (wind > 0.0 && curWindSpeed > 0.001)
 	{
 		windsway = height * wind * 0.075;
 
 		// Add the angle
 		VectorMA(loc2, height * wind, cur_wind_grass_dir, loc2);
 		// Bob up and down
-		if (cur_wind_speed < 40.0)
+		if (curWindSpeed < 40.0)
 		{
-			windsway *= cur_wind_speed * (1.0 / 100.0);
+			windsway *= curWindSpeed * (1.0 / 100.0);
 		}
 		else
 		{
@@ -444,7 +443,7 @@ static void RB_VerticalSurfaceSpriteWindPoint(vec3_t loc, const float width, con
 	const int hangdown, vec2_t skew, vec2_t winddiff, float windforce, const bool flattened)
 {
 	vec3_t loc2{}, right{};
-	float points[16];
+	float points[16]{};
 	color4ub_t color{};
 
 	if (windforce > 1)
@@ -454,7 +453,7 @@ static void RB_VerticalSurfaceSpriteWindPoint(vec3_t loc, const float width, con
 
 	const float angle = (loc[0] + loc[1]) * 0.02 + tr.refdef.time * 0.0015;
 
-	if (cur_wind_speed < 80.0)
+	if (curWindSpeed < 80.0)
 	{
 		const float windsway = height * windidle * 0.1 * (1.0 + windforce);
 		loc2[0] = loc[0] + skew[0] + cos(angle) * windsway;
@@ -474,7 +473,7 @@ static void RB_VerticalSurfaceSpriteWindPoint(vec3_t loc, const float width, con
 		loc2[2] = loc[2] + height;
 	}
 
-	if (cur_wind_speed > 0.001)
+	if (curWindSpeed > 0.001)
 	{
 		// Add the angle
 		VectorMA(loc2, height * wind, cur_wind_grass_dir, loc2);
@@ -1391,7 +1390,7 @@ static void RB_DrawEffectSurfaceSprites(shaderStage_t* stage, shaderCommands_t* 
 						width *= 1.0f + stage->ss->fadeScale * (1.0 - alphapos);
 					}
 
-					if (stage->ss->wind > 0.0f && cur_wind_speed > 0.001)
+					if (stage->ss->wind > 0.0f && curWindSpeed > 0.001)
 					{
 						vec3_t drawpoint;
 
@@ -1445,7 +1444,6 @@ void RB_DrawSurfaceSprites(shaderStage_t* stage, shaderCommands_t* input)
 		ss_additive_transparency = qfalse;
 	}
 
-	//#ifdef JK2_MODE
 	if (ss_additive_transparency && ss_using_fog && r_drawfog->value == 2 &&
 		tr.world &&
 		(tess.fogNum == tr.world->globalFog || tess.fogNum == tr.world->numfogs))
@@ -1461,7 +1459,6 @@ void RB_DrawSurfaceSprites(shaderStage_t* stage, shaderCommands_t* input)
 	{
 		fogging = 0;
 	}
-	//#endif
 
 		//Check if this is a new entity transformation (incl. world entity), and update the appropriate vectors if so.
 	if (backEnd.currentEntity != ss_last_entity_drawn)
@@ -1499,12 +1496,10 @@ void RB_DrawSurfaceSprites(shaderStage_t* stage, shaderCommands_t* input)
 
 	SQuickSprite.EndGroup();
 
-	//#ifdef JK2_MODE
 	if (fogging)
 	{
 		qglEnable(GL_FOG);
 	}
-	//#endif
 
 	sssurfaces++;
 }

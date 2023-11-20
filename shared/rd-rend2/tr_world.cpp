@@ -520,8 +520,8 @@ R_RecursiveWorldNode
 void R_RecursiveWorldNode(mnode_t* node, int planeBits, int dlightBits, int pshadowBits)
 {
 	do {
-		int			newDlights[2];
-		unsigned int newPShadows[2];
+		int			newDlights[2]{};
+		unsigned int newPShadows[2]{};
 
 		// if the node wasn't marked as potentially visible, exit
 		// pvs is skipped for depth shadows
@@ -741,7 +741,7 @@ static mnode_t* R_PointInLeaf(const vec3_t p) {
 R_ClusterPVS
 ==============
 */
-static const byte* R_ClusterPVS(int cluster) {
+static const byte* R_ClusterPVS(const int cluster) {
 	if (!tr.world->vis || cluster < 0 || cluster >= tr.world->numClusters) {
 		return tr.world->novis;
 	}
@@ -757,7 +757,7 @@ R_inPVS
 #ifndef REND2_SP
 qboolean R_inPVS(const vec3_t p1, const vec3_t p2, byte* mask) {
 #else
-qboolean R_inPVS(vec3_t p1, vec3_t p2) {
+qboolean R_inPVS(const vec3_t p1, const vec3_t p2) {
 	byte* mask;
 #endif
 	mnode_t* leaf = R_PointInLeaf(p1);

@@ -23,7 +23,7 @@ RE_RegisterSkin
 
 bool gServerSkinHack = false;
 
-shader_t* R_FindServerShader(const char* name, const int* lightmapIndexes, const byte* styles, qboolean mipRawImage);
+shader_t* R_FindServerShader(const char* name, const int* lightmapIndexes, const byte* styles, const qboolean mipRawImage);
 static char* CommaParse(char** data_p);
 /*
 ===============
@@ -33,7 +33,7 @@ return= true if three part skins found
 output= qualified names to three skins if return is true, undefined if false
 ===============
 */
-bool RE_SplitSkins(const char* INname, char* skinhead, char* skintorso, char* skinlower)
+static bool RE_SplitSkins(const char* INname, char* skinhead, char* skintorso, char* skinlower)
 {	//INname= "models/players/jedi_tf/|head01_skin1|torso01|lower01";
 	if (strchr(INname, '|'))
 	{
@@ -82,11 +82,11 @@ bool RE_SplitSkins(const char* INname, char* skinhead, char* skintorso, char* sk
 }
 
 // given a name, go get the skin we want and return
-qhandle_t RE_RegisterIndividualSkin(const char* name, qhandle_t hSkin)
+static qhandle_t RE_RegisterIndividualSkin(const char* name, const qhandle_t hSkin)
 {
 	skin_t* skin;
 	skinSurface_t* surf;
-	char* text, * text_p;
+	char* text = nullptr, * text_p;
 	char* token;
 	char			surfName[MAX_QPATH];
 
@@ -445,7 +445,7 @@ void	R_InitSkins(void) {
 R_GetSkinByHandle
 ===============
 */
-skin_t* R_GetSkinByHandle(qhandle_t hSkin) {
+skin_t* R_GetSkinByHandle(const qhandle_t hSkin) {
 	if (hSkin < 1 || hSkin >= tr.numSkins) {
 		return tr.skins[0];
 	}
@@ -457,7 +457,8 @@ skin_t* R_GetSkinByHandle(qhandle_t hSkin) {
 R_SkinList_f
 ===============
 */
-void	R_SkinList_f(void) {
+void R_SkinList_f(void)
+{
 	int			i, j;
 	skin_t* skin;
 
