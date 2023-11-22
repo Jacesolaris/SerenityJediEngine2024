@@ -260,7 +260,7 @@ Returns a player number for either a number or name string
 Returns -1 if invalid
 ==================
 */
-int client_numberFromString(const gentity_t* to, const char* s, const qboolean allowconnecting)
+static int client_numberFromString(const gentity_t* to, const char* s, const qboolean allowconnecting)
 {
 	gclient_t* cl;
 	int idnum;
@@ -3844,6 +3844,8 @@ void Cmd_EngageDuel_f(gentity_t* ent)
 	fwd_org[2] = ent->client->ps.origin[2] + ent->client->ps.viewheight + forward[2] * 256;
 
 	trap->Trace(&tr, ent->client->ps.origin, NULL, NULL, fwd_org, ent->s.number, MASK_PLAYERSOLID, qfalse, 0, 0);
+
+	G_SetAnim(ent, &ent->client->pers.cmd, SETANIM_TORSO, BOTH_ENGAGETAUNT, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
 
 	if (tr.fraction != 1 && tr.entityNum < MAX_CLIENTS)
 	{

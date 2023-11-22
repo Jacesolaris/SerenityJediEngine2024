@@ -962,7 +962,7 @@ models/players/visor/animation.cfg, etc
 */
 extern qboolean PM_SaberInParry(int move);
 
-qboolean G_ParseAnimationFile(const int gla_index, const char* skeleton_name, const int file_index)
+qboolean G_ParseAnimationFile(const int gla_index, const char* skeletonName, const int file_index)
 {
 	char text[120000]{};
 	const char* text_p = text;
@@ -971,11 +971,11 @@ qboolean G_ParseAnimationFile(const int gla_index, const char* skeleton_name, co
 
 	// Read In The File To The Text Buffer, Make Sure Everything Is Safe To Continue
 	//-------------------------------------------------------------------------------
-	Com_sprintf(skeleton_path, MAX_QPATH, "models/players/%s/%s.cfg", skeleton_name, skeleton_name);
+	Com_sprintf(skeleton_path, MAX_QPATH, "models/players/%s/%s.cfg", skeletonName, skeletonName);
 	int len = gi.RE_GetAnimationCFG(skeleton_path, text, sizeof text);
 	if (len <= 0)
 	{
-		Com_sprintf(skeleton_path, MAX_QPATH, "models/players/%s/animation.cfg", skeleton_name);
+		Com_sprintf(skeleton_path, MAX_QPATH, "models/players/%s/animation.cfg", skeletonName);
 		len = gi.RE_GetAnimationCFG(skeleton_path, text, sizeof text);
 		if (len <= 0)
 		{
@@ -984,7 +984,7 @@ qboolean G_ParseAnimationFile(const int gla_index, const char* skeleton_name, co
 	}
 	if (len >= static_cast<int>(sizeof text - 1))
 	{
-		G_Error("G_ParseAnimationFile: File %s too long\n (%d > %d)", skeleton_name, len, sizeof text - 1);
+		G_Error("G_ParseAnimationFile: File %s too long\n (%d > %d)", skeletonName, len, sizeof text - 1);
 	}
 
 	// Read In Each Token
@@ -1147,7 +1147,7 @@ qboolean G_ParseAnimationFile(const int gla_index, const char* skeleton_name, co
 // the animation event file.
 //
 ////////////////////////////////////////////////////////////////////////
-int G_ParseAnimFileSet(const char* skeleton_name, const char* model_name = nullptr)
+int G_ParseAnimFileSet(const char* skeletonName, const char* model_name = nullptr)
 {
 	int file_index;
 
@@ -1155,7 +1155,7 @@ int G_ParseAnimFileSet(const char* skeleton_name, const char* model_name = nullp
 	//--------------------------------------------------------------
 	for (file_index = 0; file_index < level.numKnownAnimFileSets; file_index++)
 	{
-		if (Q_stricmp(level.knownAnimFileSets[file_index].filename, skeleton_name) == 0)
+		if (Q_stricmp(level.knownAnimFileSets[file_index].filename, skeletonName) == 0)
 		{
 			break;
 		}
@@ -1174,7 +1174,7 @@ int G_ParseAnimFileSet(const char* skeleton_name, const char* model_name = nullp
 		//---------------------------------------------------------
 		file_index = level.numKnownAnimFileSets;
 		level.numKnownAnimFileSets++;
-		strcpy(level.knownAnimFileSets[file_index].filename, skeleton_name);
+		strcpy(level.knownAnimFileSets[file_index].filename, skeletonName);
 
 		level.knownAnimFileSets[file_index].torsoAnimEventCount = 0;
 		level.knownAnimFileSets[file_index].legsAnimEventCount = 0;
@@ -1223,7 +1223,7 @@ int G_ParseAnimFileSet(const char* skeleton_name, const char* model_name = nullp
 
 		// Get The Cinematic GLA Name
 		//----------------------------
-		if (g_standard_humanoid(skeleton_name))
+		if (g_standard_humanoid(skeletonName))
 		{
 			const char* map_name = strrchr(level.mapname, '/');
 			if (map_name)
@@ -1234,24 +1234,22 @@ int G_ParseAnimFileSet(const char* skeleton_name, const char* model_name = nullp
 			{
 				map_name = level.mapname;
 			}
-			char skeleton_map_name[MAX_QPATH];
-			Com_sprintf(skeleton_map_name, MAX_QPATH, "_humanoid_%s", map_name);
-			const int normal_gla_index = gi.
-				G2API_PrecacheGhoul2Model(va("models/players/%s/_humanoid.gla", skeleton_name));
+			char skeletonMapName[MAX_QPATH];
+			Com_sprintf(skeletonMapName, MAX_QPATH, "_humanoid_%s", map_name);
+			const int normalGLAIndex = gi.G2API_PrecacheGhoul2Model(va("models/players/%s/_humanoid.gla", skeletonName));
 			//double check this always comes first!
 
 			// Make Sure To Precache The GLAs (both regular and cinematic), And Remember Their Indicies
 			//------------------------------------------------------------------------------------------
-			G_ParseAnimationFile(0, skeleton_name, file_index);
-			G_ParseAnimationEvtFile(0, skeleton_name, file_index, normal_gla_index, false/*flag for model specific*/);
+			G_ParseAnimationFile(0, skeletonName, file_index);
+			G_ParseAnimationEvtFile(0, skeletonName, file_index, normalGLAIndex, false);
 
-			const int cine_gla_index = gi.G2API_PrecacheGhoul2Model(
-				va("models/players/%s/%s.gla", skeleton_map_name, skeleton_map_name));
-			if (cine_gla_index)
+			const int cineGLAIndex = gi.G2API_PrecacheGhoul2Model(
+				va("models/players/%s/%s.gla", skeletonMapName, skeletonMapName));
+			if (cineGLAIndex)
 			{
-				G_ParseAnimationFile(1, skeleton_map_name, file_index);
-				G_ParseAnimationEvtFile(1, skeleton_map_name, file_index, cine_gla_index,
-					false/*flag for model specific*/);
+				G_ParseAnimationFile(1, skeletonMapName, file_index);
+				G_ParseAnimationEvtFile(1, skeletonMapName, file_index, cineGLAIndex,	false);
 			}
 		}
 		else
@@ -1260,8 +1258,8 @@ int G_ParseAnimFileSet(const char* skeleton_name, const char* model_name = nullp
 			//
 			// Make Sure To Precache The GLAs (both regular and cinematic), And Remember Their Indicies
 			//------------------------------------------------------------------------------------------
-			G_ParseAnimationFile(0, skeleton_name, file_index);
-			G_ParseAnimationEvtFile(0, skeleton_name, file_index);
+			G_ParseAnimationFile(0, skeletonName, file_index);
+			G_ParseAnimationEvtFile(0, skeletonName, file_index);
 		}
 	}
 
@@ -1293,9 +1291,9 @@ int G_ParseAnimFileSet(const char* skeleton_name, const char* model_name = nullp
 
 		// Only Do The Event File If The Model Is Not The Same As The Skeleton
 		//---------------------------------------------------------------------
-		if (Q_stricmp(skeleton_name, model_name) != 0)
+		if (Q_stricmp(skeletonName, model_name) != 0)
 		{
-			const int i_gla_index_to_check_for_skip = Q_stricmp(skeleton_name, "_humanoid")
+			const int i_gla_index_to_check_for_skip = Q_stricmp(skeletonName, "_humanoid")
 				? -1
 				: gi.G2API_PrecacheGhoul2Model(
 					"models/players/_humanoid/_humanoid.gla"); // ;-)
@@ -1474,7 +1472,7 @@ void NPC_PrecacheAnimationCFG(const char* npc_type)
 
 extern int NPC_WeaponsForTeam(team_t team, int spawnflags, const char* NPC_type);
 
-void NPC_PrecacheWeapons(const team_t player_team, const int spawnflags, const char* np_ctype)
+static void NPC_PrecacheWeapons(const team_t player_team, const int spawnflags, const char* np_ctype)
 {
 	const int weapons = NPC_WeaponsForTeam(player_team, spawnflags, np_ctype);
 	for (int cur_weap = WP_SABER; cur_weap < WP_NUM_WEAPONS; cur_weap++)
@@ -1538,7 +1536,7 @@ extern void NPC_Saboteur_Precache();
 extern void npc_cultist_destroyer_precache();
 extern void NPC_GalakMech_Precache();
 
-void NPC_Jawa_Precache()
+static void NPC_Jawa_Precache()
 {
 	for (int i = 1; i < 7; i++)
 	{
@@ -2102,8 +2100,7 @@ void NPC_BuildRandom()
 extern cvar_t* com_outcast;
 extern void G_MatchPlayerWeapon(gentity_t* ent);
 extern void G_InitPlayerFromCvars(gentity_t* ent);
-extern void g_set_g2_player_model(gentity_t* ent, const char* model_name, const char* customSkin, const char* surf_off,
-	const char* surf_on);
+extern void g_set_g2_player_model(gentity_t* ent, const char* model_name, const char* customSkin, const char* surf_off,	const char* surf_on);
 
 qboolean NPC_ParseParms(const char* npc_name, gentity_t* npc)
 {

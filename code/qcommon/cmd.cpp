@@ -273,7 +273,7 @@ void Cbuf_Execute()
 Cmd_Exec_f
 ===============
 */
-void Cmd_Exec_f()
+static void Cmd_Exec_f(void)
 {
 	union
 	{
@@ -286,7 +286,7 @@ void Cmd_Exec_f()
 
 	if (Cmd_Argc() != 2)
 	{
-		Com_Printf("exec%s <filename> : execute a script file%s\n", quiet ? "q" : "", quiet ? " without notification" : "");
+		//Com_Printf("exec%s <filename> : execute a script file%s\n", quiet ? "q" : "", quiet ? " without notification" : "");
 		return;
 	}
 
