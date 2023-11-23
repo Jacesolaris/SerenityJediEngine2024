@@ -929,8 +929,7 @@ R_CreateImage
 This is the only way any image_t are created
 ================
 */
-image_t* R_CreateImage(const char* name, const byte* pic, const int width, const int height,
-	const GLenum format, const qboolean mipmap, const qboolean allow_picmip, const qboolean allow_tc, int gl_wrap_clamp_mode)
+image_t* R_CreateImage(const char* name, const byte* pic, const int width, const int height, const GLenum format, const qboolean mipmap, const qboolean allow_picmip, const qboolean allow_tc, int gl_wrap_clamp_mode)
 {
 	qboolean	is_lightmap = qfalse;
 
@@ -1214,7 +1213,8 @@ R_CreateBuiltinImages
 */
 void R_UpdateSaveGameImage(const char* filename);
 
-void R_CreateBuiltinImages() {
+static void R_CreateBuiltinImages(void)
+{
 	int		x;
 	byte	data[DEFAULT_SIZE][DEFAULT_SIZE][4];
 

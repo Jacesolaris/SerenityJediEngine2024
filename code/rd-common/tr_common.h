@@ -37,7 +37,7 @@ Noise Generation
 void R_NoiseInit();
 
 // Get random 4-component vector.
-float R_NoiseGet4f(float x, float y, float z, float t);
+float R_NoiseGet4f(const float x, const float y, const float z, const float t);
 
 // Get the noise time.
 float GetNoiseTime(int t);
@@ -63,7 +63,7 @@ void R_LoadImage(const char* shortname, byte** pic, int* width, int* height);
 void LoadTGA(const char* name, byte** pic, int* width, int* height);
 
 // Load raw image data from JPEG image.
-void LoadJPG(const char* filename, byte** pic, int* width, int* height);
+void LoadJPG(const char* filename, unsigned char** pic, int* width, int* height);
 
 // Load raw image data from PNG image.
 void LoadPNG(const char* filename, byte** data, int* width, int* height);

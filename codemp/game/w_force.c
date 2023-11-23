@@ -895,7 +895,7 @@ void WP_SpawnInitForcePowers(gentity_t* ent)
 	}
 }
 
-qboolean is_merc(const gentity_t* ent)
+static qboolean is_merc(const gentity_t* ent)
 {
 	if (!ent->client)
 	{
@@ -1126,18 +1126,7 @@ qboolean WP_ForcePowerAvailable(const gentity_t* self, const forcePowers_t force
 	return qtrue;
 }
 
-qboolean WP_ForcePowerInUse(const gentity_t* self, const forcePowers_t forcePower)
-{
-	if (self->client->ps.fd.forcePowersActive & 1 << forcePower)
-	{
-		//already using this power
-		return qtrue;
-	}
-
-	return qfalse;
-}
-
-qboolean class_is_gunner(const gentity_t* self)
+static qboolean class_is_gunner(const gentity_t* self)
 {
 	switch (self->client->ps.weapon)
 	{
@@ -1742,7 +1731,7 @@ void ForceHeal(gentity_t* self)
 	G_PlayBoltedEffect(G_EffectIndex("force/heal2.efx"), self, "thoracic");
 }
 
-void wp_add_to_client_bitflags(gentity_t* ent, const int entNum)
+static void wp_add_to_client_bitflags(gentity_t* ent, const int entNum)
 {
 	if (!ent)
 	{
@@ -1984,7 +1973,7 @@ void ForceTeamForceReplenish(const gentity_t* self)
 	}
 }
 
-qboolean IsHybrid(const gentity_t* ent)
+static qboolean IsHybrid(const gentity_t* ent)
 {
 	qboolean jedi = qfalse, merc = qfalse;
 
@@ -2122,7 +2111,7 @@ qboolean IsHybrid(const gentity_t* ent)
 	return qfalse;
 }
 
-qboolean WP_CounterForce(const gentity_t* attacker, const gentity_t* defender, const int attackPower)
+static qboolean WP_CounterForce(const gentity_t* attacker, const gentity_t* defender, const int attackPower)
 {
 	if (BG_IsUsingHeavyWeap(&defender->client->ps))
 	{
@@ -2341,7 +2330,7 @@ int IsPressingKickButton(const gentity_t* self)
 	return qfalse;
 }
 
-void WP_DebounceForceDeactivateTime(const gentity_t* self)
+static void WP_DebounceForceDeactivateTime(const gentity_t* self)
 {
 	if (self && self->client)
 	{
@@ -2430,7 +2419,7 @@ void ForceSpeed(gentity_t* self, const int forceDuration)
 	G_PlayBoltedEffect(G_EffectIndex("misc/breath.efx"), self, "*head_front");
 }
 
-void ForceDashAnim(gentity_t* self)
+static void ForceDashAnim(gentity_t* self)
 {
 	const int setAnimOverride = SETANIM_AFLAG_PACE;
 
@@ -2474,7 +2463,7 @@ void ForceDashAnimDash(gentity_t* self)
 	}
 }
 
-void ForceSpeedDash(gentity_t* self)
+static void ForceSpeedDash(gentity_t* self)
 {
 	if (self->health <= 0)
 	{
@@ -2829,7 +2818,7 @@ void ForceRage(gentity_t* self)
 	G_PlayBoltedEffect(G_EffectIndex("misc/breathSith.efx"), self, "*head_front");
 }
 
-qboolean ForceLightningCheckattack(const gentity_t* self)
+static qboolean ForceLightningCheckattack(const gentity_t* self)
 {
 	if (self->client->ps.torsoAnim == BOTH_FORCE_2HANDEDLIGHTNING
 		|| self->client->ps.torsoAnim == BOTH_FORCE_2HANDEDLIGHTNING_OLD
@@ -2938,7 +2927,7 @@ void ForceLightning(gentity_t* self)
 	WP_ForcePowerStart(self, FP_LIGHTNING, 500);
 }
 
-qboolean melee_block_lightning_counter_force(gentity_t* attacker, const gentity_t* defender, int attackPower)
+static qboolean melee_block_lightning_counter_force(gentity_t* attacker, const gentity_t* defender, int attackPower)
 {
 	//generically checks to see if the defender is able to block an attack from this attacker
 	if (!manual_forceblocking(defender))
@@ -2960,7 +2949,7 @@ qboolean melee_block_lightning_counter_force(gentity_t* attacker, const gentity_
 	return qtrue;
 }
 
-qboolean melee_block_lightning(gentity_t* attacker, gentity_t* defender)
+static qboolean melee_block_lightning(gentity_t* attacker, gentity_t* defender)
 {
 	const qboolean melee_light_block = qtrue;
 
@@ -3007,7 +2996,7 @@ qboolean melee_block_lightning(gentity_t* attacker, gentity_t* defender)
 	return qtrue;
 }
 
-qboolean saber_block_lightning(const gentity_t* attacker, const gentity_t* defender)
+static qboolean saber_block_lightning(const gentity_t* attacker, const gentity_t* defender)
 {
 	//defender is attempting to block lightning.  Try to do it.
 	const qboolean active_blocking = defender->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK
@@ -3062,7 +3051,7 @@ qboolean saber_block_lightning(const gentity_t* attacker, const gentity_t* defen
 	return qtrue;
 }
 
-void force_lightning_damage(gentity_t* self, gentity_t* trace_ent, vec3_t dir, const float dist, const float dot,
+static void force_lightning_damage(gentity_t* self, gentity_t* trace_ent, vec3_t dir, const float dist, const float dot,
 	vec3_t impact_point)
 {
 	self->client->dangerTime = level.time;
@@ -3416,7 +3405,7 @@ void force_lightning_damage(gentity_t* self, gentity_t* trace_ent, vec3_t dir, c
 	}
 }
 
-void force_shoot_lightning(gentity_t* self)
+static void force_shoot_lightning(gentity_t* self)
 {
 	trace_t tr;
 	vec3_t forward;
@@ -3596,7 +3585,7 @@ void ForceDrain(gentity_t* self)
 
 qboolean Jedi_DrainReaction(gentity_t* self);
 
-void ForceDrainDamage(gentity_t* self, gentity_t* trace_ent, vec3_t dir, vec3_t impact_point)
+static void ForceDrainDamage(gentity_t* self, gentity_t* trace_ent, vec3_t dir, vec3_t impact_point)
 {
 	self->client->dangerTime = level.time;
 	self->client->ps.eFlags &= ~EF_INVULNERABLE;
@@ -3738,7 +3727,7 @@ static void FP_TraceSetStart(const gentity_t* ent, vec3_t start, vec3_t mins, ve
 #define	DESTRUCTION_RANGE				150
 
 //---------------------------------------------------------
-void WP_FireDestruction(gentity_t* ent, const int force_level)
+static void WP_FireDestruction(gentity_t* ent, const int force_level)
 //---------------------------------------------------------
 {
 	vec3_t start, forward;
@@ -3953,7 +3942,7 @@ int ForceShootDrain(gentity_t* self)
 	return numDrained;
 }
 
-int ForceShootDestruction(gentity_t* self)
+static int ForceShootDestruction(gentity_t* self)
 {
 	trace_t tr;
 	vec3_t forward;
@@ -4093,7 +4082,7 @@ int ForceShootDestruction(gentity_t* self)
 	return numDrained;
 }
 
-void ForceJumpCharge(gentity_t* self, usercmd_t* ucmd)
+static void ForceJumpCharge(gentity_t* self, usercmd_t* ucmd)
 {
 	//I guess this is unused now. Was used for the "charge" jump type.
 	const float forceJumpChargeInterval = forceJumpStrength[0] / (FORCE_JUMP_CHARGE_TIME / FRAMETIME);
@@ -4322,7 +4311,7 @@ void ForceJump(gentity_t* self, const usercmd_t* ucmd)
 	self->client->ps.groundEntityNum = ENTITYNUM_NONE;
 }
 
-void WP_AddAsMindtricked(forcedata_t* fd, const int entNum)
+static void WP_AddAsMindtricked(forcedata_t* fd, const int entNum)
 {
 	if (!fd)
 	{
@@ -4347,7 +4336,7 @@ void WP_AddAsMindtricked(forcedata_t* fd, const int entNum)
 	}
 }
 
-qboolean ForceTelepathyCheckDirectNPCTarget(gentity_t* self, trace_t* tr, qboolean* tookPower)
+static qboolean ForceTelepathyCheckDirectNPCTarget(gentity_t* self, trace_t* tr, qboolean* tookPower)
 {
 	qboolean targetLive = qfalse;
 	vec3_t tfrom, tto, fwd;
@@ -4884,7 +4873,7 @@ static qboolean playeris_resisting_force_throw(const gentity_t* player, gentity_
 	return qfalse;
 }
 
-qboolean ShouldPlayerResistForceThrow(const gentity_t* self, const gentity_t* thrower, const qboolean pull)
+static qboolean ShouldPlayerResistForceThrow(const gentity_t* self, const gentity_t* thrower, const qboolean pull)
 {
 	int power_use;
 
@@ -5180,7 +5169,7 @@ void WP_ResistForcePush(gentity_t* self, const gentity_t* pusher, const qboolean
 	Jedi_PlayBlockedPushSound(self);
 }
 
-void RepulseDamage(gentity_t* self, gentity_t* enemy, vec3_t location, const int damageLevel)
+static void RepulseDamage(gentity_t* self, gentity_t* enemy, vec3_t location, const int damageLevel)
 {
 	switch (damageLevel)
 	{
@@ -5213,7 +5202,7 @@ void RepulseDamage(gentity_t* self, gentity_t* enemy, vec3_t location, const int
 	}
 }
 
-void PushDamage(gentity_t* self, gentity_t* enemy, vec3_t location, const int damageLevel)
+static void PushDamage(gentity_t* self, gentity_t* enemy, vec3_t location, const int damageLevel)
 {
 	switch (damageLevel)
 	{
@@ -7079,7 +7068,7 @@ void WP_ForcePowerStop(gentity_t* self, const forcePowers_t forcePower)
 extern qboolean Boba_Flying(const gentity_t* self);
 extern void Boba_FlyStop(gentity_t* self);
 
-void DoGripAction(gentity_t* self, const forcePowers_t forcePower)
+static void DoGripAction(gentity_t* self, const forcePowers_t forcePower)
 {
 	trace_t tr;
 	vec3_t a;
@@ -7313,7 +7302,7 @@ void DoGripAction(gentity_t* self, const forcePowers_t forcePower)
 	}
 }
 
-qboolean G_IsMindTricked(const forcedata_t* fd, const int client)
+static qboolean G_IsMindTricked(const forcedata_t* fd, const int client)
 {
 	int checkIn;
 	int sub = 0;
@@ -7692,7 +7681,7 @@ static void wp_force_power_run(gentity_t* self, const forcePowers_t forcePower, 
 	}
 }
 
-int WP_DoSpecificPower(gentity_t* self, const usercmd_t* ucmd, const forcePowers_t forcepower)
+static int WP_DoSpecificPower(gentity_t* self, const usercmd_t* ucmd, const forcePowers_t forcepower)
 {
 	int powerSucceeded = 1;
 
@@ -7867,7 +7856,7 @@ int WP_DoSpecificPower(gentity_t* self, const usercmd_t* ucmd, const forcePowers
 	return powerSucceeded;
 }
 
-void FindGenericEnemyIndex(const gentity_t* self)
+static void FindGenericEnemyIndex(const gentity_t* self)
 {
 	//Find another client that would be considered a threat.
 	int i = 0;
@@ -7905,10 +7894,9 @@ void FindGenericEnemyIndex(const gentity_t* self)
 	self->client->ps.genericEnemyIndex = besten->s.number;
 }
 
-void SeekerDroneUpdate(gentity_t* self)
+static void SeekerDroneUpdate(gentity_t* self)
 {
 	vec3_t org, elevated, dir, a;
-	gentity_t* en;
 	float angle;
 	trace_t tr;
 
@@ -7993,35 +7981,6 @@ void SeekerDroneUpdate(gentity_t* self)
 		self->client->ps.genericEnemyIndex = ENTITYNUM_NONE;
 	}
 
-	if (self->client->ps.genericEnemyIndex != ENTITYNUM_NONE && self->client->ps.genericEnemyIndex != -1)
-	{
-		en = &g_entities[self->client->ps.genericEnemyIndex];
-
-		if (en->s.number == self->s.number)
-		{
-			self->client->ps.genericEnemyIndex = ENTITYNUM_NONE;
-		}
-		else if (en->health < 1)
-		{
-			self->client->ps.genericEnemyIndex = ENTITYNUM_NONE;
-		}
-		else if (OnSameTeam(self, en))
-		{
-			self->client->ps.genericEnemyIndex = ENTITYNUM_NONE;
-		}
-		else
-		{
-			if (!in_front(en->client->ps.origin, self->client->ps.origin, self->client->ps.viewangles, 0.8f))
-			{
-				self->client->ps.genericEnemyIndex = ENTITYNUM_NONE;
-			}
-			else if (!org_visible(self->client->ps.origin, en->client->ps.origin, self->s.number))
-			{
-				self->client->ps.genericEnemyIndex = ENTITYNUM_NONE;
-			}
-		}
-	}
-
 	if (self->client->ps.genericEnemyIndex == ENTITYNUM_NONE || self->client->ps.genericEnemyIndex == -1)
 	{
 		FindGenericEnemyIndex(self);
@@ -8029,7 +7988,7 @@ void SeekerDroneUpdate(gentity_t* self)
 
 	if (self->client->ps.genericEnemyIndex != ENTITYNUM_NONE && self->client->ps.genericEnemyIndex != -1)
 	{
-		en = &g_entities[self->client->ps.genericEnemyIndex];
+		gentity_t* en = &g_entities[self->client->ps.genericEnemyIndex];
 
 		VectorCopy(self->client->ps.origin, elevated);
 		elevated[2] += 40;
@@ -8057,10 +8016,38 @@ void SeekerDroneUpdate(gentity_t* self)
 				self->client->ps.droneFireTime = level.time + Q_irand(400, 700);
 			}
 		}
+
+		if (!en || !en->client)
+		{
+			self->client->ps.genericEnemyIndex = ENTITYNUM_NONE;
+		}
+		else if (en->s.number == self->s.number)
+		{
+			self->client->ps.genericEnemyIndex = ENTITYNUM_NONE;
+		}
+		else if (en->health < 1)
+		{
+			self->client->ps.genericEnemyIndex = ENTITYNUM_NONE;
+		}
+		else if (OnSameTeam(self, en))
+		{
+			self->client->ps.genericEnemyIndex = ENTITYNUM_NONE;
+		}
+		else
+		{
+			if (!in_front(en->client->ps.origin, self->client->ps.origin, self->client->ps.viewangles, 0.8f))
+			{
+				self->client->ps.genericEnemyIndex = ENTITYNUM_NONE;
+			}
+			else if (!org_visible(self->client->ps.origin, en->client->ps.origin, self->s.number))
+			{
+				self->client->ps.genericEnemyIndex = ENTITYNUM_NONE;
+			}
+		}
 	}
 }
 
-void HolocronUpdate(gentity_t* self)
+static void HolocronUpdate(gentity_t* self)
 {
 	//keep holocron status updated in holocron mode
 	int i = 0;
@@ -8170,7 +8157,7 @@ void HolocronUpdate(gentity_t* self)
 	}
 }
 
-void JediMasterUpdate(gentity_t* self)
+static void JediMasterUpdate(gentity_t* self)
 {
 	//keep jedi master status updated for JM gametype
 	int i = 0;
@@ -8251,7 +8238,7 @@ qboolean WP_HasForcePowers(const playerState_t* ps)
 }
 
 //try a special roll getup move
-qboolean G_SpecialRollGetup(gentity_t* self)
+static qboolean G_SpecialRollGetup(gentity_t* self)
 {
 	//fixme: currently no knockdown will actually land you on your front... so froll's are pretty useless at the moment.
 	qboolean rolled = qfalse;

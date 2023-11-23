@@ -28,7 +28,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 R_CheckFBO
 =============
 */
-qboolean R_CheckFBO(const FBO_t* fbo)
+static qboolean R_CheckFBO(const FBO_t* fbo)
 {
 	int             code;
 	int             id;
@@ -99,7 +99,7 @@ qboolean R_CheckFBO(const FBO_t* fbo)
 FBO_Create
 ============
 */
-FBO_t* FBO_Create(const char* name, int width, int height)
+static FBO_t* FBO_Create(const char* name, int width, int height)
 {
 	FBO_t* fbo;
 
@@ -134,7 +134,7 @@ FBO_t* FBO_Create(const char* name, int width, int height)
 	return fbo;
 }
 
-void FBO_CreateBuffer(FBO_t* fbo, int format, int index, int multisample)
+static void FBO_CreateBuffer(FBO_t* fbo, int format, int index, int multisample)
 {
 	uint32_t* pRenderBuffer;
 	GLenum attachment;
@@ -217,7 +217,7 @@ void FBO_CreateBuffer(FBO_t* fbo, int format, int index, int multisample)
 R_AttachFBOTexture1D
 =================
 */
-void R_AttachFBOTexture1D(int texId, int index)
+static void R_AttachFBOTexture1D(int texId, int index)
 {
 	if (index < 0 || index >= glRefConfig.maxColorAttachments)
 	{
@@ -233,7 +233,7 @@ void R_AttachFBOTexture1D(int texId, int index)
 R_AttachFBOTexture2D
 =================
 */
-void R_AttachFBOTexture2D(int target, int texId, int index)
+static void R_AttachFBOTexture2D(int target, int texId, int index)
 {
 	if (target != GL_TEXTURE_2D &&
 		(target < GL_TEXTURE_CUBE_MAP_POSITIVE_X ||
@@ -257,7 +257,7 @@ void R_AttachFBOTexture2D(int target, int texId, int index)
 R_AttachFBOTexture3D
 =================
 */
-void R_AttachFBOTexture3D(int texId, int index, int zOffset)
+static void R_AttachFBOTexture3D(int texId, int index, int zOffset)
 {
 	if (index < 0 || index >= glRefConfig.maxColorAttachments)
 	{
@@ -273,7 +273,7 @@ void R_AttachFBOTexture3D(int texId, int index, int zOffset)
 R_AttachFBOTextureDepth
 =================
 */
-void R_AttachFBOTextureDepth(int texId)
+static void R_AttachFBOTextureDepth(int texId)
 {
 	qglFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, texId, 0);
 }
@@ -283,12 +283,12 @@ void R_AttachFBOTextureDepth(int texId)
 R_AttachFBOTexturePackedDepthStencil
 =================
 */
-void R_AttachFBOTexturePackedDepthStencil(int texId)
+static void R_AttachFBOTexturePackedDepthStencil(int texId)
 {
 	qglFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, texId, 0);
 }
 
-void FBO_AttachTextureImage(image_t* img, int index)
+static void FBO_AttachTextureImage(image_t* img, int index)
 {
 	if (!glState.currentFBO)
 	{
@@ -312,7 +312,7 @@ static void FBO_SetupDrawBuffers()
 
 	FBO_t* currentFBO = glState.currentFBO;
 	int numBuffers = 0;
-	GLenum bufs[8];
+	GLenum bufs[8]{};
 
 	while (currentFBO->colorBuffers[numBuffers] != 0)
 	{
@@ -712,7 +712,7 @@ void FBO_Shutdown(void)
 R_FBOList_f
 ============
 */
-void R_FBOList_f(void)
+static void R_FBOList_f(void)
 {
 	int             i;
 	FBO_t* fbo;
@@ -732,12 +732,12 @@ void R_FBOList_f(void)
 
 void FBO_BlitFromTexture(struct image_s* src, vec4i_t inSrcBox, vec2_t inSrcTexScale, FBO_t* dst, vec4i_t inDstBox, struct shaderProgram_s* shaderProgram, vec4_t inColor, int blend)
 {
-	vec4i_t dstBox, srcBox;
-	vec2_t srcTexScale;
-	vec4_t color;
-	vec4_t quadVerts[4];
-	vec2_t texCoords[4];
-	vec2_t invTexRes;
+	vec4i_t dstBox{}, srcBox{};
+	vec2_t srcTexScale{};
+	vec4_t color{};
+	vec4_t quadVerts[4]{};
+	vec2_t texCoords[4]{};
+	vec2_t invTexRes{};
 	FBO_t* oldFbo = glState.currentFBO;
 	matrix_t projection;
 	int width, height;
@@ -856,7 +856,7 @@ void FBO_BlitFromTexture(struct image_s* src, vec4i_t inSrcBox, vec2_t inSrcTexS
 
 void FBO_Blit(FBO_t* src, vec4i_t inSrcBox, vec2_t srcTexScale, FBO_t* dst, vec4i_t dstBox, struct shaderProgram_s* shaderProgram, vec4_t color, int blend)
 {
-	vec4i_t srcBox;
+	vec4i_t srcBox{};
 
 	if (!src)
 	{
@@ -882,7 +882,7 @@ void FBO_Blit(FBO_t* src, vec4i_t inSrcBox, vec2_t srcTexScale, FBO_t* dst, vec4
 
 void FBO_FastBlit(FBO_t* src, vec4i_t srcBox, FBO_t* dst, vec4i_t dstBox, int buffers, int filter)
 {
-	vec4i_t srcBoxFinal, dstBoxFinal;
+	vec4i_t srcBoxFinal{}, dstBoxFinal{};
 	GLuint srcFb, dstFb;
 
 	// get to a neutral state first

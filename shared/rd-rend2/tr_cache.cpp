@@ -229,7 +229,7 @@ void CModelCacheManager::InsertModelHandle(const char* fileName, qhandle_t handl
 	char path[MAX_QPATH];
 	NormalizePath(path, fileName, sizeof(path));
 
-	Asset asset;
+	Asset asset{};
 	asset.handle = handle;
 	Q_strncpyz(asset.path, path, sizeof(asset.path));
 	assets.emplace_back(asset);

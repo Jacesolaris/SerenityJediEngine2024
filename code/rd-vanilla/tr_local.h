@@ -1260,7 +1260,7 @@ model_t* R_AllocModel(void);
 void    	R_Init();
 image_t* R_FindImageFile(const char* name, qboolean mipmap, qboolean allow_picmip, qboolean allow_tc, int gl_wrap_clamp_mode);
 
-image_t* R_CreateImage(const char* name, const byte* pic, int width, int height, GLenum format, qboolean mipmap, qboolean allow_picmip, qboolean allow_tc, int gl_wrap_clamp_mode);
+image_t* R_CreateImage(const char* name, const byte* pic, const int width, const int height, const GLenum format, const qboolean mipmap, const qboolean allow_picmip, const qboolean allow_tc, int gl_wrap_clamp_mode);
 
 qboolean	R_GetModeInfo(int* width, int* height, int mode);
 

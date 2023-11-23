@@ -67,9 +67,9 @@ void R_NoiseInit()
 
 float R_NoiseGet4f(const float x, const float y, const float z, const float t)
 {
-	float front[4];
-	float back[4];
-	float value[2];
+	float front[4]{};
+	float back[4]{};
+	float value[2]{};
 
 	const int ix = static_cast<int>(floor(x));
 	const float fx = x - ix;

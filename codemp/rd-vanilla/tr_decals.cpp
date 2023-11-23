@@ -69,7 +69,7 @@ void R_InitDecals() {
 	RE_ClearDecals();
 }
 
-void RE_FreeDecal(const int type, const int index) {
+static void RE_FreeDecal(const int type, const int index) {
 	if (!re_decalPolys[type][index].time)
 		return;
 

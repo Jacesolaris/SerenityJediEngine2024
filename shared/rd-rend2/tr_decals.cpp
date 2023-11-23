@@ -46,7 +46,7 @@ void R_InitDecals(void) {
 	RE_ClearDecals();
 }
 
-void RE_FreeDecal(const int type, const int index) {
+static void RE_FreeDecal(const int type, const int index) {
 	if (!re_decalPolys[type][index].time)
 		return;
 
@@ -185,7 +185,7 @@ void RE_AddDecalToScene(const qhandle_t decalShader, const vec3_t origin, const 
 	for (i = 0, mf = markFragments; i < numFragments; i++, mf++)
 	{
 		polyVert_t* v;
-		polyVert_t	verts[MAX_VERTS_ON_DECAL_POLY];
+		polyVert_t	verts[MAX_VERTS_ON_DECAL_POLY]{};
 		decalPoly_t* decal;
 
 		// we have an upper limit on the complexity of polygons

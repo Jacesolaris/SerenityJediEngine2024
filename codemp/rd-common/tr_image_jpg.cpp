@@ -57,7 +57,8 @@ static void R_JPGOutputMessage(const j_common_ptr cinfo)
 	Com_Printf("%s\n", buffer);
 }
 
-void LoadJPG(const char* filename, unsigned char** pic, int* width, int* height) {
+void LoadJPG(const char* filename, unsigned char** pic, int* width, int* height)
+{
 	/* This struct contains the JPEG decompression parameters and pointers to
 	* working space (which is allocated as needed by the JPEG library).
 	*/
@@ -325,8 +326,7 @@ Encodes JPEG from image in image_buffer and writes to buffer.
 Expects RGB input data
 =================
 */
-size_t RE_SaveJPGToBuffer(byte* buffer, size_t bufSize, int quality,
-	int image_width, int image_height, byte* image_buffer, int padding)
+size_t RE_SaveJPGToBuffer(byte* buffer, size_t bufSize, int quality, int image_width, int image_height, byte* image_buffer, int padding)
 {
 	jpeg_compress_struct cinfo{};
 	jpeg_error_mgr jerr;

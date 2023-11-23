@@ -1291,7 +1291,7 @@ Ghoul2 Insert End
 */
 //====================================================================
 
-float R_NoiseGet4f(float x, float y, float z, float t);
+float R_NoiseGet4f(const float x, const float y, const float z, const float t);
 void R_NoiseInit();
 
 void R_RenderView(const viewParms_t* parms);

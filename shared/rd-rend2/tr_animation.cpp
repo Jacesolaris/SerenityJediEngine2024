@@ -136,7 +136,7 @@ R_MDRComputeFogNum
 =================
 */
 
-static int R_MDRComputeFogNum(mdrHeader_t* header, trRefEntity_t* ent) 
+static int R_MDRComputeFogNum(mdrHeader_t* header, trRefEntity_t* ent)
 {
 	int				i, j = 0;
 	float			frameRadius;

@@ -30,7 +30,7 @@ int g_G2AllocServer = 0;
 static bool g_G2AllocTrackInit = false; //want to keep this thing contained
 static CGhoul2Info_v* g_G2AllocTrack[MAX_TRACKED_ALLOC];
 
-void G2_DEBUG_InitPtrTracker(void)
+static void G2_DEBUG_InitPtrTracker(void)
 {
 	memset(g_G2AllocTrack, 0, sizeof(g_G2AllocTrack));
 	g_G2AllocTrackInit = true;
@@ -67,7 +67,7 @@ void G2_DEBUG_ReportLeaks(void)
 	}
 }
 
-void G2_DEBUG_ShovePtrInTracker(CGhoul2Info_v* g2)
+static void G2_DEBUG_ShovePtrInTracker(CGhoul2Info_v* g2)
 {
 	int i = 0;
 
@@ -103,7 +103,7 @@ void G2_DEBUG_ShovePtrInTracker(CGhoul2Info_v* g2)
 	}
 }
 
-void G2_DEBUG_RemovePtrFromTracker(CGhoul2Info_v* g2)
+static void G2_DEBUG_RemovePtrFromTracker(CGhoul2Info_v* g2)
 {
 	int i = 0;
 
@@ -670,7 +670,7 @@ void SaveGhoul2InfoArray()
 	}
 }
 
-void Ghoul2InfoArray_Free(void)
+static void Ghoul2InfoArray_Free(void)
 {
 	if (singleton) {
 		delete singleton;

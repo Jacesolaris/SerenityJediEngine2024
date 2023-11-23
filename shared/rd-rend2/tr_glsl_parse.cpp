@@ -56,7 +56,7 @@ namespace
 GPUProgramDesc ParseProgramSource(Allocator& allocator, const char* text)
 {
 	int numBlocks = 0;
-	Block blocks[MAX_BLOCKS];
+	Block blocks[MAX_BLOCKS]{};
 	Block* prevBlock = nullptr;
 
 	int i = 0;

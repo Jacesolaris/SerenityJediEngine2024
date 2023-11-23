@@ -3621,13 +3621,11 @@ qboolean client_userinfo_changed(const int client_num)
 			|| Class_Model(model, "yun_mp")
 			|| Class_Model(model, "md_agen")
 			|| Class_Model(model, "md_agen_robed")
-			|| Class_Model(model, "jedi_hm")
 			|| Class_Model(model, "md_foul_moudama")
 			|| Class_Model(model, "md_micah_robed")
 			|| Class_Model(model, "md_tsuichoi")
 			|| Class_Model(model, "md_redath_robed")
 			|| Class_Model(model, "md_zett_jukassa")
-			|| Class_Model(model, "jedi_hm_mp")
 			|| Class_Model(model, "md_jed_nikto")
 			|| Class_Model(model, "md_jed_nikto_robed")
 			|| Class_Model(model, "md_joopi_robed")
@@ -3716,7 +3714,6 @@ qboolean client_userinfo_changed(const int client_num)
 			|| Class_Model(model, "caleb_dume_mp/robed")
 			|| Class_Model(model, "caleb_dume_mp/hooded")
 			|| Class_Model(model, "caleb_dume_mp")
-			|| Class_Model(model, "jedi_hf")
 			|| Class_Model(model, "jedi_zf")
 			|| Class_Model(model, "jedi_tf")
 			|| Class_Model(model, "yun_mp")
@@ -3736,6 +3733,53 @@ qboolean client_userinfo_changed(const int client_num)
 		{
 			client->pers.botmodelscale = BOTZIZE_SMALL;
 			client->pers.nextbotclass = BCLASS_JEDI;
+			if (!(ent->r.svFlags & SVF_BOT))
+			{
+				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
+					GT_SIEGE)
+				{
+					client->ps.stats[STAT_HEALTH] = ent->health = 0;
+					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
+					trap->UnlinkEntity((sharedEntity_t*)ent);
+				}
+				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
+			}
+		}
+		else if (Class_Model(model, "jedi_hm")
+			|| Class_Model(model, "jedi_hm_mp"))
+		{
+			if (ent->r.svFlags & SVF_ADMIN)
+			{
+				client->pers.nextbotclass = BCLASS_SERENITY;
+			}
+			else
+			{
+				client->pers.nextbotclass = BCLASS_JEDI;
+			}
+			client->pers.botmodelscale = BOTZIZE_NORMAL;
+			if (!(ent->r.svFlags & SVF_BOT))
+			{
+				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
+					GT_SIEGE)
+				{
+					client->ps.stats[STAT_HEALTH] = ent->health = 0;
+					player_die(ent, ent, ent, 100000, MOD_TEAM_CHANGE);
+					trap->UnlinkEntity((sharedEntity_t*)ent);
+				}
+				Com_Printf("Changes to your Class settings will take effect the next time you respawn.\n");
+			}
+		}
+		else if (Class_Model(model, "jedi_hf"))
+		{
+			if (ent->r.svFlags & SVF_ADMIN)
+			{
+				client->pers.nextbotclass = BCLASS_CADENCE;
+			}
+			else
+			{
+				client->pers.nextbotclass = BCLASS_JEDI;
+			}
+			client->pers.botmodelscale = BOTZIZE_SMALL;
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
 				if (g_gametype.integer != GT_DUEL && g_gametype.integer != GT_POWERDUEL && g_gametype.integer !=
@@ -5662,7 +5706,7 @@ char* ClientConnect(int client_num, const qboolean firstTime, const qboolean isB
 						//	client->pers.connected = CON_DISCONNECTED;
 							return "Please wait, another connection from this IP is still pending...";
 						}
-					}
+}
 				}
 #else
 				if (CompareIPs(tmpIP, level.clients[i].sess.IP))
@@ -6350,8 +6394,8 @@ tryTorso:
 			//Now remove it
 			trap->G2API_RemoveBone(self->ghoul2, brokenBone, 0);
 			self->client->brokenLimbs &= ~broken;
-		}
-	}
+}
+}
 #endif
 }
 

@@ -312,8 +312,6 @@ void CL_InitUI()
 	uii.Milliseconds = Sys_Milliseconds2;
 
 	UI_Init(UI_API_VERSION, &uii, static_cast<qboolean>(cls.state > CA_DISCONNECTED && cls.state <= CA_ACTIVE));
-
-	//	uie->UI_Init( UI_API_VERSION, &uii );
 }
 
 qboolean UI_GameCommand()

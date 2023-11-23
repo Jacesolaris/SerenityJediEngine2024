@@ -326,12 +326,12 @@ If a larger shrinking is needed, use the mipmap function
 before or after.
 ================
 */
-static void ResampleTexture(byte* in, int inwidth, int inheight, byte* out,
-	int outwidth, int outheight) {
+static void ResampleTexture(byte* in, int inwidth, int inheight, byte* out, int outwidth, int outheight)
+{
 	int		i, j;
 	byte* inrow, * inrow2;
 	int		frac, fracstep;
-	int		p1[2048], p2[2048];
+	int		p1[2048]{}, p2[2048]{};
 	byte* pix1, * pix2, * pix3, * pix4;
 
 	if (outwidth > 2048)
@@ -470,9 +470,9 @@ static void RGBAtoNormal(const byte* in, byte* out, int width, int height, qbool
 			// 3 4 5
 			// 6 7 8
 
-			byte s[9];
+			byte s[9]{};
 			int x2, y2, i;
-			vec3_t normal;
+			vec3_t normal{};
 
 			i = 0;
 			for (y2 = -1; y2 <= 1; y2++)
@@ -1030,7 +1030,7 @@ static void DoLinear(byte* in, byte* out, int width, int height)
 
 	for (y = 1; y < height - 1; y++)
 	{
-		byte sd[4], sf[4], sg[4], si[4];
+		byte sd[4]{}, sf[4]{}, sg[4]{}, si[4]{};
 		byte* line2, * line3, * line4;
 
 		x = y % 2 + 1;
@@ -1125,7 +1125,7 @@ static void FillInNormalizedZ(const byte* in, byte* out, int width, int height)
 // assumes that data has already been expanded into a 2x2 grid
 static void FCBIByBlock(byte* data, int width, int height, qboolean clampToEdge, qboolean normalized)
 {
-	byte workdata[WORKBLOCK_REALSIZE * WORKBLOCK_REALSIZE * 4];
+	byte workdata[WORKBLOCK_REALSIZE * WORKBLOCK_REALSIZE * 4]{};
 	byte outdata[WORKBLOCK_REALSIZE * WORKBLOCK_REALSIZE * 4];
 	byte* inbyte, * outbyte;
 	int x, y;
@@ -1463,7 +1463,7 @@ static void R_MipMapNormalHeight(const byte* in, byte* out, int width, int heigh
 
 	for (i = 0; i < height; i++, in += row) {
 		for (j = 0; j < width; j++, out += 4, in += 8) {
-			vec3_t v;
+			vec3_t v{};
 
 			v[0] = OffsetByteToFloat(in[sx]);
 			v[1] = OffsetByteToFloat(in[1]);
@@ -1507,7 +1507,7 @@ static void R_BlendOverTexture(byte* data, const int pixelCount, byte blend[4])
 {
 	int		i;
 	int		inverseAlpha;
-	int		premult[3];
+	int		premult[3]{};
 
 	inverseAlpha = 255 - blend[3];
 	premult[0] = blend[0] * blend[3];
@@ -2323,7 +2323,8 @@ R_CreateImage
 This is the only way any 2d image_t are created
 ================
 */
-image_t* R_CreateImage(const char* name, byte* pic, int width, int height, imgType_t type, int flags, int internalFormat) {
+image_t* R_CreateImage(const char* name, byte* pic, int width, int height, imgType_t type, int flags, int internalFormat)
+{
 	image_t* image;
 	qboolean	isLightmap = qfalse;
 	long		hash;
@@ -2471,7 +2472,7 @@ R_Create2DImageArray
 This is the only way any 2d array sampler image_t are created
 ================
 */
-image_t* R_Create2DImageArray(const char* name, byte* pic, int width, int height, int layers, imgType_t type, int flags, int internalFormat)
+static image_t* R_Create2DImageArray(const char* name, byte* pic, int width, int height, int layers, imgType_t type, int flags, int internalFormat)
 {
 	image_t* image;
 	long		hash;
@@ -2658,7 +2659,8 @@ done:
 		ri->Hunk_FreeTempMemory(resampledBuffer);
 }
 
-image_t* R_GetLoadedImage(const char* name, int flags) {
+static image_t* R_GetLoadedImage(const char* name, int flags)
+{
 	long	hash;
 	image_t* image;
 
@@ -2796,7 +2798,7 @@ image_t* R_BuildSDRSpecGlossImage(shaderStage_t* stage, const char* specImageNam
 		return NULL;
 
 	byte* sdrSpecPic = (byte*)ri->Hunk_AllocateTempMemory(sizeof(unsigned) * specWidth * specHeight);
-	vec3_t currentColor;
+	vec3_t currentColor{};
 	for (int i = 0; i < specWidth * specHeight * 4; i += 4)
 	{
 		currentColor[0] = ByteToFloat(specPic[i + 0]);
@@ -2936,11 +2938,12 @@ image_t* R_FindImageFile(const char* name, imgType_t type, int flags)
 	int internalFormat = 0;
 	int loadFlags = flags;
 
-	if (!name) {
-		return NULL;
+	if (!name)
+	{
+		return nullptr;
 	}
 
-	if ((image = R_GetLoadedImage(name, flags)) != NULL)
+	if ((image = R_GetLoadedImage(name, flags)) != nullptr)
 		return image;
 
 	//
@@ -2952,7 +2955,7 @@ image_t* R_FindImageFile(const char* name, imgType_t type, int flags)
 		Com_sprintf(filename, sizeof(filename), "%s.hdr", name);
 		float* floatBuffer;
 		R_LoadHDRImage(filename, &pic, &width, &height);
-		if (pic == NULL)
+		if (pic == nullptr)
 		{
 			R_LoadImage(name, &pic, &width, &height);
 		}
@@ -2986,8 +2989,9 @@ image_t* R_FindImageFile(const char* name, imgType_t type, int flags)
 		R_LoadImage(name, &pic, &width, &height);
 	}
 
-	if (pic == NULL) {
-		return NULL;
+	if (pic == nullptr)
+	{
+		return nullptr;
 	}
 
 	if (r_normalMapping->integer && !(type == IMGTYPE_NORMAL) &&
@@ -3017,7 +3021,9 @@ R_CreateDlightImage
 ================
 */
 #define	DLIGHT_SIZE	16
-static void R_CreateDlightImage(void) {
+
+static void R_CreateDlightImage(void)
+{
 	int		width, height;
 	byte* pic;
 
@@ -3030,7 +3036,7 @@ static void R_CreateDlightImage(void) {
 	else
 	{	// if we dont get a successful load
 		int		x, y;
-		byte	data[DLIGHT_SIZE][DLIGHT_SIZE][4];
+		byte	data[DLIGHT_SIZE][DLIGHT_SIZE][4]{};
 		int		b;
 
 		// make a centered inverse-square falloff blob for dynamic lighting
@@ -3062,7 +3068,8 @@ static void R_CreateDlightImage(void) {
 R_InitFogTable
 =================
 */
-void R_InitFogTable(void) {
+void R_InitFogTable(void)
+{
 	int		i;
 	float	d;
 	float	exp;
@@ -3118,11 +3125,12 @@ R_CreateFogImage
 */
 #define	FOG_S	256
 #define	FOG_T	32
-static void R_CreateFogImage(void) {
+static void R_CreateFogImage(void)
+{
 	int		x, y;
 	byte* data;
 	float	d;
-	float	borderColor[4];
+	float	borderColor[4]{};
 
 	data = (byte*)ri->Hunk_AllocateTempMemory(FOG_S * FOG_T * 4);
 
@@ -3157,14 +3165,15 @@ R_CreateEnvBrdfLUT
 based on https://github.com/knarkowicz/IntegrateDFG
 ================
 */
-static void R_CreateEnvBrdfLUT(void) {
+static void R_CreateEnvBrdfLUT(void)
+{
 	static const int LUT_WIDTH = 128;
 	static const int LUT_HEIGHT = 128;
 
 	if (!r_cubeMapping->integer)
 		return;
 
-	uint16_t data[LUT_WIDTH][LUT_HEIGHT][3];
+	uint16_t data[LUT_WIDTH][LUT_HEIGHT][3]{};
 
 	unsigned const numSamples = 1024;
 
@@ -3269,7 +3278,8 @@ R_CreateDefaultImage
 ==================
 */
 #define	DEFAULT_SIZE	16
-static void R_CreateDefaultImage(void) {
+static void R_CreateDefaultImage(void)
+{
 	int		x;
 	byte	data[DEFAULT_SIZE][DEFAULT_SIZE][4];
 
@@ -3306,7 +3316,7 @@ static void R_CreateDefaultImage(void) {
 R_CreateBuiltinImages
 ==================
 */
-void R_CreateBuiltinImages(void) {
+static void R_CreateBuiltinImages(void) {
 	int		x, y;
 	byte	data[DEFAULT_SIZE][DEFAULT_SIZE][4];
 
@@ -3402,7 +3412,7 @@ void R_CreateBuiltinImages(void) {
 		GL_DEPTH_COMPONENT24);
 
 	{
-		unsigned short sdata[4];
+		unsigned short sdata[4]{};
 		void* p;
 
 		if (hdrFormat == GL_RGBA16F)

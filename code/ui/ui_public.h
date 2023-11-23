@@ -26,7 +26,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 #include "../client/keycodes.h"
 
-constexpr auto UI_API_VERSION = 3;
+#define UI_API_VERSION 4
 
 using uiimport_t = struct
 {

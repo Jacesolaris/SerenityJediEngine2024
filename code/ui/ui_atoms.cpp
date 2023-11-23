@@ -47,7 +47,7 @@ static void UI_SaveMenu_f();
 UI_ForceMenuOff
 =================
 */
-void UI_ForceMenuOff()
+static void UI_ForceMenuOff()
 {
 	ui.Key_SetCatcher(ui.Key_GetCatcher() & ~KEYCATCH_UI);
 	ui.Key_ClearStates();
@@ -396,7 +396,7 @@ void UI_Init(const int apiVersion, const uiimport_t* uiimport, const qboolean in
 UI_DrawNamedPic
 =================
 */
-void UI_DrawNamedPic(const float x, const float y, const float width, const float height, const char* picname)
+static void UI_DrawNamedPic(const float x, const float y, const float width, const float height, const char* picname)
 {
 	const qhandle_t hShader = ui.R_RegisterShaderNoMip(picname);
 	ui.R_DrawStretchPic(x, y, width, height, 0, 0, 1, 1, hShader);

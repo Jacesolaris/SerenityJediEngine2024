@@ -251,8 +251,9 @@ FLARE BACK END
 RB_TestFlare
 ==================
 */
-static void RB_TestFlare(flare_t* f) {
-	float			depth;
+static void RB_TestFlare(flare_t* f)
+{
+	float			depth = 0.0;
 	qboolean		visible;
 	float			fade;
 	float			screenZ;
@@ -315,8 +316,9 @@ static void RB_TestFlare(flare_t* f) {
 RB_RenderFlare
 ==================
 */
-static void RB_RenderFlare(flare_t* f) {
-	vec4_t			color;
+static void RB_RenderFlare(flare_t* f) 
+{
+	vec4_t			color{};
 
 	backEnd.pc.c_flareRenders++;
 
