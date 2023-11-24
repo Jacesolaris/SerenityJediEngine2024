@@ -42,7 +42,7 @@ static std::map<std::pair<int, int>, int> GoreTagsTemp; // this is a surface ind
 // temporarily during the generation phase so we reuse gore tags per LOD
 int goreModelIndex;
 
-static cvar_t* cg_g2MarksAllModels = NULL;
+static cvar_t* cg_g2MarksAllModels = nullptr;
 
 static inline void DestroyGoreTexCoordinates(int tag)
 {
@@ -1623,12 +1623,12 @@ void G2_TraceModels(CGhoul2Info_v& ghoul2, vec3_t rayStart, vec3_t rayEnd, CColl
 
 		cust_shader = (g.mCustomShader)
 			? (shader_t*)R_GetShaderByHandle(g.mCustomShader)
-			: NULL;
+			: nullptr;
 
 		// figure out the custom skin thing
 		skin = (g.mSkin > 0 && g.mSkin < tr.numSkins)
 			? R_GetSkinByHandle(g.mSkin)
-			: NULL;
+			: nullptr;
 
 		lod = G2_DecideTraceLod(ghoul2[i], useLod);
 

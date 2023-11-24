@@ -398,7 +398,7 @@ void R_VBOList_f(void)
 	ri.Printf(PRINT_ALL, " %.2f MB in total\n\n", indexesSize / (1024.0f * 1024.0f));
 }
 
-void AddVertexArray(
+static void AddVertexArray(
 	VertexArraysProperties* properties,
 	int attributeIndex,
 	size_t size,
@@ -597,9 +597,11 @@ void RB_UpdateVBOs(unsigned int attribBits)
 
 		if ((currentFrame->dynamicVboWriteOffset + totalVertexDataSize) > frameVbo->vertexesSize)
 		{
+#ifdef _DEBUG
 			// TODO: Eh...resize?
 			assert(!"This shouldn't happen");
 			return;
+#endif
 		}
 
 		R_BindVBO(frameVbo);
@@ -650,9 +652,11 @@ void RB_UpdateVBOs(unsigned int attribBits)
 
 		if ((currentFrame->dynamicIboWriteOffset + totalIndexDataSize) > frameIbo->indexesSize)
 		{
+#ifdef _DEBUG
 			// TODO: Resize the buffer?
 			assert(!"This shouldn't happen");
 			return;
+#endif
 		}
 
 		void* dst;
