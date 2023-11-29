@@ -967,7 +967,7 @@ static int G2_ComputeLOD(trRefEntity_t* ent, const model_t* currentModel, int lo
 //
 // Bone Manipulation code
 
-void G2_CreateQuaterion(const mdxaBone_t* mat, vec4_t quat)
+static void G2_CreateQuaterion(const mdxaBone_t* mat, vec4_t quat)
 {
 	// this is revised for the 3x4 matrix we use in G2.
 	const float t = 1 + mat->matrix[0][0] + mat->matrix[1][1] + mat->matrix[2][2];
@@ -1022,7 +1022,7 @@ void G2_CreateQuaterion(const mdxaBone_t* mat, vec4_t quat)
 	}
 }
 
-void G2_CreateMatrixFromQuaterion(mdxaBone_t* mat, vec4_t quat)
+static void G2_CreateMatrixFromQuaterion(mdxaBone_t* mat, vec4_t quat)
 {
 	const float xx = quat[0] * quat[0];
 	const float xy = quat[0] * quat[1];
@@ -1094,7 +1094,6 @@ static int G2_GetBonePoolIndex(const mdxaHeader_t* pMDXAHeader, const int iFrame
 	return (pIndex->iIndex[2] << 16) + (pIndex->iIndex[1] << 8) + pIndex->iIndex[0];
 }
 
-/*static inline*/
 static void UnCompressBone(float mat[3][4], const int iBoneIndex, const mdxaHeader_t* pMDXAHeader, const int iFrame)
 {
 	const mdxaCompQuatBone_t* pCompBonePool = (mdxaCompQuatBone_t*)((byte*)pMDXAHeader + pMDXAHeader->ofsCompBonePool);
@@ -1979,27 +1978,9 @@ void G2_TransformBone(const int index, CBoneCache& cb)
 			Multiply_3x4Matrix(&cb.mFinalBones[index].boneMatrix, &tempMatrix, &boneList[boneListIndex].matrix);
 		}
 	}
-	/*
-	if (r_Ghoul2UnSqash->integer)
-	{
-		mdxaBone_t tempMatrix;
-		Multiply_3x4Matrix(&tempMatrix,&BC.mFinalBones[child].boneMatrix, &skel->BasePoseMat);
-		float maxl;
-		maxl=VectorLength(&skel->BasePoseMat.matrix[0][0]);
-		VectorNormalize(&tempMatrix.matrix[0][0]);
-		VectorNormalize(&tempMatrix.matrix[1][0]);
-		VectorNormalize(&tempMatrix.matrix[2][0]);
-
-		VectorScale(&tempMatrix.matrix[0][0],maxl,&tempMatrix.matrix[0][0]);
-		VectorScale(&tempMatrix.matrix[1][0],maxl,&tempMatrix.matrix[1][0]);
-		VectorScale(&tempMatrix.matrix[2][0],maxl,&tempMatrix.matrix[2][0]);
-		Multiply_3x4Matrix(&BC.mFinalBones[child].boneMatrix,&tempMatrix,&skel->BasePoseMatInv);
-	}
-	*/
-	//rwwFIXMEFIXME: Care?
 }
 
-void G2_SetUpBolts(mdxaHeader_t* header, CGhoul2Info& ghoul2, const mdxaBone_v& bonePtr, boltInfo_v& boltList)
+static void G2_SetUpBolts(mdxaHeader_t* header, CGhoul2Info& ghoul2, const mdxaBone_v& bonePtr, boltInfo_v& boltList)
 {
 	const auto offsets = (mdxaSkelOffsets_t*)((byte*)header + sizeof(mdxaHeader_t));
 
@@ -2171,7 +2152,7 @@ static void G2_TransformGhoulBones(boneInfo_v& rootBoneList, const mdxaBone_t& r
 // Surface Manipulation code
 
 // We've come across a surface that's designated as a bolt surface, process it and put it in the appropriate bolt place
-void G2_ProcessSurfaceBolt(const mdxaBone_v& bonePtr, mdxmSurface_t* surface, const int boltNum, boltInfo_v& boltList,
+static void G2_ProcessSurfaceBolt(const mdxaBone_v& bonePtr, mdxmSurface_t* surface, const int boltNum, boltInfo_v& boltList,
 	const surfaceInfo_t* surfInfo, model_t* mod)
 {
 	float pTri[3][3]{};
@@ -2390,7 +2371,7 @@ void G2_ProcessSurfaceBolt(const mdxaBone_v& bonePtr, mdxmSurface_t* surface, co
 }
 
 // now go through all the generated surfaces that aren't included in the model surface hierarchy and create the correct bolt info for them
-void G2_ProcessGeneratedSurfaceBolts(CGhoul2Info& ghoul2, const mdxaBone_v& bonePtr, model_t* mod_t)
+static void G2_ProcessGeneratedSurfaceBolts(CGhoul2Info& ghoul2, const mdxaBone_v& bonePtr, model_t* mod_t)
 {
 #ifdef G2_PERFORMANCE_ANALYSIS
 	G2PerformanceTimer_G2_ProcessGeneratedSurfaceBolts.Start();
@@ -2840,7 +2821,7 @@ static void G2_Sort_Models(CGhoul2Info_v& ghoul2, int* const modelList, int* con
 	}
 }
 
-void* G2_FindSurface_BC(const model_s* mod, const int index, const int lod)
+static void* G2_FindSurface_BC(const model_s* mod, const int index, const int lod)
 {
 	assert(mod);
 	assert(mod->mdxm);
@@ -4454,7 +4435,7 @@ static const char* bottomBones[NUM_BOTTOMBONES] =
 	"lhand"
 };
 
-qboolean BoneIsRootParent(char* name)
+static qboolean BoneIsRootParent(char* name)
 {
 	int i = 0;
 
@@ -4471,7 +4452,7 @@ qboolean BoneIsRootParent(char* name)
 	return qfalse;
 }
 
-qboolean BoneIsOtherParent(char* name)
+static qboolean BoneIsOtherParent(char* name)
 {
 	int i = 0;
 
@@ -4488,7 +4469,7 @@ qboolean BoneIsOtherParent(char* name)
 	return qfalse;
 }
 
-qboolean BoneIsBottom(char* name)
+static qboolean BoneIsBottom(char* name)
 {
 	int i = 0;
 
@@ -4505,7 +4486,7 @@ qboolean BoneIsBottom(char* name)
 	return qfalse;
 }
 
-void ShiftMemoryDown(mdxaSkelOffsets_t* offsets, mdxaHeader_t* mdxa, int boneIndex, byte** endMarker)
+static void ShiftMemoryDown(mdxaSkelOffsets_t* offsets, mdxaHeader_t* mdxa, int boneIndex, byte** endMarker)
 {
 	int i = 0;
 
@@ -4564,7 +4545,7 @@ static const char* BoneHierarchyList[] =
 };
 
 //Gets the index of a child or parent. If child is passed as qfalse then parent is assumed.
-int BoneParentChildIndex(mdxaHeader_t* mdxa, mdxaSkelOffsets_t* offsets, mdxaSkel_t* boneInfo, qboolean child)
+static int BoneParentChildIndex(mdxaHeader_t* mdxa, mdxaSkelOffsets_t* offsets, mdxaSkel_t* boneInfo, qboolean child)
 {
 	int i = 0;
 	int matchindex = -1;

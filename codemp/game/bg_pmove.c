@@ -450,7 +450,7 @@ bgEntity_t* PM_BGEntForNum(const int num)
 qboolean PM_WalkingAnim(int anim);
 qboolean PM_RunningAnim(int anim);
 
-qboolean PM_CanSetWeaponReadyAnim(void)
+static qboolean PM_CanSetWeaponReadyAnim(void)
 {
 	if (pm->ps->pm_type != PM_JETPACK
 		&& pm->ps->weaponstate != WEAPON_FIRING
@@ -513,8 +513,7 @@ static QINLINE qboolean PM_IsRocketTrooper(void)
 	return qfalse;
 }
 
-animNumber_t
-QINLINE PM_GetWeaponReadyAnim(void)
+static animNumber_t QINLINE PM_GetWeaponReadyAnim(void)
 {
 	if (pm->cmd.buttons & BUTTON_WALKING && pm->cmd.buttons & BUTTON_BLOCK)
 	{
@@ -2003,10 +2002,9 @@ int PM_BlockingPoseForsaber_anim_levelStaff(void)
 	return anim;
 }
 
-qboolean PM_DoSlowFall(void)
+static qboolean PM_DoSlowFall(void)
 {
-	if ((pm->ps->legsAnim == BOTH_WALL_RUN_RIGHT || pm->ps->legsAnim == BOTH_WALL_RUN_LEFT) && pm->ps->legsTimer >
-		500)
+	if ((pm->ps->legsAnim == BOTH_WALL_RUN_RIGHT || pm->ps->legsAnim == BOTH_WALL_RUN_LEFT) && pm->ps->legsTimer > 500)
 	{
 		return qtrue;
 	}
@@ -2029,7 +2027,7 @@ and returns.
 ====================================================================
 */
 
-void PM_pitch_roll_for_slope(const bgEntity_t* forwhom, vec3_t pass_slope, vec3_t storeAngles)
+static void PM_pitch_roll_for_slope(const bgEntity_t* forwhom, vec3_t pass_slope, vec3_t storeAngles)
 {
 	vec3_t slope;
 	vec3_t nvf, ovf, ovr, new_angles = { 0, 0, 0 };
@@ -2117,7 +2115,7 @@ void PM_pitch_roll_for_slope(const bgEntity_t* forwhom, vec3_t pass_slope, vec3_
 #define		FLY_HOVER	3
 static int pm_flying = FLY_NONE;
 
-void PM_SetSpecialMoveValues(void)
+static void PM_SetSpecialMoveValues(void)
 {
 	if (pm->ps->client_num < MAX_CLIENTS)
 	{
@@ -2405,7 +2403,7 @@ gentity_t* G_PlayEffectID(int fxID, vec3_t org, vec3_t ang);
 
 static void PM_GroundTraceMissed(void);
 
-void PM_HoverTrace(void)
+static void PM_HoverTrace(void)
 {
 	vec3_t vAng;
 	vec3_t fxAxis[3];
@@ -3105,7 +3103,7 @@ qboolean PM_InBackFlip(const int anim)
 	return qfalse;
 }
 
-qboolean PM_ForceJumpingUp(void)
+static qboolean PM_ForceJumpingUp(void)
 {
 	if (!(pm->ps->fd.forcePowersActive & 1 << FP_LEVITATION) && pm->ps->fd.forceJumpCharge)
 	{
@@ -3198,7 +3196,7 @@ static void PM_JumpForDir(void)
 	}
 }
 
-void PM_SetPMViewAngle(playerState_t* ps, vec3_t angle, const usercmd_t* ucmd)
+static void PM_SetPMViewAngle(playerState_t* ps, vec3_t angle, const usercmd_t* ucmd)
 {
 	for (int i = 0; i < 3; i++)
 	{
@@ -3208,7 +3206,7 @@ void PM_SetPMViewAngle(playerState_t* ps, vec3_t angle, const usercmd_t* ucmd)
 	VectorCopy(angle, ps->viewangles);
 }
 
-qboolean PM_AdjustAngleForWallRun(playerState_t* ps, usercmd_t* ucmd, const qboolean doMove)
+static qboolean PM_AdjustAngleForWallRun(playerState_t* ps, usercmd_t* ucmd, const qboolean doMove)
 {
 	if ((ps->legsAnim == BOTH_WALL_RUN_RIGHT || ps->legsAnim == BOTH_WALL_RUN_LEFT) && ps->legsTimer > 500)
 	{
@@ -3323,13 +3321,13 @@ qboolean PM_AdjustAngleForWallRun(playerState_t* ps, usercmd_t* ucmd, const qboo
 	return qfalse;
 }
 
-qboolean PM_AdjustAnglesForWallRunUpFlipAlt(const usercmd_t* ucmd)
+static qboolean PM_AdjustAnglesForWallRunUpFlipAlt(const usercmd_t* ucmd)
 {
 	PM_SetPMViewAngle(pm->ps, pm->ps->viewangles, ucmd);
 	return qtrue;
 }
 
-qboolean PM_AdjustAngleForWallRunUp(playerState_t* ps, usercmd_t* ucmd, const qboolean doMove)
+static qboolean PM_AdjustAngleForWallRunUp(playerState_t* ps, usercmd_t* ucmd, const qboolean doMove)
 {
 	if (ps->legsAnim == BOTH_FORCEWALLRUNFLIP_START)
 	{
@@ -3447,7 +3445,7 @@ static float BG_ForceWallJumpStrength(void)
 	return forceJumpStrength[FORCE_LEVEL_3] / 2.5f;
 }
 
-qboolean PM_AdjustAngleForWallJump(playerState_t* ps, usercmd_t* ucmd, const qboolean doMove)
+static qboolean PM_AdjustAngleForWallJump(playerState_t* ps, usercmd_t* ucmd, const qboolean doMove)
 {
 	if (PM_InLedgeMove(ps->legsAnim))
 	{
@@ -3619,14 +3617,14 @@ qboolean PM_AdjustAngleForWallJump(playerState_t* ps, usercmd_t* ucmd, const qbo
 #define LEDGEHOROFFSET			22.3
 
 //lets go of a ledge
-void BG_LetGoofLedge(playerState_t* ps)
+static void BG_LetGoofLedge(playerState_t* ps)
 {
 	ps->pm_flags &= ~PMF_STUCK_TO_WALL;
 	ps->torsoTimer = 0;
 	ps->legsTimer = 0;
 }
 
-void PM_SetVelocityforLedgeMove(playerState_t* ps, const int anim)
+static void PM_SetVelocityforLedgeMove(playerState_t* ps, const int anim)
 {
 	vec3_t fwdAngles, moveDir;
 	const float animationpoint = BG_GetLegsAnimPoint(ps, pm_entSelf->localAnimIndex);
@@ -3699,7 +3697,7 @@ void PM_SetVelocityforLedgeMove(playerState_t* ps, const int anim)
 	}
 }
 
-qboolean LedgeGrabableEntity(const int entityNum)
+static qboolean LedgeGrabableEntity(const int entityNum)
 {
 	//indicates if the given entity is an entity that can be ledgegrabbed.
 	const bgEntity_t* ent = PM_BGEntForNum(entityNum);
@@ -3846,7 +3844,7 @@ void PM_AdjustAngleForWallGrab(playerState_t* ps, usercmd_t* ucmd)
 extern qboolean PM_InForceGetUp(const playerState_t* ps);
 int pm_min_get_up_time(const playerState_t* ps);
 
-qboolean PM_AdjustAnglesForKnockdown(playerState_t* ps, usercmd_t* ucmd)
+static qboolean PM_AdjustAnglesForKnockdown(playerState_t* ps, usercmd_t* ucmd)
 {
 	if (PM_InKnockDown(ps))
 	{
@@ -3892,7 +3890,7 @@ qboolean PM_AdjustAnglesForKnockdown(playerState_t* ps, usercmd_t* ucmd)
 	return qfalse;
 }
 
-qboolean PM_AdjustAnglesForLongJump(playerState_t* ps, usercmd_t* ucmd)
+static qboolean PM_AdjustAnglesForLongJump(playerState_t* ps, usercmd_t* ucmd)
 {
 	if (ps->legsAnim == BOTH_FORCELONGLEAP_START
 		|| ps->legsAnim == BOTH_FORCELONGLEAP_ATTACK
@@ -3935,12 +3933,12 @@ float forceJumpHeightMax[NUM_FORCE_POWER_LEVELS] =
 	418 //(384+stepheight(18)+crouchdiff(24) = 426)
 };
 
-qboolean PM_PredictJumpSafe()
+static qboolean PM_PredictJumpSafe()
 {
 	return qtrue;
 }
 
-void PM_GrabWallForJump(const int anim)
+static void PM_GrabWallForJump(const int anim)
 {
 	//NOTE!!! assumes an appropriate anim is being passed in!!!
 	PM_SetAnim(SETANIM_BOTH, anim, SETANIM_FLAG_RESTART | SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
@@ -4113,7 +4111,7 @@ int ForceFallBrakeRate[NUM_FORCE_POWER_LEVELS] =
 //time between Force Fall braking actions.
 #define FORCEFALLDEBOUNCE		100
 
-qboolean PM_CanForceFall()
+static qboolean PM_CanForceFall()
 {
 	return !BG_InRoll(pm->ps, pm->ps->legsAnim) // not rolling
 		&& !PM_InKnockDown(pm->ps) // not knocked down
@@ -4131,7 +4129,7 @@ qboolean PM_CanForceFall()
 		&& pm->ps->gravity > 0; // not in zero-g
 }
 
-qboolean PM_InForceFall()
+static qboolean PM_InForceFall()
 {
 	const int FFDebounce = pm->ps->fd.forcePowerDebounce[FP_LEVITATION] - pm->ps->fd.forcePowerLevel[FP_LEVITATION] *
 		100;
@@ -4185,7 +4183,7 @@ qboolean PM_InForceFall()
 	return qfalse;
 }
 
-qboolean PM_Is_A_Dash_Anim(const int anim)
+static qboolean PM_Is_A_Dash_Anim(const int anim)
 {
 	switch (anim)
 	{
@@ -5470,7 +5468,7 @@ static qboolean pm_check_jump(void)
 	return qtrue;
 }
 
-qboolean LedgeTrace(trace_t* trace, vec3_t dir, float* lerpup, float* lerpfwd, float* lerpyaw)
+static qboolean LedgeTrace(trace_t* trace, vec3_t dir, float* lerpup, float* lerpfwd, float* lerpyaw)
 {
 	//scan for for a ledge in the given direction
 	vec3_t traceTo, traceFrom, wallangles;
@@ -5532,7 +5530,7 @@ qboolean LedgeTrace(trace_t* trace, vec3_t dir, float* lerpup, float* lerpfwd, f
 
 //check for ledge grab
 
-qboolean PM_IsGunner(void)
+static qboolean PM_IsGunner(void)
 {
 	switch (pm->ps->weapon)
 	{
@@ -6489,7 +6487,7 @@ static void PM_AirMove(void)
 
 extern qboolean PM_Bobaspecialanim(int anim);
 
-void PM_JetPackAnim(void)
+static void PM_JetPackAnim(void)
 {
 	int anim = BOTH_FORCEJUMP1;
 
@@ -6599,7 +6597,7 @@ void PM_JetPackAnim(void)
 	}
 }
 
-int PM_ForceJumpAnimForJumpAnim(int anim)
+static int PM_ForceJumpAnimForJumpAnim(int anim)
 {
 	switch (anim)
 	{
@@ -7962,7 +7960,7 @@ extern void G_Knockdown(gentity_t* self, gentity_t* attacker, const vec3_t push_
 	qboolean breakSaberLock);
 #endif
 
-qboolean BG_InDFA()
+static qboolean BG_InDFA()
 {
 	if (pm->ps->saber_move == LS_A_JUMP_T__B_)
 	{
@@ -7997,7 +7995,7 @@ qboolean BG_InDFA()
 }
 
 #ifdef _GAME
-qboolean G_InDFA(const gentity_t* ent)
+static qboolean G_InDFA(const gentity_t* ent)
 {
 	if (!ent || !ent->client) return qfalse;
 
@@ -8355,7 +8353,7 @@ static void PM_SetWaterLevel(void)
 //	}
 //}
 
-qboolean PM_CheckDualForwardJumpDuck(void)
+static qboolean PM_CheckDualForwardJumpDuck(void)
 {
 	qboolean resized = qfalse;
 	if (pm->ps->legsAnim == BOTH_JUMPATTACK6)
@@ -8672,7 +8670,7 @@ Generates a use event
 */
 #define USE_DELAY 2000
 
-void PM_Use(void)
+static void PM_Use(void)
 {
 	if (pm->ps->useTime > 0)
 		pm->ps->useTime -= 100; //pm->cmd.msec;
@@ -8905,7 +8903,7 @@ qboolean PM_StandingidleAnim(const int anim)
 	return qfalse;
 }
 
-void PM_AnglesForSlope(const float yaw, const vec3_t slope, vec3_t angles)
+static void PM_AnglesForSlope(const float yaw, const vec3_t slope, vec3_t angles)
 {
 	vec3_t nvf, ovf, ovr, new_angles;
 
@@ -8932,7 +8930,7 @@ void PM_AnglesForSlope(const float yaw, const vec3_t slope, vec3_t angles)
 	angles[ROLL] = (1 - Q_fabs(dot)) * pitch * mod;
 }
 
-void PM_FootSlopeTrace(float* p_diff, float* p_interval)
+static void PM_FootSlopeTrace(float* p_diff, float* p_interval)
 {
 	vec3_t footLOrg, footROrg, footLBot, footRBot;
 	vec3_t footLPoint, footRPoint;
@@ -9076,7 +9074,7 @@ qboolean PM_InSlopeAnim(const int anim)
 
 #define	SLOPE_RECALC_INT 100
 
-qboolean PM_AdjustStandAnimForSlope(void)
+static qboolean PM_AdjustStandAnimForSlope(void)
 {
 	float diff;
 	float interval;
@@ -9522,7 +9520,7 @@ qboolean PM_AdjustStandAnimForSlope(void)
 extern int WeaponReadyLegsAnim[WP_NUM_WEAPONS];
 
 //rww - slowly back out of slope leg anims, to prevent skipping between slope anims and general jittering
-int PM_LegsSlopeBackTransition(const int desiredAnim)
+static int PM_LegsSlopeBackTransition(const int desiredAnim)
 {
 	const int anim = pm->ps->legsAnim;
 	int resultingAnim = desiredAnim;
@@ -9586,7 +9584,7 @@ int PM_LegsSlopeBackTransition(const int desiredAnim)
 	return resultingAnim;
 }
 
-void PM_LadderAnim(void)
+static void PM_LadderAnim(void)
 {
 	const int legsAnim = pm->ps->legsAnim;
 	//FIXME: no start or stop anims
@@ -9617,7 +9615,7 @@ void PM_LadderAnim(void)
 	}
 }
 
-void PM_SwimFloatAnim(void)
+static void PM_SwimFloatAnim(void)
 {
 	const int legsAnim = pm->ps->legsAnim;
 	pm->xyspeed = sqrt(pm->ps->velocity[0] * pm->ps->velocity[0] + pm->ps->velocity[1] * pm->ps->velocity[1]);
@@ -11915,7 +11913,7 @@ int BG_VehTraceFromCamPos(trace_t* cam_trace, const bgEntity_t* bg_ent, const ve
 	return 0;
 }
 
-void PM_RocketLock(const float lockDist, const qboolean vehicleLock)
+static void PM_RocketLock(const float lockDist, const qboolean vehicleLock)
 {
 	// Not really a charge weapon, but we still want to delay fire until the button comes up so that we can
 	//	implement our alt-fire locking stuff
@@ -12292,7 +12290,7 @@ rest:
 	return qfalse; // continue with the rest of the weapon code
 }
 
-int PM_ItemUsable(const playerState_t* ps, int forced_use)
+static int PM_ItemUsable(const playerState_t* ps, int forced_use)
 {
 	vec3_t fwd, fwdorg, dest;
 	vec3_t yawonly;
@@ -12425,10 +12423,6 @@ int PM_ItemUsable(const playerState_t* ps, int forced_use)
 			//not enough fuel to fire the weapon.
 			return 0;
 		}
-		/*if (!(pm->cmd.buttons & BUTTON_FORCEPOWER))
-		{
-			return 0;
-		}*/
 		if (PM_InGrappleMove(pm->ps->torsoAnim))
 		{
 			//In grapple
@@ -12453,7 +12447,7 @@ int PM_ItemUsable(const playerState_t* ps, int forced_use)
 }
 
 //cheesy vehicle weapon hackery
-qboolean PM_CanSetWeaponAnims(void)
+static qboolean PM_CanSetWeaponAnims(void)
 {
 	return qtrue;
 }
@@ -12461,7 +12455,7 @@ qboolean PM_CanSetWeaponAnims(void)
 //perform player anim overrides while on vehicle.
 extern int PM_irand_timesync(int val1, int val2);
 
-void PM_VehicleWeaponAnimate(void)
+static void PM_VehicleWeaponAnimate(void)
 {
 	const bgEntity_t* veh = pm_entVeh;
 	int iFlags = 0, Anim = -1;
@@ -12938,7 +12932,7 @@ Generates weapon events and modifes the weapon counter
 extern int PM_MeleeMoveForConditions(void);
 extern int PM_CheckKick(void);
 
-void PM_Weapon(void)
+static void PM_Weapon(void)
 {
 	int addTime;
 	int amount;
@@ -15588,7 +15582,7 @@ void PM_UpdateViewAngles(int saber_anim_level, playerState_t* ps, const usercmd_
 }
 
 //-------------------------------------------
-void PM_AdjustAttackStates(pmove_t* pmove)
+static void PM_AdjustAttackStates(pmove_t* pmove)
 //-------------------------------------------
 {
 	int amount;
@@ -15765,7 +15759,7 @@ void PM_AdjustAttackStates(pmove_t* pmove)
 	}
 }
 
-void PM_CmdForRoll(playerState_t* ps, const int anim, usercmd_t* p_Cmd)
+static void PM_CmdForRoll(playerState_t* ps, const int anim, usercmd_t* p_Cmd)
 {
 #ifdef _GAME
 	if (ps->userInt3 & 1 << FLAG_DODGEROLL)
@@ -15921,7 +15915,7 @@ void PM_CmdForRoll(playerState_t* ps, const int anim, usercmd_t* p_Cmd)
 
 qboolean PM_SaberInTransition(int move);
 
-void BG_AdjustClientSpeed(playerState_t* ps, const usercmd_t* cmd, const int svTime)
+static void BG_AdjustClientSpeed(playerState_t* ps, const usercmd_t* cmd, const int svTime)
 {
 	saberInfo_t* saber;
 
@@ -16175,28 +16169,20 @@ void BG_AdjustClientSpeed(playerState_t* ps, const usercmd_t* cmd, const int svT
 	}
 
 	saber = BG_MySaber(ps->client_num, 0);
-	if (saber
-		&& saber
 
-		->
-		moveSpeedScale != 1.0f
-		)
+	if (saber && saber->moveSpeedScale != 1.0f)
 	{
 		ps->speed *= saber->moveSpeedScale;
 	}
 	saber = BG_MySaber(ps->client_num, 1);
-	if (saber
-		&& saber
 
-		->
-		moveSpeedScale != 1.0f
-		)
+	if (saber && saber->moveSpeedScale != 1.0f)
 	{
 		ps->speed *= saber->moveSpeedScale;
 	}
 }
 
-qboolean BG_InRollAnim(const entityState_t* cent)
+static qboolean BG_InRollAnim(const entityState_t* cent)
 {
 	switch (cent->legsAnim)
 	{
@@ -16250,7 +16236,7 @@ qboolean BG_InKnockDown(const int anim)
 	return qfalse;
 }
 
-qboolean BG_InRollES(entityState_t* ps, const int anim)
+static qboolean BG_InRollES(entityState_t* ps, const int anim)
 {
 	switch (anim)
 	{
@@ -16267,9 +16253,7 @@ qboolean BG_InRollES(entityState_t* ps, const int anim)
 }
 
 void BG_IK_MoveArm(void* ghoul2, const int lHandBolt, const int time, const entityState_t* ent, const int basePose,
-	vec3_t desiredPos,
-	qboolean* ikInProgress,
-	vec3_t origin, vec3_t angles, vec3_t scale, const int blendTime, const qboolean forceHalt)
+	vec3_t desiredPos, qboolean* ikInProgress, vec3_t origin, vec3_t angles, vec3_t scale, const int blendTime, const qboolean forceHalt)
 {
 	mdxaBone_t l_hand_matrix;
 
@@ -16431,7 +16415,7 @@ void BG_IK_MoveArm(void* ghoul2, const int lHandBolt, const int time, const enti
 }
 
 //used to make sure NPCs with weird bone structures get they skeletons used correctly
-qboolean BG_ClassHasBadBones(const int NPC_class)
+static qboolean BG_ClassHasBadBones(const int NPC_class)
 {
 	switch (NPC_class)
 	{
@@ -16448,7 +16432,7 @@ qboolean BG_ClassHasBadBones(const int NPC_class)
 }
 
 //used to set the proper orientations for the funky NPC class bone structures.
-void BG_BoneOrientationsForClass(const int NPC_class, const char* boneName, int* oUp, int* oRt, int* oFwd)
+static void BG_BoneOrientationsForClass(const int NPC_class, const char* boneName, int* oUp, int* oRt, int* oFwd)
 {
 	//defaults
 	*oUp = POSITIVE_X;
@@ -16532,7 +16516,7 @@ void BG_BoneOrientationsForClass(const int NPC_class, const char* boneName, int*
 }
 
 //Adjust the head/neck desired angles
-void BG_UpdateLookAngles(const int lookingDebounceTime, vec3_t lastHeadAngles, const int time, vec3_t lookAngles,
+static void BG_UpdateLookAngles(const int lookingDebounceTime, vec3_t lastHeadAngles, const int time, vec3_t lookAngles,
 	const float lookSpeed,
 	const float minPitch, const float maxPitch, const float minYaw, const float maxYaw,
 	const float minRoll, const float maxRoll)
@@ -17022,7 +17006,7 @@ static float BG_SwingAngles(const float destination, const float swingTolerance,
 }
 
 //I apologize for this function
-qboolean BG_InRoll2(const entityState_t* es)
+static qboolean BG_InRoll2(const entityState_t* es)
 {
 	switch (es->legsAnim)
 	{
@@ -17701,7 +17685,7 @@ static QINLINE void PM_CmdForSaberMoves(usercmd_t* ucmd)
 }
 
 //constrain him based on the angles of his vehicle and the caps
-void PM_VehicleViewAngles(playerState_t* ps, const bgEntity_t* veh, const usercmd_t* ucmd)
+static void PM_VehicleViewAngles(playerState_t* ps, const bgEntity_t* veh, const usercmd_t* ucmd)
 {
 	const Vehicle_t* p_veh = veh->m_pVehicle;
 	qboolean setAngles = qfalse;
@@ -17772,7 +17756,7 @@ void PM_VehicleViewAngles(playerState_t* ps, const bgEntity_t* veh, const usercm
 }
 
 //see if a weapon is ok to use on a vehicle
-qboolean PM_WeaponOkOnVehicle(const int weapon)
+static qboolean PM_WeaponOkOnVehicle(const int weapon)
 {
 	switch (weapon)
 	{
@@ -17801,7 +17785,7 @@ qboolean PM_WeaponOkOnVehicle(const int weapon)
 
 extern void PM_CheckClearSaberBlock(void);
 
-void PM_CheckInVehicleSaberAttackAnim(void)
+static void PM_CheckInVehicleSaberAttackAnim(void)
 {
 	//A bit of a hack, but makes the vehicle saber attacks act like any other saber attack...
 	// make weapon function
@@ -17892,7 +17876,7 @@ int PM_GetOkWeaponForVehicle(void)
 }
 
 //force the vehicle to turn and travel to its forced destination point
-void PM_VehForcedTurning(bgEntity_t* veh)
+static void PM_VehForcedTurning(bgEntity_t* veh)
 {
 	const bgEntity_t* dst = PM_BGEntForNum(veh->playerState->vehTurnaroundIndex);
 	vec3_t dir;
@@ -17942,7 +17926,7 @@ void PM_VehForcedTurning(bgEntity_t* veh)
 }
 
 #ifdef VEH_CONTROL_SCHEME_4
-void PM_VehFaceHyperspacePoint(bgEntity_t* veh)
+static void PM_VehFaceHyperspacePoint(bgEntity_t* veh)
 {
 	if (!veh || !veh->m_pVehicle)
 	{
@@ -18024,7 +18008,7 @@ void PM_VehFaceHyperspacePoint(bgEntity_t* veh)
 
 #else //VEH_CONTROL_SCHEME_4
 
-void PM_VehFaceHyperspacePoint(const bgEntity_t* veh)
+static void PM_VehFaceHyperspacePoint(const bgEntity_t* veh)
 {
 	if (!veh || !veh->m_pVehicle)
 	{
@@ -18195,16 +18179,14 @@ PmoveSingle
 ================
 */
 extern int BG_EmplacedView(vec3_t base_angles, vec3_t angles, float* new_yaw, float constraint);
-extern qboolean BG_FighterUpdate(Vehicle_t* p_veh, const usercmd_t* pUcmd, vec3_t trMins, vec3_t trMaxs, float gravity,
-	void (*traceFunc)(trace_t* results, const vec3_t start, const vec3_t lmins,
-		const vec3_t lmaxs, const vec3_t end, int pass_entity_num,
-		int content_mask)); //FighterNPC.c
+extern qboolean BG_FighterUpdate(Vehicle_t* p_veh, const usercmd_t* pUcmd, vec3_t trMins, vec3_t trMaxs, float gravity, void (*traceFunc)
+	(trace_t* results, const vec3_t start, const vec3_t lmins, const vec3_t lmaxs, const vec3_t end, int pass_entity_num, int content_mask)); //FighterNPC.c
 
 #define JETPACK_HOVER_HEIGHT	64
 
 //#define _TESTING_VEH_PREDICTION
 
-void PM_MoveForKata(usercmd_t* ucmd)
+static void PM_MoveForKata(usercmd_t* ucmd)
 {
 	if (pm->ps->legsAnim == BOTH_A7_SOULCAL
 		&& pm->ps->saber_move == LS_STAFF_SOULCAL)
@@ -18320,7 +18302,7 @@ void PM_MoveForKata(usercmd_t* ucmd)
 
 extern qboolean PM_InAmputateMove(int anim);
 
-void PmoveSingle(pmove_t* pmove)
+static void PmoveSingle(pmove_t* pmove)
 {
 	qboolean stiffenedUp = qfalse;
 	qboolean noAnimate = qfalse;
@@ -19841,7 +19823,7 @@ qboolean PM_InAttackRoll(const int anim)
 	return qfalse;
 }
 
-qboolean PM_CheckRollSafety(const int anim, const float testDist)
+static qboolean PM_CheckRollSafety(const int anim, const float testDist)
 {
 	vec3_t forward;
 	vec3_t right;
@@ -20046,7 +20028,7 @@ qboolean PM_ForceUsingSaberAnim(const int anim)
 
 qboolean PM_LockedAnim(int anim);
 
-qboolean PM_CrouchGetup(const float crouchheight)
+static qboolean PM_CrouchGetup(const float crouchheight)
 {
 	//racc - recover from our current knockdown state into a crouch.
 	//This should work as long as we're in a known knockdown state.
@@ -20097,7 +20079,7 @@ qboolean PM_CrouchGetup(const float crouchheight)
 
 extern qboolean PM_LockedAnim(int anim);
 
-qboolean PM_CheckRollGetup(void)
+static qboolean PM_CheckRollGetup(void)
 {
 	//racc - try getting up from a knockdown by using a getup roll move.
 #ifdef _GAME

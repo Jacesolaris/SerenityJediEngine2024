@@ -105,8 +105,6 @@ cvar_t* cl_lanForcePackets;
 
 cvar_t* cl_drawRecording;
 
-vec3_t cl_windVec;
-
 cvar_t* cl_com_rend2;
 
 clientActive_t cl;
@@ -196,7 +194,7 @@ CL_WriteDemoMessage
 Dumps the current net message, prefixed by the length
 ====================
 */
-void CL_WriteDemoMessage(const msg_t* msg, const int headerBytes)
+static void CL_WriteDemoMessage(const msg_t* msg, const int headerBytes)
 {
 	int swlen;
 
@@ -219,7 +217,7 @@ CL_StopRecording_f
 stop recording a demo
 ====================
 */
-void CL_StopRecord_f(void)
+static void CL_StopRecord_f(void)
 {
 	int len;
 
@@ -245,7 +243,7 @@ void CL_StopRecord_f(void)
 CL_DemoFilename
 ==================
 */
-void CL_DemoFilename(char* buf, const int bufSize)
+static void CL_DemoFilename(char* buf, const int bufSize)
 {
 	time_t rawtime;
 	char timeStr[32] = { 0 }; // should really only reach ~19 chars
@@ -266,7 +264,7 @@ Begins recording a demo from the current position
 ====================
 */
 static char demoName[MAX_QPATH]; // compiler bug workaround
-void CL_Record_f(void)
+static void CL_Record_f(void)
 {
 	char name[MAX_OSPATH];
 	byte bufData[MAX_MSGLEN];
@@ -422,7 +420,7 @@ CLIENT SIDE DEMO PLAYBACK
 CL_DemoCompleted
 =================
 */
-void CL_DemoCompleted(void)
+static void CL_DemoCompleted(void)
 {
 	if (cl_timedemo && cl_timedemo->integer)
 	{
@@ -531,7 +529,7 @@ demo <demoname>
 
 ====================
 */
-void CL_PlayDemo_f(void)
+static void CL_PlayDemo_f(void)
 {
 	char name[MAX_OSPATH], extension[32];
 
@@ -931,7 +929,7 @@ CL_RequestMotd
 
 ===================
 */
-void CL_RequestMotd(void)
+static void CL_RequestMotd(void)
 {
 	netadr_t to;
 	char command[MAX_STRING_CHARS], info[MAX_INFO_STRING]{};
@@ -1009,7 +1007,7 @@ CONSOLE COMMANDS
 CL_ForwardToServer_f
 ==================
 */
-void CL_ForwardToServer_f(void)
+static void CL_ForwardToServer_f(void)
 {
 	if (cls.state != CA_ACTIVE || clc.demoplaying)
 	{
@@ -1045,7 +1043,7 @@ CL_Reconnect_f
 
 ================
 */
-void CL_Reconnect_f(void)
+static void CL_Reconnect_f(void)
 {
 	if (!strlen(cl_reconnectArgs))
 	{
@@ -1061,7 +1059,7 @@ CL_Connect_f
 
 ================
 */
-void CL_Connect_f(void)
+static void CL_Connect_f(void)
 {
 	if (Cmd_Argc() != 2)
 	{
@@ -1166,7 +1164,7 @@ CL_Rcon_f
   an unconnected command.
 =====================
 */
-void CL_Rcon_f(void)
+static void CL_Rcon_f(void)
 {
 	char message[MAX_RCON_MESSAGE]{};
 
@@ -1219,7 +1217,7 @@ void CL_Rcon_f(void)
 CL_SendPureChecksums
 =================
 */
-void CL_SendPureChecksums(void)
+static void CL_SendPureChecksums(void)
 {
 	char cMsg[MAX_INFO_VALUE];
 
@@ -1234,7 +1232,7 @@ void CL_SendPureChecksums(void)
 CL_ResetPureClientAtServer
 =================
 */
-void CL_ResetPureClientAtServer(void)
+static void CL_ResetPureClientAtServer(void)
 {
 	CL_AddReliableCommand("vdr", qfalse);
 }
@@ -1351,7 +1349,7 @@ void CL_Snd_Restart_f(void)
 CL_PK3List_f
 ==================
 */
-void CL_OpenedPK3List_f(void)
+static void CL_OpenedPK3List_f(void)
 {
 	Com_Printf("Opened PK3 Names: %s\n", FS_LoadedPakNames());
 }
@@ -1361,7 +1359,7 @@ void CL_OpenedPK3List_f(void)
 CL_PureList_f
 ==================
 */
-void CL_ReferencedPK3List_f(void)
+static void CL_ReferencedPK3List_f(void)
 {
 	Com_Printf("Referenced PK3 Names: %s\n", FS_ReferencedPakNames());
 }
@@ -1371,7 +1369,7 @@ void CL_ReferencedPK3List_f(void)
 CL_Configstrings_f
 ==================
 */
-void CL_Configstrings_f(void)
+static void CL_Configstrings_f(void)
 {
 	if (cls.state != CA_ACTIVE)
 	{
@@ -1395,7 +1393,7 @@ void CL_Configstrings_f(void)
 CL_Clientinfo_f
 ==============
 */
-void CL_Clientinfo_f(void)
+static void CL_Clientinfo_f(void)
 {
 	Com_Printf("--------- Client Information ---------\n");
 	Com_Printf("state: %i\n", cls.state);
@@ -1414,7 +1412,7 @@ CL_DownloadsComplete
 Called when all downloading has been completed
 =================
 */
-void CL_DownloadsComplete(void)
+static void CL_DownloadsComplete(void)
 {
 	// if we downloaded files we need to restart the file system
 	if (clc.downloadRestart)
@@ -1474,7 +1472,7 @@ game directory.
 =================
 */
 
-void CL_BeginDownload(const char* localName, const char* remoteName)
+static void CL_BeginDownload(const char* localName, const char* remoteName)
 {
 	Com_DPrintf("***** CL_BeginDownload *****\n"
 		"Localname: %s\n"
@@ -1680,7 +1678,7 @@ to the server, the server will send out of band disconnect packets
 to the client so it doesn't have to wait for the full timeout period.
 ===================
 */
-void CL_DisconnectPacket(const netadr_t from)
+static void CL_DisconnectPacket(const netadr_t from)
 {
 	if (cls.state < CA_AUTHORIZING)
 	{
@@ -1712,7 +1710,7 @@ CL_MotdPacket
 
 ===================
 */
-void CL_MotdPacket(const netadr_t from)
+static void CL_MotdPacket(const netadr_t from)
 {
 	// if not from our server, ignore it
 	if (!NET_CompareAdr(from, cls.updateServer))
@@ -1740,7 +1738,7 @@ void CL_MotdPacket(const netadr_t from)
 CL_InitServerInfo
 ===================
 */
-void CL_InitServerInfo(serverInfo_t* server, const netadr_t* address)
+static void CL_InitServerInfo(serverInfo_t* server, const netadr_t* address)
 {
 	server->adr = *address;
 	server->clients = 0;
@@ -1767,7 +1765,7 @@ constexpr auto MAX_SERVERSPERPACKET = 256;
 CL_ServersResponsePacket
 ===================
 */
-void CL_ServersResponsePacket(const msg_t* msg)
+static void CL_ServersResponsePacket(const msg_t* msg)
 {
 	int i, j;
 	netadr_t addresses[MAX_SERVERSPERPACKET]{};
@@ -1949,7 +1947,7 @@ CL_ConnectionlessPacket
 Responses to broadcasts, etc
 =================
 */
-void CL_ConnectionlessPacket(const netadr_t from, msg_t* msg)
+static void CL_ConnectionlessPacket(const netadr_t from, msg_t* msg)
 {
 	MSG_BeginReadingOOB(msg);
 	MSG_ReadLong(msg); // skip the -1
@@ -2172,7 +2170,7 @@ CL_CheckTimeout
 
 ==================
 */
-void CL_CheckTimeout(void)
+static void CL_CheckTimeout(void)
 {
 	//
 	// check timeout
@@ -2220,7 +2218,7 @@ CL_CheckUserinfo
 
 ==================
 */
-void CL_CheckUserinfo(void)
+static void CL_CheckUserinfo(void)
 {
 	// don't add reliable commands when not yet connected
 	if (cls.state < CA_CONNECTED)
@@ -2361,7 +2359,7 @@ CL_RefPrintf
 DLL glue
 ================
 */
-void QDECL CL_RefPrintf(const int print_level, const char* fmt, ...)
+static void QDECL CL_RefPrintf(const int print_level, const char* fmt, ...)
 {
 	va_list argptr;
 	char msg[MAXPRINTMSG];
@@ -2413,7 +2411,7 @@ static void CL_ShutdownRef(const qboolean restarting)
 CL_InitRenderer
 ============
 */
-void CL_InitRenderer(void)
+static void CL_InitRenderer(void)
 {
 	// this sets up the renderer and calls R_Init
 	re->BeginRegistration(&cls.glconfig);
@@ -2637,7 +2635,7 @@ void CL_InitRef(void)
 constexpr auto MODEL_CHANGE_DELAY = 5000;
 int gCLModelDelay = 0;
 
-void CL_SetModel_f(void)
+static void CL_SetModel_f(void)
 {
 	const char* arg = Cmd_Argv(1);
 	if (arg[0])
@@ -2667,7 +2665,7 @@ void CL_SetModel_f(void)
 	}
 }
 
-void CL_SetForcePowers_f(void)
+static void CL_SetForcePowers_f(void)
 {
 }
 
@@ -2676,7 +2674,7 @@ void CL_SetForcePowers_f(void)
 CL_VideoFilename
 ==================
 */
-void CL_VideoFilename(char* buf, const int bufSize)
+static void CL_VideoFilename(char* buf, const int bufSize)
 {
 	time_t rawtime;
 	char timeStr[32] = { 0 }; // should really only reach ~19 chars
@@ -2695,7 +2693,7 @@ video
 video [filename]
 ===============
 */
-void CL_Video_f(void)
+static void CL_Video_f(void)
 {
 	char filename[MAX_OSPATH];
 
@@ -2729,7 +2727,7 @@ void CL_Video_f(void)
 CL_StopVideo_f
 ===============
 */
-void CL_StopVideo_f(void)
+static void CL_StopVideo_f(void)
 {
 	CL_CloseAVI();
 }
@@ -3236,7 +3234,7 @@ void CL_ServerInfoPacket(netadr_t from, msg_t* msg)
 CL_GetServerStatus
 ===================
 */
-serverStatus_t* CL_GetServerStatus(const netadr_t from)
+static serverStatus_t* CL_GetServerStatus(const netadr_t from)
 {
 	int i;
 
@@ -3672,7 +3670,7 @@ int CL_GetPingQueueCount(void)
 CL_GetFreePing
 ==================
 */
-ping_t* CL_GetFreePing(void)
+static ping_t* CL_GetFreePing(void)
 {
 	int i;
 

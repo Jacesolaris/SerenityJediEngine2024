@@ -46,7 +46,7 @@ cvar_t* com_maxfpsUnfocused;
 Sys_SetBinaryPath
 =================
 */
-void Sys_SetBinaryPath(const char* path)
+static void Sys_SetBinaryPath(const char* path)
 {
 	Q_strncpyz(binaryPath, path, sizeof binaryPath);
 }
@@ -56,7 +56,7 @@ void Sys_SetBinaryPath(const char* path)
 Sys_BinaryPath
 =================
 */
-char* Sys_BinaryPath()
+static char* Sys_BinaryPath()
 {
 	return binaryPath;
 }
@@ -350,7 +350,7 @@ void* Sys_LoadDll(const char* name, const qboolean useSystemLib)
 }
 
 #if defined(MACOS_X) && !defined(_JK2EXE)
-void* Sys_LoadMachOBundle(const char* name)
+static void* Sys_LoadMachOBundle(const char* name)
 {
 	if (!FS_LoadMachOBundle(name))
 		return nullptr;
@@ -467,7 +467,7 @@ static void FreeUnpackDLLResult(const UnpackDLLResult* result)
 
 void* Sys_LoadLegacyGameDll(const char* name, VMMainProc** vmMain, SystemCallProc* systemcalls)
 {
-	void* libHandle;
+	void* libHandle{};
 	char filename[MAX_OSPATH];
 
 	Com_sprintf(filename, sizeof filename, "%s" ARCH_STRING DLL_EXT, name);
@@ -603,7 +603,7 @@ void* Sys_LoadSPGameDll(const char* name, GetGameAPIProc** GetGameAPI)
 
 void* Sys_LoadGameDll(const char* name, GetModuleAPIProc** moduleAPI)
 {
-	void* libHandle;
+	void* libHandle{};
 	char filename[MAX_OSPATH];
 
 	Com_sprintf(filename, sizeof filename, "%s" ARCH_STRING DLL_EXT, name);
@@ -718,7 +718,7 @@ void Sys_SigHandler(const int signal)
  the result is returned. If not, dir is returned untouched.
  =================
  */
-char* Sys_StripAppBundle(char* dir)
+static char* Sys_StripAppBundle(char* dir)
 {
 	static char cwd[MAX_OSPATH];
 

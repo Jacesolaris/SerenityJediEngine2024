@@ -67,7 +67,7 @@ extern void player_Burn(const gentity_t* self);
 extern void NPC_SetAnim(gentity_t* ent, int set_anim_parts, int anim, int set_anim_flags);
 
 // For more than four players, adjust the respawn times, up to 1/4.
-int adjustRespawnTime(const float preRespawnTime, const int itemType, const int itemTag)
+static int adjustRespawnTime(const float preRespawnTime, const int itemType, const int itemTag)
 {
 	float respawnTime = preRespawnTime;
 
@@ -132,7 +132,7 @@ static qhandle_t shieldActivateSound = 0;
 static qhandle_t shieldDeactivateSound = 0;
 static qhandle_t shieldDamageSound = 0;
 
-void ShieldRemove(gentity_t* self)
+static void ShieldRemove(gentity_t* self)
 {
 	self->parent->forceFieldThink = level.time + 30000;
 	self->think = G_FreeEntity;
@@ -145,7 +145,7 @@ void ShieldRemove(gentity_t* self)
 }
 
 // Count down the health of the shield.
-void ShieldThink(gentity_t* self)
+static void ShieldThink(gentity_t* self)
 {
 	self->s.trickedentindex = 0;
 
@@ -166,7 +166,7 @@ void ShieldThink(gentity_t* self)
 }
 
 // The shield was damaged to below zero health.
-void ShieldDie(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int damage, int mod)
+static void ShieldDie(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int damage, int mod)
 {
 	// Play damaging sound...
 	G_AddEvent(self, EV_GENERAL_SOUND, shieldDamageSound);
@@ -175,7 +175,7 @@ void ShieldDie(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int d
 }
 
 // The shield had damage done to it.  Make it flicker.
-void ShieldPain(gentity_t* self, gentity_t* attacker, int damage)
+static void ShieldPain(gentity_t* self, gentity_t* attacker, int damage)
 {
 	// Set the itemplaceholder flag to indicate the the shield drawing that the shield pain should be drawn.
 	self->think = ShieldThink;
@@ -188,7 +188,7 @@ void ShieldPain(gentity_t* self, gentity_t* attacker, int damage)
 }
 
 // Try to turn the shield back on after a delay.
-void ShieldGoSolid(gentity_t* self)
+static void ShieldGoSolid(gentity_t* self)
 {
 	trace_t tr;
 
@@ -228,7 +228,7 @@ void ShieldGoSolid(gentity_t* self)
 }
 
 // Turn the shield off to allow a friend to pass through.
-void ShieldGoNotSolid(gentity_t* self)
+static void ShieldGoNotSolid(gentity_t* self)
 {
 	// make the shield non-solid very briefly
 	self->r.contents = 0;
@@ -283,7 +283,7 @@ int sje_number_of_allies(const gentity_t* ent)
 extern void G_Knockdown(gentity_t* self, gentity_t* attacker, const vec3_t push_dir, float strength,
 	qboolean break_saber_lock);
 // Somebody (a player) has touched the shield.  See if it is a "friend".
-void ShieldTouch(gentity_t* self, gentity_t* other, trace_t* trace)
+static void ShieldTouch(gentity_t* self, gentity_t* other, trace_t* trace)
 {
 	vec3_t tempDir, stunDir;
 
@@ -347,7 +347,7 @@ void ShieldTouch(gentity_t* self, gentity_t* other, trace_t* trace)
 }
 
 // After a short delay, create the shield by expanding in all directions.
-void CreateShield(gentity_t* ent)
+static void CreateShield(gentity_t* ent)
 {
 	trace_t tr;
 	vec3_t mins, maxs, end, posTraceEnd, negTraceEnd, start;
@@ -473,7 +473,7 @@ void CreateShield(gentity_t* ent)
 	ShieldGoSolid(ent);
 }
 
-qboolean PlaceShield(gentity_t* playerent)
+static qboolean PlaceShield(gentity_t* playerent)
 {
 	static const gitem_t* shieldItem = NULL;
 	trace_t tr;
@@ -615,7 +615,7 @@ void ItemUse_Shield(gentity_t* ent)
 
 #define PAS_DAMAGE	2
 
-void SentryTouch(gentity_t* ent, gentity_t* other, trace_t* trace)
+static void SentryTouch(gentity_t* ent, gentity_t* other, trace_t* trace)
 {
 }
 
@@ -623,7 +623,7 @@ qboolean PM_CrouchAnim(int anim);
 qboolean PM_InKnockDown(const playerState_t* ps);
 
 //----------------------------------------------------------------
-void pas_fire(gentity_t* ent)
+static void pas_fire(gentity_t* ent)
 //----------------------------------------------------------------
 {
 	vec3_t fwd, myOrg, enOrg;
@@ -775,7 +775,7 @@ static qboolean pas_find_enemies(gentity_t* self)
 }
 
 //---------------------------------
-void pas_adjust_enemy(gentity_t* ent)
+static void pas_adjust_enemy(gentity_t* ent)
 //---------------------------------
 {
 	trace_t tr;
@@ -1106,7 +1106,7 @@ void turret_die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int 
 	}
 }
 
-void turret_free(gentity_t* self)
+static void turret_free(gentity_t* self)
 {
 	if (!g_entities[self->genericValue3].inuse || !g_entities[self->genericValue3].client)
 	{
@@ -1721,7 +1721,7 @@ void ItemUse_UseCloak(gentity_t* ent)
 #define TOSSED_ITEM_STAY_PERIOD			20000
 #define TOSSED_ITEM_OWNER_NOTOUCH_DUR	1000
 
-void SpecialItemThink(gentity_t* ent)
+static void SpecialItemThink(gentity_t* ent)
 {
 	const float gravity = 3.0f;
 	const float mass = 0.09f;
@@ -1739,7 +1739,7 @@ void SpecialItemThink(gentity_t* ent)
 	ent->nextthink = level.time + 50;
 }
 
-void G_SpecialSpawnItem(gentity_t* ent, gitem_t* item)
+static void G_SpecialSpawnItem(gentity_t* ent, gitem_t* item)
 {
 	register_item(item);
 	ent->item = item;
@@ -1858,7 +1858,7 @@ void ItemUse_UseDisp(const gentity_t* ent, const int type)
 //Portable E-Web -rww
 //===============================================
 //put the e-web away/remove it from the owner
-void EWebDisattach(const gentity_t* owner, gentity_t* eweb)
+static void EWebDisattach(const gentity_t* owner, gentity_t* eweb)
 {
 	owner->client->ewebIndex = 0;
 	owner->client->ps.emplacedIndex = 0;
@@ -1888,7 +1888,7 @@ void EWebPrecache(void)
 
 extern void BG_CycleInven(playerState_t* ps, int direction); //bg_misc.c
 
-void EWebDie(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int damage, int mod)
+static void EWebDie(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int damage, int mod)
 {
 	vec3_t fx_dir;
 
@@ -1924,7 +1924,7 @@ void EWebDie(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int dam
 }
 
 //e-web pain
-void EWebPain(const gentity_t* self, gentity_t* attacker, int damage)
+static void EWebPain(const gentity_t* self, gentity_t* attacker, int damage)
 {
 	//update the owner's health status of me
 	if (self->r.ownerNum != ENTITYNUM_NONE)
@@ -1939,7 +1939,7 @@ void EWebPain(const gentity_t* self, gentity_t* attacker, int damage)
 }
 
 //special routine for tracking angles between client and server
-void EWeb_SetBoneAngles(gentity_t* ent, const char* bone, vec3_t angles)
+static void EWeb_SetBoneAngles(gentity_t* ent, const char* bone, vec3_t angles)
 {
 	int* thebone = &ent->s.boneIndex1;
 	int* firstFree = NULL;
@@ -2039,7 +2039,7 @@ void EWeb_SetBoneAngles(gentity_t* ent, const char* bone, vec3_t angles)
 }
 
 //start an animation on model_root both server side and client side
-void EWeb_SetBoneAnim(gentity_t* eweb, const int startFrame, const int endFrame)
+static void EWeb_SetBoneAnim(gentity_t* eweb, const int startFrame, const int endFrame)
 {
 	//set info on the entity so it knows to start the anim on the client next snapshot.
 	eweb->s.eFlags |= EF_G2ANIMATING;
@@ -2064,7 +2064,7 @@ void EWeb_SetBoneAnim(gentity_t* eweb, const int startFrame, const int endFrame)
 //fire a shot off
 #define EWEB_MISSILE_DAMAGE			20
 
-void EWebFire(gentity_t* owner, gentity_t* eweb)
+static void EWebFire(gentity_t* owner, gentity_t* eweb)
 {
 	mdxaBone_t boltMatrix;
 	vec3_t p, d, bPoint;
@@ -2108,7 +2108,7 @@ void EWebFire(gentity_t* owner, gentity_t* eweb)
 }
 
 //lock the owner into place relative to the cannon pos
-void EWebPositionUser(gentity_t* owner, gentity_t* eweb)
+static void EWebPositionUser(gentity_t* owner, gentity_t* eweb)
 {
 	mdxaBone_t boltMatrix;
 	vec3_t p, d;
@@ -2185,7 +2185,7 @@ void EWebPositionUser(gentity_t* owner, gentity_t* eweb)
 }
 
 //keep the bone angles updated based on the owner's look dir
-void EWebUpdateBoneAngles(gentity_t* owner, gentity_t* eweb)
+static void EWebUpdateBoneAngles(gentity_t* owner, gentity_t* eweb)
 {
 	vec3_t yAng;
 	const float turnCap = 4.0f; //max degrees we can turn per update
@@ -2223,7 +2223,7 @@ void EWebUpdateBoneAngles(gentity_t* owner, gentity_t* eweb)
 //keep it updated
 extern int BG_EmplacedView(vec3_t base_angles, vec3_t angles, float* new_yaw, float constraint); //bg_misc.c
 
-void EWebThink(gentity_t* self)
+static void EWebThink(gentity_t* self)
 {
 	qboolean killMe = qfalse;
 	const float gravity = 3.0f;
@@ -2312,7 +2312,7 @@ void EWebThink(gentity_t* self)
 #define EWEB_HEALTH			200
 
 //spawn and set up an e-web ent
-gentity_t* EWeb_Create(gentity_t* spawner)
+static gentity_t* EWeb_Create(gentity_t* spawner)
 {
 	const char* modelName = "models/map_objects/hoth/eweb_model.glm";
 	const int failSound = G_SoundIndex("sound/interface/shieldcon_empty");
@@ -2487,7 +2487,7 @@ void ItemUse_UseEWeb(gentity_t* ent)
 //End E-Web
 //===============================================
 
-int Pickup_Powerup(const gentity_t* ent, const gentity_t* other)
+static int Pickup_Powerup(const gentity_t* ent, const gentity_t* other)
 {
 	int quantity;
 
@@ -2578,7 +2578,7 @@ int Pickup_Powerup(const gentity_t* ent, const gentity_t* other)
 
 //======================================================================
 
-int Pickup_Holdable(const gentity_t* ent, const gentity_t* other)
+static int Pickup_Holdable(const gentity_t* ent, const gentity_t* other)
 {
 	other->client->ps.stats[STAT_HOLDABLE_ITEM] = ent->item - bg_itemlist;
 
@@ -2677,7 +2677,7 @@ void Add_Batteries(gentity_t* ent, int* count)
 }
 
 //-------------------------------------------------------
-int Pickup_Battery(const gentity_t* ent, gentity_t* other)
+static int Pickup_Battery(const gentity_t* ent, gentity_t* other)
 {
 	int quantity;
 
@@ -2696,7 +2696,7 @@ int Pickup_Battery(const gentity_t* ent, gentity_t* other)
 	return 30;
 }
 
-int Pickup_Ammo(const gentity_t* ent, const gentity_t* other)
+static int Pickup_Ammo(const gentity_t* ent, const gentity_t* other)
 {
 	int quantity;
 
@@ -2750,7 +2750,7 @@ int Pickup_Ammo(const gentity_t* ent, const gentity_t* other)
 
 //======================================================================
 
-int Pickup_Weapon(const gentity_t* ent, gentity_t* other)
+static int Pickup_Weapon(const gentity_t* ent, gentity_t* other)
 {
 	int quantity;
 
@@ -2809,7 +2809,7 @@ int Pickup_Weapon(const gentity_t* ent, gentity_t* other)
 
 //======================================================================
 
-int Pickup_Health(const gentity_t* ent, gentity_t* other)
+static int Pickup_Health(const gentity_t* ent, gentity_t* other)
 {
 	int max;
 	int quantity;
@@ -2852,7 +2852,7 @@ int Pickup_Health(const gentity_t* ent, gentity_t* other)
 
 //======================================================================
 
-int Pickup_Armor(const gentity_t* ent, const gentity_t* other)
+static int Pickup_Armor(const gentity_t* ent, const gentity_t* other)
 {
 	// make sure that the shield effect is on
 	other->client->ps.powerups[PW_BATTLESUIT] = Q3_INFINITE;
@@ -3768,7 +3768,7 @@ void save_registered_items(void)
 G_ItemDisabled
 ============
 */
-int G_ItemDisabled(const gitem_t* item)
+static int G_ItemDisabled(const gitem_t* item)
 {
 	char name[128];
 
@@ -3777,7 +3777,7 @@ int G_ItemDisabled(const gitem_t* item)
 }
 
 //This function checks an ammo type against the disabled weapons list.
-qboolean G_AmmoDisabled(const int wDisable, const gitem_t* item)
+static qboolean G_AmmoDisabled(const int wDisable, const gitem_t* item)
 {
 	if (item->giType != IT_AMMO)
 	{
@@ -3926,7 +3926,7 @@ G_BounceItem
 
 ================
 */
-void G_BounceItem(gentity_t* ent, trace_t* trace)
+static void G_BounceItem(gentity_t* ent, trace_t* trace)
 {
 	vec3_t velocity;
 
@@ -3981,7 +3981,7 @@ G_RunItem
 ================
 */
 
-void G_RemoveWeaponEffect(gentity_t* ent)
+static void G_RemoveWeaponEffect(gentity_t* ent)
 {
 	vec3_t effectPos, defaultDir;
 
@@ -4098,6 +4098,14 @@ void IT_LoadWeatherParms(void)
 	if (com_rend2.integer == 1 &&
 		(Q_stricmp(sje_mapname, "yavin1") == 0)
 		|| (Q_stricmp(sje_mapname, "demo") == 0)
+		|| (Q_stricmp(sje_mapname, "01nar") == 0)
+		|| (Q_stricmp(sje_mapname, "md2_bd_ch") == 0)
+		|| (Q_stricmp(sje_mapname, "md_sn_intro_jedi") == 0)
+		|| (Q_stricmp(sje_mapname, "md_ch_battledroids") == 0)
+		|| (Q_stricmp(sje_mapname, "md_ep4_intro") == 0)
+		|| (Q_stricmp(sje_mapname, "secbase") == 0)
+		|| (Q_stricmp(sje_mapname, "level0") == 0)
+		|| (Q_stricmp(sje_mapname, "JKG_ImperialBase") == 0)
 		|| (Q_stricmp(sje_mapname, "kejim_post") == 0))
 	{
 		return;

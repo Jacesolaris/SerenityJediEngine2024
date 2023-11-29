@@ -40,9 +40,6 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #define QKEY_FILE "jakey"
 #define QKEY_SIZE 2048
 
-// Wind
-extern vec3_t cl_windVec;
-
 // snapshots are a view of the server at a given time
 using clSnapshot_t = struct clSnapshot_s
 {
@@ -438,7 +435,6 @@ void CL_SetUserCmdValue(int userCmdValue, float sensitivityScale, float mPitchOv
 	float mSensitivityOverride, int fpSel, int invenSel);
 
 void CL_Disconnect_f(void);
-void CL_GetChallengePacket(void);
 void CL_Vid_Restart_f(void);
 void CL_Snd_Restart_f(void);
 void CL_StartDemoLoop(void);
@@ -496,7 +492,6 @@ void CL_ParseServerMessage(msg_t* msg);
 void CL_ServerInfoPacket(netadr_t from, msg_t* msg);
 void CL_LocalServers_f(void);
 void CL_GlobalServers_f(void);
-void CL_FavoriteServers_f(void);
 void CL_Ping_f(void);
 qboolean CL_UpdateVisiblePings_f(int source);
 
@@ -568,7 +563,6 @@ qboolean CL_GameCommand(void);
 void CL_CGameRendering(stereoFrame_t stereo);
 void CL_SetCGameTime(void);
 void CL_FirstSnapshot(void);
-void CL_ShaderStateChanged(void);
 
 //
 // cl_ui.c
