@@ -42,7 +42,7 @@ Ghoul2 Insert End
 void CG_InitJetpackGhoul2(void);
 void CG_CleanJetpackGhoul2(void);
 
-void CG_Init(int serverMessageNum, int serverCommandSequence, int client_num);
+void CG_Init(int serverMessageNum, int serverCommandSequence, int clientNum);
 void CG_Shutdown(void);
 
 void CG_CalcEntityLerpPositions(centity_t* cent);
@@ -399,10 +399,10 @@ int CG_CrosshairPlayer(void)
 	if (cg.time > cg.crosshairClientTime + 1000)
 		return -1;
 
-	if (cg.crosshairclient_num >= MAX_CLIENTS)
+	if (cg.crosshairclientNum >= MAX_CLIENTS)
 		return -1;
 
-	return cg.crosshairclient_num;
+	return cg.crosshairclientNum;
 }
 
 int CG_LastAttacker(void)
@@ -1889,12 +1889,12 @@ CG_RegisterClients
 */
 static void CG_RegisterClients(void)
 {
-	CG_LoadingClient(cg.client_num);
-	CG_NewClientInfo(cg.client_num, qfalse);
+	CG_LoadingClient(cg.clientNum);
+	CG_NewClientInfo(cg.clientNum, qfalse);
 
 	for (int i = 0; i < MAX_CLIENTS; i++)
 	{
-		if (cg.client_num == i)
+		if (cg.clientNum == i)
 		{
 			continue;
 		}
@@ -2309,7 +2309,7 @@ void CG_SetScoreSelection(void* p)
 		{
 			blue++;
 		}
-		if (ps->client_num == cg.scores[i].client)
+		if (ps->clientNum == cg.scores[i].client)
 		{
 			cg.selectedScore = i;
 		}
@@ -2772,7 +2772,7 @@ Called after every level change or subsystem restart
 Will perform callbacks to make the loading info screen update.
 =================
 */
-void CG_Init(const int serverMessageNum, const int serverCommandSequence, const int client_num)
+void CG_Init(const int serverMessageNum, const int serverCommandSequence, const int clientNum)
 {
 	static gitem_t* item;
 	char buf[64];
@@ -2809,7 +2809,7 @@ void CG_Init(const int serverMessageNum, const int serverCommandSequence, const 
 	memset(&cgs, 0, sizeof cgs);
 	memset(cg_weapons, 0, sizeof cg_weapons);
 
-	cg.client_num = client_num;
+	cg.clientNum = clientNum;
 
 	cgs.processedSnapshotNum = serverMessageNum;
 	cgs.serverCommandSequence = serverCommandSequence;

@@ -1047,7 +1047,7 @@ void CFxScheduler::CreateEffect(CPrimitiveTemplate* fx, const int client_id, int
 
 			if (cent && cent->gent && cent->gent->client)
 			{
-				FX_AddLight(cent->gent->client->renderInfo.muzzle_point, fx->mSizeStart.GetVal(), fx->mSizeEnd.GetVal(),
+				FX_AddLight(cent->gent->client->renderInfo.muzzlePoint, fx->mSizeStart.GetVal(), fx->mSizeEnd.GetVal(),
 					fx->mSizeParm.GetVal(),
 					sRGB, eRGB, fx->mRGBParm.GetVal(),
 					fx->mLife.GetVal(), fx->mFlags);

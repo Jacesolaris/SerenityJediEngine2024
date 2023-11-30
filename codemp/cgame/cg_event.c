@@ -442,8 +442,8 @@ static void CG_Obituary(entityState_t* ent)
 
 clientkilled:
 
-	// check for kill messages from the current client_num
-	if (attacker == cg.snap->ps.client_num)
+	// check for kill messages from the current clientNum
+	if (attacker == cg.snap->ps.clientNum)
 	{
 		char* s;
 
@@ -507,8 +507,8 @@ clientkilled:
 	{
 		Q_strncpyz(attacker_name, Info_ValueForKey(attacker_info, "n"), sizeof attacker_name - 2);
 		strcat(attacker_name, S_COLOR_WHITE);
-		// check for kill messages about the current client_num
-		if (target == cg.snap->ps.client_num)
+		// check for kill messages about the current clientNum
+		if (target == cg.snap->ps.clientNum)
 		{
 			Q_strncpyz(cg.killerName, attacker_name, sizeof cg.killerName);
 		}
@@ -744,7 +744,7 @@ clientkilled:
 
 void CG_ToggleBinoculars(const centity_t* cent, const int force_zoom)
 {
-	if (cent->currentState.number != cg.snap->ps.client_num)
+	if (cent->currentState.number != cg.snap->ps.clientNum)
 	{
 		return;
 	}
@@ -769,11 +769,11 @@ void CG_ToggleBinoculars(const centity_t* cent, const int force_zoom)
 
 	if (cg.snap->ps.zoomMode == 0)
 	{
-		trap->S_StartSound(NULL, cg.snap->ps.client_num, CHAN_AUTO, cgs.media.zoomStart);
+		trap->S_StartSound(NULL, cg.snap->ps.clientNum, CHAN_AUTO, cgs.media.zoomStart);
 	}
 	else if (cg.snap->ps.zoomMode == 2)
 	{
-		trap->S_StartSound(NULL, cg.snap->ps.client_num, CHAN_AUTO, cgs.media.zoomEnd);
+		trap->S_StartSound(NULL, cg.snap->ps.clientNum, CHAN_AUTO, cgs.media.zoomEnd);
 	}
 }
 
@@ -801,7 +801,7 @@ CG_UseItem
 static void CG_UseItem(const centity_t* cent)
 {
 	clientInfo_t* ci;
-	int client_num;
+	int clientNum;
 
 	const entityState_t* es = &cent->currentState;
 
@@ -812,7 +812,7 @@ static void CG_UseItem(const centity_t* cent)
 	}
 
 	// print a message if the local player
-	if (es->number == cg.snap->ps.client_num)
+	if (es->number == cg.snap->ps.clientNum)
 	{
 		if (!item_num)
 		{
@@ -844,19 +844,19 @@ static void CG_UseItem(const centity_t* cent)
 		break;
 
 	case HI_MEDPAC:
-		client_num = cent->currentState.client_num;
-		if (client_num >= 0 && client_num < MAX_CLIENTS)
+		clientNum = cent->currentState.clientNum;
+		if (clientNum >= 0 && clientNum < MAX_CLIENTS)
 		{
-			ci = &cgs.clientinfo[client_num];
+			ci = &cgs.clientinfo[clientNum];
 			ci->medkitUsageTime = cg.time;
 		}
 		trap->S_StartSound(NULL, es->number, CHAN_AUTO, cgs.media.medkitSound2);
 		break;
 	case HI_MEDPAC_BIG:
-		client_num = cent->currentState.client_num;
-		if (client_num >= 0 && client_num < MAX_CLIENTS)
+		clientNum = cent->currentState.clientNum;
+		if (clientNum >= 0 && clientNum < MAX_CLIENTS)
 		{
-			ci = &cgs.clientinfo[client_num];
+			ci = &cgs.clientinfo[clientNum];
 			ci->medkitUsageTime = cg.time;
 		}
 		//Different sound for big bacta?
@@ -880,7 +880,7 @@ static void CG_UseItem(const centity_t* cent)
 		break;
 	}
 
-	if (cg.snap && cg.snap->ps.client_num == cent->currentState.number && item_num != HI_BINOCULARS &&
+	if (cg.snap && cg.snap->ps.clientNum == cent->currentState.number && item_num != HI_BINOCULARS &&
 		item_num != HI_JETPACK && item_num != HI_HEALTHDISP && item_num != HI_AMMODISP && item_num != HI_CLOAK
 		&& item_num != HI_EWEB && item_num != HI_FLAMETHROWER && item_num != HI_DROIDEKA && item_num != HI_SEEKER)
 	{
@@ -1210,7 +1210,7 @@ void CG_GetCTFMessageEvent(const entityState_t* es)
 	CG_PrintCTFMessage(ci, team_name, es->eventParm);
 }
 
-void DoFall(centity_t* cent, const entityState_t* es, const int client_num)
+void DoFall(centity_t* cent, const entityState_t* es, const int clientNum)
 {
 	const int delta = es->eventParm;
 
@@ -1258,7 +1258,7 @@ void DoFall(centity_t* cent, const entityState_t* es, const int client_num)
 		trap->S_StartSound(NULL, es->number, CHAN_AUTO, cgs.media.landSound);
 	}
 
-	if (client_num == cg.predicted_player_state.client_num)
+	if (clientNum == cg.predicted_player_state.clientNum)
 	{
 		// smooth landing z changes
 		cg.landChange = -delta;
@@ -1595,7 +1595,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 	int event;
 	vec3_t dir;
 	const char* s;
-	int client_num;
+	int clientNum;
 	int e_id = 0;
 	int isnd = 0;
 	centity_t* cl_ent;
@@ -1614,16 +1614,16 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 		return;
 	}
 
-	client_num = es->client_num;
+	clientNum = es->clientNum;
 
-	if (client_num < 0 || client_num >= MAX_CLIENTS)
+	if (clientNum < 0 || clientNum >= MAX_CLIENTS)
 	{
-		client_num = 0;
+		clientNum = 0;
 	}
 
 	if (es->eType == ET_NPC)
 	{
-		client_num = es->number;
+		clientNum = es->number;
 
 		if (!cent->npcClient)
 		{
@@ -1766,11 +1766,11 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 
 	case EV_FALL:
 		DEBUGNAME("EV_FALL");
-		if (es->number == cg.snap->ps.client_num && cg.snap->ps.fallingToDeath)
+		if (es->number == cg.snap->ps.clientNum && cg.snap->ps.fallingToDeath)
 		{
 			break;
 		}
-		DoFall(cent, es, client_num);
+		DoFall(cent, es, clientNum);
 		break;
 	case EV_STEP_4:
 	case EV_STEP_8:
@@ -1782,7 +1782,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 			int delta;
 			int step;
 
-			if (client_num != cg.predicted_player_state.client_num)
+			if (clientNum != cg.predicted_player_state.clientNum)
 			{
 				break;
 			}
@@ -1836,8 +1836,8 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 				//no enemy data, can't do our visual effects.
 				break;
 			}
-			if (es->number != cg.snap->ps.client_num //not the client
-				&& (es->eventParm == cg.snap->ps.client_num //other lock player is the client
+			if (es->number != cg.snap->ps.clientNum //not the client
+				&& (es->eventParm == cg.snap->ps.clientNum //other lock player is the client
 					|| es->eventParm < es->number)) //other player has lower entity number.
 			{
 				//don't render the effects twice.
@@ -1977,9 +1977,9 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 		DEBUGNAME("EV_GLOBAL_DUEL");
 		//used for beginning of power duels
 		//if (cg.predicted_player_state.persistant[PERS_TEAM] != TEAM_SPECTATOR)
-		if (es->otherentity_num == cg.predicted_player_state.client_num ||
-			es->otherentity_num2 == cg.predicted_player_state.client_num ||
-			es->groundEntityNum == cg.predicted_player_state.client_num)
+		if (es->otherentity_num == cg.predicted_player_state.clientNum ||
+			es->otherentity_num2 == cg.predicted_player_state.clientNum ||
+			es->groundEntityNum == cg.predicted_player_state.clientNum)
 		{
 			CG_CenterPrint(CG_GetStringEdString("MP_SVGAME", "BEGIN_DUEL"), 120, GIANTCHAR_WIDTH * 2);
 			trap->S_StartLocalSound(cgs.media.countFightSound, CHAN_ANNOUNCER);
@@ -1989,7 +1989,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 	case EV_PRIVATE_DUEL:
 		DEBUGNAME("EV_PRIVATE_DUEL");
 
-		if (cg.snap->ps.client_num != es->number)
+		if (cg.snap->ps.clientNum != es->number)
 		{
 			break;
 		}
@@ -2025,8 +2025,8 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 			break;
 		}
 		if (cg.predicted_player_state.duelInProgress &&
-			(cg.predicted_player_state.client_num != es->client_num &&
-				cg.predicted_player_state.duelIndex != es->client_num))
+			(cg.predicted_player_state.clientNum != es->clientNum &&
+				cg.predicted_player_state.duelIndex != es->clientNum))
 		{
 			break;
 		}
@@ -2035,12 +2035,12 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 			trap->S_StartSound(NULL, es->number, CHAN_VOICE, CG_CustomSound(es->number, "*jump1.wav"));
 			//play all jump sounds
 		}
-		else if (cg_jumpSounds.integer == 2 && cg.snap->ps.client_num != es->number)
+		else if (cg_jumpSounds.integer == 2 && cg.snap->ps.clientNum != es->number)
 		{
 			trap->S_StartSound(NULL, es->number, CHAN_VOICE, CG_CustomSound(es->number, "*jump1.wav"));
 			//only play other players' jump sounds
 		}
-		else if (cg_jumpSounds.integer > 2 && cg.snap->ps.client_num == es->number)
+		else if (cg_jumpSounds.integer > 2 && cg.snap->ps.clientNum == es->number)
 		{
 			trap->S_StartSound(NULL, es->number, CHAN_VOICE, CG_CustomSound(es->number, "*jump1.wav"));
 			//only play my jump sounds
@@ -2059,7 +2059,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 			cg_entities[es->number].currentState.torsoFlip ^= qtrue;
 			cg_entities[es->number].currentState.legsFlip ^= qtrue;
 
-			if (cg.predicted_player_state.pm_flags & PMF_FOLLOW && es->number == cg.predicted_player_state.client_num)
+			if (cg.predicted_player_state.pm_flags & PMF_FOLLOW && es->number == cg.predicted_player_state.clientNum)
 			{
 				cg.predicted_player_state.torsoFlip ^= qtrue;
 				cg.predicted_player_state.legsFlip ^= qtrue;
@@ -2079,32 +2079,32 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 				}
 			}
 		}
-		if (es->number == cg.snap->ps.client_num && cg.snap->ps.fallingToDeath)
+		if (es->number == cg.snap->ps.clientNum && cg.snap->ps.fallingToDeath)
 		{
 			break;
 		}
 
 		if (cg.predicted_player_state.duelInProgress &&
-			(es->client_num != cg.predicted_player_state.client_num &&
-				es->client_num != cg.predicted_player_state.duelIndex))
+			(es->clientNum != cg.predicted_player_state.clientNum &&
+				es->clientNum != cg.predicted_player_state.duelIndex))
 		{
 			break;
 		}
 
 		if (es->eventParm) //fall-roll-in-one event
 		{
-			DoFall(cent, es, client_num);
+			DoFall(cent, es, clientNum);
 		}
 
 		if (cg_rollSounds.integer == 1)
 		{
 			trap->S_StartSound(NULL, es->number, CHAN_VOICE, CG_CustomSound(es->number, "*jump1.wav"));
 		}
-		else if (cg_rollSounds.integer == 2 && cg.snap->ps.client_num != es->number)
+		else if (cg_rollSounds.integer == 2 && cg.snap->ps.clientNum != es->number)
 		{
 			trap->S_StartSound(NULL, es->number, CHAN_VOICE, CG_CustomSound(es->number, "*jump1.wav"));
 		}
-		else if (cg_rollSounds.integer > 2 && cg.snap->ps.client_num == es->number)
+		else if (cg_rollSounds.integer > 2 && cg.snap->ps.clientNum == es->number)
 		{
 			trap->S_StartSound(NULL, es->number, CHAN_VOICE, CG_CustomSound(es->number, "*jump1.wav"));
 		}
@@ -2484,7 +2484,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 
 	case EV_SIEGESPEC:
 		DEBUGNAME("EV_SIEGESPEC");
-		if (es->owner == cg.predicted_player_state.client_num)
+		if (es->owner == cg.predicted_player_state.clientNum)
 		{
 			cg_siegeDeathTime = es->time;
 		}
@@ -2565,7 +2565,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 				index = cg_entities[es->eventParm].currentState.trickedentindex4;
 				trap->S_StartSound(NULL, es->number, CHAN_AUTO, cgs.media.holocronPickup);
 
-				if (es->number == cg.snap->ps.client_num && showPowersName[index])
+				if (es->number == cg.snap->ps.clientNum && showPowersName[index])
 				{
 					const char* str_text = CG_GetStringEdString("MP_INGAME", "PICKUPLINE");
 
@@ -2577,7 +2577,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 				//Show the player their force selection bar in case picking the holocron up changed the current selection
 				if (index != FP_SABER_OFFENSE && index != FP_SABER_DEFENSE && index != FP_SABERTHROW &&
 					index != FP_LEVITATION &&
-					es->number == cg.snap->ps.client_num &&
+					es->number == cg.snap->ps.clientNum &&
 					(index == cg.snap->ps.fd.forcePowerSelected || !(cg.snap->ps.fd.forcePowersActive & 1 << cg.snap
 						->ps.fd.forcePowerSelected)))
 				{
@@ -2588,7 +2588,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 					}
 				}
 
-				if (es->number == cg.snap->ps.client_num && newindex)
+				if (es->number == cg.snap->ps.clientNum && newindex)
 				{
 					if (cg.forceSelectTime < cg.time)
 					{
@@ -2626,7 +2626,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 			}
 
 			// show icon and name on status bar
-			if (es->number == cg.snap->ps.client_num)
+			if (es->number == cg.snap->ps.clientNum)
 			{
 				CG_ItemPickup(index);
 			}
@@ -2649,12 +2649,12 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 			// powerup pickups are global
 			if (item->pickup_sound && item->pickup_sound[0])
 			{
-				trap->S_StartSound(NULL, cg.snap->ps.client_num, CHAN_AUTO,
+				trap->S_StartSound(NULL, cg.snap->ps.clientNum, CHAN_AUTO,
 					trap->S_RegisterSound(item->pickup_sound));
 			}
 
 			// show icon and name on status bar
-			if (es->number == cg.snap->ps.client_num)
+			if (es->number == cg.snap->ps.clientNum)
 			{
 				CG_ItemPickup(index);
 			}
@@ -2675,25 +2675,25 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 	case EV_NOAMMO:
 		DEBUGNAME("EV_NOAMMO");
 		//		trap->S_StartSound (NULL, es->number, CHAN_AUTO, cgs.media.noAmmoSound );
-		if (es->number == cg.snap->ps.client_num)
+		if (es->number == cg.snap->ps.clientNum)
 		{
 			if (CG_InFighter() || CG_InATST() || cg.snap->ps.weapon == WP_NONE)
 			{
 				//just letting us know our vehicle is out of ammo
 				//FIXME: flash something on HUD or give some message so we know we have no ammo
-				centity_t* local_cent = &cg_entities[cg.snap->ps.client_num];
+				centity_t* local_cent = &cg_entities[cg.snap->ps.clientNum];
 				if (local_cent->m_pVehicle
 					&& local_cent->m_pVehicle->m_pVehicleInfo
 					&& local_cent->m_pVehicle->m_pVehicleInfo->weapon[es->eventParm].soundNoAmmo)
 				{
 					//play the "no Ammo" sound for this weapon
-					trap->S_StartSound(NULL, cg.snap->ps.client_num, CHAN_AUTO,
+					trap->S_StartSound(NULL, cg.snap->ps.clientNum, CHAN_AUTO,
 						local_cent->m_pVehicle->m_pVehicleInfo->weapon[es->eventParm].soundNoAmmo);
 				}
 				else
 				{
 					//play the default "no ammo" sound
-					trap->S_StartSound(NULL, cg.snap->ps.client_num, CHAN_AUTO, cgs.media.noAmmoSound);
+					trap->S_StartSound(NULL, cg.snap->ps.clientNum, CHAN_AUTO, cgs.media.noAmmoSound);
 				}
 				//flash the HUD so they associate the sound with the visual indicator that they don't have enough ammo
 				if (cg_vehicleAmmoWarningTime < cg.time
@@ -2819,7 +2819,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 
 			if (cg.snap->ps.duelInProgress)
 			{ // this client is dueling
-				if (es->number != cg.snap->ps.client_num && es->number != cg.snap->ps.duelIndex)
+				if (es->number != cg.snap->ps.clientNum && es->number != cg.snap->ps.duelIndex)
 				{	// event did not origniate from one of the duelers
 					doit = 0;
 				}
@@ -2852,7 +2852,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 
 			if (cg.snap->ps.duelInProgress)
 			{ // this client is dueling
-				if (es->number != cg.snap->ps.client_num && es->number != cg.snap->ps.duelIndex)
+				if (es->number != cg.snap->ps.clientNum && es->number != cg.snap->ps.duelIndex)
 				{	// event did not origniate from one of the duelers
 					doit = 0;
 				}
@@ -2863,7 +2863,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 			}
 
 			//if you just exploded your detpacks and you have no ammo left for them, autoswitch
-			if (cg.snap->ps.client_num == cent->currentState.number &&
+			if (cg.snap->ps.clientNum == cent->currentState.number &&
 				cg.snap->ps.weapon == WP_DET_PACK)
 			{
 				if (cg.snap->ps.ammo[weaponData[WP_DET_PACK].ammoIndex] == 0)
@@ -3479,7 +3479,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 			trap->S_StartSound(NULL, es->number, CHAN_AUTO,
 				trap->S_RegisterSound("sound/weapons/saber/saberon.wav"));
 
-			if (cg.snap->ps.client_num == es->number)
+			if (cg.snap->ps.clientNum == es->number)
 			{
 				trap->S_StartLocalSound(cgs.media.happyMusic, CHAN_LOCAL);
 				CGCam_SetMusicMult(0.3f, 5000);
@@ -3494,12 +3494,12 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 
 			if (cg.snap->ps.duelInProgress)
 			{ // this client is dueling
-				if (es->number >= 0 && es->number < MAX_CLIENTS && es->number != cg.snap->ps.client_num && es->number != cg.snap->ps.duelIndex)
+				if (es->number >= 0 && es->number < MAX_CLIENTS && es->number != cg.snap->ps.clientNum && es->number != cg.snap->ps.duelIndex)
 				{	// sound originated from a client, but not one of the duelers
 					doit = 0;
 				}
 				else if (es->number >= MAX_CLIENTS && es->otherentity_num != ENTITYNUM_NONE &&
-					es->otherentity_num != cg.snap->ps.client_num &&
+					es->otherentity_num != cg.snap->ps.clientNum &&
 					es->otherentity_num != cg.snap->ps.duelIndex)
 				{  // sound generated by an temp entity in a snap, the otherentity_num should be the orinating
 				   // client number (by hack!). If otherentity_num is ENTITYNUM_NONE, then it is one of the many sounds
@@ -3509,7 +3509,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 			}
 			if (doit)
 			{
-				if (cent->currentState.eventParm != cg.snap->ps.client_num || cg.renderingThirdPerson || cg_trueguns.integer
+				if (cent->currentState.eventParm != cg.snap->ps.clientNum || cg.renderingThirdPerson || cg_trueguns.integer
 					|| cg.predicted_player_state.weapon == WP_SABER || cg.predicted_player_state.weapon == WP_MELEE)
 				{
 					//h4q3ry
@@ -3543,12 +3543,12 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 
 			if (cg.snap->ps.duelInProgress)
 			{ // this client is dueling
-				if (es->number >= 0 && es->number < MAX_CLIENTS && es->number != cg.snap->ps.client_num && es->number != cg.snap->ps.duelIndex)
+				if (es->number >= 0 && es->number < MAX_CLIENTS && es->number != cg.snap->ps.clientNum && es->number != cg.snap->ps.duelIndex)
 				{	// sound originated from a client, but not one of the duelers
 					doit = 0;
 				}
 				else if (es->number >= MAX_CLIENTS && es->otherentity_num != ENTITYNUM_NONE &&
-					es->otherentity_num != cg.snap->ps.client_num &&
+					es->otherentity_num != cg.snap->ps.clientNum &&
 					es->otherentity_num != cg.snap->ps.duelIndex)
 				{  // sound generated by an temp entity in a snap, the otherentity_num should be the orinating
 				   // client number (by hack!). If otherentity_num is ENTITYNUM_NONE, then it is one of the many sounds
@@ -3558,7 +3558,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 			}
 			if (doit)
 			{
-				if (cent->currentState.eventParm != cg.snap->ps.client_num ||
+				if (cent->currentState.eventParm != cg.snap->ps.clientNum ||
 					cg.renderingThirdPerson)
 				{
 					//h4q3ry
@@ -3607,12 +3607,12 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 
 			if (cg.snap->ps.duelInProgress)
 			{ // this client is dueling
-				if (es->number >= 0 && es->number < MAX_CLIENTS && es->number != cg.snap->ps.client_num && es->number != cg.snap->ps.duelIndex)
+				if (es->number >= 0 && es->number < MAX_CLIENTS && es->number != cg.snap->ps.clientNum && es->number != cg.snap->ps.duelIndex)
 				{	// sound originated from a client, but not one of the duelers
 					doit = 0;
 				}
 				else if (es->number >= MAX_CLIENTS && es->otherentity_num != ENTITYNUM_NONE &&
-					es->otherentity_num != cg.snap->ps.client_num &&
+					es->otherentity_num != cg.snap->ps.clientNum &&
 					es->otherentity_num != cg.snap->ps.duelIndex)
 				{  // sound generated by an temp entity in a snap, the otherentity_num should be the orinating
 				   // client number (by hack!). If otherentity_num is ENTITYNUM_NONE, then it is one of the many sounds
@@ -3639,7 +3639,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 
 	case EV_DISRUPTOR_ZOOMSOUND:
 		DEBUGNAME("EV_DISRUPTOR_ZOOMSOUND");
-		if (es->number == cg.snap->ps.client_num)
+		if (es->number == cg.snap->ps.clientNum)
 		{
 			if (cg.snap->ps.zoomMode)
 			{
@@ -3725,7 +3725,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 
 	case EV_SCREENSHAKE:
 		DEBUGNAME("EV_SCREENSHAKE");
-		if (!es->modelIndex || cg.predicted_player_state.client_num == es->modelIndex - 1)
+		if (!es->modelIndex || cg.predicted_player_state.clientNum == es->modelIndex - 1)
 		{
 			CGCam_Shake(es->angles[0], es->time);
 		}
@@ -3734,12 +3734,12 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 	case EV_BLOCKSHAKE:
 		DEBUGNAME("EV_BLOCKSHAKE");
 
-		/*if (es->owner == cg.predicted_player_state.client_num)
+		/*if (es->owner == cg.predicted_player_state.clientNum)
 		{
 			CGCam_BlockShake(es->angles[0], es->time);
 		}*/
 
-		if (!es->modelIndex || cg.predicted_player_state.client_num == es->modelIndex - 1)
+		if (!es->modelIndex || cg.predicted_player_state.clientNum == es->modelIndex - 1)
 		{
 			CGCam_BlockShake(es->angles[0], es->time);
 		}
@@ -3747,7 +3747,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 
 	case EV_LOCALTIMER:
 		DEBUGNAME("EV_LOCALTIMER");
-		if (es->owner == cg.predicted_player_state.client_num)
+		if (es->owner == cg.predicted_player_state.clientNum)
 		{
 			CG_LocalTimingBar(es->time, es->time2);
 		}
@@ -3819,7 +3819,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 
 	case EV_ITEMUSEFAIL:
 		DEBUGNAME("EV_ITEMUSEFAIL");
-		if (cg.snap->ps.client_num == es->number)
+		if (cg.snap->ps.clientNum == es->number)
 		{
 			char* ps_string_ed_ref = NULL;
 
@@ -3867,12 +3867,12 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 
 			if (cg.snap->ps.duelInProgress)
 			{ // this client is dueling
-				if (es->number >= 0 && es->number < MAX_CLIENTS && es->number != cg.snap->ps.client_num && es->number != cg.snap->ps.duelIndex)
+				if (es->number >= 0 && es->number < MAX_CLIENTS && es->number != cg.snap->ps.clientNum && es->number != cg.snap->ps.duelIndex)
 				{	// sound originated from a client, but not one of the duelers
 					doit = 0;
 				}
 				else if (es->number >= MAX_CLIENTS && es->otherentity_num != ENTITYNUM_NONE &&
-					es->otherentity_num != cg.snap->ps.client_num &&
+					es->otherentity_num != cg.snap->ps.clientNum &&
 					es->otherentity_num != cg.snap->ps.duelIndex)
 				{  // sound generated by an temp entity in a snap, the otherentity_num should be the orinating
 				   // client number (by hack!). If otherentity_num is ENTITYNUM_NONE, then it is one of the many sounds
@@ -3914,12 +3914,12 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 
 			if (cg.snap->ps.duelInProgress)
 			{ // this client is dueling
-				if (es->number >= 0 && es->number < MAX_CLIENTS && es->number != cg.snap->ps.client_num && es->number != cg.snap->ps.duelIndex)
+				if (es->number >= 0 && es->number < MAX_CLIENTS && es->number != cg.snap->ps.clientNum && es->number != cg.snap->ps.duelIndex)
 				{	// sound originated from a client, but not one of the duelers
 					doit = 0;
 				}
 				else if (es->number >= MAX_CLIENTS && es->otherentity_num != ENTITYNUM_NONE &&
-					es->otherentity_num != cg.snap->ps.client_num &&
+					es->otherentity_num != cg.snap->ps.clientNum &&
 					es->otherentity_num != cg.snap->ps.duelIndex)
 				{  // sound generated by an temp entity in a snap, the otherentity_num should be the orinating
 				   // client number (by hack!). If otherentity_num is ENTITYNUM_NONE, then it is one of the many sounds
@@ -4031,7 +4031,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 
 	case EV_GIVE_NEW_RANK:
 		DEBUGNAME("EV_GIVE_NEW_RANK");
-		if (es->trickedentindex == cg.snap->ps.client_num)
+		if (es->trickedentindex == cg.snap->ps.clientNum)
 		{
 			trap->Cvar_Set("ui_rankChange", va("%i", es->eventParm));
 
@@ -4098,7 +4098,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 				// note special encoding:
 				//  otherentity_num has owner number
 				//  otherentity_num2 has hit entitiy number
-				if (es->otherentity_num != cg.snap->ps.client_num && es->otherentity_num != cg.snap->ps.duelIndex)
+				if (es->otherentity_num != cg.snap->ps.clientNum && es->otherentity_num != cg.snap->ps.duelIndex)
 				{
 					doit = 0;
 				}
@@ -4144,7 +4144,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 				// note special encoding:
 				//  otherentity_num has owner number
 				//  otherentity_num2 has hit entitiy number
-				if (es->otherentity_num != cg.snap->ps.client_num && es->otherentity_num != cg.snap->ps.duelIndex)
+				if (es->otherentity_num != cg.snap->ps.clientNum && es->otherentity_num != cg.snap->ps.duelIndex)
 				{
 					doit = 0;
 				}
@@ -4190,7 +4190,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 				// note special encoding:
 				//  otherentity_num has owner number
 				//  otherentity_num2 has hit entitiy number
-				if (es->otherentity_num != cg.snap->ps.client_num && es->otherentity_num != cg.snap->ps.duelIndex)
+				if (es->otherentity_num != cg.snap->ps.clientNum && es->otherentity_num != cg.snap->ps.duelIndex)
 				{
 					doit = 0;
 				}
@@ -4229,7 +4229,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 				//  otherentity_num has owner number
 				//  if owner num is ENTITYNUM_NONE then always play it
 				if (es->otherentity_num != ENTITYNUM_NONE &&
-					es->otherentity_num != cg.snap->ps.client_num &&
+					es->otherentity_num != cg.snap->ps.clientNum &&
 					es->otherentity_num != cg.snap->ps.duelIndex)
 				{
 					doit = 0;
@@ -4333,7 +4333,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 				//  otherentity_num has owner number
 				//  if owner num is ENTITYNUM_NONE then always play it
 				if (es->otherentity_num != ENTITYNUM_NONE &&
-					es->otherentity_num != cg.snap->ps.client_num &&
+					es->otherentity_num != cg.snap->ps.clientNum &&
 					es->otherentity_num != cg.snap->ps.duelIndex)
 				{
 					doit = 0;
@@ -4475,14 +4475,14 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 
 			if (sfx)
 			{
-				if (entnum != cg.predicted_player_state.client_num)
+				if (entnum != cg.predicted_player_state.clientNum)
 				{
 					//play on the head as well to simulate hearing in radio and in world
 					if (ci->team == cg.predicted_player_state.persistant[PERS_TEAM])
 					{
 						//don't hear it if this person is on the other team, but they can still
 						//hear it in the world spot.
-						trap->S_StartSound(NULL, cg.snap->ps.client_num, CHAN_MENU1, sfx);
+						trap->S_StartSound(NULL, cg.snap->ps.clientNum, CHAN_MENU1, sfx);
 					}
 				}
 				if (ci->team == cg.predicted_player_state.persistant[PERS_TEAM])
@@ -4531,12 +4531,12 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 		DEBUGNAME("EV_GLOBAL_SOUND");
 		if (cgs.gameSounds[es->eventParm])
 		{
-			trap->S_StartSound(NULL, cg.snap->ps.client_num, CHAN_MENU1, cgs.gameSounds[es->eventParm]);
+			trap->S_StartSound(NULL, cg.snap->ps.clientNum, CHAN_MENU1, cgs.gameSounds[es->eventParm]);
 		}
 		else
 		{
 			s = CG_ConfigString(CS_SOUNDS + es->eventParm);
-			trap->S_StartSound(NULL, cg.snap->ps.client_num, CHAN_MENU1, CG_CustomSound(es->number, s));
+			trap->S_StartSound(NULL, cg.snap->ps.clientNum, CHAN_MENU1, CG_CustomSound(es->number, s));
 		}
 		break;
 
@@ -4621,15 +4621,15 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 		{
 			int gender;
 
-			if (es->client_num < MAX_CLIENTS && cg_entities[es->client_num].currentValid)
+			if (es->clientNum < MAX_CLIENTS && cg_entities[es->clientNum].currentValid)
 			{
 				//already a player
-				gender = cgs.clientinfo[es->client_num].gender;
+				gender = cgs.clientinfo[es->clientNum].gender;
 			}
-			else if (cg_entities[es->client_num].currentState.eType == ET_NPC)
+			else if (cg_entities[es->clientNum].currentState.eType == ET_NPC)
 			{
 				//NPC
-				gender = cg_entities[es->client_num].npcClient->gender;
+				gender = cg_entities[es->clientNum].npcClient->gender;
 			}
 			else
 			{
@@ -4666,20 +4666,20 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 					fileName = Q_strrchr(r, '/');
 					strcpy(name_slash, fileName);
 
-					trap->S_StartSound(NULL, es->client_num, es->trickedentindex,
-						CG_CustomSound(es->client_num, sound_name));
+					trap->S_StartSound(NULL, es->clientNum, es->trickedentindex,
+						CG_CustomSound(es->clientNum, sound_name));
 					break;
 				}
 			}
 		}
 		if (cgs.gameSounds[es->eventParm])
 		{
-			trap->S_StartSound(NULL, es->client_num, es->trickedentindex, cgs.gameSounds[es->eventParm]);
+			trap->S_StartSound(NULL, es->clientNum, es->trickedentindex, cgs.gameSounds[es->eventParm]);
 		}
 		else
 		{
 			s = CG_ConfigString(CS_SOUNDS + es->eventParm);
-			trap->S_StartSound(NULL, es->client_num, es->trickedentindex, CG_CustomSound(es->client_num, s));
+			trap->S_StartSound(NULL, es->clientNum, es->trickedentindex, CG_CustomSound(es->clientNum, s));
 		}
 		break;
 
@@ -4717,7 +4717,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 		DEBUGNAME("EV_DEATHx");
 		trap->S_StartSound(NULL, es->number, CHAN_VOICE,
 			CG_CustomSound(es->number, va("*death%i.wav", event - EV_DEATH1 + 1)));
-		if (es->eventParm && es->number == cg.snap->ps.client_num)
+		if (es->eventParm && es->number == cg.snap->ps.clientNum)
 		{
 			trap->S_StartLocalSound(cgs.media.dramaticFailure, CHAN_LOCAL);
 			CGCam_SetMusicMult(0.3f, 5000);
@@ -4734,7 +4734,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 		//
 	case EV_POWERUP_QUAD:
 		DEBUGNAME("EV_POWERUP_QUAD");
-		if (es->number == cg.snap->ps.client_num)
+		if (es->number == cg.snap->ps.clientNum)
 		{
 			cg.powerupActive = PW_MEDITATE;
 			cg.powerupTime = cg.time;
@@ -4743,7 +4743,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 
 	case EV_POWERUP_BATTLESUIT:
 		DEBUGNAME("EV_POWERUP_BATTLESUIT");
-		if (es->number == cg.snap->ps.client_num)
+		if (es->number == cg.snap->ps.clientNum)
 		{
 			cg.powerupActive = PW_BATTLESUIT;
 			cg.powerupTime = cg.time;
@@ -4776,7 +4776,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 
 	case EV_DRUGGED:
 		DEBUGNAME("EV_DRUGGED");
-		if (es->owner == cg.predicted_player_state.client_num)
+		if (es->owner == cg.predicted_player_state.clientNum)
 		{
 			// Only allow setting up the wonky vision on the player..do it for 10 seconds...must be synchronized with calcs done in cg_view.  Just search for cg.wonkyTime to find 'em.
 			cg.wonkyTime = cg.time + 10000;
@@ -4785,7 +4785,7 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 
 	case EV_STUNNED:
 		DEBUGNAME("EV_STUNNED");
-		if (es->owner == cg.predicted_player_state.client_num)
+		if (es->owner == cg.predicted_player_state.clientNum)
 		{
 			// Only allow setting up the wonky vision on the player..do it for 5 seconds...must be synchronized with calcs done in cg_view.  Just search for cg.wonkyTime to find 'em.
 			cg.stunnedTime = cg.time + 5000;

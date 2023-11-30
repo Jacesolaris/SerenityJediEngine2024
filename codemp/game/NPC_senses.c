@@ -480,7 +480,7 @@ int G_CheckAlertEvents(gentity_t* self, qboolean checkSight, qboolean checkSound
 	int bestSoundAlert = -1;
 	int bestSightAlert = -1;
 
-	//OJKFIXME: client_num 0
+	//OJKFIXME: clientNum 0
 	if (&g_entities[0] == NULL || g_entities[0].health <= 0)
 	{
 		//player is dead

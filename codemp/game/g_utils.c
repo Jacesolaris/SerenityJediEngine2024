@@ -1634,7 +1634,7 @@ void G_EntitySound(gentity_t* ent, soundChannel_t channel, const int soundIndex)
 {
 	gentity_t* te = G_TempEntity(ent->r.currentOrigin, EV_ENTITY_SOUND);
 	te->s.eventParm = soundIndex;
-	te->s.client_num = ent->s.number;
+	te->s.clientNum = ent->s.number;
 	te->s.trickedentindex = channel;
 }
 
@@ -1643,7 +1643,7 @@ void G_SoundOnEnt(gentity_t* ent, soundChannel_t channel, const char* sound_path
 {
 	gentity_t* te = G_TempEntity(ent->r.currentOrigin, EV_ENTITY_SOUND);
 	te->s.eventParm = G_SoundIndex((char*)sound_path);
-	te->s.client_num = ent->s.number;
+	te->s.clientNum = ent->s.number;
 	te->s.trickedentindex = channel;
 }
 

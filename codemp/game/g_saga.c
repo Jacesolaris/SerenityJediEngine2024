@@ -861,7 +861,7 @@ void SiegeRespawn(gentity_t* ent)
 		ClientSpawn(ent);
 		// add a teleportation effect
 		gentity_t* tent = G_TempEntity(ent->client->ps.origin, EV_PLAYER_TELEPORT_IN);
-		tent->s.client_num = ent->s.client_num;
+		tent->s.clientNum = ent->s.clientNum;
 	}
 }
 

@@ -427,35 +427,35 @@ void Svcmd_SaberAttackCycle_f()
 		return;
 	}
 
-	if (self->s.client_num >= MAX_CLIENTS //not the player
+	if (self->s.clientNum >= MAX_CLIENTS //not the player
 		&& !PM_ControlledByPlayer() && self->client->ps.saber[0].type == SABER_STAFF && self->client->ps.saber_anim_level
 		== SS_STAFF)
 	{
 		return;
 	}
 
-	if (self->s.client_num >= MAX_CLIENTS //not the player
+	if (self->s.clientNum >= MAX_CLIENTS //not the player
 		&& !PM_ControlledByPlayer() && self->client->ps.saber[0].type == SABER_ELECTROSTAFF && self->client->ps.
 		saber_anim_level == SS_STAFF)
 	{
 		return;
 	}
 
-	if (self->s.client_num >= MAX_CLIENTS //not the player
+	if (self->s.clientNum >= MAX_CLIENTS //not the player
 		&& !PM_ControlledByPlayer() && self->client->ps.saber[0].type == SABER_STAFF_UNSTABLE && self->client->ps.
 		saber_anim_level == SS_STAFF)
 	{
 		return;
 	}
 
-	if (self->s.client_num >= MAX_CLIENTS //not the player
+	if (self->s.clientNum >= MAX_CLIENTS //not the player
 		&& !PM_ControlledByPlayer() && self->client->ps.saber[0].type == SABER_STAFF_MAUL && self->client->ps.
 		saber_anim_level == SS_STAFF)
 	{
 		return;
 	}
 
-	if (self->s.client_num >= MAX_CLIENTS //not the player
+	if (self->s.clientNum >= MAX_CLIENTS //not the player
 		&& !PM_ControlledByPlayer() && self->client->ps.saber[0].type == SABER_SINGLE && self->client->ps.saber_anim_level
 		== SS_DUAL)
 	{
@@ -648,25 +648,25 @@ void Svcmd_SaberAttackCycle_f()
 		saber_anim_level++;
 		if (saber_anim_level > SS_STAFF)
 		{
-			if (self->s.client_num >= MAX_CLIENTS //not the player
+			if (self->s.clientNum >= MAX_CLIENTS //not the player
 				&& !PM_ControlledByPlayer() && self->client->ps.saber[0].type == SABER_STAFF && self->client->ps.
 				saber_anim_level == SS_STAFF)
 			{
 				saber_anim_level = SS_STAFF;
 			}
-			else if (self->s.client_num >= MAX_CLIENTS //not the player
+			else if (self->s.clientNum >= MAX_CLIENTS //not the player
 				&& !PM_ControlledByPlayer() && self->client->ps.saber[0].type == SABER_STAFF_UNSTABLE && self->client->
 				ps.saber_anim_level == SS_STAFF)
 			{
 				saber_anim_level = SS_STAFF;
 			}
-			else if (self->s.client_num >= MAX_CLIENTS //not the player
+			else if (self->s.clientNum >= MAX_CLIENTS //not the player
 				&& !PM_ControlledByPlayer() && self->client->ps.saber[0].type == SABER_STAFF_MAUL && self->client->ps.
 				saber_anim_level == SS_STAFF)
 			{
 				saber_anim_level = SS_STAFF;
 			}
-			else if (self->s.client_num >= MAX_CLIENTS //not the player
+			else if (self->s.clientNum >= MAX_CLIENTS //not the player
 				&& !PM_ControlledByPlayer() && self->client->ps.saber[0].type == SABER_SINGLE && self->client->ps.
 				saber_anim_level == SS_DUAL)
 			{

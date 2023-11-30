@@ -879,8 +879,8 @@ static void UI_BuildPlayerList()
 	char info[MAX_INFO_STRING];
 
 	trap->GetClientState(&cs);
-	trap->GetConfigString(CS_PLAYERS + cs.client_num, info, MAX_INFO_STRING);
-	uiInfo.playerNumber = cs.client_num;
+	trap->GetConfigString(CS_PLAYERS + cs.clientNum, info, MAX_INFO_STRING);
+	uiInfo.playerNumber = cs.clientNum;
 	uiInfo.teamLeader = atoi(Info_ValueForKey(info, "tl"));
 	const int team = atoi(Info_ValueForKey(info, "t"));
 	trap->GetConfigString(CS_SERVERINFO, info, sizeof info);
@@ -903,7 +903,7 @@ static void UI_BuildPlayerList()
 			{
 				Q_strncpyz(uiInfo.teamNames[uiInfo.myTeamCount], Info_ValueForKey(info, "n"), MAX_NETNAME);
 				Q_StripColor(uiInfo.teamNames[uiInfo.myTeamCount]);
-				uiInfo.teamclient_nums[uiInfo.myTeamCount] = n;
+				uiInfo.teamclientNums[uiInfo.myTeamCount] = n;
 				if (uiInfo.playerNumber == n)
 				{
 					playerTeamNumber = uiInfo.myTeamCount;
@@ -3642,7 +3642,7 @@ static qboolean UI_OwnerDrawVisible(int flags)
 			else
 			{
 				// if showing yourself
-				if (cg_selectedPlayer.integer < uiInfo.myTeamCount && uiInfo.teamclient_nums[cg_selectedPlayer.
+				if (cg_selectedPlayer.integer < uiInfo.myTeamCount && uiInfo.teamclientNums[cg_selectedPlayer.
 					integer] == uiInfo.playerNumber)
 				{
 					vis = qfalse;
@@ -3656,7 +3656,7 @@ static qboolean UI_OwnerDrawVisible(int flags)
 			if (uiInfo.teamLeader)
 			{
 				// if not showing yourself
-				if (!(cg_selectedPlayer.integer < uiInfo.myTeamCount && uiInfo.teamclient_nums[cg_selectedPlayer.
+				if (!(cg_selectedPlayer.integer < uiInfo.myTeamCount && uiInfo.teamclientNums[cg_selectedPlayer.
 					integer] == uiInfo.playerNumber))
 				{
 					vis = qfalse;
@@ -5446,7 +5446,7 @@ void UI_GetVideoSetup(void)
 	trap->Cvar_Register(NULL, "ui_r_subdivisions", "0", CVAR_ROM | CVAR_INTERNAL);
 	trap->Cvar_Register(NULL, "ui_r_fastSky", "0", CVAR_ROM | CVAR_INTERNAL);
 	trap->Cvar_Register(NULL, "ui_r_inGameVideo", "0", CVAR_ROM | CVAR_INTERNAL);
-	trap->Cvar_Register(NULL, "ui_r_allowExtensions", "0", CVAR_ROM | CVAR_INTERNAL);
+	trap->Cvar_Register(NULL, "ui_r_allowExtensions", "1", CVAR_ROM | CVAR_INTERNAL);
 	trap->Cvar_Register(NULL, "ui_cg_shadows", "2", CVAR_ROM | CVAR_INTERNAL);
 	trap->Cvar_Register(NULL, "ui_r_modified", "0", CVAR_ROM | CVAR_INTERNAL);
 
@@ -6963,7 +6963,7 @@ static void UI_RunMenuScript(char** args)
 				if (selectedPlayer < uiInfo.myTeamCount)
 				{
 					Q_strncpyz(buff, orders, sizeof buff);
-					trap->Cmd_ExecuteText(EXEC_APPEND, va(buff, uiInfo.teamclient_nums[selectedPlayer]));
+					trap->Cmd_ExecuteText(EXEC_APPEND, va(buff, uiInfo.teamclientNums[selectedPlayer]));
 					trap->Cmd_ExecuteText(EXEC_APPEND, "\n");
 				}
 				else
@@ -6971,11 +6971,11 @@ static void UI_RunMenuScript(char** args)
 					int i;
 					for (i = 0; i < uiInfo.myTeamCount; i++)
 					{
-						if (uiInfo.playerNumber == uiInfo.teamclient_nums[i])
+						if (uiInfo.playerNumber == uiInfo.teamclientNums[i])
 						{
 							continue;
 						}
-						Com_sprintf(buff, sizeof buff, orders, uiInfo.teamclient_nums[i]);
+						Com_sprintf(buff, sizeof buff, orders, uiInfo.teamclientNums[i]);
 						trap->Cmd_ExecuteText(EXEC_APPEND, buff);
 						trap->Cmd_ExecuteText(EXEC_APPEND, "\n");
 					}
@@ -7019,7 +7019,7 @@ static void UI_RunMenuScript(char** args)
 				else
 				{
 					Q_strncpyz(buff, orders, sizeof buff);
-					trap->Cmd_ExecuteText(EXEC_APPEND, va(buff, uiInfo.teamclient_nums[selectedPlayer]));
+					trap->Cmd_ExecuteText(EXEC_APPEND, va(buff, uiInfo.teamclientNums[selectedPlayer]));
 				}
 				trap->Cmd_ExecuteText(EXEC_APPEND, "\n");
 

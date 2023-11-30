@@ -52,7 +52,7 @@ qboolean PM_SaberInTransition(int move);
 qboolean PM_SaberInDeflect(int move);
 extern qboolean PM_SaberInBounce(int move);
 extern qboolean PM_SaberInBrokenParry(int move);
-extern saberInfo_t* BG_MySaber(int client_num, int saberNum);
+extern saberInfo_t* BG_MySaber(int clientNum, int saberNum);
 extern qboolean PM_InBackFlip(int anim);
 /*
 ==============================================================================
@@ -5844,7 +5844,7 @@ static void BG_StartLegsAnim(playerState_t* ps, const int anim)
 	if (ps->pm_type >= PM_DEAD)
 	{
 		//vehicles are allowed to do this.. IF it's a vehicle death anim
-		if (ps->client_num < MAX_CLIENTS || anim != BOTH_VT_DEATH1)
+		if (ps->clientNum < MAX_CLIENTS || anim != BOTH_VT_DEATH1)
 		{
 			return;
 		}
@@ -5859,7 +5859,7 @@ static void BG_StartLegsAnim(playerState_t* ps, const int anim)
 		BG_FlipPart(ps, SETANIM_LEGS);
 	}
 #ifdef _GAME
-	else if (g_entities[ps->client_num].s.legsAnim == anim)
+	else if (g_entities[ps->clientNum].s.legsAnim == anim)
 	{
 		//toggled anim to one anim then back to the one we were at previously in
 		//one frame, indicating that anim should be restarted.
@@ -5921,7 +5921,7 @@ void BG_StartTorsoAnim(playerState_t* ps, const int anim)
 		BG_FlipPart(ps, SETANIM_TORSO);
 	}
 #ifdef _GAME
-	else if (g_entities[ps->client_num].s.torsoAnim == anim)
+	else if (g_entities[ps->clientNum].s.torsoAnim == anim)
 	{
 		//toggled anim to one anim then back to the one we were at previously in
 		//one frame, indicating that anim should be restarted.
@@ -5955,22 +5955,22 @@ void BG_SetLegsAnimTimer(playerState_t* ps, const int time)
 		ps->legsTimer = 0;
 	}
 #ifdef _GAME
-	if (!ps->legsTimer && trap->ICARUS_TaskIDPending((sharedEntity_t*)&g_entities[ps->client_num], TID_ANIM_LOWER))
+	if (!ps->legsTimer && trap->ICARUS_TaskIDPending((sharedEntity_t*)&g_entities[ps->clientNum], TID_ANIM_LOWER))
 	{
 		//Waiting for legsAnimTimer to complete, and it just got set to zero
-		if (!trap->ICARUS_TaskIDPending((sharedEntity_t*)&g_entities[ps->client_num], TID_ANIM_BOTH))
+		if (!trap->ICARUS_TaskIDPending((sharedEntity_t*)&g_entities[ps->clientNum], TID_ANIM_BOTH))
 		{
 			//Not waiting for top
-			trap->ICARUS_TaskIDComplete((sharedEntity_t*)&g_entities[ps->client_num], TID_ANIM_LOWER);
+			trap->ICARUS_TaskIDComplete((sharedEntity_t*)&g_entities[ps->clientNum], TID_ANIM_LOWER);
 		}
 		else
 		{
 			//Waiting for both to finish before complete
-			Q3_TaskIDClear(&g_entities[ps->client_num].taskID[TID_ANIM_LOWER]); //Bottom is done, regardless
-			if (!trap->ICARUS_TaskIDPending((sharedEntity_t*)&g_entities[ps->client_num], TID_ANIM_UPPER))
+			Q3_TaskIDClear(&g_entities[ps->clientNum].taskID[TID_ANIM_LOWER]); //Bottom is done, regardless
+			if (!trap->ICARUS_TaskIDPending((sharedEntity_t*)&g_entities[ps->clientNum], TID_ANIM_UPPER))
 			{
 				//top is done and we're done
-				trap->ICARUS_TaskIDComplete((sharedEntity_t*)&g_entities[ps->client_num], TID_ANIM_BOTH);
+				trap->ICARUS_TaskIDComplete((sharedEntity_t*)&g_entities[ps->clientNum], TID_ANIM_BOTH);
 			}
 		}
 	}
@@ -5997,22 +5997,22 @@ void BG_SetTorsoAnimTimer(playerState_t* ps, const int time)
 		ps->torsoTimer = 0;
 	}
 #ifdef _GAME
-	if (!ps->torsoTimer && trap->ICARUS_TaskIDPending((sharedEntity_t*)&g_entities[ps->client_num], TID_ANIM_UPPER))
+	if (!ps->torsoTimer && trap->ICARUS_TaskIDPending((sharedEntity_t*)&g_entities[ps->clientNum], TID_ANIM_UPPER))
 	{
 		//Waiting for torsoAnimTimer to complete, and it just got set to zero
-		if (!trap->ICARUS_TaskIDPending((sharedEntity_t*)&g_entities[ps->client_num], TID_ANIM_BOTH))
+		if (!trap->ICARUS_TaskIDPending((sharedEntity_t*)&g_entities[ps->clientNum], TID_ANIM_BOTH))
 		{
 			//Not waiting for bottom
-			trap->ICARUS_TaskIDComplete((sharedEntity_t*)&g_entities[ps->client_num], TID_ANIM_UPPER);
+			trap->ICARUS_TaskIDComplete((sharedEntity_t*)&g_entities[ps->clientNum], TID_ANIM_UPPER);
 		}
 		else
 		{
 			//Waiting for both to finish before complete
-			Q3_TaskIDClear(&g_entities[ps->client_num].taskID[TID_ANIM_UPPER]); //Top is done, regardless
-			if (!trap->ICARUS_TaskIDPending((sharedEntity_t*)&g_entities[ps->client_num], TID_ANIM_LOWER))
+			Q3_TaskIDClear(&g_entities[ps->clientNum].taskID[TID_ANIM_UPPER]); //Top is done, regardless
+			if (!trap->ICARUS_TaskIDPending((sharedEntity_t*)&g_entities[ps->clientNum], TID_ANIM_LOWER))
 			{
 				//lower is done and we're done
-				trap->ICARUS_TaskIDComplete((sharedEntity_t*)&g_entities[ps->client_num], TID_ANIM_BOTH);
+				trap->ICARUS_TaskIDComplete((sharedEntity_t*)&g_entities[ps->clientNum], TID_ANIM_BOTH);
 			}
 		}
 	}
@@ -6024,7 +6024,7 @@ void PM_SetTorsoAnimTimer(const int time)
 	BG_SetTorsoAnimTimer(pm->ps, time);
 }
 
-void pm_saber_start_trans_anim(const int client_num, const int saber_anim_level, const int weapon, const int anim,
+void pm_saber_start_trans_anim(const int clientNum, const int saber_anim_level, const int weapon, const int anim,
 	float* animSpeed, const int fatigued)
 {
 	char buf[128];
@@ -6039,7 +6039,7 @@ void pm_saber_start_trans_anim(const int client_num, const int saber_anim_level,
 
 	if (anim >= BOTH_A1_T__B_ && anim <= BOTH_ROLL_STAB)
 	{
-		const saberInfo_t* saber = BG_MySaber(client_num, 0);
+		const saberInfo_t* saber = BG_MySaber(clientNum, 0);
 
 		if (weapon == WP_SABER)
 		{
@@ -6047,7 +6047,7 @@ void pm_saber_start_trans_anim(const int client_num, const int saber_anim_level,
 			{
 				*animSpeed *= saber->animSpeedScale;
 			}
-			saber = BG_MySaber(client_num, 1);
+			saber = BG_MySaber(clientNum, 1);
 
 			if (saber && saber->animSpeedScale != 1.0f)
 			{
@@ -6216,7 +6216,7 @@ void BG_SetAnimFinal(playerState_t* ps, const animation_t* animations, const int
 	assert(anim > -1);
 	assert(animations[anim].firstFrame > 0 || animations[anim].numFrames > 0);
 
-	pm_saber_start_trans_anim(ps->client_num, ps->fd.saber_anim_level, ps->weapon, anim, &edit_anim_speed, ps->userInt3);
+	pm_saber_start_trans_anim(ps->clientNum, ps->fd.saber_anim_level, ps->weapon, anim, &edit_anim_speed, ps->userInt3);
 
 	// Set torso anim
 	if (set_anim_parts & SETANIM_TORSO)
@@ -6450,7 +6450,7 @@ float bg_get_torso_anim_point(const playerState_t* ps, const int anim_index)
 	float anim_speed_factor = 1.0f;
 
 	//Be sure to scale by the proper anim speed just as if we were going to play the animation
-	pm_saber_start_trans_anim(ps->client_num, ps->fd.saber_anim_level, ps->weapon, ps->torsoAnim, &anim_speed_factor,
+	pm_saber_start_trans_anim(ps->clientNum, ps->fd.saber_anim_level, ps->weapon, ps->torsoAnim, &anim_speed_factor,
 		ps->userInt3);
 
 	if (anim_speed_factor > 0)
@@ -6486,7 +6486,7 @@ float BG_GetLegsAnimPoint(const playerState_t* ps, const int anim_index)
 	float anim_speed_factor = 1.0f;
 
 	//Be sure to scale by the proper anim speed just as if we were going to play the animation
-	pm_saber_start_trans_anim(ps->client_num, ps->fd.saber_anim_level, ps->weapon, ps->legsAnim, &anim_speed_factor,
+	pm_saber_start_trans_anim(ps->clientNum, ps->fd.saber_anim_level, ps->weapon, ps->legsAnim, &anim_speed_factor,
 		ps->userInt3);
 
 	if (anim_speed_factor > 0)

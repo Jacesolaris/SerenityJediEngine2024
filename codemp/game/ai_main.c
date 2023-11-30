@@ -177,7 +177,7 @@ char* teamplayStateDescriptions[] = {
 
 #define DEFEND_MINDISTANCE	200
 
-int force_jump_needed(vec3_t startvect, vec3_t endvect)
+static int force_jump_needed(vec3_t startvect, vec3_t endvect)
 {
 	vec3_t tempstart;
 	vec3_t tempend;
@@ -294,7 +294,7 @@ int IdealAttackDistance[WP_NUM_WEAPONS] =
 };
 
 //Find the origin location of a given entity
-void FindOrigin(const gentity_t* ent, vec3_t origin)
+static void FindOrigin(const gentity_t* ent, vec3_t origin)
 {
 	if (!ent->classname)
 	{
@@ -327,7 +327,7 @@ void FindOrigin(const gentity_t* ent, vec3_t origin)
 }
 
 //find angles/viewangles for entity
-void find_angles(const gentity_t* ent, vec3_t angles)
+static void find_angles(const gentity_t* ent, vec3_t angles)
 {
 	if (ent->client)
 	{
@@ -341,7 +341,7 @@ void find_angles(const gentity_t* ent, vec3_t angles)
 	}
 }
 
-float TargetDistance(const bot_state_t* bs, const gentity_t* target, vec3_t targetorigin)
+static float TargetDistance(const bot_state_t* bs, const gentity_t* target, vec3_t targetorigin)
 {
 	if (strcmp(target->classname, "misc_siege_item") == 0
 		|| strcmp(target->classname, "func_breakable") == 0
@@ -414,7 +414,7 @@ float TargetDistance(const bot_state_t* bs, const gentity_t* target, vec3_t targ
 	return Distance(bs->eye, targetorigin);
 }
 
-qboolean visible(const gentity_t* self, const gentity_t* other)
+static qboolean visible(const gentity_t* self, const gentity_t* other)
 {
 	vec3_t spot1;
 	vec3_t spot2;
@@ -443,7 +443,7 @@ qboolean visible(const gentity_t* self, const gentity_t* other)
 	return qfalse;
 }
 
-gentity_t* find_closest_human_player(vec3_t position, const int enemy_team)
+static gentity_t* find_closest_human_player(vec3_t position, const int enemy_team)
 {
 	float bestdist = 9999;
 	gentity_t* closestplayer = NULL;
@@ -485,7 +485,7 @@ gentity_t* find_closest_human_player(vec3_t position, const int enemy_team)
 	return closestplayer;
 }
 
-float vector_distancebot(vec3_t v1, vec3_t v2)
+static float vector_distancebot(vec3_t v1, vec3_t v2)
 {
 	vec3_t dir;
 
@@ -493,7 +493,7 @@ float vector_distancebot(vec3_t v1, vec3_t v2)
 	return VectorLength(dir);
 }
 
-qboolean check_fall_by_vectors(vec3_t origin, vec3_t angles, const gentity_t* ent)
+static qboolean check_fall_by_vectors(vec3_t origin, vec3_t angles, const gentity_t* ent)
 {
 	// Check a little in front of us.
 	trace_t tr;
@@ -519,7 +519,7 @@ qboolean check_fall_by_vectors(vec3_t origin, vec3_t angles, const gentity_t* en
 
 	down[2] -= 4096;
 
-	trap->Trace(&tr, use, ent->r.mins, ent->r.maxs, down, ent->s.client_num, MASK_SOLID, qfalse, 0, 0);
+	trap->Trace(&tr, use, ent->r.mins, ent->r.maxs, down, ent->s.clientNum, MASK_SOLID, qfalse, 0, 0);
 	// Look for ground.
 
 	VectorSubtract(use, tr.endpos, down);
@@ -535,7 +535,7 @@ qboolean check_fall_by_vectors(vec3_t origin, vec3_t angles, const gentity_t* en
 
 	down[2] -= 4096;
 
-	trap->Trace(&tr, use, ent->r.mins, ent->r.maxs, down, ent->s.client_num, MASK_SOLID, qfalse, 0, 0);
+	trap->Trace(&tr, use, ent->r.mins, ent->r.maxs, down, ent->s.clientNum, MASK_SOLID, qfalse, 0, 0);
 	// Look for ground.
 
 	VectorSubtract(use, tr.endpos, down);
@@ -551,7 +551,7 @@ qboolean check_fall_by_vectors(vec3_t origin, vec3_t angles, const gentity_t* en
 
 	down[2] -= 4096;
 
-	trap->Trace(&tr, use, ent->r.mins, ent->r.maxs, down, ent->s.client_num, MASK_SOLID, qfalse, 0, 0);
+	trap->Trace(&tr, use, ent->r.mins, ent->r.maxs, down, ent->s.clientNum, MASK_SOLID, qfalse, 0, 0);
 	// Look for ground.
 
 	VectorSubtract(use, tr.endpos, down);
@@ -562,7 +562,7 @@ qboolean check_fall_by_vectors(vec3_t origin, vec3_t angles, const gentity_t* en
 	return qfalse; // All is ok!
 }
 
-void set_enemy_path(bot_state_t* bs)
+static void set_enemy_path(bot_state_t* bs)
 {
 	// For aborted jumps.
 	vec3_t fwd, b_angle;
@@ -593,7 +593,7 @@ void set_enemy_path(bot_state_t* bs)
 	}
 }
 
-void ai_mod_jump(bot_state_t* bs)
+static void ai_mod_jump(bot_state_t* bs)
 {
 	vec3_t dir, p1, p2, apex;
 	float time, height, forward, z, xy, dist;
@@ -606,7 +606,7 @@ void ai_mod_jump(bot_state_t* bs)
 		return;
 	}
 
-	const gentity_t* target = &g_entities[bs->currentEnemy->client->ps.client_num]; // We NEED a valid enemy!
+	const gentity_t* target = &g_entities[bs->currentEnemy->client->ps.clientNum]; // We NEED a valid enemy!
 
 	if (!target)
 	{
@@ -788,7 +788,7 @@ void ai_mod_jump(bot_state_t* bs)
 	}
 }
 
-void bot_straight_tp_order_check(gentity_t* ent, const int ordernum, bot_state_t* bs)
+static void bot_straight_tp_order_check(gentity_t* ent, const int ordernum, bot_state_t* bs)
 {
 	switch (ordernum)
 	{
@@ -817,7 +817,7 @@ void bot_straight_tp_order_check(gentity_t* ent, const int ordernum, bot_state_t
 	}
 }
 
-void bot_select_weapon(const int client, const int weapon)
+static void bot_select_weapon(const int client, const int weapon)
 {
 	if (weapon <= WP_NONE)
 	{
@@ -826,7 +826,7 @@ void bot_select_weapon(const int client, const int weapon)
 	trap->EA_SelectWeapon(client, weapon);
 }
 
-void BotReportStatus(const bot_state_t* bs)
+static void BotReportStatus(const bot_state_t* bs)
 {
 	if (level.gametype == GT_TEAM)
 	{
@@ -843,7 +843,7 @@ void BotReportStatus(const bot_state_t* bs)
 }
 
 //accept a team order from a player
-void bot_order(gentity_t* ent, const int client_num, const int ordernum)
+void bot_order(gentity_t* ent, const int clientNum, const int ordernum)
 {
 	int state_min = 0;
 	int state_max = 0;
@@ -853,12 +853,12 @@ void bot_order(gentity_t* ent, const int client_num, const int ordernum)
 		return;
 	}
 
-	if (client_num != -1 && !botstates[client_num])
+	if (clientNum != -1 && !botstates[clientNum])
 	{
 		return;
 	}
 
-	if (client_num != -1 && !OnSameTeam(ent, &g_entities[client_num]))
+	if (clientNum != -1 && !OnSameTeam(ent, &g_entities[clientNum]))
 	{
 		return;
 	}
@@ -889,21 +889,21 @@ void bot_order(gentity_t* ent, const int client_num, const int ordernum)
 		return;
 	}
 
-	if (client_num != -1)
+	if (clientNum != -1)
 	{
 		if (ordernum == -1)
 		{
-			BotReportStatus(botstates[client_num]);
+			BotReportStatus(botstates[clientNum]);
 		}
 		else
 		{
-			bot_straight_tp_order_check(ent, ordernum, botstates[client_num]);
-			botstates[client_num]->state_Forced = ordernum;
-			botstates[client_num]->chatObject = ent;
-			botstates[client_num]->chatAltObject = NULL;
-			if (BotDoChat(botstates[client_num], "OrderAccepted", 1))
+			bot_straight_tp_order_check(ent, ordernum, botstates[clientNum]);
+			botstates[clientNum]->state_Forced = ordernum;
+			botstates[clientNum]->chatObject = ent;
+			botstates[clientNum]->chatAltObject = NULL;
+			if (BotDoChat(botstates[clientNum], "OrderAccepted", 1))
 			{
-				botstates[client_num]->chatTeam = 1;
+				botstates[clientNum]->chatTeam = 1;
 			}
 		}
 	}
@@ -937,7 +937,7 @@ void bot_order(gentity_t* ent, const int client_num, const int ordernum)
 }
 
 //See if bot is mind tricked by the client in question
-int bot_mind_tricked(const int bot_client, const int enemy_client)
+static int bot_mind_tricked(const int bot_client, const int enemy_client)
 {
 	if (!g_entities[enemy_client].client)
 	{
@@ -983,7 +983,7 @@ int bot_mind_tricked(const int bot_client, const int enemy_client)
 	return 0;
 }
 
-int is_teamplay(void)
+static int is_teamplay(void)
 {
 	if (level.gametype < GT_TEAM)
 	{
@@ -998,9 +998,9 @@ int is_teamplay(void)
 BotAI_GetClientState
 ==================
 */
-int bot_ai_get_client_state(const int client_num, playerState_t* state)
+static int bot_ai_get_client_state(const int clientNum, playerState_t* state)
 {
-	const gentity_t* ent = &g_entities[client_num];
+	const gentity_t* ent = &g_entities[clientNum];
 	if (!ent->inuse)
 	{
 		return qfalse;
@@ -1019,7 +1019,7 @@ int bot_ai_get_client_state(const int client_num, playerState_t* state)
 BotAI_GetEntityState
 ==================
 */
-int bot_ai_get_entity_state(const int entityNum, entityState_t* state)
+static int bot_ai_get_entity_state(const int entityNum, entityState_t* state)
 {
 	const gentity_t* ent = &g_entities[entityNum];
 	memset(state, 0, sizeof(entityState_t));
@@ -1035,9 +1035,9 @@ int bot_ai_get_entity_state(const int entityNum, entityState_t* state)
 BotAI_GetSnapshotEntity
 ==================
 */
-int BotAI_GetSnapshotEntity(const int client_num, const int sequence, entityState_t* state)
+static int BotAI_GetSnapshotEntity(const int clientNum, const int sequence, entityState_t* state)
 {
-	const int entNum = trap->BotGetSnapshotEntity(client_num, sequence);
+	const int entNum = trap->BotGetSnapshotEntity(clientNum, sequence);
 	if (entNum == -1)
 	{
 		memset(state, 0, sizeof(entityState_t));
@@ -1054,7 +1054,7 @@ int BotAI_GetSnapshotEntity(const int client_num, const int sequence, entityStat
 BotEntityInfo
 ==============
 */
-void BotEntityInfo(const int entnum, aas_entityinfo_t* info)
+static void BotEntityInfo(const int entnum, aas_entityinfo_t* info)
 {
 	trap->AAS_EntityInfo(entnum, info);
 }
@@ -1064,7 +1064,7 @@ void BotEntityInfo(const int entnum, aas_entityinfo_t* info)
 AngleDifference
 ==============
 */
-float angle_difference(const float ang1, const float ang2)
+static float angle_difference(const float ang1, const float ang2)
 {
 	float diff = ang1 - ang2;
 	if (ang1 > ang2)
@@ -1083,7 +1083,7 @@ float angle_difference(const float ang1, const float ang2)
 BotChangeViewAngle
 ==============
 */
-float bot_change_view_angle(float angle, float ideal_angle, const float speed)
+static float bot_change_view_angle(float angle, float ideal_angle, const float speed)
 {
 	angle = AngleMod(angle);
 	ideal_angle = AngleMod(ideal_angle);
@@ -1113,7 +1113,7 @@ float bot_change_view_angle(float angle, float ideal_angle, const float speed)
 BotChangeViewAngles
 ==============
 */
-void bot_change_view_angles(bot_state_t* bs, const float thinktime)
+static void bot_change_view_angles(bot_state_t* bs, const float thinktime)
 {
 	float factor;
 
@@ -1181,7 +1181,7 @@ void bot_change_view_angles(bot_state_t* bs, const float thinktime)
 BotInputToUserCommand
 ==============
 */
-void bot_input_to_user_command(bot_input_t* bi, usercmd_t* ucmd, int delta_angles[3], const int time,
+static void bot_input_to_user_command(bot_input_t* bi, usercmd_t* ucmd, int delta_angles[3], const int time,
 	const int use_time)
 {
 	vec3_t angles, forward, right;
@@ -1310,7 +1310,7 @@ void bot_input_to_user_command(bot_input_t* bi, usercmd_t* ucmd, int delta_angle
 BotUpdateInput
 ==============
 */
-void bot_update_input(bot_state_t* bs, const int time, const int elapsed_time)
+static void bot_update_input(bot_state_t* bs, const int time, const int elapsed_time)
 {
 	bot_input_t bi;
 	int j;
@@ -1345,13 +1345,13 @@ void bot_update_input(bot_state_t* bs, const int time, const int elapsed_time)
 			&& bs->currentEnemy->client
 			&& bs->currentEnemy->health > 0
 			&& bs->jumpTime <= level.time // Don't walk during jumping...
-			&& (VectorDistance(g_entities[bs->cur_ps.client_num].r.currentOrigin, bs->currentEnemy->r.currentOrigin) < 300
-				|| walktime[bs->cur_ps.client_num] > level.time))
+			&& (VectorDistance(g_entities[bs->cur_ps.clientNum].r.currentOrigin, bs->currentEnemy->r.currentOrigin) < 300
+				|| walktime[bs->cur_ps.clientNum] > level.time))
 		{
-			if (visible(&g_entities[bs->cur_ps.client_num], bs->currentEnemy) || walktime[bs->cur_ps.client_num] > level.time)
+			if (visible(&g_entities[bs->cur_ps.clientNum], bs->currentEnemy) || walktime[bs->cur_ps.clientNum] > level.time)
 			{
 				bi.actionflags |= ACTION_WALK;
-				walktime[bs->cur_ps.client_num] = level.time + 2000;
+				walktime[bs->cur_ps.clientNum] = level.time + 2000;
 				if (bs->cur_ps.saber_holstered)
 				{
 					bs->cur_ps.saber_holstered = 0;
@@ -1360,28 +1360,28 @@ void bot_update_input(bot_state_t* bs, const int time, const int elapsed_time)
 			else
 			{
 				// Reset.
-				walktime[bs->cur_ps.client_num] = 0;
+				walktime[bs->cur_ps.clientNum] = 0;
 				bi.actionflags &= ~ACTION_WALK;
 			}
 		}
 		else
 		{
 			// Reset.
-			walktime[bs->cur_ps.client_num] = 0;
+			walktime[bs->cur_ps.clientNum] = 0;
 			bi.actionflags &= ~ACTION_WALK;
 		}
 	}
 
-	if (next_kick[bs->cur_ps.client_num] <= level.time && bot_thinklevel.integer >= 0)
+	if (next_kick[bs->cur_ps.clientNum] <= level.time && bot_thinklevel.integer >= 0)
 	{
 		if (bs->currentEnemy
 			&& bs->currentEnemy->client
 			&& bs->currentEnemy->health > 0
 			&& bs->currentEnemy->client->ps.groundEntityNum != ENTITYNUM_NONE
-			&& VectorDistance(g_entities[bs->cur_ps.client_num].r.currentOrigin, bs->currentEnemy->r.currentOrigin) < SABER_KICK_RANGE
-			|| next_kick[bs->cur_ps.client_num] > level.time)
+			&& VectorDistance(g_entities[bs->cur_ps.clientNum].r.currentOrigin, bs->currentEnemy->r.currentOrigin) < SABER_KICK_RANGE
+			|| next_kick[bs->cur_ps.clientNum] > level.time)
 		{
-			if (visible(&g_entities[bs->cur_ps.client_num], bs->currentEnemy) || next_kick[bs->cur_ps.client_num] > level.time)
+			if (visible(&g_entities[bs->cur_ps.clientNum], bs->currentEnemy) || next_kick[bs->cur_ps.clientNum] > level.time)
 			{
 				bi.actionflags |= ACTION_KICK;
 
@@ -1390,22 +1390,22 @@ void bot_update_input(bot_state_t* bs, const int time, const int elapsed_time)
 				if (check_val <= 0)
 					check_val = 1;
 
-				next_kick[bs->cur_ps.client_num] = level.time + 20000 / check_val;
+				next_kick[bs->cur_ps.clientNum] = level.time + 20000 / check_val;
 			}
 			else
 			{
 				// Reset.
-				next_kick[bs->cur_ps.client_num] = 0;
+				next_kick[bs->cur_ps.clientNum] = 0;
 			}
 		}
 		else
 		{
 			// Reset.
-			next_kick[bs->cur_ps.client_num] = 0;
+			next_kick[bs->cur_ps.clientNum] = 0;
 		}
 	}
 
-	if (next_gloat[bs->cur_ps.client_num] <= level.time && bot_thinklevel.integer >= 0)
+	if (next_gloat[bs->cur_ps.clientNum] <= level.time && bot_thinklevel.integer >= 0)
 	{
 		if (bs->currentEnemy
 			&& bs->currentEnemy->client
@@ -1414,11 +1414,11 @@ void bot_update_input(bot_state_t* bs, const int time, const int elapsed_time)
 			&& !bs->doAttack
 			&& !bs->doAltAttack
 			&& bs->currentEnemy->client->ps.groundEntityNum != ENTITYNUM_NONE
-			&& VectorDistance(g_entities[bs->cur_ps.client_num].r.currentOrigin,
+			&& VectorDistance(g_entities[bs->cur_ps.clientNum].r.currentOrigin,
 				bs->currentEnemy->r.currentOrigin) < 300
-			|| next_gloat[bs->cur_ps.client_num] > level.time)
+			|| next_gloat[bs->cur_ps.clientNum] > level.time)
 		{
-			if (visible(&g_entities[bs->cur_ps.client_num], bs->currentEnemy) || next_gloat[bs->cur_ps.client_num] > level.time)
+			if (visible(&g_entities[bs->cur_ps.clientNum], bs->currentEnemy) || next_gloat[bs->cur_ps.clientNum] > level.time)
 			{
 				bi.actionflags |= ACTION_GLOAT;
 
@@ -1427,22 +1427,22 @@ void bot_update_input(bot_state_t* bs, const int time, const int elapsed_time)
 				if (check_val <= 0)
 					check_val = 1;
 
-				next_gloat[bs->cur_ps.client_num] = level.time + 30000 / check_val;
+				next_gloat[bs->cur_ps.clientNum] = level.time + 30000 / check_val;
 			}
 			else
 			{
 				// Reset.
-				next_gloat[bs->cur_ps.client_num] = 0;
+				next_gloat[bs->cur_ps.clientNum] = 0;
 			}
 		}
 		else
 		{
 			// Reset.
-			next_gloat[bs->cur_ps.client_num] = 0;
+			next_gloat[bs->cur_ps.clientNum] = 0;
 		}
 	}
 
-	if (next_flourish[bs->cur_ps.client_num] <= level.time && bot_thinklevel.integer >= 0)
+	if (next_flourish[bs->cur_ps.clientNum] <= level.time && bot_thinklevel.integer >= 0)
 	{
 		if (bs->currentEnemy
 			&& bs->currentEnemy->client
@@ -1451,11 +1451,11 @@ void bot_update_input(bot_state_t* bs, const int time, const int elapsed_time)
 			&& !bs->doAttack
 			&& !bs->doAltAttack
 			&& bs->currentEnemy->client->ps.groundEntityNum != ENTITYNUM_NONE
-			&& VectorDistance(g_entities[bs->cur_ps.client_num].r.currentOrigin,
+			&& VectorDistance(g_entities[bs->cur_ps.clientNum].r.currentOrigin,
 				bs->currentEnemy->r.currentOrigin) < 300
-			|| next_flourish[bs->cur_ps.client_num] > level.time)
+			|| next_flourish[bs->cur_ps.clientNum] > level.time)
 		{
-			if (visible(&g_entities[bs->cur_ps.client_num], bs->currentEnemy) || next_flourish[bs->cur_ps.client_num] > level.time)
+			if (visible(&g_entities[bs->cur_ps.clientNum], bs->currentEnemy) || next_flourish[bs->cur_ps.clientNum] > level.time)
 			{
 				bi.actionflags |= ACTION_FLOURISH;
 
@@ -1464,18 +1464,18 @@ void bot_update_input(bot_state_t* bs, const int time, const int elapsed_time)
 				if (check_val <= 0)
 					check_val = 1;
 
-				next_flourish[bs->cur_ps.client_num] = level.time + 60000 / check_val;
+				next_flourish[bs->cur_ps.clientNum] = level.time + 60000 / check_val;
 			}
 			else
 			{
 				// Reset.
-				next_flourish[bs->cur_ps.client_num] = 0;
+				next_flourish[bs->cur_ps.clientNum] = 0;
 			}
 		}
 		else
 		{
 			// Reset.
-			next_flourish[bs->cur_ps.client_num] = 0;
+			next_flourish[bs->cur_ps.clientNum] = 0;
 		}
 	}
 
@@ -1522,7 +1522,7 @@ void bot_update_input(bot_state_t* bs, const int time, const int elapsed_time)
 BotAIRegularUpdate
 ==============
 */
-void bot_ai_regular_update(void)
+static void bot_ai_regular_update(void)
 {
 	if (regularupdate_time < FloatTime())
 	{
@@ -1536,7 +1536,7 @@ void bot_ai_regular_update(void)
 RemoveColorEscapeSequences
 ==============
 */
-void remove_color_escape_sequences(char* text)
+static void remove_color_escape_sequences(char* text)
 {
 	int l = 0;
 	for (int i = 0; text[i]; i++)
@@ -1559,7 +1559,7 @@ BotAI
 ==============
 */
 
-int bot_ai(const int client, const float thinktime)
+static int bot_ai(const int client, const float thinktime)
 {
 	bot_state_t* bs;
 	char buf[1024], * args;
@@ -1653,7 +1653,7 @@ int bot_ai(const int client, const float thinktime)
 BotScheduleBotThink
 ==================
 */
-void bot_schedule_bot_think(void)
+static void bot_schedule_bot_think(void)
 {
 	int botnum = 0;
 
@@ -1669,7 +1669,7 @@ void bot_schedule_bot_think(void)
 	}
 }
 
-int players_in_game(void)
+static int players_in_game(void)
 {
 	int i = 0;
 	int pl = 0;
@@ -1874,7 +1874,7 @@ int org_visible(vec3_t org1, vec3_t org2, const int ignore)
 }
 
 //special waypoint visibility check
-int wp_org_visible(const gentity_t* bot, vec3_t org1, vec3_t org2, const int ignore)
+static int wp_org_visible(const gentity_t* bot, vec3_t org1, vec3_t org2, const int ignore)
 {
 	trace_t tr;
 
@@ -1929,7 +1929,7 @@ int org_visible_box(vec3_t org1, vec3_t mins, vec3_t maxs, vec3_t org2, const in
 //see if there's a func_* ent under the given pos.
 //kind of badly done, but this shouldn't happen
 //often.
-int check_for_func(vec3_t org, const int ignore)
+static int check_for_func(vec3_t org, const int ignore)
 {
 	vec3_t under;
 	trace_t tr;
@@ -1961,7 +1961,7 @@ int check_for_func(vec3_t org, const int ignore)
 }
 
 //perform pvs check based on rmg or not
-qboolean bot_pvs_check(const vec3_t p1, const vec3_t p2)
+static qboolean bot_pvs_check(const vec3_t p1, const vec3_t p2)
 {
 	if (RMG.integer && bot_pvstype.integer)
 	{
@@ -1998,7 +1998,7 @@ node_waypoint_t open_list[MAX_WPARRAY_SIZE + 1];
 
 node_waypoint_t close_list[MAX_WPARRAY_SIZE];
 
-qboolean open_list_empty(void)
+static qboolean open_list_empty(void)
 {
 	//since we're using a binary heap, in theory, if the first slot is empty, the heap
 	//is empty.
@@ -2012,7 +2012,7 @@ qboolean open_list_empty(void)
 
 //Scans for the given wp on the Open List and returns it's OpenList position.
 //Returns -1 if not found.
-int find_open_list(const int wpNum)
+static int find_open_list(const int wpNum)
 {
 	for (int i = 1; i < MAX_WPARRAY_SIZE + 1 && open_list[i].wpNum != -1; i++)
 	{
@@ -2026,7 +2026,7 @@ int find_open_list(const int wpNum)
 
 //Scans for the given wp on the Close List and returns it's CloseList position.
 //Returns -1 if not found.
-int find_close_list(const int wpNum)
+static int find_close_list(const int wpNum)
 {
 	for (int i = 0; i < MAX_WPARRAY_SIZE && close_list[i].wpNum != -1; i++)
 	{
@@ -2040,7 +2040,7 @@ int find_close_list(const int wpNum)
 
 extern float rand_float(float min, float max);
 
-qboolean carrying_cap_objective(const bot_state_t* bs)
+static qboolean carrying_cap_objective(const bot_state_t* bs)
 {
 	//Carrying the Capture Objective?
 	if (level.gametype == GT_SIEGE)
@@ -2057,7 +2057,7 @@ qboolean carrying_cap_objective(const bot_state_t* bs)
 	return qfalse;
 }
 
-float route_randomize(const bot_state_t* bs, const float dest_dist)
+static float route_randomize(const bot_state_t* bs, const float dest_dist)
 {
 	//this function randomizes the h value (distance to target location) to make the
 	//bots take a random path instead of always taking the shortest route.
@@ -2076,7 +2076,7 @@ float route_randomize(const bot_state_t* bs, const float dest_dist)
 }
 
 //Add this wpNum to the open list.
-void add_open_list(const bot_state_t* bs, const int wp_num, const int parent, const int end)
+static void add_open_list(const bot_state_t* bs, const int wp_num, const int parent, const int end)
 {
 	int i;
 	float g;
@@ -2211,7 +2211,7 @@ void add_open_list(const bot_state_t* bs, const int wp_num, const int parent, co
 }
 
 //Remove the first element from the OpenList.
-void remove_first_open_list(void)
+static void remove_first_open_list(void)
 {
 	int i;
 	for (i = 1; i < MAX_WPARRAY_SIZE + 1 && open_list[i].wpNum != -1; i++)
@@ -2303,7 +2303,7 @@ void remove_first_open_list(void)
 }
 
 //Adds a given OpenList wp to the closed list
-void add_close_list(const int openListpos)
+static void add_close_list(const int openListpos)
 {
 	if (open_list[openListpos].wpNum != -1)
 	{
@@ -2324,7 +2324,7 @@ void add_close_list(const int openListpos)
 }
 
 //Clear out the Route
-void clear_route(int Route[MAX_WPARRAY_SIZE])
+static void clear_route(int Route[MAX_WPARRAY_SIZE])
 {
 	for (int i = 0; i < MAX_WPARRAY_SIZE; i++)
 	{
@@ -2332,7 +2332,7 @@ void clear_route(int Route[MAX_WPARRAY_SIZE])
 	}
 }
 
-void addto_route(const int wp_num, int route[MAX_WPARRAY_SIZE])
+static void addto_route(const int wp_num, int route[MAX_WPARRAY_SIZE])
 {
 	int i;
 	for (i = 0; i < MAX_WPARRAY_SIZE && route[i] != -1; i++)
@@ -2360,7 +2360,7 @@ void addto_route(const int wp_num, int route[MAX_WPARRAY_SIZE])
 
 //find a given wpNum on the given route and return it's address.  return -1 if not on route.
 //use wpNum = -1 to find the last wp on route.
-int find_on_route(const int wp_num, int route[MAX_WPARRAY_SIZE])
+static int find_on_route(const int wp_num, int route[MAX_WPARRAY_SIZE])
 {
 	int i;
 	for (i = 0; i < MAX_WPARRAY_SIZE && route[i] != wp_num; i++)
@@ -2392,7 +2392,7 @@ int find_on_route(const int wp_num, int route[MAX_WPARRAY_SIZE])
 }
 
 //Copy Route
-void copy_route(bot_route_t routesource, bot_route_t routedest)
+static void copy_route(bot_route_t routesource, bot_route_t routedest)
 {
 	for (int i = 0; i < MAX_WPARRAY_SIZE; i++)
 	{
@@ -2404,7 +2404,7 @@ void copy_route(bot_route_t routesource, bot_route_t routedest)
 //badwp is for situations where you need to recalc a path when you dynamically discover
 //that a wp is bad (door locked, blocked, etc).
 //doRoute = actually set botRoute
-float find_ideal_pathto_wp(bot_state_t* bs, const int start, const int end, const int badwp, bot_route_t route)
+static float find_ideal_pathto_wp(bot_state_t* bs, const int start, const int end, const int badwp, bot_route_t route)
 {
 	int i;
 
@@ -2568,14 +2568,14 @@ int get_nearest_visible_wp(vec3_t org, const int ignore)
 }
 
 //visually scanning in the given direction.
-void bot_behave_visual_scan(bot_state_t* bs)
+static void bot_behave_visual_scan(bot_state_t* bs)
 {
 	VectorCopy(bs->VisualScanDir, bs->goalAngles);
 	bs->wpCurrent = NULL;
 }
 
 //Just stand still
-void bot_be_still(bot_state_t* bs)
+static void bot_be_still(bot_state_t* bs)
 {
 	VectorCopy(bs->origin, bs->goalPosition);
 	bs->beStill = level.time + BOT_THINK_TIME;
@@ -2585,7 +2585,7 @@ void bot_be_still(bot_state_t* bs)
 }
 
 //just like GetNearestVisibleWP except with a bad waypoint input
-int get_nearest_visible_wpsje(const bot_state_t* bs, vec3_t org, const int ignore, const int badwp)
+static int get_nearest_visible_wpsje(const bot_state_t* bs, vec3_t org, const int ignore, const int badwp)
 {
 	float bestdist;
 	vec3_t mins, maxs;
@@ -2658,7 +2658,7 @@ int get_nearest_visible_wpsje(const bot_state_t* bs, vec3_t org, const int ignor
 }
 
 //just like GetNearestVisibleWP except without visiblity checks
-int get_nearest_wp(const bot_state_t* bs, vec3_t org, const int badwp)
+static int get_nearest_wp(const bot_state_t* bs, vec3_t org, const int badwp)
 {
 	float bestdist;
 
@@ -2721,7 +2721,7 @@ int get_nearest_wp(const bot_state_t* bs, vec3_t org, const int badwp)
 	return bestindex;
 }
 
-qboolean is_heavy_weapon(const bot_state_t* bs, const int weapon)
+static qboolean is_heavy_weapon(const bot_state_t* bs, const int weapon)
 {
 	//right now we only show positive for weapons that can do this in primary fire mode
 	switch (weapon)
@@ -2747,7 +2747,7 @@ qboolean is_heavy_weapon(const bot_state_t* bs, const int weapon)
 }
 
 //use Force push or pull on local func_doors
-qboolean use_forceon_local(bot_state_t* bs, vec3_t origin, const qboolean pull)
+static qboolean use_forceon_local(bot_state_t* bs, vec3_t origin, const qboolean pull)
 {
 	gentity_t* test = NULL;
 	vec3_t center;
@@ -3059,7 +3059,7 @@ qboolean use_forceon_local(bot_state_t* bs, vec3_t origin, const qboolean pull)
 }
 
 //just returns the favorite weapon.
-int favorite_weapon(bot_state_t* bs, const gentity_t* target, const qboolean have_check, const qboolean ammoCheck,
+static int favorite_weapon(bot_state_t* bs, const gentity_t* target, const qboolean have_check, const qboolean ammoCheck,
 	const int ignore_weaps)
 {
 	int bestweight = -1;
@@ -3157,7 +3157,7 @@ int favorite_weapon(bot_state_t* bs, const gentity_t* target, const qboolean hav
 
 void reset_wp_timers(bot_state_t* bs);
 
-qboolean have_heavy_weapon(const int weapons)
+static qboolean have_heavy_weapon(const int weapons)
 {
 	if (weapons & 1 << WP_SABER
 		|| weapons & 1 << WP_ROCKET_LAUNCHER
@@ -3255,7 +3255,7 @@ qboolean AttackLocalBreakable(bot_state_t* bs)
 	return qfalse;
 }
 
-void wp_visible_update(bot_state_t* bs)
+static void wp_visible_update(bot_state_t* bs)
 {
 	if (org_visible_box(bs->origin, NULL, NULL, bs->wpCurrent->origin, bs->client))
 	{
@@ -3264,7 +3264,7 @@ void wp_visible_update(bot_state_t* bs)
 	}
 }
 
-qboolean calculate_jump(vec3_t origin, vec3_t dest)
+static qboolean calculate_jump(vec3_t origin, vec3_t dest)
 {
 	vec3_t flatorigin;
 	vec3_t flatdest;
@@ -3282,7 +3282,7 @@ qboolean calculate_jump(vec3_t origin, vec3_t dest)
 	return qfalse;
 }
 
-void bot_move(bot_state_t* bs, vec3_t dest, const qboolean wptravel, qboolean strafe)
+static void bot_move(bot_state_t* bs, vec3_t dest, const qboolean wptravel, qboolean strafe)
 {
 	vec3_t move_dir;
 	vec3_t view_dir;
@@ -3547,7 +3547,7 @@ void bot_move(bot_state_t* bs, vec3_t dest, const qboolean wptravel, qboolean st
 	}
 }
 
-qboolean dont_block_allies(bot_state_t* bs)
+static qboolean dont_block_allies(bot_state_t* bs)
 {
 	for (int i = 0; i < level.maxclients; i++)
 	{
@@ -3570,7 +3570,7 @@ qboolean dont_block_allies(bot_state_t* bs)
 	return qfalse;
 }
 
-void wp_touch(bot_state_t* bs)
+static void wp_touch(bot_state_t* bs)
 {
 	//Touched the target WP
 	int i = find_on_route(bs->wpCurrent->index, bs->botRoute);
@@ -3658,7 +3658,7 @@ void reset_wp_timers(bot_state_t* bs)
 
 //see if this is a valid waypoint to pick up in our
 //current state (whatever that may be)
-int pass_way_check(const bot_state_t* bs, const int windex)
+static int pass_way_check(const bot_state_t* bs, const int windex)
 {
 	if (!gWPArray[windex] || !gWPArray[windex]->inuse)
 	{
@@ -3699,7 +3699,7 @@ int pass_way_check(const bot_state_t* bs, const int windex)
 }
 
 //tally up the distance between two waypoints
-float total_trail_distance(const int start, const int end)
+static float total_trail_distance(const int start, const int end)
 {
 	int beginat;
 	int endat;
@@ -3770,7 +3770,7 @@ float total_trail_distance(const int start, const int end)
 
 //see if there's a route shorter than our current one to get
 //to the final destination we currently desire
-void check_for_shorter_routes(bot_state_t* bs, const int newwpindex)
+static void check_for_shorter_routes(bot_state_t* bs, const int newwpindex)
 {
 	int i = 0;
 	int fj = 0;
@@ -3857,7 +3857,7 @@ void check_for_shorter_routes(bot_state_t* bs, const int newwpindex)
 }
 
 //Find the origin location of a given entity
-void find_origins(const gentity_t* ent, vec3_t origin)
+static void find_origins(const gentity_t* ent, vec3_t origin)
 {
 	if (!ent->classname)
 	{
@@ -3889,7 +3889,7 @@ void find_origins(const gentity_t* ent, vec3_t origin)
 	}
 }
 
-float target_distances(const bot_state_t* bs, const gentity_t* target, vec3_t targetorigin)
+static float target_distances(const bot_state_t* bs, const gentity_t* target, vec3_t targetorigin)
 {
 	if (strcmp(target->classname, "misc_siege_item") == 0
 		|| strcmp(target->classname, "func_breakable") == 0
@@ -3962,7 +3962,7 @@ float target_distances(const bot_state_t* bs, const gentity_t* target, vec3_t ta
 	return Distance(bs->eye, targetorigin);
 }
 
-qboolean isa_heavy_weapon(const bot_state_t* bs, const int weapon)
+static qboolean isa_heavy_weapon(const bot_state_t* bs, const int weapon)
 {
 	//right now we only show positive for weapons that can do this in primary fire mode
 	switch (weapon)
@@ -3987,7 +3987,7 @@ qboolean isa_heavy_weapon(const bot_state_t* bs, const int weapon)
 	return qfalse;
 }
 
-int favorite_weapons(const bot_state_t* bs, const gentity_t* target, const qboolean have_check,
+static int favorite_weapons(const bot_state_t* bs, const gentity_t* target, const qboolean have_check,
 	const qboolean ammo_check,
 	const int ignore_weaps)
 {
@@ -4077,7 +4077,7 @@ int favorite_weapons(const bot_state_t* bs, const gentity_t* target, const qbool
 }
 
 //Find the number of players useing this basic class on team.
-int numberof_siege_basic_classes(const int team, const int base_class)
+static int numberof_siege_basic_classes(const int team, const int base_class)
 {
 	const siegeClass_t* hold_class = BG_GetClassOnBaseClass(team, base_class, 0);
 	int num_players = 0;
@@ -4097,7 +4097,7 @@ int numberof_siege_basic_classes(const int team, const int base_class)
 	return num_players;
 }
 
-qboolean have_heavy_weapons(const int weapons)
+static qboolean have_heavy_weapons(const int weapons)
 {
 	if (weapons & 1 << WP_SABER
 		|| weapons & 1 << WP_ROCKET_LAUNCHER
@@ -4112,7 +4112,7 @@ qboolean have_heavy_weapons(const int weapons)
 	return qfalse;
 }
 
-int find_heavy_weapon_classse(const int team, const int index, const qboolean saber)
+static int find_heavy_weapon_classse(const int team, const int index, const qboolean saber)
 {
 	int num_heavy_weap_classes = 0;
 
@@ -4217,7 +4217,7 @@ void request_siege_assistance(bot_state_t* bs, const int base_class)
 
 //Should we switch classes to destroy this breakable or just call for help?
 //saber = saber only destroyable?
-void should_switcha_siege_classes(bot_state_t* bs, const qboolean saber)
+static void should_switcha_siege_classes(bot_state_t* bs, const qboolean saber)
 {
 	int i = 0;
 
@@ -4294,7 +4294,7 @@ int bot_select_choice_weapon(bot_state_t* bs, const int weapon, const int dosele
 	return 0;
 }
 
-qboolean attack_local_breakables(bot_state_t* bs)
+static qboolean attack_local_breakables(bot_state_t* bs)
 {
 	gentity_t* test = NULL;
 	const gentity_t* valid = NULL;
@@ -4392,7 +4392,7 @@ qboolean attack_local_breakables(bot_state_t* bs)
 	return qfalse;
 }
 
-qboolean use_forceon_locals(bot_state_t* bs, vec3_t origin, const qboolean pull)
+static qboolean use_forceon_locals(bot_state_t* bs, vec3_t origin, const qboolean pull)
 {
 	gentity_t* test = NULL;
 	vec3_t center;
@@ -4681,7 +4681,7 @@ qboolean use_forceon_locals(bot_state_t* bs, vec3_t origin, const qboolean pull)
 	return qfalse;
 }
 
-void wp_visible_updates(bot_state_t* bs)
+static void wp_visible_updates(bot_state_t* bs)
 {
 	if (org_visible_box(bs->origin, NULL, NULL, bs->wpCurrent->origin, bs->client))
 	{
@@ -4692,7 +4692,7 @@ void wp_visible_updates(bot_state_t* bs)
 
 //check for flags on the waypoint we're currently traveling to
 //and perform the desired behavior based on the flag
-void wp_constant_routine(bot_state_t* bs)
+static void wp_constant_routine(bot_state_t* bs)
 {
 	if (!bs->wpCurrent)
 	{
@@ -4809,7 +4809,7 @@ void wp_constant_routine(bot_state_t* bs)
 }
 
 //check if our ctf state is to guard the base
-qboolean BotCTFGuardDuty(const bot_state_t* bs)
+static qboolean BotCTFGuardDuty(const bot_state_t* bs)
 {
 	if (level.gametype != GT_CTF && level.gametype != GT_CTY)
 	{
@@ -4828,7 +4828,7 @@ qboolean BotCTFGuardDuty(const bot_state_t* bs)
 //this function will be called. We will perform any
 //checks for flags on the current wp and activate
 //any "touch" events based on that.
-void WPTouchRoutine(bot_state_t* bs)
+static void WPTouchRoutine(bot_state_t* bs)
 {
 	if (!bs->wpCurrent)
 	{
@@ -4940,7 +4940,7 @@ void WPTouchRoutine(bot_state_t* bs)
 
 //could also slowly lerp toward, but for now
 //just copying straight over.
-void move_toward_ideal_angles(bot_state_t* bs)
+static void move_toward_ideal_angles(bot_state_t* bs)
 {
 	VectorCopy(bs->goalAngles, bs->ideal_viewangles);
 }
@@ -4953,7 +4953,7 @@ void move_toward_ideal_angles(bot_state_t* bs)
 
 //do some trace checks for strafing to get an idea of where we
 //are and if we should move to avoid obstacles.
-int bot_trace_strafe(const bot_state_t* bs, vec3_t traceto)
+static int bot_trace_strafe(const bot_state_t* bs, vec3_t traceto)
 {
 	const vec3_t player_mins = { -15, -15, -8 };
 	const vec3_t player_maxs = { 15, 15, DEFAULT_MAXS_2 };
@@ -5037,7 +5037,7 @@ int bot_trace_strafe(const bot_state_t* bs, vec3_t traceto)
 
 //Similar to the trace check, but we want to trace to see
 //if there's anything we can jump over.
-int bot_trace_jump(bot_state_t* bs, vec3_t traceto)
+static int bot_trace_jump(bot_state_t* bs, vec3_t traceto)
 {
 	vec3_t mins, maxs, a, fwd, traceto_mod, tracefrom_mod;
 	trace_t tr;
@@ -5121,7 +5121,7 @@ int bot_trace_jump(bot_state_t* bs, vec3_t traceto)
 }
 
 //And yet another check to duck under any obstacles.
-int bot_trace_duck(const bot_state_t* bs, vec3_t traceto)
+static int bot_trace_duck(const bot_state_t* bs, vec3_t traceto)
 {
 	vec3_t mins, maxs, a, fwd, traceto_mod, tracefrom_mod;
 	trace_t tr;
@@ -5172,7 +5172,7 @@ int bot_trace_duck(const bot_state_t* bs, vec3_t traceto)
 }
 
 //check of the potential enemy is a valid one
-int pass_standard_enemy_checks(const bot_state_t* bs, const gentity_t* en)
+static int pass_standard_enemy_checks(const bot_state_t* bs, const gentity_t* en)
 {
 	if (!bs || !en)
 	{
@@ -5318,7 +5318,7 @@ void bot_damage_notification(const gclient_t* bot, gentity_t* attacker)
 		return;
 	}
 
-	if (bot->ps.client_num >= MAX_CLIENTS)
+	if (bot->ps.clientNum >= MAX_CLIENTS)
 	{
 		//an NPC.. do nothing for them.
 		return;
@@ -5335,14 +5335,14 @@ void bot_damage_notification(const gclient_t* bot, gentity_t* attacker)
 	if (bs_a)
 	{
 		//if the client attacking us is a bot as well
-		bs_a->lastAttacked = &g_entities[bot->ps.client_num];
+		bs_a->lastAttacked = &g_entities[bot->ps.clientNum];
 		i = 0;
 
 		while (i < MAX_CLIENTS)
 		{
 			if (botstates[i] &&
 				i != bs_a->client &&
-				botstates[i]->lastAttacked == &g_entities[bot->ps.client_num])
+				botstates[i]->lastAttacked == &g_entities[bot->ps.clientNum])
 			{
 				botstates[i]->lastAttacked = NULL;
 			}
@@ -5357,7 +5357,7 @@ void bot_damage_notification(const gclient_t* bot, gentity_t* attacker)
 		while (i < MAX_CLIENTS)
 		{
 			if (botstates[i] &&
-				botstates[i]->lastAttacked == &g_entities[bot->ps.client_num])
+				botstates[i]->lastAttacked == &g_entities[bot->ps.clientNum])
 			{
 				botstates[i]->lastAttacked = NULL;
 			}
@@ -5366,7 +5366,7 @@ void bot_damage_notification(const gclient_t* bot, gentity_t* attacker)
 		}
 	}
 
-	bot_state_t* bs = botstates[bot->ps.client_num];
+	bot_state_t* bs = botstates[bot->ps.clientNum];
 
 	if (!bs)
 	{
@@ -5397,7 +5397,7 @@ void bot_damage_notification(const gclient_t* bot, gentity_t* attacker)
 
 //perform cheap "hearing" checks based on the event catching
 //system
-int bot_can_hear(const bot_state_t* bs, const gentity_t* en, const float endist)
+static int bot_can_hear(const bot_state_t* bs, const gentity_t* en, const float endist)
 {
 	float minlen;
 
@@ -5471,7 +5471,7 @@ checkStep:
 }
 
 //check for new events
-void update_event_tracker(void)
+static void update_event_tracker(void)
 {
 	int i = 0;
 
@@ -5585,7 +5585,7 @@ int pass_loved_one_check(const bot_state_t* bs, const gentity_t* ent)
 }
 
 //update the currentEnemy visual data for the current enemy.
-void enemy_visual_update(bot_state_t* bs)
+static void enemy_visual_update(bot_state_t* bs)
 {
 	vec3_t a;
 	vec3_t enemy_origin;
@@ -5627,7 +5627,7 @@ void enemy_visual_update(bot_state_t* bs)
 }
 
 //standard check to find a new enemy.
-int scan_for_enemies(bot_state_t* bs)
+static int scan_for_enemies(bot_state_t* bs)
 {
 	float has_enemy_dist = 0;
 	qboolean no_attack_non_jm = qfalse;
@@ -5827,7 +5827,7 @@ int scan_for_enemies(bot_state_t* bs)
 }
 
 //the main scan regular scan for enemies for the TAB Bot
-void advanced_scanfor_enemies(bot_state_t* bs)
+static void advanced_scanfor_enemies(bot_state_t* bs)
 {
 	vec3_t a, enemy_origin;
 	int close_enemy_num = -1;
@@ -5843,7 +5843,7 @@ void advanced_scanfor_enemies(bot_state_t* bs)
 			|| bs->currentEnemy->client && bs->currentEnemy->client->sess.sessionTeam == TEAM_SPECTATOR
 			|| bs->currentEnemy->s.eFlags & EF_DEAD
 			|| bs->currentEnemy->client && bs->currentEnemy->client->ps.eFlags & EF_DEAD
-			|| OnSameTeam(bs->currentEnemy, &g_entities[bs->cur_ps.client_num]))
+			|| OnSameTeam(bs->currentEnemy, &g_entities[bs->cur_ps.clientNum]))
 		{
 			//target died or because invalid, move to next target
 			bs->currentEnemy = NULL;
@@ -6076,7 +6076,7 @@ void advanced_scanfor_enemies(bot_state_t* bs)
 	}
 }
 
-int waiting_for_now(bot_state_t* bs, vec3_t goalpos)
+static int waiting_for_now(bot_state_t* bs, vec3_t goalpos)
 {
 	vec3_t xybot;
 	vec3_t xywp;
@@ -6252,7 +6252,7 @@ jmPass:
 
 //look for "bad things". bad things include detpacks, thermal detonators,
 //and other dangerous explodey items.
-gentity_t* get_nearest_bad_thing(bot_state_t* bs)
+static gentity_t* get_nearest_bad_thing(bot_state_t* bs)
 {
 	int i = 0;
 	float glen;
@@ -6397,7 +6397,7 @@ gentity_t* get_nearest_bad_thing(bot_state_t* bs)
 }
 
 //Keep our CTF priorities on defending our team's flag
-int bot_defend_flag(bot_state_t* bs)
+static int bot_defend_flag(bot_state_t* bs)
 {
 	wpobject_t* flag_point;
 	vec3_t a;
@@ -6431,7 +6431,7 @@ int bot_defend_flag(bot_state_t* bs)
 }
 
 //Keep our CTF priorities on getting the other team's flag
-int bot_get_enemy_flag(bot_state_t* bs)
+static int bot_get_enemy_flag(bot_state_t* bs)
 {
 	wpobject_t* flagPoint;
 	vec3_t a;
@@ -6465,7 +6465,7 @@ int bot_get_enemy_flag(bot_state_t* bs)
 }
 
 //Our team's flag is gone, so try to get it back
-int bot_get_flag_back(bot_state_t* bs)
+static int bot_get_flag_back(bot_state_t* bs)
 {
 	int i = 0;
 	int my_flag;
@@ -6528,7 +6528,7 @@ int bot_get_flag_back(bot_state_t* bs)
 	return 1;
 }
 
-void determine_ctf_goal(bot_state_t* bs)
+static void determine_ctf_goal(bot_state_t* bs)
 {
 	int num_offence = 0; //number of bots on offence
 	int num_defense = 0; //number of bots on defence
@@ -6582,7 +6582,7 @@ void determine_ctf_goal(bot_state_t* bs)
 
 //Someone else on our team has the enemy flag, so try to get
 //to their assistance
-int bot_guard_flag_carrier(bot_state_t* bs)
+static int bot_guard_flag_carrier(bot_state_t* bs)
 {
 	int i = 0;
 	int enemy_flag;
@@ -6646,7 +6646,7 @@ int bot_guard_flag_carrier(bot_state_t* bs)
 }
 
 //We have the flag, let's get it home.
-int bot_get_flag_home(bot_state_t* bs)
+static int bot_get_flag_home(bot_state_t* bs)
 {
 	wpobject_t* flag_point;
 	vec3_t a;
@@ -6679,7 +6679,7 @@ int bot_get_flag_home(bot_state_t* bs)
 	return 1;
 }
 
-void get_new_flag_point(const wpobject_t* wp, const gentity_t* flag_ent, const int team)
+static void get_new_flag_point(const wpobject_t* wp, const gentity_t* flag_ent, const int team)
 {
 	//get the nearest possible waypoint to the flag since it's not in its original position
 	int i = 0;
@@ -6745,7 +6745,7 @@ void get_new_flag_point(const wpobject_t* wp, const gentity_t* flag_ent, const i
 }
 
 //See if our CTF state should take priority in our nav routines
-int ctf_takes_priority(bot_state_t* bs)
+static int ctf_takes_priority(bot_state_t* bs)
 {
 	gentity_t* ent;
 	int enemy_flag;
@@ -6976,7 +6976,7 @@ success:
 	return 1;
 }
 
-int entity_visible_box(vec3_t org1, vec3_t mins, vec3_t maxs, vec3_t org2, const int ignore, const int ignore2)
+static int entity_visible_box(vec3_t org1, vec3_t mins, vec3_t maxs, vec3_t org2, const int ignore, const int ignore2)
 {
 	trace_t tr;
 
@@ -6995,7 +6995,7 @@ int entity_visible_box(vec3_t org1, vec3_t mins, vec3_t maxs, vec3_t org2, const
 }
 
 //Get the closest objective for siege and go after it
-int siege_target_closest_objective(bot_state_t* bs, const int flag)
+static int siege_target_closest_objective(bot_state_t* bs, const int flag)
 {
 	int i = 0;
 	int bestindex = -1;
@@ -7140,7 +7140,7 @@ void siege_defend_from_attackers(bot_state_t* bs)
 }
 
 //how many defenders on our team?
-int siege_count_defenders(const bot_state_t* bs)
+static int siege_count_defenders(const bot_state_t* bs)
 {
 	int i = 0;
 	int num = 0;
@@ -7166,7 +7166,7 @@ int siege_count_defenders(const bot_state_t* bs)
 }
 
 //how many other players on our team?
-int siege_count_teammates(const bot_state_t* bs)
+static int siege_count_teammates(const bot_state_t* bs)
 {
 	int i = 0;
 	int num = 0;
@@ -7191,7 +7191,7 @@ int siege_count_teammates(const bot_state_t* bs)
 
 //see if siege objective completion should take priority in our
 //nav routines.
-int siege_takes_priority(bot_state_t* bs)
+static int siege_takes_priority(bot_state_t* bs)
 {
 	int attacker;
 	int flag_for_attackable_objective;
@@ -7358,7 +7358,7 @@ int siege_takes_priority(bot_state_t* bs)
 
 //see if jedi master priorities should take priority in our nav
 //routines.
-int jm_takes_priority(bot_state_t* bs)
+static int jm_takes_priority(bot_state_t* bs)
 {
 	int i = 0;
 	gentity_t* the_important_entity;
@@ -7422,7 +7422,7 @@ int jm_takes_priority(bot_state_t* bs)
 
 //see if we already have an item/powerup/etc. that is associated
 //with this waypoint.
-int bot_has_associated(const bot_state_t* bs, const wpobject_t* wp)
+static int bot_has_associated(const bot_state_t* bs, const wpobject_t* wp)
 {
 	if (wp->associated_entity == ENTITYNUM_NONE)
 	{
@@ -7545,7 +7545,7 @@ int get_best_idle_goal(bot_state_t* bs)
 
 //go through the list of possible priorities for navigating
 //and work out the best destination point.
-void get_ideal_destination(bot_state_t* bs)
+static void get_ideal_destination(bot_state_t* bs)
 {
 	int temp_int, idleWP;
 	float dist_change, plus_len, minus_len;
@@ -7832,7 +7832,7 @@ void get_ideal_destination(bot_state_t* bs)
 
 //commander CTF AI - tell other bots in the so-called
 //"squad" what to do.
-void commander_bot_ctfai(const bot_state_t* bs)
+static void commander_bot_ctfai(const bot_state_t* bs)
 {
 	int i = 0;
 	gentity_t* ent;
@@ -8003,7 +8003,7 @@ void commander_bot_ctfai(const bot_state_t* bs)
 }
 
 //similar to ctf ai, for siege
-void commander_bot_siege_ai(const bot_state_t* bs)
+static void commander_bot_siege_ai(const bot_state_t* bs)
 {
 	int i = 0;
 	int squadmates = 0;
@@ -8069,7 +8069,7 @@ void commander_bot_siege_ai(const bot_state_t* bs)
 }
 
 //teamplay ffa squad ai
-void bot_do_teamplay_ai(bot_state_t* bs)
+static void bot_do_teamplay_ai(bot_state_t* bs)
 {
 	if (bs->state_Forced)
 	{
@@ -8085,7 +8085,7 @@ void bot_do_teamplay_ai(bot_state_t* bs)
 }
 
 //like ctf and siege commander ai, instruct the squad
-void commander_bot_teamplay_ai(bot_state_t* bs)
+static void commander_bot_teamplay_ai(bot_state_t* bs)
 {
 	int i = 0;
 	int squadmates = 0;
@@ -8183,7 +8183,7 @@ void commander_bot_teamplay_ai(bot_state_t* bs)
 }
 
 //pick which commander ai to use based on gametype
-void commander_bot_ai(bot_state_t* bs)
+static void commander_bot_ai(bot_state_t* bs)
 {
 	if (level.gametype == GT_CTF || level.gametype == GT_CTY)
 	{
@@ -8200,7 +8200,7 @@ void commander_bot_ai(bot_state_t* bs)
 }
 
 //close range combat routines
-void melee_combat_handling(bot_state_t* bs)
+static void melee_combat_handling(bot_state_t* bs)
 {
 	vec3_t usethisvec;
 	vec3_t downvec;
@@ -8307,7 +8307,7 @@ void adjustfor_strafe(const bot_state_t* bs, vec3_t move_dir)
 	VectorNormalize(move_dir);
 }
 
-void movefor_attack_quad(const bot_state_t* bs, vec3_t move_dir, const int Quad)
+static void movefor_attack_quad(const bot_state_t* bs, vec3_t move_dir, const int Quad)
 {
 	//set the moveDir to set our attack direction to be towards this Quad.
 	vec3_t forward, right;
@@ -8355,7 +8355,7 @@ void movefor_attack_quad(const bot_state_t* bs, vec3_t move_dir, const int Quad)
 	}
 }
 
-qboolean bot_behave_check_backstab(bot_state_t* bs)
+static qboolean bot_behave_check_backstab(bot_state_t* bs)
 {
 	// Check if there is an enemy behind us that we can backstab...
 	vec3_t forward, back_org, cur_org, move_dir;
@@ -8404,7 +8404,7 @@ qboolean bot_behave_check_backstab(bot_state_t* bs)
 	return qtrue;
 }
 
-qboolean bot_behave_check_use_kata(const bot_state_t* bs)
+static qboolean bot_behave_check_use_kata(const bot_state_t* bs)
 {
 	// Check if there is an in front of us that we can use our kata on...
 	vec3_t forward, back_org, cur_org;
@@ -8448,7 +8448,7 @@ qboolean bot_behave_check_use_kata(const bot_state_t* bs)
 	return qtrue;
 }
 
-qboolean bot_behave_check_use_crouch_attack(bot_state_t* bs)
+static qboolean bot_behave_check_use_crouch_attack(bot_state_t* bs)
 {
 	// Check if there is an in front of us that we can use our special crouch attack on...
 	vec3_t forward, back_org, cur_org, moveDir;
@@ -8624,7 +8624,7 @@ void bot_behave_attack_basic(bot_state_t* bs, const gentity_t* target)
 
 	if (!VectorCompare(vec3_origin, move_dir))
 	{
-		trace_move(bs, move_dir, target->s.client_num);
+		trace_move(bs, move_dir, target->s.clientNum);
 		trap->EA_Move(bs->client, move_dir, 5000);
 	}
 
@@ -8644,7 +8644,7 @@ void bot_behave_attack_basic(bot_state_t* bs, const gentity_t* target)
 }
 
 //saber combat routines (it's simple, but it works)
-void saber_combat_handling(bot_state_t* bs)
+static void saber_combat_handling(bot_state_t* bs)
 {
 	vec3_t usethisvec;
 	vec3_t downvec;
@@ -8970,7 +8970,7 @@ void bot_aim_leading(bot_state_t* bs, vec3_t headlevel, const float lead_amount)
 }
 
 //wobble our aim around based on our sk1llz
-void bot_aim_offset_goal_angles(bot_state_t* bs)
+static void bot_aim_offset_goal_angles(bot_state_t* bs)
 {
 	if (bs->skills.perfectaim)
 	{
@@ -9087,7 +9087,7 @@ void bot_aim_offset_goal_angles(bot_state_t* bs)
 }
 
 //do we want to alt fire with this weapon?
-int should_secondary_fire(const bot_state_t* bs)
+static int should_secondary_fire(const bot_state_t* bs)
 {
 	const int weap = bs->cur_ps.weapon;
 
@@ -9166,7 +9166,7 @@ int should_secondary_fire(const bot_state_t* bs)
 }
 
 //standard weapon combat routines
-int combat_bot_ai(bot_state_t* bs)
+static int combat_bot_ai(bot_state_t* bs)
 {
 	vec3_t eorg, a;
 
@@ -9318,7 +9318,7 @@ int next_point[MAX_CLIENTS];
 //back to jumping around and turning in random
 //directions off walls to see if we can get back to a
 //good place.
-int gunner_bot_fallback_navigation(bot_state_t* bs)
+static int gunner_bot_fallback_navigation(bot_state_t* bs)
 {
 	vec3_t b_angle, fwd, trto, mins, maxs;
 	trace_t tr;
@@ -9360,7 +9360,7 @@ int gunner_bot_fallback_navigation(bot_state_t* bs)
 	return 0;
 }
 
-int saber_bot_fallback_navigation(bot_state_t* bs)
+static int saber_bot_fallback_navigation(bot_state_t* bs)
 {
 	vec3_t b_angle, fwd, trto, mins, maxs;
 	trace_t tr;
@@ -9512,7 +9512,7 @@ int saber_bot_fallback_navigation(bot_state_t* bs)
 	return 1; // Success!
 }
 
-int bot_try_another_weapon(bot_state_t* bs)
+static int bot_try_another_weapon(bot_state_t* bs)
 {
 	int i = 1;
 
@@ -9541,7 +9541,7 @@ int bot_try_another_weapon(bot_state_t* bs)
 }
 
 //is this weapon available to us?
-qboolean bot_weapon_selectable(const bot_state_t* bs, const int weapon)
+static qboolean bot_weapon_selectable(const bot_state_t* bs, const int weapon)
 {
 	if (weapon == WP_NONE)
 	{
@@ -9558,7 +9558,7 @@ qboolean bot_weapon_selectable(const bot_state_t* bs, const int weapon)
 }
 
 //select the best weapon we can
-int bot_select_ideal_weapon(bot_state_t* bs)
+static int bot_select_ideal_weapon(bot_state_t* bs)
 {
 	int bestweight = -1;
 	int bestweapon = 0;
@@ -9648,7 +9648,7 @@ int bot_select_ideal_weapon(bot_state_t* bs)
 }
 
 //override our standard weapon choice with a melee weapon
-int bot_select_melee(bot_state_t* bs)
+static int bot_select_melee(bot_state_t* bs)
 {
 	if (bs->cur_ps.weapon != 1 && bs->virtualWeapon != 1)
 	{
@@ -9661,7 +9661,7 @@ int bot_select_melee(bot_state_t* bs)
 }
 
 //See if we our in love with the potential bot.
-int get_love_level(const bot_state_t* bs, const bot_state_t* love)
+static int get_love_level(const bot_state_t* bs, const bot_state_t* love)
 {
 	int i = 0;
 
@@ -9707,7 +9707,7 @@ int get_love_level(const bot_state_t* bs, const bot_state_t* love)
 }
 
 //Our loved one was killed. We must become infuriated!
-void bot_loved_one_died(bot_state_t* bs, const bot_state_t* loved, const int lovelevel)
+static void bot_loved_one_died(bot_state_t* bs, const bot_state_t* loved, const int lovelevel)
 {
 	if (!loved->lastHurt || !loved->lastHurt->client ||
 		loved->lastHurt->s.number == loved->client)
@@ -9787,7 +9787,7 @@ void bot_loved_one_died(bot_state_t* bs, const bot_state_t* loved, const int lov
 	}
 }
 
-void bot_death_notify(const bot_state_t* bs)
+static void bot_death_notify(const bot_state_t* bs)
 {
 	//in case someone has an emotional attachment to us, we'll notify them
 	int i = 0;
@@ -9814,7 +9814,7 @@ void bot_death_notify(const bot_state_t* bs)
 }
 
 //perform strafe trace checks
-void strafe_tracing(bot_state_t* bs)
+static void strafe_tracing(bot_state_t* bs)
 {
 	vec3_t mins, maxs;
 	vec3_t right, rorg, drorg;
@@ -9863,7 +9863,7 @@ void strafe_tracing(bot_state_t* bs)
 }
 
 //doing primary weapon fire
-int prim_firing(const bot_state_t* bs)
+static int prim_firing(const bot_state_t* bs)
 {
 	if (bs->cur_ps.weaponstate != WEAPON_CHARGING &&
 		bs->doAttack)
@@ -9881,7 +9881,7 @@ int prim_firing(const bot_state_t* bs)
 }
 
 //should we keep our primary weapon from firing?
-int keep_prim_from_firing(bot_state_t* bs)
+static int keep_prim_from_firing(bot_state_t* bs)
 {
 	if (bs->cur_ps.weaponstate != WEAPON_CHARGING &&
 		bs->doAttack)
@@ -9899,7 +9899,7 @@ int keep_prim_from_firing(bot_state_t* bs)
 }
 
 //doing secondary weapon fire
-int alt_firing(const bot_state_t* bs)
+static int alt_firing(const bot_state_t* bs)
 {
 	if (bs->cur_ps.weaponstate != WEAPON_CHARGING_ALT &&
 		bs->doAltAttack)
@@ -9917,7 +9917,7 @@ int alt_firing(const bot_state_t* bs)
 }
 
 //should we keep our alt from firing?
-int keep_alt_from_firing(bot_state_t* bs)
+static int keep_alt_from_firing(bot_state_t* bs)
 {
 	if (bs->cur_ps.weaponstate != WEAPON_CHARGING_ALT &&
 		bs->doAltAttack)
@@ -9935,7 +9935,7 @@ int keep_alt_from_firing(bot_state_t* bs)
 }
 
 //Try not to shoot our friends in the back. Or in the face. Or anywhere, really.
-gentity_t* check_for_friend_in_lof(const bot_state_t* bs)
+static gentity_t* check_for_friend_in_lof(const bot_state_t* bs)
 {
 	vec3_t fwd;
 	vec3_t trfrom, trto;
@@ -9981,7 +9981,7 @@ gentity_t* check_for_friend_in_lof(const bot_state_t* bs)
 	return NULL;
 }
 
-void bot_scan_for_leader(bot_state_t* bs)
+static void bot_scan_for_leader(bot_state_t* bs)
 {
 	//bots will only automatically obtain a leader if it's another bot using this method.
 	int i = 0;
@@ -10015,7 +10015,7 @@ void bot_scan_for_leader(bot_state_t* bs)
 }
 
 //w3rd to the p33pz.
-void bot_reply_greetings(const bot_state_t* bs)
+static void bot_reply_greetings(const bot_state_t* bs)
 {
 	int i = 0;
 	int numhello = 0;
@@ -10045,7 +10045,7 @@ void bot_reply_greetings(const bot_state_t* bs)
 }
 
 //try to move in to grab a nearby flag
-void ctf_flag_movement(bot_state_t* bs)
+static void ctf_flag_movement(bot_state_t* bs)
 {
 	const gentity_t* desired_drop = NULL;
 	vec3_t a, mins, maxs;
@@ -10123,7 +10123,7 @@ void ctf_flag_movement(bot_state_t* bs)
 }
 
 //see if we want to make our detpacks blow up
-void bot_check_det_packs(bot_state_t* bs)
+static void bot_check_det_packs(bot_state_t* bs)
 {
 	gentity_t* dp = NULL;
 	gentity_t* my_det = NULL;
@@ -10182,7 +10182,7 @@ stillmadeit:
 BotBuyItem
 ==================
 */
-qboolean bot_buy_item(bot_state_t* bs, const char* msg)
+static qboolean bot_buy_item(bot_state_t* bs, const char* msg)
 {
 	int j;
 
@@ -10392,7 +10392,7 @@ qboolean bot_buy_item(bot_state_t* bs, const char* msg)
 }
 
 //see if it would be beneficial at this time to use one of our inv items
-int bot_use_inventory_item(bot_state_t* bs)
+static int bot_use_inventory_item(bot_state_t* bs)
 {
 	if (bs->cur_ps.stats[STAT_HOLDABLE_ITEMS] & 1 << HI_MEDPAC)
 	{
@@ -10504,7 +10504,7 @@ wantuseitem:
 }
 
 //trace forward to see if we can plant a detpack or something
-int bot_surface_near(const bot_state_t* bs)
+static int bot_surface_near(const bot_state_t* bs)
 {
 	trace_t tr;
 	vec3_t fwd;
@@ -10526,7 +10526,7 @@ int bot_surface_near(const bot_state_t* bs)
 }
 
 //could we block projectiles from the weapon potentially with a light saber?
-int bot_weapon_blockable(const int weapon)
+static int bot_weapon_blockable(const int weapon)
 {
 	switch (weapon)
 	{
@@ -10602,7 +10602,7 @@ void bot_set_forced_movement(const int bot, const int forward, const int right, 
 //check to see if the bot should switch player
 qboolean switch_siege_ideal_class(const bot_state_t* bs, const char* idealclass)
 {
-	char cmp[MAX_STRING_CHARS];
+	char cmp[MAX_STRING_CHARS] = { 0 };
 	int i = 0;
 
 	while (idealclass[i])
@@ -10660,20 +10660,20 @@ int numberof_siege_specific_class(const int team, const char* classname)
 }
 
 //has the bot select the siege class with the fewest number of players on this team.
-void select_best_siege_class(const int client_num, const qboolean force_join)
+static void select_best_siege_class(const int clientNum, const qboolean force_join)
 {
 	int best_num = MAX_CLIENTS;
 	int best_base_class = -1;
 
-	if (client_num < 0 || client_num > MAX_CLIENTS)
+	if (clientNum < 0 || clientNum > MAX_CLIENTS)
 	{
-		//bad client_num
+		//bad clientNum
 		return;
 	}
 
 	for (int i = 0; i < SPC_MAX; i++)
 	{
-		const int x = numberof_siege_basic_classes(g_entities[client_num].client->sess.siegeDesiredTeam, i);
+		const int x = numberof_siege_basic_classes(g_entities[clientNum].client->sess.siegeDesiredTeam, i);
 		if (x < best_num)
 		{
 			//this class has fewer players.
@@ -10685,18 +10685,19 @@ void select_best_siege_class(const int client_num, const qboolean force_join)
 	if (best_base_class != -1)
 	{
 		//found one, join that class
-		siegeClass_t* hold_class = BG_GetClassOnBaseClass(g_entities[client_num].client->sess.siegeDesiredTeam,
+		siegeClass_t* hold_class = BG_GetClassOnBaseClass(g_entities[clientNum].client->sess.siegeDesiredTeam,
 			best_base_class, 0);
-		if (Q_stricmp(g_entities[client_num].client->sess.siegeClass, hold_class->name)
+		if (Q_stricmp(g_entities[clientNum].client->sess.siegeClass, hold_class->name)
 			|| force_join)
 		{
 			//we're not already this class.
-			trap->EA_Command(client_num, va("siegeclass \"%s\"\n", hold_class->name));
+			trap->EA_Command(clientNum, va("siegeclass \"%s\"\n", hold_class->name));
 		}
 	}
 }
 
-extern saberInfo_t* BG_MySaber(int client_num, int saberNum);
+extern saberInfo_t* BG_MySaber(int clientNum, int saberNum);
+void bot_check_speak(gentity_t* self, const qboolean moving);
 //the main AI loop.
 //please don't be too frightened.
 void standard_bot_ai(bot_state_t* bs)
@@ -11000,10 +11001,16 @@ void standard_bot_ai(bot_state_t* bs)
 	}
 
 	if (!dualSabers && !staffSaber
-		&& (bs->cur_ps.fd.saber_anim_level != SS_FAST && bs->cur_ps.fd.saber_anim_level != SS_MEDIUM && bs->cur_ps.fd.saber_anim_level != SS_STRONG))
+		&& (bs->cur_ps.fd.saber_anim_level != SS_FAST &&
+			bs->cur_ps.fd.saber_anim_level != SS_TAVION &&
+			bs->cur_ps.fd.saber_anim_level != SS_MEDIUM &&
+			bs->cur_ps.fd.saber_anim_level != SS_STRONG &&
+			bs->cur_ps.fd.saber_anim_level != SS_DESANN))
 	{//using a single saber
 		Cmd_SaberAttackCycle_f(&g_entities[bs->client]);
 	}
+
+	bot_check_speak(&g_entities[bs->client], qtrue);
 
 	if (PM_InLedgeMove(bs->cur_ps.legsAnim))
 	{
@@ -11915,7 +11922,7 @@ void standard_bot_ai(bot_state_t* bs)
 				bs->BOTjumpState = JS_FACING;
 				ai_mod_jump(bs);
 
-				VectorCopy(bs->currentEnemy->r.currentOrigin, jumpPos[bs->cur_ps.client_num]);
+				VectorCopy(bs->currentEnemy->r.currentOrigin, jumpPos[bs->cur_ps.clientNum]);
 			}
 			else if (bs->cur_ps.weapon == WP_SABER
 				&& bs->BOTjumpState <= JS_WAITING // Not in a jump right now.
@@ -11929,7 +11936,7 @@ void standard_bot_ai(bot_state_t* bs)
 				bs->BOTjumpState = JS_FACING;
 				ai_mod_jump(bs);
 
-				VectorCopy(bs->currentEnemy->r.currentOrigin, jumpPos[bs->cur_ps.client_num]);
+				VectorCopy(bs->currentEnemy->r.currentOrigin, jumpPos[bs->cur_ps.clientNum]);
 			}
 			else if (bs->cur_ps.stats[STAT_HOLDABLE_ITEMS] & 1 << HI_JETPACK
 				&& bs->BOTjumpState <= JS_WAITING // Not in a jump right now.
@@ -11943,7 +11950,7 @@ void standard_bot_ai(bot_state_t* bs)
 				bs->BOTjumpState = JS_FACING;
 				ai_mod_jump(bs);
 
-				VectorCopy(bs->currentEnemy->r.currentOrigin, jumpPos[bs->cur_ps.client_num]);
+				VectorCopy(bs->currentEnemy->r.currentOrigin, jumpPos[bs->cur_ps.clientNum]);
 			}
 			else if (bs->cur_ps.stats[STAT_HOLDABLE_ITEMS] & 1 << HI_JETPACK
 				&& bs->BOTjumpState <= JS_WAITING // Not in a jump right now.
@@ -11957,7 +11964,7 @@ void standard_bot_ai(bot_state_t* bs)
 				bs->BOTjumpState = JS_FACING;
 				ai_mod_jump(bs);
 
-				VectorCopy(bs->currentEnemy->r.currentOrigin, jumpPos[bs->cur_ps.client_num]);
+				VectorCopy(bs->currentEnemy->r.currentOrigin, jumpPos[bs->cur_ps.clientNum]);
 			}
 			else if (bs->BOTjumpState >= JS_CROUCHING)
 			{
@@ -12194,18 +12201,18 @@ void standard_bot_ai(bot_state_t* bs)
 			}
 
 			if (g_entities[bs->client].client->ps.fd.saber_anim_level != SS_STAFF
-				&& g_entities[bs->client].client->ps.fd.saber_anim_level != SS_DUAL)
+				&& g_entities[bs->client].client->ps.fd.saber_anim_level != SS_DUAL) // dont change staff or dual styles
 			{
-				if (bs->currentEnemy->client->ps.fd.blockPoints > BLOCKPOINTS_MISSILE
-					&& g_entities[bs->client].client->ps.fd.forcePowerLevel[FP_SABER_OFFENSE] > 2)
+				if (bs->currentEnemy->client->ps.fd.blockPoints > BLOCKPOINTS_FULL   // enemy has high BP
+					&& g_entities[bs->client].client->ps.fd.forcePowerLevel[FP_SABER_OFFENSE] > 2) // We have offense level 3
 				{
 					if (g_entities[bs->client].client->ps.fd.saber_anim_level != SS_STRONG
-						&& g_entities[bs->client].client->ps.fd.saber_anim_level != SS_DESANN && bs->saberPower)
+						&& g_entities[bs->client].client->ps.fd.saber_anim_level != SS_DESANN && bs->saberPower)  // should swap from desann to strong and vise versa
 					{ //if we are up against someone with a lot of blockpoints and we have a strong attack available, then h4q them
 						Cmd_SaberAttackCycle_f(&g_entities[bs->client]);
 					}
 				}
-				else if (bs->currentEnemy->client->ps.fd.blockPoints > BLOCKPOINTS_FOURTY
+				else if (bs->currentEnemy->client->ps.fd.blockPoints > BLOCKPOINTS_HALF
 					&& g_entities[bs->client].client->ps.fd.forcePowerLevel[FP_SABER_OFFENSE] > 1)
 				{
 					if (g_entities[bs->client].client->ps.fd.saber_anim_level != SS_MEDIUM)
@@ -12750,7 +12757,7 @@ void standard_bot_ai(bot_state_t* bs)
 	move_toward_ideal_angles(bs);
 }
 
-void movement_command(bot_state_t* bs, const int command, vec3_t move_dir)
+static void movement_command(bot_state_t* bs, const int command, vec3_t move_dir)
 {
 	if (!command)
 	{
@@ -12773,7 +12780,7 @@ void movement_command(bot_state_t* bs, const int command, vec3_t move_dir)
 	VectorCopy(vec3_origin, move_dir);
 }
 
-void adjust_move_direction(const bot_state_t* bs, vec3_t move_dir, const int quad)
+static void adjust_move_direction(const bot_state_t* bs, vec3_t move_dir, const int quad)
 {
 	vec3_t fwd, right;
 	vec3_t addvect;
@@ -12827,7 +12834,7 @@ void adjust_move_direction(const bot_state_t* bs, vec3_t move_dir, const int qua
 	VectorNormalize(move_dir);
 }
 
-int adjust_quad(const int quad)
+static int adjust_quad(const int quad)
 {
 	int dir = quad;
 	while (dir > 7)
@@ -12844,7 +12851,7 @@ int adjust_quad(const int quad)
 	return dir;
 }
 
-int find_movement_quad(const playerState_t* ps, vec3_t move_dir)
+static int find_movement_quad(const playerState_t* ps, vec3_t move_dir)
 {
 	vec3_t viewfwd, viewright;
 	vec3_t move;
@@ -12906,7 +12913,7 @@ int find_movement_quad(const playerState_t* ps, vec3_t move_dir)
 	return 0;
 }
 
-int trace_jump_crouch_fall(const bot_state_t* bs, vec3_t move_dir, const int target_num, vec3_t hit_normal)
+static int trace_jump_crouch_fall(const bot_state_t* bs, vec3_t move_dir, const int target_num, vec3_t hit_normal)
 {
 	vec3_t mins;
 	vec3_t maxs;
@@ -13066,7 +13073,7 @@ int trace_jump_crouch_fall(const bot_state_t* bs, vec3_t move_dir, const int tar
 	return move_command;
 }
 
-qboolean try_move_around_obsticle(bot_state_t* bs, vec3_t move_dir, const int target_num, vec3_t hit_normal,
+static qboolean try_move_around_obsticle(bot_state_t* bs, vec3_t move_dir, const int target_num, vec3_t hit_normal,
 	const int try_num,
 	const qboolean check_both_ways)
 {
@@ -13308,7 +13315,7 @@ void trace_move(bot_state_t* bs, vec3_t move_dir, const int target_num)
 
 extern void npc_conversation_animation();
 
-void bot_check_speak(gentity_t* self, const qboolean moving)
+static void bot_check_speak(gentity_t* self, const qboolean moving)
 {
 	char filename[256];
 	char npc_sound_dir[256];
@@ -13548,7 +13555,7 @@ void bot_check_speak(gentity_t* self, const qboolean moving)
 
 //Behavior to move to the given DestPosition
 //strafe = do some strafing while moving to this location
-void bot_moveto(bot_state_t* bs, const qboolean strafe)
+static void bot_moveto(bot_state_t* bs, const qboolean strafe)
 {
 	qboolean recalcroute = qfalse;
 	qboolean findwp = qfalse;

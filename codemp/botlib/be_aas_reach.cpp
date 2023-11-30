@@ -113,7 +113,7 @@ int numlreachabilities;
 // Returns:					-
 // Changes Globals:		-
 //===========================================================================
-float AAS_FaceArea(aas_face_t* face)
+static float AAS_FaceArea(aas_face_t* face)
 {
 	int edgenum = aasworld.edgeindex[face->firstedge];
 	int side = edgenum < 0;
@@ -1595,7 +1595,7 @@ float VectorDistance(vec3_t v1, vec3_t v2)
 // Returns:					-
 // Changes Globals:		-
 //===========================================================================
-int VectorBetweenVectors(vec3_t v, vec3_t v1, vec3_t v2)
+static int VectorBetweenVectors(vec3_t v, vec3_t v1, vec3_t v2)
 {
 	vec3_t dir1, dir2;
 
@@ -1610,7 +1610,7 @@ int VectorBetweenVectors(vec3_t v, vec3_t v1, vec3_t v2)
 // Returns:					-
 // Changes Globals:		-
 //===========================================================================
-void VectorMiddle(vec3_t v1, vec3_t v2, vec3_t middle)
+static void VectorMiddle(vec3_t v1, vec3_t v2, vec3_t middle)
 {
 	VectorAdd(v1, v2, middle);
 	VectorScale(middle, 0.5, middle);

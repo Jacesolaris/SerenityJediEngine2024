@@ -2258,7 +2258,7 @@ static void RenderSurfaces(CRenderSurface& RS)
 		// projection shadows work fine with personal models
 		if (r_shadows->integer == 3
 			//			&& RS.fogNum == 0
-			&& RS.renderfx & RF_SHADOW_PLANE
+			&& RS.renderfx & RF_shadowPlane
 			&& !(RS.renderfx & RF_NOSHADOW)
 			&& shader->sort == SS_OPAQUE)
 		{
@@ -2628,7 +2628,7 @@ void R_AddGhoulSurfaces(trRefEntity_t* ent)
 #else
 			CRenderSurface RS(ghoul2[i].mSurfaceRoot, ghoul2[i].mSlist, cust_shader, fogNum, personalModel, ghoul2[i].mBoneCache, ent->e.renderfx, skin, ghoul2[i].currentModel, whichLod, ghoul2[i].mBltlist);
 #endif
-			if (!personalModel && RS.renderfx & RF_SHADOW_PLANE && !bInShadowRange(ent->e.origin))
+			if (!personalModel && RS.renderfx & RF_shadowPlane && !bInShadowRange(ent->e.origin))
 			{
 				RS.renderfx |= RF_NOSHADOW;
 			}

@@ -37,6 +37,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #define ITEM_TYPE_TEXTSCROLL		14		// scrolling text
 #define ITEM_TYPE_INTSLIDER		    15		  // mouse speed, volume, etc.
 #define ITEM_TYPE_SLIDER_ROTATE     16
+#define ITEM_TYPE_MODEL_ITEM        17
 
 #define ITEM_ALIGN_LEFT 0                 // left alignment
 #define ITEM_ALIGN_CENTER 1               // center alignment

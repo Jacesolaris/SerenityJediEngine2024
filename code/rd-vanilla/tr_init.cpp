@@ -190,6 +190,8 @@ cvar_t* r_ratiofix;
 
 cvar_t* r_com_rend2;
 
+cvar_t* com_outcast;
+
 // More bullshit needed for the proper modular renderer
 cvar_t* sv_mapname;
 cvar_t* sv_mapChecksum;
@@ -316,6 +318,11 @@ static void R_Splash()
 	if (r_com_rend2->integer != 0)
 	{
 		ri.Cvar_Set("com_rend2", "0");
+	}
+
+	if (com_outcast->integer != 0)
+	{
+		ri.Cvar_Set("com_outcast", "0");
 	}
 
 	ri.WIN_Present(&window);
@@ -1700,6 +1707,8 @@ static void R_Register()
 
 	r_com_rend2 = ri.Cvar_Get("com_rend2", "0", CVAR_ARCHIVE | CVAR_SAVEGAME);
 
+	com_outcast = ri.Cvar_Get("com_outcast", "0", CVAR_ARCHIVE | CVAR_SAVEGAME);
+
 	r_ratiofix = ri.Cvar_Get("r_ratiofix", "0", CVAR_ARCHIVE);
 
 	sv_mapname = ri.Cvar_Get("mapname", "nomap", CVAR_SERVERINFO | CVAR_ROM);
@@ -1756,7 +1765,7 @@ void R_Init()
 #ifndef FINAL_BUILD
 	if ((intptr_t)tess.xyz & 15) {
 		Com_Printf("WARNING: tess.xyz not 16 byte aligned\n");
-	}
+}
 #endif
 
 	//

@@ -386,7 +386,7 @@ static void CL_Record_f(void)
 	// finished writing the gamestate stuff
 
 	// write the client num
-	MSG_WriteLong(&buf, clc.client_num);
+	MSG_WriteLong(&buf, clc.clientNum);
 	// write the checksum feed
 	MSG_WriteLong(&buf, clc.checksumFeed);
 

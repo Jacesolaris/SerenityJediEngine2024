@@ -115,7 +115,7 @@ void CG_ToggleBinoculars()
 			return;
 		}
 
-		if (cg.snap->ps.viewEntity || cg_entities[cg.snap->ps.client_num].currentState.eFlags & (EF_LOCKED_TO_WEAPON | EF_IN_ATST))
+		if (cg.snap->ps.viewEntity || cg_entities[cg.snap->ps.clientNum].currentState.eFlags & (EF_LOCKED_TO_WEAPON | EF_IN_ATST))
 		{
 			return;
 		}
@@ -142,13 +142,13 @@ void CG_ToggleBinoculars()
 			cg_zoomFov = cg_fov.value;
 		}
 
-		cgi_S_StartSound(nullptr, cg.snap->ps.client_num, CHAN_AUTO, cgs.media.zoomStart);
+		cgi_S_StartSound(nullptr, cg.snap->ps.clientNum, CHAN_AUTO, cgs.media.zoomStart);
 	}
 	else
 	{
 		cg.zoomMode = 0;
 		cg.zoomTime = cg.time;
-		cgi_S_StartSound(nullptr, cg.snap->ps.client_num, CHAN_AUTO, cgs.media.zoomEnd);
+		cgi_S_StartSound(nullptr, cg.snap->ps.clientNum, CHAN_AUTO, cgs.media.zoomEnd);
 
 		if (cg.weaponSelect == WP_MELEE && cg.snap->ps.stats[STAT_WEAPONS] & 1 << WP_SABER)
 		{
@@ -171,7 +171,7 @@ void CG_ToggleLAGoggles()
 			return;
 		}
 
-		if (cg.snap->ps.viewEntity || cg_entities[cg.snap->ps.client_num].currentState.eFlags & (EF_LOCKED_TO_WEAPON | EF_IN_ATST))
+		if (cg.snap->ps.viewEntity || cg_entities[cg.snap->ps.clientNum].currentState.eFlags & (EF_LOCKED_TO_WEAPON | EF_IN_ATST))
 		{
 			return;
 		}
@@ -187,13 +187,13 @@ void CG_ToggleLAGoggles()
 			cg_zoomFov = cg_fov.value; // does not zoom!!
 		}
 
-		cgi_S_StartSound(nullptr, cg.snap->ps.client_num, CHAN_AUTO, cgs.media.zoomStart);
+		cgi_S_StartSound(nullptr, cg.snap->ps.clientNum, CHAN_AUTO, cgs.media.zoomStart);
 	}
 	else
 	{
 		cg.zoomMode = 0;
 		cg.zoomTime = cg.time;
-		cgi_S_StartSound(nullptr, cg.snap->ps.client_num, CHAN_AUTO, cgs.media.zoomEnd);
+		cgi_S_StartSound(nullptr, cg.snap->ps.clientNum, CHAN_AUTO, cgs.media.zoomEnd);
 	}
 }
 

@@ -135,20 +135,20 @@ void trap_LocateGameData(sharedEntity_t* gEnts, const int numGEntities, const in
 	Q_syscall(G_LOCATE_GAME_DATA, gEnts, numGEntities, sizeofGEntity_t, clients, sizeofGClient);
 }
 
-void trap_DropClient(const int client_num, const char* reason)
+void trap_DropClient(const int clientNum, const char* reason)
 {
-	Q_syscall(G_DROP_CLIENT, client_num, reason);
+	Q_syscall(G_DROP_CLIENT, clientNum, reason);
 }
 
-void trap_SendServerCommand(const int client_num, const char* text)
+void trap_SendServerCommand(const int clientNum, const char* text)
 {
 	if (strlen(text) > 1022)
 	{
-		G_SecurityLogPrintf("trap_SendServerCommand( %d, ... ) length exceeds 1022.\n", client_num);
+		G_SecurityLogPrintf("trap_SendServerCommand( %d, ... ) length exceeds 1022.\n", clientNum);
 		G_SecurityLogPrintf("text [%s]\n", text);
 		return;
 	}
-	Q_syscall(G_SEND_SERVER_COMMAND, client_num, text);
+	Q_syscall(G_SEND_SERVER_COMMAND, clientNum, text);
 }
 
 void trap_SetConfigstring(const int num, const char* string)
@@ -248,14 +248,14 @@ int trap_BotAllocateClient(void)
 	return Q_syscall(G_BOT_ALLOCATE_CLIENT);
 }
 
-void trap_BotFreeClient(const int client_num)
+void trap_BotFreeClient(const int clientNum)
 {
-	Q_syscall(G_BOT_FREE_CLIENT, client_num);
+	Q_syscall(G_BOT_FREE_CLIENT, clientNum);
 }
 
-void trap_GetUsercmd(const int client_num, usercmd_t* cmd)
+void trap_GetUsercmd(const int clientNum, usercmd_t* cmd)
 {
-	Q_syscall(G_GET_USERCMD, client_num, cmd);
+	Q_syscall(G_GET_USERCMD, clientNum, cmd);
 }
 
 qboolean trap_GetEntityToken(char* buffer, const int buffer_size)
@@ -709,19 +709,19 @@ int trap_BotLibTest(const int parm0, char* parm1, vec3_t parm2, vec3_t parm3)
 	return Q_syscall(BOTLIB_TEST, parm0, parm1, parm2, parm3);
 }
 
-int trap_BotGetSnapshotEntity(const int client_num, const int sequence)
+int trap_BotGetSnapshotEntity(const int clientNum, const int sequence)
 {
-	return Q_syscall(BOTLIB_GET_SNAPSHOT_ENTITY, client_num, sequence);
+	return Q_syscall(BOTLIB_GET_SNAPSHOT_ENTITY, clientNum, sequence);
 }
 
-int trap_BotGetServerCommand(const int client_num, char* message, const int size)
+int trap_BotGetServerCommand(const int clientNum, char* message, const int size)
 {
-	return Q_syscall(BOTLIB_GET_CONSOLE_MESSAGE, client_num, message, size);
+	return Q_syscall(BOTLIB_GET_CONSOLE_MESSAGE, clientNum, message, size);
 }
 
-void trap_BotUserCommand(const int client_num, usercmd_t* ucmd)
+void trap_BotUserCommand(const int clientNum, usercmd_t* ucmd)
 {
-	Q_syscall(BOTLIB_USER_COMMAND, client_num, ucmd);
+	Q_syscall(BOTLIB_USER_COMMAND, clientNum, ucmd);
 }
 
 void trap_AAS_EntityInfo(const int entnum, void* info)

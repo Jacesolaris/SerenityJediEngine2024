@@ -38,7 +38,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #include "bg_local.h"
 
 // Muzzle point table...
-vec3_t WP_muzzle_point[WP_NUM_WEAPONS] =
+vec3_t WP_muzzlePoint[WP_NUM_WEAPONS] =
 {
 	//	Fwd,	right,	up.
 	{0, 0, 0}, // WP_NONE,
@@ -60,7 +60,7 @@ vec3_t WP_muzzle_point[WP_NUM_WEAPONS] =
 	{12, 6, -6}, // WP_BRYAR_OLD,
 };
 
-vec3_t WP_muzzle_point2[WP_NUM_WEAPONS] =
+vec3_t WP_muzzlePoint2[WP_NUM_WEAPONS] =
 {
 	//	Fwd,	right,	up.
 	{0, 0, 0}, // WP_NONE,

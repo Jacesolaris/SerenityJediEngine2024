@@ -132,7 +132,7 @@ R_SetupEntityLightingGrid
 */
 static void R_SetupEntityLightingGrid(trRefEntity_t* ent)
 {
-	vec3_t			light_origin;
+	vec3_t			lightOrigin;
 	int				pos[3]{};
 	int				i, j;
 	float			frac[3]{};
@@ -154,23 +154,23 @@ static void R_SetupEntityLightingGrid(trRefEntity_t* ent)
 		// seperate lightOrigins are needed so an object that is
 		// sinking into the ground can still be lit, and so
 		// multi-part models can be lit identically
-		VectorCopy(ent->e.lightingOrigin, light_origin);
+		VectorCopy(ent->e.lightingOrigin, lightOrigin);
 	}
 	else
 	{
-		VectorCopy(ent->e.origin, light_origin);
+		VectorCopy(ent->e.origin, lightOrigin);
 	}
 #define ACCURATE_LIGHTGRID_SAMPLING 1
 #if ACCURATE_LIGHTGRID_SAMPLING
-	vec3_t	start_light_origin;
-	VectorCopy(light_origin, start_light_origin);
+	vec3_t	start_lightOrigin;
+	VectorCopy(lightOrigin, start_lightOrigin);
 #endif
 
-	VectorSubtract(light_origin, tr.world->lightGridOrigin, light_origin);
+	VectorSubtract(lightOrigin, tr.world->lightGridOrigin, lightOrigin);
 	for (i = 0; i < 3; i++) {
 		float	v;
 
-		v = light_origin[i] * tr.world->lightGridInverseSize[i];
+		v = lightOrigin[i] * tr.world->lightGridInverseSize[i];
 		pos[i] = floor(v);
 		frac[i] = v - pos[i];
 		if (pos[i] < 0) {
@@ -378,7 +378,7 @@ by the Calc_* functions
 void R_SetupEntityLighting(const trRefdef_t* refdef, trRefEntity_t* ent) {
 	int				i;
 	vec3_t			light_dir;
-	vec3_t			light_origin;
+	vec3_t			lightOrigin;
 
 	// lighting calculations
 	if (ent->lightingCalculated) {
@@ -393,10 +393,10 @@ void R_SetupEntityLighting(const trRefdef_t* refdef, trRefEntity_t* ent) {
 		// seperate lightOrigins are needed so an object that is
 		// sinking into the ground can still be lit, and so
 		// multi-part models can be lit identically
-		VectorCopy(ent->e.lightingOrigin, light_origin);
+		VectorCopy(ent->e.lightingOrigin, lightOrigin);
 	}
 	else {
-		VectorCopy(ent->e.origin, light_origin);
+		VectorCopy(ent->e.origin, lightOrigin);
 	}
 
 	// if NOWORLDMODEL, only use dynamic lights (menu system, etc)
@@ -436,7 +436,7 @@ void R_SetupEntityLighting(const trRefdef_t* refdef, trRefEntity_t* ent) {
 	for (i = 0; i < refdef->num_dlights; i++) {
 		vec3_t dir;
 		const dlight_t* dl = &refdef->dlights[i];
-		VectorSubtract(dl->origin, light_origin, dir);
+		VectorSubtract(dl->origin, lightOrigin, dir);
 		d = VectorNormalize(dir);
 
 		const float power = DLIGHT_AT_RADIUS * (dl->radius * dl->radius);

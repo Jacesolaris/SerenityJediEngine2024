@@ -44,7 +44,7 @@ extern stringID_table_t saber_moveTable[];
 #endif
 
 extern qboolean BG_SabersOff(const playerState_t* ps);
-saberInfo_t* BG_MySaber(int client_num, int saberNum);
+saberInfo_t* BG_MySaber(int clientNum, int saberNum);
 extern qboolean PM_SaberInDamageMove(int move);
 void PM_AddFatigue(playerState_t* ps, int fatigue);
 extern qboolean PM_InCartwheel(int anim);
@@ -726,9 +726,9 @@ saber_moveName_t PM_NPCSaberAttackFromQuad(const int quad)
 		BG_EnoughForcePowerForMove(SABER_KATA_ATTACK_POWER) &&
 		!pm->ps->fd.forcePowersActive && !in_camera)
 	{
-		if (g_entities[pm->ps->client_num].r.svFlags & SVF_BOT)
+		if (g_entities[pm->ps->clientNum].r.svFlags & SVF_BOT)
 		{// Some special bot stuff.
-			if (Next_Kill_Attack_Move_Check[pm->ps->client_num] <= level.time && g_attackskill.integer >= 0)
+			if (Next_Kill_Attack_Move_Check[pm->ps->clientNum] <= level.time && g_attackskill.integer >= 0)
 			{
 				int check_val = 0; // Times 500 for next check interval.
 
@@ -892,7 +892,7 @@ saber_moveName_t PM_NPCSaberAttackFromQuad(const int quad)
 					check_val = 1;
 				}
 
-				Next_Kill_Attack_Move_Check[pm->ps->client_num] = level.time + (40000 / check_val); // 20 secs / g_attackskill
+				Next_Kill_Attack_Move_Check[pm->ps->clientNum] = level.time + (40000 / check_val); // 20 secs / g_attackskill
 			}
 		}
 	}
@@ -1169,8 +1169,8 @@ saber_moveName_t PM_CheckStabDown(void)
 	const vec3_t trmins = { -15, -15, -15 };
 	const vec3_t trmaxs = { 15, 15, 15 };
 
-	const saberInfo_t* saber1 = BG_MySaber(pm->ps->client_num, 0);
-	const saberInfo_t* saber2 = BG_MySaber(pm->ps->client_num, 1);
+	const saberInfo_t* saber1 = BG_MySaber(pm->ps->clientNum, 0);
+	const saberInfo_t* saber2 = BG_MySaber(pm->ps->clientNum, 1);
 
 	if (saber1
 		&& saber1->saberFlags & SFL_NO_STABDOWN)
@@ -1188,7 +1188,7 @@ saber_moveName_t PM_CheckStabDown(void)
 		//sorry must be on ground!
 		return LS_NONE;
 	}
-	if (pm->ps->client_num < MAX_CLIENTS)
+	if (pm->ps->clientNum < MAX_CLIENTS)
 	{
 		//player
 		pm->ps->velocity[2] = 0;
@@ -1201,7 +1201,7 @@ saber_moveName_t PM_CheckStabDown(void)
 	//FIXME: need to only move forward until we bump into our target...?
 	VectorMA(pm->ps->origin, 164.0f, face_fwd, fwd);
 
-	pm->trace(&tr, pm->ps->origin, trmins, trmaxs, fwd, pm->ps->client_num, MASK_PLAYERSOLID);
+	pm->trace(&tr, pm->ps->origin, trmins, trmaxs, fwd, pm->ps->clientNum, MASK_PLAYERSOLID);
 
 	if (tr.entityNum < ENTITYNUM_WORLD)
 	{
@@ -1389,7 +1389,7 @@ int PM_SaberAttackChainAngle(const int move1, const int move2)
 
 qboolean PM_SaberKataDone(const int curmove, const int newmove)
 {
-	const saberInfo_t* saber1 = BG_MySaber(pm->ps->client_num, 0);
+	const saberInfo_t* saber1 = BG_MySaber(pm->ps->clientNum, 0);
 	if (pm->ps->m_iVehicleNum)
 	{
 		//never continue kata on vehicle
@@ -1694,7 +1694,7 @@ int PM_SaberLockLoseAnim(playerState_t* genemy, const qboolean victory, const qb
 	if (lose_anim != -1)
 	{
 #ifdef _GAME
-		NPC_SetAnim(&g_entities[genemy->client_num], SETANIM_BOTH, lose_anim,
+		NPC_SetAnim(&g_entities[genemy->clientNum], SETANIM_BOTH, lose_anim,
 			SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 		genemy->weaponTime = genemy->torsoTimer; // + 250;
 #endif
@@ -1752,7 +1752,7 @@ int PM_SaberLockResultAnim(playerState_t* duelist, const qboolean super_break, c
 	//play the anim and hold it
 #ifdef _GAME
 	//server-side: set it on the other guy, too
-	if (duelist->client_num == pm->ps->client_num)
+	if (duelist->clientNum == pm->ps->clientNum)
 	{
 		//me
 		PM_SetAnim(SETANIM_BOTH, base_anim, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
@@ -1760,7 +1760,7 @@ int PM_SaberLockResultAnim(playerState_t* duelist, const qboolean super_break, c
 	else
 	{
 		//other guy
-		NPC_SetAnim(&g_entities[duelist->client_num], SETANIM_BOTH, base_anim,
+		NPC_SetAnim(&g_entities[duelist->clientNum], SETANIM_BOTH, base_anim,
 			SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 	}
 #else
@@ -1774,7 +1774,7 @@ int PM_SaberLockResultAnim(playerState_t* duelist, const qboolean super_break, c
 #ifdef _GAME
 		if (1)
 #else
-		if (duelist->client_num == pm->ps->client_num)
+		if (duelist->clientNum == pm->ps->clientNum)
 #endif
 		{
 			//set saber move to none
@@ -1787,7 +1787,7 @@ int PM_SaberLockResultAnim(playerState_t* duelist, const qboolean super_break, c
 #ifdef _GAME
 	if (1)
 #else
-	if (duelist->client_num == pm->ps->client_num)
+	if (duelist->clientNum == pm->ps->clientNum)
 #endif
 	{
 		//no attacking during this anim
@@ -1824,7 +1824,7 @@ void PM_SaberLockBreak(playerState_t* genemy, const qboolean victory, const int 
 	{//someone lost the lock, so punish them by knocking them down
 		if (!super_break)
 		{//if we're not in a superbreak, force the loser to mishap.
-			pm->checkDuelLoss = genemy->client_num + 1;
+			pm->checkDuelLoss = genemy->clientNum + 1;
 		}
 	}
 	else
@@ -1955,14 +1955,14 @@ void PM_SaberLocked(void)
 			//between 8 and 80 from each other
 			PM_SaberLockBreak(genemy, qfalse, 0);
 #ifdef _GAME
-			gentity_t* self = &g_entities[pm->ps->client_num];
+			gentity_t* self = &g_entities[pm->ps->clientNum];
 			G_Sound(self, CHAN_BODY, G_SoundIndex("sound/weapons/saber/saberlockend.mp3"));
 #endif
 			return;
 		}
 
 #ifdef _GAME
-		if (g_entities[pm->ps->client_num].r.svFlags & SVF_BOT)
+		if (g_entities[pm->ps->clientNum].r.svFlags & SVF_BOT)
 		{
 			if (pm->ps->saberLockAdvance)
 			{
@@ -1989,7 +1989,7 @@ void PM_SaberLocked(void)
 						{
 							//I won!  Break out
 							PM_SaberLockBreak(genemy, qtrue, strength);
-							gentity_t* self = &g_entities[pm->ps->client_num];
+							gentity_t* self = &g_entities[pm->ps->clientNum];
 							G_Sound(self, CHAN_BODY, G_SoundIndex("sound/weapons/saber/saberlockend.mp3"));
 							return;
 						}
@@ -2004,7 +2004,7 @@ void PM_SaberLocked(void)
 						{
 							//I won!  Break out
 							PM_SaberLockBreak(genemy, qtrue, strength);
-							gentity_t* self = &g_entities[pm->ps->client_num];
+							gentity_t* self = &g_entities[pm->ps->clientNum];
 							G_Sound(self, CHAN_BODY, G_SoundIndex("sound/weapons/saber/saberlockend.mp3"));
 							return;
 						}
@@ -2023,7 +2023,7 @@ void PM_SaberLocked(void)
 						{
 							//I won!  Break out
 							PM_SaberLockBreak(genemy, qtrue, strength);
-							gentity_t* self = &g_entities[pm->ps->client_num];
+							gentity_t* self = &g_entities[pm->ps->clientNum];
 							G_Sound(self, CHAN_BODY, G_SoundIndex("sound/weapons/saber/saberlockend.mp3"));
 							return;
 						}
@@ -2038,7 +2038,7 @@ void PM_SaberLocked(void)
 						{
 							//I won!  Break out
 							PM_SaberLockBreak(genemy, qtrue, strength);
-							gentity_t* self = &g_entities[pm->ps->client_num];
+							gentity_t* self = &g_entities[pm->ps->clientNum];
 							G_Sound(self, CHAN_BODY, G_SoundIndex("sound/weapons/saber/saberlockend.mp3"));
 							return;
 						}
@@ -2115,7 +2115,7 @@ void PM_SaberLocked(void)
 								//I won!  Break out
 								PM_SaberLockBreak(genemy, qtrue, strength);
 #ifdef _GAME
-								gentity_t* self = &g_entities[pm->ps->client_num];
+								gentity_t* self = &g_entities[pm->ps->clientNum];
 								G_Sound(self, CHAN_BODY, G_SoundIndex("sound/weapons/saber/saberlockend.mp3"));
 #endif
 								return;
@@ -2132,7 +2132,7 @@ void PM_SaberLocked(void)
 								//I won!  Break out
 								PM_SaberLockBreak(genemy, qtrue, strength);
 #ifdef _GAME
-								gentity_t* self = &g_entities[pm->ps->client_num];
+								gentity_t* self = &g_entities[pm->ps->clientNum];
 								G_Sound(self, CHAN_BODY, G_SoundIndex("sound/weapons/saber/saberlockend.mp3"));
 #endif
 								return;
@@ -2153,7 +2153,7 @@ void PM_SaberLocked(void)
 								//I won!  Break out
 								PM_SaberLockBreak(genemy, qtrue, strength);
 #ifdef _GAME
-								gentity_t* self = &g_entities[pm->ps->client_num];
+								gentity_t* self = &g_entities[pm->ps->clientNum];
 								G_Sound(self, CHAN_BODY, G_SoundIndex("sound/weapons/saber/saberlockend.mp3"));
 #endif
 								return;
@@ -2170,7 +2170,7 @@ void PM_SaberLocked(void)
 								//I won!  Break out
 								PM_SaberLockBreak(genemy, qtrue, strength);
 #ifdef _GAME
-								gentity_t* self = &g_entities[pm->ps->client_num];
+								gentity_t* self = &g_entities[pm->ps->clientNum];
 								G_Sound(self, CHAN_BODY, G_SoundIndex("sound/weapons/saber/saberlockend.mp3"));
 #endif
 								return;
@@ -2223,7 +2223,7 @@ void PM_SaberLocked(void)
 		//something broke us out of it
 		PM_SaberLockBreak(genemy, qfalse, 0);
 #ifdef _GAME
-		gentity_t* self = &g_entities[pm->ps->client_num];
+		gentity_t* self = &g_entities[pm->ps->clientNum];
 		G_Sound(self, CHAN_BODY, G_SoundIndex("sound/weapons/saber/saberlockend.mp3"));
 #endif
 	}
@@ -2295,7 +2295,7 @@ qboolean PM_CanBackstab(void)
 	back[1] = pm->ps->origin[1] - fwd[1] * BACK_STAB_DISTANCE;
 	back[2] = pm->ps->origin[2] - fwd[2] * BACK_STAB_DISTANCE;
 
-	pm->trace(&tr, pm->ps->origin, trmins, trmaxs, back, pm->ps->client_num, MASK_PLAYERSOLID);
+	pm->trace(&tr, pm->ps->origin, trmins, trmaxs, back, pm->ps->clientNum, MASK_PLAYERSOLID);
 
 	if (tr.fraction != 1.0 && tr.entityNum >= 0 && tr.entityNum < ENTITYNUM_NONE)
 	{
@@ -2314,8 +2314,8 @@ saber_moveName_t PM_SaberFlipOverAttackMove(void)
 {
 	vec3_t fwdAngles, jumpFwd;
 
-	const saberInfo_t* saber1 = BG_MySaber(pm->ps->client_num, 0);
-	const saberInfo_t* saber2 = BG_MySaber(pm->ps->client_num, 1);
+	const saberInfo_t* saber1 = BG_MySaber(pm->ps->clientNum, 0);
+	const saberInfo_t* saber2 = BG_MySaber(pm->ps->clientNum, 1);
 
 	//see if we have an overridden (or cancelled) lunge move
 	if (saber1
@@ -2382,8 +2382,8 @@ saber_moveName_t PM_SaberFlipOverAttackMove(void)
 
 int PM_SaberBackflipAttackMove(void)
 {
-	const saberInfo_t* saber1 = BG_MySaber(pm->ps->client_num, 0);
-	const saberInfo_t* saber2 = BG_MySaber(pm->ps->client_num, 1);
+	const saberInfo_t* saber1 = BG_MySaber(pm->ps->clientNum, 0);
+	const saberInfo_t* saber2 = BG_MySaber(pm->ps->clientNum, 1);
 
 	//see if we have an overridden (or cancelled) lunge move
 	if (saber1
@@ -2421,7 +2421,7 @@ int PM_SaberBackflipAttackMove(void)
 
 int PM_SaberDualJumpAttackMove(void)
 {
-	const saberInfo_t* saber1 = BG_MySaber(pm->ps->client_num, 0);
+	const saberInfo_t* saber1 = BG_MySaber(pm->ps->clientNum, 0);
 
 	pm->cmd.upmove = 0; //no jump just yet
 
@@ -2439,8 +2439,8 @@ saber_moveName_t PM_SaberLungeAttackMove(const qboolean noSpecials)
 {
 	vec3_t fwdAngles, jumpFwd;
 
-	const saberInfo_t* saber1 = BG_MySaber(pm->ps->client_num, 0);
-	const saberInfo_t* saber2 = BG_MySaber(pm->ps->client_num, 1);
+	const saberInfo_t* saber1 = BG_MySaber(pm->ps->clientNum, 0);
+	const saberInfo_t* saber2 = BG_MySaber(pm->ps->clientNum, 1);
 
 	WP_ForcePowerDrain(pm->ps, FP_SABER_OFFENSE, SABER_ALT_ATTACK_POWER_FB);
 
@@ -2473,7 +2473,7 @@ saber_moveName_t PM_SaberLungeAttackMove(const qboolean noSpecials)
 		return LS_A_T2B; //LS_NONE;
 	}
 	//just do it
-	saber1 = BG_MySaber(pm->ps->client_num, 0);
+	saber1 = BG_MySaber(pm->ps->clientNum, 0);
 
 	if (pm->ps->fd.saber_anim_level == SS_FAST)
 	{
@@ -2622,7 +2622,7 @@ qboolean PM_Can_Do_Kill_Lunge(void)
 	back[1] = pm->ps->origin[1] + fwd[1] * SPECIAL_ATTACK_DISTANCE;
 	back[2] = pm->ps->origin[2] + fwd[2] * SPECIAL_ATTACK_DISTANCE;
 
-	pm->trace(&tr, pm->ps->origin, trmins, trmaxs, back, pm->ps->client_num, MASK_PLAYERSOLID);
+	pm->trace(&tr, pm->ps->origin, trmins, trmaxs, back, pm->ps->clientNum, MASK_PLAYERSOLID);
 
 	if (tr.fraction != 1.0 && tr.entityNum >= 0 && tr.entityNum < MAX_CLIENTS)
 	{
@@ -2650,7 +2650,7 @@ qboolean PM_Can_Do_Kill_Lunge_back(void)
 	back[1] = pm->ps->origin[1] - fwd[1] * SPECIAL_ATTACK_DISTANCE;
 	back[2] = pm->ps->origin[2] - fwd[2] * SPECIAL_ATTACK_DISTANCE;
 
-	pm->trace(&tr, pm->ps->origin, trmins, trmaxs, back, pm->ps->client_num, MASK_PLAYERSOLID);
+	pm->trace(&tr, pm->ps->origin, trmins, trmaxs, back, pm->ps->clientNum, MASK_PLAYERSOLID);
 
 	if (tr.fraction != 1.0 && tr.entityNum >= 0 && (tr.entityNum < MAX_CLIENTS))
 	{ //We don't have real entity access here so we can't do an indepth check. But if it's a client and it's behind us, I guess that's reason enough to stab backward
@@ -2662,8 +2662,8 @@ qboolean PM_Can_Do_Kill_Lunge_back(void)
 
 saber_moveName_t PM_SaberJumpAttackMove2(void)
 {
-	const saberInfo_t* saber1 = BG_MySaber(pm->ps->client_num, 0);
-	const saberInfo_t* saber2 = BG_MySaber(pm->ps->client_num, 1);
+	const saberInfo_t* saber1 = BG_MySaber(pm->ps->clientNum, 0);
+	const saberInfo_t* saber2 = BG_MySaber(pm->ps->clientNum, 1);
 
 	//see if we have an overridden (or cancelled) lunge move
 	if (saber1
@@ -2709,8 +2709,8 @@ saber_moveName_t PM_SaberJumpForwardAttackMove(void)
 {
 	vec3_t fwdAngles, jumpFwd;
 
-	const saberInfo_t* saber1 = BG_MySaber(pm->ps->client_num, 0);
-	const saberInfo_t* saber2 = BG_MySaber(pm->ps->client_num, 1);
+	const saberInfo_t* saber1 = BG_MySaber(pm->ps->clientNum, 0);
+	const saberInfo_t* saber2 = BG_MySaber(pm->ps->clientNum, 1);
 
 	//see if we have an overridden (or cancelled) lunge move
 	if (saber1
@@ -2751,7 +2751,7 @@ saber_moveName_t PM_SaberJumpForwardAttackMove(void)
 	PM_AddEvent(EV_JUMP);
 	pm->ps->fd.forceJumpSound = 1;
 	pm->cmd.upmove = 0;
-	saber1 = BG_MySaber(pm->ps->client_num, 0);
+	saber1 = BG_MySaber(pm->ps->clientNum, 0);
 
 	if (saber1 && saber1->type == SABER_YODA || saber1 && saber1->type == SABER_PALP)
 	{
@@ -2764,8 +2764,8 @@ saber_moveName_t PM_NPC_Force_Leap_Attack(void)
 {
 	vec3_t fwdAngles, jumpFwd;
 
-	const saberInfo_t* saber1 = BG_MySaber(pm->ps->client_num, 0);
-	const saberInfo_t* saber2 = BG_MySaber(pm->ps->client_num, 1);
+	const saberInfo_t* saber1 = BG_MySaber(pm->ps->clientNum, 0);
+	const saberInfo_t* saber2 = BG_MySaber(pm->ps->clientNum, 1);
 
 	//see if we have an overridden (or cancelled) lunge move
 	if (saber1
@@ -2860,7 +2860,7 @@ float PM_GroundDistance(void)
 
 	down[2] -= 4096;
 
-	pm->trace(&tr, pm->ps->origin, pm->mins, pm->maxs, down, pm->ps->client_num, MASK_SOLID);
+	pm->trace(&tr, pm->ps->origin, pm->mins, pm->maxs, down, pm->ps->clientNum, MASK_SOLID);
 
 	VectorSubtract(pm->ps->origin, tr.endpos, down);
 
@@ -2876,7 +2876,7 @@ float PM_WalkableGroundDistance(void)
 
 	down[2] -= 4096;
 
-	pm->trace(&tr, pm->ps->origin, pm->mins, pm->maxs, down, pm->ps->client_num, MASK_SOLID);
+	pm->trace(&tr, pm->ps->origin, pm->mins, pm->maxs, down, pm->ps->clientNum, MASK_SOLID);
 
 	if (tr.plane.normal[2] < MIN_WALK_NORMAL)
 	{
@@ -2893,13 +2893,13 @@ static qboolean PM_CanDoDualDoubleAttacks(void)
 {
 	if (pm->ps->weapon == WP_SABER)
 	{
-		const saberInfo_t* saber = BG_MySaber(pm->ps->client_num, 0);
+		const saberInfo_t* saber = BG_MySaber(pm->ps->clientNum, 0);
 		if (saber
 			&& saber->saberFlags & SFL_NO_MIRROR_ATTACKS)
 		{
 			return qfalse;
 		}
-		saber = BG_MySaber(pm->ps->client_num, 1);
+		saber = BG_MySaber(pm->ps->clientNum, 1);
 		if (saber
 			&& saber->saberFlags & SFL_NO_MIRROR_ATTACKS)
 		{
@@ -2977,7 +2977,7 @@ qboolean G_CheckEnemyPresence(const int dir, const float radius)
 	}
 
 	VectorMA(pm->ps->origin, radius, checkDir, tTo);
-	pm->trace(&tr, pm->ps->origin, tMins, tMaxs, tTo, pm->ps->client_num, MASK_PLAYERSOLID);
+	pm->trace(&tr, pm->ps->origin, tMins, tMaxs, tTo, pm->ps->clientNum, MASK_PLAYERSOLID);
 
 	if (tr.fraction != 1.0f && tr.entityNum < ENTITYNUM_WORLD)
 	{
@@ -3079,8 +3079,8 @@ saber_moveName_t PM_SaberAttackForMovement(const saber_moveName_t curmove)
 	saber_moveName_t overrideJumpRightAttackMove = LS_INVALID;
 	saber_moveName_t overrideJumpLeftAttackMove = LS_INVALID;
 
-	const saberInfo_t* saber1 = BG_MySaber(pm->ps->client_num, 0);
-	const saberInfo_t* saber2 = BG_MySaber(pm->ps->client_num, 1);
+	const saberInfo_t* saber1 = BG_MySaber(pm->ps->clientNum, 0);
+	const saberInfo_t* saber2 = BG_MySaber(pm->ps->clientNum, 1);
 
 	if (pm->ps->weapon == WP_SABER)
 	{
@@ -3417,7 +3417,7 @@ saber_moveName_t PM_SaberAttackForMovement(const saber_moveName_t curmove)
 			{
 				//bounces, parries, etc return to the start position if a direction isn't given.
 #ifdef _GAME
-				if (g_entities[pm->ps->client_num].r.svFlags & SVF_BOT)
+				if (g_entities[pm->ps->clientNum].r.svFlags & SVF_BOT)
 				{
 					newmove = LS_READY;
 				}
@@ -3437,7 +3437,7 @@ saber_moveName_t PM_SaberAttackForMovement(const saber_moveName_t curmove)
 			{
 				//bounces should go to their default attack if you don't specify a direction but are attacking
 #ifdef _GAME
-				if (g_entities[pm->ps->client_num].r.svFlags & SVF_BOT || pm_entSelf->s.eType == ET_NPC &&
+				if (g_entities[pm->ps->clientNum].r.svFlags & SVF_BOT || pm_entSelf->s.eType == ET_NPC &&
 					Q_irand(0, 3))
 				{
 					//use bot random
@@ -3534,7 +3534,7 @@ qboolean PM_CheckUpsideDownAttack(void)
 	{
 		return qfalse;
 	}
-	if (pm->ps->client_num >= MAX_CLIENTS)
+	if (pm->ps->clientNum >= MAX_CLIENTS)
 	{
 		//FIXME: check ranks?
 		return qfalse;
@@ -3869,7 +3869,7 @@ qboolean PM_CanDoKata(void)
 
 qboolean PM_SaberThrowable(void)
 {
-	const saberInfo_t* saber = BG_MySaber(pm->ps->client_num, 0);
+	const saberInfo_t* saber = BG_MySaber(pm->ps->clientNum, 0);
 	if (!saber)
 	{
 		//this is bad, just drop out.
@@ -3949,13 +3949,13 @@ qboolean PM_CanDoRollStab(void)
 {
 	if (pm->ps->weapon == WP_SABER && !(pm->ps->userInt3 & 1 << FLAG_DODGEROLL))
 	{
-		const saberInfo_t* saber = BG_MySaber(pm->ps->client_num, 0);
+		const saberInfo_t* saber = BG_MySaber(pm->ps->clientNum, 0);
 		if (saber
 			&& saber->saberFlags & SFL_NO_ROLL_STAB)
 		{
 			return qfalse;
 		}
-		saber = BG_MySaber(pm->ps->client_num, 1);
+		saber = BG_MySaber(pm->ps->clientNum, 1);
 		if (saber
 			&& saber->saberFlags & SFL_NO_ROLL_STAB)
 		{
@@ -4554,7 +4554,7 @@ void PM_SaberDroidWeapon(void)
 void PM_CheckClearSaberBlock(void)
 {
 #ifdef _GAME
-	if (!(g_entities[pm->ps->client_num].r.svFlags & SVF_BOT || pm_entSelf->s.eType == ET_NPC))
+	if (!(g_entities[pm->ps->clientNum].r.svFlags & SVF_BOT || pm_entSelf->s.eType == ET_NPC))
 #endif
 	{
 		//player
@@ -4579,7 +4579,7 @@ void PM_CheckClearSaberBlock(void)
 
 qboolean PM_SaberBlocking(void)
 {
-	const saberInfo_t* saber1 = BG_MySaber(pm->ps->client_num, 0);
+	const saberInfo_t* saber1 = BG_MySaber(pm->ps->clientNum, 0);
 
 	// Now we react to a block action by the player's lightsaber.
 	if (pm->ps->saberBlocked)
@@ -4690,7 +4690,7 @@ qboolean PM_SaberBlocking(void)
 				{
 					//transition to a new attack
 #ifdef _GAME
-					if (g_entities[pm->ps->client_num].r.svFlags & SVF_BOT || pm_entSelf->s.eType == ET_NPC)
+					if (g_entities[pm->ps->clientNum].r.svFlags & SVF_BOT || pm_entSelf->s.eType == ET_NPC)
 					{
 						// Some special bot stuff.
 						next_move = saber_moveData[pm->ps->saber_move].chain_attack;
@@ -4713,7 +4713,7 @@ qboolean PM_SaberBlocking(void)
 				{
 					//return to ready
 #ifdef _GAME
-					if (g_entities[pm->ps->client_num].r.svFlags & SVF_BOT || pm_entSelf->s.eType == ET_NPC)
+					if (g_entities[pm->ps->clientNum].r.svFlags & SVF_BOT || pm_entSelf->s.eType == ET_NPC)
 					{
 						// Some special bot stuff.
 						next_move = saber_moveData[pm->ps->saber_move].chain_idle;
@@ -5002,7 +5002,7 @@ void PM_WeaponLightsaber(void)
 	int anim = -1;
 	int newmove = LS_NONE;
 
-	const saberInfo_t* saber1 = BG_MySaber(pm->ps->client_num, 0);
+	const saberInfo_t* saber1 = BG_MySaber(pm->ps->clientNum, 0);
 
 	const qboolean is_holding_block_button = pm->ps->ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
 	//Holding Block Button
@@ -5045,7 +5045,7 @@ void PM_WeaponLightsaber(void)
 		}
 
 #ifdef _GAME
-		if (g_entities[pm->ps->client_num].r.svFlags & SVF_BOT)
+		if (g_entities[pm->ps->clientNum].r.svFlags & SVF_BOT)
 		{
 			if (!(pm->cmd.buttons & BUTTON_ATTACK)
 				&& !PM_SaberInSpecial(pm->ps->saber_move)
@@ -5141,7 +5141,7 @@ void PM_WeaponLightsaber(void)
 				{
 					PM_SaberLockBreak(en, qfalse, 0);
 #ifdef _GAME
-					gentity_t* self = &g_entities[pm->ps->client_num];
+					gentity_t* self = &g_entities[pm->ps->clientNum];
 					G_Sound(self, CHAN_BODY, G_SoundIndex("sound/weapons/saber/saberlockend.mp3"));
 #endif
 					return;
@@ -5185,7 +5185,7 @@ void PM_WeaponLightsaber(void)
 		else if (PM_InSlopeAnim(pm->ps->legsAnim) && pm->ps->torsoTimer <= 0)
 		{
 #ifdef _GAME
-			if (g_entities[pm->ps->client_num].r.svFlags & SVF_BOT || pm_entSelf->s.eType == ET_NPC)
+			if (g_entities[pm->ps->clientNum].r.svFlags & SVF_BOT || pm_entSelf->s.eType == ET_NPC)
 			{
 				// Some special bot stuff.
 				PM_SetAnim(SETANIM_TORSO, PM_ReadyPoseForsaber_anim_levelBOT(), SETANIM_FLAG_OVERRIDE);
@@ -5346,7 +5346,7 @@ void PM_WeaponLightsaber(void)
 			if (cgs.m_nerf & 1 << EOC_CLOSETHROW)
 #endif
 			{
-				pm->trace(&sab_tr, pm->ps->origin, sab_mins, sab_maxs, min_fwd, pm->ps->client_num, MASK_PLAYERSOLID);
+				pm->trace(&sab_tr, pm->ps->origin, sab_mins, sab_maxs, min_fwd, pm->ps->clientNum, MASK_PLAYERSOLID);
 
 				if (sab_tr.allsolid || sab_tr.startsolid || sab_tr.fraction < 1.0f)
 				{
@@ -5690,7 +5690,7 @@ weapChecks:
 		else
 		{
 #ifdef _GAME
-			if (g_entities[pm->ps->client_num].r.svFlags & SVF_BOT || pm_entSelf->s.eType == ET_NPC)
+			if (g_entities[pm->ps->clientNum].r.svFlags & SVF_BOT || pm_entSelf->s.eType == ET_NPC)
 			{
 				// Some special bot stuff.
 				PM_SetAnim(SETANIM_TORSO, PM_ReadyPoseForsaber_anim_levelBOT(), SETANIM_FLAG_NORMAL);
@@ -5883,7 +5883,7 @@ weapChecks:
 			{
 				//started a swing, must continue from here
 #ifdef _GAME
-				if (g_entities[pm->ps->client_num].r.svFlags & SVF_BOT) //npc
+				if (g_entities[pm->ps->clientNum].r.svFlags & SVF_BOT) //npc
 				{
 					//NPCs never do attack fakes, just follow thru with attack.
 					newmove = LS_A_TL2BR + (curmove - LS_S_TL2BR);
@@ -5905,7 +5905,7 @@ weapChecks:
 			{
 				//in a transition, must play sequential attack
 #ifdef _GAME
-				if (g_entities[pm->ps->client_num].r.svFlags & SVF_BOT) //npc
+				if (g_entities[pm->ps->clientNum].r.svFlags & SVF_BOT) //npc
 				{
 					//NPCs never stop attacking mid-attack, just follow thru with attack.
 					newmove = saber_moveData[curmove].chain_attack;
@@ -5921,7 +5921,7 @@ weapChecks:
 			{
 				//in a bounce
 #ifdef _GAME
-				if (g_entities[pm->ps->client_num].r.svFlags & SVF_BOT) //npc
+				if (g_entities[pm->ps->clientNum].r.svFlags & SVF_BOT) //npc
 				{
 					//NPCs must play sequential attack
 					if (PM_SaberKataDone(LS_NONE, LS_NONE))
@@ -6109,7 +6109,7 @@ weapChecks:
 			{
 				//get attack move from movement command
 #ifdef _GAME
-				if (g_entities[pm->ps->client_num].r.svFlags & SVF_BOT
+				if (g_entities[pm->ps->clientNum].r.svFlags & SVF_BOT
 					&& (Q_irand(0, pm->ps->fd.forcePowerLevel[FP_SABER_OFFENSE] - 1)
 						|| pm->ps->fd.saber_anim_level == SS_FAST
 						&& Q_irand(0, 1))) //minor change to make fast-attack users use the special attacks more
@@ -6270,7 +6270,7 @@ weapChecks:
 				break;
 			default:;
 #ifdef _GAME
-				if (g_entities[pm->ps->client_num].r.svFlags & SVF_BOT)
+				if (g_entities[pm->ps->clientNum].r.svFlags & SVF_BOT)
 				{
 					anim = PM_ReadyPoseForsaber_anim_levelBOT();
 				}
@@ -6554,8 +6554,8 @@ void PM_Setsaber_move(saber_moveName_t new_move)
 	int anim = saber_moveData[new_move].animToUse;
 	int parts = SETANIM_TORSO;
 
-	const saberInfo_t* saber1 = BG_MySaber(pm->ps->client_num, 0);
-	const saberInfo_t* saber2 = BG_MySaber(pm->ps->client_num, 1);
+	const saberInfo_t* saber1 = BG_MySaber(pm->ps->clientNum, 0);
+	const saberInfo_t* saber2 = BG_MySaber(pm->ps->clientNum, 1);
 
 	const qboolean is_holding_block_button = pm->ps->ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
 	//Holding Block Button
@@ -6798,7 +6798,7 @@ void PM_Setsaber_move(saber_moveName_t new_move)
 		{
 			//If standing then use the special saber stand anim
 #ifdef _GAME
-			if (g_entities[pm->ps->client_num].r.svFlags & SVF_BOT || pm_entSelf->s.eType == ET_NPC)
+			if (g_entities[pm->ps->clientNum].r.svFlags & SVF_BOT || pm_entSelf->s.eType == ET_NPC)
 			{
 				anim = PM_ReadyPoseForsaber_anim_levelBOT();
 			}
@@ -6855,7 +6855,7 @@ void PM_Setsaber_move(saber_moveName_t new_move)
 		{
 			//normal stance when walking backward so saber doesn't look like it's cutting through leg
 #ifdef _GAME
-			if (g_entities[pm->ps->client_num].r.svFlags & SVF_BOT || pm_entSelf->s.eType == ET_NPC)
+			if (g_entities[pm->ps->clientNum].r.svFlags & SVF_BOT || pm_entSelf->s.eType == ET_NPC)
 			{
 				anim = PM_ReadyPoseForsaber_anim_levelBOT();
 			}
@@ -6887,7 +6887,7 @@ void PM_Setsaber_move(saber_moveName_t new_move)
 		if (PM_InSlopeAnim(anim))
 		{
 #ifdef _GAME
-			if (g_entities[pm->ps->client_num].r.svFlags & SVF_BOT || pm_entSelf->s.eType == ET_NPC)
+			if (g_entities[pm->ps->clientNum].r.svFlags & SVF_BOT || pm_entSelf->s.eType == ET_NPC)
 			{
 				// Some special bot stuff.
 				anim = PM_ReadyPoseForsaber_anim_levelBOT();
@@ -7057,7 +7057,7 @@ void PM_Setsaber_move(saber_moveName_t new_move)
 			const qboolean active_blocking = pm->ps->ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK ? qtrue : qfalse;
 			//Active Blocking
 
-			if (!(g_entities[pm->ps->client_num].r.svFlags & SVF_BOT))
+			if (!(g_entities[pm->ps->clientNum].r.svFlags & SVF_BOT))
 			{
 			}
 			else
@@ -7172,7 +7172,7 @@ void PM_Setsaber_move(saber_moveName_t new_move)
 
 		pm->ps->torsoAnim = anim;
 
-		if (pm->ps->client_num == 0)
+		if (pm->ps->clientNum == 0)
 		{
 			if (pm->ps->saberBlocked >= BLOCKED_UPPER_RIGHT_PROJ && pm->ps->saberBlocked <= BLOCKED_TOP_PROJ
 				&& new_move >= LS_REFLECT_UP && new_move <= LS_REFLECT_LL)
@@ -7193,11 +7193,11 @@ void PM_Setsaber_move(saber_moveName_t new_move)
 	}
 }
 
-saberInfo_t* BG_MySaber(int client_num, int saberNum)
+saberInfo_t* BG_MySaber(int clientNum, int saberNum)
 {
 	//returns a pointer to the requested saberNum
 #ifdef _GAME
-	const gentity_t* ent = &g_entities[client_num];
+	const gentity_t* ent = &g_entities[clientNum];
 	if (ent->inuse && ent->client)
 	{
 		if (!ent->client->saber[saberNum].model[0])
@@ -7209,13 +7209,13 @@ saberInfo_t* BG_MySaber(int client_num, int saberNum)
 	}
 #elif defined(_CGAME)
 	clientInfo_t* ci = NULL;
-	if (client_num < MAX_CLIENTS)
+	if (clientNum < MAX_CLIENTS)
 	{
-		ci = &cgs.clientinfo[client_num];
+		ci = &cgs.clientinfo[clientNum];
 	}
 	else
 	{
-		const centity_t* cent = &cg_entities[client_num];
+		const centity_t* cent = &cg_entities[clientNum];
 		if (cent->npcClient)
 		{
 			ci = cent->npcClient;

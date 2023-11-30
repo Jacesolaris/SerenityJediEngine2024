@@ -447,7 +447,7 @@ using cg_t = struct
 	int rewardCount;
 
 	// crosshair client ID
-	int crosshairclient_num; //who you're looking at
+	int crosshairclientNum; //who you're looking at
 	int crosshairClientTime; //last time you looked at them
 
 	// powerup active flashing
@@ -720,7 +720,7 @@ extern vmCvar_t cg_missionstatusscreen;
 extern vmCvar_t cg_hudRatio;
 extern vmCvar_t cg_saberLockCinematicCamera;
 
-void CG_NewClientinfo(int client_num);
+void CG_NewClientinfo(int clientNum);
 //
 // cg_main.c
 //
@@ -1303,8 +1303,8 @@ void CG_PlayEffectBolted(const char* fx_name, int modelIndex, int boltIndex, int
 	int i_loop_time = 0, bool is_relative = false);
 void CG_PlayEffectIDBolted(int fx_id, int modelIndex, int boltIndex, int entNum, vec3_t origin, int i_loop_time = 0,
 	bool is_relative = false);
-void CG_PlayEffectOnEnt(const char* fx_name, int client_num, vec3_t origin, const vec3_t fwd);
-void CG_PlayEffectIDOnEnt(int fx_id, int client_num, vec3_t origin, const vec3_t fwd);
+void CG_PlayEffectOnEnt(const char* fx_name, int clientNum, vec3_t origin, const vec3_t fwd);
+void CG_PlayEffectIDOnEnt(int fx_id, int clientNum, vec3_t origin, const vec3_t fwd);
 void CG_PlayEffect(const char* fx_name, vec3_t origin, const vec3_t fwd);
 void CG_PlayEffectID(int fx_id, vec3_t origin, const vec3_t fwd);
 

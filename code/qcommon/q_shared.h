@@ -1029,8 +1029,8 @@ using bladeInfo_t = struct
 	float length;
 	float lengthMax;
 	float lengthOld;
-	vec3_t muzzle_point;
-	vec3_t muzzle_pointOld;
+	vec3_t muzzlePoint;
+	vec3_t muzzlePointOld;
 	vec3_t muzzleDir;
 	vec3_t muzzleDirOld;
 	saberTrail_t trail;
@@ -1056,8 +1056,8 @@ using bladeInfo_t = struct
 		saved_game.write<float>(length);
 		saved_game.write<float>(lengthMax);
 		saved_game.write<float>(lengthOld);
-		saved_game.write<float>(muzzle_point);
-		saved_game.write<float>(muzzle_pointOld);
+		saved_game.write<float>(muzzlePoint);
+		saved_game.write<float>(muzzlePointOld);
 		saved_game.write<float>(muzzleDir);
 		saved_game.write<float>(muzzleDirOld);
 		saved_game.write<>(trail);
@@ -1072,8 +1072,8 @@ using bladeInfo_t = struct
 		saved_game.read<float>(length);
 		saved_game.read<float>(lengthMax);
 		saved_game.read<float>(lengthOld);
-		saved_game.read<float>(muzzle_point);
-		saved_game.read<float>(muzzle_pointOld);
+		saved_game.read<float>(muzzlePoint);
+		saved_game.read<float>(muzzlePointOld);
 		saved_game.read<float>(muzzleDir);
 		saved_game.read<float>(muzzleDirOld);
 		saved_game.read<>(trail);
@@ -1860,7 +1860,7 @@ public:
 	int externalEventParm;
 	int externalEventTime;
 
-	int client_num; // ranges from 0 to MAX_CLIENTS-1
+	int clientNum; // ranges from 0 to MAX_CLIENTS-1
 	int weapon; // copied to entityState_t->weapon
 	int weaponstate;
 
@@ -2297,7 +2297,7 @@ public:
 		saved_game.write<int32_t>(externalEvent);
 		saved_game.write<int32_t>(externalEventParm);
 		saved_game.write<int32_t>(externalEventTime);
-		saved_game.write<int32_t>(client_num);
+		saved_game.write<int32_t>(clientNum);
 		saved_game.write<int32_t>(weapon);
 		saved_game.write<int32_t>(weaponstate);
 		saved_game.write<int32_t>(batteryCharge);
@@ -2553,7 +2553,7 @@ public:
 		saved_game.read<int32_t>(externalEvent);
 		saved_game.read<int32_t>(externalEventParm);
 		saved_game.read<int32_t>(externalEventTime);
-		saved_game.read<int32_t>(client_num);
+		saved_game.read<int32_t>(clientNum);
 		saved_game.read<int32_t>(weapon);
 		saved_game.read<int32_t>(weaponstate);
 		saved_game.read<int32_t>(batteryCharge);
@@ -2983,7 +2983,7 @@ using entityState_t = struct entityState_s
 	int modelindex;
 	int modelindex2;
 	int modelindex3;
-	int client_num; // 0 to (MAX_CLIENTS - 1), for players and corpses
+	int clientNum; // 0 to (MAX_CLIENTS - 1), for players and corpses
 	int frame;
 
 	int NPC_class; //we need to see what it is on the client for a few effects.
@@ -3124,7 +3124,7 @@ using entityState_t = struct entityState_s
 		saved_game.write<int32_t>(modelindex);
 		saved_game.write<int32_t>(modelindex2);
 		saved_game.write<int32_t>(modelindex3);
-		saved_game.write<int32_t>(client_num);
+		saved_game.write<int32_t>(clientNum);
 		saved_game.write<int32_t>(frame);
 		saved_game.write<int32_t>(solid);
 		saved_game.write<int32_t>(event);
@@ -3240,7 +3240,7 @@ using entityState_t = struct entityState_s
 		saved_game.read<int32_t>(modelindex);
 		saved_game.read<int32_t>(modelindex2);
 		saved_game.read<int32_t>(modelindex3);
-		saved_game.read<int32_t>(client_num);
+		saved_game.read<int32_t>(clientNum);
 		saved_game.read<int32_t>(frame);
 		saved_game.read<int32_t>(solid);
 		saved_game.read<int32_t>(event);

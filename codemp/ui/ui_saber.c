@@ -177,7 +177,7 @@ qboolean UI_SaberTypeForSaber(const char* saber_name, char* saberType)
 	return WP_SaberParseParm(saber_name, "saberType", saberType);
 }
 
-int UI_saber_numBladesForSaber(const char* saber_name)
+static int UI_saber_numBladesForSaber(const char* saber_name)
 {
 	char	numBladesString[8] = { 0 };
 	WP_SaberParseParm(saber_name, "numBlades", numBladesString);
@@ -193,7 +193,7 @@ int UI_saber_numBladesForSaber(const char* saber_name)
 	return numBlades;
 }
 
-qboolean UI_SaberShouldDrawBlade(const char* saber_name, int blade_num)
+static qboolean UI_SaberShouldDrawBlade(const char* saber_name, int blade_num)
 {
 	int bladeStyle2Start = 0, noBlade = 0;
 	char	bladeStyle2StartString[8] = { 0 };
@@ -223,7 +223,7 @@ qboolean UI_SaberShouldDrawBlade(const char* saber_name, int blade_num)
 	return noBlade == 0;
 }
 
-qboolean UI_IsSaberTwoHanded(const char* saber_name)
+static qboolean UI_IsSaberTwoHanded(const char* saber_name)
 {
 	char	twoHandedString[8] = { 0 };
 	WP_SaberParseParm(saber_name, "twoHanded", twoHandedString);
@@ -235,7 +235,7 @@ qboolean UI_IsSaberTwoHanded(const char* saber_name)
 	return twoHanded != 0;
 }
 
-float UI_SaberBladeLengthForSaber(const char* saber_name, int blade_num)
+static float UI_SaberBladeLengthForSaber(const char* saber_name, int blade_num)
 {
 	char	lengthString[8] = { 0 };
 	float	length = 40.0f;
@@ -262,7 +262,7 @@ float UI_SaberBladeLengthForSaber(const char* saber_name, int blade_num)
 	return length;
 }
 
-float UI_SaberBladeRadiusForSaber(const char* saber_name, int blade_num)
+static float UI_SaberBladeRadiusForSaber(const char* saber_name, int blade_num)
 {
 	char	radiusString[8] = { 0 };
 	float	radius = 3.0f;
@@ -307,7 +307,7 @@ qboolean UI_SaberProperNameForSaber(const char* saber_name, char* saberProperNam
 	return ret;
 }
 
-qboolean UI_SaberValidForPlayerInMP(const char* saber_name)
+static qboolean UI_SaberValidForPlayerInMP(const char* saber_name)
 {
 	char allowed[8] = { 0 };
 	if (!WP_SaberParseParm(saber_name, "notInMP", allowed))
@@ -330,7 +330,7 @@ void UI_SaberLoadParms(void)
 	WP_SaberLoadParms();
 }
 
-void RGB_LerpColor(vec3_t from, vec3_t to, float frac, vec3_t out)
+static void RGB_LerpColor(vec3_t from, vec3_t to, float frac, vec3_t out)
 {
 	vec3_t diff;
 
@@ -344,7 +344,7 @@ void RGB_LerpColor(vec3_t from, vec3_t to, float frac, vec3_t out)
 	}
 }
 
-int getint(char** buf)
+static int getint(char** buf)
 {
 	const double temp = strtod(*buf, buf);
 	return (int)temp;
@@ -391,7 +391,7 @@ void UI_ParseScriptedSaber(char* script, int snum)
 	ScriptedNum[snum] = n;
 }
 
-void rgb_adjust_scipted_saber_color(vec3_t color, const int n)
+static void rgb_adjust_scipted_saber_color(vec3_t color, const int n)
 {
 	int actual;
 	const int time = uiInfo.uiDC.realTime;
@@ -425,7 +425,7 @@ void rgb_adjust_scipted_saber_color(vec3_t color, const int n)
 
 #define PIMP_MIN_INTESITY 120
 
-void RGB_RandomRGB(vec3_t c)
+static void RGB_RandomRGB(vec3_t c)
 {
 	int i;
 	for (i = 0; i < 3; i++)
@@ -441,7 +441,7 @@ int PimpEndTime[2];
 vec3_t PimpColorFrom[2];
 vec3_t PimpColorTo[2];
 
-void RGB_AdjustPimpSaberColor(vec3_t color, int n)
+static void RGB_AdjustPimpSaberColor(vec3_t color, int n)
 {
 	int time;
 
@@ -470,7 +470,7 @@ void RGB_AdjustPimpSaberColor(vec3_t color, int n)
 		color[i] /= 255;
 }
 
-void UI_DoSaber(vec3_t origin, vec3_t dir, float length, float lengthMax, float radius, saber_colors_t color, int snum)
+static void UI_DoSaber(vec3_t origin, vec3_t dir, float length, float lengthMax, float radius, saber_colors_t color, int snum)
 {
 	vec3_t		mid, rgb = { 1,1,1 };
 	qhandle_t	blade = 0, glow = 0;
@@ -628,7 +628,7 @@ void UI_DoSaber(vec3_t origin, vec3_t dir, float length, float lengthMax, float 
 	trap->R_AddRefEntityToScene(&saber);
 }
 
-void UI_DobattlefrontSaber(vec3_t origin, vec3_t dir, float length, float lengthMax, float radius, saber_colors_t color, int snum)
+static void UI_DobattlefrontSaber(vec3_t origin, vec3_t dir, float length, float lengthMax, float radius, saber_colors_t color, int snum)
 {
 	vec3_t	    mid, rgb = { 1,1,1 };
 	qhandle_t	glow = 0, blade = 0;
@@ -783,7 +783,7 @@ void UI_DobattlefrontSaber(vec3_t origin, vec3_t dir, float length, float length
 	}
 }
 
-void UI_DoSFXSaber(vec3_t origin, vec3_t dir, float length, float lengthMax, float radius, saber_colors_t color, int snum)
+static void UI_DoSFXSaber(vec3_t origin, vec3_t dir, float length, float lengthMax, float radius, saber_colors_t color, int snum)
 {
 	vec3_t	    mid, rgb = { 1,1,1 };
 	qhandle_t	glow = 0, blade = 0;
@@ -936,7 +936,7 @@ void UI_DoSFXSaber(vec3_t origin, vec3_t dir, float length, float lengthMax, flo
 	}
 }
 
-void UI_DoEp1Saber(vec3_t origin, vec3_t dir, float length, float lengthMax, float radius, saber_colors_t color, int snum)
+static void UI_DoEp1Saber(vec3_t origin, vec3_t dir, float length, float lengthMax, float radius, saber_colors_t color, int snum)
 {
 	vec3_t	    mid, rgb = { 1,1,1 };
 	qhandle_t	glow = 0, blade = 0;
@@ -1090,7 +1090,7 @@ void UI_DoEp1Saber(vec3_t origin, vec3_t dir, float length, float lengthMax, flo
 	}
 }
 
-void UI_DoEp2Saber(vec3_t origin, vec3_t dir, float length, float lengthMax, float radius, saber_colors_t color, int snum)
+static void UI_DoEp2Saber(vec3_t origin, vec3_t dir, float length, float lengthMax, float radius, saber_colors_t color, int snum)
 {
 	vec3_t	    mid, rgb = { 1,1,1 };
 	qhandle_t	glow = 0, blade = 0;
@@ -1244,7 +1244,7 @@ void UI_DoEp2Saber(vec3_t origin, vec3_t dir, float length, float lengthMax, flo
 	}
 }
 
-void UI_DoEp3Saber(vec3_t origin, vec3_t dir, float length, float lengthMax, float radius, saber_colors_t color, int snum)
+static void UI_DoEp3Saber(vec3_t origin, vec3_t dir, float length, float lengthMax, float radius, saber_colors_t color, int snum)
 {
 	vec3_t	    mid, rgb = { 1,1,1 };
 	qhandle_t	glow = 0, blade = 0;
@@ -1398,7 +1398,7 @@ void UI_DoEp3Saber(vec3_t origin, vec3_t dir, float length, float lengthMax, flo
 	}
 }
 
-void UI_DoOTSaber(vec3_t origin, vec3_t dir, float length, float lengthMax, float radius, saber_colors_t color, int snum)
+static void UI_DoOTSaber(vec3_t origin, vec3_t dir, float length, float lengthMax, float radius, saber_colors_t color, int snum)
 {
 	vec3_t	    mid, rgb = { 1,1,1 };
 	qhandle_t	glow = 0, blade = 0;
@@ -1551,7 +1551,7 @@ void UI_DoOTSaber(vec3_t origin, vec3_t dir, float length, float lengthMax, floa
 	}
 }
 
-void UI_DoTFASaber(vec3_t origin, vec3_t dir, float length, float lengthMax, float radius, saber_colors_t color, int snum)
+static void UI_DoTFASaber(vec3_t origin, vec3_t dir, float length, float lengthMax, float radius, saber_colors_t color, int snum)
 {
 	vec3_t	    mid, rgb = { 1,1,1 };
 	qhandle_t	glow = 0, blade = 0;
@@ -1705,7 +1705,7 @@ void UI_DoTFASaber(vec3_t origin, vec3_t dir, float length, float lengthMax, flo
 	}
 }
 
-void UI_DoSaberUnstable(vec3_t origin, vec3_t dir, float length, float lengthMax, float radius, saber_colors_t color, int snum)
+static void UI_DoSaberUnstable(vec3_t origin, vec3_t dir, float length, float lengthMax, float radius, saber_colors_t color, int snum)
 {
 	vec3_t	    mid, rgb = { 1,1,1 };
 	qhandle_t	glow = 0, blade = 0;
@@ -1859,7 +1859,7 @@ void UI_DoSaberUnstable(vec3_t origin, vec3_t dir, float length, float lengthMax
 	}
 }
 
-void UI_DoCustomSaber(vec3_t origin, vec3_t dir, float length, float lengthMax, float radius, saber_colors_t color, int snum)
+static void UI_DoCustomSaber(vec3_t origin, vec3_t dir, float length, float lengthMax, float radius, saber_colors_t color, int snum)
 {
 	vec3_t	    mid, rgb = { 1,1,1 };
 	qhandle_t	glow = 0, blade = 0;
@@ -2013,7 +2013,7 @@ void UI_DoCustomSaber(vec3_t origin, vec3_t dir, float length, float lengthMax, 
 	}
 }
 
-void UI_SaberDrawBlade(itemDef_t* item, const char* saber_name, int saberModel, saberType_t saberType, vec3_t origin, vec3_t angles, int blade_num)
+static void UI_SaberDrawBlade(itemDef_t* item, const char* saber_name, int saberModel, saberType_t saberType, vec3_t origin, vec3_t angles, int blade_num)
 {
 	char bladeColorString[MAX_QPATH];
 	vec3_t	bladeOrigin = { 0 };
@@ -2366,7 +2366,7 @@ void UI_SaberDrawBlade(itemDef_t* item, const char* saber_name, int saberModel, 
 	}
 }
 
-void UI_GetSaberForMenu(char* saber, int saberNum)
+static void UI_GetSaberForMenu(char* saber, int saberNum)
 {
 	char saberTypeString[MAX_QPATH] = { 0 };
 	saberType_t saberType = SABER_NONE;

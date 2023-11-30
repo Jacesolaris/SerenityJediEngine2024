@@ -1776,8 +1776,8 @@ int wp_saber_init_blade_data(gentity_t* ent)
 	}
 	if (true)
 	{
-		VectorClear(ent->client->renderInfo.muzzle_point);
-		VectorClear(ent->client->renderInfo.muzzle_pointOld);
+		VectorClear(ent->client->renderInfo.muzzlePoint);
+		VectorClear(ent->client->renderInfo.muzzlePointOld);
 		VectorClear(ent->client->renderInfo.muzzleDir);
 		VectorClear(ent->client->renderInfo.muzzleDirOld);
 
@@ -1785,8 +1785,8 @@ int wp_saber_init_blade_data(gentity_t* ent)
 		{
 			for (auto& blade_num : saberNum.blade)
 			{
-				VectorClear(blade_num.muzzle_point);
-				VectorClear(blade_num.muzzle_pointOld);
+				VectorClear(blade_num.muzzlePoint);
+				VectorClear(blade_num.muzzlePointOld);
 				VectorClear(blade_num.muzzleDir);
 				VectorClear(blade_num.muzzleDirOld);
 				blade_num.lengthOld = blade_num.length = 0;
@@ -1955,7 +1955,7 @@ void wp_saber_update_old_blade_data(gentity_t* ent)
 		{
 			for (int blade_num = 0; blade_num < saberNum.numBlades; blade_num++)
 			{
-				VectorCopy(saberNum.blade[blade_num].muzzle_point, saberNum.blade[blade_num].muzzle_pointOld);
+				VectorCopy(saberNum.blade[blade_num].muzzlePoint, saberNum.blade[blade_num].muzzlePointOld);
 				VectorCopy(saberNum.blade[blade_num].muzzleDir, saberNum.blade[blade_num].muzzleDirOld);
 				if (!did_event)
 				{
@@ -1984,7 +1984,7 @@ void wp_saber_update_old_blade_data(gentity_t* ent)
 				saberNum.blade[blade_num].lengthOld = saberNum.blade[blade_num].length;
 			}
 		}
-		VectorCopy(ent->client->renderInfo.muzzle_point, ent->client->renderInfo.muzzle_pointOld);
+		VectorCopy(ent->client->renderInfo.muzzlePoint, ent->client->renderInfo.muzzlePointOld);
 		VectorCopy(ent->client->renderInfo.muzzleDir, ent->client->renderInfo.muzzleDirOld);
 	}
 }
@@ -2065,7 +2065,7 @@ static int g_saber_attack_power(const gentity_t* ent, const qboolean attacking)
 			break;
 		}
 
-		VectorSubtract(ent->client->renderInfo.muzzle_point, ent->client->renderInfo.muzzle_pointOld, v_sub);
+		VectorSubtract(ent->client->renderInfo.muzzlePoint, ent->client->renderInfo.muzzlePointOld, v_sub);
 		auto swing_dist = static_cast<int>(VectorLength(v_sub));
 
 		while (swing_dist > 0)
@@ -2111,16 +2111,16 @@ static qboolean wp_get_saber_deflection_angle(const gentity_t* attacker, const g
 	attacker->client->ps.saberBounceMove = BLOCKED_BOUNCE_MOVE;
 
 	//get the attacker's saber base pos at time of impact
-	VectorSubtract(attacker->client->renderInfo.muzzle_point, attacker->client->renderInfo.muzzle_pointOld, temp);
-	VectorMA(attacker->client->renderInfo.muzzle_pointOld, saberHitFraction, temp, att_saber_base);
+	VectorSubtract(attacker->client->renderInfo.muzzlePoint, attacker->client->renderInfo.muzzlePointOld, temp);
+	VectorMA(attacker->client->renderInfo.muzzlePointOld, saberHitFraction, temp, att_saber_base);
 
 	//get the position along the length of the blade where the hit occurred
 	const float att_saber_hit_length = Distance(saberHitLocation, att_saber_base) / attacker->client->ps.SaberLength();
 
 	//now get the start of that midpoint in the swing and the actual impact point in the swing (shouldn't the latter just be saberHitLocation?)
-	VectorMA(attacker->client->renderInfo.muzzle_pointOld, att_saber_hit_length,
+	VectorMA(attacker->client->renderInfo.muzzlePointOld, att_saber_hit_length,
 		attacker->client->renderInfo.muzzleDirOld, att_start_pos);
-	VectorMA(attacker->client->renderInfo.muzzle_point, att_saber_hit_length, attacker->client->renderInfo.muzzleDir,
+	VectorMA(attacker->client->renderInfo.muzzlePoint, att_saber_hit_length, attacker->client->renderInfo.muzzleDir,
 		saber_mid_next);
 	VectorSubtract(saber_mid_next, att_start_pos, att_hit_dir);
 	VectorMA(att_start_pos, saberHitFraction, att_hit_dir, att_hit_pos);
@@ -3344,10 +3344,10 @@ static qboolean wp_sabers_intersect(const gentity_t* ent1, const int ent1_saber_
 				vec3_t saber_tip1;
 				vec3_t saber_base1;
 				//valid saber and this blade is on
-				VectorCopy(ent1->client->ps.saber[ent1_saber_num].blade[ent1_blade_num].muzzle_pointOld, saber_base1);
-				VectorCopy(ent1->client->ps.saber[ent1_saber_num].blade[ent1_blade_num].muzzle_point, saber_base_next1);
-				VectorSubtract(ent1->client->ps.saber[ent1_saber_num].blade[ent1_blade_num].muzzle_point,
-					ent1->client->ps.saber[ent1_saber_num].blade[ent1_blade_num].muzzle_pointOld, dir);
+				VectorCopy(ent1->client->ps.saber[ent1_saber_num].blade[ent1_blade_num].muzzlePointOld, saber_base1);
+				VectorCopy(ent1->client->ps.saber[ent1_saber_num].blade[ent1_blade_num].muzzlePoint, saber_base_next1);
+				VectorSubtract(ent1->client->ps.saber[ent1_saber_num].blade[ent1_blade_num].muzzlePoint,
+					ent1->client->ps.saber[ent1_saber_num].blade[ent1_blade_num].muzzlePointOld, dir);
 				VectorNormalize(dir);
 				VectorMA(saber_base_next1, SABER_EXTRAPOLATE_DIST, dir, saber_base_next1);
 				VectorMA(saber_base1, ent1->client->ps.saber[ent1_saber_num].blade[ent1_blade_num].length,
@@ -3358,10 +3358,10 @@ static qboolean wp_sabers_intersect(const gentity_t* ent1, const int ent1_saber_
 				VectorNormalize(dir);
 				VectorMA(saber_tip_next1, SABER_EXTRAPOLATE_DIST, dir, saber_tip_next1);
 
-				VectorCopy(ent2_saber_num.blade[ent2_blade_num].muzzle_pointOld, saber_base2);
-				VectorCopy(ent2_saber_num.blade[ent2_blade_num].muzzle_point, saber_base_next2);
-				VectorSubtract(ent2_saber_num.blade[ent2_blade_num].muzzle_point,
-					ent2_saber_num.blade[ent2_blade_num].muzzle_pointOld, dir);
+				VectorCopy(ent2_saber_num.blade[ent2_blade_num].muzzlePointOld, saber_base2);
+				VectorCopy(ent2_saber_num.blade[ent2_blade_num].muzzlePoint, saber_base_next2);
+				VectorSubtract(ent2_saber_num.blade[ent2_blade_num].muzzlePoint,
+					ent2_saber_num.blade[ent2_blade_num].muzzlePointOld, dir);
 				VectorNormalize(dir);
 				VectorMA(saber_base_next2, SABER_EXTRAPOLATE_DIST, dir, saber_base_next2);
 				VectorMA(saber_base2, ent2_saber_num.blade[ent2_blade_num].length,
@@ -3445,11 +3445,11 @@ static float wp_sabers_distance(const gentity_t* ent1, const gentity_t* ent2)
 		return qfalse;
 	}
 
-	VectorCopy(ent1->client->ps.saber[0].blade[0].muzzle_point, saber_base_next1);
+	VectorCopy(ent1->client->ps.saber[0].blade[0].muzzlePoint, saber_base_next1);
 	VectorMA(saber_base_next1, ent1->client->ps.saber[0].blade[0].length, ent1->client->ps.saber[0].blade[0].muzzleDir,
 		saber_tip_next1);
 
-	VectorCopy(ent2->client->ps.saber[0].blade[0].muzzle_point, saber_base_next2);
+	VectorCopy(ent2->client->ps.saber[0].blade[0].muzzlePoint, saber_base_next2);
 	VectorMA(saber_base_next2, ent2->client->ps.saber[0].blade[0].length, ent2->client->ps.saber[0].blade[0].muzzleDir,
 		saber_tip_next2);
 
@@ -3499,12 +3499,12 @@ static qboolean wp_sabers_intersection(const gentity_t* ent1, const gentity_t* e
 							vec3_t saber_tip_next1;
 							vec3_t saber_base_next1;
 							//valid saber and this blade is on
-							VectorCopy(saber_num1.blade[blade_num1].muzzle_point,
+							VectorCopy(saber_num1.blade[blade_num1].muzzlePoint,
 								saber_base_next1);
 							VectorMA(saber_base_next1, saber_num1.blade[blade_num1].length,
 								saber_num1.blade[blade_num1].muzzleDir, saber_tip_next1);
 
-							VectorCopy(saber_num2.blade[blade_num2].muzzle_point,
+							VectorCopy(saber_num2.blade[blade_num2].muzzlePoint,
 								saber_base_next2);
 							VectorMA(saber_base_next2, saber_num2.blade[blade_num2].length,
 								saber_num2.blade[blade_num2].muzzleDir, saber_tip_next2);
@@ -6751,7 +6751,7 @@ static void WP_SaberDamageTrace(gentity_t* ent, int saberNum, int blade_num)
 		return;
 	}
 
-	if (VectorCompare(ent->client->renderInfo.muzzle_pointOld, vec3_origin) || VectorCompare(
+	if (VectorCompare(ent->client->renderInfo.muzzlePointOld, vec3_origin) || VectorCompare(
 		ent->client->renderInfo.muzzleDirOld, vec3_origin))
 	{
 		//just started up the saber?
@@ -6763,7 +6763,7 @@ static void WP_SaberDamageTrace(gentity_t* ent, int saberNum, int blade_num)
 	if (!(ent->client->ps.saber[saberNum].saberFlags & SFL_ON_IN_WATER))
 	{
 		//saber can't stay on underwater
-		saber_contents = gi.pointcontents(ent->client->renderInfo.muzzle_point, ent->client->ps.saberentity_num);
+		saber_contents = gi.pointcontents(ent->client->renderInfo.muzzlePoint, ent->client->ps.saberentity_num);
 	}
 	if (saber_contents & CONTENTS_WATER ||
 		saber_contents & CONTENTS_SLIME ||
@@ -6773,13 +6773,13 @@ static void WP_SaberDamageTrace(gentity_t* ent, int saberNum, int blade_num)
 		ent->client->ps.saber[saberNum].blade[blade_num].active = qfalse;
 		return;
 	}
-	if (!g_saberNoEffects && gi.WE_IsOutside(ent->client->renderInfo.muzzle_point))
+	if (!g_saberNoEffects && gi.WE_IsOutside(ent->client->renderInfo.muzzlePoint))
 	{
 		float chance_of_fizz = gi.WE_GetChanceOfSaberFizz();
 		if (chance_of_fizz > 0 && Q_flrand(0.0f, 1.0f) < chance_of_fizz)
 		{
 			vec3_t end;
-			VectorMA(ent->client->ps.saber[saberNum].blade[blade_num].muzzle_point,
+			VectorMA(ent->client->ps.saber[saberNum].blade[blade_num].muzzlePoint,
 				ent->client->ps.saber[saberNum].blade[blade_num].length * Q_flrand(0, 1),
 				ent->client->ps.saber[saberNum].blade[blade_num].muzzleDir, end);
 			G_PlayEffect("saber/fizz", end);
@@ -6866,9 +6866,9 @@ static void WP_SaberDamageTrace(gentity_t* ent, int saberNum, int blade_num)
 			}
 		}
 		//Use old to current since can't predict it
-		VectorCopy(ent->client->ps.saber[saberNum].blade[blade_num].muzzle_pointOld, mp1);
+		VectorCopy(ent->client->ps.saber[saberNum].blade[blade_num].muzzlePointOld, mp1);
 		VectorCopy(ent->client->ps.saber[saberNum].blade[blade_num].muzzleDirOld, md1);
-		VectorCopy(ent->client->ps.saber[saberNum].blade[blade_num].muzzle_point, mp2);
+		VectorCopy(ent->client->ps.saber[saberNum].blade[blade_num].muzzlePoint, mp2);
 		VectorCopy(ent->client->ps.saber[saberNum].blade[blade_num].muzzleDir, md2);
 	}
 	else
@@ -7070,16 +7070,16 @@ static void WP_SaberDamageTrace(gentity_t* ent, int saberNum, int blade_num)
 		{
 			//really only used when a saber attack start anim starts, not actually for stopping damage
 			//we just want to not use the old position to trace the attack from...
-			VectorCopy(ent->client->ps.saber[saberNum].blade[blade_num].muzzle_point,
-				ent->client->ps.saber[saberNum].blade[blade_num].muzzle_pointOld);
+			VectorCopy(ent->client->ps.saber[saberNum].blade[blade_num].muzzlePoint,
+				ent->client->ps.saber[saberNum].blade[blade_num].muzzlePointOld);
 			VectorCopy(ent->client->ps.saber[saberNum].blade[blade_num].muzzleDir,
 				ent->client->ps.saber[saberNum].blade[blade_num].muzzleDirOld);
 		}
 		//do the damage trace from the last position...
-		VectorCopy(ent->client->ps.saber[saberNum].blade[blade_num].muzzle_pointOld, mp1);
+		VectorCopy(ent->client->ps.saber[saberNum].blade[blade_num].muzzlePointOld, mp1);
 		VectorCopy(ent->client->ps.saber[saberNum].blade[blade_num].muzzleDirOld, md1);
 		//...to the current one.
-		VectorCopy(ent->client->ps.saber[saberNum].blade[blade_num].muzzle_point, mp2);
+		VectorCopy(ent->client->ps.saber[saberNum].blade[blade_num].muzzlePoint, mp2);
 		VectorCopy(ent->client->ps.saber[saberNum].blade[blade_num].muzzleDir, md2);
 
 		//see if anyone is so close that they're within the dist from my origin to the start of the saber
@@ -8472,11 +8472,11 @@ void wp_saber_in_flight_reflect_check(gentity_t* self)
 			for (int blade_num = 0; blade_num < self->client->ps.saber[saberNum].numBlades; blade_num++)
 			{
 				vec3_t tip;
-				VectorMA(self->client->ps.saber[saberNum].blade[blade_num].muzzle_point,
+				VectorMA(self->client->ps.saber[saberNum].blade[blade_num].muzzlePoint,
 					self->client->ps.saber[saberNum].blade[blade_num].length,
 					self->client->ps.saber[saberNum].blade[blade_num].muzzleDir, tip);
 
-				if (G_PointDistFromLineSegment(self->client->ps.saber[saberNum].blade[blade_num].muzzle_point, tip,
+				if (G_PointDistFromLineSegment(self->client->ps.saber[saberNum].blade[blade_num].muzzlePoint, tip,
 					ent->currentOrigin) <= 32)
 				{
 					will_hit = qtrue;
@@ -8987,7 +8987,7 @@ static qboolean WP_SaberLaunch(gentity_t* self, gentity_t* saber, const qboolean
 	saber->svFlags &= ~SVF_NOCLIENT;
 
 	//place it
-	VectorCopy(self->client->renderInfo.handRPoint, saber->currentOrigin); //muzzle_point
+	VectorCopy(self->client->renderInfo.handRPoint, saber->currentOrigin); //muzzlePoint
 	VectorCopy(saber->currentOrigin, saber->s.pos.trBase);
 	saber->s.pos.trTime = level.time;
 	saber->s.pos.trType = TR_LINEAR;
@@ -10919,8 +10919,8 @@ int wp_saber_must_block(gentity_t* self, const gentity_t* atk, const qboolean ch
 		VectorSubtract(closest_body_point, point, dir_to_body);
 
 		//find current saber movement direction of the attacker
-		VectorSubtract(atk->client->ps.saber[r_saber_num].blade[r_blade_num].muzzle_point,
-			atk->client->ps.saber[r_saber_num].blade[r_blade_num].muzzle_pointOld, saber_move_dir);
+		VectorSubtract(atk->client->ps.saber[r_saber_num].blade[r_blade_num].muzzlePoint,
+			atk->client->ps.saber[r_saber_num].blade[r_blade_num].muzzlePointOld, saber_move_dir);
 
 		if (DotProduct(dir_to_body, saber_move_dir) < 0)
 		{
@@ -14089,7 +14089,7 @@ void wp_saber_update(gentity_t* self, const usercmd_t* ucmd)
 								continue;
 							}
 						}
-						VectorCopy(self->client->ps.saber[saberNum].blade[blade_num].muzzle_point, saber_base);
+						VectorCopy(self->client->ps.saber[saberNum].blade[blade_num].muzzlePoint, saber_base);
 						VectorMA(saber_base, self->client->ps.saber[saberNum].blade[blade_num].length,
 							self->client->ps.saber[saberNum].blade[blade_num].muzzleDir, saber_tip);
 						VectorMA(saber_base, self->client->ps.saber[saberNum].blade[blade_num].length * 0.5,
@@ -20977,7 +20977,7 @@ static void ForceShootstrike(gentity_t* self)
 								if (chance_of_fizz > 0)
 								{
 									VectorMA(
-										trace_ent->client->ps.saber[npc_saber_num].blade[npc_blade_num].muzzle_point,
+										trace_ent->client->ps.saber[npc_saber_num].blade[npc_blade_num].muzzlePoint,
 										trace_ent->client->ps.saber[npc_saber_num].blade[npc_blade_num].length *
 										Q_flrand(0, 1),
 										trace_ent->client->ps.saber[npc_saber_num].blade[npc_blade_num].muzzleDir,
@@ -21293,7 +21293,7 @@ static void ForceShootstrike(gentity_t* self)
 								if (chance_of_fizz > 0)
 								{
 									VectorMA(
-										trace_ent->client->ps.saber[npc_saber_num].blade[npc_blade_num].muzzle_point,
+										trace_ent->client->ps.saber[npc_saber_num].blade[npc_blade_num].muzzlePoint,
 										trace_ent->client->ps.saber[npc_saber_num].blade[npc_blade_num].length *
 										Q_flrand(0, 1),
 										trace_ent->client->ps.saber[npc_saber_num].blade[npc_blade_num].muzzleDir,
@@ -21610,7 +21610,7 @@ static void ForceShootstrike(gentity_t* self)
 								if (chance_of_fizz > 0)
 								{
 									VectorMA(
-										trace_ent->client->ps.saber[npc_saber_num].blade[npc_blade_num].muzzle_point,
+										trace_ent->client->ps.saber[npc_saber_num].blade[npc_blade_num].muzzlePoint,
 										trace_ent->client->ps.saber[npc_saber_num].blade[npc_blade_num].length *
 										Q_flrand(0, 1),
 										trace_ent->client->ps.saber[npc_saber_num].blade[npc_blade_num].muzzleDir,
@@ -21898,7 +21898,7 @@ static void force_lightning_damage(gentity_t* self, gentity_t* trace_ent, vec3_t
 					vec3_t end;
 					constexpr int npcblade_num = 0;
 					constexpr int npcsaber_num = 0;
-					VectorMA(trace_ent->client->ps.saber[npcsaber_num].blade[npcblade_num].muzzle_point,
+					VectorMA(trace_ent->client->ps.saber[npcsaber_num].blade[npcblade_num].muzzlePoint,
 						trace_ent->client->ps.saber[npcsaber_num].blade[npcblade_num].length * Q_flrand(0, 1),
 						trace_ent->client->ps.saber[npcsaber_num].blade[npcblade_num].muzzleDir, end);
 					G_PlayEffect(G_EffectIndex("saber/fizz.efx"), end, fwd);
@@ -22078,7 +22078,7 @@ static void force_lightning_damage(gentity_t* self, gentity_t* trace_ent, vec3_t
 							vec3_t end;
 							constexpr int npcblade_num = 0;
 							constexpr int npcsaber_num = 0;
-							VectorMA(trace_ent->client->ps.saber[npcsaber_num].blade[npcblade_num].muzzle_point,
+							VectorMA(trace_ent->client->ps.saber[npcsaber_num].blade[npcblade_num].muzzlePoint,
 								trace_ent->client->ps.saber[npcsaber_num].blade[npcblade_num].length *
 								Q_flrand(0, 1),
 								trace_ent->client->ps.saber[npcsaber_num].blade[npcblade_num].muzzleDir, end);
@@ -22175,7 +22175,7 @@ static void force_lightning_damage(gentity_t* self, gentity_t* trace_ent, vec3_t
 							vec3_t end;
 							constexpr int npcblade_num = 0;
 							constexpr int npcsaber_num = 0;
-							VectorMA(trace_ent->client->ps.saber[npcsaber_num].blade[npcblade_num].muzzle_point,
+							VectorMA(trace_ent->client->ps.saber[npcsaber_num].blade[npcblade_num].muzzlePoint,
 								trace_ent->client->ps.saber[npcsaber_num].blade[npcblade_num].length *
 								Q_flrand(0, 1),
 								trace_ent->client->ps.saber[npcsaber_num].blade[npcblade_num].muzzleDir, end);
@@ -22246,7 +22246,7 @@ static void force_lightning_damage(gentity_t* self, gentity_t* trace_ent, vec3_t
 							vec3_t end;
 							constexpr int npc_blade_num = 0;
 							constexpr int npc_saber_num = 0;
-							VectorMA(trace_ent->client->ps.saber[npc_saber_num].blade[npc_blade_num].muzzle_point,
+							VectorMA(trace_ent->client->ps.saber[npc_saber_num].blade[npc_blade_num].muzzlePoint,
 								trace_ent->client->ps.saber[npc_saber_num].blade[npc_blade_num].length * Q_flrand(
 									0, 1),
 								trace_ent->client->ps.saber[npc_saber_num].blade[npc_blade_num].muzzleDir, end);
@@ -22300,7 +22300,7 @@ static void force_lightning_damage(gentity_t* self, gentity_t* trace_ent, vec3_t
 							vec3_t end;
 							constexpr int npc_blade_num = 0;
 							constexpr int npc_saber_num = 0;
-							VectorMA(trace_ent->client->ps.saber[npc_saber_num].blade[npc_blade_num].muzzle_point,
+							VectorMA(trace_ent->client->ps.saber[npc_saber_num].blade[npc_blade_num].muzzlePoint,
 								trace_ent->client->ps.saber[npc_saber_num].blade[npc_blade_num].length * Q_flrand(
 									0, 1),
 								trace_ent->client->ps.saber[npc_saber_num].blade[npc_blade_num].muzzleDir, end);

@@ -106,7 +106,7 @@ static void NPC_CheckAttacker(gentity_t* other, const int mod)
 		}
 	}
 
-	//OJKFIXME: client_num 0
+	//OJKFIXME: clientNum 0
 	//Special case player interactions
 	if (other == &g_entities[0])
 	{
@@ -585,7 +585,7 @@ void npc_push(gentity_t* self, gentity_t* other, trace_t* trace)
 				gripper = &g_entities[i];
 				if (gripper && gripper->client)
 				{
-					if (gripper->client->ps.fd.forceGripentity_num == other->client->ps.client_num)
+					if (gripper->client->ps.fd.forceGripentity_num == other->client->ps.clientNum)
 						break;
 				}
 			}

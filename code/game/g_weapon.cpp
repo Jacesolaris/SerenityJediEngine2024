@@ -480,7 +480,7 @@ qboolean LogAccuracyHit(const gentity_t* target, const gentity_t* attacker)
 	return qtrue;
 }
 
-void calcmuzzle_point2(const gentity_t* const ent, vec3_t muzzle_point, const float lead_in)
+void calcmuzzlePoint2(const gentity_t* const ent, vec3_t muzzlePoint, const float lead_in)
 {
 	if (!lead_in)
 	{
@@ -490,14 +490,14 @@ void calcmuzzle_point2(const gentity_t* const ent, vec3_t muzzle_point, const fl
 			if (ent->client->renderInfo.mPCalcTime >= level.time - FRAMETIME * 2)
 			{
 				//Our muzz point was calced no more than 2 frames ago
-				VectorCopy(ent->client->renderInfo.muzzle_pointOld, muzzle_point);
+				VectorCopy(ent->client->renderInfo.muzzlePointOld, muzzlePoint);
 			}
 		}
 	}
 }
 
 //---------------------------------------------------------
-void calcmuzzle_point(gentity_t* const ent, vec3_t forward_vec, vec3_t muzzle_point, const float lead_in)
+void calcmuzzlePoint(gentity_t* const ent, vec3_t forward_vec, vec3_t muzzlePoint, const float lead_in)
 //---------------------------------------------------------
 {
 	vec3_t org;
@@ -511,13 +511,13 @@ void calcmuzzle_point(gentity_t* const ent, vec3_t forward_vec, vec3_t muzzle_po
 			if (ent->client->renderInfo.mPCalcTime >= level.time - FRAMETIME * 2)
 			{
 				//Our muzz point was calced no more than 2 frames ago
-				VectorCopy(ent->client->renderInfo.muzzle_point, muzzle_point);
+				VectorCopy(ent->client->renderInfo.muzzlePoint, muzzlePoint);
 				return;
 			}
 		}
 	}
 
-	VectorCopy(ent->currentOrigin, muzzle_point);
+	VectorCopy(ent->currentOrigin, muzzlePoint);
 
 	switch (ent->s.weapon)
 	{
@@ -525,59 +525,59 @@ void calcmuzzle_point(gentity_t* const ent, vec3_t forward_vec, vec3_t muzzle_po
 	case WP_BLASTER_PISTOL:
 	case WP_SBD_PISTOL:
 		ViewHeightFix(ent);
-		muzzle_point[2] += ent->client->ps.viewheight; //By eyes
-		muzzle_point[2] -= 16;
-		VectorMA(muzzle_point, 28, forward_vec, muzzle_point);
-		VectorMA(muzzle_point, 6, vright_vec, muzzle_point);
+		muzzlePoint[2] += ent->client->ps.viewheight; //By eyes
+		muzzlePoint[2] -= 16;
+		VectorMA(muzzlePoint, 28, forward_vec, muzzlePoint);
+		VectorMA(muzzlePoint, 6, vright_vec, muzzlePoint);
 		break;
 
 	case WP_DROIDEKA:
 		ViewHeightFix(ent);
-		muzzle_point[2] += ent->client->ps.viewheight; //By eyes
-		muzzle_point[2] -= 1;
+		muzzlePoint[2] += ent->client->ps.viewheight; //By eyes
+		muzzlePoint[2] -= 1;
 		if (ent->s.number == 0)
-			VectorMA(muzzle_point, 12, forward_vec, muzzle_point);
+			VectorMA(muzzlePoint, 12, forward_vec, muzzlePoint);
 		// player, don't set this any lower otherwise the projectile will impact immediately when your back is to a wall
 		else
-			VectorMA(muzzle_point, 2, forward_vec, muzzle_point);
+			VectorMA(muzzlePoint, 2, forward_vec, muzzlePoint);
 		// NPC, don't set too far forward_vec otherwise the projectile can go through doors
 
-		VectorMA(muzzle_point, 1, vright_vec, muzzle_point);
+		VectorMA(muzzlePoint, 1, vright_vec, muzzlePoint);
 		break;
 
 	case WP_ROCKET_LAUNCHER:
 	case WP_CONCUSSION:
 	case WP_THERMAL:
 		ViewHeightFix(ent);
-		muzzle_point[2] += ent->client->ps.viewheight; //By eyes
-		muzzle_point[2] -= 2;
+		muzzlePoint[2] += ent->client->ps.viewheight; //By eyes
+		muzzlePoint[2] -= 2;
 		break;
 
 	case WP_BLASTER:
 		ViewHeightFix(ent);
-		muzzle_point[2] += ent->client->ps.viewheight; //By eyes
-		muzzle_point[2] -= 1;
+		muzzlePoint[2] += ent->client->ps.viewheight; //By eyes
+		muzzlePoint[2] -= 1;
 		if (ent->s.number == 0)
-			VectorMA(muzzle_point, 12, forward_vec, muzzle_point);
+			VectorMA(muzzlePoint, 12, forward_vec, muzzlePoint);
 		// player, don't set this any lower otherwise the projectile will impact immediately when your back is to a wall
 		else
-			VectorMA(muzzle_point, 2, forward_vec, muzzle_point);
+			VectorMA(muzzlePoint, 2, forward_vec, muzzlePoint);
 		// NPC, don't set too far forward_vec otherwise the projectile can go through doors
 
-		VectorMA(muzzle_point, 1, vright_vec, muzzle_point);
+		VectorMA(muzzlePoint, 1, vright_vec, muzzlePoint);
 		break;
 	case WP_WRIST_BLASTER:
 		ViewHeightFix(ent);
-		muzzle_point[2] += ent->client->ps.viewheight; //By eyes
-		muzzle_point[2] -= 1;
+		muzzlePoint[2] += ent->client->ps.viewheight; //By eyes
+		muzzlePoint[2] -= 1;
 		if (ent->s.number == 0)
-			VectorMA(muzzle_point, 12, forward_vec, muzzle_point);
+			VectorMA(muzzlePoint, 12, forward_vec, muzzlePoint);
 		// player, don't set this any lower otherwise the projectile will impact immediately when your back is to a wall
 		else
-			VectorMA(muzzle_point, 2, forward_vec, muzzle_point);
+			VectorMA(muzzlePoint, 2, forward_vec, muzzlePoint);
 		// NPC, don't set too far forward_vec otherwise the projectile can go through doors
 
-		VectorMA(muzzle_point, 1, vright_vec, muzzle_point);
+		VectorMA(muzzlePoint, 1, vright_vec, muzzlePoint);
 		break;
 
 	case WP_SABER:
@@ -590,14 +590,14 @@ void calcmuzzle_point(gentity_t* const ent, vec3_t forward_vec, vec3_t muzzle_po
 		}
 		else
 		{
-			muzzle_point[2] += 16;
+			muzzlePoint[2] += 16;
 		}
-		VectorMA(muzzle_point, 8, forward_vec, muzzle_point);
-		VectorMA(muzzle_point, 16, vright_vec, muzzle_point);
+		VectorMA(muzzlePoint, 8, forward_vec, muzzlePoint);
+		VectorMA(muzzlePoint, 16, vright_vec, muzzlePoint);
 		break;
 
 	case WP_BOT_LASER:
-		muzzle_point[2] -= 16; //
+		muzzlePoint[2] -= 16; //
 		break;
 	case WP_ATST_MAIN:
 
@@ -620,17 +620,17 @@ void calcmuzzle_point(gentity_t* const ent, vec3_t forward_vec, vec3_t muzzle_po
 
 		gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, org);
 
-		VectorCopy(org, muzzle_point);
+		VectorCopy(org, muzzlePoint);
 
 		break;
 	default:;
 	}
 
-	AddLeanOfs(ent, muzzle_point);
+	AddLeanOfs(ent, muzzlePoint);
 }
 
 // Muzzle point table...
-vec3_t WP_muzzle_point[WP_NUM_WEAPONS] =
+vec3_t WP_muzzlePoint[WP_NUM_WEAPONS] =
 {
 	//	Fwd,	right,	up.
 	{0, 0, 0}, // WP_NONE,
@@ -664,27 +664,27 @@ void WP_RocketLock(const gentity_t* ent, const float lockDist)
 	vec3_t ang;
 	trace_t tr;
 
-	vec3_t muzzleOffPoint, muzzle_point, forward_vec, right, up;
+	vec3_t muzzleOffPoint, muzzlePoint, forward_vec, right, up;
 
 	AngleVectors(ent->client->ps.viewangles, forward_vec, right, up);
 
 	AngleVectors(ent->client->ps.viewangles, ang, nullptr, nullptr);
 
-	VectorCopy(ent->client->ps.origin, muzzle_point);
-	VectorCopy(WP_muzzle_point[WP_ROCKET_LAUNCHER], muzzleOffPoint);
+	VectorCopy(ent->client->ps.origin, muzzlePoint);
+	VectorCopy(WP_muzzlePoint[WP_ROCKET_LAUNCHER], muzzleOffPoint);
 
-	VectorMA(muzzle_point, muzzleOffPoint[0], forward_vec, muzzle_point);
-	VectorMA(muzzle_point, muzzleOffPoint[1], right, muzzle_point);
-	muzzle_point[2] += ent->client->ps.viewheight + muzzleOffPoint[2];
+	VectorMA(muzzlePoint, muzzleOffPoint[0], forward_vec, muzzlePoint);
+	VectorMA(muzzlePoint, muzzleOffPoint[1], right, muzzlePoint);
+	muzzlePoint[2] += ent->client->ps.viewheight + muzzleOffPoint[2];
 
-	ang[0] = muzzle_point[0] + ang[0] * lockDist;
-	ang[1] = muzzle_point[1] + ang[1] * lockDist;
-	ang[2] = muzzle_point[2] + ang[2] * lockDist;
+	ang[0] = muzzlePoint[0] + ang[0] * lockDist;
+	ang[1] = muzzlePoint[1] + ang[1] * lockDist;
+	ang[2] = muzzlePoint[2] + ang[2] * lockDist;
 
-	gi.trace(&tr, muzzle_point, nullptr, nullptr, ang, ent->client->ps.client_num, MASK_PLAYERSOLID,
+	gi.trace(&tr, muzzlePoint, nullptr, nullptr, ang, ent->client->ps.clientNum, MASK_PLAYERSOLID,
 		static_cast<EG2_Collision>(0), 0);
 
-	if (tr.fraction != 1 && tr.entityNum < ENTITYNUM_NONE && tr.entityNum != ent->client->ps.client_num)
+	if (tr.fraction != 1 && tr.entityNum < ENTITYNUM_NONE && tr.entityNum != ent->client->ps.clientNum)
 	{
 		const gentity_t* bgEnt = &g_entities[tr.entityNum];
 		if (bgEnt && bgEnt->s.powerups & PW_CLOAKED)
@@ -1395,7 +1395,7 @@ qboolean doesnot_drain_mishap(const gentity_t* ent)
 
 void G_AddBlasterAttackChainCount(const gentity_t* ent, int amount)
 {
-	if (ent->s.client_num >= MAX_CLIENTS)
+	if (ent->s.clientNum >= MAX_CLIENTS)
 	{
 		return;
 	}
@@ -1479,7 +1479,7 @@ void FireWeapon(gentity_t* ent, const qboolean alt_fire)
 	{
 		vec3_t muzzle1;
 
-		VectorCopy(ent->client->renderInfo.muzzle_point, muzzle1);
+		VectorCopy(ent->client->renderInfo.muzzlePoint, muzzle1);
 
 		if (!ent->s.number)
 		{
@@ -1532,7 +1532,7 @@ void FireWeapon(gentity_t* ent, const qboolean alt_fire)
 				cg.time ? cg.time : level.time, nullptr, ent->s.modelScale);
 
 			// work the matrix axis stuff into the original axis and origins used.
-			gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, ent->client->renderInfo.muzzle_point);
+			gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, ent->client->renderInfo.muzzlePoint);
 			gi.G2API_GiveMeVectorFromMatrix(boltMatrix, NEGATIVE_Y, ent->client->renderInfo.muzzleDir);
 			ent->client->renderInfo.mPCalcTime = level.time;
 
@@ -1590,7 +1590,7 @@ void FireWeapon(gentity_t* ent, const qboolean alt_fire)
 				vec3_t actor_right;
 				vec3_t actor_fwd;
 
-				VectorCopy(ent->client->renderInfo.muzzle_point, muzzle);
+				VectorCopy(ent->client->renderInfo.muzzlePoint, muzzle);
 				AngleVectors(ent->currentAngles, actor_fwd, actor_right, nullptr);
 
 				// Aiming Left
@@ -1646,21 +1646,21 @@ void FireWeapon(gentity_t* ent, const qboolean alt_fire)
 	{
 		if (ent->NPC && ent->NPC->scriptFlags & SCF_FIRE_WEAPON_NO_ANIM)
 		{
-			VectorCopy(ent->client->renderInfo.muzzle_point, muzzle);
+			VectorCopy(ent->client->renderInfo.muzzlePoint, muzzle);
 			VectorCopy(ent->client->renderInfo.muzzleDir, forward_vec);
 			MakeNormalVectors(forward_vec, vright_vec, up);
 		}
 		else
 		{
-			calcmuzzle_point(ent, forward_vec, muzzle, 0);
+			calcmuzzlePoint(ent, forward_vec, muzzle, 0);
 
 			if (!cg_trueguns.integer && !cg.renderingThirdPerson && ent->client->ps.eFlags & EF2_DUAL_WEAPONS)
 			{
-				calcmuzzle_point2(ent, muzzle2, 0);
+				calcmuzzlePoint2(ent, muzzle2, 0);
 			}
 			if (ent->s.weapon == WP_DROIDEKA)
 			{
-				calcmuzzle_point2(ent, muzzle2, 0);
+				calcmuzzlePoint2(ent, muzzle2, 0);
 			}
 
 			if (!doesnot_drain_mishap(ent) && ent->client->ps.BlasterAttackChainCount <= BLASTERMISHAPLEVEL_FULL)
@@ -2037,7 +2037,7 @@ void SP_misc_weapon_shooter(gentity_t* self)
 	}
 
 	//set where our muzzle is
-	VectorCopy(self->s.origin, self->client->renderInfo.muzzle_point);
+	VectorCopy(self->s.origin, self->client->renderInfo.muzzlePoint);
 	//permanently updated
 	self->client->renderInfo.mPCalcTime = Q3_INFINITE;
 
@@ -2078,7 +2078,7 @@ void Weapon_GrapplingHook_Fire(gentity_t* ent)
 	vec3_t forward, right, vup;
 
 	AngleVectors(ent->client->ps.viewangles, forward, right, vup);
-	calcmuzzle_point(ent, forward, muzzle, 0);
+	calcmuzzlePoint(ent, forward, muzzle, 0);
 	if (!ent->client->fireHeld && !ent->client->hook)
 	{
 		fire_grapple(ent, muzzle, forward);
@@ -2091,7 +2091,7 @@ void Weapon_AltStun_Fire(gentity_t* ent)
 	vec3_t forward, right, vup;
 
 	AngleVectors(ent->client->ps.viewangles, forward, right, vup);
-	calcmuzzle_point(ent, forward, muzzle, 0);
+	calcmuzzlePoint(ent, forward, muzzle, 0);
 	if (!ent->client->stunHeld && !ent->client->stun)
 	{
 		fire_stun(ent, muzzle, forward);

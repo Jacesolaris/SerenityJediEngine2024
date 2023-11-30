@@ -162,13 +162,13 @@ void SanitizeString(char* in, char* out)
 
 /*
 ==================
-client_numberFromString
+clientNumberFromString
 
 Returns a player number for either a number or name string
 Returns -1 if invalid
 ==================
 */
-int client_numberFromString(const gentity_t* to, char* s)
+int clientNumberFromString(const gentity_t* to, char* s)
 {
 	gclient_t* cl;
 	int idnum;
@@ -2473,9 +2473,9 @@ void G_RemoveWeather()
 ClientCommand
 =================
 */
-void ClientCommand(const int client_num)
+void ClientCommand(const int clientNum)
 {
-	gentity_t* ent = g_entities + client_num;
+	gentity_t* ent = g_entities + clientNum;
 	if (!ent->client)
 	{
 		return; // not fully in game yet
@@ -2883,6 +2883,6 @@ void ClientCommand(const int client_num)
 	}
 	else
 	{
-		gi.SendServerCommand(client_num, va("print \"Unknown command %s\n\"", cmd));
+		gi.SendServerCommand(clientNum, va("print \"Unknown command %s\n\"", cmd));
 	}
 }

@@ -67,7 +67,7 @@ extern qboolean PM_RunningAnim(int anim);
 extern void g_reflect_missile_auto(const gentity_t* ent, gentity_t* missile, vec3_t forward);
 extern void g_reflect_missile_bot(const gentity_t* ent, gentity_t* missile, vec3_t forward);
 extern void G_SoundOnEnt(gentity_t* ent, soundChannel_t channel, const char* sound_path);
-extern saberInfo_t* BG_MySaber(int client_num, int saberNum);
+extern saberInfo_t* BG_MySaber(int clientNum, int saberNum);
 extern qboolean G_ControlledByPlayer(const gentity_t* self);
 extern qboolean PM_SaberCanInterruptMove(int move, int anim);
 extern void Boba_FireWristMissile(gentity_t* self, int whichMissile);
@@ -3272,7 +3272,7 @@ static void force_lightning_damage(gentity_t* self, gentity_t* trace_ent, vec3_t
 								if (chance_of_fizz > 0)
 								{
 									vec3_t end2;
-									VectorMA(trace_ent->client->saber[rsaber_num].blade[rblade_num].muzzle_point,
+									VectorMA(trace_ent->client->saber[rsaber_num].blade[rblade_num].muzzlePoint,
 										trace_ent->client->saber[rsaber_num].blade[rblade_num].lengthMax *
 										flrand(0, 1),
 										trace_ent->client->saber[rsaber_num].blade[rblade_num].muzzleDir, end2);
@@ -3333,7 +3333,7 @@ static void force_lightning_damage(gentity_t* self, gentity_t* trace_ent, vec3_t
 							if (chance_of_fizz > 0)
 							{
 								vec3_t end2;
-								VectorMA(trace_ent->client->saber[rsaber_num].blade[rblade_num].muzzle_point,
+								VectorMA(trace_ent->client->saber[rsaber_num].blade[rblade_num].muzzlePoint,
 									trace_ent->client->saber[rsaber_num].blade[rblade_num].lengthMax * flrand(0, 1),
 									trace_ent->client->saber[rsaber_num].blade[rblade_num].muzzleDir, end2);
 								if (trace_ent->client->ps.fd.blockPoints > 50)
@@ -5247,7 +5247,7 @@ void ForceThrow(gentity_t* self, qboolean pull)
 	qboolean i_grip = qfalse;
 	int damage_level = FORCE_LEVEL_0;
 
-	saberInfo_t* saber1 = BG_MySaber(self->client_num, 0);
+	saberInfo_t* saber1 = BG_MySaber(self->clientNum, 0);
 
 	vision_arc = 0;
 

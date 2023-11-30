@@ -1164,7 +1164,7 @@ typedef struct playerState_s {
 	int			externalEventParm;
 	int			externalEventTime;
 
-	int			client_num;		// ranges from 0 to MAX_CLIENTS-1
+	int			clientNum;		// ranges from 0 to MAX_CLIENTS-1
 	int			weapon;			// copied to entityState_t->weapon
 	int			weaponstate;
 
@@ -1862,7 +1862,7 @@ typedef struct entityState_s {
 	int		g2radius;
 	int		modelIndex;
 	int		model_index2;
-	int		client_num;		// 0 to (MAX_CLIENTS - 1), for players and corpses
+	int		clientNum;		// 0 to (MAX_CLIENTS - 1), for players and corpses
 	int		frame;
 
 	qboolean	saberInFlight;

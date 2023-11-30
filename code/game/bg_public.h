@@ -351,7 +351,7 @@ using persEnum_t = enum
 	PERS_PLAYEREVENTS,
 	// incremented for each reward sound
 	PERS_ATTACKER,
-	// client_num of last damage inflicter
+	// clientNum of last damage inflicter
 	PERS_KILLED,
 	// count of the number of times you died
 	// these were added for single player awards tracking

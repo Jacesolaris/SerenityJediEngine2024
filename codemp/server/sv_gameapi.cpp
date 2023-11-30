@@ -65,70 +65,70 @@ void GVM_ShutdownGame(const int restart)
 	ge->ShutdownGame(restart);
 }
 
-char* GVM_ClientConnect(const int client_num, const qboolean firstTime, const qboolean isBot)
+char* GVM_ClientConnect(const int clientNum, const qboolean firstTime, const qboolean isBot)
 {
 	if (gvm->isLegacy)
-		return reinterpret_cast<char*>(VM_Call(gvm, GAME_CLIENT_CONNECT, client_num, firstTime, isBot));
+		return reinterpret_cast<char*>(VM_Call(gvm, GAME_CLIENT_CONNECT, clientNum, firstTime, isBot));
 	VMSwap v(gvm);
 
-	return ge->ClientConnect(client_num, firstTime, isBot);
+	return ge->ClientConnect(clientNum, firstTime, isBot);
 }
 
-void GVM_ClientBegin(const int client_num)
+void GVM_ClientBegin(const int clientNum)
 {
 	if (gvm->isLegacy)
 	{
-		VM_Call(gvm, GAME_CLIENT_BEGIN, client_num);
+		VM_Call(gvm, GAME_CLIENT_BEGIN, clientNum);
 		return;
 	}
 	VMSwap v(gvm);
 
-	ge->ClientBegin(client_num, qtrue);
+	ge->ClientBegin(clientNum, qtrue);
 }
 
-qboolean GVM_client_userinfo_changed(const int client_num)
+qboolean GVM_client_userinfo_changed(const int clientNum)
 {
 	if (gvm->isLegacy)
-		return static_cast<qboolean>(VM_Call(gvm, GAME_CLIENT_USERINFO_CHANGED, client_num));
+		return static_cast<qboolean>(VM_Call(gvm, GAME_CLIENT_USERINFO_CHANGED, clientNum));
 	VMSwap v(gvm);
 
-	return ge->client_userinfo_changed(client_num);
+	return ge->client_userinfo_changed(clientNum);
 }
 
-void GVM_ClientDisconnect(const int client_num)
+void GVM_ClientDisconnect(const int clientNum)
 {
 	if (gvm->isLegacy)
 	{
-		VM_Call(gvm, GAME_CLIENT_DISCONNECT, client_num);
+		VM_Call(gvm, GAME_CLIENT_DISCONNECT, clientNum);
 		return;
 	}
 	VMSwap v(gvm);
 
-	ge->ClientDisconnect(client_num);
+	ge->ClientDisconnect(clientNum);
 }
 
-void GVM_ClientCommand(const int client_num)
+void GVM_ClientCommand(const int clientNum)
 {
 	if (gvm->isLegacy)
 	{
-		VM_Call(gvm, GAME_CLIENT_COMMAND, client_num);
+		VM_Call(gvm, GAME_CLIENT_COMMAND, clientNum);
 		return;
 	}
 	VMSwap v(gvm);
 
-	ge->ClientCommand(client_num);
+	ge->ClientCommand(clientNum);
 }
 
-void GVM_ClientThink(const int client_num, usercmd_t* ucmd)
+void GVM_ClientThink(const int clientNum, usercmd_t* ucmd)
 {
 	if (gvm->isLegacy)
 	{
-		VM_Call(gvm, GAME_CLIENT_THINK, client_num, reinterpret_cast<intptr_t>(ucmd));
+		VM_Call(gvm, GAME_CLIENT_THINK, clientNum, reinterpret_cast<intptr_t>(ucmd));
 		return;
 	}
 	VMSwap v(gvm);
 
-	ge->ClientThink(client_num, ucmd);
+	ge->ClientThink(clientNum, ucmd);
 }
 
 void GVM_RunFrame(const int levelTime)
@@ -504,28 +504,28 @@ static void SV_LocateGameData(sharedEntity_t* gEnts, const int numGEntities, con
 	sv.gameClientSize = sizeofGameClient;
 }
 
-static void SV_GameDropClient(const int client_num, const char* reason)
+static void SV_GameDropClient(const int clientNum, const char* reason)
 {
-	if (client_num < 0 || client_num >= sv_maxclients->integer)
+	if (clientNum < 0 || clientNum >= sv_maxclients->integer)
 	{
 		return;
 	}
-	SV_DropClient(svs.clients + client_num, reason);
+	SV_DropClient(svs.clients + clientNum, reason);
 }
 
-static void SV_GameSendServerCommand(const int client_num, const char* text)
+static void SV_GameSendServerCommand(const int clientNum, const char* text)
 {
-	if (client_num == -1)
+	if (clientNum == -1)
 	{
 		SV_SendServerCommand(nullptr, "%s", text);
 	}
 	else
 	{
-		if (client_num < 0 || client_num >= sv_maxclients->integer)
+		if (clientNum < 0 || clientNum >= sv_maxclients->integer)
 		{
 			return;
 		}
-		SV_SendServerCommand(svs.clients + client_num, "%s", text);
+		SV_SendServerCommand(svs.clients + clientNum, "%s", text);
 	}
 }
 
@@ -628,13 +628,13 @@ static void SV_AdjustAreaPortalState(sharedEntity_t* ent, const qboolean open)
 	CM_AdjustAreaPortalState(svEnt->areanum, svEnt->areanum2, open);
 }
 
-static void SV_GetUsercmd(const int client_num, usercmd_t* cmd)
+static void SV_GetUsercmd(const int clientNum, usercmd_t* cmd)
 {
-	if (client_num < 0 || client_num >= sv_maxclients->integer)
+	if (clientNum < 0 || clientNum >= sv_maxclients->integer)
 	{
-		Com_Error(ERR_DROP, "SV_GetUsercmd: bad client_num:%i", client_num);
+		Com_Error(ERR_DROP, "SV_GetUsercmd: bad clientNum:%i", clientNum);
 	}
-	*cmd = svs.clients[client_num].lastUsercmd;
+	*cmd = svs.clients[clientNum].lastUsercmd;
 }
 
 static sharedEntity_t gLocalModifier;
@@ -1467,14 +1467,14 @@ static int SV_BotLibTest(const int parm0, char* parm1, vec3_t parm2, vec3_t parm
 	return botlib_export->Test(parm0, parm1, parm2, parm3);
 }
 
-static int SV_BotGetServerCommand(const int client_num, char* message, const int size)
+static int SV_BotGetServerCommand(const int clientNum, char* message, const int size)
 {
-	return SV_BotGetConsoleMessage(client_num, message, size);
+	return SV_BotGetConsoleMessage(clientNum, message, size);
 }
 
-static void SV_BotUserCommand(const int client_num, usercmd_t* ucmd)
+static void SV_BotUserCommand(const int clientNum, usercmd_t* ucmd)
 {
-	SV_ClientThink(&svs.clients[client_num], ucmd);
+	SV_ClientThink(&svs.clients[clientNum], ucmd);
 }
 
 static int SV_AAS_EnableRoutingArea(const int areanum, const int enable)

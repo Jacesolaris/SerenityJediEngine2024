@@ -1261,11 +1261,11 @@ int Trooper_CanHitTarget(gentity_t* actor, const gentity_t* target, c_troop& tro
 	CVec3& MuzzleToTarget)
 {
 	trace_t tr;
-	CVec3 muzzle_point(actor->currentOrigin);
-	CalcEntitySpot(actor, SPOT_WEAPON, muzzle_point.v);
+	CVec3 muzzlePoint(actor->currentOrigin);
+	CalcEntitySpot(actor, SPOT_WEAPON, muzzlePoint.v);
 
 	MuzzleToTarget = troop.TargetVisablePosition();
-	MuzzleToTarget -= muzzle_point;
+	MuzzleToTarget -= muzzlePoint;
 	MuzzleToTargetDistance = MuzzleToTarget.SafeNorm();
 
 	CVec3 MuzzleDirection(actor->currentAngles);
@@ -1277,7 +1277,7 @@ int Trooper_CanHitTarget(gentity_t* actor, const gentity_t* target, c_troop& tro
 	{
 		// Clear Line Of Sight To Target?
 		//--------------------------------
-		gi.trace(&tr, muzzle_point.v, nullptr, nullptr, troop.TargetVisablePosition().v, actor->s.number, MASK_SHOT,
+		gi.trace(&tr, muzzlePoint.v, nullptr, nullptr, troop.TargetVisablePosition().v, actor->s.number, MASK_SHOT,
 			static_cast<EG2_Collision>(0), 0);
 		if (tr.startsolid || tr.allsolid)
 		{

@@ -175,7 +175,7 @@ void CalcEntitySpot(const gentity_t* ent, const spot_t spot, vec3_t point)
 		{
 			AngleVectors(ent->client->ps.viewangles, forward, right, up);
 		}
-		calcmuzzle_point(const_cast<gentity_t*>(ent), forward, point, 0);
+		calcmuzzlePoint(const_cast<gentity_t*>(ent), forward, point, 0);
 		//NOTE: automatically takes leaning into account!
 		break;
 

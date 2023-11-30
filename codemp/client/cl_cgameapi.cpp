@@ -40,16 +40,16 @@ static vm_t* cgvm; // cgame vm, valid for legacy and new api
 //
 // cgame vmMain calls
 //
-void CGVM_Init(const int serverMessageNum, const int serverCommandSequence, const int client_num)
+void CGVM_Init(const int serverMessageNum, const int serverCommandSequence, const int clientNum)
 {
 	if (cgvm->isLegacy)
 	{
-		VM_Call(cgvm, CG_INIT, serverMessageNum, serverCommandSequence, client_num);
+		VM_Call(cgvm, CG_INIT, serverMessageNum, serverCommandSequence, clientNum);
 		return;
 	}
 	VMSwap v(cgvm);
 
-	cge->Init(serverMessageNum, serverCommandSequence, client_num);
+	cge->Init(serverMessageNum, serverCommandSequence, clientNum);
 }
 
 void CGVM_Shutdown(void)

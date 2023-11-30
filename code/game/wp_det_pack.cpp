@@ -63,7 +63,7 @@ static void WP_DropDetPack(gentity_t* self, vec3_t start)
 {
 	// Chucking a new one
 	AngleVectors(self->client->ps.viewangles, forward_vec, vright_vec, up);
-	calcmuzzle_point(self, forward_vec, muzzle, 0);
+	calcmuzzlePoint(self, forward_vec, muzzle, 0);
 	VectorNormalize(forward_vec);
 	VectorMA(muzzle, -4, forward_vec, muzzle);
 

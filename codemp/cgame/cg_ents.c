@@ -270,7 +270,7 @@ void CG_S_UpdateLoopingSounds(const int entityNum)
 	}
 
 	if (cent->currentState.eFlags & EF_SOUNDTRACKER
-		&& (!cg.snap || cent->currentState.trickedentindex != cg.snap->ps.client_num))
+		&& (!cg.snap || cent->currentState.trickedentindex != cg.snap->ps.clientNum))
 	{
 		//keep sound for this entity updated in accordance with its attached entity at all times
 		//entity out of range
@@ -531,7 +531,7 @@ void CG_Special(const centity_t* cent)
 	{
 		// The portable shield should go through a different rendering function.
 		if (!cg.snap->ps.duelInProgress ||
-			s1->otherentity_num == cg.snap->ps.client_num ||
+			s1->otherentity_num == cg.snap->ps.clientNum ||
 			s1->otherentity_num == cg.snap->ps.duelIndex)
 		{
 			FX_DrawPortableShield(cent);
@@ -757,17 +757,17 @@ extern int cgSiegeEntityRender;
 
 static qboolean CG_RenderTimeEntBolt(centity_t* cent)
 {
-	const int client_num = cent->currentState.boltToPlayer - 1;
+	const int clientNum = cent->currentState.boltToPlayer - 1;
 	mdxaBone_t matrix;
 	vec3_t bolt_org, bolt_ang;
 
-	if (client_num >= MAX_CLIENTS || client_num < 0)
+	if (clientNum >= MAX_CLIENTS || clientNum < 0)
 	{
 		assert(0);
 		return qfalse;
 	}
 
-	centity_t* cl = &cg_entities[client_num];
+	centity_t* cl = &cg_entities[clientNum];
 
 	if (!cl->ghoul2)
 	{
@@ -775,7 +775,7 @@ static qboolean CG_RenderTimeEntBolt(centity_t* cent)
 		return qfalse;
 	}
 
-	if (client_num == cg.predicted_player_state.client_num &&
+	if (clientNum == cg.predicted_player_state.clientNum &&
 		!cg.renderingThirdPerson)
 	{
 		//If in first person and you have it then render the thing spinning around on your hud.
@@ -802,18 +802,18 @@ static qboolean CG_RenderTimeEntBolt(centity_t* cent)
 /*
 static void CG_SiegeEntRenderAboveHead(centity_t *cent)
 {
-	int client_num = cent->currentState.boltToPlayer-1;
+	int clientNum = cent->currentState.boltToPlayer-1;
 	centity_t *cl;
 	refEntity_t ent;
 	vec3_t renderAngles;
 
-	if (client_num >= MAX_CLIENTS || client_num < 0)
+	if (clientNum >= MAX_CLIENTS || clientNum < 0)
 	{
 		assert(0);
 		return;
 	}
 
-	cl = &cg_entities[client_num];
+	cl = &cg_entities[clientNum];
 
 	memset(&ent, 0, sizeof(ent));
 
@@ -883,7 +883,7 @@ CG_General
 ==================
 */
 void CG_G2ServerBoneAngles(const centity_t* cent);
-extern void CG_BodyQueueCopy(centity_t* cent, int client_num, int knownWeapon);
+extern void CG_BodyQueueCopy(centity_t* cent, int clientNum, int knownWeapon);
 extern qboolean BG_GetRootSurfNameWithVariant(void* ghoul2, const char* rootSurfName, char* returnSurfName,
 	int returnSize);
 
@@ -999,7 +999,7 @@ static void CG_General(centity_t* cent)
 
 	if (cg.snap->ps.duelInProgress &&
 		((cent->currentState.weapon == WP_SABER &&
-			cent->currentState.otherentity_num != cg.snap->ps.client_num &&
+			cent->currentState.otherentity_num != cg.snap->ps.clientNum &&
 			cent->currentState.otherentity_num != cg.snap->ps.duelIndex) ||
 			cent->currentState.eType & ET_BODY ||
 			cent->currentState.weapon == G2_MODEL_PART))
@@ -1015,7 +1015,7 @@ static void CG_General(centity_t* cent)
 			pl->currentState.trickedentindex2,
 			pl->currentState.trickedentindex3,
 			pl->currentState.trickedentindex4,
-			cg.predicted_player_state.client_num))
+			cg.predicted_player_state.clientNum))
 		{
 			//don't show if this guy is mindtricking
 			return;
@@ -1449,7 +1449,7 @@ static void CG_General(centity_t* cent)
 
 		emp_own = &cg_entities[cent->currentState.emplacedOwner];
 
-		if (cg.snap->ps.client_num == emp_own->currentState.number &&
+		if (cg.snap->ps.clientNum == emp_own->currentState.number &&
 			!cg.renderingThirdPerson)
 		{
 			VectorCopy(cg.refdef.viewangles, emp_angles);
@@ -1601,7 +1601,7 @@ static void CG_General(centity_t* cent)
 	}
 
 	// player model
-	if (s1->number == cg.snap->ps.client_num)
+	if (s1->number == cg.snap->ps.clientNum)
 	{
 		ent.renderfx |= RF_THIRD_PERSON; // only draw from mirrors
 	}
@@ -1801,7 +1801,7 @@ static void CG_General(centity_t* cent)
 		cent->currentState.bolt1)  // lmo using same bolt1 hack to recognise sentry! (see above and SP_PAS in g_items.c)
 	{ // if entity is a trip mine, detpack, sentry gun consider duel NoX
 		if (!cg.snap->ps.duelInProgress ||
-			cent->currentState.otherentity_num == cg.snap->ps.client_num ||
+			cent->currentState.otherentity_num == cg.snap->ps.clientNum ||
 			cent->currentState.otherentity_num == cg.snap->ps.duelIndex)
 		{
 			trap->R_AddRefEntityToScene(&ent);
@@ -1971,7 +1971,7 @@ static void CG_General(centity_t* cent)
 		int beam_id;
 		//if force sight is active, render the laser multiple times up to the force sight level to increase visibility
 		if (!cg.snap->ps.duelInProgress ||
-			cent->currentState.otherentity_num == cg.snap->ps.client_num ||
+			cent->currentState.otherentity_num == cg.snap->ps.clientNum ||
 			cent->currentState.otherentity_num == cg.snap->ps.duelIndex)
 		{ // dont render if neither you nor opponent are owner
 			if (cent->currentState.bolt2 == 1)
@@ -2232,9 +2232,9 @@ static void CG_Speaker(centity_t* cent)
 		CG_S_StopLoopingSound(cent->currentState.number, -1);
 	}
 
-	if (!cent->currentState.client_num)
+	if (!cent->currentState.clientNum)
 	{
-		// FIXME: use something other than client_num...
+		// FIXME: use something other than clientNum...
 		return; // not auto triggering
 	}
 
@@ -2246,8 +2246,8 @@ static void CG_Speaker(centity_t* cent)
 	trap->S_StartSound(NULL, cent->currentState.number, CHAN_ITEM, cgs.gameSounds[cent->currentState.eventParm]);
 
 	//	ent->s.frame = ent->wait * 10;
-	//	ent->s.client_num = ent->random * 10;
-	cent->miscTime = cg.time + cent->currentState.frame * 100 + cent->currentState.client_num * 100 *
+	//	ent->s.clientNum = ent->random * 10;
+	cent->miscTime = cg.time + cent->currentState.frame * 100 + cent->currentState.clientNum * 100 *
 		Q_flrand(-1.0f, 1.0f);
 }
 
@@ -2833,7 +2833,7 @@ static void CG_Missile(centity_t* cent)
 
 	if (cg.snap->ps.duelInProgress &&
 		cent->currentState.eType == ET_MISSILE &&
-		cent->currentState.otherentity_num != cg.snap->ps.client_num &&
+		cent->currentState.otherentity_num != cg.snap->ps.clientNum &&
 		cent->currentState.otherentity_num != cg.snap->ps.duelIndex)
 	{ //dont render missiles (includes dead sabers) if duel nox
 		return;
@@ -3262,7 +3262,7 @@ static void CG_Missile(centity_t* cent)
 				if (saber_own_info->saber[0].numBlades > 2)
 				{
 					//add a single glow for the saber based on all the blade colors combined
-					CG_DoSaberLight(&saber_own_info->saber[0], saber_own->currentState.client_num, 0);
+					CG_DoSaberLight(&saber_own_info->saber[0], saber_own->currentState.clientNum, 0);
 				}
 			}
 		}
@@ -3275,7 +3275,7 @@ static void CG_Missile(centity_t* cent)
 
 	if (s1->weapon == WP_SABER
 		&& (cgs.gametype == GT_JEDIMASTER || //playing JediMaster
-			s1->owner == cg.snap->ps.client_num)) //or it's our saber and we've dropped it.
+			s1->owner == cg.snap->ps.clientNum)) //or it's our saber and we've dropped it.
 	{
 		// always make the saber glow when on the ground
 		float wv;
@@ -3654,7 +3654,7 @@ static void CG_Portal(const centity_t* cent)
 	ent.reType = RT_PORTALSURFACE;
 	ent.oldframe = s1->powerups;
 	ent.frame = s1->frame; // rotation speed
-	ent.skinNum = s1->client_num / 256.0 * 360; // roll offset
+	ent.skinNum = s1->clientNum / 256.0 * 360; // roll offset
 	/*
 	Ghoul2 Insert Start
 	*/
@@ -3761,7 +3761,7 @@ void CG_CalcEntityLerpPositions(centity_t* cent)
 	if (!cg_smoothClients.integer)
 	{
 		// make sure the clients use TR_INTERPOLATE
-		if (cent->currentState.number != cg.client_num && cent->currentState.number < MAX_CLIENTS || cent->currentState.
+		if (cent->currentState.number != cg.clientNum && cent->currentState.number < MAX_CLIENTS || cent->currentState.
 			eType == ET_NPC)
 		{
 			cent->currentState.pos.trType = TR_INTERPOLATE;
@@ -3776,7 +3776,7 @@ void CG_CalcEntityLerpPositions(centity_t* cent)
 		//special case for vehicle we are riding
 		const centity_t* veh = &cg_entities[cg.predicted_player_state.m_iVehicleNum];
 
-		if (veh->currentState.owner == cg.predicted_player_state.client_num)
+		if (veh->currentState.owner == cg.predicted_player_state.clientNum)
 		{
 			//only do this if the vehicle is pilotted by this client and predicting properly
 			BG_EvaluateTrajectory(&cent->currentState.pos, cg.time, cent->lerpOrigin);
@@ -3794,7 +3794,7 @@ void CG_CalcEntityLerpPositions(centity_t* cent)
 	// first see if we can interpolate between two snaps for
 	// linear extrapolated clients
 	if (cent->interpolate && cent->currentState.pos.trType == TR_LINEAR_STOP
-		&& (cent->currentState.number != cg.client_num && cent->currentState.number < MAX_CLIENTS || cent->currentState.
+		&& (cent->currentState.number != cg.clientNum && cent->currentState.number < MAX_CLIENTS || cent->currentState.
 			eType == ET_NPC))
 	{
 		CG_InterpolateEntityPosition(cent);
@@ -3880,7 +3880,7 @@ void CG_CalcEntityLerpPositions(centity_t* cent)
 
 	// adjust for riding a mover if it wasn't rolled into the predicted
 	// player state
-	if (cent->currentState.number != cg.client_num)
+	if (cent->currentState.number != cg.clientNum)
 	{
 		CG_AdjustPositionForMover(cent->lerpOrigin, cent->currentState.groundEntityNum,
 			cg.snap->serverTime, cg.time, cent->lerpOrigin);
@@ -4000,7 +4000,7 @@ static void CG_AddCEntity(centity_t* cent)
 	}
 
 	// don't render when we are in spec, happens occasionally on map_restart and such
-	if (cg.predicted_player_state.client_num == cent->currentState.number && cg.predicted_player_state.persistant[PERS_TEAM]
+	if (cg.predicted_player_state.clientNum == cent->currentState.number && cg.predicted_player_state.persistant[PERS_TEAM]
 		== TEAM_SPECTATOR)
 		return;
 
@@ -4148,15 +4148,15 @@ void CG_AddPacketEntities(const qboolean is_portal)
 	// generate and add the entity from the playerstate
 	playerState_t* ps = &cg.predicted_player_state;
 
-	CG_CheckPlayerG2Weapons(ps, &cg_entities[cg.predicted_player_state.client_num]);
-	BG_PlayerStateToEntityState(ps, &cg_entities[cg.predicted_player_state.client_num].currentState, qfalse);
+	CG_CheckPlayerG2Weapons(ps, &cg_entities[cg.predicted_player_state.clientNum]);
+	BG_PlayerStateToEntityState(ps, &cg_entities[cg.predicted_player_state.clientNum].currentState, qfalse);
 
 	if (cg.predicted_player_state.m_iVehicleNum)
 	{
 		//add the vehicle I'm riding first
 		centity_t* veh = &cg_entities[cg.predicted_player_state.m_iVehicleNum];
 
-		if (veh->currentState.owner == cg.predicted_player_state.client_num)
+		if (veh->currentState.owner == cg.predicted_player_state.clientNum)
 		{
 			BG_PlayerStateToEntityState(&cg.predictedVehicleState, &veh->currentState, qfalse);
 			veh->currentState.eType = ET_NPC;
@@ -4167,11 +4167,11 @@ void CG_AddPacketEntities(const qboolean is_portal)
 		veh->bodyHeight = cg.time; //indicate we have already been added
 	}
 
-	CG_AddCEntity(&cg_entities[cg.predicted_player_state.client_num]);
+	CG_AddCEntity(&cg_entities[cg.predicted_player_state.clientNum]);
 
 	/*
 	// lerp the non-predicted value for lightning gun origins
-	CG_CalcEntityLerpPositions( &cg_entities[ cg.snap->ps.client_num ] );
+	CG_CalcEntityLerpPositions( &cg_entities[ cg.snap->ps.clientNum ] );
 	*/
 	//No longer have to do this.
 
@@ -4179,7 +4179,7 @@ void CG_AddPacketEntities(const qboolean is_portal)
 	for (num = 0; num < cg.snap->numEntities; num++)
 	{
 		// Don't re-add ents that have been predicted.
-		if (cg.snap->entities[num].number != cg.snap->ps.client_num)
+		if (cg.snap->entities[num].number != cg.snap->ps.clientNum)
 		{
 			cent = &cg_entities[cg.snap->entities[num].number];
 			if (cent->currentState.eType == ET_PLAYER &&

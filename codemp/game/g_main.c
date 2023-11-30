@@ -1787,15 +1787,15 @@ static void RemoveTournamentLoser(void)
 		return;
 	}
 
-	const int client_num = level.sortedClients[1];
+	const int clientNum = level.sortedClients[1];
 
-	if (level.clients[client_num].pers.connected != CON_CONNECTED)
+	if (level.clients[clientNum].pers.connected != CON_CONNECTED)
 	{
 		return;
 	}
 
 	// make them a spectator
-	SetTeam(&g_entities[client_num], "s");
+	SetTeam(&g_entities[clientNum], "s");
 }
 
 void G_PowerDuelCount(int* loners, int* doubles, const qboolean countSpec)
@@ -2007,15 +2007,15 @@ static void RemoveTournamentWinner(void)
 		return;
 	}
 
-	const int client_num = level.sortedClients[0];
+	const int clientNum = level.sortedClients[0];
 
-	if (level.clients[client_num].pers.connected != CON_CONNECTED)
+	if (level.clients[clientNum].pers.connected != CON_CONNECTED)
 	{
 		return;
 	}
 
 	// make them a spectator
-	SetTeam(&g_entities[client_num], "s");
+	SetTeam(&g_entities[clientNum], "s");
 }
 
 /*
@@ -2025,7 +2025,7 @@ AdjustTournamentScores
 */
 static void AdjustTournamentScores(void)
 {
-	int client_num;
+	int clientNum;
 
 	if (level.clients[level.sortedClients[0]].ps.persistant[PERS_SCORE] ==
 		level.clients[level.sortedClients[1]].ps.persistant[PERS_SCORE] &&
@@ -2057,50 +2057,50 @@ static void AdjustTournamentScores(void)
 
 		if (cl_failure != 2)
 		{
-			client_num = level.sortedClients[cl_success];
+			clientNum = level.sortedClients[cl_success];
 
-			level.clients[client_num].sess.wins++;
-			client_userinfo_changed(client_num);
-			trap->SetConfigstring(CS_CLIENT_DUELWINNER, va("%i", client_num));
+			level.clients[clientNum].sess.wins++;
+			client_userinfo_changed(clientNum);
+			trap->SetConfigstring(CS_CLIENT_DUELWINNER, va("%i", clientNum));
 
-			client_num = level.sortedClients[cl_failure];
+			clientNum = level.sortedClients[cl_failure];
 
-			level.clients[client_num].sess.losses++;
-			client_userinfo_changed(client_num);
+			level.clients[clientNum].sess.losses++;
+			client_userinfo_changed(clientNum);
 		}
 		else
 		{
 			cl_success = 0;
 			cl_failure = 1;
 
-			client_num = level.sortedClients[cl_success];
+			clientNum = level.sortedClients[cl_success];
 
-			level.clients[client_num].sess.wins++;
-			client_userinfo_changed(client_num);
-			trap->SetConfigstring(CS_CLIENT_DUELWINNER, va("%i", client_num));
+			level.clients[clientNum].sess.wins++;
+			client_userinfo_changed(clientNum);
+			trap->SetConfigstring(CS_CLIENT_DUELWINNER, va("%i", clientNum));
 
-			client_num = level.sortedClients[cl_failure];
+			clientNum = level.sortedClients[cl_failure];
 
-			level.clients[client_num].sess.losses++;
-			client_userinfo_changed(client_num);
+			level.clients[clientNum].sess.losses++;
+			client_userinfo_changed(clientNum);
 		}
 	}
 	else
 	{
-		client_num = level.sortedClients[0];
-		if (level.clients[client_num].pers.connected == CON_CONNECTED)
+		clientNum = level.sortedClients[0];
+		if (level.clients[clientNum].pers.connected == CON_CONNECTED)
 		{
-			level.clients[client_num].sess.wins++;
-			client_userinfo_changed(client_num);
+			level.clients[clientNum].sess.wins++;
+			client_userinfo_changed(clientNum);
 
-			trap->SetConfigstring(CS_CLIENT_DUELWINNER, va("%i", client_num));
+			trap->SetConfigstring(CS_CLIENT_DUELWINNER, va("%i", clientNum));
 		}
 
-		client_num = level.sortedClients[1];
-		if (level.clients[client_num].pers.connected == CON_CONNECTED)
+		clientNum = level.sortedClients[1];
+		if (level.clients[clientNum].pers.connected == CON_CONNECTED)
 		{
-			level.clients[client_num].sess.losses++;
-			client_userinfo_changed(client_num);
+			level.clients[clientNum].sess.losses++;
+			client_userinfo_changed(clientNum);
 		}
 	}
 }

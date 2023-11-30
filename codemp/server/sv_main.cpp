@@ -554,7 +554,7 @@ void SVC_Status(const netadr_t from)
 		if (cl->state >= CS_CONNECTED)
 		{
 			char player[1024];
-			const playerState_t* ps = SV_Gameclient_num(i);
+			const playerState_t* ps = SV_GameclientNum(i);
 			Com_sprintf(player, sizeof player, "%i %i \"%s\"\n",
 				ps->persistant[PERS_SCORE], cl->ping, cl->name);
 			const int playerLength = strlen(player);
@@ -976,7 +976,7 @@ void SV_CalcPings(void)
 		}
 
 		// let the game dll know about the ping
-		playerState_t* ps = SV_Gameclient_num(i);
+		playerState_t* ps = SV_GameclientNum(i);
 		ps->ping = cl->ping;
 	}
 }

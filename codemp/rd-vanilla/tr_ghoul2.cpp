@@ -2457,7 +2457,7 @@ static void RenderSurfaces(CRenderSurface& RS) //also ended up just ripping righ
 		// stencil shadows can't do personal models unless I polyhedron clip
 		//using z-fail now so can do personal models -rww
 		if (r_shadows->integer == 2
-			&& (RS.renderfx & RF_SHADOW_PLANE)
+			&& (RS.renderfx & RF_shadowPlane)
 			&& !(RS.renderfx & (RF_NOSHADOW | RF_DEPTHHACK))
 			&& shader->sort == SS_OPAQUE)
 		{
@@ -2479,7 +2479,7 @@ static void RenderSurfaces(CRenderSurface& RS) //also ended up just ripping righ
 
 		// projection shadows work fine with personal models
 		if (r_shadows->integer == 3
-			&& RS.renderfx & RF_SHADOW_PLANE
+			&& RS.renderfx & RF_shadowPlane
 			&& !(RS.renderfx & RF_NOSHADOW)
 			&& shader->sort == SS_OPAQUE)
 		{
@@ -3352,7 +3352,7 @@ void R_AddGhoulSurfaces(trRefEntity_t* ent)
 #else
 			CRenderSurface RS(ghoul2[i].mSurfaceRoot, ghoul2[i].mSlist, cust_shader, fogNum, personalModel, ghoul2[i].mBoneCache, ent->e.renderfx, skin, (model_t*)ghoul2[i].currentModel, whichLod, ghoul2[i].mBltlist);
 #endif
-			if (!personalModel && RS.renderfx & RF_SHADOW_PLANE && !bInShadowRange(ent->e.origin))
+			if (!personalModel && RS.renderfx & RF_shadowPlane && !bInShadowRange(ent->e.origin))
 			{
 				RS.renderfx |= RF_NOSHADOW;
 			}

@@ -1278,7 +1278,7 @@ void CG_CheckSVStringEdRef(char* buf, const char* str)
 	buf[b] = 0;
 }
 
-static void CG_BodyQueueCopy(centity_t* cent, const int client_num, const int knownWeapon)
+static void CG_BodyQueueCopy(centity_t* cent, const int clientNum, const int knownWeapon)
 {
 	const int flags = BONE_ANIM_OVERRIDE_FREEZE;
 
@@ -1287,12 +1287,12 @@ static void CG_BodyQueueCopy(centity_t* cent, const int client_num, const int kn
 		trap->G2API_CleanGhoul2Models(&cent->ghoul2);
 	}
 
-	if (client_num < 0 || client_num >= MAX_CLIENTS)
+	if (clientNum < 0 || clientNum >= MAX_CLIENTS)
 	{
 		return;
 	}
 
-	centity_t* source = &cg_entities[client_num];
+	centity_t* source = &cg_entities[clientNum];
 
 	if (!source)
 	{

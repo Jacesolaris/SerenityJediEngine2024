@@ -6524,7 +6524,7 @@ void G_Damage(gentity_t* targ, gentity_t* inflictor, gentity_t* attacker, vec3_t
 	{
 		//don't take damage when in a walker, or fighter
 		//unless the walker/fighter is dead!!! -rww
-		if (targ->client->ps.client_num < MAX_CLIENTS && targ->client->ps.m_iVehicleNum)
+		if (targ->client->ps.clientNum < MAX_CLIENTS && targ->client->ps.m_iVehicleNum)
 		{
 			gentity_t* veh = &g_entities[targ->client->ps.m_iVehicleNum];
 			if (veh->m_pVehicle && veh->health > 0)
@@ -7454,7 +7454,7 @@ void G_Damage(gentity_t* targ, gentity_t* inflictor, gentity_t* attacker, vec3_t
 					ang[1] = flrand(0, 360);
 					ang[2] = flrand(0, 360);
 
-					VectorMA(targ->client->saber[rsaber_num].blade[rblade_num].muzzle_point, targ->client->saber[rsaber_num].blade[rblade_num].lengthMax * flrand(0, 1), targ->client->saber[rsaber_num].blade[rblade_num].muzzleDir, testEndPos);
+					VectorMA(targ->client->saber[rsaber_num].blade[rblade_num].muzzlePoint, targ->client->saber[rsaber_num].blade[rblade_num].lengthMax * flrand(0, 1), targ->client->saber[rsaber_num].blade[rblade_num].muzzleDir, testEndPos);
 					G_PlayEffectID(G_EffectIndex("world / acid_fizz.efx"), testEndPos, ang);
 
 					targ->client->poisonDamage = 18;

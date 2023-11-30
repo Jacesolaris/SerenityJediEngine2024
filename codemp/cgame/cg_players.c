@@ -229,7 +229,7 @@ CG_CustomSound
 
 ================
 */
-sfxHandle_t CG_CustomSound(int client_num, const char* sound_name)
+sfxHandle_t CG_CustomSound(int clientNum, const char* sound_name)
 {
 	clientInfo_t* ci;
 	int i;
@@ -249,18 +249,18 @@ sfxHandle_t CG_CustomSound(int client_num, const char* sound_name)
 
 	COM_StripExtension(sound_name, l_sound_name, sizeof l_sound_name);
 
-	if (client_num < 0)
+	if (clientNum < 0)
 	{
-		client_num = 0;
+		clientNum = 0;
 	}
 
-	if (client_num >= MAX_CLIENTS)
+	if (clientNum >= MAX_CLIENTS)
 	{
-		ci = cg_entities[client_num].npcClient;
+		ci = cg_entities[clientNum].npcClient;
 	}
 	else
 	{
-		ci = &cgs.clientinfo[client_num];
+		ci = &cgs.clientinfo[clientNum];
 	}
 
 	if (!ci)
@@ -286,7 +286,7 @@ sfxHandle_t CG_CustomSound(int client_num, const char* sound_name)
 		}
 	}
 
-	if (client_num >= MAX_CLIENTS)
+	if (clientNum >= MAX_CLIENTS)
 	{
 		//these are only for npc's
 		for (i = 0; i < MAX_CUSTOM_SOUNDS; i++)
@@ -391,7 +391,7 @@ sfxHandle_t CG_CustomSound(int client_num, const char* sound_name)
 			//npc only
 			return ci->combatSounds[i];
 		}
-		if (client_num >= MAX_CLIENTS && i < num_c_ex_sounds && strcmp(l_sound_name, cg_customExtraSoundNames[i]) == 0)
+		if (clientNum >= MAX_CLIENTS && i < num_c_ex_sounds && strcmp(l_sound_name, cg_customExtraSoundNames[i]) == 0)
 		{
 			//npc only
 			return ci->extraSounds[i];
@@ -401,7 +401,7 @@ sfxHandle_t CG_CustomSound(int client_num, const char* sound_name)
 			//npc only
 			return ci->jediSounds[i];
 		}
-		if (client_num >= MAX_CLIENTS && i < num_c_call_sounds && strcmp(l_sound_name, cg_customCalloutSoundNames[i]) ==
+		if (clientNum >= MAX_CLIENTS && i < num_c_call_sounds && strcmp(l_sound_name, cg_customCalloutSoundNames[i]) ==
 			0)
 		{
 			//npc only
@@ -531,7 +531,7 @@ qboolean BG_IsValidCharacterModel(const char* model_name, const char* skin_name)
 qboolean BG_ValidateSkinForTeam(const char* model_name, char* skin_name, int team, float* colors);
 
 static qboolean CG_RegisterClientModelname(clientInfo_t* ci, const char* model_name, const char* skin_name,
-	const char* team_name, const int client_num)
+	const char* team_name, const int clientNum)
 {
 	char afilename[MAX_QPATH];
 	char gla_name[MAX_QPATH];
@@ -797,9 +797,9 @@ retryModel:
 		trap->G2API_SetSurfaceOnOff(ci->ghoul2Model, "torso_ljet", TURN_OFF);
 	}
 
-	if (client_num != -1)
+	if (clientNum != -1)
 	{
-		cg_entities[client_num].ghoul2weapon = NULL;
+		cg_entities[clientNum].ghoul2weapon = NULL;
 	}
 
 	Q_strncpyz(ci->teamName, team_name, sizeof ci->teamName);
@@ -1170,11 +1170,11 @@ void CG_LoadClientInfo(clientInfo_t* ci)
 	if (ci->gender == GENDER_FEMALE)
 		fallback_model = DEFAULT_MODEL_FEMALE;
 
-	int client_num = ci - cgs.clientinfo;
+	int clientNum = ci - cgs.clientinfo;
 
-	if (client_num < 0 || client_num >= MAX_CLIENTS)
+	if (clientNum < 0 || clientNum >= MAX_CLIENTS)
 	{
-		client_num = -1;
+		clientNum = -1;
 	}
 
 	ci->deferred = qfalse;
@@ -1207,7 +1207,7 @@ void CG_LoadClientInfo(clientInfo_t* ci)
 	}
 	else
 	{
-		if (!CG_RegisterClientModelname(ci, ci->modelName, ci->skinName, teamname, client_num))
+		if (!CG_RegisterClientModelname(ci, ci->modelName, ci->skinName, teamname, clientNum))
 		{
 			//trap->Error( ERR_DROP, "CG_RegisterClientModelname( %s, %s, %s, %s %s ) failed", ci->modelName, ci->skinName, ci->headModelName, ci->headSkinName, teamname );
 			//rww - DO NOT error out here! Someone could just type in a nonsense model name and crash everyone's client.
@@ -1242,32 +1242,32 @@ void CG_LoadClientInfo(clientInfo_t* ci)
 		}
 	}
 
-	if (client_num != -1)
+	if (clientNum != -1)
 	{
-		trap->G2API_ClearAttachedInstance(client_num);
+		trap->G2API_ClearAttachedInstance(clientNum);
 	}
 
-	if (client_num != -1 && ci->ghoul2Model && trap->G2_HaveWeGhoul2Models(ci->ghoul2Model))
+	if (clientNum != -1 && ci->ghoul2Model && trap->G2_HaveWeGhoul2Models(ci->ghoul2Model))
 	{
-		if (cg_entities[client_num].ghoul2 && trap->G2_HaveWeGhoul2Models(cg_entities[client_num].ghoul2))
+		if (cg_entities[clientNum].ghoul2 && trap->G2_HaveWeGhoul2Models(cg_entities[clientNum].ghoul2))
 		{
-			trap->G2API_CleanGhoul2Models(&cg_entities[client_num].ghoul2);
+			trap->G2API_CleanGhoul2Models(&cg_entities[clientNum].ghoul2);
 		}
-		trap->G2API_DuplicateGhoul2Instance(ci->ghoul2Model, &cg_entities[client_num].ghoul2);
+		trap->G2API_DuplicateGhoul2Instance(ci->ghoul2Model, &cg_entities[clientNum].ghoul2);
 
 		//Attach the instance to this entity num so we can make use of client-server
 		//shared operations if possible.
-		trap->G2API_AttachInstanceToEntNum(cg_entities[client_num].ghoul2, client_num, qfalse);
+		trap->G2API_AttachInstanceToEntNum(cg_entities[clientNum].ghoul2, clientNum, qfalse);
 
-		if (trap->G2API_AddBolt(cg_entities[client_num].ghoul2, 0, "face") == -1)
+		if (trap->G2API_AddBolt(cg_entities[clientNum].ghoul2, 0, "face") == -1)
 		{
 			//check now to see if we have this bone for setting anims and such
-			cg_entities[client_num].noFace = qtrue;
+			cg_entities[clientNum].noFace = qtrue;
 		}
 
-		cg_entities[client_num].localAnimIndex = CG_G2SkelForModel(cg_entities[client_num].ghoul2);
-		cg_entities[client_num].eventAnimIndex = CG_G2EvIndexForModel(cg_entities[client_num].ghoul2,
-			cg_entities[client_num].localAnimIndex);
+		cg_entities[clientNum].localAnimIndex = CG_G2SkelForModel(cg_entities[clientNum].ghoul2);
+		cg_entities[clientNum].eventAnimIndex = CG_G2EvIndexForModel(cg_entities[clientNum].ghoul2,
+			cg_entities[clientNum].localAnimIndex);
 	}
 
 	ci->newAnims = qfalse;
@@ -1296,10 +1296,10 @@ void CG_LoadClientInfo(clientInfo_t* ci)
 
 	// reset any existing players and bodies, because they might be in bad
 	// frames for this new model
-	client_num = ci - cgs.clientinfo;
+	clientNum = ci - cgs.clientinfo;
 	for (int i = 0; i < MAX_GENTITIES; i++)
 	{
-		if (cg_entities[i].currentState.client_num == client_num
+		if (cg_entities[i].currentState.clientNum == clientNum
 			&& cg_entities[i].currentState.eType == ET_PLAYER)
 		{
 			CG_ResetPlayerEntity(&cg_entities[i]);
@@ -1448,7 +1448,7 @@ static void CG_CopyClientInfoModel(const clientInfo_t* from, clientInfo_t* to)
 CG_ScanForExistingClientInfo
 ======================
 */
-static qboolean CG_ScanForExistingClientInfo(clientInfo_t* ci, const int client_num)
+static qboolean CG_ScanForExistingClientInfo(clientInfo_t* ci, const int clientNum)
 {
 	for (int i = 0; i < cgs.maxclients; i++)
 	{
@@ -1478,7 +1478,7 @@ static qboolean CG_ScanForExistingClientInfo(clientInfo_t* ci, const int client_
 			//Switching instances when not necessary produces small animation glitches.
 			//Actually, before, were we even freeing the instance attached to the old clientinfo before copying
 			//this new clientinfo over it? Could be a nasty leak possibility. (though this should remedy it in theory)
-			if (client_num == i)
+			if (clientNum == i)
 			{
 				if (match->ghoul2Model && trap->G2_HaveWeGhoul2Models(match->ghoul2Model))
 				{
@@ -1699,7 +1699,7 @@ void CG_ParseScriptedSaber(char* script, clientInfo_t* ci, int snum);
 void WP_SetSaber(int entNum, saberInfo_t* sabers, int saberNum, const char* saber_name);
 extern void* CG_G2WeaponInstance2(const centity_t* cent, int weapon);
 
-void CG_NewClientInfo(int client_num, qboolean entities_initialized)
+void CG_NewClientInfo(int clientNum, qboolean entities_initialized)
 {
 	clientInfo_t* ci;
 	clientInfo_t new_info;
@@ -1714,7 +1714,7 @@ void CG_NewClientInfo(int client_num, qboolean entities_initialized)
 	int k = 0;
 	qboolean saber_update[MAX_SABERS];
 
-	ci = &cgs.clientinfo[client_num];
+	ci = &cgs.clientinfo[clientNum];
 
 	old_ghoul2 = ci->ghoul2Model;
 
@@ -1725,7 +1725,7 @@ void CG_NewClientInfo(int client_num, qboolean entities_initialized)
 		k++;
 	}
 
-	configstring = CG_ConfigString(client_num + CS_PLAYERS);
+	configstring = CG_ConfigString(clientNum + CS_PLAYERS);
 	if (!configstring[0])
 	{
 		if (ci->ghoul2Model && trap->G2_HaveWeGhoul2Models(ci->ghoul2Model))
@@ -1798,7 +1798,7 @@ void CG_NewClientInfo(int client_num, qboolean entities_initialized)
 	new_info.team = atoi(v);
 
 	//copy team info out to menu
-	if (client_num == cg.client_num) //this is me
+	if (clientNum == cg.clientNum) //this is me
 	{
 		trap->Cvar_Set("ui_team", v);
 	}
@@ -1961,7 +1961,7 @@ void CG_NewClientInfo(int client_num, qboolean entities_initialized)
 	if (v && Q_stricmp(v, ci->saber_name))
 	{
 		Q_strncpyz(new_info.saber_name, v, 64);
-		WP_SetSaber(client_num, new_info.saber, 0, new_info.saber_name);
+		WP_SetSaber(clientNum, new_info.saber, 0, new_info.saber_name);
 		saber_update[0] = qtrue;
 	}
 	else
@@ -1978,7 +1978,7 @@ void CG_NewClientInfo(int client_num, qboolean entities_initialized)
 	if (v && Q_stricmp(v, ci->saber2Name))
 	{
 		Q_strncpyz(new_info.saber2Name, v, 64);
-		WP_SetSaber(client_num, new_info.saber, 1, new_info.saber2Name);
+		WP_SetSaber(clientNum, new_info.saber, 1, new_info.saber2Name);
 		saber_update[1] = qtrue;
 	}
 	else
@@ -2030,8 +2030,8 @@ void CG_NewClientInfo(int client_num, qboolean entities_initialized)
 						old_g2_holstered_weapons[j] = 0;
 					}
 				}
-				cg_entities[client_num].weapon = 0;
-				cg_entities[client_num].ghoul2weapon = NULL; //force a refresh
+				cg_entities[clientNum].weapon = 0;
+				cg_entities[clientNum].ghoul2weapon = NULL; //force a refresh
 			}
 			j++;
 		}
@@ -2077,10 +2077,10 @@ void CG_NewClientInfo(int client_num, qboolean entities_initialized)
 
 	// scan for an existing clientinfo that matches this modelname
 	// so we can avoid loading checks if possible
-	if (!CG_ScanForExistingClientInfo(&new_info, client_num))
+	if (!CG_ScanForExistingClientInfo(&new_info, clientNum))
 	{
 		// if we are defering loads, just have it pick the first valid
-		if (cg.snap && cg.snap->ps.client_num == client_num)
+		if (cg.snap && cg.snap->ps.clientNum == clientNum)
 		{
 			//rww - don't defer your own client info ever
 			CG_LoadClientInfo(&new_info);
@@ -2096,7 +2096,7 @@ void CG_NewClientInfo(int client_num, qboolean entities_initialized)
 		}
 	}
 
-	if (cg.snap && cg.snap->ps.client_num == client_num)
+	if (cg.snap && cg.snap->ps.clientNum == clientNum)
 	{
 		//adjust our True View position for this new model since this model is for this client
 		//Set the eye position based on the trueviewmodel.cfg if it has a position for this model.
@@ -2122,10 +2122,10 @@ void CG_NewClientInfo(int client_num, qboolean entities_initialized)
 		i++;
 	}
 
-	if (client_num != -1)
+	if (clientNum != -1)
 	{
 		//don't want it using an invalid pointer to share
-		trap->G2API_ClearAttachedInstance(client_num);
+		trap->G2API_ClearAttachedInstance(clientNum);
 	}
 
 	// Check if the ghoul2 model changed in any way.  This is safer than assuming we have a legal cent shile loading info.
@@ -2133,9 +2133,9 @@ void CG_NewClientInfo(int client_num, qboolean entities_initialized)
 	{
 		// Copy the new ghoul2 model to the centity.
 		animation_t* anim;
-		centity_t* cent = &cg_entities[client_num];
+		centity_t* cent = &cg_entities[clientNum];
 
-		anim = &bgHumanoidAnimations[cg_entities[client_num].currentState.legsAnim];
+		anim = &bgHumanoidAnimations[cg_entities[clientNum].currentState.legsAnim];
 
 		if (anim)
 		{
@@ -2158,10 +2158,10 @@ void CG_NewClientInfo(int client_num, qboolean entities_initialized)
 			trap->G2API_SetBoneAnim(ci->ghoul2Model, 0, "model_root", first_frame, anim->firstFrame + anim->numFrames,
 				flags, animSpeed, cg.time, setFrame, 150);
 
-			cg_entities[client_num].currentState.legsAnim = 0.0f;
+			cg_entities[clientNum].currentState.legsAnim = 0.0f;
 		}
 
-		anim = &bgHumanoidAnimations[cg_entities[client_num].currentState.torsoAnim];
+		anim = &bgHumanoidAnimations[cg_entities[clientNum].currentState.torsoAnim];
 
 		if (anim)
 		{
@@ -2184,55 +2184,55 @@ void CG_NewClientInfo(int client_num, qboolean entities_initialized)
 			trap->G2API_SetBoneAnim(ci->ghoul2Model, 0, "lower_lumbar", first_frame, anim->firstFrame + anim->numFrames,
 				flags, animSpeed, cg.time, setFrame, 150);
 
-			cg_entities[client_num].currentState.torsoAnim = 0;
+			cg_entities[clientNum].currentState.torsoAnim = 0;
 		}
 
-		if (cg_entities[client_num].ghoul2 && trap->G2_HaveWeGhoul2Models(cg_entities[client_num].ghoul2))
+		if (cg_entities[clientNum].ghoul2 && trap->G2_HaveWeGhoul2Models(cg_entities[clientNum].ghoul2))
 		{
-			trap->G2API_CleanGhoul2Models(&cg_entities[client_num].ghoul2);
+			trap->G2API_CleanGhoul2Models(&cg_entities[clientNum].ghoul2);
 		}
-		trap->G2API_DuplicateGhoul2Instance(ci->ghoul2Model, &cg_entities[client_num].ghoul2);
+		trap->G2API_DuplicateGhoul2Instance(ci->ghoul2Model, &cg_entities[clientNum].ghoul2);
 
-		if (client_num != -1)
+		if (clientNum != -1)
 		{
 			//Attach the instance to this entity num so we can make use of client-server
 			//shared operations if possible.
-			trap->G2API_AttachInstanceToEntNum(cg_entities[client_num].ghoul2, client_num, qfalse);
+			trap->G2API_AttachInstanceToEntNum(cg_entities[clientNum].ghoul2, clientNum, qfalse);
 		}
 
-		if (trap->G2API_AddBolt(cg_entities[client_num].ghoul2, 0, "face") == -1)
+		if (trap->G2API_AddBolt(cg_entities[clientNum].ghoul2, 0, "face") == -1)
 		{
 			//check now to see if we have this bone for setting anims and such
-			cg_entities[client_num].noFace = qtrue;
+			cg_entities[clientNum].noFace = qtrue;
 		}
 
-		cg_entities[client_num].localAnimIndex = CG_G2SkelForModel(cg_entities[client_num].ghoul2);
-		cg_entities[client_num].eventAnimIndex = CG_G2EvIndexForModel(cg_entities[client_num].ghoul2,
-			cg_entities[client_num].localAnimIndex);
+		cg_entities[clientNum].localAnimIndex = CG_G2SkelForModel(cg_entities[clientNum].ghoul2);
+		cg_entities[clientNum].eventAnimIndex = CG_G2EvIndexForModel(cg_entities[clientNum].ghoul2,
+			cg_entities[clientNum].localAnimIndex);
 
-		if (cg_entities[client_num].currentState.number != cg.predicted_player_state.client_num &&
-			cg_entities[client_num].currentState.weapon == WP_SABER)
+		if (cg_entities[clientNum].currentState.number != cg.predicted_player_state.clientNum &&
+			cg_entities[clientNum].currentState.weapon == WP_SABER)
 		{
-			cg_entities[client_num].weapon = cg_entities[client_num].currentState.weapon;
-			if (cg_entities[client_num].ghoul2 && ci->ghoul2Model)
+			cg_entities[clientNum].weapon = cg_entities[clientNum].currentState.weapon;
+			if (cg_entities[clientNum].ghoul2 && ci->ghoul2Model)
 			{
-				CG_CopyG2WeaponInstance(&cg_entities[client_num], cg_entities[client_num].currentState.weapon,
-					cg_entities[client_num].ghoul2);
-				cg_entities[client_num].ghoul2weapon = CG_G2WeaponInstance(
-					&cg_entities[client_num], cg_entities[client_num].currentState.weapon);
+				CG_CopyG2WeaponInstance(&cg_entities[clientNum], cg_entities[clientNum].currentState.weapon,
+					cg_entities[clientNum].ghoul2);
+				cg_entities[clientNum].ghoul2weapon = CG_G2WeaponInstance(
+					&cg_entities[clientNum], cg_entities[clientNum].currentState.weapon);
 
-				if (cg_entities[client_num].currentState.eFlags & EF3_DUAL_WEAPONS &&
-					cg_entities[client_num].currentState.weapon == WP_BRYAR_PISTOL)
+				if (cg_entities[clientNum].currentState.eFlags & EF3_DUAL_WEAPONS &&
+					cg_entities[clientNum].currentState.weapon == WP_BRYAR_PISTOL)
 				{
-					cg_entities[client_num].ghoul2weapon2 = CG_G2WeaponInstance2(
-						&cg_entities[client_num], cg_entities[client_num].currentState.weapon);
+					cg_entities[clientNum].ghoul2weapon2 = CG_G2WeaponInstance2(
+						&cg_entities[clientNum], cg_entities[clientNum].currentState.weapon);
 				}
 				else
 				{
-					cg_entities[client_num].ghoul2weapon2 = NULL;
+					cg_entities[clientNum].ghoul2weapon2 = NULL;
 				}
 			}
-			if (!cg_entities[client_num].currentState.saber_holstered)
+			if (!cg_entities[clientNum].currentState.saber_holstered)
 			{
 				//if not holstered set length and desired length for both blades to full right now.
 				int j;
@@ -2500,7 +2500,7 @@ static void player_foot_step(const vec3_t origin,
 	}
 	if (sound_type < FOOTSTEP_TOTAL)
 	{
-		trap->S_StartSound(NULL, cent->currentState.client_num, CHAN_BODY, cgs.media.footsteps[sound_type][rand() & 3]);
+		trap->S_StartSound(NULL, cent->currentState.clientNum, CHAN_BODY, cgs.media.footsteps[sound_type][rand() & 3]);
 	}
 
 	if (cg_footsteps.integer < 4)
@@ -2663,7 +2663,7 @@ void CG_PlayerAnimEventDo(centity_t* cent, animevent_t* anim_event)
 		}
 		else
 		{
-			client = &cgs.clientinfo[cent->currentState.client_num];
+			client = &cgs.clientinfo[cent->currentState.clientNum];
 		}
 		if (client && client->infoValid && client->saber[anim_event->eventData[AED_SABER_SWING_saber_num]].swingSound[
 			0])
@@ -2699,7 +2699,7 @@ void CG_PlayerAnimEventDo(centity_t* cent, animevent_t* anim_event)
 		}
 		else
 		{
-			client = &cgs.clientinfo[cent->currentState.client_num];
+			client = &cgs.clientinfo[cent->currentState.clientNum];
 		}
 		if (client
 			&& client->infoValid
@@ -2734,7 +2734,7 @@ void CG_PlayerAnimEventDo(centity_t* cent, animevent_t* anim_event)
 		}
 		if (spin_sound)
 		{
-			trap->S_StartSound(NULL, cent->currentState.client_num, CHAN_AUTO, spin_sound);
+			trap->S_StartSound(NULL, cent->currentState.clientNum, CHAN_AUTO, spin_sound);
 		}
 		break;
 	case AEV_FOOTSTEP:
@@ -2750,7 +2750,7 @@ void CG_PlayerAnimEventDo(centity_t* cent, animevent_t* anim_event)
 		}
 		if (animEvent->eventData[AED_BOLTINDEX] != -1)
 		{//have a bolt we want to play the effect on
-			G_PlayEffect(animEvent->eventData[AED_EFFECTINDEX], cent->gent->playerModel, animEvent->eventData[AED_BOLTINDEX], cent->currentState.client_num);
+			G_PlayEffect(animEvent->eventData[AED_EFFECTINDEX], cent->gent->playerModel, animEvent->eventData[AED_BOLTINDEX], cent->currentState.clientNum);
 		}
 		else
 		{//play at origin?  FIXME: maybe allow a fwd/rt/up offset?
@@ -3043,7 +3043,7 @@ void CG_PlayerAmbientEvents(centity_t* cent)
 	int event_num;
 
 	if (cent->currentState.eFlags & EF_DEAD || cent->currentState.eType == ET_PLAYER &&
-		(cg.predicted_player_state.pm_type == PM_INTERMISSION || cgs.clientinfo[cent->currentState.client_num].team ==
+		(cg.predicted_player_state.pm_type == PM_INTERMISSION || cgs.clientinfo[cent->currentState.clientNum].team ==
 			TEAM_SPECTATOR))
 	{
 		//Shouldn't play ambient sounds when dead; in intermission; or a spectator.
@@ -3227,16 +3227,16 @@ static void CG_SetLerpFrameAnimation(centity_t* cent, clientInfo_t* ci, lerpFram
 		return;
 	}
 
-	if (cg_debugAnim.integer && (cg_debugAnim.integer < 0 || cg_debugAnim.integer == cent->currentState.client_num))
+	if (cg_debugAnim.integer && (cg_debugAnim.integer < 0 || cg_debugAnim.integer == cent->currentState.clientNum))
 	{
 		if (lf == &cent->pe.legs)
 		{
-			trap->Print("%d: %d TORSO Anim: %i, '%s'\n", cg.time, cent->currentState.client_num, new_animation,
+			trap->Print("%d: %d TORSO Anim: %i, '%s'\n", cg.time, cent->currentState.clientNum, new_animation,
 				GetStringForID(animTable, new_animation));
 		}
 		else
 		{
-			trap->Print("%d: %d LEGS Anim: %i, '%s'\n", cg.time, cent->currentState.client_num, new_animation,
+			trap->Print("%d: %d LEGS Anim: %i, '%s'\n", cg.time, cent->currentState.clientNum, new_animation,
 				GetStringForID(animTable, new_animation));
 		}
 	}
@@ -3729,7 +3729,7 @@ static void CG_PlayerAnimation(centity_t* cent, int* legs_old, int* legs, float*
 	clientInfo_t* ci;
 	float speed_scale;
 
-	const int client_num = cent->currentState.client_num;
+	const int clientNum = cent->currentState.clientNum;
 
 	const qboolean is_holding_block_button = cent->currentState.ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
 	const qboolean active_blocking = cent->currentState.ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK
@@ -3764,7 +3764,7 @@ static void CG_PlayerAnimation(centity_t* cent, int* legs_old, int* legs, float*
 	}
 	else
 	{
-		ci = &cgs.clientinfo[client_num];
+		ci = &cgs.clientinfo[clientNum];
 	}
 
 	CG_RunLerpFrame(cent, ci, &cent->pe.legs, cent->currentState.legsFlip, cent->currentState.legsAnim, speed_scale,
@@ -4911,7 +4911,7 @@ static void CG_PlayerFlag(centity_t* cent, const qhandle_t h_model)
 	mdxaBone_t boltMatrix;
 	clientInfo_t* ci;
 
-	if (cent->currentState.number == cg.snap->ps.client_num
+	if (cent->currentState.number == cg.snap->ps.clientNum
 		&& !cg.renderingThirdPerson && !cg_trueguns.integer
 		&& cg.snap->ps.weapon != WP_SABER)
 	{
@@ -4970,7 +4970,7 @@ static void CG_PlayerFlag(centity_t* cent, const qhandle_t h_model)
 	ScaleModelAxis(&ent);
 
 	/*
-	if (cent->currentState.number == cg.snap->ps.client_num)
+	if (cent->currentState.number == cg.snap->ps.clientNum)
 	{ //If we're the current client (in third person), render the flag on our back transparently
 		ent.renderfx |= RF_FORCE_ENT_ALPHA;
 		ent.shaderRGBA[3] = 100;
@@ -5149,7 +5149,7 @@ static void CG_PlayerFloatSprite(const centity_t* cent, const qhandle_t shader)
 	int rf;
 	refEntity_t ent;
 
-	if (cent->currentState.number == cg.snap->ps.client_num && !cg.renderingThirdPerson)
+	if (cent->currentState.number == cg.snap->ps.clientNum && !cg.renderingThirdPerson)
 	{
 		rf = RF_THIRD_PERSON; // only show in mirrors
 	}
@@ -5184,7 +5184,7 @@ static void CG_PlayerFloatSpriteRGBA(centity_t* cent, qhandle_t shader, vec4_t r
 	int				rf;
 	refEntity_t		ent;
 
-	if (cent->currentState.number == cg.snap->ps.client_num && !cg.renderingThirdPerson) {
+	if (cent->currentState.number == cg.snap->ps.clientNum && !cg.renderingThirdPerson) {
 		rf = RF_THIRD_PERSON;		// only show in mirrors
 	}
 	else {
@@ -5222,7 +5222,7 @@ static void CG_PlayerSprites(const centity_t* cent)
 			cent->currentState.trickedentindex2,
 			cent->currentState.trickedentindex3,
 			cent->currentState.trickedentindex4,
-			cg.snap->ps.client_num))
+			cg.snap->ps.clientNum))
 	{
 		return; //this entity is mind-tricking the current client, so don't render it
 	}
@@ -5267,7 +5267,7 @@ Returns the Z component of the surface being shadowed
 */
 #define	SHADOW_DISTANCE		128
 
-static qboolean CG_PlayerShadow(const centity_t* cent, float* shadow_plane)
+static qboolean CG_PlayerShadow(const centity_t* cent, float* shadowPlane)
 {
 	vec3_t end;
 	const vec3_t maxs = { 15, 15, 2 };
@@ -5275,7 +5275,7 @@ static qboolean CG_PlayerShadow(const centity_t* cent, float* shadow_plane)
 	trace_t trace;
 	float radius = 24.0f;
 
-	*shadow_plane = 0;
+	*shadowPlane = 0;
 
 	if (cg_shadows.integer == 0)
 	{
@@ -5297,7 +5297,7 @@ static qboolean CG_PlayerShadow(const centity_t* cent, float* shadow_plane)
 		cent->currentState.trickedentindex2,
 		cent->currentState.trickedentindex3,
 		cent->currentState.trickedentindex4,
-		cg.snap->ps.client_num))
+		cg.snap->ps.clientNum))
 	{
 		return qfalse; //this entity is mind-tricking the current client, so don't render it
 	}
@@ -5347,11 +5347,11 @@ static qboolean CG_PlayerShadow(const centity_t* cent, float* shadow_plane)
 	if (cg_shadows.integer == 2)
 	{
 		//stencil shadows need plane to be on ground
-		*shadow_plane = trace.endpos[2];
+		*shadowPlane = trace.endpos[2];
 	}
 	else
 	{
-		*shadow_plane = trace.endpos[2] + 1;
+		*shadowPlane = trace.endpos[2] + 1;
 	}
 
 	if (cg_shadows.integer != 1)
@@ -5888,7 +5888,7 @@ static void CG_ForcePushBodyBlur(centity_t* cent)
 			cent->currentState.trickedentindex2,
 			cent->currentState.trickedentindex3,
 			cent->currentState.trickedentindex4,
-			cg.snap->ps.client_num))
+			cg.snap->ps.clientNum))
 	{
 		return; //this entity is mind-tricking the current client, so don't render it
 	}
@@ -6014,7 +6014,7 @@ void CG_AddRefEntityWithPowerups(const refEntity_t* ent, const entityState_t* st
 		state->trickedentindex2,
 		state->trickedentindex3,
 		state->trickedentindex4,
-		cg.snap->ps.client_num))
+		cg.snap->ps.clientNum))
 	{
 		return; //this entity is mind-tricking the current client, so don't render it
 	}
@@ -6108,7 +6108,7 @@ void CG_DrawPlayerShield(const centity_t* cent, vec3_t origin)
 void CG_PlayerHitFX(centity_t* cent)
 {
 	// only do the below fx if the cent in question is...uh...me, and it's first person.
-	if (cent->currentState.client_num != cg.predicted_player_state.client_num || cg.renderingThirdPerson)
+	if (cent->currentState.clientNum != cg.predicted_player_state.clientNum || cg.renderingThirdPerson)
 	{
 		if (cent->damageTime > cg.time && cent->currentState.NPC_class != CLASS_VEHICLE
 			&& cent->currentState.NPC_class != CLASS_SEEKER
@@ -6407,11 +6407,11 @@ void CG_DoSaberLight(const saberInfo_t* saber, const int cnum, const int bnum)
 				diameter = saber->blade[i].length * 2.0f;
 			}
 			totallength += saber->blade[i].length;
-			VectorMA(saber->blade[i].muzzle_point, saber->blade[i].length, saber->blade[i].muzzleDir, positions[i]);
+			VectorMA(saber->blade[i].muzzlePoint, saber->blade[i].length, saber->blade[i].muzzleDir, positions[i]);
 			if (!numpositions)
 			{
 				//first blade, store middle of that as midpoint
-				VectorMA(saber->blade[i].muzzle_point, saber->blade[i].length * 0.5, saber->blade[i].muzzleDir, mid);
+				VectorMA(saber->blade[i].muzzlePoint, saber->blade[i].length * 0.5, saber->blade[i].muzzleDir, mid);
 				VectorCopy(rgbs[i], rgb);
 			}
 			numpositions++;
@@ -11868,7 +11868,7 @@ void CG_SaberCompWork(vec3_t start, vec3_t end, centity_t* owner, const int sabe
 								}
 								else
 								{
-									client = &cgs.clientinfo[owner->currentState.client_num];
+									client = &cgs.clientinfo[owner->currentState.clientNum];
 								}
 								if (client
 									&& client->infoValid)
@@ -11914,7 +11914,7 @@ void CG_SaberCompWork(vec3_t start, vec3_t end, centity_t* owner, const int sabe
 										vec3_t splash_back_dir;
 										VectorScale(e_pos, -1, splash_back_dir);
 										CG_AddGhoul2Mark(weapon_mark_shader, flrand(0.5f, 2.0f),
-											trace.endpos, splash_back_dir, owner->currentState.client_num,
+											trace.endpos, splash_back_dir, owner->currentState.clientNum,
 											owner->lerpOrigin, owner->lerpAngles[YAW],
 											owner->ghoul2, owner->modelScale, Q_irand(5000, 10000));
 									}
@@ -11947,7 +11947,7 @@ void CG_SaberCompWork(vec3_t start, vec3_t end, centity_t* owner, const int sabe
 				}
 				else
 				{
-					client = &cgs.clientinfo[owner->currentState.client_num];
+					client = &cgs.clientinfo[owner->currentState.clientNum];
 				}
 				if (client && client->infoValid)
 				{
@@ -12104,7 +12104,7 @@ void CG_AddSaberBlade(centity_t* cent, centity_t* scent, int renderfx, int saber
 	}
 
 	if ((team_sabercolours.integer < 1
-		|| team_sabercolours.integer == 1 && cg.snap && cg.snap->ps.client_num != cent->currentState.number) &&
+		|| team_sabercolours.integer == 1 && cg.snap && cg.snap->ps.clientNum != cent->currentState.number) &&
 		cgs.gametype >= GT_TEAM &&
 		cgs.gametype != GT_SIEGE &&
 		!cgs.jediVmerc &&
@@ -12190,12 +12190,12 @@ void CG_AddSaberBlade(centity_t* cent, centity_t* scent, int renderfx, int saber
 
 				if (cg.snap->ps.duelInProgress)
 				{ // this client is dueling
-					if (cent->currentState.number >= 0 && cent->currentState.number < MAX_CLIENTS && cent->currentState.number != cg.snap->ps.client_num && cent->currentState.number != cg.snap->ps.duelIndex)
+					if (cent->currentState.number >= 0 && cent->currentState.number < MAX_CLIENTS && cent->currentState.number != cg.snap->ps.clientNum && cent->currentState.number != cg.snap->ps.duelIndex)
 					{	// sound originated from a client, but not one of the duelers
 						doit = 0;
 					}
 					else if (cent->currentState.number >= MAX_CLIENTS && cent->currentState.otherentity_num != ENTITYNUM_NONE &&
-						cent->currentState.otherentity_num != cg.snap->ps.client_num &&
+						cent->currentState.otherentity_num != cg.snap->ps.clientNum &&
 						cent->currentState.otherentity_num != cg.snap->ps.duelIndex)
 					{  // sound generated by an temp entity in a snap, the otherentity_num should be the orinating
 					// client number (by hack!). If otherentity_num is ENTITYNUM_NONE, then it is one of the many sounds
@@ -12443,7 +12443,7 @@ CheckTrail:
 							break;
 						case SABER_RGB:
 						{
-							int cnum = cent->currentState.client_num;
+							int cnum = cent->currentState.clientNum;
 							if (cnum < MAX_CLIENTS)
 							{
 								clientInfo_t* ci = &cgs.clientinfo[cnum];
@@ -12459,7 +12459,7 @@ CheckTrail:
 						break;
 						case SABER_PIMP:
 						{
-							int cnum = cent->currentState.client_num;
+							int cnum = cent->currentState.clientNum;
 							if (cnum < MAX_CLIENTS)
 							{
 								clientInfo_t* ci = &cgs.clientinfo[cnum];
@@ -12471,7 +12471,7 @@ CheckTrail:
 						break;
 						case SABER_SCRIPTED:
 						{
-							int cnum = cent->currentState.client_num;
+							int cnum = cent->currentState.clientNum;
 							if (cnum < MAX_CLIENTS)
 							{
 								clientInfo_t* ci = &cgs.clientinfo[cnum];
@@ -12751,7 +12751,7 @@ CheckTrail:
 				break;
 			case SABER_RGB:
 			{
-				int cnum = cent->currentState.client_num;
+				int cnum = cent->currentState.clientNum;
 				if (cnum < MAX_CLIENTS)
 				{
 					clientInfo_t* ci = &cgs.clientinfo[cnum];
@@ -12767,7 +12767,7 @@ CheckTrail:
 			break;
 			case SABER_PIMP:
 			{
-				int cnum = cent->currentState.client_num;
+				int cnum = cent->currentState.clientNum;
 				if (cnum < MAX_CLIENTS)
 				{
 					clientInfo_t* ci = &cgs.clientinfo[cnum];
@@ -12779,7 +12779,7 @@ CheckTrail:
 			break;
 			case SABER_SCRIPTED:
 			{
-				int cnum = cent->currentState.client_num;
+				int cnum = cent->currentState.clientNum;
 				if (cnum < MAX_CLIENTS)
 				{
 					clientInfo_t* ci = &cgs.clientinfo[cnum];
@@ -12821,7 +12821,7 @@ JustDoIt:
 			&& !(client->saber[saberNum].saberFlags2 & SFL2_NO_DLIGHT))
 		{
 			//hmm, but still add the dlight
-			CG_DoSaberLight(&client->saber[saberNum], cent->currentState.client_num, saberNum);
+			CG_DoSaberLight(&client->saber[saberNum], cent->currentState.clientNum, saberNum);
 		}
 		return;
 	}
@@ -12836,14 +12836,14 @@ JustDoIt:
 			CG_DoSaberUnstable(org, axis[0], saber_len, client->saber[saberNum].blade[blade_num].lengthMax,
 				client->saber[saberNum].blade[blade_num].radius, scolor, renderfx,
 				client->saber[saberNum].numBlades < 3 && !(client->saber[saberNum].saberFlags2 &
-					SFL2_NO_DLIGHT), cent->currentState.client_num, saberNum);
+					SFL2_NO_DLIGHT), cent->currentState.clientNum, saberNum);
 		}
 		else if (cent->currentState.powerups & 1 << PW_CLOAKED)
 		{
 			CG_DoCloakedSaber(org, axis[0], saber_len, client->saber[saberNum].blade[blade_num].lengthMax,
 				client->saber[saberNum].blade[blade_num].radius, scolor, renderfx,
 				client->saber[saberNum].numBlades < 3 && !(client->saber[saberNum].saberFlags2 &
-					SFL2_NO_DLIGHT), cent->currentState.client_num, saberNum);
+					SFL2_NO_DLIGHT), cent->currentState.clientNum, saberNum);
 		}
 		else
 		{
@@ -12851,7 +12851,7 @@ JustDoIt:
 				client->saber[saberNum].blade[blade_num].radius, scolor, renderfx,
 				client->saber[saberNum].numBlades < 3 && !(client->saber[saberNum].saberFlags2 &
 					SFL2_NO_DLIGHT),
-				cent->currentState.client_num, saberNum);
+				cent->currentState.clientNum, saberNum);
 		}
 	}
 	else
@@ -12868,7 +12868,7 @@ JustDoIt:
 					client->saber[saberNum].blade[blade_num].lengthMax,
 					client->saber[saberNum].blade[blade_num].radius, scolor, renderfx,
 					client->saber[saberNum].numBlades < 3 && !(client->saber[saberNum].saberFlags2 &
-						SFL2_NO_DLIGHT), cent->currentState.client_num, saberNum);
+						SFL2_NO_DLIGHT), cent->currentState.clientNum, saberNum);
 			}
 			else if (client->saber[saberNum].type == SABER_THIN || client->saber[saberNum].type == SABER_STAFF_THIN)
 			{
@@ -12876,7 +12876,7 @@ JustDoIt:
 					client->saber[saberNum].blade[blade_num].lengthMax,
 					client->saber[saberNum].blade[blade_num].radius, scolor, renderfx,
 					client->saber[saberNum].numBlades < 3 && !(client->saber[saberNum].saberFlags2 &
-						SFL2_NO_DLIGHT), cent->currentState.client_num, saberNum);
+						SFL2_NO_DLIGHT), cent->currentState.clientNum, saberNum);
 			}
 			else if (client->saber[saberNum].type == SABER_SFX || client->saber[saberNum].type == SABER_STAFF_SFX)
 			{
@@ -12884,7 +12884,7 @@ JustDoIt:
 					client->saber[saberNum].blade[blade_num].lengthMax,
 					client->saber[saberNum].blade[blade_num].radius, scolor, renderfx,
 					client->saber[saberNum].numBlades < 3 && !(client->saber[saberNum].saberFlags2 &
-						SFL2_NO_DLIGHT), cent->currentState.client_num, saberNum);
+						SFL2_NO_DLIGHT), cent->currentState.clientNum, saberNum);
 			}
 			else if (client->saber[saberNum].type == SABER_CUSTOMSFX)
 			{
@@ -12892,14 +12892,14 @@ JustDoIt:
 					client->saber[saberNum].blade[blade_num].lengthMax,
 					client->saber[saberNum].blade[blade_num].radius, scolor, renderfx,
 					client->saber[saberNum].numBlades < 3 && !(client->saber[saberNum].saberFlags2 &
-						SFL2_NO_DLIGHT), cent->currentState.client_num, saberNum);
+						SFL2_NO_DLIGHT), cent->currentState.clientNum, saberNum);
 			}
 			else if (cent->currentState.powerups & 1 << PW_CLOAKED)
 			{
 				CG_DoCloakedSaber(org, axis[0], saber_len, client->saber[saberNum].blade[blade_num].lengthMax,
 					client->saber[saberNum].blade[blade_num].radius, scolor, renderfx,
 					client->saber[saberNum].numBlades < 3 && !(client->saber[saberNum].saberFlags2 &
-						SFL2_NO_DLIGHT), cent->currentState.client_num, saberNum);
+						SFL2_NO_DLIGHT), cent->currentState.clientNum, saberNum);
 			}
 			else if (client->saber[saberNum].type == SABER_GRIE || client->saber[saberNum].type == SABER_GRIE4)
 			{
@@ -12907,7 +12907,7 @@ JustDoIt:
 					fx.mVerts[3].origin, client->saber[saberNum].blade[blade_num].lengthMax,
 					client->saber[saberNum].blade[blade_num].radius, scolor, renderfx,
 					client->saber[saberNum].numBlades < 3 && !(client->saber[saberNum].saberFlags2 &
-						SFL2_NO_DLIGHT), cent->currentState.client_num, saberNum);
+						SFL2_NO_DLIGHT), cent->currentState.clientNum, saberNum);
 			}
 			else
 			{
@@ -12915,7 +12915,7 @@ JustDoIt:
 					fx.mVerts[3].origin, client->saber[saberNum].blade[blade_num].lengthMax,
 					client->saber[saberNum].blade[blade_num].radius, scolor, renderfx,
 					client->saber[saberNum].numBlades < 3 && !(client->saber[saberNum].saberFlags2 &
-						SFL2_NO_DLIGHT), cent->currentState.client_num, saberNum);
+						SFL2_NO_DLIGHT), cent->currentState.clientNum, saberNum);
 			}
 			break;
 		case 2:
@@ -12928,7 +12928,7 @@ JustDoIt:
 					client->saber[saberNum].blade[blade_num].lengthMax,
 					client->saber[saberNum].blade[blade_num].radius, scolor, renderfx,
 					client->saber[saberNum].numBlades < 3 && !(client->saber[saberNum].saberFlags2 &
-						SFL2_NO_DLIGHT), cent->currentState.client_num, saberNum);
+						SFL2_NO_DLIGHT), cent->currentState.clientNum, saberNum);
 			}
 			else if (client->saber[saberNum].type == SABER_THIN || client->saber[saberNum].type == SABER_STAFF_THIN)
 			{
@@ -12936,7 +12936,7 @@ JustDoIt:
 					client->saber[saberNum].blade[blade_num].lengthMax,
 					client->saber[saberNum].blade[blade_num].radius, scolor, renderfx,
 					client->saber[saberNum].numBlades < 3 && !(client->saber[saberNum].saberFlags2 &
-						SFL2_NO_DLIGHT), cent->currentState.client_num, saberNum);
+						SFL2_NO_DLIGHT), cent->currentState.clientNum, saberNum);
 			}
 			else if (client->saber[saberNum].type == SABER_SFX || client->saber[saberNum].type == SABER_STAFF_SFX)
 			{
@@ -12944,7 +12944,7 @@ JustDoIt:
 					client->saber[saberNum].blade[blade_num].lengthMax,
 					client->saber[saberNum].blade[blade_num].radius, scolor, renderfx,
 					client->saber[saberNum].numBlades < 3 && !(client->saber[saberNum].saberFlags2 &
-						SFL2_NO_DLIGHT), cent->currentState.client_num, saberNum);
+						SFL2_NO_DLIGHT), cent->currentState.clientNum, saberNum);
 			}
 			else if (client->saber[saberNum].type == SABER_CUSTOMSFX)
 			{
@@ -12952,14 +12952,14 @@ JustDoIt:
 					client->saber[saberNum].blade[blade_num].lengthMax,
 					client->saber[saberNum].blade[blade_num].radius, scolor, renderfx,
 					client->saber[saberNum].numBlades < 3 && !(client->saber[saberNum].saberFlags2 &
-						SFL2_NO_DLIGHT), cent->currentState.client_num, saberNum);
+						SFL2_NO_DLIGHT), cent->currentState.clientNum, saberNum);
 			}
 			else if (cent->currentState.powerups & 1 << PW_CLOAKED)
 			{
 				CG_DoCloakedSaber(org, axis[0], saber_len, client->saber[saberNum].blade[blade_num].lengthMax,
 					client->saber[saberNum].blade[blade_num].radius, scolor, renderfx,
 					client->saber[saberNum].numBlades < 3 && !(client->saber[saberNum].saberFlags2 &
-						SFL2_NO_DLIGHT), cent->currentState.client_num, saberNum);
+						SFL2_NO_DLIGHT), cent->currentState.clientNum, saberNum);
 			}
 			else if (client->saber[saberNum].type == SABER_GRIE || client->saber[saberNum].type == SABER_GRIE4)
 			{
@@ -12967,7 +12967,7 @@ JustDoIt:
 					fx.mVerts[3].origin, client->saber[saberNum].blade[blade_num].lengthMax,
 					client->saber[saberNum].blade[blade_num].radius, scolor, renderfx,
 					client->saber[saberNum].numBlades < 3 && !(client->saber[saberNum].saberFlags2 &
-						SFL2_NO_DLIGHT), cent->currentState.client_num, saberNum);
+						SFL2_NO_DLIGHT), cent->currentState.clientNum, saberNum);
 			}
 			else
 			{
@@ -12975,7 +12975,7 @@ JustDoIt:
 					client->saber[saberNum].blade[blade_num].lengthMax,
 					client->saber[saberNum].blade[blade_num].radius, scolor, renderfx,
 					client->saber[saberNum].numBlades < 3 && !(client->saber[saberNum].saberFlags2 &
-						SFL2_NO_DLIGHT), cent->currentState.client_num, saberNum);
+						SFL2_NO_DLIGHT), cent->currentState.clientNum, saberNum);
 			}
 			break;
 		case 3:
@@ -12988,7 +12988,7 @@ JustDoIt:
 					client->saber[saberNum].blade[blade_num].lengthMax,
 					client->saber[saberNum].blade[blade_num].radius, scolor, renderfx,
 					client->saber[saberNum].numBlades < 3 && !(client->saber[saberNum].saberFlags2 &
-						SFL2_NO_DLIGHT), cent->currentState.client_num, saberNum);
+						SFL2_NO_DLIGHT), cent->currentState.clientNum, saberNum);
 			}
 			else if (client->saber[saberNum].type == SABER_THIN || client->saber[saberNum].type == SABER_STAFF_THIN)
 			{
@@ -12996,7 +12996,7 @@ JustDoIt:
 					client->saber[saberNum].blade[blade_num].lengthMax,
 					client->saber[saberNum].blade[blade_num].radius, scolor, renderfx,
 					client->saber[saberNum].numBlades < 3 && !(client->saber[saberNum].saberFlags2 &
-						SFL2_NO_DLIGHT), cent->currentState.client_num, saberNum);
+						SFL2_NO_DLIGHT), cent->currentState.clientNum, saberNum);
 			}
 			else if (client->saber[saberNum].type == SABER_SFX || client->saber[saberNum].type == SABER_STAFF_SFX)
 			{
@@ -13004,7 +13004,7 @@ JustDoIt:
 					client->saber[saberNum].blade[blade_num].lengthMax,
 					client->saber[saberNum].blade[blade_num].radius, scolor, renderfx,
 					client->saber[saberNum].numBlades < 3 && !(client->saber[saberNum].saberFlags2 &
-						SFL2_NO_DLIGHT), cent->currentState.client_num, saberNum);
+						SFL2_NO_DLIGHT), cent->currentState.clientNum, saberNum);
 			}
 			else if (client->saber[saberNum].type == SABER_CUSTOMSFX)
 			{
@@ -13012,14 +13012,14 @@ JustDoIt:
 					client->saber[saberNum].blade[blade_num].lengthMax,
 					client->saber[saberNum].blade[blade_num].radius, scolor, renderfx,
 					client->saber[saberNum].numBlades < 3 && !(client->saber[saberNum].saberFlags2 &
-						SFL2_NO_DLIGHT), cent->currentState.client_num, saberNum);
+						SFL2_NO_DLIGHT), cent->currentState.clientNum, saberNum);
 			}
 			else if (cent->currentState.powerups & 1 << PW_CLOAKED)
 			{
 				CG_DoCloakedSaber(org, axis[0], saber_len, client->saber[saberNum].blade[blade_num].lengthMax,
 					client->saber[saberNum].blade[blade_num].radius, scolor, renderfx,
 					client->saber[saberNum].numBlades < 3 && !(client->saber[saberNum].saberFlags2 &
-						SFL2_NO_DLIGHT), cent->currentState.client_num, saberNum);
+						SFL2_NO_DLIGHT), cent->currentState.clientNum, saberNum);
 			}
 			else if (client->saber[saberNum].type == SABER_GRIE || client->saber[saberNum].type == SABER_GRIE4)
 			{
@@ -13027,7 +13027,7 @@ JustDoIt:
 					fx.mVerts[3].origin, client->saber[saberNum].blade[blade_num].lengthMax,
 					client->saber[saberNum].blade[blade_num].radius, scolor, renderfx,
 					client->saber[saberNum].numBlades < 3 && !(client->saber[saberNum].saberFlags2 &
-						SFL2_NO_DLIGHT), cent->currentState.client_num, saberNum);
+						SFL2_NO_DLIGHT), cent->currentState.clientNum, saberNum);
 			}
 			else
 			{
@@ -13035,7 +13035,7 @@ JustDoIt:
 					client->saber[saberNum].blade[blade_num].lengthMax,
 					client->saber[saberNum].blade[blade_num].radius, scolor, renderfx,
 					client->saber[saberNum].numBlades < 3 && !(client->saber[saberNum].saberFlags2 &
-						SFL2_NO_DLIGHT), cent->currentState.client_num, saberNum);
+						SFL2_NO_DLIGHT), cent->currentState.clientNum, saberNum);
 			}
 			break;
 		case 4:
@@ -13048,7 +13048,7 @@ JustDoIt:
 					client->saber[saberNum].blade[blade_num].lengthMax,
 					client->saber[saberNum].blade[blade_num].radius, scolor, renderfx,
 					client->saber[saberNum].numBlades < 3 && !(client->saber[saberNum].saberFlags2 &
-						SFL2_NO_DLIGHT), cent->currentState.client_num, saberNum);
+						SFL2_NO_DLIGHT), cent->currentState.clientNum, saberNum);
 			}
 			else if (client->saber[saberNum].type == SABER_THIN || client->saber[saberNum].type == SABER_STAFF_THIN)
 			{
@@ -13056,7 +13056,7 @@ JustDoIt:
 					client->saber[saberNum].blade[blade_num].lengthMax,
 					client->saber[saberNum].blade[blade_num].radius, scolor, renderfx,
 					client->saber[saberNum].numBlades < 3 && !(client->saber[saberNum].saberFlags2 &
-						SFL2_NO_DLIGHT), cent->currentState.client_num, saberNum);
+						SFL2_NO_DLIGHT), cent->currentState.clientNum, saberNum);
 			}
 			else if (client->saber[saberNum].type == SABER_SFX || client->saber[saberNum].type == SABER_STAFF_SFX)
 			{
@@ -13064,7 +13064,7 @@ JustDoIt:
 					client->saber[saberNum].blade[blade_num].lengthMax,
 					client->saber[saberNum].blade[blade_num].radius, scolor, renderfx,
 					client->saber[saberNum].numBlades < 3 && !(client->saber[saberNum].saberFlags2 &
-						SFL2_NO_DLIGHT), cent->currentState.client_num, saberNum);
+						SFL2_NO_DLIGHT), cent->currentState.clientNum, saberNum);
 			}
 			else if (client->saber[saberNum].type == SABER_CUSTOMSFX)
 			{
@@ -13072,14 +13072,14 @@ JustDoIt:
 					client->saber[saberNum].blade[blade_num].lengthMax,
 					client->saber[saberNum].blade[blade_num].radius, scolor, renderfx,
 					client->saber[saberNum].numBlades < 3 && !(client->saber[saberNum].saberFlags2 &
-						SFL2_NO_DLIGHT), cent->currentState.client_num, saberNum);
+						SFL2_NO_DLIGHT), cent->currentState.clientNum, saberNum);
 			}
 			else if (cent->currentState.powerups & 1 << PW_CLOAKED)
 			{
 				CG_DoCloakedSaber(org, axis[0], saber_len, client->saber[saberNum].blade[blade_num].lengthMax,
 					client->saber[saberNum].blade[blade_num].radius, scolor, renderfx,
 					client->saber[saberNum].numBlades < 3 && !(client->saber[saberNum].saberFlags2 &
-						SFL2_NO_DLIGHT), cent->currentState.client_num, saberNum);
+						SFL2_NO_DLIGHT), cent->currentState.clientNum, saberNum);
 			}
 			else if (client->saber[saberNum].type == SABER_GRIE || client->saber[saberNum].type == SABER_GRIE4)
 			{
@@ -13087,7 +13087,7 @@ JustDoIt:
 					fx.mVerts[3].origin, client->saber[saberNum].blade[blade_num].lengthMax,
 					client->saber[saberNum].blade[blade_num].radius, scolor, renderfx,
 					client->saber[saberNum].numBlades < 3 && !(client->saber[saberNum].saberFlags2 &
-						SFL2_NO_DLIGHT), cent->currentState.client_num, saberNum);
+						SFL2_NO_DLIGHT), cent->currentState.clientNum, saberNum);
 			}
 			else
 			{
@@ -13095,7 +13095,7 @@ JustDoIt:
 					client->saber[saberNum].blade[blade_num].lengthMax,
 					client->saber[saberNum].blade[blade_num].radius, scolor, renderfx,
 					client->saber[saberNum].numBlades < 3 && !(client->saber[saberNum].saberFlags2 &
-						SFL2_NO_DLIGHT), cent->currentState.client_num, saberNum);
+						SFL2_NO_DLIGHT), cent->currentState.clientNum, saberNum);
 			}
 			break;
 		case 5:
@@ -13108,7 +13108,7 @@ JustDoIt:
 					client->saber[saberNum].blade[blade_num].lengthMax,
 					client->saber[saberNum].blade[blade_num].radius, scolor, renderfx,
 					client->saber[saberNum].numBlades < 3 && !(client->saber[saberNum].saberFlags2 &
-						SFL2_NO_DLIGHT), cent->currentState.client_num, saberNum);
+						SFL2_NO_DLIGHT), cent->currentState.clientNum, saberNum);
 			}
 			else if (client->saber[saberNum].type == SABER_THIN || client->saber[saberNum].type == SABER_STAFF_THIN)
 			{
@@ -13116,7 +13116,7 @@ JustDoIt:
 					client->saber[saberNum].blade[blade_num].lengthMax,
 					client->saber[saberNum].blade[blade_num].radius, scolor, renderfx,
 					client->saber[saberNum].numBlades < 3 && !(client->saber[saberNum].saberFlags2 &
-						SFL2_NO_DLIGHT), cent->currentState.client_num, saberNum);
+						SFL2_NO_DLIGHT), cent->currentState.clientNum, saberNum);
 			}
 			else if (client->saber[saberNum].type == SABER_SFX || client->saber[saberNum].type == SABER_STAFF_SFX)
 			{
@@ -13124,7 +13124,7 @@ JustDoIt:
 					client->saber[saberNum].blade[blade_num].lengthMax,
 					client->saber[saberNum].blade[blade_num].radius, scolor, renderfx,
 					client->saber[saberNum].numBlades < 3 && !(client->saber[saberNum].saberFlags2 &
-						SFL2_NO_DLIGHT), cent->currentState.client_num, saberNum);
+						SFL2_NO_DLIGHT), cent->currentState.clientNum, saberNum);
 			}
 			else if (client->saber[saberNum].type == SABER_CUSTOMSFX)
 			{
@@ -13132,14 +13132,14 @@ JustDoIt:
 					client->saber[saberNum].blade[blade_num].lengthMax,
 					client->saber[saberNum].blade[blade_num].radius, scolor, renderfx,
 					client->saber[saberNum].numBlades < 3 && !(client->saber[saberNum].saberFlags2 &
-						SFL2_NO_DLIGHT), cent->currentState.client_num, saberNum);
+						SFL2_NO_DLIGHT), cent->currentState.clientNum, saberNum);
 			}
 			else if (cent->currentState.powerups & 1 << PW_CLOAKED)
 			{
 				CG_DoCloakedSaber(org, axis[0], saber_len, client->saber[saberNum].blade[blade_num].lengthMax,
 					client->saber[saberNum].blade[blade_num].radius, scolor, renderfx,
 					client->saber[saberNum].numBlades < 3 && !(client->saber[saberNum].saberFlags2 &
-						SFL2_NO_DLIGHT), cent->currentState.client_num, saberNum);
+						SFL2_NO_DLIGHT), cent->currentState.clientNum, saberNum);
 			}
 			else if (client->saber[saberNum].type == SABER_GRIE || client->saber[saberNum].type == SABER_GRIE4)
 			{
@@ -13147,7 +13147,7 @@ JustDoIt:
 					fx.mVerts[3].origin, client->saber[saberNum].blade[blade_num].lengthMax,
 					client->saber[saberNum].blade[blade_num].radius, scolor, renderfx,
 					client->saber[saberNum].numBlades < 3 && !(client->saber[saberNum].saberFlags2 &
-						SFL2_NO_DLIGHT), cent->currentState.client_num, saberNum);
+						SFL2_NO_DLIGHT), cent->currentState.clientNum, saberNum);
 			}
 			else
 			{
@@ -13155,7 +13155,7 @@ JustDoIt:
 					client->saber[saberNum].blade[blade_num].lengthMax,
 					client->saber[saberNum].blade[blade_num].radius, scolor, renderfx,
 					client->saber[saberNum].numBlades < 3 && !(client->saber[saberNum].saberFlags2 &
-						SFL2_NO_DLIGHT), cent->currentState.client_num, saberNum);
+						SFL2_NO_DLIGHT), cent->currentState.clientNum, saberNum);
 			}
 			break;
 		case 6:
@@ -13168,7 +13168,7 @@ JustDoIt:
 					client->saber[saberNum].blade[blade_num].lengthMax,
 					client->saber[saberNum].blade[blade_num].radius, scolor, renderfx,
 					client->saber[saberNum].numBlades < 3 && !(client->saber[saberNum].saberFlags2 &
-						SFL2_NO_DLIGHT), cent->currentState.client_num, saberNum);
+						SFL2_NO_DLIGHT), cent->currentState.clientNum, saberNum);
 			}
 			else if (client->saber[saberNum].type == SABER_THIN || client->saber[saberNum].type == SABER_STAFF_THIN)
 			{
@@ -13176,7 +13176,7 @@ JustDoIt:
 					client->saber[saberNum].blade[blade_num].lengthMax,
 					client->saber[saberNum].blade[blade_num].radius, scolor, renderfx,
 					client->saber[saberNum].numBlades < 3 && !(client->saber[saberNum].saberFlags2 &
-						SFL2_NO_DLIGHT), cent->currentState.client_num, saberNum);
+						SFL2_NO_DLIGHT), cent->currentState.clientNum, saberNum);
 			}
 			else if (client->saber[saberNum].type == SABER_SFX || client->saber[saberNum].type == SABER_STAFF_SFX)
 			{
@@ -13184,7 +13184,7 @@ JustDoIt:
 					client->saber[saberNum].blade[blade_num].lengthMax,
 					client->saber[saberNum].blade[blade_num].radius, scolor, renderfx,
 					client->saber[saberNum].numBlades < 3 && !(client->saber[saberNum].saberFlags2 &
-						SFL2_NO_DLIGHT), cent->currentState.client_num, saberNum);
+						SFL2_NO_DLIGHT), cent->currentState.clientNum, saberNum);
 			}
 			else if (client->saber[saberNum].type == SABER_CUSTOMSFX)
 			{
@@ -13192,14 +13192,14 @@ JustDoIt:
 					client->saber[saberNum].blade[blade_num].lengthMax,
 					client->saber[saberNum].blade[blade_num].radius, scolor, renderfx,
 					client->saber[saberNum].numBlades < 3 && !(client->saber[saberNum].saberFlags2 &
-						SFL2_NO_DLIGHT), cent->currentState.client_num, saberNum);
+						SFL2_NO_DLIGHT), cent->currentState.clientNum, saberNum);
 			}
 			else if (cent->currentState.powerups & 1 << PW_CLOAKED)
 			{
 				CG_DoCloakedSaber(org, axis[0], saber_len, client->saber[saberNum].blade[blade_num].lengthMax,
 					client->saber[saberNum].blade[blade_num].radius, scolor, renderfx,
 					client->saber[saberNum].numBlades < 3 && !(client->saber[saberNum].saberFlags2 &
-						SFL2_NO_DLIGHT), cent->currentState.client_num, saberNum);
+						SFL2_NO_DLIGHT), cent->currentState.clientNum, saberNum);
 			}
 			else if (client->saber[saberNum].type == SABER_GRIE || client->saber[saberNum].type == SABER_GRIE4)
 			{
@@ -13207,7 +13207,7 @@ JustDoIt:
 					fx.mVerts[3].origin, client->saber[saberNum].blade[blade_num].lengthMax,
 					client->saber[saberNum].blade[blade_num].radius, scolor, renderfx,
 					client->saber[saberNum].numBlades < 3 && !(client->saber[saberNum].saberFlags2 &
-						SFL2_NO_DLIGHT), cent->currentState.client_num, saberNum);
+						SFL2_NO_DLIGHT), cent->currentState.clientNum, saberNum);
 			}
 			else
 			{
@@ -13215,7 +13215,7 @@ JustDoIt:
 					client->saber[saberNum].blade[blade_num].lengthMax,
 					client->saber[saberNum].blade[blade_num].radius, scolor, renderfx,
 					client->saber[saberNum].numBlades < 3 && !(client->saber[saberNum].saberFlags2 &
-						SFL2_NO_DLIGHT), cent->currentState.client_num, saberNum);
+						SFL2_NO_DLIGHT), cent->currentState.clientNum, saberNum);
 			}
 			break;
 		case 7:
@@ -13228,7 +13228,7 @@ JustDoIt:
 					client->saber[saberNum].blade[blade_num].lengthMax,
 					client->saber[saberNum].blade[blade_num].radius, scolor, renderfx,
 					client->saber[saberNum].numBlades < 3 && !(client->saber[saberNum].saberFlags2 &
-						SFL2_NO_DLIGHT), cent->currentState.client_num, saberNum);
+						SFL2_NO_DLIGHT), cent->currentState.clientNum, saberNum);
 			}
 			else if (client->saber[saberNum].type == SABER_THIN || client->saber[saberNum].type == SABER_STAFF_THIN)
 			{
@@ -13236,7 +13236,7 @@ JustDoIt:
 					client->saber[saberNum].blade[blade_num].lengthMax,
 					client->saber[saberNum].blade[blade_num].radius, scolor, renderfx,
 					client->saber[saberNum].numBlades < 3 && !(client->saber[saberNum].saberFlags2 &
-						SFL2_NO_DLIGHT), cent->currentState.client_num, saberNum);
+						SFL2_NO_DLIGHT), cent->currentState.clientNum, saberNum);
 			}
 			else if (client->saber[saberNum].type == SABER_SFX || client->saber[saberNum].type == SABER_STAFF_SFX)
 			{
@@ -13244,7 +13244,7 @@ JustDoIt:
 					client->saber[saberNum].blade[blade_num].lengthMax,
 					client->saber[saberNum].blade[blade_num].radius, scolor, renderfx,
 					client->saber[saberNum].numBlades < 3 && !(client->saber[saberNum].saberFlags2 &
-						SFL2_NO_DLIGHT), cent->currentState.client_num, saberNum);
+						SFL2_NO_DLIGHT), cent->currentState.clientNum, saberNum);
 			}
 			else if (client->saber[saberNum].type == SABER_CUSTOMSFX)
 			{
@@ -13252,14 +13252,14 @@ JustDoIt:
 					client->saber[saberNum].blade[blade_num].lengthMax,
 					client->saber[saberNum].blade[blade_num].radius, scolor, renderfx,
 					client->saber[saberNum].numBlades < 3 && !(client->saber[saberNum].saberFlags2 &
-						SFL2_NO_DLIGHT), cent->currentState.client_num, saberNum);
+						SFL2_NO_DLIGHT), cent->currentState.clientNum, saberNum);
 			}
 			else if (cent->currentState.powerups & 1 << PW_CLOAKED)
 			{
 				CG_DoCloakedSaber(org, axis[0], saber_len, client->saber[saberNum].blade[blade_num].lengthMax,
 					client->saber[saberNum].blade[blade_num].radius, scolor, renderfx,
 					client->saber[saberNum].numBlades < 3 && !(client->saber[saberNum].saberFlags2 &
-						SFL2_NO_DLIGHT), cent->currentState.client_num, saberNum);
+						SFL2_NO_DLIGHT), cent->currentState.clientNum, saberNum);
 			}
 			else if (client->saber[saberNum].type == SABER_GRIE || client->saber[saberNum].type == SABER_GRIE4)
 			{
@@ -13267,7 +13267,7 @@ JustDoIt:
 					fx.mVerts[3].origin, client->saber[saberNum].blade[blade_num].lengthMax,
 					client->saber[saberNum].blade[blade_num].radius, scolor, renderfx,
 					client->saber[saberNum].numBlades < 3 && !(client->saber[saberNum].saberFlags2 &
-						SFL2_NO_DLIGHT), cent->currentState.client_num, saberNum);
+						SFL2_NO_DLIGHT), cent->currentState.clientNum, saberNum);
 			}
 			else
 			{
@@ -13275,7 +13275,7 @@ JustDoIt:
 					client->saber[saberNum].blade[blade_num].lengthMax,
 					client->saber[saberNum].blade[blade_num].radius, scolor, renderfx,
 					client->saber[saberNum].numBlades < 3 && !(client->saber[saberNum].saberFlags2 &
-						SFL2_NO_DLIGHT), cent->currentState.client_num, saberNum);
+						SFL2_NO_DLIGHT), cent->currentState.clientNum, saberNum);
 			}
 			break;
 		case 8:
@@ -13288,7 +13288,7 @@ JustDoIt:
 					client->saber[saberNum].blade[blade_num].lengthMax,
 					client->saber[saberNum].blade[blade_num].radius, scolor, renderfx,
 					client->saber[saberNum].numBlades < 3 && !(client->saber[saberNum].saberFlags2 &
-						SFL2_NO_DLIGHT), cent->currentState.client_num, saberNum);
+						SFL2_NO_DLIGHT), cent->currentState.clientNum, saberNum);
 			}
 			else if (client->saber[saberNum].type == SABER_THIN || client->saber[saberNum].type == SABER_STAFF_THIN)
 			{
@@ -13296,7 +13296,7 @@ JustDoIt:
 					client->saber[saberNum].blade[blade_num].lengthMax,
 					client->saber[saberNum].blade[blade_num].radius, scolor, renderfx,
 					client->saber[saberNum].numBlades < 3 && !(client->saber[saberNum].saberFlags2 &
-						SFL2_NO_DLIGHT), cent->currentState.client_num, saberNum);
+						SFL2_NO_DLIGHT), cent->currentState.clientNum, saberNum);
 			}
 			else if (client->saber[saberNum].type == SABER_SFX || client->saber[saberNum].type == SABER_STAFF_SFX)
 			{
@@ -13304,7 +13304,7 @@ JustDoIt:
 					client->saber[saberNum].blade[blade_num].lengthMax,
 					client->saber[saberNum].blade[blade_num].radius, scolor, renderfx,
 					client->saber[saberNum].numBlades < 3 && !(client->saber[saberNum].saberFlags2 &
-						SFL2_NO_DLIGHT), cent->currentState.client_num, saberNum);
+						SFL2_NO_DLIGHT), cent->currentState.clientNum, saberNum);
 			}
 			else if (client->saber[saberNum].type == SABER_CUSTOMSFX)
 			{
@@ -13312,14 +13312,14 @@ JustDoIt:
 					client->saber[saberNum].blade[blade_num].lengthMax,
 					client->saber[saberNum].blade[blade_num].radius, scolor, renderfx,
 					client->saber[saberNum].numBlades < 3 && !(client->saber[saberNum].saberFlags2 &
-						SFL2_NO_DLIGHT), cent->currentState.client_num, saberNum);
+						SFL2_NO_DLIGHT), cent->currentState.clientNum, saberNum);
 			}
 			else if (cent->currentState.powerups & 1 << PW_CLOAKED)
 			{
 				CG_DoCloakedSaber(org, axis[0], saber_len, client->saber[saberNum].blade[blade_num].lengthMax,
 					client->saber[saberNum].blade[blade_num].radius, scolor, renderfx,
 					client->saber[saberNum].numBlades < 3 && !(client->saber[saberNum].saberFlags2 &
-						SFL2_NO_DLIGHT), cent->currentState.client_num, saberNum);
+						SFL2_NO_DLIGHT), cent->currentState.clientNum, saberNum);
 			}
 			else if (client->saber[saberNum].type == SABER_GRIE || client->saber[saberNum].type == SABER_GRIE4)
 			{
@@ -13327,7 +13327,7 @@ JustDoIt:
 					fx.mVerts[3].origin, client->saber[saberNum].blade[blade_num].lengthMax,
 					client->saber[saberNum].blade[blade_num].radius, scolor, renderfx,
 					client->saber[saberNum].numBlades < 3 && !(client->saber[saberNum].saberFlags2 &
-						SFL2_NO_DLIGHT), cent->currentState.client_num, saberNum);
+						SFL2_NO_DLIGHT), cent->currentState.clientNum, saberNum);
 			}
 			else
 			{
@@ -13335,7 +13335,7 @@ JustDoIt:
 					client->saber[saberNum].blade[blade_num].lengthMax,
 					client->saber[saberNum].blade[blade_num].radius, scolor, renderfx,
 					client->saber[saberNum].numBlades < 3 && !(client->saber[saberNum].saberFlags2 &
-						SFL2_NO_DLIGHT), cent->currentState.client_num, saberNum);
+						SFL2_NO_DLIGHT), cent->currentState.clientNum, saberNum);
 			}
 			break;
 		default:;
@@ -13485,7 +13485,7 @@ void CG_DrawPlayerSphere(const centity_t* cent, vec3_t origin, const float scale
 
 	trap->R_AddRefEntityToScene(&ent);
 
-	if (!cg.renderingThirdPerson && cent->currentState.number == cg.predicted_player_state.client_num)
+	if (!cg.renderingThirdPerson && cent->currentState.number == cg.predicted_player_state.clientNum)
 	{
 		//don't do the rest then
 		return;
@@ -14404,14 +14404,14 @@ qboolean CG_VehicleShouldDrawShields(const centity_t* veh_cent)
 /*
 extern	vmCvar_t		cg_showVehBounds;
 extern void BG_VehicleAdjustBBoxForOrientation( Vehicle_t *veh, vec3_t origin, vec3_t mins, vec3_t maxs,
-										int client_num, int tracemask,
+										int clientNum, int tracemask,
 										void (*localTrace)(trace_t *results, const vec3_t start, const vec3_t mins, const vec3_t maxs, const vec3_t end, int pass_entity_num, int content_mask)); // bg_pmove.c
 */
 qboolean CG_VehicleAttachDroidUnit(centity_t* droid_cent)
 {
 	if (droid_cent
 		&& droid_cent->currentState.owner
-		&& droid_cent->currentState.client_num >= MAX_CLIENTS)
+		&& droid_cent->currentState.clientNum >= MAX_CLIENTS)
 	{
 		//the only NPCs that can ride a vehicle are droids...???
 		centity_t* veh_cent = &cg_entities[droid_cent->currentState.owner];
@@ -14537,11 +14537,11 @@ void CG_G2Animated(centity_t* cent)
 	/*
 	if ( cg_showVehBounds.integer )
 	{//show vehicle bboxes
-		if ( cent->currentState.client_num >= MAX_CLIENTS
+		if ( cent->currentState.clientNum >= MAX_CLIENTS
 			&& cent->currentState.NPC_class == CLASS_VEHICLE
 			&& cent->m_pVehicle
 			&& cent->m_pVehicle->m_pVehicleInfo
-			&& cent->currentState.client_num != cg.predictedVehicleState.client_num )
+			&& cent->currentState.clientNum != cg.predictedVehicleState.clientNum )
 		{//not the predicted vehicle
 			vec3_t NPCDEBUG_RED = {1.0, 0.0, 0.0};
 			vec3_t absmin, absmax;
@@ -15034,7 +15034,7 @@ static QINLINE void CG_VehicleEffects(centity_t* cent)
 
 	Vehicle_t* p_veh_npc = cent->m_pVehicle;
 
-	if (cent->currentState.client_num == cg.predicted_player_state.m_iVehicleNum //my vehicle
+	if (cent->currentState.clientNum == cg.predicted_player_state.m_iVehicleNum //my vehicle
 		&& cent->currentState.eFlags2 & EF2_HYPERSPACE) //hyperspacing
 	{
 		//in hyperspace!
@@ -15053,7 +15053,7 @@ static QINLINE void CG_VehicleEffects(centity_t* cent)
 	}
 
 	//FLYBY sound
-	if (cent->currentState.client_num != cg.predicted_player_state.m_iVehicleNum
+	if (cent->currentState.clientNum != cg.predicted_player_state.m_iVehicleNum
 		&& (p_veh_npc->m_pVehicleInfo->soundFlyBy || p_veh_npc->m_pVehicleInfo->soundFlyBy2))
 	{
 		//not my vehicle
@@ -15070,7 +15070,7 @@ static QINLINE void CG_VehicleEffects(centity_t* cent)
 				VectorScale(my_fwd, cg.predicted_player_state.speed, my_fwd);
 				AngleVectors(cent->lerpAngles, their_fwd, NULL, NULL);
 				VectorScale(their_fwd, cent->currentState.speed, their_fwd);
-				if (lastFlyBySound[cent->currentState.client_num] + FLYBYSOUNDTIME < cg.time)
+				if (lastFlyBySound[cent->currentState.clientNum] + FLYBYSOUNDTIME < cg.time)
 				{
 					//okay to do a flyby sound on this vehicle
 					if (DotProduct(my_fwd, their_fwd) < 500)
@@ -15090,8 +15090,8 @@ static QINLINE void CG_VehicleEffects(centity_t* cent)
 						{
 							fly_by_sound = p_veh_npc->m_pVehicleInfo->soundFlyBy2;
 						}
-						trap->S_StartSound(NULL, cent->currentState.client_num, CHAN_LESS_ATTEN, fly_by_sound);
-						lastFlyBySound[cent->currentState.client_num] = cg.time;
+						trap->S_StartSound(NULL, cent->currentState.clientNum, CHAN_LESS_ATTEN, fly_by_sound);
+						lastFlyBySound[cent->currentState.clientNum] = cg.time;
 					}
 				}
 			}
@@ -15103,7 +15103,7 @@ static QINLINE void CG_VehicleEffects(centity_t* cent)
 		&& cent->m_pVehicle->m_pVehicleInfo->soundEngineStart)
 	{
 		//engines rev up for the first time
-		trap->S_StartSound(NULL, cent->currentState.client_num, CHAN_LESS_ATTEN,
+		trap->S_StartSound(NULL, cent->currentState.clientNum, CHAN_LESS_ATTEN,
 			cent->m_pVehicle->m_pVehicleInfo->soundEngineStart);
 	}
 	// Animals don't exude any effects...
@@ -15382,7 +15382,7 @@ void CG_CheckThirdPersonAlpha(const centity_t* cent, refEntity_t* legs)
 	if (cent->m_pVehicle)
 	{
 		//a vehicle
-		if (cg.predicted_player_state.m_iVehicleNum != cent->currentState.client_num //not mine
+		if (cg.predicted_player_state.m_iVehicleNum != cent->currentState.clientNum //not mine
 			&& cent->m_pVehicle->m_pVehicleInfo
 			&& cent->m_pVehicle->m_pVehicleInfo->cameraOverride
 			&& cent->m_pVehicle->m_pVehicleInfo->cameraAlpha) //it has alpha
@@ -15402,7 +15402,7 @@ void CG_CheckThirdPersonAlpha(const centity_t* cent, refEntity_t* legs)
 	if (cg.predicted_player_state.m_iVehicleNum)
 	{
 		//in a vehicle
-		if (cg.predicted_player_state.m_iVehicleNum == cent->currentState.client_num)
+		if (cg.predicted_player_state.m_iVehicleNum == cent->currentState.clientNum)
 		{
 			//this is my vehicle
 			if (cent->m_pVehicle
@@ -15417,8 +15417,8 @@ void CG_CheckThirdPersonAlpha(const centity_t* cent, refEntity_t* legs)
 				VectorNormalize(dir2_crosshair);
 				VectorMA(cameraCurLoc, cent->m_pVehicle->m_pVehicleInfo->cameraRange * 2.0f, dir2_crosshair, end);
 				CG_G2Trace(&trace, cameraCurLoc, vec3_origin, vec3_origin, end, ENTITYNUM_NONE, CONTENTS_BODY);
-				if (trace.entityNum == cent->currentState.client_num
-					|| trace.entityNum == cg.predicted_player_state.client_num)
+				if (trace.entityNum == cent->currentState.clientNum
+					|| trace.entityNum == cg.predicted_player_state.clientNum)
 				{
 					//hit me or the vehicle I'm in
 					cg_vehThirdPersonAlpha -= 0.1f * cg.frametime / 50.0f;
@@ -15447,7 +15447,7 @@ void CG_CheckThirdPersonAlpha(const centity_t* cent, refEntity_t* legs)
 			}
 		}
 	}
-	else if (cg.predicted_player_state.client_num == cent->currentState.client_num)
+	else if (cg.predicted_player_state.clientNum == cent->currentState.clientNum)
 	{
 		//it's me
 		//reset this
@@ -15475,7 +15475,7 @@ Based On:  G_GetAnimPoint
 float GetSelfLegAnimPoint()
 {
 	return BG_GetLegsAnimPoint(&cg.predicted_player_state,
-		cg_entities[cg.predicted_player_state.client_num].localAnimIndex);
+		cg_entities[cg.predicted_player_state.clientNum].localAnimIndex);
 }
 
 /*
@@ -15489,7 +15489,7 @@ Based On:  G_GetAnimPoint
 float GetSelfTorsoAnimPoint()
 {
 	return bg_get_torso_anim_point(&cg.predicted_player_state,
-		cg_entities[cg.predicted_player_state.client_num].localAnimIndex);
+		cg_entities[cg.predicted_player_state.clientNum].localAnimIndex);
 }
 
 /*
@@ -15970,7 +15970,7 @@ void CG_HolsteredWeaponRender(centity_t* cent, const clientInfo_t* ci, const int
 	qboolean second_weap = qfalse;
 	int boneIndex;
 
-	if (cent->currentState.number == cg.snap->ps.client_num &&
+	if (cent->currentState.number == cg.snap->ps.clientNum &&
 		!cg.renderingThirdPerson && !cg_trueguns.integer && cg.snap->ps.weapon != WP_SABER)
 	{
 		//don't render when in first person and not in True View.
@@ -16134,7 +16134,7 @@ void CG_VisualWeaponsUpdate(centity_t* cent, clientInfo_t* ci)
 	qboolean back_in_use = cent->currentState.eFlags & EF_JETPACK ? qtrue : qfalse;
 	int weap_inv;
 
-	if (cg.snap && cg.snap->ps.client_num == cent->currentState.number)
+	if (cg.snap && cg.snap->ps.clientNum == cent->currentState.number)
 	{
 		//this cent is the client, use playerstate data
 		if (cg_holsteredweapons.integer < 1)
@@ -16157,7 +16157,7 @@ void CG_VisualWeaponsUpdate(centity_t* cent, clientInfo_t* ci)
 			cent->currentState.trickedentindex2,
 			cent->currentState.trickedentindex3,
 			cent->currentState.trickedentindex4,
-			cg.predicted_player_state.client_num))
+			cg.predicted_player_state.clientNum))
 		{
 			//this player has mind tricked the client, don't render weapons on this dude.
 			return;
@@ -16993,7 +16993,7 @@ void CG_Player(centity_t* cent)
 	refEntity_t torso;
 	int renderfx;
 	qboolean shadow = qfalse;
-	float shadow_plane = 0;
+	float shadowPlane = 0;
 	vec3_t root_angles;
 	float angle;
 	vec3_t angles, dir, elevated;
@@ -17105,7 +17105,7 @@ void CG_Player(centity_t* cent)
 			cent->ghoul2 &&
 			veh->ghoul2)
 		{
-			if (veh->currentState.owner != cent->currentState.client_num)
+			if (veh->currentState.owner != cent->currentState.clientNum)
 			{
 				//FIXME: what about visible passengers?
 				if (CG_VehicleAttachDroidUnit(cent))
@@ -17116,7 +17116,7 @@ void CG_Player(centity_t* cent)
 			// fix for screen blinking when spectating person on vehicle and then
 			// switching to someone else, often happens on siege
 			else if (veh->currentState.owner != ENTITYNUM_NONE &&
-				cent->playerState->client_num != cg.snap->ps.client_num)
+				cent->playerState->clientNum != cg.snap->ps.clientNum)
 			{
 				//has a pilot...???
 				vec3_t old_ps_org;
@@ -17143,18 +17143,18 @@ void CG_Player(centity_t* cent)
 		}
 	}
 
-	// the client number is stored in client_num.  It can't be derived
+	// the client number is stored in clientNum.  It can't be derived
 	// from the entity number, because a single client may have
 	// multiple corpses on the level using the same clientinfo
 	if (cent->currentState.eType != ET_NPC)
 	{
-		int client_num;
-		client_num = cent->currentState.client_num;
-		if (client_num < 0 || client_num >= MAX_CLIENTS)
+		int clientNum;
+		clientNum = cent->currentState.clientNum;
+		if (clientNum < 0 || clientNum >= MAX_CLIENTS)
 		{
-			trap->Error(ERR_DROP, "Bad client_num on player entity");
+			trap->Error(ERR_DROP, "Bad clientNum on player entity");
 		}
-		ci = &cgs.clientinfo[client_num];
+		ci = &cgs.clientinfo[clientNum];
 	}
 	else
 	{
@@ -17222,7 +17222,7 @@ void CG_Player(centity_t* cent)
 
 	// if in a duel, don't render players outside of duel
 	if (cg.snap->ps.duelInProgress &&
-		cent->currentState.client_num != cg.snap->ps.client_num && cent->currentState.client_num != cg.snap->ps.
+		cent->currentState.clientNum != cg.snap->ps.clientNum && cent->currentState.clientNum != cg.snap->ps.
 		duelIndex)
 	{
 		// duel in progress, don't render any player not part of the duel
@@ -17239,7 +17239,7 @@ void CG_Player(centity_t* cent)
 		if (cent->currentState.NPC_class == CLASS_VEHICLE && CG_InFighter())
 		{
 			//this is a vehicle, bracket it
-			if (cg.predicted_player_state.m_iVehicleNum != cent->currentState.client_num)
+			if (cg.predicted_player_state.m_iVehicleNum != cent->currentState.clientNum)
 			{
 				//don't add the vehicle I'm in... :)
 				CG_AddBracketedEnt(cent);
@@ -17521,7 +17521,7 @@ void CG_Player(centity_t* cent)
 	{
 		vec3_t bmins = { -15, -15, DEFAULT_MINS_2 }, bmaxs = { 15, 15, DEFAULT_MAXS_2 };
 
-		if (pm && pm->ps && cent->currentState.client_num == pm->ps->client_num)
+		if (pm && pm->ps && cent->currentState.clientNum == pm->ps->clientNum)
 		{
 			VectorCopy(pm->mins, bmins);
 			VectorCopy(pm->maxs, bmaxs);
@@ -17544,7 +17544,7 @@ void CG_Player(centity_t* cent)
 		if (!CG_IsMindTricked(cent->currentState.trickedentindex,
 			cent->currentState.trickedentindex2,
 			cent->currentState.trickedentindex3,
-			cent->currentState.trickedentindex4, cg.snap->ps.client_num))
+			cent->currentState.trickedentindex4, cg.snap->ps.clientNum))
 		{
 			vec3_t absmax;
 			vec3_t absmin;
@@ -17559,7 +17559,7 @@ void CG_Player(centity_t* cent)
 		cent->currentState.trickedentindex2,
 		cent->currentState.trickedentindex3,
 		cent->currentState.trickedentindex4,
-		cg.snap->ps.client_num))
+		cg.snap->ps.clientNum))
 	{
 		if (cent->trickAlpha > 1)
 		{
@@ -17605,7 +17605,7 @@ void CG_Player(centity_t* cent)
 	// get the player model information
 	renderfx = 0;
 
-	if (cent->currentState.number == cg.snap->ps.client_num)
+	if (cent->currentState.number == cg.snap->ps.clientNum)
 	{
 		if (!cg.renderingThirdPerson)
 		{
@@ -17643,7 +17643,7 @@ void CG_Player(centity_t* cent)
 			cent->currentState.eFlags & EF3_DUAL_WEAPONS ||
 			cent->ghoul2weapon2 != NULL && !(cent->currentState.eFlags & EF3_DUAL_WEAPONS)) &&
 		!(cent->currentState.eFlags & EF_DEAD) && !cent->torsoBolt &&
-		cg.snap && (cent->currentState.number != cg.snap->ps.client_num || cg.snap->ps.pm_flags & PMF_FOLLOW))
+		cg.snap && (cent->currentState.number != cg.snap->ps.clientNum || cg.snap->ps.pm_flags & PMF_FOLLOW))
 	{
 		if (ci->team == TEAM_SPECTATOR)
 		{
@@ -17752,7 +17752,7 @@ void CG_Player(centity_t* cent)
 	team = ci->team;
 
 	if (cgs.gametype >= GT_TEAM && cg_drawFriend.integer &&
-		cent->currentState.number != cg.snap->ps.client_num &&
+		cent->currentState.number != cg.snap->ps.clientNum &&
 		cent->currentState.eType != ET_NPC)
 	{
 		// If the view is either a spectator or on the same team as this character, show a symbol above their head.
@@ -17802,13 +17802,13 @@ void CG_Player(centity_t* cent)
 		}
 	}
 	else if (cgs.gametype == GT_POWERDUEL && cg_drawFriend.integer &&
-		cent->currentState.number != cg.snap->ps.client_num)
+		cent->currentState.number != cg.snap->ps.clientNum)
 	{
 		if (cg.predicted_player_state.persistant[PERS_TEAM] != TEAM_SPECTATOR &&
 			cent->currentState.number < MAX_CLIENTS &&
 			!(cent->currentState.eFlags & EF_DEAD) &&
 			ci &&
-			cgs.clientinfo[cg.snap->ps.client_num].duelTeam == ci->duelTeam)
+			cgs.clientinfo[cg.snap->ps.clientNum].duelTeam == ci->duelTeam)
 		{
 			//ally in powerduel, so draw the icon
 			CG_PlayerFloatSprite(cent, cgs.media.powerDuelAllyShader);
@@ -17823,7 +17823,7 @@ void CG_Player(centity_t* cent)
 	}
 
 	if (cgs.gametype == GT_JEDIMASTER && cg_drawFriend.integer &&
-		cent->currentState.number != cg.snap->ps.client_num)
+		cent->currentState.number != cg.snap->ps.clientNum)
 		// Don't show a sprite above a player's own head in 3rd person.
 	{
 		// If the view is either a spectator or on the same team as this character, show a symbol above their head.
@@ -17844,7 +17844,7 @@ void CG_Player(centity_t* cent)
 	}
 
 	// add the shadow
-	shadow = CG_PlayerShadow(cent, &shadow_plane);
+	shadow = CG_PlayerShadow(cent, &shadowPlane);
 
 	if ((cent->currentState.eFlags & EF_SEEKERDRONE || cent->currentState.genericenemyindex != -1) && cent->currentState
 		.eType != ET_NPC)
@@ -17857,7 +17857,7 @@ void CG_Player(centity_t* cent)
 		elevated[2] += 40;
 
 		VectorCopy(elevated, seeker.lightingOrigin);
-		seeker.shadowPlane = shadow_plane;
+		seeker.shadowPlane = shadowPlane;
 		seeker.renderfx = 0; //renderfx;
 		//don't show in first person?
 
@@ -17924,7 +17924,7 @@ void CG_Player(centity_t* cent)
 
 	if ((cg_shadows.integer == 3 || cg_shadows.integer == 2) && shadow)
 	{
-		renderfx |= RF_SHADOW_PLANE;
+		renderfx |= RF_shadowPlane;
 	}
 	renderfx |= RF_LIGHTING_ORIGIN; // use the same origin for all
 
@@ -17934,7 +17934,7 @@ void CG_Player(centity_t* cent)
 	VectorCopy(cent->lerpOrigin, legs.origin);
 
 	VectorCopy(cent->lerpOrigin, legs.lightingOrigin);
-	legs.shadowPlane = shadow_plane;
+	legs.shadowPlane = shadowPlane;
 	legs.renderfx = renderfx;
 	if (cg_shadows.integer == 2 && renderfx & RF_THIRD_PERSON)
 	{
@@ -17990,7 +17990,7 @@ void CG_Player(centity_t* cent)
 	got_l_hand_matrix = qtrue;
 
 	//Restrict True View Model changes to the player and do the True View camera view work.
-	if (cg.snap && cent->currentState.number == cg.snap->ps.client_num && cg_truebobbing.integer)
+	if (cg.snap && cent->currentState.number == cg.snap->ps.clientNum && cg_truebobbing.integer)
 	{
 		if (!cg.renderingThirdPerson && (cg_trueguns.integer || cent->currentState.weapon == WP_SABER
 			|| cent->currentState.weapon == WP_MELEE) && !cg.predicted_player_state.zoomMode)
@@ -18495,7 +18495,7 @@ SkipTrueView:
 		ef_org[2] = l_hand_matrix.matrix[2][3];
 
 		if (cent->currentState.forcePowersActive & 1 << FP_GRIP &&
-			(cg.renderingThirdPerson || cent->currentState.number != cg.snap->ps.client_num))
+			(cg.renderingThirdPerson || cent->currentState.number != cg.snap->ps.clientNum))
 		{
 			vec3_t bolt_dir;
 			vec3_t orig_bolt;
@@ -18516,7 +18516,7 @@ SkipTrueView:
 		cent->bodyFadeTime = 0;
 	}
 
-	if (cent->currentState.weapon == WP_STUN_BATON && cent->currentState.number == cg.snap->ps.client_num)
+	if (cent->currentState.weapon == WP_STUN_BATON && cent->currentState.number == cg.snap->ps.clientNum)
 	{
 		if (cent->currentState.weapon == WP_STUN_BATON && cent->currentState.eFlags & EF_ALT_FIRING)
 		{
@@ -18648,7 +18648,7 @@ SkipTrueView:
 	if (cgs.gametype == GT_HOLOCRON && cent->currentState.time2 &&
 		(cg.renderingThirdPerson || cg_trueguns.integer || cg.predicted_player_state.weapon == WP_SABER || cg.
 			predicted_player_state.weapon == WP_MELEE
-			|| cg.snap->ps.client_num != cent->currentState.number))
+			|| cg.snap->ps.clientNum != cent->currentState.number))
 	{
 		int i = 0;
 		int rendered_holos = 0;
@@ -18664,7 +18664,7 @@ SkipTrueView:
 				elevated[2] += 8;
 
 				VectorCopy(elevated, holo_ref.lightingOrigin);
-				holo_ref.shadowPlane = shadow_plane;
+				holo_ref.shadowPlane = shadowPlane;
 				holo_ref.renderfx = 0; //RF_THIRD_PERSON;
 
 				if (rendered_holos == 0)
@@ -18927,7 +18927,7 @@ stillDoSaber:
 			vec3_t sound_spot;
 			qboolean did_first_sound = qfalse;
 
-			if (cg.snap->ps.client_num == cent->currentState.number)
+			if (cg.snap->ps.clientNum == cent->currentState.number)
 			{
 				VectorCopy(cg.refdef.vieworg, sound_spot);
 			}
@@ -19282,7 +19282,7 @@ stillDoSaber:
 						if (ci->saber[l].numBlades > 2)
 						{
 							//add a single glow for the saber based on all the blade colors combined
-							CG_DoSaberLight(&ci->saber[l], cent->currentState.client_num, l);
+							CG_DoSaberLight(&ci->saber[l], cent->currentState.clientNum, l);
 						}
 
 						l++;
@@ -19487,7 +19487,7 @@ stillDoSaber:
 			if (ci->saber[l].numBlades > 2)
 			{
 				//add a single glow for the saber based on all the blade colors combined
-				CG_DoSaberLight(&ci->saber[l], cent->currentState.client_num, l);
+				CG_DoSaberLight(&ci->saber[l], cent->currentState.clientNum, l);
 			}
 
 			l++;
@@ -19526,7 +19526,7 @@ stillDoSaber:
 		//goto endOfCall;
 	}
 
-	if (cg.snap->ps.fd.forcePowersActive & 1 << FP_SEE && cg.snap->ps.client_num != cent->currentState.number)
+	if (cg.snap->ps.fd.forcePowersActive & 1 << FP_SEE && cg.snap->ps.clientNum != cent->currentState.number)
 	{
 		legs.shaderRGBA[0] = 255;
 		legs.shaderRGBA[1] = 255;
@@ -19534,10 +19534,10 @@ stillDoSaber:
 		legs.renderfx |= RF_MINLIGHT;
 	}
 
-	//if (cg.snap->ps.duelInProgress /*&& cent->currentState.number != cg.snap->ps.client_num*/)
+	//if (cg.snap->ps.duelInProgress /*&& cent->currentState.number != cg.snap->ps.clientNum*/)
 	//{ //I guess go ahead and glow your own client too in a duel
 	//	if (cent->currentState.number != cg.snap->ps.duelIndex &&
-	//		cent->currentState.number != cg.snap->ps.client_num)
+	//		cent->currentState.number != cg.snap->ps.clientNum)
 	//	{ //everyone not involved in the duel is drawn very dark
 	//		legs.shaderRGBA[0] /= 5.0f;
 	//		legs.shaderRGBA[1] /= 5.0f;
@@ -19599,7 +19599,7 @@ stillDoSaber:
 	//}
 	//else
 	//{
-	//	if (cent->currentState.bolt1 && !(cent->currentState.eFlags & EF_DEAD) && cent->currentState.number != cg.snap->ps.client_num && (!cg.snap->ps.duelInProgress || cg.snap->ps.duelIndex != cent->currentState.number))
+	//	if (cent->currentState.bolt1 && !(cent->currentState.eFlags & EF_DEAD) && cent->currentState.number != cg.snap->ps.clientNum && (!cg.snap->ps.duelInProgress || cg.snap->ps.duelIndex != cent->currentState.number))
 	//	{
 	//		legs.shaderRGBA[0] = 50;
 	//		legs.shaderRGBA[1] = 50;
@@ -19664,7 +19664,7 @@ stillDoSaber:
 	{
 		//in the middle of cloaking
 		if (cg.snap->ps.fd.forcePowersActive & 1 << FP_SEE
-			&& cg.snap->ps.client_num != cent->currentState.number)
+			&& cg.snap->ps.clientNum != cent->currentState.number)
 		{
 			//just draw him
 			trap->R_AddRefEntityToScene(&legs);
@@ -19700,14 +19700,14 @@ stillDoSaber:
 	{
 		//fully cloaked
 		if (cg.snap->ps.fd.forcePowersActive & 1 << FP_SEE
-			&& cg.snap->ps.client_num != cent->currentState.number)
+			&& cg.snap->ps.clientNum != cent->currentState.number)
 		{
 			//just draw him
 			trap->R_AddRefEntityToScene(&legs);
 		}
 		else
 		{
-			if (cg.renderingThirdPerson || cent->currentState.number != cg.predicted_player_state.client_num)
+			if (cg.renderingThirdPerson || cent->currentState.number != cg.predicted_player_state.clientNum)
 			{
 				if (cg_shadows.integer != 2 && cgs.glconfig.stencilBits >= 4 && cg_renderToTextureFX.integer)
 				{
@@ -19821,7 +19821,7 @@ stillDoSaber:
 	CG_PlayerPowerups(cent);
 
 	if (cent->currentState.forcePowersActive & 1 << FP_RAGE &&
-		(cg.renderingThirdPerson || cent->currentState.number != cg.snap->ps.client_num
+		(cg.renderingThirdPerson || cent->currentState.number != cg.snap->ps.clientNum
 			|| cg_trueguns.integer || cg.predicted_player_state.weapon == WP_SABER
 			|| cg.predicted_player_state.weapon == WP_MELEE))
 	{
@@ -19845,7 +19845,7 @@ stillDoSaber:
 		trap->R_AddRefEntityToScene(&legs);
 	}
 
-	if (cent->currentState.number != cg.snap->ps.client_num)
+	if (cent->currentState.number != cg.snap->ps.clientNum)
 	{
 		if (cg_SaberInnonblockableAttackWarning.integer)
 		{
@@ -19866,7 +19866,7 @@ stillDoSaber:
 	}
 
 	if (!cg.snap->ps.duelInProgress && cent->currentState.bolt1 && !(cent->currentState.eFlags & EF_DEAD) && cent->
-		currentState.number != cg.snap->ps.client_num && (!cg.snap->ps.duelInProgress || cg.snap->ps.duelIndex != cent->
+		currentState.number != cg.snap->ps.clientNum && (!cg.snap->ps.duelInProgress || cg.snap->ps.duelIndex != cent->
 			currentState.number))
 	{
 		legs.shaderRGBA[0] = 50;
@@ -20040,7 +20040,7 @@ stillDoSaber:
 		trap->R_AddRefEntityToScene(&legs); //draw the shell
 	}
 
-	if (cent->currentState.isJediMaster && cg.snap->ps.client_num != cent->currentState.number)
+	if (cent->currentState.isJediMaster && cg.snap->ps.clientNum != cent->currentState.number)
 	{
 		legs.shaderRGBA[0] = 100;
 		legs.shaderRGBA[1] = 100;
@@ -20056,7 +20056,7 @@ stillDoSaber:
 		legs.renderfx &= ~RF_NODEPTH;
 	}
 
-	if (cg.snap->ps.fd.forcePowersActive & 1 << FP_SEE && cg.snap->ps.client_num != cent->currentState.number &&
+	if (cg.snap->ps.fd.forcePowersActive & 1 << FP_SEE && cg.snap->ps.clientNum != cent->currentState.number &&
 		cg_auraShell.integer)
 	{
 		if (cent->currentState.NPC_class == CLASS_IMPERIAL && cent->currentState.generic1 == 100)
@@ -20075,7 +20075,7 @@ stillDoSaber:
 				legs.shaderRGBA[1] = 255;
 				legs.shaderRGBA[2] = 0;
 			}
-			else if (ci->team != cgs.clientinfo[cg.snap->ps.client_num].team)
+			else if (ci->team != cgs.clientinfo[cg.snap->ps.clientNum].team)
 			{
 				//red
 				legs.shaderRGBA[0] = 255;
@@ -20380,7 +20380,7 @@ void CG_ResetPlayerEntity(centity_t* cent)
 	}
 	else
 	{
-		ci = &cgs.clientinfo[cent->currentState.client_num];
+		ci = &cgs.clientinfo[cent->currentState.clientNum];
 	}
 
 	while (i < MAX_SABERS)
@@ -20453,7 +20453,7 @@ void CG_ResetPlayerEntity(centity_t* cent)
 	}
 
 	//do this to prevent us from making a saber unholster sound the first time we enter the pvs
-	if (cent->currentState.number != cg.predicted_player_state.client_num &&
+	if (cent->currentState.number != cg.predicted_player_state.clientNum &&
 		cent->currentState.weapon == WP_SABER &&
 		cent->weapon != cent->currentState.weapon)
 	{

@@ -616,7 +616,7 @@ void CL_ParseGamestate(msg_t* msg)
 		}
 	}
 
-	clc.client_num = MSG_ReadLong(msg);
+	clc.clientNum = MSG_ReadLong(msg);
 	// read the checksum feed
 	clc.checksumFeed = MSG_ReadLong(msg);
 

@@ -72,7 +72,7 @@ float CG_GetValue(const int owner_draw)
 {
 	clientInfo_t* ci;
 
-	const centity_t* cent = &cg_entities[cg.snap->ps.client_num];
+	const centity_t* cent = &cg_entities[cg.snap->ps.clientNum];
 	const playerState_t* ps = &cg.snap->ps;
 
 	switch (owner_draw)
@@ -932,7 +932,7 @@ void CG_KeyEvent(const int key, const qboolean down)
 	}
 }
 
-int CG_client_numFromName(const char* p)
+int CG_clientNumFromName(const char* p)
 {
 	for (int i = 0; i < cgs.maxclients; i++)
 	{

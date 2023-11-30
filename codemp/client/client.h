@@ -179,7 +179,7 @@ demo through a file.
 
 using clientConnection_t = struct clientConnection_s
 {
-	int client_num;
+	int clientNum;
 	int lastPacketSentTime; // for retransmits during connection
 	int lastPacketTime; // for timeouts
 

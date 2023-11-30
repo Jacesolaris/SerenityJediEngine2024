@@ -3706,7 +3706,7 @@ void WP_DropDetPack(gentity_t* ent, const qboolean alt_fire)
 	{
 		AngleVectors(ent->client->ps.viewangles, forward, vright, up);
 
-		calcmuzzle_point(ent, forward, vright, muzzle);
+		calcmuzzlePoint(ent, forward, vright, muzzle);
 
 		VectorNormalize(forward);
 		VectorMA(muzzle, -4, forward, muzzle);
@@ -4249,7 +4249,7 @@ void Weapon_GrapplingHook_Fire(gentity_t* ent)
 	vec3_t right;
 
 	AngleVectors(ent->client->ps.viewangles, forward, right, up);
-	calcmuzzle_point(ent, forward, right, muzzle);
+	calcmuzzlePoint(ent, forward, right, muzzle);
 	if (!ent->client->fireHeld && !ent->client->hook)
 	{
 		fire_grapple(ent, muzzle, forward);
@@ -4262,7 +4262,7 @@ void Weapon_AltStun_Fire(gentity_t* ent)
 	vec3_t forward, right, vup;
 
 	AngleVectors(ent->client->ps.viewangles, forward, right, vup);
-	calcmuzzle_point(ent, forward, right, muzzle);
+	calcmuzzlePoint(ent, forward, right, muzzle);
 	if (!ent->client->stunHeld && !ent->client->stun)
 	{
 		fire_stun(ent, muzzle, forward);
@@ -4396,7 +4396,7 @@ qboolean LogAccuracyHit(const gentity_t* target, const gentity_t* attacker)
 
 /*
 ===============
-calcmuzzle_point
+calcmuzzlePoint
 
 set muzzle location relative to pivoting eye
 rwwFIXMEFIXME: Since ghoul2 models are on server and properly updated now,
@@ -4405,53 +4405,53 @@ The down side would be that it does not necessarily look alright from a
 first person perspective.
 ===============
 */
-void calcmuzzle_point(const gentity_t* ent, const vec3_t in_forward, const vec3_t in_right,
-	vec3_t muzzle_point)
+void calcmuzzlePoint(const gentity_t* ent, const vec3_t in_forward, const vec3_t in_right,
+	vec3_t muzzlePoint)
 {
 	vec3_t muzzle_off_point;
 
 	const int weapontype = ent->s.weapon;
-	VectorCopy(ent->s.pos.trBase, muzzle_point);
+	VectorCopy(ent->s.pos.trBase, muzzlePoint);
 
-	VectorCopy(WP_muzzle_point[weapontype], muzzle_off_point);
+	VectorCopy(WP_muzzlePoint[weapontype], muzzle_off_point);
 
 	if (weapontype > WP_NONE && weapontype < WP_NUM_WEAPONS)
 	{
-		// Use the table to generate the muzzle_point;
+		// Use the table to generate the muzzlePoint;
 		{
 			// Crouching.  Use the add-to-Z method to adjust vertically.
-			VectorMA(muzzle_point, muzzle_off_point[0], in_forward, muzzle_point);
-			VectorMA(muzzle_point, muzzle_off_point[1], in_right, muzzle_point);
-			muzzle_point[2] += ent->client->ps.viewheight + muzzle_off_point[2];
+			VectorMA(muzzlePoint, muzzle_off_point[0], in_forward, muzzlePoint);
+			VectorMA(muzzlePoint, muzzle_off_point[1], in_right, muzzlePoint);
+			muzzlePoint[2] += ent->client->ps.viewheight + muzzle_off_point[2];
 		}
 	}
 
 	// snap to integer coordinates for more efficient network bandwidth usage
-	SnapVector(muzzle_point);
+	SnapVector(muzzlePoint);
 }
 
-void calcmuzzle_point2(const gentity_t* ent, vec3_t forward, vec3_t right, vec3_t muzzle_point)
+void calcmuzzlePoint2(const gentity_t* ent, vec3_t forward, vec3_t right, vec3_t muzzlePoint)
 {
 	vec3_t muzzle_off_point;
 
 	const int weapontype = ent->s.weapon;
-	VectorCopy(ent->s.pos.trBase, muzzle_point);
+	VectorCopy(ent->s.pos.trBase, muzzlePoint);
 
-	VectorCopy(WP_muzzle_point2[weapontype], muzzle_off_point);
+	VectorCopy(WP_muzzlePoint2[weapontype], muzzle_off_point);
 
 	if (weapontype > WP_NONE && weapontype < WP_NUM_WEAPONS)
 	{
-		// Use the table to generate the muzzle_point;
+		// Use the table to generate the muzzlePoint;
 		{
 			// Crouching.  Use the add-to-Z method to adjust vertically.
-			VectorMA(muzzle_point, muzzle_off_point[0], forward, muzzle_point);
-			VectorMA(muzzle_point, muzzle_off_point[1], right, muzzle_point);
-			muzzle_point[2] += ent->client->ps.viewheight + muzzle_off_point[2];
+			VectorMA(muzzlePoint, muzzle_off_point[0], forward, muzzlePoint);
+			VectorMA(muzzlePoint, muzzle_off_point[1], right, muzzlePoint);
+			muzzlePoint[2] += ent->client->ps.viewheight + muzzle_off_point[2];
 		}
 	}
 
 	// snap to integer coordinates for more efficient network bandwidth usage
-	SnapVector(muzzle_point);
+	SnapVector(muzzlePoint);
 }
 
 extern qboolean G_MissileImpact(gentity_t* ent, trace_t* trace);
@@ -5517,10 +5517,10 @@ void FireWeapon(gentity_t* ent, const qboolean alt_fire)
 		AngleVectors(ent->client->ps.viewangles, forward, vright, up);
 	}
 
-	calcmuzzle_point(ent, forward, vright, muzzle);
+	calcmuzzlePoint(ent, forward, vright, muzzle);
 	if (ent->client->ps.eFlags & EF3_DUAL_WEAPONS)
 	{
-		calcmuzzle_point2(ent, forward, vright, muzzle2);
+		calcmuzzlePoint2(ent, forward, vright, muzzle2);
 	}
 
 	if (!doesnot_drain_mishap(ent) && ent->client->ps.BlasterAttackChainCount <= BLASTERMISHAPLEVEL_FULL)

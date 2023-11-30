@@ -205,10 +205,10 @@ void WorkshopDrawClientsideInformation()
 		return;
 	}
 	// Draw the information for the NPC that is in our crosshairs
-	if (cg.crosshairclient_num != ENTITYNUM_NONE && cg.crosshairclient_num != 0 && g_entities[cg.crosshairclient_num].
+	if (cg.crosshairclientNum != ENTITYNUM_NONE && cg.crosshairclientNum != 0 && g_entities[cg.crosshairclientNum].
 		client)
 	{
-		const gentity_t* cross_ent = &g_entities[cg.crosshairclient_num];
+		const gentity_t* cross_ent = &g_entities[cg.crosshairclientNum];
 		WorkshopDrawEntityInformation(cross_ent, 10, "Crosshair AI");
 	}
 

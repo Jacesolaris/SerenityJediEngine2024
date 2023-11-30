@@ -273,6 +273,8 @@ cvar_t* r_debugWeather;
 cvar_t* r_com_rend2;
 cvar_t* r_weather;
 
+cvar_t* com_outcast;
+
 cvar_t* r_aspectCorrectFonts;
 
 extern void	RB_SetGL2D(void);
@@ -328,6 +330,11 @@ static void R_Splash()
 	if (r_shadows->integer != 1)
 	{
 		ri->Cvar_Set("cg_shadows", "1");
+	}
+
+	if (com_outcast->integer != 0)
+	{
+		ri->Cvar_Set("com_outcast", "0");
 	}
 
 	ri->WIN_Present(&window);
@@ -1677,6 +1684,8 @@ static void R_Register(void)
 	r_com_rend2 = ri->Cvar_Get("com_rend2", "0", CVAR_ARCHIVE, "");
 
 	r_weather = ri->Cvar_Get("r_weather", "0", CVAR_ARCHIVE, "");
+
+	com_outcast = ri->Cvar_Get("com_outcast", "0", CVAR_ARCHIVE, "");
 	/*
 	Ghoul2 Insert End
 	*/

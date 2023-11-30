@@ -933,7 +933,7 @@ void R_AddIQMSurfaces(trRefEntity_t* ent, int entityNum) {
 		// projection shadows work fine with personal models
 		if (r_shadows->integer == 3
 			&& fogNum == 0
-			&& (ent->e.renderfx & RF_SHADOW_PLANE)
+			&& (ent->e.renderfx & RF_shadowPlane)
 			&& shader->sort == SS_OPAQUE)
 		{
 			R_AddDrawSurf(reinterpret_cast<surfaceType_t*>(surface), entityNum, tr.projectionShadowShader, 0, 0, R_IsPostRenderEntity(ent), 0);

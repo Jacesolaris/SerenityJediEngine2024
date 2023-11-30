@@ -128,7 +128,7 @@ static void CG_DrawClientScore(const int y, const score_t* score, float* color, 
 	}
 
 	// highlight your position
-	if (score->client == cg.snap->ps.client_num)
+	if (score->client == cg.snap->ps.clientNum)
 	{
 		float hcolor[4];
 		int rank;
@@ -632,7 +632,7 @@ qboolean CG_DrawOldScoreboard(void)
 		// draw local client at the bottom
 		for (int i = 0; i < cg.numScores; i++)
 		{
-			if (cg.scores[i].client == cg.snap->ps.client_num)
+			if (cg.scores[i].client == cg.snap->ps.clientNum)
 			{
 				CG_DrawClientScore(y, &cg.scores[i], fadeColor, fade, lineHeight == SB_NORMAL_HEIGHT);
 				break;

@@ -842,7 +842,7 @@ int pm_min_get_up_time(const gentity_t* ent)
 		//stormtroopers are slow to get up
 		return 100;
 	}
-	if (ent && ent->client && ent->s.client_num < MAX_CLIENTS || G_ControlledByPlayer(ent))
+	if (ent && ent->client && ent->s.clientNum < MAX_CLIENTS || G_ControlledByPlayer(ent))
 	{
 		//player can get up faster based on his/her force jump skill
 		constexpr int get_up_time = PLAYER_KNOCKDOWN_HOLD_EXTRA_TIME;
@@ -1528,7 +1528,7 @@ qboolean PM_AdjustAnglesForHeldByMonster(gentity_t* ent, const gentity_t* monste
 
 qboolean G_OkayToLean(const playerState_t* ps, const usercmd_t* cmd, const qboolean interrupt_okay)
 {
-	if ((ps->client_num < MAX_CLIENTS || G_ControlledByPlayer(&g_entities[ps->client_num])) //player
+	if ((ps->clientNum < MAX_CLIENTS || G_ControlledByPlayer(&g_entities[ps->clientNum])) //player
 		&& ps->groundEntityNum != ENTITYNUM_NONE //on ground
 		&& (interrupt_okay //okay to interrupt a lean
 			&& !PM_CrouchAnim(ps->legsAnim)
@@ -1551,7 +1551,7 @@ qboolean G_OkayToLean(const playerState_t* ps, const usercmd_t* cmd, const qbool
 
 qboolean G_OkayToDoStandingBlock(const playerState_t* ps, const usercmd_t* cmd, const qboolean interrupt_okay)
 {
-	if ((ps->client_num < MAX_CLIENTS || G_ControlledByPlayer(&g_entities[ps->client_num])) //player
+	if ((ps->clientNum < MAX_CLIENTS || G_ControlledByPlayer(&g_entities[ps->clientNum])) //player
 		&& ps->groundEntityNum != ENTITYNUM_NONE //on ground
 		&& (interrupt_okay //okay to interrupt a lean
 			&& PM_DodgeAnim(ps->torsoAnim)
@@ -1610,7 +1610,7 @@ void PM_UpdateViewAngles(int saber_anim_level, playerState_t* ps, usercmd_t* cmd
 	}
 
 	//don't do any updating during cut scenes
-	if (in_camera && ps->client_num < MAX_CLIENTS)
+	if (in_camera && ps->clientNum < MAX_CLIENTS)
 	{
 		return;
 	}
@@ -1682,7 +1682,7 @@ void PM_UpdateViewAngles(int saber_anim_level, playerState_t* ps, usercmd_t* cmd
 		}
 	}
 
-	if (ps->client_num != 0 && gent != nullptr && gent->client != nullptr)
+	if (ps->clientNum != 0 && gent != nullptr && gent->client != nullptr)
 	{
 		if (gent->client->renderInfo.renderFlags & RF_LOCKEDANGLE)
 		{

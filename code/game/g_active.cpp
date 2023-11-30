@@ -1997,7 +1997,7 @@ void ClientTimerActions(gentity_t* ent, const int msec)
 			}
 		}
 		else if (ent->client->ps.saberFatigueChainCount > MISHAPLEVEL_NONE
-			&& (ent->s.client_num >= MAX_CLIENTS && !G_ControlledByPlayer(ent)) //npc
+			&& (ent->s.clientNum >= MAX_CLIENTS && !G_ControlledByPlayer(ent)) //npc
 			&& !BG_InSlowBounce(&ent->client->ps)
 			&& !PM_SaberInBrokenParry(ent->client->ps.saber_move)
 			&& !PM_SaberInAttackPure(ent->client->ps.saber_move)
@@ -2011,7 +2011,7 @@ void ClientTimerActions(gentity_t* ent, const int msec)
 			WP_SaberFatigueRegenerate(1);
 		}
 
-		if (ent->s.client_num >= MAX_CLIENTS && !G_ControlledByPlayer(ent)
+		if (ent->s.clientNum >= MAX_CLIENTS && !G_ControlledByPlayer(ent)
 			&& ent->client->ps.blockPoints < BLOCK_POINTS_MAX)
 		{
 			if (!PM_SaberInMassiveBounce(ent->client->ps.torsoAnim)
@@ -2297,7 +2297,7 @@ qboolean WP_AbsorbKick(gentity_t* hit_ent, const gentity_t* pusher, const vec3_t
 		}
 		G_Sound(hit_ent, G_SoundIndex(va("sound/weapons/melee/punch%d", Q_irand(1, 4))));
 	}
-	else if (BotCanAbsorbKick(hit_ent, push_dir) && NPCBlocking && hit_ent->s.client_num >= MAX_CLIENTS && !
+	else if (BotCanAbsorbKick(hit_ent, push_dir) && NPCBlocking && hit_ent->s.clientNum >= MAX_CLIENTS && !
 		G_ControlledByPlayer(hit_ent)) //NPC only
 	{
 		if (hit_ent->client->ps.blockPoints > 50 && hit_ent->client->ps.forcePower > 50) //NPC only
@@ -5620,7 +5620,7 @@ qboolean G_CheckClampUcmd(gentity_t* ent, usercmd_t* ucmd)
 			ent->client->ps.forceJumpCharge = 0;
 		}
 	} //stiffenedup
-	else if (!in_camera && (ent->s.client_num >= MAX_CLIENTS && !G_ControlledByPlayer(ent)
+	else if (!in_camera && (ent->s.clientNum >= MAX_CLIENTS && !G_ControlledByPlayer(ent)
 		&& PM_SaberInMassiveBounce(ent->client->ps.torsoAnim) && ent->client->ps.torsoAnimTimer))
 	{
 		//npc can't move or turn
@@ -8229,7 +8229,7 @@ static void ClientThink_real(gentity_t* ent, usercmd_t* ucmd)
 		client->ps.ManualBlockingFlags &= ~(1 << MBF_MELEEDODGE);
 	}
 
-	if ((ent->NPC || ent->s.client_num >= MAX_CLIENTS && !G_ControlledByPlayer(ent)) &&
+	if ((ent->NPC || ent->s.clientNum >= MAX_CLIENTS && !G_ControlledByPlayer(ent)) &&
 		client->ps.weapon == WP_SABER &&
 		client->ps.SaberActive() &&
 		!PM_SaberInMassiveBounce(client->ps.torsoAnim) &&
@@ -8893,12 +8893,12 @@ A new command has arrived from the client
 extern void PM_CheckForceUseButton(gentity_t* ent, usercmd_t* ucmd);
 extern qboolean PM_GentCantJump(const gentity_t* gent);
 
-void ClientThink(const int client_num, usercmd_t* ucmd)
+void ClientThink(const int clientNum, usercmd_t* ucmd)
 {
 	qboolean restore_ucmd = qfalse;
 	usercmd_t sav_ucmd = { 0 };
 
-	gentity_t* ent = g_entities + client_num;
+	gentity_t* ent = g_entities + clientNum;
 
 	if (ent->s.number < MAX_CLIENTS)
 	{

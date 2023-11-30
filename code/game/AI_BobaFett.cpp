@@ -766,16 +766,16 @@ void Boba_VibrobladePunch(gentity_t* self)
 	}
 
 	mdxaBone_t boltMatrix;
-	vec3_t muzzle_point;
+	vec3_t muzzlePoint;
 	vec3_t muzzle_dir;
 	gi.G2API_GetBoltMatrix(self->ghoul2, self->playerModel, self->handRBolt, &boltMatrix, self->currentAngles,
 		self->currentOrigin, cg.time ? cg.time : level.time,
 		nullptr, self->s.modelScale);
 	// work the matrix axis stuff into the original axis and origins used.
-	gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, muzzle_point);
+	gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, muzzlePoint);
 	gi.G2API_GiveMeVectorFromMatrix(boltMatrix, NEGATIVE_Y, muzzle_dir);
 
-	VectorCopy(muzzle_point, self->client->renderInfo.muzzle_point);
+	VectorCopy(muzzlePoint, self->client->renderInfo.muzzlePoint);
 	VectorCopy(muzzle_dir, self->client->renderInfo.muzzleDir);
 
 	const int old_weapon = self->s.weapon;
@@ -907,20 +907,20 @@ void Boba_FireWristMissile(gentity_t* self, const int whichMissile)
 	if (effect)
 	{
 		mdxaBone_t boltMatrix;
-		vec3_t muzzle_point;
+		vec3_t muzzlePoint;
 		vec3_t muzzle_dir;
 		gi.G2API_GetBoltMatrix(self->ghoul2, self->playerModel,
 			missileStates[whichMissile].leftBolt ? self->genericBolt3 : self->handRBolt, &boltMatrix,
 			self->currentAngles, self->currentOrigin, cg.time ? cg.time : level.time,
 			nullptr, self->s.modelScale);
 		// work the matrix axis stuff into the original axis and origins used.
-		gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, muzzle_point);
+		gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, muzzlePoint);
 		gi.G2API_GiveMeVectorFromMatrix(boltMatrix, NEGATIVE_Y, muzzle_dir);
 
-		VectorCopy(muzzle_point, self->client->renderInfo.muzzle_point);
+		VectorCopy(muzzlePoint, self->client->renderInfo.muzzlePoint);
 		VectorCopy(muzzle_dir, self->client->renderInfo.muzzleDir);
 
-		G_PlayEffect(effect, muzzle_point, muzzle_dir);
+		G_PlayEffect(effect, muzzlePoint, muzzle_dir);
 	}
 
 	FireWeapon(self, alt_fire);

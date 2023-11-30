@@ -50,7 +50,7 @@ void WP_FireBlasterMissile(gentity_t* ent, vec3_t start, vec3_t dir, const qbool
 	else
 	{
 		// If an enemy is shooting at us, lower the velocity so you have a chance to evade
-		if (ent->client && ent->client->ps.client_num != 0 && ent->client->NPC_class != CLASS_BOBAFETT && ent->client->
+		if (ent->client && ent->client->ps.clientNum != 0 && ent->client->NPC_class != CLASS_BOBAFETT && ent->client->
 			NPC_class != CLASS_MANDO)
 		{
 			if (g_spskill->integer < 2)
@@ -214,7 +214,7 @@ void WP_FireJangoWristMissile(gentity_t* ent, vec3_t start, vec3_t dir, const qb
 	else
 	{
 		// If an enemy is shooting at us, lower the velocity so you have a chance to evade
-		if (ent->client && ent->client->ps.client_num != 0 && ent->client->NPC_class != CLASS_BOBAFETT && ent->client->
+		if (ent->client && ent->client->ps.clientNum != 0 && ent->client->NPC_class != CLASS_BOBAFETT && ent->client->
 			NPC_class != CLASS_MANDO)
 		{
 			if (g_spskill->integer < 2)
@@ -380,7 +380,7 @@ void WP_FireDroidekaDualPistolMissileDuals(gentity_t* ent, vec3_t start, vec3_t 
 	else
 	{
 		// If an enemy is shooting at us, lower the velocity so you have a chance to evade
-		if (ent->client && ent->client->ps.client_num != 0
+		if (ent->client && ent->client->ps.clientNum != 0
 			&& ent->client->NPC_class != CLASS_BOBAFETT)
 		{
 			if (g_spskill->integer < 2)
@@ -464,7 +464,7 @@ void WP_FireDroidekaDualPistolMissile(gentity_t* ent, vec3_t start, vec3_t dir, 
 	else
 	{
 		// If an enemy is shooting at us, lower the velocity so you have a chance to evade
-		if (ent->client && ent->client->ps.client_num != 0
+		if (ent->client && ent->client->ps.clientNum != 0
 			&& ent->client->NPC_class != CLASS_BOBAFETT)
 		{
 			if (g_spskill->integer < 2)

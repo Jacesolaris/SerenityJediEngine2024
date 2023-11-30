@@ -74,11 +74,11 @@ void CG_LoadingItem(const int item_num)
 CG_LoadingClient
 ===================
 */
-void CG_LoadingClient(const int client_num)
+void CG_LoadingClient(const int clientNum)
 {
 	char personality[MAX_QPATH];
 
-	const char* info = CG_ConfigString(CS_PLAYERS + client_num);
+	const char* info = CG_ConfigString(CS_PLAYERS + clientNum);
 
 	Q_strncpyz(personality, Info_ValueForKey(info, "n"), sizeof personality);
 

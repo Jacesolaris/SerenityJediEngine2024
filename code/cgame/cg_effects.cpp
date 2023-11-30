@@ -936,7 +936,7 @@ void CG_PlayEffectIDBolted(const int fx_id, const int modelIndex, const int bolt
 	CG_PlayEffectBolted(fx_name, modelIndex, boltIndex, entNum, origin, i_loop_time, is_relative);
 }
 
-void CG_PlayEffectOnEnt(const char* fx_name, const int client_num, vec3_t origin, const vec3_t fwd)
+void CG_PlayEffectOnEnt(const char* fx_name, const int clientNum, vec3_t origin, const vec3_t fwd)
 {
 	vec3_t temp, axis[3]{};
 
@@ -945,13 +945,13 @@ void CG_PlayEffectOnEnt(const char* fx_name, const int client_num, vec3_t origin
 	MakeNormalVectors(fwd, axis[1], temp);
 	CrossProduct(axis[0], axis[1], axis[2]);
 	//call FX scheduler directly
-	theFxScheduler.PlayEffect(fx_name, origin, axis, -1, client_num, false);
+	theFxScheduler.PlayEffect(fx_name, origin, axis, -1, clientNum, false);
 }
 
-void CG_PlayEffectIDOnEnt(const int fx_id, const int client_num, vec3_t origin, const vec3_t fwd)
+void CG_PlayEffectIDOnEnt(const int fx_id, const int clientNum, vec3_t origin, const vec3_t fwd)
 {
 	const char* fx_name = CG_ConfigString(CS_EFFECTS + fx_id);
-	CG_PlayEffectOnEnt(fx_name, client_num, origin, fwd);
+	CG_PlayEffectOnEnt(fx_name, clientNum, origin, fwd);
 }
 
 void CG_PlayEffect(const char* fx_name, vec3_t origin, const vec3_t fwd)
@@ -972,12 +972,12 @@ void CG_PlayEffectID(const int fx_id, vec3_t origin, const vec3_t fwd)
 	CG_PlayEffect(fx_name, origin, fwd);
 }
 
-inline float random()
+inline static float random()
 {
 	return rand() / static_cast<float>(0x7fff);
 }
 
-inline float crandom()
+inline static float crandom()
 {
 	return 2.0F * (random() - 0.5F);
 }

@@ -139,7 +139,7 @@ static void CG_Draw_JKA_ForcePower(const centity_t* cent, const float hud_ratio)
 	}
 
 	// Make the hud flash by setting forceHUDTotalFlashTime above cg.time
-	if (cg.forceHUDTotalFlashTime > cg.time || cg_entities[cg.snap->ps.client_num].currentState.userInt3 & 1 << FLAG_FATIGUED)
+	if (cg.forceHUDTotalFlashTime > cg.time || cg_entities[cg.snap->ps.clientNum].currentState.userInt3 & 1 << FLAG_FATIGUED)
 	{
 		flash = qtrue;
 		if (cg.forceHUDNextFlashTime < cg.time)
@@ -3101,7 +3101,7 @@ static void CG_DrawSimpleForcePower(const centity_t* cent)
 	}
 
 	// Make the hud flash by setting forceHUDTotalFlashTime above cg.time
-	if (cg.forceHUDTotalFlashTime > cg.time || cg_entities[cg.snap->ps.client_num].currentState.userInt3 & 1 <<
+	if (cg.forceHUDTotalFlashTime > cg.time || cg_entities[cg.snap->ps.clientNum].currentState.userInt3 & 1 <<
 		FLAG_FATIGUED)
 	{
 		flash = qtrue;
@@ -4275,7 +4275,7 @@ static void CG_DrawStats()
 		return;
 	}
 
-	const centity_t* cent = &cg_entities[cg.snap->ps.client_num];
+	const centity_t* cent = &cg_entities[cg.snap->ps.clientNum];
 
 	if (cg.snap->ps.viewEntity > 0 && cg.snap->ps.viewEntity < ENTITYNUM_WORLD)
 	{
@@ -4723,7 +4723,7 @@ static void CG_DrawCrosshair(vec3_t world_point)
 	}
 
 	//set color based on what kind of ent is under crosshair
-	if (cg.crosshairclient_num >= ENTITYNUM_WORLD)
+	if (cg.crosshairclientNum >= ENTITYNUM_WORLD)
 	{
 		ecolor[0] = ecolor[1] = ecolor[2] = 1.0f;
 	}
@@ -5189,7 +5189,7 @@ static void CG_ScanForCrosshairEntity(const qboolean scanAll)
 	trace_t trace;
 	const gentity_t* trace_ent = nullptr;
 	vec3_t start, end;
-	int ignoreEnt = cg.snap->ps.client_num;
+	int ignoreEnt = cg.snap->ps.clientNum;
 	const Vehicle_t* p_veh;
 
 	cg_forceCrosshair = qfalse;
@@ -5364,9 +5364,9 @@ static void CG_ScanForCrosshairEntity(const qboolean scanAll)
 			else
 			{
 				AngleVectors(cg_entities[0].lerpAngles, d_f, d_rt, d_up);
-				calcmuzzle_point(&g_entities[0], d_f, start, 0);
+				calcmuzzlePoint(&g_entities[0], d_f, start, 0);
 			}
-			//VectorCopy( g_entities[0].client->renderInfo.muzzle_point, start );
+			//VectorCopy( g_entities[0].client->renderInfo.muzzlePoint, start );
 			//FIXME: increase this?  Increase when zoom in?
 			VectorMA(start, 4096, d_f, end); //was 8192
 		}
@@ -5449,12 +5449,12 @@ static void CG_ScanForCrosshairEntity(const qboolean scanAll)
 	}
 
 	// update the fade timer
-	if (cg.crosshairclient_num != trace.entityNum)
+	if (cg.crosshairclientNum != trace.entityNum)
 	{
 		infoStringCount = 0;
 	}
 
-	cg.crosshairclient_num = trace.entityNum;
+	cg.crosshairclientNum = trace.entityNum;
 	cg.crosshairClientTime = cg.time;
 }
 
@@ -5474,7 +5474,7 @@ static void CG_DrawCrosshairItem()
 
 	CG_ScanForCrosshairEntity(scan_all);
 
-	if (cg_entities[cg.crosshairclient_num].currentState.eType == ET_ITEM && cg.snap->ps.weapon != WP_DROIDEKA)
+	if (cg_entities[cg.crosshairclientNum].currentState.eType == ET_ITEM && cg.snap->ps.weapon != WP_DROIDEKA)
 	{
 		CG_DrawPic(50, 285, 32, 32, cgs.media.useableHint);
 		return;
@@ -5506,7 +5506,7 @@ static void CG_DrawCrosshairNames()
 
 	const float w = CG_DrawStrlen(va("Civilian")) * TINYCHAR_WIDTH;
 
-	if (cg_entities[cg.crosshairclient_num].currentState.powerups & 1 << PW_CLOAKED)
+	if (cg_entities[cg.crosshairclientNum].currentState.powerups & 1 << PW_CLOAKED)
 	{
 		return;
 	}
@@ -6675,8 +6675,8 @@ float cg_draw_radar(const float y)
 
 		case ET_MISSILE:
 
-			if (cent->currentState.client_num > MAX_CLIENTS //belongs to an NPC
-				&& cg_entities[cent->currentState.client_num].currentState.NPC_class == CLASS_VEHICLE)
+			if (cent->currentState.clientNum > MAX_CLIENTS //belongs to an NPC
+				&& cg_entities[cent->currentState.clientNum].currentState.NPC_class == CLASS_VEHICLE)
 			{
 				//a rocket belonging to an NPC, FIXME: only tracking rockets!
 
@@ -6689,7 +6689,7 @@ float cg_draw_radar(const float y)
 				{
 					//I'm in a vehicle
 					//if it's targeting me, then play an alarm sound if I'm in a vehicle
-					if (cent->currentState.otherentity_num == cg.predicted_player_state.client_num || cent->
+					if (cent->currentState.otherentity_num == cg.predicted_player_state.clientNum || cent->
 						currentState.otherentity_num == cg.predicted_player_state.m_iVehicleNum)
 					{
 						if (radarLockSoundDebounceTime < cg.time)
@@ -6756,12 +6756,12 @@ float cg_draw_radar(const float y)
 
 				arrow_base_scale *= z_scale;
 
-				if (cent->currentState.client_num >= MAX_CLIENTS //missile owned by an NPC
-					&& cg_entities[cent->currentState.client_num].currentState.NPC_class == CLASS_VEHICLE
+				if (cent->currentState.clientNum >= MAX_CLIENTS //missile owned by an NPC
+					&& cg_entities[cent->currentState.clientNum].currentState.NPC_class == CLASS_VEHICLE
 					//NPC is a vehicle
-					&& cg_entities[cent->currentState.client_num].currentState.m_iVehicleNum <= MAX_CLIENTS
+					&& cg_entities[cent->currentState.clientNum].currentState.m_iVehicleNum <= MAX_CLIENTS
 					//Vehicle has a player driver
-					&& cgs.clientinfo[cg_entities[cent->currentState.client_num].currentState.m_iVehicleNum - 1].
+					&& cgs.clientinfo[cg_entities[cent->currentState.clientNum].currentState.m_iVehicleNum - 1].
 					infoValid) //player driver is valid
 				{
 					cgi_R_SetColor(colorTable[CT_RED]);
@@ -6834,7 +6834,7 @@ static qboolean CG_RenderingFromMiscCamera()
 {
 	//centity_t *cent;
 
-	//cent = &cg_entities[cg.snap->ps.client_num];
+	//cent = &cg_entities[cg.snap->ps.clientNum];
 
 	if (cg.snap->ps.viewEntity > 0 &&
 		cg.snap->ps.viewEntity < ENTITYNUM_WORLD)
@@ -6877,7 +6877,7 @@ qboolean CanUseInfrontOf(const gentity_t*);
 
 static void CG_UseIcon()
 {
-	cg_usingInFrontOf = CanUseInfrontOf(cg_entities[cg.snap->ps.client_num].gent);
+	cg_usingInFrontOf = CanUseInfrontOf(cg_entities[cg.snap->ps.clientNum].gent);
 	if (cg_usingInFrontOf)
 	{
 		cgi_R_SetColor(nullptr);
@@ -7241,7 +7241,7 @@ static void CG_Draw2D()
 {
 	char text[1024] = { 0 };
 	int w, y_pos;
-	const centity_t* cent = &cg_entities[cg.snap->ps.client_num];
+	const centity_t* cent = &cg_entities[cg.snap->ps.clientNum];
 
 	// if we are taking a levelshot for the menu, don't draw anything
 	if (cg.levelShot)
@@ -7338,13 +7338,13 @@ static void CG_Draw2D()
 	//if (cg.predicted_player_state.communicatingflags & (1 << PROJECTING))
 	//if (cg.predicted_player_state.pm_flags & PMF_DASH_HELD)
 	//if (cg.predicted_player_state.ManualBlockingFlags & (1 << MBF_PROJBLOCKING))
-	//if (cg_entities[cg.snap->ps.client_num].currentState.userInt3 & (1 << FLAG_ATTACKFAKE))
+	//if (cg_entities[cg.snap->ps.clientNum].currentState.userInt3 & (1 << FLAG_ATTACKFAKE))
 	//if (cent->currentState.eFlags & EF2_DUAL_WEAPONS)
 	//if (cent->currentState.eFlags & EF2_DUAL_PISTOLS)
 	//if (cg.predicted_player_state.ManualBlockingFlags & 1 << MBF_ACCURATEMISSILEBLOCKING)
 	//if (cg.predicted_player_state.ManualBlockingFlags & 1 << MBF_NPCBLOCKSTANCE)
 	//if (cg.predicted_player_state.ManualBlockingFlags & 1 << MBF_MISSILESTASIS)
-	//if (cg_entities[cg.snap->ps.client_num].currentState.userInt3 & 1 << FLAG_PERFECTBLOCK)
+	//if (cg_entities[cg.snap->ps.clientNum].currentState.userInt3 & 1 << FLAG_PERFECTBLOCK)
 	//if (cg.snap->ps.userInt3 & (1 << FLAG_PERFECTBLOCK))
 	//{//test for all sorts of shit... does it work? show me.
 		//CG_DrawPic(0, 0, 640, 480, cgi_R_RegisterShader("gfx/2d/jsense"));

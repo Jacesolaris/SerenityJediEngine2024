@@ -323,7 +323,7 @@ static void ProcessMoveCommands(Vehicle_t* p_veh)
 #ifdef _GAME
 					//G_EntitySound( ((gentity_t *)(p_veh->m_pParentEntity)), CHAN_LOCAL, p_veh->m_pVehicleInfo->soundHyper );
 #elif _CGAME
-					trap->S_StartSound(NULL, pm->ps->client_num, CHAN_LOCAL, p_veh->m_pVehicleInfo->soundHyper);
+					trap->S_StartSound(NULL, pm->ps->clientNum, CHAN_LOCAL, p_veh->m_pVehicleInfo->soundHyper);
 #endif
 				}
 

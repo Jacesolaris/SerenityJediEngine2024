@@ -66,7 +66,7 @@ void GetOrigin(const int client_id, vec3_t org)
 
 		if (cent && cent->gent && cent->gent->client)
 		{
-			VectorCopy(cent->gent->client->renderInfo.muzzle_point, org);
+			VectorCopy(cent->gent->client->renderInfo.muzzlePoint, org);
 		}
 	}
 }

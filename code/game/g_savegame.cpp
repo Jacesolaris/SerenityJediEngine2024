@@ -268,7 +268,7 @@ static AIGroupInfo_t* get_group_ptr(const intptr_t i_group_num)
 /////////// gclient_t * ////////
 //
 //
-static intptr_t get_g_client_num(const gclient_t* c, const gentity_t* ent)
+static intptr_t get_g_clientNum(const gclient_t* c, const gentity_t* ent)
 {
 	// unfortunately, I now need to see if this is a INT_ID('r','e','a','l') client (and therefore resolve to an enum), or
 	//	whether it's one of the NPC or SP_misc_weapon_shooter
@@ -393,7 +393,7 @@ static void enumerate_field(const save_field_t* p_field, const byte* pb_base)
 
 	case F_GCLIENT:
 		// ReSharper disable once CppCStyleCast
-		*static_cast<intptr_t*>(pv) = get_g_client_num(*static_cast<gclient_t**>(pv), (gentity_t*)pb_base);
+		*static_cast<intptr_t*>(pv) = get_g_clientNum(*static_cast<gclient_t**>(pv), (gentity_t*)pb_base);
 		break;
 
 	case F_ITEM:

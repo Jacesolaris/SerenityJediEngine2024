@@ -225,10 +225,10 @@ void TeleportPlayer(gentity_t* player, vec3_t origin, vec3_t angles)
 	if (player->client->sess.sessionTeam != TEAM_SPECTATOR)
 	{
 		gentity_t* tent = G_TempEntity(player->client->ps.origin, EV_PLAYER_TELEPORT_OUT);
-		tent->s.client_num = player->s.client_num;
+		tent->s.clientNum = player->s.clientNum;
 
 		tent = G_TempEntity(origin, EV_PLAYER_TELEPORT_IN);
-		tent->s.client_num = player->s.client_num;
+		tent->s.clientNum = player->s.clientNum;
 	}
 
 	// unlink to make sure it can't possibly interfere with G_KillBox
@@ -612,8 +612,8 @@ void locateCamera(gentity_t* ent)
 		ent->s.powerups = 1;
 	}
 
-	// client_num holds the rotate offset
-	ent->s.client_num = owner->s.client_num;
+	// clientNum holds the rotate offset
+	ent->s.clientNum = owner->s.clientNum;
 
 	VectorCopy(owner->s.origin, ent->s.origin2);
 
@@ -670,7 +670,7 @@ void SP_misc_portal_camera(gentity_t* ent)
 
 	G_SpawnFloat("roll", "0", &roll);
 
-	ent->s.client_num = roll / 360.0 * 256;
+	ent->s.clientNum = roll / 360.0 * 256;
 }
 
 /*QUAKED misc_bsp (1 0 0) (-16 -16 -16) (16 16 16)
@@ -3779,7 +3779,7 @@ void SP_misc_weapon_shooter(gentity_t* self)
 	register_item(BG_FindItemForWeapon(self->s.weapon));
 
 	//set where our muzzle is
-	VectorCopy(self->s.origin, self->client->renderInfo.muzzle_point);
+	VectorCopy(self->s.origin, self->client->renderInfo.muzzlePoint);
 
 	//set up to link
 	if (self->target)
@@ -4390,7 +4390,7 @@ void camera_use(gentity_t* self, gentity_t* other, gentity_t* activator)
 		//RACC - we're makign this global instead
 		//G_Sound( activator, self->soundPos1 );
 		self->genericValue1 = 1;
-		self->genericValue2 = activator->client->ps.client_num;
+		self->genericValue2 = activator->client->ps.clientNum;
 	}
 }
 

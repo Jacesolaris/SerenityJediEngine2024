@@ -49,7 +49,7 @@ sharedEntity_t* SV_Gentity_num(const int num)
 	return ent;
 }
 
-playerState_t* SV_Gameclient_num(const int num)
+playerState_t* SV_GameclientNum(const int num)
 {
 	const auto ps = reinterpret_cast<playerState_t*>(reinterpret_cast<byte*>(sv.gameClients) + sv.gameClientSize * num);
 

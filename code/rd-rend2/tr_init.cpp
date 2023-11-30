@@ -286,6 +286,8 @@ cvar_t* g_Weather;
 
 cvar_t* r_com_rend2;
 
+cvar_t* com_outcast;
+
 #define ri_Cvar_Get_NoComm(varname, value, flag, comment) ri.Cvar_Get(varname, value, flag)
 
 #ifdef REND2_SP
@@ -361,6 +363,11 @@ static void R_Splash()
 	if (r_shadows->integer != 1)
 	{
 		ri.Cvar_Set("cg_shadows", "1");
+	}
+
+	if (com_outcast->integer != 0)
+	{
+		ri.Cvar_Set("com_outcast", "0");
 	}
 
 	ri.WIN_Present(&window);
@@ -1710,6 +1717,8 @@ static void R_Register(void)
 	broadsword_dircap = ri_Cvar_Get_NoComm("broadsword_dircap", "64", CVAR_TEMP, "");
 
 	r_com_rend2 = ri.Cvar_Get("com_rend2", "0", CVAR_ARCHIVE | CVAR_SAVEGAME);
+
+	com_outcast = ri.Cvar_Get("com_outcast", "0", CVAR_ARCHIVE | CVAR_SAVEGAME);
 	/*
 	Ghoul2 Insert End
 	*/

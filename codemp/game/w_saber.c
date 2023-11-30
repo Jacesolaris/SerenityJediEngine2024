@@ -1393,8 +1393,8 @@ static QINLINE void SetSaberBoxSize(gentity_t* saberent)
 						continue;
 					}
 				}
-				VectorCopy(owner->client->saber[j].blade[k].muzzle_point, saber_org);
-				VectorMA(owner->client->saber[j].blade[k].muzzle_point, owner->client->saber[j].blade[k].lengthMax,
+				VectorCopy(owner->client->saber[j].blade[k].muzzlePoint, saber_org);
+				VectorMA(owner->client->saber[j].blade[k].muzzlePoint, owner->client->saber[j].blade[k].lengthMax,
 					owner->client->saber[j].blade[k].muzzleDir, saber_tip);
 
 				if (saber_org[i] < saberent->r.mins[i])
@@ -3135,7 +3135,7 @@ static QINLINE qboolean g_saber_collide(gentity_t* atk, const gentity_t* def, ve
 					vec3_t v;
 					//recently updated
 					//first get base and tip of blade
-					VectorCopy(blade->muzzle_point, base);
+					VectorCopy(blade->muzzlePoint, base);
 					VectorMA(base, blade->lengthMax, blade->muzzleDir, tip);
 
 					//Now get relative angles between the points
@@ -4139,8 +4139,8 @@ int wp_saber_must_block(gentity_t* self, const gentity_t* atk, const qboolean ch
 		VectorSubtract(closest_body_point, point, dir_to_body);
 
 		//find current saber movement direction of the attacker
-		VectorSubtract(atk->client->saber[r_saber_num].blade[r_blade_num].muzzle_point,
-			atk->client->saber[r_saber_num].blade[r_blade_num].muzzle_pointOld, saber_move_dir);
+		VectorSubtract(atk->client->saber[r_saber_num].blade[r_blade_num].muzzlePoint,
+			atk->client->saber[r_saber_num].blade[r_blade_num].muzzlePointOld, saber_move_dir);
 
 		if (DotProduct(dir_to_body, saber_move_dir) < 0)
 		{
@@ -4525,8 +4525,8 @@ int wp_saber_must_bolt_block(gentity_t* self, const gentity_t* atk, const qboole
 		VectorSubtract(closest_body_point, point, dir_to_body);
 
 		//find current saber movement direction of the attacker
-		VectorSubtract(atk->client->saber[r_saber_num].blade[r_blade_num].muzzle_point,
-			atk->client->saber[r_saber_num].blade[r_blade_num].muzzle_pointOld, saber_move_dir);
+		VectorSubtract(atk->client->saber[r_saber_num].blade[r_blade_num].muzzlePoint,
+			atk->client->saber[r_saber_num].blade[r_blade_num].muzzlePointOld, saber_move_dir);
 
 		if (DotProduct(dir_to_body, saber_move_dir) < 0)
 		{
@@ -4887,7 +4887,7 @@ int wp_debug_saber_colour(const saber_colors_t saber_color)
 	}
 }
 
-extern saberInfo_t* BG_MySaber(int client_num, int saberNum);
+extern saberInfo_t* BG_MySaber(int clientNum, int saberNum);
 
 #define MAX_SABER_VICTIMS 8192
 static int victimentity_num[MAX_SABER_VICTIMS];
@@ -5009,7 +5009,7 @@ static qboolean saberDoClashEffect = qfalse;
 static vec3_t saberClashPos = { 0 };
 static vec3_t saberClashNorm = { 0 };
 static int saberClashEventParm = 1;
-static int saberClashOther = -1; //the client_num for the other player involved in the saber clash.
+static int saberClashOther = -1; //the clientNum for the other player involved in the saber clash.
 static QINLINE void G_SetViewLock(const gentity_t* self, vec3_t impact_pos, vec3_t impact_normal);
 static QINLINE void G_SetViewLockDebounce(const gentity_t* self);
 
@@ -5501,7 +5501,7 @@ qboolean DodgeRollCheck(const gentity_t* self, const int dodge_anim, vec3_t forw
 	maxs[2] = 32;
 
 	//check for solids/or players in the way.
-	trap->Trace(&tr, tracefrom_mod, mins, maxs, traceto_mod, self->client->ps.client_num, MASK_PLAYERSOLID, qfalse, 0,
+	trap->Trace(&tr, tracefrom_mod, mins, maxs, traceto_mod, self->client->ps.clientNum, MASK_PLAYERSOLID, qfalse, 0,
 		0);
 
 	if (tr.fraction != 1 || tr.startsolid)
@@ -5515,7 +5515,7 @@ qboolean DodgeRollCheck(const gentity_t* self, const int dodge_anim, vec3_t forw
 	//check for 20+ feet drops
 	traceto_mod[2] -= 200;
 
-	trap->Trace(&tr, tracefrom_mod, mins, maxs, traceto_mod, self->client->ps.client_num, MASK_SOLID, qfalse, 0, 0);
+	trap->Trace(&tr, tracefrom_mod, mins, maxs, traceto_mod, self->client->ps.clientNum, MASK_SOLID, qfalse, 0, 0);
 	if (tr.fraction == 1 && !tr.startsolid)
 	{
 		//CLIFF!
@@ -9922,8 +9922,8 @@ void UpdateClientRenderinfo(gentity_t* self, vec3_t render_origin, vec3_t render
 		}
 
 		//muzzle point calc (we are going to be cheap here)
-		VectorCopy(ri->muzzle_point, ri->muzzle_pointOld);
-		VectorCopy(self->client->ps.origin, ri->muzzle_point);
+		VectorCopy(ri->muzzlePoint, ri->muzzlePointOld);
+		VectorCopy(self->client->ps.origin, ri->muzzlePoint);
 		VectorCopy(ri->muzzleDir, ri->muzzleDirOld);
 		AngleVectors(self->client->ps.viewangles, ri->muzzleDir, 0, 0);
 		ri->mPCalcTime = level.time;
@@ -11763,7 +11763,7 @@ void wp_saber_position_update(gentity_t* self, usercmd_t* ucmd)
 	qboolean client_override;
 	gentity_t* veh_ent = NULL;
 
-	saberInfo_t* saber1 = BG_MySaber(self->client_num, 0);
+	saberInfo_t* saber1 = BG_MySaber(self->clientNum, 0);
 
 	const qboolean self_is_holding_block_button = self->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
 
@@ -12589,8 +12589,8 @@ nextStep:
 			while (r_blade_num < self->client->saber[r_saber_num].numBlades)
 			{
 				//update muzzle data for the blade
-				VectorCopy(self->client->saber[r_saber_num].blade[r_blade_num].muzzle_point,
-					self->client->saber[r_saber_num].blade[r_blade_num].muzzle_pointOld);
+				VectorCopy(self->client->saber[r_saber_num].blade[r_blade_num].muzzlePoint,
+					self->client->saber[r_saber_num].blade[r_blade_num].muzzlePointOld);
 				VectorCopy(self->client->saber[r_saber_num].blade[r_blade_num].muzzleDir,
 					self->client->saber[r_saber_num].blade[r_blade_num].muzzleDirOld);
 
@@ -12642,10 +12642,10 @@ nextStep:
 					trap->G2API_GetBoltMatrix(saber_ent->ghoul2, 0, r_blade_num, &boltMatrix, saber_angles, saber_org,
 						level.time, NULL, self->modelScale);
 					BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN,
-						self->client->saber[r_saber_num].blade[r_blade_num].muzzle_point);
+						self->client->saber[r_saber_num].blade[r_blade_num].muzzlePoint);
 					BG_GiveMeVectorFromMatrix(&boltMatrix, NEGATIVE_Y,
 						self->client->saber[r_saber_num].blade[r_blade_num].muzzleDir);
-					VectorCopy(self->client->saber[r_saber_num].blade[r_blade_num].muzzle_point, bolt_origin);
+					VectorCopy(self->client->saber[r_saber_num].blade[r_blade_num].muzzlePoint, bolt_origin);
 					VectorMA(bolt_origin, self->client->saber[r_saber_num].blade[r_blade_num].lengthMax,
 						self->client->saber[r_saber_num].blade[r_blade_num].muzzleDir, end);
 				}
@@ -12654,10 +12654,10 @@ nextStep:
 					trap->G2API_GetBoltMatrix(self->ghoul2, r_saber_num + 1, r_blade_num, &boltMatrix, proper_angles,
 						proper_origin, level.time, NULL, self->modelScale);
 					BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN,
-						self->client->saber[r_saber_num].blade[r_blade_num].muzzle_point);
+						self->client->saber[r_saber_num].blade[r_blade_num].muzzlePoint);
 					BG_GiveMeVectorFromMatrix(&boltMatrix, NEGATIVE_Y,
 						self->client->saber[r_saber_num].blade[r_blade_num].muzzleDir);
-					VectorCopy(self->client->saber[r_saber_num].blade[r_blade_num].muzzle_point, bolt_origin);
+					VectorCopy(self->client->saber[r_saber_num].blade[r_blade_num].muzzlePoint, bolt_origin);
 					VectorMA(bolt_origin, self->client->saber[r_saber_num].blade[r_blade_num].lengthMax,
 						self->client->saber[r_saber_num].blade[r_blade_num].muzzleDir, end);
 				}
@@ -15493,7 +15493,7 @@ void SaberBallisticsThink(gentity_t* saber_ent)
 void thrownSaberBallistics(gentity_t* saber_ent, const gentity_t* saber_own, const qboolean stuck)
 {
 	//this function converts the saber from thrown saber that's being held on course by the force into a saber that's just ballastically moving.
-	const saberInfo_t* saber1 = BG_MySaber(saber_own->client_num, 0);
+	const saberInfo_t* saber1 = BG_MySaber(saber_own->clientNum, 0);
 
 	if (stuck)
 	{

@@ -942,7 +942,7 @@ void Jedi_Cloak(gentity_t* self)
 			self->client->ps.powerups[PW_UNCLOAKING] = level.time + 2000;
 			G_SoundOnEnt(self, CHAN_ITEM, "sound/chars/shadowtrooper/cloak.wav");
 
-			if (self->s.client_num >= MAX_CLIENTS && !self->client->ps.SaberActive())
+			if (self->s.clientNum >= MAX_CLIENTS && !self->client->ps.SaberActive())
 			{
 				NPC_SetAnim(self, SETANIM_TORSO, BOTH_FORCE_PROTECT_FAST, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 			}
@@ -5708,10 +5708,10 @@ static qboolean Jedi_SaberBlock()
 				&& NPC->enemy->client->ps.saber[saberNum].blade[blade_num].length > 0)
 			{
 				//valid saber and this blade is on
-				VectorMA(NPC->enemy->client->ps.saber[saberNum].blade[blade_num].muzzle_pointOld,
+				VectorMA(NPC->enemy->client->ps.saber[saberNum].blade[blade_num].muzzlePointOld,
 					NPC->enemy->client->ps.saber[saberNum].blade[blade_num].length,
 					NPC->enemy->client->ps.saber[saberNum].blade[blade_num].muzzleDirOld, saber_tip_old);
-				VectorMA(NPC->enemy->client->ps.saber[saberNum].blade[blade_num].muzzle_point,
+				VectorMA(NPC->enemy->client->ps.saber[saberNum].blade[blade_num].muzzlePoint,
 					NPC->enemy->client->ps.saber[saberNum].blade[blade_num].length,
 					NPC->enemy->client->ps.saber[saberNum].blade[blade_num].muzzleDir, saber_tip);
 
@@ -5721,7 +5721,7 @@ static qboolean Jedi_SaberBlock()
 				bottom[2] = NPC->absmin[2];
 
 				dist = ShortestLineSegBewteen2LineSegs(
-					NPC->enemy->client->ps.saber[saberNum].blade[blade_num].muzzle_point, saber_tip, bottom, top,
+					NPC->enemy->client->ps.saber[saberNum].blade[blade_num].muzzlePoint, saber_tip, bottom, top,
 					saber_point, axis_point);
 				if (dist < best_dist)
 				{
@@ -5752,10 +5752,10 @@ static qboolean Jedi_SaberBlock()
 	}
 
 	//now use the closest blade for my evasion check
-	VectorMA(NPC->enemy->client->ps.saber[closest_saber_num].blade[closest_blade_num].muzzle_pointOld,
+	VectorMA(NPC->enemy->client->ps.saber[closest_saber_num].blade[closest_blade_num].muzzlePointOld,
 		NPC->enemy->client->ps.saber[closest_saber_num].blade[closest_blade_num].length,
 		NPC->enemy->client->ps.saber[closest_saber_num].blade[closest_blade_num].muzzleDirOld, saber_tip_old);
-	VectorMA(NPC->enemy->client->ps.saber[closest_saber_num].blade[closest_blade_num].muzzle_point,
+	VectorMA(NPC->enemy->client->ps.saber[closest_saber_num].blade[closest_blade_num].muzzlePoint,
 		NPC->enemy->client->ps.saber[closest_saber_num].blade[closest_blade_num].length,
 		NPC->enemy->client->ps.saber[closest_saber_num].blade[closest_blade_num].muzzleDir, saber_tip);
 
@@ -5765,9 +5765,9 @@ static qboolean Jedi_SaberBlock()
 	bottom[2] = NPC->absmin[2];
 
 	dist = ShortestLineSegBewteen2LineSegs(
-		NPC->enemy->client->ps.saber[closest_saber_num].blade[closest_blade_num].muzzle_point, saber_tip, bottom, top,
+		NPC->enemy->client->ps.saber[closest_saber_num].blade[closest_blade_num].muzzlePoint, saber_tip, bottom, top,
 		saber_point, axis_point);
-	VectorSubtract(saber_point, NPC->enemy->client->ps.saber[closest_saber_num].blade[closest_blade_num].muzzle_point,
+	VectorSubtract(saber_point, NPC->enemy->client->ps.saber[closest_saber_num].blade[closest_blade_num].muzzlePoint,
 		point_dir);
 	const float point_dist = VectorLength(point_dir);
 
@@ -5779,8 +5779,8 @@ static qboolean Jedi_SaberBlock()
 	{
 		base_dir_perc = point_dist / NPC->enemy->client->ps.saber[closest_saber_num].blade[closest_blade_num].length;
 	}
-	VectorSubtract(NPC->enemy->client->ps.saber[closest_saber_num].blade[closest_blade_num].muzzle_point,
-		NPC->enemy->client->ps.saber[closest_saber_num].blade[closest_blade_num].muzzle_pointOld, base_dir);
+	VectorSubtract(NPC->enemy->client->ps.saber[closest_saber_num].blade[closest_blade_num].muzzlePoint,
+		NPC->enemy->client->ps.saber[closest_saber_num].blade[closest_blade_num].muzzlePointOld, base_dir);
 	VectorSubtract(saber_tip, saber_tip_old, tip_dir);
 	VectorScale(base_dir, base_dir_perc, base_dir);
 	VectorMA(base_dir, 1.0f - base_dir_perc, tip_dir, dir);
@@ -6574,7 +6574,7 @@ void jedi_set_enemy_info(vec3_t enemy_dest, vec3_t enemy_dir, float* enemy_dist,
 		//figure out where he'll be, say, 3 frames from now
 		VectorMA(NPC->enemy->currentOrigin, *enemy_movespeed * 0.001 * prediction, enemy_movedir, enemy_dest);
 		//figure out what dir the enemy's estimated position is from me and how far from the tip of my saber he is
-		VectorSubtract(enemy_dest, NPC->currentOrigin, enemy_dir); //NPC->client->renderInfo.muzzle_point
+		VectorSubtract(enemy_dest, NPC->currentOrigin, enemy_dir); //NPC->client->renderInfo.muzzlePoint
 		//FIXME: enemy_dist calc needs to include all blade lengths, and include distance from hand to start of blade....
 		*enemy_dist = VectorNormalize(enemy_dir) - (NPC->client->ps.SaberLengthMax() + NPC->maxs[0] * 1.5 + 16);
 	}

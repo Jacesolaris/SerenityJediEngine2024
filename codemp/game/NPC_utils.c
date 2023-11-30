@@ -145,7 +145,7 @@ void CalcEntitySpot(const gentity_t* ent, const spot_t spot, vec3_t point)
 		{
 			AngleVectors(ent->client->ps.viewangles, forward, right, up);
 		}
-		calcmuzzle_point((gentity_t*)ent, forward, right, point);
+		calcmuzzlePoint((gentity_t*)ent, forward, right, point);
 		//NOTE: automatically takes leaning into account!
 		break;
 
@@ -755,7 +755,7 @@ void SetTeamNumbers(void)
 		teamStrength[i] = 0;
 	}
 
-	//OJKFIXME: client_num 0
+	//OJKFIXME: clientNum 0
 	for (i = 0; i < 1; i++)
 	{
 		const gentity_t* found = &g_entities[i];

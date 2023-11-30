@@ -289,11 +289,11 @@ public:
 	int renderFlags;
 
 	//
-	vec3_t muzzle_point;
+	vec3_t muzzlePoint;
 	vec3_t muzzleDir;
-	vec3_t muzzle_pointOld;
+	vec3_t muzzlePointOld;
 	vec3_t muzzleDirOld;
-	//vec3_t		muzzle_pointNext;	// Muzzle point one server frame in the future!
+	//vec3_t		muzzlePointNext;	// Muzzle point one server frame in the future!
 	//vec3_t		muzzleDirNext;
 	int mPCalcTime; //Last time muzzle point was calced
 
@@ -351,9 +351,9 @@ public:
 		saved_game.write<float>(boneAngles3);
 		saved_game.write<float>(boneAngles4);
 		saved_game.write<int32_t>(renderFlags);
-		saved_game.write<float>(muzzle_point);
+		saved_game.write<float>(muzzlePoint);
 		saved_game.write<float>(muzzleDir);
-		saved_game.write<float>(muzzle_pointOld);
+		saved_game.write<float>(muzzlePointOld);
 		saved_game.write<float>(muzzleDirOld);
 		saved_game.write<int32_t>(mPCalcTime);
 		saved_game.write<float>(lockYaw);
@@ -408,9 +408,9 @@ public:
 		saved_game.read<float>(boneAngles3);
 		saved_game.read<float>(boneAngles4);
 		saved_game.read<int32_t>(renderFlags);
-		saved_game.read<float>(muzzle_point);
+		saved_game.read<float>(muzzlePoint);
 		saved_game.read<float>(muzzleDir);
-		saved_game.read<float>(muzzle_pointOld);
+		saved_game.read<float>(muzzlePointOld);
 		saved_game.read<float>(muzzleDirOld);
 		saved_game.read<int32_t>(mPCalcTime);
 		saved_game.read<float>(lockYaw);

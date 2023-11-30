@@ -1341,7 +1341,7 @@ static void CG_DoMuzzleFlash(centity_t* cent, vec3_t org, vec3_t dir, const weap
 			else
 			{
 				// We got an effect and we're firing, so let 'er rip.
-				theFxScheduler.PlayEffect(effect, cent->currentState.client_num);
+				theFxScheduler.PlayEffect(effect, cent->currentState.clientNum);
 			}
 		}
 	}
@@ -1367,7 +1367,7 @@ static void CG_DoMuzzleFlash(centity_t* cent, vec3_t org, vec3_t dir, const weap
 			else
 			{
 				// We got an effect and we're firing, so let 'er rip.
-				theFxScheduler.PlayEffect(effect, cent->currentState.client_num);
+				theFxScheduler.PlayEffect(effect, cent->currentState.clientNum);
 			}
 		}
 		cent->muzzleOverheatTime = 0;
@@ -1404,7 +1404,7 @@ void CG_AddViewWeapon(playerState_t* ps)
 	if (cg.renderingThirdPerson && !cg_trueguns.integer && !cg.zoomMode && (ps->eFlags & EF2_DUAL_WEAPONS || ps->weapon == WP_DROIDEKA))
 	{
 		vec3_t origin;
-		cent = &cg_entities[ps->client_num];
+		cent = &cg_entities[ps->clientNum];
 		// special hack for lightning guns...
 		VectorCopy(cg.refdef.vieworg, origin);
 		VectorMA(origin, -10, cg.refdef.viewaxis[2], origin);
@@ -1422,7 +1422,7 @@ void CG_AddViewWeapon(playerState_t* ps)
 		}
 
 		// If we don't update this, the muzzle flash point won't even be updated properly
-		VectorCopy(origin, cent->gent->client->renderInfo.muzzle_pointOld);
+		VectorCopy(origin, cent->gent->client->renderInfo.muzzlePointOld);
 		VectorCopy(cg.refdef.viewaxis[0], cent->gent->client->renderInfo.muzzleDirOld);
 
 		cent->gent->client->renderInfo.mPCalcTime = cg.time;
@@ -1445,7 +1445,7 @@ void CG_AddViewWeapon(playerState_t* ps)
 		return;
 	}
 
-	cent = &cg_entities[ps->client_num];
+	cent = &cg_entities[ps->clientNum];
 
 	if (ps->eFlags & EF_LOCKED_TO_WEAPON)
 	{
@@ -1621,7 +1621,7 @@ void CG_AddViewWeapon(playerState_t* ps)
 		}
 
 		// If we don't update this, the muzzle flash point won't even be updated properly
-		VectorCopy(origin, cent->gent->client->renderInfo.muzzle_point);
+		VectorCopy(origin, cent->gent->client->renderInfo.muzzlePoint);
 		VectorCopy(cg.refdef.viewaxis[0], cent->gent->client->renderInfo.muzzleDir);
 
 		cent->gent->client->renderInfo.mPCalcTime = cg.time;
@@ -1739,7 +1739,7 @@ void CG_AddViewWeapon(playerState_t* ps)
 			hand.frame = CG_MapTorsoToWeaponFrame(ci, ceil(currentFrame), torso_anim, cent->currentState.weapon,
 				cent->currentState.eFlags & EF_FIRING);
 			hand.backlerp = 1.0f - (currentFrame - floor(currentFrame));
-			if (cg_debugAnim.integer == 1 && cent->currentState.client_num == 0)
+			if (cg_debugAnim.integer == 1 && cent->currentState.clientNum == 0)
 			{
 				Com_Printf("Torso frame %d to %d makes Weapon frame %d to %d\n", cent->pe.torso.oldFrame,
 					cent->pe.torso.frame, hand.oldframe, hand.frame);
@@ -1802,7 +1802,7 @@ void CG_AddViewWeapon(playerState_t* ps)
 				else
 				{
 					//need these points stored here when in 1st person saber
-					VectorCopy(org_, cent->gent->client->ps.saber[saberNum].blade[blade_num].muzzle_point);
+					VectorCopy(org_, cent->gent->client->ps.saber[saberNum].blade[blade_num].muzzlePoint);
 				}
 				VectorCopy(axis_[0], cent->gent->client->ps.saber[saberNum].blade[blade_num].muzzleDir);
 			}
@@ -1854,7 +1854,7 @@ void CG_AddViewWeapon(playerState_t* ps)
 		{
 			if (saberNum == 0)
 			{
-				VectorCopy(flash.origin, cent->gent->client->renderInfo.muzzle_point);
+				VectorCopy(flash.origin, cent->gent->client->renderInfo.muzzlePoint);
 				VectorCopy(flash.axis[0], cent->gent->client->renderInfo.muzzleDir);
 			}
 			cent->gent->client->renderInfo.mPCalcTime = cg.time;
@@ -1937,7 +1937,7 @@ void CG_AddViewWeapon(playerState_t* ps)
 
 			for (int i = 0; i < ct; i++)
 			{
-				theFxScheduler.PlayEffect("repeater/muzzle_smoke", cent->currentState.client_num);
+				theFxScheduler.PlayEffect("repeater/muzzle_smoke", cent->currentState.clientNum);
 			}
 
 			cent->gent->client->ps.weaponShotCount = 0;
@@ -1951,14 +1951,14 @@ void CG_AddViewWeapon(playerState_t* ps)
 			if (cent->currentState.eFlags & EF_FIRING)
 			{
 				theFxScheduler.PlayEffect(weaponData[cent->gent->client->ps.weapon].mMuzzleEffect,
-					cent->gent->client->renderInfo.muzzle_point,
+					cent->gent->client->renderInfo.muzzlePoint,
 					cent->gent->client->renderInfo.muzzleDir);
 			}
 
 			if (cent->currentState.eFlags & EF_ALT_FIRING)
 			{
 				theFxScheduler.PlayEffect(weaponData[cent->gent->client->ps.weapon].mAltMuzzleEffect,
-					cent->gent->client->renderInfo.muzzle_point,
+					cent->gent->client->renderInfo.muzzlePoint,
 					cent->gent->client->renderInfo.muzzleDir);
 			}
 
@@ -1968,7 +1968,7 @@ void CG_AddViewWeapon(playerState_t* ps)
 		if (!in_camera && cent->muzzleOverheatTime > 0)
 		{
 			theFxScheduler.PlayEffect(weaponData[cent->gent->client->ps.weapon].mOverloadMuzzleEffect,
-				cent->gent->client->renderInfo.muzzle_point,
+				cent->gent->client->renderInfo.muzzlePoint,
 				cent->gent->client->renderInfo.muzzleDir);
 			cent->muzzleOverheatTime = 0;
 		}
@@ -2004,7 +2004,7 @@ void CG_AddViewWeaponDuals(playerState_t* ps)
 		return;
 	}
 
-	cent = &cg_entities[ps->client_num];
+	cent = &cg_entities[ps->clientNum];
 
 	if (ps->eFlags & EF_LOCKED_TO_WEAPON)
 	{
@@ -2156,7 +2156,7 @@ void CG_AddViewWeaponDuals(playerState_t* ps)
 		wData = &weaponData[ps->weapon];
 
 		// If we don't update this, the muzzle flash point won't even be updated properly
-		VectorCopy(origin, cent->gent->client->renderInfo.muzzle_pointOld);
+		VectorCopy(origin, cent->gent->client->renderInfo.muzzlePointOld);
 		VectorCopy(cg.refdef.viewaxis[0], cent->gent->client->renderInfo.muzzleDirOld);
 
 		cent->gent->client->renderInfo.mPCalcTime = cg.time;
@@ -2274,7 +2274,7 @@ void CG_AddViewWeaponDuals(playerState_t* ps)
 			hand.frame = CG_MapTorsoToWeaponFrame(ci, ceil(currentFrame), torsoAnim, cent->currentState.weapon,
 				cent->currentState.eFlags & EF_FIRING);
 			hand.backlerp = 1.0f - (currentFrame - floor(currentFrame));
-			if (cg_debugAnim.integer == 1 && cent->currentState.client_num == 0)
+			if (cg_debugAnim.integer == 1 && cent->currentState.clientNum == 0)
 			{
 				Com_Printf("Torso frame %d to %d makes Weapon frame %d to %d\n", cent->pe.torso.oldFrame,
 					cent->pe.torso.frame, hand.oldframe, hand.frame);
@@ -2336,7 +2336,7 @@ void CG_AddViewWeaponDuals(playerState_t* ps)
 				else
 				{
 					//need these points stored here when in 1st person saber
-					VectorCopy(org_, cent->gent->client->ps.saber[saberNum].blade[blade_num].muzzle_point);
+					VectorCopy(org_, cent->gent->client->ps.saber[saberNum].blade[blade_num].muzzlePoint);
 				}
 				VectorCopy(axis_[0], cent->gent->client->ps.saber[saberNum].blade[blade_num].muzzleDir);
 			}
@@ -2383,7 +2383,7 @@ void CG_AddViewWeaponDuals(playerState_t* ps)
 		{
 			if (saberNum == 0)
 			{
-				VectorCopy(flash.origin, cent->gent->client->renderInfo.muzzle_pointOld);
+				VectorCopy(flash.origin, cent->gent->client->renderInfo.muzzlePointOld);
 				VectorCopy(flash.axis[0], cent->gent->client->renderInfo.muzzleDirOld);
 			}
 			cent->gent->client->renderInfo.mPCalcTime = cg.time;
@@ -2466,7 +2466,7 @@ void CG_AddViewWeaponDuals(playerState_t* ps)
 
 			for (int i = 0; i < ct; i++)
 			{
-				theFxScheduler.PlayEffect("repeater/muzzle_smoke", cent->currentState.client_num);
+				theFxScheduler.PlayEffect("repeater/muzzle_smoke", cent->currentState.clientNum);
 			}
 
 			cent->gent->client->ps.weaponShotCount = 0;
@@ -2478,14 +2478,14 @@ void CG_AddViewWeaponDuals(playerState_t* ps)
 		if (cent->currentState.eFlags & EF_FIRING)
 		{
 			theFxScheduler.PlayEffect(weaponData[cent->gent->client->ps.weapon].mMuzzleEffect,
-				cent->gent->client->renderInfo.muzzle_pointOld,
+				cent->gent->client->renderInfo.muzzlePointOld,
 				cent->gent->client->renderInfo.muzzleDirOld);
 		}
 
 		if (cent->currentState.eFlags & EF_ALT_FIRING)
 		{
 			theFxScheduler.PlayEffect(weaponData[cent->gent->client->ps.weapon].mAltMuzzleEffect,
-				cent->gent->client->renderInfo.muzzle_pointOld,
+				cent->gent->client->renderInfo.muzzlePointOld,
 				cent->gent->client->renderInfo.muzzleDirOld);
 		}
 
@@ -2495,7 +2495,7 @@ void CG_AddViewWeaponDuals(playerState_t* ps)
 	if (!in_camera && cent->muzzleOverheatTime > 0)
 	{
 		theFxScheduler.PlayEffect(weaponData[cent->gent->client->ps.weapon].mOverloadMuzzleEffect,
-			cent->gent->client->renderInfo.muzzle_point,
+			cent->gent->client->renderInfo.muzzlePoint,
 			cent->gent->client->renderInfo.muzzleDir);
 		cent->muzzleOverheatTime = 0;
 	}
@@ -4005,7 +4005,7 @@ void CG_Weapon_f()
 						}
 						else
 						{
-							cgi_S_StartSound(nullptr, cg.snap->ps.client_num, CHAN_AUTO,
+							cgi_S_StartSound(nullptr, cg.snap->ps.clientNum, CHAN_AUTO,
 								cgs.sound_precache[cg_entities[0].gent->client->ps.saber[0].soundOff]);
 						}
 					}

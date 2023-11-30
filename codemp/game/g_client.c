@@ -1266,7 +1266,7 @@ void MaintainBodyQueue(gentity_t* ent)
 	if (doRCG)
 	{
 		//bodyque func didn't manage to call ircg so call this to assure our limbs and ragdoll states are proper on the client.
-		trap->SendServerCommand(-1, va("rcg %i", ent->s.client_num));
+		trap->SendServerCommand(-1, va("rcg %i", ent->s.clientNum));
 	}
 }
 
@@ -1385,13 +1385,13 @@ TeamCount
 Returns number of players on a team
 ================
 */
-int TeamCount(const int ignoreclient_num, const team_t team)
+int TeamCount(const int ignoreclientNum, const team_t team)
 {
 	int count = 0;
 
 	for (int i = 0; i < level.maxclients; i++)
 	{
-		if (i == ignoreclient_num)
+		if (i == ignoreclientNum)
 		{
 			continue;
 		}
@@ -1444,12 +1444,12 @@ PickTeam
 
 ================
 */
-team_t PickTeam(const int ignoreclient_num)
+team_t PickTeam(const int ignoreclientNum)
 {
 	int counts[TEAM_NUM_TEAMS];
 
-	counts[TEAM_BLUE] = TeamCount(ignoreclient_num, TEAM_BLUE);
-	counts[TEAM_RED] = TeamCount(ignoreclient_num, TEAM_RED);
+	counts[TEAM_BLUE] = TeamCount(ignoreclientNum, TEAM_BLUE);
+	counts[TEAM_RED] = TeamCount(ignoreclientNum, TEAM_RED);
 
 	if (counts[TEAM_BLUE] > counts[TEAM_RED])
 	{
@@ -2509,9 +2509,9 @@ void ScalePlayer(gentity_t* self, const int scale)
 }
 
 qboolean WinterGear = qfalse; //sets weither or not the models go for winter gear skins
-qboolean client_userinfo_changed(const int client_num)
+qboolean client_userinfo_changed(const int clientNum)
 {
-	gentity_t* ent = g_entities + client_num;
+	gentity_t* ent = g_entities + clientNum;
 	gclient_t* client = ent->client;
 	int team;
 	int health;
@@ -2533,15 +2533,15 @@ qboolean client_userinfo_changed(const int client_num)
 	char script1[MAX_INFO_STRING];
 	char script2[MAX_INFO_STRING];
 
-	trap->GetUserinfo(client_num, userinfo, sizeof userinfo);
+	trap->GetUserinfo(clientNum, userinfo, sizeof userinfo);
 
 	// check for malformed or illegal info strings
 	const char* s = G_ValidateUserinfo(userinfo);
 	if (s && *s)
 	{
-		G_SecurityLogPrintf("Client %d (%s) failed userinfo validation: %s [IP: %s]\n", client_num,
+		G_SecurityLogPrintf("Client %d (%s) failed userinfo validation: %s [IP: %s]\n", clientNum,
 			ent->client->pers.netname, s, client->sess.IP);
-		trap->DropClient(client_num, va("Failed userinfo validation: %s", s));
+		trap->DropClient(clientNum, va("Failed userinfo validation: %s", s));
 		G_LogPrintf("Userinfo: %s\n", userinfo);
 		return qfalse;
 	}
@@ -2591,10 +2591,10 @@ qboolean client_userinfo_changed(const int client_num)
 		{
 			if (client->pers.netnameTime > level.time)
 			{
-				trap->SendServerCommand(client_num, va("print \"%s\n\"", G_GetStringEdString("MP_SVGAME", "NONAMECHANGE")));
+				trap->SendServerCommand(clientNum, va("print \"%s\n\"", G_GetStringEdString("MP_SVGAME", "NONAMECHANGE")));
 
 				Info_SetValueForKey(userinfo, "name", oldname);
-				trap->SetUserinfo(client_num, userinfo);
+				trap->SetUserinfo(clientNum, userinfo);
 				Q_strncpyz(client->pers.netname, oldname, sizeof client->pers.netname);
 				Q_strncpyz(client->pers.netname_nocolor, oldname, sizeof client->pers.netname_nocolor);
 				Q_StripColor(client->pers.netname_nocolor);
@@ -2602,7 +2602,7 @@ qboolean client_userinfo_changed(const int client_num)
 			else
 			{
 				trap->SendServerCommand(-1, va("print \"%s" S_COLOR_WHITE " %s %s\n\"", oldname, G_GetStringEdString("MP_SVGAME", "PLRENAME"), client->pers.netname));
-				G_LogPrintf("ClientRename: %i [%s] (%s) \"%s^7\" -> \"%s^7\"\n", client_num, ent->client->sess.IP, ent->client->pers.guid, oldname, ent->client->pers.netname);
+				G_LogPrintf("ClientRename: %i [%s] (%s) \"%s^7\" -> \"%s^7\"\n", clientNum, ent->client->sess.IP, ent->client->pers.guid, oldname, ent->client->pers.netname);
 				client->pers.netnameTime = level.time + 5000;
 			}
 		}
@@ -5365,7 +5365,7 @@ qboolean client_userinfo_changed(const int client_num)
 	}
 
 	// bots set their team a few frames later
-	if (level.gametype >= GT_TEAM && g_entities[client_num].r.svFlags & SVF_BOT)
+	if (level.gametype >= GT_TEAM && g_entities[clientNum].r.svFlags & SVF_BOT)
 	{
 		s = Info_ValueForKey(userinfo, "team");
 		if (!Q_stricmp(s, "red") || !Q_stricmp(s, "r"))
@@ -5373,7 +5373,7 @@ qboolean client_userinfo_changed(const int client_num)
 		else if (!Q_stricmp(s, "blue") || !Q_stricmp(s, "b"))
 			team = TEAM_BLUE;
 		else
-			team = PickTeam(client_num); // pick the team with the least number of players
+			team = PickTeam(clientNum); // pick the team with the least number of players
 	}
 	else
 		team = client->sess.sessionTeam;
@@ -5511,7 +5511,7 @@ qboolean client_userinfo_changed(const int client_num)
 	s = Info_ValueForKey(userinfo, "snaps");
 	if (atoi(s) < sv_fps.integer)
 	{
-		trap->SendServerCommand(client_num, va(
+		trap->SendServerCommand(clientNum, va(
 			"print \"" S_COLOR_YELLOW
 			"Recommend setting /snaps %d or higher to match this server's sv_fps\n\"",
 			sv_fps.integer));
@@ -5571,8 +5571,8 @@ qboolean client_userinfo_changed(const int client_num)
 		Q_strcat(buf, sizeof buf, va("sdt\\%i\\", client->sess.siegeDesiredTeam));
 	}
 
-	trap->GetConfigstring(CS_PLAYERS + client_num, oldClientinfo, sizeof oldClientinfo);
-	trap->SetConfigstring(CS_PLAYERS + client_num, buf);
+	trap->GetConfigstring(CS_PLAYERS + clientNum, oldClientinfo, sizeof oldClientinfo);
+	trap->SetConfigstring(CS_PLAYERS + clientNum, buf);
 
 	// only going to be true for allowable server-side custom skeleton cases
 	if (model_changed)
@@ -5591,9 +5591,9 @@ qboolean client_userinfo_changed(const int client_num)
 	if (g_logClientInfo.integer)
 	{
 		if (strcmp(oldClientinfo, buf) != 0)
-			G_LogPrintf("client_userinfo_changed: %i %s\n", client_num, buf);
+			G_LogPrintf("client_userinfo_changed: %i %s\n", clientNum, buf);
 		else
-			G_LogPrintf("client_userinfo_changed: %i <no change>\n", client_num);
+			G_LogPrintf("client_userinfo_changed: %i <no change>\n", clientNum);
 	}
 
 	return qtrue;
@@ -5635,18 +5635,18 @@ static qboolean CompareIPs(const char* ip1, const char* ip2)
 	return qtrue;
 }
 
-char* ClientConnect(int client_num, const qboolean firstTime, const qboolean isBot)
+char* ClientConnect(int clientNum, const qboolean firstTime, const qboolean isBot)
 {
 	char userinfo[MAX_INFO_STRING] = { 0 },
 		tmpIP[NET_ADDRSTRMAXLEN] = { 0 },
 		guid[33] = { 0 };
 
-	gentity_t* ent = &g_entities[client_num];
+	gentity_t* ent = &g_entities[clientNum];
 
-	ent->s.number = client_num;
+	ent->s.number = clientNum;
 	ent->classname = "connecting";
 
-	trap->GetUserinfo(client_num, userinfo, sizeof userinfo);
+	trap->GetUserinfo(clientNum, userinfo, sizeof userinfo);
 
 	if (g_lms.integer > 0 && BG_IsLMSGametype(g_gametype.integer))
 	{
@@ -5697,9 +5697,9 @@ char* ClientConnect(int client_num, const qboolean firstTime, const qboolean isB
 			for (int i = 0; i < sv_maxclients.integer; i++)
 			{
 #if 0
-				if (level.clients[i].pers.connected != CON_DISCONNECTED && i != client_num)
+				if (level.clients[i].pers.connected != CON_DISCONNECTED && i != clientNum)
 				{
-					if (CompareIPs(client_num, i))
+					if (CompareIPs(clientNum, i))
 					{
 						if (!level.security.clientConnectionActive[i])
 						{//This IP has a dead connection pending, wait for it to time out
@@ -5724,13 +5724,13 @@ char* ClientConnect(int client_num, const qboolean firstTime, const qboolean isB
 	if (ent->inuse)
 	{
 		// if a player reconnects quickly after a disconnect, the client disconnect may never be called, thus flag can get lost in the ether
-		G_LogPrintf("Forcing disconnect on active client: %i\n", client_num);
+		G_LogPrintf("Forcing disconnect on active client: %i\n", clientNum);
 		// so lets just fix up anything that should happen on a disconnect
-		ClientDisconnect(client_num);
+		ClientDisconnect(clientNum);
 	}
 
 	// they can connect
-	gclient_t* client = &level.clients[client_num];
+	gclient_t* client = &level.clients[clientNum];
 	ent->client = client;
 
 	//assign the pointer for bg entity access
@@ -5775,14 +5775,14 @@ char* ClientConnect(int client_num, const qboolean firstTime, const qboolean isB
 	{
 		ent->r.svFlags |= SVF_BOT;
 		ent->inuse = qtrue;
-		if (!G_BotConnect(client_num, !firstTime))
+		if (!G_BotConnect(clientNum, !firstTime))
 		{
 			return "BotConnectfailed";
 		}
 	}
 
 	// get and distribute relevent paramters
-	if (!client_userinfo_changed(client_num))
+	if (!client_userinfo_changed(clientNum))
 		return "Failed userinfo validation";
 
 	if (!isBot && firstTime)
@@ -5791,7 +5791,7 @@ char* ClientConnect(int client_num, const qboolean firstTime, const qboolean isB
 		{
 			//No IP sent when connecting, probably an unban hack attempt
 			client->pers.connected = CON_DISCONNECTED;
-			G_SecurityLogPrintf("Client %i (%s) sent no IP when connecting.\n", client_num, client->pers.netname);
+			G_SecurityLogPrintf("Client %i (%s) sent no IP when connecting.\n", clientNum, client->pers.netname);
 			return "Invalid userinfo detected";
 		}
 	}
@@ -5799,7 +5799,7 @@ char* ClientConnect(int client_num, const qboolean firstTime, const qboolean isB
 	if (firstTime)
 		Q_strncpyz(client->sess.IP, tmpIP, sizeof client->sess.IP);
 
-	G_LogPrintf("ClientConnect: %i [%s] (%s) \"%s^7\"\n", client_num, tmpIP, guid, client->pers.netname);
+	G_LogPrintf("ClientConnect: %i [%s] (%s) \"%s^7\"\n", clientNum, tmpIP, guid, client->pers.netname);
 
 	// don't do the "xxx connected" messages if they were caried over from previous level
 	if (firstTime)
@@ -5819,7 +5819,7 @@ char* ClientConnect(int client_num, const qboolean firstTime, const qboolean isB
 
 	gentity_t* te = G_TempEntity(vec3_origin, EV_CLIENTJOIN);
 	te->r.svFlags |= SVF_BROADCAST;
-	te->s.eventParm = client_num;
+	te->s.eventParm = clientNum;
 
 	// for statistics
 	//	client->areabits = areabits;
@@ -5848,13 +5848,13 @@ extern qboolean gSiegeRoundEnded;
 extern qboolean g_dontPenalizeTeam; //g_cmds.c
 void SetTeamQuick(const gentity_t* ent, int team, qboolean doBegin);
 
-void ClientBegin(const int client_num, const qboolean allowTeamReset)
+void ClientBegin(const int clientNum, const qboolean allowTeamReset)
 {
 	char userinfo[MAX_INFO_VALUE];
 	//contains the message of the day that is sent to new players.
 	char motd[1024];
 
-	gentity_t* ent = g_entities + client_num;
+	gentity_t* ent = g_entities + clientNum;
 
 	if (ent->r.svFlags & SVF_BOT && level.gametype >= GT_TEAM)
 	{
@@ -5864,7 +5864,7 @@ void ClientBegin(const int client_num, const qboolean allowTeamReset)
 
 			//SetTeam(ent, "");
 			ent->client->sess.sessionTeam = PickTeam(-1);
-			trap->GetUserinfo(client_num, userinfo, MAX_INFO_STRING);
+			trap->GetUserinfo(clientNum, userinfo, MAX_INFO_STRING);
 
 			if (ent->client->sess.sessionTeam == TEAM_SPECTATOR)
 			{
@@ -5882,7 +5882,7 @@ void ClientBegin(const int client_num, const qboolean allowTeamReset)
 
 			Info_SetValueForKey(userinfo, "team", team);
 
-			trap->SetUserinfo(client_num, userinfo);
+			trap->SetUserinfo(clientNum, userinfo);
 
 			ent->client->ps.persistant[PERS_TEAM] = ent->client->sess.sessionTeam;
 
@@ -5890,14 +5890,14 @@ void ClientBegin(const int client_num, const qboolean allowTeamReset)
 			G_ReadSessionData(ent->client);
 			ent->client->sess.sessionTeam = preSess;
 			G_WriteClientSessionData(ent->client);
-			if (!client_userinfo_changed(client_num))
+			if (!client_userinfo_changed(clientNum))
 				return;
-			ClientBegin(client_num, qfalse);
+			ClientBegin(clientNum, qfalse);
 			return;
 		}
 	}
 
-	gclient_t* client = level.clients + client_num;
+	gclient_t* client = level.clients + clientNum;
 
 	if (ent->r.linked)
 	{
@@ -5962,7 +5962,7 @@ void ClientBegin(const int client_num, const qboolean allowTeamReset)
 	IT_LoadWeatherParms();
 
 	// First time model setup for that player.
-	trap->GetUserinfo(client_num, userinfo, sizeof userinfo);
+	trap->GetUserinfo(clientNum, userinfo, sizeof userinfo);
 	char* modelname = Info_ValueForKey(userinfo, "model");
 	SetupGameGhoul2Model(ent, modelname, NULL);
 
@@ -6003,7 +6003,7 @@ void ClientBegin(const int client_num, const qboolean allowTeamReset)
 		{
 			//don't do the "teleport in" effect if we're playing LMS and we're "out"
 			gentity_t* tent = G_TempEntity(ent->client->ps.origin, EV_PLAYER_TELEPORT_IN);
-			tent->s.client_num = ent->s.client_num;
+			tent->s.clientNum = ent->s.clientNum;
 		}
 		if (level.gametype != GT_DUEL || level.gametype == GT_POWERDUEL)
 		{
@@ -6011,7 +6011,7 @@ void ClientBegin(const int client_num, const qboolean allowTeamReset)
 				G_GetStringEdString("MP_SVGAME", "PLENTER")));
 		}
 	}
-	G_LogPrintf("ClientBegin: %i\n", client_num);
+	G_LogPrintf("ClientBegin: %i\n", clientNum);
 
 	if (client->pers.SJE_clientplugin)
 	{
@@ -6026,12 +6026,12 @@ void ClientBegin(const int client_num, const qboolean allowTeamReset)
 		client->pers.plugindetect = qfalse;
 	}
 
-	trap->SendServerCommand(client_num, va("cp \"%s\n\"", motd));
+	trap->SendServerCommand(clientNum, va("cp \"%s\n\"", motd));
 
 	// count current clients and rank for scoreboard
 	CalculateRanks();
 
-	G_ClearClientLog(client_num);
+	G_ClearClientLog(clientNum);
 }
 
 qboolean AllForceDisabled(const int force)
@@ -6805,7 +6805,7 @@ void ClientSpawn(gentity_t* ent)
 	client->ps.crouchheight = CROUCH_MAXS_2;
 	client->ps.standheight = DEFAULT_MAXS_2;
 
-	client->ps.client_num = index;
+	client->ps.clientNum = index;
 	//give default weapons
 	client->ps.stats[STAT_WEAPONS] = 1 << WP_NONE;
 
@@ -8845,7 +8845,7 @@ void ClientSpawn(gentity_t* ent)
 			VectorCopy(ent->client->ps.origin, ent->r.currentOrigin);
 
 			tent = G_TempEntity(ent->client->ps.origin, EV_PLAYER_TELEPORT_IN);
-			tent->s.client_num = ent->s.client_num;
+			tent->s.clientNum = ent->s.clientNum;
 
 			trap->LinkEntity((sharedEntity_t*)ent);
 		}
@@ -8969,13 +8969,13 @@ void G_ClearTeamVote(const gentity_t* ent, const int team)
 	}
 }
 
-void ClientDisconnect(const int client_num)
+void ClientDisconnect(const int clientNum)
 {
 	// cleanup if we are kicking a bot that
 	// hasn't spawned yet
-	G_RemoveQueuedBotBegin(client_num);
+	G_RemoveQueuedBotBegin(clientNum);
 
-	gentity_t* ent = g_entities + client_num;
+	gentity_t* ent = g_entities + clientNum;
 	if (!ent->client || ent->client->pers.connected == CON_DISCONNECTED)
 	{
 		return;
@@ -9022,7 +9022,7 @@ void ClientDisconnect(const int client_num)
 	{
 		if (level.clients[i].sess.sessionTeam == TEAM_SPECTATOR
 			&& level.clients[i].sess.spectatorState == SPECTATOR_FOLLOW
-			&& level.clients[i].sess.spectatorClient == client_num)
+			&& level.clients[i].sess.spectatorClient == clientNum)
 		{
 			StopFollowing(&g_entities[i]);
 		}
@@ -9033,26 +9033,26 @@ void ClientDisconnect(const int client_num)
 		&& ent->client->sess.sessionTeam != TEAM_SPECTATOR)
 	{
 		gentity_t* tent = G_TempEntity(ent->client->ps.origin, EV_PLAYER_TELEPORT_OUT);
-		tent->s.client_num = ent->s.client_num;
+		tent->s.clientNum = ent->s.clientNum;
 
 		// They don't get to take powerups with them!
 		// Especially important for stuff like CTF flags
 		TossClientItems(ent);
 	}
 
-	G_LogPrintf("ClientDisconnect: %i [%s] (%s) \"%s^7\"\n", client_num, ent->client->sess.IP, ent->client->pers.guid,
+	G_LogPrintf("ClientDisconnect: %i [%s] (%s) \"%s^7\"\n", clientNum, ent->client->sess.IP, ent->client->pers.guid,
 		ent->client->pers.netname);
 
 	// if we are playing in tourney mode, give a win to the other player and clear his frags for this round
 	if (level.gametype == GT_DUEL && !level.intermissiontime && !level.warmupTime)
 	{
-		if (level.sortedClients[1] == client_num)
+		if (level.sortedClients[1] == clientNum)
 		{
 			level.clients[level.sortedClients[0]].ps.persistant[PERS_SCORE] = 0;
 			level.clients[level.sortedClients[0]].sess.wins++;
 			client_userinfo_changed(level.sortedClients[0]);
 		}
-		else if (level.sortedClients[0] == client_num)
+		else if (level.sortedClients[0] == clientNum)
 		{
 			level.clients[level.sortedClients[1]].ps.persistant[PERS_SCORE] = 0;
 			level.clients[level.sortedClients[1]].sess.wins++;
@@ -9117,16 +9117,16 @@ void ClientDisconnect(const int client_num)
 		}
 	}
 
-	trap->SetConfigstring(CS_PLAYERS + client_num, "");
+	trap->SetConfigstring(CS_PLAYERS + clientNum, "");
 
 	CalculateRanks();
 
 	if (ent->r.svFlags & SVF_BOT)
 	{
-		BotAIShutdownClient(client_num);
+		BotAIShutdownClient(clientNum);
 	}
 
-	G_ClearClientLog(client_num);
+	G_ClearClientLog(clientNum);
 }
 
 qboolean g_standard_humanoid(gentity_t* self)

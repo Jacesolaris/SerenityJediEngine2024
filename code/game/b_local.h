@@ -218,7 +218,7 @@ extern void NPC_AimWiggle(vec3_t enemy_org);
 extern void NPC_SetLookTarget(const gentity_t* self, int entNum, int clear_time);
 
 //other modules
-extern void calcmuzzle_point(gentity_t* const ent, vec3_t forward_vec, vec3_t muzzle_point, const float lead_in);
+extern void calcmuzzlePoint(gentity_t* const ent, vec3_t forward_vec, vec3_t muzzlePoint, const float lead_in);
 
 //g_combat
 extern void ExplodeDeath(gentity_t* self);

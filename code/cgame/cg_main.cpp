@@ -155,7 +155,7 @@ extern "C" Q_EXPORT intptr_t QDECL vmMain(const intptr_t command, const intptr_t
 	case CG_DRAW_DATAPAD_HUD:
 		if (cg.snap)
 		{
-			cent = &cg_entities[cg.snap->ps.client_num];
+			cent = &cg_entities[cg.snap->ps.clientNum];
 			CG_DrawDataPadHUD(cent);
 		}
 		return 0;
@@ -163,7 +163,7 @@ extern "C" Q_EXPORT intptr_t QDECL vmMain(const intptr_t command, const intptr_t
 	case CG_DRAW_DATAPAD_OBJECTIVES:
 		if (cg.snap)
 		{
-			cent = &cg_entities[cg.snap->ps.client_num];
+			cent = &cg_entities[cg.snap->ps.clientNum];
 			CG_DrawDataPadObjectives(cent);
 		}
 		return 0;
@@ -705,7 +705,7 @@ int CG_CrosshairPlayer()
 	{
 		return -1;
 	}
-	return cg.crosshairclient_num;
+	return cg.crosshairclientNum;
 }
 
 int CG_GetCameraPos(vec3_t camerapos)

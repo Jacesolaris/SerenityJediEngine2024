@@ -168,7 +168,7 @@ char* Sys_DefaultHomePath()
 			return nullptr;
 		}
 
-		Com_sprintf(homePath, sizeof homePath, "%s%cSTAR WARS%c", homeDirectory, PATH_SEP, PATH_SEP);
+		Com_sprintf(homePath, sizeof homePath, "%s%cSTARWARS SerenityJediEngine%c", homeDirectory, PATH_SEP, PATH_SEP);
 
 		if (com_homepath && com_homepath->string[0])
 		{

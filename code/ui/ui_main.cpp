@@ -5020,7 +5020,7 @@ void UI_GetVideoSetup()
 	Cvar_Register(nullptr, "ui_r_subdivisions", "0", CVAR_ROM);
 	Cvar_Register(nullptr, "ui_r_fastSky", "0", CVAR_ROM);
 	Cvar_Register(nullptr, "ui_r_inGameVideo", "0", CVAR_ROM);
-	Cvar_Register(nullptr, "ui_r_allowExtensions", "0", CVAR_ROM);
+	Cvar_Register(nullptr, "ui_r_allowExtensions", "1", CVAR_ROM);
 	Cvar_Register(nullptr, "ui_cg_shadows", "0", CVAR_ROM);
 	Cvar_Register(nullptr, "ui_r_modified", "0", CVAR_ROM);
 

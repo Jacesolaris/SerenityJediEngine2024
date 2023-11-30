@@ -785,7 +785,7 @@ void NPC_BSGM_Attack()
 					NPCInfo->coverTarg = G_Spawn();
 					if (NPCInfo->coverTarg)
 					{
-						G_SetOrigin(NPCInfo->coverTarg, NPC->client->renderInfo.muzzle_point);
+						G_SetOrigin(NPCInfo->coverTarg, NPC->client->renderInfo.muzzlePoint);
 						NPCInfo->coverTarg->svFlags |= SVF_BROADCAST;
 						NPCInfo->coverTarg->s.loopSound = G_SoundIndex("sound/weapons/galak/lasercutting.wav");
 					}
@@ -812,15 +812,15 @@ void NPC_BSGM_Attack()
 				vec3_t end;
 				constexpr vec3_t maxs = { 3, 3, 3 };
 				constexpr vec3_t mins = { -3, -3, -3 };
-				VectorMA(NPC->client->renderInfo.muzzle_point, 1024, NPC->client->renderInfo.muzzleDir, end);
-				gi.trace(&trace, NPC->client->renderInfo.muzzle_point, mins, maxs, end, NPC->s.number, MASK_SHOT,
+				VectorMA(NPC->client->renderInfo.muzzlePoint, 1024, NPC->client->renderInfo.muzzleDir, end);
+				gi.trace(&trace, NPC->client->renderInfo.muzzlePoint, mins, maxs, end, NPC->s.number, MASK_SHOT,
 					G2_NOCOLLIDE, 0);
 				if (trace.allsolid || trace.startsolid)
 				{
 					//oops, in a wall
 					if (NPCInfo->coverTarg)
 					{
-						G_SetOrigin(NPCInfo->coverTarg, NPC->client->renderInfo.muzzle_point);
+						G_SetOrigin(NPCInfo->coverTarg, NPC->client->renderInfo.muzzlePoint);
 					}
 				}
 				else

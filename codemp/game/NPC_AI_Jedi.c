@@ -1345,7 +1345,7 @@ void Boba_FireWristMissile(gentity_t* self, const int whichMissile)
 	self->client->ps.lastShotTime = level.time;
 
 	mdxaBone_t boltMatrix;
-	vec3_t muzzle_point;
+	vec3_t muzzlePoint;
 	vec3_t muzzleDir;
 
 	//trap->G2API_GetBoltMatrix(self->ghoul2, 0, self->client->renderInfo.handLBolt, &boltMatrix, self->r.currentAngles, self->r.currentOrigin, level.time, NULL, self->modelScale);
@@ -1355,26 +1355,26 @@ void Boba_FireWristMissile(gentity_t* self, const int whichMissile)
 		: self->client->renderInfo.handLBolt, &boltMatrix, self->r.currentAngles,
 		self->r.currentOrigin, level.time, NULL, self->modelScale);
 
-	BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, muzzle_point);
+	BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, muzzlePoint);
 	BG_GiveMeVectorFromMatrix(&boltMatrix, NEGATIVE_Y, muzzleDir);
 	// work the matrix axis stuff into the original axis and origins used.
 
-	VectorCopy(muzzle_point, self->client->renderInfo.muzzle_point);
+	VectorCopy(muzzlePoint, self->client->renderInfo.muzzlePoint);
 	VectorCopy(muzzleDir, self->client->renderInfo.muzzleDir);
 
 	if (shotsFired >= missileStates[whichMissile].maxShots)
 	{
 		vec3_t ORIGIN = { 0, 0, 0 };
-		G_PlayEffectID(G_EffectIndex("repeater/muzzle_smoke"), muzzle_point, ORIGIN);
+		G_PlayEffectID(G_EffectIndex("repeater/muzzle_smoke"), muzzlePoint, ORIGIN);
 		self->client->ps.userInt3 &= ~(1 << FLAG_WRISTBLASTER);
 		//play smoke
 		return;
 	}
 	vec3_t ORIGIN = { 0, 0, 0 };
-	G_PlayEffectID(G_EffectIndex("blaster/muzzle_flash"), muzzle_point, ORIGIN);
+	G_PlayEffectID(G_EffectIndex("blaster/muzzle_flash"), muzzlePoint, ORIGIN);
 	self->client->ps.userInt3 |= 1 << FLAG_WRISTBLASTER;
 
-	WP_FireWristMissile(self, muzzle_point, muzzleDir);
+	WP_FireWristMissile(self, muzzlePoint, muzzleDir);
 	shotsFired++;
 
 	self->s.weapon = oldWeapon;
@@ -1581,7 +1581,7 @@ float G_GroundDistance(const gentity_t* self)
 
 	down[2] -= 4096;
 
-	trap->Trace(&tr, self->client->ps.origin, self->r.mins, self->r.maxs, down, self->s.client_num, MASK_SOLID, qfalse,
+	trap->Trace(&tr, self->client->ps.origin, self->r.mins, self->r.maxs, down, self->s.clientNum, MASK_SOLID, qfalse,
 		0, 0);
 
 	VectorSubtract(self->r.currentOrigin, tr.endpos, down);
@@ -5939,10 +5939,10 @@ static qboolean Jedi_SaberBlock(void)
 				&& NPCS.NPC->enemy->client->saber[saberNum].blade[blade_num].length > 0)
 			{
 				//valid saber and this blade is on
-				VectorMA(NPCS.NPC->enemy->client->saber[saberNum].blade[blade_num].muzzle_pointOld,
+				VectorMA(NPCS.NPC->enemy->client->saber[saberNum].blade[blade_num].muzzlePointOld,
 					NPCS.NPC->enemy->client->saber[saberNum].blade[blade_num].length,
 					NPCS.NPC->enemy->client->saber[saberNum].blade[blade_num].muzzleDirOld, saberTipOld);
-				VectorMA(NPCS.NPC->enemy->client->saber[saberNum].blade[blade_num].muzzle_point,
+				VectorMA(NPCS.NPC->enemy->client->saber[saberNum].blade[blade_num].muzzlePoint,
 					NPCS.NPC->enemy->client->saber[saberNum].blade[blade_num].length,
 					NPCS.NPC->enemy->client->saber[saberNum].blade[blade_num].muzzleDir, saberTip);
 
@@ -5952,7 +5952,7 @@ static qboolean Jedi_SaberBlock(void)
 				bottom[2] = NPCS.NPC->r.absmin[2];
 
 				dist = ShortestLineSegBewteen2LineSegs(
-					NPCS.NPC->enemy->client->saber[saberNum].blade[blade_num].muzzle_point, saberTip, bottom, top,
+					NPCS.NPC->enemy->client->saber[saberNum].blade[blade_num].muzzlePoint, saberTip, bottom, top,
 					saberPoint, axisPoint);
 				if (dist < bestDist)
 				{
@@ -5983,10 +5983,10 @@ static qboolean Jedi_SaberBlock(void)
 	}
 
 	//now use the closest blade for my evasion check
-	VectorMA(NPCS.NPC->enemy->client->saber[closestsaber_num].blade[closestblade_num].muzzle_pointOld,
+	VectorMA(NPCS.NPC->enemy->client->saber[closestsaber_num].blade[closestblade_num].muzzlePointOld,
 		NPCS.NPC->enemy->client->saber[closestsaber_num].blade[closestblade_num].length,
 		NPCS.NPC->enemy->client->saber[closestsaber_num].blade[closestblade_num].muzzleDirOld, saberTipOld);
-	VectorMA(NPCS.NPC->enemy->client->saber[closestsaber_num].blade[closestblade_num].muzzle_point,
+	VectorMA(NPCS.NPC->enemy->client->saber[closestsaber_num].blade[closestblade_num].muzzlePoint,
 		NPCS.NPC->enemy->client->saber[closestsaber_num].blade[closestblade_num].length,
 		NPCS.NPC->enemy->client->saber[closestsaber_num].blade[closestblade_num].muzzleDir, saberTip);
 
@@ -5996,9 +5996,9 @@ static qboolean Jedi_SaberBlock(void)
 	bottom[2] = NPCS.NPC->r.absmin[2];
 
 	dist = ShortestLineSegBewteen2LineSegs(
-		NPCS.NPC->enemy->client->saber[closestsaber_num].blade[closestblade_num].muzzle_point, saberTip, bottom, top,
+		NPCS.NPC->enemy->client->saber[closestsaber_num].blade[closestblade_num].muzzlePoint, saberTip, bottom, top,
 		saberPoint, axisPoint);
-	VectorSubtract(saberPoint, NPCS.NPC->enemy->client->saber[closestsaber_num].blade[closestblade_num].muzzle_point,
+	VectorSubtract(saberPoint, NPCS.NPC->enemy->client->saber[closestsaber_num].blade[closestblade_num].muzzlePoint,
 		pointDir);
 	const float pointDist = VectorLength(pointDir);
 
@@ -6011,8 +6011,8 @@ static qboolean Jedi_SaberBlock(void)
 		baseDirPerc = pointDist / NPCS.NPC->enemy->client->saber[closestsaber_num].blade[closestblade_num].length;
 	}
 
-	VectorSubtract(NPCS.NPC->enemy->client->saber[closestsaber_num].blade[closestblade_num].muzzle_point,
-		NPCS.NPC->enemy->client->saber[closestsaber_num].blade[closestblade_num].muzzle_pointOld, baseDir);
+	VectorSubtract(NPCS.NPC->enemy->client->saber[closestsaber_num].blade[closestblade_num].muzzlePoint,
+		NPCS.NPC->enemy->client->saber[closestsaber_num].blade[closestblade_num].muzzlePointOld, baseDir);
 	VectorSubtract(saberTip, saberTipOld, tipDir);
 	VectorScale(baseDir, baseDirPerc, baseDir);
 	VectorMA(baseDir, 1.0f - baseDirPerc, tipDir, dir);
@@ -6795,7 +6795,7 @@ static void jedi_set_enemy_info(vec3_t enemy_dest, vec3_t enemy_dir, float* enem
 		//figure out where he'll be, say, 3 frames from now
 		VectorMA(NPCS.NPC->enemy->r.currentOrigin, *enemy_movespeed * 0.001 * prediction, enemy_movedir, enemy_dest);
 		//figure out what dir the enemy's estimated position is from me and how far from the tip of my saber he is
-		VectorSubtract(enemy_dest, NPCS.NPC->r.currentOrigin, enemy_dir); //NPC->client->renderInfo.muzzle_point
+		VectorSubtract(enemy_dest, NPCS.NPC->r.currentOrigin, enemy_dir); //NPC->client->renderInfo.muzzlePoint
 		//FIXME: enemy_dist calc needs to include all blade lengths, and include distance from hand to start of blade....
 		*enemy_dist = VectorNormalize(enemy_dir) - (NPCS.NPC->client->saber[0].blade[0].lengthMax + NPCS.NPC->r.maxs[0]
 			* 1.5 + 16);

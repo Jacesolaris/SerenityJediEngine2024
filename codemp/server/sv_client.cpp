@@ -142,7 +142,7 @@ void SV_DirectConnect(netadr_t from)
 	client_t* cl, * newcl;
 	client_t temp{};
 	sharedEntity_t* ent;
-	int client_num;
+	int clientNum;
 	int version;
 	int qport;
 	int challenge;
@@ -329,8 +329,8 @@ gotnewcl:
 	// accept the new client
 	// this is the only place a client_t is ever initialized
 	*newcl = temp;
-	client_num = newcl - svs.clients;
-	ent = SV_Gentity_num(client_num);
+	clientNum = newcl - svs.clients;
+	ent = SV_Gentity_num(clientNum);
 	newcl->gentity = ent;
 
 	// save the challenge
@@ -343,7 +343,7 @@ gotnewcl:
 	Q_strncpyz(newcl->userinfo, userinfo, sizeof newcl->userinfo);
 
 	// get the game a chance to reject this connection or modify the userinfo
-	denied = GVM_ClientConnect(client_num, qtrue, qfalse); // firstTime = qtrue
+	denied = GVM_ClientConnect(clientNum, qtrue, qfalse); // firstTime = qtrue
 	if (denied)
 	{
 		NET_OutOfBandPrint(NS_SERVER, from, "print\n%s\n", denied);
@@ -600,9 +600,9 @@ void SV_ClientEnterWorld(client_t* client, usercmd_t* cmd)
 	SV_UpdateConfigstrings(client);
 
 	// set up the entity for the client
-	const int client_num = client - svs.clients;
-	sharedEntity_t* ent = SV_Gentity_num(client_num);
-	ent->s.number = client_num;
+	const int clientNum = client - svs.clients;
+	sharedEntity_t* ent = SV_Gentity_num(clientNum);
+	ent->s.number = clientNum;
 	client->gentity = ent;
 
 	client->lastUserInfoChange = 0; //reset the delay

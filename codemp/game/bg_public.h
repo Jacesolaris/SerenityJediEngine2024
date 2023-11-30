@@ -60,7 +60,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #define DEFAULT_REDTEAM_NAME	"Empire"
 #define DEFAULT_BLUETEAM_NAME	"Rebellion"
 
-#define CURRENT_SJE_CLIENTVERSION		"Year-23,Month-11,Day-29,BuildNum-19" // build date
+#define CURRENT_SJE_CLIENTVERSION		"Year-23,Month-11,Day-30,BuildNum-20" // build date
 
 #define	STEPSIZE		18
 
@@ -310,8 +310,8 @@ typedef enum _flag_status {
 
 typedef enum { GENDER_MALE, GENDER_FEMALE, GENDER_NEUTER } gender_t;
 
-extern vec3_t WP_muzzle_point[WP_NUM_WEAPONS];
-extern vec3_t WP_muzzle_point2[WP_NUM_WEAPONS];
+extern vec3_t WP_muzzlePoint[WP_NUM_WEAPONS];
+extern vec3_t WP_muzzlePoint2[WP_NUM_WEAPONS];
 
 extern int forcePowerSorted[NUM_FORCE_POWERS];
 
@@ -677,7 +677,7 @@ typedef enum {
 	PERS_TEAM,						// player team
 	PERS_SPAWN_COUNT,				// incremented every respawn
 	PERS_PLAYEREVENTS,				// 16 bits that can be flipped for events
-	PERS_ATTACKER,					// client_num of last damage inflicter
+	PERS_ATTACKER,					// clientNum of last damage inflicter
 	PERS_ATTACKEE_ARMOR,			// health/armor of last person we attacked
 	PERS_KILLED,					// count of the number of times you died
 	// player awards tracking
@@ -1791,7 +1791,7 @@ typedef struct bladeInfo_s {
 	float			radius;
 	float			length, lengthMax, lengthOld;
 	float			desiredLength;
-	vec3_t			muzzle_point, muzzle_pointOld;
+	vec3_t			muzzlePoint, muzzlePointOld;
 	vec3_t			muzzleDir, muzzleDirOld;
 	saberTrail_t	trail;
 	int				hitWallDebounceTime;
@@ -1992,7 +1992,7 @@ qboolean BG_InDeathAnim(int anim);
 qboolean BG_InSaberLockOld(int anim);
 qboolean PM_InSaberLock(int anim);
 
-void pm_saber_start_trans_anim(int client_num, int saber_anim_level, int weapon, int anim, float* animSpeed, int
+void pm_saber_start_trans_anim(int clientNum, int saber_anim_level, int weapon, int anim, float* animSpeed, int
 	fatigued);
 
 void WP_ForcePowerDrain(playerState_t* ps, forcePowers_t force_power, int override_amt);

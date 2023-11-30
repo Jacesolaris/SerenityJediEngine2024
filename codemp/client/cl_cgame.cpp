@@ -196,7 +196,7 @@ void CL_SetUserCmdValue(const int userCmdValue, const float sensitivityScale, co
 	cl.cgameInvenSelection = invenSel;
 }
 
-int gCLTotalclient_num = 0;
+int gCLTotalclientNum = 0;
 //keep track of the total number of clients
 extern cvar_t* cl_autolodscale;
 //if we want to do autolodscaling
@@ -205,9 +205,9 @@ void CL_DoAutoLODScale(void)
 {
 	float finalLODScaleFactor = 0;
 
-	if (gCLTotalclient_num >= 8)
+	if (gCLTotalclientNum >= 8)
 	{
-		finalLODScaleFactor = gCLTotalclient_num / -8.0f;
+		finalLODScaleFactor = gCLTotalclientNum / -8.0f;
 	}
 
 	Cvar_Set("r_autolodscalevalue", va("%f", finalLODScaleFactor));
@@ -294,10 +294,10 @@ void CL_ConfigstringModified(void)
 				i++;
 			}
 
-			gCLTotalclient_num = clientCount;
+			gCLTotalclientNum = clientCount;
 
 #ifdef _DEBUG
-			Com_DPrintf("%i clients\n", gCLTotalclient_num);
+			Com_DPrintf("%i clients\n", gCLTotalclientNum);
 #endif
 
 			CL_DoAutoLODScale();
@@ -559,7 +559,7 @@ void CL_InitCGame(void)
 	// init for this gamestate
 	// use the lastExecutedServerCommand instead of the serverCommandSequence
 	// otherwise server commands sent just before a gamestate are dropped
-	CGVM_Init(clc.serverMessageSequence, clc.lastExecutedServerCommand, clc.client_num);
+	CGVM_Init(clc.serverMessageSequence, clc.lastExecutedServerCommand, clc.clientNum);
 
 	const int clRate = Cvar_VariableIntegerValue("rate");
 	if (clRate == 4000)
