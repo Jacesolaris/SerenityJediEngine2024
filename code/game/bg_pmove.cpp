@@ -56,8 +56,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #include "g_vehicles.h"
 #include <cfloat>
 
-extern qboolean G_DoDismemberment(gentity_t* self, vec3_t point, int mod, int hit_loc,
-	qboolean force = qfalse);
+extern qboolean G_DoDismemberment(gentity_t* self, vec3_t point, int mod, int hit_loc, qboolean force = qfalse);
 extern qboolean G_EntIsUnlockedDoor(int entityNum);
 extern qboolean G_EntIsDoor(int entityNum);
 extern qboolean in_front(vec3_t spot, vec3_t from, vec3_t from_angles, float thresh_hold = 0.0f);
@@ -104,10 +103,8 @@ extern qboolean PM_SaberInDamageMove(int move);
 extern saber_moveName_t PM_SaberLungeAttackMove(qboolean fallback_to_normal_lunge);
 extern qboolean PM_InSecondaryStyle();
 extern qboolean PM_KnockDownAnimExtended(int anim);
-extern void G_StartMatrixEffect(const gentity_t* ent, int me_flags = 0, int length = 1000, float time_scale = 0.0f,
-	int spin_time = 0);
-extern void G_StartStasisEffect(const gentity_t* ent, int me_flags = 0, int length = 1000, float time_scale = 0.0f,
-	int spin_time = 0);
+extern void G_StartMatrixEffect(const gentity_t* ent, int me_flags = 0, int length = 1000, float time_scale = 0.0f, int spin_time = 0);
+extern void G_StartStasisEffect(const gentity_t* ent, int me_flags = 0, int length = 1000, float time_scale = 0.0f, int spin_time = 0);
 extern void WP_ForcePowerStop(gentity_t* self, forcePowers_t force_power);
 extern qboolean WP_ForcePowerAvailable(const gentity_t* self, forcePowers_t force_power, int override_amt);
 extern void WP_ForcePowerDrain(const gentity_t* self, forcePowers_t force_power, int override_amt);
@@ -240,9 +237,7 @@ qboolean BG_UnrestrainedPitchRoll()
 
 qboolean BG_AllowThirdPersonSpecialMove(const playerState_t* ps)
 {
-	return static_cast<qboolean>((cg.renderingThirdPerson || cg_trueguns.integer || ps->weapon == WP_SABER || ps->weapon
-		==
-		WP_MELEE) && !cg.zoomMode);
+	return static_cast<qboolean>((cg.renderingThirdPerson || cg_trueguns.integer || ps->weapon == WP_SABER || ps->weapon == WP_MELEE) && !cg.zoomMode);
 }
 
 /*
@@ -267,7 +262,7 @@ qboolean PM_PredictJumpSafe()
 	return qtrue;
 }
 
-void PM_GrabWallForJump(const int anim)
+static void PM_GrabWallForJump(const int anim)
 {
 	//NOTE!!! assumes an appropriate anim is being passed in!!!
 	PM_SetAnim(pm, SETANIM_BOTH, anim, SETANIM_FLAG_RESTART | SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
@@ -293,7 +288,7 @@ int ForceFallBrakeRate[NUM_FORCE_POWER_LEVELS] =
 //time between Force Fall braking actions.
 constexpr auto FORCEFALLDEBOUNCE = 100;
 
-qboolean PM_CanForceFall()
+static qboolean PM_CanForceFall()
 {
 	if (!PM_InRoll(pm->ps) // not rolling
 		&& !PM_InKnockDown(pm->ps) // not knocked down
@@ -1274,7 +1269,7 @@ qboolean PM_GentCantJump(const gentity_t* gent)
 	return qfalse;
 }
 
-qboolean PM_Is_A_Dash_Anim(const int anim)
+static qboolean PM_Is_A_Dash_Anim(const int anim)
 {
 	switch (anim)
 	{
@@ -2927,7 +2922,7 @@ static void PM_WaterMove()
 	PM_SlideMove(qfalse);
 }
 
-qboolean PM_IsGunner()
+static qboolean PM_IsGunner()
 {
 	switch (pm->ps->weapon)
 	{
@@ -4044,7 +4039,7 @@ static float PM_CrashLandDelta(vec3_t prev_vel)
 	return delta;
 }
 
-int PM_GetLandingAnim()
+static int PM_GetLandingAnim()
 {
 	int anim = pm->ps->legsAnim;
 
@@ -4264,7 +4259,7 @@ void G_StartRoll(gentity_t* ent, const int anim)
 	ent->client->ps.saber_move = LS_NONE;
 }
 
-qboolean pm_try_roll()
+static qboolean pm_try_roll()
 {
 	constexpr float roll_dist = 192; //was 64;
 
@@ -4484,7 +4479,7 @@ qboolean pm_try_roll()
 	return qfalse;
 }
 
-qboolean PM_TryRoll_SJE()
+static qboolean PM_TryRoll_SJE()
 {
 	constexpr float roll_dist = 192; //was 64;
 
@@ -5204,8 +5199,6 @@ static void PM_CorrectAllSolid()
 		Com_Printf("%i:allsolid\n", c_pmove); //NOTENOTE: If this ever happens, I'd really like to see this print!
 	}
 
-	// FIXME: jitter around
-
 	pm->ps->groundEntityNum = ENTITYNUM_NONE;
 	pml.groundPlane = qfalse;
 	pml.walking = qfalse;
@@ -5220,7 +5213,7 @@ qboolean FlyingCreature(const gentity_t* ent)
 	return qfalse;
 }
 
-qboolean PM_RocketeersAvoidDangerousFalls()
+static qboolean PM_RocketeersAvoidDangerousFalls()
 {
 	if (pm->gent->NPC
 		&& pm->gent->client
@@ -5288,7 +5281,7 @@ static void PM_FallToDeath()
 	pm->ps->friction = 1;
 }
 
-int PM_ForceJumpAnimForJumpAnim(int anim)
+static int PM_ForceJumpAnimForJumpAnim(int anim)
 {
 	switch (anim)
 	{
@@ -5929,7 +5922,7 @@ static void PM_GroundTraceMissed()
 extern void G_Knockdown(gentity_t* self, gentity_t* attacker, const vec3_t push_dir, float strength, qboolean breakSaberLock);
 #endif
 
-qboolean BG_InDFA()
+static qboolean BG_InDFA()
 {
 	if (pm->ps->saber_move == LS_A_JUMP_T__B_)
 	{
@@ -5959,7 +5952,7 @@ qboolean BG_InDFA()
 }
 
 #ifdef _GAME
-qboolean G_InDFA(gentity_t* ent)
+static qboolean G_InDFA(gentity_t* ent)
 {
 	if (!ent || !ent->client) return qfalse;
 
@@ -5995,7 +5988,7 @@ PM_GroundTrace
 */
 static void PM_GroundTrace()
 {
-	vec3_t point;
+	vec3_t point{};
 	trace_t trace;
 
 	if (pm->ps->eFlags & EF_LOCKED_TO_WEAPON
@@ -6197,7 +6190,7 @@ static void PM_GroundTrace()
 int LastMatrixJumpTime = 0;
 constexpr auto DEBUGMATRIXJUMP = 0;
 
-void PM_HoverTrace()
+static void PM_HoverTrace()
 {
 	if (!pm->gent || !pm->gent->client || pm->gent->client->NPC_class != CLASS_VEHICLE)
 	{
@@ -6399,7 +6392,7 @@ PM_SetWaterLevelAtPoint	FIXME: avoid this twice?  certainly if not moving
 */
 static void pm_set_water_level_at_point(vec3_t org, int* waterlevel, int* watertype)
 {
-	vec3_t point;
+	vec3_t point{};
 
 	//
 	// get waterlevel, accounting for ducking
@@ -6437,7 +6430,7 @@ static void pm_set_water_level_at_point(vec3_t org, int* waterlevel, int* watert
 	}
 }
 
-void PM_SetWaterHeight()
+static void PM_SetWaterHeight()
 {
 	pm->ps->waterHeightLevel = WHL_NONE;
 	if (pm->waterlevel < 1)
@@ -6738,7 +6731,7 @@ static void PM_CheckDuck()
 }
 
 //===================================================================
-qboolean PM_SaberLockAnim(const int anim)
+static qboolean PM_SaberLockAnim(const int anim)
 {
 	switch (anim)
 	{
@@ -7428,7 +7421,7 @@ qboolean PM_InKnockDownOnGround(playerState_t* ps)
 	return qfalse;
 }
 
-qboolean PM_CrouchGetup(const float crouchheight)
+static qboolean PM_CrouchGetup(const float crouchheight)
 {
 	pm->maxs[2] = crouchheight;
 	pm->ps->viewheight = crouchheight + STANDARD_VIEWHEIGHT_OFFSET;
@@ -7476,7 +7469,7 @@ qboolean PM_CrouchGetup(const float crouchheight)
 
 extern qboolean PM_GoingToAttackDown(const playerState_t* ps);
 
-qboolean PM_CheckRollGetup()
+static qboolean PM_CheckRollGetup()
 {
 	if (pm->ps->legsAnim == BOTH_KNOCKDOWN1
 		|| pm->ps->legsAnim == BOTH_KNOCKDOWN2
@@ -8722,56 +8715,6 @@ qboolean PM_BoltBlockingAnim(const int anim)
 	return qfalse;
 }
 
-qboolean PM_LetsSmoothTheseAnimsPlease(const int anim)
-{
-	switch (anim)
-	{
-		//New Bolt block anims
-	case BOTH_BOLT_BLOCK_BACKHAND_BOTTOM_LEFT:
-	case BOTH_BOLT_BLOCK_BACKHAND_BOTTOM_RIGHT:
-	case BOTH_BOLT_BLOCK_BACKHAND_MIDDLE_LEFT:
-	case BOTH_BOLT_BLOCK_BACKHAND_MIDDLE_RIGHT:
-	case BOTH_BOLT_BLOCK_BACKHAND_MIDDLE_TOP:
-	case BOTH_BOLT_BLOCK_BACKHAND_TOP_LEFT:
-	case BOTH_BOLT_BLOCK_BACKHAND_TOP_RIGHT:
-		//
-	case BOTH_BOLT_BLOCK_DUAL_BOTTOM_LEFT:
-	case BOTH_BOLT_BLOCK_DUAL_BOTTOM_RIGHT:
-	case BOTH_BOLT_BLOCK_DUAL_MIDDLE_LEFT:
-	case BOTH_BOLT_BLOCK_DUAL_MIDDLE_RIGHT:
-	case BOTH_BOLT_BLOCK_DUAL_TOP_LEFT:
-	case BOTH_BOLT_BLOCK_DUAL_TOP_MIDDLE:
-	case BOTH_BOLT_BLOCK_DUAL_TOP_RIGHT:
-		//
-	case BOTH_BOLT_BLOCK_STAFF_BOTTOM_LEFT:
-	case BOTH_BOLT_BLOCK_STAFF_BOTTOM_RIGHT:
-	case BOTH_BOLT_BLOCK_STAFF_MIDDLE_LEFT:
-	case BOTH_BOLT_BLOCK_STAFF_MIDDLE_RIGHT:
-	case BOTH_BOLT_BLOCK_STAFF_TOP_LEFT:
-	case BOTH_BOLT_BLOCK_STAFF_TOP_MIDDLE:
-	case BOTH_BOLT_BLOCK_STAFF_TOP_RIGHT:
-		//
-	case BOTH_BOLT_BLOCK_SINGLE_HAND_BOTTOM_LEFT:
-	case BOTH_BOLT_BLOCK_SINGLE_HAND_BOTTOM_RIGHT:
-	case BOTH_BOLT_BLOCK_SINGLE_HAND_MIDDLE_LEFT:
-	case BOTH_BOLT_BLOCK_SINGLE_HAND_MIDDLE_RIGHT:
-	case BOTH_BOLT_BLOCK_SINGLE_HAND_TOP_LEFT:
-	case BOTH_BOLT_BLOCK_SINGLE_HAND_TOP_MIDDLE:
-	case BOTH_BOLT_BLOCK_SINGLE_HAND_TOP_RIGHT:
-		//
-	case BOTH_BOLT_BLOCK_TWO_HAND_BOTTOM_LEFT:
-	case BOTH_BOLT_BLOCK_TWO_HAND_BOTTOM_RIGHT:
-	case BOTH_BOLT_BLOCK_TWO_HAND_MIDDLE_LEFT:
-	case BOTH_BOLT_BLOCK_TWO_HAND_MIDDLE_RIGHT:
-	case BOTH_BOLT_BLOCK_TWO_HAND_TOP_LEFT:
-	case BOTH_BOLT_BLOCK_TWO_HAND_TOP_MIDDLE:
-	case BOTH_BOLT_BLOCK_TWO_HAND_TOP_RIGHT:
-		return qtrue;
-	default:;
-	}
-	return qfalse;
-}
-
 qboolean PM_WalkingOrRunningAnim(const int anim)
 {
 	//mainly for checking if we can guard well
@@ -8927,7 +8870,7 @@ qboolean PM_SpinningAnim(const int anim)
 	return PM_SpinningSaberAnim(anim);
 }
 
-void PM_AnglesForSlope(const float yaw, const vec3_t slope, vec3_t angles)
+static void PM_AnglesForSlope(const float yaw, const vec3_t slope, vec3_t angles)
 {
 	vec3_t nvf, ovf, ovr, new_angles;
 
@@ -8954,7 +8897,7 @@ void PM_AnglesForSlope(const float yaw, const vec3_t slope, vec3_t angles)
 	angles[ROLL] = (1 - Q_fabs(dot)) * pitch * mod;
 }
 
-void PM_FootSlopeTrace(float* p_diff, float* p_interval)
+static void PM_FootSlopeTrace(float* p_diff, float* p_interval)
 {
 	vec3_t foot_l_org, foot_r_org, foot_l_bot, foot_r_bot;
 	trace_t trace;
@@ -9241,7 +9184,7 @@ qboolean PM_WeponRestAnim(const int anim)
 	return qfalse;
 }
 
-qboolean PM_WeponFatiguedAnim(const int anim)
+static qboolean PM_WeponFatiguedAnim(const int anim)
 {
 	switch (anim)
 	{
@@ -9297,7 +9240,7 @@ qboolean PM_SaberDrawPutawayAnim(const int anim)
 constexpr auto SLOPE_RECALC_INT = 100;
 extern qboolean g_standard_humanoid(gentity_t* self);
 
-qboolean PM_AdjustStandAnimForSlope()
+static qboolean PM_AdjustStandAnimForSlope()
 {
 	if (!pm->gent || !pm->gent->client)
 	{
@@ -9742,7 +9685,7 @@ qboolean PM_AdjustStandAnimForSlope()
 extern qboolean PM_Bobaspecialanim(int anim);
 static qhandle_t flyLoopSound = 0;
 
-void PM_JetPackAnim()
+static void PM_JetPackAnim()
 {
 	int anim = BOTH_FORCEJUMP1;
 	static qboolean registered = qfalse;
@@ -9860,7 +9803,7 @@ void PM_JetPackAnim()
 	}
 }
 
-void PM_LadderAnim()
+static void PM_LadderAnim()
 {
 	const int legs_anim = pm->ps->legsAnim;
 	//FIXME: no start or stop anims
@@ -9891,7 +9834,7 @@ void PM_LadderAnim()
 	}
 }
 
-void PM_SwimFloatAnim()
+static void PM_SwimFloatAnim()
 {
 	const int legs_anim = pm->ps->legsAnim;
 	pm->xyspeed = sqrt(pm->ps->velocity[0] * pm->ps->velocity[0] + pm->ps->velocity[1] * pm->ps->velocity[1]);
@@ -11432,7 +11375,7 @@ static void PM_Footsteps()
 					{
 						if (pm->cmd.buttons & BUTTON_BLOCK && pm->ps->sprintFuel > 15)
 						{
-							PM_SetAnim(pm, SETANIM_LEGS, BOTH_SPRINT, set_anim_flags);
+							PM_SetAnim(pm, SETANIM_LEGS, BOTH_SPRINT_SABER_MP, set_anim_flags);
 
 							if (!(pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING))
 							{
@@ -12867,7 +12810,7 @@ int PM_BlockingPoseForsaber_anim_levelSingle()
 	return anim;
 }
 
-qboolean PM_CanDoDualDoubleAttacks()
+static qboolean PM_CanDoDualDoubleAttacks()
 {
 	if (pm->ps->saber[0].saberFlags & SFL_NO_MIRROR_ATTACKS)
 	{
@@ -12992,7 +12935,7 @@ int Fatigue_SaberAttack()
 //Add Fatigue for all the sabermoves.
 extern qboolean PM_KnockAwayStaffAndDuels(int move);
 
-void PM_NPCFatigue(playerState_t* ps, const int new_move)
+static void PM_NPCFatigue(playerState_t* ps, const int new_move)
 {
 	if (ps->saber_move != new_move)
 	{
@@ -14254,7 +14197,7 @@ saber_moveName_t PM_NPCSaberAttackFromQuad(const int quad)
 	return newmove;
 }
 
-int PM_saber_moveQuadrantForMovement(const usercmd_t* ucmd)
+static int PM_saber_moveQuadrantForMovement(const usercmd_t* ucmd)
 {
 	if (ucmd->rightmove > 0)
 	{
@@ -14332,7 +14275,7 @@ void PM_SetAnimFrame(gentity_t* gent, const int frame, const qboolean torso, con
 	}
 }
 
-int pm_saber_lock_win_anim(const saberLockResult_t result, const int break_type)
+static int pm_saber_lock_win_anim(const saberLockResult_t result, const int break_type)
 {
 	int win_anim = -1;
 	switch (pm->ps->torsoAnim)
@@ -14413,7 +14356,7 @@ int pm_saber_lock_win_anim(const saberLockResult_t result, const int break_type)
 	return win_anim;
 }
 
-int PM_SaberLockLoseAnim(gentity_t* genemy, const saberLockResult_t result, const int break_type)
+static int PM_SaberLockLoseAnim(gentity_t* genemy, const saberLockResult_t result, const int break_type)
 {
 	int lose_anim = -1;
 	switch (genemy->client->ps.torsoAnim)
@@ -14529,7 +14472,7 @@ int PM_SaberLockLoseAnim(gentity_t* genemy, const saberLockResult_t result, cons
 	return lose_anim;
 }
 
-int PM_SaberLockResultAnim(gentity_t* duelist, const int lock_or_break_or_super_break, const int win_or_lose)
+static int PM_SaberLockResultAnim(gentity_t* duelist, const int lock_or_break_or_super_break, const int win_or_lose)
 {
 	int base_anim = duelist->client->ps.torsoAnim;
 	switch (base_anim)
@@ -14604,7 +14547,7 @@ int PM_SaberLockResultAnim(gentity_t* duelist, const int lock_or_break_or_super_
 extern void CGCam_BlockShakeSP(float intensity, int duration);
 constexpr auto AMPUTATE_DAMAGE = 100;
 
-void PM_SaberLockBreak(gentity_t* gent, gentity_t* genemy, const saberLockResult_t result, int victory_strength)
+static void PM_SaberLockBreak(gentity_t* gent, gentity_t* genemy, const saberLockResult_t result, int victory_strength)
 {
 	int break_type;
 	qboolean single_vs_single = qtrue;
@@ -14853,7 +14796,7 @@ void PM_SaberLockBreak(gentity_t* gent, gentity_t* genemy, const saberLockResult
 	}
 }
 
-int G_SaberLockStrength(const gentity_t* gent)
+static int G_SaberLockStrength(const gentity_t* gent)
 {
 	int strength = gent->client->ps.saber[0].lockBonus;
 
@@ -14900,7 +14843,7 @@ int G_SaberLockStrength(const gentity_t* gent)
 	return strength;
 }
 
-qboolean PM_InSaberLockOld(const int anim)
+static qboolean PM_InSaberLockOld(const int anim)
 {
 	switch (anim)
 	{
@@ -14952,7 +14895,7 @@ qboolean PM_InSaberLock(const int anim)
 extern qboolean ValidAnimFileIndex(int index);
 extern qboolean g_check_increment_lock_anim(int anim, int win_or_lose);
 
-qboolean PM_SaberLocked()
+static qboolean PM_SaberLocked()
 {
 	if (pm->ps->saberLockEnemy == ENTITYNUM_NONE)
 	{
@@ -15257,7 +15200,7 @@ qboolean PM_SaberLocked()
 	return qtrue;
 }
 
-qboolean G_EnemyInKickRange(const gentity_t* self, const gentity_t* enemy)
+static qboolean G_EnemyInKickRange(const gentity_t* self, const gentity_t* enemy)
 {
 	if (!self || !enemy)
 	{
@@ -15484,7 +15427,7 @@ saber_moveName_t G_PickAutoKick(const gentity_t* self, const gentity_t* enemy, c
 	return kick_move;
 }
 
-saber_moveName_t PM_PickAutoKick(const gentity_t* enemy)
+static saber_moveName_t PM_PickAutoKick(const gentity_t* enemy)
 {
 	return G_PickAutoKick(pm->gent, enemy, qfalse);
 }
@@ -15492,7 +15435,7 @@ saber_moveName_t PM_PickAutoKick(const gentity_t* enemy)
 saber_moveName_t g_pick_auto_multi_kick(gentity_t* self, const qboolean allow_singles, const qboolean store_move)
 {
 	gentity_t* entity_list[MAX_GENTITIES];
-	vec3_t mins, maxs;
+	vec3_t mins{}, maxs{};
 	const int radius = self->maxs[0] * 1.5f + self->maxs[0] * 1.5f + STAFF_KICK_RANGE + 24.0f;
 	//a little wide on purpose
 	vec3_t center;
@@ -15638,7 +15581,7 @@ saber_moveName_t g_pick_auto_multi_kick(gentity_t* self, const qboolean allow_si
 	return kick_move;
 }
 
-qboolean PM_PickAutoMultiKick(const qboolean allow_singles)
+static qboolean PM_PickAutoMultiKick(const qboolean allow_singles)
 {
 	const saber_moveName_t kick_move = g_pick_auto_multi_kick(pm->gent, allow_singles, qfalse);
 	if (kick_move != LS_NONE)
@@ -15649,7 +15592,7 @@ qboolean PM_PickAutoMultiKick(const qboolean allow_singles)
 	return qfalse;
 }
 
-qboolean PM_CheckKickAttack()
+static qboolean PM_CheckKickAttack()
 {
 	if (pm->cmd.buttons & BUTTON_KICK
 		&& !(pm->cmd.buttons & BUTTON_DASH)
@@ -15662,7 +15605,7 @@ qboolean PM_CheckKickAttack()
 	return qfalse;
 }
 
-qboolean PM_CheckAltKickAttack()
+static qboolean PM_CheckAltKickAttack()
 {
 	if (pm->cmd.buttons & BUTTON_ALT_ATTACK || pm->cmd.buttons & BUTTON_KICK
 		&& !(pm->cmd.buttons & BUTTON_DASH)
@@ -15674,7 +15617,7 @@ qboolean PM_CheckAltKickAttack()
 	return qfalse;
 }
 
-qboolean PM_CheckUpsideDownAttack()
+static qboolean PM_CheckUpsideDownAttack()
 {
 	if (pm->ps->saber_move != LS_READY)
 	{
@@ -15729,7 +15672,7 @@ qboolean PM_CheckUpsideDownAttack()
 	return qfalse;
 }
 
-qboolean PM_saber_moveOkayForKata()
+static qboolean PM_saber_moveOkayForKata()
 {
 	if (g_saberNewControlScheme->integer)
 	{
@@ -15750,7 +15693,7 @@ qboolean PM_saber_moveOkayForKata()
 	return qfalse;
 }
 
-qboolean PM_CanDoKata()
+static qboolean PM_CanDoKata()
 {
 	if (pm->ps->clientNum && !PM_ControlledByPlayer() && pm->ps->stats[STAT_HEALTH] >= 40)
 	{
@@ -15775,7 +15718,7 @@ qboolean PM_CanDoKata()
 	return qfalse;
 }
 
-qboolean PM_CanDoRollStab()
+static qboolean PM_CanDoRollStab()
 {
 	if (!pm->ps->saberInFlight //not throwing saber
 		&& pm->ps->groundEntityNum != ENTITYNUM_NONE //not in the air
@@ -15805,7 +15748,7 @@ qboolean PM_Can_Do_Kill_Move()
 	return qfalse;
 }
 
-void PM_SaberDroidWeapon()
+static void PM_SaberDroidWeapon()
 {
 	// make weapon function
 	if (pm->ps->weaponTime > 0)
@@ -15915,7 +15858,7 @@ void PM_SaberDroidWeapon()
 	}
 }
 
-void PM_TryGrab()
+static void PM_TryGrab()
 {
 	if (pm->ps->groundEntityNum != ENTITYNUM_NONE && pm->ps->weaponTime <= 0)
 	{
@@ -15934,7 +15877,7 @@ void PM_TryGrab()
 	}
 }
 
-void PM_TryAirKick(const saber_moveName_t kick_move)
+static void PM_TryAirKick(const saber_moveName_t kick_move)
 {
 	if (pm->ps->groundEntityNum < ENTITYNUM_NONE)
 	{
@@ -16181,7 +16124,7 @@ void PM_SetMeleeBlock()
 	}
 }
 
-qboolean InSaberDelayAnimation(const int move)
+static qboolean InSaberDelayAnimation(const int move)
 {
 	if (move >= 665 && move <= 669
 		|| move >= 690 && move <= 694
@@ -16408,7 +16351,7 @@ void PM_CheckKick()
 	}
 }
 
-void PM_MeleeKickForConditions()
+static void PM_MeleeKickForConditions()
 {
 	if (!PM_SaberInBounce(pm->ps->saber_move)
 		&& !PM_SaberInKnockaway(pm->ps->saber_move)
@@ -16864,7 +16807,7 @@ void PM_CheckClearSaberBlock()
 	}
 }
 
-qboolean PM_SaberBlocking()
+static qboolean PM_SaberBlocking()
 {
 	// Now we react to a block action by the player's lightsaber.
 	if (pm->ps->saberBlocked)
@@ -17273,7 +17216,7 @@ qboolean PM_SaberBlocking()
 	return qfalse;
 }
 
-qboolean PM_NPCCheckAttackRoll()
+static qboolean PM_NPCCheckAttackRoll()
 {
 	if (pm->ps->clientNum >= MAX_CLIENTS && !PM_ControlledByPlayer() //NPC
 		&& pm->gent
@@ -17389,7 +17332,7 @@ int PM_irand_timesync(const int val1, const int val2)
 	return i;
 }
 
-saber_moveName_t PM_DoFake(const int curmove)
+static saber_moveName_t PM_DoFake(const int curmove)
 {
 	int new_quad = -1;
 
@@ -19305,7 +19248,7 @@ qboolean PM_DroidMelee(const int npc_class)
 	return qfalse;
 }
 
-void PM_WeaponWampa()
+static void PM_WeaponWampa()
 {
 	// make weapon function
 	if (pm->ps->weaponTime > 0)
@@ -19365,7 +19308,7 @@ void PM_WeaponWampa()
 	}
 }
 
-qboolean PM_MercIsGunner()
+static qboolean PM_MercIsGunner()
 {
 	switch (pm->ps->weapon)
 	{
@@ -20793,7 +20736,7 @@ void PM_SetSpecialMoveValues()
 extern float cg_zoomFov; //from cg_view.cpp
 
 //-------------------------------------------
-void PM_AdjustAttackStates(pmove_t* pm)
+static void PM_AdjustAttackStates(pmove_t* pm)
 //-------------------------------------------
 {
 	int amount;
@@ -20979,7 +20922,7 @@ void PM_AdjustAttackStates(pmove_t* pm)
 	}
 }
 
-qboolean PM_WeaponOkOnVehicle(const int weapon)
+static qboolean PM_WeaponOkOnVehicle(const int weapon)
 {
 	switch (weapon)
 	{
@@ -20999,7 +20942,7 @@ qboolean PM_WeaponOkOnVehicle(const int weapon)
 	return qfalse;
 }
 
-void PM_CheckInVehicleSaberAttackAnim()
+static void PM_CheckInVehicleSaberAttackAnim()
 {
 	//A bit of a hack, but makes the vehicle saber attacks act like any other saber attack...
 	// make weapon function
@@ -21067,7 +21010,7 @@ void PM_CheckInVehicleSaberAttackAnim()
 }
 
 //force the vehicle to turn and travel to its forced destination point
-void PM_VehForcedTurning(const gentity_t* veh)
+static void PM_VehForcedTurning(const gentity_t* veh)
 {
 	const gentity_t* dst = &g_entities[pm->ps->vehTurnaroundIndex];
 	vec3_t dir;
@@ -21102,7 +21045,7 @@ void PM_VehForcedTurning(const gentity_t* veh)
 	SetClientViewAngle(pm->gent, pm->ps->viewangles);
 }
 
-void PM_VehFaceHyperspacePoint(const gentity_t* veh)
+static void PM_VehFaceHyperspacePoint(const gentity_t* veh)
 {
 	if (!veh || !veh->m_pVehicle)
 	{
@@ -21186,7 +21129,7 @@ Can be called by either the server or the client
 */
 void PM_AdjustAngleForWallGrab(playerState_t* ps, usercmd_t* ucmd);
 
-void PM_SetPMViewAngle(playerState_t* ps, vec3_t angle, const usercmd_t* ucmd)
+static void PM_SetPMViewAngle(playerState_t* ps, vec3_t angle, const usercmd_t* ucmd)
 {
 	for (int i = 0; i < 3; i++)
 	{
@@ -21196,7 +21139,7 @@ void PM_SetPMViewAngle(playerState_t* ps, vec3_t angle, const usercmd_t* ucmd)
 	VectorCopy(angle, ps->viewangles);
 }
 
-void PmoveSingle()
+static void PmoveSingle()
 {
 	PM_AdjustAngleForWallGrab(pm->ps, &pm->cmd);
 }
@@ -21747,7 +21690,7 @@ void PM_SaberPerfectBlockUpdate(const int new_move)
 }
 
 //saber status utility tools
-qboolean BG_SaberInFullDamageMove(const playerState_t* ps)
+static qboolean BG_SaberInFullDamageMove(const playerState_t* ps)
 {
 	//The player is attacking with a saber attack that does full damage
 	if (PM_SaberInAttack(ps->saber_move)
@@ -21842,7 +21785,7 @@ constexpr auto LEDGEGRABMINDISTANCE = 22.0f;
 constexpr auto LEDGEHOROFFSET = 22.3f;
 
 //Get the point in the leg animation and return a percentage of the current point in the anim between 0 and the total anim length (0.0f - 1.0f)
-float GetSelfLegAnimPointforLedge()
+static float GetSelfLegAnimPointforLedge()
 {
 	float current = 0.0f;
 	int end = 0;
@@ -21894,14 +21837,14 @@ void G_LetGoOfLedge(const gentity_t* ent)
 }
 
 //lets go of a ledge
-void BG_LetGoofLedge(playerState_t* ps)
+static void BG_LetGoofLedge(playerState_t* ps)
 {
 	ps->pm_flags &= ~PMF_STUCK_TO_WALL;
 	ps->torsoAnimTimer = 0;
 	ps->legsAnimTimer = 0;
 }
 
-qboolean LedgeGrabableEntity(const int entityNum)
+static qboolean LedgeGrabableEntity(const int entityNum)
 {
 	//indicates if the given entity is an entity that can be ledgegrabbed.
 	const gentity_t* ent = &g_entities[entityNum];
@@ -21917,7 +21860,7 @@ qboolean LedgeGrabableEntity(const int entityNum)
 	}
 }
 
-void PM_SetVelocityforLedgeMove(playerState_t* ps, const int anim)
+static void PM_SetVelocityforLedgeMove(playerState_t* ps, const int anim)
 {
 	vec3_t fwd_angles, move_dir;
 	const float animationpoint = GetSelfLegAnimPointforLedge();
@@ -22122,7 +22065,7 @@ void PM_AdjustAngleForWallGrab(playerState_t* ps, usercmd_t* ucmd)
 	}
 }
 
-qboolean LedgeTrace(trace_t* trace, vec3_t dir, float* lerpup, float* lerpfwd, float* lerpyaw)
+static qboolean LedgeTrace(trace_t* trace, vec3_t dir, float* lerpup, float* lerpfwd, float* lerpyaw)
 {
 	//scan for for a ledge in the given direction
 	vec3_t traceTo, trace_from, wallangles;

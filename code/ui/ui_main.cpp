@@ -645,7 +645,7 @@ void _UI_Refresh(const int realtime)
 		{
 			total = 1;
 		}
-		uiInfo.uiDC.FPS = 1000 * UI_FPS_FRAMES / total;
+		uiInfo.uiDC.FPS = static_cast<float>(1000 * UI_FPS_FRAMES) / total;
 	}
 
 	UI_UpdateCvars();
@@ -793,7 +793,7 @@ Text_PaintWithCursor
 ================
 */
 // iMaxPixelWidth is 0 here for no-limit
-void Text_PaintWithCursor(const float x, const float y, const float scale, vec4_t color, const char* text,
+static void Text_PaintWithCursor(const float x, const float y, const float scale, vec4_t color, const char* text,
 	const int cursorPos, const char cursor,
 	const int iMaxPixelWidth, const int style, const int iFontIndex)
 {
@@ -817,7 +817,7 @@ void Text_PaintWithCursor(const float x, const float y, const float scale, vec4_
 		iFontIndex);
 }
 
-const char* UI_FeederItemText(const float feederID, const int index, const int column, qhandle_t* handle)
+static const char* UI_FeederItemText(const float feederID, const int index, const int column, qhandle_t* handle)
 {
 	*handle = -1;
 
@@ -908,7 +908,7 @@ const char* UI_FeederItemText(const float feederID, const int index, const int c
 	return "";
 }
 
-qhandle_t UI_FeederItemImage(const float feederID, const int index)
+static qhandle_t UI_FeederItemImage(const float feederID, const int index)
 {
 	if (feederID == FEEDER_PLAYER_SKIN_HEAD)
 	{
@@ -2351,7 +2351,7 @@ static ui_animFileSet_t ui_knownAnimFileSets[MAX_ANIM_FILES];
 
 int ui_numKnownAnimFileSets;
 
-qboolean UI_ParseAnimationFile(const char* af_filename)
+static qboolean UI_ParseAnimationFile(const char* af_filename)
 {
 	const char* text_p;
 	char text[120000];
@@ -2456,7 +2456,7 @@ qboolean UI_ParseAnimationFile(const char* af_filename)
 	return qtrue;
 }
 
-qboolean UI_ParseAnimFileSet(const char* animCFG, int* animFileIndex)
+static qboolean UI_ParseAnimFileSet(const char* animCFG, int* animFileIndex)
 {
 	//Not going to bother parsing the sound config here.
 	char afilename[MAX_QPATH];
@@ -2510,7 +2510,7 @@ qboolean UI_ParseAnimFileSet(const char* animCFG, int* animFileIndex)
 	return qtrue;
 }
 
-int UI_G2SetAnim(CGhoul2Info* ghlInfo, const char* boneName, const int animNum, const qboolean freeze)
+static int UI_G2SetAnim(CGhoul2Info* ghlInfo, const char* boneName, const int animNum, const qboolean freeze)
 {
 	int animIndex;
 
@@ -3196,7 +3196,7 @@ Load_Menu
 	Load current menu file
 =================
 */
-qboolean Load_Menu(const char** holdBuffer)
+static qboolean Load_Menu(const char** holdBuffer)
 {
 	const char* token2 = COM_ParseExt(holdBuffer, qtrue);
 
@@ -4913,7 +4913,7 @@ int SCREENSHOT_TOTAL = -1;
 int SCREENSHOT_CHOICE = 0;
 int SCREENSHOT_NEXT_UPDATE_TIME = 0;
 
-char* UI_GetCurrentLevelshot()
+static char* UI_GetCurrentLevelshot()
 {
 	const int time = Sys_Milliseconds(); //cg.time
 
@@ -7158,7 +7158,7 @@ char GoToMenu[1024];
 Menus_SaveGoToMenu
 =================
 */
-void Menus_SaveGoToMenu(const char* menuTo)
+static void Menus_SaveGoToMenu(const char* menuTo)
 {
 	memcpy(GoToMenu, menuTo, sizeof GoToMenu);
 }

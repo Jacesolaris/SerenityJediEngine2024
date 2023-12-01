@@ -1115,18 +1115,18 @@ static void Item_ApplyHacks(itemDef_t* item)
 	}
 
 #ifdef JK2_MODE
-	if (item->type == ITEM_TYPE_MULTI && item->window.name && !Q_stricmp(item->window.name, "video_mode") && item->cvar && !Q_stricmp(item->cvar, "r_ext_texture_filter_anisotropic")) {
+	if (item->type == ITEM_TYPE_MULTI && item->window.name && !Q_stricmp(item->window.name, "video_mode") && item->cvar && !Q_stricmp(item->cvar, "r_ext_texture_filter_anisotropic"))
+	{
 		{
 			memset(item->typeData, 0, sizeof(multiDef_t));
 		}
-		editFieldDef_t* editPtr = nullptr;
 
 		item->cvarFlags = CVAR_DISABLE;
 		item->type = ITEM_TYPE_SLIDER;
 
 		Item_ValidateTypeData(item);
 
-		editPtr = (editFieldDef_t*)item->typeData;
+		const auto editPtr = static_cast<editFieldDef_t*>(item->typeData);
 		editPtr->minVal = 0.5f;
 		editPtr->maxVal = cls.glconfig.maxTextureFilterAnisotropy;
 		editPtr->defVal = 1.0f;
@@ -2607,8 +2607,6 @@ static int GetCurrentFeederIndex(itemDef_t* item)
 			{
 				return i;
 			}
-
-			//	Cvar_Set("ui_char_skin_head", uiInfo.playerSpecies[uiInfo.playerSpeciesIndex].SkinHeadNames[index]);
 		}
 		return -1;
 	}
@@ -2622,7 +2620,6 @@ static int GetCurrentFeederIndex(itemDef_t* item)
 			{
 				return i;
 			}
-			//	Cvar_Set("ui_char_skin_head", uiInfo.playerSpecies[uiInfo.playerSpeciesIndex].SkinHeadNames[index]);
 		}
 		return -1;
 	}
@@ -2636,14 +2633,8 @@ static int GetCurrentFeederIndex(itemDef_t* item)
 			{
 				return i;
 			}
-			//	Cvar_Set("ui_char_skin_head", uiInfo.playerSpecies[uiInfo.playerSpeciesIndex].SkinHeadNames[index]);
 		}
 		return -1;
-
-		//	if (index >= 0 && index < uiInfo.playerSpecies[uiInfo.playerSpeciesIndex].SkinLegCount)
-		//	{
-		//		Cvar_Set("ui_char_skin_legs", uiInfo.playerSpecies[uiInfo.playerSpeciesIndex].SkinLegNames[index]);
-		//	}
 	}
 	if (feederID == FEEDER_COLORCHOICES)
 	{
@@ -4212,7 +4203,7 @@ ItemParse_cvar
 static qboolean ItemParse_cvar(itemDef_t* item)
 {
 	Item_ValidateTypeData(item);
-	if (!PC_ParseStringMem(&item->cvar))
+	if (!PC_ParseStringMem((const char**)&item->cvar))
 	{
 		return qfalse;
 	}
@@ -4331,7 +4322,7 @@ static qboolean ItemParse_cvarInt(itemDef_t* item)
 	}
 	const auto editPtr = static_cast<editFieldDef_t*>(item->typeData);
 
-	if (PC_ParseStringMem(&item->cvar) &&
+	if (PC_ParseStringMem((const char**)&item->cvar) &&
 		!PC_ParseFloat(&editPtr->defVal) &&
 		!PC_ParseFloat(&editPtr->minVal) &&
 		!PC_ParseFloat(&editPtr->maxVal))
@@ -4350,7 +4341,7 @@ static qboolean ItemParse_cvarFloat(itemDef_t* item)
 	}
 	const auto editPtr = static_cast<editFieldDef_t*>(item->typeData);
 
-	if (PC_ParseStringMem(&item->cvar) &&
+	if (PC_ParseStringMem((const char**)&item->cvar) &&
 		!PC_ParseFloat(&editPtr->defVal) &&
 		!PC_ParseFloat(&editPtr->minVal) &&
 		!PC_ParseFloat(&editPtr->maxVal))
@@ -4379,7 +4370,8 @@ static qboolean ItemParse_cvarRotateScale(itemDef_t* item)
 		return qfalse;
 	}
 	const auto editPtr = static_cast<editFieldDef_t*>(item->typeData);
-	if (PC_ParseStringMem(&item->cvar) &&
+
+	if (PC_ParseStringMem((const char**)&item->cvar) &&
 		!PC_ParseFloat(&editPtr->range))
 	{
 		return qtrue;
@@ -6371,25 +6363,25 @@ static void Item_TextField_Paint(itemDef_t* item)
 		lowLight[2] = 0.8 * parent->focusColor[2];
 		lowLight[3] = 0.8 * parent->focusColor[3];
 		LerpColor(parent->focusColor, lowLight, newColor,
-			0.5 + 0.5 * sin(static_cast<float>(DC->realTime / PULSE_DIVISOR)));
+			0.5 + 0.5 * sin(static_cast<float>(DC->realTime / static_cast<float>(PULSE_DIVISOR))));
 	}
 	else
 	{
 		memcpy(&newColor, &item->window.foreColor, sizeof(vec4_t));
 	}
 
-	constexpr int offset = 8; //(item->text && *item->text) ? 8 : 0;
+	constexpr int offset = 8;
+
 	if (item->window.flags & WINDOW_HASFOCUS && g_editingField)
 	{
 		const char cursor = DC->getOverstrikeMode() ? '_' : '|';
 		DC->drawTextWithCursor(item->textRect.x + item->textRect.w + offset, item->textRect.y, item->textscale,
-			newColor, buff + editPtr->paintOffset, item->cursorPos - editPtr->paintOffset, cursor,
-			/*editPtr->maxPaintChars*/ item->window.rect.w, item->textStyle, item->font);
+			newColor, buff + editPtr->paintOffset, item->cursorPos - editPtr->paintOffset, cursor, item->window.rect.w, item->textStyle, item->font);
 	}
 	else
 	{
 		DC->drawText(item->textRect.x + item->textRect.w + offset, item->textRect.y, item->textscale, newColor,
-			buff + editPtr->paintOffset, /*editPtr->maxPaintChars*/ item->window.rect.w, item->textStyle,
+			buff + editPtr->paintOffset, item->window.rect.w, item->textStyle,
 			item->font);
 	}
 }
@@ -7350,7 +7342,7 @@ static void Item_Model_Paint_Item(itemDef_t* item)
 	float x, y, w, h;
 	refdef_t refdef;
 	refEntity_t		ent;
-	vec3_t			mins, maxs, origin;
+	vec3_t			mins, maxs, origin{};
 	vec3_t			angles;
 	modelDef_t* modelPtr = (modelDef_t*)item->typeData;
 
@@ -7455,7 +7447,7 @@ static void Item_OwnerDraw_Paint(itemDef_t* item)
 			lowLight[2] = 0.8 * parent->focusColor[2];
 			lowLight[3] = 0.8 * parent->focusColor[3];
 			LerpColor(parent->focusColor, lowLight, color,
-				0.5 + 0.5 * sin(static_cast<float>(DC->realTime / PULSE_DIVISOR)));
+				0.5 + 0.5 * sin(static_cast<float>(DC->realTime / static_cast<float>(PULSE_DIVISOR))));
 		}
 		else if (item->textStyle == ITEM_TEXTSTYLE_BLINK && !(DC->realTime / BLINK_DIVISOR & 1))
 		{
@@ -7464,7 +7456,7 @@ static void Item_OwnerDraw_Paint(itemDef_t* item)
 			lowLight[2] = 0.8 * item->window.foreColor[2];
 			lowLight[3] = 0.8 * item->window.foreColor[3];
 			LerpColor(item->window.foreColor, lowLight, color,
-				0.5 + 0.5 * sin(static_cast<float>(DC->realTime / PULSE_DIVISOR)));
+				0.5 + 0.5 * sin(static_cast<float>(DC->realTime / static_cast<float>(PULSE_DIVISOR))));
 		}
 
 		if (item->disabled)
@@ -10634,10 +10626,10 @@ static void Scroll_Slider_ThumbFunc(void* p)
 
 /*
  =================
- Scroll_Rotate
+ Scroll_Rotate_ThumbFunc
  =================
  */
-static void Scroll_Rotate(void* p)
+static void Scroll_Rotate_ThumbFunc(void* p)
 {
 	//This maps a scroll to a rotation. That rotation is then added to the current cvar value.
 	//It reads off editDef->range to give the correct angle range for the item area.
@@ -10770,9 +10762,9 @@ static void Item_StartCapture(itemDef_t* item, const int key)
 			scrollInfo.item = item;
 			scrollInfo.xStart = DC->cursorx;
 			scrollInfo.yStart = DC->cursory;
-			scrollInfo.adjustValue = static_cast<int>(DC->getCVarValue(item->cvar));
+			scrollInfo.adjustValue = DC->getCVarValue(item->cvar);
 			captureData = &scrollInfo;
-			captureFunc = &Scroll_Rotate;
+			captureFunc = &Scroll_Rotate_ThumbFunc;
 			itemCapture = item;
 		}
 		break;

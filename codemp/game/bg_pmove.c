@@ -2093,7 +2093,7 @@ static void PM_pitch_roll_for_slope(const bgEntity_t* forwhom, vec3_t pass_slope
 		storeAngles[PITCH] = dot * pitch;
 		storeAngles[ROLL] = (1 - Q_fabs(dot)) * pitch * mod;
 	}
-	else //if ( forwhom->client )
+	else
 	{
 		pm->ps->viewangles[PITCH] = dot * pitch;
 		pm->ps->viewangles[ROLL] = (1 - Q_fabs(dot)) * pitch * mod;
@@ -8373,7 +8373,7 @@ static qboolean PM_CheckDualForwardJumpDuck(void)
 	return resized;
 }
 
-void PM_CheckFixMins(void)
+static void PM_CheckFixMins(void)
 {
 	if (pm->ps->legsAnim == BOTH_JUMPATTACK6)
 	{
@@ -10760,7 +10760,7 @@ static void PM_Footsteps(void)
 						{
 							if (pm->cmd.buttons & BUTTON_BLOCK && pm->ps->sprintFuel > 15)
 							{
-								PM_SetAnim(SETANIM_BOTH, BOTH_SPRINT_MP, SETANIM_FLAG_NORMAL);
+								PM_SetAnim(SETANIM_BOTH, BOTH_SPRINT_SABER_MP, SETANIM_FLAG_NORMAL);
 
 								if (!(pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING))
 								{
@@ -11039,7 +11039,7 @@ static void PM_Footsteps(void)
 							{
 								if (pm->cmd.buttons & BUTTON_BLOCK && pm->ps->sprintFuel > 15)
 								{
-									PM_SetAnim(SETANIM_BOTH, BOTH_SPRINT_MP, SETANIM_FLAG_NORMAL);
+									PM_SetAnim(SETANIM_BOTH, BOTH_SPRINT_SABER_MP, SETANIM_FLAG_NORMAL);
 
 									if (!(pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING))
 									{
@@ -14842,7 +14842,7 @@ qboolean G_OkayToLean(const playerState_t* ps, const usercmd_t* uscmd, const qbo
 	return qfalse;
 }
 
-qboolean G_OkayToDoStandingBlock(const playerState_t* ps, const usercmd_t* uscmd, const qboolean interruptOkay)
+static qboolean G_OkayToDoStandingBlock(const playerState_t* ps, const usercmd_t* uscmd, const qboolean interruptOkay)
 {
 	if (ps->clientNum < MAX_CLIENTS //player
 		&& ps->groundEntityNum != ENTITYNUM_NONE //on ground
@@ -17854,7 +17854,7 @@ static void PM_CheckInVehicleSaberAttackAnim(void)
 }
 
 //do we have a weapon that's ok for using on the vehicle?
-int PM_GetOkWeaponForVehicle(void)
+static int PM_GetOkWeaponForVehicle(void)
 {
 	int i = 0;
 

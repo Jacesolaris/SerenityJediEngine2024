@@ -4082,16 +4082,14 @@ static void Scroll_Slider_ThumbFunc(void* p)
 
 /*
  =================
- Scroll_Rotate
+ Scroll_Rotate_ThumbFunc
  =================
  */
-static void Scroll_Rotate(void* p)
+static void Scroll_Rotate_ThumbFunc(void* p)
 {
 	//This maps a scroll to a rotation. That rotation is then added to the current cvar value.
 	//It reads off editDef->range to give the correct angle range for the item area.
 	float start, size, cursorpos, cursorpos_old;
-	int intValue;
-	float angleDiff;
 	const scrollInfo_t* si = p;
 	const editFieldDef_t* editDef = si->item->typeData.edit;
 
@@ -4123,8 +4121,8 @@ static void Scroll_Rotate(void* p)
 		cursorpos = start + size;
 	}
 	//moving across the whole model area should allow for 720 degree rotation
-	angleDiff = (editDef->range) * (cursorpos - cursorpos_old) / size;
-	intValue = (int)(si->adjustValue + angleDiff) % 360;
+	float angleDiff = (editDef->range) * (cursorpos - cursorpos_old) / size;
+	int intValue = (int)(si->adjustValue + angleDiff) % 360;
 	DC->setCVar(si->item->cvar, va("%d", intValue));
 }
 
@@ -4215,7 +4213,7 @@ static void Item_StartCapture(itemDef_t* item, const int key)
 			scrollInfo.yStart = DC->cursory;
 			scrollInfo.adjustValue = DC->getCVarValue(item->cvar);
 			captureData = &scrollInfo;
-			captureFunc = &Scroll_Rotate;
+			captureFunc = &Scroll_Rotate_ThumbFunc;
 			itemCapture = item;
 		}
 		break;
@@ -8842,10 +8840,8 @@ static qboolean ItemParse_cvarFloat(itemDef_t* item, const int handle)
 
 static qboolean ItemParse_cvarRotateScale(itemDef_t* item, int handle)
 {
-	editFieldDef_t* editPtr;
-
 	Item_ValidateTypeData(item);
-	editPtr = item->typeData.edit;
+	editFieldDef_t* editPtr = item->typeData.edit;
 
 	if (!editPtr)
 		return qfalse;
@@ -8855,7 +8851,6 @@ static qboolean ItemParse_cvarRotateScale(itemDef_t* item, int handle)
 	{
 		return qtrue;
 	}
-
 	return qfalse;
 }
 
@@ -8956,7 +8951,7 @@ static qboolean ItemParse_cvarStrList(itemDef_t* item, const int handle)
 			}
 		}
 	}
-		}
+}
 
 static qboolean ItemParse_cvarFloatList(itemDef_t* item, const int handle)
 {
@@ -9361,7 +9356,7 @@ static void Item_ApplyHacks(itemDef_t* item)
 			Com_Printf("Extended sound quality field to contain very high setting.\n");
 		}
 	}
-		}
+}
 
 /*
 ===============
