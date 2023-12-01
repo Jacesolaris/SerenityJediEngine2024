@@ -377,7 +377,7 @@ by the Calc_* functions
 */
 void R_SetupEntityLighting(const trRefdef_t* refdef, trRefEntity_t* ent) {
 	int				i;
-	vec3_t			light_dir;
+	vec3_t			lightDir;
 	vec3_t			lightOrigin;
 
 	// lighting calculations
@@ -413,25 +413,37 @@ void R_SetupEntityLighting(const trRefdef_t* refdef, trRefEntity_t* ent) {
 	}
 
 	// bonus items and view weapons have a fixed minimum add
-	if (ent->e.renderfx & RF_MORELIGHT)
+	if (r_AdvancedsurfaceSprites->integer)
 	{
-		ent->ambientLight[0] += tr.identityLight * 96;
-		ent->ambientLight[1] += tr.identityLight * 96;
-		ent->ambientLight[2] += tr.identityLight * 96;
+		if (ent->e.renderfx & RF_MORELIGHT)
+		{
+			ent->ambientLight[0] += tr.identityLight * 96;
+			ent->ambientLight[1] += tr.identityLight * 96;
+			ent->ambientLight[2] += tr.identityLight * 96;
+		}
 	}
 	else
 	{
-		// give everything a minimum light add
-		ent->ambientLight[0] += tr.identityLight * 16;
-		ent->ambientLight[1] += tr.identityLight * 16;
-		ent->ambientLight[2] += tr.identityLight * 16;
+		if (ent->e.renderfx & RF_MORELIGHT)
+		{
+			ent->ambientLight[0] += tr.identityLight * 96;
+			ent->ambientLight[1] += tr.identityLight * 96;
+			ent->ambientLight[2] += tr.identityLight * 96;
+		}
+		else
+		{
+			// give everything a minimum light add
+			ent->ambientLight[0] += tr.identityLight * 16;
+			ent->ambientLight[1] += tr.identityLight * 16;
+			ent->ambientLight[2] += tr.identityLight * 16;
+		}
 	}
 
 	//
 	// modify the light by dynamic lights
 	//
 	float d = VectorLength(ent->directedLight);
-	VectorScale(ent->lightDir, d, light_dir);
+	VectorScale(ent->lightDir, d, lightDir);
 
 	for (i = 0; i < refdef->num_dlights; i++) {
 		vec3_t dir;
@@ -446,7 +458,7 @@ void R_SetupEntityLighting(const trRefdef_t* refdef, trRefEntity_t* ent) {
 		d = power / (d * d);
 
 		VectorMA(ent->directedLight, d, dl->color, ent->directedLight);
-		VectorMA(light_dir, d, dir, light_dir);
+		VectorMA(lightDir, d, dir, lightDir);
 	}
 
 	// clamp ambient
@@ -467,20 +479,20 @@ void R_SetupEntityLighting(const trRefdef_t* refdef, trRefEntity_t* ent) {
 	reinterpret_cast<byte*>(&ent->ambientLightInt)[3] = 0xff;
 
 	// transform the direction to local space
-	VectorNormalize(light_dir);
-	ent->lightDir[0] = DotProduct(light_dir, ent->e.axis[0]);
-	ent->lightDir[1] = DotProduct(light_dir, ent->e.axis[1]);
-	ent->lightDir[2] = DotProduct(light_dir, ent->e.axis[2]);
+	VectorNormalize(lightDir);
+	ent->lightDir[0] = DotProduct(lightDir, ent->e.axis[0]);
+	ent->lightDir[1] = DotProduct(lightDir, ent->e.axis[1]);
+	ent->lightDir[2] = DotProduct(lightDir, ent->e.axis[2]);
 }
 
 //pass in origin
-qboolean RE_GetLighting(const vec3_t origin, vec3_t ambient_light, vec3_t directed_light, vec3_t light_dir) {
+qboolean RE_GetLighting(const vec3_t origin, vec3_t ambient_light, vec3_t directed_light, vec3_t lightDir) {
 	trRefEntity_t tr_ent;
 
 	if (!tr.world || !tr.world->lightGridData) {
 		ambient_light[0] = ambient_light[1] = ambient_light[2] = 255.0;
 		directed_light[0] = directed_light[1] = directed_light[2] = 255.0;
-		VectorCopy(tr.sunDirection, light_dir);
+		VectorCopy(tr.sunDirection, lightDir);
 		return qfalse;
 	}
 	memset(&tr_ent, 0, sizeof tr_ent);
@@ -494,7 +506,7 @@ qboolean RE_GetLighting(const vec3_t origin, vec3_t ambient_light, vec3_t direct
 	R_SetupEntityLightingGrid(&tr_ent);
 	VectorCopy(tr_ent.ambientLight, ambient_light);
 	VectorCopy(tr_ent.directedLight, directed_light);
-	VectorCopy(tr_ent.lightDir, light_dir);
+	VectorCopy(tr_ent.lightDir, lightDir);
 	return qtrue;
 }
 
@@ -503,7 +515,7 @@ qboolean RE_GetLighting(const vec3_t origin, vec3_t ambient_light, vec3_t direct
 R_LightForPoint
 =================
 */
-int R_LightForPoint(vec3_t point, vec3_t ambient_light, vec3_t directed_light, vec3_t light_dir)
+int R_LightForPoint(vec3_t point, vec3_t ambient_light, vec3_t directed_light, vec3_t lightDir)
 {
 	trRefEntity_t ent;
 
@@ -516,7 +528,7 @@ int R_LightForPoint(vec3_t point, vec3_t ambient_light, vec3_t directed_light, v
 	R_SetupEntityLightingGrid(&ent);
 	VectorCopy(ent.ambientLight, ambient_light);
 	VectorCopy(ent.directedLight, directed_light);
-	VectorCopy(ent.lightDir, light_dir);
+	VectorCopy(ent.lightDir, lightDir);
 
 	return qtrue;
 }

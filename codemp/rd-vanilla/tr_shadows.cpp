@@ -318,6 +318,9 @@ void RB_DoShadowTessEnd(vec3_t light_pos)
 #ifndef _DEBUG_STENCIL_SHADOWS
 	qglColor3f(0.2f, 0.2f, 0.2f);
 
+	// set models to be flat-shaded for speed
+	qglShadeModel(GL_FLAT);
+
 	// don't write to the color buffer
 	qglColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
 
@@ -383,6 +386,9 @@ void RB_DoShadowTessEnd(vec3_t light_pos)
 		R_RenderShadowEdges();
 	}
 #endif
+
+	// re-enable GL_SMOOTH
+	qglShadeModel(GL_SMOOTH);
 
 	// reenable writing to the color buffer
 	qglColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);

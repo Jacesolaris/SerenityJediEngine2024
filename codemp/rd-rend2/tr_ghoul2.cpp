@@ -3211,7 +3211,7 @@ void R_AddGhoulSurfaces(trRefEntity_t* ent, int entityNum)
 			whichLod,
 			g2Info.mBltlist);
 #endif
-		if (!personalModel && (RS.renderfx & RF_shadowPlane))
+		if (!personalModel && (RS.renderfx & RF_SHADOW_PLANE))
 		{
 			RS.renderfx |= RF_NOSHADOW;
 		}

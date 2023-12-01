@@ -606,7 +606,7 @@ static void G_DynamicMusicUpdate()
 	}
 }
 
-void G_ConnectNavs(const char* mapname, const int checkSum)
+static void G_ConnectNavs(const char* mapname, const int checkSum)
 {
 	NAV::LoadFromEntitiesAndSaveToFile(mapname, checkSum);
 	CP_FindCombatPointWaypoints();
@@ -623,7 +623,7 @@ All but the first will have the FL_TEAMSLAVE flag set and teammaster field set
 All but the last will have the teamchain field set to the next one
 ================
 */
-void G_FindTeams()
+static void G_FindTeams()
 {
 	int c = 0;
 	int c2 = 0;
@@ -683,7 +683,7 @@ G_InitCvars
 
 ============
 */
-void G_InitCvars()
+static void G_InitCvars()
 {
 	// don't override the cheat state set by the system
 	g_cheats = gi.cvar("helpUsObi", "", 0);
@@ -915,7 +915,7 @@ SavedGameJustLoaded_e g_eSavedGameJustLoaded;
 qboolean g_qb_load_transition = qfalse;
 void G_LoadExtraEntitiesFile();
 
-void init_game(const char* mapname, const char* spawntarget, const int check_sum, const char* entities,
+static void init_game(const char* mapname, const char* spawntarget, const int check_sum, const char* entities,
 	const int level_time, const int random_seed, const int global_time,
 	const SavedGameJustLoaded_e e_saved_game_just_loaded, const qboolean qb_load_transition)
 {
@@ -1069,7 +1069,7 @@ void init_game(const char* mapname, const char* spawntarget, const int check_sum
 ShutdownGame
 =================
 */
-void ShutdownGame()
+static void ShutdownGame()
 {
 	// write all the client session data so we can get it back
 	G_WriteSessionData();
@@ -1108,7 +1108,7 @@ static void G_Cvar_Create(const char* var_name, const char* var_value, const int
 qboolean G_ParseSpawnVars(const char** data);
 void G_SpawnGEntityFromSpawnVars();
 
-void G_GameSpawnRMGEntity(const char* s)
+static void G_GameSpawnRMGEntity(const char* s)
 {
 	if (G_ParseSpawnVars(&s))
 	{

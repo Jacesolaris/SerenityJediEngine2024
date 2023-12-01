@@ -243,6 +243,7 @@ extern cvar_t* r_marksOnTriangleMeshes;
 extern cvar_t* r_aviMotionJpegQuality;
 extern cvar_t* r_screenshotJpegQuality;
 extern cvar_t* r_surfaceSprites;
+extern cvar_t* r_AdvancedsurfaceSprites;
 
 extern cvar_t* r_maxpolys;
 extern int		max_polys;

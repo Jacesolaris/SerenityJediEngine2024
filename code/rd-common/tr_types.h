@@ -50,7 +50,7 @@ constexpr auto RF_LIGHTING_ORIGIN = 0x00080; // use refEntity->lightingOrigin in
 // for lighting.  This allows entities to sink into the floor
 // with their origin going solid, and allows all parts of a
 // player to get the same lighting
-constexpr auto RF_shadowPlane = 0x00100; // use refEntity->shadowPlane;
+constexpr auto RF_SHADOW_PLANE = 0x00100; // use refEntity->shadowPlane;
 constexpr auto RF_WRAP_FRAMES = 0x00200; // mod the model frames by the maxframes to allow continuous;
 // animation without needing to know the frame count
 constexpr auto RF_CAP_FRAMES = 0x00400; // cap the model frames by the maxframes for one shot anims;

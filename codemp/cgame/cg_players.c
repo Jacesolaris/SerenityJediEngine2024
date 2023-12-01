@@ -17924,7 +17924,7 @@ void CG_Player(centity_t* cent)
 
 	if ((cg_shadows.integer == 3 || cg_shadows.integer == 2) && shadow)
 	{
-		renderfx |= RF_shadowPlane;
+		renderfx |= RF_SHADOW_PLANE;
 	}
 	renderfx |= RF_LIGHTING_ORIGIN; // use the same origin for all
 

@@ -140,7 +140,7 @@ static void R_SetupEntityLightingGrid(trRefEntity_t* ent)
 	int				pos[3]{};
 	int				i, j;
 	float			frac[3]{};
-	int				gridStep[3];
+	int				gridStep[3]{};
 	vec3_t			direction;
 	float			totalFactor;
 	unsigned short* startGridPos;
@@ -342,18 +342,30 @@ void R_SetupEntityLighting(const trRefdef_t* refdef, trRefEntity_t* ent)
 	}
 
 	// bonus items and view weapons have a fixed minimum add
-	if (ent->e.renderfx & RF_MINLIGHT)
+	if (r_AdvancedsurfaceSprites->integer)
 	{
-		ent->ambientLight[0] += tr.identityLight * 96;
-		ent->ambientLight[1] += tr.identityLight * 96;
-		ent->ambientLight[2] += tr.identityLight * 96;
+		if (ent->e.renderfx & RF_MINLIGHT)
+		{
+			ent->ambientLight[0] += tr.identityLight * 96;
+			ent->ambientLight[1] += tr.identityLight * 96;
+			ent->ambientLight[2] += tr.identityLight * 96;
+		}
 	}
-	else
+	else 
 	{
-		// give everything a minimum light add
-		ent->ambientLight[0] += tr.identityLight * 16;
-		ent->ambientLight[1] += tr.identityLight * 16;
-		ent->ambientLight[2] += tr.identityLight * 16;
+		if (ent->e.renderfx & RF_MINLIGHT)
+		{
+			ent->ambientLight[0] += tr.identityLight * 96;
+			ent->ambientLight[1] += tr.identityLight * 96;
+			ent->ambientLight[2] += tr.identityLight * 96;
+		}
+		else
+		{
+			// give everything a minimum light add
+			ent->ambientLight[0] += tr.identityLight * 16;
+			ent->ambientLight[1] += tr.identityLight * 16;
+			ent->ambientLight[2] += tr.identityLight * 16;
+		}
 	}
 
 	//

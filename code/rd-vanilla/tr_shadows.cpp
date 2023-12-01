@@ -222,7 +222,7 @@ void RB_DoShadowTessEnd(vec3_t light_pos)
 {
 	int		i;
 	int		num_tris;
-	vec3_t	light_dir;
+	vec3_t	lightDir;
 
 	if (glConfig.stencilBits < 4) {
 		return;
@@ -238,7 +238,7 @@ void RB_DoShadowTessEnd(vec3_t light_pos)
 	//Oh well, just cast them straight down no matter what onto the ground plane.
 	//This presets no chance of screwups and still looks better than a stupid
 	//shader blob.
-	VectorSet(light_dir, ent_light[0] * 0.3f, ent_light[1] * 0.3f, 1.0f);
+	VectorSet(lightDir, ent_light[0] * 0.3f, ent_light[1] * 0.3f, 1.0f);
 	// project vertexes away from light direction
 	for (i = 0; i < tess.numVertexes; i++)
 	{
@@ -248,7 +248,7 @@ void RB_DoShadowTessEnd(vec3_t light_pos)
 		VectorAdd(tess.xyz[i], backEnd.ori.origin, worldxyz);
 		float ground_dist = worldxyz[2] - backEnd.currentEntity->e.shadowPlane;
 		ground_dist += 100.0f; //fudge factor
-		VectorMA(tess.xyz[i], -ground_dist, light_dir, shadowXyz[i]);
+		VectorMA(tess.xyz[i], -ground_dist, lightDir, shadowXyz[i]);
 	}
 #else
 	if (lightPos)
@@ -294,7 +294,7 @@ void RB_DoShadowTessEnd(vec3_t light_pos)
 			VectorSubtract(v3, v1, d2);
 			CrossProduct(d1, d2, normal);
 
-			d = DotProduct(normal, light_dir);
+			d = DotProduct(normal, lightDir);
 		}
 		else
 		{
@@ -331,6 +331,9 @@ void RB_DoShadowTessEnd(vec3_t light_pos)
 
 #ifndef _DEBUG_STENCIL_SHADOWS
 	qglColor3f(0.2f, 0.2f, 0.2f);
+
+	// set models to be flat-shaded for speed
+	qglShadeModel(GL_FLAT);
 
 	// don't write to the color buffer
 	qglColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
@@ -396,6 +399,9 @@ void RB_DoShadowTessEnd(vec3_t light_pos)
 		R_RenderShadowEdges();
 	}
 #endif
+
+	// re-enable GL_SMOOTH
+	qglShadeModel(GL_SMOOTH);
 
 	// reenable writing to the color buffer
 	qglColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
@@ -481,7 +487,7 @@ RB_ProjectionShadowDeform
 void RB_ProjectionShadowDeform() {
 	vec3_t	ground{};
 	vec3_t	light{};
-	vec3_t	light_dir;
+	vec3_t	lightDir;
 
 	auto xyz = reinterpret_cast<float*>(tess.xyz);
 
@@ -491,18 +497,18 @@ void RB_ProjectionShadowDeform() {
 
 	const float ground_dist = backEnd.ori.origin[2] - backEnd.currentEntity->e.shadowPlane;
 
-	VectorCopy(backEnd.currentEntity->lightDir, light_dir);
-	float d = DotProduct(light_dir, ground);
+	VectorCopy(backEnd.currentEntity->lightDir, lightDir);
+	float d = DotProduct(lightDir, ground);
 	// don't let the shadows get too long or go negative
 	if (d < 0.5) {
-		VectorMA(light_dir, 0.5 - d, ground, light_dir);
-		d = DotProduct(light_dir, ground);
+		VectorMA(lightDir, 0.5 - d, ground, lightDir);
+		d = DotProduct(lightDir, ground);
 	}
 	d = 1.0 / d;
 
-	light[0] = light_dir[0] * d;
-	light[1] = light_dir[1] * d;
-	light[2] = light_dir[2] * d;
+	light[0] = lightDir[0] * d;
+	light[1] = lightDir[1] * d;
+	light[2] = lightDir[2] * d;
 
 	for (int i = 0; i < tess.numVertexes; i++, xyz += 4) {
 		const float h = DotProduct(xyz, ground) + ground_dist;

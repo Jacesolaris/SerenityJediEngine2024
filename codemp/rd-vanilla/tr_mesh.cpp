@@ -389,7 +389,7 @@ void R_AddMD3Surfaces(trRefEntity_t* ent)
 			if (!personalModel
 				&& r_shadows->integer == 2
 				&& fogNum == 0
-				&& !(ent->e.renderfx & (RF_NOSHADOW | RF_DEPTHHACK))
+				&& !(ent->e.renderfx & (RF_DEPTHHACK))
 				&& shader->sort == SS_OPAQUE)
 			{
 				R_AddDrawSurf(reinterpret_cast<surfaceType_t*>(surface), tr.shadowShader, 0, qfalse);
@@ -400,7 +400,7 @@ void R_AddMD3Surfaces(trRefEntity_t* ent)
 			if (!personalModel
 				&& r_shadows->integer == 2
 				&& fogNum == 0
-				&& (ent->e.renderfx & RF_shadowPlane)
+				&& (ent->e.renderfx & RF_SHADOW_PLANE)
 				&& !(ent->e.renderfx & (RF_NOSHADOW | RF_DEPTHHACK))
 				&& shader->sort == SS_OPAQUE)
 			{
@@ -411,7 +411,7 @@ void R_AddMD3Surfaces(trRefEntity_t* ent)
 		// projection shadows work fine with personal models
 		if (r_shadows->integer == 3
 			&& fogNum == 0
-			&& ent->e.renderfx & RF_shadowPlane
+			&& ent->e.renderfx & RF_SHADOW_PLANE
 			&& shader->sort == SS_OPAQUE)
 		{
 			R_AddDrawSurf(reinterpret_cast<surfaceType_t*>(surface), tr.projectionShadowShader, 0, qfalse);

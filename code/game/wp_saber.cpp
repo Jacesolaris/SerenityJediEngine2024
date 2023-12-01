@@ -60,7 +60,6 @@ static int saberHitEntity;
 static int numVictims = 0;
 extern cvar_t* com_outcast;
 extern cvar_t* com_rend2;
-extern cvar_t* r_AdvancedsurfaceSprites;
 extern cvar_t* g_dismemberProbabilities;
 extern cvar_t* g_sex;
 extern cvar_t* g_timescale;

@@ -14181,7 +14181,7 @@ void CG_Player(centity_t* cent)
 
 		if ((cg_shadows.integer == 2) || (cg_shadows.integer == 3 && shadow))
 		{
-			ent.renderfx |= RF_shadowPlane;
+			ent.renderfx |= RF_SHADOW_PLANE;
 		}
 		ent.renderfx |= RF_LIGHTING_ORIGIN;			// use the same origin for all
 		if (cent->gent->NPC && cent->gent->NPC->scriptFlags & SCF_MORELIGHT)
@@ -14316,7 +14316,7 @@ void CG_Player(centity_t* cent)
 
 		if (cg_shadows.integer == 2 || cg_shadows.integer == 3 && shadow)
 		{
-			ent.renderfx |= RF_shadowPlane;
+			ent.renderfx |= RF_SHADOW_PLANE;
 		}
 		ent.shadowPlane = shadowPlane;
 		ent.renderfx |= RF_LIGHTING_ORIGIN; // use the same origin for all
@@ -16134,7 +16134,7 @@ void CG_Player(centity_t* cent)
 
 		if (cg_shadows.integer == 2 || cg_shadows.integer == 3 && shadow)
 		{
-			renderfx |= RF_shadowPlane;
+			renderfx |= RF_SHADOW_PLANE;
 		}
 		renderfx |= RF_LIGHTING_ORIGIN; // use the same origin for all
 		if (cent->gent->NPC && cent->gent->NPC->scriptFlags & SCF_MORELIGHT)

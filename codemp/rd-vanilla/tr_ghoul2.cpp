@@ -2456,30 +2456,55 @@ static void RenderSurfaces(CRenderSurface& RS) //also ended up just ripping righ
 		// we will add shadows even if the main object isn't visible in the view
 		// stencil shadows can't do personal models unless I polyhedron clip
 		//using z-fail now so can do personal models -rww
-		if (r_shadows->integer == 2
-			&& (RS.renderfx & RF_shadowPlane)
-			&& !(RS.renderfx & (RF_NOSHADOW | RF_DEPTHHACK))
-			&& shader->sort == SS_OPAQUE)
+		if (r_AdvancedsurfaceSprites->integer)
 		{
-			// set the surface info to point at the where the transformed bone list is going to be for when the surface gets rendered out
-			const auto newSurf = new CRenderableSurface;
-			if (surface->numVerts >= SHADER_MAX_VERTEXES / 2)
+			if (r_shadows->integer == 2
+				&& !(RS.renderfx & (RF_DEPTHHACK))
+				&& shader->sort == SS_OPAQUE)
 			{
-				//we need numVerts*2 xyz slots free in tess to do shadow, if this surf is going to exceed that then let's try the lowest lod -rww
-				const auto lowsurface = static_cast<mdxmSurface_t*>(G2_FindSurface(RS.currentModel, RS.surfaceNum, RS.currentModel->numLods - 1));
-				newSurf->surfaceData = lowsurface;
+				// set the surface info to point at the where the transformed bone list is going to be for when the surface gets rendered out
+				const auto newSurf = new CRenderableSurface;
+				if (surface->numVerts >= SHADER_MAX_VERTEXES / 2)
+				{
+					//we need numVerts*2 xyz slots free in tess to do shadow, if this surf is going to exceed that then let's try the lowest lod -rww
+					const auto lowsurface = static_cast<mdxmSurface_t*>(G2_FindSurface(RS.currentModel, RS.surfaceNum, RS.currentModel->numLods - 1));
+					newSurf->surfaceData = lowsurface;
+				}
+				else
+				{
+					newSurf->surfaceData = surface;
+				}
+				newSurf->boneCache = RS.boneCache;
+				R_AddDrawSurf((surfaceType_t*)newSurf, tr.shadowShader, 0, qfalse);
 			}
-			else
+		}
+		else
+		{
+			if (r_shadows->integer == 2
+				&& (RS.renderfx & RF_SHADOW_PLANE)
+				&& !(RS.renderfx & (RF_NOSHADOW | RF_DEPTHHACK))
+				&& shader->sort == SS_OPAQUE)
 			{
-				newSurf->surfaceData = surface;
+				// set the surface info to point at the where the transformed bone list is going to be for when the surface gets rendered out
+				const auto newSurf = new CRenderableSurface;
+				if (surface->numVerts >= SHADER_MAX_VERTEXES / 2)
+				{
+					//we need numVerts*2 xyz slots free in tess to do shadow, if this surf is going to exceed that then let's try the lowest lod -rww
+					const auto lowsurface = static_cast<mdxmSurface_t*>(G2_FindSurface(RS.currentModel, RS.surfaceNum, RS.currentModel->numLods - 1));
+					newSurf->surfaceData = lowsurface;
+				}
+				else
+				{
+					newSurf->surfaceData = surface;
+				}
+				newSurf->boneCache = RS.boneCache;
+				R_AddDrawSurf((surfaceType_t*)newSurf, tr.shadowShader, 0, qfalse);
 			}
-			newSurf->boneCache = RS.boneCache;
-			R_AddDrawSurf((surfaceType_t*)newSurf, tr.shadowShader, 0, qfalse);
 		}
 
 		// projection shadows work fine with personal models
 		if (r_shadows->integer == 3
-			&& RS.renderfx & RF_shadowPlane
+			&& RS.renderfx & RF_SHADOW_PLANE
 			&& !(RS.renderfx & RF_NOSHADOW)
 			&& shader->sort == SS_OPAQUE)
 		{
@@ -3352,7 +3377,7 @@ void R_AddGhoulSurfaces(trRefEntity_t* ent)
 #else
 			CRenderSurface RS(ghoul2[i].mSurfaceRoot, ghoul2[i].mSlist, cust_shader, fogNum, personalModel, ghoul2[i].mBoneCache, ent->e.renderfx, skin, (model_t*)ghoul2[i].currentModel, whichLod, ghoul2[i].mBltlist);
 #endif
-			if (!personalModel && RS.renderfx & RF_shadowPlane && !bInShadowRange(ent->e.origin))
+			if (!personalModel && RS.renderfx & RF_SHADOW_PLANE && !bInShadowRange(ent->e.origin))
 			{
 				RS.renderfx |= RF_NOSHADOW;
 			}

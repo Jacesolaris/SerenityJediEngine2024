@@ -127,12 +127,13 @@ R_SetupEntityLightingGrid
 
 =================
 */
-static void R_SetupEntityLightingGrid(trRefEntity_t* ent, world_t* world) {
+static void R_SetupEntityLightingGrid(trRefEntity_t* ent, world_t* world) 
+{
 	vec3_t	lightOrigin;
-	int		pos[3];
+	int		pos[3]{};
 	int		i, j;
-	float	frac[3];
-	int		gridStep[3];
+	float	frac[3]{};
+	int		gridStep[3]{};
 	vec3_t	direction;
 	float	totalFactor;
 	uint32_t startGridPos;
@@ -188,7 +189,7 @@ static void R_SetupEntityLightingGrid(trRefEntity_t* ent, world_t* world) {
 		mgrid_t* data;
 		uint32_t gridPos;
 		int		lat, lng;
-		vec3_t	normal;
+		vec3_t	normal{};
 
 #if idppc
 		float d0, d1, d2, d3, d4, d5;
@@ -373,16 +374,7 @@ void R_SetupEntityLighting(const trRefdef_t* refdef, trRefEntity_t* ent) {
 	// only do min lighting when there is no hdr light data
 	if (tr.hdrLighting != qtrue)
 	{
-#ifndef REND2_SP
-		// bonus items and view weapons have a fixed minimum add
-		if (1/*!r_hdr->integer*/) {
-			// give everything a minimum light add
-			ent->ambientLight[0] += tr.identityLight * 32;
-			ent->ambientLight[1] += tr.identityLight * 32;
-			ent->ambientLight[2] += tr.identityLight * 32;
-		}
-
-		if (ent->e.renderfx & RF_MINLIGHT)
+		if (ent->e.renderfx & RF_MORELIGHT)
 		{ //the minlight flag is now for items rotating on their holo thing
 			if (ent->e.shaderRGBA[0] == 255 &&
 				ent->e.shaderRGBA[1] == 255 &&
@@ -399,20 +391,6 @@ void R_SetupEntityLighting(const trRefdef_t* refdef, trRefEntity_t* ent) {
 				ent->ambientLight[2] += tr.identityLight * 150;
 			}
 		}
-#else
-		// bonus items and view weapons have a fixed minimum add
-		if (ent->e.renderfx & RF_MORELIGHT) {
-			ent->ambientLight[0] += tr.identityLight * 96;
-			ent->ambientLight[1] += tr.identityLight * 96;
-			ent->ambientLight[2] += tr.identityLight * 96;
-		}
-		else {
-			// give everything a minimum light add
-			ent->ambientLight[0] += tr.identityLight * 32;
-			ent->ambientLight[1] += tr.identityLight * 32;
-			ent->ambientLight[2] += tr.identityLight * 32;
-		}
-#endif
 	}
 
 	d = VectorLength(ent->directedLight);
