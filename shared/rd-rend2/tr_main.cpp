@@ -1905,12 +1905,9 @@ static void R_AddEntitySurface(const trRefdef_t* refdef, trRefEntity_t* ent, int
 	case RT_ORIENTED_QUAD:
 	case RT_ELECTRICITY:
 	case RT_LINE:
-#ifndef REND2_SP
 	case RT_ORIENTEDLINE:
-#else
 	case RT_LATHE:
 	case RT_CLOUDS:
-#endif
 	case RT_CYLINDER:
 	case RT_LIGHTNING:
 	case RT_SABER_GLOW:
@@ -1993,19 +1990,6 @@ static void R_AddEntitySurface(const trRefdef_t* refdef, trRefEntity_t* ent, int
 			}
 		}
 		break;
-#ifndef REND2_SP
-	case RT_ENT_CHAIN:
-		shader = R_GetShaderByHandle(ent->e.customShader);
-		R_AddDrawSurf(
-			&entitySurface,
-			entityNum,
-			shader,
-			R_SpriteFogNum(ent),
-			false,
-			R_IsPostRenderEntity(ent),
-			0 /* cubeMap */);
-		break;
-#endif
 	default:
 		ri.Error(ERR_DROP, "R_AddEntitySurfaces: Bad reType");
 	}
@@ -2619,9 +2603,7 @@ static qboolean R_AddPortalView(const trRefdef_t* refdef)
 		case RT_ORIENTED_QUAD:
 		case RT_ELECTRICITY:
 		case RT_LINE:
-#ifndef REND2_SP
 		case RT_ORIENTEDLINE:
-#endif
 		case RT_CYLINDER:
 		case RT_SABER_GLOW:
 			break;
@@ -2668,10 +2650,6 @@ static qboolean R_AddPortalView(const trRefdef_t* refdef)
 				}
 			}
 			break;
-#ifndef REND2_SP
-		case RT_ENT_CHAIN:
-			break;
-#endif
 		default:
 			break;
 		}

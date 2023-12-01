@@ -1948,17 +1948,6 @@ static void R_AddEntitySurface(const trRefdef_t* refdef, trRefEntity_t* ent, int
 			}
 		}
 		break;
-	case RT_ENT_CHAIN:
-		shader = R_GetShaderByHandle(ent->e.customShader);
-		R_AddDrawSurf(
-			&entitySurface,
-			entityNum,
-			shader,
-			R_SpriteFogNum(ent),
-			false,
-			R_IsPostRenderEntity(ent),
-			0 /* cubeMap */);
-		break;
 	default:
 		Com_Error(ERR_DROP, "R_AddEntitySurfaces: Bad reType");
 	}
@@ -2614,8 +2603,6 @@ static qboolean R_AddPortalView(const trRefdef_t* refdef)
 					break;
 				}
 			}
-			break;
-		case RT_ENT_CHAIN:
 			break;
 		default:
 			break;

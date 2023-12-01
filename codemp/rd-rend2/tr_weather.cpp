@@ -256,7 +256,7 @@ namespace
 						float t = 0.0f;
 						for (int j = 0; j < currentWeatherBrush->numPlanes; j++)
 						{
-							vec3_t plane_normal;
+							vec3_t plane_normal{};
 							float plane_dist;
 							if (tr.weatherSystem->weatherBrushType == WEATHER_BRUSHES_OUTSIDE)
 							{
@@ -507,7 +507,7 @@ void R_ShutdownWeatherSystem()
 WE_ParseVector
 ===============
 */
-qboolean WE_ParseVector(const char** text, int count, float* v) {
+static qboolean WE_ParseVector(const char** text, int count, float* v) {
 	char* token;
 	int		i;
 
@@ -1023,8 +1023,8 @@ void RB_SurfaceWeather(srfWeather_t* surf)
 	float centerZoneOffsetY =
 		std::floor((viewOrigin[1] / CHUNK_EXTENDS) + 0.5f);
 
-	vec2_t zoneOffsets[9];
-	GLint  zoneMapping[9];
+	vec2_t zoneOffsets[9]{};
+	GLint  zoneMapping[9]{};
 	int		centerZoneIndex;
 	{
 		int chunkIndex = 0;

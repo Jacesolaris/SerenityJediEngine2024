@@ -206,16 +206,20 @@ RE_AddRefEntityToScene
 
 =====================
 */
-void RE_AddRefEntityToScene(const refEntity_t* ent) {
-	if (!tr.registered) {
+void RE_AddRefEntityToScene(const refEntity_t* ent) 
+{
+	if (!tr.registered)
+	{
 		return;
 	}
-	if (r_numentities >= MAX_REFENTITIES) {
+	if (r_numentities >= MAX_REFENTITIES) 
+	{
 #ifndef FINAL_BUILD
 		ri.Printf(PRINT_WARNING, "WARNING: RE_AddRefEntityToScene: too many entities\n");
 #endif
 		return;
 	}
+
 	if (ent->reType < 0 || ent->reType >= RT_MAX_REF_ENTITY_TYPE) {
 		Com_Error(ERR_DROP, "RE_AddRefEntityToScene: bad reType %i", ent->reType);
 	}

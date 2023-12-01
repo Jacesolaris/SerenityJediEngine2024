@@ -1321,11 +1321,6 @@ static void R_AddEntitySurfaces(void)
 			}
 			break;
 
-		case RT_ENT_CHAIN:
-			shader = R_GetShaderByHandle(ent->e.customShader);
-			R_AddDrawSurf(&entitySurface, shader, R_SpriteFogNum(ent), false);
-			break;
-
 		default:
 			Com_Error(ERR_DROP, "R_AddEntitySurfaces: Bad reType");
 		}

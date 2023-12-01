@@ -75,19 +75,19 @@ constexpr auto WIND_DAMP_INTERVAL = 50;
 constexpr auto WIND_GUST_TIME = 2500.0;
 #define WIND_GUST_DECAY (1.0 / WIND_GUST_TIME)
 
-int		last_ss_update_time = 0;
+int		lastSSUpdateTime = 0;
 float	curWindSpeed = 0;
-float	cur_wind_gust = 5;
+float	curWindGust = 5;
 float	cur_weather_amount = 1;
 vec3_t	cur_wind_blow_vect = { 0,0,0 }, target_wind_blow_vect = { 0,0,0 };
-vec3_t	cur_wind_grass_dir = { 0,0,0 }, target_wind_grass_dir = { 0,0,0 };
+vec3_t	curWindGrassDir = { 0,0,0 }, target_wind_grass_dir = { 0,0,0 };
 int		totalsurfsprites = 0, sssurfaces = 0;
 
 qboolean cur_wind_point_active = qfalse;
 float cur_wind_point_force = 0;
 vec3_t cur_wind_point;
-int next_gust_time = 0;
-float gust_left = 0;
+int nextGustTime = 0;
+float gustLeft = 0;
 
 qboolean standardfovinitialized = qfalse;
 float	standardfovx = 90, standardscalex = 1.0;
@@ -97,7 +97,7 @@ vec3_t  ssrightvectors[4];
 vec3_t  ssfwdvector;
 int		rightvectorcount;
 
-trRefEntity_t* ss_last_entity_drawn = nullptr;
+trRefEntity_t* ssLastEntityDrawn = nullptr;
 vec3_t	ss_view_origin, ss_view_right, ss_view_up;
 
 static void R_SurfaceSpriteFrameUpdate(void)
@@ -106,20 +106,20 @@ static void R_SurfaceSpriteFrameUpdate(void)
 	float targetspeed;
 	constexpr vec3_t up = { 0,0,1 };
 
-	if (backEnd.refdef.time == last_ss_update_time)
+	if (backEnd.refdef.time == lastSSUpdateTime)
 		return;
 
-	if (backEnd.refdef.time < last_ss_update_time)
+	if (backEnd.refdef.time < lastSSUpdateTime)
 	{	// Time is BEFORE the last update time, so reset everything.
-		cur_wind_gust = 5;
+		curWindGust = 5;
 		curWindSpeed = r_windSpeed->value;
-		next_gust_time = 0;
-		gust_left = 0;
-		cur_wind_grass_dir[0] = cur_wind_grass_dir[1] = cur_wind_grass_dir[2] = 0.0f;
+		nextGustTime = 0;
+		gustLeft = 0;
+		curWindGrassDir[0] = curWindGrassDir[1] = curWindGrassDir[2] = 0.0f;
 	}
 
 	// Reset the last entity drawn, since this is a new frame.
-	ss_last_entity_drawn = nullptr;
+	ssLastEntityDrawn = nullptr;
 
 	// Adjust for an FOV.  If things look twice as wide on the screen, pretend the shaders have twice the range.
 	// ASSUMPTION HERE IS THAT "standard" fov is the first one rendered.
@@ -199,36 +199,36 @@ static void R_SurfaceSpriteFrameUpdate(void)
 		targetspeed *= 0.02f;
 		if (targetspeed >= 1.0)
 		{
-			cur_wind_gust = 300 / targetspeed;
+			curWindGust = 300 / targetspeed;
 		}
 		else
 		{
-			cur_wind_gust = 0;
+			curWindGust = 0;
 		}
 	}
 	else
 	{	// Use the cvar.
 		targetspeed = r_windSpeed->value;	// Minimum gust delay, in seconds.
-		cur_wind_gust = r_windGust->value;
+		curWindGust = r_windGust->value;
 	}
 
-	if (targetspeed > 0 && cur_wind_gust)
+	if (targetspeed > 0 && curWindGust)
 	{
-		if (gust_left > 0)
+		if (gustLeft > 0)
 		{	// We are gusting
 			// Add an amount to the target wind speed
-			targetspeed *= 1.0 + gust_left;
+			targetspeed *= 1.0 + gustLeft;
 
-			gust_left -= static_cast<float>(backEnd.refdef.time - last_ss_update_time) * WIND_GUST_DECAY;
-			if (gust_left <= 0)
+			gustLeft -= static_cast<float>(backEnd.refdef.time - lastSSUpdateTime) * WIND_GUST_DECAY;
+			if (gustLeft <= 0)
 			{
-				next_gust_time = backEnd.refdef.time + cur_wind_gust * 1000 * Q_flrand(1.0f, 4.0f);
+				nextGustTime = backEnd.refdef.time + curWindGust * 1000 * Q_flrand(1.0f, 4.0f);
 			}
 		}
-		else if (backEnd.refdef.time >= next_gust_time)
+		else if (backEnd.refdef.time >= nextGustTime)
 		{	// See if there is another right now
 			// Gust next time, mano
-			gust_left = Q_flrand(0.75f, 1.5f);
+			gustLeft = Q_flrand(0.75f, 1.5f);
 		}
 	}
 
@@ -268,7 +268,7 @@ static void R_SurfaceSpriteFrameUpdate(void)
 
 	// Start calculating a smoothing factor so wind doesn't change abruptly between speeds.
 	const float dampfactor = 1.0 - r_windDampFactor->value;	// We must exponent the amount LEFT rather than the amount bled off
-	const float dtime = static_cast<float>(backEnd.refdef.time - last_ss_update_time) * (1.0 / static_cast<float>(WIND_DAMP_INTERVAL));	// Our dampfactor is geared towards a time interval equal to "1".
+	const float dtime = static_cast<float>(backEnd.refdef.time - lastSSUpdateTime) * (1.0 / static_cast<float>(WIND_DAMP_INTERVAL));	// Our dampfactor is geared towards a time interval equal to "1".
 
 	// Note that since there are a finite number of "practical" delta millisecond values possible,
 	// the ratio should be initialized into a chart ultimately.
@@ -286,10 +286,10 @@ static void R_SurfaceSpriteFrameUpdate(void)
 	VectorMA(target_wind_blow_vect, -ratio, diff, cur_wind_blow_vect);
 
 	// Update the grass vector now
-	VectorSubtract(target_wind_grass_dir, cur_wind_grass_dir, diff);
-	VectorMA(target_wind_grass_dir, -ratio, diff, cur_wind_grass_dir);
+	VectorSubtract(target_wind_grass_dir, curWindGrassDir, diff);
+	VectorMA(target_wind_grass_dir, -ratio, diff, curWindGrassDir);
 
-	last_ss_update_time = backEnd.refdef.time;
+	lastSSUpdateTime = backEnd.refdef.time;
 
 	if (fabsf(r_windPointForce->value - cur_wind_point_force) > ratio)
 	{// Make sure not to get infinitly small number here
@@ -377,7 +377,7 @@ static void RB_VerticalSurfaceSprite(vec3_t loc, const float width, const float 
 		windsway = height * wind * 0.075;
 
 		// Add the angle
-		VectorMA(loc2, height * wind, cur_wind_grass_dir, loc2);
+		VectorMA(loc2, height * wind, curWindGrassDir, loc2);
 		// Bob up and down
 		if (curWindSpeed < 40.0)
 		{
@@ -476,7 +476,7 @@ static void RB_VerticalSurfaceSpriteWindPoint(vec3_t loc, const float width, con
 	if (curWindSpeed > 0.001)
 	{
 		// Add the angle
-		VectorMA(loc2, height * wind, cur_wind_grass_dir, loc2);
+		VectorMA(loc2, height * wind, curWindGrassDir, loc2);
 	}
 
 	loc2[0] += height * winddiff[0] * windforce;
@@ -1461,7 +1461,7 @@ void RB_DrawSurfaceSprites(shaderStage_t* stage, shaderCommands_t* input)
 	}
 
 		//Check if this is a new entity transformation (incl. world entity), and update the appropriate vectors if so.
-	if (backEnd.currentEntity != ss_last_entity_drawn)
+	if (backEnd.currentEntity != ssLastEntityDrawn)
 	{
 		if (backEnd.currentEntity == &tr.worldEntity)
 		{	// Drawing the world, so our job is dead-easy, in the viewparms
@@ -1475,7 +1475,7 @@ void RB_DrawSurfaceSprites(shaderStage_t* stage, shaderCommands_t* input)
 			R_WorldNormalToEntity(backEnd.viewParms.ori.axis[2], ss_view_up);
 			VectorCopy(backEnd.ori.viewOrigin, ss_view_origin);
 		}
-		ss_last_entity_drawn = backEnd.currentEntity;
+		ssLastEntityDrawn = backEnd.currentEntity;
 	}
 
 	switch (stage->ss->surfaceSpriteType)

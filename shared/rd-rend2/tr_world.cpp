@@ -755,9 +755,11 @@ R_inPVS
 =================
 */
 #ifndef REND2_SP
-qboolean R_inPVS(const vec3_t p1, const vec3_t p2, byte* mask) {
+qboolean R_inPVS(const vec3_t p1, const vec3_t p2, byte* mask)
+{
 #else
-qboolean R_inPVS(const vec3_t p1, const vec3_t p2) {
+qboolean R_inPVS(const vec3_t p1, const vec3_t p2) 
+{
 	byte* mask;
 #endif
 	mnode_t* leaf = R_PointInLeaf(p1);

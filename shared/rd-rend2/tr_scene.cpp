@@ -191,7 +191,8 @@ RE_AddRefEntityToScene
 
 =====================
 */
-void RE_AddRefEntityToScene(const refEntity_t* ent) {
+void RE_AddRefEntityToScene(const refEntity_t* ent)
+{
 	vec3_t cross;
 
 	if (!tr.registered) {

@@ -36,7 +36,7 @@ constexpr auto REFENTITYNUM_BITS = 11; // can't be increased without changing dr
 #define	REFENTITYNUM_WORLD	((1<<REFENTITYNUM_BITS) - 1)
 
 // renderfx flags
-constexpr auto RF_MORELIGHT = 0x00001; // allways have some light (viewmodel, some items);
+constexpr auto RF_MINLIGHT = 0x00001; // allways have some light (viewmodel, some items);
 constexpr auto RF_THIRD_PERSON = 0x00002; // don't draw through eyes, only mirrors (player bodies, chat sprites);
 constexpr auto RF_FIRST_PERSON = 0x00004; // only draw through eyes (view weapon, damage blood blob);
 constexpr auto RF_DEPTHHACK = 0x00008; // for view weapon Z crunching;
@@ -125,6 +125,7 @@ using refEntityType_t = enum
 	RT_SPRITE,
 	RT_ORIENTED_QUAD,
 	RT_LINE,
+	RT_ORIENTEDLINE,
 	RT_ELECTRICITY,
 	RT_CYLINDER,
 	RT_LATHE,
@@ -172,6 +173,18 @@ using refEntity_t = struct
 
 	// extra sprite information
 	float radius;
+
+	// texturing
+	union
+	{
+		//		int			skinNum;		// inline skin index
+		//		ivec3_t		terxelCoords;	// coords of patch for RT_TERXELS
+		struct
+		{
+			int miniStart;
+			int miniCount;
+		} uMini;
+	} uRefEnt;
 
 	// extra sprite information
 	union

@@ -1449,7 +1449,8 @@ static const byte* R_ClusterPVS(const int cluster) {
 R_inPVS
 =================
 */
-qboolean R_inPVS(const vec3_t p1, const vec3_t p2, const byte* mask) {
+qboolean R_inPVS(const vec3_t p1, const vec3_t p2, const byte* mask)
+{
 	int		leafnum;
 	int		cluster;
 

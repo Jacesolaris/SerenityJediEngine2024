@@ -883,7 +883,7 @@ static void G2_GorePolys(const mdxmSurface_t* surface, CTraceSurface& TS, const 
 	for (j = 0; j < numVerts; j++)
 	{
 		int pos = j * 5;
-		vec3_t delta;
+		vec3_t delta{};
 		delta[0] = verts[pos + 0] - TS.rayStart[0];
 		delta[1] = verts[pos + 1] - TS.rayStart[1];
 		delta[2] = verts[pos + 2] - TS.rayStart[2];
@@ -1015,7 +1015,7 @@ static void G2_GorePolys(const mdxmSurface_t* surface, CTraceSurface& TS, const 
 			TS.ghoul2info->mGoreSetTag = goreSet->mMyGoreSetTag;
 		}
 		assert(goreSet);
-		SGoreSurface add;
+		SGoreSurface add{};
 		add.shader = TS.goreShader;
 		add.mDeleteTime = 0;
 		if (TS.gore->lifeTime)
@@ -1846,7 +1846,7 @@ void G2_SaveGhoul2Models(CGhoul2Info_v& ghoul2)
 }
 
 // have to free space malloced in the save system here because the game DLL can't.
-void G2_FreeSaveBuffer(char* buffer)
+static void G2_FreeSaveBuffer(char* buffer)
 {
 	Z_Free(buffer);
 }
@@ -1939,7 +1939,7 @@ void G2_LoadGhoul2Model(CGhoul2Info_v& ghoul2, const char* buffer)
 	saved_game.ensure_all_data_read();
 }
 
-void G2_LerpAngles(CGhoul2Info_v& ghoul2, CGhoul2Info_v& nextGhoul2, float interpolation)
+static void G2_LerpAngles(CGhoul2Info_v& ghoul2, CGhoul2Info_v& nextGhoul2, float interpolation)
 {
 	// loop each model
 	for (int i = 0; i < ghoul2.size(); i++)

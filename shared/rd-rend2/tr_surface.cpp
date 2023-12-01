@@ -830,7 +830,6 @@ static void DoLine2(const vec3_t start, const vec3_t end, const vec3_t up, const
 	tess.indexes[tess.numIndexes++] = vbase + 3;
 }
 
-#ifndef REND2_SP
 static void DoLine_Oriented(const vec3_t start, const vec3_t end, const vec3_t up, float spanWidth)
 {
 	float		spanWidth2;
@@ -891,7 +890,6 @@ static void RB_SurfaceOrientedLine(void)
 	VectorCopy(e->axis[1], right);
 	DoLine_Oriented(start, end, right, e->data.line.width * 0.5);
 }
-#endif
 
 //-----------------
 // RB_SurfaceLine
@@ -2459,42 +2457,15 @@ static void RB_SurfaceEntity(surfaceType_t * surfType)
 	case RT_LIGHTNING:
 		RB_SurfaceLightningBolt();
 		break;
-#ifndef REND2_SP
 	case RT_ORIENTEDLINE:
 		RB_SurfaceOrientedLine();
 		break;
-	case RT_ENT_CHAIN:
-	{
-		static trRefEntity_t tempEnt = *backEnd.currentEntity;
-
-		//rww - if not static then currentEntity is garbage because
-		//this is a local. This was not static in sof2.. but I guess
-		//they never check ce.renderfx so it didn't show up.
-
-		const int start = backEnd.currentEntity->e.uRefEnt.uMini.miniStart;
-		const int count = backEnd.currentEntity->e.uRefEnt.uMini.miniCount;
-		assert(count > 0);
-		backEnd.currentEntity = &tempEnt;
-
-		assert(backEnd.currentEntity->e.renderfx >= 0);
-
-		for (int i = 0, j = start; i < count; i++, j++)
-		{
-			backEnd.currentEntity->e = backEnd.refdef.entities[j].e;
-			assert(backEnd.currentEntity->e.renderfx >= 0);
-
-			RB_SurfaceEntity(surfType);
-		}
-	}
-	break;
-#else
 	case RT_LATHE:
 		RB_SurfaceLathe();
 		break;
 	case RT_CLOUDS:
 		RB_SurfaceClouds();
 		break;
-#endif
 	default:
 		RB_SurfaceAxis();
 		break;

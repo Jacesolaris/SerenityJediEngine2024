@@ -1983,7 +1983,7 @@ static const void* RB_PrefilterEnvMap(const void* data) {
 		qglViewport(0, 0, width, height);
 		qglScissor(0, 0, width, height);
 
-		vec4_t viewInfo;
+		vec4_t viewInfo{};
 		VectorSet4(viewInfo, 0, level, roughnessMips, level / roughnessMips);
 		GLSL_SetUniformVec4(&tr.prefilterEnvMapShader, UNIFORM_VIEWINFO, viewInfo);
 		RB_InstantTriangle();
@@ -2079,7 +2079,7 @@ static void RB_RenderDepthOnly(drawSurf_t* drawSurfs, int numDrawSurfs)
 	{
 		// need the depth in a texture we can do GL_LINEAR sampling on, so
 		// copy it to an HDR image
-		vec4i_t srcBox;
+		vec4i_t srcBox{};
 		VectorSet4(srcBox, 0, tr.renderDepthImage->height, tr.renderDepthImage->width, -tr.renderDepthImage->height);
 		FBO_BlitFromTexture(
 			tr.renderDepthImage,
@@ -2179,7 +2179,7 @@ static void RB_UpdateCameraConstants(gpuFrame_t* frame)
 		const float ymax = zmax * tanf(backEnd.viewParms.fovY * M_PI / 360.0f);
 		const float xmax = zmax * tanf(backEnd.viewParms.fovX * M_PI / 360.0f);
 
-		vec3_t viewBasis[3];
+		vec3_t viewBasis[3]{};
 
 		VectorNormalize(tr.cachedViewParms[i].ori.axis[0]);
 		VectorNormalize(tr.cachedViewParms[i].ori.axis[1]);
@@ -2617,10 +2617,10 @@ void RB_ShowImages(void) {
 
 	image = tr.images;
 	for (i = 0; i < tr.numImages; i++, image = image->poolNext) {
-		w = glConfig.vidWidth / 20;
-		h = glConfig.vidHeight / 15;
+		w = glConfig.vidWidth / static_cast<float>(20);
+		h = glConfig.vidHeight / static_cast<float>(15);
 		x = i % 20 * w;
-		y = i / 20 * h;
+		y = i / static_cast<float>(20) * h;
 
 		// show in proportional size in mode 2
 		if (r_showImages->integer == 2) {
@@ -2629,7 +2629,7 @@ void RB_ShowImages(void) {
 		}
 
 		{
-			vec4_t quadVerts[4];
+			vec4_t quadVerts[4]{};
 
 			GL_Bind(image);
 
@@ -2796,11 +2796,11 @@ RB_PostProcess
 
 =============
 */
-const void* RB_PostProcess(const void* data)
+static const void* RB_PostProcess(const void* data)
 {
 	const postProcessCommand_t* cmd = (const postProcessCommand_t*)data;
 	FBO_t* srcFbo;
-	vec4i_t srcBox, dstBox;
+	vec4i_t srcBox{}, dstBox{};
 	qboolean autoExposure;
 
 	// finish any 2D drawing if needed
@@ -2880,7 +2880,7 @@ const void* RB_PostProcess(const void* data)
 		}
 		else
 		{
-			vec4_t color;
+			vec4_t color{};
 
 			color[0] =
 				color[1] =
@@ -2909,7 +2909,7 @@ const void* RB_PostProcess(const void* data)
 
 	if (0)
 	{
-		vec4i_t dstBox;
+		vec4i_t dstBox{};
 		VectorSet4(dstBox, 256, glConfig.vidHeight - 256, 256, 256);
 		FBO_BlitFromTexture(tr.renderDepthImage, NULL, NULL, NULL, dstBox, NULL, NULL, 0);
 		VectorSet4(dstBox, 512, glConfig.vidHeight - 256, 256, 256);
@@ -2918,7 +2918,7 @@ const void* RB_PostProcess(const void* data)
 
 	if (0 && r_ssao->integer)
 	{
-		vec4i_t dstBox;
+		vec4i_t dstBox{};
 		VectorSet4(dstBox, 0, glConfig.vidHeight, 512, -512);
 		FBO_BlitFromTexture(tr.screenSsaoImage, NULL, NULL, NULL, dstBox, NULL, NULL, 0);
 		VectorSet4(dstBox, 512, glConfig.vidHeight, 512, -512);
@@ -2929,7 +2929,7 @@ const void* RB_PostProcess(const void* data)
 
 	if (0)
 	{
-		vec4i_t dstBox;
+		vec4i_t dstBox{};
 		VectorSet4(dstBox, 256, glConfig.vidHeight - 256, 256, 256);
 		FBO_BlitFromTexture(tr.sunRaysImage, NULL, NULL, NULL, dstBox, NULL, NULL, 0);
 	}

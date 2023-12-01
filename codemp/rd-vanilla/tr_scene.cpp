@@ -214,11 +214,6 @@ void RE_AddRefEntityToScene(const refEntity_t* ent)
 
 	assert(!ent || ent->renderfx >= 0);
 
-	if (ent->reType == RT_ENT_CHAIN)
-	{ //minirefents must die.
-		return;
-	}
-
 #ifdef _DEBUG
 	if (ent->reType == RT_MODEL)
 	{

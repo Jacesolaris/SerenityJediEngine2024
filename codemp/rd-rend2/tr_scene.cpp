@@ -88,7 +88,8 @@ R_AddPolygonSurfaces
 Adds all the scene's polys into this view's drawsurf list
 =====================
 */
-void R_AddPolygonSurfaces(const trRefdef_t* refdef) {
+void R_AddPolygonSurfaces(const trRefdef_t* refdef)
+{
 	srfPoly_t* poly;
 	int	fogMask = -((refdef->rdflags & RDF_NOFOG) == 0);
 
