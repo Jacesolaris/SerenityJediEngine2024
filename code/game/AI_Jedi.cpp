@@ -115,7 +115,7 @@ static qboolean Jedi_SaberBlock();
 static qboolean Jedi_AttackDecide(int enemy_dist);
 extern void add_npc_block_point_bonus(const gentity_t* self);
 extern qboolean NPC_IsAlive(const gentity_t* self, const gentity_t* npc);
-extern void WP_DeactivateLightSaber(const gentity_t* self, qboolean clear_length = qfalse);
+extern void WP_DeactivateLightSaber(const gentity_t* self);
 extern qboolean IsSurrendering(const gentity_t* self);
 extern qboolean IsRespecting(const gentity_t* self);
 extern qboolean IsCowering(const gentity_t* self);

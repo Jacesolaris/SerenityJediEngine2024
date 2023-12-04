@@ -43,7 +43,8 @@ void R_TransformDlights(const int count, dlight_t* dl, const orientationr_t* ori
 	int		i;
 	vec3_t	temp;
 
-	for (i = 0; i < count; i++, dl++) {
+	for (i = 0; i < count; i++, dl++)
+	{
 		VectorSubtract(dl->origin, ori->origin, temp);
 		dl->transformed[0] = DotProduct(temp, ori->axis[0]);
 		dl->transformed[1] = DotProduct(temp, ori->axis[1]);

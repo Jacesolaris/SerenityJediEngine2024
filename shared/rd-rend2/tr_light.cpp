@@ -333,7 +333,8 @@ Calculates all the lighting values that will be used
 by the Calc_* functions
 =================
 */
-void R_SetupEntityLighting(const trRefdef_t* refdef, trRefEntity_t* ent) {
+void R_SetupEntityLighting(const trRefdef_t* refdef, trRefEntity_t* ent)
+{
 	int				i;
 	float			d;
 	vec3_t			lightDir;
@@ -360,7 +361,8 @@ void R_SetupEntityLighting(const trRefdef_t* refdef, trRefEntity_t* ent) {
 
 	// if NOWORLDMODEL, only use dynamic lights (menu system, etc)
 	if (!(refdef->rdflags & RDF_NOWORLDMODEL)
-		&& tr.world->lightGridData) {
+		&& tr.world->lightGridData)
+	{
 		R_SetupEntityLightingGrid(ent, tr.world);
 	}
 	else {

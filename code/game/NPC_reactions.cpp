@@ -218,7 +218,7 @@ constexpr auto MIN_PAIN_TIME = 200;
 
 extern int G_PickPainAnim(const gentity_t* self, const vec3_t point, int hit_loc);
 
-void NPC_ChoosePainAnimation(gentity_t* self, const gentity_t* other, const vec3_t point, const int damage,
+static void NPC_ChoosePainAnimation(gentity_t* self, const gentity_t* other, const vec3_t point, const int damage,
 	const int mod, const int hit_loc,
 	const int voice_event = -1)
 {
@@ -787,7 +787,7 @@ void NPC_TempLookTarget(const gentity_t* self, const int lookEntNum, int minLook
 	}
 }
 
-void NPC_Respond(gentity_t* self, int userNum)
+static void NPC_Respond(gentity_t* self, int userNum)
 {
 	int event = -1;
 
@@ -1630,10 +1630,9 @@ void NPC_Use(gentity_t* self, gentity_t* other, gentity_t* activator)
 		{
 			NPC_UseResponse(self, other, qtrue);
 		}
-		else if (!self->enemy
+		else if (!self->enemy && !(self->NPC->scriptFlags & SCF_NO_RESPONSE)
 			&& activator->s.number == 0
-			&& !gi.VoiceVolume[self->s.number]
-			&& !(self->NPC->scriptFlags & SCF_NO_RESPONSE))
+			&& !gi.VoiceVolume[self->s.number])
 		{
 			//I don't have an enemy and I'm not talking and I was used by the player
 			NPC_UseResponse(self, other, qfalse);

@@ -455,7 +455,7 @@ void RE_StretchPic(const float x, const float y, const float w, const float h, c
 #define MODE_GREEN_MAGENTA 4
 #define MODE_MAX	MODE_GREEN_MAGENTA
 
-void R_SetColorMode(GLboolean* rgba, stereoFrame_t stereoFrame, int colormode)
+static void R_SetColorMode(GLboolean* rgba, stereoFrame_t stereoFrame, int colormode)
 {
 	rgba[0] = rgba[1] = rgba[2] = rgba[3] = GL_TRUE;
 

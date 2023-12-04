@@ -1378,7 +1378,7 @@ void WeaponThink()
 		{
 			BubbleShield_TurnOn();
 		}
-		if (!NPC->flags & FL_SHIELDED)
+		if (~NPC->flags & FL_SHIELDED)
 		{
 			BubbleShield_TurnOn();
 		}
@@ -2167,8 +2167,7 @@ gentity_t* NPC_PickAlly(const qboolean facingEachOther, const float range, const
 		{
 			if (ally->health > 0)
 			{
-				if (ally->client && (ally->client->playerTeam == NPC->client->playerTeam ||
-					NPC->client->playerTeam == TEAM_ENEMY))
+				if (ally->client->playerTeam == NPC->client->playerTeam || NPC->client->playerTeam == TEAM_ENEMY && ally->client)
 				{
 					vec3_t diff;
 					//if on same team or if player is disguised as your team

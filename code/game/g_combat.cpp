@@ -6586,8 +6586,7 @@ void G_ApplyKnockback(gentity_t* targ, vec3_t new_dir, float knockback)
 	{
 		VectorAdd(targ->client->ps.velocity, kvel, targ->client->ps.velocity);
 	}
-	else if (targ->s.pos.trType != TR_STATIONARY && targ->s.pos.trType != TR_LINEAR_STOP && targ->s.pos.trType !=
-		TR_NONLINEAR_STOP)
+	else if (targ->s.pos.trType != TR_STATIONARY && targ->s.pos.trType != TR_LINEAR_STOP && targ->s.pos.trType != TR_NONLINEAR_STOP)
 	{
 		VectorAdd(targ->s.pos.trDelta, kvel, targ->s.pos.trDelta);
 		VectorCopy(targ->currentOrigin, targ->s.pos.trBase);

@@ -2407,7 +2407,7 @@ void wp_saber_clear_damage_for_ent_num(gentity_t* attacker, const int entityNum,
 	}
 }
 
-extern void pm_saber_start_trans_anim(int saber_anim_level, int anim, float* animSpeed, const gentity_t* gent,	int fatigued);
+extern void pm_saber_start_trans_anim(int saber_anim_level, int anim, float* animSpeed, const gentity_t* gent, int fatigued);
 extern float PM_GetTimeScaleMod(const gentity_t* gent);
 
 static int g_get_attack_damage(const gentity_t* self, const int min_dmg, const int max_dmg, const float mult_point)
@@ -2457,7 +2457,7 @@ static int g_get_attack_damage(const gentity_t* self, const int min_dmg, const i
 
 static float g_get_anim_point(const gentity_t* self)
 {
-	float attack_anim_length = PM_AnimLength(self->client->clientInfo.animFileIndex,static_cast<animNumber_t>(self->client->ps.torsoAnim));
+	float attack_anim_length = PM_AnimLength(self->client->clientInfo.animFileIndex, static_cast<animNumber_t>(self->client->ps.torsoAnim));
 	float anim_speed_factor = 1.0f;
 
 	//Be sure to scale by the proper anim speed just as if we were going to play the animation
@@ -4032,7 +4032,7 @@ qboolean g_in_cinematic_saber_anim(const gentity_t* self)
 	return qfalse;
 }
 
-qboolean g_in_cinematic_lightning_anim(const gentity_t* self)
+static qboolean g_in_cinematic_lightning_anim(const gentity_t* self)
 {
 	if (self->NPC && self->NPC->behaviorState == BS_CINEMATIC)
 	{
@@ -22779,7 +22779,7 @@ void WP_DeactivateSaber(const gentity_t* self, const qboolean clear_length)
 	self->client->ps.ManualBlockingFlags &= ~(1 << MBF_NPCBLOCKING);
 }
 
-void WP_DeactivateLightSaber(const gentity_t* self, const qboolean clear_length)
+void WP_DeactivateLightSaber(const gentity_t* self)
 {
 	const qboolean blocking = self->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
 	//Normal Blocking
@@ -22803,11 +22803,8 @@ void WP_DeactivateLightSaber(const gentity_t* self, const qboolean clear_length)
 	if (self->client->ps.SaberActive())
 	{
 		self->client->ps.SaberDeactivate();
-		if (clear_length)
-		{
-			self->client->ps.SetSaberLength(0);
-			PM_Setsaber_move(LS_DRAW);
-		}
+		self->client->ps.SetSaberLength(0);
+		PM_Setsaber_move(LS_DRAW);
 		G_SoundIndexOnEnt(self, CHAN_WEAPON, self->client->ps.saber[0].soundOff);
 	}
 	self->client->ps.ManualBlockingFlags &= ~(1 << HOLDINGBLOCK);
@@ -26644,8 +26641,8 @@ void WP_ForcePowerStop(gentity_t* self, const forcePowers_t force_power)
 								G_AngerAlert(grip_ent);
 							}
 						}
-					}
 				}
+			}
 				else
 				{
 					grip_ent->s.eFlags &= ~EF_FORCE_GRIPPED;
@@ -26673,10 +26670,10 @@ void WP_ForcePowerStop(gentity_t* self, const forcePowers_t force_power)
 						grip_ent->s.pos.trTime = level.time;
 					}
 				}
-			}
+		}
 			self->s.loopSound = 0;
 			self->client->ps.forceGripentity_num = ENTITYNUM_NONE;
-		}
+	}
 		if (self->client->ps.torsoAnim == BOTH_FORCEGRIP_HOLD
 			|| self->client->ps.torsoAnim == BOTH_FORCEGRIP_OLD)
 		{
@@ -26949,8 +26946,8 @@ void WP_ForcePowerStop(gentity_t* self, const forcePowers_t force_power)
 								G_AngerAlert(grip_ent);
 							}
 						}
-					}
 				}
+			}
 				else
 				{
 					grip_ent->s.eFlags &= ~EF_FORCE_GRABBED;
@@ -26978,10 +26975,10 @@ void WP_ForcePowerStop(gentity_t* self, const forcePowers_t force_power)
 						grip_ent->s.pos.trTime = level.time;
 					}
 				}
-			}
+		}
 			self->s.loopSound = 0;
 			self->client->ps.forceGripentity_num = ENTITYNUM_NONE;
-		}
+}
 		if (self->client->ps.torsoAnim == BOTH_FORCEGRIP_HOLD)
 		{
 			NPC_SetAnim(self, SETANIM_BOTH, BOTH_FORCEGRIP_RELEASE, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);

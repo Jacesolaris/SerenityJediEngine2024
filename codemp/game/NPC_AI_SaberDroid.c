@@ -4,7 +4,7 @@
 #include "g_nav.h"
 #include "anims.h"
 
-extern void WP_DeactivateSaber(const gentity_t* self, qboolean clear_length);
+extern void WP_DeactivateSaber(const gentity_t* self);
 extern int PM_AnimLength(animNumber_t anim);
 
 qboolean NPC_CheckPlayerTeamStealth(void);
@@ -129,7 +129,7 @@ void NPC_BSSaberDroid_Patrol(void)
 		if (!NPCS.NPC->client->ps.saber_holstered)
 		{
 			//saber is on.
-			WP_DeactivateSaber(NPCS.NPC, qfalse);
+			WP_DeactivateSaber(NPCS.NPC);
 			NPC_SetAnim(NPCS.NPC, SETANIM_BOTH, BOTH_TURNOFF, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 		}
 	}
