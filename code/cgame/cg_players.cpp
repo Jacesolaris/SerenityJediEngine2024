@@ -173,7 +173,7 @@ extern qboolean PM_SaberInTransitionAny(int move);
 extern int PM_GetTurnAnim(const gentity_t* gent, int anim);
 extern int PM_AnimLength(int index, animNumber_t anim);
 extern qboolean PM_InRoll(const playerState_t* ps);
-extern Vehicle_t* G_IsRidingVehicle(const gentity_t* p_ent);
+extern Vehicle_t* G_IsRidingVehicle(const gentity_t* pEnt);
 extern qboolean PM_SuperBreakWinAnim(int anim);
 
 //Basic set of custom sounds that everyone needs
@@ -424,7 +424,7 @@ CG_CustomSound
 
 ================
 */
-sfxHandle_t CG_CustomSound(const int entityNum, const char* sound_name, const int custom_sound_set)
+static sfxHandle_t CG_CustomSound(const int entityNum, const char* sound_name, const int custom_sound_set)
 {
 	int i;
 
@@ -1763,7 +1763,7 @@ CG_AddPainTwitch
 */
 constexpr auto PAIN_TWITCH_TIME = 200;
 
-void CG_AddPainTwitch(const int pain_time, const int pain_direction, const int currentTime, vec3_t torso_angles)
+static void CG_AddPainTwitch(const int pain_time, const int pain_direction, const int currentTime, vec3_t torso_angles)
 {
 	const int t = currentTime - pain_time;
 	if (t >= PAIN_TWITCH_TIME)
@@ -4847,7 +4847,7 @@ void CG_ForcePushBlur(const vec3_t org, const qboolean dark_side)
 	ex->refEntity.customShader = cgi_R_RegisterShader("gfx/effects/forcePush");
 }
 
-void CG_ForceGrabBlur(const vec3_t org)
+static void CG_ForceGrabBlur(const vec3_t org)
 {
 	localEntity_t* ex = CG_AllocLocalEntity();
 	ex->leType = LE_PUFF;
@@ -4883,7 +4883,7 @@ void CG_ForceGrabBlur(const vec3_t org)
 	ex->refEntity.customShader = cgi_R_RegisterShader("gfx/effects/forcePush");
 }
 
-void CG_ForceDeadlySightBlur(const vec3_t org)
+static void CG_ForceDeadlySightBlur(const vec3_t org)
 {
 	localEntity_t* ex = CG_AllocLocalEntity();
 	ex->leType = LE_PUFF;
@@ -5142,7 +5142,7 @@ int cg_lastHyperSpaceEffectTime = 0;
 static int lastFlyBySound[MAX_GENTITIES] = { 0 };
 constexpr auto FLYBYSOUNDTIME = 2000;
 
-void CG_VehicleEffects(centity_t* cent)
+static void CG_VehicleEffects(centity_t* cent)
 {
 	const Vehicle_t* p_veh_npc = cent->gent->m_pVehicle;
 
@@ -5297,7 +5297,7 @@ Adds the special effect
 extern void CG_AddHealthBarEnt(int entNum);
 extern void CG_AddBlockPointBarEnt(int entNum);
 
-void CG_DrawPlayerSphere(const centity_t* cent, vec3_t origin, const float scale, const int shader)
+static void CG_DrawPlayerSphere(const centity_t* cent, vec3_t origin, const float scale, const int shader)
 {
 	refEntity_t ent;
 	vec3_t ang;
@@ -6503,7 +6503,7 @@ void CG_PlayerShieldHit(const int entityNum, vec3_t dir, const int amount)
 	cent->shieldHitTime = cg.time + 250;
 }
 
-void CG_PlayerShieldRecharging(const int entityNum)
+static void CG_PlayerShieldRecharging(const int entityNum)
 {
 	if (entityNum < 0 || entityNum >= MAX_GENTITIES)
 	{
@@ -6514,7 +6514,7 @@ void CG_PlayerShieldRecharging(const int entityNum)
 	cent->shieldRechargeTime = cg.time + 1000;
 }
 
-void CG_DrawPlayerShield(const centity_t* cent, vec3_t origin)
+static void CG_DrawPlayerShield(const centity_t* cent, vec3_t origin)
 {
 	refEntity_t ent;
 
@@ -6549,7 +6549,7 @@ void CG_DrawPlayerShield(const centity_t* cent, vec3_t origin)
 	cgi_R_AddRefEntityToScene(&ent);
 }
 
-void CG_PlayerHitFX(centity_t* cent)
+static void CG_PlayerHitFX(centity_t* cent)
 {
 	// only do the below fx if the cent in question is...uh...me, and it's first person.
 	if (cent->currentState.clientNum == cg.snap->ps.clientNum || cg.renderingThirdPerson)
@@ -7272,7 +7272,7 @@ static void CG_DoSaberLight(const saberInfo_t* saber)
 	}
 }
 
-void CG_DoTFASaber(vec3_t blade_muz, vec3_t blade_tip, vec3_t trail_tip, vec3_t trail_muz, float length_max,
+static void CG_DoTFASaber(vec3_t blade_muz, vec3_t blade_tip, vec3_t trail_tip, vec3_t trail_muz, float length_max,
 	float radius, saber_colors_t color, int rfx, qboolean do_light)
 {
 	vec3_t dif, mid, blade_dir, end_dir, trail_dir, base_dir;
@@ -7756,7 +7756,7 @@ void CG_DoTFASaber(vec3_t blade_muz, vec3_t blade_tip, vec3_t trail_tip, vec3_t 
 	}
 }
 
-void CG_DoBattlefrontSaber(vec3_t blade_muz, vec3_t blade_tip, vec3_t trail_tip, vec3_t trail_muz, float length_max,
+static void CG_DoBattlefrontSaber(vec3_t blade_muz, vec3_t blade_tip, vec3_t trail_tip, vec3_t trail_muz, float length_max,
 	float radius, saber_colors_t color, int rfx, qboolean do_light)
 {
 	vec3_t dif, mid, blade_dir, end_dir, trail_dir, base_dir;
@@ -8240,7 +8240,7 @@ void CG_DoBattlefrontSaber(vec3_t blade_muz, vec3_t blade_tip, vec3_t trail_tip,
 	}
 }
 
-void CG_DoEp1Saber(vec3_t blade_muz, vec3_t blade_tip, vec3_t trail_tip, vec3_t trail_muz, float length_max,
+static void CG_DoEp1Saber(vec3_t blade_muz, vec3_t blade_tip, vec3_t trail_tip, vec3_t trail_muz, float length_max,
 	float radius, saber_colors_t color, int rfx, qboolean do_light)
 {
 	vec3_t dif, mid, blade_dir, end_dir, trail_dir, base_dir;
@@ -8724,7 +8724,7 @@ void CG_DoEp1Saber(vec3_t blade_muz, vec3_t blade_tip, vec3_t trail_tip, vec3_t 
 	}
 }
 
-void CG_DoEp2Saber(vec3_t blade_muz, vec3_t blade_tip, vec3_t trail_tip, vec3_t trail_muz, float length_max,
+static void CG_DoEp2Saber(vec3_t blade_muz, vec3_t blade_tip, vec3_t trail_tip, vec3_t trail_muz, float length_max,
 	float radius, saber_colors_t color, int rfx, qboolean do_light)
 {
 	vec3_t dif, mid, blade_dir, end_dir, trail_dir, base_dir;
@@ -9208,7 +9208,7 @@ void CG_DoEp2Saber(vec3_t blade_muz, vec3_t blade_tip, vec3_t trail_tip, vec3_t 
 	}
 }
 
-void CG_DoEp3Saber(vec3_t blade_muz, vec3_t blade_tip, vec3_t trail_tip, vec3_t trail_muz, float length_max,
+static void CG_DoEp3Saber(vec3_t blade_muz, vec3_t blade_tip, vec3_t trail_tip, vec3_t trail_muz, float length_max,
 	float radius, saber_colors_t color, int rfx, qboolean do_light)
 {
 	vec3_t dif, mid, blade_dir, end_dir, trail_dir, base_dir;
@@ -9692,7 +9692,7 @@ void CG_DoEp3Saber(vec3_t blade_muz, vec3_t blade_tip, vec3_t trail_tip, vec3_t 
 	}
 }
 
-void CG_DoSFXSaber(vec3_t blade_muz, vec3_t blade_tip, vec3_t trail_tip, vec3_t trail_muz, float length_max,
+static void CG_DoSFXSaber(vec3_t blade_muz, vec3_t blade_tip, vec3_t trail_tip, vec3_t trail_muz, float length_max,
 	float radius, saber_colors_t color, int rfx, qboolean do_light)
 {
 	vec3_t dif, mid, blade_dir, end_dir, trail_dir, base_dir;
@@ -10176,7 +10176,7 @@ void CG_DoSFXSaber(vec3_t blade_muz, vec3_t blade_tip, vec3_t trail_tip, vec3_t 
 	}
 }
 
-void CG_DoOTSaber(vec3_t blade_muz, vec3_t blade_tip, vec3_t trail_tip, vec3_t trail_muz, float length_max,
+static void CG_DoOTSaber(vec3_t blade_muz, vec3_t blade_tip, vec3_t trail_tip, vec3_t trail_muz, float length_max,
 	float radius,
 	saber_colors_t color, int rfx, qboolean do_light)
 {
@@ -10690,7 +10690,7 @@ void CG_DoOTSaber(vec3_t blade_muz, vec3_t blade_tip, vec3_t trail_tip, vec3_t t
 	}
 }
 
-void CG_DoCustomSaber(vec3_t blade_muz, vec3_t blade_tip, vec3_t trail_tip, vec3_t trail_muz, float length_max,
+static void CG_DoCustomSaber(vec3_t blade_muz, vec3_t blade_tip, vec3_t trail_tip, vec3_t trail_muz, float length_max,
 	float radius, saber_colors_t color, int rfx, qboolean do_light)
 {
 	vec3_t dif, mid, blade_dir, end_dir, trail_dir, base_dir;
@@ -11970,7 +11970,7 @@ static void CG_CreateSaberMarks(vec3_t start, vec3_t end, vec3_t normal)
 {
 	int i, j;
 	vec3_t axis[3]{}, original_points[4]{};
-	vec3_t markPoints[MAX_MARK_POINTS], projection;
+	vec3_t markPoints[MAX_MARK_POINTS]{}, projection;
 	polyVert_t* v;
 	markFragment_t markFragments[MAX_MARK_FRAGMENTS], * mf;
 
@@ -13627,7 +13627,7 @@ GetSelfLegAnimPoint
 ================
 */
 //Get the point in the leg animation and return a percentage of the current point in the anim between 0 and the total anim length (0.0f - 1.0f)
-float GetSelfLegAnimPoint()
+static float GetSelfLegAnimPoint()
 {
 	float current = 0.0f;
 	int end = 0;
@@ -13659,7 +13659,7 @@ GetSelfTorsoAnimPoint
 ================
 */
 //Get the point in the torso animation and return a percentage of the current point in the anim between 0 and the total anim length (0.0f - 1.0f)
-float GetSelfTorsoAnimPoint()
+static float GetSelfTorsoAnimPoint()
 {
 	float current = 0.0f;
 	int end = 0;
@@ -13697,7 +13697,7 @@ pitch (x) axis.
 ===============
 */
 
-void SmoothTrueView(vec3_t eye_angles)
+static void SmoothTrueView(vec3_t eye_angles)
 {
 	const float leg_anim_point = GetSelfLegAnimPoint();
 	const float torso_anim_point = GetSelfTorsoAnimPoint();
@@ -16343,7 +16343,7 @@ void CG_Player(centity_t* cent)
 
 					if ((cent->currentState.eFlags & EF_FIRING || cent->currentState.eFlags & EF_ALT_FIRING) && effect)
 					{
-						vec3_t up = { 0, 0, 1 }, ax[3];
+						vec3_t up = { 0, 0, 1 }, ax[3]{};
 
 						VectorCopy(flash.axis[0], ax[0]);
 
@@ -16531,9 +16531,6 @@ on and coontinue from there.
 */
 void CG_ResetPlayerEntity(centity_t* cent)
 {
-	//	cent->errorTime = -99999;		// guarantee no error decay added
-	//	cent->extrapolated = qfalse;
-
 	if (cent->gent && cent->gent->ghoul2.size())
 	{
 		if (cent->currentState.clientNum < MAX_CLIENTS)

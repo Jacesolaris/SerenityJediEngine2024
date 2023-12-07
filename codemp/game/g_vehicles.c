@@ -27,7 +27,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 extern gentity_t* NPC_Spawn_Do(gentity_t* ent);
 extern void NPC_SetAnim(gentity_t* ent, int set_anim_parts, int anim, int set_anim_flags);
-extern void G_DamageFromKiller(gentity_t* p_ent, const gentity_t* p_veh_ent, gentity_t* attacker, vec3_t org,
+extern void G_DamageFromKiller(gentity_t* pEnt, const gentity_t* p_veh_ent, gentity_t* attacker, vec3_t org,
 	int damage,
 	int dflags, int mod);
 
@@ -55,9 +55,9 @@ void G_VehicleTrace(trace_t* results, const vec3_t start, const vec3_t tMins, co
 	trap->Trace(results, start, tMins, tMaxs, end, pass_entity_num, contentmask, qfalse, 0, 0);
 }
 
-Vehicle_t* G_IsRidingVehicle(const gentity_t* p_ent)
+Vehicle_t* G_IsRidingVehicle(const gentity_t* pEnt)
 {
-	const gentity_t* ent = p_ent;
+	const gentity_t* ent = pEnt;
 
 	if (ent && ent->client && ent->client->NPC_class != CLASS_VEHICLE && ent->s.m_iVehicleNum != 0)
 	{
@@ -118,14 +118,14 @@ void G_VehicleSpawn(gentity_t* self)
 }
 
 // Attachs an entity to the vehicle it's riding (it's owner).
-void G_AttachToVehicle(gentity_t* p_ent, usercmd_t** ucmd)
+void G_AttachToVehicle(gentity_t* pEnt, usercmd_t** ucmd)
 {
 	mdxaBone_t boltMatrix;
 
-	if (!p_ent || !ucmd)
+	if (!pEnt || !ucmd)
 		return;
 
-	gentity_t* ent = p_ent;
+	gentity_t* ent = pEnt;
 
 	gentity_t* vehEnt = &g_entities[ent->r.ownerNum];
 	ent->waypoint = vehEnt->waypoint; // take the veh's waypoint as your own
@@ -160,13 +160,13 @@ void Animate(Vehicle_t* p_veh)
 }
 
 // Determine whether this entity is able to board this vehicle or not.
-qboolean ValidateBoard(Vehicle_t* p_veh, bgEntity_t* p_ent)
+qboolean ValidateBoard(Vehicle_t* p_veh, bgEntity_t* pEnt)
 {
 	// Determine where the entity is entering the vehicle from (left, right, or back).
 	vec3_t vVehToEnt;
 	vec3_t vVehDir;
 	const gentity_t* parent = (gentity_t*)p_veh->m_pParentEntity;
-	const gentity_t* ent = (gentity_t*)p_ent;
+	const gentity_t* ent = (gentity_t*)pEnt;
 	vec3_t vVehAngles;
 
 	if (p_veh->m_iDieTime > 0)
@@ -283,10 +283,10 @@ void FighterStorePilotViewAngles(Vehicle_t* p_veh, bgEntity_t* parent)
 #endif// VEH_CONTROL_SCHEME_4
 
 // Board this Vehicle (get on). The first entity to board an empty vehicle becomes the Pilot.
-qboolean Board(Vehicle_t* p_veh, bgEntity_t* p_ent)
+qboolean Board(Vehicle_t* p_veh, bgEntity_t* pEnt)
 {
 	vec3_t vPlayerDir;
-	gentity_t* ent = (gentity_t*)p_ent;
+	gentity_t* ent = (gentity_t*)pEnt;
 	gentity_t* parent = (gentity_t*)p_veh->m_pParentEntity;
 
 	// If it's not a valid entity, OR if the vehicle is blowing up (it's dead), OR it's not
@@ -301,7 +301,7 @@ qboolean Board(Vehicle_t* p_veh, bgEntity_t* p_ent)
 		return qfalse;
 
 	// Validate the entity's ability to board this vehicle.
-	if (!p_veh->m_pVehicleInfo->ValidateBoard(p_veh, p_ent))
+	if (!p_veh->m_pVehicleInfo->ValidateBoard(p_veh, pEnt))
 		return qfalse;
 
 	// FIXME FIXME!!! Ask Mike monday where ent->client->ps.eFlags might be getting changed!!! It is always 0 (when it should
@@ -582,7 +582,7 @@ qboolean VEH_TryEject(const Vehicle_t* p_veh,
 	return qtrue;
 }
 
-void G_EjectDroidUnit(Vehicle_t* p_veh, const qboolean kill)
+static void G_EjectDroidUnit(Vehicle_t* p_veh, const qboolean kill)
 {
 	p_veh->m_pDroidUnit->s.m_iVehicleNum = ENTITYNUM_NONE;
 	p_veh->m_pDroidUnit->s.owner = ENTITYNUM_NONE;
@@ -610,16 +610,16 @@ void G_EjectDroidUnit(Vehicle_t* p_veh, const qboolean kill)
 }
 
 // Eject the pilot from the vehicle.
-qboolean Eject(Vehicle_t* p_veh, bgEntity_t* p_ent, const qboolean forceEject)
+static qboolean Eject(Vehicle_t* p_veh, bgEntity_t* pEnt, const qboolean forceEject)
 {
 	gentity_t* parent;
 	vec3_t vExitPos;
-	gentity_t* ent = (gentity_t*)p_ent;
+	gentity_t* ent = (gentity_t*)pEnt;
 
 	qboolean taintedRider = qfalse;
 	qboolean deadRider = qfalse;
 
-	if (p_ent == p_veh->m_pDroidUnit)
+	if (pEnt == p_veh->m_pDroidUnit)
 	{
 		G_EjectDroidUnit(p_veh, qfalse);
 		return qtrue;
@@ -1038,14 +1038,14 @@ static void DeathUpdate(Vehicle_t* p_veh)
 }
 
 // Register all the assets used by this vehicle.
-void RegisterAssets(Vehicle_t* p_veh)
+static void RegisterAssets(Vehicle_t* p_veh)
 {
 }
 
 extern void ChangeWeapon(const gentity_t* ent, int new_weapon);
 
 // Initialize the vehicle.
-qboolean Initialize(Vehicle_t* p_veh)
+static qboolean Initialize(Vehicle_t* p_veh)
 {
 	gentity_t* parent = (gentity_t*)p_veh->m_pParentEntity;
 	int i;
@@ -1873,12 +1873,12 @@ static void AttachRiders(const Vehicle_t* p_veh)
 }
 
 // Make someone invisible and un-collidable.
-static void Ghost(Vehicle_t* p_veh, bgEntity_t* p_ent)
+static void Ghost(Vehicle_t* p_veh, bgEntity_t* pEnt)
 {
-	if (!p_ent)
+	if (!pEnt)
 		return;
 
-	gentity_t* ent = (gentity_t*)p_ent;
+	gentity_t* ent = (gentity_t*)pEnt;
 
 	// This was introduced to prevent one extra entity from being sent to the clients
 	ent->r.svFlags |= SVF_NOCLIENT;
@@ -1892,12 +1892,12 @@ static void Ghost(Vehicle_t* p_veh, bgEntity_t* p_ent)
 }
 
 // Make someone visible and collidable.
-static void UnGhost(Vehicle_t* p_veh, bgEntity_t* p_ent)
+static void UnGhost(Vehicle_t* p_veh, bgEntity_t* pEnt)
 {
-	if (!p_ent)
+	if (!pEnt)
 		return;
 
-	gentity_t* ent = (gentity_t*)p_ent;
+	gentity_t* ent = (gentity_t*)pEnt;
 
 	// make sure the client is sent again
 	ent->r.svFlags &= ~SVF_NOCLIENT;
@@ -1973,7 +1973,7 @@ void G_VehicleDamageBoxSizing(const Vehicle_t* p_veh)
 }
 
 //get one of 4 possible impact locations based on the trace direction
-int G_FlyVehicleImpactDir(const gentity_t* veh, const trace_t* trace)
+static int G_FlyVehicleImpactDir(const gentity_t* veh, const trace_t* trace)
 {
 	trace_t localTrace;
 	vec3_t testMins, testMaxs;
@@ -2429,16 +2429,16 @@ void G_VehUpdateShields(const gentity_t* targ)
 }
 
 // Set the parent entity of this Vehicle NPC.
-void _SetParent(Vehicle_t* p_veh, bgEntity_t* pParentEntity) { p_veh->m_pParentEntity = pParentEntity; }
+static void _SetParent(Vehicle_t* p_veh, bgEntity_t* pParentEntity) { p_veh->m_pParentEntity = pParentEntity; }
 
 // Add a pilot to the vehicle.
-void SetPilot(Vehicle_t* p_veh, bgEntity_t* pPilot) { p_veh->m_pPilot = pPilot; }
+static void SetPilot(Vehicle_t* p_veh, bgEntity_t* pPilot) { p_veh->m_pPilot = pPilot; }
 
 // Add a passenger to the vehicle (false if we're full).
-qboolean AddPassenger(Vehicle_t* p_veh) { return qfalse; }
+static qboolean AddPassenger(Vehicle_t* p_veh) { return qfalse; }
 
 // Whether this vehicle is currently inhabited (by anyone) or not.
-qboolean Inhabited(const Vehicle_t* p_veh) { return p_veh->m_pPilot || p_veh->m_iNumPassengers ? qtrue : qfalse; }
+static qboolean Inhabited(const Vehicle_t* p_veh) { return p_veh->m_pPilot || p_veh->m_iNumPassengers ? qtrue : qfalse; }
 
 // Setup the shared functions (one's that all vehicles would generally use).
 void G_SetSharedVehicleFunctions(vehicleInfo_t* pVehInfo)

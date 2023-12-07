@@ -159,7 +159,7 @@ extern qboolean PM_InRoll(const playerState_t* ps);
 int wp_saber_must_block(gentity_t* self, const gentity_t* atk, qboolean check_b_box_block, vec3_t point,
 	int r_saber_num, int r_blade_num);
 extern int PM_InGrappleMove(int anim);
-extern Vehicle_t* G_IsRidingVehicle(const gentity_t* p_ent);
+extern Vehicle_t* G_IsRidingVehicle(const gentity_t* pEnt);
 extern int SaberDroid_PowerLevelForSaberAnim(const gentity_t* self);
 extern qboolean G_ValidEnemy(const gentity_t* self, const gentity_t* enemy);
 extern void G_StartMatrixEffect(const gentity_t* ent, int me_flags = 0, int length = 1000, float time_scale = 0.0f,
@@ -26641,8 +26641,8 @@ void WP_ForcePowerStop(gentity_t* self, const forcePowers_t force_power)
 								G_AngerAlert(grip_ent);
 							}
 						}
+					}
 				}
-			}
 				else
 				{
 					grip_ent->s.eFlags &= ~EF_FORCE_GRIPPED;
@@ -26670,10 +26670,10 @@ void WP_ForcePowerStop(gentity_t* self, const forcePowers_t force_power)
 						grip_ent->s.pos.trTime = level.time;
 					}
 				}
-		}
+			}
 			self->s.loopSound = 0;
 			self->client->ps.forceGripentity_num = ENTITYNUM_NONE;
-	}
+		}
 		if (self->client->ps.torsoAnim == BOTH_FORCEGRIP_HOLD
 			|| self->client->ps.torsoAnim == BOTH_FORCEGRIP_OLD)
 		{
@@ -26946,8 +26946,8 @@ void WP_ForcePowerStop(gentity_t* self, const forcePowers_t force_power)
 								G_AngerAlert(grip_ent);
 							}
 						}
+					}
 				}
-			}
 				else
 				{
 					grip_ent->s.eFlags &= ~EF_FORCE_GRABBED;
@@ -26975,10 +26975,10 @@ void WP_ForcePowerStop(gentity_t* self, const forcePowers_t force_power)
 						grip_ent->s.pos.trTime = level.time;
 					}
 				}
-		}
+			}
 			self->s.loopSound = 0;
 			self->client->ps.forceGripentity_num = ENTITYNUM_NONE;
-}
+		}
 		if (self->client->ps.torsoAnim == BOTH_FORCEGRIP_HOLD)
 		{
 			NPC_SetAnim(self, SETANIM_BOTH, BOTH_FORCEGRIP_RELEASE, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);

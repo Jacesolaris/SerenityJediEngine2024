@@ -318,7 +318,7 @@ using vehicleInfo_t = struct
 	void (*AnimateRiders)(Vehicle_t* p_veh);
 
 	// Determine whether this entity is able to board this vehicle or not.
-	bool (*ValidateBoard)(Vehicle_t* p_veh, gentity_t* p_ent);
+	bool (*ValidateBoard)(Vehicle_t* p_veh, gentity_t* pEnt);
 
 	// Set the parent entity of this Vehicle NPC.
 	void (*SetParent)(Vehicle_t* p_veh, gentity_t* pParentEntity);
@@ -333,10 +333,10 @@ using vehicleInfo_t = struct
 	void (*Animate)(Vehicle_t* p_veh);
 
 	// Board this Vehicle (get on). The first entity to board an empty vehicle becomes the Pilot.
-	bool (*Board)(Vehicle_t* p_veh, gentity_t* p_ent);
+	bool (*Board)(Vehicle_t* p_veh, gentity_t* pEnt);
 
 	// Eject an entity from the vehicle.
-	bool (*Eject)(Vehicle_t* p_veh, gentity_t* p_ent, qboolean forceEject);
+	bool (*Eject)(Vehicle_t* p_veh, gentity_t* pEnt, qboolean forceEject);
 
 	// Eject all the inhabitants of this vehicle.
 	bool (*EjectAll)(Vehicle_t* p_veh);
@@ -371,10 +371,10 @@ using vehicleInfo_t = struct
 	void (*AttachRiders)(Vehicle_t* p_veh);
 
 	// Make someone invisible and un-collidable.
-	void (*Ghost)(Vehicle_t* p_veh, gentity_t* p_ent);
+	void (*Ghost)(Vehicle_t* p_veh, gentity_t* pEnt);
 
 	// Make someone visible and collidable.
-	void (*UnGhost)(Vehicle_t* p_veh, gentity_t* p_ent);
+	void (*UnGhost)(Vehicle_t* p_veh, gentity_t* pEnt);
 
 	// Get the pilot of this vehicle.
 	const gentity_t* (*GetPilot)(Vehicle_t* p_veh);

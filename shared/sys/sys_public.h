@@ -51,6 +51,8 @@ NON-PORTABLE SYSTEM SERVICES
 ==============================================================
 */
 
+//#define MAX_JOYSTICK_AXIS 16
+
 using joystickAxis_t = enum
 {
 	AXIS_SIDE,

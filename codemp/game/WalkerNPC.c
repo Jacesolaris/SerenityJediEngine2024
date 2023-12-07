@@ -57,9 +57,9 @@ static qboolean Update( Vehicle_t *p_veh, const usercmd_t *pUcmd )
 */
 
 // Board this Vehicle (get on). The first entity to board an empty vehicle becomes the Pilot.
-static qboolean Board(Vehicle_t* p_veh, bgEntity_t* p_ent)
+static qboolean Board(Vehicle_t* p_veh, bgEntity_t* pEnt)
 {
-	if (!g_vehicleInfo[VEHICLE_BASE].Board(p_veh, p_ent))
+	if (!g_vehicleInfo[VEHICLE_BASE].Board(p_veh, pEnt))
 		return qfalse;
 
 	// Set the board wait time (they won't be able to do anything, including getting off, for this amount of time).

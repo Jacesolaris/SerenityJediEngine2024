@@ -167,7 +167,7 @@ int in_field_of_vision(vec3_t viewangles, const float fov, vec3_t angles)
 	return 1;
 }
 
-qboolean npc_is_jedi(const gentity_t* self)
+static qboolean npc_is_jedi(const gentity_t* self)
 {
 	switch (self->client->NPC_class)
 	{
@@ -193,7 +193,7 @@ qboolean npc_is_jedi(const gentity_t* self)
 	return qfalse;
 }
 
-qboolean npc_should_not_throw_saber(const gentity_t* self)
+static qboolean npc_should_not_throw_saber(const gentity_t* self)
 {
 	switch (self->client->NPC_class)
 	{
@@ -211,7 +211,7 @@ qboolean npc_should_not_throw_saber(const gentity_t* self)
 	return qfalse;
 }
 
-qboolean npc_is_saber_master(const gentity_t* self)
+static qboolean npc_is_saber_master(const gentity_t* self)
 {
 	switch (self->client->NPC_class)
 	{
@@ -230,7 +230,7 @@ qboolean npc_is_saber_master(const gentity_t* self)
 	return qfalse;
 }
 
-qboolean npc_force_master(const gentity_t* self)
+static qboolean npc_force_master(const gentity_t* self)
 {
 	switch (self->client->NPC_class)
 	{
@@ -365,7 +365,7 @@ qboolean Jedi_CultistDestroyer(const gentity_t* self)
 	return qfalse;
 }
 
-qboolean Jedi_CultistForceUser(const gentity_t* self)
+static qboolean Jedi_CultistForceUser(const gentity_t* self)
 {
 	if (!self || !self->client)
 	{
@@ -382,7 +382,7 @@ qboolean Jedi_CultistForceUser(const gentity_t* self)
 	return qfalse;
 }
 
-qboolean Jedi_Trainer(const gentity_t* self)
+static qboolean Jedi_Trainer(const gentity_t* self)
 {
 	if (!self || !self->client)
 	{
@@ -596,7 +596,7 @@ void NPC_TavionSithSword_Precache()
 	G_SoundIndex("sound/weapons/scepter/recharge.wav");
 }
 
-void Tavion_ScepterDamage()
+static void Tavion_ScepterDamage()
 {
 	if (!NPC->ghoul2.size()
 		|| NPC->weaponModel[1] <= 0)
@@ -669,7 +669,7 @@ void Tavion_ScepterDamage()
 	}
 }
 
-void Tavion_ScepterSlam()
+static void Tavion_ScepterSlam()
 {
 	if (!NPC->ghoul2.size()
 		|| NPC->weaponModel[1] <= 0)
@@ -798,7 +798,7 @@ void Tavion_ScepterSlam()
 	}
 }
 
-void Tavion_StartScepterBeam()
+static void Tavion_StartScepterBeam()
 {
 	G_PlayEffect(G_EffectIndex("scepter/beam_warmup.efx"), NPC->weaponModel[1], NPC->genericBolt1, NPC->s.number,
 		NPC->currentOrigin, 0, qtrue);
@@ -813,7 +813,7 @@ void Tavion_StartScepterBeam()
 	VectorClear(NPC->client->ps.moveDir);
 }
 
-void Tavion_StartScepterSlam()
+static void Tavion_StartScepterSlam()
 {
 	G_PlayEffect(G_EffectIndex("scepter/slam_warmup.efx"), NPC->weaponModel[1], NPC->genericBolt1, NPC->s.number,
 		NPC->currentOrigin, 0, qtrue);
@@ -828,7 +828,7 @@ void Tavion_StartScepterSlam()
 	NPC->count = 0;
 }
 
-void Tavion_SithSwordRecharge()
+static void Tavion_SithSwordRecharge()
 {
 	if (NPC->client->ps.torsoAnim != BOTH_TAVION_SWORDPOWER
 		&& NPC->count
@@ -876,7 +876,7 @@ void player_Decloak(gentity_t* self)
 	}
 }
 
-qboolean Self_IsGunner(const gentity_t* self)
+static qboolean Self_IsGunner(const gentity_t* self)
 {
 	switch (self->client->ps.weapon)
 	{
@@ -970,7 +970,7 @@ void Jedi_Decloak(gentity_t* self)
 	}
 }
 
-void Jedi_CheckCloak()
+static void Jedi_CheckCloak()
 {
 	if (NPC
 		&& NPC->client
@@ -1172,7 +1172,7 @@ SPEAKING
 ==========================================================================================
 */
 
-qboolean Jedi_BattleTaunt(const gentity_t* NPC)
+static qboolean Jedi_BattleTaunt(const gentity_t* NPC)
 {
 	if (TIMER_Done(NPC, "chatter")
 		&& !Q_irand(0, 3)
@@ -1998,21 +1998,21 @@ static qboolean Jedi_DecideKick()
 	return qtrue;
 }
 
-void Kyle_GrabEnemy()
+static void Kyle_GrabEnemy()
 {
 	WP_SabersCheckLock2(NPC, NPC->enemy, static_cast<saberslock_mode_t>(Q_irand(LOCK_KYLE_GRAB1, LOCK_KYLE_GRAB2)));
 	//LOCK_KYLE_GRAB3
 	TIMER_Set(NPC, "grabEnemyDebounce", NPC->client->ps.torsoAnimTimer + Q_irand(4000, 20000));
 }
 
-void NPC_GrabPlayer()
+static void NPC_GrabPlayer()
 {
 	WP_SabersCheckLock2(NPC, NPC->enemy, static_cast<saberslock_mode_t>(Q_irand(LOCK_KYLE_GRAB1, LOCK_KYLE_GRAB2)));
 	//LOCK_KYLE_GRAB3
 	TIMER_Set(NPC, "NPC_GrabPlayerDebounce", NPC->client->ps.torsoAnimTimer + Q_irand(20000, 30000));
 }
 
-void Kyle_TryGrab()
+static void Kyle_TryGrab()
 {
 	NPC_SetAnim(NPC, SETANIM_BOTH, BOTH_KYLE_GRAB, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 	NPC->client->ps.torsoAnimTimer += 200;
@@ -2026,7 +2026,7 @@ void Kyle_TryGrab()
 	NPC->client->ps.SaberDeactivate();
 }
 
-qboolean Kyle_CanDoGrab()
+static qboolean Kyle_CanDoGrab()
 {
 	if (NPCInfo->aiFlags & NPCAI_BOSS_SERENITYJEDIENGINE)
 	{
@@ -4088,7 +4088,7 @@ qboolean jedi_dodge_evasion(gentity_t* self, gentity_t* shooter, trace_t* tr, in
 	return qfalse;
 }
 
-evasionType_t jedi_check_flip_evasions(gentity_t* self, const float rightdot)
+static evasionType_t jedi_check_flip_evasions(gentity_t* self, const float rightdot)
 {
 	if (self->NPC && self->NPC->scriptFlags & SCF_NO_ACROBATICS)
 	{
@@ -4166,13 +4166,12 @@ evasionType_t jedi_check_flip_evasions(gentity_t* self, const float rightdot)
 			return EVASION_OTHER;
 		}
 	}
-	else if (self->client->NPC_class != CLASS_DESANN && self->client->NPC_class != CLASS_VADER
+	else if (self->client->NPC_class != CLASS_DESANN && self->client->NPC_class != CLASS_VADER && Q_irand(0, 1)
 		//desann doesn't do these kind of frilly acrobatics
 		&& !PM_InRoll(&self->client->ps)
 		&& !PM_InKnockDown(&self->client->ps)
 		&& !pm_saber_in_special_attack(self->client->ps.torsoAnim)
-		&& (self->NPC->rank == RANK_CREWMAN || self->NPC->rank >= RANK_LT)
-		&& Q_irand(0, 1))
+		&& (self->NPC->rank == RANK_CREWMAN || self->NPC->rank >= RANK_LT))
 	{
 		vec3_t fwd, right, traceto;
 		const vec3_t fwd_angles = { 0, self->client->ps.viewangles[YAW], 0 };
@@ -4559,7 +4558,7 @@ qboolean Jedi_SaberBusy(const gentity_t* self)
 	return qfalse;
 }
 
-qboolean Jedi_InNoAIAnim(const gentity_t* self)
+static qboolean Jedi_InNoAIAnim(const gentity_t* self)
 {
 	if (!self || !self->client)
 	{
@@ -4631,7 +4630,7 @@ qboolean Jedi_InNoAIAnim(const gentity_t* self)
 	return qfalse;
 }
 
-void Jedi_CheckJumpEvasionSafety(usercmd_t* cmd, const evasionType_t evasionType)
+static void Jedi_CheckJumpEvasionSafety(usercmd_t* cmd, const evasionType_t evasionType)
 {
 	if (evasionType != EVASION_OTHER //not a FlipEvasion, which does it's own safety checks
 		&& NPC->client->ps.groundEntityNum != ENTITYNUM_NONE)
@@ -5878,7 +5877,7 @@ static qboolean Jedi_SaberBlock()
 
 extern qboolean NPC_CheckFallPositionOK(const gentity_t* NPC, vec3_t position);
 
-qboolean Jedi_EvasionRoll(gentity_t* ai_ent)
+static qboolean Jedi_EvasionRoll(gentity_t* ai_ent)
 {
 	if (ai_ent->client->NPC_class == CLASS_STORMTROOPER)
 	{
@@ -6748,7 +6747,6 @@ static void Jedi_FaceEnemy(const qboolean doPitch)
 			NPCInfo->desiredPitch += 10;
 		}
 	}
-	//FIXME: else desiredPitch = 0?  Or keep previous?
 }
 
 static void Jedi_DebounceDirectionChanges()
@@ -8706,7 +8704,7 @@ void NPC_Jedi_Pain(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, c
 	}
 }
 
-qboolean Jedi_CheckDanger()
+static qboolean Jedi_CheckDanger()
 {
 	const int alert_event = NPC_CheckAlertEvents(qtrue, qtrue);
 	if (level.alertEvents[alert_event].level >= AEL_DANGER)
@@ -8731,7 +8729,7 @@ qboolean Jedi_CheckDanger()
 
 extern int g_crosshairEntNum;
 
-qboolean Jedi_CheckAmbushPlayer()
+static qboolean Jedi_CheckAmbushPlayer()
 {
 	if (!player || !player->client)
 	{
@@ -9015,7 +9013,7 @@ finish:
 	}
 }
 
-qboolean Jedi_CanPullBackSaber(const gentity_t* self)
+static qboolean Jedi_CanPullBackSaber(const gentity_t* self)
 {
 	if (self->client->ps.saberBlocked == BLOCKED_PARRY_BROKEN && !TIMER_Done(self, "parryTime"))
 	{
@@ -9170,7 +9168,7 @@ void NPC_BSJedi_FollowLeader()
 	}
 }
 
-qboolean Jedi_CheckKataAttack()
+static qboolean Jedi_CheckKataAttack()
 {
 	if (NPCInfo->rank == RANK_CAPTAIN)
 	{
@@ -10077,7 +10075,7 @@ qboolean Rosh_TwinNearBy(const gentity_t* self)
 	return qfalse;
 }
 
-qboolean Kothos_HealRosh()
+static qboolean Kothos_HealRosh()
 {
 	if (NPC->client
 		&& NPC->client->leader
@@ -10164,7 +10162,7 @@ qboolean Kothos_HealRosh()
 	return qfalse;
 }
 
-void Kothos_PowerRosh()
+static void Kothos_PowerRosh()
 {
 	if (NPC->client
 		&& NPC->client->leader)
@@ -10187,7 +10185,7 @@ void Kothos_PowerRosh()
 	}
 }
 
-qboolean Kothos_Retreat()
+static qboolean Kothos_Retreat()
 {
 	STEER::Activate(NPC);
 	STEER::Evade(NPC, NPC->enemy);
@@ -10207,7 +10205,7 @@ constexpr auto TWINS_DANGER_DIST_EASY = 128.0f * 128.0f;
 constexpr auto TWINS_DANGER_DIST_MEDIUM = 192.0f * 192.0f;
 constexpr auto TWINS_DANGER_DIST_HARD = 256.0f * 256.0f;
 
-float Twins_DangerDist()
+static float Twins_DangerDist()
 {
 	switch (g_spskill->integer)
 	{
@@ -10221,7 +10219,7 @@ float Twins_DangerDist()
 	}
 }
 
-qboolean Jedi_InSpecialMove()
+static qboolean Jedi_InSpecialMove()
 {
 	if (NPC->client->ps.torsoAnim == BOTH_KYLE_PA_1
 		|| NPC->client->ps.torsoAnim == BOTH_KYLE_PA_2

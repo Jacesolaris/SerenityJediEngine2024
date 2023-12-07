@@ -546,7 +546,7 @@ saber_moveName_t transitionMove[Q_NUM_QUADS][Q_NUM_QUADS] =
 	}
 };
 
-int PM_AnimLevelForSaberAnim(const int anim)
+static int PM_AnimLevelForSaberAnim(const int anim)
 {
 	if (anim >= BOTH_A1_T__B_ && anim <= BOTH_D1_B____)
 	{
@@ -2739,7 +2739,7 @@ int saber_moveTransitionAngle[Q_NUM_QUADS][Q_NUM_QUADS] =
 	}
 };
 
-int PM_SaberAttackChainAngle(const int move1, const int move2)
+static int PM_SaberAttackChainAngle(const int move1, const int move2)
 {
 	if (move1 == -1 || move2 == -1)
 	{
@@ -2842,7 +2842,7 @@ qboolean PM_SaberKataDone(const int curmove = LS_NONE, const int newmove = LS_NO
 	return qfalse;
 }
 
-qboolean PM_CheckEnemyInBack(const float backCheckDist)
+static qboolean PM_CheckEnemyInBack(const float backCheckDist)
 {
 	if (!pm->gent || !pm->gent->client)
 	{
@@ -2892,7 +2892,7 @@ qboolean PM_CheckEnemyInBack(const float backCheckDist)
 	return qfalse;
 }
 
-saber_moveName_t PM_PickBackStab()
+static saber_moveName_t PM_PickBackStab()
 {
 	if (!pm->gent || !pm->gent->client)
 	{
@@ -2953,7 +2953,7 @@ saber_moveName_t PM_PickBackStab()
 	return LS_A_BACKSTAB;
 }
 
-saber_moveName_t PM_CheckStabDown()
+static saber_moveName_t PM_CheckStabDown()
 {
 	if (!pm->gent || !pm->gent->enemy || !pm->gent->enemy->client)
 	{
@@ -3767,7 +3767,7 @@ saber_moveName_t PM_NPC_Force_Leap_Attack()
 	}
 }
 
-qboolean PM_CheckJumpForwardAttackMove()
+static qboolean PM_CheckJumpForwardAttackMove()
 {
 	if (pm->ps->clientNum < MAX_CLIENTS
 		&& PM_InSecondaryStyle())
@@ -4248,7 +4248,7 @@ qboolean PM_CheckBackflipAttackMove()
 	return qfalse;
 }
 
-saber_moveName_t PM_CheckDualSpinProtect()
+static saber_moveName_t PM_CheckDualSpinProtect()
 {
 	if (pm->ps->clientNum < MAX_CLIENTS
 		&& PM_InSecondaryStyle())
@@ -4324,7 +4324,7 @@ saber_moveName_t PM_CheckDualSpinProtect()
 	return LS_NONE;
 }
 
-saber_moveName_t PM_CheckStaffKata()
+static saber_moveName_t PM_CheckStaffKata()
 {
 	if (pm->ps->clientNum < MAX_CLIENTS
 		&& PM_InSecondaryStyle())
@@ -4505,7 +4505,7 @@ saber_moveName_t PM_CheckPullAttack()
 	return LS_NONE;
 }
 
-saber_moveName_t PM_CheckPlayerAttackFromParry(const int curmove)
+static saber_moveName_t PM_CheckPlayerAttackFromParry(const int curmove)
 {
 	if (curmove >= LS_PARRY_UP && curmove <= LS_REFLECT_LL)
 	{
@@ -6431,7 +6431,7 @@ void PM_SetAnim(const pmove_t* pm, int set_anim_parts, const int anim, const int
 		&pm->ps->legsAnimTimer, &g_entities[pm->ps->clientNum], blendTime); //was pm->gent
 }
 
-bool TorsoAgainstWindTest(gentity_t* ent)
+static bool TorsoAgainstWindTest(gentity_t* ent)
 {
 	if (ent && //valid ent
 		ent->client && //a client
@@ -6539,11 +6539,11 @@ PM_TorsoAnimLightsaber
 // only does idle-ish anims.  Anything that has a timer associated, such as attacks and blocks,
 // are set by PM_WeaponLightsaber()
 
-extern Vehicle_t* G_IsRidingVehicle(const gentity_t* p_ent);
+extern Vehicle_t* G_IsRidingVehicle(const gentity_t* pEnt);
 extern qboolean PM_LandingAnim(int anim);
 qboolean PM_InCartwheel(int anim);
 
-void PM_TorsoAnimLightsaber()
+static void PM_TorsoAnimLightsaber()
 {
 	// *********************************************************
 	// WEAPON_READY
@@ -7184,7 +7184,7 @@ void PM_TorsoAnimLightsaber()
 	}
 }
 
-qboolean PM_IsPistoleer()
+static qboolean PM_IsPistoleer()
 {
 	switch (pm->ps->weapon)
 	{
@@ -9088,7 +9088,7 @@ qboolean PM_InOnGroundAnims(const int anim)
 	return qfalse;
 }
 
-qboolean PM_InSpecialDeathAnim()
+static qboolean PM_InSpecialDeathAnim()
 {
 	switch (pm->ps->legsAnim)
 	{

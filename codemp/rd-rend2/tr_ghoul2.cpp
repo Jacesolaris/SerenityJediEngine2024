@@ -193,11 +193,7 @@ void Mat3x4_Scale(mdxaBone_t* result, const mdxaBone_t* lhs, const float scale)
 	}
 }
 
-void Mat3x4_Lerp(
-	mdxaBone_t* result,
-	const mdxaBone_t* lhs,
-	const mdxaBone_t* rhs,
-	const float t)
+void Mat3x4_Lerp(mdxaBone_t* result, const mdxaBone_t* lhs, const mdxaBone_t* rhs, const float t)
 {
 	for (int i = 0; i < 3; ++i)
 	{
@@ -210,7 +206,7 @@ void Mat3x4_Lerp(
 
 const mdxaBone_t operator +(const mdxaBone_t& lhs, const mdxaBone_t& rhs)
 {
-	mdxaBone_t result;
+	mdxaBone_t result{};
 	for (int i = 0; i < 3; ++i)
 	{
 		for (int j = 0; j < 4; ++j)
@@ -223,7 +219,7 @@ const mdxaBone_t operator +(const mdxaBone_t& lhs, const mdxaBone_t& rhs)
 
 const mdxaBone_t operator -(const mdxaBone_t& lhs, const mdxaBone_t& rhs)
 {
-	mdxaBone_t result;
+	mdxaBone_t result{};
 	for (int i = 0; i < 3; ++i)
 	{
 		for (int j = 0; j < 4; ++j)
@@ -243,7 +239,7 @@ const mdxaBone_t operator *(const mdxaBone_t& lhs, const mdxaBone_t& rhs)
 
 const mdxaBone_t operator *(const mdxaBone_t& lhs, const float scale)
 {
-	mdxaBone_t result;
+	mdxaBone_t result{};
 	for (int i = 0; i < 3; ++i)
 	{
 		for (int j = 0; j < 4; ++j)
@@ -998,7 +994,7 @@ static int G2_ComputeLOD(trRefEntity_t* ent, const model_t* currentModel, int lo
 //
 // Bone Manipulation code
 
-void G2_CreateQuaterion(mdxaBone_t* mat, vec4_t quat)
+static void G2_CreateQuaterion(const mdxaBone_t* mat, vec4_t quat)
 {
 	// this is revised for the 3x4 matrix we use in G2.
 	float t = 1 + mat->matrix[0][0] + mat->matrix[1][1] + mat->matrix[2][2];
@@ -1049,7 +1045,7 @@ void G2_CreateQuaterion(mdxaBone_t* mat, vec4_t quat)
 	}
 }
 
-void G2_CreateMatrixFromQuaterion(mdxaBone_t* mat, vec4_t quat)
+static void G2_CreateMatrixFromQuaterion(mdxaBone_t* mat, vec4_t quat)
 {
 	const float xx = quat[0] * quat[0];
 	const float xy = quat[0] * quat[1];

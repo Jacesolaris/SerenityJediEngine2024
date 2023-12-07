@@ -2127,21 +2127,21 @@ static void PM_SetSpecialMoveValues(void)
 	//default until we decide otherwise
 	pm_flying = FLY_NONE;
 
-	const bgEntity_t* p_ent = pm_entSelf;
+	const bgEntity_t* pEnt = pm_entSelf;
 
-	if (p_ent)
+	if (pEnt)
 	{
 		if (pm->ps->eFlags2 & EF2_FLYING)
 		{
 			pm_flying = FLY_NORMAL;
 		}
-		else if (p_ent->s.NPC_class == CLASS_VEHICLE)
+		else if (pEnt->s.NPC_class == CLASS_VEHICLE)
 		{
-			if (p_ent->m_pVehicle->m_pVehicleInfo->type == VH_FIGHTER)
+			if (pEnt->m_pVehicle->m_pVehicleInfo->type == VH_FIGHTER)
 			{
 				pm_flying = FLY_VEHICLE;
 			}
-			else if (p_ent->m_pVehicle->m_pVehicleInfo->hoverHeight > 0)
+			else if (pEnt->m_pVehicle->m_pVehicleInfo->hoverHeight > 0)
 			{
 				pm_flying = FLY_HOVER;
 			}
@@ -2155,27 +2155,27 @@ static void PM_SetSpecialMoveValues(void)
 //
 //qboolean PM_RocketeersAvoidDangerousFalls(void)
 //{
-//	bgEntity_t *p_ent;
+//	bgEntity_t *pEnt;
 //
-//	p_ent = pm_entSelf;
+//	pEnt = pm_entSelf;
 //
-//	if (p_ent->s.NPC_class == == CLASS_BOBAFETT || p_ent->s.NPC_class == == CLASS_ROCKETTROOPER)
+//	if (pEnt->s.NPC_class == == CLASS_BOBAFETT || pEnt->s.NPC_class == == CLASS_ROCKETTROOPER)
 //	{
-//		if (JET_Flying(p_ent))
+//		if (JET_Flying(pEnt))
 //		{
-//			if (p_ent->s.NPC_class == == CLASS_BOBAFETT)
+//			if (pEnt->s.NPC_class == == CLASS_BOBAFETT)
 //			{
-//				p_ent->jetPackTime = level.time + 2000;
+//				pEnt->jetPackTime = level.time + 2000;
 //			}
 //			else
 //			{
-//				p_ent->jetPackTime = Q3_INFINITE;
+//				pEnt->jetPackTime = Q3_INFINITE;
 //			}
 //		}
 //		else
 //		{
-//			TIMER_Set(p_ent, "jetRecharge", 0);
-//			JET_FlyStart(p_ent);
+//			TIMER_Set(pEnt, "jetRecharge", 0);
+//			JET_FlyStart(pEnt);
 //		}
 //		return qtrue;
 //	}
@@ -2225,16 +2225,16 @@ static void PM_FallToDeath(gentity_t* self)
 
 static void PM_SetVehicleAngles(vec3_t normal)
 {
-	const bgEntity_t* p_ent = pm_entSelf;
+	const bgEntity_t* pEnt = pm_entSelf;
 	vec3_t vAngles;
 	float pitchBias;
 
-	if (!p_ent || p_ent->s.NPC_class != CLASS_VEHICLE)
+	if (!pEnt || pEnt->s.NPC_class != CLASS_VEHICLE)
 	{
 		return;
 	}
 
-	const Vehicle_t* p_veh = p_ent->m_pVehicle;
+	const Vehicle_t* p_veh = pEnt->m_pVehicle;
 
 	//float	curVehicleBankingSpeed;
 	float vehicleBankingSpeed = p_veh->m_pVehicleInfo->bankingSpeed * 32.0f * pml.frametime; //0.25f
@@ -2269,7 +2269,7 @@ static void PM_SetVehicleAngles(vec3_t normal)
 	else if (normal)
 	{
 		//have a valid surface below me
-		PM_pitch_roll_for_slope(p_ent, normal, vAngles);
+		PM_pitch_roll_for_slope(pEnt, normal, vAngles);
 		if (pml.groundTrace.contents & (CONTENTS_WATER | CONTENTS_SLIME | CONTENTS_LAVA))
 		{
 			//on water
@@ -2408,13 +2408,13 @@ static void PM_HoverTrace(void)
 	vec3_t vAng;
 	vec3_t fxAxis[3];
 
-	bgEntity_t* p_ent = pm_entSelf;
-	if (!p_ent || p_ent->s.NPC_class != CLASS_VEHICLE)
+	bgEntity_t* pEnt = pm_entSelf;
+	if (!pEnt || pEnt->s.NPC_class != CLASS_VEHICLE)
 	{
 		return;
 	}
 
-	Vehicle_t* p_veh = p_ent->m_pVehicle;
+	Vehicle_t* p_veh = pEnt->m_pVehicle;
 	const float hoverHeight = p_veh->m_pVehicleInfo->hoverHeight;
 	trace_t* trace = &pml.groundTrace;
 
@@ -2467,7 +2467,7 @@ static void PM_HoverTrace(void)
 #ifdef _GAME //yeah, this is kind of crappy and makes no use of prediction whatsoever
 					if (p_veh->m_pVehicleInfo->iWakeFX)
 					{
-						G_AddEvent((gentity_t*)p_ent, EV_PLAY_EFFECT_ID, p_veh->m_pVehicleInfo->iWakeFX);
+						G_AddEvent((gentity_t*)pEnt, EV_PLAY_EFFECT_ID, p_veh->m_pVehicleInfo->iWakeFX);
 					}
 #endif
 				}
@@ -2744,7 +2744,7 @@ static void PM_Friction(void)
 	vec3_t vec;
 	float control;
 	float friction = pm_friction;
-	const bgEntity_t* p_ent = NULL;
+	const bgEntity_t* pEnt = NULL;
 
 	float* vel = pm->ps->velocity;
 
@@ -2770,19 +2770,19 @@ static void PM_Friction(void)
 
 	if (pm->ps->clientNum >= MAX_CLIENTS)
 	{
-		p_ent = pm_entSelf;
+		pEnt = pm_entSelf;
 	}
 
 	// apply ground friction, even if on ladder
 	if (pm_flying != FLY_VEHICLE &&
-		p_ent &&
-		p_ent->s.NPC_class == CLASS_VEHICLE &&
-		p_ent->m_pVehicle &&
-		p_ent->m_pVehicle->m_pVehicleInfo->type != VH_ANIMAL &&
-		p_ent->m_pVehicle->m_pVehicleInfo->type != VH_WALKER &&
-		p_ent->m_pVehicle->m_pVehicleInfo->friction)
+		pEnt &&
+		pEnt->s.NPC_class == CLASS_VEHICLE &&
+		pEnt->m_pVehicle &&
+		pEnt->m_pVehicle->m_pVehicleInfo->type != VH_ANIMAL &&
+		pEnt->m_pVehicle->m_pVehicleInfo->type != VH_WALKER &&
+		pEnt->m_pVehicle->m_pVehicleInfo->friction)
 	{
-		const float friction1 = p_ent->m_pVehicle->m_pVehicleInfo->friction;
+		const float friction1 = pEnt->m_pVehicle->m_pVehicleInfo->friction;
 		if (!(pm->ps->pm_flags & PMF_TIME_KNOCKBACK) && !(pm->ps->pm_flags & PMF_TIME_NOFRICTION))
 		{
 			control = speed < pm_stopspeed ? pm_stopspeed : speed;
@@ -4218,10 +4218,10 @@ static qboolean pm_check_jump(void)
 
 	if (pm->ps->clientNum >= MAX_CLIENTS)
 	{
-		bgEntity_t* p_ent = pm_entSelf;
+		bgEntity_t* pEnt = pm_entSelf;
 
-		if (p_ent->s.eType == ET_NPC &&
-			p_ent->s.NPC_class == CLASS_VEHICLE)
+		if (pEnt->s.eType == ET_NPC &&
+			pEnt->s.NPC_class == CLASS_VEHICLE)
 		{
 			//no!
 			return qfalse;
@@ -6232,11 +6232,11 @@ static void PM_AirMove(void)
 
 	if (pm->ps->clientNum >= MAX_CLIENTS)
 	{
-		const bgEntity_t* p_ent = pm_entSelf;
+		const bgEntity_t* pEnt = pm_entSelf;
 
-		if (p_ent && p_ent->s.NPC_class == CLASS_VEHICLE)
+		if (pEnt && pEnt->s.NPC_class == CLASS_VEHICLE)
 		{
-			p_veh = p_ent->m_pVehicle;
+			p_veh = pEnt->m_pVehicle;
 		}
 	}
 
@@ -6748,9 +6748,9 @@ static void PM_WalkMove(void)
 	if (pm->ps->clientNum >= MAX_CLIENTS && !VectorCompare(pm->ps->moveDir, vec3_origin))
 	{
 		//NPC
-		const bgEntity_t* p_ent = pm_entSelf;
+		const bgEntity_t* pEnt = pm_entSelf;
 
-		if (p_ent && p_ent->s.NPC_class == CLASS_VEHICLE)
+		if (pEnt && pEnt->s.NPC_class == CLASS_VEHICLE)
 		{
 			// If The UCmds Were Set, But Never Converted Into A MoveDir, Then Make The WishDir From UCmds
 			//--------------------------------------------------------------------------------------------
@@ -8038,11 +8038,11 @@ static void PM_GroundTrace(void)
 
 	if (pm->ps->clientNum >= MAX_CLIENTS)
 	{
-		const bgEntity_t* p_ent = pm_entSelf;
+		const bgEntity_t* pEnt = pm_entSelf;
 
-		if (p_ent && p_ent->s.NPC_class == CLASS_VEHICLE)
+		if (pEnt && pEnt->s.NPC_class == CLASS_VEHICLE)
 		{
-			minNormal = p_ent->m_pVehicle->m_pVehicleInfo->maxSlope;
+			minNormal = pEnt->m_pVehicle->m_pVehicleInfo->maxSlope;
 		}
 	}
 
@@ -9079,7 +9079,7 @@ static qboolean PM_AdjustStandAnimForSlope(void)
 	float diff;
 	float interval;
 	int destAnim;
-	const bgEntity_t* p_ent = pm_entSelf;
+	const bgEntity_t* pEnt = pm_entSelf;
 #define SLOPERECALCVAR pm->ps->slopeRecalcTime //this is purely convenience
 
 	if (!pm->ghoul2)
@@ -9146,7 +9146,7 @@ static qboolean PM_AdjustStandAnimForSlope(void)
 	int legsAnim = pm->ps->legsAnim;
 	//adjust for current legs anim
 
-	if (p_ent->s.NPC_class != CLASS_ATST)
+	if (pEnt->s.NPC_class != CLASS_ATST)
 	{
 		//adjust for current legs anim
 		switch (legsAnim)
@@ -9323,7 +9323,7 @@ static qboolean PM_AdjustStandAnimForSlope(void)
 	else
 	{
 		//in a stand of some sort?
-		if (p_ent->s.NPC_class == CLASS_ATST)
+		if (pEnt->s.NPC_class == CLASS_ATST)
 		{
 			if (legsAnim == BOTH_STAND1 || legsAnim == BOTH_STAND2 || legsAnim == BOTH_CROUCH1IDLE)
 			{
@@ -19301,10 +19301,10 @@ static void PmoveSingle(pmove_t* pmove)
 		pm->ps->groundEntityNum >= MAX_CLIENTS)
 	{
 		//I am a player client, not riding on a vehicle, and potentially standing on an NPC
-		bgEntity_t* p_ent = PM_BGEntForNum(pm->ps->groundEntityNum);
+		bgEntity_t* pEnt = PM_BGEntForNum(pm->ps->groundEntityNum);
 
-		if (p_ent && p_ent->s.eType == ET_NPC &&
-			p_ent->s.NPC_class != CLASS_VEHICLE) //don't bounce on vehicles
+		if (pEnt && pEnt->s.eType == ET_NPC &&
+			pEnt->s.NPC_class != CLASS_VEHICLE) //don't bounce on vehicles
 		{
 			//this is actually an NPC, let's try to bounce of its head to make sure we can't just stand around on top of it.
 			if (pm->ps->velocity[2] < 270)
@@ -19317,16 +19317,16 @@ static void PmoveSingle(pmove_t* pmove)
 #ifdef _GAME
 		else if (!pm->ps->zoomMode &&
 			pm_entSelf //I exist
-			&& p_ent->m_pVehicle) //ent has a vehicle
+			&& pEnt->m_pVehicle) //ent has a vehicle
 		{
-			const gentity_t* gEnt = (gentity_t*)p_ent;
+			const gentity_t* gEnt = (gentity_t*)pEnt;
 			if (gEnt->client
 				&& !gEnt->client->ps.m_iVehicleNum //vehicle is empty
 				&& gEnt->spawnflags & 2) //SUSPENDED
 			{
 				//it's a vehicle, see if we should get in it
 				//if land on an empty, suspended vehicle, get in it
-				p_ent->m_pVehicle->m_pVehicleInfo->Board(p_ent->m_pVehicle, pm_entSelf);
+				pEnt->m_pVehicle->m_pVehicleInfo->Board(pEnt->m_pVehicle, pm_entSelf);
 			}
 		}
 #endif
@@ -19749,7 +19749,7 @@ void Pmove(pmove_t* pmove)
 
 int pm_min_get_up_time(const playerState_t* ps)
 {
-	const bgEntity_t* p_ent = pm_entSelf;
+	const bgEntity_t* pEnt = pm_entSelf;
 	const int npcget_up_time = NPC_KNOCKDOWN_HOLD_EXTRA_TIME;
 
 	if (ps->legsAnim == BOTH_PLAYER_PA_3_FLY
@@ -19758,19 +19758,19 @@ int pm_min_get_up_time(const playerState_t* ps)
 	{
 		return 200;
 	}
-	if (p_ent->s.NPC_class == CLASS_ALORA)
+	if (pEnt->s.NPC_class == CLASS_ALORA)
 	{
 		return 1000;
 	}
-	if (p_ent->s.NPC_class == CLASS_STORMTROOPER)
+	if (pEnt->s.NPC_class == CLASS_STORMTROOPER)
 	{
 		return npcget_up_time + 100;
 	}
-	if (p_ent->s.NPC_class == CLASS_CLONETROOPER)
+	if (pEnt->s.NPC_class == CLASS_CLONETROOPER)
 	{
 		return npcget_up_time + 100;
 	}
-	if (p_ent->s.NPC_class == CLASS_STORMCOMMANDO)
+	if (pEnt->s.NPC_class == CLASS_STORMCOMMANDO)
 	{
 		return npcget_up_time + 100;
 	}
@@ -20308,7 +20308,7 @@ static qboolean PM_CheckRollGetup(void)
 
 qboolean PM_GettingUpFromKnockDown(const float standheight, const float crouchheight)
 {
-	const bgEntity_t* p_ent = pm_entSelf;
+	const bgEntity_t* pEnt = pm_entSelf;
 
 	const int legsAnim = pm->ps->legsAnim;
 
@@ -20353,7 +20353,7 @@ qboolean PM_GettingUpFromKnockDown(const float standheight, const float crouchhe
 #endif
 		if (!pm->ps->legsTimer //our knockdown is over
 			|| pm->ps->legsTimer <= minTimeLeft //or we're strong enough to get up earlier.
-			&& (pm->cmd.upmove > 0 || p_ent->s.NPC_class == CLASS_ALORA)) //and we're trying to get up
+			&& (pm->cmd.upmove > 0 || pEnt->s.NPC_class == CLASS_ALORA)) //and we're trying to get up
 		{
 			//done with the knockdown - FIXME: somehow this is allowing an *instant* getup...???
 			if (pm->cmd.upmove < 0)

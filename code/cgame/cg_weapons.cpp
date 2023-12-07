@@ -1107,7 +1107,7 @@ the weapon hand animation has 3 anims,
 */
 extern qboolean ValidAnimFileIndex(int index);
 
-int CG_MapTorsoToWeaponFrame(const clientInfo_t* ci, const int frame, const int animNum, int weaponNum, int firing)
+static int CG_MapTorsoToWeaponFrame(const clientInfo_t* ci, const int frame, const int animNum, int weaponNum, int firing)
 {
 	// we should use the animNum to map a weapon frame instead of relying on the torso frame
 	if (!ValidAnimFileIndex(ci->animFileIndex))
@@ -1167,7 +1167,7 @@ CG_MachinegunSpinAngle
 constexpr auto SPIN_SPEED = 0.9;
 constexpr auto COAST_TIME = 1000;
 
-float cg_machinegun_spin_angle(centity_t* cent)
+static float cg_machinegun_spin_angle(centity_t* cent)
 {
 	float angle;
 
@@ -1300,7 +1300,7 @@ void CG_CalculateWeaponPosition(vec3_t origin, vec3_t angles)
 Ghoul2 Insert Start
 */
 // set up the appropriate ghoul2 info to a refent
-void CG_SetGhoul2InfoRef(refEntity_t* ent, const refEntity_t* s1)
+static void CG_SetGhoul2InfoRef(refEntity_t* ent, const refEntity_t* s1)
 {
 	ent->ghoul2 = s1->ghoul2;
 	VectorCopy(s1->modelScale, ent->modelScale);
@@ -2871,7 +2871,7 @@ void SetWeaponSelectTime()
 CG_DrawWeaponSelect
 ===================
 */
-extern Vehicle_t* G_IsRidingVehicle(const gentity_t* p_ent);
+extern Vehicle_t* G_IsRidingVehicle(const gentity_t* pEnt);
 extern bool G_IsRidingTurboVehicle(const gentity_t* ent);
 
 void CG_DrawWeaponSelect()
@@ -3260,7 +3260,7 @@ void CG_DrawWeaponSelect()
 CG_WeaponSelectable
 ===============
 */
-qboolean CG_WeaponSelectable(int i, const int original, const qboolean dpMode)
+static qboolean CG_WeaponSelectable(int i, const int original, const qboolean dpMode)
 {
 	if (i > MAX_PLAYER_WEAPONS || !playerUsableWeapons[i])
 	{
@@ -3329,7 +3329,7 @@ qboolean CG_WeaponSelectable(int i, const int original, const qboolean dpMode)
 	return qtrue;
 }
 
-void CG_ToggleATSTWeapon()
+static void CG_ToggleATSTWeapon()
 {
 	if (cg.weaponSelect == WP_ATST_MAIN)
 	{

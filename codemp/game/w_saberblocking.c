@@ -77,7 +77,7 @@ extern void wp_saber_clear_damage_for_ent_num(gentity_t* attacker, int entityNum
 extern void g_do_m_block_response(const gentity_t* speaker_npc_self);
 //////////Defines////////////////
 
-void sab_beh_saber_should_be_disarmed_attacker(gentity_t* attacker, const gentity_t* blocker)
+static void sab_beh_saber_should_be_disarmed_attacker(gentity_t* attacker, const gentity_t* blocker)
 {
 	static trace_t tr;
 
@@ -89,7 +89,7 @@ void sab_beh_saber_should_be_disarmed_attacker(gentity_t* attacker, const gentit
 	}
 }
 
-void sab_beh_saber_should_be_disarmed_blocker(gentity_t* blocker, const gentity_t* attacker)
+static void sab_beh_saber_should_be_disarmed_blocker(gentity_t* blocker, const gentity_t* attacker)
 {
 	static trace_t tr;
 
@@ -200,7 +200,7 @@ qboolean g_accurate_blocking(const gentity_t* blocker, const gentity_t* attacker
 	return qfalse;
 }
 
-void sab_beh_add_mishap_attacker(gentity_t* attacker, const gentity_t* blocker)
+static void sab_beh_add_mishap_attacker(gentity_t* attacker, const gentity_t* blocker)
 {
 	if (attacker->client->ps.fd.blockPoints <= MISHAPLEVEL_NONE)
 	{
@@ -259,7 +259,7 @@ void sab_beh_add_mishap_attacker(gentity_t* attacker, const gentity_t* blocker)
 	}
 }
 
-void sab_beh_add_mishap_Fake_attacker(gentity_t* attacker, const gentity_t* blocker)
+static void sab_beh_add_mishap_Fake_attacker(gentity_t* attacker, const gentity_t* blocker)
 {
 	if (attacker->client->ps.fd.blockPoints <= MISHAPLEVEL_NONE)
 	{
@@ -318,7 +318,7 @@ void sab_beh_add_mishap_Fake_attacker(gentity_t* attacker, const gentity_t* bloc
 	}
 }
 
-void sab_beh_add_mishap_blocker(gentity_t* blocker, const gentity_t* attacker)
+static void sab_beh_add_mishap_blocker(gentity_t* blocker, const gentity_t* attacker)
 {
 	if (blocker->client->ps.fd.blockPoints <= MISHAPLEVEL_NONE)
 	{
@@ -387,7 +387,7 @@ void sab_beh_animate_heavy_slow_bounce_attacker(gentity_t* attacker)
 	attacker->client->ps.userInt3 |= 1 << FLAG_OLDSLOWBOUNCE;
 }
 
-void sab_beh_animate_small_bounce(gentity_t* attacker)
+static void sab_beh_animate_small_bounce(gentity_t* attacker)
 {
 	if (attacker->r.svFlags & SVF_BOT) //NPC only
 	{
@@ -403,7 +403,7 @@ void sab_beh_animate_small_bounce(gentity_t* attacker)
 	}
 }
 
-void sab_beh_animate_heavy_slow_bounce_blocker(gentity_t* blocker, gentity_t* attacker)
+static void sab_beh_animate_heavy_slow_bounce_blocker(gentity_t* blocker, gentity_t* attacker)
 {
 	blocker->client->ps.userInt3 |= 1 << FLAG_SLOWBOUNCE;
 	blocker->client->ps.userInt3 |= 1 << FLAG_OLDSLOWBOUNCE;
@@ -428,7 +428,7 @@ void sab_beh_animate_slow_bounce_blocker(gentity_t* blocker)
 
 ////////Bounces//////////
 
-qboolean sab_beh_attack_blocked(gentity_t* attacker, gentity_t* blocker, const qboolean force_mishap)
+static qboolean sab_beh_attack_blocked(gentity_t* attacker, gentity_t* blocker, const qboolean force_mishap)
 {
 	//if the attack is blocked -(Im the attacker)
 	const qboolean m_blocking = blocker->client->ps.ManualBlockingFlags & 1 << PERFECTBLOCKING ? qtrue : qfalse;
@@ -551,7 +551,7 @@ qboolean sab_beh_attack_blocked(gentity_t* attacker, gentity_t* blocker, const q
 	return qtrue;
 }
 
-void sab_beh_add_balance(const gentity_t* self, int amount)
+static void sab_beh_add_balance(const gentity_t* self, int amount)
 {
 	if (!walk_check(self))
 	{
@@ -582,7 +582,7 @@ void sab_beh_add_balance(const gentity_t* self, int amount)
 
 /////////Functions//////////////
 
-qboolean sab_beh_attack_vs_attack(gentity_t* attacker, gentity_t* blocker)
+static qboolean sab_beh_attack_vs_attack(gentity_t* attacker, gentity_t* blocker)
 {
 	//set the saber behavior for two attacking blades hitting each other
 	const qboolean atkfake = attacker->client->ps.userInt3 & 1 << FLAG_ATTACKFAKE ? qtrue : qfalse;

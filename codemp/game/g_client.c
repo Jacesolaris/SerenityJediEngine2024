@@ -664,7 +664,7 @@ Find the spot that we DON'T want to use
 */
 #define	MAX_SPAWN_POINTS	128
 
-gentity_t* SelectNearestDeathmatchSpawnPoint(vec3_t from)
+static gentity_t* SelectNearestDeathmatchSpawnPoint(vec3_t from)
 {
 	float nearestDist = 999999;
 	gentity_t* nearestSpot = NULL;
@@ -702,18 +702,11 @@ gentity_t* SelectRandomDeathmatchSpawnPoint(qboolean isbot)
 	gentity_t* spot = NULL;
 
 	while ((spot = G_Find(spot, FOFS(classname), "info_player_deathmatch")) != NULL && count < MAX_SPAWN_POINTS)
-	{
+	{	
 		if (SpotWouldTelefrag(spot))
 		{
 			continue;
 		}
-
-		//if(((spot->flags & FL_NO_BOTS) && isbot) ||
-		//   ((spot->flags & FL_NO_HUMANS) && !isbot))
-		//{
-		//	// spot is not for this human/bot player
-		//	continue;
-		//}
 
 		spots[count] = spot;
 		count++;

@@ -7903,13 +7903,13 @@ void G_Damage(gentity_t* targ, gentity_t* inflictor, gentity_t* attacker, vec3_t
 	}
 }
 
-void G_DamageFromKiller(gentity_t* p_ent, const gentity_t* p_veh_ent, gentity_t* attacker, vec3_t org, const int damage,
+void G_DamageFromKiller(gentity_t* pEnt, const gentity_t* p_veh_ent, gentity_t* attacker, vec3_t org, const int damage,
 	const int dflags,
 	int mod)
 {
 	gentity_t* killer = attacker, * inflictor = attacker;
 	qboolean temp_inflictor = qfalse;
-	if (!p_ent || !p_veh_ent || !p_veh_ent->client)
+	if (!pEnt || !p_veh_ent || !p_veh_ent->client)
 	{
 		return;
 	}
@@ -7943,7 +7943,7 @@ void G_DamageFromKiller(gentity_t* p_ent, const gentity_t* p_veh_ent, gentity_t*
 	{
 		killer = (gentity_t*)killer->m_pVehicle->m_pPilot;
 	}
-	G_Damage(p_ent, inflictor, killer, NULL, org, damage, dflags, mod);
+	G_Damage(pEnt, inflictor, killer, NULL, org, damage, dflags, mod);
 	if (temp_inflictor)
 	{
 		G_FreeEntity(inflictor);

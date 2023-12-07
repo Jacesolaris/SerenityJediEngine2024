@@ -812,7 +812,7 @@ frame.
 //
 // Bone Manipulation code
 
-void G2_CreateQuaterion(const mdxaBone_t* mat, vec4_t quat)
+static void G2_CreateQuaterion(const mdxaBone_t* mat, vec4_t quat)
 {
 	// this is revised for the 3x4 matrix we use in G2.
 	const float t = 1 + mat->matrix[0][0] + mat->matrix[1][1] + mat->matrix[2][2];
@@ -867,7 +867,7 @@ void G2_CreateQuaterion(const mdxaBone_t* mat, vec4_t quat)
 	}
 }
 
-void G2_CreateMatrixFromQuaterion(mdxaBone_t* mat, vec4_t quat)
+static void G2_CreateMatrixFromQuaterion(mdxaBone_t* mat, vec4_t quat)
 {
 	const float xx = quat[0] * quat[0];
 	const float xy = quat[0] * quat[1];

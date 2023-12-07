@@ -40,7 +40,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #include "g_nav.h"
 #include "g_functions.h"
 
-extern Vehicle_t* G_IsRidingVehicle(const gentity_t* p_ent);
+extern Vehicle_t* G_IsRidingVehicle(const gentity_t* pEnt);
 
 int teamNumbers[TEAM_NUM_TEAMS];
 int teamStrength[TEAM_NUM_TEAMS];

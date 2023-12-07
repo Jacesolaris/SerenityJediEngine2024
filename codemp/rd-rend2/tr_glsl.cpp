@@ -609,7 +609,7 @@ static void GLSL_BindShaderInterface(shaderProgram_t* program)
 	}
 }
 
-GLenum ToGLShaderType(GPUShaderType type)
+static GLenum ToGLShaderType(GPUShaderType type)
 {
 	switch (type)
 	{
@@ -804,7 +804,7 @@ static bool GLSL_LoadGPUShader(
 	return builder.Build(program);
 }
 
-void GLSL_InitUniforms(shaderProgram_t* program)
+static void GLSL_InitUniforms(shaderProgram_t* program)
 {
 	program->uniforms = (GLint*)Z_Malloc(
 		UNIFORM_COUNT * sizeof(*program->uniforms), TAG_GENERAL);
@@ -893,7 +893,7 @@ void GLSL_InitUniforms(shaderProgram_t* program)
 
 		if (numMembers > 0)
 		{
-			GLuint memberIndices[128];
+			GLuint memberIndices[128]{};
 			qglGetActiveUniformBlockiv(
 				program->program,
 				i,
@@ -954,7 +954,7 @@ void GLSL_InitUniforms(shaderProgram_t* program)
 	}
 }
 
-void GLSL_FinishGPUShader(shaderProgram_t* program)
+static void GLSL_FinishGPUShader(shaderProgram_t* program)
 {
 #if defined(_DEBUG)
 	GLSL_ShowProgramUniforms(program->program);
@@ -1286,7 +1286,7 @@ void GLSL_SetUniformMatrix4x4(shaderProgram_t* program, int uniformNum, const fl
 	qglUniformMatrix4fv(uniforms[uniformNum], numElements, GL_FALSE, matrix);
 }
 
-void GLSL_DeleteGPUShader(shaderProgram_t* program)
+static void GLSL_DeleteGPUShader(shaderProgram_t* program)
 {
 	if (program->program)
 	{
@@ -1337,7 +1337,7 @@ static bool GLSL_IsValidPermutationForLight(int lightType, int shaderCaps)
 	return true;
 }
 
-Block* FindBlock(const char* name, Block* blocks, size_t numBlocks)
+static Block* FindBlock(const char* name, Block* blocks, size_t numBlocks)
 {
 	for (size_t i = 0; i < numBlocks; ++i)
 	{
@@ -1397,7 +1397,7 @@ static const GPUProgramDesc* LoadProgramSource(
 
 	if (r_externalGLSL->integer)
 	{
-		char* buffer;
+		char* buffer = nullptr;
 		char programPath[MAX_QPATH];
 		Com_sprintf(programPath, sizeof(programPath), "glsl/%s.glsl", programName);
 
@@ -1421,7 +1421,7 @@ static int GLSL_LoadGPUProgramGeneric(
 	int numPrograms = 0;
 	Allocator allocator(scratchAlloc.Base(), scratchAlloc.GetSize());
 
-	char extradefines[1200];
+	char extradefines[1200]{};
 	const GPUProgramDesc* programDesc =
 		LoadProgramSource("generic", allocator, fallback_genericProgram);
 	for (int i = 0; i < GENERICDEF_COUNT; i++)
@@ -1495,7 +1495,7 @@ static int GLSL_LoadGPUProgramFogPass(
 	int numPrograms = 0;
 	Allocator allocator(scratchAlloc.Base(), scratchAlloc.GetSize());
 
-	char extradefines[1200];
+	char extradefines[1200]{};
 	const GPUProgramDesc* programDesc =
 		LoadProgramSource("fogpass", allocator, fallback_fogpassProgram);
 	for (int i = 0; i < FOGDEF_COUNT; i++)
@@ -1558,7 +1558,7 @@ static int GLSL_LoadGPUProgramRefraction(
 	int numPrograms = 0;
 	Allocator allocator(scratchAlloc.Base(), scratchAlloc.GetSize());
 
-	char extradefines[1200];
+	char extradefines[1200]{};
 	const GPUProgramDesc* programDesc =
 		LoadProgramSource("refraction", allocator, fallback_refractionProgram);
 	for (int i = 0; i < REFRACTIONDEF_COUNT; i++)
@@ -1625,7 +1625,7 @@ static int GLSL_LoadGPUProgramLightAll(
 	int numPrograms = 0;
 	Allocator allocator(scratchAlloc.Base(), scratchAlloc.GetSize());
 
-	char extradefines[1200];
+	char extradefines[1200]{};
 	const GPUProgramDesc* programDesc =
 		LoadProgramSource("lightall", allocator, fallback_lightallProgram);
 	const bool useFastLight =
@@ -1894,7 +1894,7 @@ static int GLSL_LoadGPUProgramVShadow(
 {
 	Allocator allocator(scratchAlloc.Base(), scratchAlloc.GetSize());
 
-	char extradefines[1200];
+	char extradefines[1200]{};
 	const GPUProgramDesc* programDesc =
 		LoadProgramSource("shadowvolume", allocator, fallback_shadowvolumeProgram);
 	const uint32_t attribs = ATTR_POSITION | ATTR_BONE_INDEXES | ATTR_BONE_WEIGHTS;
@@ -1963,7 +1963,7 @@ static int GLSL_LoadGPUProgramTonemap(
 	Allocator& scratchAlloc)
 {
 	Allocator allocator(scratchAlloc.Base(), scratchAlloc.GetSize());
-	char extradefines[1200];
+	char extradefines[1200]{};
 	const GPUProgramDesc* programDesc =
 		LoadProgramSource("tonemap", allocator, fallback_tonemapProgram);
 	const uint32_t attribs = ATTR_POSITION | ATTR_TEXCOORD0;
@@ -2001,7 +2001,7 @@ static int GLSL_LoadGPUProgramCalcLuminanceLevel(
 	int numPrograms = 0;
 	Allocator allocator(scratchAlloc.Base(), scratchAlloc.GetSize());
 
-	char extradefines[1200];
+	char extradefines[1200]{};
 	const GPUProgramDesc* programDesc =
 		LoadProgramSource("calclevels4x", allocator, fallback_calclevels4xProgram);
 	for (int i = 0; i < 2; i++)
@@ -2083,7 +2083,7 @@ static int GLSL_LoadGPUProgramDepthBlur(
 	int numPrograms = 0;
 	Allocator allocator(scratchAlloc.Base(), scratchAlloc.GetSize());
 
-	char extradefines[1200];
+	char extradefines[1200]{};
 	const GPUProgramDesc* programDesc =
 		LoadProgramSource("depthBlur", allocator, fallback_depthblurProgram);
 	for (int i = 0; i < 2; i++)
@@ -2123,7 +2123,7 @@ static int GLSL_LoadGPUProgramGaussianBlur(
 {
 	Allocator allocator(scratchAlloc.Base(), scratchAlloc.GetSize());
 
-	char extradefines[1200];
+	char extradefines[1200]{};
 	const GPUProgramDesc* programDesc =
 		LoadProgramSource("gaussian_blur", allocator, fallback_gaussian_blurProgram);
 	const uint32_t attribs = 0;
@@ -2195,7 +2195,7 @@ static int GLSL_LoadGPUProgramSurfaceSprites(
 	int numPrograms = 0;
 	Allocator allocator(scratchAlloc.Base(), scratchAlloc.GetSize());
 
-	char extradefines[1200];
+	char extradefines[1200]{};
 	const GPUProgramDesc* programDesc =
 		LoadProgramSource("surface_sprites", allocator, fallback_surface_spritesProgram);
 	const uint32_t attribs = ATTR_POSITION | ATTR_POSITION2 | ATTR_NORMAL | ATTR_COLOR;
@@ -2474,7 +2474,7 @@ void GLSL_BindNullProgram(void)
 
 void GLSL_VertexAttribsState(uint32_t stateBits, VertexArraysProperties* vertexArraysOut)
 {
-	VertexArraysProperties vertexArraysLocal;
+	VertexArraysProperties vertexArraysLocal{};
 	VertexArraysProperties* vertexArrays = vertexArraysOut;
 
 	if (!vertexArrays)

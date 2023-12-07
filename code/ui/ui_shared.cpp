@@ -2822,7 +2822,6 @@ commandDef_t commandList[] =
 	{"play", &Script_Play}, // group/name
 	{"playVoice", &Script_PlayVoice}, // group/name
 	{"stopVoice", &Script_StopVoice}, // group/name
-	//  {"playlooped",	&Script_playLooped},			// group/name
 	{"setasset", &Script_SetAsset}, // works on this
 	{"setbackground", &Script_SetBackground}, // works on this
 	{"setcolor", &Script_SetColor}, // works on this
@@ -11340,6 +11339,7 @@ void Menu_HandleKey(menuDef_t* menu, int key, qboolean down)
 		Menu_SetPrevCursorItem(menu);
 		break;
 
+	case A_PAD0_GUIDE:
 	case A_ESCAPE:
 		if (!g_waitingForKey && menu->onESC)
 		{

@@ -325,7 +325,7 @@ Find the spot that we DON'T want to use
 */
 constexpr auto MAX_SPAWN_POINTS = 128;
 
-gentity_t* SelectNearestDeathmatchSpawnPoint(vec3_t from, team_t team)
+static gentity_t* SelectNearestDeathmatchSpawnPoint(vec3_t from, team_t team)
 {
 	float nearestDist = static_cast<float>(WORLD_SIZE) * static_cast<float>(WORLD_SIZE);
 	gentity_t* nearestSpot = nullptr;
@@ -333,13 +333,6 @@ gentity_t* SelectNearestDeathmatchSpawnPoint(vec3_t from, team_t team)
 
 	while ((spot = G_Find(spot, FOFS(classname), "info_player_deathmatch")) != nullptr)
 	{
-		/*if ( team == TEAM_RED && ( spot->spawnflags & 2 ) ) {
-			continue;
-		}
-		if ( team == TEAM_BLUE && ( spot->spawnflags & 1 ) ) {
-			continue;
-		}*/
-
 		if (spot->targetname != nullptr)
 		{
 			//this search routine should never find a spot that is targetted
@@ -364,7 +357,7 @@ go to a random point that doesn't telefrag
 ================
 */
 
-gentity_t* SelectRandomDeathmatchSpawnPoint(team_t team)
+static gentity_t* SelectRandomDeathmatchSpawnPoint(team_t team)
 {
 	gentity_t* spots[MAX_SPAWN_POINTS]{};
 
@@ -2410,7 +2403,7 @@ void G_RemoveHolsterModels(gentity_t* ent)
 	}
 }
 
-void G_AddWeaponModels(gentity_t* ent)
+static void G_AddWeaponModels(gentity_t* ent)
 {
 	if (!ent || !ent->client)
 	{

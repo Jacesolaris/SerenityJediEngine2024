@@ -124,9 +124,9 @@ static bool Update( Vehicle_t *p_veh, const usercmd_t *pUcmd )
 */
 
 // Board this Vehicle (get on). The first entity to board an empty vehicle becomes the Pilot.
-static bool Board(Vehicle_t* p_veh, bgEntity_t* p_ent)
+static bool Board(Vehicle_t* p_veh, bgEntity_t* pEnt)
 {
-	if (!g_vehicleInfo[VEHICLE_BASE].Board(p_veh, p_ent))
+	if (!g_vehicleInfo[VEHICLE_BASE].Board(p_veh, pEnt))
 		return false;
 
 	// Set the board wait time (they won't be able to do anything, including getting off, for this amount of time).

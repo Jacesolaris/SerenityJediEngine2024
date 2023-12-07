@@ -3738,11 +3738,7 @@ void G2_SetSurfaceOnOffFromSkin(CGhoul2Info* ghlInfo, qhandle_t renderSkin);	//t
 #endif
 void Mat3x4_Multiply(mdxaBone_t* out, const mdxaBone_t* in2, const mdxaBone_t* in);
 void Mat3x4_Scale(mdxaBone_t* result, const mdxaBone_t* lhs, const float scale);
-void Mat3x4_Lerp(
-	mdxaBone_t* result,
-	const mdxaBone_t* lhs,
-	const mdxaBone_t* rhs,
-	const float t);
+void Mat3x4_Lerp(mdxaBone_t* result, const mdxaBone_t* lhs, const mdxaBone_t* rhs, const float t);
 const mdxaBone_t operator +(const mdxaBone_t& lhs, const mdxaBone_t& rhs);
 const mdxaBone_t operator -(const mdxaBone_t& lhs, const mdxaBone_t& rhs);
 const mdxaBone_t operator *(const mdxaBone_t& lhs, const mdxaBone_t& rhs);

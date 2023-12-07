@@ -2668,7 +2668,7 @@ R_LoadFogs
 
 =================
 */
-static void R_LoadFogs(world_t* worldData, lump_t* l, lump_t* brushesLump, lump_t* sidesLump) 
+static void R_LoadFogs(world_t* worldData, lump_t* l, lump_t* brushesLump, lump_t* sidesLump)
 {
 	int			i;
 	fog_t* out;
@@ -3092,7 +3092,7 @@ static qboolean R_ParseSpawnVars(char* spawnVarChars, int maxSpawnVarChars, int*
 	return qtrue;
 }
 
-void R_LoadEnvironmentJson(const char* baseName)
+static void R_LoadEnvironmentJson(const char* baseName)
 {
 	char filename[MAX_QPATH];
 

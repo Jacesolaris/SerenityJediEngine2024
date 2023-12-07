@@ -216,7 +216,7 @@ extern int PM_PickAnim(const gentity_t* self, int minAnim, int maxAnim);
 extern void DoImpact(gentity_t* self, gentity_t* other, qboolean damage_self, const trace_t* trace);
 extern saber_moveName_t transitionMove[Q_NUM_QUADS][Q_NUM_QUADS];
 
-extern Vehicle_t* G_IsRidingVehicle(const gentity_t* p_ent);
+extern Vehicle_t* G_IsRidingVehicle(const gentity_t* pEnt);
 
 Vehicle_t* PM_RidingVehicle()
 {

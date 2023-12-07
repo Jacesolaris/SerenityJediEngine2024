@@ -458,7 +458,7 @@ int WeaponAltAttackAnim[WP_NUM_WEAPONS] =
 	BOTH_ATTACK1 //WP_TURRET,
 };
 
-qboolean BG_FileExists(const char* fileName)
+static qboolean BG_FileExists(const char* fileName)
 {
 	if (fileName && fileName[0])
 	{
@@ -2398,7 +2398,7 @@ COM_BitCheck
   Allows bit-wise checks on arrays with more than one item (> 32 bits)
 ==================
 */
-qboolean COM_BitCheck(const int array[], int bit_num)
+static qboolean COM_BitCheck(const int array[], int bit_num)
 {
 	int i = 0;
 	while (bit_num > 31)

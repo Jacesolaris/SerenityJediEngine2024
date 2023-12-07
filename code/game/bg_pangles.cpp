@@ -52,7 +52,7 @@ extern qboolean PM_BlockHoldStaffAnim(int anim);
 extern qboolean PM_InReboundHold(int anim);
 extern qboolean PM_InKnockDownNoGetup(const playerState_t* ps);
 extern qboolean PM_InGetUpNoRoll(const playerState_t* ps);
-extern Vehicle_t* G_IsRidingVehicle(const gentity_t* p_ent);
+extern Vehicle_t* G_IsRidingVehicle(const gentity_t* pEnt);
 extern void WP_ForcePowerDrain(const gentity_t* self, forcePowers_t force_power, int override_amt);
 extern qboolean G_ControlledByPlayer(const gentity_t* self);
 extern qboolean PM_WalkingOrRunningAnim(int anim);
@@ -70,7 +70,7 @@ extern qboolean player_locked;
 extern pmove_t* pm;
 extern pml_t pml;
 
-void BG_IK_MoveLimb(CGhoul2Info_v& ghoul2, const int boltIndex, const char* anim_bone, const char* first_bone,
+static void BG_IK_MoveLimb(CGhoul2Info_v& ghoul2, const int boltIndex, const char* anim_bone, const char* first_bone,
 	const char* second_bone,
 	const int time, const entityState_t* ent, const int anim_file_index, const int basePose,
 	vec3_t desired_pos, qboolean* ik_in_progress, vec3_t origin,
@@ -158,7 +158,7 @@ void BG_IK_MoveLimb(CGhoul2Info_v& ghoul2, const int boltIndex, const char* anim
 		vec3_t torg;
 		vec3_t hold_point{};
 		//actively update our ik state.
-		sharedIKMoveParams_t ik_m;
+		sharedIKMoveParams_t ik_m{};
 		CRagDollUpdateParams tu_parms;
 		vec3_t t_angles;
 
@@ -262,7 +262,7 @@ void BG_IK_MoveLimb(CGhoul2Info_v& ghoul2, const int boltIndex, const char* anim
 	}
 }
 
-void PM_IKUpdate(gentity_t* ent)
+static void PM_IKUpdate(gentity_t* ent)
 {
 	//The bone we're holding them by and the next bone after that
 	const auto anim_bone = "lower_lumbar";
@@ -413,7 +413,7 @@ void BG_G2SetBoneAngles(const centity_t* cent, const int boneIndex, const vec3_t
 constexpr auto MAX_YAWSPEED_X_WING = 1;
 constexpr auto MAX_PITCHSPEED_X_WING = 1;
 
-void PM_ScaleUcmd(const playerState_t* ps, usercmd_t* cmd, const gentity_t* gent)
+static void PM_ScaleUcmd(const playerState_t* ps, usercmd_t* cmd, const gentity_t* gent)
 {
 	if (G_IsRidingVehicle(gent))
 	{
@@ -864,7 +864,7 @@ int pm_min_get_up_time(const gentity_t* ent)
 	return 200;
 }
 
-float GetSelfTorsoKnockdownAnimPoint(gentity_t* self)
+static float GetSelfTorsoKnockdownAnimPoint(gentity_t* self)
 {
 	float current = 0.0f;
 	int end = 0;
@@ -1264,7 +1264,7 @@ qboolean PM_AdjustAngleForWallJump(gentity_t* ent, usercmd_t* ucmd, const qboole
 qboolean pm_adjust_angles_for_bf_kick(gentity_t* self, usercmd_t* ucmd, vec3_t fwd_angs, const qboolean aim_front)
 {
 	gentity_t* entity_list[MAX_GENTITIES];
-	vec3_t mins, maxs;
+	vec3_t mins{}, maxs{};
 	const int radius = self->maxs[0] * 1.5f + self->maxs[0] * 1.5f + STAFF_KICK_RANGE + 24.0f;
 	//a little wide on purpose
 	vec3_t center, v_fwd;
@@ -1549,7 +1549,7 @@ qboolean G_OkayToLean(const playerState_t* ps, const usercmd_t* cmd, const qbool
 	return qfalse;
 }
 
-qboolean G_OkayToDoStandingBlock(const playerState_t* ps, const usercmd_t* cmd, const qboolean interrupt_okay)
+static qboolean G_OkayToDoStandingBlock(const playerState_t* ps, const usercmd_t* cmd, const qboolean interrupt_okay)
 {
 	if ((ps->clientNum < MAX_CLIENTS || G_ControlledByPlayer(&g_entities[ps->clientNum])) //player
 		&& ps->groundEntityNum != ENTITYNUM_NONE //on ground

@@ -2872,21 +2872,25 @@ static void UI_BuildPlayerModel_List(const qboolean inGameLoad)
 					}
 				}
 			}
-			if (iSkinParts != 7)
+			if (iSkinParts < 7)
 			{
 				//didn't get a skin for each, then skip this model.
 				UI_FreeSpecies(species);
 				continue;
 			}
 			uiInfo.playerSpeciesCount++;
-			if (!inGameLoad && ui_PrecacheModels.integer)
+
+			if (ui_com_rend2.integer == 0) //rend2 is off
 			{
-				CGhoul2Info_v ghoul2;
-				Com_sprintf(fpath, sizeof fpath, "models/players/%s/model.glm", dirptr);
-				const int g2Model = DC->g2_InitGhoul2Model(ghoul2, fpath, 0, 0, 0, 0, 0);
-				if (g2Model >= 0)
+				if (!inGameLoad && ui_PrecacheModels.integer)
 				{
-					DC->g2_RemoveGhoul2Model(ghoul2, 0);
+					CGhoul2Info_v ghoul2;
+					Com_sprintf(fpath, sizeof fpath, "models/players/%s/model.glm", dirptr);
+					const int g2Model = DC->g2_InitGhoul2Model(ghoul2, fpath, 0, 0, 0, 0, 0);
+					if (g2Model >= 0)
+					{
+						DC->g2_RemoveGhoul2Model(ghoul2, 0);
+					}
 				}
 			}
 		}
@@ -5458,6 +5462,36 @@ static void UI_SetPowerTitleText(const qboolean showAllocated)
 	}
 }
 
+static int UI_CountForcePowers(void)
+{
+	const client_t* cl = &svs.clients[0];
+
+	if (cl && cl->gentity)
+	{
+		const playerState_t* ps = cl->gentity->client;
+
+		return ps->forcePowerLevel[FP_HEAL] +
+			ps->forcePowerLevel[FP_TELEPATHY] +
+			ps->forcePowerLevel[FP_PROTECT] +
+			ps->forcePowerLevel[FP_ABSORB] +
+			ps->forcePowerLevel[FP_GRIP] +
+			ps->forcePowerLevel[FP_LIGHTNING] +
+			ps->forcePowerLevel[FP_RAGE] +
+			ps->forcePowerLevel[FP_DRAIN];
+	}
+	else
+	{
+		return uiInfo.forcePowerLevel[FP_HEAL] +
+			uiInfo.forcePowerLevel[FP_TELEPATHY] +
+			uiInfo.forcePowerLevel[FP_PROTECT] +
+			uiInfo.forcePowerLevel[FP_ABSORB] +
+			uiInfo.forcePowerLevel[FP_GRIP] +
+			uiInfo.forcePowerLevel[FP_LIGHTNING] +
+			uiInfo.forcePowerLevel[FP_RAGE] +
+			uiInfo.forcePowerLevel[FP_DRAIN];
+	}
+}
+
 //. Find weapons button and make active/inactive  (Used by Force Power Allocation screen)
 static void UI_ForcePowerWeaponsButton(qboolean activeFlag)
 {
@@ -5468,11 +5502,13 @@ static void UI_ForcePowerWeaponsButton(qboolean activeFlag)
 		return;
 	}
 
-	// Cheats are on so lets always let us pass
-	if (trap_Cvar_VariableValue("helpUsObi") != 0)
+	// Cheats are on so lets always let us pass or total light and dark powers are at maximum level 3   ( 3 levels * ( 4ls + 4ds ) = 24 )
+	if ((trap_Cvar_VariableValue("helpUsObi") != 0) || (UI_CountForcePowers() >= 24))
+	{
 		activeFlag = qtrue;
+	}
 
-	itemDef_t* item = Menu_FindItemByName(menu, "weaponbutton");
+	const auto item = Menu_FindItemByName(menu, "weaponbutton");
 	if (item)
 	{
 		// Make it active
@@ -5542,7 +5578,6 @@ static void UI_ForceHelpActive()
 	// First time, show instructions
 	if (tier_storyinfo == 1)
 	{
-		//		Menus_OpenByName("ingameForceHelp");
 		Menus_ActivateByName("ingameForceHelp");
 	}
 }
@@ -7139,18 +7174,6 @@ static void UI_UpdateSaberHilt(const qboolean second_saber)
 	}
 }
 
-/*
-static void UI_UpdateSaberColor( qboolean second_saber )
-{
-	int saber_number;
-	if (second_saber)
-		saber_number = 2;
-	else
-		saber_number = 1;
-
-	ui.Cmd_ExecuteText( EXEC_APPEND, va("sabercolor %i %s\n",saber_number, Cvar_VariableString("g_saber_color")));
-}
-*/
 char GoToMenu[1024];
 
 /*
@@ -7189,8 +7212,6 @@ void UI_CheckVid1Data(const char* menu_to, const char* warning_menu_name)
 
 	if (apply_changes->window.flags & WINDOW_VISIBLE) // Is the APPLY CHANGES button active?
 	{
-		//		Menus_SaveGoToMenu(menuTo);							// Save menu you're going to
-		//		Menus_HideItems(menu->window.name);					// HIDE videMenu in case you have to come back
 		Menus_OpenByName(warning_menu_name); // Give warning
 	}
 	else

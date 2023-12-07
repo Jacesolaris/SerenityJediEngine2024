@@ -171,7 +171,7 @@ extern float EvalWaveFormClamped(const waveForm_t* wf);
 static void ComputeTexMods(shaderStage_t* pStage, int bundleNum, float* outMatrix, float* outOffTurb)
 {
 	int tm;
-	float matrix[6], currentmatrix[6];
+	float matrix[6]{}, currentmatrix[6]{};
 	textureBundle_t* bundle = &pStage->bundle[bundleNum];
 
 	matrix[0] = 1.0f; matrix[2] = 0.0f; matrix[4] = 0.0f;
@@ -1418,7 +1418,7 @@ static void RB_IterateStagesGeneric(shaderCommands_t* input, const VertexArraysP
 		int index = 0;
 		bool useAlphaTestGE192 = false;
 		bool forceRefraction = false;
-		vec4_t disintegrationInfo;
+		vec4_t disintegrationInfo{};
 
 		if (!pStage)
 		{
@@ -1577,7 +1577,7 @@ static void RB_IterateStagesGeneric(shaderCommands_t* input, const VertexArraysP
 
 		if (forceRefraction)
 		{
-			vec4_t color;
+			vec4_t color{};
 			color[0] =
 				color[1] =
 				color[2] = powf(2.0f, r_cameraExposure->value);

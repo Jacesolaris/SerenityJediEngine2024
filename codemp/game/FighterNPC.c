@@ -38,7 +38,7 @@ extern void ChangeWeapon(const gentity_t* ent, int newWeapon);
 extern int PM_AnimLength(animNumber_t anim);
 extern void G_VehicleTrace(trace_t* results, const vec3_t start, const vec3_t tMins, const vec3_t tMaxs,
 	const vec3_t end, int pass_entity_num, int contentmask);
-extern void G_DamageFromKiller(gentity_t* p_ent, gentity_t* pVehEnt, gentity_t* attacker, vec3_t org, int damage,
+extern void G_DamageFromKiller(gentity_t* pEnt, gentity_t* pVehEnt, gentity_t* attacker, vec3_t org, int damage,
 	int dflags, int mod);
 #endif
 
@@ -123,9 +123,9 @@ static qboolean Update(Vehicle_t* p_veh, const usercmd_t* pUcmd)
 }
 
 // Board this Vehicle (get on). The first entity to board an empty vehicle becomes the Pilot.
-static qboolean Board(Vehicle_t* p_veh, bgEntity_t* p_ent)
+static qboolean Board(Vehicle_t* p_veh, bgEntity_t* pEnt)
 {
-	if (!g_vehicleInfo[VEHICLE_BASE].Board(p_veh, p_ent))
+	if (!g_vehicleInfo[VEHICLE_BASE].Board(p_veh, pEnt))
 		return qfalse;
 
 	// Set the board wait time (they won't be able to do anything, including getting off, for this amount of time).
@@ -135,9 +135,9 @@ static qboolean Board(Vehicle_t* p_veh, bgEntity_t* p_ent)
 }
 
 // Eject an entity from the vehicle.
-static qboolean Eject(Vehicle_t* p_veh, bgEntity_t* p_ent, const qboolean forceEject)
+static qboolean Eject(Vehicle_t* p_veh, bgEntity_t* pEnt, const qboolean forceEject)
 {
-	if (g_vehicleInfo[VEHICLE_BASE].Eject(p_veh, p_ent, forceEject))
+	if (g_vehicleInfo[VEHICLE_BASE].Eject(p_veh, pEnt, forceEject))
 	{
 		return qtrue;
 	}

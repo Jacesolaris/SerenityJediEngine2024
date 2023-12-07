@@ -81,7 +81,7 @@ void IN_Button10Up(void);
 void IN_Button6Down(void);
 void IN_Button6Up(void);
 
-void IN_UseGivenForce(void)
+static void IN_UseGivenForce(void)
 {
 	const char* c = Cmd_Argv(1);
 	int force_num;
@@ -155,14 +155,14 @@ void IN_UseGivenForce(void)
 	}
 }
 
-void IN_MLookDown(void)
+static void IN_MLookDown(void)
 {
 	in_mlooking = qtrue;
 }
 
 void IN_CenterView(void);
 
-void IN_MLookUp(void)
+static void IN_MLookUp(void)
 {
 	in_mlooking = qfalse;
 	if (!cl_freelook->integer)
@@ -171,115 +171,115 @@ void IN_MLookUp(void)
 	}
 }
 
-void IN_GenCMD1(void)
+static void IN_GenCMD1(void)
 {
 	cl.gcmdSendValue = qtrue;
 	cl.gcmdValue = GENCMD_SABERSWITCH;
 }
 
-void IN_GenCMD2(void)
+static void IN_GenCMD2(void)
 {
 	cl.gcmdSendValue = qtrue;
 	cl.gcmdValue = GENCMD_ENGAGE_DUEL;
 }
 
-void IN_GenCMD3(void)
+static void IN_GenCMD3(void)
 {
 	cl.gcmdSendValue = qtrue;
 	cl.gcmdValue = GENCMD_FORCE_HEAL;
 }
 
-void IN_GenCMD4(void)
+static void IN_GenCMD4(void)
 {
 	cl.gcmdSendValue = qtrue;
 	cl.gcmdValue = GENCMD_FORCE_SPEED;
 }
 
-void IN_GenCMD5(void)
+static void IN_GenCMD5(void)
 {
 	cl.gcmdSendValue = qtrue;
 	cl.gcmdValue = GENCMD_FORCE_PULL;
 }
 
-void IN_GenCMD6(void)
+static void IN_GenCMD6(void)
 {
 	cl.gcmdSendValue = qtrue;
 	cl.gcmdValue = GENCMD_FORCE_DISTRACT;
 }
 
-void IN_GenCMD7(void)
+static void IN_GenCMD7(void)
 {
 	cl.gcmdSendValue = qtrue;
 	cl.gcmdValue = GENCMD_FORCE_RAGE;
 }
 
-void IN_GenCMD8(void)
+static void IN_GenCMD8(void)
 {
 	cl.gcmdSendValue = qtrue;
 	cl.gcmdValue = GENCMD_FORCE_PROTECT;
 }
 
-void IN_GenCMD9(void)
+static void IN_GenCMD9(void)
 {
 	cl.gcmdSendValue = qtrue;
 	cl.gcmdValue = GENCMD_FORCE_ABSORB;
 }
 
-void IN_GenCMD10(void)
+static void IN_GenCMD10(void)
 {
 	cl.gcmdSendValue = qtrue;
 	cl.gcmdValue = GENCMD_FORCE_HEALOTHER;
 }
 
-void IN_GenCMD11(void)
+static void IN_GenCMD11(void)
 {
 	cl.gcmdSendValue = qtrue;
 	cl.gcmdValue = GENCMD_FORCE_FORCEPOWEROTHER;
 }
 
-void IN_GenCMD12(void)
+static void IN_GenCMD12(void)
 {
 	cl.gcmdSendValue = qtrue;
 	cl.gcmdValue = GENCMD_FORCE_SEEING;
 }
 
-void IN_GenCMD13(void)
+static void IN_GenCMD13(void)
 {
 	cl.gcmdSendValue = qtrue;
 	cl.gcmdValue = GENCMD_USE_SEEKER;
 }
 
-void IN_GenCMD14(void)
+static void IN_GenCMD14(void)
 {
 	cl.gcmdSendValue = qtrue;
 	cl.gcmdValue = GENCMD_USE_FIELD;
 }
 
-void IN_GenCMD15(void)
+static void IN_GenCMD15(void)
 {
 	cl.gcmdSendValue = qtrue;
 	cl.gcmdValue = GENCMD_USE_BACTA;
 }
 
-void IN_GenCMD16(void)
+static void IN_GenCMD16(void)
 {
 	cl.gcmdSendValue = qtrue;
 	cl.gcmdValue = GENCMD_USE_ELECTROBINOCULARS;
 }
 
-void IN_GenCMD17(void)
+static void IN_GenCMD17(void)
 {
 	cl.gcmdSendValue = qtrue;
 	cl.gcmdValue = GENCMD_ZOOM;
 }
 
-void IN_GenCMD18(void)
+static void IN_GenCMD18(void)
 {
 	cl.gcmdSendValue = qtrue;
 	cl.gcmdValue = GENCMD_USE_SENTRY;
 }
 
-void IN_GenCMD19(void)
+static void IN_GenCMD19(void)
 {
 	if (Cvar_VariableIntegerValue("d_saberStanceDebug"))
 	{
@@ -289,79 +289,79 @@ void IN_GenCMD19(void)
 	cl.gcmdValue = GENCMD_SABERATTACKCYCLE;
 }
 
-void IN_GenCMD20(void)
+static void IN_GenCMD20(void)
 {
 	cl.gcmdSendValue = qtrue;
 	cl.gcmdValue = GENCMD_FORCE_THROW;
 }
 
-void IN_GenCMD21(void)
+static void IN_GenCMD21(void)
 {
 	cl.gcmdSendValue = qtrue;
 	cl.gcmdValue = GENCMD_USE_JETPACK;
 }
 
-void IN_GenCMD22(void)
+static void IN_GenCMD22(void)
 {
 	cl.gcmdSendValue = qtrue;
 	cl.gcmdValue = GENCMD_USE_BACTABIG;
 }
 
-void IN_GenCMD23(void)
+static void IN_GenCMD23(void)
 {
 	cl.gcmdSendValue = qtrue;
 	cl.gcmdValue = GENCMD_USE_HEALTHDISP;
 }
 
-void IN_GenCMD24(void)
+static void IN_GenCMD24(void)
 {
 	cl.gcmdSendValue = qtrue;
 	cl.gcmdValue = GENCMD_USE_AMMODISP;
 }
 
-void IN_GenCMD25(void)
+static void IN_GenCMD25(void)
 {
 	cl.gcmdSendValue = qtrue;
 	cl.gcmdValue = GENCMD_USE_EWEB;
 }
 
-void IN_GenCMD26(void)
+static void IN_GenCMD26(void)
 {
 	cl.gcmdSendValue = qtrue;
 	cl.gcmdValue = GENCMD_USE_CLOAK;
 }
 
-void IN_GenCMD27(void)
+static void IN_GenCMD27(void)
 {
 	cl.gcmdSendValue = qtrue;
 	cl.gcmdValue = GENCMD_TAUNT;
 }
 
-void IN_GenCMD28(void)
+static void IN_GenCMD28(void)
 {
 	cl.gcmdSendValue = qtrue;
 	cl.gcmdValue = GENCMD_BOW;
 }
 
-void IN_GenCMD29(void)
+static void IN_GenCMD29(void)
 {
 	cl.gcmdSendValue = qtrue;
 	cl.gcmdValue = GENCMD_MEDITATE;
 }
 
-void IN_GenCMD30(void)
+static void IN_GenCMD30(void)
 {
 	cl.gcmdSendValue = qtrue;
 	cl.gcmdValue = GENCMD_FLOURISH;
 }
 
-void IN_GenCMD31(void)
+static void IN_GenCMD31(void)
 {
 	cl.gcmdSendValue = qtrue;
 	cl.gcmdValue = GENCMD_GLOAT;
 }
 
-void IN_GenCMD32(void)
+static void IN_GenCMD32(void)
 {
 	cl.gcmdSendValue = qtrue;
 	cl.gcmdValue = GENCMD_SURRENDER;
@@ -370,7 +370,7 @@ void IN_GenCMD32(void)
 //toggle automap view mode
 static bool g_clAutoMapMode = false;
 
-void IN_AutoMapButton(void)
+static void IN_AutoMapButton(void)
 {
 	g_clAutoMapMode = !g_clAutoMapMode;
 }
@@ -378,12 +378,12 @@ void IN_AutoMapButton(void)
 //toggle between automap, radar, nothing
 extern cvar_t* r_autoMap;
 
-void IN_AutoMapToggle(void)
+static void IN_AutoMapToggle(void)
 {
 	Cvar_User_SetValue("cg_drawRadar", !Cvar_VariableValue("cg_drawRadar"));
 }
 
-void IN_VoiceChatButton(void)
+static void IN_VoiceChatButton(void)
 {
 	if (!cls.uiStarted)
 	{
@@ -393,7 +393,7 @@ void IN_VoiceChatButton(void)
 	UIVM_SetActiveMenu(UIMENU_VOICECHAT);
 }
 
-void IN_KeyDown(kbutton_t* b)
+static void IN_KeyDown(kbutton_t* b)
 {
 	int k;
 
@@ -439,7 +439,7 @@ void IN_KeyDown(kbutton_t* b)
 	b->wasPressed = qtrue;
 }
 
-void IN_KeyUp(kbutton_t* b)
+static void IN_KeyUp(kbutton_t* b)
 {
 	int k;
 
@@ -631,7 +631,7 @@ static void CL_AutoMapKey(const int autoMapKey, const qboolean up)
 	g_clAutoMapInput.goToDefaults = qfalse;
 }
 
-void IN_UpDown(void)
+static void IN_UpDown(void)
 {
 	if (g_clAutoMapMode)
 	{
@@ -643,7 +643,7 @@ void IN_UpDown(void)
 	}
 }
 
-void IN_UpUp(void)
+static void IN_UpUp(void)
 {
 	if (g_clAutoMapMode)
 	{
@@ -655,7 +655,7 @@ void IN_UpUp(void)
 	}
 }
 
-void IN_DownDown(void)
+static void IN_DownDown(void)
 {
 	if (g_clAutoMapMode)
 	{
@@ -667,7 +667,7 @@ void IN_DownDown(void)
 	}
 }
 
-void IN_DownUp(void)
+static void IN_DownUp(void)
 {
 	if (g_clAutoMapMode)
 	{
@@ -679,12 +679,12 @@ void IN_DownUp(void)
 	}
 }
 
-void IN_LeftDown(void) { IN_KeyDown(&in_left); }
-void IN_LeftUp(void) { IN_KeyUp(&in_left); }
-void IN_RightDown(void) { IN_KeyDown(&in_right); }
-void IN_RightUp(void) { IN_KeyUp(&in_right); }
+static void IN_LeftDown(void) { IN_KeyDown(&in_left); }
+static void IN_LeftUp(void) { IN_KeyUp(&in_left); }
+static void IN_RightDown(void) { IN_KeyDown(&in_right); }
+static void IN_RightUp(void) { IN_KeyUp(&in_right); }
 
-void IN_ForwardDown(void)
+static void IN_ForwardDown(void)
 {
 	if (g_clAutoMapMode)
 	{
@@ -696,7 +696,7 @@ void IN_ForwardDown(void)
 	}
 }
 
-void IN_ForwardUp(void)
+static void IN_ForwardUp(void)
 {
 	if (g_clAutoMapMode)
 	{
@@ -708,7 +708,7 @@ void IN_ForwardUp(void)
 	}
 }
 
-void IN_BackDown(void)
+static void IN_BackDown(void)
 {
 	if (g_clAutoMapMode)
 	{
@@ -720,7 +720,7 @@ void IN_BackDown(void)
 	}
 }
 
-void IN_BackUp(void)
+static void IN_BackUp(void)
 {
 	if (g_clAutoMapMode)
 	{
@@ -732,12 +732,12 @@ void IN_BackUp(void)
 	}
 }
 
-void IN_LookupDown(void) { IN_KeyDown(&in_lookup); }
-void IN_LookupUp(void) { IN_KeyUp(&in_lookup); }
-void IN_LookdownDown(void) { IN_KeyDown(&in_lookdown); }
-void IN_LookdownUp(void) { IN_KeyUp(&in_lookdown); }
+static void IN_LookupDown(void) { IN_KeyDown(&in_lookup); }
+static void IN_LookupUp(void) { IN_KeyUp(&in_lookup); }
+static void IN_LookdownDown(void) { IN_KeyDown(&in_lookdown); }
+static void IN_LookdownUp(void) { IN_KeyUp(&in_lookdown); }
 
-void IN_MoveleftDown(void)
+static void IN_MoveleftDown(void)
 {
 	if (g_clAutoMapMode)
 	{
@@ -749,7 +749,7 @@ void IN_MoveleftDown(void)
 	}
 }
 
-void IN_MoveleftUp(void)
+static void IN_MoveleftUp(void)
 {
 	if (g_clAutoMapMode)
 	{
@@ -761,7 +761,7 @@ void IN_MoveleftUp(void)
 	}
 }
 
-void IN_MoverightDown(void)
+static void IN_MoverightDown(void)
 {
 	if (g_clAutoMapMode)
 	{
@@ -773,7 +773,7 @@ void IN_MoverightDown(void)
 	}
 }
 
-void IN_MoverightUp(void)
+static void IN_MoverightUp(void)
 {
 	if (g_clAutoMapMode)
 	{
@@ -785,23 +785,23 @@ void IN_MoverightUp(void)
 	}
 }
 
-void IN_SpeedDown(void) { IN_KeyDown(&in_speed); }
-void IN_SpeedUp(void) { IN_KeyUp(&in_speed); }
-void IN_StrafeDown(void) { IN_KeyDown(&in_strafe); }
-void IN_StrafeUp(void) { IN_KeyUp(&in_strafe); }
+static void IN_SpeedDown(void) { IN_KeyDown(&in_speed); }
+static void IN_SpeedUp(void) { IN_KeyUp(&in_speed); }
+static void IN_StrafeDown(void) { IN_KeyDown(&in_strafe); }
+static void IN_StrafeUp(void) { IN_KeyUp(&in_strafe); }
 
-void IN_Button0Down(void) { IN_KeyDown(&in_buttons[0]); }
-void IN_Button0Up(void) { IN_KeyUp(&in_buttons[0]); }
-void IN_Button1Down(void) { IN_KeyDown(&in_buttons[1]); }
-void IN_Button1Up(void) { IN_KeyUp(&in_buttons[1]); }
-void IN_Button2Down(void) { IN_KeyDown(&in_buttons[2]); }
-void IN_Button2Up(void) { IN_KeyUp(&in_buttons[2]); }
-void IN_Button3Down(void) { IN_KeyDown(&in_buttons[3]); }
-void IN_Button3Up(void) { IN_KeyUp(&in_buttons[3]); }
-void IN_Button4Down(void) { IN_KeyDown(&in_buttons[4]); }
-void IN_Button4Up(void) { IN_KeyUp(&in_buttons[4]); }
+static void IN_Button0Down(void) { IN_KeyDown(&in_buttons[0]); }
+static void IN_Button0Up(void) { IN_KeyUp(&in_buttons[0]); }
+static void IN_Button1Down(void) { IN_KeyDown(&in_buttons[1]); }
+static void IN_Button1Up(void) { IN_KeyUp(&in_buttons[1]); }
+static void IN_Button2Down(void) { IN_KeyDown(&in_buttons[2]); }
+static void IN_Button2Up(void) { IN_KeyUp(&in_buttons[2]); }
+static void IN_Button3Down(void) { IN_KeyDown(&in_buttons[3]); }
+static void IN_Button3Up(void) { IN_KeyUp(&in_buttons[3]); }
+static void IN_Button4Down(void) { IN_KeyDown(&in_buttons[4]); }
+static void IN_Button4Up(void) { IN_KeyUp(&in_buttons[4]); }
 
-void IN_Button5Down(void) //use key
+static void IN_Button5Down(void) //use key
 {
 	if (g_clAutoMapMode)
 	{
@@ -813,37 +813,37 @@ void IN_Button5Down(void) //use key
 	}
 }
 
-void IN_Button5Up(void) { IN_KeyUp(&in_buttons[5]); }
+static void IN_Button5Up(void) { IN_KeyUp(&in_buttons[5]); }
 void IN_Button6Down(void) { IN_KeyDown(&in_buttons[6]); }
 void IN_Button6Up(void) { IN_KeyUp(&in_buttons[6]); }
-void IN_Button7Down(void) { IN_KeyDown(&in_buttons[7]); }
-void IN_Button7Up(void) { IN_KeyUp(&in_buttons[7]); }
-void IN_Button8Down(void) { IN_KeyDown(&in_buttons[8]); }
-void IN_Button8Up(void) { IN_KeyUp(&in_buttons[8]); }
-void IN_Button9Down(void) { IN_KeyDown(&in_buttons[9]); }
-void IN_Button9Up(void) { IN_KeyUp(&in_buttons[9]); }
+static void IN_Button7Down(void) { IN_KeyDown(&in_buttons[7]); }
+static void IN_Button7Up(void) { IN_KeyUp(&in_buttons[7]); }
+static void IN_Button8Down(void) { IN_KeyDown(&in_buttons[8]); }
+static void IN_Button8Up(void) { IN_KeyUp(&in_buttons[8]); }
+static void IN_Button9Down(void) { IN_KeyDown(&in_buttons[9]); }
+static void IN_Button9Up(void) { IN_KeyUp(&in_buttons[9]); }
 void IN_Button10Down(void) { IN_KeyDown(&in_buttons[10]); }
 void IN_Button10Up(void) { IN_KeyUp(&in_buttons[10]); }
 void IN_Button11Down(void) { IN_KeyDown(&in_buttons[11]); }
 void IN_Button11Up(void) { IN_KeyUp(&in_buttons[11]); }
-void IN_Button12Down(void) { IN_KeyDown(&in_buttons[12]); }
-void IN_Button12Up(void) { IN_KeyUp(&in_buttons[12]); }
-void IN_Button13Down(void) { IN_KeyDown(&in_buttons[13]); }
-void IN_Button13Up(void) { IN_KeyUp(&in_buttons[13]); }
-void IN_Button14Down(void) { IN_KeyDown(&in_buttons[14]); }
-void IN_Button14Up(void) { IN_KeyUp(&in_buttons[14]); }
-void IN_Button15Down(void) { IN_KeyDown(&in_buttons[15]); }
-void IN_Button15Up(void) { IN_KeyUp(&in_buttons[15]); }
-void IN_Button16Down(void) { IN_KeyDown(&in_buttons[16]); }
-void IN_Button16Up(void) { IN_KeyUp(&in_buttons[16]); }
-void IN_Button17Down(void) { IN_KeyDown(&in_buttons[17]); }
-void IN_Button17Up(void) { IN_KeyUp(&in_buttons[17]); }
-void IN_Button18Down(void) { IN_KeyDown(&in_buttons[18]); }
-void IN_Button18Up(void) { IN_KeyUp(&in_buttons[18]); }
-void IN_Button19Down(void) { IN_KeyDown(&in_buttons[19]); }
-void IN_Button19Up(void) { IN_KeyUp(&in_buttons[19]); }
-void IN_Button20Down(void) { IN_KeyDown(&in_buttons[20]); }
-void IN_Button20Up(void) { IN_KeyUp(&in_buttons[20]); }
+static void IN_Button12Down(void) { IN_KeyDown(&in_buttons[12]); }
+static void IN_Button12Up(void) { IN_KeyUp(&in_buttons[12]); }
+static void IN_Button13Down(void) { IN_KeyDown(&in_buttons[13]); }
+static void IN_Button13Up(void) { IN_KeyUp(&in_buttons[13]); }
+static void IN_Button14Down(void) { IN_KeyDown(&in_buttons[14]); }
+static void IN_Button14Up(void) { IN_KeyUp(&in_buttons[14]); }
+static void IN_Button15Down(void) { IN_KeyDown(&in_buttons[15]); }
+static void IN_Button15Up(void) { IN_KeyUp(&in_buttons[15]); }
+static void IN_Button16Down(void) { IN_KeyDown(&in_buttons[16]); }
+static void IN_Button16Up(void) { IN_KeyUp(&in_buttons[16]); }
+static void IN_Button17Down(void) { IN_KeyDown(&in_buttons[17]); }
+static void IN_Button17Up(void) { IN_KeyUp(&in_buttons[17]); }
+static void IN_Button18Down(void) { IN_KeyDown(&in_buttons[18]); }
+static void IN_Button18Up(void) { IN_KeyUp(&in_buttons[18]); }
+static void IN_Button19Down(void) { IN_KeyDown(&in_buttons[19]); }
+static void IN_Button19Up(void) { IN_KeyUp(&in_buttons[19]); }
+static void IN_Button20Down(void) { IN_KeyDown(&in_buttons[20]); }
+static void IN_Button20Up(void) { IN_KeyUp(&in_buttons[20]); }
 
 void IN_CenterView(void)
 {
@@ -870,7 +870,7 @@ CL_AdjustAngles
 Moves the local angle positions
 ================
 */
-void CL_AdjustAngles(void)
+static void CL_AdjustAngles(void)
 {
 	float speed;
 
@@ -940,7 +940,7 @@ CL_KeyMove
 Sets the usercmd_t based on key states
 ================
 */
-void CL_KeyMove(usercmd_t* cmd)
+static void CL_KeyMove(usercmd_t* cmd)
 {
 	int movespeed;
 
@@ -1031,6 +1031,11 @@ void CL_JoystickEvent(const int axis, const int value, int time)
 	{
 		Com_Error(ERR_DROP, "CL_JoystickEvent: bad axis %i", axis);
 	}
+
+	if (Key_GetCatcher() & (KEYCATCH_UI))
+	{
+		return;
+	}
 	cl.joystickAxis[axis] = value;
 }
 
@@ -1041,14 +1046,31 @@ CL_JoystickMove
 */
 extern cvar_t* in_joystick;
 
-void CL_JoystickMove(usercmd_t* cmd)
+extern cvar_t* j_pitch;
+extern cvar_t* j_yaw;
+extern cvar_t* j_forward;
+extern cvar_t* j_side;
+extern cvar_t* j_up;
+extern cvar_t* j_pitch_axis;
+extern cvar_t* j_yaw_axis;
+extern cvar_t* j_forward_axis;
+extern cvar_t* j_side_axis;
+extern cvar_t* j_up_axis;
+
+static void CL_JoystickMove(usercmd_t* cmd)
 {
-	float anglespeed;
+	float	anglespeed;
 
 	if (!in_joystick->integer)
 	{
 		return;
 	}
+
+	float yaw = j_yaw->value * cl.joystickAxis[j_yaw_axis->integer];
+	float right = j_side->value * cl.joystickAxis[j_side_axis->integer];
+	float forward = j_forward->value * cl.joystickAxis[j_forward_axis->integer];
+	float pitch = j_pitch->value * cl.joystickAxis[j_pitch_axis->integer];
+	float up = j_up->value * cl.joystickAxis[j_up_axis->integer];
 
 	if (!(in_speed.active ^ cl_run->integer))
 	{
@@ -1070,6 +1092,59 @@ void CL_JoystickMove(usercmd_t* cmd)
 		{
 			if (cl_mSensitivityOverride)
 			{
+				cl.viewangles[YAW] += cl_mYawOverride * cl_mSensitivityOverride * yaw / 2.0f;
+			}
+			else
+			{
+				cl.viewangles[YAW] += cl_mYawOverride * OVERRIDE_MOUSE_SENSITIVITY * yaw / 2.0f;
+			}
+		}
+		else
+		{
+			cl.viewangles[YAW] += anglespeed * yaw;
+		}
+		cmd->rightmove = ClampCharMove(cmd->rightmove + (int)right);
+	}
+	else
+	{
+		cl.viewangles[YAW] += anglespeed * right;
+		cmd->rightmove = ClampCharMove(cmd->rightmove + (int)yaw);
+	}
+
+	if (in_mlooking || cl_freelook->integer)
+	{
+		if (cl_mPitchOverride)
+		{
+			if (cl_mSensitivityOverride)
+			{
+				cl.viewangles[PITCH] += cl_mPitchOverride * cl_mSensitivityOverride * forward / 2.0f;
+			}
+			else
+			{
+				cl.viewangles[PITCH] += cl_mPitchOverride * OVERRIDE_MOUSE_SENSITIVITY * forward / 2.0f;
+			}
+		}
+		else
+		{
+			cl.viewangles[PITCH] += anglespeed * forward;
+		}
+		cmd->forwardmove = ClampCharMove(cmd->forwardmove + (int)pitch);
+	}
+	else
+	{
+		cl.viewangles[PITCH] += anglespeed * pitch;
+		cmd->forwardmove = ClampCharMove(cmd->forwardmove + (int)forward);
+	}
+
+	cmd->upmove = ClampCharMove(cmd->upmove + (int)up);
+
+#if 0
+
+	if (!in_strafe.active) {
+		if (cl_mYawOverride)
+		{
+			if (cl_mSensitivityOverride)
+			{
 				cl.viewangles[YAW] += cl_mYawOverride * cl_mSensitivityOverride * cl.joystickAxis[AXIS_SIDE] / 2.0f;
 			}
 			else
@@ -1087,19 +1162,16 @@ void CL_JoystickMove(usercmd_t* cmd)
 		cmd->rightmove = ClampChar(cmd->rightmove + cl.joystickAxis[AXIS_SIDE]);
 	}
 
-	if (in_mlooking || cl_freelook->integer)
-	{
+	if (in_mlooking || cl_freelook->integer) {
 		if (cl_mPitchOverride)
 		{
 			if (cl_mSensitivityOverride)
 			{
-				cl.viewangles[PITCH] += cl_mPitchOverride * cl_mSensitivityOverride * cl.joystickAxis[AXIS_FORWARD] /
-					2.0f;
+				cl.viewangles[PITCH] += cl_mPitchOverride * cl_mSensitivityOverride * cl.joystickAxis[AXIS_FORWARD] / 2.0f;
 			}
 			else
 			{
-				cl.viewangles[PITCH] += cl_mPitchOverride * OVERRIDE_MOUSE_SENSITIVITY * cl.joystickAxis[AXIS_FORWARD] /
-					2.0f;
+				cl.viewangles[PITCH] += cl_mPitchOverride * OVERRIDE_MOUSE_SENSITIVITY * cl.joystickAxis[AXIS_FORWARD] / 2.0f;
 			}
 		}
 		else
@@ -1113,14 +1185,14 @@ void CL_JoystickMove(usercmd_t* cmd)
 	}
 
 	cmd->upmove = ClampChar(cmd->upmove + cl.joystickAxis[AXIS_UP]);
+#endif
 }
-
 /*
 =================
 CL_MouseMove
 =================
 */
-void CL_MouseMove(usercmd_t* cmd)
+static void CL_MouseMove(usercmd_t* cmd)
 {
 	float mx, my;
 	const float speed = static_cast<float>(frame_msec);
@@ -1278,7 +1350,7 @@ void CL_MouseMove(usercmd_t* cmd)
 		cmd->forwardmove = ClampChar(cmd->forwardmove - m_forward->value * my);
 }
 
-qboolean CL_NoUseableForce(void)
+static qboolean CL_NoUseableForce(void)
 {
 	if (!cls.cgameStarted)
 	{
@@ -1294,7 +1366,7 @@ qboolean CL_NoUseableForce(void)
 CL_CmdButtons
 ==============
 */
-void CL_CmdButtons(usercmd_t* cmd)
+static void CL_CmdButtons(usercmd_t* cmd)
 {
 	//
 	// figure button bits
@@ -1342,7 +1414,7 @@ CL_FinishMove
 vec3_t cl_sendAngles = { 0 };
 vec3_t cl_lastViewAngles = { 0 };
 
-void CL_FinishMove(usercmd_t* cmd)
+static void CL_FinishMove(usercmd_t* cmd)
 {
 	int i;
 
@@ -1433,7 +1505,7 @@ void CL_FinishMove(usercmd_t* cmd)
 CL_CreateCmd
 =================
 */
-usercmd_t CL_CreateCmd(void)
+static usercmd_t CL_CreateCmd(void)
 {
 	usercmd_t cmd;
 	vec3_t oldAngles;
@@ -1492,7 +1564,7 @@ CL_CreateNewCommands
 Create a new usercmd_t structure for this frame
 =================
 */
-void CL_CreateNewCommands(void)
+static void CL_CreateNewCommands(void)
 {
 	// no need to create usercmds until we have a gamestate
 	if (cls.state < CA_PRIMED)
@@ -1529,7 +1601,7 @@ delivered in the next packet, but saving a header and
 getting more delta compression will reduce total bandwidth.
 =================
 */
-qboolean CL_ReadyToSendPacket(void)
+static qboolean CL_ReadyToSendPacket(void)
 {
 	// don't send anything if playing back a demo
 	if (clc.demoplaying || cls.state == CA_CINEMATIC)

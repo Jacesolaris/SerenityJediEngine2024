@@ -594,7 +594,7 @@ static const char* GetMonthAbbrevString(int iMonth)
 #define UI_MAX_MASTER_SERVERS	5
 
 // Convert ui's net source to AS_* used by trap calls.
-int UI_SourceForLAN(void)
+static int UI_SourceForLAN(void)
 {
 	switch (ui_netSource.integer)
 	{
@@ -612,15 +612,6 @@ int UI_SourceForLAN(void)
 	}
 }
 
-/*
-static const char *netSources[] = {
-	"Local",
-	"Internet",
-	"Favorites"
-//	"Mplayer"
-};
-static const int numNetSources = ARRAY_LEN(netSources);
-*/
 static const int numNetSources = 7; // now hard-entered in StringEd file
 static const char* GetNetSourceString(int iSource)
 {
@@ -735,7 +726,7 @@ int Text_Height(const char* text, float scale, int i_menu_font)
 	return trap->R_Font_HeightPixels(iFontIndex, scale);
 }
 
-void Text_Paint(float x, float y, float scale, vec4_t color, const char* text, float adjust, int limit, int style,
+static void Text_Paint(float x, float y, float scale, vec4_t color, const char* text, float adjust, int limit, int style,
 	int i_menu_font)
 {
 	int iStyleOR = 0;
@@ -773,7 +764,7 @@ void Text_Paint(float x, float y, float scale, vec4_t color, const char* text, f
 	);
 }
 
-void Text_PaintWithCursor(float x, float y, float scale, vec4_t color, const char* text, int cursorPos, char cursor,
+static void Text_PaintWithCursor(float x, float y, float scale, vec4_t color, const char* text, int cursorPos, char cursor,
 	int limit, int style, int i_menu_font)
 {
 	Text_Paint(x, y, scale, color, text, 0, limit, style, i_menu_font);
@@ -823,8 +814,7 @@ static void Text_Paint_Limit(float* maxX, float x, float y, float scale, vec4_t 
 		char* psOutLastGood = psOut;
 
 		while (*psText && x + trap->R_Font_StrLenPixels(sTemp, iFontIndex, scale) <= *maxX
-			&& psOut < &sTemp[sizeof sTemp - 1] // sanity
-			)
+			&& psOut < &sTemp[sizeof sTemp - 1])
 		{
 			int iAdvanceCount;
 			psOutLastGood = psOut;
@@ -856,7 +846,7 @@ static void Text_Paint_Limit(float* maxX, float x, float y, float scale, vec4_t 
 	}
 }
 
-void UI_LoadNonIngame()
+static void UI_LoadNonIngame()
 {
 	const char* menuSet = UI_Cvar_VariableString("ui_menuFilesMP");
 	if (menuSet == NULL || menuSet[0] == '\0')
@@ -943,7 +933,7 @@ static void UI_BuildPlayerList()
 
 void UI_ParseMenu(const char* menuFile);
 
-void UI_LoadSingleMenuFile(const char* menuFile)
+static void UI_LoadSingleMenuFile(const char* menuFile)
 {
 	//load in a single menu file
 	trap->PC_LoadGlobalDefines("ui/sjemp/menudef.h"); //Load globaldefines for parsing.
@@ -951,7 +941,7 @@ void UI_LoadSingleMenuFile(const char* menuFile)
 	trap->PC_RemoveAllGlobalDefines(); //Close globaldefines.
 }
 
-void UI_SetActiveMenu(uiMenuCommand_t menu)
+static void UI_SetActiveMenu(uiMenuCommand_t menu)
 {
 	// this should be the ONLY way the menu system is brought up
 	// enusure minumum menu data is cached
@@ -1084,7 +1074,7 @@ void UI_SetActiveMenu(uiMenuCommand_t menu)
 	}
 }
 
-void UI_DrawCenteredPic(qhandle_t image, int w, int h)
+static void UI_DrawCenteredPic(qhandle_t image, int w, int h)
 {
 	const int x = (SCREEN_WIDTH - w) / 2;
 	const int y = (SCREEN_HEIGHT - h) / 2;
@@ -1131,7 +1121,7 @@ void UI_Shutdown(void)
 
 char* defaultMenu = NULL;
 
-char* GetMenuBuffer(const char* filename)
+static char* GetMenuBuffer(const char* filename)
 {
 	fileHandle_t f;
 	static char buf[MAX_MENUFILE];
@@ -1156,7 +1146,7 @@ char* GetMenuBuffer(const char* filename)
 	return buf;
 }
 
-qboolean Asset_Parse(int handle)
+static qboolean Asset_Parse(int handle)
 {
 	pc_token_t token;
 
@@ -1504,7 +1494,7 @@ void UI_ParseMenu(const char* menuFile)
 	trap->PC_FreeSource(handle);
 }
 
-qboolean Load_Menu(int handle)
+static qboolean Load_Menu(int handle)
 {
 	pc_token_t token;
 
@@ -1638,7 +1628,7 @@ void UI_Load(void)
 char sAll[15] = { 0 };
 char sJediAcademy[30] = { 0 };
 
-const char* UI_FilterDescription(int value)
+static const char* UI_FilterDescription(int value)
 {
 	if (value <= 0 || value > uiInfo.modCount)
 	{
@@ -1648,7 +1638,7 @@ const char* UI_FilterDescription(int value)
 	return uiInfo.modList[value - 1].modDescr;
 }
 
-const char* UI_FilterDir(int value)
+static const char* UI_FilterDir(int value)
 {
 	if (value <= 0 || value > uiInfo.modCount)
 	{
@@ -2019,7 +2009,7 @@ static void UI_DrawForceSide(rectDef_t* rect, float scale, vec4_t color, int tex
 	Text_Paint(rect->x, rect->y, scale, color, s, 0, 0, textStyle, i_menu_font);
 }
 
-qboolean UI_HasSetSaberOnly(const char* info, const int gametype)
+static qboolean UI_HasSetSaberOnly(const char* info, const int gametype)
 {
 	int i = 0;
 	int wDisable;
@@ -2212,7 +2202,7 @@ int SCREENSHOT_TOTAL = -1;
 int SCREENSHOT_CHOICE = 0;
 int SCREENSHOT_NEXT_UPDATE_TIME = 0;
 
-char* UI_GetCurrentLevelshot(void)
+static char* UI_GetCurrentLevelshot(void)
 {
 	const int time = trap->Milliseconds();
 
@@ -2373,7 +2363,7 @@ static void UI_SetForceDisabled(int force)
 }
 
 // The game type on create server has changed - make the HUMAN/BOTS fields active
-void UpdateBotButtons(void)
+static void UpdateBotButtons(void)
 {
 	menuDef_t* menu = Menu_GetFocused();
 
@@ -2394,22 +2384,8 @@ void UpdateBotButtons(void)
 	}
 }
 
-void UpdateForceStatus()
+static void UpdateForceStatus()
 {
-	// Currently we don't make a distinction between those that wish to play Jedi of lower than maximum skill.
-	/*	if (ui_forcePowerDisable.integer)
-		{
-			uiForceRank = 0;
-			uiForceAvailable = 0;
-			uiForceUsed = 0;
-		}
-		else
-		{
-			uiForceRank = uiMaxRank;
-			uiForceUsed = 0;
-			uiForceAvailable = forceMasteryPoints[uiForceRank];
-		}
-	*/
 	menuDef_t* menu = Menus_FindByName("ingame_player");
 	if (menu)
 	{
@@ -3390,20 +3366,6 @@ static void UI_OwnerDraw(float x, float y, float w, float h, float text_x, float
 	case UI_FORCE_RANK_SABERDEFEND:
 	case UI_FORCE_RANK_SABERTHROW:
 
-		//		uiForceRank
-		/*
-				uiForceUsed
-				// Only fields for white stars
-				if (uiForceUsed<3)
-				{
-					Menu_ShowItemByName(menu, "lightpowers_team", qtrue);
-				}
-				else if (uiForceUsed<6)
-				{
-					Menu_ShowItemByName(menu, "lightpowers_team", qtrue);
-				}
-		*/
-
 		findex = ownerDraw - UI_FORCE_RANK - 1;
 		//this will give us the index as long as UI_FORCE_RANK is always one below the first force rank index
 		if (uiForcePowerDarkLight[findex] && uiForceSide != uiForcePowerDarkLight[findex])
@@ -3412,13 +3374,6 @@ static void UI_OwnerDraw(float x, float y, float w, float h, float text_x, float
 			color[1] *= 0.5;
 			color[2] *= 0.5;
 		}
-		/*		else if (uiForceRank < UI_ForceColorMinRank[bgForcePowerCost[findex][FORCE_LEVEL_1]])
-				{
-					color[0] *= 0.5;
-					color[1] *= 0.5;
-					color[2] *= 0.5;
-				}
-		*/
 		drawRank = uiForcePowersRank[findex];
 
 		UI_DrawForceStars(&rect, scale, color, textStyle, findex, drawRank, 0, NUM_FORCE_POWER_LEVELS - 1);
@@ -4806,7 +4761,7 @@ static int QDECL UI_ServersQsortCompare(const void* arg1, const void* arg2)
 UI_ServersSort
 =================
 */
-void UI_ServersSort(int column, qboolean force)
+static void UI_ServersSort(int column, qboolean force)
 {
 	if (!force)
 	{
@@ -5595,7 +5550,7 @@ static void UI_GetCharacterCvars(void)
 	}
 }
 
-void UI_SetSiegeObjectiveGraphicPos(menuDef_t* menu, const char* itemName, const char* cvarName)
+static void UI_SetSiegeObjectiveGraphicPos(menuDef_t* menu, const char* itemName, const char* cvarName)
 {
 	const char* holdVal;
 	char* hold_buf;
@@ -5634,7 +5589,7 @@ void UI_SetSiegeObjectiveGraphicPos(menuDef_t* menu, const char* itemName, const
 	}
 }
 
-void UI_FindCurrentSiegeTeamClass(void)
+static void UI_FindCurrentSiegeTeamClass(void)
 {
 	const int myTeam = (int)trap->Cvar_VariableValue("ui_myteam");
 	char* itemname;
@@ -5703,7 +5658,7 @@ void UI_FindCurrentSiegeTeamClass(void)
 	}
 }
 
-void UI_UpdateSiegeObjectiveGraphics(void)
+static void UI_UpdateSiegeObjectiveGraphics(void)
 {
 	int teamI, objI;
 
@@ -6205,7 +6160,7 @@ static void UI_JoinServer(void)
 	}
 }
 
-int UI_SiegeClassNum(siegeClass_t* scl)
+static int UI_SiegeClassNum(siegeClass_t* scl)
 {
 	for (int i = 0; i < bgNumSiegeClasses; i++)
 	{
@@ -6217,7 +6172,7 @@ int UI_SiegeClassNum(siegeClass_t* scl)
 }
 
 //called every time a class is selected from a feeder, sets info for shaders to be displayed in the menu about the class -rww
-void UI_SiegeSetCvarsForClass(siegeClass_t* scl)
+static void UI_SiegeSetCvarsForClass(siegeClass_t* scl)
 {
 	int i = 0;
 	int count = 0;
@@ -6375,7 +6330,7 @@ void UI_SiegeSetCvarsForClass(siegeClass_t* scl)
 
 static int g_siegedFeederForcedSet = 0;
 
-void UI_UpdateCvarsForClass(const int team, const int baseClass, const int index)
+static void UI_UpdateCvarsForClass(const int team, const int baseClass, const int index)
 {
 	// Is it a valid team
 	if (team == SIEGETEAM_TEAM1 ||
@@ -6415,7 +6370,7 @@ void UI_UpdateCvarsForClass(const int team, const int baseClass, const int index
 	}
 }
 
-void UI_ClampMaxPlayers(void)
+static void UI_ClampMaxPlayers(void)
 {
 	// duel requires 2 players
 	if (uiInfo.gameTypes[ui_netGametype.integer].gtEnum == GT_DUEL)
@@ -6438,7 +6393,7 @@ void UI_ClampMaxPlayers(void)
 	}
 }
 
-void UI_UpdateSiegeStatusIcons(void)
+static void UI_UpdateSiegeStatusIcons(void)
 {
 	const menuDef_t* menu = Menu_GetFocused();
 
@@ -7989,7 +7944,7 @@ static int UI_MapCountByGameType(qboolean singlePlayer)
 	return c;
 }
 
-qboolean UI_hasSkinForBase(const char* base, const char* team)
+static qboolean UI_hasSkinForBase(const char* base, const char* team)
 {
 	char test[1024];
 	fileHandle_t f;
@@ -10487,7 +10442,7 @@ static void UI_BuildQ3Model_List(void)
 	}
 }
 
-void UI_SiegeInit(void)
+static void UI_SiegeInit(void)
 {
 	//Load the player class types
 	BG_SiegeLoadClasses(g_UIClassDescriptions);
@@ -10590,7 +10545,7 @@ void UI_FreeAllSpecies(void)
 UI_BuildPlayerModel_List
 =================
 */
-static void UI_BuildPlayerModel_List(qboolean inGameLoad)
+static void UI_BuildPlayerModel_List(const qboolean inGameLoad)
 {
 	static const size_t DIR_LIST_SIZE = 16384;
 
@@ -10739,22 +10694,25 @@ static void UI_BuildPlayerModel_List(qboolean inGameLoad)
 					}
 				}
 			}
-			if (iSkinParts != 7)
+			if (iSkinParts < 7)
 			{
 				//didn't get a skin for each, then skip this model.
 				UI_FreeSpecies(species);
 				continue;
 			}
 			uiInfo.playerSpeciesCount++;
-			if (!inGameLoad && ui_PrecacheModels.integer)
+
+			if (com_rend2.integer == 0) //rend2 is off
 			{
-				void* ghoul2 = 0;
-				Com_sprintf(fpath, sizeof fpath, "models/players/%s/model.glm", dirptr);
-				const int g2Model = trap->G2API_InitGhoul2Model(&ghoul2, fpath, 0, 0, 0, 0, 0);
-				if (g2Model >= 0)
+				if (!inGameLoad && ui_PrecacheModels.integer)
 				{
-					//					trap->G2API_RemoveGhoul2Model( &ghoul2, 0 );
-					trap->G2API_CleanGhoul2Models(&ghoul2);
+					void* ghoul2 = 0;
+					Com_sprintf(fpath, sizeof fpath, "models/players/%s/model.glm", dirptr);
+					const int g2Model = trap->G2API_InitGhoul2Model(&ghoul2, fpath, 0, 0, 0, 0, 0);
+					if (g2Model >= 0)
+					{
+						trap->G2API_CleanGhoul2Models(&ghoul2);
+					}
 				}
 			}
 		}
@@ -10786,7 +10744,7 @@ static qhandle_t UI_RegisterShaderNoMip(const char* name)
 UI_Init
 =================
 */
-void UI_Init(qboolean inGameLoad)
+static void UI_Init(qboolean inGameLoad)
 {
 	// Get the list of possible languages
 	uiInfo.languageCount = trap->SE_GetNumLanguages(); // this does a dir scan, so use carefully
@@ -10954,7 +10912,7 @@ void UI_Init(qboolean inGameLoad)
 
 #define	UI_FPS_FRAMES	4
 
-void UI_Refresh(int realtime)
+static void UI_Refresh(int realtime)
 {
 	static int index;
 	static int previousTimes[UI_FPS_FRAMES];
@@ -11038,25 +10996,11 @@ void UI_Refresh(int realtime)
 			parsedFPMessage[p] = '\0';
 		}
 
-		//if (uiMaxRank > ui_rankChange.integer)
-		{
-			uiMaxRank = ui_rankChange.integer;
-			uiForceRank = uiMaxRank;
+		uiMaxRank = ui_rankChange.integer;
+		uiForceRank = uiMaxRank;
 
-			/*
-			while (x < NUM_FORCE_POWERS)
-			{
-				//For now just go ahead and clear force powers upon rank change
-				uiForcePowersRank[x] = 0;
-				x++;
-			}
-			uiForcePowersRank[FP_LEVITATION] = 1;
-			uiForceUsed = 0;
-			*/
-
-			//Use BG_LegalizedForcePowers and transfer the result into the UI force settings
-			UI_ReadLegalForce();
-		}
+		//Use BG_LegalizedForcePowers and transfer the result into the UI force settings
+		UI_ReadLegalForce();
 
 		if (ui_freeSaber.integer && uiForcePowersRank[FP_SABER_OFFENSE] < 1)
 		{
@@ -11089,7 +11033,7 @@ void UI_Refresh(int realtime)
 UI_KeyEvent
 =================
 */
-void UI_KeyEvent(int key, qboolean down)
+static void UI_KeyEvent(int key, qboolean down)
 {
 	if (Menu_Count() > 0)
 	{
@@ -11123,7 +11067,7 @@ void UI_KeyEvent(int key, qboolean down)
 UI_MouseEvent
 =================
 */
-void UI_MouseEvent(int dx, int dy)
+static void UI_MouseEvent(int dx, int dy)
 {
 	// update mouse screen position
 	uiInfo.uiDC.cursorx += dx;
@@ -11321,7 +11265,7 @@ This will also be overlaid on the cgame info screen during loading
 to prevent it from blinking away too rapidly on local or lan games.
 ========================
 */
-void UI_DrawConnectScreen(qboolean overlay)
+static void UI_DrawConnectScreen(qboolean overlay)
 {
 	const char* s;
 	uiClientState_t cstate;

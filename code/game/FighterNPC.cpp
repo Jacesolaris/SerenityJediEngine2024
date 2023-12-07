@@ -106,7 +106,7 @@ extern qboolean BG_UnrestrainedPitchRoll();
 
 extern void BG_SetAnim(playerState_t* ps, animation_t* animations, int set_anim_parts, int anim, int set_anim_flags);
 extern int BG_GetTime(void);
-extern void G_DamageFromKiller(gentity_t* p_ent, gentity_t* pVehEnt, gentity_t* attacker, vec3_t org, int damage, int dflags, int mod);
+extern void G_DamageFromKiller(gentity_t* pEnt, gentity_t* pVehEnt, gentity_t* attacker, vec3_t org, int damage, int dflags, int mod);
 #endif
 
 #include "b_local.h"
@@ -224,9 +224,9 @@ static bool update(Vehicle_t* p_veh, const usercmd_t* p_ucmd)
 }
 
 // Board this Vehicle (get on). The first entity to board an empty vehicle becomes the Pilot.
-static bool Board(Vehicle_t* p_veh, bgEntity_t* p_ent)
+static bool Board(Vehicle_t* p_veh, bgEntity_t* pEnt)
 {
-	if (!g_vehicleInfo[VEHICLE_BASE].Board(p_veh, p_ent))
+	if (!g_vehicleInfo[VEHICLE_BASE].Board(p_veh, pEnt))
 		return false;
 
 	// Set the board wait time (they won't be able to do anything, including getting off, for this amount of time).
@@ -236,9 +236,9 @@ static bool Board(Vehicle_t* p_veh, bgEntity_t* p_ent)
 }
 
 // Eject an entity from the vehicle.
-static bool Eject(Vehicle_t* p_veh, bgEntity_t* p_ent, const qboolean forceEject)
+static bool Eject(Vehicle_t* p_veh, bgEntity_t* pEnt, const qboolean forceEject)
 {
-	if (g_vehicleInfo[VEHICLE_BASE].Eject(p_veh, p_ent, forceEject))
+	if (g_vehicleInfo[VEHICLE_BASE].Eject(p_veh, pEnt, forceEject))
 	{
 		if (p_veh->m_pVehicleInfo->soundOff)
 		{

@@ -171,7 +171,7 @@ extern float EvalWaveFormClamped(const waveForm_t* wf);
 static void ComputeTexMods(shaderStage_t* pStage, int bundleNum, float* outMatrix, float* outOffTurb)
 {
 	int tm;
-	float matrix[6], currentmatrix[6];
+	float matrix[6]{}, currentmatrix[6]{};
 	textureBundle_t* bundle = &pStage->bundle[bundleNum];
 
 	matrix[0] = 1.0f; matrix[2] = 0.0f; matrix[4] = 0.0f;
@@ -918,7 +918,7 @@ DrawNormals
 Draws vertex normals for debugging
 ================
 */
-static void DrawNormals(const shaderCommands_t* input) 
+static void DrawNormals(const shaderCommands_t* input)
 {
 	//GL_Bind(tr.whiteImage);
 	//qglColor3f(1, 1, 1);
@@ -1413,7 +1413,7 @@ static void RB_IterateStagesGeneric(shaderCommands_t* input, const VertexArraysP
 	{
 		shaderStage_t* pStage = input->xstages[stage];
 		shaderProgram_t* sp;
-		vec4_t texMatrix;
+		vec4_t texMatrix{};
 		vec4_t texOffTurb;
 		int stateBits;
 		colorGen_t forceRGBGen = CGEN_BAD;
@@ -1421,7 +1421,7 @@ static void RB_IterateStagesGeneric(shaderCommands_t* input, const VertexArraysP
 		int index = 0;
 		bool useAlphaTestGE192 = false;
 		bool forceRefraction = false;
-		vec4_t disintegrationInfo;
+		vec4_t disintegrationInfo{};
 
 		if (!pStage)
 		{
@@ -1519,8 +1519,8 @@ static void RB_IterateStagesGeneric(shaderCommands_t* input, const VertexArraysP
 		}
 		else
 		{
-			vec4_t baseColor;
-			vec4_t vertColor;
+			vec4_t baseColor{};
+			vec4_t vertColor{};
 
 #ifdef REND2_SP_GORE
 			// Fade will be set true when rendering some gore surfaces
@@ -1592,7 +1592,7 @@ static void RB_IterateStagesGeneric(shaderCommands_t* input, const VertexArraysP
 
 		if (forceRefraction)
 		{
-			vec4_t color;
+			vec4_t color{};
 			color[0] =
 				color[1] =
 				color[2] = powf(2.0f, r_cameraExposure->value);

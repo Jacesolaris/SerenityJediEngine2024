@@ -42,7 +42,7 @@ extern qboolean PM_ReloadAnim(int anim);
 Ghoul2 Insert Start
 */
 // set up the appropriate ghoul2 info to a refent
-void CG_SetGhoul2InfoRef(refEntity_t* ent, const refEntity_t* s1)
+static void CG_SetGhoul2InfoRef(refEntity_t* ent, const refEntity_t* s1)
 {
 	ent->ghoul2 = s1->ghoul2;
 	VectorCopy(s1->modelScale, ent->modelScale);
@@ -240,7 +240,7 @@ CG_MachinegunSpinAngle
 #define		SPIN_SPEED	0.9
 #define		COAST_TIME	1000
 
-float cg_machinegun_spin_angle(centity_t* cent)
+static float cg_machinegun_spin_angle(centity_t* cent)
 {
 	float angle;
 
@@ -462,7 +462,7 @@ void cg_add_player_weaponduals(refEntity_t* parent, playerState_t* ps, centity_t
 	// only do this if we are in first person, since world weapons are now handled on the server by Ghoul2
 	if (!third_person)
 	{
-		vec3_t angles;
+		vec3_t angles = { 0, 0, 0 };
 		// add the weapon
 		VectorCopy(parent->lightingOrigin, gun.lightingOrigin);
 		gun.shadowPlane = parent->shadowPlane;
@@ -902,7 +902,7 @@ void CG_AddPlayerWeapon(refEntity_t* parent, playerState_t* ps, centity_t* cent,
 	// only do this if we are in first person, since world weapons are now handled on the server by Ghoul2
 	if (!third_person)
 	{
-		vec3_t angles;
+		vec3_t angles = { 0, 0, 0 };
 		// add the weapon
 		VectorCopy(parent->lightingOrigin, gun.lightingOrigin);
 		gun.shadowPlane = parent->shadowPlane;
@@ -3039,7 +3039,7 @@ qboolean CG_CalcmuzzlePoint(const int entityNum, vec3_t muzzle)
 		//I'm not exactly sure why we'd be rendering someone else's crosshair, but hey.
 		const int weapontype = cg.snap->ps.weapon;
 		vec3_t weapon_muzzle;
-		const centity_t* p_ent = &cg_entities[cg.predicted_player_state.clientNum];
+		const centity_t* pEnt = &cg_entities[cg.predicted_player_state.clientNum];
 
 		VectorCopy(WP_muzzlePoint[weapontype], weapon_muzzle);
 
@@ -3051,8 +3051,8 @@ qboolean CG_CalcmuzzlePoint(const int entityNum, vec3_t muzzle)
 
 		if (cg.renderingThirdPerson)
 		{
-			VectorCopy(p_ent->lerpOrigin, gunpoint);
-			AngleVectors(p_ent->lerpAngles, forward, right, NULL);
+			VectorCopy(pEnt->lerpOrigin, gunpoint);
+			AngleVectors(pEnt->lerpAngles, forward, right, NULL);
 		}
 		else
 		{
@@ -3073,7 +3073,7 @@ qboolean CG_CalcmuzzlePoint(const int entityNum, vec3_t muzzle)
 
 				if (cg.renderingThirdPerson)
 				{
-					VectorCopy(p_ent->lerpAngles, pitch_constraint);
+					VectorCopy(pEnt->lerpAngles, pitch_constraint);
 				}
 				else
 				{

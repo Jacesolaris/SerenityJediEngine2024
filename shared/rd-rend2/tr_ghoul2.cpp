@@ -1033,7 +1033,7 @@ static int G2_ComputeLOD(trRefEntity_t* ent, const model_t* currentModel, int lo
 //
 // Bone Manipulation code
 
-static void G2_CreateQuaterion(mdxaBone_t* mat, vec4_t quat)
+static void G2_CreateQuaterion(const mdxaBone_t* mat, vec4_t quat)
 {
 	// this is revised for the 3x4 matrix we use in G2.
 	float t = 1 + mat->matrix[0][0] + mat->matrix[1][1] + mat->matrix[2][2];

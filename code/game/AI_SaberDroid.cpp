@@ -92,7 +92,7 @@ NPC_BSSaberDroid_Patrol
 -------------------------
 */
 
-void NPC_BSSaberDroid_Patrol()
+static void NPC_BSSaberDroid_Patrol()
 {
 	//FIXME: pick up on bodies of dead buddies?
 	if (NPCInfo->confusionTime < level.time && NPCInfo->insanityTime < level.time)
@@ -265,7 +265,7 @@ NPC_BSSaberDroid_Attack
 -------------------------
 */
 
-void NPC_SaberDroid_PickAttack()
+static void NPC_SaberDroid_PickAttack()
 {
 	int attack_anim = Q_irand(0, 3);
 	switch (attack_anim)
@@ -309,7 +309,7 @@ void NPC_SaberDroid_PickAttack()
 	NPC->client->ps.weaponstate = WEAPON_FIRING;
 }
 
-void NPC_BSSaberDroid_Attack()
+static void NPC_BSSaberDroid_Attack()
 {
 	//Don't do anything if we're hurt
 	if (NPC->painDebounceTime > level.time)

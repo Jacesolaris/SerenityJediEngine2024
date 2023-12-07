@@ -378,7 +378,34 @@ keyname_t keynames[MAX_KEYS] =
 	{0x13c, 0x13c, "AUX28", A_AUX28, false},
 	{0x13d, 0x13d, "AUX29", A_AUX29, false},
 	{0x13e, 0x13e, "AUX30", A_AUX30, false},
-	{0x13f, 0x13f, "AUX31", A_AUX31, false}
+	{0x13f, 0x13f, "AUX31", A_AUX31, false},
+
+	{ 0x140, 0x140, "PAD_A", A_PAD0_A, false },
+	{ 0x141, 0x141, "PAD_B", A_PAD0_B, false },
+	{ 0x142, 0x142, "PAD_X", A_PAD0_X, false },
+	{ 0x143, 0x143, "PAD_Y", A_PAD0_Y, false },
+	{ 0x144, 0x144, "PAD_BACK", A_PAD0_BACK, false },
+	{ 0x145, 0x145, "PAD_HOME", A_PAD0_GUIDE, false },
+	{ 0x146, 0x146, "PAD_START", A_PAD0_START, false },
+	{ 0x147, 0x147, "PAD_LEFTSTICK_CLICK", A_PAD0_LEFTSTICK_CLICK, false },
+	{ 0x148, 0x148, "PAD_RIGHTSTICK_CLICK", A_PAD0_RIGHTSTICK_CLICK, false },
+	{ 0x149, 0x149, "PAD_LEFTSHOULDER", A_PAD0_LEFTSHOULDER, false },
+	{ 0x14a, 0x14a, "PAD_RIGHTSHOULDER", A_PAD0_RIGHTSHOULDER, false },
+	{ 0x14b, 0x14b, "PAD_DPAD_UP", A_PAD0_DPAD_UP, false },
+	{ 0x14c, 0x14c, "PAD_DPAD_DOWN", A_PAD0_DPAD_DOWN, false },
+	{ 0x14d, 0x14d, "PAD_DPAD_LEFT", A_PAD0_DPAD_LEFT, false },
+	{ 0x14e, 0x14e, "PAD_DPAD_RIGHT", A_PAD0_DPAD_RIGHT, false },
+	{ 0x14f, 0x14f, "PAD_MISC1", A_PAD0_MISC1, false },
+	{ 0x150, 0x150, "PAD_LEFTSTICK_LEFT", A_PAD0_LEFTSTICK_LEFT, false },
+	{ 0x151, 0x151, "PAD_LEFTSTICK_RIGHT", A_PAD0_LEFTSTICK_RIGHT, false },
+	{ 0x152, 0x152, "PAD_LEFTSTICK_UP", A_PAD0_LEFTSTICK_UP, false },
+	{ 0x153, 0x153, "PAD_LEFTSTICK_DOWN", A_PAD0_LEFTSTICK_DOWN, false },
+	{ 0x154, 0x154, "PAD_RIGHTSTICK_LEFT", A_PAD0_RIGHTSTICK_LEFT, false },
+	{ 0x155, 0x155, "PAD_RIGHTSTICK_RIGHT", A_PAD0_RIGHTSTICK_RIGHT, false },
+	{ 0x156, 0x156, "PAD_RIGHTSTICK_UP", A_PAD0_RIGHTSTICK_UP, false },
+	{ 0x157, 0x157, "PAD_RIGHTSTICK_DOWN", A_PAD0_RIGHTSTICK_DOWN, false },
+	{ 0x158, 0x158, "PAD_LEFTTRIGGER", A_PAD0_LEFTTRIGGER, false },
+	{ 0x159, 0x159, "PAD_RIGHTTRIGGER", A_PAD0_RIGHTTRIGGER, false }
 };
 static constexpr size_t numKeynames = std::size(keynames);
 
@@ -398,7 +425,7 @@ Handles horizontal scrolling and cursor blinking
 x, y, amd width are in pixels
 ===================
 */
-void Field_VariableSizeDraw(field_t* edit, const int x, const int y, int width, const int size,
+static void Field_VariableSizeDraw(field_t* edit, const int x, const int y, int width, const int size,
 	const qboolean showCursor, const qboolean noColorEscape)
 {
 	int prestep;
@@ -506,7 +533,7 @@ void Field_BigDraw(field_t* edit, const int x, const int y, const int width, con
 Field_Paste
 ================
 */
-void Field_Paste(field_t* edit)
+static void Field_Paste(field_t* edit)
 {
 	char* cbd, * c;
 
@@ -703,7 +730,7 @@ Console_Key
 Handles history and console scrollback
 ====================
 */
-void Console_Key(const int key)
+static void Console_Key(const int key)
 {
 	// ctrl-L clears screen
 	if (keynames[key].lower == 'l' && kg.keys[A_CTRL].down)
@@ -861,7 +888,7 @@ Message_Key
 In game talk message
 ================
 */
-void Message_Key(const int key)
+static void Message_Key(const int key)
 {
 	char buffer[MAX_STRING_CHARS] = { 0 };
 
@@ -1001,7 +1028,7 @@ static const char* Key_KeyToHex(const int keynum)
 }
 
 // Returns the ascii code of the keynum
-const char* Key_KeynumToAscii(const int keynum)
+static const char* Key_KeynumToAscii(const int keynum)
 {
 	const char* name = Key_KeynumValid(keynum);
 
@@ -1111,7 +1138,7 @@ int Key_GetKey(const char* binding)
 Key_Unbind_f
 ===================
 */
-void Key_Unbind_f(void)
+static void Key_Unbind_f(void)
 {
 	if (Cmd_Argc() != 2)
 	{
@@ -1134,7 +1161,7 @@ void Key_Unbind_f(void)
 Key_Unbindall_f
 ===================
 */
-void Key_Unbindall_f(void)
+static void Key_Unbindall_f(void)
 {
 	for (int i = 0; i < MAX_KEYS; i++)
 	{
@@ -1148,7 +1175,7 @@ void Key_Unbindall_f(void)
 Key_Bind_f
 ===================
 */
-void Key_Bind_f(void)
+static void Key_Bind_f(void)
 {
 	const int c = Cmd_Argc();
 
@@ -1210,7 +1237,7 @@ Key_Bindlist_f
 
 ============
 */
-void Key_Bindlist_f(void)
+static void Key_Bindlist_f(void)
 {
 	for (size_t i = 0; i < MAX_KEYS; i++)
 	{
@@ -1321,7 +1348,7 @@ CL_ParseBinding
 Execute the commands in the bind string
 ===================
 */
-void CL_ParseBinding(const int key, const qboolean down, const unsigned time)
+static void CL_ParseBinding(const int key, const qboolean down, const unsigned time)
 {
 	char buf[MAX_STRING_CHARS]{}, * p = buf;
 
@@ -1404,7 +1431,7 @@ CL_KeyDownEvent
 Called by CL_KeyEvent to handle a keypress
 ===================
 */
-void CL_KeyDownEvent(int key, const unsigned time)
+static void CL_KeyDownEvent(int key, const unsigned time)
 {
 	kg.keys[keynames[key].upper].down = qtrue;
 	kg.keys[keynames[key].upper].repeats++;
@@ -1439,7 +1466,7 @@ void CL_KeyDownEvent(int key, const unsigned time)
 	}
 
 	// escape is always handled special
-	if (key == A_ESCAPE)
+	if (key == A_ESCAPE || key == A_PAD0_GUIDE)
 	{
 		if (!kg.keys[A_SHIFT].down && Key_GetCatcher() & KEYCATCH_CONSOLE)
 		{
@@ -1514,7 +1541,7 @@ CL_KeyUpEvent
 Called by CL_KeyEvent to handle a keyrelease
 ===================
 */
-void CL_KeyUpEvent(const int key, const unsigned time)
+static void CL_KeyUpEvent(const int key, const unsigned time)
 {
 	kg.keys[keynames[key].upper].repeats = 0;
 	kg.keys[keynames[key].upper].down = qfalse;

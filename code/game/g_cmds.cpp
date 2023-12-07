@@ -63,12 +63,12 @@ extern qboolean PM_RunningAnim(int anim);
 extern qboolean BG_IsAlreadyinTauntAnim(int anim);
 extern cvar_t* g_sex;
 extern void G_PilotXWing(gentity_t* ent);
-extern void G_DriveATST(gentity_t* p_ent, gentity_t* atst);
+extern void G_DriveATST(gentity_t* pEnt, gentity_t* atst);
 extern qboolean IsHoldingReloadableGun(const gentity_t* ent);
 extern void WP_ReloadGun(gentity_t* ent);
 extern void RemoveBarrier(gentity_t* ent);
 extern void CancelReload(gentity_t* ent);
-extern Vehicle_t* G_IsRidingVehicle(const gentity_t* p_ent);
+extern Vehicle_t* G_IsRidingVehicle(const gentity_t* pEnt);
 extern void TurnBarrierOff(gentity_t* ent);
 
 extern void ForceRepulse(gentity_t* self);
@@ -640,7 +640,7 @@ Cmd_Noclip_f
 argv(0) noclip
 ==================
 */
-void Cmd_Noclip_f(const gentity_t* ent)
+static void Cmd_Noclip_f(const gentity_t* ent)
 {
 	const char* msg;
 

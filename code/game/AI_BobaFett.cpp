@@ -129,7 +129,7 @@ extern cvar_t* g_bobaDebug;
 #include <stdio.h>
 #define STDIO_H_INC
 #endif
-void	Boba_Printf(const char* format, ...)
+static void	Boba_Printf(const char* format, ...)
 {
 	if (g_bobaDebug->integer == 0)
 	{
@@ -160,7 +160,7 @@ void	Boba_Printf(const char* format, ...)
 	gi.Printf(buf);
 }
 #else
-void Boba_Printf(const char* format, ...)
+static void Boba_Printf(const char* format, ...)
 {
 }
 #endif
@@ -737,7 +737,7 @@ wristWeapon_t missileStates[4] =
 	{BOBA_MISSILE_VIBROBLADE, FP_DRAIN, WP_MELEE, qfalse, 1, 1000, 100, BOTH_PULL_IMPALE_STAB, qfalse, qfalse, qfalse}
 };
 
-void Boba_VibrobladePunch(gentity_t* self)
+static void Boba_VibrobladePunch(gentity_t* self)
 {
 	constexpr int dummy_force_power = FP_DRAIN;
 	if (!self->client->ps.forcePowerDuration[dummy_force_power])
@@ -1069,7 +1069,7 @@ void Boba_Fire()
 	}
 }
 
-qboolean isBobaClass()
+static qboolean isBobaClass()
 {
 	if (NPC->client->NPC_class == CLASS_BOBAFETT || NPC->client->NPC_class == CLASS_MANDO)
 		return qtrue;

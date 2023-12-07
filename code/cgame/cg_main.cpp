@@ -3742,7 +3742,7 @@ CG_DrawInventorySelect
 ===================
 */
 
-extern Vehicle_t* G_IsRidingVehicle(const gentity_t* p_ent);
+extern Vehicle_t* G_IsRidingVehicle(const gentity_t* pEnt);
 
 void cg_draw_inventory_select()
 {

@@ -1160,7 +1160,7 @@ saber_moveName_t PM_SaberAnimTransitionMove(const saber_moveName_t curmove, cons
 
 extern qboolean BG_InKnockDown(int anim);
 
-saber_moveName_t PM_CheckStabDown(void)
+static saber_moveName_t PM_CheckStabDown(void)
 {
 	vec3_t face_fwd, facing_angles;
 	vec3_t fwd;
@@ -1231,7 +1231,7 @@ saber_moveName_t PM_CheckStabDown(void)
 	return LS_NONE;
 }
 
-int PM_saber_moveQuadrantForMovement(const usercmd_t* ucmd)
+static int PM_saber_moveQuadrantForMovement(const usercmd_t* ucmd)
 {
 	if (ucmd->rightmove > 0)
 	{
@@ -1378,7 +1378,7 @@ int saber_moveTransitionAngle[Q_NUM_QUADS][Q_NUM_QUADS] =
 	}
 };
 
-int PM_SaberAttackChainAngle(const int move1, const int move2)
+static int PM_SaberAttackChainAngle(const int move1, const int move2)
 {
 	if (move1 == -1 || move2 == -1)
 	{
@@ -1491,12 +1491,12 @@ qboolean PM_SaberKataDone(const int curmove, const int newmove)
 	return qfalse;
 }
 
-void PM_SetAnimFrame(playerState_t* gent, const int frame)
+static void PM_SetAnimFrame(playerState_t* gent, const int frame)
 {
 	gent->saberLockFrame = frame;
 }
 
-int PM_SaberLockWinAnim(const qboolean victory, const qboolean super_break)
+static int PM_SaberLockWinAnim(const qboolean victory, const qboolean super_break)
 {
 	int win_anim = -1;
 	switch (pm->ps->torsoAnim)
@@ -1584,7 +1584,7 @@ extern gentity_t g_entities[];
 #include "cgame/cg_local.h"
 #endif
 
-int PM_SaberLockLoseAnim(playerState_t* genemy, const qboolean victory, const qboolean super_break)
+static int PM_SaberLockLoseAnim(playerState_t* genemy, const qboolean victory, const qboolean super_break)
 {
 	int lose_anim = -1;
 
@@ -1704,7 +1704,7 @@ int PM_SaberLockLoseAnim(playerState_t* genemy, const qboolean victory, const qb
 	return lose_anim;
 }
 
-int PM_SaberLockResultAnim(playerState_t* duelist, const qboolean super_break, const qboolean won)
+static int PM_SaberLockResultAnim(playerState_t* duelist, const qboolean super_break, const qboolean won)
 {
 	int base_anim = duelist->torsoAnim;
 	switch (base_anim)
@@ -1797,7 +1797,7 @@ int PM_SaberLockResultAnim(playerState_t* duelist, const qboolean super_break, c
 	return base_anim;
 }
 
-void PM_SaberLockBreak(playerState_t* genemy, const qboolean victory, const int strength)
+static void PM_SaberLockBreak(playerState_t* genemy, const qboolean victory, const int strength)
 {
 	const qboolean super_break = strength + pm->cmd.buttons & BUTTON_ATTACK;
 
@@ -1921,7 +1921,7 @@ qboolean g_check_increment_lock_anim(const int anim, const int win_or_lose)
 	return increment;
 }
 
-void PM_SaberLocked(void)
+static void PM_SaberLocked(void)
 {
 	const bgEntity_t* e_genemy = PM_BGEntForNum(pm->ps->saberLockEnemy);
 
@@ -2278,7 +2278,7 @@ saber_moveName_t PM_BrokenParryForParry(const int move)
 }
 
 #define BACK_STAB_DISTANCE 128
-qboolean PM_CanBackstab(void)
+static qboolean PM_CanBackstab(void)
 {
 	trace_t tr;
 	vec3_t flat_ang;
@@ -2419,7 +2419,7 @@ int PM_SaberBackflipAttackMove(void)
 	return LS_A_BACKFLIP_ATK;
 }
 
-int PM_SaberDualJumpAttackMove(void)
+static int PM_SaberDualJumpAttackMove(void)
 {
 	const saberInfo_t* saber1 = BG_MySaber(pm->ps->clientNum, 0);
 
@@ -2660,7 +2660,7 @@ qboolean PM_Can_Do_Kill_Lunge_back(void)
 	return qfalse;
 }
 
-saber_moveName_t PM_SaberJumpAttackMove2(void)
+static saber_moveName_t PM_SaberJumpAttackMove2(void)
 {
 	const saberInfo_t* saber1 = BG_MySaber(pm->ps->clientNum, 0);
 	const saberInfo_t* saber2 = BG_MySaber(pm->ps->clientNum, 1);
@@ -3036,7 +3036,7 @@ saber_moveName_t PM_CheckPullAttack(void)
 	return LS_NONE;
 }
 
-qboolean PM_InSecondarySaberStyle(void)
+static qboolean PM_InSecondarySaberStyle(void)
 {
 	if (pm->ps->fd.saber_anim_levelBase == SS_STAFF || pm->ps->fd.saber_anim_levelBase == SS_DUAL)
 	{
@@ -3048,7 +3048,7 @@ qboolean PM_InSecondarySaberStyle(void)
 	return qfalse;
 }
 
-saber_moveName_t PM_CheckPlayerAttackFromParry(const int curmove)
+static saber_moveName_t PM_CheckPlayerAttackFromParry(const int curmove)
 {
 	if (curmove >= LS_PARRY_UP && curmove <= LS_REFLECT_LL)
 	{
@@ -3071,7 +3071,7 @@ saber_moveName_t PM_CheckPlayerAttackFromParry(const int curmove)
 	return LS_NONE;
 }
 
-saber_moveName_t PM_SaberAttackForMovement(const saber_moveName_t curmove)
+static saber_moveName_t PM_SaberAttackForMovement(const saber_moveName_t curmove)
 {
 	saber_moveName_t newmove = LS_NONE;
 	const qboolean noSpecials = PM_InSecondarySaberStyle() || PM_InCartwheel(pm->ps->legsAnim);
@@ -3520,7 +3520,7 @@ saber_moveName_t PM_SaberAttackForMovement(const saber_moveName_t curmove)
 	return newmove;
 }
 
-qboolean PM_CheckUpsideDownAttack(void)
+static qboolean PM_CheckUpsideDownAttack(void)
 {
 	if (pm->ps->saber_move != LS_READY)
 	{
@@ -3572,7 +3572,7 @@ qboolean PM_CheckUpsideDownAttack(void)
 	return qfalse;
 }
 
-void PM_TryAirKick(const saber_moveName_t kick_move)
+static void PM_TryAirKick(const saber_moveName_t kick_move)
 {
 	if (pm->ps->groundEntityNum < ENTITYNUM_NONE)
 	{
@@ -3836,7 +3836,7 @@ int PM_MeleeMoveForConditions(void)
 qboolean PM_InSlopeAnim(int anim);
 qboolean PM_RunningAnim(int anim);
 
-qboolean PM_saber_moveOkayForKata(void)
+static qboolean PM_saber_moveOkayForKata(void)
 {
 	if (pm->ps->saber_move == LS_READY
 		|| PM_SaberInReflect(pm->ps->saber_move)
@@ -3847,7 +3847,7 @@ qboolean PM_saber_moveOkayForKata(void)
 	return qfalse;
 }
 
-qboolean PM_CanDoKata(void)
+static qboolean PM_CanDoKata(void)
 {
 	if (!pm->ps->saberInFlight //not throwing saber
 		&& PM_saber_moveOkayForKata()
@@ -3867,7 +3867,7 @@ qboolean PM_CanDoKata(void)
 	return qfalse;
 }
 
-qboolean PM_SaberThrowable(void)
+static qboolean PM_SaberThrowable(void)
 {
 	const saberInfo_t* saber = BG_MySaber(pm->ps->clientNum, 0);
 	if (!saber)
@@ -3909,7 +3909,7 @@ qboolean PM_SaberThrowable(void)
 	return qfalse;
 }
 
-qboolean PM_CheckAltKickAttack(void)
+static qboolean PM_CheckAltKickAttack(void)
 {
 	if ((pm->cmd.buttons & BUTTON_ALT_ATTACK || pm->cmd.buttons & BUTTON_KICK)
 		&& (!PM_FlippingAnim(pm->ps->legsAnim) || pm->ps->legsTimer <= 250) && !(pm->cmd.buttons & BUTTON_DASH))
@@ -3927,7 +3927,7 @@ int bg_parryDebounce[NUM_FORCE_POWER_LEVELS] =
 	50
 };
 
-qboolean PM_SaberPowerCheck(void)
+static qboolean PM_SaberPowerCheck(void)
 {
 	if (pm->ps->saberInFlight)
 	{
@@ -3945,7 +3945,7 @@ qboolean PM_SaberPowerCheck(void)
 	return qfalse;
 }
 
-qboolean PM_CanDoRollStab(void)
+static qboolean PM_CanDoRollStab(void)
 {
 	if (pm->ps->weapon == WP_SABER && !(pm->ps->userInt3 & 1 << FLAG_DODGEROLL))
 	{
@@ -3982,7 +3982,7 @@ qboolean PM_Can_Do_Kill_Move(void)
 	return qfalse;
 }
 
-qboolean InSaberDelayAnimation(const int move)
+static qboolean InSaberDelayAnimation(const int move)
 {
 	if (move >= 665 && move <= 669
 		|| move >= 690 && move <= 694
@@ -4236,7 +4236,7 @@ int blockedfor_quad(const int quad)
 	}
 }
 
-saber_moveName_t PM_DoFake(const int curmove)
+static saber_moveName_t PM_DoFake(const int curmove)
 {
 	int newQuad = -1;
 
@@ -4443,7 +4443,7 @@ saber_moveName_t PM_DoAI_Fake(const int curmove)
 	return transitionMove[saber_moveData[curmove].endQuad][newQuad];
 }
 
-void PM_SaberDroidWeapon(void)
+static void PM_SaberDroidWeapon(void)
 {
 	// make weapon function
 	if (pm->ps->weaponTime > 0)
@@ -4577,7 +4577,7 @@ void PM_CheckClearSaberBlock(void)
 	}
 }
 
-qboolean PM_SaberBlocking(void)
+static qboolean PM_SaberBlocking(void)
 {
 	const saberInfo_t* saber1 = BG_MySaber(pm->ps->clientNum, 0);
 
@@ -6435,7 +6435,7 @@ void PM_AddBlockFatigue(playerState_t* ps, const int fatigue)
 	}
 }
 
-int Fatigue_SaberAttack()
+static int Fatigue_SaberAttack()
 {
 	//returns the FP cost for a saber attack by this player.
 	return FATIGUE_SABERATTACK;
@@ -6444,7 +6444,7 @@ int Fatigue_SaberAttack()
 //Add Fatigue for all the saber moves.
 extern qboolean PM_KnockAwayStaffAndDuels(int move);
 
-void PM_NPCFatigue(playerState_t* ps, const int new_move)
+static void PM_NPCFatigue(playerState_t* ps, const int new_move)
 {
 	if (ps->saber_move != new_move)
 	{
@@ -7487,7 +7487,7 @@ qboolean BG_SaberInFullDamageMove(const playerState_t* ps, const int anim_index)
 	return qfalse;
 }
 
-qboolean BG_SaberInPartialDamageMove(const playerState_t* ps, const int anim_index)
+static qboolean BG_SaberInPartialDamageMove(const playerState_t* ps, const int anim_index)
 {
 	//The player is attacking with a saber attack that does NO damage AT THIS POINT
 	const float torso_anim_point = bg_get_torso_anim_point(ps, anim_index);

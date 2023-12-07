@@ -179,7 +179,7 @@ void B_CleanupAlloc(void)
 #endif
 }
 
-int GetValueGroup(const char* buf, const char* group, char* outbuf)
+static int GetValueGroup(const char* buf, const char* group, char* outbuf)
 {
 	int subg = 0;
 
@@ -248,7 +248,7 @@ int GetValueGroup(const char* buf, const char* group, char* outbuf)
 	return 1;
 }
 
-int GetPairedValue(char* buf, const char* key, char* outbuf)
+static int GetPairedValue(char* buf, const char* key, char* outbuf)
 {
 	if (!buf || !key || !outbuf)
 	{
@@ -519,7 +519,7 @@ int BotDoChat(bot_state_t* bs, const char* section, const int always)
 	return 1;
 }
 
-void ParseEmotionalAttachments(bot_state_t* bs, const char* buf)
+static void ParseEmotionalAttachments(bot_state_t* bs, const char* buf)
 {
 	int i = 0;
 	char tbuf[16];
@@ -575,7 +575,7 @@ void ParseEmotionalAttachments(bot_state_t* bs, const char* buf)
 	}
 }
 
-int ReadChatGroups(const bot_state_t* bs, const char* buf)
+static int ReadChatGroups(const bot_state_t* bs, const char* buf)
 {
 	const char* cgroupbegin = strstr(buf, "BEGIN_CHAT_GROUPS");
 

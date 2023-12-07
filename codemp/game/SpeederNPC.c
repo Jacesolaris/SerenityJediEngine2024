@@ -284,7 +284,7 @@ static void ProcessMoveCommands(Vehicle_t* p_veh)
 // ProcessOrientCommands the Vehicle.
 extern void AnimalProcessOri(const Vehicle_t* p_veh);
 
-void ProcessOrientCommands(const Vehicle_t* p_veh)
+static void ProcessOrientCommands(const Vehicle_t* p_veh)
 {
 	/********************************************************************************/
 	/*	BEGIN	Here is where make sure the vehicle is properly oriented.	BEGIN	*/
@@ -352,7 +352,7 @@ void AnimateVehicle(Vehicle_t* p_veh)
 //I want to keep this function BG too, because it's fairly generic already, and it
 //would be nice to have proper prediction of animations. -rww
 // This function makes sure that the rider's in this vehicle are properly animated.
-void AnimateRiders(Vehicle_t* p_veh)
+static void AnimateRiders(Vehicle_t* p_veh)
 {
 	animNumber_t Anim = BOTH_VS_IDLE;
 

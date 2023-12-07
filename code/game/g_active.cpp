@@ -95,7 +95,7 @@ extern qboolean PM_MeleeblockAnim(int anim);
 extern qboolean PM_CanRollFromSoulCal(const playerState_t* ps);
 extern qboolean BG_FullBodyTauntAnim(int anim);
 extern qboolean FlyingCreature(const gentity_t* ent);
-extern Vehicle_t* G_IsRidingVehicle(const gentity_t* p_ent);
+extern Vehicle_t* G_IsRidingVehicle(const gentity_t* pEnt);
 extern void G_AttachToVehicle(gentity_t* ent, usercmd_t** ucmd);
 extern void G_GetBoltPosition(gentity_t* self, int boltIndex, vec3_t pos, int modelIndex = 0);
 extern void G_UpdateEmplacedWeaponData(gentity_t* ent);

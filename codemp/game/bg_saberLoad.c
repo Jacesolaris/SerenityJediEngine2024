@@ -710,7 +710,8 @@ qboolean WP_UseFirstValidSaberStyle(const saberInfo_t* saber1, const saberInfo_t
 	{
 		if (dualSabers)
 		{
-			Com_Printf("WARNING: No valid saber styles for %s/%s", saber1->name, saber2->name);
+			Com_Printf("WARNING: No valid saber styles for %s", saber1->name);
+			Com_Printf("WARNING: No valid saber styles for %s", saber2->name);
 		}
 		else
 		{

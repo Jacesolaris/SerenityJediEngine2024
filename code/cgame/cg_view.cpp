@@ -49,7 +49,7 @@ constexpr auto CAMERA_SIZE = 4;
 
 float cg_zoomFov;
 extern qboolean CG_OnMovingPlat(const playerState_t* ps);
-extern Vehicle_t* G_IsRidingVehicle(const gentity_t* p_ent);
+extern Vehicle_t* G_IsRidingVehicle(const gentity_t* pEnt);
 
 extern int g_crosshairSameEntTime;
 extern int g_crosshairEntNum;
@@ -1987,7 +1987,7 @@ static void CG_DrawSkyBoxPortal()
 }
 
 //----------------------------
-void CG_RunEmplacedWeapon()
+static void CG_RunEmplacedWeapon()
 {
 	const gentity_t* player = &g_entities[0],
 		* gun = player->owner;
