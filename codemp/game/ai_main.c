@@ -11259,7 +11259,7 @@ void standard_bot_ai(bot_state_t* bs)
 				forceHostile = 0;
 			}
 		}
-		else if (bs->cur_ps.saberInFlight && !bs->cur_ps.saberentity_num)
+		else if (bs->cur_ps.saberInFlight && !bs->cur_ps.saberEntityNum)
 		{
 			//we've lost our saber.
 			//check to see if we can get the saber back yet.
@@ -12713,7 +12713,7 @@ void standard_bot_ai(bot_state_t* bs)
 
 	if (bs->cur_ps.weapon == WP_SABER &&
 		bs->cur_ps.saberInFlight &&
-		!bs->cur_ps.saberentity_num)
+		!bs->cur_ps.saberEntityNum)
 	{
 		//saber knocked away, keep trying to get it back
 		bs->doAttack = 1;

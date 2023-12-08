@@ -51,18 +51,18 @@ NON-PORTABLE SYSTEM SERVICES
 ==============================================================
 */
 
-//#define MAX_JOYSTICK_AXIS 16
+#define MAX_JOYSTICK_AXIS 16
 
-using joystickAxis_t = enum
-{
-	AXIS_SIDE,
-	AXIS_FORWARD,
-	AXIS_UP,
-	AXIS_ROLL,
-	AXIS_YAW,
-	AXIS_PITCH,
-	MAX_JOYSTICK_AXIS
-};
+//using joystickAxis_t = enum
+//{
+//	AXIS_SIDE,
+//	AXIS_FORWARD,
+//	AXIS_UP,
+//	AXIS_ROLL,
+//	AXIS_YAW,
+//	AXIS_PITCH,
+//	MAX_JOYSTICK_AXIS
+//};
 
 using sysEventType_t = enum
 {

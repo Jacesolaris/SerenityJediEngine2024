@@ -1903,6 +1903,5 @@ void wp_handle_bolt_block(gentity_t* bolt, gentity_t* blocker, trace_t* trace, v
 
 	bolt->activator = prev_owner;
 
-	blocker->client->ps.ManualMBlockingTime = level.time + (600 - blocker->client->ps.fd.forcePowerLevel[
-		FP_SABER_DEFENSE] * 200);
+	blocker->client->ps.ManualMBlockingTime = level.time + (600 - blocker->client->ps.fd.forcePowerLevel[FP_SABER_DEFENSE] * 200);
 }

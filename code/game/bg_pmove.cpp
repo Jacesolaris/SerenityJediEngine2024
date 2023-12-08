@@ -168,9 +168,9 @@ extern cvar_t* g_stepSlideFix;
 extern cvar_t* g_noIgniteTwirl;
 extern void TurnBarrierOff(gentity_t* ent);
 
-int PM_BlockingPoseForsaber_anim_levelDual();
-int PM_BlockingPoseForsaber_anim_levelStaff();
-int PM_BlockingPoseForsaber_anim_levelSingle();
+int PM_BlockingPoseForsaber_anim_levelDual(void);
+int PM_BlockingPoseForsaber_anim_levelStaff(void);
+int PM_BlockingPoseForsaber_anim_levelSingle(void);
 int PM_IdlePoseForsaber_anim_level();
 
 static void pm_set_water_level_at_point(vec3_t org, int* waterlevel, int* watertype);
@@ -9889,7 +9889,7 @@ static void PM_Footsteps()
 
 	const qboolean is_holding_block_button = pm->ps->ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
 	//Holding Block Button
-	const qboolean active_blocking = pm->ps->ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK ? qtrue : qfalse;
+	const qboolean is_holding_block_button_and_attack = pm->ps->ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK ? qtrue : qfalse;
 	//Holding Block Button
 
 	if (pm->gent == nullptr || pm->gent->client == nullptr)
@@ -10296,10 +10296,10 @@ static void PM_Footsteps()
 					//we're stuck in a broken parry
 					saber_in_air = qfalse;
 				}
-				if (pm->ps->saberentity_num < ENTITYNUM_NONE && pm->ps->saberentity_num > 0) //player is 0
+				if (pm->ps->saberEntityNum < ENTITYNUM_NONE && pm->ps->saberEntityNum > 0) //player is 0
 				{
 					//
-					if (&g_entities[pm->ps->saberentity_num] != nullptr && g_entities[pm->ps->saberentity_num].s.pos.
+					if (&g_entities[pm->ps->saberEntityNum] != nullptr && g_entities[pm->ps->saberEntityNum].s.pos.
 						trType == TR_STATIONARY)
 					{
 						//fell to the ground and we're not trying to pull it back
@@ -10347,7 +10347,7 @@ static void PM_Footsteps()
 			}
 			else if (pm->ps->weapon == WP_SABER
 				&& pm->ps->SaberLength() > 0
-				&& (pm->ps->SaberActive() || !g_noIgniteTwirl->integer && !active_blocking
+				&& (pm->ps->SaberActive() || !g_noIgniteTwirl->integer && !is_holding_block_button_and_attack
 					&& !is_holding_block_button)
 				&& !pm->ps->saberInFlight
 				&& !PM_SaberDrawPutawayAnim(pm->ps->legsAnim))
@@ -11834,7 +11834,7 @@ static void PM_BeginWeaponChange(const int weapon)
 {
 	const qboolean is_holding_block_button = pm->ps->ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
 	//Holding Block Button
-	const qboolean active_blocking = pm->ps->ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK ? qtrue : qfalse;
+	const qboolean is_holding_block_button_and_attack = pm->ps->ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK ? qtrue : qfalse;
 	//Active Blocking
 
 	if (pm->gent && pm->gent->client && pm->gent->client->pers.enterTime >= level.time - 500)
@@ -11868,7 +11868,7 @@ static void PM_BeginWeaponChange(const int weapon)
 		pm->ps->eFlags &= ~EF2_DUAL_WEAPONS;
 	}
 
-	if (pm->ps->weapon == WP_SABER && (is_holding_block_button || active_blocking))
+	if (pm->ps->weapon == WP_SABER && (is_holding_block_button || is_holding_block_button_and_attack))
 	{
 		return;
 	}
@@ -11986,7 +11986,7 @@ static void PM_FinishWeaponChange()
 
 	const qboolean is_holding_block_button = pm->ps->ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
 	//Holding Block Button
-	const qboolean active_blocking = pm->ps->ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK ? qtrue : qfalse;
+	const qboolean is_holding_block_button_and_attack = pm->ps->ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK ? qtrue : qfalse;
 
 	if (pm->gent && pm->gent->client && pm->gent->client->pers.enterTime >= level.time - 500)
 	{
@@ -12120,7 +12120,7 @@ static void PM_FinishWeaponChange()
 				}
 				else
 				{
-					if (!g_noIgniteTwirl->integer && !IsSurrendering(pm->gent) && !active_blocking
+					if (!g_noIgniteTwirl->integer && !IsSurrendering(pm->gent) && !is_holding_block_button_and_attack
 						&& !is_holding_block_button)
 					{
 						if (PM_RunningAnim(pm->ps->legsAnim) || pm->ps->groundEntityNum == ENTITYNUM_NONE ||
@@ -12359,7 +12359,7 @@ int PM_IdlePoseForsaber_anim_level()
 	return anim;
 }
 
-int PM_BlockingPoseForsaber_anim_levelDual()
+int PM_BlockingPoseForsaber_anim_levelDual(void)
 {
 	int anim = PM_ReadyPoseForsaber_anim_level();
 
@@ -12507,7 +12507,7 @@ int PM_BlockingPoseForsaber_anim_levelDual()
 	return anim;
 }
 
-int PM_BlockingPoseForsaber_anim_levelStaff()
+int PM_BlockingPoseForsaber_anim_levelStaff(void)
 {
 	int anim = PM_ReadyPoseForsaber_anim_level();
 
@@ -12655,18 +12655,21 @@ int PM_BlockingPoseForsaber_anim_levelStaff()
 	return anim;
 }
 
-int PM_BlockingPoseForsaber_anim_levelSingle()
+int PM_BlockingPoseForsaber_anim_levelSingle(void)
 {
 	int anim = PM_ReadyPoseForsaber_anim_level();
 
-	const qboolean is_holding_block_button_and_attack = pm->ps->ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK
-		? qtrue
-		: qfalse; //Holding Block and attack Buttons
+	const qboolean is_holding_block_button_and_attack = pm->ps->ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK ? qtrue : qfalse; //Holding Block and attack Buttons
 
 	const signed char forwardmove = pm->cmd.forwardmove;
 	const signed char rightmove = pm->cmd.rightmove;
 
 	if (PM_RidingVehicle())
+	{
+		return -1;
+	}
+
+	if (PM_InKnockDown(pm->ps) || PM_InSlapDown(pm->ps) || PM_InRoll(pm->ps))
 	{
 		return -1;
 	}
@@ -13017,8 +13020,7 @@ void PM_Setsaber_move(saber_moveName_t new_move)
 	int parts = SETANIM_TORSO;
 	qboolean manual_blocking = qfalse;
 
-	const qboolean is_holding_block_button = pm->ps->ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
-	//Holding Block Button
+	const qboolean is_holding_block_button = pm->ps->ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;//Holding Block Button
 
 	if (new_move < LS_NONE || new_move >= LS_MOVE_MAX)
 	{
@@ -13037,8 +13039,7 @@ void PM_Setsaber_move(saber_moveName_t new_move)
 
 	if (cg_debugSaber.integer & 0x01 && new_move != LS_READY)
 	{
-		Com_Printf("SetSaberMove:  From '%s' to '%s'\n", saber_moveData[pm->ps->saber_move].name,
-			saber_moveData[new_move].name);
+		Com_Printf("SetSaberMove:  From '%s' to '%s'\n", saber_moveData[pm->ps->saber_move].name, saber_moveData[new_move].name);
 	}
 
 	if (new_move == LS_READY || new_move == LS_A_FLIP_STAB || new_move == LS_A_FLIP_SLASH)
@@ -13862,7 +13863,7 @@ Generates a use event
 */
 constexpr auto USE_DELAY = 250;
 
-void PM_Use()
+static void PM_Use()
 {
 	if (pm->ps->useTime > 0)
 	{
@@ -14524,7 +14525,7 @@ static int PM_SaberLockResultAnim(gentity_t* duelist, const int lock_or_break_or
 	{
 		//if you lose a superbreak, you're defenseless
 		//make saberent not block
-		gentity_t* saberent = &g_entities[duelist->client->ps.saberentity_num];
+		gentity_t* saberent = &g_entities[duelist->client->ps.saberEntityNum];
 		if (saberent)
 		{
 			VectorClear(saberent->mins);
@@ -15108,7 +15109,7 @@ static qboolean PM_SaberLocked()
 							}
 						}
 					}
-				}
+			}
 				else
 				{
 					return qfalse;
@@ -15166,13 +15167,13 @@ static qboolean PM_SaberLocked()
 						}
 					}
 				}
-			}
 		}
+	}
 		else
 		{
 			//FIXME: other ways out of a saberlock?
 		}
-	}
+}
 	else
 	{
 		//something broke us out of it
@@ -17555,7 +17556,7 @@ void PM_WeaponLightsaber()
 
 	const qboolean is_holding_block_button = pm->ps->ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
 	//Holding Block Button
-	const qboolean active_blocking = pm->ps->ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK ? qtrue : qfalse;
+	const qboolean is_holding_block_button_and_attack = pm->ps->ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK ? qtrue : qfalse;
 	const qboolean walking_blocking = pm->ps->ManualBlockingFlags & 1 << MBF_BLOCKWALKING ? qtrue : qfalse;
 	//Walking Blocking
 
@@ -17802,10 +17803,10 @@ void PM_WeaponLightsaber()
 		if (pm->ps->saberInFlight)
 		{
 			//guiding saber
-			if (pm->ps->saberentity_num < ENTITYNUM_NONE && pm->ps->saberentity_num > 0) //player is 0
+			if (pm->ps->saberEntityNum < ENTITYNUM_NONE && pm->ps->saberEntityNum > 0) //player is 0
 			{
 				//
-				if (&g_entities[pm->ps->saberentity_num] != nullptr && g_entities[pm->ps->saberentity_num].s.pos.
+				if (&g_entities[pm->ps->saberEntityNum] != nullptr && g_entities[pm->ps->saberEntityNum].s.pos.
 					trType == TR_STATIONARY)
 				{
 					//fell to the ground and we're not trying to pull it back
@@ -18051,10 +18052,10 @@ void PM_WeaponLightsaber()
 					//we're stuck in a broken parry
 					in_air = qfalse;
 				}
-				if (pm->ps->saberentity_num < ENTITYNUM_NONE && pm->ps->saberentity_num > 0) //player is 0
+				if (pm->ps->saberEntityNum < ENTITYNUM_NONE && pm->ps->saberEntityNum > 0) //player is 0
 				{
 					//
-					if (&g_entities[pm->ps->saberentity_num] != nullptr && g_entities[pm->ps->saberentity_num].s.pos.
+					if (&g_entities[pm->ps->saberEntityNum] != nullptr && g_entities[pm->ps->saberEntityNum].s.pos.
 						trType == TR_STATIONARY)
 					{
 						//fell to the ground and we're not trying to pull it back
@@ -18236,7 +18237,7 @@ void PM_WeaponLightsaber()
 		}
 		// check for fire
 		//This section dictates want happens when you quit holding down attack.
-		else if (!(pm->cmd.buttons & BUTTON_ATTACK) || is_holding_block_button || walking_blocking || active_blocking)
+		else if (!(pm->cmd.buttons & BUTTON_ATTACK) || is_holding_block_button || walking_blocking || is_holding_block_button_and_attack)
 		{
 			//not attacking
 			pm->ps->weaponTime = 0;
@@ -18380,10 +18381,10 @@ void PM_WeaponLightsaber()
 				//we're stuck in a broken parry
 				in_air = qfalse;
 			}
-			if (pm->ps->saberentity_num < ENTITYNUM_NONE && pm->ps->saberentity_num > 0) //player is 0
+			if (pm->ps->saberEntityNum < ENTITYNUM_NONE && pm->ps->saberEntityNum > 0) //player is 0
 			{
 				//
-				if (&g_entities[pm->ps->saberentity_num] != nullptr && g_entities[pm->ps->saberentity_num].s.pos.
+				if (&g_entities[pm->ps->saberEntityNum] != nullptr && g_entities[pm->ps->saberEntityNum].s.pos.
 					trType == TR_STATIONARY)
 				{
 					//fell to the ground and we're not trying to pull it back
@@ -20773,8 +20774,7 @@ static void PM_AdjustAttackStates(pmove_t* pm)
 			}
 		}
 		//saber staff alt-attack does a special attack anim, non-throwable sabers do kicks
-		if (/*pm->ps->saber_anim_level != SS_STAFF
-			&&*/ !(pm->ps->saber[0].saberFlags & SFL_NOT_THROWABLE))
+		if (!(pm->ps->saber[0].saberFlags & SFL_NOT_THROWABLE))
 		{
 			//using a throwable saber, so remove the saber throw button
 			if (!g_saberNewControlScheme->integer

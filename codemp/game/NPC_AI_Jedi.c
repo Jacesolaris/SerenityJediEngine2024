@@ -3947,7 +3947,7 @@ static void Jedi_CombatDistance(const int enemy_dist)
 			TIMER_Set(NPCS.NPC, "attackDelay", 3000);
 		}
 		else if (NPCS.NPC->enemy && NPCS.NPC->enemy->client && //valid enemy
-			NPCS.NPC->enemy->client->ps.saberInFlight && NPCS.NPC->enemy->client->ps.saberentity_num &&
+			NPCS.NPC->enemy->client->ps.saberInFlight && NPCS.NPC->enemy->client->ps.saberEntityNum &&
 			//enemy throwing saber
 			NPCS.NPC->client->ps.weaponTime <= 0 && //I'm not busy
 			WP_ForcePowerAvailable(NPCS.NPC, FP_GRIP, 0) && //I can use the power
@@ -6365,7 +6365,7 @@ static void Jedi_EvasionSaber(vec3_t enemy_movedir, const float enemy_dist, vec3
 	}
 
 	if (NPCS.NPC->enemy->client->ps.saberInFlight
-		&& NPCS.NPC->enemy->client->ps.saberentity_num != ENTITYNUM_NONE
+		&& NPCS.NPC->enemy->client->ps.saberEntityNum != ENTITYNUM_NONE
 		&& NPCS.NPC->enemy->client->ps.saberEntityState != SES_RETURNING)
 	{
 		//enemy is shooting lightning
@@ -6429,7 +6429,7 @@ static void Jedi_EvasionSaber(vec3_t enemy_movedir, const float enemy_dist, vec3
 				{
 					vec3_t saberDir2Me;
 					vec3_t saberMoveDir;
-					const gentity_t* saber = &g_entities[NPCS.NPC->enemy->client->ps.saberentity_num];
+					const gentity_t* saber = &g_entities[NPCS.NPC->enemy->client->ps.saberEntityNum];
 					VectorSubtract(NPCS.NPC->r.currentOrigin, saber->r.currentOrigin, saberDir2Me);
 					const float saberDist = VectorNormalize(saberDir2Me);
 					VectorCopy(saber->s.pos.trDelta, saberMoveDir);
@@ -9037,7 +9037,7 @@ static void Jedi_Patrol(void)
 						{
 							vec3_t saberDir2Me;
 							vec3_t saberMoveDir;
-							const gentity_t* saber = &g_entities[enemy->client->ps.saberentity_num];
+							const gentity_t* saber = &g_entities[enemy->client->ps.saberEntityNum];
 							VectorSubtract(NPCS.NPC->r.currentOrigin, saber->r.currentOrigin, saberDir2Me);
 							const float saberDist = VectorNormalize(saberDir2Me);
 							VectorCopy(saber->s.pos.trDelta, saberMoveDir);
@@ -9216,11 +9216,11 @@ void NPC_BSJedi_FollowLeader(void)
 	if (NPCS.NPC->client->ps.saberInFlight)
 	{
 		//saber is not in hand
-		if (NPCS.NPC->client->ps.saberentity_num < ENTITYNUM_NONE && NPCS.NPC->client->ps.saberentity_num > 0)
+		if (NPCS.NPC->client->ps.saberEntityNum < ENTITYNUM_NONE && NPCS.NPC->client->ps.saberEntityNum > 0)
 			//player is 0
 		{
 			//
-			if (g_entities[NPCS.NPC->client->ps.saberentity_num].s.pos.trType == TR_STATIONARY)
+			if (g_entities[NPCS.NPC->client->ps.saberEntityNum].s.pos.trType == TR_STATIONARY)
 			{
 				//fell to the ground, try to pick it up...
 				if (Jedi_CanPullBackSaber(NPCS.NPC))
@@ -9230,7 +9230,7 @@ void NPC_BSJedi_FollowLeader(void)
 					//		otherwise we could end up running away from it while it's on its
 					//		way back to us and we could lose it again.
 					NPCS.NPC->client->ps.saberBlocked = BLOCKED_NONE;
-					NPCS.NPCInfo->goalEntity = &g_entities[NPCS.NPC->client->ps.saberentity_num];
+					NPCS.NPCInfo->goalEntity = &g_entities[NPCS.NPC->client->ps.saberEntityNum];
 					NPCS.ucmd.buttons &= ~BUTTON_ALT_ATTACK;
 					NPCS.ucmd.buttons |= BUTTON_ATTACK;
 					if (NPCS.NPC->enemy && NPCS.NPC->enemy->health > 0)
@@ -9473,10 +9473,10 @@ static void Jedi_Attack(void)
 	if (NPCS.NPC->client->ps.saberInFlight)
 	{
 		//saber is not in hand
-		if (!NPCS.NPC->client->ps.saberentity_num && NPCS.NPC->client->saberStoredIndex)
+		if (!NPCS.NPC->client->ps.saberEntityNum && NPCS.NPC->client->saberStoredIndex)
 		{
 			//
-			if (g_entities[NPCS.NPC->client->ps.saberentity_num].s.pos.trType == TR_STATIONARY)
+			if (g_entities[NPCS.NPC->client->ps.saberEntityNum].s.pos.trType == TR_STATIONARY)
 			{
 				//fell to the ground, try to pick it up
 				if (Jedi_CanPullBackSaber(NPCS.NPC))

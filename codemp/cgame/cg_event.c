@@ -4504,8 +4504,8 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 
 	case EV_GENERAL_SOUND:
 		DEBUGNAME("EV_GENERAL_SOUND");
-		if (es->saberentity_num == TRACK_CHANNEL_2 || es->saberentity_num == TRACK_CHANNEL_3 ||
-			es->saberentity_num == TRACK_CHANNEL_5)
+		if (es->saberEntityNum == TRACK_CHANNEL_2 || es->saberEntityNum == TRACK_CHANNEL_3 ||
+			es->saberEntityNum == TRACK_CHANNEL_5)
 		{
 			//channels 2 and 3 are for speed and rage, 5 for sight
 			if (cgs.gameSounds[es->eventParm])
@@ -4517,12 +4517,12 @@ void CG_EntityEvent(centity_t* cent, vec3_t position)
 		{
 			if (cgs.gameSounds[es->eventParm])
 			{
-				trap->S_StartSound(NULL, es->number, es->saberentity_num, cgs.gameSounds[es->eventParm]);
+				trap->S_StartSound(NULL, es->number, es->saberEntityNum, cgs.gameSounds[es->eventParm]);
 			}
 			else
 			{
 				s = CG_ConfigString(CS_SOUNDS + es->eventParm);
-				trap->S_StartSound(NULL, es->number, es->saberentity_num, CG_CustomSound(es->number, s));
+				trap->S_StartSound(NULL, es->number, es->saberEntityNum, CG_CustomSound(es->number, s));
 			}
 		}
 		break;

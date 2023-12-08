@@ -42,7 +42,7 @@ char connectionMessageString[1024];
  UI_DrawThumbNail
  =================
  */
-void UI_DrawThumbNail(float x, float y, float w, float h, byte* pic)
+static void UI_DrawThumbNail(float x, float y, float w, float h, byte* pic)
 {
 	ui.DrawStretchRaw(x, y, w, h, SG_SCR_WIDTH, SG_SCR_HEIGHT, pic, 0, qtrue);
 }
@@ -119,7 +119,7 @@ void UI_UpdateConnectionMessageString(const char* string)
 UI_KeyConnect
 ===================
 */
-void UI_KeyConnect(const int key)
+static void UI_KeyConnect(const int key)
 {
 	if (key == A_ESCAPE)
 	{

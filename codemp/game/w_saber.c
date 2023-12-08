@@ -1042,7 +1042,7 @@ void WP_DeactivateSaber(gentity_t* self)
 {
 	const qboolean blocking = self->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
 	//Normal Blocking
-	const qboolean active_blocking = self->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK ? qtrue : qfalse;
+	const qboolean is_holding_block_button_and_attack = self->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK ? qtrue : qfalse;
 	//Active Blocking
 
 	if (!self || !self->client)
@@ -1050,7 +1050,7 @@ void WP_DeactivateSaber(gentity_t* self)
 		return;
 	}
 
-	if (blocking || active_blocking)
+	if (blocking || is_holding_block_button_and_attack)
 	{
 		return;
 	}
@@ -1466,7 +1466,7 @@ void wp_saber_init_blade_data(const gentity_t* ent)
 		//ok, make one then
 		saberent = G_Spawn();
 	}
-	ent->client->ps.saberentity_num = ent->client->saberStoredIndex = saberent->s.number;
+	ent->client->ps.saberEntityNum = ent->client->saberStoredIndex = saberent->s.number;
 	saberent->classname = "lightsaber";
 
 	saberent->neverFree = qtrue; //the saber being removed would be a terrible thing.
@@ -2425,8 +2425,8 @@ qboolean WP_SabersCheckLock(gentity_t* ent1, gentity_t* ent2)
 		}
 	}
 
-	if (!ent1->client->ps.saberentity_num ||
-		!ent2->client->ps.saberentity_num ||
+	if (!ent1->client->ps.saberEntityNum ||
+		!ent2->client->ps.saberEntityNum ||
 		ent1->client->ps.saberInFlight ||
 		ent2->client->ps.saberInFlight)
 	{
@@ -3940,7 +3940,7 @@ int wp_saber_must_block(gentity_t* self, const gentity_t* atk, const qboolean ch
 		return 0;
 	}
 
-	if (!self->client->ps.saberentity_num || self->client->ps.saberInFlight)
+	if (!self->client->ps.saberEntityNum || self->client->ps.saberInFlight)
 	{
 		//our saber is currently dropped or in flight.
 		if (!wp_using_dual_saber_as_primary(&self->client->ps))
@@ -5304,7 +5304,7 @@ qboolean WP_BrokenBoltBlockKnockBack(gentity_t* victim)
 
 		vec3_t throw_dir = { 0, 0, 350 };
 
-		saberKnockOutOfHand(&g_entities[victim->client->ps.saberentity_num], victim, throw_dir);
+		saberKnockOutOfHand(&g_entities[victim->client->ps.saberEntityNum], victim, throw_dir);
 
 		G_AddEvent(victim, EV_PAIN, victim->health);
 		return qtrue;
@@ -6742,7 +6742,7 @@ static QINLINE qboolean check_saber_damage(gentity_t* self, const int r_saber_nu
 	const qboolean self_m_blocking = self->client->ps.ManualBlockingFlags & 1 << PERFECTBLOCKING ? qtrue : qfalse;
 	//Perfect Blocking
 
-	if (BG_SabersOff(&self->client->ps) || !self->client->ps.saberentity_num && self->client->ps.fd.saber_anim_levelBase
+	if (BG_SabersOff(&self->client->ps) || !self->client->ps.saberEntityNum && self->client->ps.fd.saber_anim_levelBase
 		!= SS_DUAL)
 	{
 		// register as a hit so we don't do a lot of interpolation.
@@ -7140,7 +7140,7 @@ static QINLINE qboolean check_saber_damage(gentity_t* self, const int r_saber_nu
 
 	if (blocker)
 	{
-		sabimpactentity_num = blocker->client->ps.saberentity_num;
+		sabimpactentity_num = blocker->client->ps.saberEntityNum;
 	}
 	else
 	{
@@ -7303,7 +7303,7 @@ static QINLINE qboolean check_saber_damage(gentity_t* self, const int r_saber_nu
 	if (self->client->ps.saberInFlight && !wp_using_dual_saber_as_primary(&self->client->ps))
 	{
 		//saber in flight and it has hit something.  deactivate it.
-		saberCheckKnockdown_Smashed(&g_entities[self->client->ps.saberentity_num], self, blocker, dmg);
+		saberCheckKnockdown_Smashed(&g_entities[self->client->ps.saberEntityNum], self, blocker, dmg);
 	}
 	else
 	{
@@ -7644,8 +7644,8 @@ void wp_saber_start_missile_block_check(gentity_t* self, usercmd_t* ucmd)
 				continue; //not valid cl owner
 			}
 
-			if (!p_owner->client->ps.saberentity_num ||
-				p_owner->client->ps.saberentity_num != ent->s.number)
+			if (!p_owner->client->ps.saberEntityNum ||
+				p_owner->client->ps.saberEntityNum != ent->s.number)
 			{
 				//the saber is knocked away and/or not flying actively, or this ent is not the cl's saber ent at all
 				continue;
@@ -7848,7 +7848,7 @@ void wp_saber_start_missile_block_check(gentity_t* self, usercmd_t* ucmd)
 			trap->Trace(&trace, ent->r.currentOrigin, ent->r.mins, ent->r.maxs, trace_to, ent->s.number, ent->clipmask,
 				qfalse, 0, 0);
 			if (trace.allsolid || trace.startsolid || trace.fraction < 1.0f && trace.entityNum != self->s.number &&
-				trace.entityNum != self->client->ps.saberentity_num)
+				trace.entityNum != self->client->ps.saberEntityNum)
 			{
 				//okay, try one more check
 				VectorNormalize2(ent->s.pos.trDelta, ent_dir);
@@ -7856,7 +7856,7 @@ void wp_saber_start_missile_block_check(gentity_t* self, usercmd_t* ucmd)
 				trap->Trace(&trace, ent->r.currentOrigin, ent->r.mins, ent->r.maxs, trace_to, ent->s.number,
 					ent->clipmask, qfalse, 0, 0);
 				if (trace.allsolid || trace.startsolid || trace.fraction < 1.0f && trace.entityNum != self->s.number &&
-					trace.entityNum != self->client->ps.saberentity_num)
+					trace.entityNum != self->client->ps.saberEntityNum)
 				{
 					//can't hit me, ignore it
 					continue;
@@ -8435,9 +8435,9 @@ static void DownedSaberThink(gentity_t* saberent)
 		return;
 	}
 
-	if (saber_own->client->ps.saberentity_num)
+	if (saber_own->client->ps.saberEntityNum)
 	{
-		if (saber_own->client->ps.saberentity_num == saberent->s.number)
+		if (saber_own->client->ps.saberEntityNum == saberent->s.number)
 		{
 			//owner shouldn't have this set if we're thinking in here. Must've fallen off a cliff and instantly respawned or something.
 			not_disowned = qtrue;
@@ -8457,7 +8457,7 @@ static void DownedSaberThink(gentity_t* saberent)
 	if (not_disowned || saber_own->health < 1 || !saber_own->client->ps.fd.forcePowerLevel[FP_SABER_OFFENSE])
 	{
 		//He's dead, just go back to our normal saber status
-		saber_own->client->ps.saberentity_num = saber_own->client->saberStoredIndex;
+		saber_own->client->ps.saberEntityNum = saber_own->client->saberStoredIndex;
 
 #ifdef _DEBUG
 		if (saber_own->client->saberStoredIndex != saberent->s.number)
@@ -8521,13 +8521,13 @@ static void DownedSaberThink(gentity_t* saberent)
 	if (pull_back)
 	{
 		//Get going back to the owner.
-		saber_own->client->ps.saberentity_num = saber_own->client->saberStoredIndex;
+		saber_own->client->ps.saberEntityNum = saber_own->client->saberStoredIndex;
 
 #ifdef _DEBUG
 		if (saber_own->client->saberStoredIndex != saberent->s.number)
 		{
 			//I'm paranoid.
-			saber_own->client->saberStoredIndex = saber_own->client->ps.saberentity_num = saberent->s.number;
+			saber_own->client->saberStoredIndex = saber_own->client->ps.saberEntityNum = saberent->s.number;
 		}
 #endif
 		saberReactivate(saberent, saber_own);
@@ -8571,7 +8571,7 @@ static void DrownedSaberTouch(gentity_t* self, gentity_t* other, trace_t* trace)
 		//and in a roll or crouching
 		&& (BG_InRoll(&other->client->ps, other->client->ps.legsAnim) || PM_CrouchAnim(other->client->ps.legsAnim)))
 	{
-		other->client->ps.saberentity_num = other->client->saberStoredIndex;
+		other->client->ps.saberEntityNum = other->client->saberStoredIndex;
 
 #ifdef _DEBUG
 		if (other->client->saberStoredIndex != self->s.number)
@@ -8652,7 +8652,7 @@ static void saberKnockDown(gentity_t* saberent, gentity_t* saber_owner, const ge
 {
 	trace_t tr;
 
-	saber_owner->client->ps.saberentity_num = 0; //still stored in client->saberStoredIndex
+	saber_owner->client->ps.saberEntityNum = 0; //still stored in client->saberStoredIndex
 	saber_owner->client->saberKnockedTime = level.time + SABER_RETRIEVE_DELAY;
 
 	saberent->clipmask = MASK_SOLID;
@@ -8757,7 +8757,7 @@ static void saberKnockDown(gentity_t* saberent, gentity_t* saber_owner, const ge
 }
 
 //sort of a silly macro I guess. But if I change anything in here I'll probably want it to be everywhere.
-#define SABERINVALID (!saberent || !saberOwner || !other || !saberent->inuse || !saberOwner->inuse || !other->inuse || !saberOwner->client || !other->client || !saberOwner->client->ps.saberentity_num || saberOwner->client->ps.saberLockTime > (level.time-100))
+#define SABERINVALID (!saberent || !saberOwner || !other || !saberent->inuse || !saberOwner->inuse || !other->inuse || !saberOwner->client || !other->client || !saberOwner->client->ps.saberEntityNum || saberOwner->client->ps.saberLockTime > (level.time-100))
 
 void WP_SaberRemoveG2Model(gentity_t* saberent)
 {
@@ -8792,7 +8792,7 @@ qboolean saberKnockOutOfHand(gentity_t* saberent, gentity_t* saber_owner, vec3_t
 		return qfalse;
 	}
 
-	if (!saber_owner->client->ps.saberentity_num)
+	if (!saber_owner->client->ps.saberEntityNum)
 	{
 		//already gone
 		return qfalse;
@@ -8949,7 +8949,7 @@ qboolean ButterFingers(gentity_t* saberent, gentity_t* saber_owner, const gentit
 	VectorClear(oswing);
 
 	if (!saber_owner->client->olderIsValid || level.time - saber_owner->client->lastSaberStorageTime >= 200
-		|| !saber_owner->client->ps.saberentity_num || saber_owner->client->ps.saberInFlight)
+		|| !saber_owner->client->ps.saberEntityNum || saber_owner->client->ps.saberInFlight)
 	{
 		//old or bad saberOwner data or you don't have a saber in your hand.  We're kind of screwed so just return.
 		return qfalse;
@@ -8960,7 +8960,7 @@ qboolean ButterFingers(gentity_t* saberent, gentity_t* saber_owner, const gentit
 	if (other && other->client && other->inuse)
 	{
 		if (other->client->olderIsValid && level.time - other->client->lastSaberStorageTime >= 200
-			&& other->client->ps.saberentity_num && !other->client->ps.saberInFlight)
+			&& other->client->ps.saberEntityNum && !other->client->ps.saberInFlight)
 		{
 			VectorSubtract(other->client->lastSaberBase_Always, other->client->olderSaberBase, oswing);
 			VectorCopy(other->client->ps.velocity, ovelocity);
@@ -9215,9 +9215,9 @@ void saberBackToOwner(gentity_t* saberent)
 	}
 
 	//make sure this is set alright
-	assert(saber_owner->client->ps.saberentity_num == saberent->s.number ||
+	assert(saber_owner->client->ps.saberEntityNum == saberent->s.number ||
 		saber_owner->client->saberStoredIndex == saberent->s.number);
-	saber_owner->client->ps.saberentity_num = saberent->s.number;
+	saber_owner->client->ps.saberEntityNum = saberent->s.number;
 
 	saberent->r.contents = CONTENTS_LIGHTSABER;
 
@@ -9288,7 +9288,7 @@ void saberBackToOwner(gentity_t* saberent)
 	}
 
 	//I'm just doing this now. I don't really like the spin on the way back. And it does weird stuff with the new saber-knocked-away code.
-	if (saber_owner->client->ps.saberentity_num == saberent->s.number)
+	if (saber_owner->client->ps.saberEntityNum == saberent->s.number)
 	{
 		if (!(saber_owner->client->saber[0].saberFlags & SFL_RETURN_DAMAGE)
 			|| saber_owner->client->ps.saber_holstered)
@@ -9849,14 +9849,14 @@ extern qboolean BG_InKnockDown(int anim);
 
 qboolean WP_AbsorbKick(gentity_t* hit_ent, const gentity_t* pusher, const vec3_t push_dir)
 {
-	const qboolean active_blocking = hit_ent->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK ? qtrue : qfalse;
+	const qboolean is_holding_block_button_and_attack = hit_ent->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK ? qtrue : qfalse;
 	//manual Blocking
 	const qboolean is_holding_block_button = hit_ent->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
 	//Normal Blocking
 	const qboolean npc_blocking = hit_ent->client->ps.ManualBlockingFlags & 1 << MBF_NPCKICKBLOCK ? qtrue : qfalse;
 	//NPC Blocking
 
-	if (PlayerCanAbsorbKick(hit_ent, push_dir) && (is_holding_block_button || active_blocking) && !(hit_ent->r.svFlags & SVF_BOT))
+	if (PlayerCanAbsorbKick(hit_ent, push_dir) && (is_holding_block_button || is_holding_block_button_and_attack) && !(hit_ent->r.svFlags & SVF_BOT))
 		//player only
 	{
 		if (hit_ent->client->ps.fd.blockPoints > 50)
@@ -12102,7 +12102,7 @@ void wp_saber_position_update(gentity_t* self, usercmd_t* ucmd)
 	//for this entity to save us processing time.
 	client_override = trap->G2API_OverrideServer(self->ghoul2);
 
-	saberNum = self->client->ps.saberentity_num;
+	saberNum = self->client->ps.saberEntityNum;
 
 	if (!saberNum)
 	{
@@ -12276,7 +12276,7 @@ nextStep:
 
 	VectorMA(bolt_origin, self->client->saber[0].blade[0].lengthMax, bolt_angles, end);
 
-	if (self->client->ps.saberentity_num)
+	if (self->client->ps.saberEntityNum)
 	{
 		//I guess it's good to keep the position updated even when contents are 0
 		if (my_saber && (my_saber->r.contents & CONTENTS_LIGHTSABER || my_saber->r.contents == 0) && !self->client->ps.
@@ -12296,7 +12296,7 @@ nextStep:
 
 		if (saberent)
 		{
-			if (!self->client->ps.saberEntityState && self->client->ps.saberentity_num)
+			if (!self->client->ps.saberEntityState && self->client->ps.saberEntityNum)
 			{
 				vec3_t startorg, startang, dir;
 
@@ -12387,7 +12387,7 @@ nextStep:
 
 				trap->LinkEntity((sharedEntity_t*)saberent);
 			}
-			else if (self->client->ps.saberentity_num)
+			else if (self->client->ps.saberEntityNum)
 				//only do this stuff if your saber is active and has not been knocked out of the air.
 			{
 				VectorCopy(bolt_origin, saberent->pos1);
@@ -12425,7 +12425,7 @@ nextStep:
 			saberent->s.loopIsSoundset = qfalse;
 		}
 
-		if (self->client->ps.saberLockTime > level.time && self->client->ps.saberentity_num)
+		if (self->client->ps.saberLockTime > level.time && self->client->ps.saberEntityNum)
 		{
 			while (r_saber_num < MAX_SABERS)
 			{
@@ -12455,7 +12455,7 @@ nextStep:
 		if (self->client->ps.saberInFlight)
 		{
 			//if saber is thrown then only do the standard stuff for the left hand saber
-			if (!self->client->ps.saberentity_num)
+			if (!self->client->ps.saberEntityNum)
 			{
 				//however, if saber is not in flight but rather knocked away, our left saber is off, and thus we may do nothing.
 				r_saber_num = 1; //was 2?
@@ -12489,7 +12489,7 @@ nextStep:
 				&& self->client->saber[1].model
 				&& self->client->saber[1].model[0]
 				&& self->client->ps.saber_holstered == 1
-				&& (!self->client->ps.saberInFlight || self->client->ps.saberentity_num))
+				&& (!self->client->ps.saberInFlight || self->client->ps.saberEntityNum))
 			{
 				//don't to saber 2 if it's off
 				break;
@@ -12516,14 +12516,14 @@ nextStep:
 				//then update the bolt pos/dir. rblade_num corresponds to the bolt index because blade bolts are added in order.
 				if (r_saber_num == 0 && self->client->ps.saberInFlight)
 				{
-					if (!self->client->ps.saberentity_num)
+					if (!self->client->ps.saberEntityNum)
 					{
 						//dropped it... shouldn't get here, but...
 						r_saber_num++;
 						r_blade_num = 0;
 						continue;
 					}
-					gentity_t* saber_ent = &g_entities[self->client->ps.saberentity_num];
+					gentity_t* saber_ent = &g_entities[self->client->ps.saberEntityNum];
 					vec3_t saber_org, saber_angles;
 					if (!saber_ent
 						|| !saber_ent->inuse
@@ -15024,7 +15024,7 @@ int WP_SaberCanBlockThrownSaber(gentity_t* self, vec3_t point, qboolean projecti
 		return 0;
 	}
 
-	if (!self->client->ps.saberentity_num)
+	if (!self->client->ps.saberEntityNum)
 	{ //saber is knocked away
 		return 0;
 	}
@@ -15352,7 +15352,7 @@ static void SaberBallisticsThink(gentity_t* saber_ent)
 			saber_ent->nextthink = level.time + 50;
 			WP_SaberRemoveG2Model(saber_ent);
 
-			saber_owner->client->ps.saberentity_num = saber_owner->client->saberStoredIndex;
+			saber_owner->client->ps.saberEntityNum = saber_owner->client->saberStoredIndex;
 			return;
 		}
 		if (saber_owner->client->pers.cmd.buttons & BUTTON_ATTACK
@@ -15500,7 +15500,7 @@ void thrownSaberBallistics(gentity_t* saber_ent, const gentity_t* saber_own, con
 	VectorCopy(saber_ent->r.currentOrigin, saber_ent->s.pos.trBase);
 
 	//let the player know that they've lost control of the saber.
-	saber_own->client->ps.saberentity_num = 0;
+	saber_own->client->ps.saberEntityNum = 0;
 
 	//set the appropriate function pointer stuff
 	saber_ent->think = SaberBallisticsThink;
@@ -15538,7 +15538,7 @@ void DebounceSaberImpact(const gentity_t* self, const gentity_t* other_saberer, 
 
 		//Also add this impact to the otherowner so he doesn't do do his behavior rolls twice.
 		other_saberer->client->sabimpact[self->client->lastSaberCollided][self->client->lastBladeCollided].entityNum =
-			self->client->ps.saberentity_num;
+			self->client->ps.saberEntityNum;
 		other_saberer->client->sabimpact[self->client->lastSaberCollided][self->client->lastBladeCollided].Debounce =
 			level.time;
 		other_saberer->client->sabimpact[self->client->lastSaberCollided][self->client->lastBladeCollided].saberNum =
@@ -15568,7 +15568,7 @@ qboolean WP_SaberIsOff(const gentity_t* self, const int saberNum)
 	{
 		//one saber off, one saber on, depends on situation.
 		if (self->client->ps.fd.saber_anim_level == SS_DUAL && self->client->ps.saberInFlight && !self->client->ps.
-			saberentity_num)
+			saberEntityNum)
 		{
 			//special case where the secondary blade is lit instead of the primary
 			if (saberNum == 0)

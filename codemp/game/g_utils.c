@@ -1183,9 +1183,9 @@ void G_FreeEntity(gentity_t* ed)
 		//this "client" structure is one of our dynamically allocated ones, so free the memory
 		int saberEntNum = -1;
 		int i = 0;
-		if (ed->client->ps.saberentity_num)
+		if (ed->client->ps.saberEntityNum)
 		{
-			saberEntNum = ed->client->ps.saberentity_num;
+			saberEntNum = ed->client->ps.saberEntityNum;
 		}
 		else if (ed->client->saberStoredIndex)
 		{
@@ -1589,7 +1589,7 @@ void G_Sound(gentity_t* ent, const int channel, const int soundIndex)
 
 	gentity_t* te = G_SoundTempEntity(ent->r.currentOrigin, EV_GENERAL_SOUND, channel);
 	te->s.eventParm = soundIndex;
-	te->s.saberentity_num = channel;
+	te->s.saberEntityNum = channel;
 
 	if (ent && ent->client && channel > TRACK_CHANNEL_NONE)
 	{
@@ -1622,7 +1622,7 @@ void G_SoundAtLoc(vec3_t loc, const int channel, const int soundIndex)
 {
 	gentity_t* te = G_TempEntity(loc, EV_GENERAL_SOUND);
 	te->s.eventParm = soundIndex;
-	te->s.saberentity_num = channel;
+	te->s.saberEntityNum = channel;
 }
 
 /*

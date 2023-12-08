@@ -5006,7 +5006,7 @@ void PM_WeaponLightsaber(void)
 
 	const qboolean is_holding_block_button = pm->ps->ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
 	//Holding Block Button
-	const qboolean active_blocking = pm->ps->ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK ? qtrue : qfalse;
+	const qboolean is_holding_block_button_and_attack = pm->ps->ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK ? qtrue : qfalse;
 	//Active Blocking
 	const qboolean walking_blocking = pm->ps->ManualBlockingFlags & 1 << MBF_BLOCKWALKING ? qtrue : qfalse;
 	//Walking Blocking
@@ -5243,7 +5243,7 @@ void PM_WeaponLightsaber(void)
 		goto weapChecks;
 	}
 
-	if (!pm->ps->saberentity_num && pm->ps->saberInFlight)
+	if (!pm->ps->saberEntityNum && pm->ps->saberInFlight)
 	{
 		//this means our saber has been knocked away
 		if (pm->ps->fd.saber_anim_level == SS_DUAL)
@@ -5304,7 +5304,7 @@ void PM_WeaponLightsaber(void)
 				return;
 			}
 		}
-		else if (pm->ps->saberInFlight && pm->ps->saberentity_num)
+		else if (pm->ps->saberInFlight && pm->ps->saberEntityNum)
 		{
 			//saber is already in flight continue moving it with the force.
 			switch (pm->ps->fd.saber_anim_level)
@@ -5863,7 +5863,7 @@ weapChecks:
 		}
 		// check for fire
 		//This section dictates want happens when you quit holding down attack.
-		else if (!(pm->cmd.buttons & BUTTON_ATTACK) || is_holding_block_button || walking_blocking || active_blocking)
+		else if (!(pm->cmd.buttons & BUTTON_ATTACK) || is_holding_block_button || walking_blocking || is_holding_block_button_and_attack)
 		{
 			//not attacking
 			pm->ps->weaponTime = 0;
@@ -7054,7 +7054,7 @@ void PM_Setsaber_move(saber_moveName_t new_move)
 		if (pm->ps->weapon == WP_SABER && !BG_SabersOff(pm->ps))
 		{
 #ifdef _GAME
-			const qboolean active_blocking = pm->ps->ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK ? qtrue : qfalse;
+			const qboolean is_holding_block_button_and_attack = pm->ps->ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK ? qtrue : qfalse;
 			//Active Blocking
 
 			if (!(g_entities[pm->ps->clientNum].r.svFlags & SVF_BOT))

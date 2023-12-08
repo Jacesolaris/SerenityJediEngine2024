@@ -14872,10 +14872,10 @@ void CG_Player(centity_t* cent)
 									//play it on the saber
 									if (cg_saberOnSoundTime[cent->currentState.number] < cg.time)
 									{
-										cgi_S_UpdateEntityPosition(cent->gent->client->ps.saberentity_num,
-											g_entities[cent->gent->client->ps.saberentity_num].
+										cgi_S_UpdateEntityPosition(cent->gent->client->ps.saberEntityNum,
+											g_entities[cent->gent->client->ps.saberEntityNum].
 											currentOrigin);
-										cgi_S_StartSound(nullptr, cent->gent->client->ps.saberentity_num, CHAN_AUTO,
+										cgi_S_StartSound(nullptr, cent->gent->client->ps.saberEntityNum, CHAN_AUTO,
 											saber_on_sound);
 										cg_saberOnSoundTime[cent->currentState.number] = cg.time;
 										//so we don't play multiple on sounds at one time

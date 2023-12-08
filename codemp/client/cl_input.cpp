@@ -1056,6 +1056,7 @@ extern cvar_t* j_yaw_axis;
 extern cvar_t* j_forward_axis;
 extern cvar_t* j_side_axis;
 extern cvar_t* j_up_axis;
+extern cvar_t* j_sensitivity;
 
 static void CL_JoystickMove(usercmd_t* cmd)
 {
@@ -1073,6 +1074,10 @@ static void CL_JoystickMove(usercmd_t* cmd)
 	float up = j_up->value * cl.joystickAxis[j_up_axis->integer];
 
 	if (!(in_speed.active ^ cl_run->integer))
+	{
+		cmd->buttons |= BUTTON_WALKING;
+	}
+	else if (pitch <= 180 && pitch >= -180 && pitch != 0)
 	{
 		cmd->buttons |= BUTTON_WALKING;
 	}
@@ -1101,7 +1106,7 @@ static void CL_JoystickMove(usercmd_t* cmd)
 		}
 		else
 		{
-			cl.viewangles[YAW] += anglespeed * yaw;
+			cl.viewangles[YAW] += anglespeed * (yaw * j_sensitivity->value);
 		}
 		cmd->rightmove = ClampCharMove(cmd->rightmove + (int)right);
 	}
@@ -1126,7 +1131,7 @@ static void CL_JoystickMove(usercmd_t* cmd)
 		}
 		else
 		{
-			cl.viewangles[PITCH] += anglespeed * forward;
+			cl.viewangles[PITCH] -= anglespeed * ((forward / 11.38) * j_sensitivity->value);
 		}
 		cmd->forwardmove = ClampCharMove(cmd->forwardmove + (int)pitch);
 	}
@@ -1139,8 +1144,8 @@ static void CL_JoystickMove(usercmd_t* cmd)
 	cmd->upmove = ClampCharMove(cmd->upmove + (int)up);
 
 #if 0
-
-	if (!in_strafe.active) {
+	if (!in_strafe.active)
+	{
 		if (cl_mYawOverride)
 		{
 			if (cl_mSensitivityOverride)
@@ -1162,7 +1167,8 @@ static void CL_JoystickMove(usercmd_t* cmd)
 		cmd->rightmove = ClampChar(cmd->rightmove + cl.joystickAxis[AXIS_SIDE]);
 	}
 
-	if (in_mlooking || cl_freelook->integer) {
+	if (in_mlooking || cl_freelook->integer)
+	{
 		if (cl_mPitchOverride)
 		{
 			if (cl_mSensitivityOverride)

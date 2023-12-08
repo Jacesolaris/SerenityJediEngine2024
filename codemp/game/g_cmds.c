@@ -3414,7 +3414,7 @@ void Cmd_ToggleSaber_f(gentity_t* ent)
 
 	if (ent->client->ps.saberInFlight)
 	{
-		if (ent->client->ps.saberentity_num)
+		if (ent->client->ps.saberEntityNum)
 		{
 			//our saber is dead, Try pulling it back.
 			ent->client->ps.forceHandExtend = HANDEXTEND_SABERPULL;

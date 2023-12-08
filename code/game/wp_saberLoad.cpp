@@ -3032,7 +3032,7 @@ qboolean WP_BreakSaber(gentity_t* ent, const char* surfName, const saberType_t s
 		}
 		broken = qtrue;
 		//change my saberent's model and skin to match my new right-hand saber
-		wp_set_saber_ent_model_skin(ent, &g_entities[ent->client->ps.saberentity_num]);
+		wp_set_saber_ent_model_skin(ent, &g_entities[ent->client->ps.saberEntityNum]);
 	}
 
 	if (originalNumBlades <= 1)

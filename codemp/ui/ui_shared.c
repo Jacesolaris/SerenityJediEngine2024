@@ -3850,9 +3850,8 @@ qboolean Item_TextField_HandleKey(itemDef_t* item, int key)
 			}
 		}
 
-		//	if ( key == A_ENTER || key == A_KP_ENTER || key == A_ESCAPE)  {
-		if (key == A_ENTER || key == A_KP_ENTER || key == A_ESCAPE || key == A_MOUSE1 && !Rect_ContainsPoint(
-			&item->window.rect, DC->cursorx, DC->cursory))
+		if (key == A_ENTER || key == A_KP_ENTER || key == A_ESCAPE || key == A_MOUSE1 &&
+			!Rect_ContainsPoint(&item->window.rect, DC->cursorx, DC->cursory))
 		{
 			DC->setOverstrikeMode(qfalse);
 			return qfalse;

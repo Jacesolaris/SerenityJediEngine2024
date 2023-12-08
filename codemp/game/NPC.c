@@ -282,10 +282,10 @@ void NPC_RemoveBody(gentity_t* ent)
 			}
 			//if ( self->enemy )
 			{
-				if (ent->client && ent->client->ps.saberentity_num > 0 && ent->client->ps.saberentity_num <
+				if (ent->client && ent->client->ps.saberEntityNum > 0 && ent->client->ps.saberEntityNum <
 					ENTITYNUM_WORLD)
 				{
-					gentity_t* saberent = &g_entities[ent->client->ps.saberentity_num];
+					gentity_t* saberent = &g_entities[ent->client->ps.saberEntityNum];
 					if (saberent)
 					{
 						G_FreeEntity(saberent);

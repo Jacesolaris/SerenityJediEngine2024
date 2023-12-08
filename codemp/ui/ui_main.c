@@ -11056,10 +11056,6 @@ static void UI_KeyEvent(int key, qboolean down)
 			trap->Cvar_Set("cl_paused", "0");
 		}
 	}
-
-	//if ((s > 0) && (s != menu_null_sound)) {
-	//  trap->S_StartLocalSound( s, CHAN_LOCAL_SOUND );
-	//}
 }
 
 /*

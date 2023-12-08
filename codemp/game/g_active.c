@@ -6136,7 +6136,7 @@ void ClientThink_real(gentity_t* ent)
 
 			if (clientLost && clientLost->inuse && clientLost->client)
 			{
-				saberKnockOutOfHand(&g_entities[clientLost->client->ps.saberentity_num], clientLost, vec3_origin);
+				saberKnockOutOfHand(&g_entities[clientLost->client->ps.saberEntityNum], clientLost, vec3_origin);
 			}
 		}
 

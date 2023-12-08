@@ -3958,8 +3958,8 @@ void CG_Weapon_f()
 				//can't toggle it if not holding it and not controlling it or dead
 				if (cg.predicted_player_state.stats[STAT_HEALTH] > 0
 					&& (!cg_entities[0].gent->client->ps.saberInFlight ||
-						&g_entities[cg_entities[0].gent->client->ps.saberentity_num] != nullptr &&
-						g_entities[cg_entities[0].gent->client->ps.saberentity_num].s.pos.trType == TR_LINEAR))
+						&g_entities[cg_entities[0].gent->client->ps.saberEntityNum] != nullptr &&
+						g_entities[cg_entities[0].gent->client->ps.saberEntityNum].s.pos.trType == TR_LINEAR))
 				{
 					//it's either in-hand or it's under telekinetic control
 					if (cg_entities[0].gent->client->ps.SaberActive())
@@ -3997,10 +3997,10 @@ void CG_Weapon_f()
 						if (cg_entities[0].gent->client->ps.saberInFlight)
 						{
 							//play it on the saber
-							cgi_S_UpdateEntityPosition(cg_entities[0].gent->client->ps.saberentity_num,
-								g_entities[cg_entities[0].gent->client->ps.saberentity_num].
+							cgi_S_UpdateEntityPosition(cg_entities[0].gent->client->ps.saberEntityNum,
+								g_entities[cg_entities[0].gent->client->ps.saberEntityNum].
 								currentOrigin);
-							cgi_S_StartSound(nullptr, cg_entities[0].gent->client->ps.saberentity_num, CHAN_AUTO,
+							cgi_S_StartSound(nullptr, cg_entities[0].gent->client->ps.saberEntityNum, CHAN_AUTO,
 								cgs.sound_precache[cg_entities[0].gent->client->ps.saber[0].soundOff]);
 						}
 						else

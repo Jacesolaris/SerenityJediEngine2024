@@ -537,10 +537,10 @@ void EnablePlayerCameraPos(gentity_t* player)
 	//holster sabers
 	player->client->ps.saber_holstered = 2;
 
-	if (player->client->ps.saberInFlight && player->client->ps.saberentity_num)
+	if (player->client->ps.saberInFlight && player->client->ps.saberEntityNum)
 	{
 		//saber is out
-		gentity_t* saberent = &g_entities[player->client->ps.saberentity_num];
+		gentity_t* saberent = &g_entities[player->client->ps.saberEntityNum];
 		if (saberent)
 		{
 			//force the weapon back to our hand.

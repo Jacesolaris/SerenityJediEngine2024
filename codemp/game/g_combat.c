@@ -3022,12 +3022,12 @@ void player_die(gentity_t* self, const gentity_t* inflictor, gentity_t* attacker
 	self->client->ps.emplacedIndex = 0;
 
 	G_BreakArm(self, 0); //unbreak anything we have broken
-	self->client->ps.saberentity_num = self->client->saberStoredIndex;
+	self->client->ps.saberEntityNum = self->client->saberStoredIndex;
 	//in case we died while our saber was knocked away.
 
 	if (self->client->ps.weapon == WP_SABER && self->client->saberKnockedTime)
 	{
-		gentity_t* saber_ent = &g_entities[self->client->ps.saberentity_num];
+		gentity_t* saber_ent = &g_entities[self->client->ps.saberEntityNum];
 		self->client->saberKnockedTime = 0;
 		saberReactivate(saber_ent, self);
 		saber_ent->r.contents = CONTENTS_LIGHTSABER;
@@ -3182,7 +3182,7 @@ void player_die(gentity_t* self, const gentity_t* inflictor, gentity_t* attacker
 	//holstering on death like sp)
 	if (self->client->ps.weapon == WP_SABER &&
 		!self->client->ps.saber_holstered &&
-		self->client->ps.saberentity_num)
+		self->client->ps.saberEntityNum)
 	{
 		if (!self->client->ps.saberInFlight &&
 			self->client->saber[0].soundOff)

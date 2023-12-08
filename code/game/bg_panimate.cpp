@@ -6551,7 +6551,7 @@ static void PM_TorsoAnimLightsaber()
 
 	const qboolean is_holding_block_button = pm->ps->ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
 	//Holding Block Button
-	const qboolean active_blocking = pm->ps->ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK ? qtrue : qfalse;
+	const qboolean is_holding_block_button_and_attack = pm->ps->ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK ? qtrue : qfalse;
 	//Active Blocking
 	const qboolean walking_blocking = pm->ps->ManualBlockingFlags & 1 << MBF_BLOCKWALKING ? qtrue : qfalse;
 	//Walking Blocking
@@ -6593,7 +6593,7 @@ static void PM_TorsoAnimLightsaber()
 			}
 			else
 			{
-				if (!g_noIgniteTwirl->integer && !IsSurrendering(pm->gent) && !active_blocking
+				if (!g_noIgniteTwirl->integer && !IsSurrendering(pm->gent) && !is_holding_block_button_and_attack
 					&& !is_holding_block_button)
 				{
 					if (PM_RunningAnim(pm->ps->legsAnim) || pm->ps->groundEntityNum == ENTITYNUM_NONE || in_camera)
@@ -6688,7 +6688,7 @@ static void PM_TorsoAnimLightsaber()
 			}
 			else
 			{
-				if (!g_noIgniteTwirl->integer && !IsSurrendering(pm->gent) && !active_blocking
+				if (!g_noIgniteTwirl->integer && !IsSurrendering(pm->gent) && !is_holding_block_button_and_attack
 					&& !is_holding_block_button)
 				{
 					if (PM_RunningAnim(pm->ps->legsAnim) || pm->ps->groundEntityNum == ENTITYNUM_NONE || in_camera)
@@ -6768,7 +6768,7 @@ static void PM_TorsoAnimLightsaber()
 							|| pm->ps->legsAnim == BOTH_WALK2
 							|| pm->ps->legsAnim == BOTH_WALKBACK2)
 							&& pm->ps->saberBlockingTime < cg.time
-							&& !active_blocking
+							&& !is_holding_block_button_and_attack
 							&& !is_holding_block_button
 							&& !walking_blocking)
 						{
@@ -7058,10 +7058,10 @@ static void PM_TorsoAnimLightsaber()
 					//we're stuck in a broken parry
 					saber_in_air = qfalse;
 				}
-				if (pm->ps->saberentity_num < ENTITYNUM_NONE && pm->ps->saberentity_num > 0) //player is 0
+				if (pm->ps->saberEntityNum < ENTITYNUM_NONE && pm->ps->saberEntityNum > 0) //player is 0
 				{
 					//
-					if (&g_entities[pm->ps->saberentity_num] != nullptr && g_entities[pm->ps->saberentity_num].s.pos.
+					if (&g_entities[pm->ps->saberEntityNum] != nullptr && g_entities[pm->ps->saberEntityNum].s.pos.
 						trType == TR_STATIONARY)
 					{
 						//fell to the ground and we're not trying to pull it back
@@ -7150,7 +7150,7 @@ static void PM_TorsoAnimLightsaber()
 								|| pm->ps->legsAnim == BOTH_WALK2
 								|| pm->ps->legsAnim == BOTH_WALKBACK2)
 								&& pm->ps->saberBlockingTime < cg.time
-								&& !active_blocking
+								&& !is_holding_block_button_and_attack
 								&& !is_holding_block_button
 								&& !walking_blocking)
 							{
@@ -7344,10 +7344,10 @@ void PM_TorsoAnimation()
 			}
 			else
 			{
-				if (pm->ps->saberentity_num < ENTITYNUM_NONE && pm->ps->saberentity_num > 0) //player is 0
+				if (pm->ps->saberEntityNum < ENTITYNUM_NONE && pm->ps->saberEntityNum > 0) //player is 0
 				{
 					//
-					if (&g_entities[pm->ps->saberentity_num] != nullptr && g_entities[pm->ps->saberentity_num].s.pos.
+					if (&g_entities[pm->ps->saberEntityNum] != nullptr && g_entities[pm->ps->saberEntityNum].s.pos.
 						trType == TR_STATIONARY)
 					{
 						//fell to the ground and we're not trying to pull it back

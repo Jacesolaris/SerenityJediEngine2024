@@ -1223,7 +1223,7 @@ typedef struct playerState_s {
 	int			saberLockHitIncrementTime; //so we don't add a hit per attack button press more than once per server frame
 	qboolean	saberLockAdvance; //do an advance (sent across net as 1 bit)
 
-	int			saberentity_num;
+	int			saberEntityNum;
 	float		saberEntityDist;
 	int			saberEntityState;
 	int			saberThrowDelay;
@@ -1866,7 +1866,7 @@ typedef struct entityState_s {
 	int		frame;
 
 	qboolean	saberInFlight;
-	int			saberentity_num;
+	int			saberEntityNum;
 	int			saber_move;
 	int			forcePowersActive;
 	int			saber_holstered;//sent in only only 2 bits - should be 0, 1 or 2

@@ -936,7 +936,7 @@ struct gclient_s
 	int cloakDebReduce;
 
 	int saberStoredIndex;
-	//stores saberentity_num from playerstate for when it's set to 0 (indicating saber was knocked out of the air)
+	//stores saberEntityNum from playerstate for when it's set to 0 (indicating saber was knocked out of the air)
 
 	int saberKnockedTime; //if saber gets knocked away, can't pull it back until this value is < level.time
 

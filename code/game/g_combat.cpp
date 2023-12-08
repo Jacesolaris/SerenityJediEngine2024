@@ -2206,14 +2206,14 @@ void G_RemoveWeaponsWithLimbs(gentity_t* ent, gentity_t* limb, const int limb_an
 					if (!ent->client->ps.saberInFlight)
 					{
 						//saberent isn't flying through the air, it's in-hand and attached to player
-						if (ent->client->ps.saberentity_num != ENTITYNUM_NONE && ent->client->ps.saberentity_num > 0)
+						if (ent->client->ps.saberEntityNum != ENTITYNUM_NONE && ent->client->ps.saberEntityNum > 0)
 						{
 							//remove the owner ent's saber model and entity
-							if (g_entities[ent->client->ps.saberentity_num].inuse)
+							if (g_entities[ent->client->ps.saberEntityNum].inuse)
 							{
-								G_FreeEntity(&g_entities[ent->client->ps.saberentity_num]);
+								G_FreeEntity(&g_entities[ent->client->ps.saberEntityNum]);
 							}
-							ent->client->ps.saberentity_num = ENTITYNUM_NONE;
+							ent->client->ps.saberEntityNum = ENTITYNUM_NONE;
 						}
 					}
 				}
@@ -4872,7 +4872,7 @@ void player_die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, cons
 	{
 		holding_saber = qtrue;
 	}
-	if (self->client && self->client->ps.saberentity_num != ENTITYNUM_NONE && self->client->ps.saberentity_num > 0)
+	if (self->client && self->client->ps.saberEntityNum != ENTITYNUM_NONE && self->client->ps.saberEntityNum > 0)
 	{
 		if (self->client->ps.saberInFlight)
 		{
@@ -4920,11 +4920,11 @@ void player_die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, cons
 			else
 			{
 				//just free it
-				if (g_entities[self->client->ps.saberentity_num].inuse)
+				if (g_entities[self->client->ps.saberEntityNum].inuse)
 				{
-					G_FreeEntity(&g_entities[self->client->ps.saberentity_num]);
+					G_FreeEntity(&g_entities[self->client->ps.saberEntityNum]);
 				}
-				self->client->ps.saberentity_num = ENTITYNUM_NONE;
+				self->client->ps.saberEntityNum = ENTITYNUM_NONE;
 			}
 		}
 	}

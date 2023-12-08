@@ -1884,11 +1884,11 @@ int wp_saber_init_blade_data(gentity_t* ent)
 		}
 		ent->client->ps.saberAttackChainCount = MISHAPLEVEL_NONE;
 
-		if (ent->client->ps.saberentity_num <= 0 || ent->client->ps.saberentity_num >= ENTITYNUM_WORLD)
+		if (ent->client->ps.saberEntityNum <= 0 || ent->client->ps.saberEntityNum >= ENTITYNUM_WORLD)
 		{
 			//FIXME: if you do have a saber already, be sure to re-set the model if it's changed (say, via a script).
 			gentity_t* saberent = G_Spawn();
-			ent->client->ps.saberentity_num = saberent->s.number;
+			ent->client->ps.saberEntityNum = saberent->s.number;
 			saberent->classname = "lightsaber";
 
 			saberent->s.eType = ET_GENERAL;
@@ -1933,7 +1933,7 @@ int wp_saber_init_blade_data(gentity_t* ent)
 		else
 		{
 			//already have one, might just be changing sabers, register the model and skin and use them if different from what we're using now.
-			wp_set_saber_ent_model_skin(ent, &g_entities[ent->client->ps.saberentity_num]);
+			wp_set_saber_ent_model_skin(ent, &g_entities[ent->client->ps.saberEntityNum]);
 		}
 	}
 
@@ -1963,10 +1963,10 @@ void wp_saber_update_old_blade_data(gentity_t* ent)
 						//just turned on
 						//do sound event
 						vec3_t saber_org;
-						VectorCopy(g_entities[ent->client->ps.saberentity_num].currentOrigin, saber_org);
+						VectorCopy(g_entities[ent->client->ps.saberEntityNum].currentOrigin, saber_org);
 						if (!ent->client->ps.saberInFlight && ent->client->ps.groundEntityNum == ENTITYNUM_WORLD
 							//holding saber and on ground
-							|| g_entities[ent->client->ps.saberentity_num].s.pos.trType == TR_STATIONARY)
+							|| g_entities[ent->client->ps.saberEntityNum].s.pos.trType == TR_STATIONARY)
 							//saber out there somewhere and on ground
 						{
 							//a ground alert
@@ -2487,7 +2487,7 @@ static qboolean wp_saber_apply_damage(gentity_t* ent, const float base_damage, c
 	const saberType_t saber_type = ent->client->ps.saber[saberNum].type;
 	float max_dmg;
 
-	const qboolean active_blocking = ent->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK ? qtrue : qfalse;
+	const qboolean is_holding_block_button_and_attack = ent->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK ? qtrue : qfalse;
 	const qboolean is_holding_block_button = ent->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
 	//Normal Blocking
 	const qboolean m_blocking = ent->client->ps.ManualBlockingFlags & 1 << PERFECTBLOCKING ? qtrue : qfalse;
@@ -2504,7 +2504,7 @@ static qboolean wp_saber_apply_damage(gentity_t* ent, const float base_damage, c
 		return qfalse;
 	}
 
-	if ((is_holding_block_button || active_blocking || m_blocking || ent->client->ps.saberBlockingTime > level.time) && (ent->s.
+	if ((is_holding_block_button || is_holding_block_button_and_attack || m_blocking || ent->client->ps.saberBlockingTime > level.time) && (ent->s.
 		number < MAX_CLIENTS || G_ControlledByPlayer(ent))) //jacesolaris 2019 test for idlekill
 	{
 		return qfalse;
@@ -2562,7 +2562,7 @@ static qboolean wp_saber_apply_damage(gentity_t* ent, const float base_damage, c
 					vec3_t test_from;
 					if (ent->client->ps.saberInFlight)
 					{
-						VectorCopy(g_entities[ent->client->ps.saberentity_num].currentOrigin, test_from);
+						VectorCopy(g_entities[ent->client->ps.saberEntityNum].currentOrigin, test_from);
 					}
 					else
 					{
@@ -3135,7 +3135,7 @@ static qboolean wp_saber_apply_damage(gentity_t* ent, const float base_damage, c
 						}
 						if (thrown_saber)
 						{
-							inflictor = &g_entities[ent->client->ps.saberentity_num];
+							inflictor = &g_entities[ent->client->ps.saberEntityNum];
 						}
 						int damage;
 						if (!WP_SaberBladeUseSecondBladeStyle(&ent->client->ps.saber[saberNum], blade_num)
@@ -3171,7 +3171,7 @@ static qboolean wp_saber_apply_damage(gentity_t* ent, const float base_damage, c
 							{
 								cg_saber_do_weapon_hit_marks(ent->client,
 									ent->client->ps.saberInFlight
-									? &g_entities[ent->client->ps.saberentity_num]
+									? &g_entities[ent->client->ps.saberEntityNum]
 									: nullptr,
 									victim,
 									saberNum,
@@ -4003,7 +4003,7 @@ static void wp_saber_m_block_effect(const gentity_t* attacker, const int saberNu
 
 static void wp_saber_knockaway(const gentity_t* attacker, trace_t* tr)
 {
-	WP_SaberDrop(attacker, &g_entities[attacker->client->ps.saberentity_num]);
+	WP_SaberDrop(attacker, &g_entities[attacker->client->ps.saberEntityNum]);
 	wp_saber_knock_sound(attacker, 0, 0);
 	wp_saber_block_effect(attacker, 0, 0, tr->endpos, nullptr, qfalse);
 	saberHitFraction = tr->fraction;
@@ -6762,7 +6762,7 @@ static void WP_SaberDamageTrace(gentity_t* ent, int saberNum, int blade_num)
 	if (!(ent->client->ps.saber[saberNum].saberFlags & SFL_ON_IN_WATER))
 	{
 		//saber can't stay on underwater
-		saber_contents = gi.pointcontents(ent->client->renderInfo.muzzlePoint, ent->client->ps.saberentity_num);
+		saber_contents = gi.pointcontents(ent->client->renderInfo.muzzlePoint, ent->client->ps.saberEntityNum);
 	}
 	if (saber_contents & CONTENTS_WATER ||
 		saber_contents & CONTENTS_SLIME ||
@@ -7386,7 +7386,7 @@ static void WP_SaberDamageTrace(gentity_t* ent, int saberNum, int blade_num)
 
 		if (ent->client->ps.saberInFlight && saberNum == 0 &&
 			ent->client->ps.saber[saberNum].blade[blade_num].active &&
-			ent->client->ps.saberentity_num != ENTITYNUM_NONE &&
+			ent->client->ps.saberEntityNum != ENTITYNUM_NONE &&
 			ent->client->ps.saberEntityState != SES_RETURNING)
 		{
 			//saber was blocked, return it
@@ -7767,7 +7767,7 @@ static void WP_SaberDamageTrace(gentity_t* ent, int saberNum, int blade_num)
 				if (in_flight_saber_blocked)
 				{
 					//FIXME: never hear this sound
-					wp_saber_bounce_sound(ent, &g_entities[ent->client->ps.saberentity_num], 0, 0);
+					wp_saber_bounce_sound(ent, &g_entities[ent->client->ps.saberEntityNum], 0, 0);
 				}
 				else
 				{
@@ -7862,41 +7862,41 @@ static void WP_SaberDamageTrace(gentity_t* ent, int saberNum, int blade_num)
 					{
 						vec3_t new_dir;
 
-						VectorSubtract(g_entities[ent->client->ps.saberentity_num].currentOrigin, hit_ent->currentOrigin,
+						VectorSubtract(g_entities[ent->client->ps.saberEntityNum].currentOrigin, hit_ent->currentOrigin,
 							new_dir);
 						VectorNormalize(new_dir);
 
 						if (ent->s.number >= MAX_CLIENTS && !G_ControlledByPlayer(ent))
 						{
-							g_reflect_missile_npc(ent, &g_entities[ent->client->ps.saberentity_num], new_dir);
+							g_reflect_missile_npc(ent, &g_entities[ent->client->ps.saberEntityNum], new_dir);
 						}
 						else
 						{
-							g_reflect_missile_auto(ent, &g_entities[ent->client->ps.saberentity_num], new_dir);
+							g_reflect_missile_auto(ent, &g_entities[ent->client->ps.saberEntityNum], new_dir);
 						}
 					}
 					Jedi_PlayDeflectSound(hit_owner);
-					WP_SaberDrop(ent, &g_entities[ent->client->ps.saberentity_num]);
+					WP_SaberDrop(ent, &g_entities[ent->client->ps.saberEntityNum]);
 				}
 				else
 				{
 					if (!Q_irand(0, 2) && hit_ent)
 					{
 						vec3_t new_dir;
-						VectorSubtract(g_entities[ent->client->ps.saberentity_num].currentOrigin, hit_ent->currentOrigin,
+						VectorSubtract(g_entities[ent->client->ps.saberEntityNum].currentOrigin, hit_ent->currentOrigin,
 							new_dir);
 						VectorNormalize(new_dir);
 
 						if (ent->s.number >= MAX_CLIENTS && !G_ControlledByPlayer(ent))
 						{
-							g_reflect_missile_npc(ent, &g_entities[ent->client->ps.saberentity_num], new_dir);
+							g_reflect_missile_npc(ent, &g_entities[ent->client->ps.saberEntityNum], new_dir);
 						}
 						else
 						{
-							g_reflect_missile_auto(ent, &g_entities[ent->client->ps.saberentity_num], new_dir);
+							g_reflect_missile_auto(ent, &g_entities[ent->client->ps.saberEntityNum], new_dir);
 						}
 					}
-					WP_SaberDrop(ent, &g_entities[ent->client->ps.saberentity_num]);
+					WP_SaberDrop(ent, &g_entities[ent->client->ps.saberEntityNum]);
 				}
 			}
 		}
@@ -8389,11 +8389,11 @@ void wp_saber_in_flight_reflect_check(gentity_t* self)
 	{
 		return;
 	}
-	if (self->client->ps.saberentity_num == ENTITYNUM_NONE)
+	if (self->client->ps.saberEntityNum == ENTITYNUM_NONE)
 	{
 		return;
 	}
-	gentity_t* saberent = &g_entities[self->client->ps.saberentity_num];
+	gentity_t* saberent = &g_entities[self->client->ps.saberEntityNum];
 	if (!saberent)
 	{
 		return;
@@ -8535,7 +8535,7 @@ void wp_saber_in_flight_reflect_check(gentity_t* self)
 							if (!no_flare)
 							{
 								g_saberFlashTime = level.time - 50;
-								const gentity_t* saber = &g_entities[self->client->ps.saberentity_num];
+								const gentity_t* saber = &g_entities[self->client->ps.saberEntityNum];
 								vec3_t org;
 								VectorSubtract(missile_list[x]->currentOrigin, saber->currentOrigin, org);
 								VectorMA(saber->currentOrigin, 0.5, org, org);
@@ -9122,7 +9122,7 @@ static void WP_SaberKnockedOutOfHand(const gentity_t* self, gentity_t* saber)
 
 qboolean saberShotOutOfHand(gentity_t* self, vec3_t throw_dir)
 {
-	if (!self || !self->client || self->client->ps.saberentity_num <= 0)
+	if (!self || !self->client || self->client->ps.saberEntityNum <= 0)
 	{
 		//WTF?!!  We lost it already?
 		return qfalse;
@@ -9134,7 +9134,7 @@ qboolean saberShotOutOfHand(gentity_t* self, vec3_t throw_dir)
 		return qfalse;
 	}
 
-	gentity_t* dropped = &g_entities[self->client->ps.saberentity_num];
+	gentity_t* dropped = &g_entities[self->client->ps.saberEntityNum];
 
 	if (!self->client->ps.saberInFlight)
 	{
@@ -9176,7 +9176,7 @@ qboolean saberShotOutOfHand(gentity_t* self, vec3_t throw_dir)
 
 qboolean WP_SaberDisarmed(gentity_t* self, vec3_t throw_dir)
 {
-	if (!self || !self->client || self->client->ps.saberentity_num <= 0)
+	if (!self || !self->client || self->client->ps.saberEntityNum <= 0)
 	{
 		//WTF?!!  We lost it already?
 		return qfalse;
@@ -9188,7 +9188,7 @@ qboolean WP_SaberDisarmed(gentity_t* self, vec3_t throw_dir)
 		return qfalse;
 	}
 
-	gentity_t* dropped = &g_entities[self->client->ps.saberentity_num];
+	gentity_t* dropped = &g_entities[self->client->ps.saberEntityNum];
 
 	if (!self->client->ps.saberInFlight)
 	{
@@ -9228,7 +9228,7 @@ qboolean WP_SaberDisarmed(gentity_t* self, vec3_t throw_dir)
 
 qboolean WP_SaberLose(gentity_t* self, vec3_t throw_dir)
 {
-	if (!self || !self->client || self->client->ps.saberentity_num <= 0)
+	if (!self || !self->client || self->client->ps.saberEntityNum <= 0)
 	{
 		//WTF?!!  We lost it already?
 		return qfalse;
@@ -9242,7 +9242,7 @@ qboolean WP_SaberLose(gentity_t* self, vec3_t throw_dir)
 	{
 		self->client->ps.SaberDeactivate();
 	}
-	gentity_t* dropped = &g_entities[self->client->ps.saberentity_num];
+	gentity_t* dropped = &g_entities[self->client->ps.saberEntityNum];
 
 	if (!self->client->ps.saberInFlight)
 	{
@@ -9284,7 +9284,7 @@ void WP_SetSaberOrigin(gentity_t* self, vec3_t new_org)
 	{
 		return;
 	}
-	if (self->client->ps.saberentity_num <= 0 || self->client->ps.saberentity_num >= ENTITYNUM_WORLD)
+	if (self->client->ps.saberEntityNum <= 0 || self->client->ps.saberEntityNum >= ENTITYNUM_WORLD)
 	{
 		//no saber ent to reposition
 		return;
@@ -9299,7 +9299,7 @@ void WP_SetSaberOrigin(gentity_t* self, vec3_t new_org)
 		//saber droids can't drop their saber
 		return;
 	}
-	gentity_t* dropped = &g_entities[self->client->ps.saberentity_num];
+	gentity_t* dropped = &g_entities[self->client->ps.saberEntityNum];
 	if (!self->client->ps.saberInFlight)
 	{
 		//not already in air
@@ -9446,7 +9446,7 @@ void WP_SaberCatch(gentity_t* self, gentity_t* saber, const qboolean switch_to_s
 
 void WP_SaberReturn(const gentity_t* self, gentity_t* saber)
 {
-	const qboolean active_blocking = self->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK ? qtrue : qfalse;
+	const qboolean is_holding_block_button_and_attack = self->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK ? qtrue : qfalse;
 	const qboolean is_holding_block_button = self->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
 	//Normal Blocking
 
@@ -9458,7 +9458,7 @@ void WP_SaberReturn(const gentity_t* self, gentity_t* saber)
 	if (self->s.number < MAX_CLIENTS || G_ControlledByPlayer(self))
 	{
 		if ( /*self->client->ps.forcePower < BLOCKPOINTS_FIVE || self->client->ps.blockPoints < BLOCKPOINTS_TWELVE ||*/
-			is_holding_block_button || active_blocking || self->client->buttons & BUTTON_BLOCK)
+			is_holding_block_button || is_holding_block_button_and_attack || self->client->buttons & BUTTON_BLOCK)
 		{
 			WP_SaberDrop(self, saber);
 			return;
@@ -9555,7 +9555,7 @@ static void WP_SaberPull(const gentity_t* self, gentity_t* saber)
 
 static void WP_SaberGrab(const gentity_t* self, gentity_t* saber)
 {
-	const qboolean active_blocking = self->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK ? qtrue : qfalse;
+	const qboolean is_holding_block_button_and_attack = self->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK ? qtrue : qfalse;
 	const qboolean is_holding_block_button = self->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
 	//Normal Blocking
 
@@ -9565,7 +9565,7 @@ static void WP_SaberGrab(const gentity_t* self, gentity_t* saber)
 	}
 	if (self->s.number < MAX_CLIENTS || G_ControlledByPlayer(self))
 	{
-		if (is_holding_block_button || active_blocking)
+		if (is_holding_block_button || is_holding_block_button_and_attack)
 		{
 			return;
 		}
@@ -9601,7 +9601,7 @@ static void WP_SaberThrow(gentity_t* self, const usercmd_t* ucmd)
 	vec3_t saber_diff;
 	trace_t tr;
 
-	if (self->client->ps.saberentity_num <= 0 || self->client->ps.saberentity_num >= ENTITYNUM_WORLD)
+	if (self->client->ps.saberEntityNum <= 0 || self->client->ps.saberEntityNum >= ENTITYNUM_WORLD)
 	{
 		//WTF?!!  We lost it?
 		return;
@@ -9639,7 +9639,7 @@ static void WP_SaberThrow(gentity_t* self, const usercmd_t* ucmd)
 			return;
 		}
 	}
-	gentity_t* saberent = &g_entities[self->client->ps.saberentity_num];
+	gentity_t* saberent = &g_entities[self->client->ps.saberEntityNum];
 
 	VectorSubtract(self->client->renderInfo.handRPoint, saberent->currentOrigin, saber_diff);
 
@@ -9716,7 +9716,7 @@ static void WP_SaberThrow(gentity_t* self, const usercmd_t* ucmd)
 					//dropped it
 					G_FreeEntity(saberent);
 					//forget it
-					self->client->ps.saberentity_num = ENTITYNUM_NONE;
+					self->client->ps.saberEntityNum = ENTITYNUM_NONE;
 					return;
 				}
 			}
@@ -9737,7 +9737,7 @@ static void WP_SaberThrow(gentity_t* self, const usercmd_t* ucmd)
 				//free it
 				G_FreeEntity(saberent);
 				//forget it
-				self->client->ps.saberentity_num = ENTITYNUM_NONE;
+				self->client->ps.saberEntityNum = ENTITYNUM_NONE;
 				return;
 			}
 			if (!self->s.number && level.time - saberent->aimDebounceTime > 15000
@@ -10766,7 +10766,7 @@ int wp_saber_must_block(gentity_t* self, const gentity_t* atk, const qboolean ch
 		return 0;
 	}
 
-	if (!self->client->ps.saberentity_num || self->client->ps.saberInFlight)
+	if (!self->client->ps.saberEntityNum || self->client->ps.saberInFlight)
 	{
 		//saber not currently in use or available, attempt to use our hands instead.
 		return 0;
@@ -13775,7 +13775,7 @@ void wp_saber_start_missile_block_check(gentity_t* self, const usercmd_t* ucmd)
 			gi.trace(&trace, ent->currentOrigin, ent->mins, ent->maxs, trace_to, ent->s.number, ent->clipmask,
 				static_cast<EG2_Collision>(0), 0);
 			if (trace.allsolid || trace.startsolid || trace.fraction < 1.0f && trace.entityNum != self->s.number &&
-				trace.entityNum != self->client->ps.saberentity_num)
+				trace.entityNum != self->client->ps.saberEntityNum)
 			{
 				//okay, try one more check
 				VectorNormalize2(ent->s.pos.trDelta, ent_dir);
@@ -13783,7 +13783,7 @@ void wp_saber_start_missile_block_check(gentity_t* self, const usercmd_t* ucmd)
 				gi.trace(&trace, ent->currentOrigin, ent->mins, ent->maxs, trace_to, ent->s.number, ent->clipmask,
 					static_cast<EG2_Collision>(0), 0);
 				if (trace.allsolid || trace.startsolid || trace.fraction < 1.0f && trace.entityNum != self->s.number &&
-					trace.entityNum != self->client->ps.saberentity_num)
+					trace.entityNum != self->client->ps.saberEntityNum)
 				{
 					//can't hit me, ignore it
 					continue;
@@ -13915,7 +13915,7 @@ void wp_saber_update(gentity_t* self, const usercmd_t* ucmd)
 		return;
 	}
 
-	if (self->client->ps.saberentity_num < 0 || self->client->ps.saberentity_num >= ENTITYNUM_WORLD)
+	if (self->client->ps.saberEntityNum < 0 || self->client->ps.saberEntityNum >= ENTITYNUM_WORLD)
 	{
 		//never got one
 		return;
@@ -13924,13 +13924,13 @@ void wp_saber_update(gentity_t* self, const usercmd_t* ucmd)
 	// Check if we are throwing it, launch it if needed, update position if needed.
 	WP_SaberThrow(self, ucmd);
 
-	if (self->client->ps.saberentity_num <= 0)
+	if (self->client->ps.saberEntityNum <= 0)
 	{
 		//WTF?!!  We lost it?
 		return;
 	}
 
-	gentity_t* saberent = &g_entities[self->client->ps.saberentity_num];
+	gentity_t* saberent = &g_entities[self->client->ps.saberEntityNum];
 
 	if (self->client->ps.saberBlocked != BLOCKED_NONE)
 	{
@@ -16278,7 +16278,7 @@ void ForceThrow(gentity_t* self, qboolean pull, qboolean fake)
 							&& push_target[x]->client
 							&& push_target[x]->client->ps.weapon == WP_SABER
 							&& !push_target[x]->client->ps.saberInFlight
-							&& push_target[x]->client->ps.saberentity_num < ENTITYNUM_WORLD
+							&& push_target[x]->client->ps.saberEntityNum < ENTITYNUM_WORLD
 							&& !PM_InOnGroundAnim(&push_target[x]->client->ps))
 						{
 							vec3_t throw_vec;
@@ -22153,7 +22153,7 @@ static void force_lightning_damage(gentity_t* self, gentity_t* trace_ent, vec3_t
 						&& trace_ent->client->ps.blockPoints > 5)
 					{
 						//saber can block lightning
-						const qboolean active_blocking =
+						const qboolean is_holding_block_button_and_attack =
 							trace_ent->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK ? qtrue : qfalse;
 						//Active Blocking
 						//make them do a parry
@@ -22211,7 +22211,7 @@ static void force_lightning_damage(gentity_t* self, gentity_t* trace_ent, vec3_t
 						trace_ent->client->ps.weaponTime = Q_irand(300, 600);
 						dmg = 0;
 
-						if (active_blocking)
+						if (is_holding_block_button_and_attack)
 						{
 							PM_AddBlockFatigue(&trace_ent->client->ps, fp_block_cost);
 						}
@@ -22747,7 +22747,7 @@ void WP_DeactivateSaber(const gentity_t* self, const qboolean clear_length)
 {
 	const qboolean blocking = self->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
 	//Normal Blocking
-	const qboolean active_blocking = self->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK ? qtrue : qfalse;
+	const qboolean is_holding_block_button_and_attack = self->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK ? qtrue : qfalse;
 	//Active Blocking
 
 	if (!self || !self->client)
@@ -22755,7 +22755,7 @@ void WP_DeactivateSaber(const gentity_t* self, const qboolean clear_length)
 		return;
 	}
 
-	if (blocking || active_blocking)
+	if (blocking || is_holding_block_button_and_attack)
 	{
 		return;
 	}
@@ -22783,7 +22783,7 @@ void WP_DeactivateLightSaber(const gentity_t* self)
 {
 	const qboolean blocking = self->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
 	//Normal Blocking
-	const qboolean active_blocking = self->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK ? qtrue : qfalse;
+	const qboolean is_holding_block_button_and_attack = self->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK ? qtrue : qfalse;
 	//Active Blocking
 
 	if (!self || !self->client)
@@ -22791,7 +22791,7 @@ void WP_DeactivateLightSaber(const gentity_t* self)
 		return;
 	}
 
-	if (blocking || active_blocking)
+	if (blocking || is_holding_block_button_and_attack)
 	{
 		return;
 	}
@@ -28963,10 +28963,10 @@ void WP_ForcePowersUpdate(gentity_t* self, usercmd_t* ucmd)
 	if (self->client->ps.saberInFlight)
 	{
 		//don't regen force power while throwing saber
-		if (self->client->ps.saberentity_num < ENTITYNUM_NONE && self->client->ps.saberentity_num > 0) //player is 0
+		if (self->client->ps.saberEntityNum < ENTITYNUM_NONE && self->client->ps.saberEntityNum > 0) //player is 0
 		{
 			//
-			if (&g_entities[self->client->ps.saberentity_num] != nullptr && g_entities[self->client->ps.saberentity_num].s
+			if (&g_entities[self->client->ps.saberEntityNum] != nullptr && g_entities[self->client->ps.saberEntityNum].s
 				.pos.trType == TR_LINEAR)
 			{
 				//fell to the ground and we're trying to pull it back
@@ -28979,7 +28979,7 @@ void WP_ForcePowersUpdate(gentity_t* self, usercmd_t* ucmd)
 		using_force = qtrue;
 	}
 
-	const qboolean active_blocking = self->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK ? qtrue : qfalse;
+	const qboolean is_holding_block_button_and_attack = self->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK ? qtrue : qfalse;
 	const qboolean is_holding_block_button = self->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
 	//Normal Blocking
 
@@ -29030,7 +29030,7 @@ void WP_ForcePowersUpdate(gentity_t* self, usercmd_t* ucmd)
 					wp_force_power_regenerate(self, 2);
 					bg_reduce_saber_mishap_level(&self->client->ps);
 				}
-				else if (is_holding_block_button || active_blocking)
+				else if (is_holding_block_button || is_holding_block_button_and_attack)
 				{
 					//regen half as fast
 					self->client->ps.forcePowerRegenDebounceTime += 2000; //1 point per 1 seconds.. super slow

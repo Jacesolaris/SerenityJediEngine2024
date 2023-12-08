@@ -4413,20 +4413,12 @@ UI_KeyEvent
 */
 void _UI_KeyEvent(const int key, const qboolean down)
 {
-	/*	extern qboolean SwallowBadNumLockedKPKey( int iKey );
-		if (SwallowBadNumLockedKPKey(key)){
-			return;
-		}
-	*/
-
 	if (Menu_Count() > 0)
 	{
 		menuDef_t* menu = Menu_GetFocused();
 		if (menu)
 		{
-			//DemoEnd();
-			if (key == A_ESCAPE && down && !Menus_AnyFullScreenVisible() && !(menu->window.flags &
-				WINDOW_IGNORE_ESCAPE))
+			if (key == A_ESCAPE && down && !Menus_AnyFullScreenVisible() && !(menu->window.flags & WINDOW_IGNORE_ESCAPE))
 			{
 				Menus_CloseAll();
 			}

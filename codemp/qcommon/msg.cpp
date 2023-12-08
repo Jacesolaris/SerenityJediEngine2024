@@ -981,7 +981,7 @@ netField_t entityStateFields[] =
 	// used mostly for players and npcs - appears to be static / never changing
 	{NETF(customRGBA[2]), 8}, //0-255
 	// multiple meanings
-	{NETF(saberentity_num), GENTITYNUM_BITS},
+	{NETF(saberEntityNum), GENTITYNUM_BITS},
 	// could probably just eliminate and assume a big number
 	{NETF(g2radius), 8},
 	{NETF(otherentity_num2), GENTITYNUM_BITS},
@@ -1536,7 +1536,7 @@ netField_t playerStateFields[] =
 	{PSF(events[1]), 10}, // There is a maximum of 256 events (8 bits transmission, 2 high bits for uniqueness)
 	{PSF(customRGBA[0]), 8}, //0-255
 	{PSF(movementDir), 4},
-	{PSF(saberentity_num), GENTITYNUM_BITS},
+	{PSF(saberEntityNum), GENTITYNUM_BITS},
 	//Also used for channel tracker storage, but should never exceed entity number
 	{PSF(customRGBA[3]), 8}, //0-255
 	{PSF(weaponstate), 4},
@@ -1800,7 +1800,7 @@ netField_t pilotPlayerStateFields[] =
 	//NOTE: This isn't just an index all the time, it's often used as a time value, and thus needs 32 bits
 	{PSF(customRGBA[0]), 8}, //0-255
 	{PSF(movementDir), 4},
-	{PSF(saberentity_num), GENTITYNUM_BITS},
+	{PSF(saberEntityNum), GENTITYNUM_BITS},
 	//Also used for channel tracker storage, but should never exceed entity number
 	{PSF(customRGBA[3]), 8}, //0-255
 	{PSF(saber_move), 32},
@@ -2116,7 +2116,7 @@ netField_t	playerStateFields[] =
 { PSF(events[1]), 10 },			// There is a maximum of 256 events (8 bits transmission, 2 high bits for uniqueness)
 { PSF(customRGBA[0]), 8 }, //0-255
 { PSF(movementDir), 4 },
-{ PSF(saberentity_num), GENTITYNUM_BITS }, //Also used for channel tracker storage, but should never exceed entity number
+{ PSF(saberEntityNum), GENTITYNUM_BITS }, //Also used for channel tracker storage, but should never exceed entity number
 { PSF(customRGBA[3]), 8 }, //0-255
 { PSF(weaponstate), 4 },
 { PSF(saber_move), 32 }, //This value sometimes exceeds the max LS_ value and gets set to a crazy amount, so it needs 32 bits

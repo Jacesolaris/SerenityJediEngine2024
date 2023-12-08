@@ -870,7 +870,7 @@ static QINLINE void CG_EntityStateToPlayerState(entityState_t* s, playerState_t*
 	ps->eFlags = s->eFlags;
 
 	ps->saberInFlight = s->saberInFlight;
-	ps->saberentity_num = s->saberentity_num;
+	ps->saberEntityNum = s->saberEntityNum;
 
 	ps->fd.forcePowersActive = s->forcePowersActive;
 

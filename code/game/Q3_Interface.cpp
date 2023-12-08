@@ -6853,13 +6853,13 @@ static void Q3_RemoveEnt(gentity_t* victim)
 			G_FreeEntity(victim->NPC->tempGoal);
 			victim->NPC->tempGoal = nullptr;
 		}
-		if (victim->client->ps.saberentity_num != ENTITYNUM_NONE && victim->client->ps.saberentity_num > 0)
+		if (victim->client->ps.saberEntityNum != ENTITYNUM_NONE && victim->client->ps.saberEntityNum > 0)
 		{
-			if (g_entities[victim->client->ps.saberentity_num].inuse)
+			if (g_entities[victim->client->ps.saberEntityNum].inuse)
 			{
-				G_FreeEntity(&g_entities[victim->client->ps.saberentity_num]);
+				G_FreeEntity(&g_entities[victim->client->ps.saberEntityNum]);
 			}
-			victim->client->ps.saberentity_num = ENTITYNUM_NONE;
+			victim->client->ps.saberEntityNum = ENTITYNUM_NONE;
 		}
 		//Disappear in half a second
 		victim->e_ThinkFunc = thinkF_G_FreeEntity;

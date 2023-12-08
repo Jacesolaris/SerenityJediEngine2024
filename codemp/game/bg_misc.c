@@ -3306,7 +3306,7 @@ void BG_PlayerStateToEntityState(playerState_t* ps, entityState_t* s, const qboo
 	s->eFlags2 = ps->eFlags2;
 
 	s->saberInFlight = ps->saberInFlight;
-	s->saberentity_num = ps->saberentity_num;
+	s->saberEntityNum = ps->saberEntityNum;
 	s->saber_move = ps->saber_move;
 	s->forcePowersActive = ps->fd.forcePowersActive;
 
@@ -3515,7 +3515,7 @@ void BG_PlayerStateToEntityStateExtraPolate(playerState_t* ps, entityState_t* s,
 	s->eFlags2 = ps->eFlags2;
 
 	s->saberInFlight = ps->saberInFlight;
-	s->saberentity_num = ps->saberentity_num;
+	s->saberEntityNum = ps->saberEntityNum;
 	s->saber_move = ps->saber_move;
 	s->forcePowersActive = ps->fd.forcePowersActive;
 

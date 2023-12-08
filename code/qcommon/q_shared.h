@@ -2099,7 +2099,7 @@ public:
 #ifdef JK2_MODE
 	float		saberLengthOld;
 #endif
-	int saberentity_num;
+	int saberEntityNum;
 	float saberEntityDist;
 	int saberThrowTime;
 	int saberEntityState;
@@ -2359,7 +2359,7 @@ public:
 		saved_game.write<float>(saberLengthOld);
 #endif // JK2_MODE
 
-		saved_game.write<int32_t>(saberentity_num);
+		saved_game.write<int32_t>(saberEntityNum);
 		saved_game.write<float>(saberEntityDist);
 		saved_game.write<int32_t>(saberThrowTime);
 		saved_game.write<int32_t>(saberEntityState);
@@ -2615,7 +2615,7 @@ public:
 		saved_game.read<float>(saberLengthOld);
 #endif // JK2_MODE
 
-		saved_game.read<int32_t>(saberentity_num);
+		saved_game.read<int32_t>(saberEntityNum);
 		saved_game.read<float>(saberEntityDist);
 		saved_game.read<int32_t>(saberThrowTime);
 		saved_game.read<int32_t>(saberEntityState);

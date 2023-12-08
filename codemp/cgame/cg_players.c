@@ -3195,7 +3195,7 @@ static void CG_SetLerpFrameAnimation(centity_t* cent, clientInfo_t* ci, lerpFram
 	const float old_speed = lf->animationSpeed;
 
 	const qboolean is_holding_block_button = cent->currentState.ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
-	const qboolean active_blocking = cent->currentState.ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK
+	const qboolean is_holding_block_button_and_attack = cent->currentState.ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK
 		? qtrue
 		: qfalse;
 
@@ -3300,7 +3300,7 @@ static void CG_SetLerpFrameAnimation(centity_t* cent, clientInfo_t* ci, lerpFram
 		if (!PM_WalkingOrRunningAnim(cent->currentState.legsAnim) && !PM_InKataAnim(cent->currentState.torsoAnim))
 		{
 			//make smooth animations
-			if ((active_blocking || is_holding_block_button) && cent->currentState.saber_move == LS_READY)
+			if ((is_holding_block_button_and_attack || is_holding_block_button) && cent->currentState.saber_move == LS_READY)
 			{
 				blendTime *= 1.8f;
 			}
@@ -3320,7 +3320,7 @@ static void CG_SetLerpFrameAnimation(centity_t* cent, clientInfo_t* ci, lerpFram
 				resume_frame = qtrue;
 			}
 			lf->animationTorsoSpeed = anim_speed_mult;
-			if ((active_blocking || is_holding_block_button) && cent->currentState.saber_move == LS_READY)
+			if ((is_holding_block_button_and_attack || is_holding_block_button) && cent->currentState.saber_move == LS_READY)
 			{
 				blendTime *= 1.8f;
 			}
@@ -3732,7 +3732,7 @@ static void CG_PlayerAnimation(centity_t* cent, int* legs_old, int* legs, float*
 	const int clientNum = cent->currentState.clientNum;
 
 	const qboolean is_holding_block_button = cent->currentState.ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
-	const qboolean active_blocking = cent->currentState.ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK
+	const qboolean is_holding_block_button_and_attack = cent->currentState.ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK
 		? qtrue
 		: qfalse;
 
@@ -3791,7 +3791,7 @@ static void CG_PlayerAnimation(centity_t* cent, int* legs_old, int* legs, float*
 		if (!PM_WalkingOrRunningAnim(cent->currentState.legsAnim) && !PM_InKataAnim(cent->currentState.torsoAnim))
 		{
 			//make smooth animations
-			if ((active_blocking || is_holding_block_button) && cent->currentState.saber_move == LS_READY)
+			if ((is_holding_block_button_and_attack || is_holding_block_button) && cent->currentState.saber_move == LS_READY)
 			{
 				speed_scale *= 0.3f;
 			}
@@ -12033,7 +12033,7 @@ void CG_AddSaberBlade(centity_t* cent, centity_t* scent, int renderfx, int saber
 		client = &cgs.clientinfo[cent->currentState.number];
 	}
 
-	saber_ent = &cg_entities[cent->currentState.saberentity_num];
+	saber_ent = &cg_entities[cent->currentState.saberEntityNum];
 	saber_len = client->saber[saberNum].blade[blade_num].length;
 
 	if (saber_len <= 0 && !dont_draw)
@@ -16189,7 +16189,7 @@ void CG_VisualWeaponsUpdate(centity_t* cent, clientInfo_t* ci)
 				if (!(ci->saber[0].saberFlags & SFL_TWO_HANDED))
 				{
 					//using single saber(s)
-					if (cent->currentState.saberentity_num && !cent->currentState.saberInFlight)
+					if (cent->currentState.saberEntityNum && !cent->currentState.saberInFlight)
 					{
 						//only have holstered saber if we current have our saber in our posession.
 						if (ci->holster_saber != -1)
@@ -16233,7 +16233,7 @@ void CG_VisualWeaponsUpdate(centity_t* cent, clientInfo_t* ci)
 				else
 				{
 					//using staff saber
-					if (cent->currentState.saberentity_num && !cent->currentState.saberInFlight)
+					if (cent->currentState.saberEntityNum && !cent->currentState.saberInFlight)
 					{
 						//only have holstered saber if we current have our saber in our posession.
 						if (!back_in_use)
@@ -19011,11 +19011,11 @@ stillDoSaber:
 		}
 
 		if (cent->currentState.saberInFlight
-			&& cent->currentState.saberentity_num)
+			&& cent->currentState.saberEntityNum)
 		{
 			centity_t* saber_ent;
 
-			saber_ent = &cg_entities[cent->currentState.saberentity_num];
+			saber_ent = &cg_entities[cent->currentState.saberEntityNum];
 
 			if (g2_has_weapon || !cent->bolt3 ||
 				saber_ent->serverSaberHitIndex != saber_ent->currentState.modelIndex)
@@ -19343,7 +19343,7 @@ stillDoSaber:
 				if (ci->saber[1].model //dual sabers
 					&& cent->currentState.saber_holstered == 1) //second one off
 				{
-					if (cent->currentState.saberInFlight && !cent->currentState.saberentity_num)
+					if (cent->currentState.saberInFlight && !cent->currentState.saberEntityNum)
 					{
 						BG_SI_SetDesiredLength(&ci->saber[0], 0, -1);
 						BG_SI_SetDesiredLength(&ci->saber[1], -1, -1);
@@ -19395,13 +19395,13 @@ stillDoSaber:
 		int k = 0;
 		int l = 0;
 
-		if (!cent->currentState.saberentity_num)
+		if (!cent->currentState.saberEntityNum)
 		{
 			l = 1; //The "primary" saber is missing or in flight or something, so only try to draw in the second one
 		}
 		else if (!cent->currentState.saberInFlight)
 		{
-			saber_ent = &cg_entities[cent->currentState.saberentity_num];
+			saber_ent = &cg_entities[cent->currentState.saberEntityNum];
 
 			if (!g2_has_weapon)
 			{
@@ -19494,7 +19494,7 @@ stillDoSaber:
 		}
 	}
 
-	if (cent->currentState.saberInFlight && !cent->currentState.saberentity_num)
+	if (cent->currentState.saberInFlight && !cent->currentState.saberEntityNum)
 	{
 		//reset the length if the saber is knocked away
 		BG_SI_SetDesiredLength(&ci->saber[0], 0, -1);

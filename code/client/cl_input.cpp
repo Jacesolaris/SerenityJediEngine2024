@@ -565,6 +565,7 @@ void CL_JoystickEvent(const int axis, const int value, int time)
 CL_JoystickMove
 =================
 */
+
 static void CL_JoystickMove(usercmd_t* cmd)
 {
 	float	anglespeed;
@@ -581,6 +582,10 @@ static void CL_JoystickMove(usercmd_t* cmd)
 	float up = j_up->value * cl.joystickAxis[j_up_axis->integer];
 
 	if (!(in_speed.active ^ cl_run->integer))
+	{
+		cmd->buttons |= BUTTON_WALKING;
+	}
+	else if (pitch <= 180 && pitch >= -180 && pitch != 0)
 	{
 		cmd->buttons |= BUTTON_WALKING;
 	}
@@ -633,7 +638,8 @@ static void CL_JoystickMove(usercmd_t* cmd)
 	cmd->upmove = ClampCharMove(cmd->upmove + (int)up);
 
 #if 0
-	if (!in_strafe.active) {
+	if (!in_strafe.active)
+	{
 		if (cl_mYawOverride)
 		{
 			cl.viewangles[YAW] += 5.0f * cl_mYawOverride * cl.joystickAxis[AXIS_SIDE];
@@ -648,7 +654,8 @@ static void CL_JoystickMove(usercmd_t* cmd)
 		cmd->rightmove = ClampChar(cmd->rightmove + cl.joystickAxis[AXIS_SIDE]);
 	}
 
-	if (in_mlooking) {
+	if (in_mlooking)
+	{
 		if (cl_mPitchOverride)
 		{
 			cl.viewangles[PITCH] += 5.0f * cl_mPitchOverride * cl.joystickAxis[AXIS_FORWARD];
@@ -658,9 +665,10 @@ static void CL_JoystickMove(usercmd_t* cmd)
 			cl.viewangles[PITCH] += anglespeed * (cl_pitchspeed->value / 100.0f) * cl.joystickAxis[AXIS_FORWARD];
 		}
 	}
-	else {
+	else
+	{
 		cmd->forwardmove = ClampChar(cmd->forwardmove + cl.joystickAxis[AXIS_FORWARD]);
-	}
+}
 
 	cmd->upmove = ClampChar(cmd->upmove + cl.joystickAxis[AXIS_UP]);
 #endif

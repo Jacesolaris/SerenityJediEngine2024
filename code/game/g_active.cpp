@@ -2275,14 +2275,14 @@ extern void G_Stagger(gentity_t* hit_ent);
 
 qboolean WP_AbsorbKick(gentity_t* hit_ent, const gentity_t* pusher, const vec3_t push_dir)
 {
-	const qboolean active_blocking = hit_ent->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK ? qtrue : qfalse;
+	const qboolean is_holding_block_button_and_attack = hit_ent->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCKANDATTACK ? qtrue : qfalse;
 	//manual Blocking
 	const qboolean is_holding_block_button = hit_ent->client->ps.ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
 	//Normal Blocking
 	const qboolean NPCBlocking = hit_ent->client->ps.ManualBlockingFlags & 1 << MBF_NPCKICKBLOCK ? qtrue : qfalse;
 	//NPC Blocking
 
-	if (PlayerCanAbsorbKick(hit_ent, push_dir) && (is_holding_block_button || active_blocking) && (hit_ent->s.number < MAX_CLIENTS ||
+	if (PlayerCanAbsorbKick(hit_ent, push_dir) && (is_holding_block_button || is_holding_block_button_and_attack) && (hit_ent->s.number < MAX_CLIENTS ||
 		G_ControlledByPlayer(hit_ent))) //player only
 	{
 		if (hit_ent->client->ps.blockPoints > 50)
@@ -8503,7 +8503,7 @@ static void ClientThink_real(gentity_t* ent, usercmd_t* ucmd)
 	}
 
 	// Update the position of the saber, and check to see if we're throwing it
-	if (client->ps.saberentity_num != ENTITYNUM_NONE)
+	if (client->ps.saberEntityNum != ENTITYNUM_NONE)
 	{
 		int updates = 1;
 		if (ent->NPC)

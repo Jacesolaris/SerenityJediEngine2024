@@ -363,7 +363,7 @@ void ThrowSaberToAttacker(gentity_t* self, const gentity_t* attacker)
 		//someone killed us and we had the saber thrown, so actually move this saber to the saber location
 		//if we killed ourselves with saber thrown, however, same suicide rules of respawning at spawn spot still
 		//apply.
-		const gentity_t* flyingsaber = &g_entities[self->client->ps.saberentity_num];
+		const gentity_t* flyingsaber = &g_entities[self->client->ps.saberEntityNum];
 
 		if (flyingsaber && flyingsaber->inuse)
 		{
@@ -6664,7 +6664,7 @@ void ClientSpawn(gentity_t* ent)
 
 	savedForce = client->ps.fd;
 
-	savesaber_num = client->ps.saberentity_num;
+	savesaber_num = client->ps.saberEntityNum;
 
 	savedSiegeIndex = client->siegeClass;
 
@@ -6724,7 +6724,7 @@ void ClientSpawn(gentity_t* ent)
 	}
 
 	//or the saber ent num
-	client->ps.saberentity_num = savesaber_num;
+	client->ps.saberEntityNum = savesaber_num;
 	client->saberStoredIndex = savesaber_num;
 
 	client->ps.fd = savedForce;
