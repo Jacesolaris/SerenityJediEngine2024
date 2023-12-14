@@ -26,6 +26,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #define __TR_TYPES_H
 
 #include "../game/ghoul2_shared.h"
+#include <qcommon\q_shared.h>
 
 constexpr auto MAX_DLIGHTS = 32; // can't be increased, because bit flags are used on surfaces;
 constexpr auto REFENTITYNUM_BITS = 11; // can't be increased without changing drawsurf bit packing;
@@ -75,6 +76,8 @@ constexpr auto RF_SHADOW_ONLY = 0x200000; //add surfs for shadowing but don't dr
 constexpr auto RF_DISTORTION = 0x400000; //area distortion effect -rww;
 
 constexpr auto RF_FORCE_ENT_ALPHA = 0x800000; // override shader alpha settings;
+
+constexpr auto RF_ALPHA_DEPTH = 0x1000000; //depth write on alpha model
 
 // refdef flags
 constexpr auto RDF_NOWORLDMODEL = 1; // used for player configuration screen;

@@ -1089,13 +1089,13 @@ static void read_g_entities(const qboolean qbAutosave)
 
 		if (pEnt->m_pVehicle) // will be qtrue/qfalse
 		{
-			Vehicle_t temp_vehicle;
+			Vehicle_t tempVehicle;
 
 			// initialize the vehicle cache g_vehicleInfo
 			// Calling this function fixes the vehicle crashing issue
 			BG_VehicleGetIndex(pEnt->NPC_type);
 
-			EvaluateFields(savefields_g_vhic, &temp_vehicle, reinterpret_cast<byte*>(p_ent_original->m_pVehicle),INT_ID('V', 'H', 'I', 'C'));
+			EvaluateFields(savefields_g_vhic, &tempVehicle, reinterpret_cast<byte*>(p_ent_original->m_pVehicle), INT_ID('V', 'H', 'I', 'C'));
 
 			// so can we pinch the original's one or do we have to alloc a new one?...
 			//
@@ -1114,7 +1114,7 @@ static void read_g_entities(const qboolean qbAutosave)
 
 			// copy over the one we've just loaded...
 			//
-			*pEnt->m_pVehicle = temp_vehicle; // struct copy
+			*pEnt->m_pVehicle = tempVehicle; // struct copy
 		}
 
 		// the scary ghoul2 stuff...  (fingers crossed)

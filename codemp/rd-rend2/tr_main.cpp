@@ -98,7 +98,7 @@ static void R_CalcTangentsForTriangle(vec3_t tangent, vec3_t bitangent,
 	const vec2_t t0, const vec2_t t1, const vec2_t t2)
 {
 	int             i;
-	vec3_t          planes[3];
+	vec3_t          planes[3]{};
 	vec3_t          u, v;
 
 	for (i = 0; i < 3; i++)
@@ -2244,7 +2244,7 @@ void R_SetupPshadowMaps(trRefdef_t* refdef)
 	{
 		trRefEntity_t* ent = &refdef->entities[i];
 
-		if ((ent->e.renderfx & (RF_FIRST_PERSON | RF_NOSHADOW)))
+		if ((ent->e.renderfx & (RF_FIRST_PERSON | RF_NOSHADOW | RF_DEPTHHACK)))
 			continue;
 
 		//if((ent->e.renderfx & RF_THIRD_PERSON))
@@ -2274,6 +2274,13 @@ void R_SetupPshadowMaps(trRefdef_t* refdef)
 			{
 				if (ent->e.ghoul2 && G2API_HaveWeGhoul2Models(*((CGhoul2Info_v*)ent->e.ghoul2)))
 				{
+					shader_t* cust_shader = nullptr;
+					if (ent->e.customShader)
+					{
+						cust_shader = R_GetShaderByHandle(ent->e.customShader);
+						if (cust_shader->sort != SS_OPAQUE)
+							continue;
+					}
 					// scale the radius if needed
 					float largestScale = ent->e.modelScale[0];
 					if (ent->e.modelScale[1] > largestScale)

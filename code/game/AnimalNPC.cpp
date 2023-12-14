@@ -101,7 +101,7 @@ extern cvar_t* g_speederControlScheme;
 #ifdef _JK2MP
 #include "../namespace_begin.h"
 #endif
-extern void PM_SetAnim(const pmove_t* pm, int set_anim_parts, int anim, int set_anim_flags, int blendTime);
+extern void PM_SetAnim(const pmove_t* pm, int setAnimParts, int anim, int setAnimFlags, int blendTime);
 extern int PM_AnimLength(int index, animNumber_t anim);
 #ifdef _JK2MP
 #include "../namespace_end.h"
@@ -111,7 +111,7 @@ extern int PM_AnimLength(int index, animNumber_t anim);
 extern void CG_ChangeWeapon(int num);
 #endif
 
-extern void Vehicle_SetAnim(gentity_t* ent, int set_anim_parts, int anim, int set_anim_flags, int i_blend);
+extern void Vehicle_SetAnim(gentity_t* ent, int setAnimParts, int anim, int setAnimFlags, int i_blend);
 extern void G_Knockdown(gentity_t* self, gentity_t* attacker, const vec3_t push_dir, float strength,
 	qboolean break_saber_lock);
 extern void G_VehicleTrace(trace_t* results, const vec3_t start, const vec3_t tMins, const vec3_t tMaxs,
@@ -445,13 +445,6 @@ static void ProcessOrientCommands(Vehicle_t* p_veh)
 		/********************************************************************************/
 }
 
-#ifdef _JK2MP //temp hack til mp speeder controls are sorted -rww
-void AnimalProcessOri(Vehicle_t* p_veh)
-{
-	ProcessOrientCommands(p_veh);
-}
-#endif
-
 #ifdef QAGAME //back to our game-only functions
 // This function makes sure that the vehicle is properly animated.
 
@@ -531,11 +524,9 @@ static void AnimateVehicle(Vehicle_t* p_veh)
 
 			// Set the delay time (which happens to be the time it takes for the animation to complete).
 			// NOTE: Here I made it so the delay is actually 70% (0.7f) of the animation time.
-#ifdef _JK2MP
-			iAnimLen = BG_AnimLength(parent->localAnimIndex, Anim) * 0.7f;
-#else
+
 			iAnimLen = PM_AnimLength(parent->client->clientInfo.animFileIndex, Anim) * 0.7f;
-#endif
+
 			p_veh->m_iBoarding = level.time + iAnimLen;
 
 			// Set the animation, which won't be interrupted until it's completed.
@@ -591,7 +582,7 @@ static void AnimateVehicle(Vehicle_t* p_veh)
 			iFlags = SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLDLESS;
 			Anim = Walking ? BOTH_VT_WALK_FWD : Running ? BOTH_VT_RUN_FWD : BOTH_VT_IDLE1;
 		}
-}
+	}
 	Vehicle_SetAnim(parent, SETANIM_LEGS, Anim, iFlags, i_blend);
 }
 
@@ -715,7 +706,7 @@ static void AnimateRiders(Vehicle_t* p_veh)
 			pilotPS->weapon == WP_FLECHETTE)
 		{
 			WeaponPose = WPOSE_BLASTER;
-	}
+		}
 		else if (pilotPS->weapon == WP_SABER)
 		{
 			if (p_veh->m_ulFlags & VEH_SABERINLEFTHAND && pilotPS->torsoAnim == BOTH_VT_ATL_TO_R_S)
@@ -791,7 +782,7 @@ static void AnimateRiders(Vehicle_t* p_veh)
 					break;
 				default: assert(0);
 				}
-				}
+			}
 			else if (Right)
 			{
 				// Attack Right
@@ -816,7 +807,7 @@ static void AnimateRiders(Vehicle_t* p_veh)
 				default: assert(0);
 				}
 			}
-			}
+		}
 		else if (Turbo)
 		{
 			// Kicked In Turbo
@@ -859,15 +850,11 @@ static void AnimateRiders(Vehicle_t* p_veh)
 				}
 			}
 		} // No Special Moves
-		}
+	}
 
 	Vehicle_SetAnim(pilot, SETANIM_BOTH, Anim, iFlags, i_blend);
 }
 #endif //QAGAME
-
-#ifndef QAGAME
-void AttachRidersGeneric(Vehicle_t* p_veh);
-#endif
 
 //on the client this function will only set up the process command funcs
 void G_SetAnimalVehicleFunctions(vehicleInfo_t* pVehInfo)
@@ -875,31 +862,11 @@ void G_SetAnimalVehicleFunctions(vehicleInfo_t* pVehInfo)
 #ifdef QAGAME
 	pVehInfo->AnimateVehicle = AnimateVehicle;
 	pVehInfo->AnimateRiders = AnimateRiders;
-	//	pVehInfo->ValidateBoard				=		ValidateBoard;
-	//	pVehInfo->SetParent					=		SetParent;
-	//	pVehInfo->SetPilot					=		SetPilot;
-	//	pVehInfo->AddPassenger				=		AddPassenger;
-	//	pVehInfo->Animate					=		Animate;
-	//	pVehInfo->Board						=		Board;
-	//	pVehInfo->Eject						=		Eject;
-	//	pVehInfo->EjectAll					=		EjectAll;
-	//	pVehInfo->StartDeathDelay			=		StartDeathDelay;
 	pVehInfo->DeathUpdate = DeathUpdate;
-	//	pVehInfo->RegisterAssets			=		RegisterAssets;
-	//	pVehInfo->Initialize				=		Initialize;
 	pVehInfo->Update = update;
-	//	pVehInfo->UpdateRider				=		UpdateRider;
 #endif //QAGAME
 	pVehInfo->ProcessMoveCommands = ProcessMoveCommands;
 	pVehInfo->ProcessOrientCommands = ProcessOrientCommands;
-
-#ifndef QAGAME //cgame prediction attachment func
-	pVehInfo->AttachRiders = AttachRidersGeneric;
-#endif
-	//	pVehInfo->AttachRiders				=		AttachRiders;
-	//	pVehInfo->Ghost						=		Ghost;
-	//	pVehInfo->UnGhost					=		UnGhost;
-	//	pVehInfo->Inhabited					=		Inhabited;
 }
 
 // Following is only in game, not in namespace

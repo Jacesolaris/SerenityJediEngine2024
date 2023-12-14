@@ -33,7 +33,7 @@ extern float DotToSpot(vec3_t spot, vec3_t from, vec3_t fromAngles);
 extern vec3_t player_mins;
 extern vec3_t player_maxs;
 extern int PM_AnimLength(int index, animNumber_t anim);
-extern void Vehicle_SetAnim(gentity_t* ent, int set_anim_parts, int anim, int set_anim_flags, int i_blend);
+extern void Vehicle_SetAnim(gentity_t* ent, int setAnimParts, int anim, int setAnimFlags, int i_blend);
 extern void G_Knockdown(gentity_t* self, gentity_t* attacker, const vec3_t push_dir, float strength,
 	qboolean breakSaberLock);
 extern void G_VehicleTrace(trace_t* results, const vec3_t start, const vec3_t tMins, const vec3_t tMaxs,

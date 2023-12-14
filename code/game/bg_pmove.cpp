@@ -9885,7 +9885,7 @@ static void PM_Footsteps()
 	qboolean footstep = qfalse;
 	qboolean valid_npc = qfalse;
 	qboolean flipping = qfalse;
-	int set_anim_flags = SETANIM_FLAG_NORMAL;
+	int setAnimFlags = SETANIM_FLAG_NORMAL;
 
 	const qboolean is_holding_block_button = pm->ps->ManualBlockingFlags & 1 << HOLDINGBLOCK ? qtrue : qfalse;
 	//Holding Block Button
@@ -10042,11 +10042,11 @@ static void PM_Footsteps()
 							{
 								if (pm->ps->pm_flags & PMF_BACKWARDS_RUN)
 								{
-									PM_SetAnim(pm, SETANIM_LEGS, BOTH_CROUCH1WALKBACK, set_anim_flags);
+									PM_SetAnim(pm, SETANIM_LEGS, BOTH_CROUCH1WALKBACK, setAnimFlags);
 								}
 								else
 								{
-									PM_SetAnim(pm, SETANIM_LEGS, BOTH_CROUCH1WALK, set_anim_flags);
+									PM_SetAnim(pm, SETANIM_LEGS, BOTH_CROUCH1WALK, setAnimFlags);
 								}
 							}
 							else
@@ -10219,7 +10219,7 @@ static void PM_Footsteps()
 	if (PM_SwimmingAnim(pm->ps->legsAnim) && pm->waterlevel < 2)
 	{
 		//legs are in swim anim, and not swimming, be sure to override it
-		set_anim_flags |= SETANIM_FLAG_OVERRIDE;
+		setAnimFlags |= SETANIM_FLAG_OVERRIDE;
 	}
 
 	// if not trying to move
@@ -10495,7 +10495,7 @@ static void PM_Footsteps()
 		if (pm->ps->legsAnim == BOTH_TURN_LEFT1 || pm->ps->legsAnim == BOTH_TURN_RIGHT1)
 		{
 			//moving overrides turning
-			set_anim_flags |= SETANIM_FLAG_OVERRIDE;
+			setAnimFlags |= SETANIM_FLAG_OVERRIDE;
 		}
 	}
 	else
@@ -10524,7 +10524,7 @@ static void PM_Footsteps()
 			|| PM_ForceAnim(pm->ps->legsAnim))
 		{
 			//legs are in a saber anim, and not spinning, be sure to override it
-			set_anim_flags |= SETANIM_FLAG_OVERRIDE;
+			setAnimFlags |= SETANIM_FLAG_OVERRIDE;
 		}
 	}
 
@@ -10555,11 +10555,11 @@ static void PM_Footsteps()
 			{
 				if (pm->ps->pm_flags & PMF_BACKWARDS_RUN)
 				{
-					PM_SetAnim(pm, SETANIM_LEGS, BOTH_CROUCH1WALKBACK, set_anim_flags);
+					PM_SetAnim(pm, SETANIM_LEGS, BOTH_CROUCH1WALKBACK, setAnimFlags);
 				}
 				else
 				{
-					PM_SetAnim(pm, SETANIM_LEGS, BOTH_CROUCH1WALK, set_anim_flags);
+					PM_SetAnim(pm, SETANIM_LEGS, BOTH_CROUCH1WALK, setAnimFlags);
 				}
 				if (!Q_irand(0, 19))
 				{
@@ -10594,17 +10594,17 @@ static void PM_Footsteps()
 			if (pm->ps->weapon == WP_SABER && pm->ps->SaberActive())
 			{
 				//This controls saber movement anims //JaceSolaris
-				PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUNBACK2, set_anim_flags);
+				PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUNBACK2, setAnimFlags);
 			}
 			else if (pm->gent && pm->gent->client && pm->gent->client->NPC_class == CLASS_RANCOR)
 			{
 				//no run anim
-				PM_SetAnim(pm, SETANIM_LEGS, BOTH_WALKBACK1, set_anim_flags);
+				PM_SetAnim(pm, SETANIM_LEGS, BOTH_WALKBACK1, setAnimFlags);
 			}
 			else if (pm->gent && pm->gent->client && pm->gent->client->NPC_class == CLASS_SBD)
 			{
 				//no run anim
-				PM_SetAnim(pm, SETANIM_LEGS, SBD_RUNBACK_NORMAL, set_anim_flags);
+				PM_SetAnim(pm, SETANIM_LEGS, SBD_RUNBACK_NORMAL, setAnimFlags);
 			}
 			else if (!in_camera && pm->gent && pm->gent->client && pm->gent->client->NPC_class == CLASS_DROIDEKA)
 			{
@@ -10613,7 +10613,7 @@ static void PM_Footsteps()
 					if (pm->ps->legsAnim != BOTH_RUN1START)
 					{
 						//Hmm, he should really start slow and have to accelerate... also need to do this for stopping
-						PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN1START, set_anim_flags | SETANIM_FLAG_HOLD);
+						PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN1START, setAnimFlags | SETANIM_FLAG_HOLD);
 
 						if (pm->ps->powerups[PW_GALAK_SHIELD] || pm->gent->flags & FL_SHIELDED)
 						{
@@ -10622,17 +10622,17 @@ static void PM_Footsteps()
 					}
 					else if (!pm->ps->legsAnimTimer)
 					{
-						PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUNBACK1, set_anim_flags);
+						PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUNBACK1, setAnimFlags);
 					}
 				}
 				else
 				{
-					PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUNBACK1, set_anim_flags);
+					PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUNBACK1, setAnimFlags);
 				}
 			}
 			else
 			{
-				PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUNBACK1, set_anim_flags);
+				PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUNBACK1, setAnimFlags);
 			}
 			footstep = qtrue;
 		}
@@ -10646,11 +10646,11 @@ static void PM_Footsteps()
 				//This controls saber movement anims //JaceSolaris
 				if (PM_SaberDrawPutawayAnim(pm->ps->torsoAnim))
 				{
-					PM_SetAnim(pm, SETANIM_LEGS, BOTH_WALKBACK1, set_anim_flags);
+					PM_SetAnim(pm, SETANIM_LEGS, BOTH_WALKBACK1, setAnimFlags);
 				}
 				else
 				{
-					PM_SetAnim(pm, SETANIM_LEGS, BOTH_WALKBACK1, set_anim_flags);
+					PM_SetAnim(pm, SETANIM_LEGS, BOTH_WALKBACK1, setAnimFlags);
 				}
 			}
 			else if (!in_camera && pm->gent && pm->gent->client && pm->gent->client->NPC_class == CLASS_DROIDEKA)
@@ -10660,26 +10660,26 @@ static void PM_Footsteps()
 					if (pm->ps->legsAnim != BOTH_RUN1STOP && pm->ps->legsAnim == BOTH_RUNBACK1)
 					{
 						//Hmm, he should really start slow and have to accelerate... also need to do this for stopping
-						PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN1STOP, set_anim_flags | SETANIM_FLAG_HOLD);
+						PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN1STOP, setAnimFlags | SETANIM_FLAG_HOLD);
 					}
 					else if (!pm->ps->legsAnimTimer)
 					{
-						PM_SetAnim(pm, SETANIM_LEGS, BOTH_WALKBACK1, set_anim_flags);
+						PM_SetAnim(pm, SETANIM_LEGS, BOTH_WALKBACK1, setAnimFlags);
 					}
 				}
 				else
 				{
-					PM_SetAnim(pm, SETANIM_LEGS, BOTH_WALKBACK1, set_anim_flags);
+					PM_SetAnim(pm, SETANIM_LEGS, BOTH_WALKBACK1, setAnimFlags);
 				}
 			}
 			else if (pm->gent && pm->gent->client && pm->gent->client->NPC_class == CLASS_SBD)
 			{
 				//no run anim
-				PM_SetAnim(pm, SETANIM_LEGS, SBD_WALKBACK_NORMAL, set_anim_flags);
+				PM_SetAnim(pm, SETANIM_LEGS, SBD_WALKBACK_NORMAL, setAnimFlags);
 			}
 			else
 			{
-				PM_SetAnim(pm, SETANIM_LEGS, BOTH_WALKBACK1, set_anim_flags);
+				PM_SetAnim(pm, SETANIM_LEGS, BOTH_WALKBACK1, setAnimFlags);
 			}
 			if (!Q_irand(0, 9))
 			{
@@ -10716,7 +10716,7 @@ static void PM_Footsteps()
 		else if (pm->gent && pm->gent->client && pm->gent->client->NPC_class == CLASS_SBD)
 		{
 			//no run anim
-			PM_SetAnim(pm, SETANIM_LEGS, SBD_WALK_NORMAL, set_anim_flags);
+			PM_SetAnim(pm, SETANIM_LEGS, SBD_WALK_NORMAL, setAnimFlags);
 		}
 		else
 		{
@@ -10732,24 +10732,24 @@ static void PM_Footsteps()
 					{
 						if (pm->ps->forcePowersActive & 1 << FP_SPEED)
 						{
-							PM_SetAnim(pm, SETANIM_BOTH, BOTH_SPRINT, set_anim_flags);
+							PM_SetAnim(pm, SETANIM_BOTH, BOTH_SPRINT, setAnimFlags);
 						}
 						else
 						{
 							if (pm->ps->stats[STAT_HEALTH] <= 70 && pm->ps->stats[STAT_HEALTH] >= 40)
 							{
-								PM_SetAnim(pm, SETANIM_BOTH, BOTH_RUN9, set_anim_flags);
+								PM_SetAnim(pm, SETANIM_BOTH, BOTH_RUN9, setAnimFlags);
 							}
 							else if (pm->ps->stats[STAT_HEALTH] <= 40)
 							{
-								PM_SetAnim(pm, SETANIM_BOTH, BOTH_RUN8, set_anim_flags);
+								PM_SetAnim(pm, SETANIM_BOTH, BOTH_RUN8, setAnimFlags);
 							}
 							else
 							{
 								if (is_holding_block_button && pm->ps->sprintFuel > 15) // staff sprint here
 								{
 									//This controls saber movement anims //JaceSolaris
-									PM_SetAnim(pm, SETANIM_BOTH, BOTH_RUN_STAFF, set_anim_flags);
+									PM_SetAnim(pm, SETANIM_BOTH, BOTH_RUN_STAFF, setAnimFlags);
 
 									if (!(pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING))
 									{
@@ -10763,7 +10763,7 @@ static void PM_Footsteps()
 								}
 								else
 								{
-									PM_SetAnim(pm, SETANIM_BOTH, BOTH_RUN1, set_anim_flags);
+									PM_SetAnim(pm, SETANIM_BOTH, BOTH_RUN1, setAnimFlags);
 
 									if (pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING ||
 										pm->ps->PlayerEffectFlags & 1 << PEF_WEAPONSPRINTING)
@@ -10780,24 +10780,24 @@ static void PM_Footsteps()
 					{
 						if (pm->ps->forcePowersActive & 1 << FP_SPEED)
 						{
-							PM_SetAnim(pm, SETANIM_BOTH, BOTH_SPRINT, set_anim_flags);
+							PM_SetAnim(pm, SETANIM_BOTH, BOTH_SPRINT, setAnimFlags);
 						}
 						else
 						{
 							if (pm->ps->stats[STAT_HEALTH] <= 70 && pm->ps->stats[STAT_HEALTH] >= 40)
 							{
-								PM_SetAnim(pm, SETANIM_BOTH, BOTH_RUN7, set_anim_flags);
+								PM_SetAnim(pm, SETANIM_BOTH, BOTH_RUN7, setAnimFlags);
 							}
 							else if (pm->ps->stats[STAT_HEALTH] <= 40)
 							{
-								PM_SetAnim(pm, SETANIM_BOTH, BOTH_RUN8, set_anim_flags);
+								PM_SetAnim(pm, SETANIM_BOTH, BOTH_RUN8, setAnimFlags);
 							}
 							else
 							{
 								if (is_holding_block_button && pm->ps->sprintFuel > 15) //dual sprint here
 								{
 									//This controls saber movement anims //JaceSolaris
-									PM_SetAnim(pm, SETANIM_BOTH, BOTH_RUN_DUAL, set_anim_flags);
+									PM_SetAnim(pm, SETANIM_BOTH, BOTH_RUN_DUAL, setAnimFlags);
 
 									if (!(pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING))
 									{
@@ -10811,7 +10811,7 @@ static void PM_Footsteps()
 								}
 								else
 								{
-									PM_SetAnim(pm, SETANIM_BOTH, BOTH_RUN1, set_anim_flags);
+									PM_SetAnim(pm, SETANIM_BOTH, BOTH_RUN1, setAnimFlags);
 
 									if (pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING ||
 										pm->ps->PlayerEffectFlags & 1 << PEF_WEAPONSPRINTING)
@@ -10828,23 +10828,23 @@ static void PM_Footsteps()
 					{
 						if (pm->ps->clientNum >= MAX_CLIENTS && !PM_ControlledByPlayer())
 						{
-							PM_SetAnim(pm, SETANIM_BOTH, BOTH_RUN2, set_anim_flags);
+							PM_SetAnim(pm, SETANIM_BOTH, BOTH_RUN2, setAnimFlags);
 						}
 						else
 						{
 							if (pm->ps->forcePowersActive & 1 << FP_SPEED)
 							{
-								PM_SetAnim(pm, SETANIM_BOTH, BOTH_SPRINT, set_anim_flags);
+								PM_SetAnim(pm, SETANIM_BOTH, BOTH_SPRINT, setAnimFlags);
 							}
 							else
 							{
 								if (pm->ps->stats[STAT_HEALTH] <= 70 && pm->ps->stats[STAT_HEALTH] >= 40)
 								{
-									PM_SetAnim(pm, SETANIM_BOTH, BOTH_RUN9, set_anim_flags);
+									PM_SetAnim(pm, SETANIM_BOTH, BOTH_RUN9, setAnimFlags);
 								}
 								else if (pm->ps->stats[STAT_HEALTH] <= 40)
 								{
-									PM_SetAnim(pm, SETANIM_BOTH, BOTH_RUN8, set_anim_flags);
+									PM_SetAnim(pm, SETANIM_BOTH, BOTH_RUN8, setAnimFlags);
 								}
 								else
 								{
@@ -10854,24 +10854,24 @@ static void PM_Footsteps()
 										if (pm->ps->saber[0].type == SABER_BACKHAND
 											|| pm->ps->saber[0].type == SABER_ASBACKHAND) //saber backhand
 										{
-											PM_SetAnim(pm, SETANIM_BOTH, BOTH_RUN_STAFF, set_anim_flags);
+											PM_SetAnim(pm, SETANIM_BOTH, BOTH_RUN_STAFF, setAnimFlags);
 										}
 										else if (pm->ps->saber[0].type == SABER_YODA) //saber yoda
 										{
-											PM_SetAnim(pm, SETANIM_BOTH, BOTH_RUN10, set_anim_flags);
+											PM_SetAnim(pm, SETANIM_BOTH, BOTH_RUN10, setAnimFlags);
 										}
 										else if (pm->ps->saber[0].type == SABER_GRIE) //saber kylo
 										{
-											PM_SetAnim(pm, SETANIM_BOTH, BOTH_RUN7, set_anim_flags);
+											PM_SetAnim(pm, SETANIM_BOTH, BOTH_RUN7, setAnimFlags);
 										}
 										else if (pm->ps->saber[0].type == SABER_GRIE4) //saber kylo
 										{
-											PM_SetAnim(pm, SETANIM_BOTH, BOTH_RUN7, set_anim_flags);
+											PM_SetAnim(pm, SETANIM_BOTH, BOTH_RUN7, setAnimFlags);
 										}
 										else
 										{
 											//This controls saber movement anims //JaceSolaris
-											PM_SetAnim(pm, SETANIM_BOTH, BOTH_SPRINT_SABER, set_anim_flags);
+											PM_SetAnim(pm, SETANIM_BOTH, BOTH_SPRINT_SABER, setAnimFlags);
 										}
 
 										if (!(pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING))
@@ -10886,7 +10886,7 @@ static void PM_Footsteps()
 									}
 									else
 									{
-										PM_SetAnim(pm, SETANIM_BOTH, BOTH_RUN1, set_anim_flags);
+										PM_SetAnim(pm, SETANIM_BOTH, BOTH_RUN1, setAnimFlags);
 
 										if (pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING ||
 											pm->ps->PlayerEffectFlags & 1 << PEF_WEAPONSPRINTING)
@@ -10908,11 +10908,11 @@ static void PM_Footsteps()
 					{
 						if (pm->ps->stats[STAT_HEALTH] <= 70 && pm->ps->stats[STAT_HEALTH] >= 40)
 						{
-							PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN8, set_anim_flags);
+							PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN8, setAnimFlags);
 						}
 						else if (pm->ps->stats[STAT_HEALTH] <= 40)
 						{
-							PM_SetAnim(pm, SETANIM_BOTH, BOTH_RUN9, set_anim_flags);
+							PM_SetAnim(pm, SETANIM_BOTH, BOTH_RUN9, setAnimFlags);
 						}
 						else
 						{
@@ -10925,11 +10925,11 @@ static void PM_Footsteps()
 									pm->ps->weapon == WP_BLASTER_PISTOL) //they do this themselves
 								{
 									//dual blaster pistols
-									PM_SetAnim(pm, SETANIM_LEGS, BOTH_SPRINT_MP, set_anim_flags);
+									PM_SetAnim(pm, SETANIM_LEGS, BOTH_SPRINT_MP, setAnimFlags);
 								}
 								else
 								{
-									PM_SetAnim(pm, SETANIM_LEGS, BOTH_SPRINT_MP, set_anim_flags);
+									PM_SetAnim(pm, SETANIM_LEGS, BOTH_SPRINT_MP, setAnimFlags);
 								}
 
 								if (pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING)
@@ -10955,11 +10955,11 @@ static void PM_Footsteps()
 									pm->ps->weapon == WP_BLASTER_PISTOL) //they do this themselves
 								{
 									//dual blaster pistols
-									PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN2, set_anim_flags);
+									PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN2, setAnimFlags);
 								}
 								else
 								{
-									PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN5, set_anim_flags);
+									PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN5, setAnimFlags);
 								}
 								if (pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING ||
 									pm->ps->PlayerEffectFlags & 1 << PEF_WEAPONSPRINTING)
@@ -10975,11 +10975,11 @@ static void PM_Footsteps()
 					{
 						if (pm->ps->stats[STAT_HEALTH] <= 70 && pm->ps->stats[STAT_HEALTH] >= 40)
 						{
-							PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN8, set_anim_flags);
+							PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN8, setAnimFlags);
 						}
 						else if (pm->ps->stats[STAT_HEALTH] <= 40)
 						{
-							PM_SetAnim(pm, SETANIM_BOTH, BOTH_RUN9, set_anim_flags);
+							PM_SetAnim(pm, SETANIM_BOTH, BOTH_RUN9, setAnimFlags);
 						}
 						else
 						{
@@ -10992,11 +10992,11 @@ static void PM_Footsteps()
 									pm->ps->weapon == WP_BLASTER_PISTOL) //they do this themselves
 								{
 									//dual blaster pistols
-									PM_SetAnim(pm, SETANIM_LEGS, BOTH_SPRINT_MP, set_anim_flags);
+									PM_SetAnim(pm, SETANIM_LEGS, BOTH_SPRINT_MP, setAnimFlags);
 								}
 								else
 								{
-									PM_SetAnim(pm, SETANIM_LEGS, BOTH_SPRINT_MP, set_anim_flags);
+									PM_SetAnim(pm, SETANIM_LEGS, BOTH_SPRINT_MP, setAnimFlags);
 								}
 
 								if (pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING)
@@ -11022,11 +11022,11 @@ static void PM_Footsteps()
 									pm->ps->weapon == WP_BLASTER_PISTOL) //they do this themselves
 								{
 									//dual blaster pistols
-									PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN2, set_anim_flags);
+									PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN2, setAnimFlags);
 								}
 								else
 								{
-									PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN5, set_anim_flags);
+									PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN5, setAnimFlags);
 								}
 								if (pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING ||
 									pm->ps->PlayerEffectFlags & 1 << PEF_WEAPONSPRINTING)
@@ -11049,7 +11049,7 @@ static void PM_Footsteps()
 				{
 					if (pm->ps->clientNum >= MAX_CLIENTS && !PM_ControlledByPlayer())
 					{
-						PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN3, set_anim_flags);
+						PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN3, setAnimFlags);
 					}
 					else if (!in_camera && pm->gent && pm->gent->client && pm->gent->client->NPC_class == CLASS_DROIDEKA)
 					{
@@ -11058,18 +11058,18 @@ static void PM_Footsteps()
 							if (pm->ps->legsAnim != BOTH_RUN1START)
 							{
 								//Hmm, he should really start slow and have to accelerate... also need to do this for stopping
-								PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN1START, set_anim_flags | SETANIM_FLAG_HOLD);
+								PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN1START, setAnimFlags | SETANIM_FLAG_HOLD);
 
 								TurnBarrierOff(pm->gent);
 							}
 							else if (!pm->ps->legsAnimTimer)
 							{
-								PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN1, set_anim_flags);
+								PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN1, setAnimFlags);
 							}
 						}
 						else
 						{
-							PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN1, set_anim_flags);
+							PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN1, setAnimFlags);
 						}
 					}
 					else
@@ -11078,17 +11078,17 @@ static void PM_Footsteps()
 						{
 							if (pm->ps->stats[STAT_HEALTH] <= 70 && pm->ps->stats[STAT_HEALTH] >= 40)
 							{
-								PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN7, set_anim_flags);
+								PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN7, setAnimFlags);
 							}
 							else if (pm->ps->stats[STAT_HEALTH] <= 40)
 							{
-								PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN8, set_anim_flags);
+								PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN8, setAnimFlags);
 							}
 							else
 							{
 								if (pm->cmd.buttons & BUTTON_BLOCK && pm->ps->sprintFuel > 15)
 								{
-									PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN3_MP, set_anim_flags);
+									PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN3_MP, setAnimFlags);
 
 									if (pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING)
 									{
@@ -11106,7 +11106,7 @@ static void PM_Footsteps()
 								}
 								else
 								{
-									PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN3, set_anim_flags);
+									PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN3, setAnimFlags);
 
 									if (pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING ||
 										pm->ps->PlayerEffectFlags & 1 << PEF_WEAPONSPRINTING)
@@ -11122,7 +11122,7 @@ static void PM_Footsteps()
 						{
 							if (pm->cmd.buttons & BUTTON_BLOCK && pm->ps->sprintFuel > 15)
 							{
-								PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN3_MP, set_anim_flags);
+								PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN3_MP, setAnimFlags);
 
 								if (pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING)
 								{
@@ -11140,7 +11140,7 @@ static void PM_Footsteps()
 							}
 							else
 							{
-								PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN3, set_anim_flags);
+								PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN3, setAnimFlags);
 
 								if (pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING ||
 									pm->ps->PlayerEffectFlags & 1 << PEF_WEAPONSPRINTING)
@@ -11159,15 +11159,15 @@ static void PM_Footsteps()
 				{
 					if (pm->ps->stats[STAT_HEALTH] <= 70 && pm->ps->stats[STAT_HEALTH] >= 40)
 					{
-						PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN7, set_anim_flags);
+						PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN7, setAnimFlags);
 					}
 					else if (pm->ps->stats[STAT_HEALTH] <= 40)
 					{
-						PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN8, set_anim_flags);
+						PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN8, setAnimFlags);
 					}
 					else
 					{
-						PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN6, set_anim_flags);
+						PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN6, setAnimFlags);
 					}
 
 					if (pm->cmd.buttons & BUTTON_BLOCK && pm->ps->sprintFuel > 15)
@@ -11201,21 +11201,21 @@ static void PM_Footsteps()
 				{
 					if (pm->ps->clientNum >= MAX_CLIENTS && !PM_ControlledByPlayer())
 					{
-						PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN3, set_anim_flags);
+						PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN3, setAnimFlags);
 					}
 					else
 					{
 						if (pm->ps->stats[STAT_HEALTH] <= 70 && pm->ps->stats[STAT_HEALTH] >= 40)
 						{
-							PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN7, set_anim_flags);
+							PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN7, setAnimFlags);
 						}
 						else if (pm->ps->stats[STAT_HEALTH] <= 40)
 						{
-							PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN8, set_anim_flags);
+							PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN8, setAnimFlags);
 						}
 						else
 						{
-							PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN7, set_anim_flags);
+							PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN7, setAnimFlags);
 						}
 
 						if (pm->cmd.buttons & BUTTON_BLOCK && pm->ps->sprintFuel > 15)
@@ -11248,60 +11248,60 @@ static void PM_Footsteps()
 				}
 				else if (pm->ps->weapon == WP_SBD_PISTOL)
 				{
-					PM_SetAnim(pm, SETANIM_LEGS, SBD_RUNING_WEAPON, set_anim_flags);
+					PM_SetAnim(pm, SETANIM_LEGS, SBD_RUNING_WEAPON, setAnimFlags);
 				}
 				else if (pm->gent && pm->gent->client && pm->gent->client->NPC_class == CLASS_JAWA)
 				{
-					PM_SetAnim(pm, SETANIM_BOTH, BOTH_RUN4, set_anim_flags);
+					PM_SetAnim(pm, SETANIM_BOTH, BOTH_RUN4, setAnimFlags);
 				}
 				else if (pm->gent && pm->gent->client && pm->gent->client->NPC_class == CLASS_VADER)
 				{
-					PM_SetAnim(pm, SETANIM_BOTH, BOTH_VADERRUN1, set_anim_flags);
+					PM_SetAnim(pm, SETANIM_BOTH, BOTH_VADERRUN1, setAnimFlags);
 				}
 				else if (pm->gent && pm->gent->client && pm->gent->client->NPC_class == CLASS_SBD)
 				{
 					//no run anim
-					PM_SetAnim(pm, SETANIM_LEGS, SBD_RUNING_WEAPON, set_anim_flags);
+					PM_SetAnim(pm, SETANIM_LEGS, SBD_RUNING_WEAPON, setAnimFlags);
 				}
 				else if (pm->gent && pm->gent->client && pm->gent->client->NPC_class == CLASS_RANCOR)
 				{
 					//no run anim
-					PM_SetAnim(pm, SETANIM_LEGS, BOTH_WALK1, set_anim_flags);
+					PM_SetAnim(pm, SETANIM_LEGS, BOTH_WALK1, setAnimFlags);
 				}
 				else if (pm->gent && pm->gent->client && pm->gent->client->ps.forcePowersActive & 1 << FP_SPEED
 					&& pm->gent->client->ps.forcePowerLevel[FP_SPEED] > FORCE_LEVEL_1)
 				{
 					//in force speed
-					PM_SetAnim(pm, SETANIM_LEGS, BOTH_SPRINT, set_anim_flags);
+					PM_SetAnim(pm, SETANIM_LEGS, BOTH_SPRINT, setAnimFlags);
 				}
 				else if (pm->gent && pm->gent->client && pm->gent->client->NPC_class == CLASS_WOOKIE)
 				{
-					PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN7, set_anim_flags);
+					PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN7, setAnimFlags);
 				}
 				else if (pm->gent && pm->gent->client && pm->gent->client->NPC_class == CLASS_GRAN)
 				{
-					PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN7, set_anim_flags);
+					PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN7, setAnimFlags);
 				}
 				else if (pm->gent && pm->gent->client && pm->gent->client->ps.forcePowersActive & 1 << FP_RAGE)
 				{
 					//in force rage
-					PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN7, set_anim_flags);
+					PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN7, setAnimFlags);
 				}
 				else if (pm->gent && pm->gent->client && pm->gent->client->NPC_class == CLASS_TUSKEN)
 				{
-					PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN7, set_anim_flags);
+					PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN7, setAnimFlags);
 				}
 				else if (pm->gent && pm->gent->client && pm->gent->client->NPC_class == CLASS_NOGHRI)
 				{
-					PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN8, set_anim_flags);
+					PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN8, setAnimFlags);
 				}
 				else if (pm->gent && pm->gent->client && pm->gent->client->NPC_class == CLASS_MARK1)
 				{
-					PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN1, set_anim_flags);
+					PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN1, setAnimFlags);
 				}
 				else if (pm->gent && pm->gent->client && pm->gent->client->NPC_class == CLASS_MARK2)
 				{
-					PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN1, set_anim_flags);
+					PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN1, setAnimFlags);
 				}
 				else if (pm->gent && pm->gent->client && pm->gent->client->NPC_class == CLASS_ATST)
 				{
@@ -11310,16 +11310,16 @@ static void PM_Footsteps()
 						if (pm->ps->legsAnim != BOTH_RUN1START)
 						{
 							//Hmm, he should really start slow and have to accelerate... also need to do this for stopping
-							PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN1START, set_anim_flags | SETANIM_FLAG_HOLD);
+							PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN1START, setAnimFlags | SETANIM_FLAG_HOLD);
 						}
 						else if (!pm->ps->legsAnimTimer)
 						{
-							PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN1, set_anim_flags);
+							PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN1, setAnimFlags);
 						}
 					}
 					else
 					{
-						PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN1, set_anim_flags);
+						PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN1, setAnimFlags);
 					}
 				}
 				else if (!in_camera && pm->gent && pm->gent->client && pm->gent->client->NPC_class == CLASS_DROIDEKA)
@@ -11329,18 +11329,18 @@ static void PM_Footsteps()
 						if (pm->ps->legsAnim != BOTH_RUN1START)
 						{
 							//Hmm, he should really start slow and have to accelerate... also need to do this for stopping
-							PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN1START, set_anim_flags | SETANIM_FLAG_HOLD);
+							PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN1START, setAnimFlags | SETANIM_FLAG_HOLD);
 
 							TurnBarrierOff(pm->gent);
 						}
 						else if (!pm->ps->legsAnimTimer)
 						{
-							PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN1, set_anim_flags);
+							PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN1, setAnimFlags);
 						}
 					}
 					else
 					{
-						PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN1, set_anim_flags);
+						PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN1, setAnimFlags);
 					}
 				}
 				else if (pm->gent && pm->gent->client && pm->gent->client->NPC_class == CLASS_WAMPA)
@@ -11365,17 +11365,17 @@ static void PM_Footsteps()
 				{
 					if (pm->ps->stats[STAT_HEALTH] <= 70 && pm->ps->stats[STAT_HEALTH] >= 40)
 					{
-						PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN7, set_anim_flags);
+						PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN7, setAnimFlags);
 					}
 					else if (pm->ps->stats[STAT_HEALTH] <= 40)
 					{
-						PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN8, set_anim_flags);
+						PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN8, setAnimFlags);
 					}
 					else
 					{
 						if (pm->cmd.buttons & BUTTON_BLOCK && pm->ps->sprintFuel > 15)
 						{
-							PM_SetAnim(pm, SETANIM_LEGS, BOTH_SPRINT_SABER_MP, set_anim_flags);
+							PM_SetAnim(pm, SETANIM_LEGS, BOTH_SPRINT_SABER_MP, setAnimFlags);
 
 							if (!(pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING))
 							{
@@ -11389,7 +11389,7 @@ static void PM_Footsteps()
 						}
 						else
 						{
-							PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN1, set_anim_flags);
+							PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN1, setAnimFlags);
 
 							if (pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING ||
 								pm->ps->PlayerEffectFlags & 1 << PEF_WEAPONSPRINTING)
@@ -11416,17 +11416,17 @@ static void PM_Footsteps()
 						{
 							if (PM_SaberDrawPutawayAnim(pm->ps->torsoAnim))
 							{
-								PM_SetAnim(pm, SETANIM_LEGS, BOTH_WALK1, set_anim_flags);
+								PM_SetAnim(pm, SETANIM_LEGS, BOTH_WALK1, setAnimFlags);
 							}
 							else
 							{
 								if (is_holding_block_button)
 								{
-									PM_SetAnim(pm, SETANIM_LEGS, BOTH_WALK2, set_anim_flags);
+									PM_SetAnim(pm, SETANIM_LEGS, BOTH_WALK2, setAnimFlags);
 								}
 								else
 								{
-									PM_SetAnim(pm, SETANIM_LEGS, BOTH_WALK1, set_anim_flags);
+									PM_SetAnim(pm, SETANIM_LEGS, BOTH_WALK1, setAnimFlags);
 								}
 							}
 						}
@@ -11434,17 +11434,17 @@ static void PM_Footsteps()
 						{
 							if (PM_SaberDrawPutawayAnim(pm->ps->torsoAnim))
 							{
-								PM_SetAnim(pm, SETANIM_LEGS, BOTH_WALK1, set_anim_flags);
+								PM_SetAnim(pm, SETANIM_LEGS, BOTH_WALK1, setAnimFlags);
 							}
 							else
 							{
 								if (is_holding_block_button)
 								{
-									PM_SetAnim(pm, SETANIM_LEGS, BOTH_WALK2, set_anim_flags);
+									PM_SetAnim(pm, SETANIM_LEGS, BOTH_WALK2, setAnimFlags);
 								}
 								else
 								{
-									PM_SetAnim(pm, SETANIM_LEGS, BOTH_WALK_STAFF, set_anim_flags);
+									PM_SetAnim(pm, SETANIM_LEGS, BOTH_WALK_STAFF, setAnimFlags);
 								}
 							}
 						}
@@ -11456,23 +11456,23 @@ static void PM_Footsteps()
 						{
 							if (PM_SaberDrawPutawayAnim(pm->ps->torsoAnim))
 							{
-								PM_SetAnim(pm, SETANIM_LEGS, BOTH_WALK1, set_anim_flags);
+								PM_SetAnim(pm, SETANIM_LEGS, BOTH_WALK1, setAnimFlags);
 							}
 							else
 							{
 								if (is_holding_block_button)
 								{
-									PM_SetAnim(pm, SETANIM_LEGS, BOTH_WALK2, set_anim_flags);
+									PM_SetAnim(pm, SETANIM_LEGS, BOTH_WALK2, setAnimFlags);
 								}
 								else
 								{
-									PM_SetAnim(pm, SETANIM_LEGS, BOTH_WALK1, set_anim_flags);
+									PM_SetAnim(pm, SETANIM_LEGS, BOTH_WALK1, setAnimFlags);
 								}
 							}
 						}
 						else
 						{
-							PM_SetAnim(pm, SETANIM_LEGS, BOTH_WALK1, set_anim_flags);
+							PM_SetAnim(pm, SETANIM_LEGS, BOTH_WALK1, setAnimFlags);
 						}
 						if (pm->ps->PlayerEffectFlags & 1 << PEF_SPRINTING ||
 							pm->ps->PlayerEffectFlags & 1 << PEF_WEAPONSPRINTING)
@@ -11486,15 +11486,15 @@ static void PM_Footsteps()
 					{
 						if (pm->ps->saber_anim_level == SS_DUAL)
 						{
-							PM_SetAnim(pm, SETANIM_LEGS, BOTH_WALK_DUAL, set_anim_flags);
+							PM_SetAnim(pm, SETANIM_LEGS, BOTH_WALK_DUAL, setAnimFlags);
 						}
 						else if (pm->ps->saber_anim_level == SS_STAFF)
 						{
-							PM_SetAnim(pm, SETANIM_LEGS, BOTH_WALK_STAFF, set_anim_flags);
+							PM_SetAnim(pm, SETANIM_LEGS, BOTH_WALK_STAFF, setAnimFlags);
 						}
 						else
 						{
-							PM_SetAnim(pm, SETANIM_LEGS, BOTH_WALK2, set_anim_flags);
+							PM_SetAnim(pm, SETANIM_LEGS, BOTH_WALK2, setAnimFlags);
 						}
 					}
 				}
@@ -11514,17 +11514,17 @@ static void PM_Footsteps()
 				else if (pm->gent && pm->gent->client && pm->gent->client->NPC_class == CLASS_MARK1)
 				{
 					//no run anim
-					PM_SetAnim(pm, SETANIM_BOTH, BOTH_WALK1, set_anim_flags);
+					PM_SetAnim(pm, SETANIM_BOTH, BOTH_WALK1, setAnimFlags);
 				}
 				else if (pm->gent && pm->gent->client && pm->gent->client->NPC_class == CLASS_MARK2)
 				{
 					//no run anim
-					PM_SetAnim(pm, SETANIM_BOTH, BOTH_WALK1, set_anim_flags);
+					PM_SetAnim(pm, SETANIM_BOTH, BOTH_WALK1, setAnimFlags);
 				}
 				else if (pm->gent && pm->gent->client && pm->gent->client->NPC_class == CLASS_SBD)
 				{
 					//no run anim
-					PM_SetAnim(pm, SETANIM_BOTH, SBD_WALK_NORMAL, set_anim_flags);
+					PM_SetAnim(pm, SETANIM_BOTH, SBD_WALK_NORMAL, setAnimFlags);
 				}
 				else if (!in_camera && pm->gent && pm->gent->client && pm->gent->client->NPC_class == CLASS_DROIDEKA)
 				{
@@ -11533,16 +11533,16 @@ static void PM_Footsteps()
 						if (pm->ps->legsAnim != BOTH_RUN1STOP && pm->ps->legsAnim == BOTH_RUN1)
 						{
 							//Hmm, he should really start slow and have to accelerate... also need to do this for stopping
-							PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN1STOP, set_anim_flags | SETANIM_FLAG_HOLD);
+							PM_SetAnim(pm, SETANIM_LEGS, BOTH_RUN1STOP, setAnimFlags | SETANIM_FLAG_HOLD);
 						}
 						else if (!pm->ps->legsAnimTimer)
 						{
-							PM_SetAnim(pm, SETANIM_LEGS, BOTH_WALK1, set_anim_flags);
+							PM_SetAnim(pm, SETANIM_LEGS, BOTH_WALK1, setAnimFlags);
 						}
 					}
 					else
 					{
-						PM_SetAnim(pm, SETANIM_LEGS, BOTH_WALK1, set_anim_flags);
+						PM_SetAnim(pm, SETANIM_LEGS, BOTH_WALK1, setAnimFlags);
 					}
 				}
 				else
@@ -13123,7 +13123,7 @@ void PM_Setsaber_move(saber_moveName_t new_move)
 					active)) //saber staff with more than first blade active
 					|| pm->ps->saber[0].type == SABER_ARC))
 			{
-				if (is_holding_block_button)
+				if (pm->ps->ManualBlockingFlags & 1 << HOLDINGBLOCK)
 				{
 					if (pm->ps->saber_anim_level == SS_DUAL)
 					{
@@ -13146,7 +13146,7 @@ void PM_Setsaber_move(saber_moveName_t new_move)
 		}
 		else if (pm->ps->saber[0].readyAnim != -1)
 		{
-			if (is_holding_block_button)
+			if (pm->ps->ManualBlockingFlags & 1 << HOLDINGBLOCK)
 			{
 				if (pm->ps->saber_anim_level == SS_DUAL)
 				{
@@ -13168,7 +13168,7 @@ void PM_Setsaber_move(saber_moveName_t new_move)
 		}
 		else if (pm->ps->dualSabers && pm->ps->saber[1].readyAnim != -1)
 		{
-			if (is_holding_block_button)
+			if (pm->ps->ManualBlockingFlags & 1 << HOLDINGBLOCK)
 			{
 				if (pm->ps->saber_anim_level == SS_DUAL)
 				{
@@ -13194,7 +13194,7 @@ void PM_Setsaber_move(saber_moveName_t new_move)
 					|| pm->ps->saber[0].blade[1].active))
 					|| pm->ps->saber[0].type == SABER_ARC)))
 		{
-			if (is_holding_block_button)
+			if (pm->ps->ManualBlockingFlags & 1 << HOLDINGBLOCK)
 			{
 				if (pm->ps->saber_anim_level == SS_DUAL)
 				{
@@ -13216,7 +13216,7 @@ void PM_Setsaber_move(saber_moveName_t new_move)
 		}
 		else
 		{
-			if (is_holding_block_button)
+			if (pm->ps->ManualBlockingFlags & 1 << HOLDINGBLOCK)
 			{
 				if (pm->ps->saber_anim_level == SS_DUAL)
 				{
@@ -13308,8 +13308,7 @@ void PM_Setsaber_move(saber_moveName_t new_move)
 	}
 	else if (new_move == LS_PUTAWAY)
 	{
-		if (pm->ps->saber[0].holsterPlace == HOLSTER_LHIP && !pm->ps->dualSabers && pm->ps->saber[0].putawayAnim ==
-			-1)
+		if (pm->ps->saber[0].holsterPlace == HOLSTER_LHIP && !pm->ps->dualSabers && pm->ps->saber[0].putawayAnim == -1)
 		{
 			//TODO: left hip putaway anim
 		}
@@ -13601,12 +13600,11 @@ void PM_Setsaber_move(saber_moveName_t new_move)
 				parts = SETANIM_BOTH;
 				pm->ps->legsAnimTimer = pm->ps->torsoAnimTimer = 0;
 			}
-			else if (!pm->cmd.forwardmove && !pm->cmd.rightmove && !pm->cmd.upmove && !(pm->ps->pm_flags &
-				PMF_DUCKED)
-				|| is_holding_block_button && pm->cmd.buttons & BUTTON_WALKING)
+			else if (!pm->cmd.forwardmove && !pm->cmd.rightmove && !pm->cmd.upmove && !(pm->ps->pm_flags & PMF_DUCKED)
+				|| pm->ps->ManualBlockingFlags & 1 << HOLDINGBLOCK && pm->cmd.buttons & BUTTON_WALKING)
 			{
 				//not trying to run, duck or jump
-				if (is_holding_block_button && pm->cmd.buttons & BUTTON_WALKING
+				if (pm->ps->ManualBlockingFlags & 1 << HOLDINGBLOCK && pm->cmd.buttons & BUTTON_WALKING
 					&& !PM_SaberInParry(new_move)
 					&& !PM_SaberInKnockaway(new_move)
 					&& !PM_SaberInBrokenParry(new_move)
@@ -15109,7 +15107,7 @@ static qboolean PM_SaberLocked()
 							}
 						}
 					}
-			}
+				}
 				else
 				{
 					return qfalse;
@@ -15167,13 +15165,13 @@ static qboolean PM_SaberLocked()
 						}
 					}
 				}
+			}
 		}
-	}
 		else
 		{
 			//FIXME: other ways out of a saberlock?
 		}
-}
+	}
 	else
 	{
 		//something broke us out of it

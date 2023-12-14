@@ -2394,7 +2394,7 @@ static void ParseSkyParms(const char** text) {
 ParseSort
 =================
 */
-static void ParseSort(const char** text) 
+static void ParseSort(const char** text)
 {
 	char* token;
 
@@ -4204,6 +4204,9 @@ static shader_t* FinishShader(void)
 			if (!pStage->active)
 				continue;
 
+			if (pStage->stateBits & (GLS_DSTBLEND_BITS | GLS_SRCBLEND_BITS))
+				break;
+
 			if (pStage->alphaTestType == ALPHA_TEST_NONE)
 				shader.useSimpleDepthShader = qtrue;
 			break;
@@ -4599,7 +4602,7 @@ shader_t* R_FindServerShader(const char* name, const int* lightmapIndexes, const
 	return FinishShader();
 }
 
-qhandle_t RE_RegisterShaderFromImage(const char* name, const int* lightmapIndexes, const byte* styles, image_t* image) 
+qhandle_t RE_RegisterShaderFromImage(const char* name, const int* lightmapIndexes, const byte* styles, image_t* image)
 {
 	int			hash;
 	shader_t* sh;

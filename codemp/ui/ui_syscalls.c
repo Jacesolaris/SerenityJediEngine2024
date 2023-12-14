@@ -35,12 +35,12 @@ Q_EXPORT void dllEntry(intptr_t(QDECL* syscallptr)(intptr_t arg, ...)) {
 	TranslateSyscalls();
 }
 
-int PASSFLOAT(float x) {
+static int PASSFLOAT(float x) {
 	byteAlias_t fi;
 	fi.f = x;
 	return fi.i;
 }
-void trap_Print(const char* string) {
+static void trap_Print(const char* string) {
 	Q_syscall(UI_PRINT, string);
 }
 void trap_Error(const char* string) {
@@ -370,7 +370,7 @@ qboolean trap_G2API_GetBoltMatrix_NoRecNoRot(void* ghoul2, const int modelIndex,
 int trap_G2API_InitGhoul2Model(void** ghoul2Ptr, const char* fileName, int modelIndex, qhandle_t customSkin, qhandle_t customShader, int modelFlags, int lodBias) {
 	return Q_syscall(UI_G2_INITGHOUL2MODEL, ghoul2Ptr, fileName, modelIndex, customSkin, customShader, modelFlags, lodBias);
 }
-qboolean trap_G2API_SetSkin(void* ghoul2, int modelIndex, qhandle_t customSkin, qhandle_t renderSkin) {
+qboolean trap_G2API_SetSkin(void* ghoul2, const int modelIndex, const qhandle_t customSkin, const qhandle_t renderSkin) {
 	return Q_syscall(UI_G2_SETSKIN, ghoul2, modelIndex, customSkin, renderSkin);
 }
 void trap_G2API_CollisionDetect(CollisionRecord_t* collRecMap, void* ghoul2, const vec3_t angles, const vec3_t position, int frameNumber, int entNum, const vec3_t rayStart, const vec3_t rayEnd, const vec3_t scale, int traceFlags, int useLod, float fRadius) {

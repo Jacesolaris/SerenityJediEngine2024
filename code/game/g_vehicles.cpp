@@ -61,7 +61,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 #ifdef _JK2MP
 extern gentity_t* NPC_Spawn_Do(gentity_t* ent);
-extern void NPC_SetAnim(gentity_t* ent, int set_anim_parts, int anim, int set_anim_flags);
+extern void NPC_SetAnim(gentity_t* ent, int setAnimParts, int anim, int setAnimFlags);
 #else
 extern gentity_t* NPC_Spawn_Do(gentity_t* pEnt, qboolean fullSpawnNow);
 extern qboolean G_ClearLineOfSight(const vec3_t point1, const vec3_t point2, int ignore, int clipmask);
@@ -81,16 +81,15 @@ extern vec3_t player_mins;
 extern vec3_t player_maxs;
 extern cvar_t* g_speederControlScheme;
 extern cvar_t* in_joystick;
-extern void PM_SetAnim(const pmove_t* pm, int set_anim_parts, int anim, int set_anim_flags, int blendTime);
+extern void PM_SetAnim(const pmove_t* pm, int setAnimParts, int anim, int setAnimFlags, int blendTime);
 extern int PM_AnimLength(int index, animNumber_t anim);
-extern void NPC_SetAnim(gentity_t* ent, int set_anim_parts, int anim, int set_anim_flags, int i_blend);
+extern void NPC_SetAnim(gentity_t* ent, int setAnimParts, int anim, int setAnimFlags, int i_blend);
 extern void G_Knockdown(gentity_t* self, gentity_t* attacker, const vec3_t push_dir, float strength,
 	qboolean break_saber_lock);
 #endif
 
 #ifdef _JK2MP
 #include "../namespace_begin.h"
-extern void BG_SetAnim(playerState_t* ps, animation_t* animations, int set_anim_parts, int anim, int set_anim_flags);
 extern void BG_SetLegsAnimTimer(playerState_t* ps, int time);
 extern void BG_SetTorsoAnimTimer(playerState_t* ps, int time);
 #include "../namespace_end.h"
@@ -105,15 +104,9 @@ extern void PM_SetLegsAnimTimer(gentity_t* ent, int* legsAnimTimer, int time);
 
 extern qboolean BG_UnrestrainedPitchRoll();
 
-void Vehicle_SetAnim(gentity_t* ent, int set_anim_parts, int anim, int set_anim_flags, const int i_blend)
+void Vehicle_SetAnim(gentity_t* ent, int setAnimParts, int anim, int setAnimFlags, const int i_blend)
 {
-#ifdef _JK2MP
-	assert(ent->client);
-	BG_SetAnim(&ent->client->ps, bgAllAnims[ent->localAnimIndex].anims, set_anim_parts, anim, set_anim_flags);
-	ent->s.legsAnim = ent->client->ps.legsAnim;
-#else
-	NPC_SetAnim(ent, set_anim_parts, anim, set_anim_flags, i_blend);
-#endif
+	NPC_SetAnim(ent, setAnimParts, anim, setAnimFlags, i_blend);
 }
 
 void G_VehicleTrace(trace_t* results, const vec3_t start, const vec3_t tMins, const vec3_t tMaxs, const vec3_t end,
@@ -275,43 +268,20 @@ void G_AttachToVehicle(gentity_t* pEnt, usercmd_t** ucmd)
 	gentity_t* vehEnt;
 	mdxaBone_t boltMatrix;
 	gentity_t* ent;
-#ifdef _JK2MP
-	int				crotchBolt;
-#endif
 
 	if (!pEnt || !ucmd)
 		return;
 
 	ent = pEnt;
-
-#ifdef _JK2MP
-	vehEnt = &g_entities[ent->r.ownerNum];
-#else
 	vehEnt = ent->owner;
-#endif
 	ent->waypoint = vehEnt->waypoint; // take the veh's waypoint as your own
 
 	if (!vehEnt->m_pVehicle)
 		return;
-
-#ifdef _JK2MP
-	crotchBolt = trap_G2API_AddBolt(vehEnt->ghoul2, 0, "*driver");
-
 	// Get the driver tag.
-	trap_G2API_GetBoltMatrix(vehEnt->ghoul2, 0, crotchBolt, &boltMatrix,
-		vehEnt->m_pVehicle->m_vOrientation, vehEnt->currentOrigin,
-		level.time, nullptr, vehEnt->modelScale);
-	BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, ent->client->ps.origin);
-	G_SetOrigin(ent, ent->client->ps.origin);
-	trap_LinkEntity(ent);
-#else
-	// Get the driver tag.
-	gi.G2API_GetBoltMatrix(vehEnt->ghoul2, vehEnt->playerModel, vehEnt->crotchBolt, &boltMatrix,
-		vehEnt->m_pVehicle->m_vOrientation, vehEnt->currentOrigin,
-		cg.time ? cg.time : level.time, nullptr, vehEnt->s.modelScale);
+	gi.G2API_GetBoltMatrix(vehEnt->ghoul2, vehEnt->playerModel, vehEnt->crotchBolt, &boltMatrix, vehEnt->m_pVehicle->m_vOrientation, vehEnt->currentOrigin, cg.time ? cg.time : level.time, nullptr, vehEnt->s.modelScale);
 	gi.G2API_GiveMeVectorFromMatrix(boltMatrix, ORIGIN, ent->client->ps.origin);
 	gi.linkentity(ent);
-#endif
 }
 
 void G_KnockOffVehicle(gentity_t* pRider, const gentity_t* self, const qboolean bPull)
@@ -1676,14 +1646,8 @@ static bool Initialize(Vehicle_t* p_veh)
 	{
 		int iFlags = SETANIM_FLAG_NORMAL;
 		constexpr int i_blend = 300;
-#ifdef _JK2MP
-		p_veh->m_ulFlags |= VEH_GEARSOPEN;
-		BG_SetAnim(p_veh->m_pParentEntity->playerState,
-			bgAllAnims[p_veh->m_pParentEntity->localAnimIndex].anims,
-			SETANIM_BOTH, BOTH_VS_IDLE, iFlags);
-#else
+
 		NPC_SetAnim(p_veh->m_pParentEntity, SETANIM_BOTH, BOTH_VS_IDLE, iFlags, i_blend);
-#endif
 	}
 
 	return true;
@@ -2027,19 +1991,13 @@ static bool UpdateRider(Vehicle_t* p_veh, bgEntity_t* pRider, usercmd_t* pUmcd)
 					int iAnimLen;
 					// NOTE: I know I shouldn't reuse p_veh->m_iBoarding so many times for so many different
 					// purposes, but it's not used anywhere else right here so why waste memory???
-#ifdef _JK2MP
-					iAnimLen = BG_AnimLength(rider->localAnimIndex, Anim);
-#else
+
 					iAnimLen = PM_AnimLength(pRider->client->clientInfo.animFileIndex, Anim);
-#endif
 					p_veh->m_iBoarding = level.time + iAnimLen;
+
 					// Weird huh? Well I wanted to reuse flags and this should never be set in an
 					// entity, so what the heck.
-#ifdef _JK2MP
-					rider->flags |= FL_VEH_BOARDING;
-#else
 					rider->client->ps.eFlags |= EF_VEH_BOARDING;
-#endif
 
 					// Make sure they can't fire when leaving.
 					rider->client->ps.weaponTime = iAnimLen;
@@ -2196,114 +2154,11 @@ static bool UpdateRider(Vehicle_t* p_veh, bgEntity_t* pRider, usercmd_t* pUmcd)
 	}
 
 	return true;
-}
-
-#ifdef _JK2MP //we want access to this one clientside, but it's the only
-//generic vehicle function we care about over there
-#include "../namespace_begin.h"
-extern void AttachRidersGeneric(Vehicle_t * p_veh);
-#include "../namespace_end.h"
-#endif
+	}
 
 // Attachs all the riders of this vehicle to their appropriate tag (*driver, *pass1, *pass2, whatever...).
 static void AttachRiders(Vehicle_t * p_veh)
 {
-#ifdef _JK2MP
-	int i = 0;
-
-	AttachRidersGeneric(p_veh);
-
-	if (p_veh->m_pPilot)
-	{
-		gentity_t* parent = (gentity_t*)p_veh->m_pParentEntity;
-		gentity_t* pilot = (gentity_t*)p_veh->m_pPilot;
-		pilot->waypoint = parent->waypoint; // take the veh's waypoint as your own
-
-		//assuming we updated him relative to the bolt in AttachRidersGeneric
-		G_SetOrigin(pilot, pilot->client->ps.origin);
-		trap_LinkEntity(pilot);
-	}
-
-	if (p_veh->m_pOldPilot)
-	{
-		gentity_t* parent = (gentity_t*)p_veh->m_pParentEntity;
-		gentity_t* oldpilot = (gentity_t*)p_veh->m_pOldPilot;
-		oldpilot->waypoint = parent->waypoint; // take the veh's waypoint as your own
-
-		//assuming we updated him relative to the bolt in AttachRidersGeneric
-		G_SetOrigin(oldpilot, oldpilot->client->ps.origin);
-		trap_LinkEntity(oldpilot);
-	}
-
-	//attach passengers
-	while (i < p_veh->m_iNumPassengers)
-	{
-		if (p_veh->m_ppPassengers[i])
-		{
-			mdxaBone_t boltMatrix;
-			vec3_t	yawOnlyAngles;
-			gentity_t* parent = (gentity_t*)p_veh->m_pParentEntity;
-			gentity_t* pilot = (gentity_t*)p_veh->m_ppPassengers[i];
-			int crotchBolt;
-
-			assert(parent->ghoul2);
-			crotchBolt = trap_G2API_AddBolt(parent->ghoul2, 0, "*driver");
-			assert(parent->client);
-			assert(pilot->client);
-
-			VectorSet(yawOnlyAngles, 0, parent->client->ps.viewangles[YAW], 0);
-
-			// Get the driver tag.
-			trap_G2API_GetBoltMatrix(parent->ghoul2, 0, crotchBolt, &boltMatrix,
-				yawOnlyAngles, parent->client->ps.origin,
-				level.time, nullptr, parent->modelScale);
-			BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, pilot->client->ps.origin);
-
-			G_SetOrigin(pilot, pilot->client->ps.origin);
-			trap_LinkEntity(pilot);
-		}
-		i++;
-	}
-
-	//attach droid
-	if (p_veh->m_pDroidUnit
-		&& p_veh->m_iDroidUnitTag != -1)
-	{
-		mdxaBone_t boltMatrix;
-		vec3_t	yawOnlyAngles, fwd;
-		gentity_t* parent = (gentity_t*)p_veh->m_pParentEntity;
-		gentity_t* droid = (gentity_t*)p_veh->m_pDroidUnit;
-
-		assert(parent->ghoul2);
-		assert(parent->client);
-		//assert(droid->client);
-
-		if (droid->client)
-		{
-			VectorSet(yawOnlyAngles, 0, parent->client->ps.viewangles[YAW], 0);
-
-			// Get the droid tag.
-			trap_G2API_GetBoltMatrix(parent->ghoul2, 0, p_veh->m_iDroidUnitTag, &boltMatrix,
-				yawOnlyAngles, parent->currentOrigin,
-				level.time, nullptr, parent->modelScale);
-			BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, droid->client->ps.origin);
-			BG_GiveMeVectorFromMatrix(&boltMatrix, NEGATIVE_Y, fwd);
-			vectoangles(fwd, droid->client->ps.viewangles);
-
-			G_SetOrigin(droid, droid->client->ps.origin);
-			G_SetAngles(droid, droid->client->ps.viewangles);
-			SetClientViewAngle(droid, droid->client->ps.viewangles);
-			trap_LinkEntity(droid);
-
-			if (droid->NPC)
-			{
-				NPC_SetAnim(droid, SETANIM_BOTH, BOTH_STAND2, (SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD));
-				droid->client->ps.legsTimer = 500;
-				droid->client->ps.torsoTimer = 500;
-			}
-		}
-	}
-#else
 	// If we have a pilot, attach him to the driver tag.
 	if (p_veh->m_pPilot)
 	{
@@ -2338,7 +2193,6 @@ static void AttachRiders(Vehicle_t * p_veh)
 		G_SetOrigin(pilot, pilot->client->ps.origin);
 		gi.linkentity(pilot);
 	}
-#endif
 }
 
 // Make someone invisible and un-collidable.

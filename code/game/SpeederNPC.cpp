@@ -86,7 +86,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #define MOD_EXPLOSIVE MOD_SUICIDE
 #else
 #define bgEntity_t gentity_t
-extern void NPC_SetAnim(gentity_t* ent, int set_anim_parts, int anim, int set_anim_flags, int i_blend);
+extern void NPC_SetAnim(gentity_t* ent, int setAnimParts, int anim, int setAnimFlags, int i_blend);
 #endif
 
 extern float DotToSpot(vec3_t spot, vec3_t from, vec3_t fromAngles);
@@ -96,7 +96,7 @@ extern vec3_t player_mins;
 extern vec3_t player_maxs;
 extern cvar_t* g_speederControlScheme;
 extern void ChangeWeapon(const gentity_t* ent, int new_weapon);
-extern void PM_SetAnim(const pmove_t* pm, int set_anim_parts, int anim, int set_anim_flags, int blendTime);
+extern void PM_SetAnim(const pmove_t* pm, int setAnimParts, int anim, int setAnimFlags, int blendTime);
 extern int PM_AnimLength(int index, animNumber_t anim);
 #endif
 
@@ -104,7 +104,6 @@ extern int PM_AnimLength(int index, animNumber_t anim);
 
 #include "../namespace_begin.h"
 
-extern void BG_SetAnim(playerState_t* ps, animation_t* animations, int set_anim_parts, int anim, int set_anim_flags);
 extern int BG_GetTime(void);
 #endif
 
@@ -160,7 +159,7 @@ bool VEH_StartStrafeRam(Vehicle_t* p_veh, const bool Right)
 	return false;
 }
 #else
-bool	VEH_StartStrafeRam(Vehicle_t* p_veh, bool Right, int Duration)
+static bool	VEH_StartStrafeRam(Vehicle_t* p_veh, bool Right, int Duration)
 {
 	return false;
 }
@@ -168,7 +167,7 @@ bool	VEH_StartStrafeRam(Vehicle_t* p_veh, bool Right, int Duration)
 
 #ifdef QAGAME //game-only.. for now
 // Like a think or move command, this updates various vehicle properties.
-bool update(Vehicle_t* p_veh, const usercmd_t* p_ucmd)
+static bool update(Vehicle_t* p_veh, const usercmd_t* p_ucmd)
 {
 	if (!g_vehicleInfo[VEHICLE_BASE].Update(p_veh, p_ucmd))
 	{
@@ -661,10 +660,7 @@ static void ProcessMoveCommands(Vehicle_t* p_veh)
 //"!s.number", this is a universal check that will work for both SP
 //and MP. -rww
 // ProcessOrientCommands the Vehicle.
-#ifdef _JK2MP //temp hack til mp speeder controls are sorted -rww
-extern void AnimalProcessOri(Vehicle_t* p_veh);
-#endif
-void ProcessOrientCommands(Vehicle_t* p_veh)
+static void ProcessOrientCommands(Vehicle_t* p_veh)
 {
 	/********************************************************************************/
 	/*	BEGIN	Here is where make sure the vehicle is properly oriented.	BEGIN	*/
@@ -767,11 +763,11 @@ void ProcessOrientCommands(Vehicle_t* p_veh)
 
 #ifdef QAGAME
 
-extern void PM_SetAnim(const pmove_t* pm, int set_anim_parts, int anim, int set_anim_flags, int blendTime);
+extern void PM_SetAnim(const pmove_t* pm, int setAnimParts, int anim, int setAnimFlags, int blendTime);
 extern int PM_AnimLength(int index, animNumber_t anim);
 
 // This function makes sure that the vehicle is properly animated.
-void AnimateVehicle(Vehicle_t* p_veh)
+static void AnimateVehicle(Vehicle_t* p_veh)
 {
 }
 
@@ -792,7 +788,7 @@ extern void G_StartMatrixEffect(const gentity_t* ent, int me_flags = 0, int leng
 //I want to keep this function BG too, because it's fairly generic already, and it
 //would be nice to have proper prediction of animations. -rww
 // This function makes sure that the rider's in this vehicle are properly animated.
-void AnimateRiders(Vehicle_t* p_veh)
+static void AnimateRiders(Vehicle_t* p_veh)
 {
 	animNumber_t Anim = BOTH_VS_IDLE;
 	int i_flags;
@@ -835,11 +831,8 @@ void AnimateRiders(Vehicle_t* p_veh)
 
 			// Set the delay time (which happens to be the time it takes for the animation to complete).
 			// NOTE: Here I made it so the delay is actually 40% (0.4f) of the animation time.
-#ifdef _JK2MP
-			iAnimLen = BG_AnimLength(p_veh->m_pPilot->localAnimIndex, Anim) * 0.4f;
-			p_veh->m_iBoarding = BG_GetTime() + iAnimLen;
-#else
-			iAnimLen = PM_AnimLength(p_veh->m_pPilot->client->clientInfo.animFileIndex, Anim); // * 0.4f;
+
+			iAnimLen = PM_AnimLength(p_veh->m_pPilot->client->clientInfo.animFileIndex, Anim);
 			if (p_veh->m_iBoarding != VEH_MOUNT_THROW_LEFT && p_veh->m_iBoarding != VEH_MOUNT_THROW_RIGHT)
 			{
 				p_veh->m_iBoarding = level.time + iAnimLen * 0.4f;
@@ -848,22 +841,16 @@ void AnimateRiders(Vehicle_t* p_veh)
 			{
 				p_veh->m_iBoarding = level.time + iAnimLen;
 			}
-#endif
 			// Set the animation, which won't be interrupted until it's completed.
 			// TODO: But what if he's killed? Should the animation remain persistant???
 			i_flags = SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD;
 
-#ifdef _JK2MP
-			BG_SetAnim(p_veh->m_pPilot->playerState, bgAllAnims[p_veh->m_pPilot->localAnimIndex].anims,
-				SETANIM_BOTH, Anim, iFlags);
-#else
 			NPC_SetAnim(p_veh->m_pPilot, SETANIM_BOTH, Anim, i_flags, i_blend);
 			if (p_veh->m_pOldPilot)
 			{
 				iAnimLen = PM_AnimLength(p_veh->m_pPilot->client->clientInfo.animFileIndex, BOTH_VS_MOUNTTHROWEE);
 				NPC_SetAnim(p_veh->m_pOldPilot, SETANIM_BOTH, BOTH_VS_MOUNTTHROWEE, i_flags, i_blend);
 			}
-#endif
 		}
 
 #ifndef _JK2MP
@@ -1246,60 +1233,20 @@ void AnimateRiders(Vehicle_t* p_veh)
 			}
 		} // No Special Moves
 	} // Going backwards?
-
-#ifdef _JK2MP
-	iFlags &= ~SETANIM_FLAG_OVERRIDE;
-	if (p_veh->m_pPilot->playerState->torsoAnim == Anim)
-	{
-		p_veh->m_pPilot->playerState->torsoTimer = BG_AnimLength(p_veh->m_pPilot->localAnimIndex, Anim);
-	}
-	if (p_veh->m_pPilot->playerState->legsAnim == Anim)
-	{
-		p_veh->m_pPilot->playerState->legsTimer = BG_AnimLength(p_veh->m_pPilot->localAnimIndex, Anim);
-	}
-	BG_SetAnim(p_veh->m_pPilot->playerState, bgAllAnims[p_veh->m_pPilot->localAnimIndex].anims,
-		SETANIM_BOTH, Anim, iFlags | SETANIM_FLAG_HOLD);
-#else
 	NPC_SetAnim(p_veh->m_pPilot, SETANIM_BOTH, Anim, i_flags, i_blend);
-#endif
 }
-
-#ifndef QAGAME
-void AttachRidersGeneric(Vehicle_t* p_veh);
-#endif
 
 void G_SetSpeederVehicleFunctions(vehicleInfo_t* pVehInfo)
 {
 #ifdef QAGAME
 	pVehInfo->AnimateVehicle = AnimateVehicle;
 	pVehInfo->AnimateRiders = AnimateRiders;
-	//	pVehInfo->ValidateBoard				=		ValidateBoard;
-	//	pVehInfo->SetParent					=		SetParent;
-	//	pVehInfo->SetPilot					=		SetPilot;
-	//	pVehInfo->AddPassenger				=		AddPassenger;
-	//	pVehInfo->Animate					=		Animate;
-	//	pVehInfo->Board						=		Board;
-	//	pVehInfo->Eject						=		Eject;
-	//	pVehInfo->EjectAll					=		EjectAll;
-	//	pVehInfo->StartDeathDelay			=		StartDeathDelay;
-	//	pVehInfo->DeathUpdate				=		DeathUpdate;
-	//	pVehInfo->RegisterAssets			=		RegisterAssets;
-	//	pVehInfo->Initialize				=		Initialize;
 	pVehInfo->Update = update;
-	//	pVehInfo->UpdateRider				=		UpdateRider;
 #endif
 
 	//shared
 	pVehInfo->ProcessMoveCommands = ProcessMoveCommands;
 	pVehInfo->ProcessOrientCommands = ProcessOrientCommands;
-
-#ifndef QAGAME //cgame prediction attachment func
-	pVehInfo->AttachRiders = AttachRidersGeneric;
-#endif
-	//	pVehInfo->AttachRiders				=		AttachRiders;
-	//	pVehInfo->Ghost						=		Ghost;
-	//	pVehInfo->UnGhost					=		UnGhost;
-	//	pVehInfo->Inhabited					=		Inhabited;
 }
 
 // Following is only in game, not in namespace

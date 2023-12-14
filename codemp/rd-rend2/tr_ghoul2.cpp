@@ -2422,26 +2422,27 @@ static void RenderSurfaces(CRenderSurface& RS, const trRefEntity_t* ent, int ent
 						{
 							gshader = R_GetShaderByHandle(goreShader);
 						}
-#ifdef REND2_SP_MAYBE
+
 						// Set fade on surf.
-						// Only if we have a fade time set, and let us fade on
-						// rgb if we want -rww
-						if (kcur->second.mDeleteTime && kcur->second.mFadeTime)
+												//Only if we have a fade time set, and let us fade on rgb if we want -rww
+						if ((*kcur).second.mDeleteTime && (*kcur).second.mFadeTime)
 						{
-							if ((kcur->second.mDeleteTime - curTime) < kcur->second.mFadeTime)
+							if ((*kcur).second.mDeleteTime - curTime < (*kcur).second.mFadeTime)
 							{
-								newSurf2->fade =
-									(float)(kcur->second.mDeleteTime - curTime) /
-									kcur->second.mFadeTime;
-								if (kcur->second.mFadeRGB)
+								newSurf2->fade = static_cast<float>((*kcur).second.mDeleteTime - curTime) / (*kcur).
+									second.mFadeTime;
+								if ((*kcur).second.mFadeRGB)
 								{
-									// RGB fades are scaled from 2.0f to 3.0f
-									// (simply to differentiate)
-									newSurf2->fade = Q_max(2.01f, newSurf2->fade + 2.0f);
+									//RGB fades are scaled from 2.0f to 3.0f (simply to differentiate)
+									newSurf2->fade += 2.0f;
+
+									if (newSurf2->fade < 2.01f)
+									{
+										newSurf2->fade = 2.01f;
+									}
 								}
 							}
 						}
-#endif
 						last->goreChain = newSurf2;
 						last = newSurf2;
 						R_AddDrawSurf(
@@ -3239,7 +3240,7 @@ bool G2_NeedsRecalc(CGhoul2Info* ghlInfo, const int frameNum)
 			G2API_OverrideServerWithClientData(ghlInfo))
 		{ //if we can manage this, then we don't have to reconstruct
 			return false;
-		}
+}
 #endif
 		ghlInfo->mSkelFrameNum = frameNum;
 		return true;
@@ -4344,7 +4345,7 @@ qboolean R_LoadMDXM(model_t* mod, void* buffer, const char* mod_name, qboolean& 
 
 				weights += stride;
 				bonerefs += stride;
-			}
+				}
 
 			// Texture coordinates
 			mdxmVertexTexCoord_t* tc = (mdxmVertexTexCoord_t*)(v + surf->numVerts);
@@ -4363,7 +4364,7 @@ qboolean R_LoadMDXM(model_t* mod, void* buffer, const char* mod_name, qboolean& 
 			}
 
 			surf = (mdxmSurface_t*)((byte*)surf + surf->ofsEnd);
-		}
+			}
 
 		assert((byte*)verts == (data + dataSize));
 
@@ -4423,10 +4424,10 @@ qboolean R_LoadMDXM(model_t* mod, void* buffer, const char* mod_name, qboolean& 
 		ri->Hunk_FreeTempMemory(baseVertexes);
 
 		lod = (mdxmLOD_t*)((byte*)lod + lod->ofsEnd);
-	}
+		}
 
 	return qtrue;
-}
+	}
 
 //#define CREATE_LIMB_HIERARCHY
 
@@ -4725,7 +4726,7 @@ qboolean R_LoadMDXA(model_t* mod, void* buffer, const char* mod_name, qboolean& 
 		LL(mdxa->numBones);
 		LL(mdxa->ofsFrames);
 		LL(mdxa->ofsEnd);
-	}
+}
 
 #ifdef CREATE_LIMB_HIERARCHY
 	if (!bAlreadyFound)

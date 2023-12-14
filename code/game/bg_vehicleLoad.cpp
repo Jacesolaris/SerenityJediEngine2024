@@ -216,7 +216,7 @@ static vehField_t* FindVehWeaponParm(const char* parmName)
 
 static qboolean BG_ParseVehWeaponParm(vehWeaponInfo_t* vehWeapon, const char* parmName, const char* pValue)
 {
-	vec3_t vec;
+	vec3_t vec{};
 	auto b = reinterpret_cast<byte*>(vehWeapon);
 	int _iFieldsRead;
 	vehicleType_t vehType;
@@ -349,7 +349,7 @@ static qboolean BG_ParseVehWeaponParm(vehWeaponInfo_t* vehWeapon, const char* pa
 	return qtrue;
 }
 
-int VEH_LoadVehWeapon(const char* vehWeaponName)
+static int VEH_LoadVehWeapon(const char* vehWeaponName)
 {
 	//load up specified vehWeapon and save in array: g_vehWeaponInfo
 	const char* token;
@@ -462,7 +462,7 @@ int VEH_LoadVehWeapon(const char* vehWeaponName)
 	return numVehicleWeapons++;
 }
 
-int VEH_Vehweapon_indexForName(const char* vehWeaponName)
+static int VEH_Vehweapon_indexForName(const char* vehWeaponName)
 {
 	int vw;
 	if (!vehWeaponName || !vehWeaponName[0])
@@ -757,7 +757,7 @@ stringID_table_t VehicleTable[VH_NUM_VEHICLES + 1] =
 };
 
 // Setup the shared functions (one's that all vehicles would generally use).
-void BG_SetSharedVehicleFunctions(vehicleInfo_t* pVehInfo)
+static void BG_SetSharedVehicleFunctions(vehicleInfo_t* pVehInfo)
 {
 #ifdef QAGAME
 	//only do the whole thing if we're on game
@@ -785,12 +785,12 @@ void BG_SetSharedVehicleFunctions(vehicleInfo_t* pVehInfo)
 #endif
 }
 
-void BG_VehicleSetDefaults(vehicleInfo_t* vehicle)
+static void BG_VehicleSetDefaults(vehicleInfo_t* vehicle)
 {
 	memset(vehicle, 0, sizeof(vehicleInfo_t));
 }
 
-void BG_VehicleClampData(vehicleInfo_t* vehicle)
+static void BG_VehicleClampData(vehicleInfo_t* vehicle)
 {
 	//sanity check and clamp the vehicle's data
 	for (int i = 0; i < 3; i++)
@@ -828,7 +828,7 @@ static vehField_t* FindVehicleParm(const char* parmName)
 
 static qboolean BG_ParseVehicleParm(vehicleInfo_t* vehicle, const char* parmName, const char* pValue)
 {
-	vec3_t vec;
+	vec3_t vec{};
 	auto b = reinterpret_cast<byte*>(vehicle);
 	int _iFieldsRead;
 	vehicleType_t vehType;
@@ -962,7 +962,7 @@ static qboolean BG_ParseVehicleParm(vehicleInfo_t* vehicle, const char* parmName
 	return qtrue;
 }
 
-int veh_load_vehicle(const char* vehicle_name)
+static int veh_load_vehicle(const char* vehicle_name)
 {
 	//load up specified vehicle and save in array: g_vehicleInfo
 	const char* token;
@@ -1362,7 +1362,7 @@ int veh_load_vehicle(const char* vehicle_name)
 	return numVehicles++;
 }
 
-int VEH_VehicleIndexForName(const char* vehicleName)
+static int VEH_VehicleIndexForName(const char* vehicleName)
 {
 	int v;
 	if (!vehicleName || !vehicleName[0])
@@ -1396,9 +1396,9 @@ int VEH_VehicleIndexForName(const char* vehicleName)
 	return v;
 }
 
-void BG_VehWeaponLoadParms()
+static void BG_VehWeaponLoadParms()
 {
-	int vehExtFNLen, mainBlockLen, fileCnt;
+	int vehExtFNLen = 0, mainBlockLen, fileCnt;
 	char* holdChar;
 	char vehWeaponExtensionListBuf[2048]; //	The list of file names read in
 	fileHandle_t f;
@@ -1493,7 +1493,7 @@ void BG_VehWeaponLoadParms()
 void BG_VehicleLoadParms()
 {
 	//HMM... only do this if there's a vehicle on the level?
-	int vehExtFNLen, mainBlockLen, fileCnt;
+	int vehExtFNLen = 0, mainBlockLen, fileCnt;
 	//	const char	*filename = "ext_data/vehicles.dat";
 	char* holdChar;
 	char vehExtensionListBuf[2048]; //	The list of file names read in
@@ -1605,7 +1605,7 @@ int BG_VehicleGetIndex(const char* vehicleName)
 //with a $ in front of it.
 //we are expected to then get the model for the
 //vehicle and stomp over modelname with it.
-void BG_GetVehicleModelName(char* modelname)
+static void BG_GetVehicleModelName(char* modelname)
 {
 	char* vehName = &modelname[1];
 	const int vIndex = BG_VehicleGetIndex(vehName);
@@ -1619,7 +1619,7 @@ void BG_GetVehicleModelName(char* modelname)
 	strcpy(modelname, g_vehicleInfo[vIndex].model);
 }
 
-void BG_GetVehicleSkinName(char* skinname)
+static void BG_GetVehicleSkinName(char* skinname)
 {
 	char* vehName = &skinname[1];
 	const int vIndex = BG_VehicleGetIndex(vehName);
@@ -1640,39 +1640,3 @@ void BG_GetVehicleSkinName(char* skinname)
 		strcpy(skinname, g_vehicleInfo[vIndex].skin);
 	}
 }
-
-#ifdef _JK2MP
-#ifndef WE_ARE_IN_THE_UI
-//so cgame can assign the function pointer for the vehicle attachment without having to
-//bother with all the other funcs that don't really exist cgame-side.
-extern int BG_GetTime(void);
-extern int trap_G2API_AddBolt(void* ghoul2, int modelIndex, const char* boneName);
-extern qboolean trap_G2API_GetBoltMatrix(void* ghoul2, const int modelIndex, const int boltIndex, mdxaBone_t* matrix,
-	const vec3_t angles, const vec3_t position, const int frameNum, qhandle_t* modelList, vec3_t scale);
-void AttachRidersGeneric(Vehicle_t* p_veh)
-{
-	// If we have a pilot, attach him to the driver tag.
-	if (p_veh->m_pPilot)
-	{
-		mdxaBone_t boltMatrix;
-		vec3_t	yawOnlyAngles;
-		bgEntity_t* parent = p_veh->m_pParentEntity;
-		bgEntity_t* pilot = p_veh->m_pPilot;
-		int crotchBolt = trap_G2API_AddBolt(parent->ghoul2, 0, "*driver");
-
-		assert(parent->playerState);
-
-		VectorSet(yawOnlyAngles, 0, parent->playerState->viewangles[YAW], 0);
-
-		// Get the driver tag.
-		trap_G2API_GetBoltMatrix(parent->ghoul2, 0, crotchBolt, &boltMatrix,
-			yawOnlyAngles, parent->playerState->origin,
-			BG_GetTime(), nullptr, parent->modelScale);
-		BG_GiveMeVectorFromMatrix(&boltMatrix, ORIGIN, pilot->playerState->origin);
-	}
-}
-#endif
-
-#include "../namespace_end.h"
-
-#endif // _JK2MP

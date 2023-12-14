@@ -2468,26 +2468,26 @@ static void RenderSurfaces(CRenderSurface& RS, const trRefEntity_t* ent, int ent
 						{
 							gshader = R_GetShaderByHandle(goreShader);
 						}
-#ifdef REND2_SP_GORE
 						// Set fade on surf.
-						// Only if we have a fade time set, and let us fade on
-						// rgb if we want -rww
-						if (kcur->second.mDeleteTime && kcur->second.mFadeTime)
+												//Only if we have a fade time set, and let us fade on rgb if we want -rww
+						if ((*kcur).second.mDeleteTime && (*kcur).second.mFadeTime)
 						{
-							if ((kcur->second.mDeleteTime - curTime) < kcur->second.mFadeTime)
+							if ((*kcur).second.mDeleteTime - curTime < (*kcur).second.mFadeTime)
 							{
-								newSurf2->fade =
-									(float)(kcur->second.mDeleteTime - curTime) /
-									kcur->second.mFadeTime;
-								if (kcur->second.mFadeRGB)
+								newSurf2->fade = static_cast<float>((*kcur).second.mDeleteTime - curTime) / (*kcur).
+									second.mFadeTime;
+								if ((*kcur).second.mFadeRGB)
 								{
-									// RGB fades are scaled from 2.0f to 3.0f
-									// (simply to differentiate)
-									newSurf2->fade = Q_max(2.01f, newSurf2->fade + 2.0f);
+									//RGB fades are scaled from 2.0f to 3.0f (simply to differentiate)
+									newSurf2->fade += 2.0f;
+
+									if (newSurf2->fade < 2.01f)
+									{
+										newSurf2->fade = 2.01f;
+									}
 								}
 							}
 						}
-#endif
 						last->goreChain = newSurf2;
 						last = newSurf2;
 						R_AddDrawSurf(

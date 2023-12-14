@@ -34,7 +34,7 @@ extern vec3_t player_maxs;
 
 extern int BG_AnimLength(int index, animNumber_t anim);
 
-extern void Vehicle_SetAnim(gentity_t* ent, int set_anim_parts, int anim, int set_anim_flags, int i_blend);
+extern void Vehicle_SetAnim(gentity_t* ent, int setAnimParts, int anim, int setAnimFlags, int i_blend);
 extern void G_Knockdown(gentity_t* self, gentity_t* attacker, const vec3_t push_dir, float strength,
 	qboolean breakSaberLock);
 extern void G_VehicleTrace(trace_t* results, const vec3_t start, const vec3_t tMins, const vec3_t tMaxs,
@@ -257,55 +257,9 @@ static void ProcessOrientCommands(const Vehicle_t* p_veh)
 		}
 	}
 
-	/*	speed = VectorLength( parent_ps->velocity );
-
-		// If the player is the rider...
-		if ( rider->s.number < MAX_CLIENTS )
-		{//FIXME: use the vehicle's turning stat in this calc
-			p_veh->m_vOrientation[YAW] = rider_ps->viewangles[YAW];
-		}
-		else
-		{
-			float turnSpeed = p_veh->m_pVehicleInfo->turningSpeed;
-			if ( !p_veh->m_pVehicleInfo->turnWhenStopped
-				&& !parent_ps->speed )//FIXME: or !p_veh->m_ucmd.forwardmove?
-			{//can't turn when not moving
-				//FIXME: or ramp up to max turnSpeed?
-				turnSpeed = 0.0f;
-			}
-			if (rider->s.eType == ET_NPC)
-			{//help NPCs out some
-				turnSpeed *= 2.0f;
-				if (parent_ps->speed > 200.0f)
-				{
-					turnSpeed += turnSpeed * parent_ps->speed/200.0f*0.05f;
-				}
-			}
-			turnSpeed *= p_veh->m_fTimeModifier;
-
-			//default control scheme: strafing turns, mouselook aims
-			if ( p_veh->m_ucmd.rightmove < 0 )
-			{
-				p_veh->m_vOrientation[YAW] += turnSpeed;
-			}
-			else if ( p_veh->m_ucmd.rightmove > 0 )
-			{
-				p_veh->m_vOrientation[YAW] -= turnSpeed;
-			}
-
-			if ( p_veh->m_pVehicleInfo->malfunctionArmorLevel && p_veh->m_iArmor <= p_veh->m_pVehicleInfo->malfunctionArmorLevel )
-			{//damaged badly
-			}
-		}*/
-
-		/********************************************************************************/
-		/*	END	Here is where make sure the vehicle is properly oriented.	END			*/
-		/********************************************************************************/
-}
-
-void AnimalProcessOri(const Vehicle_t* p_veh)
-{
-	ProcessOrientCommands(p_veh);
+	/********************************************************************************/
+	/*	END	Here is where make sure the vehicle is properly oriented.	END			*/
+	/********************************************************************************/
 }
 
 #ifdef _GAME //back to our game-only functions

@@ -257,32 +257,32 @@ void RE_SetLightStyle(int style, int color);
 
 static void R_Splash()
 {
-	image_t* p_image;
+	image_t* pImage;
 	const int splash_pick = rand() % 5;
 
 	switch (splash_pick)
 	{
 	case 0:
-		p_image = R_FindImageFile("menu/splash", qfalse, qfalse, qfalse, GL_CLAMP);
+		pImage = R_FindImageFile("menu/splash", qfalse, qfalse, qfalse, GL_CLAMP);
 		break;
 	case 1:
-		p_image = R_FindImageFile("menu/splash2", qfalse, qfalse, qfalse, GL_CLAMP);
+		pImage = R_FindImageFile("menu/splash2", qfalse, qfalse, qfalse, GL_CLAMP);
 		break;
 	case 2:
-		p_image = R_FindImageFile("menu/splash3", qfalse, qfalse, qfalse, GL_CLAMP);
+		pImage = R_FindImageFile("menu/splash3", qfalse, qfalse, qfalse, GL_CLAMP);
 		break;
 	case 3:
-		p_image = R_FindImageFile("menu/splash4", qfalse, qfalse, qfalse, GL_CLAMP);
+		pImage = R_FindImageFile("menu/splash4", qfalse, qfalse, qfalse, GL_CLAMP);
 		break;
 	case 4:
-		p_image = R_FindImageFile("menu/splash5", qfalse, qfalse, qfalse, GL_CLAMP);
+		pImage = R_FindImageFile("menu/splash5", qfalse, qfalse, qfalse, GL_CLAMP);
 		break;
 	default:
-		p_image = R_FindImageFile("menu/splash", qfalse, qfalse, qfalse, GL_CLAMP);
+		pImage = R_FindImageFile("menu/splash", qfalse, qfalse, qfalse, GL_CLAMP);
 		break;
 	}
 
-	if (!p_image)
+	if (!pImage)
 	{
 		// Can't find the splash image so just clear to black
 		qglClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -293,7 +293,7 @@ static void R_Splash()
 		extern void	RB_SetGL2D();
 		RB_SetGL2D();
 
-		GL_Bind(p_image);
+		GL_Bind(pImage);
 		GL_State(GLS_SRCBLEND_ONE | GLS_DSTBLEND_ZERO);
 
 		constexpr int width = 640;

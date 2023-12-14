@@ -265,7 +265,7 @@ using game_import_t = struct
 
 	int (*G2API_InitGhoul2Model)(CGhoul2Info_v& ghoul2, const char* fileName, int modelIndex, qhandle_t customSkin,
 		qhandle_t customShader, int modelFlags, int lodBias);
-	qboolean(*G2API_SetSkin)(CGhoul2Info* ghlInfo, qhandle_t customSkin, qhandle_t renderSkin);
+	qboolean(*G2API_SetSkin)(CGhoul2Info* ghlInfo, const qhandle_t customSkin, const qhandle_t renderSkin);
 	qboolean(*G2API_SetBoneAnim)(CGhoul2Info* ghlInfo, const char* boneName, int startFrame, int endFrame,
 		int flags, float animSpeed, int currentTime, float setFrame, int blendTime);
 	qboolean(*G2API_SetBoneAngles)(CGhoul2Info* ghlInfo, const char* boneName, const vec3_t angles,

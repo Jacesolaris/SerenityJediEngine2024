@@ -263,7 +263,7 @@ static int PowerOf2(int iArg)
 Dissolve_t Dissolve = { 0 };
 #define fDISSOLVE_SECONDS 0.75f
 
-static void RE_Blit(float fX0, float fY0, float fX1, float fY1, float fX2, float fY2, float fX3, float fY3, image_t* pImage, int iGLState, bool atest)
+static void RE_Blit(const float fX0, const float fY0, const float fX1, const float fY1, const float fX2, const float fY2, const float fX3, const float fY3, image_t* pImage, const int iGLState, const bool atest)
 {
 	//
 	// some junk they had at the top of other StretchRaw code...
@@ -490,12 +490,12 @@ qboolean RE_ProcessDissolve(void)
 				//
 				// blit circular graphic...
 				//
-				x0 = fXScaleFactor * ((Dissolve.iWidth / 2) - fDiagZoom);
-				y0 = fYScaleFactor * ((Dissolve.iHeight / 2) - fDiagZoom);
-				x1 = fXScaleFactor * ((Dissolve.iWidth / 2) + fDiagZoom);
+				x0 = fXScaleFactor * ((Dissolve.iWidth / static_cast<float>(2)) - fDiagZoom);
+				y0 = fYScaleFactor * ((Dissolve.iHeight / static_cast<float>(2)) - fDiagZoom);
+				x1 = fXScaleFactor * ((Dissolve.iWidth / static_cast<float>(2)) + fDiagZoom);
 				y1 = y0;
 				x2 = x1;
-				y2 = fYScaleFactor * ((Dissolve.iHeight / 2) + fDiagZoom);
+				y2 = fYScaleFactor * ((Dissolve.iHeight / static_cast<float>(2)) + fDiagZoom);
 				x3 = x0;
 				y3 = y2;
 
@@ -510,12 +510,12 @@ qboolean RE_ProcessDissolve(void)
 				//
 				// blit circular graphic...
 				//
-				x0 = fXScaleFactor * ((Dissolve.iWidth / 2) - fDiagZoom);
-				y0 = fYScaleFactor * ((Dissolve.iHeight / 2) - fDiagZoom);
-				x1 = fXScaleFactor * ((Dissolve.iWidth / 2) + fDiagZoom);
+				x0 = fXScaleFactor * ((Dissolve.iWidth / static_cast<float>(2)) - fDiagZoom);
+				y0 = fYScaleFactor * ((Dissolve.iHeight / static_cast<float>(2)) - fDiagZoom);
+				x1 = fXScaleFactor * ((Dissolve.iWidth / static_cast<float>(2)) + fDiagZoom);
 				y1 = y0;
 				x2 = x1;
-				y2 = fYScaleFactor * ((Dissolve.iHeight / 2) + fDiagZoom);
+				y2 = fYScaleFactor * ((Dissolve.iHeight / static_cast<float>(2)) + fDiagZoom);
 				x3 = x0;
 				y3 = y2;
 

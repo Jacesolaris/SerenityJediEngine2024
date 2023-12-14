@@ -92,7 +92,7 @@ extern vec3_t player_mins;
 extern vec3_t player_maxs;
 extern cvar_t* g_speederControlScheme;
 extern void ChangeWeapon(const gentity_t* ent, int new_weapon);
-extern void PM_SetAnim(const pmove_t* pm, int set_anim_parts, int anim, int set_anim_flags, int blendTime);
+extern void PM_SetAnim(const pmove_t* pm, int setAnimParts, int anim, int setAnimFlags, int blendTime);
 extern int PM_AnimLength(int index, animNumber_t anim);
 extern void G_VehicleTrace(trace_t* results, const vec3_t start, const vec3_t tMins, const vec3_t tMaxs,
 	const vec3_t end, int pass_entity_num, int contentmask);
@@ -100,19 +100,10 @@ extern void G_VehicleTrace(trace_t* results, const vec3_t start, const vec3_t tM
 
 extern qboolean BG_UnrestrainedPitchRoll();
 
-#ifdef _JK2MP
-
-#include "../namespace_begin.h"
-
-extern void BG_SetAnim(playerState_t* ps, animation_t* animations, int set_anim_parts, int anim, int set_anim_flags);
-extern int BG_GetTime(void);
-extern void G_DamageFromKiller(gentity_t* pEnt, gentity_t* pVehEnt, gentity_t* attacker, vec3_t org, int damage, int dflags, int mod);
-#endif
-
 #include "b_local.h"
 
 //this stuff has got to be predicted, so..
-bool BG_FighterUpdate(Vehicle_t* p_veh, vec3_t tr_mins, vec3_t tr_maxs,
+static bool BG_FighterUpdate(Vehicle_t* p_veh, vec3_t tr_mins, vec3_t tr_maxs,
 	void (*trace_func)(trace_t* results, const vec3_t start, const vec3_t lmins, const vec3_t lmaxs,
 		const vec3_t end, int pass_entity_num, int content_mask))
 {
@@ -296,7 +287,7 @@ static float PredictedAngularDecrement(const float scale, const float time_mod, 
 
 #ifdef QAGAME//only do this check on GAME side, because if it's CGAME, it's being predicted, and it's only predicted if the local client is the driver
 
-qboolean FighterIsInSpace(const gentity_t* g_parent)
+static qboolean FighterIsInSpace(const gentity_t* g_parent)
 {
 	if (g_parent
 		&& g_parent->client
@@ -309,7 +300,7 @@ qboolean FighterIsInSpace(const gentity_t* g_parent)
 }
 #endif
 
-qboolean FighterOverValidLandingSurface(const Vehicle_t* p_veh)
+static qboolean FighterOverValidLandingSurface(const Vehicle_t* p_veh)
 {
 	if (p_veh->m_LandTrace.fraction < 1.0f //ground present
 		&& p_veh->m_LandTrace.plane.normal[2] >= MIN_LANDING_SLOPE) //flat enough
@@ -330,7 +321,7 @@ qboolean FighterIsLanded(const Vehicle_t* p_veh, const playerState_t* parent_ps)
 	return qfalse;
 }
 
-qboolean FighterIsLanding(Vehicle_t* p_veh, playerState_t* parent_ps)
+static qboolean FighterIsLanding(Vehicle_t* p_veh, playerState_t* parent_ps)
 {
 	if (FighterOverValidLandingSurface(p_veh)
 		&& p_veh->m_pVehicleInfo->Inhabited(p_veh) //has to have a driver in order to be capable of landing
@@ -344,7 +335,7 @@ qboolean FighterIsLanding(Vehicle_t* p_veh, playerState_t* parent_ps)
 	return qfalse;
 }
 
-qboolean FighterIsLaunching(Vehicle_t* p_veh, const playerState_t* parent_ps)
+static qboolean FighterIsLaunching(Vehicle_t* p_veh, const playerState_t* parent_ps)
 {
 	if (FighterOverValidLandingSurface(p_veh)
 #ifdef QAGAME//only do this check on GAME side, because if it's CGAME, it's being predicted, and it's only predicted if the local client is the driver
@@ -360,7 +351,7 @@ qboolean FighterIsLaunching(Vehicle_t* p_veh, const playerState_t* parent_ps)
 	return qfalse;
 }
 
-qboolean FighterSuspended(const Vehicle_t* p_veh, const playerState_t* parent_ps)
+static qboolean FighterSuspended(const Vehicle_t* p_veh, const playerState_t* parent_ps)
 {
 #ifdef QAGAME//only do this check on GAME side, because if it's CGAME, it's being predicted, and it's only predicted if the local client is the driver
 
@@ -1627,7 +1618,7 @@ static void ProcessOrientCommands(Vehicle_t* p_veh)
 
 #ifdef QAGAME //ONLY in SP or on server, not cgame
 
-extern void PM_SetAnim(const pmove_t* pm, int set_anim_parts, int anim, int set_anim_flags, int blendTime);
+extern void PM_SetAnim(const pmove_t* pm, int setAnimParts, int anim, int setAnimFlags, int blendTime);
 
 // This function makes sure that the vehicle is properly animated.
 static void AnimateVehicle(Vehicle_t* p_veh)
@@ -1738,12 +1729,8 @@ static void AnimateVehicle(Vehicle_t* p_veh)
 	if (anim != -1)
 	{
 		constexpr int i_blend = 300;
-#ifdef _JK2MP
-		BG_SetAnim(p_veh->m_pParentEntity->playerState, bgAllAnims[p_veh->m_pParentEntity->localAnimIndex].anims,
-			SETANIM_BOTH, Anim, iFlags, i_blend);
-#else
+
 		NPC_SetAnim(p_veh->m_pParentEntity, SETANIM_BOTH, anim, i_flags, i_blend);
-#endif
 	}
 }
 
@@ -1753,10 +1740,6 @@ static void AnimateRiders(Vehicle_t* p_veh)
 }
 
 #endif //game-only
-
-#ifndef QAGAME
-void AttachRidersGeneric(Vehicle_t* p_veh);
-#endif
 
 void G_SetFighterVehicleFunctions(vehicleInfo_t* pVehInfo)
 {
@@ -1769,10 +1752,6 @@ void G_SetFighterVehicleFunctions(vehicleInfo_t* pVehInfo)
 #endif //game-only
 	pVehInfo->ProcessMoveCommands = ProcessMoveCommands;
 	pVehInfo->ProcessOrientCommands = ProcessOrientCommands;
-
-#ifndef QAGAME //cgame prediction attachment func
-	pVehInfo->AttachRiders = AttachRidersGeneric;
-#endif
 }
 
 // Following is only in game, not in namespace

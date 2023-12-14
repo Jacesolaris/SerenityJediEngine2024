@@ -290,33 +290,33 @@ static void R_Splash()
 
 	GL_Cull(CT_TWO_SIDED);
 
-	image_t* p_image;
+	image_t* pImage;
 	const int splash_pick = rand() % 5;
 
 	switch (splash_pick)
 	{
 	case 0:
-		p_image = R_FindImageFile("menu/splash5", IMGTYPE_COLORALPHA, IMGFLAG_NONE);
+		pImage = R_FindImageFile("menu/splash5", IMGTYPE_COLORALPHA, IMGFLAG_NONE);
 		break;
 	case 1:
-		p_image = R_FindImageFile("menu/splash4", IMGTYPE_COLORALPHA, IMGFLAG_NONE);
+		pImage = R_FindImageFile("menu/splash4", IMGTYPE_COLORALPHA, IMGFLAG_NONE);
 		break;
 	case 2:
-		p_image = R_FindImageFile("menu/splash3", IMGTYPE_COLORALPHA, IMGFLAG_NONE);
+		pImage = R_FindImageFile("menu/splash3", IMGTYPE_COLORALPHA, IMGFLAG_NONE);
 		break;
 	case 3:
-		p_image = R_FindImageFile("menu/splash2", IMGTYPE_COLORALPHA, IMGFLAG_NONE);
+		pImage = R_FindImageFile("menu/splash2", IMGTYPE_COLORALPHA, IMGFLAG_NONE);
 		break;
 	case 4:
-		p_image = R_FindImageFile("menu/splash1", IMGTYPE_COLORALPHA, IMGFLAG_NONE);
+		pImage = R_FindImageFile("menu/splash1", IMGTYPE_COLORALPHA, IMGFLAG_NONE);
 		break;
 	default:
-		p_image = R_FindImageFile("menu/splash", IMGTYPE_COLORALPHA, IMGFLAG_NONE);
+		pImage = R_FindImageFile("menu/splash", IMGTYPE_COLORALPHA, IMGFLAG_NONE);
 		break;
 	}
 
-	if (p_image)
-		GL_Bind(p_image);
+	if (pImage)
+		GL_Bind(pImage);
 
 	GL_State(GLS_DEPTHTEST_DISABLE);
 	GLSL_BindProgram(&tr.splashScreenShader);

@@ -237,7 +237,7 @@ extern qboolean infront(const gentity_t* from, const gentity_t* to);
 //MCG - End============================================================
 
 // NPC.cpp
-extern void NPC_SetAnim(gentity_t* ent, int set_anim_parts, int anim, int set_anim_flags,
+extern void NPC_SetAnim(gentity_t* ent, int setAnimParts, int anim, int setAnimFlags,
 	int i_blend = SETANIM_BLEND_DEFAULT);
 extern qboolean NPC_EnemyTooFar(const gentity_t* enemy, float dist, qboolean toShoot);
 

@@ -56,7 +56,7 @@ visibility_t enemyVisibility;
 
 extern vmCvar_t g_saberRealisticCombat;
 
-void NPC_SetAnim(gentity_t* ent, int set_anim_parts, int anim, int set_anim_flags);
+void NPC_SetAnim(gentity_t* ent, int setAnimParts, int anim, int setAnimFlags);
 static bState_t G_CurrentBState(gNPC_t* gNPC);
 void pitch_roll_for_slope(gentity_t* forwhom, vec3_t pass_slope);
 extern void GM_Dying(gentity_t* self);
@@ -2198,7 +2198,7 @@ void NPC_InitGame(void)
 	NPC_LoadParms();
 }
 
-void NPC_SetAnim(gentity_t* ent, const int set_anim_parts, const int anim, const int set_anim_flags)
+void NPC_SetAnim(gentity_t* ent, const int setAnimParts, const int anim, const int setAnimFlags)
 {
-	G_SetAnim(ent, NULL, set_anim_parts, anim, set_anim_flags, 0);
+	G_SetAnim(ent, NULL, setAnimParts, anim, setAnimFlags, 0);
 }

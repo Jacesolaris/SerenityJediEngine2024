@@ -36,14 +36,14 @@ Q_EXPORT void dllEntry(intptr_t(QDECL* syscallptr)(intptr_t arg, ...))
 	TranslateSyscalls();
 }
 
-int PASSFLOAT(const float x)
+static int PASSFLOAT(const float x)
 {
 	byteAlias_t fi;
 	fi.f = x;
 	return fi.i;
 }
 
-void trap_Print(const char* fmt)
+static void trap_Print(const char* fmt)
 {
 	Q_syscall(CG_PRINT, fmt);
 }

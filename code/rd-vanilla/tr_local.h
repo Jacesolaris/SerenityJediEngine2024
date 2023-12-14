@@ -1006,7 +1006,7 @@ int		 R_Images_StartIteration();
 image_t* R_Images_GetNextIteration();
 void	 R_Images_Clear();
 void	 R_Images_DeleteLightMaps();
-void	 R_Images_DeleteImage(image_t* p_image);
+void	 R_Images_DeleteImage(image_t* pImage);
 
 extern backEndState_t	backEnd;
 extern trGlobals_t	tr;

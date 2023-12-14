@@ -43,8 +43,8 @@ extern void G_DamageFromKiller(gentity_t* pEnt, gentity_t* pVehEnt, gentity_t* a
 #endif
 
 extern qboolean BG_UnrestrainedPitchRoll(const playerState_t* ps, Vehicle_t* p_veh);
-extern void BG_SetAnim(playerState_t* ps, const animation_t* animations, int set_anim_parts, int anim,
-	int set_anim_flags);
+extern void BG_SetAnim(playerState_t* ps, const animation_t* animations, int setAnimParts, int anim,
+	int setAnimFlags);
 extern int BG_GetTime(void);
 
 //this stuff has got to be predicted, so..

@@ -205,7 +205,7 @@ Check for lava / slime contents and drowning
 =============
 */
 extern qboolean G_PointInBounds(vec3_t point, vec3_t mins, vec3_t maxs);
-extern void NPC_SetAnim(gentity_t* ent, int set_anim_parts, int anim, int set_anim_flags);
+extern void NPC_SetAnim(gentity_t* ent, int setAnimParts, int anim, int setAnimFlags);
 extern void WP_ForcePowerStart(const gentity_t* self, forcePowers_t forcePower, int overrideAmt);
 
 void P_WorldEffects(gentity_t* ent)

@@ -83,7 +83,7 @@ gclient_t* client;
 usercmd_t ucmd;
 visibility_t enemyVisibility;
 
-void NPC_SetAnim(gentity_t* ent, int set_anim_parts, int anim, int set_anim_flags, int i_blend);
+void NPC_SetAnim(gentity_t* ent, int setAnimParts, int anim, int setAnimFlags, int i_blend);
 static bState_t G_CurrentBState(gNPC_t* gNPC);
 
 extern int eventClearTime;
@@ -2780,7 +2780,7 @@ void NPC_InitGame()
 	G_ParseAnimFileSet("_humanoid"); //GET THIS CACHED NOW BEFORE CGAME STARTS
 }
 
-void NPC_SetAnim(gentity_t* ent, int set_anim_parts, const int anim, const int set_anim_flags, const int i_blend)
+void NPC_SetAnim(gentity_t* ent, int setAnimParts, const int anim, const int setAnimFlags, const int i_blend)
 {
 	// FIXME : once torsoAnim and legsAnim are in the same structure for NCP and Players
 	// rename PM_SETAnimFinal to PM_SetAnim and have both NCP and Players call PM_SetAnim
@@ -2798,7 +2798,7 @@ void NPC_SetAnim(gentity_t* ent, int set_anim_parts, const int anim, const int s
 			&& !PM_LockedAnim(anim))
 		{
 			//nothing can override these special anims
-			set_anim_parts &= ~SETANIM_TORSO;
+			setAnimParts &= ~SETANIM_TORSO;
 		}
 
 		if (ent->client->ps.legsAnimTimer
@@ -2806,11 +2806,11 @@ void NPC_SetAnim(gentity_t* ent, int set_anim_parts, const int anim, const int s
 			&& !PM_LockedAnim(anim))
 		{
 			//nothing can override these special anims
-			set_anim_parts &= ~SETANIM_LEGS;
+			setAnimParts &= ~SETANIM_LEGS;
 		}
 	}
 
-	if (!set_anim_parts)
+	if (!setAnimParts)
 	{
 		return;
 	}
@@ -2828,49 +2828,49 @@ void NPC_SetAnim(gentity_t* ent, int set_anim_parts, const int anim, const int s
 	if (ent->client)
 	{
 		//Players, NPCs
-		if (set_anim_flags & SETANIM_FLAG_OVERRIDE)
+		if (setAnimFlags & SETANIM_FLAG_OVERRIDE)
 		{
-			if (set_anim_parts & SETANIM_TORSO)
+			if (setAnimParts & SETANIM_TORSO)
 			{
-				if (set_anim_flags & SETANIM_FLAG_RESTART || ent->client->ps.torsoAnim != anim)
+				if (setAnimFlags & SETANIM_FLAG_RESTART || ent->client->ps.torsoAnim != anim)
 				{
 					PM_SetTorsoAnimTimer(ent, &ent->client->ps.torsoAnimTimer, 0);
 				}
 			}
-			if (set_anim_parts & SETANIM_LEGS)
+			if (setAnimParts & SETANIM_LEGS)
 			{
-				if (set_anim_flags & SETANIM_FLAG_RESTART || ent->client->ps.legsAnim != anim)
+				if (setAnimFlags & SETANIM_FLAG_RESTART || ent->client->ps.legsAnim != anim)
 				{
 					PM_SetLegsAnimTimer(ent, &ent->client->ps.legsAnimTimer, 0);
 				}
 			}
 		}
 
-		PM_SetAnimFinal(&ent->client->ps.torsoAnim, &ent->client->ps.legsAnim, set_anim_parts, anim, set_anim_flags,
+		PM_SetAnimFinal(&ent->client->ps.torsoAnim, &ent->client->ps.legsAnim, setAnimParts, anim, setAnimFlags,
 			&ent->client->ps.torsoAnimTimer, &ent->client->ps.legsAnimTimer, ent, i_blend);
 	}
 	else
 	{
 		//bodies, etc.
-		if (set_anim_flags & SETANIM_FLAG_OVERRIDE)
+		if (setAnimFlags & SETANIM_FLAG_OVERRIDE)
 		{
-			if (set_anim_parts & SETANIM_TORSO)
+			if (setAnimParts & SETANIM_TORSO)
 			{
-				if (set_anim_flags & SETANIM_FLAG_RESTART || ent->s.torsoAnim != anim)
+				if (setAnimFlags & SETANIM_FLAG_RESTART || ent->s.torsoAnim != anim)
 				{
 					PM_SetTorsoAnimTimer(ent, &ent->s.torsoAnimTimer, 0);
 				}
 			}
-			if (set_anim_parts & SETANIM_LEGS)
+			if (setAnimParts & SETANIM_LEGS)
 			{
-				if (set_anim_flags & SETANIM_FLAG_RESTART || ent->s.legsAnim != anim)
+				if (setAnimFlags & SETANIM_FLAG_RESTART || ent->s.legsAnim != anim)
 				{
 					PM_SetLegsAnimTimer(ent, &ent->s.legsAnimTimer, 0);
 				}
 			}
 		}
 
-		PM_SetAnimFinal(&ent->s.torsoAnim, &ent->s.legsAnim, set_anim_parts, anim, set_anim_flags,
+		PM_SetAnimFinal(&ent->s.torsoAnim, &ent->s.legsAnim, setAnimParts, anim, setAnimFlags,
 			&ent->s.torsoAnimTimer, &ent->s.legsAnimTimer, ent);
 	}
 }

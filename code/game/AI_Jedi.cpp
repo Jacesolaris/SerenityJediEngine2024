@@ -4340,12 +4340,12 @@ static evasionType_t jedi_check_flip_evasions(gentity_t* self, const float right
 								}
 								self->client->ps.velocity[2] = forceJumpStrength[FORCE_LEVEL_2] / 2.25f;
 								//animate me
-								int set_anim_parts = SETANIM_LEGS;
+								int setAnimParts = SETANIM_LEGS;
 								if (!self->client->ps.weaponTime)
 								{
-									set_anim_parts = SETANIM_BOTH;
+									setAnimParts = SETANIM_BOTH;
 								}
-								NPC_SetAnim(self, set_anim_parts, anim, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+								NPC_SetAnim(self, setAnimParts, anim, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 								self->client->ps.forceJumpZStart = self->currentOrigin[2];
 								//so we don't take damage if we land at same height
 								self->client->ps.pm_flags |= PMF_JUMPING | PMF_SLOW_MO_FALL;
@@ -4437,12 +4437,12 @@ static evasionType_t jedi_check_flip_evasions(gentity_t* self, const float right
 						}
 						self->client->ps.velocity[2] = forceJumpStrength[FORCE_LEVEL_2] / 2.25f;
 						//animate me
-						int set_anim_parts = SETANIM_LEGS;
+						int setAnimParts = SETANIM_LEGS;
 						if (!self->client->ps.weaponTime)
 						{
-							set_anim_parts = SETANIM_BOTH;
+							setAnimParts = SETANIM_BOTH;
 						}
-						NPC_SetAnim(self, set_anim_parts, anim, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+						NPC_SetAnim(self, setAnimParts, anim, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 						self->client->ps.forceJumpZStart = self->currentOrigin[2];
 						//so we don't take damage if we land at same height
 						self->client->ps.pm_flags |= PMF_JUMPING | PMF_SLOW_MO_FALL;

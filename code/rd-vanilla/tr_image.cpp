@@ -210,20 +210,20 @@ R_SumOfUsedImages
 float R_SumOfUsedImages(const qboolean b_use_format)
 {
 	int	total = 0;
-	image_t* p_image;
+	image_t* pImage;
 
 	R_Images_StartIteration();
-	while ((p_image = R_Images_GetNextIteration()) != nullptr)
+	while ((pImage = R_Images_GetNextIteration()) != nullptr)
 	{
-		if (p_image->frameUsed == tr.frameCount - 1) {//it has already been advanced for the next frame, so...
+		if (pImage->frameUsed == tr.frameCount - 1) {//it has already been advanced for the next frame, so...
 			if (b_use_format)
 			{
-				const float  bytePerTex = R_BytesPerTex(p_image->internalFormat);
-				total += bytePerTex * (p_image->width * p_image->height);
+				const float  bytePerTex = R_BytesPerTex(pImage->internalFormat);
+				total += bytePerTex * (pImage->width * pImage->height);
 			}
 			else
 			{
-				total += p_image->width * p_image->height;
+				total += pImage->width * pImage->height;
 			}
 		}
 	}
@@ -727,20 +727,20 @@ image_t* R_Images_GetNextIteration()
 	if (itAllocatedImages == AllocatedImages.end())
 		return nullptr;
 
-	image_t* p_image = (*itAllocatedImages).second;
+	image_t* pImage = (*itAllocatedImages).second;
 	++itAllocatedImages;
-	return p_image;
+	return pImage;
 }
 
 // clean up anything to do with an image_t struct, but caller will have to clear the internal to an image_t struct ready for either struct free() or overwrite...
 //
-static void R_Images_DeleteImageContents(image_t* p_image)
+static void R_Images_DeleteImageContents(image_t* pImage)
 {
-	assert(p_image);	// should never be called with NULL
-	if (p_image)
+	assert(pImage);	// should never be called with NULL
+	if (pImage)
 	{
-		qglDeleteTextures(1, &p_image->texnum);
-		R_Free(p_image);
+		qglDeleteTextures(1, &pImage->texnum);
+		R_Free(pImage);
 	}
 }
 
@@ -764,11 +764,11 @@ void R_Images_DeleteLightMaps(void)
 {
 	for (auto it_image = AllocatedImages.begin(); it_image != AllocatedImages.end(); /* empty */)
 	{
-		image_t* p_image = (*it_image).second;
+		image_t* pImage = (*it_image).second;
 
-		if (p_image->imgName[0] == '$' /*&& strstr(p_image->imgName,"lightmap")*/)	// loose check, but should be ok
+		if (pImage->imgName[0] == '$' /*&& strstr(pImage->imgName,"lightmap")*/)	// loose check, but should be ok
 		{
-			R_Images_DeleteImageContents(p_image);
+			R_Images_DeleteImageContents(pImage);
 
 			AllocatedImages.erase(it_image++);
 		}
@@ -783,14 +783,14 @@ void R_Images_DeleteLightMaps(void)
 
 // special function currently only called by Dissolve code...
 //
-void R_Images_DeleteImage(image_t* p_image)
+void R_Images_DeleteImage(image_t* pImage)
 {
 	// Even though we supply the image handle, we need to get the corresponding iterator entry...
 	//
-	const auto it_image = AllocatedImages.find(p_image->imgName);
+	const auto it_image = AllocatedImages.find(pImage->imgName);
 	if (it_image != AllocatedImages.end())
 	{
-		R_Images_DeleteImageContents(p_image);
+		R_Images_DeleteImageContents(pImage);
 		AllocatedImages.erase(it_image);
 	}
 	else
@@ -803,12 +803,12 @@ void R_Images_DeleteImage(image_t* p_image)
 //
 void R_Images_Clear()
 {
-	image_t* p_image;
+	image_t* pImage;
 	//	int iNumImages =
 	R_Images_StartIteration();
-	while ((p_image = R_Images_GetNextIteration()) != nullptr)
+	while ((pImage = R_Images_GetNextIteration()) != nullptr)
 	{
-		R_Images_DeleteImageContents(p_image);
+		R_Images_DeleteImageContents(pImage);
 	}
 
 	AllocatedImages.clear();
@@ -817,18 +817,18 @@ void R_Images_Clear()
 
 void RE_RegisterImages_Info_f()
 {
-	image_t* p_image;
+	image_t* pImage;
 	int i_image = 0;
 	int i_texels = 0;
 
 	const int i_num_images = R_Images_StartIteration();
-	while ((p_image = R_Images_GetNextIteration()) != nullptr)
+	while ((pImage = R_Images_GetNextIteration()) != nullptr)
 	{
-		ri.Printf(PRINT_ALL, "%d: (%4dx%4dy) \"%s\"", i_image, p_image->width, p_image->height, p_image->imgName);
-		ri.Printf(PRINT_ALL, ", levused %d", p_image->iLastLevelUsedOn);
+		ri.Printf(PRINT_ALL, "%d: (%4dx%4dy) \"%s\"", i_image, pImage->width, pImage->height, pImage->imgName);
+		ri.Printf(PRINT_ALL, ", levused %d", pImage->iLastLevelUsedOn);
 		ri.Printf(PRINT_ALL, "\n");
 
-		i_texels += p_image->width * p_image->height;
+		i_texels += pImage->width * pImage->height;
 		i_image++;
 	}
 	ri.Printf(PRINT_ALL, "%d Images. %d (%.2fMB) texels total, (not including mipmaps)\n", i_num_images, i_texels, static_cast<float>(i_texels) / 1024.0f / 1024.0f);
@@ -844,17 +844,17 @@ qboolean RE_RegisterImages_LevelLoadEnd()
 	{
 		qboolean b_erase_occured = qfalse;
 
-		image_t* p_image = (*it_image).second;
+		image_t* pImage = (*it_image).second;
 
 		// don't un-register system shaders (*fog, *dlight, *white, *default), but DO de-register lightmaps ("$<mapname>/lightmap%d")
-		if (p_image->imgName[0] != '*')
+		if (pImage->imgName[0] != '*')
 		{
 			// image used on this level?
 			//
-			if (p_image->iLastLevelUsedOn != RE_RegisterMedia_GetLevel())
+			if (pImage->iLastLevelUsedOn != RE_RegisterMedia_GetLevel())
 			{	// nope, so dump it...
-				//ri.Printf( PRINT_DEVELOPER, "Dumping image \"%s\"\n",p_image->imgName);
-				R_Images_DeleteImageContents(p_image);
+				//ri.Printf( PRINT_DEVELOPER, "Dumping image \"%s\"\n",pImage->imgName);
+				R_Images_DeleteImageContents(pImage);
 
 				AllocatedImages.erase(it_image++);
 				b_erase_occured = qtrue;
@@ -894,29 +894,29 @@ static image_t* R_FindImageFile_NoLoad(const char* name, const qboolean mipmap, 
 	const auto itAllocatedImage = AllocatedImages.find(p_name);
 	if (itAllocatedImage != AllocatedImages.end())
 	{
-		image_t* p_image = (*itAllocatedImage).second;
+		image_t* pImage = (*itAllocatedImage).second;
 
 		// the white image can be used with any set of parms, but other mismatches are errors...
 		//
 		if (strcmp(p_name, "*white") != 0)
 		{
-			if (p_image->mipmap != !!mipmap)
+			if (pImage->mipmap != !!mipmap)
 			{
 				//ri.Printf( PRINT_WARNING, "WARNING: reused image %s with mixed mipmap parm\n", pName );
 			}
-			if (p_image->allowPicmip != !!allow_picmip)
+			if (pImage->allowPicmip != !!allow_picmip)
 			{
 				//ri.Printf( PRINT_WARNING, "WARNING: reused image %s with mixed allowPicmip parm\n", pName );
 			}
-			if (p_image->wrapClampMode != gl_wrap_clamp_mode)
+			if (pImage->wrapClampMode != gl_wrap_clamp_mode)
 			{
 				//ri.Printf( PRINT_WARNING, "WARNING: reused image %s with mixed glWrapClampMode parm\n", pName );
 			}
 		}
 
-		p_image->iLastLevelUsedOn = RE_RegisterMedia_GetLevel();
+		pImage->iLastLevelUsedOn = RE_RegisterMedia_GetLevel();
 
-		return p_image;
+		return pImage;
 	}
 
 	return nullptr;

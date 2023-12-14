@@ -35,8 +35,8 @@ extern void ChangeWeapon(const gentity_t* ent, int newWeapon);
 extern int PM_AnimLength(int index, animNumber_t anim);
 #endif
 
-extern void BG_SetAnim(playerState_t* ps, const animation_t* animations, int set_anim_parts, int anim,
-	int set_anim_flags);
+extern void BG_SetAnim(playerState_t* ps, const animation_t* animations, int setAnimParts, int anim,
+	int setAnimFlags);
 extern int BG_GetTime(void);
 extern qboolean BG_SabersOff(const playerState_t* ps);
 
@@ -282,7 +282,6 @@ static void ProcessMoveCommands(Vehicle_t* p_veh)
 //"!s.number", this is a universal check that will work for both SP
 //and MP. -rww
 // ProcessOrientCommands the Vehicle.
-extern void AnimalProcessOri(const Vehicle_t* p_veh);
 
 static void ProcessOrientCommands(const Vehicle_t* p_veh)
 {

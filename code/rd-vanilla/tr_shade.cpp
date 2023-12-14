@@ -1793,7 +1793,16 @@ static void RB_IterateStagesGeneric(const shaderCommands_t* input)
 			else if (backEnd.currentEntity && backEnd.currentEntity->e.renderfx & RF_FORCE_ENT_ALPHA)
 			{
 				ForceAlpha(reinterpret_cast<unsigned char*>(tess.svars.colors), backEnd.currentEntity->e.shaderRGBA[3]);
-				GL_State(GLS_SRCBLEND_SRC_ALPHA | GLS_DSTBLEND_ONE_MINUS_SRC_ALPHA);
+
+				if (backEnd.currentEntity->e.renderfx & RF_ALPHA_DEPTH)
+				{ //depth write, so faces through the model will be stomped over by nearer ones. this works because
+					//we draw RF_FORCE_ENT_ALPHA stuff after everything else, including standard alpha surfs.
+					GL_State(GLS_SRCBLEND_SRC_ALPHA | GLS_DSTBLEND_ONE_MINUS_SRC_ALPHA | GLS_DEPTHMASK_TRUE);
+				}
+				else
+				{
+					GL_State(GLS_SRCBLEND_SRC_ALPHA | GLS_DSTBLEND_ONE_MINUS_SRC_ALPHA);
+				}
 			}
 			else
 			{
