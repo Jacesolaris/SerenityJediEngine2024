@@ -8507,10 +8507,18 @@ static void DownedSaberThink(gentity_t* saberent)
 		//we want to pull the saber back.
 		pull_back = qtrue;
 	}
-	else if (saber_own->r.svFlags & SVF_BOT && level.time - saber_own->client->saberKnockedTime > MAX_BOT_LEAVE_TIME)
+	else if (saber_own->r.svFlags & SVF_BOT)
 	{
-		//we want to pull the saber back.
-		pull_back = qtrue;
+		if (saber_own->client->ps.fd.saber_anim_level != SS_DUAL && level.time - saber_own->client->saberKnockedTime > MAX_BOT_LEAVE_TIME)
+		{
+			//we want to pull the saber back.
+			pull_back = qtrue;
+		}
+		else 
+		{
+			//we want to pull the saber back.
+			pull_back = qtrue;
+		}
 	}
 	else if (level.time - saber_own->client->saberKnockedTime > MAX_LEAVE_TIME)
 	{

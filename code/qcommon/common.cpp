@@ -1039,9 +1039,9 @@ Com_ExecuteCfg
 ==================
 */
 
-static void Com_ExecuteCfg()
+static void Com_ExecuteCfg(void)
 {
-	Cbuf_ExecuteText(EXEC_NOW, "exec spdefault.cfg\n");
+	Cbuf_ExecuteText(EXEC_NOW, "exec SJE-SP-default.cfg\n");
 	Cbuf_Execute(); // Always execute after exec to prevent text buffer overflowing
 
 	if (!Com_SafeMode())
@@ -1352,7 +1352,7 @@ void Com_WriteConfig_f()
 		return;
 	}
 
-	if (!FS_FilenameCompare(filename, "mpdefault.cfg") || !FS_FilenameCompare(filename, "spdefault.cfg"))
+	if (!FS_FilenameCompare(filename, "SJE-SP-default.cfg") || !FS_FilenameCompare(filename, "SJE-MP-default.cfg"))
 	{
 		Com_Printf(S_COLOR_YELLOW "Com_WriteConfig_f: The filename \"%s\" is reserved! Please choose another name.\n",
 			filename);

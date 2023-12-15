@@ -331,7 +331,8 @@ static void FS_AssertInitialised(void) {
 FS_PakIsPure
 =================
 */
-qboolean FS_PakIsPure(pack_t* pack) {
+static qboolean FS_PakIsPure(pack_t* pack)
+{
 	if (fs_numServerPaks) {
 		// NOTE TTimo we are matching checksums without checking the pak names
 		//   this means you can have the same pk3 as the server under a different name, you will still get through sv_pure validation
@@ -403,7 +404,7 @@ FS_fplength
 ================
 */
 
-long FS_fplength(FILE* h)
+static long FS_fplength(FILE* h)
 {
 	const long pos = ftell(h);
 	if (pos == EOF)
@@ -440,7 +441,7 @@ FS_ReplaceSeparators
 Fix things up differently for win/unix/mac
 ====================
 */
-void FS_ReplaceSeparators(char* path) {
+static void FS_ReplaceSeparators(char* path) {
 	qboolean lastCharWasSep = qfalse;
 
 	for (char* s = path; *s; s++) {
@@ -466,7 +467,7 @@ FS_BuildOSPath
 Qpath may have either forward or backwards slashes
 ===================
 */
-char* FS_BuildOSPath(const char* qpath) {
+static char* FS_BuildOSPath(const char* qpath) {
 	char	temp[MAX_OSPATH];
 	static char ospath[4][MAX_OSPATH];
 	static int toggle;
@@ -511,7 +512,7 @@ FS_CreatePath
 Creates any directories needed to store the given filename
 ============
 */
-qboolean FS_CreatePath(char* OSPath) {
+static qboolean FS_CreatePath(char* OSPath) {
 	char	path[MAX_OSPATH];
 
 	// make absolutely sure that it can't back up the path
@@ -569,7 +570,7 @@ FS_CopyFile
 Copy a fully specified file from one place to another
 =================
 */
-void FS_CopyFile(char* fromOSPath, char* toOSPath) {
+static void FS_CopyFile(char* fromOSPath, char* toOSPath) {
 	FS_CheckFilenameIsMutable(fromOSPath, __func__);
 
 	Com_Printf("copy %s to %s\n", fromOSPath, toOSPath);
@@ -706,7 +707,7 @@ FS_FileInPathExists
 Tests if path and file exists
 ================
 */
-qboolean FS_FileInPathExists(const char* testpath)
+static qboolean FS_FileInPathExists(const char* testpath)
 {
 	FILE* filep = fopen(testpath, "rb");
 
@@ -741,7 +742,7 @@ FS_SV_FileExists
 Tests if the file exists
 ================
 */
-qboolean FS_SV_FileExists(const char* file)
+static qboolean FS_SV_FileExists(const char* file)
 {
 	char* testpath = FS_BuildOSPath(fs_homepath->string, file, "");
 	testpath[strlen(testpath) - 1] = '\0';
@@ -1085,7 +1086,7 @@ Return qtrue if ext matches file extension filename
 ===========
 */
 
-qboolean FS_IsExt(const char* filename, const char* ext, int namelen)
+static qboolean FS_IsExt(const char* filename, const char* ext, int namelen)
 {
 	const int extlen = strlen(ext);
 
@@ -1106,7 +1107,7 @@ Return qtrue if filename has a demo extension
 */
 
 #define DEMO_EXTENSION "dm_"
-qboolean FS_IsDemoExt(const char* filename, int namelen)
+static qboolean FS_IsDemoExt(const char* filename, int namelen)
 {
 	const char* ext_test = strrchr(filename, '.');
 	if (ext_test && !Q_stricmpn(ext_test + 1, DEMO_EXTENSION, ARRAY_LEN(DEMO_EXTENSION) - 1))
@@ -1122,7 +1123,7 @@ qboolean FS_IsDemoExt(const char* filename, int namelen)
 
 #ifdef _WIN32
 
-bool Sys_GetFileTime(LPCSTR psFileName, FILETIME& ft)
+static bool Sys_GetFileTime(LPCSTR psFileName, FILETIME& ft)
 {
 	bool bSuccess = false;
 
@@ -1153,7 +1154,7 @@ bool Sys_GetFileTime(LPCSTR psFileName, FILETIME& ft)
 	return bSuccess;
 }
 
-bool Sys_FileOutOfDate(LPCSTR psFinalFileName /* dest */, LPCSTR psDataFileName /* src */)
+static bool Sys_FileOutOfDate(LPCSTR psFinalFileName /* dest */, LPCSTR psDataFileName /* src */)
 {
 	FILETIME ftFinalFile, ftDataFile;
 
@@ -1186,7 +1187,7 @@ bool Sys_FileOutOfDate(LPCSTR psFinalFileName /* dest */, LPCSTR psDataFileName 
 
 #endif // _WIN32
 
-bool FS_FileCacheable(const char* const filename)
+static bool FS_FileCacheable(const char* const filename)
 {
 	extern	cvar_t* com_buildScript;
 	if (com_buildScript && com_buildScript->integer)
@@ -1657,7 +1658,8 @@ FS_Seek
 
 =================
 */
-int FS_Seek(fileHandle_t f, long offset, int origin) {
+int FS_Seek(fileHandle_t f, long offset, int origin)
+{
 	int		_origin;
 
 	FS_AssertInitialised();
@@ -2076,7 +2078,7 @@ Frees a pak structure and releases all associated resources
 =================
 */
 
-void FS_FreePak(pack_t* thepak)
+static void FS_FreePak(pack_t* thepak)
 {
 	unzClose(thepak->handle);
 	Z_Free(thepak->buildBuffer);
@@ -2561,7 +2563,7 @@ int	FS_GetModList(char* listbuf, int bufsize) {
 FS_Dir_f
 ================
 */
-void FS_Dir_f(void) {
+static void FS_Dir_f(void) {
 	char* path;
 	char* extension;
 	int		ndirs;
@@ -2596,7 +2598,7 @@ void FS_Dir_f(void) {
 FS_ConvertPath
 ===========
 */
-void FS_ConvertPath(char* s) {
+static void FS_ConvertPath(char* s) {
 	while (*s) {
 		if (*s == '\\' || *s == ':') {
 			*s = '/';
@@ -2612,7 +2614,7 @@ FS_PathCmp
 Ignore case and separator char distinctions
 ===========
 */
-int FS_PathCmp(const char* s1, const char* s2) {
+static int FS_PathCmp(const char* s1, const char* s2) {
 	int		c1;
 
 	do {
@@ -2649,7 +2651,7 @@ int FS_PathCmp(const char* s1, const char* s2) {
 FS_SortFileList
 ================
 */
-void FS_SortFileList(char** filelist, int numfiles) {
+static void FS_SortFileList(char** filelist, int numfiles) {
 	int j;
 
 	char** sortedlist = static_cast<char**>(Z_Malloc((numfiles + 1) * sizeof * sortedlist, TAG_FILESYS, qtrue));
@@ -2676,7 +2678,7 @@ void FS_SortFileList(char** filelist, int numfiles) {
 FS_NewDir_f
 ================
 */
-void FS_NewDir_f(void) {
+static void FS_NewDir_f(void) {
 	int		ndirs;
 
 	if (Cmd_Argc() < 2) {
@@ -2707,7 +2709,7 @@ FS_Path_f
 
 ============
 */
-void FS_Path_f(void) {
+static void FS_Path_f(void) {
 	Com_Printf("Current search path:\n");
 	for (const searchpath_t* s = fs_searchpaths; s; s = s->next) {
 		if (s->pack) {
@@ -2742,7 +2744,7 @@ The only purpose of this function is to allow game script files to copy
 arbitrary files furing an "fs_copyfiles 1" run.
 ============
 */
-void FS_TouchFile_f(void) {
+static void FS_TouchFile_f(void) {
 	fileHandle_t	f;
 
 	if (Cmd_Argc() != 2) {
@@ -2761,7 +2763,7 @@ void FS_TouchFile_f(void) {
 FS_Which_f
 ============
 */
-void FS_Which_f(void) {
+static void FS_Which_f(void) {
 	char* filename = Cmd_Argv(1);
 
 	if (!filename[0]) {
@@ -3218,7 +3220,7 @@ static void FS_ReorderPurePaks()
 
 	@param gameName Name of the default folder (i.e. always BASEGAME = "base" in OpenJK)
 */
-void FS_Startup(const char* gameName)
+static void FS_Startup(const char* gameName)
 {
 	Com_Printf("----- FS_Startup -----\n");
 
@@ -3659,11 +3661,11 @@ void FS_InitFilesystem(void) {
 	// try to start up normally
 	FS_Startup(BASEGAME);
 
-	// if we can't find spdefault.cfg, assume that the paths are
+	// if we can't find SJE-MP-default.cfg, assume that the paths are
 	// busted and error out now, rather than getting an unreadable
 	// graphics screen when the font fails to load
-	if (FS_ReadFile("mpdefault.cfg", nullptr) <= 0) {
-		Com_Error(ERR_FATAL, "Couldn't load mpdefault.cfg");
+	if (FS_ReadFile("SJE-MP-default.cfg", nullptr) <= 0) {
+		Com_Error(ERR_FATAL, "Couldn't load SJE-MP-default.cfg");
 		// bk001208 - SafeMode see below, FIXME?
 	}
 
@@ -3695,10 +3697,10 @@ void FS_Restart(int checksumFeed) {
 	// try to start up normally
 	FS_Startup(BASEGAME);
 
-	// if we can't find spdefault.cfg, assume that the paths are
+	// if we can't find SJE-MP-default.cfg, assume that the paths are
 	// busted and error out now, rather than getting an unreadable
 	// graphics screen when the font fails to load
-	if (FS_ReadFile("mpdefault.cfg", nullptr) <= 0) {
+	if (FS_ReadFile("SJE-MP-default.cfg", nullptr) <= 0) {
 		// this might happen when connecting to a pure server not using BASEGAME/pak0.pk3
 		// (for instance a TA demo server)
 		if (lastValidBase[0]) {
@@ -3710,7 +3712,7 @@ void FS_Restart(int checksumFeed) {
 			FS_Restart(checksumFeed);
 			Com_Error(ERR_DROP, "Invalid game folder\n");
 		}
-		Com_Error(ERR_FATAL, "Couldn't load mpdefault.cfg");
+		Com_Error(ERR_FATAL, "Couldn't load SJE-MP-default.cfg");
 	}
 
 	if (Q_stricmp(fs_gamedirvar->string, lastValidGame)) {

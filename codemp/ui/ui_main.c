@@ -6538,7 +6538,7 @@ static void UI_RunMenuScript(char** args)
 		{
 			trap->Cmd_ExecuteText(EXEC_APPEND, "cvar_restart\n");
 			Controls_SetDefaults();
-			trap->Cmd_ExecuteText(EXEC_APPEND, "exec mpdefault.cfg\n");
+			trap->Cmd_ExecuteText(EXEC_APPEND, "exec SJE-MP-default.cfg\n");
 			trap->Cmd_ExecuteText(EXEC_APPEND, "vid_restart\n");
 		}
 		else if (Q_stricmp(name, "loadArenas") == 0)

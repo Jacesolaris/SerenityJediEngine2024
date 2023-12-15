@@ -58,6 +58,7 @@ extern qboolean UI_SaberSkinForSaber(const char* saber_name, char* saberSkin);
 extern void UI_SaberAttachToChar(itemDef_t* item);
 extern void Item_RunScript(itemDef_t* item, const char* s); //from ui_shared;
 extern qboolean PC_Script_Parse(const char** out);
+extern void FS_Restart();
 
 constexpr auto LISTBUFSIZE = 10240;
 
@@ -1126,7 +1127,6 @@ static qboolean UI_RunMenuScript(const char** args)
 			if (uiInfo.modList[uiInfo.modIndex].modName)
 			{
 				Cvar_Set("fs_game", uiInfo.modList[uiInfo.modIndex].modName);
-				extern void FS_Restart();
 				FS_Restart();
 				Cbuf_ExecuteText(EXEC_APPEND, "vid_restart;");
 			}
@@ -7222,7 +7222,7 @@ void UI_ResetDefaults()
 {
 	ui.Cmd_ExecuteText(EXEC_APPEND, "cvar_restart\n");
 	Controls_SetDefaults();
-	ui.Cmd_ExecuteText(EXEC_APPEND, "exec spdefault.cfg\n");
+	ui.Cmd_ExecuteText(EXEC_APPEND, "exec SJE-SP-default.cfg\n");
 	ui.Cmd_ExecuteText(EXEC_APPEND, "vid_restart\n");
 }
 
