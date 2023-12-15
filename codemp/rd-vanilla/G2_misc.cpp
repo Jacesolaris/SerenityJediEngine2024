@@ -671,7 +671,7 @@ static void G2_BuildHitPointST(const vec3_t A, const float SA, const float TA,
 }
 
 // routine that works out given a ray whether or not it hits a poly
-qboolean G2_SegmentTriangleTest(const vec3_t start, const vec3_t end,
+static qboolean G2_SegmentTriangleTest(const vec3_t start, const vec3_t end,
 	const vec3_t A, const vec3_t B, const vec3_t C,
 	const qboolean backFaces, const qboolean frontFaces, vec3_t returnedPoint, vec3_t returnedNormal, float* denom)
 {
@@ -766,11 +766,11 @@ static int GoreIndecies[MAX_GORE_INDECIES];
 int	G2API_GetTime(int arg_time);
 
 // now we at poly level, check each model space transformed poly against the model world transfomed ray
-void G2_GorePolys(const mdxmSurface_t* surface, CTraceSurface& TS, const mdxmSurfHierarchy_t* surfInfo)
+static void G2_GorePolys(const mdxmSurface_t* surface, CTraceSurface& TS, const mdxmSurfHierarchy_t* surfInfo)
 {
 	int				j;
 	vec3_t basis1;
-	vec3_t basis2;
+	vec3_t basis2{};
 	vec3_t taxis;
 	vec3_t saxis;
 
@@ -1750,7 +1750,7 @@ qboolean G2_SaveGhoul2Models(CGhoul2Info_v& ghoul2, char** buffer, int* size)
 }
 
 // have to free space malloced in the save system here because the game DLL can't.
-void G2_FreeSaveBuffer(char* buffer)
+static void G2_FreeSaveBuffer(char* buffer)
 {
 	Z_Free(buffer);
 }
@@ -1828,7 +1828,7 @@ void G2_LoadGhoul2Model(CGhoul2Info_v& ghoul2, const char* buffer)
 	}
 }
 
-void G2_LerpAngles(CGhoul2Info_v& ghoul2, CGhoul2Info_v& nextGhoul2, const float interpolation)
+static void G2_LerpAngles(CGhoul2Info_v& ghoul2, CGhoul2Info_v& nextGhoul2, const float interpolation)
 {
 	// loop each model
 	for (int i = 0; i < ghoul2.size(); i++)

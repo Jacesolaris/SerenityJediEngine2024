@@ -102,9 +102,9 @@ extern "C" {
 	}
 #endif
 
-	signed char ClampChar(int i);
-	signed char ClampCharMove(int i);
-	signed short ClampShort(int i);
+	signed char ClampChar(const int i);
+	signed char ClampCharMove(const int i);
+	signed short ClampShort(const int i);
 	int Com_Clampi(int min, int max, int value);
 	float Com_Clamp(float min, float max, float value);
 	int Com_AbsClampi(int min, int max, int value);

@@ -25,6 +25,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #ifdef _WIN32
 #include <intrin.h>
 #endif
+#include <cstdint>
 
 class timing_c
 {

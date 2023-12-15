@@ -521,7 +521,7 @@ static void R_TransformEachSurface(const mdxmSurface_t* surface, vec3_t scale, C
 	}
 }
 
-void G2_TransformSurfaces(int surfaceNum, surfaceInfo_v& rootSList,
+static void G2_TransformSurfaces(int surfaceNum, surfaceInfo_v& rootSList,
 	CBoneCache* boneCache, const model_t* currentModel, int lod, vec3_t scale, CMiniHeap* G2VertSpace, intptr_t* TransformedVertArray, bool secondTimeAround)
 {
 	int	i;

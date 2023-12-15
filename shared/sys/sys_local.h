@@ -24,9 +24,9 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #include "qcommon/qcommon.h"
 
 void IN_Init(void* windowData);
-void IN_Frame();
-void IN_Shutdown();
-void IN_Restart();
+void IN_Frame(void);
+void IN_Shutdown(void);
+void IN_Restart(void);
 
 void Sys_PlatformInit();
 void Sys_PlatformExit();

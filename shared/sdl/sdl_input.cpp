@@ -57,6 +57,10 @@ cvar_t* j_sensitivity;
 
 static SDL_Window* SDL_window = nullptr;
 
+#define Com_QueueEvent Sys_QueEvent
+
+static int in_eventTime = 0;
+
 #define CTRL(a) ((a)-'a'+1)
 
 /*
@@ -620,7 +624,7 @@ struct stick_state_s
 IN_InitJoystick
 ===============
 */
-static void IN_InitJoystick()
+static void IN_InitJoystick(void)
 {
 	char buf[16384] = "";
 
@@ -634,10 +638,14 @@ static void IN_InitJoystick()
 	gamepad = nullptr;
 	memset(&stick_state, '\0', sizeof(stick_state));
 
+	// SDL 2.0.4 requires SDL_INIT_JOYSTICK to be initialized separately from
+	// SDL_INIT_GAMECONTROLLER for SDL_JoystickOpen() to work correctly,
+	// despite https://wiki.libsdl.org/SDL_Init (retrieved 2016-08-16)
+	// indicating SDL_INIT_JOYSTICK should be initialized automatically.
 	if (!SDL_WasInit(SDL_INIT_JOYSTICK))
 	{
 		Com_DPrintf("Calling SDL_Init(SDL_INIT_JOYSTICK)...\n");
-		if (SDL_Init(SDL_INIT_JOYSTICK) == -1)
+		if (SDL_Init(SDL_INIT_JOYSTICK) != 0)
 		{
 			Com_DPrintf("SDL_Init(SDL_INIT_JOYSTICK) failed: %s\n", SDL_GetError());
 			return;
@@ -935,7 +943,7 @@ IN_ProcessEvents
 */
 void SNDDMA_Activate(qboolean activate);
 
-static void IN_ProcessEvents()
+static void IN_ProcessEvents(void)
 {
 	SDL_Event e;
 	fakeAscii_t key;
@@ -1570,7 +1578,7 @@ void IN_Shutdown(void)
 IN_Restart
 ===============
 */
-void IN_Restart()
+void IN_Restart(void)
 {
 	IN_ShutdownJoystick();
 	IN_Init(SDL_window);

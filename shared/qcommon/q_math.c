@@ -288,7 +288,7 @@ signed char ClampChar(const int i)
 	return i;
 }
 
-signed char ClampCharMove(int i)
+signed char ClampCharMove(const int i)
 {
 	if (i < -127) {
 		return -127;

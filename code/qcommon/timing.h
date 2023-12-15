@@ -36,7 +36,7 @@ private:
 	int reset;
 
 public:
-	timing_c() : start(0), end(0), reset(0)
+	timing_c(void) : start(0), end(0), reset(0)
 	{
 	}
 

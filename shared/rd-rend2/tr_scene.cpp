@@ -231,7 +231,8 @@ RE_AddMiniRefEntityToScene
 1:1 with how vanilla does it --eez
 =====================
 */
-void RE_AddMiniRefEntityToScene(const miniRefEntity_t* miniRefEnt) {
+void RE_AddMiniRefEntityToScene(const miniRefEntity_t* miniRefEnt)
+{
 	refEntity_t entity;
 	if (!tr.registered)
 		return;

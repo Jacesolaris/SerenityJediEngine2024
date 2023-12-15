@@ -384,8 +384,8 @@ using refexport_t = struct
 #endif
 
 	// Performance analysis (perform anal)
-	void (*G2Time_ResetTimers)();
-	void (*G2Time_ReportTimers)();
+	void (*G2Time_ResetTimers)(void);
+	void (*G2Time_ReportTimers)(void);
 };
 
 // this is the only function actually exported at the linker level

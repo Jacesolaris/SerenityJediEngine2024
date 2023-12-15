@@ -1104,12 +1104,11 @@ static void CreateShape()
 }
 
 //----------------------------------------------------------------------------
-static void ApplyShape(vec3_t start, vec3_t end, vec3_t right, const float sradius, const float eradius, const int count, const float startPerc = 0.0f, const float endPerc = 1.0f)
+static void ApplyShape(vec3_t start, vec3_t end, vec3_t right, const float sradius, const float eradius, const int count, const float startPerc, const float endPerc)
 //----------------------------------------------------------------------------
 {
 	vec3_t	point1, point2, fwd;
 	vec3_t	rt, up;
-	float	perc, dis;
 
 	if (count < 1)
 	{
@@ -1121,28 +1120,21 @@ static void ApplyShape(vec3_t start, vec3_t end, vec3_t right, const float sradi
 	CreateShape();
 
 	VectorSubtract(end, start, fwd);
-	dis = VectorNormalize(fwd) * 0.7f;
+	const float dis = VectorNormalize(fwd) * 0.7f;
 	MakeNormalVectors(fwd, rt, up);
 
-	perc = sh1[0];
+	float perc = sh1[0];
 
 	VectorScale(start, perc, point1);
 	VectorMA(point1, 1.0f - perc, end, point1);
 	VectorMA(point1, dis * sh1[1], rt, point1);
 	VectorMA(point1, dis * sh1[2], up, point1);
 
-	// do a quick and dirty interpolation of the radius at that point
-	float rads1, rads2;
-
-	rads1 = sradius * 0.666f + eradius * 0.333f;
-	rads2 = sradius * 0.333f + eradius * 0.666f;
+	const float rads1 = sradius * 0.666f + eradius * 0.333f;
+	const float rads2 = sradius * 0.333f + eradius * 0.666f;
 
 	// recursion
-#ifndef REND2_SP
-	ApplyShape(start, point1, right, sradius, rads1, count - 1);
-#else
 	ApplyShape(start, point1, right, sradius, rads1, count - 1, startPerc, startPerc * 0.666f + endPerc * 0.333f);
-#endif
 
 	perc = sh2[0];
 
@@ -1152,75 +1144,54 @@ static void ApplyShape(vec3_t start, vec3_t end, vec3_t right, const float sradi
 	VectorMA(point2, dis * sh2[2], up, point2);
 
 	// recursion
-#ifndef REND2_SP
-	ApplyShape(point2, point1, right, rads1, rads2, count - 1);
-	ApplyShape(point2, end, right, rads2, eradius, count - 1);
-#else
 	ApplyShape(point2, point1, right, rads1, rads2, count - 1, startPerc * 0.333f + endPerc * 0.666f, startPerc * 0.666f + endPerc * 0.333f);
 	ApplyShape(point2, end, right, rads2, eradius, count - 1, startPerc * 0.333f + endPerc * 0.666f, endPerc);
-#endif
 }
 
 //----------------------------------------------------------------------------
 static void DoBoltSeg(vec3_t start, vec3_t end, vec3_t right, const float radius)
 //----------------------------------------------------------------------------
 {
-	refEntity_t* e;
 	vec3_t fwd, old;
-	vec3_t cur, off = { 10,10,10 };
+	vec3_t off = { 10,10,10 };
 	vec3_t rt, up;
-	vec3_t temp;
-	int		i;
-	float dis, oldPerc = 0.0f, perc, oldRadius, newRadius;
+	float oldPerc = 0.0f, perc, oldRadius;
 
-	e = &backEnd.currentEntity->e;
+	refEntity_t* e = &backEnd.currentEntity->e;
 
 	VectorSubtract(end, start, fwd);
-	dis = VectorNormalize(fwd);
+	float dis = VectorNormalize(fwd);
 
-#ifdef REND2_SP
 	if (dis > 2000)	//freaky long
 	{
 		//		ri.Printf( PRINT_WARNING, "DoBoltSeg: insane distance.\n" );
 		dis = 2000;
 	}
-#endif
-
 	MakeNormalVectors(fwd, rt, up);
 
 	VectorCopy(start, old);
 
-#ifndef REND2_SP
-	oldRadius = newRadius = radius;
-	for (i = 20; i <= dis; i += 20)
+	float newRadius = oldRadius = radius;
+
+	for (int i = 16; i <= dis; i += 16)
 	{
-		// because of our large step size, we may not actually draw to the end.  In this case, fudge our percent so that we are basically complete
-		if (i + 20 > dis)
-#else
-	newRadius = oldRadius = radius;
-	for (i = 16; i <= dis; i += 16)
-	{
+		vec3_t temp;
+		vec3_t cur;
 		// because of our large step size, we may not actually draw to the end.  In this case, fudge our percent so that we are basically complete
 		if (i + 16 > dis)
-#endif
 		{
 			perc = 1.0f;
 		}
 		else
 		{
 			// percentage of the amount of line completed
-			perc = (float)i / dis;
+			perc = static_cast<float>(i) / dis;
 		}
 
 		// create our level of deviation for this point
 		VectorScale(fwd, Q_crandom(&e->frame) * 3.0f, temp);				// move less in fwd direction, chaos also does not affect this
-#ifndef REND2_SP
-		VectorMA(temp, Q_crandom(&e->frame) * 7.0f * e->axis[0][0], rt, temp);	// move more in direction perpendicular to line, angles is really the chaos
-		VectorMA(temp, Q_crandom(&e->frame) * 7.0f * e->axis[0][0], up, temp);	// move more in direction perpendicular to line
-#else
 		VectorMA(temp, Q_crandom(&e->frame) * 7.0f * e->angles[0], rt, temp);	// move more in direction perpendicular to line, angles is really the chaos
 		VectorMA(temp, Q_crandom(&e->frame) * 7.0f * e->angles[0], up, temp);	// move more in direction perpendicular to line
-#endif
 
 		// track our total level of offset from the ideal line
 		VectorAdd(off, temp, off);
@@ -1240,14 +1211,10 @@ static void DoBoltSeg(vec3_t start, vec3_t end, vec3_t right, const float radius
 		}
 
 		// Apply the random shape to our line seg to give it some micro-detail-jaggy-coolness.
-#ifndef REND2_SP
-		ApplyShape(cur, old, right, newRadius, oldRadius, LIGHTNING_RECURSION_LEVEL);
-#else
 		ApplyShape(cur, old, right, newRadius, oldRadius, 2 - r_lodbias->integer, 0, 1);
-#endif
 
 		// randomly split off to create little tendrils, but don't do it too close to the end and especially if we are not even of the forked variety
-		if ((e->renderfx & RF_FORKED) && f_count > 0 && Q_random(&e->frame) > 0.94f && radius * (1.0f - perc) > 0.2f)
+		if (e->renderfx & RF_FORKED && f_count > 0 && Q_random(&e->frame) > 0.93f && 1.0f - perc > 0.8f)
 		{
 			vec3_t newDest;
 
@@ -1258,9 +1225,9 @@ static void DoBoltSeg(vec3_t start, vec3_t end, vec3_t right, const float radius
 			VectorScale(newDest, 0.5f, newDest);
 
 			// And then add some crazy offset
-			for (int t = 0; t < 3; t++)
+			for (float& t : newDest)
 			{
-				newDest[t] += Q_crandom(&e->frame) * 80;
+				t += Q_crandom(&e->frame) * 80;
 			}
 
 			// we could branch off using OLD and NEWDEST, but that would allow multiple forks...whereas, we just want simpler brancing

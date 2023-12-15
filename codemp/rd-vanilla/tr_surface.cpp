@@ -1047,7 +1047,7 @@ static void DoBoltSeg(vec3_t start, vec3_t end, vec3_t right, const float radius
 	vec3_t fwd, old;
 	vec3_t off = { 10,10,10 };
 	vec3_t rt, up;
-	float old_perc = 0.0f, perc, new_radius;
+	float oldPerc = 0.0f, perc, newRadius;
 
 	refEntity_t* e = &backEnd.currentEntity->e;
 
@@ -1058,7 +1058,7 @@ static void DoBoltSeg(vec3_t start, vec3_t end, vec3_t right, const float radius
 
 	VectorCopy(start, old);
 
-	float old_radius = new_radius = radius;
+	float oldRadius = newRadius = radius;
 
 	for (int i = 20; i <= dis; i += 20)
 	{
@@ -1093,12 +1093,12 @@ static void DoBoltSeg(vec3_t start, vec3_t end, vec3_t right, const float radius
 		{
 			// This does pretty close to perfect tapering since apply shape interpolates the old and new as it goes along.
 			//	by using one minus the square, the radius stays fairly constant, then drops off quickly at the very point of the bolt
-			old_radius = radius * (1.0f - old_perc * old_perc);
-			new_radius = radius * (1.0f - perc * perc);
+			oldRadius = radius * (1.0f - oldPerc * oldPerc);
+			newRadius = radius * (1.0f - perc * perc);
 		}
 
 		// Apply the random shape to our line seg to give it some micro-detail-jaggy-coolness.
-		ApplyShape(cur, old, right, new_radius, old_radius, LIGHTNING_RECURSION_LEVEL);
+		ApplyShape(cur, old, right, newRadius, oldRadius, LIGHTNING_RECURSION_LEVEL);
 
 		// randomly split off to create little tendrils, but don't do it too close to the end and especially if we are not even of the forked variety
 		if (e->renderfx & RF_FORKED && f_count > 0 && Q_random(&e->frame) > 0.94f && radius * (1.0f - perc) > 0.2f)
@@ -1118,12 +1118,12 @@ static void DoBoltSeg(vec3_t start, vec3_t end, vec3_t right, const float radius
 			}
 
 			// we could branch off using OLD and NEWDEST, but that would allow multiple forks...whereas, we just want simpler brancing
-			DoBoltSeg(cur, newDest, right, new_radius);
+			DoBoltSeg(cur, newDest, right, newRadius);
 		}
 
 		// Current point along the line becomes our new old attach point
 		VectorCopy(cur, old);
-		old_perc = perc;
+		oldPerc = perc;
 	}
 }
 

@@ -36,6 +36,8 @@ constexpr auto REFENTITYNUM_BITS = 11; // can't be increased without changing dr
 #define	MAX_REFENTITIES		((1<<REFENTITYNUM_BITS) - 1)
 #define	REFENTITYNUM_WORLD	((1<<REFENTITYNUM_BITS) - 1)
 
+#define	MAX_MINI_ENTITIES	1024
+
 // renderfx flags
 constexpr auto RF_MINLIGHT = 0x00001; // allways have some light (viewmodel, some items);
 constexpr auto RF_THIRD_PERSON = 0x00002; // don't draw through eyes, only mirrors (player bodies, chat sprites);
