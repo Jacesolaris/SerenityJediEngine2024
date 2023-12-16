@@ -611,7 +611,7 @@ qboolean PM_ClientImpact(const trace_t* trace, qboolean damageSelf)
 		return qfalse;
 	}
 
-	const gentity_t* trace_ent = &g_entities[otherentity_num];
+	const gentity_t* traceEnt = &g_entities[otherentity_num];
 
 	if (VectorLength(pm->ps->velocity) >= 100 && pm_entSelf->s.NPC_class != CLASS_VEHICLE && pm->ps->lastOnGround + 100
 		< level.time)
@@ -620,8 +620,8 @@ qboolean PM_ClientImpact(const trace_t* trace, qboolean damageSelf)
 		//DoImpact((gentity_t*)(pm_entSelf), &g_entities[otherentity_num], damageSelf, trace);
 	}
 
-	if (!trace_ent
-		|| !(trace_ent->r.contents & pm->tracemask))
+	if (!traceEnt
+		|| !(traceEnt->r.contents & pm->tracemask))
 	{
 		//it's dead or not in my way anymore, don't clip against it
 		return qtrue;

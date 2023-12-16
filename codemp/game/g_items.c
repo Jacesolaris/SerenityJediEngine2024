@@ -1508,27 +1508,27 @@ void Flamethrower_Fire(gentity_t* self)
 		vec3_t ent_org;
 		vec3_t dir;
 		float dot;
-		gentity_t* trace_ent = entity_list[e];
+		gentity_t* traceEnt = entity_list[e];
 
-		if (!trace_ent)
+		if (!traceEnt)
 			continue;
-		if (trace_ent == self)
+		if (traceEnt == self)
 			continue;
-		if (!trace_ent->inuse)
+		if (!traceEnt->inuse)
 			continue;
-		if (!trace_ent->takedamage)
+		if (!traceEnt->takedamage)
 			continue;
-		if (!g_friendlyFire.integer && OnSameTeam(self, trace_ent))
+		if (!g_friendlyFire.integer && OnSameTeam(self, traceEnt))
 			continue;
 		for (i = 0; i < 3; i++)
 		{
-			if (center[i] < trace_ent->r.absmin[i])
+			if (center[i] < traceEnt->r.absmin[i])
 			{
-				v[i] = trace_ent->r.absmin[i] - center[i];
+				v[i] = traceEnt->r.absmin[i] - center[i];
 			}
-			else if (center[i] > trace_ent->r.absmax[i])
+			else if (center[i] > traceEnt->r.absmax[i])
 			{
-				v[i] = center[i] - trace_ent->r.absmax[i];
+				v[i] = center[i] - traceEnt->r.absmax[i];
 			}
 			else
 			{
@@ -1536,8 +1536,8 @@ void Flamethrower_Fire(gentity_t* self)
 			}
 		}
 
-		VectorSubtract(trace_ent->r.absmax, trace_ent->r.absmin, size);
-		VectorMA(trace_ent->r.absmin, 0.5, size, ent_org);
+		VectorSubtract(traceEnt->r.absmax, traceEnt->r.absmin, size);
+		VectorMA(traceEnt->r.absmin, 0.5, size, ent_org);
 
 		//see if they're in front of me
 		//must be within the forward cone
@@ -1554,7 +1554,7 @@ void Flamethrower_Fire(gentity_t* self)
 		}
 
 		//in PVS?
-		if (!trace_ent->r.bmodel && !trap->InPVS(ent_org, self->client->ps.origin))
+		if (!traceEnt->r.bmodel && !trap->InPVS(ent_org, self->client->ps.origin))
 		{
 			//must be in PVS
 			continue;
@@ -1563,34 +1563,34 @@ void Flamethrower_Fire(gentity_t* self)
 		//Now check and see if we can actually hit it
 		trap->Trace(&tr, self->client->ps.origin, vec3_origin, vec3_origin, ent_org, self->s.number, MASK_SHOT, qfalse, 0, 0);
 
-		if (tr.fraction < 1.0f && tr.entityNum != trace_ent->s.number)
+		if (tr.fraction < 1.0f && tr.entityNum != traceEnt->s.number)
 		{
 			//must have clear LOS
 			continue;
 		}
 
-		if (tr.entityNum < ENTITYNUM_WORLD && trace_ent->takedamage)
+		if (tr.entityNum < ENTITYNUM_WORLD && traceEnt->takedamage)
 		{
 			const int damage = FLAMETHROWER_DAMAGE;
 
-			G_Damage(trace_ent, self, self, dir, tr.endpos, damage, DAMAGE_NO_ARMOR | DAMAGE_NO_KNOCKBACK | DAMAGE_IGNORE_TEAM, MOD_BURNING);
+			G_Damage(traceEnt, self, self, dir, tr.endpos, damage, DAMAGE_NO_ARMOR | DAMAGE_NO_KNOCKBACK | DAMAGE_IGNORE_TEAM, MOD_BURNING);
 
-			if (trace_ent->health > 0)
+			if (traceEnt->health > 0)
 			{
-				g_throw(trace_ent, dir, 30);
+				g_throw(traceEnt, dir, 30);
 
-				if (trace_ent->client)
+				if (traceEnt->client)
 				{
-					G_PlayBoltedEffect(G_EffectIndex("flamethrower/flame_impact"), trace_ent, "thoracic");
+					G_PlayBoltedEffect(G_EffectIndex("flamethrower/flame_impact"), traceEnt, "thoracic");
 
-					NPC_SetAnim(trace_ent, SETANIM_TORSO, BOTH_FACEPROTECT, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+					NPC_SetAnim(traceEnt, SETANIM_TORSO, BOTH_FACEPROTECT, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 				}
-				player_Burn(trace_ent);
+				player_Burn(traceEnt);
 			}
 		}
 		else
 		{
-			Player_CheckBurn(trace_ent);
+			Player_CheckBurn(traceEnt);
 		}
 	}
 }

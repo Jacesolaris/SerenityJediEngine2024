@@ -8815,9 +8815,9 @@ qboolean CG_CheckClientVisibility(const centity_t* cent)
 
 	CG_Trace(&trace, start, NULL, NULL, end, cg.clientNum, MASK_PLAYERSOLID);
 
-	const centity_t* trace_ent = &cg_entities[trace.entityNum];
+	const centity_t* traceEnt = &cg_entities[trace.entityNum];
 
-	if (trace_ent == cent || trace.fraction == 1.0f)
+	if (traceEnt == cent || trace.fraction == 1.0f)
 	{
 		currently_visible[cent->currentState.number] = qtrue;
 		return qtrue;

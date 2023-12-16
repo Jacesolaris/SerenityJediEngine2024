@@ -5101,12 +5101,12 @@ static void CG_ScanForRocketLock()
 	static qboolean temp_lock = qfalse;
 	// this will break if anything else uses this locking code ( other than the player )
 
-	const gentity_t* trace_ent = &g_entities[g_crosshairEntNum];
+	const gentity_t* traceEnt = &g_entities[g_crosshairEntNum];
 
-	if (!trace_ent || g_crosshairEntNum <= 0 || g_crosshairEntNum >= ENTITYNUM_WORLD || !trace_ent->client && trace_ent
+	if (!traceEnt || g_crosshairEntNum <= 0 || g_crosshairEntNum >= ENTITYNUM_WORLD || !traceEnt->client && traceEnt
 		->s.
-		weapon != WP_TURRET || !trace_ent->health
-		|| trace_ent && trace_ent->client && trace_ent->client->ps.powerups[PW_CLOAKED])
+		weapon != WP_TURRET || !traceEnt->health
+		|| traceEnt && traceEnt->client && traceEnt->client->ps.powerups[PW_CLOAKED])
 	{
 		// see how much locking we have
 		const int dif = (cg.time - g_rocketLockTime) / (1200.0f / 8.0f);
@@ -5187,7 +5187,7 @@ extern float forcePushPullRadius[];
 static void CG_ScanForCrosshairEntity(const qboolean scanAll)
 {
 	trace_t trace;
-	const gentity_t* trace_ent = nullptr;
+	const gentity_t* traceEnt = nullptr;
 	vec3_t start, end;
 	int ignoreEnt = cg.snap->ps.clientNum;
 	const Vehicle_t* p_veh;
@@ -5223,15 +5223,15 @@ static void CG_ScanForCrosshairEntity(const qboolean scanAll)
 		if (trace.entityNum < ENTITYNUM_WORLD)
 		{
 			//hit something
-			trace_ent = &g_entities[trace.entityNum];
-			if (trace_ent)
+			traceEnt = &g_entities[trace.entityNum];
+			if (traceEnt)
 			{
 				// Check for mind trickable-guys
-				if (trace_ent->client)
+				if (traceEnt->client)
 				{
 					//is a client
-					if (cg_entities[0].gent->client->ps.forcePowerLevel[FP_TELEPATHY] && trace_ent->health > 0 &&
-						VALIDSTRING(trace_ent->behaviorSet[BSET_MINDTRICK]))
+					if (cg_entities[0].gent->client->ps.forcePowerLevel[FP_TELEPATHY] && traceEnt->health > 0 &&
+						VALIDSTRING(traceEnt->behaviorSet[BSET_MINDTRICK]))
 					{
 						//I have the ability to mind-trick and he is alive and he has a mind trick script
 						//NOTE: no need to check range since it's always 2048
@@ -5239,13 +5239,13 @@ static void CG_ScanForCrosshairEntity(const qboolean scanAll)
 					}
 				}
 				// No?  Check for force-push/pullable doors and func_statics
-				else if (trace_ent->s.eType == ET_MOVER)
+				else if (traceEnt->s.eType == ET_MOVER)
 				{
 					//hit a mover
-					if (!Q_stricmp("func_door", trace_ent->classname))
+					if (!Q_stricmp("func_door", traceEnt->classname))
 					{
 						//it's a func_door
-						if (trace_ent->spawnflags & 2/*MOVER_FORCE_ACTIVATE*/)
+						if (traceEnt->spawnflags & 2/*MOVER_FORCE_ACTIVATE*/)
 						{
 							//it's force-usable
 							if (cg_entities[0].gent->client->ps.forcePowerLevel[FP_PULL] || cg_entities[0].gent->client
@@ -5274,10 +5274,10 @@ static void CG_ScanForCrosshairEntity(const qboolean scanAll)
 							}
 						}
 					}
-					else if (!Q_stricmp("func_static", trace_ent->classname))
+					else if (!Q_stricmp("func_static", traceEnt->classname))
 					{
 						//it's a func_static
-						if (trace_ent->spawnflags & 1/*F_PUSH*/ && trace_ent->spawnflags & 2/*F_PULL*/)
+						if (traceEnt->spawnflags & 1/*F_PUSH*/ && traceEnt->spawnflags & 2/*F_PULL*/)
 						{
 							//push or pullable
 							float max_range;
@@ -5300,7 +5300,7 @@ static void CG_ScanForCrosshairEntity(const qboolean scanAll)
 								cg_forceCrosshair = qtrue;
 							}
 						}
-						else if (trace_ent->spawnflags & 1/*F_PUSH*/)
+						else if (traceEnt->spawnflags & 1/*F_PUSH*/)
 						{
 							//pushable only
 							if (forcePushPullRadius[cg_entities[0].gent->client->ps.forcePowerLevel[FP_PUSH]] >= trace.
@@ -5310,7 +5310,7 @@ static void CG_ScanForCrosshairEntity(const qboolean scanAll)
 								cg_forceCrosshair = qtrue;
 							}
 						}
-						else if (trace_ent->spawnflags & 2/*F_PULL*/)
+						else if (traceEnt->spawnflags & 2/*F_PULL*/)
 						{
 							//pullable only
 							if (forcePushPullRadius[cg_entities[0].gent->client->ps.forcePowerLevel[FP_PULL]] >= trace.
@@ -5392,7 +5392,7 @@ static void CG_ScanForCrosshairEntity(const qboolean scanAll)
 			trace.entityNum = ENTITYNUM_NONE;
 		}
 
-		trace_ent = &g_entities[trace.entityNum];
+		traceEnt = &g_entities[trace.entityNum];
 	}
 	//draw crosshair at endpoint
 	CG_DrawCrosshair(trace.endpos);
@@ -5400,7 +5400,7 @@ static void CG_ScanForCrosshairEntity(const qboolean scanAll)
 	g_crosshairEntNum = trace.entityNum;
 	g_crosshairEntDist = 4096 * trace.fraction;
 
-	if (!trace_ent)
+	if (!traceEnt)
 	{
 		//not looking at anything
 		g_crosshairSameEntTime = 0;
@@ -5424,9 +5424,9 @@ static void CG_ScanForCrosshairEntity(const qboolean scanAll)
 		g_crosshairEntTime = cg.time;
 	}
 
-	if (!trace_ent)
+	if (!traceEnt)
 	{
-		if (trace_ent && scanAll)
+		if (traceEnt && scanAll)
 		{
 		}
 		else

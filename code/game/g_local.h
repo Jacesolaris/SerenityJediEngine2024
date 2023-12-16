@@ -82,6 +82,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #define	FL_DINDJARIN			0x00800000	// protected from all damage except lightsabers for 20% of the time
 #define	FL_BOBAFETT 			0x01000000	// protected from all damage
 #define	FL_SABERDAMAGE_RESIST	0x02000000	// Partially resistant to sabers
+#define FL_NOFORCE				0x04000000
 
 //Pointer safety utilities
 #define VALID( a )		( a != NULL )

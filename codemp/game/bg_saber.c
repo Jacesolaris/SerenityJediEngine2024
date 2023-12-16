@@ -5081,8 +5081,7 @@ void PM_WeaponLightsaber(void)
 		{
 			if (pm->cmd.buttons & BUTTON_ATTACK)
 			{
-				if (BG_EnoughForcePowerForMove(SABER_ALT_ATTACK_POWER_FB) && !pm->ps->saberInFlight && pm->watertype !=
-					CONTENTS_WATER)
+				if (BG_EnoughForcePowerForMove(SABER_KATA_ATTACK_POWER) && !pm->ps->saberInFlight && pm->watertype != CONTENTS_WATER)
 				{
 					if (PM_CanDoRollStab())
 					{
@@ -5094,7 +5093,7 @@ void PM_WeaponLightsaber(void)
 							PM_AddEvent(EV_SABER_UNHOLSTER);
 						}
 						PM_Setsaber_move(LS_ROLL_STAB);
-						WP_ForcePowerDrain(pm->ps, FP_SABER_OFFENSE, SABER_ALT_ATTACK_POWER_FB);
+						WP_ForcePowerDrain(pm->ps, FP_SABER_OFFENSE, SABER_KATA_ATTACK_POWER);
 					}
 				}
 			}

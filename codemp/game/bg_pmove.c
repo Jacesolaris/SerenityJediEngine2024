@@ -5343,7 +5343,7 @@ static qboolean pm_check_jump(void)
 						vec3_t forward, trace_to, minimum_mins, maximum_maxs, angles;
 						trace_t trace_s;
 						vec3_t ideal_normal;
-						bgEntity_t* trace_ent;
+						bgEntity_t* traceEnt;
 
 						VectorSet(minimum_mins, pm->mins[0], pm->mins[1], 0.0f);
 						VectorSet(maximum_maxs, pm->maxs[0], pm->maxs[1], 24.0f);
@@ -5358,10 +5358,10 @@ static qboolean pm_check_jump(void)
 						VectorSubtract(pm->ps->origin, trace_to, ideal_normal);
 						VectorNormalize(ideal_normal);
 
-						trace_ent = PM_BGEntForNum(trace_s.entityNum);
+						traceEnt = PM_BGEntForNum(trace_s.entityNum);
 
 						if (trace_s.fraction < 1.0f
-							&& (trace_s.entityNum < ENTITYNUM_WORLD && trace_ent && trace_ent->s.solid != SOLID_BMODEL ||
+							&& (trace_s.entityNum < ENTITYNUM_WORLD && traceEnt && traceEnt->s.solid != SOLID_BMODEL ||
 								DotProduct(trace_s.plane.normal, ideal_normal) > 0.7))
 						{
 							//there is a wall there
@@ -5385,10 +5385,10 @@ static qboolean pm_check_jump(void)
 
 							if (pm->ps->userInt2 == 1)
 							{
-								if (trace_ent && (trace_ent->s.eType == ET_PLAYER || trace_ent->s.eType == ET_NPC))
+								if (traceEnt && (traceEnt->s.eType == ET_PLAYER || traceEnt->s.eType == ET_NPC))
 								{
 									//kick that thang!
-									pm->ps->forceKickFlip = trace_ent->s.number + 1;
+									pm->ps->forceKickFlip = traceEnt->s.number + 1;
 								}
 							}
 							pm->cmd.rightmove = pm->cmd.forwardmove = 0;
@@ -5449,17 +5449,17 @@ static qboolean pm_check_jump(void)
 						vec3_t idealNormal;
 						vec3_t traceto;
 						//trace in the dir we're pushing in and see if there's a vertical wall there
-						bgEntity_t* trace_ent;
+						bgEntity_t* traceEnt;
 
 						VectorMA(pm->ps->origin, 8, checkDir, traceto);
 						pm->trace(&trace, pm->ps->origin, mins, maxs, traceto, pm->ps->clientNum, CONTENTS_SOLID);
 						//FIXME: clip brushes too?
 						VectorSubtract(pm->ps->origin, traceto, idealNormal);
 						VectorNormalize(idealNormal);
-						trace_ent = PM_BGEntForNum(trace.entityNum);
+						traceEnt = PM_BGEntForNum(trace.entityNum);
 						if (trace.fraction < 1.0f
 							&& fabs(trace.plane.normal[2]) <= 0.2f /*MAX_WALL_GRAB_SLOPE*/
-							&& (trace.entityNum < ENTITYNUM_WORLD && trace_ent && trace_ent->s.solid != SOLID_BMODEL ||
+							&& (trace.entityNum < ENTITYNUM_WORLD && traceEnt && traceEnt->s.solid != SOLID_BMODEL ||
 								DotProduct(trace.plane.normal, idealNormal) > 0.7))
 						{
 							//there is a wall there

@@ -162,13 +162,13 @@ void G_RunObject(gentity_t* ent)
 	//hit something
 
 	//Do impact damage
-	gentity_t* trace_ent = &g_entities[tr.entityNum];
-	if (tr.fraction || trace_ent && trace_ent->takedamage)
+	gentity_t* traceEnt = &g_entities[tr.entityNum];
+	if (tr.fraction || traceEnt && traceEnt->takedamage)
 	{
 		if (!VectorCompare(ent->currentOrigin, old_org))
 		{
 			//moved and impacted
-			if (trace_ent && trace_ent->takedamage)
+			if (traceEnt && traceEnt->takedamage)
 			{
 				//hurt someone
 				vec3_t fx_dir;
@@ -190,7 +190,7 @@ void G_RunObject(gentity_t* ent)
 				G_Sound(ent, G_SoundIndex("sound/movers/objects/objectHit.wav"));
 			}
 		}
-		DoImpact(ent, trace_ent, static_cast<qboolean>(!(tr.surfaceFlags & SURF_NODAMAGE)), &tr);
+		DoImpact(ent, traceEnt, static_cast<qboolean>(!(tr.surfaceFlags & SURF_NODAMAGE)), &tr);
 	}
 
 	if (!ent || ent->takedamage && ent->health <= 0)

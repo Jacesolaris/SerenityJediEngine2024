@@ -1471,17 +1471,17 @@ qboolean CanShoot(const gentity_t* ent, const gentity_t* shooter)
 	CalcEntitySpot(ent, SPOT_ORIGIN, spot); //FIXME preferred target locations for some weapons (feet for R/L)
 
 	gi.trace(&tr, muzzle, nullptr, nullptr, spot, shooter->s.number, MASK_SHOT, static_cast<EG2_Collision>(0), 0);
-	const gentity_t* trace_ent = &g_entities[tr.entityNum];
+	const gentity_t* traceEnt = &g_entities[tr.entityNum];
 
 	// point blank, baby!
 	if (!IS_BREAKABLE && tr.startsolid && shooter->NPC && shooter->NPC->touchedByPlayer)
 	{
-		trace_ent = shooter->NPC->touchedByPlayer;
+		traceEnt = shooter->NPC->touchedByPlayer;
 	}
 
 	if (!IS_BREAKABLE && ShotThroughGlass(&tr, ent, spot, MASK_SHOT))
 	{
-		trace_ent = &g_entities[tr.entityNum];
+		traceEnt = &g_entities[tr.entityNum];
 	}
 
 	if (IS_BREAKABLE && tr.fraction > 0.8)
@@ -1491,7 +1491,7 @@ qboolean CanShoot(const gentity_t* ent, const gentity_t* shooter)
 	}
 
 	// shot is dead on
-	if (trace_ent == ent)
+	if (traceEnt == ent)
 	{
 		return qtrue;
 	}
@@ -1499,8 +1499,8 @@ qboolean CanShoot(const gentity_t* ent, const gentity_t* shooter)
 	//ok, can't hit them in center, try their head
 	CalcEntitySpot(ent, SPOT_HEAD, spot);
 	gi.trace(&tr, muzzle, nullptr, nullptr, spot, shooter->s.number, MASK_SHOT, static_cast<EG2_Collision>(0), 0);
-	trace_ent = &g_entities[tr.entityNum];
-	if (trace_ent == ent)
+	traceEnt = &g_entities[tr.entityNum];
+	if (traceEnt == ent)
 	{
 		return qtrue;
 	}
@@ -1514,7 +1514,7 @@ qboolean CanShoot(const gentity_t* ent, const gentity_t* shooter)
 	}
 	//MCG - End
 	// shot would hit a non-client
-	if (!trace_ent->client)
+	if (!traceEnt->client)
 	{
 		return qfalse;
 	}
@@ -1522,13 +1522,13 @@ qboolean CanShoot(const gentity_t* ent, const gentity_t* shooter)
 	// shot is blocked by another player
 
 	// he's already dead, so go ahead
-	if (trace_ent->health <= 0)
+	if (traceEnt->health <= 0)
 	{
 		return qtrue;
 	}
 
 	// don't deliberately shoot a teammate
-	if (trace_ent->client && trace_ent->client->playerTeam == shooter->client->playerTeam)
+	if (traceEnt->client && traceEnt->client->playerTeam == shooter->client->playerTeam)
 	{
 		return qfalse;
 	}
@@ -2655,7 +2655,7 @@ qboolean NPC_CheckCanAttack(float attack_scale, qboolean stationary)
 	if (enemyVisibility >= VIS_FOV)
 	{
 		vec3_t hitspot;
-		const gentity_t* trace_ent = nullptr;
+		const gentity_t* traceEnt = nullptr;
 		vec3_t forward;
 		//He's in our FOV
 		attack_ok = qtrue;
@@ -2694,11 +2694,11 @@ qboolean NPC_CheckCanAttack(float attack_scale, qboolean stationary)
 			ShotThroughGlass(&tr, NPC->enemy, enemy_org, MASK_SHOT);
 			*/
 
-			trace_ent = &g_entities[tr.entityNum];
+			traceEnt = &g_entities[tr.entityNum];
 
 			/*
-			if( trace_ent != NPC->enemy &&//FIXME: if someone on our team is in the way, suggest that they duck if possible
-				(!trace_ent || !trace_ent->client || !NPC->client->enemyTeam || NPC->client->enemyTeam != trace_ent->client->playerTeam) )
+			if( traceEnt != NPC->enemy &&//FIXME: if someone on our team is in the way, suggest that they duck if possible
+				(!traceEnt || !traceEnt->client || !NPC->client->enemyTeam || NPC->client->enemyTeam != traceEnt->client->playerTeam) )
 			{//no, so shoot for somewhere between the head and torso
 				//NOTE: yes, I know this looks weird, but it works
 				enemy_org[0] += 0.3*Q_flrand(NPC->enemy->mins[0], NPC->enemy->maxs[0]);
@@ -2708,14 +2708,14 @@ qboolean NPC_CheckCanAttack(float attack_scale, qboolean stationary)
 				attack_scale *= 0.75;
 				gi.trace ( &tr, muzzle, NULL, NULL, enemy_org, NPC->s.number, MASK_SHOT );
 				ShotThroughGlass(&tr, NPC->enemy, enemy_org, MASK_SHOT);
-				trace_ent = &g_entities[tr.entityNum];
+				traceEnt = &g_entities[tr.entityNum];
 			}
 			*/
 
 			VectorCopy(tr.endpos, hitspot);
 
-			if (trace_ent == NPC->enemy || trace_ent->client && NPC->client->enemyTeam && NPC->client->enemyTeam ==
-				trace_ent->client->playerTeam)
+			if (traceEnt == NPC->enemy || traceEnt->client && NPC->client->enemyTeam && NPC->client->enemyTeam ==
+				traceEnt->client->playerTeam)
 			{
 				dead_on = qtrue;
 			}
@@ -2724,9 +2724,9 @@ qboolean NPC_CheckCanAttack(float attack_scale, qboolean stationary)
 				attack_scale *= 0.5;
 				if (NPC->client->playerTeam)
 				{
-					if (trace_ent && trace_ent->client && trace_ent->client->playerTeam)
+					if (traceEnt && traceEnt->client && traceEnt->client->playerTeam)
 					{
-						if (NPC->client->playerTeam == trace_ent->client->playerTeam)
+						if (NPC->client->playerTeam == traceEnt->client->playerTeam)
 						{
 							//Don't shoot our own team
 							attack_ok = qfalse;
@@ -2749,14 +2749,14 @@ qboolean NPC_CheckCanAttack(float attack_scale, qboolean stationary)
 				vec3_t diff;
 				//We're not going to hit him directly, try a suppressing fire
 				//see if where we're going to shoot is too far from his origin
-				if (trace_ent && (trace_ent->health <= 30 || EntIsGlass(trace_ent)))
+				if (traceEnt && (traceEnt->health <= 30 || EntIsGlass(traceEnt)))
 				{
 					//easy to kill - go for it
-					if (trace_ent->e_DieFunc == dieF_ExplodeDeath_Wait && trace_ent->splashDamage)
+					if (traceEnt->e_DieFunc == dieF_ExplodeDeath_Wait && traceEnt->splashDamage)
 					{
 						//going to explode, don't shoot if close to self
-						VectorSubtract(NPC->currentOrigin, trace_ent->currentOrigin, diff);
-						if (VectorLengthSquared(diff) < trace_ent->splashRadius * trace_ent->splashRadius)
+						VectorSubtract(NPC->currentOrigin, traceEnt->currentOrigin, diff);
+						if (VectorLengthSquared(diff) < traceEnt->splashRadius * traceEnt->splashRadius)
 						{
 							//Too close to shoot!
 							attack_ok = qfalse;

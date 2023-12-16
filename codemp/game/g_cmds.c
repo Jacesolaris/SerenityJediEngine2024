@@ -634,6 +634,19 @@ static void Cmd_Notarget_f(gentity_t* ent)
 	trap->SendServerCommand(ent - g_entities, va("print \"%s\n\"", msg));
 }
 
+static void Cmd_Noforce_f(gentity_t* ent)
+{
+	char* msg;
+
+	ent->flags ^= FL_NOFORCE;
+	if (!(ent->flags & FL_NOFORCE))
+		msg = "No Force OFF";
+	else
+		msg = "No Force ON";
+
+	trap->SendServerCommand(ent - g_entities, va("print \"%s\n\"", msg));
+}
+
 /*
 ==================
 Cmd_Noclip_f
@@ -641,18 +654,24 @@ Cmd_Noclip_f
 argv(0) noclip
 ==================
 */
-static void Cmd_Noclip_f(const gentity_t* ent)
+static void Cmd_Noclip_f(gentity_t* ent)
 {
 	char* msg;
 
 	if (in_camera)
 		return;
 
-	ent->client->noclip = !ent->client->noclip;
 	if (!ent->client->noclip)
+	{
 		msg = "noclip OFF";
+	}
 	else
+	{
 		msg = "noclip ON";
+	}
+
+	ent->client->noclip = !ent->client->noclip;
+	ent->flags ^= FL_NOFORCE;
 
 	trap->SendServerCommand(ent - g_entities, va("print \"%s\n\"", msg));
 }
@@ -4304,6 +4323,7 @@ command_t commands[] = {
 	{"Adminpunish", Cmd_Punish, CMD_NOINTERMISSION},
 	{"Adminkick", Cmd_Kick, CMD_NOINTERMISSION},
 	{"Adminmenu", CG_AdminMenu, CMD_NOINTERMISSION},
+	{"noforce", Cmd_Noforce_f, CMD_ALIVE | CMD_NOINTERMISSION},
 };
 
 static const size_t num_commands = ARRAY_LEN(commands);

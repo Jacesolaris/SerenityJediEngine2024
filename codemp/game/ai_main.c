@@ -435,9 +435,9 @@ static qboolean visible(const gentity_t* self, const gentity_t* other)
 	// And a standard pass..
 	trap->Trace(&tr, spot1, NULL, NULL, other->r.currentOrigin, self->s.number, MASK_SHOT, qfalse, 0, 0);
 
-	const gentity_t* trace_ent = &g_entities[tr.entityNum];
+	const gentity_t* traceEnt = &g_entities[tr.entityNum];
 
-	if (trace_ent == other)
+	if (traceEnt == other)
 		return qtrue;
 
 	return qfalse;

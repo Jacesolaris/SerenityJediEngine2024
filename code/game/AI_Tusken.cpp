@@ -448,23 +448,23 @@ void Tusken_StaffTrace()
 			if (trace.fraction < 1.0f && trace.entityNum != last_hit)
 			{
 				//hit something
-				gentity_t* trace_ent = &g_entities[trace.entityNum];
-				if (trace_ent->takedamage
-					&& (!trace_ent->client || trace_ent == NPC->enemy || trace_ent->client->NPC_class != NPC->client->
+				gentity_t* traceEnt = &g_entities[trace.entityNum];
+				if (traceEnt->takedamage
+					&& (!traceEnt->client || traceEnt == NPC->enemy || traceEnt->client->NPC_class != NPC->client->
 						NPC_class))
 				{
 					//smack
 					const int dmg = Q_irand(5, 10) * (g_spskill->integer + 1);
 
 					//FIXME: debounce?
-					G_Sound(trace_ent, G_SoundIndex(va("sound/weapons/tusken_staff/stickhit%d.wav", Q_irand(1, 4))));
-					G_Damage(trace_ent, NPC, NPC, vec3_origin, trace.endpos, dmg, DAMAGE_NO_KNOCKBACK, MOD_MELEE);
-					if (trace_ent->health > 0
-						&& (trace_ent->client && trace_ent->client->NPC_class == CLASS_JAWA && !Q_irand(0, 1)
+					G_Sound(traceEnt, G_SoundIndex(va("sound/weapons/tusken_staff/stickhit%d.wav", Q_irand(1, 4))));
+					G_Damage(traceEnt, NPC, NPC, vec3_origin, trace.endpos, dmg, DAMAGE_NO_KNOCKBACK, MOD_MELEE);
+					if (traceEnt->health > 0
+						&& (traceEnt->client && traceEnt->client->NPC_class == CLASS_JAWA && !Q_irand(0, 1)
 							|| dmg > 19)) //FIXME: base on skill!
 					{
 						//do pain on enemy
-						G_Knockdown(trace_ent, NPC, dir, 300, qtrue);
+						G_Knockdown(traceEnt, NPC, dir, 300, qtrue);
 					}
 					last_hit = trace.entityNum;
 					hit = qtrue;
@@ -514,23 +514,23 @@ void Tusken_StaffTracenew(gentity_t* self)
 			if (trace.fraction < 1.0f && trace.entityNum != last_hit)
 			{
 				//hit something
-				gentity_t* trace_ent = &g_entities[trace.entityNum];
-				if (trace_ent->takedamage
-					&& (!trace_ent->client || trace_ent == self->enemy || trace_ent->client->NPC_class != self->client->
+				gentity_t* traceEnt = &g_entities[trace.entityNum];
+				if (traceEnt->takedamage
+					&& (!traceEnt->client || traceEnt == self->enemy || traceEnt->client->NPC_class != self->client->
 						NPC_class))
 				{
 					//smack
 					const int dmg = Q_irand(5, 10) * (g_spskill->integer + 1);
 
 					//FIXME: debounce?
-					G_Sound(trace_ent, G_SoundIndex(va("sound/weapons/tusken_staff/stickhit%d.wav", Q_irand(1, 4))));
-					G_Damage(trace_ent, self, self, vec3_origin, trace.endpos, dmg, DAMAGE_NO_KNOCKBACK, MOD_MELEE);
-					if (trace_ent->health > 0
-						&& (trace_ent->client && trace_ent->client->NPC_class == CLASS_JAWA && !Q_irand(0, 1)
+					G_Sound(traceEnt, G_SoundIndex(va("sound/weapons/tusken_staff/stickhit%d.wav", Q_irand(1, 4))));
+					G_Damage(traceEnt, self, self, vec3_origin, trace.endpos, dmg, DAMAGE_NO_KNOCKBACK, MOD_MELEE);
+					if (traceEnt->health > 0
+						&& (traceEnt->client && traceEnt->client->NPC_class == CLASS_JAWA && !Q_irand(0, 1)
 							|| dmg > 19)) //FIXME: base on skill!
 					{
 						//do pain on enemy
-						G_Knockdown(trace_ent, self, dir, 300, qtrue);
+						G_Knockdown(traceEnt, self, dir, 300, qtrue);
 					}
 					last_hit = trace.entityNum;
 					hit = qtrue;

@@ -631,20 +631,20 @@ static void Tavion_ScepterDamage()
 			if (trace.fraction < 1.0f)
 			{
 				//hit something
-				gentity_t* trace_ent = &g_entities[trace.entityNum];
+				gentity_t* traceEnt = &g_entities[trace.entityNum];
 
 				//UGH
 				G_PlayEffect(G_EffectIndex("scepter/impact.efx"), trace.endpos, trace.plane.normal);
 
-				if (trace_ent->takedamage
+				if (traceEnt->takedamage
 					&& trace.entityNum != last_hit
-					&& (!trace_ent->client || trace_ent == NPC->enemy || trace_ent->client->NPC_class != NPC->client->
+					&& (!traceEnt->client || traceEnt == NPC->enemy || traceEnt->client->NPC_class != NPC->client->
 						NPC_class))
 				{
 					//smack
 					const int dmg = Q_irand(10, 20) * (g_spskill->integer + 1); //NOTE: was 6-12
-					G_Damage(trace_ent, NPC, NPC, vec3_origin, trace.endpos, dmg, DAMAGE_NO_KNOCKBACK, MOD_SABER);
-					if (trace_ent->client)
+					G_Damage(traceEnt, NPC, NPC, vec3_origin, trace.endpos, dmg, DAMAGE_NO_KNOCKBACK, MOD_SABER);
+					if (traceEnt->client)
 					{
 						if (!Q_irand(0, 2))
 						{
@@ -654,11 +654,11 @@ static void Tavion_ScepterDamage()
 						{
 							G_AddVoiceEvent(NPC, EV_JDETECTED3, 10000);
 						}
-						g_throw(trace_ent, dir, Q_flrand(50, 80));
-						if (trace_ent->health > 0 && !Q_irand(0, 2)) //FIXME: base on skill!
+						g_throw(traceEnt, dir, Q_flrand(50, 80));
+						if (traceEnt->health > 0 && !Q_irand(0, 2)) //FIXME: base on skill!
 						{
 							//do pain on enemy
-							G_Knockdown(trace_ent, NPC, dir, 300, qtrue);
+							G_Knockdown(traceEnt, NPC, dir, 300, qtrue);
 						}
 					}
 					hit = qtrue;
@@ -4286,9 +4286,9 @@ static evasionType_t jedi_check_flip_evasions(gentity_t* self, const float right
 			VectorSubtract(self->currentOrigin, traceto, ideal_normal);
 			VectorNormalize(ideal_normal);
 
-			const gentity_t* trace_ent = &g_entities[trace.entityNum];
+			const gentity_t* traceEnt = &g_entities[trace.entityNum];
 
-			if (trace.entityNum < ENTITYNUM_WORLD && trace_ent && trace_ent->s.solid != SOLID_BMODEL
+			if (trace.entityNum < ENTITYNUM_WORLD && traceEnt && traceEnt->s.solid != SOLID_BMODEL
 				|| DotProduct(trace.plane.normal, ideal_normal) > 0.7f)
 			{
 				//it's a ent of some sort or it's a wall roughly facing us

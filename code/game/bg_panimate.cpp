@@ -2870,20 +2870,20 @@ static qboolean PM_CheckEnemyInBack(const float backCheckDist)
 		static_cast<EG2_Collision>(0), 0);
 	if (trace.fraction < 1.0f && trace.entityNum < ENTITYNUM_WORLD)
 	{
-		gentity_t* trace_ent = &g_entities[trace.entityNum];
-		if (trace_ent
-			&& trace_ent->health > 0
-			&& trace_ent->client
-			&& trace_ent->client->playerTeam == pm->gent->client->enemyTeam
-			&& trace_ent->client->ps.groundEntityNum != ENTITYNUM_NONE)
+		gentity_t* traceEnt = &g_entities[trace.entityNum];
+		if (traceEnt
+			&& traceEnt->health > 0
+			&& traceEnt->client
+			&& traceEnt->client->playerTeam == pm->gent->client->enemyTeam
+			&& traceEnt->client->ps.groundEntityNum != ENTITYNUM_NONE)
 		{
 			if (pm->ps->clientNum < MAX_CLIENTS || PM_ControlledByPlayer())
 			{
 				//player
 				if (pm->gent)
 				{
-					//set player enemy to trace_ent so he auto-aims at him
-					pm->gent->enemy = trace_ent;
+					//set player enemy to traceEnt so he auto-aims at him
+					pm->gent->enemy = traceEnt;
 				}
 			}
 			return qtrue;

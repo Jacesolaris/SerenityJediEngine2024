@@ -3018,8 +3018,8 @@ void maglock_link(gentity_t* self)
 		*/
 		return;
 	}
-	gentity_t* trace_ent = &g_entities[trace.entityNum];
-	if (trace.entityNum >= ENTITYNUM_WORLD || !trace_ent || Q_stricmp("func_door", trace_ent->classname))
+	gentity_t* traceEnt = &g_entities[trace.entityNum];
+	if (trace.entityNum >= ENTITYNUM_WORLD || !traceEnt || Q_stricmp("func_door", traceEnt->classname))
 	{
 		self->think = maglock_link;
 		self->nextthink = level.time + 100;
@@ -3028,12 +3028,12 @@ void maglock_link(gentity_t* self)
 		return;
 	}
 
-	//check the trace_ent, make sure it's a door and give it a lockCount and deactivate it
+	//check the traceEnt, make sure it's a door and give it a lockCount and deactivate it
 	//find the trigger for the door
-	self->activator = G_FindDoorTrigger(trace_ent);
+	self->activator = G_FindDoorTrigger(traceEnt);
 	if (!self->activator)
 	{
-		self->activator = trace_ent;
+		self->activator = traceEnt;
 	}
 	self->activator->lockCount++;
 	self->activator->flags |= FL_INACTIVE;

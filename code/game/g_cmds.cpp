@@ -85,7 +85,7 @@ extern void ForceBlinding(gentity_t* self);
 CheatsOk
 ==================
 */
-qboolean CheatsOk(const gentity_t* ent)
+static qboolean CheatsOk(const gentity_t* ent)
 {
 	if (!g_cheats->integer)
 	{
@@ -140,7 +140,7 @@ SanitizeString
 Remove case and control characters
 ==================
 */
-void SanitizeString(char* in, char* out)
+static void SanitizeString(char* in, char* out)
 {
 	while (*in)
 	{
@@ -168,7 +168,7 @@ Returns a player number for either a number or name string
 Returns -1 if invalid
 ==================
 */
-int clientNumberFromString(const gentity_t* to, char* s)
+static int clientNumberFromString(const gentity_t* to, char* s)
 {
 	gclient_t* cl;
 	int idnum;
@@ -215,7 +215,7 @@ int clientNumberFromString(const gentity_t* to, char* s)
 
 extern qboolean he_is_jedi(const gentity_t* ent);
 
-void G_Give(gentity_t* ent, const char* name, const char* args, const int argc)
+static void G_Give(gentity_t* ent, const char* name, const char* args, const int argc)
 {
 	qboolean give_all = qfalse;
 
@@ -393,7 +393,7 @@ void G_Give(gentity_t* ent, const char* name, const char* args, const int argc)
 	}
 }
 
-void Cmd_Give_f(gentity_t* ent)
+static void Cmd_Give_f(gentity_t* ent)
 {
 	if (ent->client->NPC_class == CLASS_DROIDEKA
 		&& ent->s.weapon == WP_DROIDEKA)
@@ -405,7 +405,7 @@ void Cmd_Give_f(gentity_t* ent)
 
 extern void SP_fx_runner(gentity_t* ent);
 //------------------
-void Cmd_Fx(const gentity_t* ent)
+static void Cmd_Fx(const gentity_t* ent)
 {
 	gentity_t* fx_ent = nullptr;
 
@@ -543,7 +543,7 @@ Sets client to godmode
 argv(0) god
 ==================
 */
-void Cmd_God_f(gentity_t* ent)
+static void Cmd_God_f(gentity_t* ent)
 {
 	const char* msg;
 
@@ -570,7 +570,7 @@ Sets client to undead mode
 argv(0) undying
 ==================
 */
-void Cmd_Undying_f(gentity_t* ent)
+static void Cmd_Undying_f(gentity_t* ent)
 {
 	const char* msg;
 
@@ -620,7 +620,7 @@ Sets client to notarget
 argv(0) notarget
 ==================
 */
-void Cmd_Notarget_f(gentity_t* ent)
+static void Cmd_Notarget_f(gentity_t* ent)
 {
 	const char* msg;
 
@@ -633,6 +633,19 @@ void Cmd_Notarget_f(gentity_t* ent)
 	gi.SendServerCommand(ent - g_entities, "print \"%s\"", msg);
 }
 
+static void Cmd_Noforce_f(gentity_t* ent)
+{
+	const char* msg;
+
+	ent->flags ^= FL_NOFORCE;
+	if (!(ent->flags & FL_NOFORCE))
+		msg = "No Force OFF\n";
+	else
+		msg = "No Force ON\n";
+
+	gi.SendServerCommand(ent - g_entities, "print \"%s\"", msg);
+}
+
 /*
 ==================
 Cmd_Noclip_f
@@ -640,7 +653,7 @@ Cmd_Noclip_f
 argv(0) noclip
 ==================
 */
-static void Cmd_Noclip_f(const gentity_t* ent)
+static void Cmd_Noclip_f(gentity_t* ent)
 {
 	const char* msg;
 
@@ -653,6 +666,7 @@ static void Cmd_Noclip_f(const gentity_t* ent)
 		msg = "noclip ON\n";
 	}
 	ent->client->noclip = !ent->client->noclip;
+	ent->flags ^= FL_NOFORCE;
 
 	gi.SendServerCommand(ent - g_entities, "print \"%s\"", msg);
 }
@@ -667,7 +681,7 @@ and sends over a command to the client to resize the view,
 hide the scoreboard, and take a special screenshot
 ==================
 */
-void Cmd_LevelShot_f(const gentity_t* ent)
+static void Cmd_LevelShot_f(const gentity_t* ent)
 {
 	gi.SendServerCommand(ent - g_entities, "clientLevelShot");
 }
@@ -677,7 +691,7 @@ void Cmd_LevelShot_f(const gentity_t* ent)
 Cmd_Kill_f
 =================
 */
-void Cmd_Kill_f(gentity_t* ent)
+static void Cmd_Kill_f(gentity_t* ent)
 {
 	if (level.time - ent->client->respawnTime < 5000)
 	{
@@ -694,7 +708,7 @@ void Cmd_Kill_f(gentity_t* ent)
 Cmd_Where_f
 ==================
 */
-void Cmd_Where_f(const gentity_t* ent)
+static void Cmd_Where_f(const gentity_t* ent)
 {
 	const char* s = gi.argv(1);
 	const int len = strlen(s);
@@ -708,9 +722,6 @@ void Cmd_Where_f(const gentity_t* ent)
 	{
 		if (!PInUse(i))
 			continue;
-		//		if(!check || !check->inuse) {
-		//			continue;
-		//		}
 		const gentity_t* check = &g_entities[i];
 		if (!Q_stricmpn(s, check->classname, len))
 		{
@@ -727,7 +738,7 @@ UserSpawn
 
 extern qboolean G_CallSpawn(gentity_t* ent);
 
-void UserSpawn(const gentity_t* ent, const char* name)
+static void UserSpawn(const gentity_t* ent, const char* name)
 {
 	vec3_t origin;
 	vec3_t vf;
@@ -763,7 +774,7 @@ Cmd_Spawn
 -------------------------
 */
 
-void Cmd_Spawn(const gentity_t* ent)
+static void Cmd_Spawn(const gentity_t* ent)
 {
 	char* name = ConcatArgs(1);
 
@@ -777,7 +788,7 @@ void Cmd_Spawn(const gentity_t* ent)
 Cmd_SetViewpos_f
 =================
 */
-void Cmd_SetViewpos_f(gentity_t* ent)
+static void Cmd_SetViewpos_f(gentity_t* ent)
 {
 	vec3_t origin{}, angles;
 
@@ -811,7 +822,7 @@ Cmd_SetObjective_f
 */
 qboolean g_check_player_dark_side();
 
-void Cmd_SetObjective_f(const gentity_t* ent)
+static void Cmd_SetObjective_f(const gentity_t* ent)
 {
 	int objective_i;
 
@@ -845,7 +856,7 @@ void Cmd_SetObjective_f(const gentity_t* ent)
 Cmd_ViewObjective_f
 =================
 */
-void Cmd_ViewObjective_f(const gentity_t* ent)
+static void Cmd_ViewObjective_f(const gentity_t* ent)
 {
 	if (gi.argc() != 2)
 	{
@@ -865,7 +876,7 @@ void Cmd_ViewObjective_f(const gentity_t* ent)
 Cmd_UseElectrobinoculars_f
 ================
 */
-void Cmd_UseElectrobinoculars_f(gentity_t* ent)
+static void Cmd_UseElectrobinoculars_f(gentity_t* ent)
 {
 	if (ent->health < 1 || in_camera)
 	{
@@ -890,7 +901,7 @@ void Cmd_UseElectrobinoculars_f(gentity_t* ent)
 Cmd_UseBacta_f
 ================
 */
-void Cmd_UseBacta_f(gentity_t* ent)
+static void Cmd_UseBacta_f(gentity_t* ent)
 {
 	if (G_IsRidingVehicle(ent))
 	{
@@ -909,7 +920,7 @@ void Cmd_UseBacta_f(gentity_t* ent)
 Cmd_UseCloak_f
 ================
 */
-void Cmd_UseCloak_f(gentity_t* ent)
+static void Cmd_UseCloak_f(gentity_t* ent)
 {
 	if (ent->health < 1 || in_camera)
 	{
@@ -928,7 +939,7 @@ void Cmd_UseCloak_f(gentity_t* ent)
 Cmd_UseJetpack_f
 ================
 */
-void Cmd_UseJetpack_f(const gentity_t* ent)
+static void Cmd_UseJetpack_f(const gentity_t* ent)
 {
 	if (ent->health < 1 || in_camera)
 	{
@@ -947,7 +958,7 @@ void Cmd_UseJetpack_f(const gentity_t* ent)
 }
 
 //----------------------------------------------------------------------------------
-qboolean pick_seeker_spawn_point(vec3_t org, vec3_t fwd, vec3_t right, const int skip, vec3_t spot)
+static qboolean pick_seeker_spawn_point(vec3_t org, vec3_t fwd, vec3_t right, const int skip, vec3_t spot)
 {
 	vec3_t mins{}, maxs, forward, end;
 	trace_t tr;
@@ -1014,7 +1025,7 @@ extern void SP_NPC_Droid_Seeker(gentity_t* ent);
 Cmd_UseSeeker_f
 ================
 */
-void Cmd_UseSeeker_f(gentity_t* ent)
+static void Cmd_UseSeeker_f(gentity_t* ent)
 {
 	if (ent->health < 1 || in_camera)
 	{
@@ -1062,7 +1073,7 @@ void Cmd_UseSeeker_f(gentity_t* ent)
 Cmd_UseGoggles_f
 ================
 */
-void Cmd_UseGoggles_f(gentity_t* ent)
+static void Cmd_UseGoggles_f(gentity_t* ent)
 {
 	if (ent->health < 1 || in_camera)
 	{
@@ -1086,7 +1097,7 @@ Cmd_UseSentry_f
 */
 qboolean place_portable_assault_sentry(gentity_t* self, vec3_t origin, vec3_t dir);
 
-void Cmd_UseSentry_f(gentity_t* ent)
+static void Cmd_UseSentry_f(gentity_t* ent)
 {
 	if (ent->health < 1 || in_camera)
 	{
@@ -1117,7 +1128,7 @@ void Cmd_UseSentry_f(gentity_t* ent)
 
 extern void CG_ChangeWeapon(int num);
 
-void Cmd_UseBarrier_f(gentity_t* ent)
+static void Cmd_UseBarrier_f(gentity_t* ent)
 {
 	if (ent->health < 1 || in_camera)
 	{
@@ -1155,7 +1166,7 @@ void Cmd_UseBarrier_f(gentity_t* ent)
 	}
 }
 
-void Cmd_StopBarrier_f(gentity_t* ent)
+static void Cmd_StopBarrier_f(gentity_t* ent)
 {
 	RemoveBarrier(ent);
 }
@@ -1165,7 +1176,7 @@ void Cmd_StopBarrier_f(gentity_t* ent)
 Cmd_UseInventory_f
 ================
 */
-void Cmd_UseInventory_f(gentity_t* ent)
+static void Cmd_UseInventory_f(gentity_t* ent)
 {
 	if (G_IsRidingVehicle(ent))
 	{
@@ -1200,12 +1211,12 @@ void Cmd_UseInventory_f(gentity_t* ent)
 	}
 }
 
-void Cmd_FlushCamFile_f(gentity_t* ent)
+static void Cmd_FlushCamFile_f(gentity_t* ent)
 {
 	gi.FlushCamFile();
 }
 
-void G_Taunt(gentity_t* ent)
+static void G_Taunt(gentity_t* ent)
 {
 	if (ent->client)
 	{
@@ -1229,7 +1240,7 @@ void G_Taunt(gentity_t* ent)
 	}
 }
 
-void G_Victory(const gentity_t* ent)
+static void G_Victory(const gentity_t* ent)
 {
 	if (ent->health > 0)
 	{
@@ -1253,7 +1264,7 @@ enum
 	TAUNT_RELOAD
 };
 
-void G_TauntSound(gentity_t* ent, int taunt)
+static void G_TauntSound(gentity_t* ent, int taunt)
 {
 	if (BG_IsAlreadyinTauntAnim(ent->client->ps.torsoAnim))
 	{
@@ -2497,6 +2508,8 @@ void ClientCommand(const int clientNum)
 		Cmd_Undying_f(ent);
 	else if (Q_stricmp(cmd, "notarget") == 0)
 		Cmd_Notarget_f(ent);
+	else if (Q_stricmp(cmd, "noforce") == 0)
+		Cmd_Noforce_f(ent);
 	else if (Q_stricmp(cmd, "noclip") == 0)
 	{
 		Cmd_Noclip_f(ent);

@@ -100,6 +100,7 @@ extern vec3_t gPainPoint;
 #define FL_BBRUSH					0x04000000 //I am a breakable brush
 #define FL_NO_IMPACT_DMG			0x08000000	// Will not take impact damage
 #define	FL_SABERDAMAGE_RESIST		0x10000000	// protected from all damage except lightsabers for 20% of the time
+#define FL_NOFORCE				    0x20000000
 
 #define SABERTWEAK_INTERPOLATE			(0x0001u) // use SP style interpolation, also fix various small issues
 #define SABERTWEAK_PROLONGDAMAGE		(0x0002u) // allow damaging in wind-up and return animations

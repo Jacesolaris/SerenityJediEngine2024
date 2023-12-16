@@ -216,8 +216,8 @@ qboolean WP_LobFire(const gentity_t* self, vec3_t start, vec3_t target, vec3_t m
 					if (trace.entityNum < ENTITYNUM_WORLD)
 					{
 						//hit an ent
-						const gentity_t* trace_ent = &g_entities[trace.entityNum];
-						if (trace_ent && trace_ent->takedamage && !OnSameTeam(self, trace_ent))
+						const gentity_t* traceEnt = &g_entities[trace.entityNum];
+						if (traceEnt && traceEnt->takedamage && !OnSameTeam(self, traceEnt))
 						{
 							//hit something breakable, so that's okay
 							//we haven't found a clear shot yet so use this as the failcase

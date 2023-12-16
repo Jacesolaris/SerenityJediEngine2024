@@ -571,9 +571,9 @@ qboolean PM_ClientImpact(const trace_t* trace, const qboolean damage_self)
 		return qfalse;
 	}
 
-	const gentity_t* trace_ent = &g_entities[other_entity_num];
+	const gentity_t* traceEnt = &g_entities[other_entity_num];
 
-	if (other_entity_num == ENTITYNUM_WORLD || trace_ent->bmodel && trace_ent->s.pos.trType == TR_STATIONARY)
+	if (other_entity_num == ENTITYNUM_WORLD || traceEnt->bmodel && traceEnt->s.pos.trType == TR_STATIONARY)
 	{
 		//hit world or a non-moving brush
 		if (PM_CheckGrabWall(trace))
@@ -594,7 +594,7 @@ qboolean PM_ClientImpact(const trace_t* trace, const qboolean damage_self)
 		return qfalse;
 	}
 
-	if (!trace_ent || !(trace_ent->contents & pm->tracemask))
+	if (!traceEnt || !(traceEnt->contents & pm->tracemask))
 	{
 		//it's dead or not in my way anymore
 		return qtrue;
@@ -2239,9 +2239,9 @@ static qboolean pm_check_jump()
 						}
 					}
 				}
-				gentity_t* trace_ent = &g_entities[trace.entityNum];
+				gentity_t* traceEnt = &g_entities[trace.entityNum];
 
-				if (!do_trace || trace.fraction < 1.0f && (trace.entityNum < ENTITYNUM_WORLD && trace_ent && trace_ent->
+				if (!do_trace || trace.fraction < 1.0f && (trace.entityNum < ENTITYNUM_WORLD && traceEnt && traceEnt->
 					s
 					.solid != SOLID_BMODEL || DotProduct(wallNormal, ideal_normal) > 0.7))
 				{
@@ -2301,36 +2301,36 @@ static qboolean pm_check_jump()
 						{
 							if (pm->gent && trace.entityNum < ENTITYNUM_WORLD)
 							{
-								if (trace_ent
-									&& trace_ent->client
-									&& trace_ent->health > 0
-									&& trace_ent->takedamage
-									&& trace_ent->client->NPC_class != CLASS_GALAKMECH
-									&& trace_ent->client->NPC_class != CLASS_DESANN
-									&& trace_ent->client->NPC_class != CLASS_SITHLORD
-									&& trace_ent->client->NPC_class != CLASS_VADER
-									&& !(trace_ent->flags & FL_NO_KNOCKBACK))
+								if (traceEnt
+									&& traceEnt->client
+									&& traceEnt->health > 0
+									&& traceEnt->takedamage
+									&& traceEnt->client->NPC_class != CLASS_GALAKMECH
+									&& traceEnt->client->NPC_class != CLASS_DESANN
+									&& traceEnt->client->NPC_class != CLASS_SITHLORD
+									&& traceEnt->client->NPC_class != CLASS_VADER
+									&& !(traceEnt->flags & FL_NO_KNOCKBACK))
 								{
 									//push them away and do pain
 									vec3_t opp_dir, fx_dir;
 									float strength = VectorNormalize2(pm->ps->velocity, opp_dir);
 									VectorScale(opp_dir, -1, opp_dir);
 									//FIXME: need knockdown anim
-									G_Damage(trace_ent, pm->gent, pm->gent, opp_dir, trace_ent->currentOrigin, 10,
+									G_Damage(traceEnt, pm->gent, pm->gent, opp_dir, traceEnt->currentOrigin, 10,
 										DAMAGE_NO_ARMOR | DAMAGE_NO_HIT_LOC | DAMAGE_NO_KNOCKBACK, MOD_MELEE);
 									VectorCopy(fwd, fx_dir);
 									VectorScale(fx_dir, -1, fx_dir);
 									G_PlayEffect(G_EffectIndex("melee/kick_impact"), trace.endpos, fx_dir);
-									if (trace_ent->health > 0)
+									if (traceEnt->health > 0)
 									{
 										//didn't kill him
-										if (trace_ent->s.number == 0 && !Q_irand(0, g_spskill->integer)
-											|| trace_ent->NPC != nullptr && Q_irand(RANK_CIVILIAN, trace_ent->NPC->rank)
+										if (traceEnt->s.number == 0 && !Q_irand(0, g_spskill->integer)
+											|| traceEnt->NPC != nullptr && Q_irand(RANK_CIVILIAN, traceEnt->NPC->rank)
 											+ Q_irand(-2, 2) < RANK_ENSIGN)
 										{
-											NPC_SetAnim(trace_ent, SETANIM_BOTH, BOTH_KNOCKDOWN2,
+											NPC_SetAnim(traceEnt, SETANIM_BOTH, BOTH_KNOCKDOWN2,
 												SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
-											g_throw(trace_ent, opp_dir, strength);
+											g_throw(traceEnt, opp_dir, strength);
 										}
 									}
 								}
@@ -2508,7 +2508,7 @@ static qboolean pm_check_jump()
 							parts = SETANIM_BOTH;
 						}
 						PM_SetAnim(pm, parts, anim, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
-						//FIXME: do damage to trace_ent, like above?
+						//FIXME: do damage to traceEnt, like above?
 						pm->ps->pm_flags |= PMF_JUMPING | PMF_SLOW_MO_FALL;
 						pm->cmd.upmove = 0;
 						PM_AddEvent(EV_JUMP);
@@ -2583,10 +2583,10 @@ static qboolean pm_check_jump()
 							static_cast<EG2_Collision>(0), 0); //FIXME: clip brushes too?
 						VectorSubtract(pm->ps->origin, traceto, ideal_normal);
 						VectorNormalize(ideal_normal);
-						gentity_t* trace_ent = &g_entities[trace.entityNum];
+						gentity_t* traceEnt = &g_entities[trace.entityNum];
 						if (trace.fraction < 1.0f
 							&& fabs(trace.plane.normal[2]) <= MAX_WALL_GRAB_SLOPE
-							&& (trace.entityNum < ENTITYNUM_WORLD && trace_ent && trace_ent->s.solid != SOLID_BMODEL ||
+							&& (trace.entityNum < ENTITYNUM_WORLD && traceEnt && traceEnt->s.solid != SOLID_BMODEL ||
 								DotProduct(trace.plane.normal, ideal_normal) > 0.7))
 						{
 							//there is a wall there
@@ -4461,8 +4461,8 @@ static qboolean pm_try_roll()
 				else
 				{
 					//check other conditions
-					const gentity_t* trace_ent = &g_entities[trace.entityNum];
-					if (trace_ent && trace_ent->svFlags & SVF_GLASS_BRUSH)
+					const gentity_t* traceEnt = &g_entities[trace.entityNum];
+					if (traceEnt && traceEnt->svFlags & SVF_GLASS_BRUSH)
 					{
 						//okay to roll through glass
 						roll = qtrue;
@@ -4689,8 +4689,8 @@ static qboolean PM_TryRoll_SJE()
 				else
 				{
 					//check other conditions
-					const gentity_t* trace_ent = &g_entities[trace.entityNum];
-					if (trace_ent && trace_ent->svFlags & SVF_GLASS_BRUSH)
+					const gentity_t* traceEnt = &g_entities[trace.entityNum];
+					if (traceEnt && traceEnt->svFlags & SVF_GLASS_BRUSH)
 					{
 						//okay to roll through glass
 						roll = qtrue;
@@ -5626,8 +5626,8 @@ static void PM_GroundTraceMissed()
 														client->NPC_class != CLASS_ROCKETTROOPER))
 												{
 													//Jedi don't scream and die if they're heading for a hard impact
-													const gentity_t* trace_ent = &g_entities[trace.entityNum];
-													if (trace.entityNum == ENTITYNUM_WORLD || trace_ent && trace_ent->
+													const gentity_t* traceEnt = &g_entities[trace.entityNum];
+													if (trace.entityNum == ENTITYNUM_WORLD || traceEnt && traceEnt->
 														bmodel)
 													{
 														//hit architecture, find impact force
@@ -15727,7 +15727,7 @@ static qboolean PM_CanDoRollStab()
 		&& pm->cmd.upmove <= 0 //not jumping...?
 		&& (!(pm->ps->saber[0].saberFlags & SFL_NO_ROLL_STAB)
 			&& (!pm->ps->dualSabers || !(pm->ps->saber[1].saberFlags & SFL_NO_ROLL_STAB)))
-		&& G_EnoughPowerForSpecialMove(pm->ps->forcePower, SABER_ALT_ATTACK_POWER_FB, qtrue)) // have enough power
+		&& G_EnoughPowerForSpecialMove(pm->ps->forcePower, SABER_KATA_ATTACK_POWER, qtrue)) // have enough power
 	{
 		return qtrue;
 	}
@@ -17735,7 +17735,7 @@ void PM_WeaponLightsaber()
 				{
 					//okay to do roll-stab
 					PM_Setsaber_move(LS_ROLL_STAB);
-					WP_ForcePowerDrain(pm->gent, FP_SABER_OFFENSE, SABER_ALT_ATTACK_POWER_FB);
+					WP_ForcePowerDrain(pm->gent, FP_SABER_OFFENSE, SABER_KATA_ATTACK_POWER);
 				}
 			}
 		}

@@ -10353,8 +10353,8 @@ static void UI_BuildQ3Model_List(void)
 {
 	char dirlist[16384];
 	char skinname[64];
-	int dirlen;
-	int filelen;
+	int dirlen = 0;
+	int filelen = 0;
 
 	uiInfo.q3HeadCount = 0;
 

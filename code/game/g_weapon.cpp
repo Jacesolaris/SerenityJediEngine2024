@@ -1331,7 +1331,7 @@ void WP_FireScepter(gentity_t* ent, qboolean alt_fire)
 	VectorMA(start, shot_range, forward_vec, end);
 
 	gi.trace(&tr, start, nullptr, nullptr, end, ent->s.number, MASK_SHOT, G2_RETURNONHIT, 10);
-	gentity_t* trace_ent = &g_entities[tr.entityNum];
+	gentity_t* traceEnt = &g_entities[tr.entityNum];
 
 	if (tr.surfaceFlags & SURF_NOIMPACT)
 	{
@@ -1345,14 +1345,14 @@ void WP_FireScepter(gentity_t* ent, qboolean alt_fire)
 
 	if (render_impact)
 	{
-		if (tr.entityNum < ENTITYNUM_WORLD && trace_ent->takedamage)
+		if (tr.entityNum < ENTITYNUM_WORLD && traceEnt->takedamage)
 		{
 			constexpr int damage = 1;
 			// Create a simple impact type mark that doesn't last long in the world
 			G_PlayEffect(G_EffectIndex("disruptor/flesh_impact"), tr.endpos, tr.plane.normal);
 
 			const int hit_loc = G_GetHitLocFromTrace(&tr, MOD_DISRUPTOR);
-			G_Damage(trace_ent, ent, ent, forward_vec, tr.endpos, damage, DAMAGE_EXTRA_KNOCKBACK, MOD_DISRUPTOR, hit_loc);
+			G_Damage(traceEnt, ent, ent, forward_vec, tr.endpos, damage, DAMAGE_EXTRA_KNOCKBACK, MOD_DISRUPTOR, hit_loc);
 		}
 		else
 		{

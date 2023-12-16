@@ -829,12 +829,12 @@ void NPC_BSGM_Attack()
 					if (trace.fraction < 1.0f)
 					{
 						//hit something
-						gentity_t* trace_ent = &g_entities[trace.entityNum];
-						if (trace_ent && trace_ent->takedamage)
+						gentity_t* traceEnt = &g_entities[trace.entityNum];
+						if (traceEnt && traceEnt->takedamage)
 						{
 							//damage it
 							G_SoundAtSpot(trace.endpos, G_SoundIndex("sound/weapons/galak/laserdamage.wav"), qfalse);
-							G_Damage(trace_ent, NPC, NPC, NPC->client->renderInfo.muzzleDir, trace.endpos, 10, 0,
+							G_Damage(traceEnt, NPC, NPC, NPC->client->renderInfo.muzzleDir, trace.endpos, 10, 0,
 								MOD_ENERGY);
 						}
 					}

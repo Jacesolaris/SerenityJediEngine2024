@@ -557,38 +557,38 @@ void Boba_FireFlameThrower(gentity_t* self)
 	}
 	gi.trace(&tr, start, self->mins, self->maxs, end, self->s.number, MASK_SHOT, static_cast<EG2_Collision>(0), 0);
 
-	gentity_t* trace_ent = &g_entities[tr.entityNum];
+	gentity_t* traceEnt = &g_entities[tr.entityNum];
 
-	if (tr.entityNum < ENTITYNUM_WORLD && trace_ent->takedamage)
+	if (tr.entityNum < ENTITYNUM_WORLD && traceEnt->takedamage)
 	{
-		G_Damage(trace_ent, self, self, dir, tr.endpos, damage,
+		G_Damage(traceEnt, self, self, dir, tr.endpos, damage,
 			DAMAGE_NO_ARMOR | DAMAGE_NO_KNOCKBACK | DAMAGE_NO_HIT_LOC | DAMAGE_IGNORE_TEAM, MOD_BURNING, HL_NONE);
 
-		if (trace_ent->health > 0 && trace_ent->painDebounceTime > level.time)
+		if (traceEnt->health > 0 && traceEnt->painDebounceTime > level.time)
 		{
-			g_throw(trace_ent, dir, 30);
+			g_throw(traceEnt, dir, 30);
 
-			if (trace_ent->client)
+			if (traceEnt->client)
 			{
-				if (trace_ent->ghoul2.size())
+				if (traceEnt->ghoul2.size())
 				{
-					if (trace_ent->chestBolt != -1)
+					if (traceEnt->chestBolt != -1)
 					{
-						G_PlayEffect(G_EffectIndex("flamethrower/flame_impact"), trace_ent->playerModel,
-							trace_ent->chestBolt, trace_ent->s.number, trace_ent->currentOrigin, 3000, qtrue);
+						G_PlayEffect(G_EffectIndex("flamethrower/flame_impact"), traceEnt->playerModel,
+							traceEnt->chestBolt, traceEnt->s.number, traceEnt->currentOrigin, 3000, qtrue);
 					}
 				}
-				if (!PM_InRoll(&trace_ent->client->ps)
-					&& !PM_InKnockDown(&trace_ent->client->ps))
+				if (!PM_InRoll(&traceEnt->client->ps)
+					&& !PM_InKnockDown(&traceEnt->client->ps))
 				{
-					NPC_SetAnim(trace_ent, SETANIM_TORSO, BOTH_FACEPROTECT, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
+					NPC_SetAnim(traceEnt, SETANIM_TORSO, BOTH_FACEPROTECT, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 				}
 			}
-			player_Burn(trace_ent);
+			player_Burn(traceEnt);
 		}
 		else
 		{
-			Player_CheckBurn(trace_ent);
+			Player_CheckBurn(traceEnt);
 		}
 	}
 }

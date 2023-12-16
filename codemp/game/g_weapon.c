@@ -847,7 +847,7 @@ static void WP_DisruptorMainFire(gentity_t* ent)
 	qboolean render_impact = qtrue;
 	vec3_t start, end;
 	trace_t tr;
-	gentity_t* trace_ent;
+	gentity_t* traceEnt;
 	const float shot_range = 8192;
 
 	const vec3_t shot_maxs = { DISRUPTOR_SHOT_SIZE, DISRUPTOR_SHOT_SIZE, DISRUPTOR_SHOT_SIZE };
@@ -881,74 +881,74 @@ static void WP_DisruptorMainFire(gentity_t* ent)
 			trap->Trace(&tr, start, shot_mins, shot_maxs, end, ignore, MASK_SHOT, qfalse, 0, 0);
 		}
 
-		trace_ent = &g_entities[tr.entityNum];
+		traceEnt = &g_entities[tr.entityNum];
 
-		if (d_projectileGhoul2Collision.integer && trace_ent->inuse && trace_ent->client)
+		if (d_projectileGhoul2Collision.integer && traceEnt->inuse && traceEnt->client)
 		{
 			//g2 collision checks -rww
-			if (trace_ent->inuse && trace_ent->client && trace_ent->ghoul2)
+			if (traceEnt->inuse && traceEnt->client && traceEnt->ghoul2)
 			{
 				//since we used G2TRFLAG_GETSURFINDEX, tr.surfaceFlags will actually contain the index of the surface on the ghoul2 model we collided with.
-				trace_ent->client->g2LastSurfaceHit = tr.surfaceFlags;
-				trace_ent->client->g2LastSurfaceTime = level.time;
-				trace_ent->client->g2LastSurfaceModel = G2MODEL_PLAYER;
+				traceEnt->client->g2LastSurfaceHit = tr.surfaceFlags;
+				traceEnt->client->g2LastSurfaceTime = level.time;
+				traceEnt->client->g2LastSurfaceModel = G2MODEL_PLAYER;
 			}
 
-			if (trace_ent->ghoul2)
+			if (traceEnt->ghoul2)
 			{
 				tr.surfaceFlags = 0; //clear the surface flags after, since we actually care about them in here.
 			}
 		}
 
-		if (trace_ent && trace_ent->client && trace_ent->client->ps.duelInProgress &&
-			trace_ent->client->ps.duelIndex != ent->s.number)
+		if (traceEnt && traceEnt->client && traceEnt->client->ps.duelInProgress &&
+			traceEnt->client->ps.duelIndex != ent->s.number)
 		{
 			ignore = tr.entityNum;
 			VectorCopy(tr.endpos, start);
 			continue;
 		}
 
-		if (trace_ent)
+		if (traceEnt)
 		{
-			if (wp_saber_must_bolt_block(trace_ent, ent, qfalse, tr.endpos, -1, -1) && !
-				WP_DoingForcedAnimationForForcePowers(trace_ent))
+			if (wp_saber_must_bolt_block(traceEnt, ent, qfalse, tr.endpos, -1, -1) && !
+				WP_DoingForcedAnimationForForcePowers(traceEnt))
 			{
 				//players can block or dodge disruptor shots.
-				g_missile_reflect_effect(trace_ent, tr.plane.normal);
-				WP_ForcePowerDrain(&trace_ent->client->ps, FP_SABER_DEFENSE,
-					WP_SaberBlockCost(trace_ent, ent, tr.endpos));
+				g_missile_reflect_effect(traceEnt, tr.plane.normal);
+				WP_ForcePowerDrain(&traceEnt->client->ps, FP_SABER_DEFENSE,
+					WP_SaberBlockCost(traceEnt, ent, tr.endpos));
 
 				//force player into a projective block move.
-				if (d_combatinfo.integer || g_DebugSaberCombat.integer && !(trace_ent->r.svFlags & SVF_BOT))
+				if (d_combatinfo.integer || g_DebugSaberCombat.integer && !(traceEnt->r.svFlags & SVF_BOT))
 				{
 					Com_Printf(S_COLOR_ORANGE"should be blocking now\n");
 				}
-				WP_SaberBlockBolt(trace_ent, tr.endpos, qtrue);
+				WP_SaberBlockBolt(traceEnt, tr.endpos, qtrue);
 
 				ignore = tr.entityNum;
 				VectorCopy(tr.endpos, start);
 				continue;
 			}
 
-			if (wp_player_must_dodge(trace_ent, ent) && !
-				WP_DoingForcedAnimationForForcePowers(trace_ent))
+			if (wp_player_must_dodge(traceEnt, ent) && !
+				WP_DoingForcedAnimationForForcePowers(traceEnt))
 			{
 				//players can block or dodge disruptor shots.
-				if (trace_ent->r.svFlags & SVF_BOT)
+				if (traceEnt->r.svFlags & SVF_BOT)
 				{
-					WP_ForcePowerDrain(&trace_ent->client->ps, FP_SABER_DEFENSE, FATIGUE_DODGEINGBOT);
+					WP_ForcePowerDrain(&traceEnt->client->ps, FP_SABER_DEFENSE, FATIGUE_DODGEINGBOT);
 				}
 				else
 				{
-					WP_ForcePowerDrain(&trace_ent->client->ps, FP_SABER_DEFENSE, FATIGUE_DODGEING);
+					WP_ForcePowerDrain(&traceEnt->client->ps, FP_SABER_DEFENSE, FATIGUE_DODGEING);
 				}
-				if (d_combatinfo.integer || g_DebugSaberCombat.integer && !(trace_ent->r.svFlags & SVF_BOT))
+				if (d_combatinfo.integer || g_DebugSaberCombat.integer && !(traceEnt->r.svFlags & SVF_BOT))
 				{
 					Com_Printf(S_COLOR_ORANGE"should be dodging now\n");
 				}
 
 				//force player into a projective block move.
-				jedi_disruptor_dodge_evasion(trace_ent, ent, tr.endpos, -1);
+				jedi_disruptor_dodge_evasion(traceEnt, ent, tr.endpos, -1);
 
 				ignore = tr.entityNum;
 				VectorCopy(tr.endpos, start);
@@ -956,7 +956,7 @@ static void WP_DisruptorMainFire(gentity_t* ent)
 			}
 		}
 
-		if (trace_ent->flags & FL_SHIELDED)
+		if (traceEnt->flags & FL_SHIELDED)
 		{
 			//stopped cold
 			return;
@@ -975,30 +975,30 @@ static void WP_DisruptorMainFire(gentity_t* ent)
 	VectorCopy(muzzle, tent->s.origin2);
 	tent->s.eventParm = ent->s.number;
 
-	trace_ent = &g_entities[tr.entityNum];
+	traceEnt = &g_entities[tr.entityNum];
 
 	if (render_impact)
 	{
-		if (tr.entityNum < ENTITYNUM_WORLD && trace_ent->takedamage)
+		if (tr.entityNum < ENTITYNUM_WORLD && traceEnt->takedamage)
 		{
-			if (trace_ent->client && LogAccuracyHit(trace_ent, ent))
+			if (traceEnt->client && LogAccuracyHit(traceEnt, ent))
 			{
 				ent->client->accuracy_hits++;
 			}
 
-			if (trace_ent && trace_ent->client && trace_ent->client->NPC_class == CLASS_GALAKMECH)
+			if (traceEnt && traceEnt->client && traceEnt->client->NPC_class == CLASS_GALAKMECH)
 			{
 				//hehe
-				G_Damage(trace_ent, ent, ent, forward, tr.endpos, 3, DAMAGE_DEATH_KNOCKBACK, MOD_DISRUPTOR);
+				G_Damage(traceEnt, ent, ent, forward, tr.endpos, 3, DAMAGE_DEATH_KNOCKBACK, MOD_DISRUPTOR);
 			}
 			else
 			{
-				G_Damage(trace_ent, ent, ent, forward, tr.endpos, damage, DAMAGE_NORMAL, MOD_DISRUPTOR);
+				G_Damage(traceEnt, ent, ent, forward, tr.endpos, damage, DAMAGE_NORMAL, MOD_DISRUPTOR);
 			}
 
 			tent = G_TempEntity(tr.endpos, EV_DISRUPTOR_HIT);
 			tent->s.eventParm = DirToByte(tr.plane.normal);
-			if (trace_ent->client)
+			if (traceEnt->client)
 			{
 				tent->s.weapon = 1;
 			}
@@ -1132,20 +1132,20 @@ void WP_DisruptorAltFire(gentity_t* ent)
 			trap->Trace(&tr, start, shot_mins, shot_maxs, end, ignore, MASK_SHOT, qfalse, 0, 0);
 		}
 
-		gentity_t* trace_ent = &g_entities[tr.entityNum];
+		gentity_t* traceEnt = &g_entities[tr.entityNum];
 
-		if (d_projectileGhoul2Collision.integer && trace_ent->inuse && trace_ent->client)
+		if (d_projectileGhoul2Collision.integer && traceEnt->inuse && traceEnt->client)
 		{
 			//g2 collision checks -rww
-			if (trace_ent->inuse && trace_ent->client && trace_ent->ghoul2)
+			if (traceEnt->inuse && traceEnt->client && traceEnt->ghoul2)
 			{
 				//since we used G2TRFLAG_GETSURFINDEX, tr.surfaceFlags will actually contain the index of the surface on the ghoul2 model we collided with.
-				trace_ent->client->g2LastSurfaceHit = tr.surfaceFlags;
-				trace_ent->client->g2LastSurfaceTime = level.time;
-				trace_ent->client->g2LastSurfaceModel = G2MODEL_PLAYER;
+				traceEnt->client->g2LastSurfaceHit = tr.surfaceFlags;
+				traceEnt->client->g2LastSurfaceTime = level.time;
+				traceEnt->client->g2LastSurfaceModel = G2MODEL_PLAYER;
 			}
 
-			if (trace_ent->ghoul2)
+			if (traceEnt->ghoul2)
 			{
 				tr.surfaceFlags = 0; //clear the surface flags after, since we actually care about them in here.
 			}
@@ -1156,55 +1156,55 @@ void WP_DisruptorAltFire(gentity_t* ent)
 			render_impact = qfalse;
 		}
 
-		if (trace_ent && trace_ent->client && trace_ent->client->ps.duelInProgress &&
-			trace_ent->client->ps.duelIndex != ent->s.number)
+		if (traceEnt && traceEnt->client && traceEnt->client->ps.duelInProgress &&
+			traceEnt->client->ps.duelIndex != ent->s.number)
 		{
 			ignore = tr.entityNum;
 			VectorCopy(tr.endpos, start);
 			continue;
 		}
 
-		if (trace_ent)
+		if (traceEnt)
 		{
-			if (wp_saber_must_bolt_block(trace_ent, ent, qfalse, tr.endpos, -1, -1) && !
-				WP_DoingForcedAnimationForForcePowers(trace_ent))
+			if (wp_saber_must_bolt_block(traceEnt, ent, qfalse, tr.endpos, -1, -1) && !
+				WP_DoingForcedAnimationForForcePowers(traceEnt))
 			{
 				//players can block or dodge disruptor shots.
-				g_missile_reflect_effect(trace_ent, tr.plane.normal);
-				WP_ForcePowerDrain(&trace_ent->client->ps, FP_SABER_DEFENSE,
-					WP_SaberBlockCost(trace_ent, ent, tr.endpos));
+				g_missile_reflect_effect(traceEnt, tr.plane.normal);
+				WP_ForcePowerDrain(&traceEnt->client->ps, FP_SABER_DEFENSE,
+					WP_SaberBlockCost(traceEnt, ent, tr.endpos));
 
 				//force player into a projective block move.
-				if (d_combatinfo.integer || g_DebugSaberCombat.integer && !(trace_ent->r.svFlags & SVF_BOT))
+				if (d_combatinfo.integer || g_DebugSaberCombat.integer && !(traceEnt->r.svFlags & SVF_BOT))
 				{
 					Com_Printf(S_COLOR_ORANGE"should be blocking now\n");
 				}
-				WP_SaberBlockBolt(trace_ent, tr.endpos, qtrue);
+				WP_SaberBlockBolt(traceEnt, tr.endpos, qtrue);
 
 				ignore = tr.entityNum;
 				VectorCopy(tr.endpos, start);
 				continue;
 			}
 
-			if (wp_player_must_dodge(trace_ent, ent) && !
-				WP_DoingForcedAnimationForForcePowers(trace_ent))
+			if (wp_player_must_dodge(traceEnt, ent) && !
+				WP_DoingForcedAnimationForForcePowers(traceEnt))
 			{
 				//players can block or dodge disruptor shots.
-				if (trace_ent->r.svFlags & SVF_BOT)
+				if (traceEnt->r.svFlags & SVF_BOT)
 				{
-					WP_ForcePowerDrain(&trace_ent->client->ps, FP_SABER_DEFENSE, FATIGUE_DODGEINGBOT);
+					WP_ForcePowerDrain(&traceEnt->client->ps, FP_SABER_DEFENSE, FATIGUE_DODGEINGBOT);
 				}
 				else
 				{
-					WP_ForcePowerDrain(&trace_ent->client->ps, FP_SABER_DEFENSE, FATIGUE_DODGEING);
+					WP_ForcePowerDrain(&traceEnt->client->ps, FP_SABER_DEFENSE, FATIGUE_DODGEING);
 				}
-				if (d_combatinfo.integer || g_DebugSaberCombat.integer && !(trace_ent->r.svFlags & SVF_BOT))
+				if (d_combatinfo.integer || g_DebugSaberCombat.integer && !(traceEnt->r.svFlags & SVF_BOT))
 				{
 					Com_Printf(S_COLOR_ORANGE"should be dodging now\n");
 				}
 
 				//force player into a projective block move.
-				jedi_disruptor_dodge_evasion(trace_ent, ent, tr.endpos, -1);
+				jedi_disruptor_dodge_evasion(traceEnt, ent, tr.endpos, -1);
 
 				ignore = tr.entityNum;
 				VectorCopy(tr.endpos, start);
@@ -1221,16 +1221,16 @@ void WP_DisruptorAltFire(gentity_t* ent)
 		// If the beam hits a skybox, etc. it would look foolish to add impact effects
 		if (render_impact)
 		{
-			if (trace_ent->takedamage && trace_ent->client)
+			if (traceEnt->takedamage && traceEnt->client)
 			{
-				tent->s.otherentity_num = trace_ent->s.number;
+				tent->s.otherentity_num = traceEnt->s.number;
 
 				// Create a simple impact type mark
 				tent = G_TempEntity(tr.endpos, EV_MISSILE_MISS);
 				tent->s.eventParm = DirToByte(tr.plane.normal);
 				tent->s.eFlags |= EF_ALT_FIRING;
 
-				if (LogAccuracyHit(trace_ent, ent))
+				if (LogAccuracyHit(traceEnt, ent))
 				{
 					if (ent->client)
 					{
@@ -1240,13 +1240,13 @@ void WP_DisruptorAltFire(gentity_t* ent)
 			}
 			else
 			{
-				if (trace_ent->r.svFlags & SVF_GLASS_BRUSH
-					|| trace_ent->takedamage
-					|| trace_ent->s.eType == ET_MOVER)
+				if (traceEnt->r.svFlags & SVF_GLASS_BRUSH
+					|| traceEnt->takedamage
+					|| traceEnt->s.eType == ET_MOVER)
 				{
-					if (trace_ent->takedamage)
+					if (traceEnt->takedamage)
 					{
-						G_Damage(trace_ent, ent, ent, forward, tr.endpos, damage, DAMAGE_NO_KNOCKBACK,
+						G_Damage(traceEnt, ent, ent, forward, tr.endpos, damage, DAMAGE_NO_KNOCKBACK,
 							MOD_DISRUPTOR_SNIPER);
 
 						tent = G_TempEntity(tr.endpos, EV_DISRUPTOR_HIT);
@@ -1262,48 +1262,48 @@ void WP_DisruptorAltFire(gentity_t* ent)
 				break; // and don't try any more traces
 			}
 
-			if (trace_ent->flags & FL_SHIELDED)
+			if (traceEnt->flags & FL_SHIELDED)
 			{
 				//stops us cold
 				break;
 			}
 
-			if (trace_ent->takedamage)
+			if (traceEnt->takedamage)
 			{
 				vec3_t pre_ang;
-				const int pre_health = trace_ent->health;
+				const int pre_health = traceEnt->health;
 				int pre_legs = 0;
 				int pre_torso = 0;
 
-				if (trace_ent->client)
+				if (traceEnt->client)
 				{
-					pre_legs = trace_ent->client->ps.legsAnim;
-					pre_torso = trace_ent->client->ps.torsoAnim;
-					VectorCopy(trace_ent->client->ps.viewangles, pre_ang);
+					pre_legs = traceEnt->client->ps.legsAnim;
+					pre_torso = traceEnt->client->ps.torsoAnim;
+					VectorCopy(traceEnt->client->ps.viewangles, pre_ang);
 				}
 
-				G_Damage(trace_ent, ent, ent, forward, tr.endpos, damage, DAMAGE_NO_KNOCKBACK, MOD_DISRUPTOR_SNIPER);
+				G_Damage(traceEnt, ent, ent, forward, tr.endpos, damage, DAMAGE_NO_KNOCKBACK, MOD_DISRUPTOR_SNIPER);
 
-				if (trace_ent->client && pre_health > 0 && trace_ent->health <= 0 && full_charge &&
-					G_CanDisruptify(trace_ent))
+				if (traceEnt->client && pre_health > 0 && traceEnt->health <= 0 && full_charge &&
+					G_CanDisruptify(traceEnt))
 				{
 					//was killed by a fully charged sniper shot, so disintegrate
-					VectorCopy(pre_ang, trace_ent->client->ps.viewangles);
+					VectorCopy(pre_ang, traceEnt->client->ps.viewangles);
 
-					trace_ent->client->ps.eFlags |= EF_DISINTEGRATION;
-					VectorCopy(tr.endpos, trace_ent->client->ps.lastHitLoc);
+					traceEnt->client->ps.eFlags |= EF_DISINTEGRATION;
+					VectorCopy(tr.endpos, traceEnt->client->ps.lastHitLoc);
 
-					trace_ent->client->ps.legsAnim = pre_legs;
-					trace_ent->client->ps.torsoAnim = pre_torso;
+					traceEnt->client->ps.legsAnim = pre_legs;
+					traceEnt->client->ps.torsoAnim = pre_torso;
 
-					trace_ent->r.contents = 0;
+					traceEnt->r.contents = 0;
 
-					VectorClear(trace_ent->client->ps.velocity);
+					VectorClear(traceEnt->client->ps.velocity);
 				}
 
 				tent = G_TempEntity(tr.endpos, EV_DISRUPTOR_HIT);
 				tent->s.eventParm = DirToByte(tr.plane.normal);
-				if (trace_ent->client)
+				if (traceEnt->client)
 				{
 					tent->s.weapon = 1;
 				}
@@ -2888,8 +2888,8 @@ qboolean WP_LobFire(const gentity_t* self, vec3_t start, vec3_t target, vec3_t m
 					if (trace.entityNum < ENTITYNUM_WORLD)
 					{
 						//hit an ent
-						const gentity_t* trace_ent = &g_entities[trace.entityNum];
-						if (trace_ent && trace_ent->takedamage && !OnSameTeam(self, trace_ent))
+						const gentity_t* traceEnt = &g_entities[trace.entityNum];
+						if (traceEnt && traceEnt->takedamage && !OnSameTeam(self, traceEnt))
 						{
 							//hit something breakable, so that's okay
 							//we haven't found a clear shot yet so use this as the failcase
@@ -3105,11 +3105,11 @@ void laserTrapThink(gentity_t* ent)
 	VectorMA(ent->s.pos.trBase, 1024, ent->movedir, end);
 	trap->Trace(&tr, ent->r.currentOrigin, NULL, NULL, end, ent->s.number, MASK_SHOT, qfalse, 0, 0);
 
-	const gentity_t* trace_ent = &g_entities[tr.entityNum];
+	const gentity_t* traceEnt = &g_entities[tr.entityNum];
 
 	ent->s.time = -1; //let all clients know to draw a beam from this guy
 
-	if (trace_ent->client || tr.startsolid)
+	if (traceEnt->client || tr.startsolid)
 	{
 		//go boom
 		ent->touch = 0;
@@ -3775,19 +3775,19 @@ static void WP_FireConcussionAlt(gentity_t* ent)
 			trap->Trace(&tr, start, shot_mins, shot_maxs, end, skip, MASK_SHOT, qfalse, 0, 0);
 		}
 
-		gentity_t* trace_ent = &g_entities[tr.entityNum];
+		gentity_t* traceEnt = &g_entities[tr.entityNum];
 
-		if (d_projectileGhoul2Collision.integer && trace_ent->inuse && trace_ent->client)
+		if (d_projectileGhoul2Collision.integer && traceEnt->inuse && traceEnt->client)
 		{
 			//g2 collision checks -rww
-			if (trace_ent->inuse && trace_ent->client && trace_ent->ghoul2)
+			if (traceEnt->inuse && traceEnt->client && traceEnt->ghoul2)
 			{
 				//since we used G2TRFLAG_GETSURFINDEX, tr.surfaceFlags will actually contain the index of the surface on the ghoul2 model we collided with.
-				trace_ent->client->g2LastSurfaceHit = tr.surfaceFlags;
-				trace_ent->client->g2LastSurfaceTime = level.time;
+				traceEnt->client->g2LastSurfaceHit = tr.surfaceFlags;
+				traceEnt->client->g2LastSurfaceTime = level.time;
 			}
 
-			if (trace_ent->ghoul2)
+			if (traceEnt->ghoul2)
 			{
 				tr.surfaceFlags = 0; //clear the surface flags after, since we actually care about them in here.
 			}
@@ -3813,27 +3813,27 @@ static void WP_FireConcussionAlt(gentity_t* ent)
 			break;
 		}
 
-		if (trace_ent)
+		if (traceEnt)
 		{
-			if (wp_player_must_dodge(trace_ent, ent) && !
-				WP_DoingForcedAnimationForForcePowers(trace_ent))
+			if (wp_player_must_dodge(traceEnt, ent) && !
+				WP_DoingForcedAnimationForForcePowers(traceEnt))
 			{
 				//players can block or dodge disruptor shots.
-				if (trace_ent->r.svFlags & SVF_BOT)
+				if (traceEnt->r.svFlags & SVF_BOT)
 				{
-					WP_ForcePowerDrain(&trace_ent->client->ps, FP_SABER_DEFENSE, FATIGUE_DODGEINGBOT);
+					WP_ForcePowerDrain(&traceEnt->client->ps, FP_SABER_DEFENSE, FATIGUE_DODGEINGBOT);
 				}
 				else
 				{
-					WP_ForcePowerDrain(&trace_ent->client->ps, FP_SABER_DEFENSE, FATIGUE_DODGEING);
+					WP_ForcePowerDrain(&traceEnt->client->ps, FP_SABER_DEFENSE, FATIGUE_DODGEING);
 				}
-				if (d_combatinfo.integer || g_DebugSaberCombat.integer && !(trace_ent->r.svFlags & SVF_BOT))
+				if (d_combatinfo.integer || g_DebugSaberCombat.integer && !(traceEnt->r.svFlags & SVF_BOT))
 				{
 					Com_Printf(S_COLOR_ORANGE"should be dodging now\n");
 				}
 
 				//force player into a projective block move.
-				jedi_disruptor_dodge_evasion(trace_ent, ent, tr.endpos, -1);
+				jedi_disruptor_dodge_evasion(traceEnt, ent, tr.endpos, -1);
 
 				skip = tr.entityNum;
 				VectorCopy(tr.endpos, start);
@@ -3844,31 +3844,31 @@ static void WP_FireConcussionAlt(gentity_t* ent)
 		{
 			if (render_impact)
 			{
-				if (tr.entityNum < ENTITYNUM_WORLD && trace_ent->takedamage
-					|| !Q_stricmp(trace_ent->classname, "misc_model_breakable")
-					|| trace_ent->s.eType == ET_MOVER)
+				if (tr.entityNum < ENTITYNUM_WORLD && traceEnt->takedamage
+					|| !Q_stricmp(traceEnt->classname, "misc_model_breakable")
+					|| traceEnt->s.eType == ET_MOVER)
 				{
 					const int damage = CONC_ALT_DAMAGE;
-					if (trace_ent->client && LogAccuracyHit(trace_ent, ent))
+					if (traceEnt->client && LogAccuracyHit(traceEnt, ent))
 					{
 						//NOTE: hitting multiple ents can still get you over 100% accuracy
 						ent->client->accuracy_hits++;
 					}
 
-					const qboolean no_knock_back = trace_ent->flags & FL_NO_KNOCKBACK;
+					const qboolean no_knock_back = traceEnt->flags & FL_NO_KNOCKBACK;
 					//will be set if they die, I want to know if it was on *before* they died
-					if (trace_ent && trace_ent->client && trace_ent->client->NPC_class == CLASS_GALAKMECH)
+					if (traceEnt && traceEnt->client && traceEnt->client->NPC_class == CLASS_GALAKMECH)
 					{
 						//hehe
-						G_Damage(trace_ent, ent, ent, forward, tr.endpos, 10, DAMAGE_NO_KNOCKBACK | DAMAGE_NO_HIT_LOC,
+						G_Damage(traceEnt, ent, ent, forward, tr.endpos, 10, DAMAGE_NO_KNOCKBACK | DAMAGE_NO_HIT_LOC,
 							MOD_CONC_ALT);
 						break;
 					}
-					G_Damage(trace_ent, ent, ent, forward, tr.endpos, damage, DAMAGE_NO_KNOCKBACK | DAMAGE_NO_HIT_LOC,
+					G_Damage(traceEnt, ent, ent, forward, tr.endpos, damage, DAMAGE_NO_KNOCKBACK | DAMAGE_NO_HIT_LOC,
 						MOD_CONC_ALT);
 
 					//do knockback and knockdown manually
-					if (trace_ent->client)
+					if (traceEnt->client)
 					{
 						//only if we hit a client
 						vec3_t push_dir;
@@ -3878,20 +3878,20 @@ static void WP_FireConcussionAlt(gentity_t* ent)
 							push_dir[2] = 0.2f;
 						} //hmm, re-normalize?  nah...
 
-						if (trace_ent->health > 0)
+						if (traceEnt->health > 0)
 						{
 							//alive
-							//if ( G_HasKnockdownAnims( trace_ent ) )
-							if (!no_knock_back && !trace_ent->localAnimIndex && trace_ent->client->ps.forceHandExtend !=
+							//if ( G_HasKnockdownAnims( traceEnt ) )
+							if (!no_knock_back && !traceEnt->localAnimIndex && traceEnt->client->ps.forceHandExtend !=
 								HANDEXTEND_KNOCKDOWN &&
-								BG_KnockDownable(&trace_ent->client->ps)) //just check for humanoids..
+								BG_KnockDownable(&traceEnt->client->ps)) //just check for humanoids..
 							{
 								//knock-downable
 								vec3_t pl_p_dif;
 
 								//cap it and stuff, base the strength and whether or not we can knockdown on the distance
 								//from the shooter to the target
-								VectorSubtract(trace_ent->client->ps.origin, ent->client->ps.origin, pl_p_dif);
+								VectorSubtract(traceEnt->client->ps.origin, ent->client->ps.origin, pl_p_dif);
 								float p_str = 500.0f - VectorLength(pl_p_dif);
 								if (p_str < 150.0f)
 								{
@@ -3899,26 +3899,26 @@ static void WP_FireConcussionAlt(gentity_t* ent)
 								}
 								if (p_str > 200.0f)
 								{
-									trace_ent->client->ps.forceHandExtend = HANDEXTEND_KNOCKDOWN;
-									trace_ent->client->ps.forceHandExtendTime = level.time + 1100;
-									trace_ent->client->ps.forceDodgeAnim = 0;
+									traceEnt->client->ps.forceHandExtend = HANDEXTEND_KNOCKDOWN;
+									traceEnt->client->ps.forceHandExtendTime = level.time + 1100;
+									traceEnt->client->ps.forceDodgeAnim = 0;
 									//this toggles between 1 and 0, when it's 1 we should play the get up anim
 								}
-								trace_ent->client->ps.otherKiller = ent->s.number;
-								trace_ent->client->ps.otherKillerTime = level.time + 5000;
-								trace_ent->client->ps.otherKillerDebounceTime = level.time + 100;
-								trace_ent->client->otherKillerMOD = MOD_UNKNOWN;
-								trace_ent->client->otherKillerVehWeapon = 0;
-								trace_ent->client->otherKillerWeaponType = WP_NONE;
+								traceEnt->client->ps.otherKiller = ent->s.number;
+								traceEnt->client->ps.otherKillerTime = level.time + 5000;
+								traceEnt->client->ps.otherKillerDebounceTime = level.time + 100;
+								traceEnt->client->otherKillerMOD = MOD_UNKNOWN;
+								traceEnt->client->otherKillerVehWeapon = 0;
+								traceEnt->client->otherKillerWeaponType = WP_NONE;
 
-								trace_ent->client->ps.velocity[0] += push_dir[0] * p_str;
-								trace_ent->client->ps.velocity[1] += push_dir[1] * p_str;
-								trace_ent->client->ps.velocity[2] = p_str;
+								traceEnt->client->ps.velocity[0] += push_dir[0] * p_str;
+								traceEnt->client->ps.velocity[1] += push_dir[1] * p_str;
+								traceEnt->client->ps.velocity[2] = p_str;
 							}
 						}
 					}
 
-					if (trace_ent->s.eType == ET_MOVER)
+					if (traceEnt->s.eType == ET_MOVER)
 					{
 						//stop the traces on any mover
 						break;
