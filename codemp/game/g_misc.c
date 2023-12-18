@@ -862,12 +862,12 @@ void SP_misc_skyportal(gentity_t* ent)
 	ent->nextthink = level.time + 1050; //give it some time first so that all other entities are spawned.
 }
 
-void HolocronRespawn(gentity_t* self)
+static void HolocronRespawn(gentity_t* self)
 {
 	self->s.modelIndex = self->count - 128;
 }
 
-void HolocronPopOut(gentity_t* self)
+static void HolocronPopOut(gentity_t* self)
 {
 	if (Q_irand(1, 10) < 5)
 	{
@@ -888,7 +888,7 @@ void HolocronPopOut(gentity_t* self)
 	self->s.pos.trDelta[2] = 150 + Q_irand(1, 100);
 }
 
-void HolocronTouch(gentity_t* self, gentity_t* other, const trace_t* trace)
+static void HolocronTouch(gentity_t* self, gentity_t* other, const trace_t* trace)
 {
 	int i = 0;
 	int othercarrying = 0;
@@ -1255,7 +1255,7 @@ static void InitShooter_Finish(gentity_t* ent)
 	ent->nextthink = 0;
 }
 
-void InitShooter(gentity_t* ent, const int weapon)
+static void InitShooter(gentity_t* ent, const int weapon)
 {
 	ent->use = Use_Shooter;
 	ent->s.weapon = weapon;
@@ -1287,7 +1287,7 @@ void SP_shooter_blaster(gentity_t* ent)
 	InitShooter(ent, WP_BLASTER);
 }
 
-void check_recharge(gentity_t* ent)
+static void check_recharge(gentity_t* ent)
 {
 	if (ent->fly_sound_debounce_time < level.time ||
 		!ent->activator ||
@@ -1325,7 +1325,7 @@ void check_recharge(gentity_t* ent)
 EnergyShieldStationSettings
 ================
 */
-void EnergyShieldStationSettings(gentity_t* ent)
+static void EnergyShieldStationSettings(gentity_t* ent)
 {
 	G_SpawnInt("count", "200", &ent->count);
 
@@ -1449,7 +1449,7 @@ void shield_power_converter_use(gentity_t* self, const gentity_t* other, gentity
 	}
 }
 
-qboolean HasValidWeaponThatUsesAmmo(const gentity_t* ent, const int ammotype)
+static qboolean HasValidWeaponThatUsesAmmo(const gentity_t* ent, const int ammotype)
 {
 	switch (ammotype)
 	{
@@ -1505,7 +1505,7 @@ qboolean HasValidWeaponThatUsesAmmo(const gentity_t* ent, const int ammotype)
 extern void Add_Ammo3(const gentity_t* ent, int weapon, int count, int* stop, qboolean* gaveSome);
 
 //dispense generic ammo
-void ammo_generic_power_converter_use(gentity_t* self, gentity_t* other, gentity_t* activator)
+static void ammo_generic_power_converter_use(gentity_t* self, gentity_t* other, gentity_t* activator)
 {
 	//int ammoType;
 	int stop = 1;
@@ -1589,7 +1589,7 @@ void ammo_generic_power_converter_use(gentity_t* self, gentity_t* other, gentity
 
 //dispense generic ammo
 #if 0
-void ammo_generic_power_converter_use(gentity_t* self, gentity_t* other, gentity_t* activator)
+static void ammo_generic_power_converter_use(gentity_t* self, gentity_t* other, gentity_t* activator)
 {
 	int /*dif,*/ add;
 	//int ammoType;
@@ -1931,7 +1931,7 @@ void SP_misc_model_shield_power_converter(gentity_t* ent)
 EnergyAmmoShieldStationSettings
 ================
 */
-void EnergyAmmoStationSettings(gentity_t* ent)
+static void EnergyAmmoStationSettings(gentity_t* ent)
 {
 	G_SpawnInt("count", "200", &ent->count);
 }
@@ -2120,7 +2120,7 @@ void SP_misc_model_ammo_power_converter(gentity_t* ent)
 EnergyHealthStationSettings
 ================
 */
-void EnergyHealthStationSettings(gentity_t* ent)
+static void EnergyHealthStationSettings(gentity_t* ent)
 {
 	G_SpawnInt("count", "200", &ent->count);
 }
@@ -2130,7 +2130,7 @@ void EnergyHealthStationSettings(gentity_t* ent)
 health_power_converter_use
 ================
 */
-void health_power_converter_use(gentity_t* self, gentity_t* other, gentity_t* activator)
+static void health_power_converter_use(gentity_t* self, gentity_t* other, gentity_t* activator)
 {
 	int stop = 1;
 
@@ -2238,12 +2238,12 @@ void SP_misc_model_health_power_converter(gentity_t* ent)
 }
 
 #if 0 //damage box stuff
-void DmgBoxHit(gentity_t* self, gentity_t* other, trace_t* trace)
+static void DmgBoxHit(gentity_t* self, gentity_t* other, trace_t* trace)
 {
 	return;
 }
 
-void DmgBoxUpdateSelf(gentity_t* self)
+static void DmgBoxUpdateSelf(gentity_t* self)
 {
 	gentity_t* owner = &g_entities[self->r.ownerNum];
 
@@ -2287,17 +2287,17 @@ killMe:
 	self->nextthink = level.time;
 }
 
-void DmgBoxAbsorb_Die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int damage, int mod)
+static void DmgBoxAbsorb_Die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int damage, int mod)
 {
 	self->health = 1;
 }
 
-void DmgBoxAbsorb_Pain(gentity_t* self, gentity_t* attacker, int damage)
+static void DmgBoxAbsorb_Pain(gentity_t* self, gentity_t* attacker, int damage)
 {
 	self->health = 1;
 }
 
-gentity_t* CreateNewDamageBox(gentity_t* ent)
+static gentity_t* CreateNewDamageBox(gentity_t* ent)
 {
 	gentity_t* dmgBox;
 
@@ -2332,7 +2332,7 @@ gentity_t* CreateNewDamageBox(gentity_t* ent)
 	return dmgBox;
 }
 
-void ATST_ManageDamageBoxes(gentity_t* ent)
+static void ATST_ManageDamageBoxes(gentity_t* ent)
 {
 	vec3_t headOrg, lLegOrg, rLegOrg;
 	vec3_t fwd, right, up, flatAngle;
@@ -2412,7 +2412,7 @@ void ATST_ManageDamageBoxes(gentity_t* ent)
 	G_SetOrigin(&g_entities[ent->client->damageBoxHandle_RLeg], rLegOrg);
 }
 
-int G_PlayerBecomeATST(gentity_t* ent)
+static int G_PlayerBecomeATST(gentity_t* ent)
 {
 	if (!ent || !ent->client)
 	{
@@ -2870,7 +2870,7 @@ void SP_CreateWeather(gentity_t* ent)
 qboolean gEscaping = qfalse;
 int gEscapeTime = 0;
 
-void Use_Target_Screenshake(gentity_t* ent, gentity_t* other, gentity_t* activator)
+static void Use_Target_Screenshake(gentity_t* ent, gentity_t* other, gentity_t* activator)
 {
 	qboolean bGlobal = qfalse;
 
@@ -2896,7 +2896,7 @@ void SP_target_screenshake(gentity_t* ent)
 
 void LogExit(const char* string);
 
-void Use_Target_Escapetrig(const gentity_t* ent, gentity_t* other, const gentity_t* activator)
+static void Use_Target_Escapetrig(const gentity_t* ent, gentity_t* other, const gentity_t* activator)
 {
 	if (!ent->genericValue6)
 	{
@@ -2952,7 +2952,7 @@ NOTE: place these half-way in the door to make it flush with the door's surface.
 "target"	thing to use when destoryed (not doors - it automatically unlocks the door it was angled at)
 "health"	default is 10
 */
-void maglock_die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int damage, int mod)
+static void maglock_die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int damage, int mod)
 {
 	//unlock our door if we're the last lock pointed at the door
 	if (self->activator)
@@ -3067,7 +3067,7 @@ void maglock_link(gentity_t* self)
 	}
 }
 
-void faller_touch(gentity_t* self, gentity_t* other, trace_t* trace)
+static void faller_touch(gentity_t* self, gentity_t* other, trace_t* trace)
 {
 	if (self->epVelocity[2] < -100 && self->genericValue7 < level.time)
 	{
@@ -3095,7 +3095,7 @@ void faller_touch(gentity_t* self, gentity_t* other, trace_t* trace)
 	}
 }
 
-void faller_think(gentity_t* ent)
+static void faller_think(gentity_t* ent)
 {
 	const float gravity = 3.0f;
 	const float mass = 0.09f;
@@ -3126,7 +3126,7 @@ void faller_think(gentity_t* ent)
 	ent->nextthink = level.time + 25;
 }
 
-void misc_faller_create(gentity_t* ent, gentity_t* other, gentity_t* activator)
+static void misc_faller_create(gentity_t* ent, gentity_t* other, gentity_t* activator)
 {
 	gentity_t* faller = G_Spawn();
 
@@ -3167,7 +3167,7 @@ void misc_faller_create(gentity_t* ent, gentity_t* other, gentity_t* activator)
 	trap->LinkEntity((sharedEntity_t*)faller);
 }
 
-void misc_faller_think(gentity_t* ent)
+static void misc_faller_think(gentity_t* ent)
 {
 	misc_faller_create(ent, ent, ent);
 	ent->nextthink = level.time + ent->genericValue1 + Q_irand(0, ent->genericValue2);
@@ -3225,7 +3225,7 @@ typedef struct tagOwner_s
 
 tagOwner_t refTagOwnerMap[MAX_TAG_OWNERS];
 
-tagOwner_t* FirstFreeTagOwner(void)
+static tagOwner_t* FirstFreeTagOwner(void)
 {
 	int i = 0;
 
@@ -3242,7 +3242,7 @@ tagOwner_t* FirstFreeTagOwner(void)
 	return NULL;
 }
 
-reference_tag_t* FirstFreeRefTag(tagOwner_t* tagOwner)
+static reference_tag_t* FirstFreeRefTag(tagOwner_t* tagOwner)
 {
 	int i = 0;
 
@@ -3290,7 +3290,7 @@ TAG_FindOwner
 -------------------------
 */
 
-tagOwner_t* TAG_FindOwner(const char* owner)
+static tagOwner_t* TAG_FindOwner(const char* owner)
 {
 	int i = 0;
 
@@ -3660,7 +3660,7 @@ typedef struct shooterClient_s
 static shooterClient_t g_shooterClients[MAX_SHOOTERS];
 static qboolean g_shooterClientInit = qfalse;
 
-gclient_t* G_ClientForShooter(void)
+static gclient_t* G_ClientForShooter(void)
 {
 	int i = 0;
 
@@ -3684,7 +3684,7 @@ gclient_t* G_ClientForShooter(void)
 	return NULL;
 }
 
-void G_FreeClientForShooter(const gclient_t* cl)
+static void G_FreeClientForShooter(const gclient_t* cl)
 {
 	int i = 0;
 	while (i < MAX_SHOOTERS)
@@ -3855,7 +3855,7 @@ void SP_misc_trip_mine(gentity_t* ent)
 #define RACK_REPEATER	2
 #define RACK_ROCKET		4
 
-void GunRackAddItem(gitem_t* gun, vec3_t org, vec3_t angs, const float ffwd, const float fright, const float fup)
+static void GunRackAddItem(gitem_t* gun, vec3_t org, vec3_t angs, const float ffwd, const float fright, const float fup)
 {
 	vec3_t fwd, right;
 	gentity_t* it_ent = G_Spawn();
@@ -4245,8 +4245,6 @@ PWR_CELL - Adds one or more power cell packs that are compatible with the Disupt
 NO_FILL - Only puts selected ammo on the rack, it never fills up all three slots if only one or two items were checked
 */
 
-extern gitem_t* FindItemForAmmo(ammo_t ammo);
-
 void SP_misc_model_ammo_rack(gentity_t* ent)
 {
 	// If BLASTER is checked...or nothing is checked then we'll do blasters
@@ -4309,7 +4307,7 @@ void SP_misc_model_ammo_rack(gentity_t* ent)
 //all this stuff ported from SP
 extern void ICam_Disable(void);
 
-void camera_die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int damage, int mod)
+static void camera_die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int damage, int mod)
 {
 	vec3_t ang;
 
@@ -4594,7 +4592,7 @@ INACTIVE - Start off, has to be activated to be usable
 "target2"	thing to use when player uses the panel without the key
 */
 char KeyPool[10]; //key pool for security keys
-void panel_touch(gentity_t* self, gentity_t* other, trace_t* trace)
+static void panel_touch(gentity_t* self, gentity_t* other, trace_t* trace)
 {
 	if (self->genericValue1 < level.time)
 	{
@@ -4664,7 +4662,7 @@ qboolean INV_SecurityKeyGive(gentity_t* target, const char* keyname)
 	return qtrue;
 }
 
-void key_touch(gentity_t* self, gentity_t* other, trace_t* trace)
+static void key_touch(gentity_t* self, gentity_t* other, trace_t* trace)
 {
 	//touch code for keys
 	if (other && other->s.number < MAX_CLIENTS)
@@ -4785,7 +4783,7 @@ void SP_misc_model_bomb_planted(gentity_t* ent)
 
 extern void beacon_think(gentity_t* ent);
 
-void beacon_deploy(gentity_t* ent)
+static void beacon_deploy(gentity_t* ent)
 {
 	ent->think = beacon_think;
 	ent->nextthink = level.time + FRAMETIME * 0.5f;

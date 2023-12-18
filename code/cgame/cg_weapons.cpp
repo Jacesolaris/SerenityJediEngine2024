@@ -382,7 +382,7 @@ void CG_RegisterWeapon(const int weapon_num)
 
 		cgs.effects.destructionProjectile = theFxScheduler.RegisterEffect("destruction/shot");
 		cgs.effects.destructionHit = theFxScheduler.RegisterEffect("destruction/explosion");
-		cgs.media.destructionSound = cgi_S_RegisterSound("sound/weapons/concussion/missleloop.wav");
+		cgs.media.destructionSound = cgi_S_RegisterSound("sound/weapons/concussion/missileloop.wav");
 
 		cgs.effects.blastProjectile = theFxScheduler.RegisterEffect("repeater/alt_projectile");
 		cgs.effects.blastHit = theFxScheduler.RegisterEffect("force/blast");

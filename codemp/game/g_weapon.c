@@ -232,7 +232,7 @@ static void WP_FireEmplaced(gentity_t* ent, qboolean alt_fire);
 
 void laserTrapStick(gentity_t* ent, vec3_t endpos, vec3_t normal);
 
-void touch_NULL(gentity_t* ent, gentity_t* other, trace_t* trace)
+static void touch_NULL(gentity_t* ent, gentity_t* other, trace_t* trace)
 {
 }
 
@@ -702,7 +702,7 @@ void WP_FireWrist(gentity_t* ent)
 	{
 		//no inherent aim screw up
 	}
-	else if (!(ent->client->ps.fd.forcePowersActive & 1 << FP_SEE) || ent->client->ps.fd.forcePowersActive & 1 << FP_SEE && ent->client->ps.fd.forcePowerLevel[FP_SEE] < FORCE_LEVEL_2)
+	else if ((!(ent->client->ps.fd.forcePowersActive & 1 << FP_SEE)) || ent->client->ps.fd.forcePowersActive & 1 << FP_SEE && ent->client->ps.fd.forcePowerLevel[FP_SEE] < FORCE_LEVEL_2)
 	{//force sight 2+ gives perfect aim
 		if (!(ent->r.svFlags & SVF_BOT))
 		{
@@ -754,7 +754,7 @@ void WP_FireBlaster(gentity_t* ent, const qboolean alt_fire)
 	{
 		//no inherent aim screw up
 	}
-	else if (!(ent->client->ps.fd.forcePowersActive & 1 << FP_SEE) || ent->client->ps.fd.forcePowersActive & 1 << FP_SEE && ent->client->ps.fd.forcePowerLevel[FP_SEE] < FORCE_LEVEL_2)
+	else if ((!(ent->client->ps.fd.forcePowersActive & 1 << FP_SEE)) || ent->client->ps.fd.forcePowersActive & 1 << FP_SEE && ent->client->ps.fd.forcePowerLevel[FP_SEE] < FORCE_LEVEL_2)
 	{//force sight 2+ gives perfect aim
 		if (alt_fire)
 		{
@@ -1449,7 +1449,7 @@ static void WP_BowcasterMainFire(gentity_t* ent)
 		{
 			//no inherent aim screw up
 		}
-		else if (!(ent->client->ps.fd.forcePowersActive & 1 << FP_SEE) || ent->client->ps.fd.forcePowersActive & 1 << FP_SEE && ent->client->ps.fd.forcePowerLevel[FP_SEE] < FORCE_LEVEL_2)
+		else if ((!(ent->client->ps.fd.forcePowersActive & 1 << FP_SEE)) || ent->client->ps.fd.forcePowersActive & 1 << FP_SEE && ent->client->ps.fd.forcePowerLevel[FP_SEE] < FORCE_LEVEL_2)
 		{//force sight 2+ gives perfect aim
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
@@ -1606,7 +1606,7 @@ static void WP_FireRepeater(gentity_t* ent, const qboolean alt_fire)
 		{
 			//no inherent aim screw up
 		}
-		else if (!(ent->client->ps.fd.forcePowersActive & 1 << FP_SEE) || ent->client->ps.fd.forcePowersActive & 1 << FP_SEE && ent->client->ps.fd.forcePowerLevel[FP_SEE] < FORCE_LEVEL_2)
+		else if ((!(ent->client->ps.fd.forcePowersActive & 1 << FP_SEE)) || ent->client->ps.fd.forcePowersActive & 1 << FP_SEE && ent->client->ps.fd.forcePowerLevel[FP_SEE] < FORCE_LEVEL_2)
 		{//force sight 2+ gives perfect aim
 			if (!(ent->r.svFlags & SVF_BOT))
 			{
@@ -1973,7 +1973,7 @@ static void WP_FlechetteMainFire(gentity_t* ent)
 			{
 				//no inherent aim screw up
 			}
-			else if (!(ent->client->ps.fd.forcePowersActive & 1 << FP_SEE) || ent->client->ps.fd.forcePowersActive & 1 << FP_SEE && ent->client->ps.fd.forcePowerLevel[FP_SEE] < FORCE_LEVEL_2)
+			else if ((!(ent->client->ps.fd.forcePowersActive & 1 << FP_SEE)) || ent->client->ps.fd.forcePowersActive & 1 << FP_SEE && ent->client->ps.fd.forcePowerLevel[FP_SEE] < FORCE_LEVEL_2)
 			{//force sight 2+ gives perfect aim
 				if (!(ent->r.svFlags & SVF_BOT))
 				{
@@ -5408,6 +5408,7 @@ qboolean doesnot_drain_mishap(const gentity_t* ent)
 
 extern void FireOverheatFail(gentity_t* ent);
 extern qboolean PM_ReloadAnim(int anim);
+extern qboolean PM_WeponRestAnim(int anim);
 
 void FireWeapon(gentity_t* ent, const qboolean alt_fire)
 {
@@ -5446,7 +5447,17 @@ void FireWeapon(gentity_t* ent, const qboolean alt_fire)
 		}
 	}
 
+	if (ent && ent->client && ent->client->frozenTime > level.time)
+	{
+		return; //this entity is mind-tricking the current client, so don't render it
+	}
+
 	if (ent && ent->client && PM_ReloadAnim(ent->client->ps.torsoAnim))
+	{
+		return;
+	}
+
+	if (ent && ent->client && PM_WeponRestAnim(ent->client->ps.torsoAnim))
 	{
 		return;
 	}

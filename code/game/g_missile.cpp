@@ -1138,11 +1138,11 @@ static void g_bounce_roll_missile(gentity_t* ent, const trace_t* trace)
 
 /*
 ================
-g_bounce_missile
+G_BounceMissile
 
 ================
 */
-void g_bounce_missile(gentity_t* ent, trace_t* trace)
+void G_BounceMissile(gentity_t* ent, trace_t* trace)
 {
 	vec3_t velocity;
 
@@ -1607,7 +1607,7 @@ static void g_missile_impact(gentity_t* ent, trace_t* trace, const int hit_loc =
 			}
 		}
 
-		g_bounce_missile(ent, trace);
+		G_BounceMissile(ent, trace);
 		NPC_SetAnim(other, SETANIM_TORSO, Q_irand(BOTH_PAIN1, BOTH_PAIN3), SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD);
 
 		if (ent->owner)
@@ -1636,7 +1636,7 @@ static void g_missile_impact(gentity_t* ent, trace_t* trace, const int hit_loc =
 			G_Damage(other, ent, ent->owner, ent->currentOrigin, ent->s.pos.trDelta, 0, DAMAGE_NO_DAMAGE, MOD_UNKNOWN);
 		}
 
-		g_bounce_missile(ent, trace);
+		G_BounceMissile(ent, trace);
 
 		if (ent->owner)
 		{
@@ -1656,7 +1656,7 @@ static void g_missile_impact(gentity_t* ent, trace_t* trace, const int hit_loc =
 		{
 			if (!(other->contents & CONTENTS_LIGHTSABER))
 			{
-				g_bounce_missile(ent, trace);
+				G_BounceMissile(ent, trace);
 
 				if (--ent->bounceCount < 0)
 				{
@@ -1680,7 +1680,7 @@ static void g_missile_impact(gentity_t* ent, trace_t* trace, const int hit_loc =
 				|| g_spskill->integer >= 2 && ent->s.weapon != WP_FLECHETTE && ent->s.weapon != WP_DEMP2
 				&& ent->s.weapon != WP_BOWCASTER && ent->s.weapon != WP_REPEATER)
 			{
-				g_bounce_missile(ent, trace);
+				G_BounceMissile(ent, trace);
 
 				if (--ent->bounceCount < 0)
 				{
@@ -2648,7 +2648,7 @@ void G_StasisMissile(gentity_t* ent, gentity_t* missile)
 
 	if (!registered)
 	{
-		stasisLoopSound = G_SoundIndex("sound/effects/blaster_stasis_loop.wav3");
+		stasisLoopSound = G_SoundIndex("sound/effects/blaster_stasis_loop.wav");
 		registered = qtrue;
 	}
 
@@ -2695,11 +2695,11 @@ void G_StasisMissile(gentity_t* ent, gentity_t* missile)
 		}
 	}
 	VectorNormalize(bounce_dir);
+	missile->s.loopSound = stasisLoopSound;
 
 	if (missile_in_stasis)
 	{
 		VectorScale(bounce_dir, stasisspeed, missile->s.pos.trDelta);
-		missile->s.loopSound = stasisLoopSound;
 
 #ifdef _DEBUG
 		assert(!Q_isnan(missile->s.pos.trDelta[0]) && !Q_isnan(missile->s.pos.trDelta[1]) && !Q_isnan(missile->s.pos.trDelta[2]));

@@ -4784,27 +4784,26 @@ static void wp_constant_routine(bot_state_t* bs)
 
 	if (bs->wpCurrent->forceJumpTo)
 	{
-#ifdef FORCEJUMP_INSTANTMETHOD
 		if (bs->cur_ps.stats[STAT_HOLDABLE_ITEMS] & (1 << HI_JETPACK))
 		{
-			client->jetPackOn = qtrue;
 			bs->cur_ps.eFlags = PM_JETPACK;
 			bs->cur_ps.eFlags |= EF_JETPACK_ACTIVE;
 			bs->cur_ps.eFlags |= EF_JETPACK_FLAMING;
 			bs->cur_ps.eFlags |= EF3_JETPACK_HOVER;
 			bs->jumpHoldTime = ((bs->forceJumpChargeTime + level.time) / 2) + 50000;
-		}
-		if (bs->origin[2] + 16 < bs->wpCurrent->origin[2])
-		{
-			bs->jumpTime = level.time + 100;
-		}
-#else
 
-		if (bs->cur_ps.fd.forceJumpCharge < forceJumpStrength[bs->cur_ps.fd.forcePowerLevel[FP_LEVITATION]] - 100)
-		{
-			bs->forceJumpChargeTime = level.time + 200;
+			if (bs->origin[2] + 16 < bs->wpCurrent->origin[2])
+			{
+				bs->jumpTime = level.time + 100;
+			}
 		}
-#endif
+		else
+		{
+			if (bs->cur_ps.fd.forceJumpCharge < forceJumpStrength[bs->cur_ps.fd.forcePowerLevel[FP_LEVITATION]] - 100)
+			{
+				bs->forceJumpChargeTime = level.time + 200;
+			}
+		}
 	}
 }
 

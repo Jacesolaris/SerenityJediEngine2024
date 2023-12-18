@@ -93,7 +93,7 @@ extern void g_reflect_missile_auto(gentity_t* ent, gentity_t* missile, vec3_t fo
 extern void g_reflect_missile_npc(gentity_t* ent, gentity_t* missile, vec3_t forward);
 extern int G_CheckLedgeDive(gentity_t* self, float check_dist, const vec3_t check_vel, qboolean try_opposite,
 	qboolean try_perp);
-extern void g_bounce_missile(gentity_t* ent, trace_t* trace);
+extern void G_BounceMissile(gentity_t* ent, trace_t* trace);
 extern qboolean G_PointInBounds(const vec3_t point, const vec3_t mins, const vec3_t maxs);
 extern void NPC_UseResponse(gentity_t* self, const gentity_t* user, qboolean useWhenDone);
 extern void g_missile_impacted(gentity_t* ent, gentity_t* other, vec3_t impact_pos, vec3_t normal,
@@ -8298,7 +8298,7 @@ static void WP_SaberImpact(gentity_t* owner, gentity_t* saber, trace_t* trace)
 			return;
 		}
 
-		g_bounce_missile(saber, trace);
+		G_BounceMissile(saber, trace);
 
 		if (saber->s.pos.trType == TR_GRAVITY)
 		{

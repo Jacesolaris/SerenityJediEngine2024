@@ -31,8 +31,7 @@ extern void G_DamageFromKiller(gentity_t* pEnt, const gentity_t* p_veh_ent, gent
 	int damage,
 	int dflags, int mod);
 
-extern void BG_SetAnim(playerState_t* ps, const animation_t* animations, int setAnimParts, int anim,
-	int setAnimFlags);
+extern void BG_SetAnim(playerState_t* ps, const animation_t* animations, int setAnimParts, int anim, int setAnimFlags);
 extern void BG_SetLegsAnimTimer(playerState_t* ps, int time);
 extern void BG_SetTorsoAnimTimer(playerState_t* ps, int time);
 void G_VehUpdateShields(const gentity_t* targ);

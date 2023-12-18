@@ -1694,7 +1694,7 @@ qboolean G_FilterPacket(char* from);
 //
 // g_weapon.c
 //
-void FireWeapon(gentity_t* ent, qboolean alt_fire);
+void FireWeapon(gentity_t* ent, const qboolean alt_fire);
 void BlowDetpacks(const gentity_t* ent);
 void RemoveDetpacks(const gentity_t* ent);
 

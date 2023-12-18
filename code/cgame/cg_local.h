@@ -882,7 +882,7 @@ void CG_RegisterWeapon(int weapon_num);
 void CG_RegisterItemVisuals(int item_num);
 void CG_RegisterItemSounds(int itemNum);
 
-void CG_FireWeapon(centity_t* cent, qboolean alt_fire);
+void CG_FireWeapon(centity_t* cent, const qboolean alt_fire);
 
 void CG_AddViewWeapon(playerState_t* ps);
 void CG_AddViewWeaponDuals(playerState_t* ps);

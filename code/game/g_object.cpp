@@ -29,7 +29,7 @@ void G_StopObjectMoving(gentity_t* object);
 
 /*
 ================
-g_bounce_missile
+G_BounceMissile
 
 ================
 */

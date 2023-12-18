@@ -6141,7 +6141,7 @@ qboolean PM_WalkingAnim(int anim);
 
 static void BG_SetAnimFinal(playerState_t* ps, const animation_t* animations, const int setAnimParts, const int anim, const int setAnimFlags)
 {
-	float edit_anim_speed = 1;
+	float editAnimSpeed = 1;
 
 	if (!animations)
 	{
@@ -6151,7 +6151,7 @@ static void BG_SetAnimFinal(playerState_t* ps, const animation_t* animations, co
 	assert(anim > -1);
 	assert(animations[anim].firstFrame > 0 || animations[anim].numFrames > 0);
 
-	pm_saber_start_trans_anim(ps->clientNum, ps->fd.saber_anim_level, ps->weapon, anim, &edit_anim_speed, ps->userInt3);
+	pm_saber_start_trans_anim(ps->clientNum, ps->fd.saber_anim_level, ps->weapon, anim, &editAnimSpeed, ps->userInt3);
 
 	// Set torso anim
 	if (setAnimParts & SETANIM_TORSO)
@@ -6176,17 +6176,17 @@ static void BG_SetAnimFinal(playerState_t* ps, const animation_t* animations, co
 			if (setAnimFlags & SETANIM_FLAG_HOLDLESS)
 			{
 				// Make sure to only wait in full 1/20 sec server frame intervals.
-				if (edit_anim_speed > 0)
+				if (editAnimSpeed > 0)
 				{
 					if (animations[anim].numFrames < 2)
 					{
 						//single frame animations should just run with one frame worth of animation.
-						ps->torsoTimer = fabs(animations[anim].frameLerp) * (1 / edit_anim_speed);
+						ps->torsoTimer = fabs(animations[anim].frameLerp) * (1 / editAnimSpeed);
 					}
 					else
 					{
 						ps->torsoTimer = (animations[anim].numFrames - 1) * fabs(animations[anim].frameLerp) * (1 /
-							edit_anim_speed);
+							editAnimSpeed);
 					}
 
 					if (ps->torsoTimer > 1)
@@ -6227,7 +6227,7 @@ setAnimLegs:
 			if (setAnimFlags & SETANIM_FLAG_HOLDLESS)
 			{
 				int dur = (animations[anim].numFrames - 1) * fabs(animations[anim].frameLerp);
-				const int speedDif = dur - dur * edit_anim_speed;
+				const int speedDif = dur - dur * editAnimSpeed;
 				dur += speedDif;
 				if (dur > 1)
 				{
@@ -6254,7 +6254,8 @@ setAnimLegs:
 		}
 	}
 
-setAnimDone:;
+setAnimDone:
+	return;
 }
 
 static void PM_SetAnimFinal(const int setAnimParts, const int anim, const int setAnimFlags)
@@ -6329,26 +6330,6 @@ void BG_SetAnim(playerState_t* ps, const animation_t* animations, int setAnimPar
 		{
 			//still? Just return then I guess.
 			return;
-		}
-	}
-
-	if (ps->stats[STAT_HEALTH] > 0)
-	{
-		//don't lock anims if the guy is dead
-		if (ps->torsoTimer
-			&& PM_LockedAnim(ps->torsoAnim)
-			&& !PM_LockedAnim(anim))
-		{
-			//nothing can override these special anims
-			setAnimParts &= ~SETANIM_TORSO;
-		}
-
-		if (ps->legsTimer
-			&& PM_LockedAnim(ps->legsAnim)
-			&& !PM_LockedAnim(anim))
-		{
-			//nothing can override these special anims
-			setAnimParts &= ~SETANIM_LEGS;
 		}
 	}
 

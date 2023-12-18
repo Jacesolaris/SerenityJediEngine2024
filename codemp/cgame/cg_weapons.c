@@ -2597,9 +2597,19 @@ void CG_FireWeapon(centity_t* cent, const qboolean alt_fire)
 		return;
 	}
 
-	if (PM_ReloadAnim(cent->currentState.torsoAnim) || PM_WeponRestAnim(cent->currentState.torsoAnim))
+	if (PM_ReloadAnim(cent->currentState.torsoAnim))
 	{
 		return;
+	}
+
+	if (PM_WeponRestAnim(cent->currentState.torsoAnim))
+	{
+		return;
+	}
+
+	if (cg.predicted_player_state.frozenTime > cg.time)
+	{
+		return; //this entity is mind-tricking the current client, so don't render it
 	}
 
 	const weaponInfo_t* weap = &cg_weapons[ent->weapon];

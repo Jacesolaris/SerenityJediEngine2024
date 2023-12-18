@@ -1436,6 +1436,11 @@ void G_CheapWeaponFire(const int entNum, const int ev)
 			return;
 		}
 
+		if (ent && ent->client && ent->client->frozenTime > level.time)
+		{
+			return; //this entity is mind-tricking the current client, so don't render it
+		}
+
 		if (ent->m_pVehicle && ent->m_pVehicle->m_pVehicleInfo->type == VH_SPEEDER &&
 			ent->client && ent->client->ps.m_iVehicleNum)
 		{
@@ -1462,6 +1467,11 @@ void G_CheapWeaponFire(const int entNum, const int ev)
 		if (PM_ReloadAnim(ent->client->ps.torsoAnim))
 		{
 			return;
+		}
+
+		if (ent && ent->client && ent->client->frozenTime > level.time)
+		{
+			return; //this entity is mind-tricking the current client, so don't render it
 		}
 		FireWeapon(ent, qtrue);
 		ent->client->dangerTime = level.time;
@@ -1636,6 +1646,11 @@ void ClientEvents(gentity_t* ent, int old_event_sequence)
 			{
 				return;
 			}
+
+			if (ent && ent->client && ent->client->frozenTime > level.time)
+			{
+				return; //this entity is mind-tricking the current client, so don't render it
+			}
 			FireWeapon(ent, qfalse);
 			ent->client->dangerTime = level.time;
 			ent->client->ps.eFlags &= ~EF_INVULNERABLE;
@@ -1646,6 +1661,11 @@ void ClientEvents(gentity_t* ent, int old_event_sequence)
 			if (PM_ReloadAnim(Client->ps.torsoAnim))
 			{
 				return;
+			}
+
+			if (ent && ent->client && ent->client->frozenTime > level.time)
+			{
+				return; //this entity is mind-tricking the current client, so don't render it
 			}
 			FireWeapon(ent, qtrue);
 			ent->client->dangerTime = level.time;
@@ -5592,7 +5612,7 @@ void ClientThink_real(gentity_t* ent)
 				thrower->client->doingThrow = 0;
 				thrower->client->ps.forceHandExtend = HANDEXTEND_NONE;
 			}
-		}
+	}
 		else if (thrower->inuse && thrower->client && thrower->ghoul2 &&
 			trap->G2API_HaveWeGhoul2Models(thrower->ghoul2))
 		{
@@ -5754,8 +5774,8 @@ void ClientThink_real(gentity_t* ent)
 						}
 					}
 				}
-			}
 		}
+}
 	}
 	else if (ent->client->ps.heldByClient)
 	{
@@ -5875,7 +5895,7 @@ void ClientThink_real(gentity_t* ent)
 				pmove.ghoul2 = ent->ghoul2;
 				pmove.g2Bolts_LFoot = trap->G2API_AddBolt(ent->ghoul2, 0, "*l_leg_foot");
 				pmove.g2Bolts_RFoot = trap->G2API_AddBolt(ent->ghoul2, 0, "*r_leg_foot");
-			}
+	}
 		}
 
 	//point the saber data to the right place

@@ -564,13 +564,12 @@ qboolean ConsoleCommand();
 //
 // g_weapon.c
 //
-void FireWeapon(gentity_t* ent, qboolean alt_fire);
+void FireWeapon(gentity_t* ent, const qboolean alt_fire);
 
 //
 // p_hud.c
 //
 void MoveClientToIntermission(gentity_t* ent);
-void G_SetStats(gentity_t* ent);
 void DeathmatchScoreboardMessage(const gentity_t* ent);
 
 //

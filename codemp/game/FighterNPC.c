@@ -43,8 +43,7 @@ extern void G_DamageFromKiller(gentity_t* pEnt, gentity_t* pVehEnt, gentity_t* a
 #endif
 
 extern qboolean BG_UnrestrainedPitchRoll(const playerState_t* ps, Vehicle_t* p_veh);
-extern void BG_SetAnim(playerState_t* ps, const animation_t* animations, int setAnimParts, int anim,
-	int setAnimFlags);
+extern void BG_SetAnim(playerState_t* ps, const animation_t* animations, int setAnimParts, int anim, int setAnimFlags);
 extern int BG_GetTime(void);
 
 //this stuff has got to be predicted, so..
@@ -1775,8 +1774,7 @@ static void AnimateVehicle(Vehicle_t* p_veh)
 	if (Anim != -1)
 	{
 		const int iFlags = SETANIM_FLAG_NORMAL;
-		BG_SetAnim(p_veh->m_pParentEntity->playerState, bgAllAnims[p_veh->m_pParentEntity->localAnimIndex].anims,
-			SETANIM_BOTH, Anim, iFlags);
+		BG_SetAnim(p_veh->m_pParentEntity->playerState, bgAllAnims[p_veh->m_pParentEntity->localAnimIndex].anims, SETANIM_BOTH, Anim, iFlags);
 	}
 }
 

@@ -505,7 +505,7 @@ void g_reflect_missile_bot(const gentity_t* ent, gentity_t* missile, vec3_t forw
 
 /*
 ================
-g_bounce_missile
+G_BounceMissile
 
 ================
 */

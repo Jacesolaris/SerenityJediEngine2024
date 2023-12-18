@@ -830,7 +830,7 @@ static void DoLine2(const vec3_t start, const vec3_t end, const vec3_t up, const
 	tess.indexes[tess.numIndexes++] = vbase + 3;
 }
 
-static void DoLine_Oriented(const vec3_t start, const vec3_t end, const vec3_t up, float spanWidth)
+static void DoLine_Oriented(const vec3_t start, const vec3_t end, const vec3_t up, const float spanWidth)
 {
 	float		spanWidth2;
 	int			vbase;

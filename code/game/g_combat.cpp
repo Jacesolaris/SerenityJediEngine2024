@@ -1865,7 +1865,7 @@ int G_PickPainAnim(const gentity_t* self, const vec3_t point, int hit_loc = HL_N
 	}
 }
 
-extern void g_bounce_missile(gentity_t* ent, trace_t* trace);
+extern void G_BounceMissile(gentity_t* ent, trace_t* trace);
 
 void LimbThink(gentity_t* ent)
 {
@@ -1932,7 +1932,7 @@ void LimbThink(gentity_t* ent)
 
 	if (tr.fraction != 1)
 	{
-		g_bounce_missile(ent, &tr);
+		G_BounceMissile(ent, &tr);
 		if (ent->s.pos.trType == TR_STATIONARY)
 		{
 			//stopped, stop spinning

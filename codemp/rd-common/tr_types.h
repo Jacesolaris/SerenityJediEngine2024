@@ -116,15 +116,16 @@ typedef enum
 	RT_POLY,
 	RT_SPRITE,
 	RT_ORIENTED_QUAD,
-	RT_BEAM,
-	RT_SABER_GLOW,
-	RT_ELECTRICITY,
-	RT_PORTALSURFACE,
-	// doesn't draw anything, just info for portals
 	RT_LINE,
 	RT_ORIENTEDLINE,
+	RT_ELECTRICITY,
 	RT_CYLINDER,
 	RT_LATHE,
+	RT_BEAM,
+	RT_SABER_GLOW,
+	RT_PORTALSURFACE,
+	// doesn't draw anything, just info for portals
+	RT_CLOUDS,
 	RT_LIGHTNING,
 
 	RT_MAX_REF_ENTITY_TYPE

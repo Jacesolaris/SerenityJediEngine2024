@@ -35,8 +35,7 @@ extern void ChangeWeapon(const gentity_t* ent, int newWeapon);
 extern int PM_AnimLength(int index, animNumber_t anim);
 #endif
 
-extern void BG_SetAnim(playerState_t* ps, const animation_t* animations, int setAnimParts, int anim,
-	int setAnimFlags);
+extern void BG_SetAnim(playerState_t* ps, const animation_t* animations, int setAnimParts, int anim, int setAnimFlags);
 extern int BG_GetTime(void);
 extern qboolean BG_SabersOff(const playerState_t* ps);
 

@@ -2121,7 +2121,7 @@ void CG_WeaponClean_f(void);
 void CG_RegisterWeapon(int weapon_num);
 void CG_RegisterItemVisuals(int item_num);
 
-void CG_FireWeapon(centity_t* cent, qboolean alt_fire);
+void CG_FireWeapon(centity_t* cent, const qboolean alt_fire);
 void cg_missile_hit_wall(int weapon, vec3_t origin, vec3_t dir, qboolean alt_fire, int charge);
 void cg_missile_hit_player(int weapon, vec3_t origin, vec3_t dir, qboolean alt_fire);
 

@@ -1983,6 +1983,7 @@ using weaponInfo_t = struct weaponInfo_s
 
 	qhandle_t missileModel;
 	sfxHandle_t missileSound;
+	sfxHandle_t stasismissileSound;
 	void (*missileTrailFunc)(centity_t*, const weaponInfo_s* wi);
 
 	qhandle_t alt_missileModel;

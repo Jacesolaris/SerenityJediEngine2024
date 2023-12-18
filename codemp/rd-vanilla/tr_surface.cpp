@@ -652,7 +652,7 @@ static void RB_SurfaceLine(void)
 	DoLine(start, end, right, e->radius);
 }
 
-static void RB_SurfaceOrientedLine()
+static void RB_SurfaceOrientedLine(void)
 {
 	vec3_t		right;
 	vec3_t		start, end;

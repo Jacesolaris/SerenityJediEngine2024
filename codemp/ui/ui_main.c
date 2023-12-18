@@ -5952,8 +5952,7 @@ void UI_UpdateCharacterSkin(void)
 
 	if (!item)
 	{
-		Com_Error(ERR_FATAL, "UI_UpdateCharacterSkin: Could not find item (character) in menu (%s)",
-			menu->window.name);
+		Com_Error(ERR_FATAL, "UI_UpdateCharacterSkin: Could not find item (character) in menu (%s)", menu->window.name);
 	}
 
 	trap->Cvar_VariableStringBuffer("ui_char_model", model, sizeof model);

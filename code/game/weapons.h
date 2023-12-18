@@ -172,6 +172,7 @@ using weaponData_t = struct weaponData_s
 
 	char missileMdl[64]; // Missile Model
 	char missileSound[64]; // Missile flight sound
+	char stasismissileSound[64]; // Missile flight sound
 	float missileDlight; // what is says
 	vec3_t missileDlightColor; // ditto
 
