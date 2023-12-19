@@ -3581,12 +3581,12 @@ void Cmd_SaberAttackCycle_f(gentity_t* ent)
 		if (ent->client->ps.weapon == WP_SABER && ent->client->ps.saberInFlight)
 		{
 			//saber not currently in use or available.
-			return qfalse;
+			return;
 		}
 
 		if (PM_InKnockDown(&ent->client->ps) || PM_InSlapDown(&ent->client->ps) || PM_InRoll(&ent->client->ps))
 		{
-			return qfalse;
+			return;
 		}
 	}
 

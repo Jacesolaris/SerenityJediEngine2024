@@ -365,7 +365,7 @@ qboolean BG_ParseLiteral(const char** data, const char* string)
 	return qfalse;
 }
 
-qboolean BG_ParseLiteralSilent(const char** data, const char* string)
+static qboolean BG_ParseLiteralSilent(const char** data, const char* string)
 {
 	const char* token = COM_ParseExt(data, qtrue);
 	if (!token[0])
@@ -824,7 +824,7 @@ qboolean WP_SaberCanTurnOffSomeBlades(const saberInfo_t* saber)
 	return qtrue;
 }
 
-void wp_saber_set_defaults(saberInfo_t* saber)
+static void wp_saber_set_defaults(saberInfo_t* saber)
 {
 	//Set defaults so that, if it fails, there's at least something there
 	for (int i = 0; i < MAX_BLADES; i++)
@@ -2993,7 +2993,7 @@ qboolean WP_SaberParseParm(const char* saber_name, const char* parmname, char* s
 	return qfalse;
 }
 
-qboolean WP_SaberValidForPlayerInMP(const char* saber_name)
+static qboolean WP_SaberValidForPlayerInMP(const char* saber_name)
 {
 	char allowed[8] = { 0 };
 	if (!WP_SaberParseParm(saber_name, "notInMP", allowed))
@@ -3025,15 +3025,6 @@ void WP_RemoveSaber(saberInfo_t* sabers, const int saberNum)
 	//ent->client->ps.dualSabers = qfalse;
 	BG_SI_Deactivate(&sabers[saberNum]);
 	BG_SI_SetLength(&sabers[saberNum], 0.0f);
-	//	if ( ent->weaponModel[saberNum] > 0 )
-	//	{
-	//		trap->G2API_RemoveGhoul2Model( ent->ghoul2, ent->weaponModel[saberNum] );
-	//		ent->weaponModel[saberNum] = -1;
-	//	}
-	//	if ( saberNum == 1 )
-	//	{
-	//		ent->client->ps.dualSabers = qfalse;
-	//	}
 }
 
 void WP_SetSaber(const int entNum, saberInfo_t* sabers, const int saberNum, const char* saber_name)
@@ -3075,7 +3066,7 @@ void WP_SetSaber(const int entNum, saberInfo_t* sabers, const int saberNum, cons
 	}
 }
 
-void WP_SaberSetColor(saberInfo_t* sabers, const int saberNum, const int blade_num, const char* colorName)
+static void WP_SaberSetColor(saberInfo_t* sabers, const int saberNum, const int blade_num, const char* colorName)
 {
 	if (!sabers)
 	{
@@ -3149,7 +3140,7 @@ void WP_SaberLoadParms()
 }
 
 #ifdef UI_BUILD
-qboolean WP_IsSaberTwoHanded(const char* saber_name)
+static qboolean WP_IsSaberTwoHanded(const char* saber_name)
 {
 	char twoHandedString[8] = { 0 };
 	WP_SaberParseParm(saber_name, "twoHanded", twoHandedString);

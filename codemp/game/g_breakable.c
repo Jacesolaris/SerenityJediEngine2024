@@ -160,12 +160,12 @@ void misc_model_breakable_die(gentity_t* self, const gentity_t* inflictor, genti
 	}
 }
 
-void misc_model_breakable_touch(gentity_t* self, gentity_t* other, trace_t* trace)
+static void misc_model_breakable_touch(gentity_t* self, gentity_t* other, trace_t* trace)
 {
 	//touch function for model breakable.  doesn't actually do anything, but we need one to prevent crashs like the one on taspir2
 }
 
-void misc_model_throw_at_target4(gentity_t* self, const gentity_t* activator)
+static void misc_model_throw_at_target4(gentity_t* self, const gentity_t* activator)
 {
 	vec3_t push_dir, kvel;
 	float knockback = 200;
@@ -289,7 +289,7 @@ void misc_model_breakable_pain(gentity_t* self, gentity_t* attacker, int damage)
 	}
 }
 
-void health_shutdown(gentity_t* self)
+static void health_shutdown(gentity_t* self)
 {
 	if (!(self->s.eFlags & EF_ANIM_ONCE))
 	{
@@ -499,7 +499,7 @@ void health_use(gentity_t* self, gentity_t* other, gentity_t* activator)
 	}
 }
 
-void ammo_shutdown(gentity_t* self)
+static void ammo_shutdown(gentity_t* self)
 {
 	if (!(self->s.eFlags & EF_ANIM_ONCE))
 	{
@@ -619,7 +619,7 @@ void ammo_use(gentity_t* self, gentity_t* other, gentity_t* activator)
 }
 
 //initization for misc_model_breakable
-void misc_model_breakable_init(gentity_t* ent)
+static void misc_model_breakable_init(gentity_t* ent)
 {
 	const int type = MDL_OTHER;
 

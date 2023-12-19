@@ -159,7 +159,7 @@ Returns qfalse if the move is blocked
 */
 extern qboolean G_OkayToRemoveCorpse(gentity_t* self);
 
-qboolean G_TryPushingEntity(gentity_t* check, gentity_t* pusher, vec3_t move, vec3_t amove)
+static qboolean G_TryPushingEntity(gentity_t* check, gentity_t* pusher, vec3_t move, vec3_t amove)
 {
 	vec3_t forward;
 	vec3_t right;
@@ -512,7 +512,7 @@ qboolean g_mover_push(gentity_t* pusher, vec3_t move, vec3_t amove, gentity_t** 
 G_MoverTeam
 =================
 */
-void G_MoverTeam(gentity_t* ent)
+static void G_MoverTeam(gentity_t* ent)
 {
 	gentity_t* part, * obstacle;
 
@@ -1622,7 +1622,7 @@ Elevator cars require that the trigger extend through the entire low position,
 not just sit on top of it.
 ================
 */
-void SpawnPlatTrigger(gentity_t* ent)
+static void SpawnPlatTrigger(gentity_t* ent)
 {
 	vec3_t tmin{}, tmax{};
 

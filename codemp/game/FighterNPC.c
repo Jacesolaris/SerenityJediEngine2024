@@ -190,7 +190,7 @@ static float PredictedAngularDecrement(const float scale, const float time_mod, 
 
 #ifdef _GAME//only do this check on game side, because if it's cgame, it's being predicted, and it's only predicted if the local client is the driver
 
-qboolean FighterIsInSpace(const gentity_t* gParent)
+static qboolean FighterIsInSpace(const gentity_t* gParent)
 {
 	if (gParent
 		&& gParent->client
@@ -203,7 +203,7 @@ qboolean FighterIsInSpace(const gentity_t* gParent)
 }
 #endif
 
-qboolean FighterOverValidLandingSurface(const Vehicle_t* p_veh)
+static qboolean FighterOverValidLandingSurface(const Vehicle_t* p_veh)
 {
 	if (p_veh->m_LandTrace.fraction < 1.0f //ground present
 		&& p_veh->m_LandTrace.plane.normal[2] >= MIN_LANDING_SLOPE) //flat enough
@@ -224,7 +224,7 @@ qboolean FighterIsLanded(const Vehicle_t* p_veh, const playerState_t* parent_ps)
 	return qfalse;
 }
 
-qboolean FighterIsLanding(Vehicle_t* p_veh, const playerState_t* parent_ps)
+static qboolean FighterIsLanding(Vehicle_t* p_veh, const playerState_t* parent_ps)
 {
 	if (FighterOverValidLandingSurface(p_veh)
 #ifdef _GAME//only do this check on game side, because if it's cgame, it's being predicted, and it's only predicted if the local client is the driver
@@ -240,7 +240,7 @@ qboolean FighterIsLanding(Vehicle_t* p_veh, const playerState_t* parent_ps)
 	return qfalse;
 }
 
-qboolean FighterIsLaunching(Vehicle_t* p_veh, const playerState_t* parent_ps)
+static qboolean FighterIsLaunching(Vehicle_t* p_veh, const playerState_t* parent_ps)
 {
 	if (FighterOverValidLandingSurface(p_veh)
 #ifdef _GAME//only do this check on game side, because if it's cgame, it's being predicted, and it's only predicted if the local client is the driver
@@ -256,7 +256,7 @@ qboolean FighterIsLaunching(Vehicle_t* p_veh, const playerState_t* parent_ps)
 	return qfalse;
 }
 
-qboolean FighterSuspended(const Vehicle_t* p_veh, const playerState_t* parent_ps)
+static qboolean FighterSuspended(const Vehicle_t* p_veh, const playerState_t* parent_ps)
 {
 #ifdef _GAME//only do this check on game side, because if it's cgame, it's being predicted, and it's only predicted if the local client is the driver
 
@@ -1049,7 +1049,7 @@ static void FighterDamageRoutine(Vehicle_t* p_veh, bgEntity_t* parent, const pla
 
 #define FIGHTER_TURNING_MULTIPLIER 0.8f//was 1.6f //magic number hackery
 #define FIGHTER_TURNING_DEADZONE 0.25f//no turning if offset is this much
-void FighterRollAdjust(Vehicle_t* p_veh, playerState_t* rider_ps, playerState_t* parent_ps)
+static void FighterRollAdjust(Vehicle_t* p_veh, playerState_t* rider_ps, playerState_t* parent_ps)
 {
 	float angDif = AngleSubtract(p_veh->m_vPrevRiderViewAngles[YAW], rider_ps->viewangles[YAW]);///2.0f;//AngleSubtract(p_veh->m_vPrevRiderViewAngles[YAW], rider_ps->viewangles[YAW]);
 
@@ -1289,7 +1289,7 @@ void FighterPitchAdjust(const Vehicle_t* p_veh, const playerState_t* rider_ps, c
 }
 #endif// VEH_CONTROL_SCHEME_4
 
-void FighterPitchClamp(Vehicle_t* p_veh, const playerState_t* rider_ps, const playerState_t* parent_ps, const int curTime)
+static void FighterPitchClamp(Vehicle_t* p_veh, const playerState_t* rider_ps, const playerState_t* parent_ps, const int curTime)
 {
 	if (!BG_UnrestrainedPitchRoll(rider_ps, p_veh))
 	{

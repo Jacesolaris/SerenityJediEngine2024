@@ -1470,7 +1470,7 @@ void Jetpack_On(gentity_t* ent)
 }
 
 #define FLAMETHROWER_RADIUS 200
-#define FLAMETHROWER_DAMAGE	1
+#define FLAMETHROWER_DAMAGE	2
 
 void Flamethrower_Fire(gentity_t* self)
 {
@@ -1480,7 +1480,7 @@ void Flamethrower_Fire(gentity_t* self)
 
 	const float radius = FLAMETHROWER_RADIUS;
 	gentity_t* entity_list[MAX_GENTITIES];
-	int i_entity_list[MAX_GENTITIES];
+	int iEntityList[MAX_GENTITIES];
 	int i;
 
 	AngleVectors(self->client->ps.viewangles, forward, NULL, NULL);
@@ -1492,12 +1492,12 @@ void Flamethrower_Fire(gentity_t* self)
 		mins[i] = center[i] - radius;
 		maxs[i] = center[i] + radius;
 	}
-	const int num_listed_entities = trap->EntitiesInBox(mins, maxs, i_entity_list, MAX_GENTITIES);
+	const int num_listed_entities = trap->EntitiesInBox(mins, maxs, iEntityList, MAX_GENTITIES);
 
 	i = 0;
 	while (i < num_listed_entities)
 	{
-		entity_list[i] = &g_entities[i_entity_list[i]];
+		entity_list[i] = &g_entities[iEntityList[i]];
 
 		i++;
 	}

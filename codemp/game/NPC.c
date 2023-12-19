@@ -31,8 +31,6 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 extern vec3_t player_mins;
 extern vec3_t player_maxs;
 extern void G_SoundOnEnt(gentity_t* ent, soundChannel_t channel, const char* sound_path);
-extern void PM_SetTorsoAnimTimer(gentity_t* ent, int* torsoAnimTimer, int time);
-extern void PM_SetLegsAnimTimer(gentity_t* ent, int* legsAnimTimer, int time);
 extern void NPC_BSNoClip(void);
 extern void G_AddVoiceEvent(const gentity_t* self, int event, int speak_debounce_time);
 extern void NPC_ApplyRoff(void);
@@ -68,7 +66,7 @@ qboolean NPC_IsTrooper(const gentity_t* self)
 	return self && self->NPC && self->s.weapon && !!(self->NPC->scriptFlags & SCF_NO_GROUPS);
 }
 
-void CorpsePhysics(gentity_t* self)
+static void CorpsePhysics(gentity_t* self)
 {
 	// run the bot through the server like it was a real client
 	memset(&NPCS.ucmd, 0, sizeof NPCS.ucmd);
@@ -305,7 +303,7 @@ Determines when it's ok to ditch the corpse
 ----------------------------------------
 */
 
-int BodyRemovalPadTime(const gentity_t* ent)
+static int BodyRemovalPadTime(const gentity_t* ent)
 {
 	int time;
 
@@ -590,7 +588,7 @@ extern void G_Cube(vec3_t mins, vec3_t maxs, vec3_t color, float alpha);
 extern void G_Line(vec3_t start, vec3_t end, vec3_t color, float alpha);
 extern qboolean InPlayersPVS(vec3_t point);
 
-void NPC_ApplyScriptFlags(void)
+static void NPC_ApplyScriptFlags(void)
 {
 	if (NPCS.NPCInfo->scriptFlags & SCF_CROUCHED)
 	{
@@ -703,7 +701,7 @@ void NPC_ApplyScriptFlags(void)
 
 void Q3_DebugPrint(int level, const char* format, ...);
 
-void NPC_HandleAIFlags(void)
+static void NPC_HandleAIFlags(void)
 {
 	//FIXME: make these flags checks a function call like NPC_CheckAIFlagsAndTimers
 	if (NPCS.NPCInfo->aiFlags & NPCAI_LOST)
@@ -747,12 +745,12 @@ void NPC_HandleAIFlags(void)
 	}
 }
 
-void NPC_AvoidWallsAndCliffs(void)
+static void NPC_AvoidWallsAndCliffs(void)
 {
 	//...
 }
 
-void NPC_CheckAttackScript(void)
+static void NPC_CheckAttackScript(void)
 {
 	if (!(NPCS.ucmd.buttons & BUTTON_ATTACK))
 	{
@@ -764,7 +762,7 @@ void NPC_CheckAttackScript(void)
 
 float NPC_MaxDistSquaredForWeapon(void);
 
-void NPC_CheckAttackHold(void)
+static void NPC_CheckAttackHold(void)
 {
 	vec3_t vec;
 
@@ -831,7 +829,7 @@ qboolean NPC_CanUseAdvancedFighting()
 	return qtrue;
 }
 
-void NPC_KeepCurrentFacing(void)
+static void NPC_KeepCurrentFacing(void)
 {
 	if (!NPCS.ucmd.angles[YAW])
 	{
@@ -850,7 +848,7 @@ NPC_BehaviorSet_Charmed
 -------------------------
 */
 
-void NPC_BehaviorSet_Charmed(const int b_state)
+static void NPC_BehaviorSet_Charmed(const int b_state)
 {
 	switch (b_state)
 	{
@@ -941,7 +939,7 @@ void NPC_BehaviorSet_Default(const int b_state)
 NPC_BehaviorSet_Interrogator
 -------------------------
 */
-void NPC_BehaviorSet_Interrogator(const int b_state)
+static void NPC_BehaviorSet_Interrogator(const int b_state)
 {
 	switch (b_state)
 	{
@@ -963,7 +961,7 @@ void NPC_BehaviorSet_Interrogator(const int b_state)
 NPC_BehaviorSet_ImperialProbe
 -------------------------
 */
-void NPC_BehaviorSet_ImperialProbe(const int b_state)
+static void NPC_BehaviorSet_ImperialProbe(const int b_state)
 {
 	switch (b_state)
 	{
@@ -987,7 +985,7 @@ void NPC_BSSeeker_Default(void);
 NPC_BehaviorSet_Seeker
 -------------------------
 */
-void NPC_BehaviorSet_Seeker(const int b_state)
+static void NPC_BehaviorSet_Seeker(const int b_state)
 {
 	switch (b_state)
 	{
@@ -1011,7 +1009,7 @@ void NPC_BSRemote_Default(void);
 NPC_BehaviorSet_Remote
 -------------------------
 */
-void NPC_BehaviorSet_Remote(const int b_state)
+static void NPC_BehaviorSet_Remote(const int b_state)
 {
 	switch (b_state)
 	{
@@ -1035,7 +1033,7 @@ void NPC_BSSentry_Default(void);
 NPC_BehaviorSet_Sentry
 -------------------------
 */
-void NPC_BehaviorSet_Sentry(const int b_state)
+static void NPC_BehaviorSet_Sentry(const int b_state)
 {
 	switch (b_state)
 	{
@@ -1057,7 +1055,7 @@ void NPC_BehaviorSet_Sentry(const int b_state)
 NPC_BehaviorSet_Grenadier
 -------------------------
 */
-void NPC_BehaviorSet_Grenadier(const int b_state)
+static void NPC_BehaviorSet_Grenadier(const int b_state)
 {
 	switch (b_state)
 	{
@@ -1080,7 +1078,7 @@ void NPC_BehaviorSet_Grenadier(const int b_state)
 NPC_BehaviorSet_Tusken
 -------------------------
 */
-void NPC_BehaviorSet_Tusken(const int b_state)
+static void NPC_BehaviorSet_Tusken(const int b_state)
 {
 	switch (b_state)
 	{
@@ -1103,7 +1101,7 @@ void NPC_BehaviorSet_Tusken(const int b_state)
 NPC_BehaviorSet_Sniper
 -------------------------
 */
-void NPC_BehaviorSet_Sniper(const int b_state)
+static void NPC_BehaviorSet_Sniper(const int b_state)
 {
 	switch (b_state)
 	{
@@ -1190,7 +1188,7 @@ NPC_BehaviorSet_Jedi
 -------------------------
 */
 
-void NPC_BehaviorSet_Jedi(const int b_state)
+static void NPC_BehaviorSet_Jedi(const int b_state)
 {
 	switch (b_state)
 	{
@@ -1238,7 +1236,7 @@ void NPC_BehaviorSet_Jedi(const int b_state)
 NPC_BehaviorSet_Droid
 -------------------------
 */
-void NPC_BehaviorSet_Droid(const int b_state)
+static void NPC_BehaviorSet_Droid(const int b_state)
 {
 	switch (b_state)
 	{
@@ -1258,7 +1256,7 @@ void NPC_BehaviorSet_Droid(const int b_state)
 NPC_BehaviorSet_Mark1
 -------------------------
 */
-void NPC_BehaviorSet_Mark1(const int b_state)
+static void NPC_BehaviorSet_Mark1(const int b_state)
 {
 	switch (b_state)
 	{
@@ -1278,7 +1276,7 @@ void NPC_BehaviorSet_Mark1(const int b_state)
 NPC_BehaviorSet_Mark2
 -------------------------
 */
-void NPC_BehaviorSet_Mark2(const int b_state)
+static void NPC_BehaviorSet_Mark2(const int b_state)
 {
 	switch (b_state)
 	{
@@ -1299,7 +1297,7 @@ void NPC_BehaviorSet_Mark2(const int b_state)
 NPC_BehaviorSet_ATST
 -------------------------
 */
-void NPC_BehaviorSet_ATST(const int b_state)
+static void NPC_BehaviorSet_ATST(const int b_state)
 {
 	switch (b_state)
 	{
@@ -1320,7 +1318,7 @@ void NPC_BehaviorSet_ATST(const int b_state)
 NPC_BehaviorSet_MineMonster
 -------------------------
 */
-void NPC_BehaviorSet_MineMonster(const int b_state)
+static void NPC_BehaviorSet_MineMonster(const int b_state)
 {
 	switch (b_state)
 	{
@@ -1342,7 +1340,7 @@ void NPC_BehaviorSet_MineMonster(const int b_state)
 NPC_BehaviorSet_Howler
 -------------------------
 */
-void NPC_BehaviorSet_Howler(const int b_state)
+static void NPC_BehaviorSet_Howler(const int b_state)
 {
 	switch (b_state)
 	{
@@ -1364,7 +1362,7 @@ void NPC_BehaviorSet_Howler(const int b_state)
 NPC_BehaviorSet_Rancor
 -------------------------
 */
-void NPC_BehaviorSet_Rancor(const int b_state)
+static void NPC_BehaviorSet_Rancor(const int b_state)
 {
 	switch (b_state)
 	{
@@ -1388,7 +1386,7 @@ NPC_BehaviorSet_Wampa
 */
 extern void NPC_BSWampa_Default(void);
 
-void NPC_BehaviorSet_Wampa(const int b_state)
+static void NPC_BehaviorSet_Wampa(const int b_state)
 {
 	switch (b_state)
 	{
@@ -1410,7 +1408,7 @@ void NPC_BehaviorSet_Wampa(const int b_state)
 NPC_BehaviorSet_SandCreature
 -------------------------
 */
-void NPC_BehaviorSet_SandCreature(const int b_state)
+static void NPC_BehaviorSet_SandCreature(const int b_state)
 {
 	switch (b_state)
 	{
@@ -1433,7 +1431,7 @@ NPC_BehaviorSet_Droid
 -------------------------
 */
 // Added 01/21/03 by AReis.
-void NPC_BehaviorSet_Animal(const int b_state)
+static void NPC_BehaviorSet_Animal(const int b_state)
 {
 	switch (b_state)
 	{
@@ -1464,7 +1462,7 @@ extern void bubble_shield_update(void);
 extern void NPC_BSSD_Default(void);
 extern void NPC_BSCivilian_Default(int b_state);
 
-void NPC_RunBehavior(const int team, const int b_state)
+static void NPC_RunBehavior(const int team, const int b_state)
 {
 	qboolean dontSetAim;
 
@@ -1740,6 +1738,7 @@ void NPC_RunBehavior(const int team, const int b_state)
 			else if (NPCS.NPC->client->NPC_class == CLASS_VEHICLE)
 			{
 				const Vehicle_t* pVehicle = NPCS.NPC->m_pVehicle;
+
 				if (!pVehicle->m_pPilot && pVehicle->m_iBoarding == 0)
 				{
 					//racc - no pilot
@@ -1806,7 +1805,7 @@ NPC Behavior state thinking
 
 ===============
 */
-void NPC_ExecuteBState(const gentity_t* self) //, int msec )
+static void NPC_ExecuteBState(const gentity_t* self) //, int msec )
 {
 	if (self->enemy && self->enemy->client && self->enemy->client->ps.duelInProgress)
 	{
@@ -1949,7 +1948,7 @@ void NPC_ExecuteBState(const gentity_t* self) //, int msec )
 	NPCS.NPCInfo->touchedByPlayer = NULL;
 }
 
-void NPC_CheckInSolid(void)
+static void NPC_CheckInSolid(void)
 {
 	trace_t trace;
 	vec3_t point;
@@ -1973,7 +1972,7 @@ void NPC_CheckInSolid(void)
 	}
 }
 
-void G_DroidSounds(gentity_t* self)
+static void G_DroidSounds(gentity_t* self)
 {
 	if (self->client)
 	{

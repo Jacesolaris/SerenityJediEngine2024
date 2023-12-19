@@ -1679,7 +1679,7 @@ void shipboundary_touch(gentity_t* self, gentity_t* other, trace_t* trace)
 
 void shipboundary_think(gentity_t* ent)
 {
-	int i_entity_list[MAX_GENTITIES];
+	int iEntityList[MAX_GENTITIES];
 	int i = 0;
 
 	ent->nextthink = level.time + 100;
@@ -1690,10 +1690,10 @@ void shipboundary_think(gentity_t* ent)
 		return;
 	}
 
-	const int num_listed_entities = trap->EntitiesInBox(ent->r.absmin, ent->r.absmax, i_entity_list, MAX_GENTITIES);
+	const int num_listed_entities = trap->EntitiesInBox(ent->r.absmin, ent->r.absmax, iEntityList, MAX_GENTITIES);
 	while (i < num_listed_entities)
 	{
-		gentity_t* listed_ent = &g_entities[i_entity_list[i]];
+		gentity_t* listed_ent = &g_entities[iEntityList[i]];
 		if (listed_ent->inuse && listed_ent->client && listed_ent->client->ps.m_iVehicleNum)
 		{
 			if (listed_ent->s.eType == ET_NPC &&

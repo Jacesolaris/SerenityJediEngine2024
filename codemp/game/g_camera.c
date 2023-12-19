@@ -250,7 +250,7 @@ void GCam_FollowUpdate(void)
 	VectorCopy(cameraAngles, client_camera.angles);
 }
 
-void GCam_FollowDisable(void)
+static void GCam_FollowDisable(void)
 {
 	client_camera.info_state &= ~CAMERA_FOLLOWING;
 	//client_camera.cameraGroup[0] = 0;
@@ -262,13 +262,13 @@ void GCam_FollowDisable(void)
 	client_camera.cameraGroupTag[0] = 0;
 }
 
-void GCam_TrackDisable(void)
+static void GCam_TrackDisable(void)
 {
 	client_camera.info_state &= ~CAMERA_TRACKING;
 	client_camera.trackEntNum = ENTITYNUM_WORLD;
 }
 
-void GCam_DistanceDisable(void)
+static void GCam_DistanceDisable(void)
 {
 	client_camera.distance = 0;
 }

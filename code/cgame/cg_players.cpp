@@ -14097,7 +14097,7 @@ CG_Player
 
 ===============
 */
-extern qboolean G_GetRootSurfNameWithVariant(gentity_t* ent, const char* root_surf_name, char* return_surf_name,
+extern qboolean G_GetRootSurfNameWithVariant(gentity_t* ent, const char* rootSurfName, char* return_surf_name,
 	int return_size);
 extern qboolean G_RagDoll(gentity_t* ent, vec3_t forcedAngles);
 int cg_saberOnSoundTime[MAX_GENTITIES] = { 0 };

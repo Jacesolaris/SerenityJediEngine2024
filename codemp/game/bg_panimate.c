@@ -5914,11 +5914,6 @@ void BG_SetLegsAnimTimer(playerState_t* ps, const int time)
 #endif
 }
 
-static void PM_SetLegsAnimTimer(const int time)
-{
-	BG_SetLegsAnimTimer(pm->ps, time);
-}
-
 /*
 -------------------------
 PM_SetTorsoAnimTimer
@@ -5954,11 +5949,6 @@ void BG_SetTorsoAnimTimer(playerState_t* ps, const int time)
 		}
 	}
 #endif
-}
-
-void PM_SetTorsoAnimTimer(const int time)
-{
-	BG_SetTorsoAnimTimer(pm->ps, time);
 }
 
 void pm_saber_start_trans_anim(const int clientNum, const int saber_anim_level, const int weapon, const int anim, float* animSpeed, const int fatigued)

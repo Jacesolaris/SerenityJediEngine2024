@@ -76,7 +76,7 @@ extern void G_LetGoOfLedge(const gentity_t* ent);
 
 extern void SP_item_security_key(gentity_t* self);
 
-void G_DropKey(gentity_t* self)
+static void G_DropKey(gentity_t* self)
 {
 	//drop whatever security key I was holding
 	gentity_t* dropped = G_Spawn();
@@ -397,7 +397,7 @@ void ExplodeDeath(gentity_t* self)
 ScorePlum
 ============
 */
-void ScorePlum(const gentity_t* ent, vec3_t origin, const int score)
+static void ScorePlum(const gentity_t* ent, vec3_t origin, const int score)
 {
 	gentity_t* plum = G_TempEntity(origin, EV_SCOREPLUM);
 	// only send this temp entity to a single client
@@ -547,7 +547,7 @@ Toss the weapon and powerups for the killed player
 =================
 */
 
-int WeaponRemovalTime()
+static int WeaponRemovalTime()
 {
 	int time;
 
@@ -713,7 +713,7 @@ void TossClientItems(gentity_t* self)
 GibEntity
 ==================
 */
-void GibEntity(gentity_t* self)
+static void GibEntity(gentity_t* self)
 {
 	G_AddEvent(self, EV_GIB_PLAYER, 0);
 	self->takedamage = qfalse;
@@ -721,13 +721,13 @@ void GibEntity(gentity_t* self)
 	self->r.contents = 0;
 }
 
-void GibEntity_Headshot(gentity_t* self)
+static void GibEntity_Headshot(gentity_t* self)
 {
 	G_AddEvent(self, EV_GIB_PLAYER_HEADSHOT, 0);
 	self->client->noHead = qtrue;
 }
 
-void BodyRid(gentity_t* ent)
+static void BodyRid(gentity_t* ent)
 {
 	trap->UnlinkEntity((sharedEntity_t*)ent);
 	ent->physicsObject = qfalse;
@@ -870,7 +870,7 @@ char* modNames[MOD_MAX] = {
 CheckAlmostCapture
 ==================
 */
-void CheckAlmostCapture()
+static void CheckAlmostCapture()
 {
 #if 0
 	gentity_t* ent;
@@ -918,7 +918,7 @@ void CheckAlmostCapture()
 #endif
 }
 
-qboolean G_InKnockDown(const playerState_t* ps)
+static qboolean G_InKnockDown(const playerState_t* ps)
 {
 	switch (ps->legsAnim)
 	{
@@ -1526,7 +1526,7 @@ static int G_CheckSpecialDeathAnim(gentity_t* self)
 	return death_anim;
 }
 
-int G_PickDeathAnim(gentity_t* self, vec3_t point, const int damage, int hit_loc)
+static int G_PickDeathAnim(gentity_t* self, vec3_t point, const int damage, int hit_loc)
 {
 	int death_anim = -1;
 	int max_health;
@@ -2072,7 +2072,7 @@ int G_CheckLedgeDive(gentity_t* self, const float check_dist, const vec3_t check
 	return cliff_fall;
 }
 
-gentity_t* G_GetJediMaster(void)
+static gentity_t* G_GetJediMaster(void)
 {
 	int i = 0;
 
@@ -2197,9 +2197,8 @@ G_DeathAlert
 #define	DEATH_ALERT_RADIUS			512
 #define	DEATH_ALERT_SOUND_RADIUS	512
 
-void G_DeathAlert(const gentity_t* victim, gentity_t* attacker)
+static void G_DeathAlert(const gentity_t* victim, gentity_t* attacker)
 {
-	//FIXME: with all the other alert stuff, do we really need this?
 	G_AlertTeam(victim, attacker, DEATH_ALERT_RADIUS, DEATH_ALERT_SOUND_RADIUS);
 }
 
@@ -2429,7 +2428,7 @@ void DeathFX(gentity_t* ent)
 	}
 }
 
-void death_fxextra(gentity_t* ent)
+static void death_fxextra(gentity_t* ent)
 {
 	vec3_t effect_pos, right;
 	vec3_t default_dir;
@@ -2676,7 +2675,7 @@ void death_fxextra(gentity_t* ent)
 	}
 }
 
-void G_CheckVictoryScript(gentity_t* self)
+static void G_CheckVictoryScript(gentity_t* self)
 {
 	if (!G_ActivateBehavior(self, BSET_VICTORY))
 	{
@@ -2709,7 +2708,7 @@ void G_CheckVictoryScript(gentity_t* self)
 	}
 }
 
-void G_AddPowerDuelScore(const int team, const int score)
+static void G_AddPowerDuelScore(const int team, const int score)
 {
 	int i = 0;
 
@@ -2730,7 +2729,7 @@ void G_AddPowerDuelScore(const int team, const int score)
 	}
 }
 
-void G_AddPowerDuelLoserScore(const int team, const int score)
+static void G_AddPowerDuelLoserScore(const int team, const int score)
 {
 	int i = 0;
 
@@ -2753,7 +2752,7 @@ void G_AddPowerDuelLoserScore(const int team, const int score)
 
 extern qboolean g_noPDuelCheck;
 
-void G_BroadcastObit(gentity_t* self, const gentity_t* inflictor, const gentity_t* attacker, const int killer,
+static void G_BroadcastObit(gentity_t* self, const gentity_t* inflictor, const gentity_t* attacker, const int killer,
 	const int means_of_death,
 	const int was_in_vehicle, const qboolean was_jedi_master)
 {
@@ -3999,7 +3998,7 @@ void PlayerPain(gentity_t* self, const int damage)
 CheckArmor
 ================
 */
-int CheckArmor(const gentity_t* ent, const int damage, const int dflags, const int mod)
+static int CheckArmor(const gentity_t* ent, const int damage, const int dflags, const int mod)
 {
 	int save;
 
@@ -4155,7 +4154,7 @@ void G_Knockdown(gentity_t* self, gentity_t* attacker, const vec3_t push_dir, fl
 	qboolean break_saber_lock);
 extern qboolean g_standard_humanoid(gentity_t* self);
 
-void G_CheckKnockdown(gentity_t* targ, gentity_t* attacker, vec3_t new_dir, const int dflags, const int mod)
+static void G_CheckKnockdown(gentity_t* targ, gentity_t* attacker, vec3_t new_dir, const int dflags, const int mod)
 {
 	if (!targ || !attacker)
 	{
@@ -4212,7 +4211,7 @@ void G_CheckKnockdown(gentity_t* targ, gentity_t* attacker, vec3_t new_dir, cons
 	}
 }
 
-void G_CheckLightningKnockdown(gentity_t* targ, gentity_t* attacker, vec3_t new_dir, const int dflags, const int mod)
+static void G_CheckLightningKnockdown(gentity_t* targ, gentity_t* attacker, vec3_t new_dir, const int dflags, const int mod)
 {
 	if (!targ || !attacker)
 	{
@@ -4387,7 +4386,7 @@ static int G_CheckForLedge(const gentity_t* self, vec3_t fall_check_dir, const f
 RaySphereIntersections
 ================
 */
-int RaySphereIntersections(vec3_t origin, const float radius, vec3_t point, vec3_t dir, vec3_t intersections[2])
+static int RaySphereIntersections(vec3_t origin, const float radius, vec3_t point, vec3_t dir, vec3_t intersections[2])
 {
 	float t;
 
@@ -4455,7 +4454,7 @@ char* hitLocName[HL_MAX] =
 	"generic6" //HL_GENERIC6
 };
 
-void G_GetDismemberLoc(const gentity_t* self, vec3_t bolt_point, const int limb_type)
+static void G_GetDismemberLoc(const gentity_t* self, vec3_t bolt_point, const int limb_type)
 {
 	//Just get the general area without using server-side ghoul2
 	vec3_t fwd, right, up;
@@ -4526,7 +4525,7 @@ void G_GetDismemberLoc(const gentity_t* self, vec3_t bolt_point, const int limb_
 	}
 }
 
-void G_GetDismemberBolt(gentity_t* self, vec3_t bolt_point, const int limbType)
+static void G_GetDismemberBolt(gentity_t* self, vec3_t bolt_point, const int limbType)
 {
 	vec3_t proper_origin, proper_angles, add_vel;
 	//matrix3_t legAxis;
@@ -4652,7 +4651,7 @@ void G_GetDismemberBolt(gentity_t* self, vec3_t bolt_point, const int limbType)
 	}
 }
 
-void LimbTouch(gentity_t* self, gentity_t* other, trace_t* trace)
+static void LimbTouch(gentity_t* self, gentity_t* other, trace_t* trace)
 {
 }
 
@@ -4698,8 +4697,7 @@ void LimbThink(gentity_t* ent)
 	ent->nextthink = level.time;
 }
 
-extern qboolean BG_GetRootSurfNameWithVariant(void* ghoul2, const char* root_surf_name, char* return_surf_name,
-	int return_size);
+extern qboolean BG_GetRootSurfNameWithVariant(void* ghoul2, const char* rootSurfName, char* return_surf_name, int return_size);
 
 void G_Dismember(const gentity_t* ent, const gentity_t* enemy, vec3_t point, const int limb_type)
 {
@@ -4963,7 +4961,7 @@ void DismembermentByNum(gentity_t* self, const int num)
 	G_Dismember(self, self, bolt_point, sect);
 }
 
-int G_GetHitQuad(const gentity_t* self, vec3_t hitloc)
+static int G_GetHitQuad(const gentity_t* self, vec3_t hitloc)
 {
 	vec3_t diff, fwdangles = { 0, 0, 0 }, right;
 	vec3_t cl_eye;
@@ -5712,7 +5710,7 @@ void G_CheckForblowingup(gentity_t* ent, const gentity_t* enemy, const int damag
 	G_Dismember(ent, enemy, bolt_point, G2_MODELPART_WAIST);
 }
 
-void G_LocationBasedDamageModifier(gentity_t* ent, vec3_t point, const int mod, const int dflags, int* damage)
+static void G_LocationBasedDamageModifier(gentity_t* ent, vec3_t point, const int mod, const int dflags, int* damage)
 {
 	int hit_loc = -1;
 
@@ -6122,7 +6120,7 @@ void G_KnockOver(gentity_t* self, gentity_t* attacker, const vec3_t push_dir, fl
 G_LocationDamage
 ============
 */
-int G_LocationDamage(vec3_t point, const gentity_t* targ, int take)
+static int G_LocationDamage(vec3_t point, const gentity_t* targ, int take)
 {
 	vec3_t bullet_path;
 	vec3_t bullet_angle;
@@ -6250,7 +6248,7 @@ int G_LocationDamage(vec3_t point, const gentity_t* targ, int take)
 	return take;
 }
 
-void G_ApplyVehicleOtherKiller(const gentity_t* targ, const gentity_t* inflictor, const gentity_t* attacker,
+static void G_ApplyVehicleOtherKiller(const gentity_t* targ, const gentity_t* inflictor, const gentity_t* attacker,
 	const int mod,
 	const qboolean vehicle_dying)
 {

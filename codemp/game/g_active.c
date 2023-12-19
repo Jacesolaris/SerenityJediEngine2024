@@ -77,7 +77,7 @@ extern qboolean saberKnockOutOfHand(gentity_t* saberent, gentity_t* saber_owner,
 extern qboolean BG_SaberSprintAnim(int anim);
 extern qboolean BG_WeaponSprintAnim(int anim);
 
-void P_SetTwitchInfo(gclient_t* client)
+static void P_SetTwitchInfo(gclient_t* client)
 {
 	client->ps.painTime = level.time;
 	client->ps.painDirection ^= 1;
@@ -108,7 +108,7 @@ damage values to that client for pain blends and kicks, and
 global pain sound events for all clients.
 ===============
 */
-void P_DamageFeedback(gentity_t* player)
+static void P_DamageFeedback(gentity_t* player)
 {
 	gclient_t* client = player->client;
 	if (client->ps.pm_type == PM_DEAD || client->tempSpectate >= level.time)
@@ -208,7 +208,7 @@ extern qboolean G_PointInBounds(vec3_t point, vec3_t mins, vec3_t maxs);
 extern void NPC_SetAnim(gentity_t* ent, int setAnimParts, int anim, int setAnimFlags);
 extern void WP_ForcePowerStart(const gentity_t* self, forcePowers_t forcePower, int overrideAmt);
 
-void P_WorldEffects(gentity_t* ent)
+static void P_WorldEffects(gentity_t* ent)
 {
 	if (ent->client->noclip)
 	{
@@ -657,7 +657,7 @@ void DoImpact(gentity_t* self, gentity_t* other, const qboolean damageSelf)
 	}
 }
 
-void DoImpactPlayer(gentity_t* self, gentity_t* other, const qboolean damageSelf) //mp
+static void DoImpactPlayer(gentity_t* self, gentity_t* other, const qboolean damageSelf) //mp
 {
 	float my_mass;
 	vec3_t velocity;
@@ -839,7 +839,7 @@ void Client_CheckImpactBBrush(gentity_t* self, gentity_t* other)
 G_SetClientSound
 ===============
 */
-void G_SetClientSound(gentity_t* ent)
+static void G_SetClientSound(gentity_t* ent)
 {
 	if (ent->client && ent->client->isHacking)
 	{
@@ -883,7 +883,7 @@ void G_SetClientSound(gentity_t* ent)
 ClientImpacts
 ==============
 */
-void ClientImpacts(gentity_t* ent, const pmove_t* pmove)
+static void ClientImpacts(gentity_t* ent, const pmove_t* pmove)
 {
 	int j;
 	trace_t trace = { 0 };
@@ -1105,7 +1105,7 @@ static void SV_PMTrace(trace_t* results, const vec3_t start, const vec3_t mins, 
 SpectatorThink
 =================
 */
-void SpectatorThink(gentity_t* ent, const usercmd_t* ucmd)
+static void SpectatorThink(gentity_t* ent, const usercmd_t* ucmd)
 {
 	pmove_t pmove;
 
@@ -1182,7 +1182,7 @@ ClientInactivityTimer
 Returns qfalse if the client is dropped
 =================
 */
-qboolean ClientInactivityTimer(gclient_t* client)
+static qboolean ClientInactivityTimer(gclient_t* client)
 {
 	if (!g_inactivity.integer)
 	{
@@ -1227,7 +1227,7 @@ extern void WP_BlasterFatigueRegenerate(int override_amt);
 extern void G_Rename_Player(gentity_t* player, const char* newname);
 extern char* PickName(void);
 
-void ClientTimerActions(gentity_t* ent, const int msec)
+static void ClientTimerActions(gentity_t* ent, const int msec)
 {
 	gclient_t* client = ent->client;
 	client->timeResidual += msec;
@@ -1367,7 +1367,7 @@ void ClientTimerActions(gentity_t* ent, const int msec)
 ClientIntermissionThink
 ====================
 */
-void ClientIntermissionThink(gclient_t* client)
+static void ClientIntermissionThink(gclient_t* client)
 {
 	client->ps.eFlags &= ~EF_TALK;
 	client->ps.eFlags &= ~EF_FIRING;
@@ -1384,7 +1384,7 @@ void ClientIntermissionThink(gclient_t* client)
 	}
 }
 
-void G_VehicleAttachDroidUnit(gentity_t* vehEnt)
+static void G_VehicleAttachDroidUnit(gentity_t* vehEnt)
 {
 	if (vehEnt && vehEnt->m_pVehicle && vehEnt->m_pVehicle->m_pDroidUnit != NULL)
 	{
@@ -1491,7 +1491,7 @@ but any server game effects are handled here
 ================
 */
 
-void ClientEvents(gentity_t* ent, int old_event_sequence)
+static void ClientEvents(gentity_t* ent, int old_event_sequence)
 {
 	int damage;
 
@@ -1528,7 +1528,7 @@ void ClientEvents(gentity_t* ent, int old_event_sequence)
 				break;
 			}
 
-			if (PM_InKnockDownOnly(Client->ps.legsAnim))
+			if (Client && PM_InKnockDownOnly(Client->ps.legsAnim))
 			{
 				if (delta <= 14)
 				{
@@ -1845,7 +1845,7 @@ void G_ThrownDeathAnimForDeathAnim(gentity_t* hit_ent, vec3_t impactPoint)
 SendPendingPredictableEvents
 ==============
 */
-void SendPendingPredictableEvents(playerState_t* ps)
+static void SendPendingPredictableEvents(playerState_t* ps)
 {
 	// if there are still events pending
 	if (ps->entityEventSequence < ps->eventSequence)
@@ -1878,7 +1878,7 @@ static const float maxJediMasterFOV = 100.0f;
 static const float maxForceSightDistance = Square(1500.0f) * 1500.0f; // x^2, optimisation
 static const float maxForceSightFOV = 100.0f;
 
-void G_UpdateClientBroadcasts(gentity_t* self)
+static void G_UpdateClientBroadcasts(gentity_t* self)
 {
 	int i;
 	gentity_t* other;
@@ -1941,7 +1941,7 @@ void G_UpdateClientBroadcasts(gentity_t* self)
 	trap->LinkEntity((sharedEntity_t*)self);
 }
 
-void G_AddPushVecToUcmd(const gentity_t* self, usercmd_t* ucmd)
+static void G_AddPushVecToUcmd(const gentity_t* self, usercmd_t* ucmd)
 {
 	vec3_t forward, right, moveDir;
 
@@ -1976,7 +1976,7 @@ void G_AddPushVecToUcmd(const gentity_t* self, usercmd_t* ucmd)
 	}
 }
 
-qboolean G_ActionButtonPressed(const int buttons)
+static qboolean G_ActionButtonPressed(const int buttons)
 {
 	if (buttons & BUTTON_ATTACK)
 	{
@@ -2046,7 +2046,7 @@ qboolean G_ActionButtonPressed(const int buttons)
 	return qfalse;
 }
 
-void G_CheckClientIdleSabers(gentity_t* ent, usercmd_t* ucmd)
+static void G_CheckClientIdleSabers(gentity_t* ent, usercmd_t* ucmd)
 {
 	vec3_t viewChange;
 
@@ -2210,7 +2210,7 @@ void G_CheckClientIdleSabers(gentity_t* ent, usercmd_t* ucmd)
 	}
 }
 
-qboolean GunisMelee(const gentity_t* ent)
+static qboolean GunisMelee(const gentity_t* ent)
 {
 	switch (ent->s.weapon)
 	{
@@ -2222,7 +2222,7 @@ qboolean GunisMelee(const gentity_t* ent)
 	return qfalse;
 }
 
-qboolean GunisShort(const gentity_t* ent)
+static qboolean GunisShort(const gentity_t* ent)
 {
 	switch (ent->s.weapon)
 	{
@@ -2234,7 +2234,7 @@ qboolean GunisShort(const gentity_t* ent)
 	return qfalse;
 }
 
-qboolean GunisLong(const gentity_t* ent)
+static qboolean GunisLong(const gentity_t* ent)
 {
 	switch (ent->s.weapon)
 	{
@@ -2249,7 +2249,7 @@ qboolean GunisLong(const gentity_t* ent)
 	return qfalse;
 }
 
-qboolean GunisMassive(const gentity_t* ent)
+static qboolean GunisMassive(const gentity_t* ent)
 {
 	switch (ent->s.weapon)
 	{
@@ -2262,7 +2262,7 @@ qboolean GunisMassive(const gentity_t* ent)
 	return qfalse;
 }
 
-qboolean GunisBomb(const gentity_t* ent)
+static qboolean GunisBomb(const gentity_t* ent)
 {
 	switch (ent->s.weapon)
 	{
@@ -2275,7 +2275,7 @@ qboolean GunisBomb(const gentity_t* ent)
 	return qfalse;
 }
 
-void G_CheckClientIdleGuns(gentity_t* ent, usercmd_t* ucmd)
+static void G_CheckClientIdleGuns(gentity_t* ent, usercmd_t* ucmd)
 {
 	vec3_t viewChange;
 
@@ -2450,7 +2450,7 @@ void G_CheckClientIdleGuns(gentity_t* ent, usercmd_t* ucmd)
 	}
 }
 
-void NPC_Accelerate(const gentity_t* ent, const qboolean fullWalkAcc, const qboolean fullRunAcc)
+static void NPC_Accelerate(const gentity_t* ent, const qboolean fullWalkAcc, const qboolean fullRunAcc)
 {
 	if (!ent->client || !ent->NPC)
 	{
@@ -2572,7 +2572,7 @@ static int NPC_GetRunSpeed(const gentity_t* ent)
 //Seems like a slightly less than ideal method for this, could it be done on the client?
 extern qboolean FlyingCreature(const gentity_t* ent);
 
-void G_CheckMovingLoopingSounds(gentity_t* ent, const usercmd_t* ucmd)
+static void G_CheckMovingLoopingSounds(gentity_t* ent, const usercmd_t* ucmd)
 {
 	if (ent->client)
 	{
@@ -2615,7 +2615,7 @@ void G_CheckMovingLoopingSounds(gentity_t* ent, const usercmd_t* ucmd)
 	}
 }
 
-void G_HeldByMonster(gentity_t* ent, usercmd_t* ucmd)
+static void G_HeldByMonster(gentity_t* ent, usercmd_t* ucmd)
 {
 	if (ent
 		&& ent->client
@@ -3970,7 +3970,7 @@ void CancelReload(gentity_t* ent)
 }
 ////////////////////// reload
 
-qboolean IsGunner(const gentity_t* ent)
+static qboolean IsGunner(const gentity_t* ent)
 {
 	switch (ent->s.weapon)
 	{
@@ -3994,7 +3994,7 @@ qboolean IsGunner(const gentity_t* ent)
 	return qfalse;
 }
 
-qboolean Bot_Is_Saber_Class(gentity_t* ent)
+static qboolean Bot_Is_Saber_Class(gentity_t* ent)
 {
 	// Evasion/Weapon Switching/etc...
 	switch (ent->client->pers.botclass)
@@ -4046,7 +4046,7 @@ qboolean Bot_Is_Saber_Class(gentity_t* ent)
 	return qtrue;
 }
 
-qboolean Is_Oversized_Gunner(gentity_t* ent)
+static qboolean Is_Oversized_Gunner(gentity_t* ent)
 {
 	gclient_t* client = ent->client;
 
@@ -4060,7 +4060,7 @@ qboolean Is_Oversized_Gunner(gentity_t* ent)
 	return qfalse;
 }
 
-qboolean Is_Undersized_Gunner(gentity_t* ent)
+static qboolean Is_Undersized_Gunner(gentity_t* ent)
 {
 	gclient_t* client = ent->client;
 
@@ -4073,7 +4073,7 @@ qboolean Is_Undersized_Gunner(gentity_t* ent)
 	return qfalse;
 }
 
-qboolean Is_Undersized_Jedi(gentity_t* ent)
+static qboolean Is_Undersized_Jedi(gentity_t* ent)
 {
 	gclient_t* client = ent->client;
 
@@ -4101,7 +4101,7 @@ extern qboolean player_locked;
 extern qboolean g_standard_humanoid(gentity_t* self);
 extern void Weapon_AltStun_Fire(gentity_t* ent);
 
-void ClientThink_real(gentity_t* ent)
+static void ClientThink_real(gentity_t* ent)
 {
 	gclient_t* client;
 	pmove_t pmove;
@@ -5612,7 +5612,7 @@ void ClientThink_real(gentity_t* ent)
 				thrower->client->doingThrow = 0;
 				thrower->client->ps.forceHandExtend = HANDEXTEND_NONE;
 			}
-	}
+		}
 		else if (thrower->inuse && thrower->client && thrower->ghoul2 &&
 			trap->G2API_HaveWeGhoul2Models(thrower->ghoul2))
 		{
@@ -5774,8 +5774,8 @@ void ClientThink_real(gentity_t* ent)
 						}
 					}
 				}
+			}
 		}
-}
 	}
 	else if (ent->client->ps.heldByClient)
 	{
@@ -5895,7 +5895,7 @@ void ClientThink_real(gentity_t* ent)
 				pmove.ghoul2 = ent->ghoul2;
 				pmove.g2Bolts_LFoot = trap->G2API_AddBolt(ent->ghoul2, 0, "*l_leg_foot");
 				pmove.g2Bolts_RFoot = trap->G2API_AddBolt(ent->ghoul2, 0, "*r_leg_foot");
-	}
+			}
 		}
 
 	//point the saber data to the right place
@@ -6910,7 +6910,7 @@ SpectatorClientEndFrame
 
 ==================
 */
-void SpectatorClientEndFrame(const gentity_t* ent)
+static void SpectatorClientEndFrame(const gentity_t* ent)
 {
 	if (ent->s.eType == ET_NPC)
 	{

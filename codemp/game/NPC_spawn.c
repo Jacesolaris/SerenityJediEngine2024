@@ -40,9 +40,6 @@ extern void Q3_SetParm(int ent_id, int parmNum, const char* parmValue);
 extern char* TeamNames[TEAM_NUM_TEAMS];
 extern void bubble_shield_update(void);
 
-extern void PM_SetTorsoAnimTimer(gentity_t* ent, int* torsoAnimTimer, int time);
-extern void PM_SetLegsAnimTimer(gentity_t* ent, int* legsAnimTimer, int time);
-
 extern void ST_ClearTimers(const gentity_t* ent);
 extern void Jedi_ClearTimers(const gentity_t* ent);
 extern void npc_shadow_trooper_precache(void);
@@ -166,7 +163,7 @@ NPC_PainFunc
 */
 typedef void (PAIN_FUNC)(gentity_t* self, gentity_t* attacker, int damage);
 
-PAIN_FUNC* NPC_PainFunc(const gentity_t* ent)
+static PAIN_FUNC* NPC_PainFunc(const gentity_t* ent)
 {
 	void (*func)(gentity_t * self, gentity_t * attacker, int damage);
 
@@ -258,7 +255,7 @@ NPC_TouchFunc
 */
 typedef void (TOUCH_FUNC)(gentity_t* self, gentity_t* other, trace_t* trace);
 
-TOUCH_FUNC* NPC_TouchFunc(gentity_t* ent)
+static TOUCH_FUNC* NPC_TouchFunc(gentity_t* ent)
 {
 	void(*func)(gentity_t * self, gentity_t * other, trace_t * trace) = NPC_Touch;
 
@@ -271,7 +268,7 @@ NPC_SetMiscDefaultData
 -------------------------
 */
 //this function sets the default fleeing behavior for this NPC
-void G_ClassSetDontFlee(const gentity_t* self)
+static void G_ClassSetDontFlee(const gentity_t* self)
 {
 	if (!self || !self->client || !self->NPC)
 	{
@@ -349,7 +346,7 @@ extern void Boba_SetBolts(const gentity_t* ent);
 void DetermineDodgeMax(const gentity_t* ent);
 extern void Saboteur_Cloak(gentity_t* self);
 
-void NPC_SetMiscDefaultData(gentity_t* ent)
+static void NPC_SetMiscDefaultData(gentity_t* ent)
 {
 	if (ent->spawnflags & SFB_CINEMATIC)
 	{
@@ -1115,7 +1112,7 @@ NPC_SetWeapons
 -------------------------
 */
 
-void NPC_SetWeapons(gentity_t* ent)
+static void NPC_SetWeapons(gentity_t* ent)
 {
 	int bestWeap = WP_NONE;
 	const int weapons = NPC_WeaponsForTeam(ent->client->playerTeam, ent->spawnflags, ent->NPC_type);
@@ -1165,7 +1162,7 @@ NPC_SpawnEffect
 -------------------------
 */
 
-void NPC_SpawnEffect(gentity_t* ent)
+static void NPC_SpawnEffect(gentity_t* ent)
 {
 }
 
@@ -1174,7 +1171,7 @@ void NPC_SpawnEffect(gentity_t* ent)
 //
 // Set up any special parms for spawn effects
 //--------------------------------------------------------------
-void NPC_SetFX_SpawnStates(const gentity_t* ent)
+static void NPC_SetFX_SpawnStates(const gentity_t* ent)
 {
 	if (!(ent->NPC->aiFlags & NPCAI_CUSTOM_GRAVITY))
 	{
@@ -1188,7 +1185,7 @@ NPC_SpotWouldTelefrag
 
 ================
 */
-qboolean NPC_SpotWouldTelefrag(const gentity_t* npc)
+static qboolean NPC_SpotWouldTelefrag(const gentity_t* npc)
 {
 	int touch[MAX_GENTITIES];
 	vec3_t mins, maxs;
@@ -1715,7 +1712,7 @@ void NPC_Begin(gentity_t* ent)
 
 gNPC_t* gNPCPtrs[MAX_GENTITIES];
 
-gNPC_t* New_NPC_t(const int entNum)
+static gNPC_t* New_NPC_t(const int entNum)
 {
 	if (!gNPCPtrs[entNum])
 	{
@@ -1734,7 +1731,7 @@ gNPC_t* New_NPC_t(const int entNum)
 	return ptr;
 }
 
-void NPC_DefaultScriptFlags(const gentity_t* ent)
+static void NPC_DefaultScriptFlags(const gentity_t* ent)
 {
 	if (!ent || !ent->NPC)
 	{
@@ -1758,7 +1755,7 @@ extern void G_CreateFighterNPC(Vehicle_t** p_veh, const char* strType);
 #define TURN_OFF			0x00000100
 #define MAX_SAFESPAWN_ENTS 4
 
-qboolean NPC_SafeSpawn(const gentity_t* ent, const float safeRadius)
+static qboolean NPC_SafeSpawn(const gentity_t* ent, const float safeRadius)
 {
 	int radius_ents[MAX_SAFESPAWN_ENTS];
 	vec3_t safeMins, safeMaxs;
@@ -2376,7 +2373,7 @@ teamnodmg - team that NPC does not take damage from (turrets and other auto-defe
 extern void NPC_PrecacheAnimationCFG(const char* npc_type);
 void NPC_Precache(gentity_t* spawner);
 
-void NPC_PrecacheType(char* NPC_type)
+static void NPC_PrecacheType(char* NPC_type)
 {
 	gentity_t* fakespawner = G_Spawn();
 	if (fakespawner)
@@ -2660,7 +2657,7 @@ teamnodmg - team that NPC does not take damage from (turrets and other auto-defe
 	1 - red
 	2 - blue
 */
-qboolean NPC_VehiclePrecache(const gentity_t* spawner)
+static qboolean NPC_VehiclePrecache(const gentity_t* spawner)
 {
 	char* droidNPCType = NULL;
 	const int iVehIndex = BG_VehicleGetIndex(spawner->NPC_type);

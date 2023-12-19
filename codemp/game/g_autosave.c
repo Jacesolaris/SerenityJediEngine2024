@@ -5,7 +5,7 @@
 
 extern void Use_Autosave(gentity_t* ent, gentity_t* other, const gentity_t* activator);
 
-void Touch_Autosave(gentity_t* self, const gentity_t* other, trace_t* trace)
+static void Touch_Autosave(gentity_t* self, const gentity_t* other, trace_t* trace)
 {
 	//touch function used by SP_trigger_autosave
 	if (!other || !other->inuse || !other->client || other->s.number >= MAX_CLIENTS)
@@ -71,7 +71,7 @@ editor code.
 extern vmCvar_t bot_wp_edit;
 extern void init_trigger(gentity_t* self);
 
-void SP_trigger_autosave(gentity_t* self)
+static void SP_trigger_autosave(gentity_t* self)
 {
 	init_trigger(self);
 

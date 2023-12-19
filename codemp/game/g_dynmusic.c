@@ -43,7 +43,7 @@ void LoadDynamicMusic(void)
 extern int BG_SiegeGetPairedValue(const char* buf, char* key, char* outbuf);
 extern int BG_SiegeGetValueGroup(const char* buf, char* group, char* outbuf);
 
-void LoadDMSSongData(const char* buffer, char* song, DynamicMusicSet_t* songData, char* mapname)
+static void LoadDMSSongData(const char* buffer, char* song, DynamicMusicSet_t* songData, char* mapname)
 {
 	char SongGroup[DMS_INFO_SIZE];
 	int numTransitions = 0;
@@ -117,7 +117,7 @@ void LoadDMSSongData(const char* buffer, char* song, DynamicMusicSet_t* songData
 	}
 }
 
-void LoadLengthforSong(const char* buffer, DynamicMusicSet_t* song)
+static void LoadLengthforSong(const char* buffer, DynamicMusicSet_t* song)
 {
 	//load in the song lengths for the given DMS song
 	char TempLength[MAX_QPATH];
@@ -160,7 +160,7 @@ void LoadLengthforSong(const char* buffer, DynamicMusicSet_t* song)
 }
 
 //loads in the song lengths for the DMS music files
-void LoadDMSSongLengths(void)
+static void LoadDMSSongLengths(void)
 {
 	char buffer[DMS_INFO_SIZE];
 	fileHandle_t f;
@@ -276,7 +276,7 @@ void LoadDynamicMusicGroup(char* mapname, char* buffer)
 }
 
 //Do the transitions between DMS action/explore DMS states
-void TransitionBetweenState(void)
+static void TransitionBetweenState(void)
 {
 	DynamicMusicSet_t* oldSongGroup;
 	DynamicMusicSet_t* newSongGroup;

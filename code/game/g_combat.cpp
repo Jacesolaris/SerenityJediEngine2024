@@ -127,7 +127,7 @@ extern void Rancor_DropVictim(gentity_t* self);
 extern void Wampa_DropVictim(gentity_t* self);
 extern void WP_StopForceHealEffects(const gentity_t* self);
 qboolean NPC_IsNotDismemberable(const gentity_t* self);
-qboolean G_GetRootSurfNameWithVariant(gentity_t* ent, const char* root_surf_name, char* return_surf_name,
+qboolean G_GetRootSurfNameWithVariant(gentity_t* ent, const char* rootSurfName, char* return_surf_name,
 	int return_size);
 extern void G_LetGoOfWall(const gentity_t* ent);
 extern void G_LetGoOfLedge(const gentity_t* ent);
@@ -2148,7 +2148,7 @@ static qboolean G_LimbLost(const gentity_t* ent, const int hit_loc)
 	}
 }
 
-extern qboolean G_GetRootSurfNameWithVariant(gentity_t* ent, const char* root_surf_name, char* return_surf_name, int return_size);
+extern qboolean G_GetRootSurfNameWithVariant(gentity_t* ent, const char* rootSurfName, char* return_surf_name, int return_size);
 
 static void G_RemoveWeaponsWithLimbs(gentity_t* ent, gentity_t* limb, const int limb_anim)
 {
@@ -2532,24 +2532,24 @@ static qboolean G_Dismemberable(const gentity_t* self, const int hit_loc)
 
 constexpr auto MAX_VARIANTS = 8;
 
-qboolean G_GetRootSurfNameWithVariant(gentity_t* ent, const char* root_surf_name, char* return_surf_name,
+qboolean G_GetRootSurfNameWithVariant(gentity_t* ent, const char* rootSurfName, char* return_surf_name,
 	const int return_size)
 {
-	if (!gi.G2API_GetSurfaceRenderStatus(&ent->ghoul2[ent->playerModel], root_surf_name))
+	if (!gi.G2API_GetSurfaceRenderStatus(&ent->ghoul2[ent->playerModel], rootSurfName))
 	{
 		//see if the basic name without variants is on
-		Q_strncpyz(return_surf_name, root_surf_name, return_size);
+		Q_strncpyz(return_surf_name, rootSurfName, return_size);
 		return qtrue;
 	}
 	for (int i = 0; i < MAX_VARIANTS; i++)
 	{
-		Com_sprintf(return_surf_name, return_size, "%s%c", root_surf_name, 'a' + i);
+		Com_sprintf(return_surf_name, return_size, "%s%c", rootSurfName, 'a' + i);
 		if (!gi.G2API_GetSurfaceRenderStatus(&ent->ghoul2[ent->playerModel], return_surf_name))
 		{
 			return qtrue;
 		}
 	}
-	Q_strncpyz(return_surf_name, root_surf_name, return_size);
+	Q_strncpyz(return_surf_name, rootSurfName, return_size);
 	return qfalse;
 }
 

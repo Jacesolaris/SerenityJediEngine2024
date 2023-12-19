@@ -2638,7 +2638,6 @@ static void PM_HoverTrace(void)
 				p_veh->m_vAngularVelocity = 15.0f;
 			}
 		}
-		//p_veh->m_vAngularVelocity *= 0.95f;		// Angular Velocity Decays Over Time
 		if (p_veh->m_vAngularVelocity > 0.0f)
 		{
 			p_veh->m_vAngularVelocity -= pml.frametime;

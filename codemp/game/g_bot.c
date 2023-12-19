@@ -51,7 +51,7 @@ float trap_Cvar_VariableValue(const char* var_name)
 G_ParseInfos
 ===============
 */
-int G_ParseInfos(const char* buf, const int max, char* infos[])
+static int G_ParseInfos(const char* buf, const int max, char* infos[])
 {
 	char info[MAX_INFO_STRING];
 
@@ -116,7 +116,7 @@ int G_ParseInfos(const char* buf, const int max, char* infos[])
 G_LoadArenasFromFile
 ===============
 */
-void G_LoadArenasFromFile(char* filename)
+static void G_LoadArenasFromFile(char* filename)
 {
 	fileHandle_t f;
 	char buf[MAX_ARENAS_TEXT];
@@ -141,7 +141,7 @@ void G_LoadArenasFromFile(char* filename)
 	level.arenas.num += G_ParseInfos(buf, MAX_ARENAS - level.arenas.num, &level.arenas.infos[level.arenas.num]);
 }
 
-int G_GetMapTypeBits(const char* type)
+static int G_GetMapTypeBits(const char* type)
 {
 	int typeBits = 0;
 
@@ -516,7 +516,7 @@ static void PlayerIntroSound(const char* modelAndSkin) {
 G_AddRandomBot
 ===============
 */
-void G_AddRandomBot(const int team)
+static void G_AddRandomBot(const int team)
 {
 	int i, n;
 	char* value, * teamstr;
@@ -621,7 +621,7 @@ void G_AddRandomBot(const int team)
 G_RemoveRandomBot
 ===============
 */
-int G_RemoveRandomBot(const int team)
+static int G_RemoveRandomBot(const int team)
 {
 	for (int i = 0; i < sv_maxclients.integer; i++)
 	{
@@ -652,7 +652,7 @@ int G_RemoveRandomBot(const int team)
 G_CountHumanPlayers
 ===============
 */
-int G_CountHumanPlayers(const int team)
+static int G_CountHumanPlayers(const int team)
 {
 	int num = 0;
 	for (int i = 0; i < sv_maxclients.integer; i++)
@@ -680,7 +680,7 @@ int G_CountHumanPlayers(const int team)
 G_CountBotPlayers
 ===============
 */
-int G_CountBotPlayers(const int team)
+static int G_CountBotPlayers(const int team)
 {
 	int num = 0;
 	for (int i = 0; i < sv_maxclients.integer; i++)
@@ -730,7 +730,7 @@ int G_CountBotPlayers(const int team)
 G_CheckMinimumPlayers
 ===============
 */
-void G_CheckMinimumPlayers(void)
+static void G_CheckMinimumPlayers(void)
 {
 	static int checkminimumplayers_time;
 

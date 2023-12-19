@@ -1006,7 +1006,7 @@ void CG_PainEvent(centity_t* cent, const int health)
 	cent->pe.painDirection ^= 1;
 }
 
-extern qboolean BG_GetRootSurfNameWithVariant(void* ghoul2, const char* root_surf_name, char* return_surf_name,
+extern qboolean BG_GetRootSurfNameWithVariant(void* ghoul2, const char* rootSurfName, char* return_surf_name,
 	int return_size);
 
 void CG_ReattachLimb(centity_t* source)

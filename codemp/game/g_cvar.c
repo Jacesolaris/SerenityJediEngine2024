@@ -51,11 +51,13 @@ typedef struct cvarTable_s
 #include "g_xcvar.h"
 #undef XCVAR_DECL
 
-static const cvarTable_t gameCvarTable[] = {
+static const cvarTable_t gameCvarTable[] =
+{
 #define XCVAR_LIST
 #include "g_xcvar.h"
 #undef XCVAR_LIST
 };
+
 static const size_t gameCvarTableSize = ARRAY_LEN(gameCvarTable);
 
 void G_RegisterCvars(void)

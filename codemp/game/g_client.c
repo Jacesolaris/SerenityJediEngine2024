@@ -55,7 +55,7 @@ extern qboolean WP_UseFirstValidSaberStyle(const saberInfo_t* saber1, const sabe
 
 forcedata_t Client_Force[MAX_CLIENTS];
 
-void g_Spectator(gentity_t* ent)
+static void g_Spectator(gentity_t* ent)
 {
 	if (ent->client->sess.sessionTeam != TEAM_SPECTATOR)
 	{
@@ -202,7 +202,7 @@ void SP_info_player_start_blue(gentity_t* ent)
 	SP_info_player_deathmatch(ent);
 }
 
-void SiegePointUse(gentity_t* self, gentity_t* other, gentity_t* activator)
+static void SiegePointUse(gentity_t* self, gentity_t* other, gentity_t* activator)
 {
 	//Toggle the point on/off
 	if (self->genericValue1)
@@ -416,7 +416,7 @@ void ThrowSaberToAttacker(gentity_t* self, const gentity_t* attacker)
 	trap->LinkEntity((sharedEntity_t*)ent);
 }
 
-void JMSaberThink(gentity_t* ent)
+static void JMSaberThink(gentity_t* ent)
 {
 	gJMSaberEnt = ent;
 
@@ -458,7 +458,7 @@ void JMSaberThink(gentity_t* ent)
 
 void DetermineDodgeMax(const gentity_t* ent);
 
-void JMSaberTouch(gentity_t* self, gentity_t* other, trace_t* trace)
+static void JMSaberTouch(gentity_t* self, gentity_t* other, trace_t* trace)
 {
 	int i = 0;
 
@@ -702,7 +702,7 @@ gentity_t* SelectRandomDeathmatchSpawnPoint(qboolean isbot)
 	gentity_t* spot = NULL;
 
 	while ((spot = G_Find(spot, FOFS(classname), "info_player_deathmatch")) != NULL && count < MAX_SPAWN_POINTS)
-	{	
+	{
 		if (SpotWouldTelefrag(spot))
 		{
 			continue;
@@ -1067,7 +1067,7 @@ BodySink
 After sitting around for five seconds, fall into the ground and disappear
 =============
 */
-void BodySink(gentity_t* ent)
+static void BodySink(gentity_t* ent)
 {
 	//while we're at it, I'm making the corpse removal time be set by a cvar like in SP.
 	if (g_corpseRemovalTime.integer && level.time - ent->timestamp > g_corpseRemovalTime.integer * 1000 + 2500)
@@ -1744,7 +1744,7 @@ static void client_clean_name(const char* in, char* out, const int outSize)
 }
 
 #ifdef _DEBUG
-void G_DebugWrite(const char* path, const char* text)
+static void G_DebugWrite(const char* path, const char* text)
 {
 	fileHandle_t f;
 
@@ -1754,7 +1754,7 @@ void G_DebugWrite(const char* path, const char* text)
 }
 #endif
 
-qboolean G_SaberModelSetup(const gentity_t* ent)
+static qboolean G_SaberModelSetup(const gentity_t* ent)
 {
 	int i = 0;
 	qboolean fallbackForSaber = qtrue;
@@ -2343,7 +2343,7 @@ void Svcmd_ToggleUserinfoValidation_f(void)
 			g_userinfoValidate.integer & 1 << index ? "Validated" : "Ignored");
 }
 
-char* G_ValidateUserinfo(const char* userinfo)
+static char* G_ValidateUserinfo(const char* userinfo)
 {
 	unsigned int i, count;
 	const size_t length = strlen(userinfo);
@@ -2433,7 +2433,7 @@ char* G_ValidateUserinfo(const char* userinfo)
 	return NULL;
 }
 
-char lcase(char c)
+static char lcase(char c)
 {
 	if (c >= 'A' && c <= 'Z')
 	{
@@ -2442,7 +2442,7 @@ char lcase(char c)
 	return c;
 }
 
-int Class_Model(char* haystack, char* needle)
+static int Class_Model(char* haystack, char* needle)
 {
 	while (*haystack)
 	{
@@ -5699,7 +5699,7 @@ char* ClientConnect(int clientNum, const qboolean firstTime, const qboolean isBo
 						//	client->pers.connected = CON_DISCONNECTED;
 							return "Please wait, another connection from this IP is still pending...";
 						}
-}
+					}
 				}
 #else
 				if (CompareIPs(tmpIP, level.clients[i].sess.IP))
@@ -6387,8 +6387,8 @@ tryTorso:
 			//Now remove it
 			trap->G2API_RemoveBone(self->ghoul2, brokenBone, 0);
 			self->client->brokenLimbs &= ~broken;
-}
-}
+		}
+	}
 #endif
 }
 

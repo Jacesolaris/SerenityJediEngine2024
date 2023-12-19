@@ -172,23 +172,23 @@ void BG_AttachToSandCreature(void* ghoul2,
 
 #define	MAX_VARIANTS 8
 
-qboolean BG_GetRootSurfNameWithVariant(void* ghoul2, const char* root_surf_name, char* return_surf_name,
+qboolean BG_GetRootSurfNameWithVariant(void* ghoul2, const char* rootSurfName, char* return_surf_name,
 	const int return_size)
 {
 #if defined(_GAME)
-	if (!ghoul2 || !trap->G2API_GetSurfaceRenderStatus(ghoul2, 0, root_surf_name))
+	if (!ghoul2 || !trap->G2API_GetSurfaceRenderStatus(ghoul2, 0, rootSurfName))
 #elif defined(_CGAME)
-	if (!ghoul2 || !trap->G2API_GetSurfaceRenderStatus(ghoul2, 0, root_surf_name))
+	if (!ghoul2 || !trap->G2API_GetSurfaceRenderStatus(ghoul2, 0, rootSurfName))
 #endif
 	{
 		//see if the basic name without variants is on
-		Q_strncpyz(return_surf_name, root_surf_name, return_size);
+		Q_strncpyz(return_surf_name, rootSurfName, return_size);
 		return qtrue;
 	}
 	//check variants
 	for (int i = 0; i < MAX_VARIANTS; i++)
 	{
-		Com_sprintf(return_surf_name, return_size, "%s%c", root_surf_name, 'a' + i);
+		Com_sprintf(return_surf_name, return_size, "%s%c", rootSurfName, 'a' + i);
 #if defined(_GAME)
 		if (!trap->G2API_GetSurfaceRenderStatus(ghoul2, 0, return_surf_name))
 #elif defined(_CGAME)
@@ -198,6 +198,6 @@ qboolean BG_GetRootSurfNameWithVariant(void* ghoul2, const char* root_surf_name,
 			return qtrue;
 		}
 	}
-	Q_strncpyz(return_surf_name, root_surf_name, return_size);
+	Q_strncpyz(return_surf_name, rootSurfName, return_size);
 	return qfalse;
 }

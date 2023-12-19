@@ -703,7 +703,7 @@ int BG_SiegeGetPairedValue(const char* buf, char* key, char* outbuf)
 //======================================
 //Class loading functions
 //======================================
-void BG_SiegeTranslateForcePowers(const char* buf, siegeClass_t* siegeClass)
+static void BG_SiegeTranslateForcePowers(const char* buf, siegeClass_t* siegeClass)
 {
 	char checkPower[1024];
 	char checkLevel[256];
@@ -826,7 +826,7 @@ void BG_SiegeTranslateForcePowers(const char* buf, siegeClass_t* siegeClass)
 //table should be the appropriate string/id table. If bitflag is qtrue then the
 //values are accumulated into a bitflag. If bitflag is qfalse then the first value
 //is returned as a directly corresponding id and no further parsing is done.
-int BG_SiegeTranslateGenericTable(const char* buf, const stringID_table_t* table, const qboolean bitflag)
+static int BG_SiegeTranslateGenericTable(const char* buf, const stringID_table_t* table, const qboolean bitflag)
 {
 	int items = 0;
 	char checkItem[1024];
@@ -899,7 +899,7 @@ char* classTitles[SPC_MAX] =
 	"heavy_weapons", // SPC_HEAVY_WEAPONS
 };
 
-void BG_SiegeParseClassFile(const char* filename, siegeClassDesc_t* descBuffer)
+static void BG_SiegeParseClassFile(const char* filename, siegeClassDesc_t* descBuffer)
 {
 	fileHandle_t f;
 	int i;
@@ -1393,7 +1393,7 @@ siegeClass_t* BG_SiegeFindClassByName(const char* classname)
 	return NULL;
 }
 
-void BG_SiegeParseTeamFile(const char* filename)
+static void BG_SiegeParseTeamFile(const char* filename)
 {
 	fileHandle_t f;
 	char teamInfo[2048];
@@ -1617,7 +1617,7 @@ qboolean BG_SiegeCheckClassLegality(const int team, char* classname)
 	return qfalse;
 }
 
-siegeTeam_t* BG_SiegeFindTeamForTheme(const char* themeName)
+static siegeTeam_t* BG_SiegeFindTeamForTheme(const char* themeName)
 {
 	int i = 0;
 

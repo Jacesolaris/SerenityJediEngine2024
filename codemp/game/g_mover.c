@@ -145,7 +145,7 @@ gentity_t* G_TestEntityPosition(const gentity_t* ent)
 G_CreateRotationMatrix
 ================
 */
-void G_CreateRotationMatrix(vec3_t angles, matrix3_t matrix)
+static void G_CreateRotationMatrix(vec3_t angles, matrix3_t matrix)
 {
 	AngleVectors(angles, matrix[0], matrix[1], matrix[2]);
 	VectorInverse(matrix[1]);
@@ -156,7 +156,7 @@ void G_CreateRotationMatrix(vec3_t angles, matrix3_t matrix)
 G_TransposeMatrix
 ================
 */
-void G_TransposeMatrix(matrix3_t matrix, matrix3_t transpose)
+static void G_TransposeMatrix(matrix3_t matrix, matrix3_t transpose)
 {
 	for (int i = 0; i < 3; i++)
 	{
@@ -172,7 +172,7 @@ void G_TransposeMatrix(matrix3_t matrix, matrix3_t transpose)
 G_RotatePoint
 ================
 */
-void G_RotatePoint(vec3_t point, matrix3_t matrix)
+static void G_RotatePoint(vec3_t point, matrix3_t matrix)
 {
 	vec3_t tvec;
 
@@ -189,7 +189,7 @@ G_TryPushingEntity
 Returns qfalse if the move is blocked
 ==================
 */
-qboolean G_TryPushingEntity(gentity_t* check, gentity_t* pusher, vec3_t move, vec3_t amove)
+static qboolean G_TryPushingEntity(gentity_t* check, gentity_t* pusher, vec3_t move, vec3_t amove)
 {
 	matrix3_t matrix, transpose;
 	vec3_t org, org2, move2;
@@ -317,7 +317,7 @@ If qfalse is returned, *obstacle will be the blocking entity
 */
 void NPC_RemoveBody(gentity_t* ent);
 
-qboolean g_mover_push(gentity_t* pusher, vec3_t move, vec3_t amove, gentity_t** obstacle)
+static qboolean g_mover_push(gentity_t* pusher, vec3_t move, vec3_t amove, gentity_t** obstacle)
 {
 	int i;
 	vec3_t mins, maxs;
@@ -486,7 +486,7 @@ qboolean g_mover_push(gentity_t* pusher, vec3_t move, vec3_t amove, gentity_t** 
 G_MoverTeam
 =================
 */
-void G_MoverTeam(gentity_t* ent)
+static void G_MoverTeam(gentity_t* ent)
 {
 	gentity_t* part, * obstacle;
 
@@ -1641,7 +1641,7 @@ Elevator cars require that the trigger extend through the entire low position,
 not just sit on top of it.
 ================
 */
-void SpawnPlatTrigger(gentity_t* ent)
+static void SpawnPlatTrigger(gentity_t* ent)
 {
 	vec3_t tmin, tmax;
 
@@ -2668,7 +2668,7 @@ void funcBBrushDieGo(gentity_t* ent)
 	ent->nextthink = level.time + 50;
 }
 
-void funcBBrushDie(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int damage, int mod)
+static void funcBBrushDie(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int damage, int mod)
 {
 	self->takedamage = qfalse; //stop chain reaction runaway loops
 
@@ -3066,7 +3066,7 @@ GLASS
 
 ===============================================================================
 */
-void GlassDie(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int damage, int mod)
+static void GlassDie(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int damage, int mod)
 {
 	vec3_t dif;
 
@@ -3096,7 +3096,7 @@ void GlassDie(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int da
 	G_FreeEntity(self);
 }
 
-void GlassDie_Old(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int damage, int mod)
+static void GlassDie_Old(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int damage, int mod)
 {
 	vec3_t dif;
 
@@ -3114,13 +3114,13 @@ void GlassDie_Old(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, in
 	G_FreeEntity(self);
 }
 
-void GlassPain(gentity_t* self, gentity_t* attacker, int damage)
+static void GlassPain(gentity_t* self, gentity_t* attacker, int damage)
 {
 	//trap->Print("Mr. Glass says: PLZ NO IT HURTS\n");
 	//Make "cracking" sound?
 }
 
-void GlassUse(gentity_t* self, gentity_t* other, gentity_t* activator)
+static void GlassUse(gentity_t* self, gentity_t* other, gentity_t* activator)
 {
 	vec3_t temp1, temp2;
 
@@ -3314,7 +3314,7 @@ void func_usable_pain(gentity_t* self, gentity_t* attacker, int damage)
 	GlobalUse(self, attacker, attacker);
 }
 
-void func_usable_die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int damage, int mod)
+static void func_usable_die(gentity_t* self, gentity_t* inflictor, gentity_t* attacker, int damage, int mod)
 {
 	self->takedamage = qfalse;
 	GlobalUse(self, inflictor, attacker);
