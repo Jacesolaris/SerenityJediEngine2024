@@ -2,11 +2,11 @@
 ===========================================================================
 Copyright (C) 2000 - 2013, Raven Software, Inc.
 Copyright (C) 2001 - 2013, Activision, Inc.
-Copyright (C) 2013 - 2015, OpenJK contributors
+Copyright (C) 2013 - 2015, SerenityJediEngine2024 contributors
 
-This file is part of the OpenJK source code.
+This file is part of the SerenityJediEngine2024 source code.
 
-OpenJK is free software; you can redistribute it and/or modify it
+SerenityJediEngine2024 is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License version 2 as
 published by the Free Software Foundation.
 
@@ -214,7 +214,7 @@ void Disappear(gentity_t* ent)
 
 void MakeOwnerInvis(gentity_t* self);
 
-void BeamOut(gentity_t* self)
+static void BeamOut(gentity_t* self)
 {
 	self->nextthink = level.time + 1500;
 	self->e_ThinkFunc = thinkF_Disappear;
@@ -367,7 +367,7 @@ void NPC_BSSleep()
 
 extern qboolean NPC_MoveDirClear(int forwardmove, int rightmove, qboolean reset);
 
-bool NPC_BSFollowLeader_UpdateLeader()
+static bool NPC_BSFollowLeader_UpdateLeader()
 {
 	if (NPC->client->leader //have a leader
 		&& NPC->client->leader->s.number < MAX_CLIENTS //player
@@ -408,7 +408,7 @@ bool NPC_BSFollowLeader_UpdateLeader()
 	return true;
 }
 
-void NPC_BSFollowLeader_UpdateEnemy()
+static void NPC_BSFollowLeader_UpdateEnemy()
 {
 	if (!NPC->enemy)
 	{
@@ -484,7 +484,7 @@ void NPC_BSFollowLeader_UpdateEnemy()
 	}
 }
 
-bool NPC_BSFollowLeader_AttackEnemy()
+static bool NPC_BSFollowLeader_AttackEnemy()
 {
 	if (NPC->client->ps.weapon == WP_SABER)
 	{
@@ -545,7 +545,7 @@ bool NPC_BSFollowLeader_AttackEnemy()
 	return false;
 }
 
-bool NPC_BSFollowLeader_CanAttack()
+static bool NPC_BSFollowLeader_CanAttack()
 {
 	return NPC->enemy
 		&& NPC->client->ps.weapon
@@ -553,7 +553,7 @@ bool NPC_BSFollowLeader_CanAttack()
 		;
 }
 
-bool NPC_BSFollowLeader_InFullBodyAttack()
+static bool NPC_BSFollowLeader_InFullBodyAttack()
 {
 	return NPC->client->ps.legsAnim == BOTH_ATTACK1 ||
 		NPC->client->ps.legsAnim == BOTH_ATTACK2 ||
@@ -572,7 +572,7 @@ bool NPC_BSFollowLeader_InFullBodyAttack()
 		NPC->client->ps.legsAnim == BOTH_WOOKIE_SLAP;
 }
 
-void NPC_BSFollowLeader_LookAtLeader()
+static void NPC_BSFollowLeader_LookAtLeader()
 {
 	vec3_t head, leader_head, delta, angle_to_leader;
 
@@ -1192,7 +1192,7 @@ extern void WP_DropWeapon(gentity_t* dropper, vec3_t velocity);
 extern void ChangeWeapon(const gentity_t* ent, int new_weapon);
 extern int g_crosshairEntNum;
 
-qboolean NPC_CanSurrender()
+static qboolean NPC_CanSurrender()
 {
 	if (NPC->client)
 	{
@@ -1287,7 +1287,7 @@ qboolean NPC_CanSurrender()
 	return qtrue;
 }
 
-void NPC_Surrender()
+static void NPC_Surrender()
 {
 	//FIXME: say "don't shoot!" if we weren't already surrendering
 	if (NPC->client->ps.weaponTime || PM_InKnockDown(&NPC->client->ps))
@@ -1494,7 +1494,7 @@ qboolean NPC_CheckSurrender()
 extern int NPC_CheckMultipleEnemies(const gentity_t* closest_to, int enemy_team, qboolean check_vis);
 extern void WP_MeleeTime(gentity_t* meleer);
 
-qboolean NPC_CheckSubmit(const qboolean no_escape = qfalse)
+static qboolean NPC_CheckSubmit(const qboolean no_escape = qfalse)
 {
 	if (!g_AIsurrender->integer
 		&& NPC->client->NPC_class != CLASS_UGNAUGHT
@@ -1594,7 +1594,7 @@ qboolean NPC_CheckSubmit(const qboolean no_escape = qfalse)
 	return qfalse;
 }
 
-void NPC_JawaFleeSound()
+static void NPC_JawaFleeSound()
 {
 	if (NPC
 		&& NPC->client

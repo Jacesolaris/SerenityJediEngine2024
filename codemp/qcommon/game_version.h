@@ -2,11 +2,11 @@
 ===========================================================================
 Copyright (C) 2000 - 2013, Raven Software, Inc.
 Copyright (C) 2001 - 2013, Activision, Inc.
-Copyright (C) 2013 - 2015, OpenJK contributors
+Copyright (C) 2013 - 2015, SerenityJediEngine2024 contributors
 
-This file is part of the OpenJK source code.
+This file is part of the SerenityJediEngine2024 source code.
 
-OpenJK is free software; you can redistribute it and/or modify it
+SerenityJediEngine2024 is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License version 2 as
 published by the Free Software Foundation.
 
@@ -40,10 +40,10 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 #define VERSION_MAJOR_RELEASE		23
 #define VERSION_MINOR_RELEASE		12
-#define VERSION_INTERNAL_BUILD	    19
+#define VERSION_INTERNAL_BUILD	    20
 
-#define VERSION_STRING				"Year-23,Month-12,Day-19,BuildNum-09"
-#define VERSION_STRING_DOTTED		"Year-23,Month-12,Day-19,BuildNum-09" // build date
+#define VERSION_STRING				"Year-23,Month-12,Day-20,BuildNum-10"
+#define VERSION_STRING_DOTTED		"Year-23,Month-12,Day-20,BuildNum-10" // build date
 
 #if defined(_DEBUG)
 #define	JK_VERSION		"(debug)SerenityJediEngine2024-MP: " VERSION_STRING_DOTTED

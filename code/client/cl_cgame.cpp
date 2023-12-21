@@ -3,11 +3,11 @@
 Copyright (C) 1999 - 2005, Id Software, Inc.
 Copyright (C) 2000 - 2013, Raven Software, Inc.
 Copyright (C) 2001 - 2013, Activision, Inc.
-Copyright (C) 2013 - 2015, OpenJK contributors
+Copyright (C) 2013 - 2015, SerenityJediEngine2024 contributors
 
-This file is part of the OpenJK source code.
+This file is part of the SerenityJediEngine2024 source code.
 
-OpenJK is free software; you can redistribute it and/or modify it
+SerenityJediEngine2024 is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License version 2 as
 published by the Free Software Foundation.
 
@@ -799,11 +799,11 @@ cgameImport_t CL_ConvertJK2SysCall(cgameJK2Import_t import)
 	case CG_ANYLANGUAGE_READFROMSTRING2_JK2:
 		return CG_ANYLANGUAGE_READFROMSTRING2;
 		break;
-	case CG_OPENJK_MENU_PAINT_JK2:
-		return CG_OPENJK_MENU_PAINT;
+	case CG_SerenityJediEngine2024_MENU_PAINT_JK2:
+		return CG_SerenityJediEngine2024_MENU_PAINT;
 		break;
-	case CG_OPENJK_GETMENU_BYNAME_JK2:
-		return CG_OPENJK_GETMENU_BYNAME;
+	case CG_SerenityJediEngine2024_GETMENU_BYNAME_JK2:
+		return CG_SerenityJediEngine2024_GETMENU_BYNAME;
 		break;
 	}
 	return (cgameImport_t)-1;
@@ -1231,11 +1231,11 @@ intptr_t CL_CgameSystemCalls(intptr_t* args)
 		Menu_PaintAll();
 		return 0;
 
-	case CG_OPENJK_MENU_PAINT:
+	case CG_SerenityJediEngine2024_MENU_PAINT:
 		Menu_Paint(static_cast<menuDef_t*>(VMA(1)), static_cast<qboolean>(args[2] != 0));
 		return 0;
 
-	case CG_OPENJK_GETMENU_BYNAME:
+	case CG_SerenityJediEngine2024_GETMENU_BYNAME:
 		return reinterpret_cast<intptr_t>(Menus_FindByName(static_cast<const char*>(VMA(1))));
 
 	case CG_UI_STRING_INIT:

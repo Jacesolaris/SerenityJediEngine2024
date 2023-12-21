@@ -597,11 +597,9 @@ void RB_UpdateVBOs(unsigned int attribBits)
 
 		if ((currentFrame->dynamicVboWriteOffset + totalVertexDataSize) > frameVbo->vertexesSize)
 		{
-#ifdef _DEBUG
 			// TODO: Eh...resize?
 			assert(!"This shouldn't happen");
 			return;
-#endif
 		}
 
 		R_BindVBO(frameVbo);
@@ -652,11 +650,9 @@ void RB_UpdateVBOs(unsigned int attribBits)
 
 		if ((currentFrame->dynamicIboWriteOffset + totalIndexDataSize) > frameIbo->indexesSize)
 		{
-#ifdef _DEBUG
 			// TODO: Resize the buffer?
 			assert(!"This shouldn't happen");
 			return;
-#endif
 		}
 
 		void* dst;

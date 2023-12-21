@@ -1,9 +1,9 @@
 #============================================================================
-# Copyright (C) 2013 - 2018, OpenJK contributors
+# Copyright (C) 2013 - 2018, SerenityJediEngine2024 contributors
 # 
-# This file is part of the OpenJK source code.
+# This file is part of the SerenityJediEngine2024 source code.
 # 
-# OpenJK is free software; you can redistribute it and/or modify it
+# SerenityJediEngine2024 is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License version 2 as
 # published by the Free Software Foundation.
 # 
@@ -20,7 +20,7 @@ cmake_minimum_required(VERSION 3.5)
 set(CMAKE_OSX_DEPLOYMENT_TARGET "10.9" CACHE STRING "Minimum OS X deployment version")
 
 # For checks in subdirectories
-set(InOpenJK TRUE)
+set(InSerenityJediEngine2024 TRUE)
 
 
 
@@ -178,8 +178,8 @@ set(SPDir "${CMAKE_SOURCE_DIR}/code")
 set(MPDir "${CMAKE_SOURCE_DIR}/codemp")
 set(JK2SPDir "${CMAKE_SOURCE_DIR}/codeJK2")
 set(SharedDir ${CMAKE_SOURCE_DIR}/shared)
-set(OpenJKLibDir "${CMAKE_SOURCE_DIR}/lib")
-set(GSLIncludeDirectory "${OpenJKLibDir}/gsl-lite/include")
+set(SerenityJediEngine2024LibDir "${CMAKE_SOURCE_DIR}/lib")
+set(GSLIncludeDirectory "${SerenityJediEngine2024LibDir}/gsl-lite/include")
 
 include(InstallConfig)
 
@@ -215,7 +215,7 @@ if(MSVC)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP")
 
 	# We don't try to control symbol visibility under MSVC.
-	set(OPENJK_VISIBILITY_FLAGS "")
+	set(SerenityJediEngine2024_VISIBILITY_FLAGS "")
 
 elseif (("${CMAKE_C_COMPILER_ID}" STREQUAL "GNU") OR ("${CMAKE_C_COMPILER_ID}" MATCHES "Clang"))
 	# I hope this doesn't come back to bite me in the butt later on.
@@ -226,7 +226,7 @@ elseif (("${CMAKE_C_COMPILER_ID}" STREQUAL "GNU") OR ("${CMAKE_C_COMPILER_ID}" M
 	# ZLib explicitly declares symbols hidden, rather than defaulting to hidden.
 	#
 	# Note that -fvisibility=hidden is stronger than -fvisibility-inlines-hidden.
-	set(OPENJK_VISIBILITY_FLAGS "-fvisibility=hidden")
+	set(SerenityJediEngine2024_VISIBILITY_FLAGS "-fvisibility=hidden")
 
 	# removes the -rdynamic flag at linking (which causes crashes for some reason)
 	set(CMAKE_SHARED_LIBRARY_LINK_C_FLAGS "")

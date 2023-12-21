@@ -14,7 +14,7 @@
  * needed on buffers full of bytes, and then call MD5Final, which
  * will fill a supplied 16-byte array with the digest.
  *
- * An implementation of HMAC-MD5 (originally for OpenJK) is also
+ * An implementation of HMAC-MD5 (originally for SerenityJediEngine2024) is also
  * provided, and also released into the public domain.
  */
 

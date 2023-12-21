@@ -2,11 +2,11 @@
 ===========================================================================
 Copyright (C) 2000 - 2013, Raven Software, Inc.
 Copyright (C) 2001 - 2013, Activision, Inc.
-Copyright (C) 2013 - 2015, OpenJK contributors
+Copyright (C) 2013 - 2015, SerenityJediEngine2024 contributors
 
-This file is part of the OpenJK source code.
+This file is part of the SerenityJediEngine2024 source code.
 
-OpenJK is free software; you can redistribute it and/or modify it
+SerenityJediEngine2024 is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License version 2 as
 published by the Free Software Foundation.
 
@@ -46,14 +46,14 @@ extern qboolean BG_SabersOff(const playerState_t* ps);
 #define	STRAFERAM_DURATION	8
 #define	STRAFERAM_ANGLE		8
 
-qboolean VEH_StartStrafeRam(Vehicle_t* p_veh, qboolean Right, int Duration)
+static qboolean VEH_StartStrafeRam(Vehicle_t* p_veh, qboolean Right, int Duration)
 {
 	return qfalse;
 }
 
 #ifdef _GAME //game-only.. for now
 // Like a think or move command, this updates various vehicle properties.
-qboolean Update(Vehicle_t* p_veh, const usercmd_t* pUcmd)
+static qboolean Update(Vehicle_t* p_veh, const usercmd_t* pUcmd)
 {
 	if (!g_vehicleInfo[VEHICLE_BASE].Update(p_veh, pUcmd))
 	{
@@ -203,8 +203,7 @@ static void ProcessMoveCommands(Vehicle_t* p_veh)
 	speedIdle = p_veh->m_pVehicleInfo->speedIdle;
 	speedMin = p_veh->m_pVehicleInfo->speedMin;
 
-	if (parent_ps->speed || parent_ps->groundEntityNum == ENTITYNUM_NONE ||
-		p_veh->m_ucmd.forwardmove || p_veh->m_ucmd.upmove > 0)
+	if (parent_ps->speed ||	p_veh->m_ucmd.forwardmove || p_veh->m_ucmd.upmove > 0 || parent_ps->groundEntityNum == ENTITYNUM_NONE)
 	{
 		if (p_veh->m_ucmd.forwardmove > 0 && speedInc)
 		{
@@ -338,7 +337,7 @@ static void ProcessOrientCommands(const Vehicle_t* p_veh)
 extern int PM_AnimLength(int index, animNumber_t anim);
 
 // This function makes sure that the vehicle is properly animated.
-void AnimateVehicle(Vehicle_t* p_veh)
+static void AnimateVehicle(Vehicle_t* p_veh)
 {
 }
 

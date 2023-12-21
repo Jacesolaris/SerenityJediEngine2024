@@ -2,11 +2,11 @@
 ===========================================================================
 Copyright (C) 2000 - 2013, Raven Software, Inc.
 Copyright (C) 2001 - 2013, Activision, Inc.
-Copyright (C) 2013 - 2015, OpenJK contributors
+Copyright (C) 2013 - 2015, SerenityJediEngine2024 contributors
 
-This file is part of the OpenJK source code.
+This file is part of the SerenityJediEngine2024 source code.
 
-OpenJK is free software; you can redistribute it and/or modify it
+SerenityJediEngine2024 is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License version 2 as
 published by the Free Software Foundation.
 
@@ -206,7 +206,7 @@ void Disappear(gentity_t* ent)
 
 void MakeOwnerInvis(gentity_t* self);
 
-void BeamOut(gentity_t* self)
+static void BeamOut(gentity_t* self)
 {
 	self->nextthink = level.time + 1500;
 	self->think = Disappear;
@@ -368,7 +368,7 @@ void NPC_BSSleep(void)
 
 extern qboolean NPC_MoveDirClear(int forwardmove, int rightmove, qboolean reset);
 
-qboolean NPC_BSFollowLeader_UpdateLeader(void)
+static qboolean NPC_BSFollowLeader_UpdateLeader(void)
 {
 	//racc - checks the status of our leader.  If the leader is invalid, do some backup behavior.
 	if (NPCS.NPC->client->leader //have a leader

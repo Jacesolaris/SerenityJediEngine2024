@@ -3,11 +3,11 @@
 Copyright (C) 1999 - 2005, Id Software, Inc.
 Copyright (C) 2000 - 2013, Raven Software, Inc.
 Copyright (C) 2001 - 2013, Activision, Inc.
-Copyright (C) 2013 - 2015, OpenJK contributors
+Copyright (C) 2013 - 2015, SerenityJediEngine2024 contributors
 
-This file is part of the OpenJK source code.
+This file is part of the SerenityJediEngine2024 source code.
 
-OpenJK is free software; you can redistribute it and/or modify it
+SerenityJediEngine2024 is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License version 2 as
 published by the Free Software Foundation.
 
@@ -668,16 +668,16 @@ int cgi_SP_GetStringTextString(const char* text, char* buffer, const int buffer_
 }
 
 /*
-OpenJK Add
+SerenityJediEngine2024 Add
 Since the modules are incompatible, might as well break base compat even further amirite?
 */
 
 void* cgi_UI_GetMenuByName(const char* menu)
 {
-	return reinterpret_cast<void*>(Q_syscall(CG_OPENJK_GETMENU_BYNAME, menu));
+	return reinterpret_cast<void*>(Q_syscall(CG_SerenityJediEngine2024_GETMENU_BYNAME, menu));
 }
 
 void cgi_UI_Menu_Paint(void* menu, const qboolean force)
 {
-	Q_syscall(CG_OPENJK_MENU_PAINT, menu, force);
+	Q_syscall(CG_SerenityJediEngine2024_MENU_PAINT, menu, force);
 }

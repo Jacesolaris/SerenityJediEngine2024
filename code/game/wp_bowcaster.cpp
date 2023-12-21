@@ -2,11 +2,11 @@
 ===========================================================================
 Copyright (C) 2000 - 2013, Raven Software, Inc.
 Copyright (C) 2001 - 2013, Activision, Inc.
-Copyright (C) 2013 - 2015, OpenJK contributors
+Copyright (C) 2013 - 2015, SerenityJediEngine2024 contributors
 
-This file is part of the OpenJK source code.
+This file is part of the SerenityJediEngine2024 source code.
 
-OpenJK is free software; you can redistribute it and/or modify it
+SerenityJediEngine2024 is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License version 2 as
 published by the Free Software Foundation.
 
@@ -93,7 +93,7 @@ static void WP_BowcasterMainFire(gentity_t* ent)
 		{
 			//no inherent aim screw up
 		}
-		else if ((!(ent->client->ps.forcePowersActive & 1 << FP_SEE)) || (ent->client->ps.forcePowersActive & 1 << FP_SEE && ent->client->ps.forcePowerLevel[FP_SEE] < FORCE_LEVEL_2))
+		else if (ent->client && (!(ent->client->ps.forcePowersActive & 1 << FP_SEE)) || (ent->client->ps.forcePowersActive & 1 << FP_SEE && ent->client->ps.forcePowerLevel[FP_SEE] < FORCE_LEVEL_2))
 		{//force sight 2+ gives perfect aim
 			if (ent->s.number < MAX_CLIENTS || G_ControlledByPlayer(ent))
 			{

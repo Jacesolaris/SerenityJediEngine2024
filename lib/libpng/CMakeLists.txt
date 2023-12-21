@@ -1,9 +1,9 @@
 #============================================================================
-# Copyright (C) 2013 - 2018, OpenJK contributors
+# Copyright (C) 2013 - 2018, SerenityJediEngine2024 contributors
 #
-# This file is part of the OpenJK source code.
+# This file is part of the SerenityJediEngine2024 source code.
 #
-# OpenJK is free software; you can redistribute it and/or modify it
+# SerenityJediEngine2024 is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License version 2 as
 # published by the Free Software Foundation.
 #

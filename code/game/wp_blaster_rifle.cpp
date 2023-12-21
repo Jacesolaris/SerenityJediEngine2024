@@ -2,11 +2,11 @@
 ===========================================================================
 Copyright (C) 2000 - 2013, Raven Software, Inc.
 Copyright (C) 2001 - 2013, Activision, Inc.
-Copyright (C) 2013 - 2015, OpenJK contributors
+Copyright (C) 2013 - 2015, SerenityJediEngine2024 contributors
 
-This file is part of the OpenJK source code.
+This file is part of the SerenityJediEngine2024 source code.
 
-OpenJK is free software; you can redistribute it and/or modify it
+SerenityJediEngine2024 is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License version 2 as
 published by the Free Software Foundation.
 
@@ -122,7 +122,7 @@ void WP_FireBlaster(gentity_t* ent, const qboolean alt_fire)
 	{
 		//no inherent aim screw up
 	}
-	else if ((!(ent->client->ps.forcePowersActive & 1 << FP_SEE)) || (ent->client->ps.forcePowersActive & 1 << FP_SEE && ent->client->ps.forcePowerLevel[FP_SEE] < FORCE_LEVEL_2))
+	else if (ent->client && (!(ent->client->ps.forcePowersActive & 1 << FP_SEE)) || (ent->client->ps.forcePowersActive & 1 << FP_SEE && ent->client->ps.forcePowerLevel[FP_SEE] < FORCE_LEVEL_2))
 	{//force sight 2+ gives perfect aim
 		if (alt_fire)
 		{
@@ -200,7 +200,7 @@ void WP_FireBlaster(gentity_t* ent, const qboolean alt_fire)
 }
 
 //---------------------------------------------------------
-void WP_FireJangoWristMissile(gentity_t* ent, vec3_t start, vec3_t dir, const qboolean alt_fire)
+static void WP_FireJangoWristMissile(gentity_t* ent, vec3_t start, vec3_t dir, const qboolean alt_fire)
 //---------------------------------------------------------
 {
 	int velocity = CLONECOMMANDO_VELOCITY;
@@ -214,8 +214,7 @@ void WP_FireJangoWristMissile(gentity_t* ent, vec3_t start, vec3_t dir, const qb
 	else
 	{
 		// If an enemy is shooting at us, lower the velocity so you have a chance to evade
-		if (ent->client && ent->client->ps.clientNum != 0 && ent->client->NPC_class != CLASS_BOBAFETT && ent->client->
-			NPC_class != CLASS_MANDO)
+		if (ent->client && ent->client->NPC_class != CLASS_BOBAFETT && ent->client->NPC_class != CLASS_MANDO && ent->client->ps.clientNum != 0)
 		{
 			if (g_spskill->integer < 2)
 			{
@@ -239,9 +238,7 @@ void WP_FireJangoWristMissile(gentity_t* ent, vec3_t start, vec3_t dir, const qb
 	missile->s.weapon = WP_WRIST_BLASTER;
 
 	// Do the damages
-	if (ent->s.number != 0 &&
-		ent->client->NPC_class != CLASS_BOBAFETT &&
-		ent->client->NPC_class != CLASS_MANDO)
+	if(ent->client && ent->client->NPC_class != CLASS_BOBAFETT && ent->client->NPC_class != CLASS_MANDO && ent->s.number != 0)
 	{
 		if (g_spskill->integer == 0)
 		{
@@ -286,7 +283,7 @@ void WP_FireWristPistol(gentity_t* ent, const qboolean alt_fire)
 	{
 		//no inherent aim screw up
 	}
-	else if ((!(ent->client->ps.forcePowersActive & 1 << FP_SEE)) || (ent->client->ps.forcePowersActive & 1 << FP_SEE && ent->client->ps.forcePowerLevel[FP_SEE] < FORCE_LEVEL_2))
+	else if (ent->client && (!(ent->client->ps.forcePowersActive & 1 << FP_SEE)) || (ent->client->ps.forcePowersActive & 1 << FP_SEE && ent->client->ps.forcePowerLevel[FP_SEE] < FORCE_LEVEL_2))
 	{//force sight 2+ gives perfect aim
 		if (alt_fire)
 		{
@@ -366,7 +363,7 @@ void WP_FireWristPistol(gentity_t* ent, const qboolean alt_fire)
 //////// DROIDEKA ////////
 
 //---------------------------------------------------------
-void WP_FireDroidekaDualPistolMissileDuals(gentity_t* ent, vec3_t start, vec3_t dir, const qboolean alt_fire)
+static void WP_FireDroidekaDualPistolMissileDuals(gentity_t* ent, vec3_t start, vec3_t dir, const qboolean alt_fire)
 //---------------------------------------------------------
 {
 	int velocity = BLASTER_VELOCITY;
@@ -380,8 +377,7 @@ void WP_FireDroidekaDualPistolMissileDuals(gentity_t* ent, vec3_t start, vec3_t 
 	else
 	{
 		// If an enemy is shooting at us, lower the velocity so you have a chance to evade
-		if (ent->client && ent->client->ps.clientNum != 0
-			&& ent->client->NPC_class != CLASS_BOBAFETT)
+		if (ent->client && ent->client->NPC_class != CLASS_BOBAFETT && ent->client->NPC_class != CLASS_MANDO && ent->client->ps.clientNum != 0)
 		{
 			if (g_spskill->integer < 2)
 			{
@@ -406,9 +402,7 @@ void WP_FireDroidekaDualPistolMissileDuals(gentity_t* ent, vec3_t start, vec3_t 
 	missile->s.weapon = WP_DROIDEKA;
 
 	// Do the damages
-	if (ent->s.number != 0 &&
-		ent->client->NPC_class != CLASS_BOBAFETT &&
-		ent->client->NPC_class != CLASS_MANDO)
+	if (ent->client && ent->client->NPC_class != CLASS_BOBAFETT && ent->client->NPC_class != CLASS_MANDO && ent->s.number != 0)
 	{
 		if (g_spskill->integer == 0)
 		{
@@ -440,7 +434,7 @@ void WP_FireDroidekaDualPistolMissileDuals(gentity_t* ent, vec3_t start, vec3_t 
 	// we don't want it to bounce forever
 	missile->bounceCount = 8;
 	// alternate muzzles
-	ent->fxID = !ent->fxID;
+	ent->fxID = ~ent->fxID;
 
 	if (ent->weaponModel[1] > 0)
 	{
@@ -450,7 +444,7 @@ void WP_FireDroidekaDualPistolMissileDuals(gentity_t* ent, vec3_t start, vec3_t 
 }
 
 //---------------------------------------------------------
-void WP_FireDroidekaDualPistolMissile(gentity_t* ent, vec3_t start, vec3_t dir, const qboolean alt_fire)
+static void WP_FireDroidekaDualPistolMissile(gentity_t* ent, vec3_t start, vec3_t dir, const qboolean alt_fire)
 //---------------------------------------------------------
 {
 	int velocity = BLASTER_VELOCITY;
@@ -464,8 +458,7 @@ void WP_FireDroidekaDualPistolMissile(gentity_t* ent, vec3_t start, vec3_t dir, 
 	else
 	{
 		// If an enemy is shooting at us, lower the velocity so you have a chance to evade
-		if (ent->client && ent->client->ps.clientNum != 0
-			&& ent->client->NPC_class != CLASS_BOBAFETT)
+		if (ent->client && ent->client->NPC_class != CLASS_BOBAFETT && ent->client->NPC_class != CLASS_MANDO && ent->client->ps.clientNum != 0)
 		{
 			if (g_spskill->integer < 2)
 			{
@@ -490,9 +483,7 @@ void WP_FireDroidekaDualPistolMissile(gentity_t* ent, vec3_t start, vec3_t dir, 
 	missile->s.weapon = WP_DROIDEKA;
 
 	// Do the damages
-	if (ent->s.number != 0 &&
-		ent->client->NPC_class != CLASS_BOBAFETT &&
-		ent->client->NPC_class != CLASS_MANDO)
+	if (ent->client && ent->client->NPC_class != CLASS_BOBAFETT && ent->client->NPC_class != CLASS_MANDO && ent->s.number != 0)
 	{
 		if (g_spskill->integer == 0)
 		{
@@ -525,7 +516,7 @@ void WP_FireDroidekaDualPistolMissile(gentity_t* ent, vec3_t start, vec3_t dir, 
 	missile->bounceCount = 8;
 
 	// alternate muzzles
-	ent->fxID = !ent->fxID;
+	ent->fxID = ~ent->fxID;
 
 	if (ent->weaponModel[1] > 0)
 	{

@@ -4,11 +4,11 @@ Copyright (C) 1999 - 2005, Id Software, Inc.
 Copyright (C) 2000 - 2013, Raven Software, Inc.
 Copyright (C) 2001 - 2013, Activision, Inc.
 Copyright (C) 2005 - 2015, ioquake3 contributors
-Copyright (C) 2013 - 2015, OpenJK contributors
+Copyright (C) 2013 - 2015, SerenityJediEngine2024 contributors
 
-This file is part of the OpenJK source code.
+This file is part of the SerenityJediEngine2024 source code.
 
-OpenJK is free software; you can redistribute it and/or modify it
+SerenityJediEngine2024 is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License version 2 as
 published by the Free Software Foundation.
 
@@ -83,7 +83,7 @@ constexpr auto HOMEPATH_NAME_WIN = "SerenityJediEngine";
 #endif
 
 constexpr auto BASEGAME = "base";
-constexpr auto OPENJKGAME = "SerenityJediEngine2024";
+constexpr auto SerenityJediEngine2024GAME = "SerenityJediEngine2024";
 
 #define Q3CONFIG_NAME PRODUCT_NAME ".cfg"
 

@@ -1,7 +1,7 @@
 # Make sure the user is not executing this script directly
-if(NOT InOpenJK)
+if(NOT InSerenityJediEngine2024)
 	message(FATAL_ERROR "Use the top-level cmake script!")
-endif(NOT InOpenJK)
+endif(NOT InSerenityJediEngine2024)
 
 set(MPRend2IncludeDirectories
 	"${SharedDir}"
@@ -146,7 +146,7 @@ set(MPRend2Files
 	${CMAKE_CURRENT_BINARY_DIR}/glsl_shaders.h
 	${CMAKE_CURRENT_BINARY_DIR}/glsl_shaders.cpp)
 
-set(MPRend2IncludeDirectories ${MPRend2IncludeDirectories} ${OpenJKLibDir})
+set(MPRend2IncludeDirectories ${MPRend2IncludeDirectories} ${SerenityJediEngine2024LibDir})
 add_library(${MPRend2} SHARED ${MPRend2Files})
 
 if(NOT MSVC)
@@ -176,7 +176,7 @@ endif()
 set_target_properties(${MPRend2} PROPERTIES COMPILE_DEFINITIONS "${SharedDefines}")
 
 # Hide symbols not explicitly marked public.
-set_property(TARGET ${MPRend2} APPEND PROPERTY COMPILE_OPTIONS ${OPENJK_VISIBILITY_FLAGS})
+set_property(TARGET ${MPRend2} APPEND PROPERTY COMPILE_OPTIONS ${SerenityJediEngine2024_VISIBILITY_FLAGS})
 set_target_properties(${MPRend2} PROPERTIES INCLUDE_DIRECTORIES "${MPRend2IncludeDirectories}")
 set_target_properties(${MPRend2} PROPERTIES PROJECT_LABEL "MP Rend2 Renderer")
 target_link_libraries(${MPRend2} ${MPRend2Libraries})

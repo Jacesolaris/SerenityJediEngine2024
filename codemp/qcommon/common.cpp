@@ -4,11 +4,11 @@ Copyright (C) 1999 - 2005, Id Software, Inc.
 Copyright (C) 2000 - 2013, Raven Software, Inc.
 Copyright (C) 2001 - 2013, Activision, Inc.
 Copyright (C) 2005 - 2015, ioquake3 contributors
-Copyright (C) 2013 - 2015, OpenJK contributors
+Copyright (C) 2013 - 2015, SerenityJediEngine2024 contributors
 
-This file is part of the OpenJK source code.
+This file is part of the SerenityJediEngine2024 source code.
 
-OpenJK is free software; you can redistribute it and/or modify it
+SerenityJediEngine2024 is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License version 2 as
 published by the Free Software Foundation.
 
@@ -1112,7 +1112,7 @@ Com_ExecuteCfg
 
 static void Com_ExecuteCfg(void)
 {
-	Cbuf_ExecuteText(EXEC_NOW, "exec SJE-MP-default.cfg\n");
+	Cbuf_ExecuteText(EXEC_NOW, "exec SerenityJediEngine2024-MP-default.cfg\n");
 	Cbuf_Execute(); // Always execute after exec to prevent text buffer overflowing
 
 	if (!Com_SafeMode())
@@ -1493,7 +1493,7 @@ void Com_WriteConfig_f(void)
 		return;
 	}
 
-	if (!FS_FilenameCompare(filename, "SJE-MP-default.cfg") || !FS_FilenameCompare(filename, "SJE-SP-default.cfg"))
+	if (!FS_FilenameCompare(filename, "SerenityJediEngine2024-MP-default.cfg") || !FS_FilenameCompare(filename, "SerenityJediEngine2024-SP-default.cfg"))
 	{
 		Com_Printf(S_COLOR_YELLOW "Com_WriteConfig_f: The filename \"%s\" is reserved! Please choose another name.\n",
 			filename);

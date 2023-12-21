@@ -1,7 +1,7 @@
 # Make sure the user is not executing this script directly
-if(NOT InOpenJK)
+if(NOT InSerenityJediEngine2024)
 	message(FATAL_ERROR "Use the top-level cmake script!")
-endif(NOT InOpenJK)
+endif(NOT InSerenityJediEngine2024)
 
 set(SPRend2IncludeDirectories
 	"${SharedDir}"
@@ -146,7 +146,7 @@ set(SPRend2Files
 	${CMAKE_CURRENT_BINARY_DIR}/glsl_shaders.h
 	${CMAKE_CURRENT_BINARY_DIR}/glsl_shaders.cpp)
 
-set(SPRend2IncludeDirectories ${SPRend2IncludeDirectories} ${OpenJKLibDir})
+set(SPRend2IncludeDirectories ${SPRend2IncludeDirectories} ${SerenityJediEngine2024LibDir})
 
 function(add_sp_renderer_project ProjectName Label EngineName InstallDir Component)
 	add_library(${ProjectName} SHARED ${SPRend2Files})
@@ -177,7 +177,7 @@ function(add_sp_renderer_project ProjectName Label EngineName InstallDir Compone
 	set_target_properties(${ProjectName} PROPERTIES COMPILE_DEFINITIONS "${SPRend2Defines}")
 
 	# Hide symbols not explicitly marked public.
-	set_property(TARGET ${ProjectName} APPEND PROPERTY COMPILE_OPTIONS ${OPENJK_VISIBILITY_FLAGS})
+	set_property(TARGET ${ProjectName} APPEND PROPERTY COMPILE_OPTIONS ${SerenityJediEngine2024_VISIBILITY_FLAGS})
 
 	set_target_properties(${ProjectName} PROPERTIES INCLUDE_DIRECTORIES "${SPRend2IncludeDirectories}")
 	set_target_properties(${ProjectName} PROPERTIES PROJECT_LABEL ${Label})

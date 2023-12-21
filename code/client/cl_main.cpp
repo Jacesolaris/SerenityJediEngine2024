@@ -4,11 +4,11 @@ Copyright (C) 1999 - 2005, Id Software, Inc.
 Copyright (C) 2000 - 2013, Raven Software, Inc.
 Copyright (C) 2001 - 2013, Activision, Inc.
 Copyright (C) 2005 - 2015, ioquake3 contributors
-Copyright (C) 2013 - 2015, OpenJK contributors
+Copyright (C) 2013 - 2015, SerenityJediEngine2024 contributors
 
-This file is part of the OpenJK source code.
+This file is part of the SerenityJediEngine2024 source code.
 
-OpenJK is free software; you can redistribute it and/or modify it
+SerenityJediEngine2024 is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License version 2 as
 published by the Free Software Foundation.
 
@@ -252,7 +252,7 @@ CL_FreeReliableCommands
 Wipes all reliableCommands strings from clc
 =====================
 */
-void CL_FreeReliableCommands()
+static void CL_FreeReliableCommands()
 {
 	// wipe the client connection
 	for (auto& reliableCommand : clc.reliableCommands)
@@ -366,7 +366,7 @@ CONSOLE COMMANDS
 CL_ForwardToServer_f
 ==================
 */
-void CL_ForwardToServer_f()
+static void CL_ForwardToServer_f()
 {
 	if (cls.state != CA_ACTIVE)
 	{
@@ -463,7 +463,7 @@ void CL_Snd_Restart_f()
 CL_Configstrings_f
 ==================
 */
-void CL_Configstrings_f()
+static void CL_Configstrings_f()
 {
 	if (cls.state != CA_ACTIVE)
 	{
@@ -487,7 +487,7 @@ void CL_Configstrings_f()
 CL_Clientinfo_f
 ==============
 */
-void CL_Clientinfo_f()
+static void CL_Clientinfo_f()
 {
 	Com_Printf("--------- Client Information ---------\n");
 	Com_Printf("state: %i\n", cls.state);
@@ -573,7 +573,7 @@ to the server, the server will send out of band disconnect packets
 to the client so it doesn't have to wait for the full timeout period.
 ===================
 */
-void CL_DisconnectPacket(const netadr_t from)
+static void CL_DisconnectPacket(const netadr_t from)
 {
 	if (cls.state != CA_ACTIVE)
 	{
@@ -605,7 +605,7 @@ CL_ConnectionlessPacket
 Responses to broadcasts, etc
 =================
 */
-void CL_ConnectionlessPacket(const netadr_t from, msg_t* msg)
+static void CL_ConnectionlessPacket(const netadr_t from, msg_t* msg)
 {
 	MSG_BeginReading(msg);
 	MSG_ReadLong(msg); // skip the -1
@@ -747,7 +747,7 @@ CL_CheckTimeout
 
 ==================
 */
-void CL_CheckTimeout()
+static void CL_CheckTimeout()
 {
 	//
 	// check timeout
@@ -795,7 +795,7 @@ CL_CheckUserinfo
 
 ==================
 */
-void CL_CheckUserinfo()
+static void CL_CheckUserinfo()
 {
 	if (cls.state < CA_CHALLENGING)
 	{
@@ -1013,7 +1013,7 @@ Convenience function for the sound system to be started
 REALLY early on Xbox, helps with memory fragmentation.
 ============================
 */
-void CL_StartSound()
+static void CL_StartSound()
 {
 	if (!cls.soundStarted)
 	{
@@ -1033,7 +1033,7 @@ void CL_StartSound()
 CL_InitRenderer
 ============
 */
-void CL_InitRenderer()
+static void CL_InitRenderer()
 {
 	// this sets up the renderer and calls R_Init
 	re.BeginRegistration(&cls.glconfig);
@@ -1100,7 +1100,7 @@ CL_RefPrintf
 DLL glue
 ================
 */
-void QDECL CL_RefPrintf(const int print_level, const char* fmt, ...)
+static void QDECL CL_RefPrintf(const int print_level, const char* fmt, ...)
 {
 	va_list argptr;
 	char msg[MAXPRINTMSG];
@@ -1131,7 +1131,7 @@ DLL glue, but highly reusuable DLL glue at that
 ============
 */
 
-const char* String_GetStringValue(const char* reference)
+static const char* String_GetStringValue(const char* reference)
 {
 #ifndef JK2_MODE
 	return SE_GetString(reference);
@@ -1145,27 +1145,27 @@ extern void* gpvCachedMapDiskImage;
 extern char gsCachedMapDiskImage[MAX_QPATH];
 extern qboolean gbUsingCachedMapDataRightNow;
 
-char* get_gsCachedMapDiskImage()
+static char* get_gsCachedMapDiskImage()
 {
 	return gsCachedMapDiskImage;
 }
 
-void* get_gpvCachedMapDiskImage()
+static void* get_gpvCachedMapDiskImage()
 {
 	return gpvCachedMapDiskImage;
 }
 
-qboolean* get_gbUsingCachedMapDataRightNow()
+static qboolean* get_gbUsingCachedMapDataRightNow()
 {
 	return &gbUsingCachedMapDataRightNow;
 }
 
-qboolean* get_gbAlreadyDoingLoad()
+static qboolean* get_gbAlreadyDoingLoad()
 {
 	return &gbAlreadyDoingLoad;
 }
 
-int get_com_frameTime()
+static int get_com_frameTime()
 {
 	return com_frameTime;
 }
@@ -1189,7 +1189,6 @@ static CMiniHeap* GetG2VertSpaceServer()
 // NOTENOTE: If you change the output name of SerenityJediEngine2024-rdsp, change this define too!
 
 #define DEFAULT_RENDER_LIBRARY	"SerenityJediEngine2024-rdsp"
-//#define DEFAULT_RENDER_LIBRARY	"SerenityJediEngine2024-rdsp-rend2"
 
 void CL_InitRef()
 {
@@ -1328,7 +1327,7 @@ void CL_Init()
 
 	Com_Printf("-----------------------------------------------------------------\n");
 	Com_Printf("---------- Genuine SerenityJediEngine-(Solaris Edition)----------\n");
-	Com_Printf("---------------------Build date 19/12/2023-----------------------\n");
+	Com_Printf("---------------------Build date 20/12/2023-----------------------\n");
 	Com_Printf("-----------------------------------------------------------------\n");
 	Com_Printf("------------------------LightSaber-------------------------------\n");
 	Com_Printf("-----------An elegant weapon for a more civilized age------------\n");

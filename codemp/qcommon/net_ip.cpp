@@ -4,11 +4,11 @@ Copyright (C) 1999 - 2005, Id Software, Inc.
 Copyright (C) 2000 - 2013, Raven Software, Inc.
 Copyright (C) 2001 - 2013, Activision, Inc.
 Copyright (C) 2005 - 2015, ioquake3 contributors
-Copyright (C) 2013 - 2015, OpenJK contributors
+Copyright (C) 2013 - 2015, SerenityJediEngine2024 contributors
 
-This file is part of the OpenJK source code.
+This file is part of the SerenityJediEngine2024 source code.
 
-OpenJK is free software; you can redistribute it and/or modify it
+SerenityJediEngine2024 is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License version 2 as
 published by the Free Software Foundation.
 
@@ -124,7 +124,7 @@ static byte localIP[MAX_IPS][4];
 NET_ErrorString
 ====================
 */
-char* NET_ErrorString(void)
+static char* NET_ErrorString(void)
 {
 #ifdef _WIN32
 	switch (socketError)
@@ -265,7 +265,7 @@ Receive one packet
 int recvfromCount;
 #endif
 
-qboolean NET_GetPacket(netadr_t* net_from, msg_t* net_message, fd_set* fdr)
+static qboolean NET_GetPacket(netadr_t* net_from, msg_t* net_message, fd_set* fdr)
 {
 	int ret;
 	socklen_t fromlen;
@@ -454,7 +454,7 @@ void Sys_ShowIP(void)
 NET_IPSocket
 ====================
 */
-SOCKET NET_IPSocket(char* net_interface, const int port, int* err)
+static SOCKET NET_IPSocket(char* net_interface, const int port, int* err)
 {
 	SOCKET newsocket;
 	sockaddr_in address;
@@ -475,7 +475,7 @@ SOCKET NET_IPSocket(char* net_interface, const int port, int* err)
 	Com_Printf("----- Client Initialization -----\n");
 	Com_Printf("-----------------------------------------------------------------\n");
 	Com_Printf("---------- Genuine SerenityJediEngine-(Solaris Edition)----------\n");
-	Com_Printf("---------------------Build date 19/12/2023-----------------------\n");
+	Com_Printf("---------------------Build date 20/12/2023-----------------------\n");
 	Com_Printf("-----------------------------------------------------------------\n");
 	Com_Printf("------------------------LightSaber-------------------------------\n");
 	Com_Printf("-----------An elegant weapon for a more civilized age------------\n");
@@ -560,7 +560,7 @@ SOCKET NET_IPSocket(char* net_interface, const int port, int* err)
 NET_OpenSocks
 ====================
 */
-void NET_OpenSocks(const int port)
+static void NET_OpenSocks(const int port)
 {
 	sockaddr_in address;
 	int len;
@@ -766,7 +766,7 @@ NET_GetLocalAddress
 	Q_max(0, (int) (ifr)->ifr_addr.sa_len - (int) sizeof((ifr)->ifr_addr))))
 #endif
 
-void NET_GetLocalAddress(void) {
+static void NET_GetLocalAddress(void) {
 	struct ifreq requestBuffer[MAX_IPS], * linkInterface, * inetInterface;
 	struct ifconf ifc;
 	struct ifreq ifr;
@@ -862,7 +862,7 @@ void NET_GetLocalAddress(void) {
 	close(interfaceSocket);
 }
 #else
-void NET_GetLocalAddress(void)
+static void NET_GetLocalAddress(void)
 {
 	char hostname[256];
 	char* p;
@@ -911,7 +911,7 @@ void NET_GetLocalAddress(void)
 NET_OpenIP
 ====================
 */
-void NET_OpenIP(void)
+static void NET_OpenIP(void)
 {
 	const int port = net_port->integer;
 	int err;
@@ -1114,7 +1114,7 @@ Called from NET_Sleep which uses select() to determine which sockets have seen a
 ====================
 */
 
-void NET_Event(fd_set* fdr)
+static void NET_Event(fd_set* fdr)
 {
 	netadr_t from;
 	msg_t netmsg;
