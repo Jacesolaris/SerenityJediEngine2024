@@ -2498,7 +2498,6 @@ static IHeapAllocator* GetG2VertSpaceServer(void)
 }
 
 #define DEFAULT_RENDER_LIBRARY "SerenityJediEngine2024-rdmp"
-//#define DEFAULT_RENDER_LIBRARY "SerenityJediEngine2024-rdmp-rend2"
 
 void CL_InitRef(void)
 {

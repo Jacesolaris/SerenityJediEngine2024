@@ -3823,13 +3823,16 @@ void Cmd_SaberAttackCycle_f(gentity_t* ent)
 				{
 					G_SetAnim(ent, &ent->client->pers.cmd, SETANIM_TORSO, BOTH_STAND2TO1, SETANIM_FLAG_OVERRIDE | SETANIM_FLAG_HOLD, 0);
 				}
-				if (ent->client->ps.saber_holstered)
+				if (!(ent->r.svFlags & SVF_BOT)) // only player
 				{
-					G_Sound(ent, CHAN_AUTO, G_SoundIndex("sound/weapons/saber/saber_catch.mp3"));
-				}
-				else
-				{
-					G_Sound(ent, CHAN_AUTO, G_SoundIndex(va("sound/weapons/saber/lowswing%i.wav", Q_irand(1, 7))));
+					if (ent->client->ps.saber_holstered)
+					{
+						G_Sound(ent, CHAN_AUTO, G_SoundIndex("sound/weapons/saber/saber_catch.mp3"));
+					}
+					else
+					{
+						G_Sound(ent, CHAN_AUTO, G_SoundIndex(va("sound/weapons/saber/lowswing%i.wav", Q_irand(1, 7))));
+					}
 				}
 			}
 		}
